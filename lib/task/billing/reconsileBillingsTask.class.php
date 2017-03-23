@@ -37,7 +37,8 @@ EOF;
         $billOrdDev = new billing_ORDERS_DEVICE('newjs_slave');
         $jprofileObjSlave = new JPROFILE('newjs_slave');
         $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
-        $jprofileObj = new JPROFILE();   
+        $jprofileObj = new JPROFILE();
+        $upgradeOrderObj = new billing_UPGRADE_ORDERS();   
 
         /**
          * Fetch Profile Data for cron
@@ -58,6 +59,16 @@ EOF;
                     $orderDet[$val['BILLID']] = $billingOrderObjSlave->getOrderDetailsForId($val['ORDERID']);
                     $orderid = $orderDet[$val['BILLID']]['ORDERID']."-".$orderDet[$val['BILLID']]['ID'];
                     $currentSubscription = $jprofileObjSlave->getSubscriptions($orderDet[$val['BILLID']]['PROFILEID'], 'SUBSCRIPTION');
+
+                    $memCacheObject = JsMemcache::getInstance(); 
+                    $checkForMemUpgrade = $memCacheObject->get($orderDet[$val['BILLID']]['PROFILEID'].'_MEM_UPGRADE_'.$orderid);
+                    unset($memCacheObject);
+                    if($checkForMemUpgrade == null || $checkForMemUpgrade == false || in_array($checkForMemUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                        $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$orderDet[$val['BILLID']]['PROFILEID']);
+                    }
+                    else{
+                        $isUpgradeCaseEntry = null;
+                    }
 
                     /**
                      * Checking if details exist in PAYMENT_DETAILS Table for the current transaction
@@ -84,32 +95,29 @@ EOF;
                         if(!empty($serveFor) && $serveFor != '') {
                             $jprofileObj->updateSubscriptionStatus($serveFor, $orderDet[$val['BILLID']]['PROFILEID']);
                         }
-                        $memCacheObject = JsMemcache::getInstance(); 
-                        $checkForMemUpgrade = $memCacheObject->get($orderDet[$val['BILLID']]['PROFILEID'].'_MEM_UPGRADE_'.$orderid);
-                        unset($memCacheObject);
-
-                        var_dump("memUpgarde- ".$checkForMemUpgrade);
-                        if($checkForMemUpgrade == null || $checkForMemUpgrade == false || $checkForMemUpgrade != "NA"){
-                            echo "\n"."upgrade entry not updated-".$key;
-                            $memHandlerObj = new MembershipHandler(false);
-                            $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
-                            unset($memHandlerObj);
-                        }
 
                     } else{
-                        //check for upgrade order entry update done or not
-                        $memCacheObject = JsMemcache::getInstance(); 
-                        $checkForMemUpgrade = $memCacheObject->get($orderDet[$val['BILLID']]['PROFILEID'].'_MEM_UPGRADE_'.$orderid);
-                        unset($memCacheObject);
-                        if($checkForMemUpgrade == null || $checkForMemUpgrade == false || in_array($checkForMemUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
-                            $upgradeOrderObj = new billing_UPGRADE_ORDERS();
-                            $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$orderDet[$val['BILLID']]['PROFILEID']);
-                            if(is_array($isUpgradeCaseEntry) && $isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING"){
+                        if(is_array($isUpgradeCaseEntry)){
+                            $serveFor =  $billServStatObj->getActiveSuscriptionString($orderDet[$val['BILLID']]['PROFILEID']);
+                            //deactivation done,upgrade done but status not updated
+                            if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && $servefor == $currentSubscription){
+                                echo "\n"."upgrade status not updated";
                                 $memHandlerObj = new MembershipHandler(false);
                                 $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
                                 unset($memHandlerObj);
                             }
-                            unset($upgradeOrderObj);
+                            else{
+                                //neither deactivation done nor upgrade done
+                                if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "PENDING" && !empty($currentSubscription) && $currentSubscription != ''){
+                                    echo "\n"."neither deactivation nor upgrade";
+                                    $membershipObj->billid = $val['BILLID'];
+                                    $membershipObj->device = $billOrdDev->getOrderDeviceFromBillid($val['BILLID']);
+                                    if (empty($membershipObj->device) || $membershipObj->device == '') {
+                                        $membershipObj->device = 'desktop';
+                                    }
+                                    $membershipObj->startServiceOrder($orderid, true,"PAYMENT_DETAILS");
+                                }
+                            }
                         }
                     }
                 } else {
@@ -126,5 +134,6 @@ EOF;
                 unset($serveFor);
             }
         }
+        unset($upgradeOrderObj);
     }
 }
