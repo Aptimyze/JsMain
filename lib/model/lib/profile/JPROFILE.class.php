@@ -31,7 +31,7 @@ class JPROFILE
      * and rest from store.
      * @var static
      */
-    private static $canSetForPartialKeys = false;
+    const ENABLE_GETFORPARTIALKEYS = false;
 
     var $activatedKey; //archiving
 
@@ -222,7 +222,7 @@ class JPROFILE
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
         if(
-            JPROFILE::$canSetForPartialKeys &&
+            JPROFILE::ENABLE_GETFORPARTIALKEYS &&
             !ProfileCacheLib::getInstance()->isCommandLineScript() &&
             is_array($valueArray) &&
             count($valueArray) == 1 &&
