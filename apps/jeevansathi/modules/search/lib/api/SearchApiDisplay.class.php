@@ -366,7 +366,7 @@ class SearchApiDisplay
 					
 				$this->finalResultsArray[$pid]['availforchat']= false;
 				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
-				if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
+				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
 					$this->finalResultsArray[$pid]['availforchat']= true;
 
 //				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::statName($pid,$this->searchResultsData[$key]['USERNAME']);
