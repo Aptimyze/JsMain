@@ -152,7 +152,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				 	return true;
 
 				 case "REPORT_INVALID":
-				 if($this->profileDetails["MOB_STATUS"] != 'Y')
+				 if($this->profileDetails["MOB_STATUS"] == 'Y')
 				 	return true;
 
 			default:
