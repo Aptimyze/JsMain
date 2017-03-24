@@ -23,6 +23,7 @@ class SolrRequest implements RequestHandleInterface
 	                $this->searchParamtersObj = $searchParamtersObj;
 
                         //$this->logSearch();
+                        JsMemcache::getInstance()->incrCount("TOTAL_SEARCH_COUNT_".date("d"));
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
@@ -196,7 +197,7 @@ class SolrRequest implements RequestHandleInterface
                 }
                 
                 if(!$this->searchResults){
-                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d-h').".txt";
+                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
 	}
@@ -674,7 +675,17 @@ class SolrRequest implements RequestHandleInterface
                 $keyAuto = "COUNTER_SEARCH_TYPE_KEYS";
                 $searchKey = "COUNTER_SEARCH_TYPE_";
                 $Rurl = explode("/",trim($_SERVER["REQUEST_URI"],"/"));
-                $searchKey .= $Rurl[0]."_";
+                if(strpos($Rurl[0],"rand")){
+                        $searchKey .= "random_";
+                }elseif(strpos($Rurl[0],"matrimony") || strpos($Rurl[0],"brides")  || strpos($Rurl[0],"grooms")){
+                        $searchKey .= "matrimony_";
+                }else{
+                        if($Rurl[0] == "" || strpos($_SERVER["REQUEST_URI"],"myjs")){
+                                $searchKey .= "myjs_";
+                        }else{
+                                $searchKey .= $Rurl[0]."_";
+                        }
+                }
                 $app = MobileCommon::isApp();
                 if(!$app){
                         if(MobileCommon::isDesktop()){

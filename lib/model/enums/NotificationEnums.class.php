@@ -40,12 +40,12 @@ class NotificationEnums
 	    'Content-Type: application/json'
 	);
 	public static $iosResponseCodeArr =array("0"=>"0-No errors encountered","1"=>"1-Processing error","2"=>"2-Missing device token","3"=>"3-Missing topic","4"=>"4-Missing payload","5"=>"5-Invalid token size","6"=>"6-Invalid topic size","7"=>"7-Invalid payload size","8"=>"8-Invalid token","255"=>"255-None(unknown)");
-	public static $scheduledNotificationKey = array('JUST_JOIN','PENDING_EOI','VISITOR','ATN','ETN','VD','MATCHALERT','PROFILE_VISITOR','MEM_EXPIRE_A5','MEM_EXPIRE_A10','MEM_EXPIRE_A15','MEM_EXPIRE_B1','MEM_EXPIRE_B5','FILTERED_EOI','CONTACTS_VIEWED_BY','CONTACT_VIEWS','PHOTO_UPLOAD','MEM_DISCOUNT','MATCH_OF_DAY');
+	public static $scheduledNotificationKey = array('JUST_JOIN','PENDING_EOI','VISITOR','ATN','ETN','VD','MATCHALERT','PROFILE_VISITOR','MEM_EXPIRE','FILTERED_EOI','CONTACTS_VIEWED_BY','CONTACT_VIEWS','PHOTO_UPLOAD','MEM_DISCOUNT','MATCH_OF_DAY');
       public static $keyBasedScheduleDaysConfig = array('PENDING_EOI'=>array('SAT','WED'));
       public static $CANCELLED = "C";
       public static $scheduledNotificationsLimit = 3;
       public static $scheduledNotificationPriorityArr = array('CONTACT_VIEWS','PENDING_EOI','CONTACTS_VIEWED_BY','PROFILE_VISITOR','JUST_JOIN','MATCHALERT','FILTERED_EOI');
-      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING");  //notifications with static content
+      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING","MATCHALERT");  //notifications with static content
       public static $appVersionCheck = array("DEFAULT"=>array('AND'=>23,'IOS'=>1),
                                           "FILTERED_EOI"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CONTACTS_VIEWED_BY"=>array('AND'=>32,'IOS'=>'2.2'),
