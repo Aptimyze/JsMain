@@ -352,7 +352,7 @@ class chatActions extends sfActions
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
 				$privilegeArray = $this->contactHandlerObj->getPrivilegeObj()->getPrivilegeArray();
-				if(!MobileCommon::isApp() && $request->getParameter('chatMessage') && CONTACTS::isObscene($request->getParameter('chatMessage')))
+				if($request->getParameter('chatMessage') && CONTACTS::isObscene($request->getParameter('chatMessage')))
 				{
 					$response["cansend"] = true;
 					$response['sent'] = false;
