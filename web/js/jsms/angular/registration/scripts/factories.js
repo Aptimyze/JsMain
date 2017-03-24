@@ -202,7 +202,8 @@
 			{"label":"Marital Status","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"children","dshow":"reg_mstatus","userDecision":"","dindex":"0","storeKey":"mstatus","optIndex":"0","tapName":"Martial Status","dependant_tapName":"Have Children"},
 			{"label":"Mother Tongue","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_mtongue","userDecision":"","dindex":"1","storeKey":"mtongue","tapName":"Mother Tongue"},
 			{"label":"Religion-Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_caste_","depValue":"","dshow":"religion","userDecision":"","dindex":"2","storeKey":"religion","optIndex":"1","tapName":"Religion","dependant_tapName":""},
-      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"3","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
+			{"label":"I am open to marry people of all castes \n(Caste No Bar)","value":"","inputType":"checkbox","show":"false","screenName":"s4","storeKey":"casteNoBar","hamburgermenu":"0","dindex":"3","dshow":"","required":"false"},
+      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"4","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
 			],
 		"s5": [
       {"label":"Full Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
@@ -270,6 +271,13 @@
 		}
 		factory.showModalWindow = function($scope)
 		{
+			var errorStr = "";
+                        angular.forEach($scope.fields, function(field,key) {
+                                if(field.errorLabel.length !== 0) {
+                                        errorStr = errorStr + field.errorLabel + "  ";
+                                }
+                        });
+			trackJsEventGA("jsms","regErrorTracking"+$scope.screenName, errorStr);
 			$scope.bModalWindow =true;
 			$timeout(function(){if($scope.bModalWindow)factory.hideModalWidow($scope);},Constants.getMsgTimeOut());
 		}
@@ -616,6 +624,15 @@
 				return;
 				 });
 			}
+			    else if(fields[indexPos].storeKey=="casteNoBar") 
+				{
+                                fields[indexPos].userDecision=output[fields[indexPos].storeKey].value;
+                                fields[indexPos].value=output[fields[indexPos].storeKey].label;
+                                fields[indexPos].errorLabel = "";       
+                                UserDecision.store(fields[indexPos].storeKey,fields[indexPos].userDecision);
+                                fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+                                factory.handleDepValue(fields[indexPos]);
+                        }
 			else
 			{
 			fields[indexPos].userDecision=output[fields[indexPos].dshow].value;
@@ -837,7 +854,7 @@
 			"s1":["relationship"],
 			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode"],
 			"s3":["edu_level_new","pg_college","degree_pg","other_pg_degree","college","degree_ug","other_ug_degree","occupation","income"],
-			"s4":["mstatus","mtongue","religion","caste","havechild","horoscope_match"],
+			"s4":["mstatus","mtongue","religion","caste","havechild","casteNoBar","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
 			"s6":["yourinfo"],
             "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","native_country","native_state","native_city","ancestral_origin"],
@@ -1005,6 +1022,7 @@
       'reg[other_pg_degree]':'',
       'reg[other_ug_degree]':'',
       'reg[name_of_user]':'',
+      'reg[casteNoBar]':'',
       'reg[horoscope_match]':''
 		};
 		var regPage2Fields={

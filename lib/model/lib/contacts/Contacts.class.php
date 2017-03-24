@@ -711,7 +711,7 @@ class Contacts {
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
             $smallIsWho = $sortedArray[0] == $profileId1 ? 'S' : 'R';
             $result = $type."_".$smallIsWho;
-            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
+            JsMemcache::getInstance()->setRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
             return $result;
             
         }
@@ -726,7 +726,7 @@ class Contacts {
         {
             if(!$profileId1 || !$profileId2)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            $result = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            $result = JsMemcache::getInstance()->getRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType');
             
             if(!$result)
                 {
@@ -754,5 +754,25 @@ class Contacts {
         
     }
 
+    /**
+	 * checks if message is obscene
+	 * @return boolean
+	 */
+	public function isObscene($message)
+	{
+		$dbObj = new newjs_OBSCENE_WORDS();
+		$obscene = $dbObj->getObsceneWord();
+		$messageArr = explode(" ",$message);
+		foreach($obscene as $index=>$value)
+		{
+			foreach($messageArr as $k=>$messWord){
+				$messWord = preg_replace('/\s+/', '', $messWord);
+				if(strtolower($messWord) == strtolower($value))
+				{
+					return true;
+				}
+			}
+		}
+    }
 }
 ?>

@@ -129,6 +129,8 @@ class Messages
 
   const PAID_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
   const PAID_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted.";
+  const REMINDER_SENT_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from interest sent";
+  const SECOND_REMINDER_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from the last reminder sent";
   
   public static $contactEngineCalled;
   /**
@@ -926,5 +928,10 @@ class Messages
 		else
 			return Messages::DETAILS_UNDERSCREENING;
 	}
+
+    public static function getReminderSentBeforeTimeMessage($message)
+  {
+    return Messages::getMessage($message);
+  }
 }
 ?>

@@ -12,6 +12,8 @@ class MyJs implements Module
         private $configurations;
         private $completeProfilesInfo;
         private static $getTotal = "T";
+		private $arrProfiler = array();
+  		private $bEnableProfiler = false;        
         
         //Constructor need profile object for myjs page 
         function __construct($module,Profile $profileObj)
@@ -198,6 +200,7 @@ class MyJs implements Module
                 $profiles     = Array();
                 $tupleService = new TupleService();
 		$tupleService->setLoginProfileObj($this->profileObj);
+		$start = microtime(TRUE);
                 foreach ($this->configurations as $infoType => $config)
 		{
                         // Handles both the ajax and non ajax display call only if count is greater than 0,  new declined are not shown in tuples in myjs modul
@@ -243,6 +246,11 @@ class MyJs implements Module
 									$skipArray = $pids;
 							}
 						}
+					}
+					if($this->bEnableProfiler)
+ 					{
+ 						$logString = $infoType.' SkipArray count -> '.count($skipArray).' ';
+ 						$this->arrProfiler[$infoType][] = CommonFunction::logResourceUtilization($start,$logString);
 					}
                                         $conditionArray         = $this->getCondition($infoType, $nav);
                                         if($infoType == "MATCH_ALERT")
@@ -304,6 +312,10 @@ class MyJs implements Module
 					}
                                 }
                         }
+                }
+                if($this->bEnableProfiler)
+                {
+ 					CommonFunction::logIntoProfiler('InfoType', $this->arrProfiler);
                 }
                 unset($conditionArray);
                 unset($skipArray);
@@ -653,6 +665,7 @@ class MyJs implements Module
 		elseif(MobileCommon::isApp()=='I')
                         $trackingMap=array(
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_MYJS_IOS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
                                 "MATCH_OF_THE_DAY"=>SearchTypesEnums::MATCH_OF_THE_DAY_MYJS_IOS,

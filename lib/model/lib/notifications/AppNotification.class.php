@@ -119,7 +119,8 @@ public function microtime_float()
 			break;
 
 
-
+        /*commented to move matchalert notification from scheduled concept to instant mailer triggered notification*/
+        /*
 		  case "MATCHALERT":
 			$applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -163,6 +164,7 @@ public function microtime_float()
 				unset($matchCount);
 			}
 			break;
+         */
 		  case "PENDING_EOI":
 		    $applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -170,6 +172,17 @@ public function microtime_float()
             		$dataAccumulated = $poolObj->getPendingInterestData($applicableProfiles);
             		unset($poolObj);
 			break;
+          case "MATCHALERT":
+ 				if($count > 0){
+ 					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+ 					$poolObj = new NotificationDataPool();
+ 					$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message,$count);
+ 					unset($poolObj);
+ 				}
+ 				else{
+ 					$dataAccumulated = null;
+ 				}
+ 				break;
 		  case "ACCEPTANCE":
 		  case "PHOTO_REQUEST":
 		  case "EOI":
@@ -211,8 +224,12 @@ public function microtime_float()
 			//$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
             		$poolObj = new NotificationDataPool();
 			$applicableProfilesArr =array_keys($applicableProfiles);
-			$applicableProfilesNew =array('SELF'=>$applicableProfilesArr[0],'OTHER'=>$appProfiles['OTHER']);
-            		$dataAccumulated = $poolObj->getProfileVisitorData($applicableProfilesNew, $applicableProfiles,$message);
+			$appSelfProfile =$appProfiles['SELF'];
+			//$applicableProfilesNew =array('SELF'=>$applicableProfilesArr[0],'OTHER'=>$appProfiles['OTHER']);
+			if(in_array("$appSelfProfile", $applicableProfilesArr)){
+				$applicableProfilesNew =array('SELF'=>$appSelfProfile,'OTHER'=>$appProfiles['OTHER']);
+	            		$dataAccumulated = $poolObj->getProfileVisitorData($applicableProfilesNew, $applicableProfiles,$message);
+			}
             		unset($poolObj);
 			break;
                   case "BUY_MEMB":
@@ -231,29 +248,15 @@ public function microtime_float()
                         break;
 		  case "ATN":
                     	$applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-			$counter =0;	
-                        if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "ETN":
                         $applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "VD":
                         $applicableProfiles=array();
@@ -264,50 +267,18 @@ public function microtime_float()
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
                         }
                         $applicableProfiles =array_merge($applicableProfilesNonNri,$applicableProfilesNri);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
-			$counter =0;
-			if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;	
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
-		  case "MEM_EXPIRE_A5":
-		  case "MEM_EXPIRE_A10":
-		  case "MEM_EXPIRE_A15":
-		  case "MEM_EXPIRE_B1":	 
-                  case "MEM_EXPIRE_B5":
+		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
                         $poolObj = new NotificationDataPool();
-                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles, $notificationKey);
+                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles);
                         $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
-                        /*
-                        $applicableProfiles = $this->getMembershipProfilesForNotification($appProfiles, $notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
-                        */
                         break;
 		case "PHOTO_UPLOAD":
 			$applicableProfiles=array();
@@ -497,7 +468,7 @@ public function microtime_float()
 				  // print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
-				  	$completeNotificationInfo[$counter]["PHOTO_URL"] =$dataPerNotification['PHOTO_URL'];
+				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
 				  else
 			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
@@ -636,17 +607,21 @@ public function microtime_float()
 	// filter check for already sent ATN/ETN notification	
 	  $varArray['NOTIFICATION_KEY'] =$notificationKey;
 	  $varArray['SENT'] 		='Y';
-	  $notificationLogObj 		=new MOBILE_API_NOTIFICATION_LOG("newjs_local111");          		           	  	  	
-	  $profilesNew			=$notificationLogObj->getNotificationProfiles($notificationKey);
-	  if(is_array($profilesNew))
-		  $profilesArr 		=array_diff($profiles, $profilesNew);
+	  if($notificationKey=='ATN')
+	  	$notificationLogObj	=new MOBILE_API_NOTIFICATION_LOG_ATN("newjs_local111");          		           	  	  		else if($notificationKey=='ETN')
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG_ETN("newjs_local111");
+	  else
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG("newjs_local111");
+	  $profilesOld			=$notificationLogObj->getNotificationProfiles();
+	  if(is_array($profilesOld))
+		  $profilesArr 		=array_diff($profiles, $profilesOld);
 	  else
 		  $profilesArr		=$profiles;
 	  $profilesArr =array_values($profilesArr);			
           unset($varArray);
 
 	// filter check in ETN notification, CASE: if profile is already considered for ATN  on the same day. 
-	  if($notificationKey=='ETN'){	
+	  /*if($notificationKey=='ETN'){	
 	  	$scheduledAppNotificationObj  =new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();					
           	$varArray['NOTIFICATION_KEY'] ='ATN';
           	$profilesAtn                  =$scheduledAppNotificationObj->getArray($varArray);
@@ -659,7 +634,7 @@ public function microtime_float()
 			$profilesArr =$profilesNew;
 		}
 		unset($varArray);
-	  }
+	  }*/
 
 	// get PROFILE data
           if(is_array($profilesArr)){
@@ -936,6 +911,35 @@ public function microtime_float()
       unset($validPicArray);
       unset($validExtensionArr);
       unset($ext);
+  }
+  
+  public function checkNotificationOnLastLogin($notificationKey, $lastLoginDate){
+	  $notifications = $this->getNotifications();
+      $timeCriteria = $notifications["TIME_CRITERIA"][$notificationKey];
+	  unset($notifications);
+	  if($timeCriteria!='')
+	  {
+		  $timeCriteriaArr = explode("|",$timeCriteria);
+		  if($timeCriteriaArr[0]!='')
+		  {
+			  $dateformatGreaterThan = $this->getDate($timeCriteriaArr[0]);
+			  $greaterThan['LAST_LOGIN_DT']=$dateformatGreaterThan;
+		  }
+		  if($timeCriteriaArr[1]!='')
+		  {
+			  $dateformatLessThan = $this->getDate($timeCriteriaArr[1]);
+			  $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
+		  }
+	  }
+      if($greaterThan["LAST_LOGIN_DT"]){
+          if(strtotime($lastLoginDate) >= strtotime($greaterThan["LAST_LOGIN_DT"])){
+              return true;
+          }
+          else{
+              return false;
+          }
+      }
+	  return true;
   }
 }
 ?>

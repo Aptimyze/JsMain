@@ -61,7 +61,7 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>false,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true,"sortSubscriptionFlag"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
@@ -97,7 +97,7 @@ EOF;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
-				
+                $this->setMatchAlertNotificationCache($data);
 			}
 			else
 				$flag = "I"; // Invalid users given in database
@@ -214,6 +214,44 @@ EOF;
         }
         $subject="Shown below are $outOf added to your account today, based on your Desired Partner Profile. You may send interest to them.";
         return $subject;
+  }
+  
+  public function setMatchAlertNotificationCache($data){
+      $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
+      $count = $data["COUNT"];
+      $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
+      $otherProfileid = $data["USERS"][0]->getPROFILEID();
+      $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
+      $cacheKey = "MA_NOTIFICATION_".$receiver;
+      $seperator = "#";
+      $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+      if($preSetCache){
+          $explodedVal = explode($seperator,$preSetCache);
+          $count = $count+$explodedVal[0];
+          if($this->getValidImage($otherPicUrl) == "D"){
+              $otherPicUrl = $explodedVal[2];
+              $otherProfileid = $explodedVal[1];
+          }
+      }
+      else{
+          $body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
+          $type = "MA_NOTIFICATION";
+          $queueData = array('process' =>'MA_NOTIFICATION',
+                            'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                          );
+          $producerObj = new JsNotificationProduce();
+          $producerObj->sendMessage($queueData);
+      }
+      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate;
+      $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
+      JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
+  }
+  
+  public function getValidImage($url){
+    $photo = "D";
+    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request')) )
+        $photo = $url;
+    return $photo;
   }
 
 }

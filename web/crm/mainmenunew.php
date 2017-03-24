@@ -31,7 +31,7 @@ function profileview($profileid,$checksum='',$priv='',$cid='')
 	if(!$priv)
 		$priv =array();	
 
-	$sql="select USERNAME,MOD_DT,GENDER,INCOMPLETE,SUBSCRIPTION,ACTIVATED , YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO ,FATHER_INFO , ENTRY_DT, SOURCE, HAVEPHOTO, MESSENGER_ID, MOB_STATUS, LANDL_STATUS, EMAIL, SERIOUSNESS_COUNT,LAST_LOGIN_DT from newjs.JPROFILE where PROFILEID='$profileid'";
+	$sql="select USERNAME,MOD_DT,GENDER,INCOMPLETE,SUBSCRIPTION,ACTIVATED , YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO ,FATHER_INFO , ENTRY_DT, SOURCE, HAVEPHOTO, MESSENGER_ID, MOB_STATUS, LANDL_STATUS, EMAIL, SERIOUSNESS_COUNT,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT from newjs.JPROFILE where PROFILEID='$profileid'";
 	$result=mysql_query_decide($sql,$db_slave) or die("1".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if(mysql_num_rows($result) > 0)

@@ -81,9 +81,20 @@
                 </div>
                 <!--end:offer--> 
                 <!--start:listing1-->
-                <div class="brdr9_ham pt20">
+                <div class = "brdr9_ham pt20">
                   <ul class="fontlig">
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
+                  <li>                  <!--start:listing6-->
+                <div id='appDownloadLink1' style='display:none'>       
+                    <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  App | 3MB only </a>
+                </div>
+                <!--end:listing6--> 
+                 <!--start:listing7-->
+                <div id='appleAppDownloadLink1' style='display:none'>
+                    <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger&channel=iosLayer';" bind-slide=1 class="white">Download iOS App </a>
+                    
+                </div>
+                <!--end:listing6--> </li>                 
                     <li><a href="/" bind-slide=1 onclick='trackJsEventGA("jsms","homeClick", "", "");' class="white" style="font-size: 17px;">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
@@ -181,27 +192,7 @@
                     
                   </ul>
                 </div>
-                <!--end:listing5--> 
-                  <!--start:listing6-->
-                <div class="brdr9_ham pt20" id='appDownloadLink1' style='display:none'>
-                  <ul class="fontlig">
-                    
-                    <li class="white fb1 ham_opa fontrobbold">It's Free</li>
-                    <li><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  Android App </a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing6--> 
-                 <!--start:listing7-->
-                <div class="brdr9_ham pt20" id='appleAppDownloadLink1' style='display:none'>
-                  <ul class="fontlig">
-                    
-                    <li class="white fb1 ham_opa fontrobbold">It's Free</li>
-                    <li><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger&channel=iosLayer';" bind-slide=1 class="white">Download iOS App </a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing6--> 
+<!--  Code moved Up to include Download App at top -->
               </div>
            	
 				<!--start:edit profile-->
@@ -224,6 +215,18 @@
 			 <!--start:listing1-->
                 <div class=" pt20  hampad1">
                   <ul class="fontlig">
+                                 <li>  <div id='appDownloadLink2' style='display:none'>
+                    
+              <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';"  bind-slide=1 class="white">Download  App | 3MB only </a>
+                </div>
+                <!--end:listing6--> 
+                <!--start:listing7-->
+                <div id='appleAppDownloadLink2' style='display:none'>
+                    
+              <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger&channel=iosLayer';"  bind-slide=1 class="white">Download iOS App </a>
+                </div> </li>
+                <!--end:listing7-->  
+
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>
                     <li><a href="/" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
@@ -233,27 +236,7 @@
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
                   </ul>
                 </div>
-                
-                 <!--start:listing5-->
-                <div class="hampad1">
-                  <ul class=" brdr9_ham fontlig">
-                    
-                    <li class="pt20" ><a href="" onclick="window.location.href = 'tel:18004196299';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing5--> 
-                  <!--start:listing6-->
-                <div class="hampad1" id='appDownloadLink2' style='display:none'>
-                  <ul class=" brdr9_ham fontlig">
-                    
-                    <li class="pt20 white fb1 ham_opa fontrobbold">It's Free</li>
-                    <li class=""><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';"  bind-slide=1 class="white">Download  Android App </a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing6--> 
-                <!--start:listing7-->
+<!--  Code moved Up to include Download App at top -->
                 <div class="hampad1" id='appleAppDownloadLink2' style='display:none'>
                   <ul class=" brdr9_ham fontlig">
                     

@@ -1,4 +1,7 @@
 stopScrolling();
+	var filterBasicMap = {};
+	var filterReligionMap = {};
+	var filterEduMap = {};
 //Showing overlay layer starts here//
 var overLaySection="";
 var overLayerParent="";
@@ -293,6 +296,8 @@ function UpdateOverlayLayer(attr)
 	var htmlArr=new Array();
 	for(i=0;i<key.length;i++)
 	{
+	if(($.inArray(key[i]["key"],editInArr[arr[0]])>-1)|| ($.inArray(key[i]["key"],editValArr[arr[1]])>-1))
+	{
 		var temp=overLayHtml;
 		temp=temp.replace(/key_label/g,key[i]["key"]+"label");
 		temp=temp.replace(/key_NAME/g,key[i]["key"]);
@@ -319,7 +324,7 @@ function UpdateOverlayLayer(attr)
 		var labelval=key[i]["label_val"];
 		
 		
-		if(!labelval || labelval===null || labelval===undefined || labelval==="-")
+		if(!labelval || labelval===null || labelval===undefined || labelval==="-" || labelval==="Select")
 		{
 			
 			key[i]["label_val"]=labelval="";
@@ -341,6 +346,7 @@ function UpdateOverlayLayer(attr)
 		
 		htmlArr.push(temp);
 					
+	}
 	}
 	var tempStr=htmlArr.join("");
 	var tempHtml=overLayerParent;
@@ -654,24 +660,33 @@ function showFilterOverlayer()
         var tempval;
         var saveJson={};
         var clicked=0;
-        filterJson.FILTER[0]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][1]["label"];
-        filterJson.FILTER[0]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][1]["label_val"];
-        filterJson.FILTER[1]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label"];
-        filterJson.FILTER[1]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label_val"];
-        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label"];
-        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label_val"];
-        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label"];
-        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label_val"];
-        filterJson.FILTER[4]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label"];
-        filterJson.FILTER[4]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label_val"];
-        filterJson.FILTER[5]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][1]["label"];
-        filterJson.FILTER[5]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][1]["label_val"];
-        filterJson.FILTER[6]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][3]["label"];
-        filterJson.FILTER[6]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][3]["label_val"];
+	$.each(pageJson["Dpp"]["BasicDetails"]["OnClick"],function(k,v){
+		filterBasicMap[v["key"]] = k;
+	});
+	$.each(pageJson["Dpp"]["Religion"]["OnClick"],function(k,v){
+		filterReligionMap[v["key"]] = k;
+	});
+	$.each(pageJson["Dpp"]["EduAndOcc"]["OnClick"],function(k,v){
+                filterEduMap[v["key"]] = k;
+        });
+        filterJson.FILTER[0]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_AGE"]]["label"];
+        filterJson.FILTER[0]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_AGE"]]["label_val"];
+        filterJson.FILTER[1]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_MSTATUS"]]["label"];
+        filterJson.FILTER[1]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_MSTATUS"]]["label_val"];
+        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_COUNTRY"]]["label"];
+        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_COUNTRY"]]["label_val"];
+        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_CITY"]]["label"];
+        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][filterBasicMap["P_CITY"]]["label_val"];
+        filterJson.FILTER[4]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_RELIGION"]]["label"];
+        filterJson.FILTER[4]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_RELIGION"]]["label_val"];
+        filterJson.FILTER[5]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_CASTE"]]["label"];
+        filterJson.FILTER[5]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_CASTE"]]["label_val"];
+        filterJson.FILTER[6]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_MTONGUE"]]["label"];
+        filterJson.FILTER[6]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][filterReligionMap["P_MTONGUE"]]["label_val"];
         filterJson.FILTER[7]["label"]= "Income";
         //Income will have two options $ and Rs
-        tempval=pageJson["Dpp"]["EduAndOcc"]["OnClick"][2]["label_val"]+"<br>";
-        tempval+=pageJson["Dpp"]["EduAndOcc"]["OnClick"][3]["label_val"].replace(/&nbsp;/g,"");
+        tempval=pageJson["Dpp"]["EduAndOcc"]["OnClick"][filterEduMap["P_INCOME_RS"]]["label_val"]+"<br>";
+        tempval+=pageJson["Dpp"]["EduAndOcc"]["OnClick"][filterEduMap["P_INCOME_DOL"]]["label_val"].replace(/&nbsp;/g,"");
         filterJson.FILTER[7]["label_val"]=tempval;
         $.each(filterJson.FILTER,function(key,value){
                 filterDiv=$("#filterSection").html();

@@ -191,7 +191,7 @@ class SEARCH_AGENT extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT S.PROFILEID, ID, SEARCH_NAME FROM `SEARCH_AGENT` S LEFT JOIN JPROFILE J USING ( PROFILEID ) WHERE J.ACTIVATED IN ('Y', 'U') AND S.PROFILEID%:TOTALINSTANCE=:REMAINDER AND J.activatedKey=1 AND J.LAST_LOGIN_DT > :LASTLOGINDATE ORDER BY PROFILEID DESC";
+                        $sql = "SELECT S.PROFILEID, ID, SEARCH_NAME FROM `SEARCH_AGENT` S LEFT JOIN JPROFILE J USING ( PROFILEID ) WHERE J.ACTIVATED IN ('Y', 'U') AND S.PROFILEID%:TOTALINSTANCE=:REMAINDER AND J.activatedKey=1 AND DATE(J.LAST_LOGIN_DT) > :LASTLOGINDATE ORDER BY PROFILEID DESC";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":TOTALINSTANCE", $totalInstances, PDO::PARAM_INT);
                         $res->bindValue(":REMAINDER", $count, PDO::PARAM_INT);

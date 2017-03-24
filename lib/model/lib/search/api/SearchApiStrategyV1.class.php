@@ -107,7 +107,7 @@ class SearchApiStrategyV1
 		elseif($request->getParameter("contactViewAttempts")==1)
                         $this->searchCat = 'contactViewAttempts';
 
-                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj);
+                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request);
                 if($this->noResults!=1)
 		{
 			if($this->results_orAnd_cluster!='onlyClusters')
@@ -145,7 +145,7 @@ class SearchApiStrategyV1
         * @param string $casteMappingCastes list of caste suggested
         * @param array $relaxCriteria array to be relaxed
 	*/ 
-	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj)
+	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request)
 	{
 		$cnt = $this->responseObj->getTotalResults();
 		$this->output["dppLinkAtEnd"] = null;
@@ -211,6 +211,10 @@ class SearchApiStrategyV1
 		else
 			$this->output["sortType"]= 'Relevance';
 		$this->output["stype"]= $SearchParamtersObj->getSEARCH_TYPE();
+                if($request->getParameter("retainSearchType"))
+                {
+                        $this->output["stype"]= $request->getParameter("retainSearchType");
+                }
 		$this->output["defaultImage"]= PictureFunctions::getNoPhotoJSMS($SearchParamtersObj->getGENDER(),$this->photoType);
 		if($noOfPages>$currentPage)
 			$this->output["next_avail"]= "true";
@@ -223,6 +227,7 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
+                $this->output['checkOnline'] = true;
 		
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{

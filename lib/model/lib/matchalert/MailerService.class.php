@@ -173,7 +173,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();
@@ -792,6 +792,10 @@ return $edu;
 			if($widgetArray["sortPhotoFlag"])
 				$users = $this->sortUsersListByPhoto($users);
                         
+                        
+			if($widgetArray["sortSubscriptionFlag"])
+				$users = $this->sortUsersListBySubscription($users,SearchConfig::$jsBoostSubscription);
+                        
 			//if($widgetArray["logicLevelFlag"] && 0)
 				//$users = $this->setUsersLogicalLevel($users,$operatorProfileObj,$mailerName);
 			
@@ -917,6 +921,52 @@ return $edu;
                 $kundliMailerObj->updateKundliMatchesUsersFlag($sno,$flag,$pid);
 
 	}
+        /**
+         * This function sort profile on the basis of subscription
+         * @param type $userList
+         * @param type $subscription
+         * @return type
+         * @throws jsException
+         */
+        public function sortUsersListBySubscription($userList, $subscription)
+	{
+		if(!is_array($userList))
+			throw  new jsException("No userList in sortUsersListBySubscription() function in RegularMatchAlerts.class.php");
 
+		foreach($userList as $k=>$v)
+		{
+			if(in_array($subscription, explode(",",$v->getSUBSCRIPTION())) && $v->getHAVEPHOTO()== $this->photoPresent)
+                        {
+                                if($v->getPHOTO_DISPLAY()!= PhotoProfilePrivacy::photoVisibleIfContactAccepted)
+					$sortArr[$v->getPROFILEID()] = 1;
+				else
+					$sortArr[$v->getPROFILEID()] = 2;
+			}
+			elseif(in_array($subscription, explode(",",$v->getSUBSCRIPTION()))){
+				$sortArr[$v->getPROFILEID()] = 3;
+			}elseif($v->getHAVEPHOTO()== $this->photoUnderScreening)
+			{
+				$sortArr[$v->getPROFILEID()] = 4;
+			}else
+			{
+				$sortArr[$v->getPROFILEID()] = 5;
+			}
+		}
+		asort($sortArr);
+		$i=0;
+		foreach($sortArr as $k=>$v)
+		{
+			foreach($userList as $kk=>$vv)
+			{
+				if($vv->getPROFILEID()==$k)
+				{
+					$matchesDataFinal[$i]=$vv;
+					$i++;
+				}
+			}
+		}
+		unset($userList);
+		return $matchesDataFinal;
+	}
 }
 ?>

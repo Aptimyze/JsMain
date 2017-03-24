@@ -50,6 +50,7 @@ class new_matches_emails_RECEIVER  extends TABLE
 	{
 		try 
 		{
+			// All parameters are in date time format.
 			$sql= " INSERT INTO  new_matches_emails.RECEIVER(PROFILEID,SENT) SELECT J.PROFILEID AS PROFILEID,'N' FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS JA ON J.PROFILEID = JA.PROFILEID WHERE (J.ACTIVATED='Y' OR ( J.ACTIVATED = 'N' AND J.INCOMPLETE = 'Y' ) ) AND J.SORT_DT >= :SORTDATE AND (J.ENTRY_DT >= :ENTRYDATE || (J.ENTRY_DT < :ENTRYDATE && (J.MOB_STATUS = 'Y' || J.LANDL_STATUS = 'Y')) && (J.LAST_LOGIN_DT >= :LOGINDATE)) AND (JA.NEW_MATCHES_MAILS IS NULL OR JA.NEW_MATCHES_MAILS='' OR JA.NEW_MATCHES_MAILS='S')";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":SORTDATE",$sortDate,PDO::PARAM_STR);

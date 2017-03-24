@@ -35,7 +35,7 @@ class desktopView extends DetailedViewApi
     $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
     $viewedProfile = $this->m_objProfile->getPROFILEID();
     parent::getDecorated_PrimaryInfo();
-    $this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
+    //$this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
     $this->m_arrOut['isOnline'] = $this->m_actionObject->ISONLINE;
     $this->m_arrOut['profile_posted'] = $this->m_objProfile->getDecoratedRelation();
     $this->m_arrOut['posted_name'] = $this->m_objProfile->getDecoratedPersonHandlingProfile();
@@ -1114,6 +1114,10 @@ class desktopView extends DetailedViewApi
     return $out;
   }
   private function getCasteLabelForGrouping($casteArr){
+        $casteArr = trim(str_replace("'1'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'153'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'148'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'496'", '', $casteArr),',');
         $casteGroupArr=FieldMap::getFieldLabel("caste_group_array",'',1);
         foreach(explode(",",$casteArr) as $v)
         {

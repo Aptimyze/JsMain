@@ -257,12 +257,18 @@ function createCookie(name, value, days,specificDomain) {
 }
 
 function translateSite(translateURL){
+	/*if(trackingProfile == "13766629" || trackingProfile == "11238186"){
+		alert("before:"+readCookie("jeevansathi_hindi_site_new")+"-"+readCookie("redirected_hindi_new"));
+	}*/
 	newHref = translateURL+"?AUTHCHECKSUM="+readCookie("AUTHCHECKSUM");
 	if(translateURL.indexOf('hindi')!=-1){
-		createCookie("jeevansathi_hindi_site","Y",100,".jeevansathi.com");
+		createCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
 	} else {
-		createCookie("jeevansathi_hindi_site","N",100,".jeevansathi.com");
+		createCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
 	}
+	/*if(trackingProfile == "13766629" || trackingProfile == "11238186"){
+		alert("after:"+readCookie("jeevansathi_hindi_site_new")+"-"+readCookie("redirected_hindi_new"));
+	}*/
  	window.location.href = newHref;
 }
 

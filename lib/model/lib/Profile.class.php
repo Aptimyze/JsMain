@@ -1286,20 +1286,34 @@ class Profile{
          * Returns profile information
          */
 	public function getDecoratedYourInfo(){
+
+                
                 if(Flag::isFlagSet("yourinfo",$this->SCREENING))
-                        return nl2br($this->YOURINFO);
-                if($this->YOURINFO=="")
                 {
-					if(!in_array("YOURINFO",$this->fieldsArray))
-					ProfileFieldsLogging::callFieldStack(1);
-				}
-	}
+                    return nl2br($this->YOURINFO);
+                }
+                else
+                {
+                    $profileYourInfoOld = new ProfileYourInfoOld();
+                    $oldYourInfo = $profileYourInfoOld->getAboutMeOld($this->PROFILEID)['YOUR_INFO_OLD'];
+                    if($this->YOURINFO=="")
+                    {
+                        if(!in_array("YOURINFO",$this->fieldsArray))
+                        ProfileFieldsLogging::callFieldStack(1);
+                    }
+
+                    if ( $oldYourInfo !== NULL )
+                    {
+                        return $oldYourInfo;
+                    }
+                }
+    }
         /**
          * getDecoratedFamilyInfo()
          *
          * Returns family information
          */
-	public function getDecoratedFamilyInfo(){
+    public function getDecoratedFamilyInfo(){
                 if(Flag::isFlagSet("familyinfo",$this->SCREENING))
                         return nl2br($this->FAMILYINFO);
                 if($this->FAMILYINFO=="")
