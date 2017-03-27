@@ -524,12 +524,14 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 			}
 			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $inc = IncomeCommonFunction::getIncomeDppFilterArray(implode(",",$ARR));
+                        /*
                         $incomeObj = new IncomeMapping;
-                        $ARR = $incomeObj->removeNoIncome($ARR);
-                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
-                        $result = array_intersect($ARR, $incomeArray);
-                        
-			if(is_array($ARR) && !empty($ARR)){
+-                       $ARR = $incomeObj->removeNoIncome($ARR);
+-                       $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+-                       $result = array_intersect($ARR, $incomeArray);
+                         */
+			if(is_array($inc) && !empty($inc)){
                                 if(in_array($profile->getINCOME(),$ARR) || !empty($result))
                                 {
                                         $CODE['INCOME']='gnf';
