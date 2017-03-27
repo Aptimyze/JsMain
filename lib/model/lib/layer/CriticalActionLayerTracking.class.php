@@ -24,14 +24,14 @@ class CriticalActionLayerTracking
    *@param- profile id
    */
   
-  public static function satisfiesDateCondition($profileId)
+  public static function satisfiesDateCondition($profileId,$mod)
   {
-     $now = time(); // or your date as well
-     $your_date = strtotime(self::RCB_LAYER_REF_DATE);
-     $datediff = $now - $your_date;
-     $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%5;
-     if($remainder==$profileId%5)return true;
+     $now = new DateTime(); // or your date as well
+     $your_date = new DateTime(self::RCB_LAYER_REF_DATE);
+     $days = $now->diff($your_date);
+     $dayDiff=$days->days;
+     $remainder=$dayDiff%$mod;
+     if($remainder==$profileId%$mod)return true;
      else return false;
   }
 
@@ -74,7 +74,6 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
-
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -185,7 +184,7 @@ return 0;
                       if(!($gender == 'M' && $age >= 24) && !($gender == 'F' && $age >=22) )break;
 
                       $loggedInUser=LoggedInProfile::getInstance();
-                      if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
+                      if(self::satisfiesDateCondition($profileid,5) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
                       {
 
   
@@ -355,12 +354,14 @@ return 0;
                     case '17': 
                       if(!$isApp)
                       {  
-                      $profileId=$profileObj->getPROFILEID();
+                     // $profileId=$profileObj->getPROFILEID();
                       $entryDate = $profileObj->getENTRY_DT();
-                      if($profileId % 9 == 0 && time() - strtotime($entryDate) > 15*24*60*60*60 ){
+                      if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ))
+                      {
                           $show=1;
                           break; 
-                        }
+                      }
+                      
                       }
           default : return false;
         }
