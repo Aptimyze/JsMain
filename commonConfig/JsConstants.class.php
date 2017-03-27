@@ -214,6 +214,7 @@ public static $dev =
 		"communicationServiceUrl" => "http://172.16.3.203:8390",
 		"profileServiceUrl" => "http://172.16.3.187:8290",
 		"presenceServiceUrl" => "http://192.168.120.70:8290",
+		"presenceServiceUrl2" => "http://192.168.120.70:8590",
         "chatNotificationService" => "http://192.168.120.239:8490",
 
         "chatOnlineFlag" => "array('profile'=>true,'contact'=>true,'search'=>true)",
