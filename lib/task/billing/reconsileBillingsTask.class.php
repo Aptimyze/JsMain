@@ -115,7 +115,7 @@ EOF;
 
                     } else if(is_array($isUpgradeCaseEntry)){
                         $serveFor =  $billServStatObj->getActiveSuscriptionString($orderDet[$val['BILLID']]['PROFILEID']);
-                        //var_dump($serveFor."--".$currentSubscription."--".$val['BILLID']);
+                        
                         //deactivation done,upgrade done but upgrade status not updated
                         if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && strpos($serveFor, "F")!==false){
                             if($serveFor != $currentSubscription){
