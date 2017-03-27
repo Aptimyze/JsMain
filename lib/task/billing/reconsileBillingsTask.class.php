@@ -116,13 +116,23 @@ EOF;
                     } else{
                         if(is_array($isUpgradeCaseEntry)){
                             $serveFor =  $billServStatObj->getActiveSuscriptionString($orderDet[$val['BILLID']]['PROFILEID']);
-                           
+
                             //deactivation done,upgrade done but status not updated
-                            if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && (!empty($serveFor) || $serveFor!="") && $serveFor == $currentSubscription){
-                                echo "\n"."upgrade status not updated case 2-".$val['BILLID'];
-                                $memHandlerObj = new MembershipHandler(false);
-                                $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
-                                unset($memHandlerObj);
+                            if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && (!empty($serveFor) || $serveFor!="")){
+                                if($serveFor == $currentSubscription){
+                                    echo "\n"."upgrade status not updated case 2-".$val['BILLID'];
+                                    $memHandlerObj = new MembershipHandler(false);
+                                    $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
+                                    unset($memHandlerObj);
+                                }
+                                else{
+                                    $jprofileObj->updateSubscriptionStatus($serveFor, $orderDet[$val['BILLID']]['PROFILEID']);
+                                    //deactivate done and upgrade done but status not updated
+                                    echo "\n"."upgrade status not updated case 3-".$val['BILLID'];
+                                    $memHandlerObj = new MembershipHandler(false);
+                                    $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
+                                    unset($memHandlerObj); 
+                                }
                             }
                             else if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "PENDING" && (empty($serveFor) || $serveFor=="")){
                                 echo "\n"."neither deactivation nor upgrade-".$val['BILLID'];
