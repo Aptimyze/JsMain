@@ -16,6 +16,7 @@ abstract class registrationBaseClass {
    * @access protected Page Id
    */
   protected $groupname;
+  protected $sourcename;
   protected $leadid;
   protected $PAGE_ID;
 
@@ -214,8 +215,8 @@ abstract class registrationBaseClass {
   /*
    * checks if the form is submitted correctly and sets Jpartner fields
    */
-  protected function postSubmit(){
-    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()]);
+  protected function postSubmit(){ 
+    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()],$this->arrFormValues["casteNoBar"]);
   }
 
   protected function preDisplay(){
@@ -228,12 +229,15 @@ abstract class registrationBaseClass {
     {
 	$pixelcodeObj = new PixelCodeHandler($this->groupname,'',$pageName,$this->loginProfile);
 	$this->objController->pixelcode = $pixelcodeObj->getPixelCode();
+	if($this->loginProfile->getSOURCE())
+		$this->sourcename = $this->loginProfile->getSOURCE();
 	unset($pixelcodeObj);
     }
     $fieldValObj = new getFieldValues;
     $this->leadid = $this->request->getParameter("leadid");
     $this->objController->leadid = $this->leadid;
     $this->objController->groupname = $this->groupname;
+    $this->objController->sourcename = $this->sourcename;
     $this->fieldsArray = $fieldValObj->getListValues(RegistrationEnums::$fieldsOnPage[$pageName],$pageName);
     if(!$this->fieldsArray){
       $msgReqForDebug[]=$_SERVER;

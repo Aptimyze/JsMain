@@ -134,6 +134,31 @@ class new_matches_emails_MAILER  extends TABLE
                    throw new jsException($e);
                 }
         }
+        
+        public function insertLogRecords($receiverId, $profileIds, $LogicLevel,$linkRequired,$relaxCriteria){
+                $sql="INSERT IGNORE INTO new_matches_emails.MAILER (RECEIVER";
+                $n=count($profileIds);
+                $userValues = '';
+                for($i=1;$i<=$n;$i++)
+                {
+                  $sql.=",USER$i";
+                  $userValues .= ",:USER_ID".$i;
+                }
+                $sql.=",LOGIC_USED,LINK_REQUIRED,RELAX_CRITERIA) VALUES (:RECEIVER_ID".$userValues.",:LOGIC_USED,:LINK_REQUIRED,:RELAX_CRITERIA)";
+                        
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":RECEIVER_ID", $receiverId, PDO::PARAM_INT);
+                $res->bindValue(":LINK_REQUIRED", $linkRequired, PDO::PARAM_STR);
+                $res->bindValue(":LOGIC_USED",$LogicLevel,PDO::PARAM_STR);
+                $res->bindValue(":RELAX_CRITERIA",$relaxCriteria,PDO::PARAM_STR);
+
+                $userCounter = 1;
+                foreach($profileIds as $userId){
+                  $res->bindValue(":USER_ID".$userCounter,$userId,PDO::PARAM_INT);
+                  $userCounter++;
+                }
+                $res->execute();
+        }
 }
 
 ?>

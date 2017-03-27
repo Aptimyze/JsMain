@@ -19,7 +19,7 @@ class phoneActions extends sfActions
 	$sendingDetails['ISD'] = $profileObj->getISD() ? phoneKnowlarity::removeAllSpecialChars($profileObj->getISD()):null;
 	$sendingDetails['PHONE1']=$profileObj->getPHONE_MOB() ? trim($profileObj->getPHONE_MOB()) :null;
 
-	$contactNumOb=new newjs_JPROFILE_CONTACT();
+	$contactNumOb= new ProfileContact();
     $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
 	$sendingDetails['PHONE2']=$numArray['0']['ALT_MOBILE']?trim($numArray['0']['ALT_MOBILE']):null;
 
@@ -89,11 +89,8 @@ class phoneActions extends sfActions
 	die;
   }
 
-
   public function executeSaveV1(sfWebRequest $request)
   {
-
-
   	$respObj = ApiResponseHandler::getInstance();
 
 	$number = $request->getParameter('NUMBER');
@@ -102,7 +99,9 @@ class phoneActions extends sfActions
 
 	$isd = phoneKnowlarity::removeAllSpecialChars($isd);
 	$number = phoneKnowlarity::removeAllSpecialChars($number);
-	
+        $profileObj = LoggedInProfile::getInstance('newjs_master');
+        $profileid = $profileObj->getPROFILEID();
+        
 	$phoneType=NULL;
 	if($type=="PHONE1")
 		$phoneType = "M";
@@ -110,7 +109,44 @@ class phoneActions extends sfActions
 		$phoneType = "A";
 	else
 		$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_INPUT);
-	if($phoneType)
+	//As the new api will be only running for PC and Mobile, we are only calling it internally for phoneType 'M' . phoneType 'A' stands for android.
+	if($phoneType == "M")
+	{ 
+	$editFieldArr =array();
+	$PHONE_MOB['mobile'] = $number;	
+	$PHONE_MOB['isd'] = $isd;
+	$editFieldArr["PHONE_MOB"] = $PHONE_MOB;
+	$request->setParameter("editFieldArr",$editFieldArr);
+	$request->setParameter('internally',1);
+	//var_dump($request->getParameter('editFieldArr'));
+
+	ob_start();
+	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
+    $data = ob_get_contents();
+    ob_end_clean();
+	$data = json_decode($data);
+	if(!is_array($data->error))	
+	    $errorArr=get_object_vars($data->error);//print_r($data);die('0000');
+    else 
+    	$errorArr=$data->error;
+	$arrKeys=array_keys($errorArr);
+	
+    if($data->responseStatusCode != 0)
+    {
+	$data->responseMessage=$errorArr[$arrKeys[0]];
+        
+    }
+        $memObject=JsMemcache::getInstance();
+        $memObject->delete('showConsentMsg_'.$profileid);		
+        $memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+        $knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
+        $data->DIAL_NUMBER =$knowlarityObj->getVirtualNumber();
+	$data = json_encode($data);
+	echo $data;
+	die;
+	}
+
+	else if($phoneType == 'A')
 	{
 		if($isd=='')
 			$respObj->setHttpArray(ResponseHandlerConfig::$ISD_BLANK);
@@ -120,23 +156,25 @@ class phoneActions extends sfActions
 			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_BLANK);
 		elseif($number!="" && ($numberValid=phoneKnowlarity::checkMobileNumber($number,'','',$isd))=="N")
 			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID);
+		elseif((new incentive_NEGATIVE_LIST())->checkEmailOrPhone("PHONE_NUM",$isd.$number))
+                         $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_JUNK);
 		else
 		{
-			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$phoneVerObject=new PhoneVerification($profileObj,$phoneType);
 			$phoneVerObject->savePhone($number,'',$isd);
-			
-			$memObject=JsMemcache::getInstance();
+                        $memObject=JsMemcache::getInstance();
 			$memObject->delete('showConsentMsg_'.$profileid);		
 			$memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+ 			
 			$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
 			$response[DIAL_NUMBER] =$knowlarityObj->getVirtualNumber();
 			$respObj->setResponseBody($response);
 		}
+			$respObj->generateResponse();
+			die;
 	}
-	$respObj->generateResponse();
-	die;
+
   }
   public function executeVerifiedV1(sfWebRequest $request)
   {
@@ -178,50 +216,58 @@ class phoneActions extends sfActions
 	die;
   }
 
-//this method is used for reporting a phone number as abuse
+//this method is used for reporting a phone number as invalid
 	public function executeReportInvalid(sfWebRequest $request)
 	{
-		
-   		
+   		$reasonNumber = $request->getParameter('reasonCode'); 
+   		$reason = phoneEnums::$mappingArrayReportInvalid[$reasonNumber-1];
+   		$otherReason = "";
+   		if($reasonNumber == 5)
+   		$otherReason = $request->getParameter('otherReasonValue');	
 		$respObj = ApiResponseHandler::getInstance();
 		$profileChecksum=$request->getParameter('profilechecksum');
 		$phone=$request->getParameter('phone');
 		$mobile=$request->getParameter('mobile');
    		
-   		if(!$profileChecksum || ($phone!='Y' && $phone!='N') || ($mobile!='Y' && $mobile!='N')) {
+   		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
 	die;
   }
+     	if(!$reasonNumber)
+     	{
+     			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
+	$respObj->setResponseBody($result);
+	$respObj->generateResponse();
+	die;
+     	}
+
+
 
    		$profile2=new Profile();
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
+   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'');
-   			$profile2->getDetail($profileid,"PROFILEID");
-			$result['username']=$profile2->getUSERNAME();
-			
-			$havePhoto=$profile2->getHAVEPHOTO();
-			if($havePhoto=='Y'){
-			$pictureServiceObj=new PictureService($profile2);
-			$profilePicObj = $pictureServiceObj->getProfilePic();
-			if($profilePicObj){
-			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$otherGender);
-              if($thumbNailArray[label] != '')
-                   $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-               else
-                   $thumbNail = $thumbNailArray['url'];
-           }
-			else $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
 
+		if($reasonNumber == 3)
+			{  
+				$sendingObject = new RequestUserToDelete();
+				$sendingObject->deleteRequestedByOther($profileid);
+				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
+                $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
+			}
+	if($increaseQuotaImmediate == true)
+	{
+		$result['message']='Thanks for helping us make Jeevansathi better matchmaking platform. We have credited one contact to your quota, and will investigate this further';
+	}
+	else { 
 
-		}
-		else 
-				$thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-			$result['userPhoto']=$thumbNail;
-    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    	$result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';
+	}
+    $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
 	die;
@@ -249,7 +295,6 @@ class phoneActions extends sfActions
 
 	public function executeConsentConfirm(sfWebRequest $request)
 	{	
-		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);
@@ -289,6 +334,8 @@ class phoneActions extends sfActions
 		//If coming directly from registration, used for google pixel code
 		if (trim($request->getParameter('groupname'))) {
 			$this->pixelcode = PixelCode::fetchPixelcode($request->getParameter('groupname'), $request->getParameter('adnetwork1'),$this->loginProfile);
+                        $this->groupname = $request->getParameter('groupname');
+                        $this->sourcename =$request->getParameter('source');
 		}
 	}
 	ob_start();
@@ -338,7 +385,8 @@ class phoneActions extends sfActions
 	if($phoneVerified=='Y') $this->redirect('/register/page6?groupname='.$groupname); 
 	$this->requestUri='/register/page6?groupname='.$groupname;
 	$fromReg=1;	
-
+	$this->groupname = $request->getParameter('groupname');
+	$this->sourcename = $this->loginProfile->getSOURCE();
 
 			//If coming directly from registration, used for google pixel code
 		if (trim($request->getParameter('groupname'))) {
@@ -371,7 +419,7 @@ class phoneActions extends sfActions
 
 		$respObj = ApiResponseHandler::getInstance();
 		$fail=0;
-		if(!$profileChecksum=$request->getParameter('profileChecksum'))
+		 if(!$profileChecksum= $request->getParameter('profileChecksum') ?  $request->getParameter('profileChecksum') : $request->getParameter('profilechecksum'))
 			throw new Exception("no profilechecksum passed as parameter in request", 1);
 		$selfProfileObj=LoggedInProfile::getInstance();
 		$arr=explode("i",$profileChecksum);

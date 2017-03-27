@@ -150,9 +150,9 @@ if(isset($data))
 			$start_date = $start_year."-".$start_month."-".$start_day;
 			$end_date = $end_year."-".$end_month."-".$end_day;
 			if($curtype=='RS' && $service_tax1>0)
-				$service_tax_content ="(Inclusive of Swachh Bharat Cess)";
+				$service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
 			elseif($curtype=='DOL')
-				$service_tax_content ="(Inclusive of Swachh Bharat Cess)";
+				$service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
 			//insert sale details.
 			$sql_i = "INSERT INTO billing.REV_MASTER(COMP_NAME,SALE_DES,CUR_TYPE,SALE_AMT,SERVICE_TAX,DISCOUNT,DISCOUNT_REASON,TOTAL_AMT,SALE_BY,ENTRY_DT,ENTRY_BY,TAX_RATE,NO_TAX_RES,DUEAMOUNT,DUE_DT,CATEGORY,BUREAU_PID,START_DATE,END_DATE,SALE_TYPE,SHIP_TO_ADDRESS,SHIP_TO_PIN,SHIP_TO_COUNTRY,SHIP_TO_PHONE,SHIP_TO_EMAIL,SERVICE_TAX_CONTENT) VALUES('$comp_name','$sale_des','$curtype','$sale_amt','$service_tax1','$discount','$discreason','$tot_amount','$sale_by',now(),'$user','$TAX_RATE','$no_tax_res','$due_amount','$due_dt','$category','$bureauprofileid','$start_date','$end_date','$sale_type_sel','$shipAddress','$shipPIN','$shipCountry','$shipPhone','$shipEmail','$service_tax_content')";
 			$res=mysql_query_decide($sql_i) or logError_sums($sql_i,1);

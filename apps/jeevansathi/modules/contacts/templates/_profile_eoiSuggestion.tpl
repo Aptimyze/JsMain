@@ -23,6 +23,8 @@
 						~mainMem::ERISHTA_LABEL`
 					~else if CommonFunction::isJSExclusiveMember($detailsArr->getSUBSCRIPTION())`
 						~mainMem::JSEXCLUSIVE_LABEL`
+						~else if CommonFunction::isEadvantageMember($detailsArr->getSUBSCRIPTION())`
+						~mainMem::EADVANTAGE_LABEL`
 					~/if`
 				</div>
 			~/if`

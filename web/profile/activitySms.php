@@ -17,6 +17,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 $match_slave=connect_slave81();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$match_slave);
 $db_master = connect_db();
+$db_ddl = connect_ddl();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_master);
 
 /*Mysql lock
@@ -46,7 +47,7 @@ if($count){
 	$activityCount = 0;
 	$totalChunks=ceil($count/$chunk);
 }else{
-	$sql_a = "SELECT PROFILEID, USERNAME, PHONE_MOB, SUBSCRIPTION, LAST_LOGIN_DT FROM JPROFILE WHERE LAST_LOGIN_DT>='$back_90_days' AND ACTIVATED='Y' AND COUNTRY_RES='51' AND SERVICE_MESSAGES!='U' AND GET_SMS!='N' AND PHONE_MOB!='' AND MOB_STATUS='Y' and   activatedKey=1 ";
+	$sql_a = "SELECT PROFILEID, USERNAME, PHONE_MOB, SUBSCRIPTION, DATE(LAST_LOGIN_DT) LAST_LOGIN_DT FROM JPROFILE WHERE DATE(LAST_LOGIN_DT)>='$back_90_days' AND ACTIVATED='Y' AND COUNTRY_RES='51' AND SERVICE_MESSAGES!='U' AND GET_SMS!='N' AND PHONE_MOB!='' AND MOB_STATUS='Y' and   activatedKey=1 ";
 	$res_a=mysql_query($sql_a,$db_slave) or die(trackSmsError($sql_a, $db_slave, "AS_LOGIN"));
 	$count_a = mysql_num_rows($res_a);
 	$totalChunks_a=ceil($count_a/$chunk);
@@ -69,7 +70,7 @@ if($count){
 		mysql_query($sql_ins, $db_master) or die($error=1);
 		if($error){
 			$sql_del = "TRUNCATE TABLE TEMP_ACTIVITY_SMS";
-			mysql_query($sql_del,$db_master) or die(mysql_error($db_master));
+			mysql_query($sql_del,$db_ddl) or die(mysql_error($db_ddl));
 			die(trackSmsError($sql_a, $db_master, "AS_TEMP_INSERT"));
 		}
 	}
@@ -91,7 +92,7 @@ for($i = 0; $i<$totalChunks; $i++)
 		$trans++;
 		$profilesLoggedIn[$row["PROFILEID"]]["PROFILEID"] = $row["PROFILEID"];
 		$profilesLoggedIn[$row["PROFILEID"]]["LAST_LOGIN_DATE"] = $row["LAST_LOGIN_DT"];
-
+		
 		$myDbName=getProfileDatabaseConnectionName($row["PROFILEID"],'slave',$mysqlObj);
 		$myDbSlave=$myDbarr[$myDbName];
 
@@ -159,13 +160,16 @@ for($i = 0; $i<$totalChunks; $i++)
 				{
 					if($sms["A_MSG"])
 					{
-						$sqlG = "SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = '$row[PROFILEID]' AND IS_MSG='Y' AND TYPE='R' AND `DATE`>='$row[LAST_LOGIN_DT]'";
+						$Shard=JsDbSharding::getShardNo($row["PROFILEID"],'slave');
+						$dbMessageLogObj=new NEWJS_MESSAGE_LOG($Shard);
+						$rowG=$dbMessageLogObj->getMessageCountSmsActivity($row['PROFILEID'],$row['LAST_LOGIN_DT']);
+						//$sqlG = "SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = '$row[PROFILEID]' AND IS_MSG='Y' AND TYPE='R' AND `DATE`>='$row[LAST_LOGIN_DT]'";
 						//echo $sqlG."\n";
-						$resG=mysql_query($sqlG,$myDbSlave) or die(trackSmsError($sqlG, $myDbSlave, "A_MSG")); 
-						$rowG = mysql_fetch_assoc($resG);
-						if($rowG["MSG_COUNT"])
+						//$resG=mysql_query($sqlG,$myDbSlave) or die(trackSmsError($sqlG, $myDbSlave, "A_MSG")); 
+						//$rowG = mysql_fetch_assoc($resG);
+						if($rowG)
 						{
-							$data[$row["PROFILEID"]]["DATA"] = $rowG["MSG_COUNT"];
+							$data[$row["PROFILEID"]]["DATA"] = $rowG;
 							$data[$row["PROFILEID"]]["KEY"] = "A_MSG";
 							$data[$row["PROFILEID"]]["PROFILEID"] = $row["PROFILEID"];
 							$data[$row["PROFILEID"]]["SUBSCRIPTION"] = $row["SUBSCRIPTION"];
@@ -233,7 +237,7 @@ for($i = 0; $i<$totalChunks; $i++)
 	}
 }
 $sql_del = "TRUNCATE TABLE TEMP_ACTIVITY_SMS";
-mysql_query($sql_del) or die(trackSmsError($sql_del, $db_master, "AS_TEMP_TRUNCATE"));
+mysql_query($sql_del,$db_ddl) or die(trackSmsError($sql_del, $db_ddl, "AS_TEMP_TRUNCATE"));
 trackSmsError("", "", "Sent $activityCount Activity SMS");
 
 release_lock($fp);

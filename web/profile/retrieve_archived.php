@@ -6,7 +6,7 @@ if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 if($zipIt)
 	ob_start("ob_gzhandler");
 //end of it
-
+include_once("$_SERVER[DOCUMENT_ROOT]/classes/JProfileUpdateLib.php");
 include("connect.inc");
 include_once("mobile_detect.php");
 include("$_SERVER[DOCUMENT_ROOT]/classes/class.rc4crypt.php");
@@ -145,8 +145,24 @@ die;
 }
 function retrieve_profile($profileid)
 {
-	$sql="UPDATE newjs.JPROFILE set MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='',ACTIVATED=if(ACTIVATED='D',PREACTIVATED,ACTIVATED),activatedKey=1, ACTIVATE_ON='0',JSARCHIVED=0 where PROFILEID='$profileid'"; 
-	mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
+	$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
+	$row_act = mysql_fetch_array($res_act);
+	if($row_act['ACTIVATED']=='D')
+		$arrFields['ACTIVATED']=$row_act['PREACTIVATED'];
+		
+	$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+	
+	$arrFields['MOB_STATUS']='N';
+	$arrFields['LANDL_STATUS']='N';
+	$arrFields['PHONE_FLAG']='';
+	$arrFields['activatedKey']=1;
+	$arrFields['ACTIVATE_ON']=1;
+	$arrFields['JSARCHIVED']=0;
+	$exrtaWhereCond = "";
+	$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+	//$sql="UPDATE newjs.JPROFILE set MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='',ACTIVATED=if(ACTIVATED='D',PREACTIVATED,ACTIVATED),activatedKey=1, ACTIVATE_ON='0',JSARCHIVED=0 where PROFILEID='$profileid'"; 
+	//mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	$date=date("Y-m-d");
 	$sql="UPDATE newjs.JSARCHIVED set STATUS='N',ACT_DATE='$date' where PROFILEID='$profileid' and STATUS='Y'";
 	mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");

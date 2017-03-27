@@ -5,12 +5,16 @@ This file provides the duplicate entries.
 It is used for finding the duplicate entries for leads and jeevansathi records.
 ********************************************************************************/
 require_once ('include/entryPoint.php');
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/profile/connect_db.php");
 class Duplicate {
     var $db;
+    var $dbUpdate;
     var $partitionsArray = array('connected', 'inactive');
     //Constructor
     function __construct() {
         if (!$this->db) $this->db = & DBManagerFactory::getInstance();
+	$this->dbUpdate = connect_db();
     }
     //Checks whether a lead/profile is duplicate
     //Function calls: isDuplicateProfile(), isDuplicateLead()
@@ -854,6 +858,7 @@ class Duplicate {
 	function updateLeadSeriousnessCount($id,$partition='')
 	{
 		$updateJprofile=0;
+		$this->dbUpdate = connect_db();
 		if($id)
 		{
 			if($partition)
@@ -874,22 +879,22 @@ class Duplicate {
 					 $cstmTableName="sugarcrm_housekeeping.connected_leads_cstm";
 				}
 				$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id=id_c AND id='$id'";
-                                $this->db->query($sql);
+				mysql_query($sql,$this->dbUpdate);
 				$updateJprofile=1;
 			}
 			if(!$leadsTableName)
 			{
 				$sql="UPDATE sugarcrm.leads,sugarcrm.leads_cstm SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-				$this->db->query($sql);
-				if(!$this->db->getAffectedRowCount())
+				mysql_query($sql,$this->dbUpdate);
+				if(!$this->dbUpdate->getAffectedRowCount())
 				{
 					foreach ($this->partitionsArray as $partition)
 					{
 						$leadsTableName="sugarcrm_housekeeping.".$partition."_leads";
 						$cstmTableName = "sugarcrm_housekeeping.".$partition."_leads_cstm";
 						$sql="UPDATE $leadsTableName,$cstmTableName SET seriousness_count_c=seriousness_count_c+1,date_modified=NOW() WHERE id='$id' AND id=id_c";
-						$this->db->query($sql);
-						if($this->db->getAffectedRowCount())
+						mysql_query($sql,$this->dbUpdate);
+						if($this->dbUpdate->getAffectedRowCount())
 						{
 							$updateJprofile=1;
 							break;
@@ -948,10 +953,7 @@ class Duplicate {
 					}
 					if(count($idsArr))
 					{
-						$idString="\"".implode("\",\"",$idsArr)."\"";
-						$now=date('Y-m-d h:i:s');
-						$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($idString)";
-						$this->db->query($sql);
+						$this->updateProfileSeriousnessCount($idsArr);
 					}
 				}
 			}
@@ -961,10 +963,16 @@ class Duplicate {
 	{
 		if(is_array($profileArr) && count($profileArr))
 		{
-			$now=date('Y-m-d h:i:s');
-			$profileString="\"".implode("\",\"",$profileArr)."\"";
-			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($profileString)";
-			$this->db->query($sql);
+//			$now=date('Y-m-d h:i:s');
+//			$profileString="\"".implode("\",\"",$profileArr)."\"";
+//			$sql="UPDATE newjs.JPROFILE SET SERIOUSNESS_COUNT=SERIOUSNESS_COUNT+1,SORT_DT='$now' WHERE PROFILEID IN ($profileString)";
+//			$this->db->query($sql);
+
+            $objUpdate = JProfileUpdateLib::getInstance();
+            $result = $objUpdate->updateProfileSeriousnessCount($profileArr);
+            if($result === false){
+                //handle any update failure
+            }
 		}
 	}
 }

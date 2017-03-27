@@ -32,10 +32,10 @@ class viewProfileOptimization{
     }
     private function setStatus(){
         if(self::$sender){
-            $ignore=new newjs_IGNORE_PROFILE();
+            $ignore=new IgnoredProfiles("newjs_master");
             //he ignored
-            $otherIgnored = $ignore->isIgnored(self::$receiver,self::$sender);
-            if($ignore->isIgnored(self::$sender,self::$receiver)){
+            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender,"byMe");
+            if($ignore->ifIgnored(self::$sender,self::$receiver,"byMe")){
                     $ignore=1; //I Ignored
             }
             elseif($otherIgnored)
@@ -47,12 +47,12 @@ class viewProfileOptimization{
             }
             $this->statusArr["Ignore"] = $ignore;
             $this->statusArr["IgnoreFilter"] = $otherIgnored;
-            $bookmark= new NEWJS_BOOKMARKS("newjs_bmsSlave");
+            $bookmark= new NEWJS_BOOKMARKS("newjs_masterRep");
             $this->statusArr["isBookmarked"] = $bookmark->isBookmarked(self::$sender,self::$receiver);
         }
-            $fsoObj = new PROFILE_VERIFICATION_FSO("newjs_bmsSlave");
+            $fsoObj = ProfileFSO::getInstance("newjs_masterRep");
             $this->statusArr["fsoStatus"] = $fsoObj->check(self::$receiver);
-            $hobbyObj=new NEWJS_HOBBIES("newjs_bmsSlave");
+            $hobbyObj=new JHOBBYCacheLib("newjs_masterRep");
             $this->statusArr["hobbies"] = $hobbyObj->getUserHobbies(self::$receiver);
     }
     

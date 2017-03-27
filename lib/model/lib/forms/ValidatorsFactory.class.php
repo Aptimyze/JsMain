@@ -1,7 +1,8 @@
 <?php
 class ValidatorsFactory{
+public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA");
 	
-	public static function getValidator($field,$form_values="",$page=""){
+	public static function getValidator($field,$form_values="",$page=""){		
 		$const_cl=$field->getConstraintClass();
 		$field_map_name=ObjectiveFieldMap::getFieldMapKey($field->getName(),$page);
 		//get all dropdown values from Fieldmaplib
@@ -11,6 +12,23 @@ class ValidatorsFactory{
 		if($field_map_name &&  !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
+                        if(in_array($field->getName(),self::$validateZeroForFields))
+                        {
+                                $choices[]='0';
+                        }
+			if($field->getName()=="CITY_RES")
+			{
+				$stateArr = array_keys(FieldMap::getFieldLabel("state_india",'',1));
+				foreach($stateArr as $x=>$y)
+				{
+					$choices[]=$y."OT";
+				}
+				$stateArr = array_keys(FieldMap::getFieldLabel("city_usa",'',1));
+				foreach($stateArr as $x=>$y)
+				{
+					$choices[]=$y;
+				}
+			}
 			$choiceValidator = new sfValidatorChoice(array('choices'=>$choices,'required'=>false),array('invalid'=>$errInvalid));
 		}
 		switch($const_cl){
@@ -124,8 +142,13 @@ class ValidatorsFactory{
 		if($field_map_name && !in_array($field_map_name,$hobby_arr)&& !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
+			if(in_array($field->getName(),self::$validateZeroForFields))
+			{
+				$choices[]='0';
+			}
 			$choiceValidator = new sfValidatorChoice(array('choices'=>$choices,'required'=>false),array('invalid'=>$errInvalid));
 		}
+  
 		if(in_array($field_map_name,$hobby_arr))
 		{
 			return new jsValidatorWhiteList(array('required'=>false,'FieldMapLabel'=>@$field_map_name,'Value'=>@$form_values[$field->getName()],'FieldName'=>@$field->getName(),'isHobby'=>1));
@@ -138,7 +161,10 @@ class ValidatorsFactory{
 			return new sfValidatorString(array('required'=>false,'nameField'=>1));
 			break;
 		case 'email':
-			return new jsValidatorMail(array(),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			return new jsValidatorMail(array('altEmail'=>$form_values["ALT_EMAIL"]),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			break;
+		case 'alt_email':
+			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
 			break;
 		case 'pin':
 		{
@@ -279,6 +305,8 @@ class ValidatorsFactory{
 		case 'partner_nchallenged':
 		case 'partner_education':
 		case 'partner_occupation':
+		case 'partner_state':
+		case 'partner_city_india':
 			{
 				$szName = $field->getName();
 				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
@@ -296,6 +324,23 @@ class ValidatorsFactory{
 					$InputValues = $form_values[$field->getName()];
 				}
 				return new jsValidatorNativePlace(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
+    case 'proof_type':
+			{
+				$szName = $field->getName();
+				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
+				if($form_values)
+				{
+					$InputValues = $form_values[$field->getName()];
+				}
+				return new jsValidatorProofVal(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName));
+				break;
+			}
+    case 'proof_val':
+			{
+                $szName = $field->getName();
+				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size']));
 				break;
 			}
 		}

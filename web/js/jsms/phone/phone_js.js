@@ -12,6 +12,7 @@ function jsmsPhoneReady()
 	if($("#fromReg").val()==1)
 		fromReg = 1;
 	groupname = $("#groupname").val();
+        sourcename = $("#sourcename").val();
 	iteration = 0;
 	limit=0;
 	isd = $("#isdNumber").val();
@@ -100,7 +101,7 @@ function setPhoneValues()
 function showError(error)
 {
 		$( "#validation_error" ).text(error);
-		$( "#validation_error" ).slideDown( "slow", function() {}).delay( 800 );
+		$( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
 		$( "#validation_error" ).slideUp( "slow", function() {});
 }
 
@@ -242,7 +243,7 @@ function validatePhone()
 						$('#mydiv').hide(); 
                                                 changingData=result;
                                                 originalData=JSON.parse(JSON.stringify(changingData));
-						if(originalData.responseMessage=="Successful")
+						if(originalData.responseStatusCode=='0')
 						{
 							save = 1;
 							isd = isdVal;
@@ -387,7 +388,7 @@ function verifiedOk()
 	setHash("verifiedOk");
 	$('#mydiv').show();
 	if(fromReg==1)
-		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname;
+		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname+"&sourcename="+sourcename+"&fromPhone=1";
 	else
 		window.location.href="/profile/mainmenu.php";
 }

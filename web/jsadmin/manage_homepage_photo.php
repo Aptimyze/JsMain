@@ -1,6 +1,7 @@
 <?php
 include("connect.inc");
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","web/jsadmin/manage_homepage_photo.php in USE",$msg);
 if(authenticated($cid))
 {
 
@@ -9,7 +10,7 @@ if(authenticated($cid))
 		if($clear_prev_list)
 		{
 			$sql="UPDATE newjs.JPROFILE set PHOTOGRADE='B' where PHOTOGRADE = 'A' and GENDER = '$gender'
-                              and LAST_LOGIN_DT <='$last_date'";
+                              and DATE(LAST_LOGIN_DT) <='$last_date'";
 
 			mysql_query_decide($sql) or die("Can not reset previous list because of : ".mysql_error_js());
 			$msg .= mysql_affected_rows_js()." photographs for $gender have been removed from homepage<br>";

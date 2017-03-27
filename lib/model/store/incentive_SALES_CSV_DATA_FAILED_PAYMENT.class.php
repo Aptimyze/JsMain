@@ -84,7 +84,7 @@ class incentive_SALES_CSV_DATA_FAILED_PAYMENT extends TABLE
                         $i=0;
                         while($res=$prep->fetch(PDO::FETCH_ASSOC))
                         {
-				$res['DATE_FP'] =$dateTime1;
+				$res['DATE_FP'] =$dateTime2;
                                 $data[$i]=$res;
                                 $i++;
                         }

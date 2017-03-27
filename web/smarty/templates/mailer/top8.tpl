@@ -23,7 +23,7 @@
   <tr>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="0" height="52">
         <tr>
-          <td width="30%" id="logoTd" style="padding-left:10px; padding-right:10px;" height="52"><div style="width:100%"><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/mailer/revampMailer/logo.gif" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div></td>
+          <td width="30%" id="logoTd" style="padding-left:10px; padding-right:10px;" height="52"><div><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div></td>
           <td width="70%" height="52" style="padding-right:10px;"><table width="120" border="0" cellspacing="0" cellpadding="0" align="right">
               <tr>
                 <td width="24"><img src="~$IMG_URL`/images/mailer/revampMailer/iconTop.gif" align="left" border="0" vspace="0" hspace="0" width="24" height="23"></td>
@@ -71,7 +71,7 @@
                                   </tr>
                                   <tr>
                                     <td valign="top"><strong>2.</strong></td>
-                                    <td style="font-size:12px; color:#000000; line-height:normal;">Visit the <a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Desired partner matches&#39;</a> page and the <a href="(LINK)MATCH_ALERT:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Match Alerts&#39;</a> listings under Matches to see profiles we recommend for you. You can also check People looking for me listing to see which profiles like your profile. Just click <strong style="color:#424242;">&#39;Send Interest&#39;</strong> to initiate contact.</td>
+                                    <td style="font-size:12px; color:#000000; line-height:normal;">Visit the <a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Desired partner matches&#39;</a> page and the <a href="(LINK)MATCH_ALERT:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Daily Recommendations&#39;</a> listings under Matches to see profiles we recommend for you. You can also check members looking for me listing to see which profiles like your profile. Just click <strong style="color:#424242;">&#39;Send Interest&#39;</strong> to initiate contact.</td>
                                   </tr>
                                   <tr>
                                     <td colspan="2" height="15"></td>

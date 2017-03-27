@@ -369,7 +369,7 @@ echo "\n\n";
                         if($this->citizenship)
                                 $whereArr[]="RES_STATUS=\"".$this->citizenship."\"";
 //                                $whereArr[]="CITIZENSHIP=\"".$this->citizenship."\"";
-			$whereArr[]="LAST_LOGIN_DT > DATE_SUB( CURDATE( ) , INTERVAL 365 DAY )";
+			$whereArr[]="DATE(LAST_LOGIN_DT) > DATE_SUB( CURDATE( ) , INTERVAL 365 DAY )";
 //			$whereArr[]="DATEDIFF(CURDATE(),LAST_LOGIN_DT)<365";
 //			$whereArr[]="DATEDIFF(CURDATE(),ENTRY_DT)<365";
 			//$whereArr[]="ACTIVATED='Y'";

@@ -15,17 +15,46 @@ class InstantAppNotification
 	$valueArray['FREQUENCY']="I";
 	$valueArray['STATUS']="Y";
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
+
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','MATCHALERT');
   }
-  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
+  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array())
   {
-	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
-	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey]>$notificationSentCount)
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
+        return;
+    }
+    $notSendObj = new NotificationSender;
+    $regIds = $notSendObj->getRegistrationIds($selfProfile, "ALL");
+    unset($notSendObj);
+    if(!is_array($regIds))
+        return;
+    /*unset($regIds);*/
+    
+    //to prevent query for notifications with no daily limit and with no digest notifications
+    if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) && NotificationEnums::$digestNotificationKeys[$this->notificationKey] == null){
+    	$notificationSentCount = 0;
+	}
+	else{
+		$notificationSentCount = $this->getNotificationSentCount($selfProfile);
+	}
+
+
+	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
+
+	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
 	{
 		if($selfProfile)
 		{
-			$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
+			if($extraParams["COUNT"]){
+			
+				$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message,$extraParams["COUNT"]);
+			}
+			else{
+				$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
+			}
+            // print_r($notificationDetails[0]);
+            
 			$notificationData = $notificationDetails[0];
 			if(is_array($notificationData))
 			{
@@ -55,7 +84,9 @@ class InstantAppNotification
                           	}
                           	if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	else  
+                          	elseif($notificationData['PHOTO_URL']!='')
+					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
+				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])
@@ -64,20 +95,37 @@ class InstantAppNotification
 				$notificationSenderObj = new NotificationSender;
 				
 				// For Pull notification(special clase for profile visitor sent via local also)
-				if($notificationData['NOTIFICATION_KEY']=='PROFILE_VISITOR'){
+				if($notificationData['NOTIFICATION_KEY']=='PROFILE_VISITOR' || $notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
 					$profileDetails[$selfProfile]['PROFILEID']=$selfProfile;
 					$profileDetails[$selfProfile]['PRIORITY']=$notificationData['PRIORITY'];
 					$profileDetails[$selfProfile]['COUNT']=$notificationData['COUNT'];
+                    if($notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
+                        $profileDetails[$selfProfile]['COUNT']=$extraParams["COUNT"];
+                        $profileDetails[$selfProfile]['PHOTO_URL']=$extraParams["OTHER_PROFILE_URL"];
+                    }
 					$profileDetails[$selfProfile]['SENT']='P';
 					$scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
                   			$profileDetails[$selfProfile]['ID'] = $scheduledAppNotificationsObj->insert($profileDetails);
                   			$profileDetails=$notificationSenderObj->filterProfilesBasedOnNotificationCount($profileDetails,'PROFILE_VISITOR');
+                            //This profileDetails is being unset in case of the notification has been send above limit
 				}
 				if($notificationData['NOTIFICATION_KEY']=='CSV_UPLOAD'){
 					$profileDetails[$selfProfile]['IMG_URL']=$exUrl;
 				}
-				$notificationSenderObj->sendNotifications($profileDetails);
+				$notificationSenderObj->sendNotifications($profileDetails,$regIds);
 			}
+		}
+	}
+	else if($notificationSentCount>=$notificationlimit)
+	{
+		//check if this notification is eligible for digest notification
+		$digestMappingkey = NotificationEnums::$digestNotificationKeys[$this->notificationKey];
+		if($digestMappingkey)
+		{
+			//schedule digest notification
+			$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+			$digestNotObj->insertDigestNotification($selfProfile,$otherProfile,$digestMappingkey);
+			unset($digestNotObj);
 		}
 	}
   }
@@ -106,5 +154,11 @@ class InstantAppNotification
     $subject = $senderName." has sent you a reminder. Kindly respond with an 'Accept'/'Decline'.";
     $this->sendNotification($receiverProfileid,$senderProfileid,$subject); 
   }
+
+  public function sendMatchAlertNotification($notificationParams=array())
+  {
+    $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"]));
+  }
+
 }
 ?>

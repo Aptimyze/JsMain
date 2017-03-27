@@ -25,7 +25,9 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["HOROSCOPE_REQUEST_SENT"] = "Horoscope";
 		self::$informationTypeEnum["ACCEPTANCES_RECEIVED"]       = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_ARCHIVED"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED_FILTER"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_EXPIRING"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_SENT"]              = "ContactsRecord";
 		self::$informationTypeEnum["DECLINE_RECEIVED"]           = "ContactsRecord";
 		self::$informationTypeEnum["NOT_INTERESTED"]           = "ContactsRecord";
@@ -41,6 +43,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["CONTACTS_VIEWED"]           = "VIEW_CONTACTS_LOG";
 		self::$informationTypeEnum["PEOPLE_WHO_VIEWED_MY_CONTACTS"]           = "VIEW_CONTACTS_LOG"; 
 		self::$informationTypeEnum["IGNORED_PROFILES"]           = "IgnoredProfiles"; 
+                self::$informationTypeEnum["MATCH_OF_THE_DAY"]           = "ContactsRecord";
 
 		self::$tuplesEnum["SMALL_ICON_TUPLE"]                    = "SmallIconTuple";
 		self::$tuplesEnum["BIG_ICON_TUPLE"]                      = "BigIconTuple";
@@ -59,6 +62,8 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["MY_MESSAGE"]                 = "MessageRecord";
 		self::$tuplesEnum["MATCHALERT_MAILER_TUPLE"]                    = "MatchalertMailerTuple";
 		self::$tuplesEnum["INBOX_VIEWED_DATE"]                    = "ContactEngineInterestViewedTuple";
+		self::$tuplesEnum["INBOX_VIEWED_DATE_NO_MESSAGE"]                    = "ContactEngineInterestViewedNoMesageTuple";
+		self::$tuplesEnum["FEATURED_PROFILE_MAILER_TUPLE"]                    = "featuredProfileDetailsTuple";
 
 	}
 	

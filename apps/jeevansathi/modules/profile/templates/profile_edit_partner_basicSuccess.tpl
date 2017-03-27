@@ -230,7 +230,7 @@ Partner min height should be less than partner max height.
 <div class="sp12"></div>
 
 <div style="padding:5px;width:96%;display:none;" id="city">
-<div class="lf gray b t12" style="width:115px;text-align:right;margin-right:10px">City living in :</div>
+<div class="lf gray b t12" style="width:115px;text-align:right;margin-right:10px">City/State :</div>
 <div class="lf t11" style="width:260px">
 <div style="padding:0 5px 0 2px;"><div class="lf">Select Items</div><div class="rf"><a id="partner_city_select_all" onclick="add_checkboxes(this); " class="blink">Select All</a></div></div>
 <div class="lf scrollbox3 t12">

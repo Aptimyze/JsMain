@@ -23,6 +23,27 @@ class formatCRMNotification
         else
           return null;  
   }
+
+  /**
+* 
+* Function for mapping data to buffer instant notification 
+* @access public
+* @param $params
+* @return $result
+**/
+  public static function mapBufferInstantNotification($params)
+  {
+        if(is_array($params) && $params)
+        {      
+          $result = array('process' =>'BUFFER_INSTANT_NOTIFICATIONS','data'=>array('type' => 'update','body'=>array("notificationKey"=>$params["notificationKey"],"selfUserId"=>$params["selfUserId"],"otherUserId"=>$params["otherUserId"])), 'redeliveryCount'=>0);
+          if($params["message"])
+            $result['data']['body']["message"] = $params["message"];
+          return $result;
+        } 
+        else
+          return null;  
+  }
+
   /**
 * 
 * Function for mapping input data to notification message 

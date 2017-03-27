@@ -36,6 +36,31 @@ class MIS_VCD_TRACKING extends TABLE
 			throw new jsException($e);
 		}
 	}
+        public function getContactAttemptProfiles($profileId,$condition){
+                if(!$profileId)
+			throw new jsException("","PROFILEID IS BLANK IN MIS_VCD_TRACKING.class.php");
+		try
+		{
+                        $date=date("Y-m-d",strtotime('-3 months'));
+                        $sql = "SELECT VIEWER ,DATE as SENT_DATE FROM MIS.VCD_ATTEMP_TRACKING WHERE DATE > '$date' AND VIEWED = :VIEWED";
+                        if(!empty($condition)){
+                          foreach($condition as $key=>$value){
+                            $sql .= " AND ".$key." IN (".$value.")";
+                          }
+                        }
+                        $sql .= ' ORDER BY DATE DESC LIMIT 0,400';
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":VIEWED", $profileId, PDO::PARAM_INT);
+                        $res->execute();
+                        $profileIdArr = array();
+                        while($profile=$res->fetch(PDO::FETCH_ASSOC)){
+                                $profileIdArr[$profile['VIEWER']] =$profile['SENT_DATE'];
+                        }
+                        return $profileIdArr;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
 }
  
 ?>

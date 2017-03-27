@@ -12,10 +12,14 @@ include("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db = connect_db();
 $name = getname($cid);
+
 $message = 'OPS';
+
 
 if(authenticated($cid))
 {
@@ -23,11 +27,18 @@ if(authenticated($cid))
 	{
 		if(is_array($profiles))
 		{
+			$temp=explode("i",$cid);
+			$CRMuserid=$temp[1];
+			$opsPhoneReportObj = new jsadmin_OPS_PHONE_VERIFIED_LOG();
+
 			$profileslist=implode("','",$profiles);
-			$sql="SELECT J.SCREENING,J.PROFILEID,J.PHONE_MOB,J.PHONE_RES,J.STD,JC.ALT_MOBILE FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT JC ON  J.PROFILEID=JC.PROFILEID WHERE J.PROFILEID IN('$profileslist')";//query to fetch numbers and their verification status
+			$sql="SELECT J.SCREENING,J.PROFILEID,J.PHONE_MOB,J.PHONE_RES,J.STD,J.ISD,J.PHONE_WITH_STD,JC.ALT_MOBILE FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT JC ON  J.PROFILEID=JC.PROFILEID WHERE J.PROFILEID IN('$profileslist')";//query to fetch numbers and their verification status
 			$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			while($row=mysql_fetch_assoc($res))
-			{
+			{	
+				$profileObj = new Profile();
+				$profileObj->getDetail($row["PROFILEID"],"PROFILEID","*");
+
 				$rcheck		=$row["PROFILEID"]."rcheck";
 				$mcheck		=$row["PROFILEID"]."mcheck";
 				$acheck		=$row["PROFILEID"]."acheck";//trac 745
@@ -40,56 +51,96 @@ if(authenticated($cid))
 				$phone_num_mob	=$row['PHONE_MOB'];
 				$phone_num_res	=$row['STD']."-".$row['PHONE_RES'];
 				$phone_num_alt	=$row['ALT_MOBILE'];
+				$isd = $profileObj->getISD();
+				$phoneStatus = '';
 				if($rcheck=="valid")
 				{
 					// Residence phone number is marked in verified state
 					$screening=setFlag("PHONERES",$screening);
-					$actionStatus ='Y';
-					$phoneType ='L';
-					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name);	
+					$phoneVerObj=new PhoneVerification($profileObj,'L');
+					$phoneStatus = 'Y';
+					if($phoneVerObj->isVerified()!='Y')
+						$phoneVerObj->phoneUpdateProcess('OPS');	
 				}
 				elseif($rcheck=="invalid")
 				{
 					// Residence phone number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='L';
-					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name);
+					$phoneStatus = 'N';
+					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_res);
 					//markInvalidProfile($row['PROFILEID'],'R');	
 				}
+				elseif($rcheck == 'noAction')
+				{
+					$phoneStatus = 'B';
+				}
+
+				if($rcheck && $phoneStatus) 
+					$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_WITH_STD'],'L',$phoneStatus);
+
 				if($mcheck=="valid")
                                 {
 					// Mobile number is marked in verified state	
-                                        $screening=setFlag("PHONEMOB",$screening);
-					$actionStatus ='Y';
-					$phoneType ='M';
-					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name);
+                    $screening=setFlag("PHONEMOB",$screening);
+					$phoneVerObj=new PhoneVerification($profileObj,'M');
+					if($phoneVerObj->isVerified()!='Y')
+						$phoneVerObj->phoneUpdateProcess('OPS');
+					$phoneStatus = 'Y';
+
                                 }
-                                elseif($mcheck=="invalid")
+                elseif($mcheck=="invalid")
                                 {
 					// Mobile number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='M';
-					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name);
+					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_mob);
+					$phoneStatus = 'N';
                                 }
+                 elseif($mcheck=='noAction')
+					$phoneStatus = 'B';
+
 //trac 745 start
+
+                	if($mcheck && $phoneStatus) 
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_MOB'],'M',$phoneStatus);
+                
+
 				if($acheck=="valid")
-                                {
+                     {
 					// Alternate number is marked in verified state	
-                                        $screening=setFlag("ALTMOB",$screening);
-					$actionStatus ='Y';
-					$phoneType ='A';
-					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name);
-                                }
-                                elseif($acheck=="invalid")
-                                {
+                        $screening=setFlag("ALTMOB",$screening);
+						$phoneVerObj=new PhoneVerification($profileObj,'A');
+						if($phoneVerObj->isVerified()!='Y')
+							$phoneVerObj->phoneUpdateProcess('OPS');  
+						$phoneStatus = 'Y';
+
+					}
+                     elseif($acheck=="invalid")
+                     {
 					// Alternate number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='A';
-					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name);//updates status in JPROFILE_CONTACTS table in newjs
-                                }//trac 745 ends
-				$sqlup="UPDATE newjs.JPROFILE SET SCREENING='$screening' WHERE PROFILEID='$row[PROFILEID]'";
-				mysql_query_decide($sqlup) or die("$sqlup".mysql_error_js());
+					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name,$isd);//updates status in JPROFILE_CONTACTS table in newjs
+					$phoneStatus = 'N';
+
+                      }//trac 745 ends
+                     elseif($acheck=='noAction')
+						$phoneStatus = 'B';
+                	if($acheck && $phoneStatus) 
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['ALT_MOBILE'],'A',$phoneStatus);
+	
+				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+				$profileid=$row[PROFILEID];
+				$arrFields = array('SCREENING'=>$screening);
+				$exrtaWhereCond = "";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+				//$sqlup="UPDATE newjs.JPROFILE SET SCREENING='$screening' WHERE PROFILEID='$row[PROFILEID]'";
+				//mysql_query_decide($sqlup) or die("$sqlup".mysql_error_js());
 				//echo "update query".$sqlup."<br>";
+				unset($profileObj);
 
 			}
 			$smarty->assign("changesdone",1);

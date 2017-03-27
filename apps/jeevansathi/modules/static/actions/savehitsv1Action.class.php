@@ -34,9 +34,11 @@ class savehitsv1Action extends sfAction
 		$source=$request->getParameter("source");
 		if(!$source)
 			$source="android";
-
+                
+                $showConfOnReg = array('showConfirmation'=>1);
                 $dbMisHits->insertRecord($source,$now,$pageName,$ip);
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $apiObj->setResponseBody($showConfOnReg);
 		$apiObj->generateResponse();
 		die;
 	}

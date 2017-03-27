@@ -1,6 +1,7 @@
 <?php
 include("connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
 	$timestamp  = date("Y-m-d H:m:s");
@@ -92,9 +93,13 @@ if(authenticated($cid))
 
 	                	$sql= "INSERT INTO jsadmin.MARK_DELETE(PROFILEID, STATUS, M_DATE, DATE, REASON, COMMENTS, ENTRY_BY) VALUES('$pid','D','$timestamp','$timestamp','$other','$comments','$user')";
         	        	$res= mysql_query_decide($sql) or die(mysql_error_js());
-
-                                $sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='',activatedKey=0 where PROFILEID='$pid'";
-                                mysql_query_decide($sql) or die("$sql".mysql_error_js());
+						$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+						$jprofileUpdateObj->updateJProfileForArchive($pid);
+						$arrFields = array('MOB_STATUS'=>'N','LANDL_STATUS'=>'N','PHONE_FLAG'=>'');
+						$jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID",'');
+						
+                                //$sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='',activatedKey=0 where PROFILEID='$pid'";
+                                //mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
                                 $sql="DELETE FROM newjs.CONNECT WHERE PROFILEID='$pid'";
                                 mysql_query_decide($sql) or die("$sql".mysql_error_js());
@@ -242,7 +247,9 @@ function markValidProfiles($pids,$message,$username)
 	$profileidStr =implode("','",$pids);		
 	$profileidStr ="'".$profileidStr."'";
 	$newProfileArr =array();
-
+$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+				$profileid=$profileid;
+				$arrFields = array();
         $sql ="update jsadmin.REPORT_INVALID_PHONE SET VERIFIED='Y' where `SUBMITTEE` IN ($profileidStr)";
         mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
 
@@ -256,15 +263,24 @@ function markValidProfiles($pids,$message,$username)
                 $landline       = $rowV['PHONE_RES'];
 
 		if($mob){
-			$query_param ="MOB_STATUS='Y',PHONE_FLAG=''";
+			//$query_param ="MOB_STATUS='Y',PHONE_FLAG=''";
+			$arrFields['MOB_STATUS']='Y';
+			$arrFields['PHONE_FLAG']='';
+			
 			$phone_type ='M';
 		}
 		else if($landline){
-			$query_param ="LANDL_STATUS='Y',PHONE_FLAG=''";
+			//$query_param ="LANDL_STATUS='Y',PHONE_FLAG=''";
+			$arrFields['LANDL_STATUS']='Y';
+			$arrFields['PHONE_FLAG']='';
 			$phone_type ='L';
 		}	
-		$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid'";
-		mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
+		
+						
+				$exrtaWhereCond = "";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+	//	$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid'";
+//		mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
 
 		$sqlAlt ="SELECT ALT_MOBILE,ALT_MOB_STATUS FROM newjs.JPROFILE_CONTACT WHERE PROFILEID='".$profileid."'";
 		$resAlt =mysql_query_decide($sqlAlt) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sqlAlt);
@@ -272,12 +288,13 @@ function markValidProfiles($pids,$message,$username)
 		{
 			if(trim($rowAlt['ALT_MOBILE']))
 			{
-        $memObject=new UserMemcache;
-        $memObject->delete("JPROFILE_CONTACT_".$profileid);
-        unset($memObject);
-        
-				$sqlAltUp="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='Y' WHERE `PROFILEID` =  '".$profileid."'";
-                                mysql_query_decide($sqlAltUp) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAltUp);
+        // $memObject=new UserMemcache;
+        // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+        // unset($memObject);
+			$arrParams = array('ALT_MOB_STATUS'=>'Y');
+			$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+			//	$sqlAltUp="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='Y' WHERE `PROFILEID` =  '".$profileid."'";
+              //                  mysql_query_decide($sqlAltUp) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAltUp);
 			}
 		}
 		$sql ="insert into jsadmin.PHONE_VERIFIED_LOG (`PROFILEID`,`PHONE_TYPE`,`PHONE_NUM`,`MSG`,`OP_USERNAME`,`ENTRY_DT`) VALUES ('$profileid','$phone_type','$phone_num','$message','$username',now())";

@@ -2,10 +2,14 @@
 include_once(JsConstants::$alertDocRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/connect_dd.inc");
 include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php");
+
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $matchalertServer = 1;
 
 function logerror1($message,$query="", $sendmailto="NO",$flag="N",$db="")
 {
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
         global $db, $smarty, $checksum,$path;
 	global $smarty;
         ob_start();

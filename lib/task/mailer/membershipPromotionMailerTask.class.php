@@ -31,13 +31,13 @@ EOF;
 		include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 		include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_db.php");
 
-		connect_db();
+		//connect_db();
 
 		$mmObj = new MembershipMailer();
 
 		$billingPurchasesObj = new BILLING_PURCHASES('newjs_slave');
 		$profileArr = $billingPurchasesObj->getFPRBPromotionalMailerProfiles();
-		$ssObj = new BILLING_SERVICE_STATUS();
+		$ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
 
 		if(!empty($profileArr)) {
 			$serviceArr = $ssObj->getActiveServicesListForProfileArr($profileArr);

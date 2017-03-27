@@ -3,9 +3,8 @@
 include("connect.inc");
 include_once("user_hierarchy.php");
 
-$db2		=connect_master();
 $data		=authenticated($cid);
-$db		=connect_misdb();
+$db		=connect_rep(); //connect_misdb();
 $name 		=trim(getname($cid));
 $privilage	=getprivilage($cid);
 $priv		=explode("+",$privilage);
@@ -85,7 +84,7 @@ if($data)
 		if(!$err)
 		{
 			// Checking Master Connection
-			if(in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("LTFSUP",$priv)){
+			/*if(in_array("MG",$priv) || in_array("TRNG",$priv) || in_array("LTFSUP",$priv)){
 
                         	if($days>'31'){
                                 	mysql_close($db2);
@@ -95,13 +94,13 @@ if($data)
                 	else{
                         	mysql_close($db2);
                         	$db2 =$db;
-                	}
+                	}*/
 
                         // function called to get payment details
                         $paid_details_arr =getProfilesCount($start_dt, $end_dt, $uname_arr ,$db);
 
 			$sql ="SELECT * from MIS.LTF where DATE>='$start_dt 00:00:00' AND DATE<='$end_dt 23:59:59'";
-			$res =mysql_query_decide($sql,$db2) or die("$sql".mysql_error_js());
+			$res =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
 			$i=0;
 			$dataArr 	=array();
 			$vSealArr	=array();

@@ -2,7 +2,7 @@
 class EditReligionEthnicity extends EditProfileComponent {
 	public function submit() {
 		
-		$today = date("Y-m-d");
+		$today = CommonUtility::makeTime(date("Y-m-d"));
 		$this->request = $this->action->getRequest();
 		$Subcaste = $this->request->getParameter('subcaste');
 		$Subcaste = trim($Subcaste);
@@ -136,7 +136,7 @@ class EditReligionEthnicity extends EditProfileComponent {
 			$bIsNative_PlaceUpdated=false;
 			if(count($nativePlaceArr)){
 				$bIsNative_PlaceUpdated=true;
-				$nativePlaceStoreObj = new NEWJS_NATIVE_PLACE;
+				$nativePlaceStoreObj = ProfileNativePlace::getInstance();
 				if($nativePlaceObj->IsRecordExist())
 					$nativePlaceStoreObj->UpdateRecord($this->loginProfile->getPROFILEID(),$nativePlaceArr);
 				else

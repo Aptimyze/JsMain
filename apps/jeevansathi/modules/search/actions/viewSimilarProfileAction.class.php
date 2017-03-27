@@ -24,8 +24,10 @@ class viewSimilarProfileAction extends sfActions
 		if($this->isMobile)
 		{
 			$profileChecksum=$request->getParameter("profilechecksum");
-			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?page=idd1&profilechecksum='.$profileChecksum.'';
-			header('Location: '.$url);
+			$url=JsConstants::$siteUrl.'/search/MobSimilarProfiles?fromViewSimilarActionMobile=1&page=idd1&profilechecksum='.$profileChecksum.'';
+                        header('Location: '.$url);
+                        die;
+
 		}
 		//Contains login credentials
 		$this->loginData = $request->getAttribute("loginData");
@@ -65,8 +67,14 @@ class viewSimilarProfileAction extends sfActions
 			header("Location: $SITE_URL/search/partnermatches");
 			die;
 		}
-
-		$contactedUsername=$request->getParameter("SIM_USERNAME");
+		if($request->getParameter("SIM_USERNAME"))
+			$contactedUsername=$request->getParameter("SIM_USERNAME");
+		else
+		{
+			$contactedProfileObj= new Profile('',$contactedProfileId);
+			$contactedProfileObj->getDetail($contactedProfileId,'','USERNAME');
+			$contactedUsername=$contactedProfileObj->getUSERNAME();
+		}
 		$this->arrOutDisplay = $this->getContactedProfileData($contactedUsername,$request);
 		//handling of no profile case
 		if($request->getAttribute("ERROR"))
@@ -113,8 +121,8 @@ class viewSimilarProfileAction extends sfActions
 		}
 		else
 		{
-			$this->Profile=new Profile("newjs_bmsSlave");
-			$this->Profile->getDetail($contactedProfileId,"PROFILEID");
+			$this->Profile=new Profile("newjs_masterRep");
+			$this->Profile->getDetail($contactedProfileId,"PROFILEID","*");
 			if($this->Profile->getUSERNAME()!=$contactedUsername)
 			{
 				ValidationHandler::getValidationHandler("","contact Id in view_similar_profile page is not correct as there is a mismatch in username and profile username:".$contact."not equals".$contactedUsername,"Y");
@@ -144,14 +152,19 @@ class viewSimilarProfileAction extends sfActions
 			$this->finalResponse=json_encode($this->arrOutDisplay);
 		}                
 		//View Similar Profile Object to set Search Criteria
-		$viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
-                if(JsConstants::$vspServer != 'live'){
+                $modVal = 9;
+                $loggedinMod = $this->loginProfile->getPROFILEID()%$modVal;
+                $modResult =  array(1);
+                if(JsConstants::$vspServer != 'live' || !in_array($loggedinMod,$modResult)){
+                    $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
                     $viewSimilarProfileObj->getViewSimilarCriteria();
                     if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
                             $this->similarPageShow=1;
                     else
                             $this->similarPageShow=0;
                 }
+                else
+                    $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile,$removeFilters=1);
 		//EOI Successsfull Confirmation Message
 		if($request->getParameter('contactEngineConfirmation'))
 		{
@@ -165,13 +178,23 @@ class viewSimilarProfileAction extends sfActions
 		$searchEngine = 'solr';
 		$outputFormat = 'array';
                 
-                if(JsConstants::$vspServer == 'live'){
+                $requestTimeout = 300;
+                if(JsConstants::$vspServer == 'live' && in_array($loggedinMod,$modResult)){
                     if($this->loginProfile->getGENDER() == 'M')
                       $feedURL = JsConstants::$vspMaleUrl;
                     else
                       $feedURL = JsConstants::$vspFemaleUrl;
-                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID()));
-                    $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
+                    $profileListObj = new IgnoredContactedProfiles();
+                    $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID(),'removeProfiles'=>$ignoredContactedProfiles));
+                    $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams,$requestTimeout);
+                    if($profilesList === false){
+                        $date = date("Y-m-d");
+                        $file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/vspTimedout_".$date.".txt","a");
+                        $stringToWrite = $this->loginProfile->getPROFILEID().",".$this->Profile->getPROFILEID().",".date("H:i:s",time());
+                        fwrite($file,$stringToWrite."\n");
+                        fclose($file);
+                    }
                     if($profilesList == "Error"){
                         $profileidsort='';
                         $this->similarPageShow=0;
@@ -190,12 +213,13 @@ class viewSimilarProfileAction extends sfActions
 		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
 		$responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj,$results_orAnd_cluster,$clustersToShow,$currentPage,$cachedSearch,$this->loginProfile);
-                
+         //print_r($responseObj);die;
         //search template info array
 		if(MobileCommon::isDesktop())
 		{
 			$SearchDisplayObj = new SearchApiDisplay();
 			$resultsArray = $SearchDisplayObj->searchPageDisplayInfo($this->isMobile,$this->loginProfile,$responseObj,'','','','ProfilePic450Url');
+			//print_r($resultsArray);die;
 		}
 		else
 		{
@@ -301,12 +325,13 @@ class viewSimilarProfileAction extends sfActions
 		if(MobileCommon::isDesktop())
 		{
 			$vspObj = new ViewSimilarProfile();
-			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype);
+			//print_r($this->finalResultsArray);die;
+			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			
 			//unset($this->finalResultsArray); 
-			//var_dump($this->firstResponse); 
+			//print_r($this->firstResponse);die; 
 			unset($vspObj);
 			//handle visibility of contacted user details top section
 			if($request->getParameter("contactedProfileDetails"))
@@ -317,7 +342,11 @@ class viewSimilarProfileAction extends sfActions
 				$this->viewProfileBackParams = $request->getParameter("queryStringParams");
 			else
 				$this->viewProfileBackParams="noParams=1";
-			$this->setTemplate("JSPC/jspcViewSimilarProfile");
+			if($request->getParameter("from_mailer")==1)
+				$this->dontShowBreadcrumb=1;
+			else
+				$this->dontShowBreadcrumb=0;
+						$this->setTemplate("JSPC/jspcViewSimilarProfile");
 		}		
 	}
 	

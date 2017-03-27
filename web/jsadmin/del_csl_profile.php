@@ -9,7 +9,7 @@ Created On  : 13 May 2009
 include("connect.inc");
 $db=connect_db();
 if(authenticated($cid))
-{
+{	$delLogObj = new PROFILE_LOG_DELETION_FLOW();
 	$smarty->assign("user",$name);
 	$smarty->assign("cid",$cid);
 	$smarty->assign("criteria",$criteria);
@@ -44,6 +44,8 @@ if(authenticated($cid))
 				$new_list=$list;
 			}
 
+			
+
 			$sql="SELECT PROFILEID,USERNAME FROM newjs.JPROFILE WHERE ACTIVATED<>'D' AND $criteria IN ($new_list) ";
 			$res=mysql_query_decide($sql) or die($sql.mysql_error()); 
 			$i=0;
@@ -75,29 +77,60 @@ if(authenticated($cid))
 		$count=count($users_arr);
 		if($count)
 		{
+			$jprofileObj =JProfileUpdateLib::getInstance();
 			while($count)
 			{
 				$count--;
 				$details=explode(":",$users_arr[$count]);
 				$profile=$details[0];
 				$username=$details[1];
-				$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
-				mysql_query_decide($sql2) or die(logError($sql2,$db));
+
+				$profileDeleteObj = new PROFILE_DELETE_LOGS();
+				$startTime = date('Y-m-d H:i:s');
+		      	$arrDeleteLogs = array(
+		          'PROFILEID' => $profile,
+		          'DELETE_REASON' => $reason,
+		          'SPECIFY_REASON' => $comments,
+		          'USERNAME'  => $username,
+		          'CHANNEL' => 'back(del_csl)',
+		          'START_TIME' => $startTime,
+		          'INTERFACE' => 'B',
+		      );
+
+		      $profileDeleteObj->insertRecord($arrDeleteLogs);
+		      
+						/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
+				mysql_query_decide($sql2) or die(logError($sql2,$db));*/
+	                        $extraStr ="PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0";
+        	                $jprofileObj->updateJProfileForBilling('',$profile,'PROFILEID',$extraStr);
+
 				$tm = date("Y-M-d");
 				$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','$reason','$comments','$name','$tm')";
 				mysql_query_decide($sql) or die(logError($sql,$db));
+				if(LoggingEnums::LOG_DELETION){
+				$delLogObj->insertEntry($profile,'JSADMIN_DELETED_PROFILES_BCKND');
+			}
 				if($ins_str)
 					$ins_str.=",(".$profile.")";
 				else
 					$ins_str="(".$profile.")";
 			}
 			$sql_ins="REPLACE INTO jsadmin.DEL_STATUS (PROFILEID) VALUES $ins_str";
+				if(LoggingEnums::LOG_DELETION){
+				$delLogObj->insertEntry($profile,'JSADMIN_DEL_STATUS_BCKND');
+			}
 			mysql_query_decide($sql_ins) or die(logError($sql_ins,$db));
 			$path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/del_profilelist_bg.php > /dev/null &";
                         $cmd = JsConstants::$php5path." -q ".$path;
                         //$cmd = "php -q ".$path;
                         passthru($cmd);
 			$err="Selected profile(s) have been deleted";
+
+			$arrDeleteLogs = array(
+        'END_TIME' => date('Y-m-d H:i:s'),
+        'COMPLETE_STATUS' => 'Y',
+    );
+    $profileDeleteObj->updateRecord($profile, $startTime, $arrDeleteLogs);
 			
 		}
 		else

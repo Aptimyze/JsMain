@@ -22,7 +22,7 @@ class DUPLICATES_PROFILES extends TABLE {
                         return $records;
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateGroupID($group1,$group2)
@@ -37,7 +37,7 @@ class DUPLICATES_PROFILES extends TABLE {
             
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateProfileGroupID($group1,$profile1,$profile2)
@@ -56,7 +56,7 @@ class DUPLICATES_PROFILES extends TABLE {
 			$prep2->execute();
 		}
 		catch (Exception $e) {
-		throw new jsException($e);
+		jsCacheWrapperException::logThis($e);
 		}
         }
         public function getProfileDuplicates($profileid)
@@ -73,7 +73,7 @@ class DUPLICATES_PROFILES extends TABLE {
 			 }
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
                 return $return;
         }
@@ -86,7 +86,7 @@ class DUPLICATES_PROFILES extends TABLE {
 				$prep->execute();
 			}
 			catch (Exception $e) {
-				throw new jsException($e);
+				jsCacheWrapperException::logThis($e);
 			}
 		}
 }

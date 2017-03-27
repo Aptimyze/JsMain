@@ -42,7 +42,7 @@ class gunascorev1Action extends sfAction
 			if(in_array($parent,array(1,9,4,7)) && !$notshow)
 			{
 				
-				$dbObj=new NEWJS_ASTRO;
+				$dbObj= ProfileAstro::getInstance();
 				$dbdata=$dbObj->getAstroDetails(array(intval($profileid),intval($oProfile)),"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1);
                                 if(is_array($dbdata))
 				foreach($dbdata as $key=>$myrow_astro)

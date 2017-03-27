@@ -30,12 +30,13 @@ EOF;
 		include_once(JsConstants::$docRoot."/profile/connect_db.php");
 		include_once(JsConstants::$docRoot."/classes/ScheduleSms.class.php");
 		include_once(JsConstants::$docRoot."/classes/Membership.class.php");
-		$vdDiscountSmsLog = new billing_VARIABLE_DISCOUNT_SMS_LOG();
+		$vdDiscountSmsLog = new billing_VARIABLE_DISCOUNT_SMS_LOG('newjs_slave');
 		$status = $vdDiscountSmsLog->checkVDStatus($entry_dt);
 		if($status){
 			$sms = new ScheduleSms;
+			//$sms->processData("VD1",$entry_dt);
+			//$sms->processData("VD2",$entry_dt);
 			$sms->processData("VD1",$entry_dt);
-			$sms->processData("VD2",$entry_dt);
 		}
 	}
 }

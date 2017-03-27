@@ -109,7 +109,7 @@ Class ButtonResponseJSMS
 						$button[]                 = self::getSendMessageButton();
 						$button[]                 = self::getContactDetailsButton();
 						$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile,$params["BOOKMARKED"]);//,0,false);
-						$button[]                 = self::getDeclineButton("",$declineAfterAccept = true,$enable=false);
+						$button[]                 = self::getCancelInterestButton();
 						
 						if (MobileCommon::isApp()=='I')
 						{
@@ -515,16 +515,17 @@ Class ButtonResponseJSMS
 			//echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			//var_dump($viewer);
 			//var_dump($type);die;
+
+			
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
-			if($params["IGNORED"] == 1)
-			{//echo "string";die;
-				$buttons["buttons"]["3"]["label"]="Unblock";
+
+			if($params["IGNORED"] == 1){
+			
+			$buttons["buttons"]["3"]["label"]="Unblock";
+			
 			}
-			//print_r($buttons);die;
-			//$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile,$params["BOOKMARKED"]);
-			//$button[] = self::getIgnoreButton($this->loginProfile, $this->otherProfile,$params["IGNORED"]);
+
 			$responseArray = $buttons;
-			//print_r($responseArray);die;
 
 		}
 		else
@@ -537,6 +538,7 @@ Class ButtonResponseJSMS
         $responseArray["photo"]=$restResponseArray["photo"];
         $responseArray["topmsg"]=$restResponseArray["topmsg"];
         $responseArray["infobtnlabel"]=$restResponseArray["infobtnlabel"];
+//        print_r($responseArray); die;
 		//$finalResponse = self::buttonDetailsMerge($responseArray);
 		//print_r($finalResponse);die;
 		return $responseArray;
@@ -726,7 +728,7 @@ Class ButtonResponseJSMS
 	public static function getDeclineButton($page='',$declineAfterAccept = false,$enable=true)
 	{
 		$button["iconid"] = IdToAppImagesMapping::DECLINE;
-		$button["label"]  = $declineAfterAccept?"Delete Interest":"Decline";
+		$button["label"]  = $declineAfterAccept?"Decline Interest":"Decline";
 		$button["action"] = "DECLINE";
 		if (isset($page["responseTracking"]))
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
@@ -783,6 +785,12 @@ Class ButtonResponseJSMS
 		{
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = "Interest Sent";
+			$button["enable"]  = false;
+		}
+		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+		{
+			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
+			$button["label"]  = "Interest Saved";
 			$button["enable"]  = false;
 		}
 		else
@@ -847,7 +855,11 @@ Class ButtonResponseJSMS
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
+					$button                 = self::getCustomButton("You cancelled interest","","","","",false);
+					$responseArray["button"] = $button;
 					$responseArray["infobtnlabel"] = "You Cancelled your interest on " . $date;
+					$responseArray["confirmLabelHead"] = "$username"."'s profile did not match your expectations.";
+					$responseArray["confirmLabelMsg"] = "Profile moved to Cancelled list";
 					break;
                                 case ContactHandler::ACCEPT:
                                                 $button                      = $this->getSendMessageButton();

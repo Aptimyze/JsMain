@@ -16,6 +16,10 @@ class ResponseTrackingLink extends LinkClass{
 		{
 			$_linkAddress.="&responseTracking=".JSTrackingPageType::YN_MAILER;
 		}
+		elseif($source == "ei")
+		{
+			$_linkAddress.="&responseTracking=".JSTrackingPageType::EXPIRING_INTEREST_MAILER;
+		}
 		elseif($source == "eoiFilter")
 		{
 			$_linkAddress.="&responseTracking=".JSTrackingPageType::EOI_FILTER_MAILER;

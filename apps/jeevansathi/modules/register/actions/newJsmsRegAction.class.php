@@ -254,7 +254,7 @@ class newJsmsRegAction extends sfAction
       $this->loginProfile->getDetail($iProfileID,"PROFILEID",$listFields,"RAW");	
 
       //Get Family Data
-      $familyDataKey = array("t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","familyinfo","country_res");
+      $familyDataKey = array("t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","familyinfo","country_res","ancestral_origin");
       
       $arrWhiteList = array("family_type","family_back","family_status","mother_occ");
       $out = array();
@@ -267,13 +267,23 @@ class newJsmsRegAction extends sfAction
         }
       }
      
+	$nativeObj = ProfileNativePlace::getInstance();
+	$nativePlaceDataArr = array("native_state","native_country","native_city");
+	$nativeData = $nativeObj->getNativeData($iProfileID);
+	foreach($nativePlaceDataArr as $k=>$field)
+	{
+		$value = $nativeData[strtoupper($field)];
+		$value = str_replace('"', "\'", htmlspecialchars($value));
+		if($value || strlen($value)){
+		  $out[$field] = $value;
+		}
+	}
       //'0' values are invalid so unset those value
       foreach($arrWhiteList as $key){
         if($out[$key] == '0'){
           unset($out[$key]);
         }
       }
-      
       $this->familyIncomeDep = $out['country_res'];
       unset($out['country_res']);
       

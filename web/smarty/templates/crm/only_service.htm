@@ -1,173 +1,195 @@
 <!doctye html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>JeevanSathi</title>
-  <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
-  <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
-	<script language="JavaScript" src="common.js"></script>
-	<script language="JavaScript">
-                <!--
-                function openBrWindow(theURL,winName,features)
-                {
-                var status = confirm("Do you really want to mark this user as Do Not Call?");
-                if (status)
-                        win = window.open(theURL,winName,features);
-                }
-                function validate()
-                {
-                        var docF = document.insertForm;
-                        if(docF.WILL_PAY.value=="")
-                        {
-                                alert("Please specify disposition");
-                                docF.WILL_PAY.focus();
-                                return false;
-                        }
-                        if(docF.REASON.value=="" && docF.WILL_PAY.value!="AA|X")
-                        {
-                                alert("Please specify validation as well");
-                                docF.REASON.focus();
-                                return false;
-                        }
-                        if(docF.COMMENTS.value.length == 0)
-                        {
-                                alert("Please enter the Comments");
-                                docF.COMMENTS.focus();
-                                return false;
-                        }
-                        return true;
-                }
-                //-->
-        </script>
- </head>
- ~include file="head.htm"`
- <br>
- <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-  <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
-   <tr width=100% border=1>
-    <td width="30%" class="formhead" height="23"><font><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome :~$name`</b></font></td>
-    <td width="25%" class="formhead" align="center">
-<font color="brown">| DISPOSITION MODULE |</font>
-<a href="mainpage.php?cid=~$cid`">Click here
-to go to main page</a></td>
-    <td width="6%" class="formhead" align='RIGHT' height="23">
-        <a href="logout.php?cid=~$cid`">Logout</a>
-    </td>
-    <td width="3%" class="formhead" height="23">&nbsp;
-    </td>
-   </tr>
-  </table>
-<br>
-
-<form name=insertForm method="post" action="only_service.php">
-<input type=hidden name=cid value="~$cid`">
-<input type=hidden name=name value="~$name`">
-<input type=hidden name=mode value="~$MODE`">
-<input type=hidden name=USERNAME value="~$USERNAME`">
-
-<table width=80% align="center" cellspacing=2 cellpadding=1 border=0>
-<tr>
- <td class=label align="left" width=30%>~if $check_username eq "Y"`<font color="red"> Username* </font> ~else` Username* ~/if`
-~if $wrong_username eq "Y"`
-<font color="red">
-Username does not exist
-</font>
-~/if`
-</td>
- <td class=fieldsnew width=70%><input type="text" name="USERNAME" value="~$USERNAME`" class="textbox"></td>
-
- <td class=label align="left" width=30%>
-<input type="submit" name="history" value="Get History">
-</td>
-
-</tr>
-<tr>
-                        <td class=label width="30%">
-                           ~if $WILL_PAY eq "y"`<font color="red"> Disposition*</font>~else` Disposition*~/if`</td>
-                        <td class=fieldsnew>
-                                <select name="WILL_PAY" class="textboxes1" onChange="PopSPEC(this,'WILL_PAY','REASON');">
-                                        <option value="" selected>Select any one option</option>
-                                        ~$WILL_PAY`
-                                </select>&nbsp;&nbsp;Validation*:
-                                <select name="REASON" class="textboxes1">
-                                        <option  value="" selected>Select</option>
-                                        ~$REASON`
-                                </select>
-                        </td>
-                </tr>
-<tr>
- <td width="30%" class="label"> ~if $check_comments eq "Y"`<font color="red"> Comments*<font> ~else` Comments*
-~/if`</td>
- <td class=fieldsnew height="26">
-  <textarea name="COMMENTS" value="~$COMMENTS`"  class="textbox" cols="55" rows="3" >~$COMMENTS`</textarea>
- </td>
-</tr>
-
-<tr>
- <td class=label width="30%" height="2">&nbsp;</td>
- <td colspan="2" height="2" class=fieldsnew> &nbsp;
- <input type="submit" name="submit" value="submit" onclick="return validate();">
- </td>
-</tr>
-
-
-
-<tr>
-<td colspan=2 align=center><br><hr></td></tr>
-                                                                                                 
- <table width=100% align="CENTER" class="fieldsnew">
-	~if $ROW.show_IM eq 'Y'`
-    <tr align="CENTER" bgcolor="#fgfgfg">
-      <td class="formhead" colspan="4" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
-    </tr>
-	~/if`
-    <tr align="CENTER">
-      <td class="formhead" colspan="4" height="23"><b><font size="3" color="black">History</font></b></td>
-    </tr>
-    <tr align="CENTER">
-      <td class="label" width=5% height="20"><b>S.No.</b></td>
-      <td class="label" width="15" height="20"><b>Handled By</b></td>
-      <td class="label" width=20% height="21"><b>Date</b></td>
-      <td class="label" width=15% height="21"><b>Mode</b></td>
-      </tr>
- ~section name=index loop=$ROW`
-    <tr align="CENTER" bgcolor="#fbfbfb" >
-      <td height="20" align="CENTER" width="5%">~$ROW[index].SNO`</td>
-      <td height="20" width="15%">~$ROW[index].NAME`</td>
-      <td height="21" width="20%">~$ROW[index].DATE`</td>
-      <td height="21" width="15%" align="LEFT">~$ROW[index].MODE`</td>
-    </tr>
-  ~if $ROW[index].COMMENTS neq ''`
-    <tr bgcolor="#fgfgfg" >
-      <td height="21" align="CENTER" width="5%">&nbsp;</td>
-      <td width=20% height="21"><b>Comments</b></td>
-      <td height="21" colspan="4">~$ROW[index].COMMENTS`</td>
-    </tr>
-  ~/if`
-        <tr class="label">
-      <td height="21" align="CENTER" width="5%" colspan=7>&nbsp;</td>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>JeevanSathi</title>
+    <link rel="stylesheet" href="../jsadmin/jeevansathi.css" type="text/css">
+    <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+    <script language="JavaScript" src="common.js"></script>
+    <script type="text/javascript" src="~JsConstants::$jquery`"></script>
+    <script language="JavaScript">
+    <!--
+    function openBrWindow(theURL,winName,features)
+    {
+    var status = confirm("Do you really want to mark this user as Do Not Call?");
+    if (status)
+    win = window.open(theURL,winName,features);
+    }
+    function validate()
+    {
+    var docF = document.insertForm;
+    if(docF.WILL_PAY.value=="")
+    {
+    alert("Please specify disposition");
+    docF.WILL_PAY.focus();
+    return false;
+    }
+    if(docF.REASON.value=="" && docF.WILL_PAY.value!="AA|X")
+    {
+    alert("Please specify validation as well");
+    docF.REASON.focus();
+    return false;
+    }
+    if(docF.COMMENTS.value.length == 0)
+    {
+    alert("Please enter the Comments");
+    docF.COMMENTS.focus();
+    return false;
+    }
+    return true;
+    }
+    //-->
+    </script>
+  </head>
+  ~include file="head.htm"`
+  <br>
+  <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+    <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+      <tr width=100% border=1>
+        <td width="30%" class="formhead" height="23"><font><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome :~$name`</b></font></td>
+        <td width="25%" class="formhead" align="center">
+          <font color="brown">| DISPOSITION MODULE |</font>
+          <a href="mainpage.php?cid=~$cid`">Click here
+          to go to main page</a></td>
+          <td width="6%" class="formhead" align='RIGHT' height="23">
+            <a href="logout.php?cid=~$cid`">Logout</a>
+          </td>
+          <td width="3%" class="formhead" height="23">&nbsp;
+          </td>
         </tr>
-    ~/section`
- </table>
-                                                                                                 
-<tr>
-<td colspan=2 align=center>
-~$msg`
-<td>
-</tr>
-<tr>
-<td colspan=2 align=center><br><hr></td></tr>
-<tr>
-<td colspan=2 align=center>
-~$pmsg`
-<td>
-</tr>
-
-
-</table>
- </form>
- <br><br>
- ~include file="foot.htm"`
- </body>
-</html>
-
+      </table>
+      <br>
+      <form name=insertForm method="post" action="only_service.php">
+        <input type=hidden name=cid value="~$cid`">
+        <input type=hidden name=name value="~$name`">
+        <input type=hidden name=mode value="~$MODE`">
+        <input type=hidden name=USERNAME value="~$USERNAME`">
+        <table width=80% align="center" cellspacing=2 cellpadding=1 border=0>
+          <tr>
+            <td class=label align="left" width=30%>~if $check_username eq "Y"`<font color="red"> Username* </font> ~else` Username* ~/if`
+              ~if $wrong_username eq "Y"`
+              <font color="red">
+              Username does not exist
+              </font>
+              ~/if`
+            </td>
+            <td class=fieldsnew width=70%><input type="text" name="USERNAME" value="~$USERNAME`" class="textbox"></td>
+            <td class=label align="left" width=30%>
+              <input type="submit" name="history" value="Get History">
+            </td>
+          </tr>
+          <tr>
+            <td class=label align="left" width=30%><font color="">Discount Negotiation Percentage(%) </font>
+            </td>
+            <td class=fieldsnew width=70%><input type="text" name="discountNegVal" value="" class="textbox discountNegVal"></td>
+          </tr>
+          <tr>
+            <td class=label width="30%">
+            ~if $WILL_PAY eq "y"`<font color="red"> Disposition*</font>~else` Disposition*~/if`</td>
+            <td class=fieldsnew>
+              <select name="WILL_PAY" class="textboxes1" onChange="PopSPEC(this,'WILL_PAY','REASON');">
+                <option value="" selected>Select any one option</option>
+                ~$WILL_PAY`
+              </select>&nbsp;&nbsp;Validation*:
+              <select name="REASON" class="textboxes1">
+                <option  value="" selected>Select</option>
+                ~$REASON`
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td width="30%" class="label"> ~if $check_comments eq "Y"`<font color="red"> Comments*<font> ~else` Comments*
+            ~/if`</td>
+            <td class=fieldsnew height="26">
+              <textarea name="COMMENTS" value="~$COMMENTS`"  class="textbox" cols="55" rows="3" >~$COMMENTS`</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class=label width="30%" height="2">&nbsp;</td>
+            <td colspan="2" height="2" class=fieldsnew> &nbsp;
+              <input type="submit" name="submit" value="submit" onclick="return validate();">
+            </td>
+          </tr>
+          <tr>
+            <td colspan=2 align=center><br><hr></td></tr>
+            
+            <table width=100% align="CENTER" class="fieldsnew">
+              ~if $ROW.show_IM eq 'Y'`
+              <tr align="CENTER" bgcolor="#fgfgfg">
+                <td class="formhead" colspan="4" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
+              </tr>
+              ~/if`
+              <tr align="CENTER">
+                <td class="formhead" colspan="4" height="23"><b><font size="3" color="black">History</font></b></td>
+              </tr>
+              <tr align="CENTER">
+                <td class="label" width=5% height="20"><b>S.No.</b></td>
+                <td class="label" width="15" height="20"><b>Handled By</b></td>
+                <td class="label" width=20% height="21"><b>Date</b></td>
+                <td class="label" width=15% height="21"><b>Mode</b></td>
+              </tr>
+              ~section name=index loop=$ROW`
+              <tr align="CENTER" bgcolor="#fbfbfb" >
+                <td height="20" align="CENTER" width="5%">~$ROW[index].SNO`</td>
+                <td height="20" width="15%">~$ROW[index].NAME`</td>
+                <td height="21" width="20%">~$ROW[index].DATE`</td>
+                <td height="21" width="15%" align="LEFT">~$ROW[index].MODE`</td>
+              </tr>
+              ~if $ROW[index].COMMENTS neq ''`
+              <tr bgcolor="#fgfgfg" >
+                <td height="21" align="CENTER" width="5%">&nbsp;</td>
+                <td width=20% height="21"><b>Comments</b></td>
+                <td height="21" colspan="4">~$ROW[index].COMMENTS`</td>
+              </tr>
+              ~/if`
+              <tr class="label">
+                <td height="21" align="CENTER" width="5%" colspan=7>&nbsp;</td>
+              </tr>
+              ~/section`
+            </table>
+            
+            <tr>
+              <td colspan=2 align=center>
+                ~$msg`
+                <td>
+                </tr>
+                <tr>
+                  <td colspan=2 align=center><br><hr></td></tr>
+                  <tr>
+                    <td colspan=2 align=center>
+                      ~$pmsg`
+                      <td>
+                      </tr>
+                    </table>
+                  </form>
+                  <br><br>
+                  ~include file="foot.htm"`
+                </body>
+                <script type="text/javascript">
+                  $(document).ready(function(){
+                    $(".discountNegVal").bind('focusout', function(){
+                      var floatVal = /^\s*(\+|-)?((\d+(\d+)?)|(\d+))\s*$/;
+                      var value  = $(this).val();
+                      if(floatVal.test(value)){
+                        if(value > 100 || value <= 0){
+                          alert("Discount cannot be greater than 100%! or less than/equal to 0 & should contain decimal number");
+                          $(this).val('');
+                        }
+                      } else if (value == '') {
+                        $(this).val('');
+                      } else {
+                        alert('Please enter a numeric value!');
+                        $(this).val('');
+                      }
+                    });
+                    $(".discountNegVal").bind('focusin', function() {
+                      $(window).keydown(function(event){
+                        if(event.keyCode == 13) {
+                          event.preventDefault();
+                          return false;
+                        }
+                      });
+                    });
+                  });
+                </script>
+              </html>

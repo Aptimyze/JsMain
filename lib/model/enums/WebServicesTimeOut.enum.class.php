@@ -11,16 +11,16 @@
 class WebServicesTimeOut
 {
 	public static $contactServiceTimeout = array(
-		"getProfilelistContact"=>10,
-		"viewer" =>10,
-		"getcontactscount"=>20,
-		"contactedProfile"=>50,
-		"getcontactedprofilearray"=>50,
-		"resultset"=>50,
-		"updateseen"=>50,
-		"viewerviewed"=>10,
-		"update"=>10,
-		"insert"=>10,
-		"delete"=>10,
+		"getProfilelistContact"=>200,
+		"viewer" =>100,
+		"getcontactscount"=>300,
+		"contactedProfile"=>300,
+		"getcontactedprofilearray"=>300,
+		"resultset"=>300,
+		"updateseen"=>200,
+		"viewerviewed"=>200,
+		"update"=>200,
+		"insert"=>200,
+		"delete"=>200,
 	);
 }

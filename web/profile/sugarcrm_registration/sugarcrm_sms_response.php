@@ -3,6 +3,7 @@ $path=$_SERVER['DOCUMENT_ROOT'];
 include_once("$path/profile/connect.inc");
 include_once("$path/profile/lead_auto_register.php");
 $db=connect_db();
+$dbSlave = connect_slave();
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 include_once("$path/classes/SmsResponse.class.php");
 include_once("$path/sugarcrm/custom/crons/housekeepingConfig.php");
@@ -66,12 +67,12 @@ else
 function findLeadId($mobile){
 	if($mobile){
 		$sql="SELECT id from sugarcrm.leads where leads.phone_mobile='$mobile' AND deleted!='1'";
-		$res=mysql_query_decide($sql,$db);
+		$res=mysql_query_decide($sql,$dbSlave);
 		$row=mysql_fetch_array($res);
 		$lead_id=$row['id'];
 		if(!$lead_id){
 			$sql="SELECT id_c from sugarcrm.leads_cstm join sugarcrm.leads on id=id_c where leads_cstm.enquirer_mobile_no_c='$mobile' and deleted!='1'";
-			$res=mysql_query_decide($sql,$db);
+			$res=mysql_query_decide($sql,$dbSlave);
 			$row=mysql_fetch_array($res);
 			$lead_id=$row['id_c'];
 			if(!$lead_id)
@@ -83,7 +84,7 @@ function findLeadId($mobile){
                                                 $partitionLeadsCstm="sugarcrm_housekeeping.".$partition."_leads_cstm";
                                                 $partitionLeads="sugarcrm_housekeeping.".$partition."_leads";
 						$sql="SELECT id from $partitionLeads where leads.phone_mobile='$mobile' and deleted!='1'";
-						$res=mysql_query_decide($sql,$db);
+						$res=mysql_query_decide($sql,$dbSlave);
 						if(mysql_num_rows($res))
 						{
 							$row=mysql_fetch_array($res);
@@ -93,7 +94,7 @@ function findLeadId($mobile){
 						else
 						{
 							$sql="SELECT id_c from $partitionLeadsCstm join $partitionLeads on id=id_c where leads_cstm.enquirer_mobile_no_c='$mobile' AND deleted!='1'";
-							$res=mysql_query_decide($sql,$db);
+							$res=mysql_query_decide($sql,$dbSlave);
 							if(mysql_num_rows($res))
 							{
 								$row=mysql_fetch_array($res);

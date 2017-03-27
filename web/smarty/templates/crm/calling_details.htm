@@ -60,17 +60,18 @@ function MM_openBrWindow(theURL,winName,features)
   <table width=100% align="CENTER" class="fieldsnew">
 	~if $ROW.show_IM eq 'Y'`
     <tr align="CENTER" bgcolor="#fgfgfg">
-      <td class="formhead" colspan="4" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
+      <td class="formhead" colspan="5" height="23"><b><font size="5" color="green">Incentive Multiplier : ~$ROW.IM`</font></b></td>
     </tr>
 	~/if`
     <tr align="CENTER">
-      <td class="formhead" colspan="4" height="23"><b><font size="3" color="black">History</font></b></td>
+      <td class="formhead" colspan="5" height="23"><b><font size="3" color="black">History</font></b></td>
     </tr>
     <tr align="CENTER">
       <td class="label" width=5% height="20"><b>S.No.</b></td>
       <td class="label" width="15" height="20"><b>Handled By</b></td>
       <td class="label" width=20% height="21"><b>Date</b></td>
       <td class="label" width=15% height="21"><b>Mode</b></td>
+      <td class="label" width=15% height="21"><b>Process</b></td>
       </tr>
  ~section name=index loop=$ROW`
     <tr align="CENTER" bgcolor="#fbfbfb" >
@@ -78,6 +79,7 @@ function MM_openBrWindow(theURL,winName,features)
       <td height="20" width="15%">~$ROW[index].NAME`</td>
       <td height="21" width="20%">~$ROW[index].DATE`</td>
       <td height="21" width="15%" align="LEFT">~$ROW[index].MODE`</td>
+      <td height="21" width="15%" align="LEFT">~$ROW[index].PROCESS`</td>
     </tr>
   ~if $ROW[index].COMMENTS neq ''`
     <tr bgcolor="#fgfgfg" >

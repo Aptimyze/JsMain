@@ -1,3 +1,13 @@
+<script type="text/javascript">
+	
+$(document).ready(function() {
+    if(typeof trackJsEventGA != 'undefined')
+    trackJsEventGA('500-error','OLD-JSMS','-');
+});
+
+</script>
+
+
 <section class="s-info-bar">
 		<div class="pgwrapper">
 			Error

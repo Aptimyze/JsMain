@@ -68,7 +68,14 @@ class BrowserGCM {
 		if($response)
 			return $response;
 		else 
-			return null;
+		{
+            JsNotificationsConsume::$sendAlert = JsNotificationsConsume::$sendAlert+1;
+            if(JsNotificationsConsume::$sendAlert==1)
+            {
+                //CRMAlertManager::sendMailAlert("no gcm response to live notification","test");
+            }
+            return null;
+        }
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 include_once("CrawlerClassesCommon.php");
 include_once("regularExpressions.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class CrawlerSite
 {
 	private $siteId;
@@ -23,7 +25,7 @@ class CrawlerSite
 		$mysqlObj=new Mysql;
 		$db=$mysqlObj->connect('crawler');
 		$sql="SELECT * FROM crawler.crawler_sites WHERE TO_BE_CRAWLED='Y' AND SITE_ID=$siteId ORDER BY PRIORITY";
-		$res=$mysqlObj->executeQuery($sql,$db) or die("Error while fetching sites details  ".mysql_error());
+		$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Error while fetching sites details  ".mysql_error()));
 		if($mysqlObj->numRows($res))
 		{
 			while($row=$mysqlObj->fetchAssoc($res))
@@ -42,7 +44,7 @@ class CrawlerSite
 			$mysqlObj=new Mysql;
 			$db=$mysqlObj->connect('crawler');
 			$sql="SELECT LOGIN_REQUIRED,PAID_LOGIN_REQUIRED,RESULTS_PER_PAGE FROM crawler.crawler_sites_actions WHERE SITE_ID='$this->siteId' AND ACTION='$action'";
-			$res=$mysqlObj->executeQuery($sql,$db) or die("Error while fetching action parameters   ".mysql_error());
+			$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Error while fetching action parameters   ".mysql_error()));
 			if($mysqlObj->numRows($res))
 			{
 				$row=$mysqlObj->fetchAssoc($res);

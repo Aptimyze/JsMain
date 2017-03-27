@@ -23,9 +23,9 @@ class ApiCALayerV1Action extends sfActions
 	{
 
 
+		// LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In ApiCALayer");
 
 		$loginData=$request->getAttribute("loginData");
-
 
 	if(!$loginData['PROFILEID'])
 		{
@@ -37,7 +37,13 @@ class ApiCALayerV1Action extends sfActions
 		{	
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$totalAwaiting=(new ProfileMemcacheService($this->loginProfile))->get('AWAITING_RESPONSE');
-		$layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
+        
+        $layerToShow = false;
+        //As Per Peek Level Unset Some Listing Across Channels
+        if(JsConstants::$hideUnimportantFeatureAtPeakLoad <=4) {
+            $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
+        }
+		
 		//print_r($layerToShow); die;
 		if(!$layerToShow) {
 			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
@@ -50,7 +56,24 @@ class ApiCALayerV1Action extends sfActions
 			
 		}
 		$layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+                if($layerToShow==9)
+                {
+                    $profileId=$this->loginProfile->getPROFILEID();
+                    $nameData=(new NameOfUser())->getNameData($profileId);
+                    $nameOfUser=$nameData[$profileId]['NAME'];
+                    $namePrivacy=$nameData[$profileId]['DISPLAY'];
+                }
+        if($layerToShow==16)
+        {
+        	if($suggestions = $request->getParameter('dppSugg'))
+        	{
+        		$layerData['dppSuggObject'] = $suggestions;
+        		$layerData['dppCALGeneric'] = 0;
+        	}
+	    }
 		$this->m_arrOut=$layerData;
+                $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;
+                $this->m_arrOut['NAME_PRIVACY']=$namePrivacy ? $namePrivacy : NULL;
 	    }
 		//Api Response Object
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();

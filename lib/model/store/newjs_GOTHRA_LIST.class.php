@@ -27,6 +27,25 @@ class newjs_GOTHRA_LIST extends TABLE implements AutoSuggestor {
           throw new jsException($e);
 		}
 	}
+        public function match ($GOTHRA)
+        {
+                try 
+                {
+
+                        $sql = "Select GOTHRA from newjs.GOTHRA_LIST where GOTHRA=:GOTHRA";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":GOTHRA",$GOTHRA, PDO::PARAM_STR);
+                        $prep->execute();
+                        if($result = $prep->fetch(PDO::FETCH_NUM))
+                        {
+                                $records[]=$result[0];
+                        }
+                        return $records;
+                }
+                catch (Exception $e) {
+                        throw new jsException($e);
+                }
+        }
 } 	
 
 ?>

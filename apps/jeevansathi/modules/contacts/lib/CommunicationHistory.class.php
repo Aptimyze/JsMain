@@ -1,18 +1,35 @@
 <?php
 class CommunicationHistory
 {
+	private static $RESULTS_PER_PAGE_APP=30;
 	private $loginProfile;
 	private $otherProfile;
+	private $nextPage;
+	private $pageNo;
 	public function __construct($loginProfile, $otherProfile)
 	{
 		$this->loginProfile = $loginProfile;
 		$this->otherProfile = $otherProfile;
 	}
-	public function getHistory()
+
+	public function getNextPage(){
+		return $this->nextPage;
+	}
+	public function getHistory($page)
 	{
 		$gender        = $this->loginProfile->getGENDER();
 		$heshe         = "They";
 		$himher        = "them";
+
+
+		if($page)
+		{
+			$memObject=JsMemcache::getInstance();
+			$CON_HISTORY=$memObject->get('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID());
+		}
+
+	if(!$CON_HISTORY || !$page)
+	{
 		$messagelogObj = new MessageLog();
 		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($messagelog))
@@ -54,7 +71,34 @@ class CommunicationHistory
 				$previousStatus                            = $value['TYPE'];
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
-				$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				if($value['MESSAGE']){
+					if(strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false)
+					{
+						$messageArr=explode("||",$value['MESSAGE']);
+						$eoiMsgCount = count($messageArr);
+						$i=0;
+						for($j=0;$j<$eoiMsgCount;$j++)
+						{
+							$splitmessage = explode("--",$messageArr[$j]);
+							if($i==0)
+								$eoiMessages=$splitmessage[0];
+							else{
+								if(!MobileCommon::isApp())
+										$eoiMessages.="</br>".$splitmessage[0];
+								else
+										$eoiMessages.="\n".$splitmessage[0];
+							}
+							$i++;							
+						}
+						if($eoiMessages)
+							$value['MESSAGE']=$eoiMessages;
+						else
+							$value['MESSAGE']="";
+					}
+					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+				}
+				else
+					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value
 			
 		$senderDetails["INCOMPLETE"] = $this->loginProfile->getINCOMPLETE();
@@ -119,8 +163,49 @@ class CommunicationHistory
 					//$message_log[$value['DATE']]["message"] = "You requested " . $himher . " for Photo";
 				}
 			}
+			
+		$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+		$chatLogObj = new NEWJS_CHAT_LOG($dbName);
+		$chatDetailsArr = $chatLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$this->otherProfile->getPROFILEID());
+		//print_r($chatDetailsArr);die;
+		if(is_array($chatDetailsArr)){
+			foreach($chatDetailsArr as $key=>$val)
+			{
+				if ($val["SENDER"] == $this->loginProfile->getPROFILEID()) {
+						$who  = "You";
+						$side = "S";
+					} //$value["SENDER"] == $logged_pid
+					else {
+						$who  = "They";
+						$side = "R";
+					}
+				//	$previousStatus                            = 'A';
+				if(array_key_exists($val['DATE'],$message_log)){
+					if($val['MESSAGE']){
+						if(!MobileCommon::isApp())
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br> ".$val['MESSAGE'];
+						else
+								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."\n".$val['MESSAGE'];
+
+					}
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+				else
+				{
+					$message_log[$val['DATE']]["type"]  = 'O'. $side;
+					$message_log[$val['DATE']]["who"]     = $who;
+					if($val['MESSAGE'])
+						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
+					else
+						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+				}
+					
+			}
+		}	
 		if (is_array($message_log))
 			krsort($message_log);
+		//print_r($message_log);die;
 		$start = 0;
 		if (is_array($message_log))
 			foreach ($message_log as $key => $val) {
@@ -135,7 +220,39 @@ class CommunicationHistory
 			} else {
 			return false;
 		}
+		//print_r($CON_HISTORY);die;
 		$CON_HISTORY = array_reverse($CON_HISTORY);
+		if($page && (count($CON_HISTORY)>self::$RESULTS_PER_PAGE_APP))
+			$memObject->set('commHistory_'.$this->otherProfile->getPROFILEID().'_'.$this->loginProfile->getPROFILEID(),$CON_HISTORY);
+	}
+
+//// trimming result if page asked for API
+
+		if($page)
+		{
+		    if(MobileCommon::IsApp()!="A")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
+			$this->pageNo=$page;
+			$offset=(intval($page)-1)*self::$RESULTS_PER_PAGE_APP;
+			$limit=self::$RESULTS_PER_PAGE_APP;
+			if(count($CON_HISTORY)>$page*self::$RESULTS_PER_PAGE_APP)
+				$this->nextPage='true';
+			else 
+				$this->nextPage='false';
+	
+			$CON_HISTORY = array_slice($CON_HISTORY, $offset,$limit);
+			if(MobileCommon::IsApp()=="I")
+			{
+				$CON_HISTORY = array_reverse($CON_HISTORY);
+			}
+		}
+		else $this->nextPage="";
+//print_r($CON_HISTORY);die;
+/////////////////////////////////////
+
+
 		return $CON_HISTORY;
 	}
 	public function temporaryInterestSuccess($incomplete, $activated)
@@ -151,6 +268,7 @@ class CommunicationHistory
 	
 	public function getResultSetApi($history,$myGender='',$otherGender='')
 	{
+
 		$count = 0;
 		if($otherGender)
 		{
@@ -168,55 +286,97 @@ class CommunicationHistory
 				case "S":
 					$result[$count]["header"] = $value["who"]." added ".$himher." to shortlist";
 					$result[$count]["message"] = $value["who"]." added ".$himher." to shortlist";
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				
 				case "IR":
-					$result[$count]["header"] = $value["who"]." expressed interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." expressed interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." expressed interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "RR":
-					$result[$count]["header"] = $value["who"]." sent a reminder";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a reminder";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a reminder";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "AR":
-					$result[$count]["header"] = $value["who"]." accepted your interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." accepted your interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." accepted your interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "DR":
-					$result[$count]["header"] = $value["who"]." declined your interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." declined your interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." declined your interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$count++;
 					break;
 				case "CR":
-					$result[$count]["header"] = $value["who"]." cancelled $hisher interest";
-					$result[$count]["message"] = $value["who"]." cancelled $hisher interest";
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." cancelled $hisher interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] =$value["message"];// $value["who"]." cancelled $hisher interest";
+						$result[$count]["header"] =$value["who"]." cancelled $hisher interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
                                 case "ER":
-                                        $result[$count]["header"] = $value["who"]." cancelled $hisher interest";
-                                        $result[$count]["message"] = $value["who"]." cancelled $hisher interest";
-                                        $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+                                        
+                                        if(!$value["message"]){
+											$result[$count]["message"]=$value["who"]." cancelled $hisher interest";
+											$result[$count]["header"] = " ";
+										}
+										else{
+											$result[$count]["message"] = $value["message"];//$value["who"]." cancelled $hisher interest";
+											$result[$count]["header"] = $value["who"]." cancelled $hisher interest";
+										}
+                                        $result[$count]["time"] = $value["time"];
                                         $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                         $result[$count]["button"] = null;
                                         $count++;
@@ -229,7 +389,7 @@ class CommunicationHistory
 						"action" => "HOROSCOPE_UPLOAD",
 						"value" => null
 					);
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$count++;
 					break;
@@ -240,62 +400,111 @@ class CommunicationHistory
 						"label" => "Upload",
 						"action" => "PHOTO_UPLOAD",
 						"value" => null
-					);$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					);$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$count++;
 					break;
 				case "RS":
-					$result[$count]["header"] = $value["who"]." sent a reminder";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a reminder";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a reminder";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "IS":
-					$result[$count]["header"] = $value["who"]." expressed interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." expressed interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." expressed interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "TIS":
-                                        $result[$count]["header"] = $value["who"]." expressed interest";
-                                        $result[$count]["message"] = $value["message"];
-                                        $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+                                        
+                                        if(!$value["message"]){
+											$result[$count]["message"]=$value["who"]." expressed interest";
+											$result[$count]["header"] = " ";
+										}
+										else{
+											$result[$count]["message"] = $value["message"];
+											$result[$count]["header"] = $value["who"]." expressed interest";
+										}
+                                        $result[$count]["time"] = $value["time"];
                                         $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                         $result[$count]["button"] = null;
                                         $count++;
                                         break;
 				case "AS":
-					$result[$count]["header"] = $value["who"]." accepted $hisher interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." accepted $hisher interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." accepted $hisher interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "DS":
-					$result[$count]["header"] = $value["who"]." declined $hisher interest";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." declined $hisher interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." declined $hisher interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "CS":
-					$result[$count]["header"] = $value["who"]." cancelled interest";
-					$result[$count]["message"] = $value["who"]." cancelled interest";
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." cancelled interest";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];//$value["who"]." cancelled interest";
+						$result[$count]["header"] = $value["who"]." cancelled interest";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
                                 case "ES":
-                                        $result[$count]["header"] = $value["who"]." cancelled interest";
-                                        $result[$count]["message"] = $value["who"]." cancelled interest";
-                                        $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+                                        
+                                        if(!$value["message"]){
+											$result[$count]["message"]=$value["who"]." cancelled interest";
+											$result[$count]["header"] = " ";
+										}
+										else{
+											$result[$count]["message"] =$value["message"];// $value["who"]." cancelled interest";
+											$result[$count]["header"] = $value["who"]." cancelled interest";
+										}
+                                        $result[$count]["time"] = $value["time"];
                                         $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                         $result[$count]["button"] = null;
                                         $count++;
@@ -303,7 +512,7 @@ class CommunicationHistory
 				case "HS":
 					$result[$count]["header"] = $value["who"]." requested for $hisher horoscope";
 					$result[$count]["message"] = $value["who"]." requested for $hisher horoscope";
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
@@ -311,31 +520,82 @@ class CommunicationHistory
 				case "PS":
 					$result[$count]["header"] = $value["who"]." requested for $hisher photo";
 					$result[$count]["message"] = $value["who"]." requested for $hisher photo";
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "MR":
-					$result[$count]["header"] = $value["who"]." sent a Message";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a Message";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "MS":
-					$result[$count]["header"] = "You sent a Message";
-					$result[$count]["message"] = $value["message"];
-					$result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+					
+					if(!$value["message"]){
+						$result[$count]["message"]="You sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = "You sent a Message";
+					}
+					$result[$count]["time"] = $value["time"];
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OR":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]=$value["who"]." sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = $value["who"]." sent a Message";
+					}
+					$result[$count]["time"] = $value["time"];
+					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
+					$result[$count]["button"] = null;
+					$count++;
+					break;
+				case "OS":
+					
+					if(!$value["message"]){
+						$result[$count]["message"]="You sent a Message";
+						$result[$count]["header"] = " ";
+					}
+					else{
+						$result[$count]["message"] = $value["message"];
+						$result[$count]["header"] = "You sent a Message";
+					}
+					$result[$count]["time"] = $value["time"];
 					$result[$count]["ismine"] = $value["who"]=="You"?true:false;
 					$result[$count]["button"] = null;
 					$count++;
 					break;
 				case "IV":
-                                       $result[$count]["header"] = $value['who']." viewed your interest";
-                                       $result[$count]["message"] = $value['message'];
-                                       $result[$count]["time"] = JsCommon::ESItoIST($value["time"]);
+                                       
+                                       if(!$value["message"]){
+											$result[$count]["message"]=$value['who']." viewed your interest";
+											$result[$count]["header"] = " ";
+										}
+										else{
+											$result[$count]["message"] = $value['message'];
+											$result[$count]["header"] = $value['who']." viewed your interest";
+										}
+                                       $result[$count]["time"] = $value["time"];
                                        $result[$count]["ismine"] = $value["who"]=="You"?true:false;
                                        $result[$count]["button"] = null;
                                        $count++;

@@ -1,8 +1,7 @@
 <?php
 include ("connect.inc");
-$db2            =connect_master();
+$db             =connect_misdb();
 $data           =authenticated($cid);
-//$db             =connect_misdb();
 
 if($data)
 {

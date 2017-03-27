@@ -25,10 +25,14 @@ jQuery.validator.setDefaults({
 		errorElement: "div"
 					});
 
-
 // invalid domain check on email
 jQuery.validator.addMethod("invalidDomain", function(value, element) {
-	value=$.trim($("#EMAIL").val());
+	
+	if($(element).attr("id") == "EMAIL" || $(element).attr("id") == "ALT_EMAIL")
+	{
+		var idVal = "#"+$(element).attr("id");
+		var email=$.trim($(idVal).val());
+	}	
 	var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 	var start = value.indexOf('@');
 	var end = value.lastIndexOf('.');
@@ -61,17 +65,27 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 	}
 
 	return true;
-},"Please provide a valid Email Id");
+});
 
 // regex pattern check on email
 jQuery.validator.addMethod("emailPattern", function(value, element) {
-       var email = $.trim($("#EMAIL").val());
+	
+	if(($(element).attr("id") == "EMAIL") || ($(element).attr("id") == "ALT_EMAIL" && value!=""))
+	{
+		var idVal = "#"+$(element).attr("id");		
+	}
+	else if($(element).attr("id") == "ALT_EMAIL" && value=="")
+	{
+		return true;
+	}	
+	   var email=$.trim($(idVal).val());
        if(!email_regex.test(email))
 			return false;
         else
 			return true;
 
-},"Please provide a valid Email Id");
+});
+
 
 // regex pattern check on name
 jQuery.validator.addMethod("validate_name", function (value, element){
@@ -85,6 +99,45 @@ jQuery.validator.addMethod("validate_name", function (value, element){
 			else			
 				return true;	
 },"Please provide a valid Name");
+
+// check if email and alternate email are same
+jQuery.validator.addMethod("sameEmail", function (value, element){
+	if($("#EMAIL").val().toLowerCase() == $("#ALT_EMAIL").val().toLowerCase() && ( $("#ALT_EMAIL").val().length > 0 ))
+	{
+		return false;
+    }
+    else
+    return true;	
+},"Both Emails are same");
+
+
+
+var nameError = {"noSpace":"Please provide your first name along with surname, not just the first name","invalidChars":"Please provide a valid Full Name"};
+var telNumberErrorNo = '';
+jQuery.validator.addMethod("validate_custom_name", function (value, element){
+			var name_of_user=value;
+
+			var name = name_of_user.replace(/\./gi, " ");
+			name = name.replace(/dr|ms|mr|miss/gi, "");
+			name = name.replace(/\,|\'/gi, "");
+			name = $.trim(name.replace(/\s+/gi, " "));
+
+                        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+			if($.trim(name)!= "" && !allowed_chars.test(trim(name)))
+			{
+                                telNumberErrorNo =  "invalidChars";
+                                return false;
+			}
+			else{	
+                                var nameArr = name.split(" ");
+                                if(nameArr.length<2){
+                                        telNumberErrorNo =  "noSpace";
+                                        return false;
+                                }else{
+                                        return true;
+                                }
+                        }
+},function(){return nameError[telNumberErrorNo];});
 jQuery.validator.addMethod("MobileNumberVerify", function(value,element) {
         return (checkMobile(0));
         });
@@ -92,6 +145,15 @@ jQuery.validator.addMethod("MobileNumberVerify", function(value,element) {
 jQuery.validator.addMethod("MobileNumber", function(value,element) {
 	return ((value=='' && $('#PHONE_RES').val().length>0) || checkMobile(0));
 	});
+function StateCityRequired(json){
+	if(json[1].value=="51" && json[2].value=='')
+		jsonError[jsonError.length]="Provide a valid state";
+	else if((json[1].value=="51" && json[2].value!='' && json[3].value=='')|| json[1].value=="128" && json[3].value=='')
+		jsonError[jsonError.length]="Provide a valid city";
+	else
+		return true;
+	return false;	
+}
 // mobile or landline number should be there
 jQuery.validator.addMethod("landlineOrMobileNumber", function(value,element) {
 	if(($('#PHONE_MOB').val()=="" && $('#PHONE_RES').val()==""))
@@ -213,7 +275,7 @@ function validator(tabKey){
 				//debug:true;
 				
 				});	
-	if(tabKey=="SuitableTimetoCall" || tabKey=="NameoftheProfileCreator" || tabKey=="EmailId" || tabKey=="MobileNo" || tabKey=="AlternateMobileNo" || tabKey=="LandlineNo")
+	if(tabKey=="SuitableTimetoCall" || tabKey=="NameoftheProfileCreator" || tabKey=="EmailId" || tabKey=="MobileNo" || tabKey=="AlternateMobileNo" || tabKey=="LandlineNo" || tabKey == "AlternateEmailId")
 	{
 		$("#PROFILE_HANDLER_NAME").rules("add", {
 			validate_name: true,
@@ -226,9 +288,26 @@ function validator(tabKey){
 
 
 		$("#EMAIL").rules("add", {
-			required: false,
+			required: false, 
 			invalidDomain: true,
-			emailPattern: true,		
+			emailPattern: true,
+			messages:
+			{
+				invalidDomain:"Please provide a valid Email Id",
+				emailPattern:"Please provide a valid Email Id"
+			}		
+		});
+
+		$("#ALT_EMAIL").rules("add", {
+			//required: false, 
+			invalidDomain: true,
+			emailPattern: true,
+			sameEmail:true,	
+			messages:
+			{
+				invalidDomain:"Please provide a valid Alternate Email Id",
+				emailPattern:"Please provide a valid Alternate Email Id"
+			}	
 		});
 		
 		$("#ISD").rules("add", {
@@ -303,9 +382,15 @@ function validator(tabKey){
 	else if(tabKey=="BasicDetails")
 	{
 		$("#NAME").rules("add", {
-			validate_name: true,
+			validate_custom_name: true,
+                        required : true,
+                        maxlength:40,
+                        messages:
+                        {
+                              required: "Please provide a valid Full Name",
+                              maxlength : "Maximum 40 characters are allowed"
+                        }
 		});
-			$("#NAME").rules("remove", "required");
 	}
 	else if(tabKey=="Appearance")
 	{

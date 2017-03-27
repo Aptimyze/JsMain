@@ -14,7 +14,7 @@ class MatchAlerts
 	*/
 	public function getMatchAlertCount($profileId, $skipProfile='',$days='')
 	{
-		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('','',$profileId);
+		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('5000','',$profileId);
 		$output["TOTAL"] = $matchProfilesArray["CNT"];
 		$output["NEW"] = $matchProfilesArray["CNT_NEW"];
 		return $output;
@@ -27,7 +27,7 @@ class MatchAlerts
         */
 	public function getProfilesSentInMatchAlerts($profileId)
 	{
-		$matchAlertObj = new matchalerts_LOG("newjs_slave");
+		$matchAlertObj = new matchalerts_LOG();
 		$output = $matchAlertObj->getProfilesSentInMatchAlerts($profileId);
 		unset($matchAlertObj);
                 return $output;
@@ -58,7 +58,7 @@ class MatchAlerts
 
         public function getProfilesWithOutSorting($profileId,$weekFlag="")
         {
-                $matchAlertObj = new matchalerts_LOG($this->dbname);
+                $matchAlertObj = new MatchAlertsLogCaching();
 		if($weekFlag)
 			$dateGreaterThanCondition = self::getLogDateFromLogicalDate()-(7*$weekFlag);
                 $output = $matchAlertObj->getMatchAlertProfiles($profileId,$dateGreaterThanCondition);
@@ -111,6 +111,12 @@ class MatchAlerts
                 
                 return $subHeadingArr;
         }
+        public function getProfilesCountOfLogicLevel($profileId,$logicLevel)
+        {
+                $matchAlertObj = new matchalerts_LOG_TEMP($this->dbname);
+                $output = $matchAlertObj->getProfilesCountOfLogicLevel($profileId,$logicLevel);
+                return $output;
+	}
 
 }
 ?>

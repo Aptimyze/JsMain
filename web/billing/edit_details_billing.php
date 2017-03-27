@@ -10,7 +10,6 @@ DATE            : 18th October 2006.
 include("../jsadmin/connect.inc");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("comfunc_sums.php");
-$db_slave = connect_slave();
 $data=authenticated($cid);
 $entryby = getuser($cid);
 $privilage=explode('+',getprivilage($cid));
@@ -118,7 +117,7 @@ if(isset($data))
 		{
 			$sql_log="INSERT into billing.EDIT_DETAILS_LOG(PROFILEID,BILLID,RECEIPTID,CHANGES,ENTRYBY,ENTRY_DT) values('$row_old_details[PROFILEID]','$row_old_details[BILLID]','$row_old_details[RECEIPTID]','$mod_str','$entryby',now())";
 			mysql_query_decide($sql_log) or logError_sums($sql_log,1); 
-			change_notify_mail($receiptid, $mod_str, "E",$db_slave);//passing receiptid, the modified string and "E" indicating that the details has been edited
+			change_notify_mail($receiptid, $mod_str, "E");//passing receiptid, the modified string and "E" indicating that the details has been edited
 		}
 
 		$oldstatus=$row_old_details['STATUS'];

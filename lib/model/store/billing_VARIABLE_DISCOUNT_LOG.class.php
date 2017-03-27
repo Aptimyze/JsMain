@@ -6,6 +6,26 @@ class billing_VARIABLE_DISCOUNT_LOG extends TABLE{
         parent::__construct($dbname);
     }
     
+
+    // Maintains log for the expired discounts
+    public function insertDataInLog($profileid,$discount,$sdate,$edate,$entryDt,$sent,$sendMail)
+    {
+        try{
+            $sql ="INSERT INTO billing.VARIABLE_DISCOUNT_LOG(PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT,SENT_MAIL) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT,:SENT_MAIL)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+	    $prep->bindValue(":DISCOUNT",$discount,PDO::PARAM_STR);
+	    $prep->bindValue(":SDATE",$sdate,PDO::PARAM_STR);
+            $prep->bindValue(":EDATE",$edate,PDO::PARAM_STR);
+            $prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
+	    $prep->bindValue(":SENT",$sent,PDO::PARAM_STR);
+	    $prep->bindValue(":SENT_MAIL",$sendMail,PDO::PARAM_STR);				
+            $prep->execute();
+        }
+        catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
     // Maintains log for the expired discounts
     public function insertDataFromVariableDiscountBackup1Day($todayDate)
     {

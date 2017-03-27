@@ -16,10 +16,12 @@ class postSendReminderv1Action extends sfAction
   */
   
 	function execute($request){
+ 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
-		if ($request->getParameter("actionName")=="reminder")
-		{
+
+		if ($request->getParameter("actionName")=="reminder" || $request->getParameter("actionName")=="postSendReminder")
+		{ 	
 			$inputValidateObj->validateContactActionData($request);
 			$output = $inputValidateObj->getResponse();
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
@@ -39,10 +41,11 @@ class postSendReminderv1Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'R',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","R");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
+
 					$responseArray           = $this->getContactArray($request);
 				}
 			}
@@ -50,6 +53,7 @@ class postSendReminderv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -87,15 +91,22 @@ class postSendReminderv1Action extends sfAction
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
-		{
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+		{	
+                        if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R";
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
+				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
+                                if($request->getParameter('API_APP_VERSION')>=80)
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray["headerthumbnailurl"] = $thumbNail;;
+		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                 		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+
+
 			}
+
 		}
 		else
 		{
@@ -126,6 +137,13 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["errmsglabel"] = "This profile is Hidden";
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Hidden Profile";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 			elseif($errorArr["REMINDER_LIMIT"] == 2)
@@ -176,6 +194,25 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 			}
+
+			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
+			{
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+				$responseArray["headerthumbnailurl"] = $thumbNail;
+				//$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
+			{
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				//$responseArray["headerlabel"] = "Profile is Underscreening";
+				//$responseArray["redirect"] = true;
+				 $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                                $responseArray["headerthumbnailurl"] = $thumbNail;
+			}
+
 			else
 			{
 				$responseArray["errmsglabel"]= "You cannot perform this action";
@@ -186,6 +223,7 @@ class postSendReminderv1Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
+
 		return $finalresponseArray;
 	}
 }

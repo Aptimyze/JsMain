@@ -9,6 +9,7 @@ include("$_SERVER[DOCUMENT_ROOT]/profile/config.php");
 include("$_SERVER[DOCUMENT_ROOT]/classes/class.rc4crypt.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("$_SERVER[DOCUMENT_ROOT]/profile/connect_functions.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $dbSlave=connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbSlave);
 
@@ -34,7 +35,7 @@ $last_week=floor(($curdate-$last_week)/(60*60*24));
 
 //$last_week=mktime(0, 0, 0, date("m")-12  , date("d"), date("Y"));
 
-$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 10 MONTH) and activatedKey=1 and ACTIVATED<>'D' limit 1";
+$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where DATE(LAST_LOGIN_DT) < DATE_SUB(CURDATE(), INTERVAL 10 MONTH) and activatedKey=1 and ACTIVATED<>'D' limit 1";
 //$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where datediff(now(),LAST_LOGIN_DT) >=$month_10 and activatedKey=1 and ACTIVATED<>'D' and PROFILEID=618185";
 //$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd from newjs.JPROFILE where PROFILEID=136580";
 $res=mysql_query($sql,$dbSlave) or die(mysql_error1(mysql_error($dbSlave).$sql));
@@ -302,6 +303,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 if(count($archive_it))
 {
 	
+  $objUpdate = JProfileUpdateLib::getInstance();
 	foreach($archive_it as $key=>$val)
 	{
 		
@@ -311,8 +313,10 @@ if(count($archive_it))
 		$subscription=$val[3];
 		$key_ja="J1S2T3!@#";
 		$activekey=bin2hex(rc4crypt::encrypt($key_ja, $profileid, 1));
-		$sql="update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0,JSARCHIVED=1, MOD_DT=now() where PROFILEID='$profileid'";
-		mysql_query($sql,$dbM) or die(mysql_error1(mysql_error($dbM).$sql));
+		//$sql="update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0,JSARCHIVED=1, MOD_DT=now() where PROFILEID='$profileid'";
+		//mysql_query($sql,$dbM) or die(mysql_error1(mysql_error($dbM).$sql));
+    $objUpdate->updateJProfileForArchive($profileid);
+     
 		$date=date("Y-m-d");
 		$sql="insert into newjs.JSARCHIVED(PROFILEID,EMAIL,USERNAME,DEACTIVE_DATE) values('$profileid','$email','$username','$date')";
 		mysql_query($sql,$dbM) or die(mysql_error1(mysql_error($dbM).$sql));
@@ -370,7 +374,7 @@ If you wish to restore your profile <a href="'.$SITE_URL_JS.'/profile/retrieve_a
 	send_email($to,$message,$subject,$from);
 	}
 	
-	
+	unset($objUpdate);
 }
 function mysql_error1($msg)
 {

@@ -38,7 +38,6 @@ EOF;
         $processObj->setMethod("IN_DIALER_ELIGIBILITY");
 
 	$indialerObj 	=new Dialer();
-	$indialerObj->createTempPoolForDialer();
 	$indialerObj->preFilter($processObj);	
 	$profiles	=$indialerObj->fetchProfiles($processObj);
 	$indialerObj->filterProfiles($profiles);

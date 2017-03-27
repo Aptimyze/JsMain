@@ -3,6 +3,7 @@ include_once("../jsadmin/connect.inc");
 include_once("../profile/pg/functions.php");
 include_once("comfunc_sums.php");
 include_once "../crm/func_sky.php";
+$db = connect_db();
 $db_slave =connect_slave();
 //print_r($_POST);
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
@@ -31,7 +32,7 @@ if(isset($data))
 		if($DraftMail)
 		{
 			$sql=" SELECT * from billing.CHEQUE_REQ_DETAILS where REQUEST_ID='$req_id' ";
-			$res=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+			$res=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());
                         while($row=mysql_fetch_array($res))
                         {
 				$cd_num=$row["CD_NUM"];
@@ -72,10 +73,10 @@ if(isset($data))
 
 			//added by sriram to track mail sent status.
 			$sql_upd = "UPDATE billing.CHEQUE_REQ_DETAILS SET MAIL_SENT = MAIL_SENT + 1, MAIL_SENT_DATE = now() WHERE REQUEST_ID='$req_id'";
-			mysql_query_decide($sql_upd) or die("$sql_upd".mysql_error_js());
+			mysql_query_decide($sql_upd,$db) or die("$sql_upd".mysql_error_js());
 
 			$sql_upd = "UPDATE incentive.PAYMENT_COLLECT SET ACC_REJ_MAIL_BY = '$loginname' WHERE ID = '$req_id'";
-			mysql_query_decide($sql_upd) or die("$sql_upd".mysql_error_js());
+			mysql_query_decide($sql_upd,$db) or die("$sql_upd".mysql_error_js());
 
 			$smarty->display("start_service_mailsent.htm");
 		}
@@ -115,7 +116,7 @@ if(isset($data))
 
 			$sql_s.=$where;
 		}
-		$res_s=mysql_query_decide($sql_s) or die(mysql_error_js());
+		$res_s=mysql_query_decide($sql_s,$db_slave) or die(mysql_error_js());
 		$today=date("Y-m-d");
 		$i=0;
 		while($row_s=mysql_fetch_array($res_s))
@@ -127,7 +128,7 @@ if(isset($data))
 				$orderarr[$i]["username"]=$row_s['USERNAME'];
 				$username_sel=$row_s['USERNAME'];
 				$sql_ph="select PHONE_MOB,PHONE_RES,EMAIL from newjs.JPROFILE where USERNAME='$username_sel'";
-				$res_ph=mysql_query_decide($sql_ph) or die(mysql_error_js());
+				$res_ph=mysql_query_decide($sql_ph,$db_slave) or die(mysql_error_js());
 				$row_ph=mysql_fetch_array($res_ph);
 				$orderarr[$i]["user_email"]=$row_ph['EMAIL'];
 				$orderarr[$i]["phone_mob"]=$row_ph['PHONE_MOB'];
@@ -184,12 +185,12 @@ if(isset($data))
 	{
 
 		 $sql="SELECT a.ID,a.SERVICE,a.ADDON_SERVICEID,a.DISCOUNT,a.PROFILEID,a.USERNAME,a.REQ_DT,b.AMOUNT,b.TYPE,b.CD_NUM,b.CD_DT,b.CD_CITY,b.BANK,b.OBANK FROM incentive.PAYMENT_COLLECT as a,billing.CHEQUE_REQ_DETAILS as b where a.ID=b.REQUEST_ID and a.ID ='$accarr'";
-		$res=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+		$res=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());
 		$row=mysql_fetch_array($res);
 		$profileid=$row["PROFILEID"];
 		$cdnum=$row["CD_NUM"];
 		$sql_chk="SELECT count(*) as CNT from billing.PAYMENT_DETAIL where PROFILEID='$profileid' and CD_NUM='$cdnum' ";
-		$result_chk = mysql_query_decide($sql_chk) or die("$sql_chk<br>".mysql_error_js());
+		$result_chk = mysql_query_decide($sql_chk,$db_slave) or die("$sql_chk<br>".mysql_error_js());
 		$myrow_chk = mysql_fetch_array($result_chk);
 		$cnt_paid=$myrow_chk["CNT"];
 		if($cnt_paid<1)
@@ -213,7 +214,7 @@ if(isset($data))
 				$dol_conv_rate = $DOL_CONV_RATE;
 			}
 			$sql="SELECT NAME, GENDER, ADDRESS, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE FROM billing.PURCHASES WHERE PROFILEID='$profileid' order by ENTRY_DT desc limit 1";
-			$res=mysql_query_decide($sql) or logError_sums($sql,0);
+			$res=mysql_query_decide($sql,$db_slave) or logError_sums($sql,0);
 			if(mysql_num_rows($res)>0)
 			{
 				$row = mysql_fetch_array($res);
@@ -235,7 +236,7 @@ if(isset($data))
 			{
 				$tracking_variable = "N";
 				$sql_order = "SELECT PHONE_RES,PHONE_MOB,GENDER,COUNTRY_RES,PINCODE,EMAIL,CITY_RES FROM newjs.JPROFILE WHERE PROFILEID = $profileid ";
-				$result = mysql_query_decide($sql_order) or logError_sums($sql_order,1);
+				$result = mysql_query_decide($sql_order,$db_slave) or logError_sums($sql_order,1);
 				$row = mysql_fetch_assoc($result);
 				$city = $row['CITY_RES'];
 				$gender = $row['GENDER'];
@@ -292,7 +293,7 @@ if(isset($data))
 			$memObj->startServiceBackend($membership_details);
 			$memObj->makePaid();
 			$sql_executive="SELECT VOUCHER_CODE FROM billing.VOUCHER_MARKING WHERE PROFILEID='$profileid'";
-			$res_executive = mysql_query_decide($sql_executive) or logError_sums($sql_executive);
+			$res_executive = mysql_query_decide($sql_executive,$db_slave) or logError_sums($sql_executive);
 			if(mysql_num_rows($res_executive)>0)
 			{
 				$row_executive = mysql_fetch_array($res_executive);
@@ -306,7 +307,7 @@ if(isset($data))
 			$bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
 
 			$sql="SELECT EMAIL from newjs.JPROFILE where PROFILEID='$profileid'";
-			$result=mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+			$result=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$email= $myrow['EMAIL'];
 
@@ -320,10 +321,10 @@ if(isset($data))
 			}
 
 			$sql_u="UPDATE billing.CHEQUE_REQ_DETAILS SET  STATUS='DONE' WHERE REQUEST_ID = $accarr";
-			mysql_query_decide($sql_u) or die("$sql_u<br>".mysql_error_js());
+			mysql_query_decide($sql_u,$db) or die("$sql_u<br>".mysql_error_js());
 
 			$sql_upd = "UPDATE incentive.PAYMENT_COLLECT SET ACC_REJ_MAIL_BY = '$loginname' WHERE ID = $accarr";
-			mysql_query_decide($sql_upd) or die("$sql_upd<br>".mysql_error_js());
+			mysql_query_decide($sql_upd,$db) or die("$sql_upd<br>".mysql_error_js());
 			$msg="Records Have been succesfully updated<br>";
 
 			$msg.="<a href=\"start_service.php?user=$user&cid=$cid&CMDSearch=1&login=1\">Continue</a>";

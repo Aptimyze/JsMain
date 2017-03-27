@@ -38,6 +38,7 @@ class MIS_CA_LAYER_TRACK extends TABLE
       $res1->bindValue(":BUTTON",$button,PDO::PARAM_STR);
       $res1->bindValue(":DATE",$date,PDO::PARAM_STR);
       $res1->execute();
+      return true;
     } 
     catch(PDOException $e){
 		jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);
@@ -89,6 +90,31 @@ class MIS_CA_LAYER_TRACK extends TABLE
     catch(PDOException $e)
     {
 		jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);
+                        return '';
+      //throw new jsException($e);
+    }
+  }
+
+
+    public function truncateForUserAndLayer($profileId='',$layerid,$beforeDate)
+  {
+    try { 
+      $sqlDate=$beforeDate ? "AND DATE(`ENTRY_DT`) < :BEFORE_DATE" : "";
+      $profileSql=$profileId ? "PROFILEID = :PROFILE_ID AND" : "";
+      $sql= "DELETE FROM MIS.CA_LAYER_TRACK WHERE $profileSql LAYERID = :LAYER_ID $sqlDate";
+      $prep=$this->db->prepare($sql);
+      if($profileId)
+      $prep->bindValue(":PROFILE_ID",$profileId,PDO::PARAM_INT);
+      $prep->bindValue(":LAYER_ID",$layerid,PDO::PARAM_INT);
+      if($beforeDate)
+        $prep->bindValue(":BEFORE_DATE",$beforeDate,PDO::PARAM_STR);
+      $prep->execute();
+      }
+    
+    catch(PDOException $e)
+    {
+        mail("palash.chordia@jeevansathi.com,ayush.sethi@jeevansathi.com,nitesh.s@jeevansathi.com","CA Layer :","error in function truncateForUserAndLayer of MIS_CA_LAYER_TRACK.class.php");
+    jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);
                         return '';
       //throw new jsException($e);
     }

@@ -1,4 +1,5 @@
 <?php
+die("Please contact on lavesh.rawat@jeevansathi.com.");
 //include("connect.inc");		commented by shakti
 include_once("connect.inc");
 include("../profile/arrays.php");

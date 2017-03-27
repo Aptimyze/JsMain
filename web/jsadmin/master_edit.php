@@ -10,7 +10,10 @@ include("connect.inc");
 include("time1.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 include_once("../profile/arrays.php");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","master_edit.php in USE",$msg);
 if(authenticated($cid))
 {
 	$user=getname($cid);
@@ -22,6 +25,7 @@ if(authenticated($cid))
 		$smarty->assign("totalnew",$totalnew);
 		$smarty->assign("totalqueue",$totalqueue);
 		$smarty->assign("flag",$flag);
+		if(!trim($username))
 		if(!trim($username))
 		{
 			$smarty->assign("CHECK_USER","Y");
@@ -112,15 +116,25 @@ if(authenticated($cid))
 							}
 							else
 							{
-								$sql_jp="UPDATE newjs.JPROFILE set ACTIVATED='U' WHERE PROFILEID=$pid AND ACTIVATED='N'";
-								mysql_query_decide($sql_jp) or die("$sql_jp".mysql_error_js());								
+								$objUpdate = JProfileUpdateLib::getInstance();
+								$result = $objUpdate->editJPROFILE(array('ACTIVATED'=>'U'),$pid,'PROFILEID',"ACTIVATED='N'");
+								if($result === false ) {
+									die('Issue while updating JPROFILE at line 120');
+								}
+//								$sql_jp="UPDATE newjs.JPROFILE set ACTIVATED='U' WHERE PROFILEID=$pid AND ACTIVATED='N'";
+//								mysql_query_decide($sql_jp) or die("$sql_jp".mysql_error_js());
 							}
 						}
 					}
 					if($myrow['ACTIVATED'] == 'N')
 					{
-						$sql_u="UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID=$pid";
-						 mysql_query_decide($sql_u) or die("$sql_u".mysql_error_js());
+						$objUpdate = JProfileUpdateLib::getInstance();
+						$result = $objUpdate->editJPROFILE(array('ACTIVATED'=>'U'),$pid,'PROFILEID');
+						if($result === false ) {
+							die('Issue while updating JPROFILE at line 132');
+						}
+//						$sql_u="UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID=$pid";
+//						 mysql_query_decide($sql_u) or die("$sql_u".mysql_error_js());
 					}
 					$smarty->assign("USERNAME",$username);	
 					//if(strstr($myrow["SOURCE"],"mb"))
@@ -350,16 +364,29 @@ if(authenticated($cid))
 				$str .= $NAME[$i]." = '".addslashes(stripslashes($_POST[$NAME[$i]]))."' ,";
 			}
 		//$count_screen=count($NAME);
-		$str = rtrim($str,","); 
-		$sql = " UPDATE newjs.JPROFILE set $str,";
-		if($verify_email)
-			$sql.=" VERIFY_EMAIL='$verify_email',";
+		$str = rtrim($str,",");
+
+		$objUpdate = JProfileUpdateLib::getInstance();
+		$arrUpdateParams = $objUpdate->convertUpdateStrToArray($str);
+//		$sql = " UPDATE newjs.JPROFILE set $str,";
+		if($verify_email){
+			$arrUpdateParams["VERIFY_EMAIL"] = $verify_email;
+//			$sql.=" VERIFY_EMAIL='$verify_email',";
+		}
+
 		/*if (0)
 			$sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";
 		else*/
-		$sql.= "ACTIVATED = 'Y' ";
-		$sql.= " where PROFILEID = '$pid' ";
-		mysql_query_decide($sql) or die("$sql".mysql_error_js());
+//		$sql.= "ACTIVATED = 'Y' ";
+//		$sql.= " where PROFILEID = '$pid' ";
+
+		$arrUpdateParams["ACTIVATED"] = 'Y';
+		$result = $objUpdate->editJPROFILE($arrUpdateParams,$pid,'PROFILEID');
+		if($result === false ) {
+			die('Issue while updating JPROFILE at line 132');
+		}
+
+		//mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		/*$sql_mod="INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,USERNAME,$name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) select '$ref_id',PROFILEID,USERNAME,$name,'$user',now(),'M','$count_screen' from newjs.JPROFILE where PROFILEID = '$pid' ";
 		mysql_query_decide($sql_mod) or die(mysql_error_js());
 		$sql= "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, 'APPROVED', SUBSCRIPTION_TYPE, SCREENING_VAL from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";  

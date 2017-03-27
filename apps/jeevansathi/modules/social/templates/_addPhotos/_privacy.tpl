@@ -1,5 +1,5 @@
       <!--start:div three-->
-      <div class="pubdr3 bg-white fontlig">
+      <div id ="photoPrivacyDiv" class="pubdr3 bg-white fontlig">
         <div class="pup13">
           <p class="f17 pucolor3">Photo Privacy</p>
           <div class="clearfix pt20">
@@ -11,11 +11,12 @@
                   <dt><span data-selected='' id="js-ph-lT">Please select option</span></dt>
                   <dd>
                     <ul>
-                      <li data-toSave="A" id="privacyA">Visible to All</li>
-                      <li data-toSave="C" id="privacyC">Visible to those you have accepted or expressed interest in.</li>
+                      <li data-toSave="A" id="privacyA">Visible to All (Recommended)</li>
+                      <li data-toSave="C" id="privacyC">Visible ONLY to those you have accepted or expressed interest in.</li>
                     </ul>
                   </dd>
                 </dl>
+		<div id="note" class="f13 color5 pup4">Please note this will reduce the number of interests that you will receive</div>
                 <!--end:drop down UI-->
 
             </div>

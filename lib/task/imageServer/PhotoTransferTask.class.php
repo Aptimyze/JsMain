@@ -44,6 +44,10 @@ EOF;
 
 		if($arguments["totalInstance"]<=$arguments["currentInstance"])
 			die("Invalid Arguments");
+			
+		 if(CommonUtility::hideFeaturesForUptime())
+             successfullDie();
+
 
 		$module = IMAGE_SERVER_MODULE_NAME_ENUM::getEnum($arguments["module"]);
 		if(!$module)
@@ -78,20 +82,47 @@ EOF;
 				
 				if($module == "PICTURE" && $whichImage=="OriginalPicUrl")
                                 {
-				       	$type = array("archive"=>1);
-					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+				       	$type = array("archive"=>1,"optimise"=>'Y');
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
 				}
-                                else
+				elseif($module == "PICTURE_DELETED")
+                                {
+				       	$type = array("archive"=>1);
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+				}
+				elseif($module=="VERIFICATION_DOCUMENTS_BYUSER" || $module=="VERIFICATION_DOCUMENTS")
+				{
+					$url = trim($v[$whichImage]);
+					$urlOri = PictureFunctions::getCloudOrApplicationCompleteUrl($url,true);
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					foreach (glob($urlOri) as $filename) 
+					{
+						if(finfo_file($finfo, $filename) === 'application/pdf') 
+						{
+							$contentType = "application/pdf";
+							$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
+							$type="";
+						} 
+					}
+					finfo_close($finfo);
+				}
+        else
 				{
 					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$type="";
 				}
-				
-				$url = $this->callImageServerApi($v["AUTOID"],trim($v[$whichImage]),$type);
+			
+				$url = $this->callImageServerApi($v["AUTOID"],trim($v[$whichImage]),$type,$contentType);
 				if($url)
 				{
 					if($this->updateUrls($url,$v,$module))
 						$this->updateImageServerTable($v["AUTOID"],$serverEnum);
+				}
+				else{
+					if($module == "PICTURE_DELETED"){
+						$serverEnum = IMAGE_SERVER_STATUS_ENUM::$deleted;
+						$this->updateImageServerTable($v["AUTOID"],$serverEnum);
+					}
 				}
 			}
 			
@@ -110,19 +141,19 @@ EOF;
 	@param - auto increment id, url of image, type is array of type of image (image/jpeg,image/gif) and if archieve is required for the image (optional)
 	@return - relative url on image server
 	*/
-	private function callImageServerApi($id,$url,$type='')
+	private function callImageServerApi($id,$url,$type='',$contentType='')
 	{
 		if($url)
 		{
 			$url = PictureFunctions::getCloudOrApplicationCompleteUrl($url);
 			$isaObj = new ImageServerApi;
 			
-			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type);
+			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type,$contentType);
 			if($serverOutput && is_array($serverOutput))
 			{
 				if($serverOutput["urlFile"])
 				{
-					$server = is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
+					$server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;// make a function call
 					$serverUrl = $server."/".$serverOutput["urlFile"];
 				}	
 			}
@@ -135,7 +166,7 @@ EOF;
                         		{
 						if($serverOutput1["urlFile"])
 						{
-                                		        $server = is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
+                                		        $server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
                                         		$serverUrl = $server."/".$serverOutput1["urlFile"];
         	                        	}
 	
@@ -147,7 +178,7 @@ EOF;
                                 }
 				elseif($serverOutput == "ERR_URL_BLANK")
 				{
-					//$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
+					$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
 					$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
 				}
                                 else
@@ -173,7 +204,6 @@ EOF;
 	{
 		$whichImage = IMAGE_SERVER_IMAGE_TYPE_ENUM::getImageType($dataArr["IMAGE_TYPE"],$dataArr["MODULE_NAME"]);
 		$paramArr[$whichImage] = $url;
-
 		if($paramArr && is_array($paramArr) && $dataArr["MODULE_ID"])
 		{
 			$modObj = UpdateModuleTableFactory::getModuleObject($module);
@@ -194,5 +224,17 @@ EOF;
 		$islObj->updateImageServerTable($id,$paramArr);
 		unset($islObj);
 	}
+	 private function getServerValue($type)
+	 {
+	 	if(is_array($type) && array_key_exists("archive",$type) && !array_key_exists("optimise",$type))
+	 	{
+	 		$source = IMAGE_SERVER_ENUM::$cloudArchiveUrl;
+	 	}
+	 	else
+	 	{
+	 		$source = IMAGE_SERVER_ENUM::$cloudUrl;
+	 	}
+	 	return $source;
+	 }
 }
 ?>

@@ -12,8 +12,8 @@ default:
     #keywords:     symfony, project
     #language:     en
     #robots:       index, follow
-  stylesheets:    [jspc/common/commonJspc_css@common,jspc/common/fontsJspc_css@common,jspc/common/headerFooterJspc_css@common,helpWidget_css@common,jspc/common/mCustomScrollBar_css@common,rippleEffectCommon_css@common]
-  javascripts:    [tracking_js@commonTop,helpWidget_js@commonBottom,jspc/common/commonJspc_js@commonBottom,jspc/login/loginLayer_js@commonBottom,jspc/common/AjaxWrapper@commonTop,jspc/common/urlHandling@commonBottom,jspc/common/jquery_mCustomScrollbar@commonBottom,jspc/common/jquery_mousewheel@commonBottom,commonExpiration_js@commonBottom,rippleEffectCommon_js@commonTop]
+  stylesheets:    [jspc/common/commonJspc_css@common,jspc/common/fontsJspc_css@common,jspc/common/headerFooterJspc_css@common,helpWidget_css@common,jspc/common/mCustomScrollBar_css@common,rippleEffectCommon_css@common,jspc/chat/chat_css@common]
+  javascripts:    [jspc/chat/customElem@bottom,tracking_js@commonTop,helpWidget_js@commonBottom,jspc/common/commonJspc_js@commonBottom,jspc/login/loginLayer_js@commonBottom,jspc/common/AjaxWrapper@commonTop,jspc/common/urlHandling@commonBottom,jspc/common/jquery_mCustomScrollbar@commonBottom,jspc/common/jquery_mousewheel@commonBottom,commonExpiration_js@commonBottom,rippleEffectCommon_js@commonBottom,common_comscore_js@commonBottom,jspc/chat/chatPlugin_js@commonBottom,jspc/chat/chatCommonConfig_js@commonBottom,jspc/chat/chatStrophieClient_js@commonBottom,jspc/chat/strophieWrapper_js@commonBottom,jspc/chat/chatPCHelper_js@commonBottom,jspc/membership/jspc_mem_md5@bottom,jspc/chat/strophe_receipts@commonBottom]
 
   has_layout:     true
   layout:         jspcLayout

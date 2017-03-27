@@ -8,8 +8,10 @@
             ~mainMem::EVALUE_LABEL`
         ~else if $arrData.subscription_icon eq jsexclusive` 
             ~mainMem::JSEXCLUSIVE_LABEL`
-        ~else`
+       ~else if $arrData.subscription_icon eq erishta`
             ~mainMem::ERISHTA_LABEL`
+        ~else if $arrData.subscription_icon eq eadvantage`
+            ~mainMem::EADVANTAGE_LABEL`
         ~/if` </div>
   ~/if`	
   <div class="clr hgt10"></div>
@@ -21,7 +23,7 @@
     <li class="wid49p" id="vpro_mtongue" >~$arrData.mtongue`</li>
     <li class="wid49p" id="vpro_education" >~$arrData.educationOnSummary`</li>
     <li class="wid49p" id="vpro_location" >~$arrData.location`</li>
-    <li class="wid49p" id="vpro_m_status" >~$arrData.m_status`</li>
+    <li class="wid49p wspace" id="vpro_m_status" >~$arrData.m_status`~if $arrData.have_child`,~$arrData.have_child`~/if`</li>
   </ul>
 	~if isset($arrData.myinfo)` 
 		<div class="fontlig pad2 wordBreak vpro_lineHeight" id="vpro_myinfo" > ~$arrData.myinfo`</div>

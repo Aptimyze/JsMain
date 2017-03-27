@@ -19,19 +19,26 @@ class GatewayWiseMis
 	public function fetchGatewayAndChannelWiseData()
 	{
 		$ordDevObj = new billing_ORDERS_DEVICE('newjs_slave');
-
+        if($this->start_dt >= "2017-04-01 00:00:00" ){
+            $table = "PAYMENT_DETAIL_NEW";
+            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+        }
+        else{
+            $table = "PAYMENT_DETAIL";
+            $condition = "='DONE'";
+        }
 		if(strtotime($this->end_dt) < strtotime("2015-01-01 00:00:00")) 
 		{
-			$info = $ordDevObj->getGatewayWiseData($this->start_dt, $this->end_dt, $this->currency);
+			$info = $ordDevObj->getGatewayWiseData($this->start_dt, $this->end_dt, $this->currency,$table,$condition);
 		} 
 		else if(strtotime($this->start_dt) >= strtotime("2015-01-01 00:00:00"))
 		{
-			$info = $ordDevObj->getGatewayAndChannelWiseData($this->start_dt, $this->end_dt, $this->currency);
+			$info = $ordDevObj->getGatewayAndChannelWiseData($this->start_dt, $this->end_dt, $this->currency,$table,$condition);
 		}
 		else
 		{
-			$info1 = $ordDevObj->getGatewayWiseData($this->start_dt, '2014-12-31 23:59:59', $this->currency);
-			$info = $ordDevObj->getGatewayAndChannelWiseData('2015-01-01 00:00:00', $this->end_dt, $this->currency);
+			$info1 = $ordDevObj->getGatewayWiseData($this->start_dt, '2014-12-31 23:59:59', $this->currency,$table,$condition);
+			$info = $ordDevObj->getGatewayAndChannelWiseData('2015-01-01 00:00:00', $this->end_dt, $this->currency,$table,$condition);
 
 			foreach($info1 as $gateway => $srcArr)
 			{

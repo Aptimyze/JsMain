@@ -56,8 +56,12 @@ class SearchDisplay
 		{
 			$degreeGrouping = FieldMap::getFieldLabel("degree_grouping","","1");
 				
-                        if($education != '')
-                                $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$education);
+                        if($education != ''){
+                                $educationExploded = explode(",",$education);
+                                foreach($educationExploded as $key=>$val){
+                                    $showEducation[] = FieldMap::getFieldLabel($decoratedFieldName,$val);
+                                }
+                        }
                         if($pgDegree != '')
                                 $showEducation[]=FieldMap::getFieldLabel($decoratedFieldName,$pgDegree);
                         if($ugDegree != '')
@@ -191,7 +195,7 @@ class SearchDisplay
 			$bookmarks = $bookmarkObj->getProfilesBookmarks($viewer, $this->profileids, 1);
 
 			//get chat requests received by logged-in user
-			$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
+			//$chatRequests  = $chatObj->getIfChatRequestSent($this->profileIdStr, $viewer, 1);
 
 			//get awaiting contact requests received by logged-in user
 			$contactObj = new ContactsRecords();
@@ -315,12 +319,7 @@ class SearchDisplay
 						}
 						else if($fieldName == 'CITY_RES')
 						{
-							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
-							{
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
-							}
-							else
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
@@ -462,6 +461,8 @@ class SearchDisplay
                                         $this->finalResultsArray[$pid]["paidLabel"] = mainMem::ERISHTA_LABEL;
                                 else if(CommonFunction::isJsExclusiveMember($subscr))
                                         $this->finalResultsArray[$pid]["paidLabel"] = mainMem::JSEXCLUSIVE_LABEL;
+                               	else if(CommonFunction::isEadvantageMember($subscr))
+                                        $this->finalResultsArray[$pid]["paidLabel"] = mainMem::EADVANTAGE_LABEL;
                                 else
                                         $this->finalResultsArray[$pid]["paidLabel"] = "";
                                 
@@ -472,7 +473,7 @@ class SearchDisplay
 					$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 					if(!$tempArr)
 					{
-						$MatchAlerts = new MatchAlerts;
+						$MatchAlerts = new MatchAlerts();
 						$tempArr = $MatchAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
         	                                $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
 					}
@@ -487,7 +488,7 @@ class SearchDisplay
 					$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 					if(!$tempArr)
 					{
-                                                $KundliAlerts = new KundliAlerts;
+                                                $KundliAlerts = new KundliAlerts();
 						$tempArr = $KundliAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
 						$this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
 					}
@@ -880,5 +881,43 @@ class SearchDisplay
                 }
                 else
                         return 0;
+        }
+        /**
+         * 
+         * @param type $country
+         * @param type $state
+         * @param type $cityVal
+         * @param type $nativeCityOpenText
+         * @param type $decoredVal
+         * @return string
+         */
+	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+                $label = '';
+                $city = explode(',',$cityVal);
+                $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
+                if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
+                {
+                        $label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
+                }
+                else{
+                        $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
+                }
+                if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
+                }else{
+                     $states = explode(',',$state);
+                     if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
+                        $nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
+                        
+                        if($nativeCityOpenText != '' && $nativeState != '')
+                           $nativePlace = $nativeCityOpenText.', ';
+                        
+                        $nativePlace .= $nativeState;
+                     }
+                }
+                if($nativePlace != '' && $nativePlace != $label)
+                        $label .= ' & '.$nativePlace;
+                
+                return $label;
         }
 }

@@ -120,8 +120,8 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
     */
     public function getArray($value="",$criteria="ID",$fields="*",$orderby="",$limit="",$extraWhereClauseArr="",$offset="")
     {
-        if(!value){
-            throw new jsException("","$criteria IS BLANK");
+        if(!$value){
+            throw new jsException("","$value IS BLANK in MOBILE_API_BROWSER_NOTIFICATION class");
         }
         try{
             $sql = "SELECT $fields FROM MOBILE_API.BROWSER_NOTIFICATION WHERE $criteria = :$criteria";
@@ -240,4 +240,86 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
             throw new jsException($e);
         }
     }
+
+    /*function to get notification count sent to profile for a particular channel in table
+    * @params :$regId,$channel(array of channels or single channel),$notificationkey="",$lessThanDt="",$greaterThanDt=""
+    * @return : $count
+    */
+    public function getSentNotificationCount($regId,$channel,$notificationkey="",$lessThanDt="",$greaterThanDt="")
+    {
+        try
+        {
+            if($regId && $channel)
+            {
+                $extraBindParams = array();
+                $sql = "SELECT COUNT(1) AS CNT FROM MOBILE_API.BROWSER_NOTIFICATION a JOIN MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION b ON a.REG_ID=b.REG_ID WHERE a.REG_ID=:REG_ID";
+                if(is_array($channel))
+                {
+                    $channel = implode(",", $channel);
+                    $sql = $sql." AND b.CHANNEL IN (:CHANNEL)";
+                }
+                else
+                {
+                    $sql = $sql." AND b.CHANNEL=:CHANNEL";
+                }
+                if($notificationkey)
+                {
+                    $sql = $sql." AND a.NOTIFICATION_KEY=:NOTIFICATION_KEY";
+                    $extraBindParams["NOTIFICATION_KEY"] = $notificationkey;
+                }
+                if($greaterThanDt)
+                {
+                   $sql = $sql." AND a.REQUEST_DT >= :GREATER_THAN_REQUEST_DT";
+                   $extraBindParams["GREATER_THAN_REQUEST_DT"] = $greaterThanDt;
+                }
+                if($lessThanDt)
+                {   
+                    $sql = $sql." AND a.REQUEST_DT <= :LESS_THAN_REQUEST_DT";
+                    $extraBindParams["LESS_THAN_REQUEST_DT"] = $lessThanDt;
+                }
+                
+                $res=$this->db->prepare($sql);
+                $res->bindValue(":REG_ID",$regId,PDO::PARAM_INT);
+                $res->bindValue(":CHANNEL",$channel,PDO::PARAM_STR);
+                if(is_array($extraBindParams) && count($extraBindParams)>0)
+                    foreach ($extraBindParams as $key => $value) 
+                    {
+                        $res->bindValue(":$key",$value,PDO::PARAM_STR);
+                    }
+                $res->execute();
+                if($row = $res->fetch(PDO::FETCH_ASSOC))
+                {
+                    $count = $row['CNT'];
+                }
+                return $count;
+            }
+            else
+            {   
+                throw new jsException("","registration id or channel IS BLANK in MOBILE_API_BROWSER_NOTIFICATION class");
+            }
+        }
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+        public function getDataCountForRange($startDate, $endDate)
+        {
+                try{
+                        $sql ="SELECT count(b.REG_ID) count, b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL FROM MOBILE_API.`BROWSER_NOTIFICATION` b, MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION b_reg WHERE b.REG_ID=b_reg.REG_ID AND b.ENTRY_DT>=:START_DATE AND b.ENTRY_DT<=:END_DATE GROUP BY b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
+                        $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
+                        $res->execute();
+                        while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                                $rowArr[$row['NOTIFICATION_KEY']][$row['CHANNEL']][$row['SENT_TO_CHANNEL']][$row['SENT_TO_QUEUE']] =$row['count'];
+                        }
+                        return $rowArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+
 }

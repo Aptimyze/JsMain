@@ -69,14 +69,18 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			global $protect;
-			JsCommon::oldIncludes();
-			$protect = new protect();
-			$protect->logout();
-			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
-			$echecksum = $protect->js_encrypt($checksum);
-			$this->autologinUrl = JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
 			$this->profileid = $this->profile->getPROFILEID();
+			//global $protect;
+			//JsCommon::oldIncludes();
+			//$protect = new protect();
+			//$protect->logout();
+			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
+		//	$echecksum = $protect->js_encrypt($checksum);
+			$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+			$authenticationLoginObj->setTrackLogin(false);
+			$authenticationLoginObj->setCrmAdminAuthchecksum($checksum);
+			$this->autologinUrl = JsConstants::$siteUrl;//JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
+			//$this->profileid = $this->profile->getPROFILEID();
 		}
 	}
 	$this->setTemplate('generateAutologin');
@@ -210,7 +214,7 @@ class commoninterfaceActions extends sfActions
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 	connect_db();
     $billingObj = new billing_SERVICE_STATUS("newjs_slave"); 
-    $activeServiceDetails =$billingObj->getActiveJsExclusiveServiceID($premiumProfileID);
+    $activeServiceDetails =$billingObj->checkJsExclusiveServiceIDEver($premiumProfileID);
     list($mainServiceID,$mainServiceDuration) = sscanf($activeServiceDetails["SERVICEID"], "%[A-Z]%d");
     if($mainServiceID == 'X')
     {
@@ -265,64 +269,57 @@ class commoninterfaceActions extends sfActions
     	return false;
   }
   /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
-    * @param: $params
-    */
+  * @param: $params
+  * MINI-VD 
+  */
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
-	/*if($params["INCOMPLETEUPLOAD"])
-	{
-		$uploadIncomplete = true;
-		$lastUploadedId = JsMemcache::getInstance()->get("lastVDEntryIDInTemp");
-	}*/
-	if($uploadIncomplete==false)
-	{
-		//empty temp table before filling new entries if not clicked on "upload again"	
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
+	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
 	unset($tempObj);
-  	//uploadIncomplete -- whether upload was complete last time and offset--index of first row to be inserted in temp
   	$offset = 0;
 	$limit = $params["limit"];    
-
-	if($uploadIncomplete==true && $lastUploadedId>=0)
-		$offset = $lastUploadedId;
-
 	//get uploaded records(with limit and offset at a time)
 	$vdObj = new VariableDiscount();
 	$status = $vdObj->transferVDRecordsToTemp($limit,$offset);
-   	if($status==uploadVD::EMPTY_SOURCE)
-    {
-    	//show error message
+
+   	if($status==uploadVD::EMPTY_SOURCE){
+    		//show error message
 		$this->forwardTo("commoninterface","uploadVD?NODATA=1&cid=".$this->cid);
-    }
-    if($status==uploadVD::INCOMPLETE_UPLOAD)
-    {
-    	//show error message
+    	}
+    	if($status==uploadVD::INCOMPLETE_UPLOAD){
+    		//show error message
 		$this->forwardTo("commoninterface","uploadVD?INCOMPLETEUPLOAD=1&cid=".$this->cid);
-    }
-  	/*else
-  	{
-  		JsMemcache::getInstance()->remove("lastVDEntryIDInTemp");
-  	}*/
+    	}
   }
 
   /* function executeUploadVD
   * @param: request Object
+  * MINI-VD STEP-1 
   */
   public function executeUploadVD(sfWebRequest $request)
   {
-  		if($request->getParameter("SUCCESSFUL"))
+  		if($request->getParameter("SUCCESSFUL")){
+			// successfully upoaded
   			$this->SUCCESSFUL = 1;
-  		else if($request->getParameter("UNAUTHORIZED"))
+		}
+  		else if($request->getParameter("UNAUTHORIZED")){
+			// privilege based
   			$this->UNAUTHORIZED = 1;
-  		else if($request->getParameter("INCOMPLETEUPLOAD"))
+		}
+                else if($request->getParameter("NODATA")){
+			// No data in temp table(test.VD_UPLOAD_TEMP)
+                        $this->NODATA=1;
+		}
+  		else if($request->getParameter("INCOMPLETEUPLOAD")){
+			//incomplete upload in temp table(billing.VARIABLE_DISCOUNT_TEMP)
   			$this->ERROR = 1;
-  		else if($request->getParameter("BACKGROUND_FAILURE"))
+		}
+  		else if($request->getParameter("BACKGROUND_SCRIPT_FAILURE"))
   			$this->BACKGROUND_FAILURE=1;
-  		else if($request->getParameter("NODATA"))
-  			$this->NODATA=1;
   		else
   			$this->UPLOAD = 1;
   }
@@ -330,6 +327,7 @@ class commoninterfaceActions extends sfActions
   /* function executeUpdateVDRecords
   * uploads data from table to VD tables
   * @param: request Object
+  * MINI-VD STEP-2
   */
   public function executeUpdateVDRecords(sfWebRequest $request)
   {
@@ -337,54 +335,48 @@ class commoninterfaceActions extends sfActions
 	$privilage = explode("+",getprivilage($this->cid));
 	if(in_array("IA",$privilage))
 	{
-		//transfer records from client table to temp table
+		//Start -transfer records from client table to temp table
 		$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
-		$params["INCOMPLETEUPLOAD"] = $request->getParameter("INCOMPLETEUPLOAD");
 		$this->transferVDRecords($params);
-        
-		//run script to populate entries to VD main tables in background
-		passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:populateVDEntriesFromTempTable > /dev/null &",$out);
-		//send mail alert in case of failure to start above script
-		if($out!=0)
-		{
-			$message = "Error in running populateVDEntriesFromTempTable cron in apps/operations/modules/commoninterface/actions/actions.class.php";
-			CRMAlertManager::sendMailAlert($message,"VDUploadFromTable");
-			//show error message
-			$this->forwardTo("commoninterface","uploadVD?BACKGROUND_FAILURE=1&cid=".$this->cid);
-		}
+		//End -transfer records        
+
+		// Background script execute to populate entries to Main VD tables
+		passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:populateVDEntriesFromTempTable > /dev/null &");
+		/*if($out!=0){
+			$message = "Error in running populateVDEntriesFromTempTable cron";
+			$this->forwardTo("commoninterface","uploadVD?BACKGROUND_SCRIPT_FAILURE=1&cid=".$this->cid);
+		}*/
 		//show success message
 		$this->forwardTo("commoninterface","uploadVD?SUCCESSFUL=1&cid=".$this->cid);
 	}
-	else
-	{
+	else{
 		$this->forwardTo("commoninterface","uploadVD?UNAUTHORIZED=1&cid=".$this->cid);
 	}	
   }
 
   public function executeWebServiceMonitoring(sfWebRequest $request)
   {
-  	$date = date("Ymd");
-  	if($request->getParameter("ajax") == 1)
-  	{	
-  		$data['sql_query'] =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-  		$data['cache_connection'] = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-  		$data['cache_problem_sql'] = sfRedis::getClient()->get($date."_SQL_REQUEST");
-  		$data['cache_inprocess'] = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-  		$data['cache_not_set'] = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-  		$data['create_cache_process'] = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-  		$data['total'] = sfRedis::getClient()->get($date."_Total");
-  		$data['execption'] = sfRedis::getClient()->get($date."_EXECPTION");
-  		echo json_encode($data);
-  		die;
-  	}
-  	$this->sql_query =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-	$this->cache_connection = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-	$this->cache_problem_sql = sfRedis::getClient()->get($date."_SQL_REQUEST");
-	$this->cache_inprocess = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-	$this->cache_not_set = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-	$this->create_cache_process = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-	$this->total = sfRedis::getClient()->get($date."_Total");
-	$this->execption = sfRedis::getClient()->get($date."_EXECPTION");
+
+	  $url = JsConstants::$contactUrl . "/v1/contacts";
+	 $url = $url . "/getloggingdata";
+	  $result = CommonUtility::webServiceRequestHandler($url);
+	  $date = date("Ymd");
+	  if(is_array($result[$date."_CACHE_NOT_SET"])) {
+		  foreach ($result[$date . "_CACHE_NOT_SET"] as $key => $value) {
+			  $this->cache_not_set += $value;
+		  }
+	  }
+	  if(is_array($result[$date."_SQL_QUERY"])) {
+		  foreach ($result[$date . "_SQL_QUERY"] as $key => $value) {
+			  $this->sql_query += $value;
+		  }
+	  }
+	$this->cache_connection =  $result[$date."_CACHE_CONNECTION"];
+	$this->cache_problem_sql =  $result[$date."_SQL_REQUEST"];
+	$this->cache_inprocess = $result[$date."_INPROCESS_CACHE_REQUEST"];
+	$this->create_cache_process =  $result[$date."_CREATE_CACHE_INPROCESS"];
+	$this->total =  $result[$date."_Total"];
+	$this->execption = $result[$date."_EXECPTION"];
 	$this->setTemplate('webservicemonitor');
   }
   
@@ -392,14 +384,21 @@ class commoninterfaceActions extends sfActions
   {
     $this->cid = $request->getAttribute("cid");
     $this->name = $request->getAttribute('name');
-    $this->newGateway = $request->getParameter('payment');
-    $path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
-    $content = htmlspecialchars(file_get_contents($path));
-    preg_match('/&quot;([^"]+)&quot;/', $content, $m);
-    $this->preSelectedGateway = $m[1];
+    $this->newGateway = $request->getParameter('payment');  
+    //$path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
+    //$content = htmlspecialchars(file_get_contents($path));
+    //preg_match('/&quot;([^"]+)&quot;/', $content, $m);  
+    $billingSelectedGateway = new billing_CURRENT_GATEWAY('newjs_master');
+    $this->preSelectedGateway = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
+    $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
+    if(!in_array($this->preSelectedGateway,$gatewayOption) || $this->preSelectedGateway == ''){
+        $this->preSelectedGateway = $billingSelectedGateway->fetchCurrentGateway();
+    }
     if($request->getParameter('gatewaySubmit')){
-        $newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
-        file_put_contents($path, htmlspecialchars_decode($newContent));
+        //$newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
+        //file_put_contents($path, htmlspecialchars_decode($newContent));
+        $billingSelectedGateway->setCurrentGateway($this->newGateway,$this->name);
+        JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;
         $this->message = "Gateway changed to ".$this->newGateway;
     }

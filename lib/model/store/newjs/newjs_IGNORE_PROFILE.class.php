@@ -129,6 +129,28 @@ class newjs_IGNORE_PROFILE extends TABLE {
                 return $output;
         }
 
+        public function getCountIgnoredProfiles($profileid)
+        {
+            try{
+                if(!$profileid)
+                    throw new jsException("","PROFILEID IS BLANK IN getCountIgnoredProfiles() OF newjs_IGNORED_PROFILE.class.php");
+                $sql = "SELECT count(*) AS CNT FROM newjs.IGNORE_PROFILE WHERE PROFILEID = :PROFILEID ";
+                $res=$this->db->prepare($sql);
+                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $res->execute();
+                if($row = $res->fetch(PDO::FETCH_ASSOC))
+                {
+                    return $row;
+                }
+
+                return null;
+            }
+            catch(PDOException $e)
+            {
+                throw new jsException($e);
+            }
+        }
+
 }
 
 ?>

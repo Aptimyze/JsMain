@@ -35,7 +35,7 @@
                      <pre id="myfamilyView" ~if $bEditView && $apiData["family"]["myfamily"] eq $notFilledInText`  class="fontlig color5"~else`class="wordbreakwrap fontlig" ~/if` >~$apiData["family"]["myfamily"]`</pre>
                 </p>
                   ~else`
-                  <p class="pt2">Not filled in</p>
+                  <p class="pt2 notFilledInColor">Not filled in</p>
                   ~/if`
                   <!--end:about family--> 
                   <!--start:about Education-->
@@ -52,7 +52,7 @@
                     </pre>
                   </p>
                   ~else`
-                  <p class="pt2">Not filled in</p>
+                  <p class="pt2 notFilledInColor">Not filled in</p>
                   ~/if`
                   <!--end:about Education--> 
                   <!--start:about Occupation-->
@@ -71,7 +71,7 @@
                       </pre>  
                   </p>
                   ~else`
-                  <p class="pt2">Not filled in</p>
+                  <p class="pt2 notFilledInColor">Not filled in</p>
                   ~/if`
                   <!--end:about Occupation--> 
                 </div>

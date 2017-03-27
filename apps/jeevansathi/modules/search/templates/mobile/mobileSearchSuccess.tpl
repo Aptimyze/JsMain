@@ -62,9 +62,9 @@ var google_remarketing_only = true;
 <section class="s-info-bar">
 	<div class="pgwrapper">
 		~if $partnermatchesPage eq 1`
-			My Matches (~$formatNumber_format`)
+			Desired Partner Matches (~$formatNumber_format`)
         	~elseif $searchBasedParam eq 'matchalerts'`
-			Match Alerts (~$formatNumber_format`)
+			Daily Recommendations (~$formatNumber_format`)
 	        ~elseif $searchBasedParam eq 'kundlialerts'`
 			Kundli Matches (~$formatNumber_format`)
 		~else`
@@ -120,6 +120,8 @@ var google_remarketing_only = true;
 						~mainMem::ERISHTA_LABEL`
 					~else if CommonFunction::isJSExclusiveMember($detailsArr['SUBSCRIPTION'])`
 						~mainMem::JSEXCLUSIVE_LABEL`
+					~else if CommonFunction::isEadvantageMember($detailsArr['SUBSCRIPTION'])`
+						~mainMem::EADVANTAGE_LABEL`
 					~/if`
 				</div>
 			~/if`

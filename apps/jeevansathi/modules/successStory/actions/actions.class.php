@@ -552,7 +552,7 @@ class successStoryActions extends sfActions
         $spouse_name = trim($request->getParameter(spouse_name));
         $spouse_id = trim($request->getParameter(spouse_id));
         $spouse_email = trim($request->getParameter(spouse_email));
-        
+        $offerConsent=$request->getParameter('offerConsent');
         if (empty($_FILES["wedding_photo"][name])){
         	$error = "photo";
         } else {
@@ -613,7 +613,12 @@ class successStoryActions extends sfActions
         	$this->MSG = 'verified';
         	$this->InsertIntoSuccessStory($request, $row, $rowd);
 	        $this->DeleteProfile($row);
-	        $this->DeleteProfile($rowd);   
+	        $this->DeleteProfile($rowd);
+
+             //// tracking of offer consent  added by Palash Chordia
+            if($offerConsent=='Y')
+            (new NEWJS_OFFER_CONSENT())->insertConsent($this->profileid);
+            ////////////////  
         }
 
         echo $this->MSG;
@@ -665,6 +670,7 @@ class successStoryActions extends sfActions
         if ($row['ACTIVATED'] != 'D') {
             $path = sfConfig::get("sf_web_dir") . "/profile/deleteprofile_bg.php " . $row[PROFILEID] . " > /dev/null &";
             $cmd = "/usr/local/php/bin/php -q " . $path;
+	    $cmd = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd);
             passthru($cmd);
         }
     }
@@ -770,9 +776,9 @@ class successStoryActions extends sfActions
                 $this->forward("successStory", "jsmsInputStory");
             }
         }
-
         $this->FetchProfile($request);
         $this->error = $request->getParameter("error");
+        $this->offerConsent = $request->getParameter("offerConsent");
 
         if (is_numeric($this->profileid)) {
             $jprofile = new JPROFILE();

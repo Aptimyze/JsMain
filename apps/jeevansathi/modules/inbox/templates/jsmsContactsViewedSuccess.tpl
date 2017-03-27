@@ -77,7 +77,13 @@ $("#noMsgDiv").css('height',$(window).height());
 			</div>
             <a class="searchNavigation" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`&stype=~SearchTypesEnums::PHONEBOOK_JSMS`&responseTracking=~JSTrackingPageType::PHONEBOOK_JSMS`&total_rec=~$firstResponse.no_of_results`&tupleId=~$idd`&searchid=~$firstResponse.searchid`&offset=~$offset`&contact_id=~$firstResponse.contact_id`&actual_offset=~$idd`" onclick="">
 				<div class="fontreg f14 color7 txtdec">
-					<span class="fontreg f14 color7 txtdec">~$tupleInfo.username`</span><span class="f11 colrsp1 fontreg padl5 fb"></span><span class="f11 color2 fontreg padl5 fb">~$tupleInfo.subscription_icon`</span>
+					<span class="fontreg f14 color7 txtdec textTru wid60p dispibl vbtm">
+                                        ~if $tupleInfo.name_of_user neq '' && $tupleInfo.name_of_user neq null` 
+                                                ~$tupleInfo.name_of_user`
+                                        ~else` 
+                                                ~$tupleInfo.username`
+                                        ~/if`
+                                        </span><span class="f11 colrsp1 fontreg padl5 fb"></span><span class="f11 color2 fontreg padl5 fb">~$tupleInfo.subscription_icon`</span>
 				</div>
 				<div class="f13 color3 fontlig txtdec">
 					~assign var="MTONGUE" value="/"|explode:$tupleInfo.mtongue`

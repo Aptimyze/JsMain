@@ -35,7 +35,7 @@ class crmMailer {
     }
     public function getProfileForFeedbackMailer()
     {
-        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS();
+        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS('newjs_slave');
         $profiles = $salesCampaignObj->getProfiles();
         return $profiles;
     }

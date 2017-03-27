@@ -53,18 +53,12 @@ class ContactMailer
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
 			$photo = 1;
-			$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			//$dppMatchesArr = SearchCommonFunctions::getDppMatches($receiver->getPROFILEID(),'fto_offer',SearchSortTypesEnums::popularSortFlag);
 		}
 		else
 		{
 			$photo = 0;
-			if($FtoState == FTOSubStateTypes::FTO_ACTIVE_LEAST_THRESHOLD)
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			else
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-				//$dppMatchesArr = SearchCommonFunctions::getDppMatches($receiver->getPROFILEID(),'fto_offer');
 		}
+		$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		$inputM2 = $dppMatchesArr["PIDS"];
 		$partialList=new PartialList;
 		$partialList->addPartial('suggested_profiles','suggested_profiles2',$inputM2,false);
@@ -87,7 +81,20 @@ class ContactMailer
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {    
+                $contactNumOb=new ProfileContact();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else 
+                    $ccEmail = "";
+		$email_sender->send("",$partialList,$ccEmail);
 	}
 	/**
 	 * 
@@ -155,7 +162,20 @@ class ContactMailer
 		$smartyObj->assign("acceptance_mailer",1);
 		$smartyObj->assign("FTO",$FTO);
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {
+                $contactNumOb=new ProfileContact();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else $ccEmail = "";
+
+		$email_sender->send("",$partialList,$ccEmail);
 	}
 	/**
 	 * 
@@ -182,27 +202,45 @@ class ContactMailer
 		$photoCount = $picture->getNoOfPics($profileArr);
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
-			$photo = 1;
-			$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
+			// Photo is visible on accept
+			if($receiver->getPHOTO_DISPLAY() == 'C')
+			{
+				$photo = 2;
+			}
+			else
+			{
+				$photo = 1;
+			}
 		}
 		else
 		{
 			$photo = 0;
-			if($FtoState == FTOSubStateTypes::FTO_ACTIVE_LEAST_THRESHOLD)
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			else
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		}
+		$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		$inputM2 = $dppMatchesArr["PIDS"];
 		$partialList=new PartialList;
-		$partialList->addPartial('suggested_profiles','suggested_profiles1',$inputM2,false);
+		$partialList->addPartial('suggested_profiles','suggested_profiles2',$inputM2,false);
 		$partialList->addPartial('jeevansathi_contact_address','jeevansathi_contact_address');
 		$smartyObj = $tpl->getSmarty();
+		$smartyObj->assign("sugcount",count($inputM2));
 		$smartyObj->assign("FTO",$FTO);
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {                
+                $contactNumOb=new ProfileContact();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else $ccEmail = "";
+
+		$email_sender->send("",$partialList,$ccEmail);
 		
 	}
 	/**
@@ -214,14 +252,53 @@ class ContactMailer
 	 */
 	public static function sendMessageMailer($receiver,$sender,$message)
 	{
-		$emailSender = new EmailSender(MailerGroup::WRITE_MESSAGE);
-		$tpl=$emailSender->setProfile($receiver);
-		$smartyObj = $tpl->getSmarty();
-		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
-		$smartyObj->assign("SENDERNAME",$sender->getUSERNAME());
-		$smartyObj->assign("RECEIVERNAME",$receiver->getUSERNAME());
-		$smartyObj->assign("CUST_MESSAGE",$message);
-		$emailSender->send();
+	$emailSender = new EmailSender(MailerGroup::WRITE_MESSAGE);
+    $tpl = $emailSender->setProfileId($receiver->getPROFILEID());
+	$variableDiscountObj = new VariableDiscount();
+	$variableDiscount = $variableDiscountObj->getDiscDetails($receiver->getPROFILEID());
+	$subscriptionStatus=CommonFunction::isPaid($receiver->getSUBSCRIPTION());
+	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
+	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
+	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
+
+	if(!empty($variableDiscount))
+	{
+		$vdDisplayText = $variableDiscountObj->getVdDisplayText($viewedProfileId,'small');
+		$discountMax = $variableDiscount["DISCOUNT"];
+		$tpl->getSmarty()->assign("variableDiscount",$discountMax);
+		$tpl->getSmarty()->assign("vdDisplayText",$vdDisplayText);
+		$tpl->getSmarty()->assign("VD_END_MONTH",date("M",JSstrToTime($variableDiscount["EDATE"])));
+        $tpl->getSmarty()->assign("VD_END_YEAR",date("Y",JSstrToTime($variableDiscount["EDATE"])));
+        $tpl->getSmarty()->assign("VD_END_DAY",date("d",JSstrToTime($variableDiscount["EDATE"])));
+        $tpl->getSmarty()->assign("VD_END_DAY_SUFFIX",date("S",JSstrToTime($variableDiscount["EDATE"])));
+		$tpl->getSmarty()->assign("topSource","VDMSG1".$discountMax);
+		$tpl->getSmarty()->assign("BottomSource","VDMSG2".$discountMax);
+	}
+	else
+	{
+		$tpl->getSmarty()->assign("BottomSource","VDMSG2");
+	}
+
+	$partialObj = new PartialList();
+	$profileChecksum=JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID());
+	if(strlen($message)>1000){$showReadMore=1;$message=substr($message,0,1000);}else $showReadMore=0;
+        $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
+        $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
+        $tpl->setPartials($partialObj);
+
+        if(CommonConstants::contactMailersCC)
+        {                
+
+        $contactNumOb=new ProfileContact();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+	$emailSender->send('','',$ccEmail);
 	}
 
   /**
@@ -267,10 +344,23 @@ class ContactMailer
 	$tpl->getSmarty()->assign("count", 1);
 	$tpl->getSmarty()->assign("totalCount",$totalCount);
 	$partialObj = new PartialList();
-    $partialObj->addPartial("eoi_profile", "eoi_profile", array($viewerProfileId=>$draft));
-    $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
-    $tpl->setPartials($partialObj);
-    $emailSender->send("");
+        $partialObj->addPartial("eoi_profile", "eoi_profile", array($viewerProfileId=>$draft));
+        $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
+        $tpl->setPartials($partialObj);
+    
+        if(CommonConstants::contactMailersCC)
+        {                
+        $contactNumOb=new ProfileContact();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+
+    $emailSender->send("",'',$ccEmail);
   } //end of InstantEOIMailer
   
   /**
@@ -288,15 +378,19 @@ class ContactMailer
    * @return boolean
    */
   public static function InstantReminderMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
-    $emailSender = new EmailSender(MailerGroup::EOI, 1756);
+
+$emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
-    if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
+  	$viewerProfileIdObj = new Profile('',$viewerProfileId);
+    if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
 		$paidStatus = "eValue";
-	else if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
+	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
+	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
+	$smartyObj->assign("count", 1);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
 	$smartyObj->assign("totalCount",$totalCount);

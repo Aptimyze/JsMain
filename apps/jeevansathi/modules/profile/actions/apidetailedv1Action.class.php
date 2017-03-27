@@ -119,6 +119,10 @@ class apidetailedv1Action extends sfAction
 			$this->loginProfile=LoggedInProfile::getInstance();
 
 		$this->profile=$this->returnProfile();
+                
+                // VA Whitelisting
+                //whiteListing of parameters
+                DetailActionLib::whiteListParams($request);
 		
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
@@ -247,13 +251,14 @@ class apidetailedv1Action extends sfAction
             }
         }
 		$out = array();
-    if(MobileCommon::isDesktop() && $request->getParameter('forViewProfile'))
-    {
-      $out =  $objDetailedDisplay->getViewProfileResponse();
-    }
-    else{
-      $out =  $objDetailedDisplay->getResponse();
-    }
+        
+        if(MobileCommon::isDesktop() && $request->getParameter('forViewProfile'))
+        {
+          $out =  $objDetailedDisplay->getViewProfileResponse();
+        }
+        else{
+          $out =  $objDetailedDisplay->getResponse();
+        }
 		
 		$this->profile->setNullValueMarker("");
 		
@@ -270,9 +275,17 @@ class apidetailedv1Action extends sfAction
 			if(MobileCommon::isIOSApp())
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
 			else
-				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORE'=>$this->IGNORED));
-		}	
-		$out['show_gunascore'] = "y";
+				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
+
+		}
+		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
+			$out['show_gunascore'] = "n";
+		}
+                $out['show_vsp'] = true;
+                if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
+			$out['show_vsp'] = false;
+		}
 		return $out;
 	}
 
@@ -340,7 +353,7 @@ class apidetailedv1Action extends sfAction
 			// 	$username=$username_temp;
 				
 			//Change this later
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($username,'USERNAME',"*","RAW");
 			$usernameUpper=strtoupper($username);
 			if(!$profile->getPROFILEID() && $usernameUpper!=$username)
@@ -354,7 +367,7 @@ class apidetailedv1Action extends sfAction
 		}
 		if($profileid)
 		{
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($profileid,'PROFILEID',"*","RAW");
 		}			
 				

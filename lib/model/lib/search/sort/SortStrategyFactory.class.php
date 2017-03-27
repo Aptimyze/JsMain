@@ -19,6 +19,7 @@ class SortStrategyFactory
 	*/
 	static public function getSorterStrategy($SearchParamtersObj,$loggedInProfileObj='',$sortLogic='')
 	{
+                
 		$slogic = $SearchParamtersObj->getSORT_LOGIC();
 		if($sortLogic == SearchSortTypesEnums::featureSortFlag)
 			return new SortByFeatureProfileStrategy($SearchParamtersObj,$loggedInProfileObj);
@@ -36,6 +37,16 @@ class SortStrategyFactory
 			return new SortByMatchAlert($SearchParamtersObj,$loggedInProfileObj);
 		if($slogic == SearchSortTypesEnums::kundliAlertFlag) 
 			return new SortByKundliAlert($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::viewAttemptFlag) 
+			return new SortByViewAttempt($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::FullDppWithReverseFlag) 
+			return new SortByLoginWithReverseDpp($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByTrendsScore) 
+			return new SortByTrendsScore($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByLoginDate) 
+			return new SortByLoginDate($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByVisitorsTimestamp) 
+			return new SortByVisitors($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }

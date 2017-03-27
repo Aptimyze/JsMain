@@ -48,7 +48,7 @@ if(!function_exists("authenticated"))
 function getcenter($connection, $ip="")
 {
 	global $TOUT;
-	global $useCrmMemcache;
+	$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	$backendObj = new backendActionsLib(array("jsadmin_PSWRDS"=>"newjs_slave","jsadmin_CONNECT"=>"newjs_master"),$useCrmMemcache);
 
 	$data = $backendObj->fetchPSWRDSDetailsBySessionID($connection,$ip,"CENTER");
@@ -59,7 +59,8 @@ function getcenter($connection, $ip="")
 
 function get_operator_detail($checksum)
 {
-	global $TOUT,$useCrmMemcache;
+	global $TOUT;
+	$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	list($md, $userno)=explode("i",$checksum);
 	if(md5($userno)!=$md)
 		return FALSE;
@@ -76,7 +77,8 @@ function get_operator_detail($checksum)
 
 function getemail($checksum)
 {
-	global $TOUT,$useCrmMemcache;
+	global $TOUT;
+	$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	list($md, $userno)=explode("i",$checksum);
     if(md5($userno)!=$md)
        return FALSE;
@@ -96,7 +98,7 @@ if(!function_exists("getname"))
 {
 	function getname($cid)
 	{
-		global $useCrmMemcache;
+		$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	    $temp=explode("i",$cid);
 	    $userid=$temp[1];
 	    if($userid)
@@ -114,7 +116,8 @@ if(!function_exists("getname"))
 
 function getprivilage($checksum="",$opname="")
 {
-	global $TOUT,$useCrmMemcache;
+	global $TOUT;
+	$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	if($opname)
 	{
 		$backendObj = new jsadmin_PSWRDS("newjs_slave");
@@ -125,7 +128,9 @@ function getprivilage($checksum="",$opname="")
 	{
 		list($md, $userno)=explode("i",$checksum);
 		if(md5($userno)!=$md)
+		{
 			return FALSE;
+		}
 		else
 		{
 			$backendObj = new backendActionsLib(array("jsadmin_PSWRDS"=>"newjs_slave","jsadmin_CONNECT"=>"newjs_master"),$useCrmMemcache);
@@ -139,8 +144,8 @@ function getprivilage($checksum="",$opname="")
 
 function getuser($checksum, $ip="")
 {
-	global $TOUT,$useCrmMemcache;
-
+	global $TOUT;
+	$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 	list($md, $userno)=explode("i",$checksum);
 	if(md5($userno)!=$md)
 		return FALSE;
@@ -158,7 +163,7 @@ if(!function_exists("logout"))
 {
 	function logout($checksum)
 	{
-		global $useCrmMemcache;
+		$useCrmMemcache = crmCommonConfig::$useCrmMemcache;
 		list($md, $userno)=explode("i",$checksum);
 		if(md5($userno)!=$md)
 		    return FALSE;

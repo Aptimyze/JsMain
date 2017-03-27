@@ -159,7 +159,9 @@ class crmAllocationActions extends sfActions
 	$this->profileid	=$request->getParameter("profileid");
 	$this->subMethod	=$request->getParameter("subMethod");
 	$this->orders		=$request->getParameter("orders");		
+	$pchecksum		=$request->getParameter("pchecksum");
 	$submit			=$request->getParameter("submit");
+	$discountNegVal         =$request->getParameter("discountNegVal");
 	if(!$this->profileid){
 		$this->forward('commoninterface','CrmLogin');
 	}
@@ -171,9 +173,10 @@ class crmAllocationActions extends sfActions
 
 
         $checksum               =md5($this->profileid)."i".$this->profileid;
+	if($checksum != $pchecksum && $pchecksum != '')
+		die('SORRY !!! YOU CANNOT PROCEED FURTHER.');
         $this->agentName        =$agentAllocDetailsObj->fetchAgentName($this->cid);
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
-
         $processObj->setProcessName('Allocation');
         $processObj->setMethod('OUTBOUND');
 	$processObj->setSubMethod($this->subMethod);	
@@ -196,6 +199,16 @@ class crmAllocationActions extends sfActions
 		$follow_hour    	=$request->getParameter("follow_hour");
 		$follow_min     	=$request->getParameter("follow_min");
 		$error			=false;
+
+		if(!empty($discountNegVal) && is_numeric($discountNegVal) && $discountNegVal > 0 && $discountNegVal < 100) {
+			$discNegObj = new incentive_DISCOUNT_NEGOTIATION_LOG();
+			$entryDt = date("Y-m-d H:i:s");
+			$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
+			$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+            if($discountNegVal <= 10){
+                $agentAllocDetailsObj->mailForLowDiscount($this->username,$this->agentName,$discountNegVal);
+            }
+		}
 
 		// Disposition value parsing  
 		if($willPay=='AA|X')
@@ -255,6 +268,12 @@ class crmAllocationActions extends sfActions
 	$this->profileChecksum =$this->checksum;
 	$this->echecksum=$apiAuthenticationObj->js_encrypt($this->checksum);
         $this->setTemplate('agentAllocation');
+
+	//JSC-1684
+        if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('OPR',$privilege))
+                $this->online_payment=1;
+        if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('ExPmSr',$privilege)||in_array('CSEXEC',$privilege))
+                $this->set_filter=1;
   }
   // allocate the profile to the agent by Outbound Process
 
@@ -263,6 +282,7 @@ class crmAllocationActions extends sfActions
         $this->cid              =$request->getParameter("cid");
         $this->username        	=$request->getParameter("username");
         $submit                 =$request->getParameter("submit");
+        $discountNegVal         =$request->getParameter("discountNegVal");
 
         $processObj             =new PROCESS();
         $crmUtilityObj          =new crmUtility();
@@ -303,6 +323,16 @@ class crmAllocationActions extends sfActions
 	                $follow_hour                  =$request->getParameter("follow_hour");
 	                $follow_min                   =$request->getParameter("follow_min");
 			$showDetail                   =$request->getParameter("showDetail");
+
+				if(!empty($discountNegVal) && is_numeric($discountNegVal) && $discountNegVal > 0 && $discountNegVal < 100) {
+					$discNegObj = new incentive_DISCOUNT_NEGOTIATION_LOG();
+					$entryDt = date("Y-m-d H:i:s");
+					$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
+					$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+                    if($discountNegVal <= 10){
+                        $agentAllocDetailsObj->mailForLowDiscount($this->username,$this->agentName,$discountNegVal);
+                    }
+				}
 
 	                // Disposition value parsing  
 	                if($willPayVal=='AA|X')
@@ -360,6 +390,12 @@ class crmAllocationActions extends sfActions
 	$this->callSource   =$crmUtilityObj->populateCallSource();
         $this->queryType    =$crmUtilityObj->populateQueryType();
 	$this->willPay      =$crmUtilityObj->populateDisposition($this->willPayVal);
+		if ($this->profileid) {
+			$curAllotAgent = $agentAllocDetailsObj->getAllotedAgent($this->profileid);
+			if ($curAllotAgent == $this->agentName) {
+				$this->isAlloted = 1;
+			}
+		}
        	$this->setTemplate('inboundAllocation');
   }
   public function executeManualAllocation(sfWebRequest $request)
@@ -853,5 +889,113 @@ class crmAllocationActions extends sfActions
     $respObj->generateResponse();
     die();
   }
+
+    /*exclusive service phase 2 form action
+    *@param : $request 
+    */
+    public function executeExclusiveServicingII(sfWebRequest $request)
+    {
+    	//show error message for invalid username
+		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
+			$this->errorMsg = "Invalid email id,no such exclusive customer exists !!!!";
+		if($request->getParameter("ERROR")=="INVALID_USERNAME_LIST")
+			$this->errorMsg = "Please enter valid list of usernames !!!!";
+		if($request->getParameter("SUCCESS")=="REQUEST_PROCESSED")
+			$this->successMsg = "Mail has been sent successfully."; 
+
+    }
+
+    /*executes exclusive servicing form II request
+    * @param : $request
+    */
+    public function executeProcessExclusiveServicingIISubmit(sfWebRequest $request){
+    	$inputArr = $request->getParameterHolder()->getAll();
+        $exclusiveEmail = trim($inputArr["exclusiveEmail"]);
+        $profileUsernameListParsed = $inputArr["profileUsernameListParsed"];
+    	$invalidCustomer = 0;
+    	if($exclusiveEmail) 
+		{
+			if($profileUsernameListParsed==""){
+				$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+			}
+			//validate profile
+			$profileObj = new Operator;
+			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID,USERNAME');
+			$pid = $profileObj->getPROFILEID();
+			if(!$pid){
+				$invalidCustomer = 1; //invalid user
+			}
+			else{
+				//check if profile has active JS sxclusive membership
+				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
+				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
+				unset($billingObj);
+				//if user has current JS Exclusive membership
+				if($exclusiveMemDetails){
+					//set profile details for mailer
+					$profileDetails = array("usernameListArr"=>explode("||", $profileUsernameListParsed),"PROFILEID"=>$pid,"EMAIL"=>$exclusiveEmail,"AGENT_NAME"=>$request->getParameter("name"));
+
+					unset($profileUsernameListParsed);
+					//get user name or set self name to username if not exists
+            		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
+            		$profileDetails["SELF_NAME"] = $nameDBObj->getName($pid);
+            		unset($nameDBObj);
+            		if(!$profileDetails["SELF_NAME"] || $profileDetails["SELF_NAME"]==""){
+            			$profileDetails["SELF_NAME"] = $profileObj->getUSERNAME();
+            		}
+            		//get agent phone number
+            		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
+            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL,FIRST_NAME,LAST_NAME");
+            		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
+            		$profileDetails["SENDER_EMAIL"] = $agentDetails[0]["EMAIL"];
+            		if($agentDetails[0]["FIRST_NAME"] && $agentDetails[0]["FIRST_NAME"]!=""){
+            			$profileDetails["SENDER_NAME"] = $agentDetails[0]["FIRST_NAME"]." ".$agentDetails[0]["LAST_NAME"];
+            		}
+            		else{
+            			if(strpos($profileDetails["AGENT_NAME"], '.')!== false){
+            				$profileDetails["AGENT_NAME"] = substr($profileDetails["AGENT_NAME"], 0,strpos($profileDetails["AGENT_NAME"], '.'));
+            			}
+            			$profileDetails["SENDER_NAME"] = ucfirst($profileDetails["AGENT_NAME"]);
+            		}
+            		//print_r($profileDetails);die;
+            		unset($jsadminObj);
+            		unset($agentDetails);
+
+            		//format mailer content and send mail
+            		$memMailerObj = new MembershipMailer();
+            		$mailSent = $memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
+            		unset($memMailerObj);
+            		unset($profileDetails);
+            		if($mailSent){
+						//successful entry case
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+				    }
+				    else{
+				    	//no valid list of username for hyperlink
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+				    }
+				}
+				else{
+					$invalidCustomer = 1;
+			    }
+			    unset($profileObj);
+		    }
+		}
+		else{
+			$invalidCustomer = 1;
+		}
+		if($invalidCustomer == 1){
+			$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
+		}
+	}
+
+    /*forwards the request to given module action
+      * @param : $module,$action
+      */
+	public function forwardTo($module,$action)
+	{
+		$url="/operations.php/$module/$action";
+		$this->redirect($url);
+	}
 
 }

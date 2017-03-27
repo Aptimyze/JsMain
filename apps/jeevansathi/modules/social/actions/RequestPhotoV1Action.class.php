@@ -124,6 +124,14 @@ class RequestPhotoV1Action extends sfActions
                                         $imageButtonDetail["url"] = null;
                                         $imageButtonDetail["action"] = null;
 				}
+
+
+					$memObject=JsMemcache::getInstance();
+					$memObject->delete('commHistory_'.$profileid.'_'.$senderProfileObj->getPROFILEID());
+					$memObject->delete('commHistory_'.$senderProfileObj->getPROFILEID().'_'.$profileid);
+
+
+
 				if($actionDetails && is_array($actionDetails))
 					$outputArr["actionDetails"] = ButtonResponse::actionDetailsMerge($actionDetails);
 				else

@@ -14,7 +14,16 @@ class MailerConfigVariables
         public static $strategyReceiversTVsT = 1;
         public static $strategyReceiversTVsNT = 2;
         public static $strategyReceiversNT = 3;
-
+        public static $communityModelNT = 4;
+        public static $relaxedDpp = 5;
+        
+        
+        public static $DppLoggedinWithReverseDppSort = 1; // DPP Loggedin in last 15days with reverse dpp sort
+        public static $DppLoggedinWithTrendsScoreSort = 2; // DPP Loggedin in last 15days, (Instead of TRENDS) for User having Trends sort by trends score
+        public static $DppNotLoggedinWithLoginDateSort = 3; // DPP not Loggedin in last 15days (Instead of TRENDS) for User having Trends sort by login timestamp
+        public static $TrendsLoggedinWithTrendsScoreSort = 4; // TRENDS Loggedin in last 15days sort by trends score
+        public static $TrendsNotLoggedinWithLoginDateSort = 5; // TRENDS not Loggedin in last 15days sort by login timestamp
+        
 	/*
 	This function returns the number of days from 01-01-2005 to today. Used in matches generation logic
 	@return - no of days

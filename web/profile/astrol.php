@@ -1,4 +1,6 @@
 <?php
+header("Location: $SITE_URL/");
+die;
 include("connect.inc");
 connect_db();
 

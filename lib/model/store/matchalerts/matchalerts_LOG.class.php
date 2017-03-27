@@ -184,7 +184,7 @@ class matchalerts_LOG extends TABLE
 	{
 		if (JsConstants::$alertServerEnable &&  $this->db) {
 			try {
-				$sql = "SELECT USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
+				$sql = "SELECT SQL_CACHE USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
 				if($dateGreaterThanCondition)
 					$sql.=" AND DATE>:DATE";
 				$prep = $this->db->prepare($sql);
@@ -246,6 +246,45 @@ class matchalerts_LOG extends TABLE
 		}
 		return $result;
 	}
+
+        public function getMatchAlertProfileForNotification($profileId, $skippedProfile,$date)
+        {
+                if (JsConstants::$alertServerEnable &&  $this->db) {
+                        try {
+                                $sql = "SELECT USER from matchalerts.LOG where RECEIVER = :RECEIVER AND DATE=:DATE ";
+                                $sql   = $sql . " AND USER NOT IN (";
+                                $count = 1;
+                                foreach ($skippedProfile as $key1 => $value1) {
+                                        $str                       = $str . ":VALUE" . $count . ",";
+                                        $bindArr["VALUE" . $count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                //if not in blank
+                                        if($count==1)
+                                                $str=136580;
+                                $str = $str . ")";
+                                $sql = $sql . $str;
+                                $prep = $this->db->prepare($sql);
+                                $prep->bindValue(":RECEIVER", $profileId, PDO::PARAM_INT);
+                                $prep->bindValue(":DATE", $date, PDO::PARAM_STR);
+                                if (isset($bindArr))
+                                        foreach ($bindArr as $k => $v)
+                                                $prep->bindValue($k, $v);
+                                $prep->execute();
+                                $maxDate = 0;
+                                while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                                        $result[] = $row['USER'];
+                                }
+                        }
+                        catch (PDOException $e) {
+                                //throw new jsException($e);
+                                jsException::log("getMatchAlertProfile-->.$sql".$e);
+                                return;
+                        }
+                }
+                return $result;
+        }
         
         /*
          * this function drops the oldest partition and creates a new one with higher ranges
@@ -288,6 +327,23 @@ echo $sql."\n";
 		/*
                 $prep->bindValue(":lastPartition", $lastPartitionName, PDO::PARAM_STR);
 		*/
+                $prep->execute();
+                $row = $prep->fetch(PDO::FETCH_ASSOC);
+                $lastPartitionRange = $row['PARTITION_DESCRIPTION'];  
+                return $lastPartitionRange;
+            }
+            catch (PDOException $ex) {
+                throw new jsException($ex);
+            }
+        }
+        /*
+         * Get minimum partition Value
+         */
+        public function getLastPartitionRange(){
+            //get the range of the latest partition
+            try{
+		$sql = "SELECT MIN(PARTITION_DESCRIPTION) AS PARTITION_DESCRIPTION FROM information_schema.PARTITIONS WHERE TABLE_SCHEMA = 'matchalerts' AND TABLE_NAME = 'LOG'";
+                $prep = $this->db->prepare($sql);
                 $prep->execute();
                 $row = $prep->fetch(PDO::FETCH_ASSOC);
                 $lastPartitionRange = $row['PARTITION_DESCRIPTION'];  

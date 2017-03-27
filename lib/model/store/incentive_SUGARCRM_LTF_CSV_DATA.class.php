@@ -87,7 +87,6 @@ class incentive_SUGARCRM_LTF_CSV_DATA extends TABLE
         		$dnc_val = $typeArr[0];
 			$dnc = $DNC[$dnc_val];
 			$mother_tongue = $typeArr[1];
-
         	    	$sql="SELECT * FROM incentive.SUGARCRM_LTF_CSV_DATA WHERE CSV_ENTRY_DATE = :ENTRY_DT AND CSV_TYPE=:MOTHER_TONGUE AND IS_DNC=:DNC ORDER BY ENTRY_DATE DESC";
             	    	$prep=$this->db->prepare($sql);
 		        $prep->bindValue(":ENTRY_DT",$date,PDO::PARAM_STR);
@@ -115,7 +114,6 @@ class incentive_SUGARCRM_LTF_CSV_DATA extends TABLE
 			$dnc ='Y';
 			$date1 =$date." 00:00:00";
 			$date2 =$date." 23:59:59";
-
                         $sql="SELECT * FROM incentive.SUGARCRM_LTF_CSV_DATA WHERE CSV_ENTRY_DATE = :ENTRY_DT AND ENTRY_DATE>=:ENTRY_DATE1 AND ENTRY_DATE<=:ENTRY_DATE2 AND IS_DNC=:DNC ORDER BY ENTRY_DATE DESC";
                         $prep=$this->db->prepare($sql);
                         $prep->bindValue(":ENTRY_DT",$date,PDO::PARAM_STR);

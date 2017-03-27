@@ -47,19 +47,34 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             throw new jsException($e);
         }
     }
-    public function getRemainingContactsForProfile($profileId)
+    public function getRemainingContactsForProfile($profileId,$extraFields="")
     {
         try
         {
-            $sql = "SELECT ALLOTED-VIEWED AS REMAINING FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID=:PROFILEID AND ALLOTED>=VIEWED";
+            $sql = "SELECT ALLOTED-VIEWED AS REMAINING";
+            if($extraFields != ""){
+                $sql = $sql.",".$extraFields;
+            }
+            $sql = $sql." FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID=:PROFILEID AND ALLOTED>=VIEWED";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
             $prep->execute();
             if($result = $prep->fetch(PDO::FETCH_ASSOC))
             {
+                if($extraFields != ""){
+                    return $result;
+                }
                 return ($result['REMAINING']);
             }
-            else return 0;
+            else{
+                if($extraFields != ""){
+                    return array("REMAINING"=>0,"ALLOTED"=>0);
+                }
+                else{
+                    return 0;
+                }
+               
+            }
         }
         catch (PDOException $e)
         {
@@ -156,6 +171,12 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
             $prep->bindValue(":COUNT", $count, PDO::PARAM_INT);
             $prep->execute();           
+            $row_affected = $prep->rowCount();
+            if($row_affected == 0)
+            {
+                return false;
+            }
+            return true;
         }
         catch (PDOException $e)
         {
@@ -172,6 +193,35 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
             $prep->bindValue(":COUNT", $count, PDO::PARAM_INT);
             $prep->execute();           
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    /*function to get contact alloted for profiles
+    * @param : $profileIdArr---array of profileids
+    * @return : $data(profileid based array of alloted,viewed and remaining contacts)
+    */
+    public function getAllotedContactsForProfiles($profileIdArr)
+    {
+        try
+        {
+            if(is_array($profileIdArr) && $profileIdArr)
+            {
+                $profileIdStr = implode("','", $profileIdArr);
+                $sql = "SELECT PROFILEID,ALLOTED FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID IN ('".$profileIdStr."')";
+                $prep = $this->db->prepare($sql);
+                $prep->execute(); 
+                while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $data[$result['PROFILEID']] = $result['ALLOTED'];
+                } 
+                return $data; 
+            }
+            else 
+                return null;
         }
         catch (PDOException $e)
         {

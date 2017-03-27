@@ -2,7 +2,6 @@
 include("connect.inc");
 include_once("../profile/pg/functions.php");    // included for dollar conversion rate
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($checksum))
 {
@@ -11,7 +10,14 @@ if(authenticated($checksum))
 		$smarty->assign("flag","1");
 		$st_date=$year."-".$month."-".$day." 00:00:00";
 		$end_date=$year2."-".$month2."-".$day2." 23:59:59";
-		
+        if(strtotime($st_date) >= strtotime("2017-04-01 00:00:00")){
+            $tableName = "PAYMENT_DETAIL_NEW";
+            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+        }
+        else{
+            $tableName = "PAYMENT_DETAIL";
+            $condition = "IN ('DONE','CHARGE_BACK')";
+        }
 		// Cases for date range check
 		$dateFlag;
 		if(strtotime($st_date) > strtotime($end_date)){
@@ -51,9 +57,9 @@ if(authenticated($checksum))
 		$temp_gateway = $gateway;
 
 		if($gateway!='ALL')
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,ord.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY from billing.PURCHASES as pur,billing.PAYMENT_DETAIL as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS IN ('DONE','CHARGE_BACK') and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,pd.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PURCHASES as pur,billing.$tableName as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
 		else
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,ord.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY from billing.PAYMENT_DETAIL as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS IN ('DONE','CHARGE_BACK') and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,pd.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.$tableName as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
 		//print $sql.PHP_EOL;
 		// print $dateFlag;
 		$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
@@ -126,6 +132,8 @@ if(authenticated($checksum))
 					$arr[$i]["amt_topay"]=$row["amt"];
 					$arr[$i]["ordno"]=$row["ordno"]."-".$row["ord_ID"];
 					$arr[$i]["rate"]=$row["rate"];
+					$arr[$i]["gateway"]=$gateway;
+					$arr[$i]["invoice_no"]=$row['INVOICE_NO'];
 					if($row['TYPE']=='DOL')
 					{
 						if ($gateway=='CCAVENUE' || $gateway == 'PAYU' || $gateway=='APPLEPAY' || $gateway=='PAYTM'){
@@ -190,7 +198,7 @@ if(authenticated($checksum))
 			$dataSet1 ="Gateway \t Total Collection For Dollars($) \t Converted Rs Value \t Total Collection in Rs";
 			$dataSet2 ="$gateway \t $total_dollars \t $total_dol_amount \t $total_rs_amount";	
 
-			$dataHeader1 =array("entry_dt"=>"Date","username"=>"Username","ordno"=>"OrderId","type"=>"Type","amt_topay"=>"Amount",);
+			$dataHeader1 =array("entry_dt"=>"Date","username"=>"Username","ordno"=>"OrderId","type"=>"Type","amt_topay"=>"Amount","gateway"=>"Gateway","invoice_no"=>"Invoice No");
 
 			$dataSet .= getExcelData($arr,$dataHeader1);
 			$dataSetComp =$dataSetHeading1."\n\n".$dataSetHeading2."\n\n".$dataSet1 ."\n".$dataSet2."\n\n\n".$dataSet;

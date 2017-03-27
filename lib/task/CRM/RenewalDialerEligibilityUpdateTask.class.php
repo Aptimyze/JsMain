@@ -31,7 +31,6 @@ EOF;
         $processObj->setMethod("IN_RENEWAL_DIALER_ELIGIBILITY");
         
         $inRenewalDialerObj = new RenewalDialer();
-        $inRenewalDialerObj->createTempPoolForRenewalDialer();
         $inRenewalDialerObj->preFilter($processObj);
         $profiles = $inRenewalDialerObj->fetchProfiles($processObj);
         $inRenewalDialerObj->filterProfiles($profiles);

@@ -18,6 +18,7 @@ class postEOIv2Action extends sfAction
 	function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
+
 		if ($request->getParameter("actionName")=="postEOI")
 		{
 			$inputValidateObj->validateContactActionData($request);
@@ -28,7 +29,7 @@ class postEOIv2Action extends sfAction
 				//Contains logined Profile information;
 				$this->loginProfile = LoggedInProfile::getInstance();
 			//	$this->loginProfile->getDetail($this->loginData["PROFILEID"], "PROFILEID");
-				
+
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
@@ -48,7 +49,10 @@ class postEOIv2Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+                    if($request->getParameter('chatMessage'))
+                        $this->contactHandlerObj->setElement("MESSAGE",$request->getParameter('chatMessage'));
+                    else
+          				$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));
@@ -64,6 +68,9 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			if($request->getParameter("setFirstEoiMsgFlag") == true){
+            	$responseArray["eoi_sent"] = true;
+            }
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -75,7 +82,12 @@ class postEOIv2Action extends sfAction
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}
-		die;
+		$internal = $request->getParameter("internal");
+		if($internal == 1){
+			return sfView::NONE;
+		} else {
+			die;
+		}
 	}
 	
 	
@@ -102,18 +114,31 @@ class postEOIv2Action extends sfAction
 		$ownthumbNail = $ownthumbNail['url'];
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
-		if($this->contactEngineObj->messageId)
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		$onlyUnderScreenError = 0; // No errors
+		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
 		{
+			$onlyUnderScreenError = 1;
+		}
+		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
+		{
+			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		}
+
+		if($this->contactEngineObj->messageId)
+		{ 
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$responseArray["headerthumbnailurl"] = $thumbNail;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I";
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+				
+
 			}	
 			else
 			{
@@ -181,6 +206,14 @@ class postEOIv2Action extends sfAction
 				$responseArray["headerlabel"] = "Your Profile is Hidden";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+			}
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
 			{
 				$membershipText = " Become a paid member to send more interests";
@@ -240,11 +273,12 @@ class postEOIv2Action extends sfAction
 				$responseArray["redirect"] = true;				
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
-			{
+			{  
 				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
-				$responseArray["errmsglabel"] = "Your profile is currently being screened by our screening team. Your interest would be delivered only after your profile is screened";
+				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["remove3Dots_UnderScreen"] = true;
+				$responseArray["headerlabel"] = "Profile Under Screening";
 				$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["DECLINED"] == 2)
@@ -265,6 +299,7 @@ class postEOIv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
+			
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;

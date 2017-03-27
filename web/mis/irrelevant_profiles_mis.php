@@ -3,9 +3,6 @@
 include("connect.inc");
 $db=connect_misdb();
 
-//why this connection is taken::Alok::17thMay2005
-$db2=connect_master();
-
 if(authenticated($cid))
 {
 	$smarty->assign("cid",$cid);

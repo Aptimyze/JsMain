@@ -40,13 +40,14 @@ function onPhoneVerifyBack(){
         <p class="color3 txtc pt10">Phone Verification Failed</p>
         <p class="color4 txtc pt10 pb30">Make sure you entered correct code.</p>
         <div class="otpbr2 txtc otplh60">
-            <div onclick='$("#otpWrongCodeLayer").hide();return true;' class="f19 otpcolr2 fontthin">Ok</div>
+            <div id='js-okIncorrectOtp'  onclick='$("#otpWrongCodeLayer").hide();return true;' class="f19 otpcolr2 fontthin">Ok</div>
         </div>
     </div>
 </div>
 
 <input type="hidden" id="fromReg" value="~$apiData.phoneDetails.fromReg`">
 <input type="hidden" id="groupname" value="~$apiData.phoneDetails.groupname`">
+<input type="hidden" id="sourcename" value="~$sourcename`">
 <input type="hidden" id="mainPhoneNumber" value="~$apiData.phoneDetails.PHONE1`">
         <input type="hidden" id="isdNumber" value="~$apiData.phoneDetails.ISD`">
             <div class="fullwid rel_c1 outerdiv" id="mainScreen">
@@ -83,7 +84,7 @@ function onPhoneVerifyBack(){
                
                <div class='dispnone js-NumberedLayer js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
     <p>Verification code sent to +<span id='isdDiv'></span> <span id='mainPhone'></span></p>
-    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a onClick='sendSMSAjax()' class="color2">Resend Code</a></p>
+    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId' onclick='sendSMSAjax()' class="color2">Resend Code</a></p>
     </div>
 
       <div class="bg4 otpma">
@@ -114,7 +115,7 @@ function onPhoneVerifyBack(){
                             <span id="mainPhone1"></span>
                         </div>
                         <div class="fl">
-                            <div class="icons1 edit"></div>
+                            <div id='myjs-phoneEditIcon' class="icons1 edit"></div>
                         </div>
                         <div class="clr"></div>
                     </a>
@@ -159,6 +160,9 @@ function onPhoneVerifyBack(){
             <div id="mydiv" class='otplayer' style="display:none;">
                 <img src="/images/jsms/commonImg/loader.gif" class="ajax-loader"/>
             </div>
+~if $sourcename && $groupname`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
+~/if`
 ~if $pixelcode`
 ~$pixelcode|decodevar`
 ~/if`

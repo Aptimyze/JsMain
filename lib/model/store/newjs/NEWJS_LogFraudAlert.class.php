@@ -39,7 +39,7 @@ class NEWJS_LogFraudAlert extends TABLE
                 try
                 {
 
-                	$sql = "SELECT J.PROFILEID,J.EMAIL from newjs.JPROFILE AS J LEFT JOIN newjs.LogFraudAlert AS F ON J.PROFILEID=F.PROFILEID WHERE J.LAST_LOGIN_DT > DATE_SUB(CURDATE(), INTERVAL :OneTimeInterval DAY) AND J.`PROFILEID`%:totalScript=:currentScript AND J.activatedKey ='1' AND J.ACTIVATED <> 'D' AND F.PROFILEID IS NULL";
+                	$sql = "SELECT J.PROFILEID,J.EMAIL from newjs.JPROFILE AS J LEFT JOIN newjs.LogFraudAlert AS F ON J.PROFILEID=F.PROFILEID WHERE DATE(J.LAST_LOGIN_DT) > DATE_SUB(CURDATE(), INTERVAL :OneTimeInterval DAY) AND J.`PROFILEID`%:totalScript=:currentScript AND J.activatedKey ='1' AND J.ACTIVATED <> 'D' AND F.PROFILEID IS NULL";
                 	$prep = $this->db->prepare($sql);
                 	$prep->bindValue(":OneTimeInterval", $OneTimeInterval, PDO::PARAM_INT);
                 	$prep->bindValue(":currentScript", $currentScript, PDO::PARAM_INT);

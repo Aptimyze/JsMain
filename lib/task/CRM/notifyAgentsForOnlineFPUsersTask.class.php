@@ -39,14 +39,14 @@ EOF;
 		{
 			sfContext::createInstance($this->configuration);
 		}
-		$offset = "- 2 min";   
+		$offset = "- 4 min";   
 		$lastOffsetDate = date('Y-m-d H:i:s', strtotime($offset));
 		$currentDate  = date("Y-m-d H:i:s");
 		$lastDayDate = date('Y-m-d H:i:s', strtotime('-1 day'));
 		$useFallbackServer = false; //use or not fallback server for agent notifications in case main rabbitmq server is off
 
-		//send notification only during 9.30 am to 9.30 pm
-		if((date('H')>=23 && date('H')<=24) || (date('H')>=0 && date('H')<=11))
+		//send notification only during 9.30 am to 7.30 pm
+		if(date('H')>=0 && date('H')<=9)
 		{
 			//updating memcache key "memUpdateDate" and "CRMNotificationEligibleAgents" initially and daily
 			if(!JsMemcache::getInstance()->get("memUpdateDate") || (JsMemcache::getInstance()->get("memUpdateDate") && JsMemcache::getInstance()->get("memUpdateDate")<=$lastDayDate))
@@ -54,7 +54,7 @@ EOF;
 				
 				JsMemcache::getInstance()->set("memUpdateDate",$currentDate);
 				//set memcache key for array of active agents
-				$pswrdsObj = new jsadmin_PSWRDS();
+				$pswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 				$agentsArr = $pswrdsObj->getAllExecutivesDetails("USERNAME");		
 				unset($pswrdsObj);
 				JsMemcache::getInstance()->set("CRMNotificationEligibleAgents",serialize($agentsArr));				
@@ -115,12 +115,16 @@ EOF;
 				        		$agentID = array_search(array("USERNAME"=>$details['AGENT']), $agentsArr);
 				        		if($agentID!=false)
 				        		{
+				        			$notificationData = array();
 					        		//send FSO app notifications
 					        		if($params["ACTION"]=="ONLINE")
-					        			$notificationKey = "AGENT_ONLINE_PROFILE";
+					        			$notificationData["notificationKey"] = "AGENT_ONLINE_PROFILE";
 					        		else if($params["ACTION"]=="FP")
-					        			$notificationKey= "AGENT_FP_PROFILE";
-					        		passthru(JsConstants::$php5path." symfony browserNotification:browserNotificationTask INSTANT ".$notificationKey." ".$agentID." ".$details['PROFILEID']." > /dev/null &");
+					        			$notificationData["notificationKey"] = "AGENT_FP_PROFILE";
+					        		$notificationData["selfUserId"] = $agentID;
+					        		$notificationData["otherUserId"] = $details['PROFILEID'];	
+					        		$producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+					        		//passthru(JsConstants::$php5path." symfony browserNotification:browserNotificationTask INSTANT ".$notificationKey." ".$agentID." ".$details['PROFILEID']." > /dev/null &");
 				        		}
 				        	}
 				        	  

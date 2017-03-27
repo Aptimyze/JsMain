@@ -8,19 +8,21 @@ class userplane_recentusers extends TABLE{
          * @param $dbName - Database to which the connection would be made
          */
 
-        public function __construct($dbname="")
+        public function __construct($dbname="newjs_masterRep")
         {
 			parent::__construct($dbname);
         }
 	public function replacedata($pid)
 	{
 		try {
+			/*
 			$time=date("Y-m-d G:i:s");
 			$sql="replace into userplane.recentusers(userID,lastTimeOnline) values(:PID,:TIME)";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PID",$pid, PDO::PARAM_INT);
 			$prep->bindValue(":TIME",$time, PDO::PARAM_STR);
 			$prep->execute();
+			*/
 			
 		}
 		catch (Exception $e) {
@@ -30,11 +32,13 @@ class userplane_recentusers extends TABLE{
 	public function DeleteRecord($pid)
 	{
 		try {
+			/*
                         $pid=intval($pid);
                         $sql="delete from userplane.recentusers where userID=:PID";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PID",$pid, PDO::PARAM_INT);
                         $prep->execute();
+			*/
 
                 }
                 catch (Exception $e) {

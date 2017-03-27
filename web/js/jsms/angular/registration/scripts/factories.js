@@ -19,7 +19,9 @@
 			"PINCODE_ERROR_1":"Provide a valid pincode",
 			"PINCODE_ERROR_2":"Provide a pincode",
 			"EMAIL_REQUIRED":"Provide an email.",
+			"NAME_REQUIRED":"Provide the name of user for whom account is being created",
 			"EMAIL_INVALID":"Provide a valid email.",
+			"NAME_INVALID":"Provide a valid name.",
 			"EMAIL_INVALID_DOMAIN":"Provide a valid email.",
 			"EMAIL_EXIST":"An account with this Email already exists",
 			"PASSWORD_REQUIRED":"Provide a password",
@@ -166,11 +168,11 @@
 							'fri':{'icon':'friicon','label':'Friend','value':'4F'},
 							};
 		var regOptionalFields = {
-		"s2" : [{"label":"City living in","value":notFilled,"show":"false","screenName":"s2","userDecision":"","dindex":"0","storeKey":"city_res",dshow:"city_res"}],
 		"s4": [{"label":"Children","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"havechild",dshow:"children"},
 			{"label":"Caste","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"caste",dshow:"reg_caste_"}],
         "s9": [{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"m_brother",dshow:"m_brother","labelPrefix":" brother(s) of which married "},
-			{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"m_sister",dshow:"m_sister","labelPrefix":" sister(s) of which married "}],
+			{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"m_sister",dshow:"m_sister","labelPrefix":" sister(s) of which married "},
+			{"label":"City","value":notFilled,"show":"false","storeKey":"native_city","screenName":"s9","dshow":"reg_city_","userDecision":"","dindex":"2","labelPrefix":"-"}],
 		};
 		
 		var listOfScreens = ['s1','s2','s3','s4','s5','s6','s9','s10'];
@@ -180,8 +182,10 @@
 			{"label":"Gender","value":notFilled,"show":"true","screenName":"s2","userDecision":"","dindex":"0","dshow":"gender","storeKey":"gender","errorLabel":""},
 			{"label":"Date of birth","value":notFilled,"show":"true","multiField":"1","screenName":"s2","storeKey":"dtofbirth","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"dtofbirth","userDecision":"","dindex":"1","depValue":"","errorLabel":"","tapName":"Date of birth"},
 			{"label":"Height","value":notFilled,"show":"true","screenName":"s2","storeKey":"height","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"height","userDecision":"","dindex":"2","tapName":"Height","defaultValue":"13"},
-			{"label":"Country - City living in","value":notFilled,"show":"true","storeKey":"country_res","optIndex":"0","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"city_res","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":"City Living In"},
-			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"4","errClass":""}
+			{"label":"Country living in","value":notFilled,"show":"true","storeKey":"country_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":""},
+			{"label":"State living in","value":notFilled,"show":"false","storeKey":"state_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"state_res","userDecision":"","dindex":"4","tapName":'State',"dependant_tapName":""},
+			{"label":"City living in","value":notFilled,"show":"false","storeKey":"city_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_city_jspc","userDecision":"","dindex":"5","tapName":'City',"dependant_tapName":""},
+			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""}
 				],
 		"s3" : [
 			{"label":"Highest Education","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"edu_level_new","userDecision":"","dindex":"0","storeKey":"edu_level_new","tapName":"Highest Education"},
@@ -198,15 +202,18 @@
 			{"label":"Marital Status","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"children","dshow":"reg_mstatus","userDecision":"","dindex":"0","storeKey":"mstatus","optIndex":"0","tapName":"Martial Status","dependant_tapName":"Have Children"},
 			{"label":"Mother Tongue","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_mtongue","userDecision":"","dindex":"1","storeKey":"mtongue","tapName":"Mother Tongue"},
 			{"label":"Religion-Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_caste_","depValue":"","dshow":"religion","userDecision":"","dindex":"2","storeKey":"religion","optIndex":"1","tapName":"Religion","dependant_tapName":""},
-      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"3","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
+			{"label":"I am open to marry people of all castes \n(Caste No Bar)","value":"","inputType":"checkbox","show":"false","screenName":"s4","storeKey":"casteNoBar","hamburgermenu":"0","dindex":"3","dshow":"","required":"false"},
+      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"4","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
 			],
 		"s5": [
-      {"label":"Name (optional)","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"false"},
+      {"label":"Full Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
 			{"label":"Email ID","value":"","show":"true","screenName":"s5","inputType":"email","hint":notFilled,"storeKey":"email","errorLabel":"","dindex":"1","errClass":"","isAutoCorrected":"false"},
 			{"label":"Password","value":"","show":"true","screenName":"s5","inputType":"password","hint":notFilled,"helpText":"Show","storeKey":"password","errorLabel":"","dindex":"2","errClass":""},
-			{"label":"Phone Number","value":"","show":"true","screenName":"s5","inputType":"number","hint":notFilled,"storeKey":"phone_mob","errorLabel":"","dindex":"3","isdVal":91,"isdHint":notFilledISD,'isdMaxlength':'4','maxLength':'10','maxNriLength':'14',"errClass":""}
+			{"label":"Phone Number","value":"","show":"true","screenName":"s5","inputType":"number","hint":notFilled,"storeKey":"phone_mob","errorLabel":"","dindex":"3","isdVal":91,"isdHint":notFilledISD,'isdMaxlength':'4','maxLength':'10','maxNriLength':'14',"errClass":""},
+			{"screenName":"s5","storeKey":"displayname","dindex":4
+			}
 			],
-		"s6": [	{"label":"Email ID","value":"","show":"true","screenName":"s6","storeKey":"yourinfo",'errorLabel':"","hint":"Introduce yourself. Write about your values, beliefs/goals, aspirations/interests and hobbies.","userDecision":""}],
+		"s6": [	{"label":"Email ID","value":"","show":"true","screenName":"s6","storeKey":"yourinfo",'errorLabel':"","hint":"Introduce yourself (Don't mention your name). Write about your values, beliefs/goals, aspirations/interests and hobbies.\n\n\n This text will be screened by our team.","userDecision":""}],
         "s9": [
 			{"label":"Family Type","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"family_type","userDecision":"","dindex":"0","storeKey":"family_type","tapName":"Family Type"},
 			{"label":"Family Values","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"family_values","userDecision":"","dindex":"1","storeKey":"family_values","tapName":"Family Values"},
@@ -216,7 +223,9 @@
             {"label":"Mother's Occupation","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"mother_occ","userDecision":"","dindex":"5","storeKey":"mother_occ","tapName":"Mother's Occupation"},
             {"label":"Brother(s)","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"m_brother","depValue":"","dshow":"t_brother","userDecision":"","dindex":"6","storeKey":"t_brother","tapName":"Brother(s)","dependant_tapName":"Of which married","optIndex":"0"},
             {"label":"Sister(s)","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"m_sister","depValue":"","dshow":"t_sister","userDecision":"","dindex":"7","storeKey":"t_sister","tapName":"Sister(s)","dependant_tapName":"Of which married","optIndex":"1"},
-            {"label":"Gothra","value":"","inputType":"text","hint":notFilled,"show":"true","screenName":"s9","storeKey":"gothra","hamburgermenu":"0","dindex":"8"}
+			{"label":"Family based out of","value":notFilled,"show":"true","storeKey":"native_state","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_city_","depValue":"","dshow":"native_state_jsms","userDecision":"","dindex":"8","tapName":'Family based out of',"optIndex":"2","dependant_tapName":"Family based out of"},
+			{"label":"Please specify(city)","value":"","show":"false","storeKey":"ancestral_origin","screenName":"s9","hamburgermenu":"0","dindex":"9","hint":notFilled,"inputType":"text","userDecision":"","required":"false"},
+            {"label":"Gothra","value":"","inputType":"text","hint":notFilled,"show":"true","screenName":"s9","storeKey":"gothra","hamburgermenu":"0","dindex":"10"},
             
 			],
             "s10": [{"label":"About family","value":"","show":"true","screenName":"s10","storeKey":"familyinfo",'errorLabel':"","hint":"Write about your parents and brothers or sisters. Where do they live? What are they doing?","userDecision":""}],
@@ -262,6 +271,13 @@
 		}
 		factory.showModalWindow = function($scope)
 		{
+			var errorStr = "";
+                        angular.forEach($scope.fields, function(field,key) {
+                                if(field.errorLabel.length !== 0) {
+                                        errorStr = errorStr + field.errorLabel + "  ";
+                                }
+                        });
+			trackJsEventGA("jsms","regErrorTracking"+$scope.screenName, errorStr);
 			$scope.bModalWindow =true;
 			$timeout(function(){if($scope.bModalWindow)factory.hideModalWidow($scope);},Constants.getMsgTimeOut());
 		}
@@ -386,7 +402,6 @@
 		{
 			var	arrDependantFields = [];
 			var iCount = 0;
-			
 			switch(field.storeKey)
 			{
 				case 'gender':
@@ -401,9 +416,12 @@
                     arrDependantFields[iCount].userDecision = "";
                     arrDependantFields[++iCount] = regFields['s9'][3];/*Family Income*/
                     Storage.storeUserData('familyIncomeDep',parseInt(field.userDecision));
-                    if(field.userDecision.indexOf('51')!=-1)/*Make optional field show as true*/
-                        regOptionalFields["s2"]['0'].show = true;
+                   // if(field.userDecision.indexOf('51')!=-1)/*Make optional field show as true*/
+                     //   regOptionalFields["s2"]['0'].show = true;
                     factory.updateISDVal(field.userDecision);
+				break;
+				case 'state_res':
+				    Storage.storeUserData('stateDep',field.userDecision);				
 				break;
 				case 'mtongue':
 					arrDependantFields[iCount] = regFields['s4'][2];/*Religion*/
@@ -439,7 +457,17 @@
 					factory.initDobField(field,preFilledData);
 					return;
 				}
-									
+				if(field.storeKey=="native_state" && screenName=="s9" && !preFilledData['native_state'])
+				{
+                                        if(preFilledData["native_country"]=="0")
+                                                return;
+
+                                        field.userDecision = preFilledData["native_country"];
+					val = factory.getLabel("native_country_jsms",field.userDecision);
+					if(val)
+						field.value = val;
+					return;
+				}					
 				if( field.storeKey && 
 					(preFilledData[field.storeKey] && 
 					preFilledData[field.storeKey] != "undefined")
@@ -529,12 +557,84 @@
 		{
 			var fields = factory.getRegFields(screenName);
 			var optionFields = factory.getRegOptionalFields(screenName);
-			
 			if(fields[indexPos].multiField == "1")
 			{
 				factory.updateMultiGuiFields(screenName,indexPos,output);
 				return ;
 			}
+				if(fields[indexPos].storeKey=="native_country" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value!="NI")
+				{
+					fields[indexPos].storeKey="native_state";
+				}
+			if((fields[indexPos].storeKey=="native_state" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value=="NI")||(fields[indexPos].storeKey=="native_country" && output.hasOwnProperty("native_country_jsms"))|| 
+	(fields[indexPos].storeKey=="native_state" && output.hasOwnProperty("native_country_jsms") && $.isNumeric(output["native_country_jsms"].value)))
+			{
+				UserDecision.store("native_country",output['native_country_jsms']['value']);
+				UserDecision.store("native_state",'');
+				UserDecision.store("native_city",'');
+				fields[indexPos].userDecision=output['native_country_jsms'].value;
+				fields[indexPos].value=output['native_country_jsms'].label;
+				fields[indexPos].storeKey="native_country";
+				fields[indexPos].errorLabel = "";	
+				fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+				var iIndex              = fields[indexPos].optIndex;
+				optionFields[iIndex].value =  "native_city";
+				optionFields[iIndex].userDecision = "";
+				factory.handleDepValue(fields[indexPos]);
+				if(output.hasOwnProperty(fields[indexPos].dshow))
+					output[fields[indexPos].dshow].value='';
+                                if(output['native_country_jsms']['value']=="0")
+                                {
+                                        fields[indexPos].value = "Not Filled In";
+                                }
+				return;
+			}
+			else if(fields[indexPos].storeKey=="native_state" && output.hasOwnProperty(fields[indexPos].dshow) && output[fields[indexPos].dshow].value!="NI")
+			{
+				UserDecision.store("native_country",'51');
+				UserDecision.store("native_state",output['native_state_jsms']['value']);
+				$.each(output, function (key,val){ 
+				if(key.indexOf('reg_city')>-1)
+				{
+					UserDecision.store("native_city",val['value']);
+					depUserSelection = val['value'];
+					depLabel		= val['label'];
+				}
+				var iIndex              = fields[indexPos].optIndex;
+				if(output['native_state_jsms']['value']=="0")
+				{
+					UserDecision.store("native_city",'');
+					depUserSelection='';
+					depLabel='';
+                                        fields[indexPos].value = "Not Filled In";
+				}
+				else
+				{
+					labelPrefix = optionFields[iIndex].labelPrefix;
+					fields[indexPos].value = output['native_state_jsms']['label'] + labelPrefix + depLabel;
+				}
+
+				optionFields[iIndex].value =  depLabel;
+				optionFields[iIndex].userDecision = depUserSelection;
+				fields[indexPos].userDecision=output['native_state_jsms']['value'];
+				fields[indexPos].errorLabel = "";	
+				fields[indexPos].depValue= depUserSelection;
+				fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+				factory.handleDepValue(fields[indexPos]);
+				return;
+				 });
+			}
+			    else if(fields[indexPos].storeKey=="casteNoBar") 
+				{
+                                fields[indexPos].userDecision=output[fields[indexPos].storeKey].value;
+                                fields[indexPos].value=output[fields[indexPos].storeKey].label;
+                                fields[indexPos].errorLabel = "";       
+                                UserDecision.store(fields[indexPos].storeKey,fields[indexPos].userDecision);
+                                fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
+                                factory.handleDepValue(fields[indexPos]);
+                        }
+			else
+			{
 			fields[indexPos].userDecision=output[fields[indexPos].dshow].value;
 			fields[indexPos].value=output[fields[indexPos].dshow].label;
 			fields[indexPos].errorLabel = "";	
@@ -558,7 +658,6 @@
 					depLabel		= output[fields[indexPos].dependant].label;
 					fields[indexPos].value = fields[indexPos].value + labelPrefix + depLabel;
 				}
-				
 				if(iIndex && iIndex.length)
 				{
 					optionFields[iIndex].value =  depLabel;
@@ -571,6 +670,23 @@
 			//parse
 			fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
 			factory.handleDepValue(fields[indexPos]);
+			}
+			if(fields[indexPos].storeKey=="country_res")
+			{
+				fields[4].userDecision='';
+				fields[5].userDecision='';
+                                UserDecision.store("state_res",'');
+                                UserDecision.store("city_res",'');
+                                fields[4].value = "Not Filled In";
+                                fields[5].value = "Not Filled In";
+			}
+			if(fields[indexPos].storeKey=="state_res")
+                        {
+                                UserDecision.store("city_res",'');
+                                fields[5].value = "Not Filled In";
+				fields[5].userDecision='';
+                        }
+
 		}
 			
 		factory.updateMultiGuiFields = function(screenName,indexPos,output)
@@ -736,12 +852,12 @@
 
 		var fieldsStoreKey={
 			"s1":["relationship"],
-			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","country_res","city_res","pincode"],
+			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode"],
 			"s3":["edu_level_new","pg_college","degree_pg","other_pg_degree","college","degree_ug","other_ug_degree","occupation","income"],
-			"s4":["mstatus","mtongue","religion","caste","havechild","horoscope_match"],
+			"s4":["mstatus","mtongue","religion","caste","havechild","casteNoBar","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
 			"s6":["yourinfo"],
-            "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra"],
+            "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","native_country","native_state","native_city","ancestral_origin"],
             "s10":["familyinfo"],
 			};
 		var szUDKey = 'UD';
@@ -775,9 +891,19 @@
 			if(key=="country_res")
 			{	
 				delete data["city_res"];
+				delete data["state_res"];
 				delete data["pincode"];
 			}
-			
+			if(key=="state_res")
+			{
+				delete data['city_res'];
+				delete data['pincode']
+			}
+			if(key=="native_country")
+			{
+				delete data["native_state"];
+				delete data["native_city"];
+			}
 			if(key=="mstatus")
 			{	
 				delete data["havechild"];
@@ -872,6 +998,7 @@
 			'reg[dtofbirth][year]':'',
 			'reg[height]':'',
 			'reg[country_res]':'',
+			'reg[state_res]':'',
 			'reg[city_res]':'',
 			'reg[pincode]':'',
 			'reg[mstatus]':'',
@@ -882,6 +1009,7 @@
 			'reg[occupation]':'',
 			'reg[income]':'',
 			'reg[email]':'',
+			'reg[displayname]':'',
 			'reg[password]':'',
 			'reg[phone_mob][isd]':'',
 			'reg[phone_mob][mobile]':'',
@@ -894,6 +1022,7 @@
       'reg[other_pg_degree]':'',
       'reg[other_ug_degree]':'',
       'reg[name_of_user]':'',
+      'reg[casteNoBar]':'',
       'reg[horoscope_match]':''
 		};
 		var regPage2Fields={
@@ -915,6 +1044,10 @@
             'reg[family_values]':'',
             'reg[familyinfo]':'',
             'reg[family_income]':'',
+            'reg[native_country]':'',
+            'reg[native_state]':'',
+            'reg[native_city]':'',
+      'reg[ancestral_origin]':'',
 			'reg[trackingParams]':''
 		};
 		var generateFormData=function(inputArray,regPageArray)
@@ -963,14 +1096,13 @@
 			{
 				var outputPageData = {};
 				var allowedScreen = ['s1','s2','s3','s4','s5'];
-        var allowedFieldName = ['gender','degree_pg','degree_ug'];
+        var allowedFieldName = ['gender','degree_pg','degree_ug','displayname'];
 				for(var i=0;i<allowedScreen.length;i++)
 				{
 					if(Gui.isRegFieldInitialized() === false)
 						Gui.initRegFields(allowedScreen[i]);
 					var fields = Gui.getRegFields(allowedScreen[i]);
 					var optFields = Gui.getRegOptionalFields(allowedScreen[i]);
-					
 					angular.forEach(fields,function(field,key){
 						if (field.show || allowedFieldName.indexOf(field.storeKey) !== -1)
 						{
@@ -1033,7 +1165,10 @@
                       }
                     }
                 });
-               
+               if(outputPageData.hasOwnProperty('native_state') && outputPageData['native_state']!='')
+		{
+			outputPageData['native_country']='51';
+		}
                 generateFormData(outputPageData,regPage3Fields);
                 var aboutFamilyField = Gui.getRegFields(allowedScreen[1]);
 				regPage3Fields['reg[familyinfo]'] = aboutFamilyField[0].userDecision;
@@ -1078,11 +1213,12 @@
 		return factory;
 	});
 	
-	app.factory ('Validate',function(Gui,Constants){
+	app.factory ('Validate',function($window,Gui,Constants,UserDecision){
 		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","12345678","123456789","1234567890");
 		var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 		var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 	        var isd_regex = /^[+]?[0-9]+$/;
+	        var name_regex = /^[A-z ]+$/;
 	        var isdCodes = ["0", "91","+91"];
 		// auto correct email array
 		var corrections =Constants.getEmailCorrections();
@@ -1093,6 +1229,7 @@
             Gui.cleanErrorLabel(screenName);
             var fields 	= Gui.getRegFields(screenName);
 			var screenName 	=fields[0].screenName;
+			var nameIndex	=fields[0].dindex;
 			var emailIndex	=fields[1].dindex;
 			var passIndex  	=fields[2].dindex;			
 			var phoneIndex  =fields[3].dindex;
@@ -1101,16 +1238,57 @@
 			var mobileISD	=fields[phoneIndex].isdVal;
 			fields[phoneIndex].userDecision=mobileISD+','+mobile;
 			
+			var nameValid 	=factory.validateName(nameIndex, screenName);
 			var emailValid 	=factory.validateEmail(emailIndex, screenName);
 			var pwdValid 	=factory.validatePassword(passIndex,screenName);
 			var phoneValid 	=factory.validatePhone(phoneIndex,screenName);
-			
-			if(emailValid && pwdValid && phoneValid){			
+			if(nameValid && emailValid && pwdValid && phoneValid){			
 				Gui.cleanErrorLabel(screenName);
+			if(screenName=="s5")
+			{
+				UserDecision.store("displayname",$window.displayName);
+				fields[4].userDecision=$window.displayName;
+				fields[4].value=$window.displayName;
+			}
 				return true;
 			}
 			return false;
         	}
+		factory.validateName = function(index,screenName)
+		{
+			var fields      =Gui.getRegFields(screenName);
+                        var name       =fields[index].value;
+			var nameError = '';
+			var name_of_user;
+
+			name_of_user = name.replace(/\./gi, " ");
+			name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+			name_of_user = name_of_user.replace(/\,|\'/gi, "");
+			name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+
+		        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+		        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
+			{
+				nameError= "Please provide a valid Full Name";
+        		}
+			else
+			{
+				var nameArr = name_of_user.split(" ");
+				if(nameArr.length<2)
+				{
+					nameError = "Please provide your first name along with surname, not just the first name";
+				}
+			}
+			if(nameError){
+				fields[index].errorLabel =nameError;
+				if(name)
+					fields[index].errClass=regErr;
+				return;
+			}
+			else
+				fields[index].errClass='';
+			return true;
+		}
 		factory.validateEmail = function(index,screenName)
 		{
                         var fields      =Gui.getRegFields(screenName);
@@ -1198,6 +1376,7 @@
             {
                 fields[index].value =email;
                 fields[index].isAutoCorrected = "true";
+                fields[index].userDecision=fields[index].value;
             }
             
         	return;
@@ -1393,8 +1572,8 @@
 		factory.validatePinCode = function(screenName)
 		{
 			var bInValidDate = false;
-			var field = Gui.getRegFields("s2")[4];
-			var cityField = Gui.getRegOptionalFields("s2")[0];
+			var field = Gui.getRegFields("s2")[6];
+			var cityField = Gui.getRegFields("s2")[5];
 			var bValid = true;
 			field.errClass='';
 			var ArrayPincode={'DE00':{0:["1100","2013","1220","2010","1210","1245"],1:4,2:"Provide a pincode that belongs to Delhi"},"MH04":{0:["400","401","410","421","416"],1:3,2:"Provide a pincode that belongs to Mumbai"},"MH08":{0:["410","411","412","413"],1:3,2:"Provide a pincode that belongs to Pune"}};
@@ -1562,7 +1741,7 @@
             });
         }
         factory.trackClientInfo = function(screenName)
-        {
+        {return;
             if(!screenName || typeof screenName != "string" || !screenName.length)
                 return ;
             var info = Storage.getUserData(clientInfoKey);
@@ -1587,7 +1766,7 @@
             }
         }
         factory.resetClientInfo = function()
-        {
+        {return;
             clientInfo.trackDoneFor = [];
         }
 		return factory;

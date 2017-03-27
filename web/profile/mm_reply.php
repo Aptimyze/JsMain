@@ -156,7 +156,7 @@ if($data)
 			$error_msg="Sorry you cannot contact <b>$row_username[USERNAME]</b> because this profile has been deleted from the site.<br><a href='/profile/mm_showmsg.php?checksum=$checksum&folderid=0'>&laquo; Go back to Inbox</a>";
 		else
 		{	
-			$error_msg="To send a message to this user <a href=\"memberships.php\">upgrade your membership</a><br><a href='/profile/mm_showmsg.php?checksum=$checksum&folderid=0'>&laquo; Go back to Inbox</a>";
+			$error_msg="To send a message to this user <a href=\"/membership/jspc\">upgrade your membership</a><br><a href='/profile/mm_showmsg.php?checksum=$checksum&folderid=0'>&laquo; Go back to Inbox</a>";
 			$smarty->assign("UPGRADE_MEMBERSHIP",'Y');
 		}
 		$smarty->assign("ERROR_MSG",$error_msg);

@@ -25,6 +25,8 @@ class deepLinking
 		$authchecksum = $loginData["AUTHCHECKSUM"];
 
 		$this->loggedInProfileId = $loginData["PROFILEID"];
+		$this->loggedInUsername = $loginData["USERNAME"];
+		$this->loggedInGender = $loginData["GENDER"];
 		if(!$this->loggedInProfileId)
 			return;
 		$isIosDeep = JsMemcache::getInstance()->get("iosDeepLinking_".$this->loggedInProfileId);
@@ -46,8 +48,8 @@ class deepLinking
 			$trackingId = $this->fetchApiData($request);
 			$profilechecksum=$request->getParameter('profilechecksum');
 			$stype = $request->getParameter('stype');
-			JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,1);							
-			$headerURL = 'comjeevansathi:'.$SITE_URL.'?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'"}';
+			JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,1);				
+			$headerURL = 'comjeevansathi:'.$SITE_URL.'?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'","username":"'.$this->loggedInUsername.'","gender":"'.$this->loggedInGender.'"}';
 			return($headerURL);
 		}
 		JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,2);		
@@ -69,7 +71,7 @@ class deepLinking
 	public function loggedInUserCondition($loggedInProfileId)
 	{	
 		$loggedInProfileId = "'".$loggedInProfileId."'";
-		$loginTrackingObj = new MIS_LOGIN_TRACKING();
+		$loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
 		$loggedInIDArr = $loginTrackingObj->getLastLoginProfilesForDate($loggedInProfileId,$this->date,self::WEBSITE_VERSION);
 		if($loggedInIDArr)
 		{

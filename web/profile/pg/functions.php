@@ -17,6 +17,8 @@ include_once (JsConstants::$docRoot . "/classes/shardingRelated.php");
 include_once (JsConstants::$docRoot . "/commonFiles/flag.php");
 include_once (JsConstants::$docRoot . "/profile/contacts_functions.php");
 include_once (JsConstants::$cronDocRoot . "/lib/model/enums/Membership.enum.class.php");
+include_once (JsConstants::$cronDocRoot . "/lib/model/lib/SendMail.class.php");
+include_once (JsConstants::$docRoot . "/classes/JProfileUpdateLib.php");
 
 $error_msg = "Due to some temporary problem your request could not be processed. Please try after some time.";
 
@@ -46,7 +48,8 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
     $res = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate");
     
     if (!mysql_num_rows($res)) {
-        mail($announce_to_email, "Record not found for $ORDERID", "In function updtOrder, script name functions.php\nmysql_num_rows is : " . mysql_num_rows($res));
+        SendMail::send_mail('vibhor.garg@jeevansathi.com', "Record not found for $ORDERID", "Record not found for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');
+        //mail($announce_to_email, "Record not found for $ORDERID", "In function updtOrder, script name functions.php\nmysql_num_rows is : " . mysql_num_rows($res));
         $ret = false;
     } 
     else {
@@ -60,9 +63,22 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
             if (mysql_affected_rows_js()) $ret = true;
             else $ret = false;
             $dup = false;
+            
+            if($updateStatus == 'N' || $updateStatus == "N"){
+                //check whether user was eligible for membership upgrade or not
+                $memCacheObject = JsMemcache::getInstance();
+                $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
+                if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                    $memHandlerObj = new MembershipHandler(false);
+                    //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
+                    $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                    unset($memHandlerObj);
+                }
+            }
         } 
         else {
-            mail($announce_to_email, "PMTRECVD failed for $ORDERID", "in funcion updtOrder script name funcion.php\nPMTRECVD already populated for $ORDERID");
+            SendMail::send_mail('vibhor.garg@jeevansathi.com', "PMTRECVD already populated for $ORDERID", "PMTRECVD already populated for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');
+            //mail($announce_to_email, "PMTRECVD failed for $ORDERID", "in funcion updtOrder script name funcion.php\nPMTRECVD already populated for $ORDERID");
             $dup = true;
             $ret = true;
         }
@@ -122,23 +138,22 @@ function getProfileDetails($profileid) {
  *    RETURNS       :    Returns string of comma seperated rights for services
  ***********************************************************************/
 function serve_for($service_main, $service_str) {
-    $service_main_details = getServiceDetails($service_main);
-    $serve_for[] = $service_main_details["RIGHTS"];
+    if (!empty($service_main)) {
+        $service_main_details = getServiceDetails($service_main);
+        $serve_for[] = $service_main_details["RIGHTS"];
+    }
     if (strlen($service_str) > 0) {
         $serve_paid = explode(",", $service_str);
         for ($i = 0; $i < count($serve_paid); $i++) {
-            $service_addon_id = $serve_paid[$i] . $service_main_details["DURATION"];
-            $service_detail = getServiceDetails($service_addon_id);
+            $service_detail = getServiceDetails($serve_paid[$i]);
             $serve_for[] = $service_detail["RIGHTS"];
-            $service_addon_id_arr[] = $service_addon_id;
-            
-            //			$serve_for[]=strtoupper(substr($serve_paid[$i],0,2));
-            
+            $addon_serviceid[] = $serve_paid[$i];
         }
     }
     if (count($serve_for) > 0) $serve_for_str[] = implode(",", $serve_for);
-    if (count($service_addon_id_arr) > 0) $serve_for_str[] = implode(",", $service_addon_id_arr);
-    return $serve_for_str;
+    $serve_for_str = implode(",", $serve_for_str);
+    $addon_serviceid = implode(",", $addon_serviceid);
+    return array($serve_for_str, $addon_serviceid);
 }
 
 /***********************************************************************
@@ -146,47 +161,45 @@ function serve_for($service_main, $service_str) {
  *    RETURNS       :    Returns associative array indexing keys as properties to their values
  ***********************************************************************/
 function getServiceDetails($serviceid) {
-    $sql = "SELECT * from billing.SERVICES where SERVICEID = '$serviceid'";
-    $result = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    $myrow = mysql_fetch_array($result);
+	$billServObj = new billing_SERVICES();
+	$serviceid = implode("','",explode(",", $serviceid));
+	$myrow = $billServObj->fetchAllServiceDetails($serviceid);
+    $myrow = $myrow[0];
     
     if ($myrow["PACKAGE"] == "Y") {
-        $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = '$serviceid'";
-        $result_duration = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);;
-        while ($myrow_duration = mysql_fetch_array($result_duration)) {
+    	$billCompObj = new billing_COMPONENTS();
+        $row = $billCompObj->getDurationRightsForServiceDetails($serviceid, $myrow['PACKAGE']);
+        foreach ($row as $key=>$myrow_duration) {
             $myrow["DURATION"] = $myrow_duration["DURATION"];
             $rights[] = $myrow_duration["RIGHTS"];
         }
         if (count($rights) > 0) {
-            // if (strstr($serviceid, 'NCP')) {
-            //     $rights_str = "D,N," . implode(",", $rights);
-            // } 
-            // else {
-                $rights_str = implode(",", $rights);
-            // }
+            $rights_str = implode(",", $rights);
         }
         $myrow['RIGHTS'] = $rights_str;
     } 
     elseif ($myrow["PACKAGE"] == "N") {
-        $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.COMPONENTS c where c.COMPID = a.COMPID AND a.SERVICEID = '$serviceid'";
-        $result_duration = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);;
-        $myrow_duration = mysql_fetch_array($result_duration);
+        $billCompObj = new billing_COMPONENTS();
+        $myrow_duration = $billCompObj->getDurationRightsForServiceDetails($serviceid, $myrow['PACKAGE']);
         $myrow["DURATION"] = $myrow_duration["DURATION"];
         $myrow["RIGHTS"] = $myrow_duration["RIGHTS"];
     }
+    
     return $myrow;
 }
+
 function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
     if ($curtype == "DOL") $price_string = $device."_DOL";
     else $price_string = $device."_RS";
-    
     $serviceid = @explode(",", $serviceid);
-    $serviceid = @implode("','", $serviceid);
-    $sql = "SELECT SERVICEID, $price_string AS PRICE FROM billing.SERVICES WHERE SERVICEID IN ('$serviceid')";
-    $res = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    $price = 0;
-    while ($row = mysql_fetch_assoc($res)) {
-        $price+= $row["PRICE"];
+    $billServObj = new billing_SERVICES();
+    if($curtype == "DOL"){
+    	$row = $billServObj->fetchServiceDetailForDollarTrxn($serviceid, $device);
+    } else {
+    	$row = $billServObj->fetchServiceDetailForRupeesTrxn($serviceid, $device);
+    }
+    foreach ($row as $key=>$val) {
+        $price+= $val["PRICE"];
     }
     return $price;
 }
@@ -196,8 +209,11 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  *    RETURNS       :    Returns true if record successfully entered
  ***********************************************************************/
 
-function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '') {
+function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
     
+    if(!$memUpgrade || $memUpgrade == ""){
+        $memUpgrade = "NA";
+    }
     //	echo $profileid."-".$paymode."-".$curtype."-".$amount."-".$service_str."-".$service_main."-".$discount."-".$setactivate;
     global $error_msg, $pay_arrayfull, $pay_arrayfull, $announce_to_email, $ip, $DOL_CONV_RATE, $tax_rate;
     
@@ -222,42 +238,100 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         if ($gateway != "PAYPAL" && $gateway != "CCAVENUE" && $gateway != "PAYSEAL" && $gateway != "PAYU" && $gateway != "APPLEPAY" && $gateway != "PAYTM") {
             if ($curtype == "DOL" && $gateway != "PAYSEAL") $data["AMOUNT"] = round(($data["AMOUNT"] * $DOL_CONV_RATE), 2);
              //convert USD value into INR value
-            
         }
-        $service_detail = getServiceDetails($service_main);
+        
+        $servMain = explode(",", $service_main);
+        
+        if (strstr($service_main, 'P') || strstr($service_main, 'C') || strstr($service_main, 'D') || strstr($service_main, 'X')) {
+            // Check for main membership in billed services
+            $service_main = array_shift($servMain);
+            $service_str = implode(",", $servMain);
+        } else {
+            // Only addons case
+            $service_str = $service_main;
+            $service_main = null;
+        }
+        
         list($servefor, $addon_serviceid) = serve_for($service_main, $service_str);
         
         $data["SERVICE_MAIN"] = $service_main;
         $data["ADDON_SERVICE"] = $addon_serviceid;
         
-        $service_all = $data["SERVICE_MAIN"];
-        if ($addon_serviceid) $service_all = $service_all . "," . $data["ADDON_SERVICE"];
-        $price_tot = getTotalPriceAll($service_all, $curtype, $device);
-        if ($amount / $price_tot < 0.20) {
-            die("Some error has occured during request generation. Try again");
+        $service_all = $service_main;
+
+        if ($addon_serviceid) {
+            $service_all = $service_main . "," . $addon_serviceid;
         }
+        
+        $price_tot = getTotalPriceAll($service_all, $curtype, $device);
+        //confirm the check for upgrade amount too less
+        if(!in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+            if ($amount / $price_tot < 0.20) {
+                die("Some error has occured during request generation. Try again");
+            }
+        }
+        else{
+            if ($amount / $price_tot < 0.01) {
+                die("Some error has occured during request generation. Try again");
+            }
+        }
+        
         if ($setactivate == "Y") {
             $renew_status = getRenewStatus($profileid);
             $activate_on = $renew_status['EXPIRY_DT'];
-        } 
-        else $activate_on = date('Y-m-d');
+        } else {
+            $activate_on = date('Y-m-d');
+        }
+
         $insert_id = '';
-        if (136580 == $profileid) $data[AMOUNT] = 1;
         
-        //$discount=round($discount*(100/(100+$tax_rate)),2);
+        if (136580 == $profileid) {
+            $data[AMOUNT] = 1;
+        }
+        
         $discount = round($discount, 2);
-        $service_main = ltrim(rtrim($service_main, ","),",");
-        $sql1 = "insert into billing.ORDERS (PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE) values ('$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_main','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type')";
-        $res1 = mysql_query_decide($sql1) or logError($error_msg, $sql1, "ShowErrTemplate", $announce_to_email);
+        $service_insert = ltrim(rtrim($service_all, ","),",");
+        if(strstr($service_insert,'X')){
+            $servefor = $servefor.',J';
+        }
+        $billingOrderObj = new BILLING_ORDERS();
+        $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE";
+        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_insert','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
+        $insert_id = $billingOrderObj->genericOrderInsert($paramsStr, $valuesStr);
         
-        $insert_id = mysql_insert_id_js();
         $data["ORDERID"] = $ORDERID . "-" . $insert_id;
-        if ($device == NULL) $device = 'desktop';
+        if ($device == NULL) {
+        	$device = 'desktop';
+        }
         $ordrDeviceObj = new billing_ORDERS_DEVICE();
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
-        if ($insert_id) return $data;
-        else return false;
+        if($memUpgrade == ""){
+            $memUpgrade = "NA";
+        }
+        if ($insert_id) {
+            //set upgrade entry record for such user
+            if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+              
+                //set entry in upgrade_orders for membership upgrade for current user
+                $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                $insertedRowId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$memUpgrade));
+                unset($upgradeOrdersObj);
+                //set upgrade case in memcache for 1 hr for this user 
+                if($insertedRowId){
+                    $memCacheObject = JsMemcache::getInstance();
+                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);
+                }
+            }
+            else{
+                $memCacheObject = JsMemcache::getInstance();
+                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",3600);
+            }
+        	return $data;
+        }
+        else {
+        	return false;
+        }
     } 
     else return false;
 }
@@ -352,10 +426,12 @@ function start_service($orderid) {
     
     $sql = "INSERT into billing.SERVICE_STATUS (BILLID, PROFILEID, SERVICEID, COMPID, ACTIVATED, ACTIVATED_ON, ACTIVATE_ON, ACTIVATED_BY, EXPIRY_DT) values " . implode(",", $insert_query);
     mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
-    
+   
     if ($myrow['SET_ACTIVATE'] != 'Y') {
-        $sql = "UPDATE newjs.JPROFILE set SUBSCRIPTION='$subscription', SUBSCRIPTION_EXPIRY_DT = '$myrow[EXPIRY_DT]' where PROFILEID='$myrow[PROFILEID]'";
-        mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate", $announce_to_email);
+
+	$jprofileObj    =JProfileUpdateLib::getInstance();
+	$paramArr =array("SUBSCRIPTION"=>$subscription,"SUBSCRIPTION_EXPIRY_DT"=>$myrow['EXPIRY_DT']);
+	$jprofileObj->editJPROFILE($paramArr,$myrow['PROFILEID'],'PROFILEID');
         
         if (isset($_COOKIE['JSLOGIN'])) {
             $checksum = $_COOKIE['JSLOGIN'];

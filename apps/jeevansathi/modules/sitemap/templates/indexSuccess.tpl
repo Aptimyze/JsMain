@@ -74,7 +74,7 @@
 						<a href="~sfConfig::get('app_site_url')`/">Home</a>
 						<a href="~sfConfig::get('app_site_url')`/profile/mainmenu.php?checksum=">My Jeevansathi</a>
 						<a href="~sfConfig::get('app_site_url')`/profile/advance_search.php?FLAG=search&matrimonial=1&checksum=">Search Jeevansathi</a>
-						<a href="~sfConfig::get('app_site_url')`/profile/memberships.php?checksum=">Memberships</a>
+						<a href="~sfConfig::get('app_site_url')`/membership/jspc">Memberships</a>
 						<a href="~sfConfig::get('app_site_url')`/success/success_stories.php">Success Stories</a>
 					</div>
 

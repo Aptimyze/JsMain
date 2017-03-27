@@ -91,7 +91,9 @@ class getFieldValues {
       break;
       case "countryReg" : $fieldArr = $this->getCountryValuesForInUsa();
       break;
-      case "cityReg" : $fieldArr = $this->getCityValuesForInUsa();
+      case "stateReg" : $fieldArr = $this->orderForLabelGrid("state_india");
+      break;
+      case "cityReg" : $fieldArr = $this->orderFamilyCity(1);
       break;
       case "horoscopeMatch" : $fieldArr = $this->orderForLabelRadio("horoscope_match");
       break;
@@ -337,7 +339,7 @@ private function orderForLabelGrid($label)
    * Function to get values from FieldMap and change format for familyCity
    * @page -  this contains page id  
    */
-private function orderFamilyCity()
+private function orderFamilyCity($addUsa='')
 {
                 $arrCity=FieldMap::getFieldLabel("city_india",'',1);
 
@@ -363,18 +365,27 @@ private function orderFamilyCity()
 		{
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
+                if($addUsa)
+                    $returnArr[$k][0][] = array('0'=>'Others');
 	}
+        if($addUsa){
+            $returnArr['128'] = $this->getCityValuesForInUsa('',1)[0]['United States'];
+        }
 	return $returnArr;
 }
 /*
    * get city values from field map
    */
-  private function getCityValuesForInUsa($partnerCity = "")
+  private function getCityValuesForInUsa($partnerCity = "",$onlyUsa='')
   {
     $countryIds = array(
               51=>array('name'=>'India','city_index'=>'india'),
               128=>array('name'=>'United States','city_index'=>'usa')
     ); // country id list
+    if($onlyUsa)
+        $countryIds = array(
+              128=>array('name'=>'United States','city_index'=>'usa')
+        );
     foreach($countryIds as $countryId=>$countryData){
       $countryName = $countryData['name'];
       $Arr[$countryId][0]=Array();

@@ -15,10 +15,8 @@
 include_once(JsConstants::$cronDocRoot.'/lib/model/lib/FieldMapLib.class.php');
 include("connect.inc");
                                                                                                  
-//$db=connect_slave81();
 $db2=connect_master();
-$db=$db2;
-$dbs = connect_737();
+$db = connect_rep();
 
 $data=authenticated($cid);
 if(isset($data))
@@ -35,18 +33,19 @@ if(isset($data))
 		// Fetch information for each selected receipt.
 		for($i=0;$i<count($mark_coll);$i++)
 		{
-			$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.MODE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.TRANS_NUM from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.RECEIPTID='".$mark_coll[$i]."' AND a.BILLID=b.BILLID";
+			$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID, b.INVOICE_NO,b.MODE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.TRANS_NUM from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.RECEIPTID='".$mark_coll[$i]."' AND a.BILLID=b.BILLID";
 			$result=mysql_query_decide($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 
 			while($row=mysql_fetch_array($result))
 			{
 				$arr[$i]['client']=$row['USERNAME'];
 				$sql_slave="SELECT COUNTRY_RES FROM newjs.JPROFILE WHERE USERNAME='{$row['USERNAME']}'";
-				$res_slave=mysql_query_decide($sql_slave,$dbs) or die(mysql_error_js());
+				$res_slave=mysql_query_decide($sql_slave,$db) or die(mysql_error_js());
 				if($row_slave=mysql_fetch_array($res_slave))
 				{
 					$arr[$i]['country'] = FieldMap::getFieldLabel('country',$row_slave['COUNTRY_RES']);
 				}
+				$billidArr[] = $row['BILLID'];
 				$arr[$i]['saleid']="JR-".$row['BILLID'];
 				$arr[$i]['receiptid']=$row['RECEIPTID'];
 				$arr[$i]['mode']=$row['MODE'];
@@ -66,9 +65,34 @@ if(isset($data))
 					$arr[$i]['collection_status']="Pending";
 				else
 					$arr[$i]['collection_status']="Collected";
-				$arr[$i]['transaction_number']=$row['TRANS_NUM'];;
+				$arr[$i]['transaction_number']=$row['TRANS_NUM'];
+				$arr[$i]['invoice_no']=$row['INVOICE_NO'];
 			}
 		
+		}
+
+		$billOrdDevObj = new billing_ORDERS_DEVICE('newjs_slave');
+		$billOrdObj = new BILLING_ORDERS('newjs_slave');
+		$transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL('newjs_slave');
+		if(is_array($billidArr)) {
+			$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
+			$approvedByArr = $transObj->fetchApprovedBy($billidArr);
+		}
+
+		foreach($orderId as $temp=>$temp2){
+			$orderidArr[] = $temp2['ID'];
+		}
+		if(is_array($orderidArr))
+			$ordersArr = $billOrdObj->getOrderDetailsForIdStr(implode(",",$orderidArr));
+
+		foreach($arr as $key=>&$val){
+			foreach($orderId as $k=>$v){
+				if(str_replace("JR-", "", $val['saleid']) == $k){
+					$arr[$key]['orderid'] = $v['ORDERID']."-".$v['ID'];
+					$arr[$key]['gateway'] = $ordersArr[$v['ID']]['GATEWAY'];
+				}
+			}
+			$arr[$key]['approved_by'] = $approvedByArr[str_replace("JR-", "", $val['saleid'])];
 		}
 
 		if($preview_not_received)
@@ -125,7 +149,7 @@ if(isset($data))
 
 		$i=0;
 
-		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS='DONE' AND b.AMOUNT>0 ";
+		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.INVOICE_NO,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM, a.DISCOUNT_TYPE from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS='DONE' AND b.AMOUNT>0 ";
 
 		if($currency=='inr')
 			$sql.=" AND b.TYPE='RS' ";
@@ -286,11 +310,12 @@ if(isset($data))
 			}
 			$arr[$i]['client']=$row['USERNAME'];
 			$sql_slave="SELECT COUNTRY_RES FROM newjs.JPROFILE WHERE USERNAME='{$row['USERNAME']}'";
-			$res_slave=mysql_query_decide($sql_slave,$dbs) or die(mysql_error_js());
+			$res_slave=mysql_query_decide($sql_slave,$db) or die(mysql_error_js());
 			if($row_slave=mysql_fetch_array($res_slave))
 			{
 				$arr[$i]['country'] = FieldMap::getFieldLabel('country',$row_slave['COUNTRY_RES']);
 			}
+			$billidArr[] = $row['BILLID'];
 			$arr[$i]['saleid']=$row['BILLID'];
 			$arr[$i]['receiptid']=$row['RECEIPTID'];
 			$arr[$i]['mode']=$row['SOURCE'];
@@ -324,7 +349,33 @@ if(isset($data))
 			else
 				$arr[$i]['collection_status']="Collected";
 
+			$arr[$i]['invoice_no']=$row['INVOICE_NO'];
+			$arr[$i]['discount_type'] = memDiscountTypes::$discountArr[$row['DISCOUNT_TYPE']];
 			$i++;
+		}
+
+		$billOrdDevObj = new billing_ORDERS_DEVICE('newjs_slave');
+		$billOrdObj = new BILLING_ORDERS('newjs_slave');
+		$transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL('newjs_slave');
+		if(is_array($billidArr)) {
+			$orderId = $billOrdDevObj->getPaymentSourceFromBillidStr(implode(",",$billidArr));
+			$approvedByArr = $transObj->fetchApprovedBy($billidArr);
+		}
+
+		foreach($orderId as $temp=>$temp2){
+			$orderidArr[] = $temp2['ID'];
+		}
+		if(is_array($orderidArr))
+			$ordersArr = $billOrdObj->getOrderDetailsForIdStr(implode(",",$orderidArr));
+
+		foreach($arr as $key=>&$val){
+			foreach($orderId as $k=>$v){
+				if(str_replace("JR-", "", $val['saleid']) == $k){
+					$arr[$key]['orderid'] = $v['ORDERID']."-".$v['ID'];
+					$arr[$key]['gateway'] = $ordersArr[$v['ID']]['GATEWAY'];
+				}
+			}
+			$arr[$key]['approved_by'] = $approvedByArr[str_replace("JR-", "", $val['saleid'])];
 		}
 
 		$arr[$i-1]['tot_sort_amt_rs']=$tot_sort_amt_rs;
@@ -343,7 +394,7 @@ if(isset($data))
                         $dataSet3 ="Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH then TRANSACTION NUMBER is Easy Bill Reference ID)";
                         $dataSet4 ="Collection-Status";
 		
-			$dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number");
+			$dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number","invoice_no"=>"Invoice-No","orderid"=>"Order-ID","gateway"=>"Gateway","approved_by"=>"Approved By","discount_type"=>"Discount Type");
 
 			$totrec =count($arr);
 			for($i=0; $i<$totrec; $i++)
@@ -369,10 +420,10 @@ if(isset($data))
 			}
 
 			$dataSet =getExcelData($arr,$dataHeader);
-                	header("Content-Type: application/vnd.ms-excel");
-                	header("Content-Disposition: attachment; filename=Payment_collection_status_report.xls");
-                	header("Pragma: no-cache");
-               		header("Expires: 0");
+        	header("Content-Type: application/vnd.ms-excel");
+        	header("Content-Disposition: attachment; filename=Payment_collection_status_report.xls");
+        	header("Pragma: no-cache");
+       		header("Expires: 0");
 			echo $dataSet1."\n\n".$dataSet2."\n\n".$dataSet3."\n\n".$dataSet4."\n\n".$dataSet5."\n\n".$dataSet."\n\t".$dataSet6."\t\t".$dataSet7;
                 	die;
 		}	
@@ -401,6 +452,7 @@ if(isset($data))
 		for($i=2005;$i<=date('Y')+1;$i++)
                         $yyarr[] = $i;
 
+        $branch = array();
 		if(in_array('ACCU',$privilege))
 		{
 			$branch_sel=strtoupper($center);
@@ -408,7 +460,7 @@ if(isset($data))
 			$res=mysql_query_decide($sql,$db) or die(mysql_error_js($db));
 			while($row=mysql_fetch_array($res))
 			{
-				$branch[]=strtoupper($row['NAME']);
+				$branch[] = strtoupper($row['NAME']);
 			}
 		}
 
@@ -424,7 +476,7 @@ if(isset($data))
 			$res=mysql_query_decide($sql,$db) or die(mysql_error_js($db));
 			while($row=mysql_fetch_array($res))
 			{
-				$branch[]=strtoupper($row['NAME']);
+				$branch[] = strtoupper($row['NAME']);
 			}
 			$smarty->assign("admin","Y");
 		}

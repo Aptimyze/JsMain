@@ -149,6 +149,7 @@ function TeleCommentsinProgress($first,$second)
 //Getting call history records.
 function getIntroCallHistory($self_profileid)
 {
+	return;//issue with the ap function, so removing temporarily
 	$introCall = array();
         $sql = "SELECT DISTINCT(MATCH_ID),CALL_STATUS FROM Assisted_Product.AP_CALL_HISTORY WHERE PROFILEID='$self_profileid' ORDER BY REQUEST_DATE";
         $res=mysql_query_decide($sql) or logError("Due to a temporary problem, your request could not be processed. Please try again after a couple of minutes",$sql,"ShowErrTemplate");
@@ -1285,7 +1286,7 @@ function assignHamburgerSmartyVariables($profileid="")
 		$contactsLeft = $jmemObj->getRemainingContactsForUser($profileid);
 		if($userType == '2' || $userType == '3' || $userType == '7')
 			$memStat = 'F';
-		else if($userType == '4' || (($userType == '6' || $userType == '5') && $contactsLeft == 0))
+		else if($userType == '4' || (($userType == '6' || $userType == '5' || $userType == '8') && $contactsLeft == 0))
 			$memStat = 'R';
 		else
 			$memStat = 'P';

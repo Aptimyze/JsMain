@@ -4,7 +4,7 @@
 $curFilePath = dirname(__FILE__)."/"; 
 include_once("/usr/local/scripts/DocRoot.php");
 include($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
-$db=connect_db();
+$db=connect_ddl();
 $sql1="TRUNCATE TABLE sugarcrm.auto_mailer";
 $res=mysql_query_decide($sql1,$db) or die("Error while truncating sugarcr.auto_mailer".mysql_error_js());
 $sql2="TRUNCATE TABLE sugarcrm.auto_sms";

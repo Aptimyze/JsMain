@@ -124,11 +124,13 @@
 			~/foreach`
 			~/if`
 			~if $data.cart_items.vas_memberships`
+            ~if !($data.totalVasCount eq "1" and $data.cart_items.vas_memberships[0].service_name eq "Profile Boost")`
 			<!--start:div-->
 			<div id="vasCard" class="pt10">
 				<div class="rv2_boxshadow">
 					<div class="bg4 rv2_pad3">
 						~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+                        ~if $v.service_name neq "Profile Boost"`
 						<!--start:VAS plan-->
 						<!--start:strike through-->
 						~if $v.vas_price_strike`
@@ -168,14 +170,18 @@
 							<!--end:div-->
 						</div>
 						<!--end:VAS plan-->
-						~if not $smarty.foreach.vasServLoop.last`
-						<div class="pad9"><div class="rv2_top2"></div></div>
-						~/if`
+                        ~if $data.subscription_id neq 'NCP'`
+                            ~if not $smarty.foreach.vasServLoop.last`
+                            <div class="pad9"><div class="rv2_top2"></div></div>
+                            ~/if`
+                        ~/if`
+                        ~/if`
 						~/foreach`
 					</div>
 				</div>
 			</div>
 			<!--end:div-->
+            ~/if`
 			~/if`
 			<!--start:div-->
 			<div class="rv2_pad3">
@@ -214,6 +220,23 @@
 </div>
 <script type="text/javascript">
 	var AndroidPromotion = 0;
+	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+	~if $data.backendLink`
+		~if $data.cart_items.main_memberships`
+			createCookie('mainMem', '~$data.subscription_id`', 0);
+			createCookie('mainMemDur', '~$data.subscription_duration`', 0);
+		~/if`
+		~if $data.cart_items.vas_memberships`
+			~if $data.subscription_id neq 'ESP' and $data.subscription_id neq 'NCP'`
+				var cookVasArr = new Array();
+				~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+					cookVasArr.push('~$v.vas_id`');
+				~/foreach`
+				var finalVasStr = cookVasArr.join(",");
+	        	createCookie('selectedVas', finalVasStr, 0);
+        	~/if`
+		~/if`
+	~/if`
 	$(document).ready(function(){
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
@@ -377,7 +400,8 @@
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
-				if(checkEmptyOrNull(readCookie('mainMem')) && (readCookie("mainMem") != "X" || readCookie("mainMem") != "ESP")){
+				if(checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
+				{
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				} else {
 					url = "/membership/jsms?displayPage=1";
@@ -397,7 +421,7 @@
 				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
 			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
-				if(checkEmptyOrNull(readCookie('selectedVas')) && readCookie('mainMem') != 'ESP' && readCookie('mainMem') != 'X' && readCookie('mainMem') != 'NCP'){
+				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas');  
 			    } else {
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression=";
@@ -434,7 +458,7 @@
 		},100);
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>
 ~/if`

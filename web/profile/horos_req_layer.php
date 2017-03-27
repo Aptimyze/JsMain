@@ -24,27 +24,28 @@ if($Submit)
 		$gender=$myrow_name['GENDER'];
 		$contact_status=get_contact_status($profileid,$chkprofilechecksum[1]);
                                                                                                                              
-        if($contact_status!='RI' && $contact_status!='RA' && $contact_status!='RD')
+        if($contact_status!='RI' && $contact_status!='RA' && $contact_status!='RD' && $contact_status!='A')
         {
 			if($gender==$data['GENDER'])
 				$samegender=1;
 			$filtered=check_privacy_filtered1($profileid,$chkprofilechecksum[1]);
         }
-	           
 		if($filtered)
 		{
 			$error='F';
 		}
 		elseif($samegender)
-		{
-			  
-                        $error='G';
+		{			  
+         	$error='G';
 		}
 		else
 		{
 			self_astro_details($profileid);
 			$flag_show_template=photo_req_common($profileid,$chkprofilechecksum[1],$dt);
 			$error=$flag_show_template;
+			$memObject=new UserMemcache;
+			$memObject->setDataToMem('','commHistory_'.$profileid.'_'.$chkprofilechecksum[1]);
+			$memObject->setDataToMem('','commHistory_'.$chkprofilechecksum[1].'_'.$profileid);
 		}
 		echo $error;die;
 	}echo 'ye';die;	

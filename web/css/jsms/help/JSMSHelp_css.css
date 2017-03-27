@@ -1,0 +1,36 @@
+.wid498p {width:49.8%;}
+.btmBrdGrey{border-bottom:1px solid #DCDCDC;}
+.greyColor {color:#bdbdbd;}
+.darkGreyColor{color:rgb(140,140,140);}
+.pad23 {padding: 10px 0px;}
+.pad24 {padding:0px 0px 5px 0px;}
+.marg25 {margin: 20px 15px 4px 15px; padding-bottom:4px;}
+.pad_15 {padding:15px}
+.pad_5_15 {padding:5px 15px;}
+.colorNew {color: #CFCFCF}
+.mt30{margin-top:30px;}
+.lt0 {left:0px; top:0px;}
+.r0 {right:0}
+.tanform5040{left:50%;top:40%; transform: translate(-50%,-50%); -webkit-transform: translate(-50%, -50%);}
+.sectionList{list-style-type: none;margin:0;padding:0;}
+.mb20{margin-bottom:20px}
+.pad1510{padding: 15px 10px;}
+.pad2515 {padding: 25px 15px 127px 15px;}
+.greyColor6{color:#666666; }
+.quesList {list-style-type:disc !important}
+.quesList li {color:#34495e; font-size:16px; text-align:left; margin-bottom: 20px; padding-right: 17px; margin-left: 19px;width:100%; font-family: "Roboto","sans-serif";font-weight: 300; word-wrap: break-word;}
+.sectionList li{color: #34495e;font-size: 17px;font-family: "Roboto","sans-serif";font-weight: 400;cursor:pointer;list-style-position: inside;padding: 12px 15px;}
+.pad015{padding:10px 15px 0px 15px;}
+.pad12_25{padding: 12px 12px 12px 25px;}
+.baricon {
+    background-position: -92px -22px;
+    width: 21px;
+    height: 20px;
+}
+.errorDiv {border: 1px solid #d9475c}
+.mt10{margin-top:10px}
+.minhgt600 {min-height:600px}
+#questionAnswerDiv table{width:100% !important}
+#questionAnswerDiv {overflow-x:auto;}
+.mb40{margin-bottom:40px}
+.mb50{margin-bottom:50px}

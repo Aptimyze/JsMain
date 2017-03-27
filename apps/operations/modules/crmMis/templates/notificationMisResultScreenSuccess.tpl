@@ -36,6 +36,7 @@
 			<td width=4% align=center>Notification does not exist</td>
 		~/if`
         </tr>
+~if $channelKey eq 'A_I'`
 	~assign var='color' value='#F0F0F0'`
 	~assign var='loopVal' value=0`
         ~foreach from=$countTypeArr item=name key=type`
@@ -49,6 +50,22 @@
 	     ~/foreach` 	
         </tr>
         ~/foreach`
+~else`
+        ~assign var='color' value='#F0F0F0'`
+        ~assign var='loopVal' value=0`
+        ~foreach from=$countTypeArr item=name key=type`
+        <tr class=formhead ~if $loopVal1%2`style="background-color:~$color` ~/if`">
+            ~assign var='loopVal1' value=$loopVal1+1`
+            <td width=4% align=left>~$name`</td>
+             ~foreach from=$newData item=countVal key=day`
+                    <td width=4% align=center>
+                        ~$newData[$day][$name]`
+                    </td>
+             ~/foreach`
+        </tr>
+        ~/foreach`
+~/if`
+
 	<tr></tr>
        </table>
 </body>

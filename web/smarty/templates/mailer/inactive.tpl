@@ -58,5 +58,6 @@
     </tbody>
   
 </table>
+<img src="~sfConfig::get('app_site_url')`/track.php?MAILER_ID=~$instanceID`" style="display:none !important;overflow:hidden;line-height:0"></img>
 </body>
 </html>

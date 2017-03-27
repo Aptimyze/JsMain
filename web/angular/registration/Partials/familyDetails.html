@@ -5,8 +5,8 @@
     <!--Fields-->
     <div class="" >
 		<div ng-repeat="field in fields" > 
-		  <div ng-if=!$last reg-ham-field data='field' ng-show='field.show'></div>
-          <div ng-if=$last reg-text-field data='field' ng-show='field.show' on-next='myNext' ></div>
+		  <div ng-if="!$last && $index!=fields.length-2"  reg-ham-field data='field' ng-show='field.show'></div>
+          <div ng-if="$last||$index==fields.length-2" reg-text-field data='field' ng-show='field.show' on-next='myNext' ></div>
 		</div>
         <!--Next Btn-->
     </div>	

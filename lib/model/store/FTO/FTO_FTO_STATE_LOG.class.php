@@ -298,7 +298,6 @@ class FTO_FTO_STATE_LOG extends TABLE
                                 $output[$row["PROFILEID"]] = $row["STATE_ID"];
                         }
 			unset($res);
-
 			$sql2 = "DROP TABLE test.TEMP_MIS1";
 			$res = $this->db->prepare($sql2);
 			$res->execute();
@@ -349,9 +348,9 @@ class FTO_FTO_STATE_LOG extends TABLE
 				$output[] = $row;
 			}
 			unset($res);
-
+						$ddl_obj = parent::__construct('newjs_masterDDL');
                         $sql2 = "DROP TABLE test.TEMP_MIS3";
-                        $res = $this->db->prepare($sql2);
+                        $res = $ddl_obj->db->prepare($sql2);
                         $res->execute();
 		}
 		catch(PDOException $e)

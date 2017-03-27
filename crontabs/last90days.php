@@ -18,7 +18,7 @@ echo $header."\n";
 
 $ts=time();
 $ts-=90*24*60*60;
-$date=date("Y-m-d",$ts);
+$date=date("Y-m-d H:i:s",$ts);
 
 $sql_pid = "SELECT PROFILEID,HAVEPHOTO,PHOTODATE, ENTRY_DT FROM newjs.JPROFILE WHERE LAST_LOGIN_DT >=  '$date'  AND ACTIVATED IN ('Y','H')";
 $res = mysql_query($sql_pid,$db) or logError($sql_pid,$db);

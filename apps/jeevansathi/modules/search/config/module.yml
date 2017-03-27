@@ -7,6 +7,8 @@ all:
     enable_login:  off
   saveSearch:
     enable_login:  off
+  saveSearchTop:
+    enable_login:  off
   featuredAction:
     enable_login:  off
   displayMySaveSearch:

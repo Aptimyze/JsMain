@@ -62,7 +62,9 @@ function loadForm()
 <TR><TD></TD></TR>
 <TR><td colspan=2  width="48%" class="label" bgcolor="#F9F9F9" style="font-size:14px" align="center">
 
-Choose profiles which are not duplicate of <a href="~sfConfig::get('app_site_url')`/jsadmin/showstat.php?cid=~$cid`&profileid=~$duplicateProfile`" target="_blank">~$username`</a>
+Choose profiles which are not duplicate of 
+<!--<a href="~sfConfig::get('app_site_url')`/jsadmin/showstat.php?cid=~$cid`&profileid=~$duplicateProfile`" target="_blank">~$username`</a>-->
+<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$duplicateProfile`" target="_blank">~$username`</a>
 
 <td></TR>
 ~foreach from=$duplicates item=Value key=Label name=foo`
@@ -70,7 +72,9 @@ Choose profiles which are not duplicate of <a href="~sfConfig::get('app_site_url
 ~if $duplicateProfile neq $Label`
 <td  width="48%" class="label" bgcolor="#F9F9F9" style="font-size:14px" align="right">
 <input type="checkbox" name="profiles[]" value="~$Label`" onclick="javascript:checkbox_clicked(this.checked)"/>&nbsp;&nbsp;&nbsp;</td>
-<TD width="50%" bgcolor="#F9F9F9"><a href="~sfConfig::get('app_site_url')`/jsadmin/showstat.php?cid=~$cid`&profileid=~$Label`"  target="_blank">~$Value`</a>
+<TD width="50%" bgcolor="#F9F9F9">
+<!--<a href="~sfConfig::get('app_site_url')`/jsadmin/showstat.php?cid=~$cid`&profileid=~$Label`"  target="_blank">~$Value`</a>-->
+<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$Label`"  target="_blank">~$Value`</a>
 <input type="hidden" name=ids[] value="~$Label`">
 </TD>~/if`
 </TR>

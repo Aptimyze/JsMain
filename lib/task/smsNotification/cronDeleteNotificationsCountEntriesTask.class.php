@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This cron truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table.
+ * This cron truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table and MOBILE_API.DIGEST_NOTIFICATIONS table.
  */
 
 class cronDeleteNotificationsCountEntries extends sfBaseTask
@@ -10,9 +10,9 @@ class cronDeleteNotificationsCountEntries extends sfBaseTask
   {
     $this->namespace        = 'notification';
     $this->name             = 'cronDeleteNotificationsCountEntries';
-    $this->briefDescription = 'truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table';
+    $this->briefDescription = 'truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table and MOBILE_API.DIGEST_NOTIFICATIONS table';
     $this->detailedDescription = <<<EOF
-      The [cronDeleteNotificationsCountEntries|INFO] task truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table.
+      The [cronDeleteNotificationsCountEntries|INFO] task truncates MOBILE_API.SENT_NOTIFICATIONS_COUNT table and MOBILE_API.DIGEST_NOTIFICATIONS table.
       Call it with:
 
       [php symfony notification:cronDeleteNotificationsCountEntries] 
@@ -26,7 +26,15 @@ $this->addOptions(array(
   {
     if(!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
-    $notificationsCountObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT();
+    
+    //remove sent notification count entries
+    $notificationsCountObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT('newjs_masterDDL');
     $notificationsCountObj->truncateCountEntries();
+    unset($notificationsCountObj);
+
+    //remove all digest notification entries
+    $digestNotificationObj = new MOBILE_API_DIGEST_NOTIFICATIONS('newjs_masterDDL');
+    $digestNotificationObj->removeEntries(date("Y-m-d"));
+    unset($digestNotificationObj);
   }
 }

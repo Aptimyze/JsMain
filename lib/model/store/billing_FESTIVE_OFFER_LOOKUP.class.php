@@ -159,6 +159,22 @@ class billing_FESTIVE_OFFER_LOOKUP extends TABLE {
 			throw new jsException($e);
 		}
 		return $row['OFFERED_SERVICEID'];
+	}
+	public function fetchReverseOfferedServiceId($serviceid)
+	{
+		try
+		{
+			$sql = "SELECT SERVICEID FROM billing.FESTIVE_OFFER_LOOKUP WHERE OFFERED_SERVICEID=:OFFERED_SERVICEID";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":OFFERED_SERVICEID", $serviceid, PDO::PARAM_STR);			
+			$res->execute();
+			$row = $res->fetch(PDO::FETCH_ASSOC);
+		}
+		catch(PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $row['SERVICEID'];
 	}		
 	public function getFestiveDiscountPercentage($serviceStr){
 		try

@@ -62,7 +62,7 @@ $this->addOptions(array(
 	$profileDetails = $mainAdminLogObj->getUnverifiedActivatedProfiles($this->date1,$this->date2);
 	if(!is_array($profileDetails))
 		return false;
-	$jprofileContactObj = new NEWJS_JPROFILE_CONTACT;
+	$jprofileContactObj = new ProfileContact();
 	$valueArray['PROFILEID']=implode(",",$profileDetails);
 	$valueArray['ALT_MOB_STATUS']="'Y'";
 	$profilesList = $jprofileContactObj->getArray($valueArray,"","","PROFILEID");

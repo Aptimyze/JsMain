@@ -4,6 +4,6 @@ indexSuccess:
     title: Matrimony, Marriage, Matrimonial Sites, Match Making
     verify-v1: y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=   
   stylesheets: [jspc/logout/homecss,jspc/search/searchBand]
-  javascripts: [jspc/common/hslider@bottom,jspc/common/test1@bottom,jspc/logout/hpjs@bottom,jspc/login/loginLayer_js@bottom,jspc/search/searchDropdowns@bottom,jspc/search/searchBand@bottom]
+  javascripts: [jspc/common/hslider@bottom,jspc/common/test1@bottom,jspc/logout/hpjs@bottom,jspc/search/searchDropdowns@bottom,jspc/search/searchBand@bottom]
   layout: jspcLayout
 

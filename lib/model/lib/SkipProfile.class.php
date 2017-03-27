@@ -158,5 +158,10 @@ class SkipProfile
 			return null;
 		return $profileid;
 	}
+
+	public static function unsetInstance($profileid)
+	{
+		unset(self::$_instance[$profileid]);
+	}
 }
 

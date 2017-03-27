@@ -14,6 +14,7 @@ class JsNotificationsConsume
   private $channel;
   private $messsagePending;
   private $serverid;
+  public static $sendAlert=0;
 
   /**
    * 
@@ -118,6 +119,7 @@ class JsNotificationsConsume
    */
   public function processMessage(AMQPMessage $msg)
   {
+
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
@@ -131,18 +133,37 @@ class JsNotificationsConsume
       if(in_array($type, BrowserNotificationEnums::$notificationChannelType))
       { 
         $handlerObj->sendGcmNotification($type,$body);  
-      }     
+      }
+      else if($type == 'APP_NOTIFICATION')
+      {
+	$notificationSenderObj = new NotificationSender;	
+	$profileid =$body['PROFILEID'];
+	$dataSet[$profileid] =$body;
+
+	//filter profiles based on notification count
+        /*if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
+        	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($dataSet,$body["NOTIFICATION_KEY"]);
+        else
+        	$filteredProfileDetails = $dataSet;*/
+	//Send Notification
+	/*$notificationSenderObj->sendNotifications($filteredProfileDetails);
+	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+        $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);*/
+      }
+      else if($type == "MA_NOTIFICATION"){
+          $handlerObj->processMatchAlertNotification($type,$body);
+      }
     }
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"browserNotification");
+      //RabbitmqHelper::sendAlert($str,"browserNotification");
      
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.
        * This new message is pushed at the back of the queue if the number of redelivery attempts is less than a specified a limit.
        */
-      if($redeliveryCount<MessageQueues::REDELIVERY_LIMIT)
+      /*if($redeliveryCount<MessageQueues::REDELIVERY_LIMIT)
       {
         //RabbitmqHelper::sendAlert("\nRedelivery Count".$redeliveryCount."\n");
         $reSendData = array('process' =>'JS_INSTANT_NOTIFICATION','data'=>array('type' => $type,'body'=>$body), 'redeliveryCount'=> $redeliveryCount+1 );
@@ -152,7 +173,7 @@ class JsNotificationsConsume
       else
       {
         RabbitmqHelper::sendAlert("\nDropping message as redelivery attempts exceeded the limit"."\n");
-      }
+      }*/
     }
     try 
     {

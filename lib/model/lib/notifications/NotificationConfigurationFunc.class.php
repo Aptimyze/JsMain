@@ -45,16 +45,45 @@ class NotificationConfigurationFunc
     public function showEnableNotificationLayer($profileid)
     {
         $showLayer = 0;
+        $registeredUser = 0;
         $browserCheck = $this->browserVersionCheck(BrowserNotificationEnums::$minChromeVersion);
         $channel = MobileCommon::isMobile()?"M":"D";
-        $browserNotificationRegObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION();
-        $checkRegUser = $browserNotificationRegObj->checkForRegisteredUser($profileid,$channel,"*");
+        
+        $browserNotificationLayerObj = new MOBILE_API_BROWSER_NOTIFICATION_LAYER();
+        $layerData = $browserNotificationLayerObj->getArray($profileid,"PROFILEID");
+        if($layerData){
+            $countChannel = ($channel == 'M')?"MOBILE_COUNT":"DESKTOP_COUNT";
+            $lastLoginChannel = ($channel == 'M')?"MOBILE_LAST_CLICK":"DESKTOP_LAST_CLICK";
+            $channelShowLayer = ($channel == 'M')?"MOBILE_LAYER":"DESKTOP_LAYER";
+            $currentDate = strtotime(date('Y-m-d'));
+            $dateDiff = ($currentDate - strtotime($layerData[0][$lastLoginChannel]))/(60*60*24);
+            if($layerData[0][$countChannel] >=5 || ($dateDiff < 7) || ($layerData[0][$channelShowLayer] == 'Y') ){
+                $registeredUser = 1;
+            }
+        }
+        elseif($browserCheck){
+            $browserNotificationLayerMasterObj = new MOBILE_API_BROWSER_NOTIFICATION_LAYER();
+            unset($paramsArr);
+            $paramsArr['PROFILEID'] = $profileid;
+            $paramsArr['MOBILE_COUNT'] = 0;
+            $paramsArr['DESKTOP_COUNT'] = 0;
+            $paramsArr['MOBILE_LAST_CLICK'] = date('Y-m-d');
+            $paramsArr['DESKTOP_LAST_CLICK'] = date('Y-m-d');
+            $paramsArr['MOBILE_LAYER'] = 'N';
+            $paramsArr['DESKTOP_LAYER'] = 'N';
+            if($channel = 'M'){
+                $paramsArr['MOBILE_LAST_CLICK'] = "0000-00-00";
+                $paramsArr['DESKTOP_LAST_CLICK'] = "0000-00-00";
+            }
+            else{
+                $paramsArr['DESKTOP_LAST_CLICK'] = "0000-00-00";
+                $paramsArr['MOBILE_LAST_CLICK'] = "0000-00-00";
+            }
+            $browserNotificationLayerMasterObj->insert($paramsArr);
+        }
         unset($browserNotificationRegObj);
         //if($profileid == '3406012'||$channel=="M")  //comment LATER
         {
-            if(is_array($checkRegUser)){
-                $registeredUser = 1;
-            }
             if($browserCheck==true && !$registeredUser){
                 $showLayer = 1;
             }

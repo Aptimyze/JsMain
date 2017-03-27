@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script is run to create object of rabbitmq Notifications Consumer class and call 
 the receiveMessage function to let the consumer receive notification messages on first server.
@@ -38,8 +38,13 @@ EOF;
   {
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
-    $consumerObj=new JsNotificationsConsume('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
-    $consumerObj->receiveMessage(); 
+
+        $notificationStop =JsConstants::$notificationStop;
+        if(!$notificationStop){
+    		$consumerObj=new JsNotificationsConsume('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+    		$consumerObj->receiveMessage(); 
+	}
+
   }
 }
 ?>

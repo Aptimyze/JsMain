@@ -340,7 +340,7 @@ var user_login=1;
 		~if $REG_P6 eq '1'`
 				<input onclick="return validate7('normal');" id="Submit" name="Sub" value="Save" type="submit" class="nsubbtn" border="0" style="margin:30px 1px 30px 102px;" >
 				~if !$IS_FTO_LIVE`
-				<a href="~$SITE_URL`/profile/intermediate.php?parentUrl=/social/addPhotos?checksum=~$CHECKSUM`&profilechecksum=~$profilechecksum`&from_registration=1" class="b f_13" style="color:#057ec3; padding-left:15px;">Skip to Upload Photos</a>~else`
+				<a href="~$SITE_URL`/social/addPhotos?checksum=~$CHECKSUM`&profilechecksum=~$profilechecksum`&from_registration=1" class="b f_13" style="color:#057ec3; padding-left:15px;">Skip to Upload Photos</a>~else`
 					<span onclick="return validate7('skip_to_fto');"><a href="#" class="b f_13" style="color:#057ec3; padding-left:15px;">Skip to Free Trial Offer details</a></span>~/if`
 		~else`
 			~if $filter_redirect eq '1'`

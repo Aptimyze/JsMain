@@ -33,7 +33,7 @@
 			~if $PERSON_SELF`
 				~if $HAVEPHOTO eq N || !$HAVEPHOTO`
 				<div style="padding-bottom:10px;">Upload your photo to get better responses.<br>
-					<a href="/search/partnermatches" style="text-decoration:none;color: #0045a9" >Skip to My Matches</a>
+					<a href="/search/partnermatches" style="text-decoration:none;color: #0045a9" >Skip to Desired Partner Matches</a>
 				</div>
 				~/if`
 			~/if`
@@ -46,6 +46,8 @@
 				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px" >~mainMem::EVALUE_LABEL`</b>
 			~else if CommonFunction::isErishtaMember($profile->getSUBSCRIPTION())`
 				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px">~mainMem::ERISHTA_LABEL`</b>
+				~else if CommonFunction::isEadvantageMember($profile->getSUBSCRIPTION())`
+				<b class="login-info b" style="background-color:white;float:right;color:#800000;font-size:14px">~mainMem::EADVANTAGE_LABEL`</b>
 			~/if`
 			<ul>
 				<li>

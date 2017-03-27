@@ -93,19 +93,43 @@ class Reminder extends ContactEvent {
 
     //send eoi reminder notification with default reminder message
     $filteredState =$this->contactHandler->getContactObj()->getFILTERED();	
-    if($filteredState!='Y'){	
+    if($filteredState!='Y')
+    {	
+      $receiverId = $this->contactHandler->getViewed()->getPROFILEID();
+      $senderId = $this->contactHandler->getViewer()->getPROFILEID();
+      $reminderMsg = $this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE);
+
 	    $instantNotificationObj =new InstantAppNotification("EOI_REMINDER");
-	    $instantNotificationObj->sendReminderInstantAppNotification($this->contactHandler->getViewer()->getUSERNAME(),$this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID(),$this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE)); 
+	    $instantNotificationObj->sendReminderInstantAppNotification($this->contactHandler->getViewer()->getUSERNAME(),$receiverId,$senderId,$reminderMsg); 
 	    unset($instantNotificationObj);
+      try
+      {
+        //send instant JSPC/JSMS notification
+        if(strlen($reminderMsg)>BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"])
+          $notificationMsg = substr($reminderMsg,0,BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"])."....";
+        else
+          $notificationMsg = $reminderMsg;
+        $notificationData = array("notificationKey"=>"EOI_REMINDER","selfUserId" => $receiverId,"otherUserId" => $senderId,"message"=>$notificationMsg);
+        $producerObj = new Producer(); 
+        if($producerObj->getRabbitMQServerConnected())
+        {
+          $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+        }
+        unset($producerObj);
+      }
+      catch(Exception $e)
+      {
+        throw new jsException("Something went wrong while sending instant eoi reminder received notification-".$e);
+      }
     } 
 
     $viewedEntryDate = $this->contactHandler->getViewed()->getENTRY_DT();
     $now = date("Y-m-d");
     $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
 
-    if ($dateDiff <= 30) { // Instant mailer
+ // Instant mailer
       $this->sendMail();
-    }
+    
   }
 
   /**
@@ -128,8 +152,7 @@ class Reminder extends ContactEvent {
     }
   }
 
-  public function sendMail(){
-return true;    
+  public function sendMail(){   
     $viewed = $this->contactHandler->getViewed();
     $viewer = $this->contactHandler->getViewer();
     $viewedSubscriptionStatus = $viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();

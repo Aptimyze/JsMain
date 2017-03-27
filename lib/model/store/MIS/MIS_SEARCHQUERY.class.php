@@ -37,7 +37,7 @@ class MIS_SEARCHQUERY extends TABLE
                         throw new jsException("","PROFILEID IS BLANK IN get() of SEARCHQUERY.class.php");
 		try
                 {
-                        $sql ="select count(*) AS CNT from MIS.SEARCHQUERY where PROFILEID=:PROFILEID AND DATE>=:DATE";
+                        $sql ="select count(1) AS CNT from MIS.SEARCHQUERY where PROFILEID=:PROFILEID AND DATE>=:DATE";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
 			$res->bindValue(":DATE", $date, PDO::PARAM_STR);

@@ -478,7 +478,7 @@ Kolkata - <font color="#7a7676">Ghariat Road, Salt Lake, AJC Bose Road</font></t
                 <td height="10"colspan="3"></td>
               </tr>
               <tr>
-                <td align="center" height="48" colspan="3" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#c9c9c9; font-size:11px; line-height:16px;">This email shows recent profile visitors who may be interested in you.<br>
+                <td align="center" height="48" colspan="3" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#c9c9c9; font-size:11px; line-height:16px;">This email shows profile visitors who may be interested in you.<br>
       Click here to <a href="(LINK)UNSUBSCRIBE:profileid=~$profileid`(/LINK)" target="_blank" title="Click here" style="color:#c9c9c9;">UNSUBSCRIBE</a> from Visitor Alert mails.</td>
               </tr>
             </table>

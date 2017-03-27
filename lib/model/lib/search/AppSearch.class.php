@@ -66,9 +66,16 @@ class AppSearch extends SearchParamters
 		$searchParamsSetter['HAVEPHOTO'] = $request->getParameter('photo');
 		$searchParamsSetter['MTONGUE'] = $request->getParameter('mtongue');
 		$city_country_resArr = $request->getParameter('location');
+		$cities_resArr = $request->getParameter('location_cities');
+                if($city_country_resArr && $cities_resArr){
+                        $city_country_resArr .= ",".$cities_resArr;
+                }elseif($cities_resArr){
+                        $city_country_resArr = $cities_resArr;
+                }
+                $city_country_resArr = trim($city_country_resArr,',');
 		if($city_country_resArr)
 		{
-                        if(array_key_exists($city_country_resArr,FieldMap::getFieldLabel("state_india","","true")))
+                        /*if(array_key_exists($city_country_resArr,FieldMap::getFieldLabel("state_india","","true")))
                         {
                                 $searchParamsSetter['STATE'] = $city_country_resArr;
                                 $searchParamsSetter['COUNTRY_RES'] = 51;
@@ -76,7 +83,32 @@ class AppSearch extends SearchParamters
 			elseif(is_numeric($city_country_resArr))
 				$searchParamsSetter['COUNTRY_RES'] = $city_country_resArr;
 			else
-				$searchParamsSetter['CITY_INDIA'] = $city_country_resArr;
+				$searchParamsSetter['CITY_INDIA'] = $city_country_resArr;*/
+                        $city_country_resArr = explode(",",$city_country_resArr);
+        	        foreach($city_country_resArr as $v)
+                	{
+	                        if(is_numeric($v))
+					$tempCountry[] = $v;
+				elseif(ctype_alpha($v))
+					$tempState[] = $v;
+				else
+					$tempCity[] = $v;
+                	}
+			if($tempCountry)
+		                $searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
+			if($tempCity)
+			{
+				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
+                                $searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+                                $tempCountry[] = 51;
+				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
+			}
+			if($tempState)
+			{
+				$searchParamsSetter['STATE'] = implode(",",$tempState);
+				$tempCountry[] = 51;
+				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
+			}
 		}
 	
 		/** 

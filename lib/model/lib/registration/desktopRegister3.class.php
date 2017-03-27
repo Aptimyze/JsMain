@@ -53,9 +53,10 @@ class desktopRegister3 extends registrationBaseClass {
 
   public function submit() {
 	$now = date("Y-m-d G:i:s");
-	$today = date("Y-m-d");
+	$today = CommonUtility::makeTime(date("Y-m-d"));
 	$values_that_are_not_in_form = array('INCOMPLETE' => 'N','ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
-	$this->form->updateData($this->loginProfile->getPROFILEID(),$values_that_are_not_in_form);
+  $this->form->updateData($this->loginProfile->getPROFILEID(),$values_that_are_not_in_form);
+  $this->redisQueueJunkIncompleteProfile($this->loginProfile->getPROFILEID());
   }
 
   public function postSubmit() {
@@ -109,4 +110,22 @@ class desktopRegister3 extends registrationBaseClass {
     $this->objController->templateVars["name"] = $this->nameOfUserObj->getName($this->profileId);
   }
 
+  public function redisQueueJunkIncompleteProfile($profileId)
+  {
+    $memcacheObj = JsMemcache::getInstance();
+
+    $minute = date("i");
+
+
+    $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+    $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+    $startIndex = floor($minute/$redisQueueInterval);
+
+    $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+
+    $memcacheObj->lpush($key,$profileId);
+  }
 }

@@ -7,7 +7,7 @@ define('sugarEntry',true);
 $path=$_SERVER[DOCUMENT_ROOT];
 require_once("$path/profile/connect.inc");
 require_once("$path/sugarcrm/include/utils/Jscreate_lead.php");
-$db_js=connect_db();
+$db_js=connect_slave();
 mysql_select_db("sugarcrm",$db_js);
 //$date=date('Y-m-d');
 $date=date('Y-m-d',strtotime("-1 days"));

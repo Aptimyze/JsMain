@@ -87,26 +87,6 @@ class ARCHIVE_FOR_DUPLICATE extends TABLE
 	}
 
 
-        public function getContactIP($pid,$myDbObj,$mysqlObj)
-        {
-		try{
-			$contactsIPArr =array();
-                	$sql="select SQL_CACHE distinct inet_ntoa(IP) as IP from newjs.MESSAGE_LOG where SENDER='$pid' ORDER BY ID DESC";
-			$result=$mysqlObj->executeQuery($sql,$myDbObj);
-	                while($row = $mysqlObj->fetchArray($result))
-	                {	
-			       $contactsIPArr[]=$row['IP'];
-	                }
-			if(is_array($contactsIPArr))
-				$contactsIPStr =@implode(", ",$contactsIPArr);
-	                return $contactsIPStr;
-        	}
-                catch(PDOException $e)
-                {
-                        /*** echo the sql statement and error message ***/
-                        throw new jsException($e);
-                }
-	}
 
         public function getPaymentIP($pid)
         {

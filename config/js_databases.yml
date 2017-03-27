@@ -5,6 +5,13 @@ newjs_master:
     username:     "<?php echo MysqlDbConstants::$master['USER']?>"
     password:     "<?php echo MysqlDbConstants::$master['PASS']?>"
 
+newjs_masterDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$masterDDL['HOST'].';port='.MysqlDbConstants::$masterDDL['PORT'].';dbname='.MysqlDbConstants::$masterDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$masterDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$masterDDL['PASS']?>"
+
 newjs_bmsSlave:
   factory:        jsPdoDatabase
   param:
@@ -26,12 +33,26 @@ shard1_master:
     username:     "<?php echo MysqlDbConstants::$shard1['USER']?>"
     password:     "<?php echo MysqlDbConstants::$shard1['PASS']?>"
 
+shard1_masterDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard1DDL['HOST'].';port='.MysqlDbConstants::$shard1DDL['PORT'].';dbname='.MysqlDbConstants::$shard1DDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard1DDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard1DDL['PASS']?>"
+
 shard2_master:
   factory:        jsPdoDatabase
   param:
     dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard2['HOST'].';port='.MysqlDbConstants::$shard2['PORT'].';dbname='.MysqlDbConstants::$shard2['DEFAULT_DB']?>"
     username:     "<?php echo MysqlDbConstants::$shard2['USER']?>"
     password:     "<?php echo MysqlDbConstants::$shard2['PASS']?>"
+
+shard2_masterDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard2DDL['HOST'].';port='.MysqlDbConstants::$shard2DDL['PORT'].';dbname='.MysqlDbConstants::$shard2DDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard2DDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard2DDL['PASS']?>"
 
 shard3_master:
   factory:        jsPdoDatabase
@@ -40,12 +61,26 @@ shard3_master:
     username:     "<?php echo MysqlDbConstants::$shard3['USER']?>"
     password:     "<?php echo MysqlDbConstants::$shard3['PASS']?>"
 
+shard3_masterDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard3DDL['HOST'].';port='.MysqlDbConstants::$shard3DDL['PORT'].';dbname='.MysqlDbConstants::$shard3DDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard3DDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard3DDL['PASS']?>"
+
 211_connect:
   factory:        jsPdoDatabase
   param:
     dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$viewLog['HOST'].';port='.MysqlDbConstants::$viewLog['PORT'].';dbname='.MysqlDbConstants::$viewLog['DEFAULT_DB']?>"
     username:     "<?php echo MysqlDbConstants::$viewLog['USER']?>"
     password:     "<?php echo MysqlDbConstants::$viewLog['PASS']?>"
+
+viewLogDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$viewLogDDL['HOST'].';port='.MysqlDbConstants::$viewLogDDL['PORT'].';dbname='.MysqlDbConstants::$viewLogDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$viewLogDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$viewLogDDL['PASS']?>"
 
 #Need to remove below 3
 MIS_master:
@@ -83,12 +118,40 @@ shard3_slave:
     username:     "<?php echo MysqlDbConstants::$shard3Slave['USER']?>"
     password:     "<?php echo MysqlDbConstants::$shard3Slave['PASS']?>"
 
+shard1_slaveDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard1SlaveDDL['HOST'].';port='.MysqlDbConstants::$shard1SlaveDDL['PORT'].';dbname='.MysqlDbConstants::$shard1SlaveDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard1SlaveDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard1SlaveDDL['PASS']?>"
+
+shard2_slaveDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard2SlaveDDL['HOST'].';port='.MysqlDbConstants::$shard2SlaveDDL['PORT'].';dbname='.MysqlDbConstants::$shard2SlaveDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard2SlaveDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard2SlaveDDL['PASS']?>"
+
+shard3_slaveDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$shard3SlaveDDL['HOST'].';port='.MysqlDbConstants::$shard3SlaveDDL['PORT'].';dbname='.MysqlDbConstants::$shard3SlaveDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$shard3SlaveDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$shard3SlaveDDL['PASS']?>"
+
 matchalerts_slave:
   factory:        jsPdoDatabase
   param:
-    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$alertsSlave['HOST'].';dbname='.MysqlDbConstants::$alertsSlave['DEFAULT_DB']?>"
-    username:     "<?php echo MysqlDbConstants::$alertsSlave['USER']?>"
-    password:     "<?php echo MysqlDbConstants::$alertsSlave['PASS']?>"
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$matchalertsSlave['HOST'].';dbname='.MysqlDbConstants::$matchalertsSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$matchalertsSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$matchalertsSlave['PASS']?>"
+
+crm_slave:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$crmSlave['HOST'].';dbname='.MysqlDbConstants::$crmSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$crmSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$crmSlave['PASS']?>"
 
 dnc_con:
   factory:        jsPdoDatabase
@@ -103,6 +166,13 @@ matchalerts_slave_localhost:
     dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$alerts['HOST'].';port='.MysqlDbConstants::$alerts['PORT'].';dbname='.MysqlDbConstants::$alerts['DEFAULT_DB']?>"
     username:     "<?php echo MysqlDbConstants::$alerts['USER']?>"
     password:     "<?php echo MysqlDbConstants::$alerts['PASS']?>"
+
+alertsDDL:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$alertsDDL['HOST'].';port='.MysqlDbConstants::$alertsDDL['PORT'].';dbname='.MysqlDbConstants::$alertsDDL['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$alertsDDL['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$alertsDDL['PASS']?>"
 
 99_master:
   factory:        jsPdoDatabase

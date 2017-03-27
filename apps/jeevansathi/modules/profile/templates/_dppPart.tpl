@@ -13,7 +13,7 @@
             </div>
         </div>
 ~/if`
-~if $isEdit`<div class="subhd2" style="width:682px;margin-top: 86px;">About My Desired Partner <a ~if $post_login eq 1`href="~sfConfig::get("app_site_url")`/profile/edit_dpp.php?width=700&flag=PPA&FLAG=partner&relation=~$RELATION`&post_login=1"~else`href="~sfConfig::get("app_site_url")`/profile/edit_dpp.php?width=700&flag=PPA&FLAG=partner&relation=trim(~$RELATION`)&clicksource=~$clicksource`&logic_used=~$logic_used`"~/if` style="font-size:14px; color:#0f71ae;" class="thickbox">  [Edit]</a></div>
+~if $isEdit`<div class="subhd2" style="width:682px;margin-top: 86px;">About Desired Partner <a ~if $post_login eq 1`href="~sfConfig::get("app_site_url")`/profile/edit_dpp.php?width=700&flag=PPA&FLAG=partner&relation=~$RELATION`&post_login=1"~else`href="~sfConfig::get("app_site_url")`/profile/edit_dpp.php?width=700&flag=PPA&FLAG=partner&relation=trim(~$RELATION`)&clicksource=~$clicksource`&logic_used=~$logic_used`"~/if` style="font-size:14px; color:#0f71ae;" class="thickbox">  [Edit]</a></div>
 ~else`
 <div><h3 class="protop1 b" style="color:#000;">~$PROFILENAME` Desired Partner Profile</h3></div>
 ~/if`

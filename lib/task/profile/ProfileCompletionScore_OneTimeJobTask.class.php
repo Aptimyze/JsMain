@@ -62,7 +62,8 @@ class ProfileCompletionScore_OneTimeJobTask extends sfBaseTask
         $this->addArguments(array(
 			new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'TotalScript'),
 			new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'CurrentScript'),
-            new sfCommandArgument('lastLoginWithIn', sfCommandArgument::OPTIONAL, 'LastLoginWithIn'),
+                        new sfCommandArgument('lastLoginWithIn', sfCommandArgument::OPTIONAL, 'LastLoginWithIn'),
+                        new sfCommandArgument('updatePcs', sfCommandArgument::OPTIONAL, 'updateScore'),
 		));
         
         $this->namespace        = 'profile';
@@ -72,7 +73,7 @@ class ProfileCompletionScore_OneTimeJobTask extends sfBaseTask
         The [ProfileCompletionScore|INFO] task does things.
         Call it with:
 
-        [php symfony profile:ProfileCompletionScore totalScripts currentScript [lastloginWithIn]]
+        [php symfony profile:ProfileCompletionScore totalScripts currentScript [lastloginWithIn] [updatePcs]]
 EOF;
     }
     /*
@@ -135,6 +136,41 @@ EOF;
     }   
     
     /*
+     * getProfiles
+     * Function to get all profiles which are logged in last 6 months 
+     * @access private
+     * @retrun void
+     */
+    private function getProfilesFromPcs($arguments)
+    {
+        $totalScripts = $arguments["totalScripts"]; // total no of scripts
+        $currentScript = $arguments["currentScript"]; // current script number
+        if(!$lastLoginWithIn || !strlen($lastLoginWithIn))
+        {
+            $lastLoginWithIn  = self::LAST_LOGIN_SINCE;
+        }
+        
+        if(null === $this->m_objNewJs_Jprofile_Slave)
+        {
+            if($this->m_bDebugInfo)
+                $this->logSection('Error: ', 'Not able to establish connection with newjs_slave');
+            return false;
+        }
+        
+        $loginDate = date('Y-m-d',strtotime('-12 month'));
+        
+        /*
+         * Get list of all profiles whose score are not stored on db
+         */
+        $this->m_arrProfiles = $this->m_objNewJs_Jprofile_Slave->getPofilesToBeUpdated($loginDate,$totalScripts,$currentScript);
+        
+        if($this->m_bDebugInfo)
+        {
+            $this->logSection('DebugInfo: Counts of profiles reterieved : ',count($this->m_arrProfiles));
+        }
+    }   
+    
+    /*
      * Function to compute profile Completion score present in m_arrProfiles array
      * @access private
      * @return void
@@ -185,9 +221,13 @@ EOF;
         //Init Connection        
         $this->initConnection();
         
-        //Get Profiles from Slave
-        $this->getProfiles($arguments);
-
+        if($arguments["updatePcs"])
+        //get profiles which have their score and needs to be updated
+            $this->getProfilesFromPcs($arguments);
+        else
+        //Get Profiles from JPROFILE which do not have score completed
+            $this->getProfiles($arguments);
+        
         //Compute Score
         $this->computeProfileCompletionScore();
         

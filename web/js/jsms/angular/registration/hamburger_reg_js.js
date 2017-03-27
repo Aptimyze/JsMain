@@ -172,6 +172,14 @@ var errorMsg = "Something went wrong!! Please try again later";
         }
 		Hamburger.prototype.hideHamburger=function()
 		{
+			var myScope = angular.element('#perspective').scope();
+			if(myScope.fields.length>=3 && localStorage.getItem("UD"))
+			{
+				if(myScope.fields[3].storeKey == "casteNoBar" && JSON.parse(localStorage.getItem("UD")).casteNoBar == "true") 
+				{
+					myScope.fields[3].value=true;
+				}
+			}
 			if(this.bHideStatus)
 				return;
 			var ele=this;	
@@ -230,13 +238,13 @@ var errorMsg = "Something went wrong!! Please try again later";
 				$("#TAPNAME_1").html("");
 				},animationtimer+250);
 			startScrolling();
-		};
+		
+};
 		Hamburger.prototype.UpdateHamburgerHTML=function()
 		{
 			var ele=this;
 
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-
 			//selected value
 			var selArr=new Array();
 			var duserdecision =this.duserDecision;
@@ -253,6 +261,12 @@ var errorMsg = "Something went wrong!! Please try again later";
 					else
 							selArr=tempArr;
 			}
+			if(ele.type=="native_state_jsms")
+			{
+				if($.isNumeric(selArr[0]))
+					ele.type = "native_country_jsms";
+			}
+
             setTimeout(function(){
                 staticTables.getData(ele.type,function(data){ele.parseData(selArr,data)});
             },100);
@@ -261,7 +275,6 @@ var errorMsg = "Something went wrong!! Please try again later";
         Hamburger.prototype.parseData=function(selArr,data)
         {
             var data=this.FilterData(JSON.parse(data));
-			
 			//Close hamburger if data not found
 			if(!data || data === -1)
 			{
@@ -277,6 +290,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 					return false;
 			}});
             
+            $(this.ulOption).unbind("click");
             $(this.ulOption).bind("click",function(ev)
 			{
 				ele.clickInProgress = true;
@@ -442,6 +456,33 @@ var errorMsg = "Something went wrong!! Please try again later";
 			
 			var value=this.UpdateOutput(ele);
 			this.SpecialDependantLogic();
+				if(this.type=="native_country_jsms" && $.isNumeric(value))
+				{
+					this.dependant = "native_country_jsms";
+				}
+                                if(this.type=="native_state_jsms" && value=="NI")
+                                {
+					this.type= "native_country_jsms";
+					this.dependant = "native_country_jsms";
+					this.bIndependantCall=true;
+					this.UpdateHamburgerHTML();
+					startTouchEvents();
+					return;
+                                }
+
+                                if(this.type == "native_country_jsms" && value== "FI")
+                                {
+					this.type= "native_state_jsms";
+					this.dependant = "native_city_jsms";
+					this.bIndependantCall=true;
+					this.UpdateHamburgerHTML();
+					startTouchEvents();
+					return;
+                                }
+                                if(this.type=="native_state_jsms" && (value=="undefined" ||value==undefined||value=="0"))
+                                {
+                                        this.dependant='';
+                                }
 			if(this.whenHide=="multiple")
 			{
 				
@@ -482,7 +523,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.SpecialDependantLogic=function()
 		{
-			var specialType = ['religion','reg_mstatus','country_res','t_brother','t_sister'];
+			var specialType = ['religion','reg_mstatus','t_brother','t_sister',"native_state_jsms"];
 			if(specialType.indexOf(this.type)!=-1)
 			{
 				var o = this.output[this.type];
@@ -502,21 +543,17 @@ var errorMsg = "Something went wrong!! Please try again later";
 							this.dependant_tapName ='Caste';
 					}
 				}
-				
+				if(this.type=="native_state_jsms"&& this.selectedValue!="NI")
+				{
+					this.dependant = '';
+					this.dependant = "reg_city_" + this.selectedValue +"_";
+				}
 				if(this.type == 'reg_mstatus'  && o.value && o.value!='N') 
 				{
 					this.dependant = 'children';
 					this.bIndependantCall = true;
 				}
 				
-				if(this.type=='country_res' && o)
-				{
-					if(o.value == 51)
-					{
-						this.dependant = "city_res";
-					}
-				}
-                
                 if((this.type == 't_brother' || this.type == 't_sister') && o ){
                     if (o.value==='0')
                         this.dependant = '';
@@ -577,6 +614,27 @@ var errorMsg = "Something went wrong!! Please try again later";
 			if(this.type == 'reg_mstatus' && json)
 			{
 				this.selectedValue = this.depValue;
+			}
+			if(this.type=="native_country_jsms" && json)
+				return json;
+			if(this.type.indexOf("reg_city_")>-1 && this.screenName!="s2")
+			{
+				var split = this.type.split("_");
+				var state = split[2];
+				return json[state];
+			}
+			if(this.type.indexOf("reg_city_jspc")>-1 && this.screenName=="s2")
+			{
+                            this.countryValue = staticTables.getUserData('familyIncomeDep');
+				if(this.countryValue=='51')
+				{
+					this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
+					return json[this.countryValue][this.stateValue];
+				}
+				else
+				{
+					return json[this.countryValue];
+				}
 			}
 			if(this.selectedValue!=-1 && json)
 			{

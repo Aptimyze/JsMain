@@ -30,7 +30,7 @@ class JsNotificationProduce
   { 
     if(JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER")==true || $this->serverConnection('FIRST_SERVER')==false)
     {
-      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true)
+      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
       {
         if(JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER")==true || $this->serverConnection('SECOND_SERVER')==false)
         {
@@ -63,6 +63,7 @@ class JsNotificationProduce
     try
     {
       $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notification");
+      $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notificationLog");
     }
     catch (Exception $exception) 
     {
@@ -163,8 +164,23 @@ class JsNotificationProduce
         case "JS_NOTIFICATION3" :
                     $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE3]);
                     break;
+	case "JS_NOTIFICATION4" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE4]);
+                    break;
+        case "JS_NOTIFICATION5" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE5]);
+                    break;
+        case "JS_NOTIFICATION6" :
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$scheduledNotificationBindingKeyArr[MQ::$SCHEDULED_NOTIFICATION_QUEUE6]);
+                    break;
         case "JS_INSTANT_NOTIFICATION":
                     $this->channel->basic_publish($msg,MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
+                    break;
+        case "JS_NOTIFICATION_LOG":
+                    $this->channel->basic_publish($msg,MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"]);
+                    break;
+        case "MA_NOTIFICATION":
+                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$MA_NOTIFICATION_QUEUE);
                     break;
       }
     }

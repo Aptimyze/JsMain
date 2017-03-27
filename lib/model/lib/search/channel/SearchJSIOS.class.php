@@ -42,6 +42,13 @@ class SearchJSIOS extends SearchJS
                  return SearchTypesEnums::iOSMatchAlertsCC;
         }
         
+	/**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                 return SearchTypesEnums::contactViewAttemptIOS;
+        }
         /**
         * getMembersLookingForMe
         */
@@ -71,6 +78,13 @@ class SearchJSIOS extends SearchJS
                  return SearchTypesEnums::VERIFIED_MATCHES_IOS;
         }
 
+				/**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsIOS;
+        }
         
          /**
         * get No of results for srp page
@@ -87,81 +101,7 @@ class SearchJSIOS extends SearchJS
                 return ResponseHandlerConfig::$SEARCH_O_RESULTS_I;
         }
         
-        
-        /**
-        * Featured Profile
-        */
-	public function showFeaturedProfile($featuredProfile,$currentPage,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$noOfProfiles,$searchId,$actionObject) {
-                if(count($responseObj->getsearchResultsPidArr())<1)
-                        return $responseObj;
-                /* feature profile */
-                if($featuredProfile)
-                {
-                        if($currentPage==1)
-                        { 
-                                $featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
-                                $featureProfileIdArr = $featuredProfileObj->getProfile("","",$searchId);
-                                $featureProfileId = $featureProfileIdArr["PROFILEID"];
-                                if(!$featureProfileId)
-                                {
-                                        $featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj);
-                                        $SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
-                                        $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
-                                        if(count($respObj->getSearchResultsPidArr())==0)
-                                        {
-                                                unset($featuredProfileObj);
-                                                $featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
-                                                $featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
-                                                $SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
-                                                $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
-                                        }
-
-                                        if(count($respObj->getSearchResultsPidArr())>0)
-                                        {
-                                                $featureProfileId = $featuredProfileObj->performDbAction($searchId,$respObj->getSearchResultsPidArr());
-                                                if(count($respObj->getSearchResultsPidArr())>1)
-                                                        $actionObject->featurePosition = 'first';
-                                                else
-                                                        $actionObject->featurePosition = 'single';
-                                                $actionObject->featuredResultNo=0;
-                                                $actionObject->totalFeaturedProfiles = count($respObj->getSearchResultsPidArr());
-                                        }
-                                }
-                                else
-                                { 
-                                        $SearchParamtersObjF = new SearchParamters;
-                                        $SearchParamtersObjF->setProfilesToShow($featureProfileId);
-                                        $SearchParamtersObjF->setGENDER('ALL');
-                                        $respObj = $SearchServiceObj->performSearch($SearchParamtersObjF,'onlyResults','','',0,$loggedInProfileObj);
-                                        $actionObject->featurePosition = $featureProfileIdArr["POSITION"];
-                                        $actionObject->featuredResultNo=0;
-                                        $actionObject->totalFeaturedProfiles = $featureProfileIdArr["TOTAL"];
-                                        unset($SearchParamtersObjF);
-                                }
-                                unset($featuredProfileObj);
-                        }
-                }
-                /* feature profile */
-
-                if($respObj && is_array($respObj->getsearchResultsPidArr())){
-                        $featuredProfilesArr = $respObj->getsearchResultsPidArr();
-                        $searchedProfilesArr = $responseObj->getsearchResultsPidArr();
-                        $featuredProfileToShow = array_diff($featuredProfilesArr,$searchedProfilesArr);
-                        if($featuredProfileToShow){
-                                $featuredProfileToShowArr[0]=$featuredProfileToShow[0];
-                                $indexOfFeatured = array_search($featuredProfileToShowArr[0],$featuredProfilesArr);
-                                $featuredProfileDetailsToShow[0] = $respObj->getResultsArr()[$indexOfFeatured];
-                                $featuredProfileDetailsToShow[0]["FEATURED"] = "Y";
-                                $featuredAndSearched  = array_merge($featuredProfileDetailsToShow,$responseObj->getResultsArr());
-                                $featuredAndSearchedPidArr  = array_merge($featuredProfileToShowArr,$searchedProfilesArr);
-                                $responseObj->setResultsArr($featuredAndSearched);
-                                $responseObj->setSearchResultsPidArr($featuredAndSearchedPidArr);
-                                $responseObj->setFeturedProfileArr($featuredProfileDetailsToShow[0]);
-                        }
-                }
-                return $responseObj;
-        }
-
+       
         /**
 	* This function will set the No. Of featured profiles results for search Page
 	*/
@@ -205,6 +145,27 @@ class SearchJSIOS extends SearchJS
                 }
                 return $clustersToShow;
         }
-
+        /**
+        * getMatchOfDay.
+        */
+        public static function getSearchTypeMatchOfDay()
+        {
+                 return SearchTypesEnums::IOSMatchOfDay;
+        }
+        
+        public function setRequestParameters($params){
+            $output = array();
+            $request = $params["request"];
+            if($params["searchCat"] == 'kundlialerts'){
+				
+				if($params['profileCount']==0 && $params["nextAvail"]=='false' && $params['noOfResults']!="")
+				{
+					$output['noresultmessage'] = SearchTitleAndTextEnums::$MESSAGE_0RESULT_MAPPING["V1"]["JSMS"]["kundlialerts"]["withHoro"];
+            	}
+               
+            }
+            return $output;
+       }
+        
 }
 ?>

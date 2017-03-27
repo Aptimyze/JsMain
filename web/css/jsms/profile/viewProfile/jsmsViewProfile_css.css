@@ -196,3 +196,12 @@ padding: 10px 15px ;
   overflow-x: none;
 }
 .vpro_lineHeight{line-height:1.5}
+.headerOverflow{
+    max-width: 65%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+.wspace{
+    white-space: normal !important;
+}

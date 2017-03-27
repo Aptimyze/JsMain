@@ -40,7 +40,7 @@ public function __construct($profileObject='',$phoneType)
 				break;	
 				
 				case 'A':		
-					$contactNumOb=new newjs_JPROFILE_CONTACT();
+					$contactNumOb= new ProfileContact();
                		$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE,ALT_MOB_STATUS,ALT_MOBILE_ISD");
                		if($numArray['0']['ALT_MOBILE'])
                		{
@@ -69,41 +69,67 @@ public function __construct($profileObject='',$phoneType)
         public function getPhone(){return $this->phone;}
         public function getPhoneWithoutIsd(){return $this->phoneWithoutIsd;}
         public function isVerified(){return $this->isVerified;}
+        public function getIsd(){return $this->isd;}
 
-protected function phoneUpdateProcess($message)
+public function phoneUpdateProcess($message)
 	{
 			if(!$this->getPhone()) return false;
 			include_once(sfConfig::get("sf_web_dir")."/P/InstantSMS.php");
 
 			$profileid=$this->profileObject->getPROFILEID();
 			$profileObject=$this->profileObject;
+			
+			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
+
 			switch ($this->phoneType)
 			{		
 
 				case 'M':
 				$paramArr=array('MOB_STATUS'=>'Y','PHONE_FLAG'=>'');
 				JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-				$profileObject->getDetail();
 				break;
 
 				case 'L':
 				$paramArr=array('LANDL_STATUS'=>'Y','PHONE_FLAG'=>'');
 				JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
-				$this->profileObj->getDetail();
 				break;
 
 				case 'A':
 				$paramArr=array('ALT_MOB_STATUS'=>'Y');
-				$contactObj=new NEWJS_JPROFILE_CONTACT();
+				$contactObj= new ProfileContact();
 				$contactObj->update($profileid,$paramArr);
 				break;
 			}
 
-			
-
+			$this->profileObject->getDetail($profileid,'PROFILEID','*');
 			$verifiedLogObj= new PHONE_VERIFIED_LOG();
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
 			$noOfTimesVerified=$row['COUNT'];
+
+			/**
+			 * this condition is added for automate profile screeening.
+			 */
+
+			if($noOfTimesVerified == '0')
+			{
+                $memcacheObj = JsMemcache::getInstance();
+
+                $minute = date("i");
+                
+                
+                $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+                $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+                $startIndex = floor($minute/$redisQueueInterval);
+                
+                $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+                
+                $memcacheObj->lpush($key,$profileid);
+
+			}
+
 
 			$this->sendMailerAfterVerification($noOfTimesVerified);
 			$this->trackingAfterVerification($noOfTimesVerified);
@@ -113,19 +139,52 @@ protected function phoneUpdateProcess($message)
 
 
 
-
+			if($message=='OPS')
+			{
 			$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
 			$reportInvalidObj->updateAsVerified($profileid);
-
+			}
+				
 			$incentiveObj=new incentive_MAIN_ADMIN_POOL();
 			$incentiveObj->setTimesTriedZero($profileid);
 
            	$jsadminObj=new jsadmin_OFFLINE_MATCHES();
            	$jsadminObj->updateCategory($profileid,'6');
 
-			$phoneLogObj= new PHONE_VERIFIED_LOG();
-			$phoneLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
-            
+			
+			if(JsConstants::$duplicateLoggingQueue)
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'DUPLICATE_LOG','data'=>array('phone' => $this->phone,'profileId'=>$this->profileObject->getPROFILEID()), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                        	Duplicate::logIfDuplicate($this->profileObject,$this->phone);	
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+											Duplicate::logIfDuplicate($this->profileObject,$this->phone);
+                                                }
+
+			            
+			
+			
+		//	$phoneLogObj= new PHONE_VERIFIED_LOG();
+			$id=$verifiedLogObj->insertEntry($profileid,$this->getPhoneType(), $this->getPhone(),$message);
+             
+             //OTP LOGGING
+             if($message=="OTP"){
+				$otpLogObj =new MIS_OTP_LOG();
+				$channel=MobileCommon::getChannel();
+				if(!$channel)
+					$channel='M';
+				$otpLogObj->insertEntry($id,$this->getPhone(),$this->getIsd(),$channel);
+            }
 
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 		
@@ -174,7 +233,7 @@ public function trackingAfterVerification($noOfTimesVerified) {
 			}
 
 
-			if (JsCommon::showDuplicateNumberConsent($profileid))
+			if ($this->phoneType=='M' && JsCommon::showDuplicateNumberConsent($profileid))
 			{
 			
 			$duplicateObj=new newjs_DUPLICATE_NUMBER_CONSENT();
@@ -198,7 +257,7 @@ public function sendMembershipOffers(){
 				
 			if($appRegProfile)
 			{
-		    $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		    $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
             $profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			
@@ -232,10 +291,10 @@ static public function hidePhoneVerLayer($profileObj)
 	if($profileObj->getMOB_STATUS()=='Y' || $profileObj->getLANDL_STATUS()=='Y' )
 	return 'Y';
 
-	$contactNumOb=new newjs_JPROFILE_CONTACT();
-	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"*");
-    if($numArray['0']['ALT_MOB_STATUS']=='Y')
-    return 'Y';
+	$contactNumOb= new ProfileContact();
+	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"ALT_MOB_STATUS");
+        if($numArray['0']['ALT_MOB_STATUS']=='Y')
+        return 'Y';
 
 	return 'N';
  
@@ -245,7 +304,6 @@ static public function hidePhoneVerLayer($profileObj)
 public function savePhone($phoneNo,$std='',$isd='')
 {
        
-	$this->entryInDuplcationCheckOnEdit();
     $this->JPROFILE = JPROFILE::getInstance($dbname);
     $phoneType=$this->phoneType;
 	$timeNow=(new DateTime)->format('Y-m-j H:i:s');
@@ -291,7 +349,7 @@ public function savePhone($phoneNo,$std='',$isd='')
 		$jprofileContactArr['ALT_MOB_STATUS']='N';
 		$jprofileContactArr['ALT_MOBILE_ISD']=$isd;
 
-		$contactObj=new NEWJS_JPROFILE_CONTACT();
+		$contactObj= new ProfileContact();
 		$contactObj->update($this->profileObject->getPROFILEID(),$jprofileContactArr);
 
         $fieldArr['MOD_DT']=$timeNow;
@@ -365,36 +423,10 @@ public function contact_archive($field="",$val="")
 
 
 
-public function entryInDuplcationCheckOnEdit()
-{
-		switch ($this->phoneType)
-		{
-			case 'M':
-			$phoneType='phone_mob';
-			break;
-
-			case 'A':
-			$phoneType='alt_mobile';
-			break;
-
-			case 'L':
-			$phoneType='phone_res';
-			break;
-		}
-        $symfonyFilePath=realpath($_SERVER['DOCUMENT_ROOT']."/../");
-        $storeOb=new duplicates_DUPLICATE_CHECKS_FIELDS();
-        $dup_flag_value=$storeOb->get_from_duplication_check_fields($profileid);
-        if($dup_flag_value){
-                if($dup_flag_value[TYPE]=='NEW')
-                        $to_not_update_dup=true;
-                else
-                        $dup_flag_value=$dup_flag_value[FIELDS_TO_BE_CHECKED];
-        }
-        if(!$to_not_update_dup){
-                $dup_flag_value=Flag::setFlag($phoneType,$dup_flag_value,'duplicationFieldsVal');
-                $storeOb->insertRetrievedEntry(LoggedInProfile::getInstance(),'edit',$dup_flag_value);
-        }
-}
-
+  private function sendMail()
+  {
+	$http_msg=print_r($_SERVER,true);
+	mail("palashc2011@gmail.com,niteshsethi1987@gmail.com","rabbit mq server issue in PhoneVerification Duplication check","rabbit mq server issue in PhoneVerification Duplication check");
+  }
 
 }

@@ -17,6 +17,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$this->TITLE_BIND_TYPE = "STR";
 			$this->COUNT_BIND_TYPE = "INT";
 			$this->MSG_ID_BIND_TYPE = "INT";
+            $this->PHOTO_URL_BIND_TYPE = "STR";
+            $this->PROFILE_CHECKSUM_BIND_TYPE = "STR";
 			$this->tableName = "MOBILE_API.SCHEDULED_APP_NOTIFICATIONS";
         }
 	public function truncate()
@@ -29,12 +31,12 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	{
 		if(!is_array($insertData))
 			return;
-		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`) VALUES ";
+		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`,`PHOTO_URL`,`PROFILE_CHECKSUM`) VALUES ";
 		foreach($insertData as $k=>$v)
 		{
 			if($sqlPart!='')
 				$sqlPart.=",";
-			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.")";
+			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.",:PHOTO_URL".$k.",:PROFILE_CHECKSUM".$k.")";
 		}
 		$sqlInsert.=$sqlPart;
 		$resInsert = $this->db->prepare($sqlInsert);
@@ -52,6 +54,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$resInsert->bindValue(":MSG_ID".$k,$v['MSG_ID'],constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
 			$resInsert->bindValue(":PRIORITY".$k,$v['PRIORITY'],constant('PDO::PARAM_'.$this->{'PRIORITY_BIND_TYPE'}));
 			$resInsert->bindValue(":SENT".$k,$v['SENT'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
+            $resInsert->bindValue(":PHOTO_URL".$k,$v['PHOTO_URL'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
+            $resInsert->bindValue(":PROFILE_CHECKSUM".$k,$v['PROFILE_CHECKSUM'],constant('PDO::PARAM_'.$this->{'PROFILE_CHECKSUM_BIND_TYPE'}));
 		}
 		//$resInsert->bindValue(":SENT","N",constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->execute();
@@ -167,7 +171,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	}
 	public function updateSent($idArr='',$notificationKey,$status,$pid='')
 	{
-                if((!is_array($idArr)&&!$pid)||!$notificationKey||!$status)
+                if((!is_array($idArr) && !$pid &&  !$msgId) || !$notificationKey || !$status)
 		     throw new jsException("","(idArr & pid) or notificationKey or status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try
                 {
@@ -179,6 +183,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 				$sql.= " AND ID IN (".$str.") AND SENT='N'";
 			if($pid)
 				$sql.=" AND PROFILEID =:PROFILEID ";
+			if($msdId)
+				$sql.=" AND MSG_ID =:MSG_ID ";
 		
 			$res=$this->db->prepare($sql);
 			if(is_array($idArr))
@@ -188,6 +194,8 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			}
 			if($pid)
 				$res->bindValue(":PROFILEID",$pid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+			if($msgId)
+				$res->bindValue(":MSG_ID",$msgId,constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
 			$res->bindValue(":NOTIFICATION_KEY",$notificationKey,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
 			$res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 			$res->execute();
@@ -203,7 +211,7 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
                      throw new jsException("","status or messageId not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try
                 {
-                        $sql = "UPDATE MOBILE_API.SCHEDULED_APP_NOTIFICATIONS SET SENT =:SENT WHERE MSG_ID=:MSG_ID AND SENT NOT IN('Y','L')";
+			$sql = "UPDATE MOBILE_API.SCHEDULED_APP_NOTIFICATIONS SET SENT =:SENT WHERE MSG_ID=:MSG_ID AND SENT IN('I','N','P')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MSG_ID",$messageId,constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
                         $res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));

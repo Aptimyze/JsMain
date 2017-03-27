@@ -1,21 +1,36 @@
 <?php 
 class MembershipMailer {
     
-    public function sendMembershipMailer($mailid, $profileid, $dataArr=''){
+    public function sendMembershipMailer($mailid, $profileid, $dataArr='',$attachment='',$attachmentName=''){
 
         $mailerServiceObj = new MailerService();
         sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-	$mailerLinks = $mailerServiceObj->getLinks();
+	    $mailerLinks = $mailerServiceObj->getLinks();
 
         $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
         $smartyObj = $emailTpl->getSmarty();
         $smartyObj->assign("mailerLinks",$mailerLinks);
+        $protect_obj = new protect;
+        $profilechecksum = md5($profileid)."i".$profileid;
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+        $echecksum = $protect_obj->js_encrypt($profilechecksum,$profileObj->getEMAIL());
+        $autoLoginLink = JsConstants::$siteUrl."/membership/jspc?CMGFRMMMMJS=1&checksum=$profilechecksum&profilechecksum=$profilechecksum&echecksum=$echecksum&enable_auto_loggedin=1&from_source=FP_RB_PROMO_MAILER";
+        $smartyObj->assign("membershipAutoLoginLink", $autoLoginLink);
 
         if(is_array($dataArr))
                 $smartyObj =$this->setSmartyParams($mailid,$smartyObj,$mailerServiceObj, $dataArr);
 
-        $email_sender->send();
+	if($attachment){	
+		$email_sender->setAttachment($attachment);
+		$email_sender->setAttachmentName($attachmentName);
+		$email_sender->setAttachmentType('application/octet-stream');
+	}
+        // if($mailid == '1836'){
+        //     $email_sender->send('','','rupali.srivastava@jeevansathi.com');
+        // } else {
+            $email_sender->send();
+        // }
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         return $deliveryStatus;
 
@@ -54,6 +69,18 @@ class MembershipMailer {
                         $smartyObj->assign("fromEmailId","membership@jeevansathi.com");
                         $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
                         $smartyObj->assign("instanceID",$dataArr['instanceID']);
+						break;
+		case 'NEW_MEMBERSHIP_PAYMENT':
+                        $mailerLinks = $mailerServiceObj->getLinks();
+                        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
+                        $smartyObj->assign("profileid",$dataArr['profileid']);
+                        $smartyObj->assign("PROFILEID",$dataArr['profileid']);
+                        $smartyObj->assign("fromEmailId","membership@jeevansathi.com");
+                        $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
+                        $smartyObj->assign("benefits",$dataArr['benefits']);
+                        $smartyObj->assign("servMain",$dataArr['servMain']);
+                        $smartyObj->assign("username",$dataArr['username']);
+                        $smartyObj->assign("dppLink",$mailerLinks['MY_DPP']);
 			break;
 		case 'JS_EXCLUSIVE_FEEDBACK':
 			$currency =$dataArr['currency'];
@@ -61,6 +88,13 @@ class MembershipMailer {
         			$smartyObj->assign('currency',$currency);
         		}
 			break;
+                case 'MEM_EXPIRY_CONTACTS_VIEWED':
+                        $mailerLinks = $mailerServiceObj->getLinks();
+                        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];
+                        $smartyObj->assign("profileid",$dataArr['profileid']);
+                        $smartyObj->assign("PROFILEID",$dataArr['profileid']);
+                        $smartyObj->assign("unsubscribeLink",$unsubscribeLink);
+                        break;
                 default:
 			break;
         }
@@ -192,7 +226,7 @@ class MembershipMailer {
     }   
 
     public function isExclusive($profileid) {
-        $ssObj = new BILLING_SERVICE_STATUS();
+        $ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
         return($ssObj->isExclusiveActive($profileid));
     }
 
@@ -207,11 +241,11 @@ class MembershipMailer {
     }
 
     public function getAllPaidProfiles($purchase_dt) {
-        $pObj = new BILLING_PURCHASES();
+        $pObj = new BILLING_PURCHASES('newjs_slave');
         return($pObj->getPaidProfiles($purchase_dt));
     }
     public function getJsExclusiveProfiles() {
-        $serviceStatusObj = new BILLING_SERVICE_STATUS();
+        $serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
         $profiles =$serviceStatusObj->getProfilesServiceBased('X');
 	return $profiles;
     }
@@ -230,7 +264,7 @@ class MembershipMailer {
         else
         {
             $logindDtStart = date('Y-m-d',strtotime(date('Y-m-d') . $lastLoginOffset));
-            $loginDtEnd = date('Y-m-d');
+            $loginDtEnd = date('Y-m-d H:i:s');
             $profileDetailsArr = $jprofileObj->getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd);   
         }
         if($neverPaidFlag==true)
@@ -332,27 +366,12 @@ class MembershipMailer {
     
     function filterProfiles($profileArray=array())
     {
-        $smsSentProfileIDArr = array("newjs_slave");
-        $filterObj = new billing_SMS_REQUEST_CALLBACK();
+        $smsSentProfileIDArr = array();
+        $filterObj = new billing_SMS_REQUEST_CALLBACK("newjs_slave");
         $smsDate = date('Y-m-d',strtotime($row["SMS_DATE"] . '- 3 month'));
         $smsSentProfileIDArr = $filterObj->getFilterdProfiles($profileArray,$smsDate);
         return $smsSentProfileIDArr;
     }
-    
-    //commented as general func "sendServiceActivationMail" used in its place
-    /*function sendWeTalkForYouUsageMail($mailId, $profileDetails){
-        $username = $profileDetails["USERNAME"];
-        $profileid = $profileDetails["PROFILEID"];
-        $mailerServiceObj = new MailerService();
-        sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-        $mailerLinks = $mailerServiceObj->getLinks();
-        $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailId);
-        $emailTpl = $email_sender->setProfileId($profileid);
-        $smartyObj = $emailTpl->getSmarty();         
-        $smartyObj->assign("mailerLinks",$mailerLinks);
-        $smartyObj->assign("USERNAME",$username);
-        $email_sender->send();
-    }*/
    
     // function to send VD Mailer	
     function sendVdMailer($mailId, $profileid, $discount, $expiryDate, $vdDisplayText, $instanceID){
@@ -381,7 +400,10 @@ class MembershipMailer {
         return $deliveryStatus;
     } 
 
-    //send RB activation mail
+    /*send service activation mail
+    * @params: $mailId, $profileDetails
+    * @return: none
+    */
     function sendServiceActivationMail($mailId, $profileDetails){
         //$username = $profileDetails["USERNAME"];
         $profileid = $profileDetails["PROFILEID"];
@@ -394,9 +416,268 @@ class MembershipMailer {
         $smartyObj->assign("mailerLinks",$mailerLinks);
         foreach ($profileDetails as $key => $value) {
             $smartyObj->assign($key,$value);
+        }  
+        $ccList = '';
+        if($profileDetails["CC_EMAIL"]){
+            $ccList = $profileDetails["CC_EMAIL"]; //mail copy sent to this email
         }
-        $email_sender->send();
+        $email_sender->send('','',$ccList);
     }   		
+    function getContactsViewedList($profileid,$startDate,$endDate){
+	
+	$contactViewObj 	=new JSADMIN_VIEW_CONTACTS_LOG('newjs_local111');
+	$profileViewedArr 	=$contactViewObj->countContactsViewForDates($profileid,$startDate,$endDate);
+
+	if(is_array($profileViewedArr)){
+		foreach($profileViewedArr as $key=>$data){
+			$profileidArr[] 	=$key;
+			$detailsArr[$key] 	=$data['DATE'];
+		}
+		$profileStr =implode(",", $profileidArr);
+
+		// jprofile details
+		$hiddenContact ='Contact hidden';
+		$jprofileObj =new JPROFILE('newjs_local111');
+		$fields ='PROFILEID,GENDER,USERNAME,EMAIL,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,PHONE_MOB,PHONE_WITH_STD,MOBILE_NUMBER_OWNER,PHONE_NUMBER_OWNER,SHOWPHONE_RES,SHOWPHONE_MOB';
+		$valueArray['PROFILEID'] =$profileStr;
+		$excludeArray =array("ACTIVATED"=>"'D'");
+		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
+
+		// jprofile Contact
+	        $jprofileContactObj    = new ProfileContact('newjs_local111');
+        	$valueArr['PROFILEID']  =$profileStr;
+        	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
+		if(is_array($result)){
+			foreach($result as $key=>$val){
+				$pid =$val['PROFILEID'];
+				$altContactArr[$pid]['ALT_MOBILE'] =$val['ALT_MOBILE'];
+				$altContactArr[$pid]['ALT_OWNER_NAME'] =$val['ALT_MOBILE_OWNER_NAME'];
+				$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER'] =$val['ALT_MOBILE_NUMBER_OWNER'];
+				$altContactArr[$pid]['SHOWALT_MOBILE'] =$val['SHOWALT_MOBILE'];
+			}
+		}
+		// data formatting
+		$id=0;
+		foreach($resDetails as $key=>$dataArr){
+			$pid 				=$dataArr['PROFILEID'];
+			$viewedDate			=$detailsArr[$pid];
+			$gender				=$dataArr['GENDER'];
+			if($gender=='M')
+				$relation		='number_owner_male';
+			else
+				$relation		='number_owner_female';	
+
+			$showMob			=$dataArr['SHOWPHONE_MOB'];	
+			$showPhone			=$dataArr['SHOWPHONE_RES'];
+			$showAlt			=$altContactArr[$pid]['SHOWALT_MOBILE'];
+	
+			$dataSet[$id]['USERNAME']	=$dataArr['USERNAME'];
+			$dataSet[$id]['VIEWED_DATE'] 	=date("d/m/Y", strtotime($viewedDate));
+			$phoneMob			=$dataArr['PHONE_MOB'];
+			$phoneLandline			=$dataArr['PHONE_WITH_STD'];
+			$phoneAlt			=$altContactArr[$pid]['ALT_MOBILE'];
+			if($showMob=='Y' && $phoneMob){
+				$relationMob		=FieldMap::getFieldLabel($relation,$dataArr['MOBILE_NUMBER_OWNER']);
+				$mobileArr      	=array($phoneMob,$dataArr['MOBILE_OWNER_NAME'],$relationMob);
+				$mobileArrNew           =array_filter($mobileArr);
+				$mobileData		=implode(",", $mobileArrNew);
+			}
+			elseif($showMob!='Y' && $phoneMob){
+				$mobileData		=$hiddenContact;
+			}
+			else	
+				$mobileData		='';
+			if($showPhone=='Y' && $phoneLandline){
+				$relationLandline  	=FieldMap::getFieldLabel($relation,$dataArr['PHONE_NUMBER_OWNER']);
+				$landlineArr            =array($phoneLandline,$dataArr['PHONE_OWNER_NAME'],$relationLandline);
+				$landlineArrNew         =array_filter($landlineArr);
+				$landlineData		=implode(",", $landlineArrNew);
+			}
+			elseif($showPhone!='Y' && $phoneLandline){
+				$landlineData		=$hiddenContact;
+			}
+			else
+				$landlineData		='';
+			if($showAlt=='Y' && $phoneAlt){
+				$relationAlt            =FieldMap::getFieldLabel($relation,$altContactArr[$pid]['ALT_MOBILE_NUMBER_OWNER']);
+				$alternateArr          =array($phoneAlt,$altContactArr[$pid]['ALT_OWNER_NAME'],$relationAlt);
+				$alternateArrNew       	=array_filter($alternateArr);
+				$altData		=implode(",", $alternateArrNew);	
+			}
+			elseif($showAlt!='Y' && $phoneAlt){
+				$altData		=$hiddenContact;	
+			}
+			else
+				$altData		='';
+                        $dataSet[$id]['MOBILE']         =$mobileData;
+                        $dataSet[$id]['LANDLINE']       =$landlineData;
+                        $dataSet[$id]['ALT']            =$altData;
+			$dataSet[$id]['EMAIL']          =$dataArr['EMAIL'];	
+			$id++;
+		}
+		return $dataSet;
+	}
+	return;
+    }
+    public function getExcelData($data,$dataHeader){
+        $retval = "";
+        if (is_array($data)  && !empty($data)){
+                $row = 0;
+                foreach(array_values($data) as $_data){
+                        if (is_array($_data) && !empty($_data)){
+                                foreach($dataHeader as $key1=>$val1){
+                                        if($row==0)
+                                                $headerVal[] =$val1;
+
+                                        $values[] =$_data[$key1];
+                                }
+                                if($row==0){
+                                        $retval =implode("\t",$headerVal);
+                                        $retval .= "\n\n";
+                                }
+                                $retval .=implode("\t",$values);
+                                $retval .= "\n";
+                                unset($values);
+                                //increment the row so we don't create headers all over again
+                                $row++;
+                        }
+                }
+        }
+        return $retval;
+    }
+    public function getCsvData($data, $dataHeader)
+    {
+        $retval  = "";
+        $filepath = "/var/www/html/web/uploads/csv_files/";
+        $filename = $filepath."tempCsvDataMemMailerContent.csv";
+        unlink($filename);
+        $csvData = fopen("$filename", "w") or print_r("Cannot Open");
+        fputcsv($csvData, array_values($dataHeader));
+        foreach($dataHeader as $key=>$val) {
+            $blankRow[] = "";
+        }
+        fputcsv($csvData, array_values($blankRow));
+        foreach ($data as $key => &$val) {
+            fputcsv($csvData, array_values($val));
+        }
+        fclose($csvData);
+        $csvAttachment = file_get_contents($filename);
+        unlink($filename);
+        return $csvAttachment;
+    }
+    public function sendWelcomeMailerToPaidUser($mailid, $profileid, $attachment, $services){
+
+        $mailerServiceObj = new MailerService();
+        sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
+		$mailerLinks = $mailerServiceObj->getLinks();
+		$memHandlerObj = new MembershipHandler();
+		$services = explode(",",$services);
+		$servMain = NULL;
+		$vasNames = array();
+		
+		foreach($services as $keyMain=>$valMain){
+			$tempId = $memHandlerObj->retrieveCorrectMemID($valMain);
+			$benefitMsg = VariableParams::$newApiPageOneBenefits;
+        	$benefitArr = VariableParams::$newApiPageOneBenefitsVisibility;
+			$vasArr = VariableParams::$newApiVasNamesAndDescription;			
+			if ($tempId == "X") {
+				$servMain = $tempId;
+            	$benefits = VariableParams::$newApiPageOneBenefitsJSX;
+        	} else {
+        		if ($tempId == "P" || $tempId == "C" || $tempId == "D" || strstr($tempId, "ES") || strstr($tempId, "NCP")){
+        			$servMain = $tempId;
+        		}
+        		foreach ($benefitArr as $key => $value) {
+	                if ($key == $tempId) {
+	                    foreach ($value as $kk => $vv) {
+	                        if ($vv == 1) {
+	                            $benefits[$kk] = $benefitMsg[$kk];
+	                        }
+	                    }
+	                }
+				}
+        	}
+        	if(in_array($tempId,array_keys($vasArr))){
+				$vasNames[] = $vasArr[$tempId]['name'];
+			}
+			unset($tempId);
+		}
+		if (empty($benefits)) {
+			$benefits = array();
+		}
+		if (empty($vasNames)) {
+			$vasNames = array();
+		}
+		$currentBenefitsMessages = array_values(array_merge($benefits , $vasNames));
+        $dataArr['benefits'] = $currentBenefitsMessages;
+        $dataArr['servMain'] = $memHandlerObj->getUserServiceName($servMain);
+        $profileDetails = $memHandlerObj->getUserData($profileid);
+        $dataArr['username'] = $profileDetails['USERNAME'];
+        $dataArr['profileid'] = $profileid;
+        
+        if(!empty($servMain)){
+        	$subject = "Congratulations! We welcome you as an " . $memHandlerObj->getUserServiceName($servMain) . " member on Jeevansathi";
+        } else {
+        	$subject = implode(', ', $vasNames) . " activated on your account";
+        }
+        
+        $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
+        $emailTpl = $email_sender->setProfileId($profileid);
+        $smartyObj = $emailTpl->getSmarty();
+        $emailTpl->setSubject($subject);
+        $smartyObj->assign("mailerLinks",$mailerLinks);
+        
+        if (is_array($dataArr)) {
+            $smartyObj =$this->setSmartyParams($mailid,$smartyObj,$mailerServiceObj,$dataArr);
+        }
+        if ($attachment) {
+        	$email_sender->setAttachment($attachment);
+        	$email_sender->setAttachmentName("Jeevansathi-Invoice.pdf");
+        	$email_sender->setAttachmentType('application/pdf');
+        }
+        
+        $email_sender->send();
+        $deliveryStatus =$email_sender->getEmailDeliveryStatus();
+        return $deliveryStatus;
+
+    }
+
+    /*sendExclusiveServiceIIMailer
+    * function to send exclusive servicing phase II mailer
+    * @params: $profileDetails
+    * @return :$mailSent(1/0)
+    */
+    public function sendExclusiveServiceIIMailer($profileDetails){
+        $mailId = '1837';
+        $mailSent = 0;
+        if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
+            $stype = SearchTypesEnums::EXCLUSIVE_SERVICE2_MAILER_STYPE;
+            $rtype = JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE;
+            //print_r($profileDetails["usernameListArr"]);die;
+            foreach ($profileDetails["usernameListArr"] as $key => $username) {
+                if($username){
+                    //validate profile in username list
+                    $otherProfileObj = new Operator;
+                    $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+                    $otherPid = $otherProfileObj->getPROFILEID();
+                    unset($otherProfileObj);
+                    //map profileid to view profile links
+                    if($otherPid){
+                        $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=".$stype."&responseTracking=".$rtype;
+                    }
+                }
+            }
+            unset($profileDetails["usernameListArr"]);
+        }
+        if($profilePageLinkArr && is_array($profilePageLinkArr) && count($profilePageLinkArr)>0){
+            $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
+            $profileDetails["CURR_MAIL_DATE"] = date("d-M-Y");
+            $mailSent = 1;
+            $profileDetails["CC_EMAIL"] = $profileDetails["SENDER_EMAIL"];
+            $this->sendServiceActivationMail($mailId, $profileDetails);
+        }
+        return $mailSent;
+    }
 
 }
 

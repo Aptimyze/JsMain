@@ -1,4 +1,5 @@
 <?php
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 $zipIt = 0;
 if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 $zipIt = 1;
@@ -236,9 +237,9 @@ if($submit_pg2c){
 			/* IVR - code ends */
 			/* SMS Code for sending sms to users */
 			
-			include_once "$root_path1/profile/InstantSMS.php";
-			 $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
-			 $sms->send();
+		//	include_once "$root_path1/profile/InstantSMS.php";
+		//	 $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
+		//	 $sms->send();
     
 			/* Ends Here of SMS code */
 		if(count($jprofile_update) > 0)
@@ -247,10 +248,18 @@ if($submit_pg2c){
 	                {
 			      $current_screening_flag="1099511627775";
 		        }
+			$objUpdate = JProfileUpdateLib::getInstance();
+
 			$jprofile_update[]="SCREENING=$current_screening_flag";
 			$jprofile_update_str = @implode(", ",$jprofile_update);
-			$sql_upd_jp .= $jprofile_update_str." WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql_upd_jp) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
+			$arrUpdateParams = $objUpdate->convertUpdateStrToArray($jprofile_update_str);
+			$result = $objUpdate->editJPROFILE($arrUpdateParams,$profileid,'PROFILEID');
+			if($result === false){
+				$sql_upd_jp .= $jprofile_update_str." WHERE PROFILEID='$profileid'";
+				logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_upd_jp,"ShowErrTemplate");
+			}
+
 		}
     //New Login
     $authWeb = new WebAuthentication();

@@ -15,8 +15,9 @@ public function __construct($profileObject,$phoneType)
 		{
 
 			
-			if (!$profileObject || !$phoneType)
-				throw new Exception("No phoneType or profileObject", 1);
+			if (!$profileObject || !$phoneType){
+				throw new jsException('',"No phoneType or profileObject", 1);
+			}
 				$this->profileObject=$profileObject;
 				$this->phoneType=$phoneType;
 				switch($phoneType)
@@ -31,13 +32,13 @@ public function __construct($profileObject,$phoneType)
 					break;
 					
 					case 'A':
-					$contactArray=(new newjs_JPROFILE_CONTACT())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
+					$contactArray= (new ProfileContact())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
 					$this->phone=$profileObject->getISD().$contactArray['0']['ALT_MOBILE'];
 					break;
 				}
 
 	
-
+			
 		}
 		catch(Exception $e)
 		{
@@ -78,14 +79,10 @@ function takes the profileid and phone number and find its virtual number if alr
 **************************/
 public function getVirtualNumber()
 {
-		$completeNumber = $this->profileObject->getISD().$this->phone;
+		$completeNumber = $this->phone;
 		if($vNoid=$this->searchExistingPid($completeNumber))
 		{
 			$vNo=self::findvno($vNoid);
-			if($this->isd=="91")
-				return "011".$vNo;
-			else
-				return "+9111".$vNo;
 		}
 		else
 		{
@@ -97,12 +94,16 @@ public function getVirtualNumber()
 			$id=$ar["id"];
 			$this->saveVNumber($id);
 			
-			if($isd=="91")
+		}
+		
+        JsMemcache::getInstance()->setHashObject('missLog_'.$this->phone,array('rVno'=>$vNo,'pId'=>$this->profileObject->getPROFILEID()));
+
+                            if($this->isd=="91")
 				return "011".$vNo;
 			else
 				return "+9111".$vNo;
-		}
-	
+
+                
 }
 /*********
 Name findvno
@@ -165,14 +166,12 @@ public static function checkDuplicatNumber($phone)
 
 public function searchExistingPid($phoneno)
 {
-    $phoneno=trim(ltrim($phoneno,'0'));
-	$digits=strlen($phoneno);
 	$knowlarityObj=new newjs_KNWLARITYVNO();
 	$row=$knowlarityObj->getDetailsFromProfileId($this->profileObject->getPROFILEID());
- if($row)
+     if($row)
 	{
 		$vNoid= $row["VIRTUALNO"];
-		$rowphn=substr($row["PHONENO"],-$digits);
+		$rowphn=$row["PHONENO"];
 		if($phoneno!=$rowphn)
 			$this->saveVNumber($vNoid);
 		return $vNoid;
@@ -184,6 +183,8 @@ public function searchExistingPid($phoneno)
 
 private  function saveVNumber($vNoid)
 {
+        JsMemcache::getInstance()->setHashObject('missLog_'.$this->phone,array('vNosaved'=>$vNoid,'pId'=>$this->profileObject->getPROFILEID()));
+
 	$knowlarityObj=new newjs_KNWLARITYVNO();
     $knowlarityObj->insertNewVno($this->profileObject->getPROFILEID(),$this->phone,$vNoid);
 

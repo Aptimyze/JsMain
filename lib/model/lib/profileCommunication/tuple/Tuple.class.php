@@ -70,7 +70,18 @@ class Tuple {
     public $MOBPHOTOSIZE;
     public $INTEREST_VIEWED_DATE;
 		public $VERIFICATIONSEAL;
-
+		public $COMPANY_NAME;
+		public $COLLEGE;
+		public $PG_COLLEGE;
+		public $ANCESTRAL_ORIGIN;
+		public $NATIVE_CITY;
+		public $NATIVE_STATE;
+        public $EMAIL;
+        public $GUNA;
+        public $MSG_DEL;
+        public $TYPE;
+        public $SENDER;
+        public $RECEIVER;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -84,6 +95,15 @@ class Tuple {
     }
     public function getGENDER() {
         return $this->GENDER;
+    }
+    public function getCOMPANY_NAME() {
+        return $this->COMPANY_NAME;
+    }
+    public function getCOLLEGE(){
+        return $this->COLLEGE;
+    }
+    public function getPG_COLLEGE(){
+        return $this->PG_COLLEGE;
     }
     public function getAGE() {
         return $this->AGE;
@@ -124,9 +144,15 @@ class Tuple {
     public function getCITY() {
         return $this->CITY;
     }
+    public function getCITY_ID() {
+        return $this->CITY_ID;
+    }
     public function getACTIVATED() {
 		return $this->ACTIVATED;
 	}
+     public function getEMAIL() {
+        return $this->EMAIL;
+    }
     public function getVERIFICATION_SEAL()
     {
         $verificationSealObj=new VerificationSealLib($this->profileObject,'1');
@@ -140,12 +166,50 @@ class Tuple {
         else
             return 0;
     }
-        
+    public function getGUNA() {
+        return $this->GUNA;
+    }
         public function setprofileObject($x) {
         $this->profileObject=$x;
     }
+    public function setANCESTRAL_ORIGIN($x) {
+        $this->ANCESTRAL_ORIGIN=$x;
+    }
+    public function getANCESTRAL_ORIGIN() {
+        return $this->ANCESTRAL_ORIGIN;
+    }
+    
+    public function setNATIVE_CITY($x) {
+        $this->NATIVE_CITY=$x;
+    }
+    public function getNATIVE_CITY() {
+        return $this->NATIVE_CITY;
+    }
+    
+    public function setNATIVE_STATE($x) {
+        $this->NATIVE_STATE=$x;
+    }
+    public function getNATIVE_STATE() {
+        return $this->NATIVE_STATE;
+    }
+    public function setNATIVE_STATE_ID($x) {
+        $this->NATIVE_STATE_ID=$x;
+    }
+    public function getNATIVE_STATE_ID() {
+        return $this->NATIVE_STATE_ID;
+    }
+    
     public function setPROFILEID($x) {
         $this->PROFILEID = $x;
+    }
+    public function setCOMPANY_NAME($x) {
+        $this->COMPANY_NAME = $x;
+    }
+    public function setCOLLEGE($x) {
+        $this->COLLEGE = $x;
+    }
+    public function setPG_COLLEGE($x) {
+        $this->PG_COLLEGE = $x;
     }
     public function setUSERNAME($x) {
         $this->USERNAME = $x;
@@ -191,6 +255,9 @@ class Tuple {
     }
     public function setCITY($x) {
         $this->CITY = $x;
+    }
+    public function setCITY_ID($x) {
+        $this->CITY_ID = $x;
     }
     public function getSHOW_HOROSCOPE() {
         return $this->SHOW_HOROSCOPE;
@@ -291,7 +358,12 @@ public function getPIC_ID($x="") {
     public function setIS_ALBUM($x) {
         $this->IS_ALBUM = $x;
     }
-
+    public function setNAME_OF_USER($x) {
+	$this->NAME_OF_USER = $x;
+    }
+    public function getNAME_OF_USER() {
+	return $this->NAME_OF_USER;
+    }
     public function getIS_ALBUM_TEXT() {
         return $this->IS_ALBUM_TEXT;
     }
@@ -382,6 +454,14 @@ public function getPIC_ID($x="") {
 	{
 		$this->LAST_LOGIN_DT = $string;
 	}
+    public function setEMAIL($string)
+    {
+        $this->EMAIL = $string;
+    }
+    public function setGUNA($x)
+    {
+        $this->GUNA = $x;
+    }
 	public function getsubscription_icon()
 	{
             $subscription=$this->getSUBSCRIPTION();              // JSExclusive.... excluded for app as it is not implemented in app yet. 
@@ -397,7 +477,14 @@ public function getPIC_ID($x="") {
 							return null; 
 			}
                      else  return mainMem::JSEXCLUSIVE_LABEL;
-                            
+        if(strpos($this->getSUBSCRIPTION(),'N')!== false){
+            if(MobileCommon::isApp()){
+                return IdToAppImagesMapping::EADVANTAGE_SRP;
+            }
+            else{
+                return IdToAppImagesMapping::EADVANTAGE_SRP;
+            }
+        }                    
 		if(strstr($this->getSUBSCRIPTION(),'F'))
 		{
 			if(strstr($this->getSUBSCRIPTION(),'D'))
@@ -417,6 +504,9 @@ public function getPIC_ID($x="") {
             $subscription = mainMem::ERISHTA_LABEL;
         elseif(CommonFunction::isJsExclusiveMember($subscription))
             $subscription = mainMem::JSEXCLUSIVE_LABEL;
+        elseif(CommonFunction::isEadvantageMember($subscription)){
+            $subscription = mainMem::EADVANTAGE_LABEL; 
+        }
         else
             $subscription = null;
         return $subscription;   
@@ -594,6 +684,38 @@ public function getPIC_ID($x="") {
         public function setINTEREST_VIEWED_DATE($string)
         {
             $this->INTEREST_VIEWED_DATE = $string;
+        }
+         public function setMSG_DEL($string)
+        {
+            $this->MSG_DEL = $string;
+        }
+        public function getMSG_DEL()
+        {
+            return $this->MSG_DEL;
+        }
+         public function setTYPE($string)
+        {
+            $this->TYPE = $string;
+        }
+        public function getTYPE()
+        {
+            return $this->TYPE;
+        }
+         public function setSENDER($string)
+        {
+            $this->SENDER = $string;
+        }
+        public function getSENDER()
+        {
+            return $this->SENDER;
+        }
+         public function setRECEIVER($string)
+        {
+            $this->RECEIVER = $string;
+        }
+        public function getRECEIVER()
+        {
+            return $this->RECEIVER;
         }
 }
 ?>

@@ -1,7 +1,6 @@
 <?php
 include("connect.inc");
-$db=connect_737m();
-$db2=connect_master();
+$db=connect_misdb();
 
 if(authenticated($cid))
 {

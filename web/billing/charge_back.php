@@ -5,6 +5,7 @@ include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include("bounced_mail.php");
 include_once("comfunc_sums.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data=authenticated($cid);
 $flag=0;
@@ -35,6 +36,12 @@ if(isset($data))
 
 			$sql="UPDATE billing.PAYMENT_DETAIL SET STATUS='CHARGE_BACK', REASON = '".addslashes(stripslashes($reason))."', BOUNCE_DT = now() WHERE RECEIPTID='$receiptid'";
 			mysql_query_decide($sql) or die(mysql_error_js());
+            
+            //**START - Entry for negative transactions
+            $memHandlerObject = new MembershipHandler();
+            $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)));
+            unset($memHandlerObject);
+            //**END - Entry for negative transactions            
 
 			//$dueamt+=$amt;
 			$status='STOPPED';
@@ -57,7 +64,8 @@ if(isset($data))
 			$sql1 ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID , STATUS,BOUNCE_DT , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY) VALUES ('', '$receiptid', '$profileid', '$billid', 'CHARGE_BACK', NOW(),DATE_ADD( CURDATE( ) , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
                         mysql_query_decide($sql1) or die("$sql1".mysql_error_js());
 
-			$cc="payments@jeevansathi.com,rohan.mathur@jeevansathi.com,JSSalesLeads@Infoedge.com,nishant.sharma@naukri.com,services@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com";
+			//$cc="payments@jeevansathi.com,rohan.mathur@jeevansathi.com,JSSalesLeads@Infoedge.com,nishant.sharma@naukri.com,services@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com";
+            $cc="services@jeevansathi.com,JsSalesLeads@jeevansathi.com,payments@jeevansathi.com";
 
 			// function called to get the template to be sent
 			// first argument is the profileid
@@ -75,7 +83,7 @@ if(isset($data))
 			$flag=1;
 
 			//added by sriram to prevent the query being run several times on page reload.
-                        $sql_act = "SELECT ACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
+                        $sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
                         $res_act = mysql_query_decide($sql_act) or die($sql_act);
                         $row_act = mysql_fetch_array($res_act);
                         // delete the contacts of this person
@@ -87,8 +95,19 @@ if(isset($data))
                         }
                         //end of - added by sriram to prevent the query being run several times on page reload.
 
-			$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON=now() where PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die(mysql_error_js());
+			/*$sql="UPDATE newjs.JPROFILE SET PREACTIVATED=IF(ACTIVATED<>'D',ACTIVATED,PREACTIVATED), ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON=now() where PROFILEID='$profileid'";
+			mysql_query_decide($sql) or die(mysql_error_js());*/
+			if($row_act['ACTIVATED']!='D')
+				$preActivated =$row_act['ACTIVATED'];
+			else
+				$preActivated =$row_act['PREACTIVATED'];
+
+                        $jprofileObj    =JProfileUpdateLib::getInstance();
+			$dateNew	=date("Y-m-d");
+                        $updateStr      ="PREACTIVATED='$preActivated', ACTIVATED='D',activatedKey=0, SUBSCRIPTION='', ACTIVATE_ON='$dateNew'";
+                        $paramArr       =$jprofileObj->convertUpdateStrToArray($updateStr);
+                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
+
 
 			$sql="INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME) values('$profileid','$username','Charge Back','$reason','$user',now())";
                         mysql_query_decide($sql) or die(mysql_error_js());
@@ -132,12 +151,13 @@ if(isset($data))
 			exit;
 		}
 
-		$sql="SELECT AMOUNT,REASON FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
+		$sql="SELECT AMOUNT,REASON,TYPE FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
 		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
 			$amt=$row['AMOUNT'];
 			$reason=$row['REASON'];
+            $type = $row['TYPE'];
 		}
 
 		$smarty->assign("username",$username);
@@ -154,12 +174,13 @@ if(isset($data))
 		$smarty->assign("billid",$billid);
 		$smarty->assign("offline_billing",$offline_billing);
 		$smarty->assign("flag","2");
+        $smarty->assign("type",$type);
 
 		$smarty->display("charge_back.htm");
 	}
 	elseif($CMDIVR)
 	{
-		$sql = "SELECT p.USERNAME,pd.ENTRY_DT, pd.PROFILEID, pd.AMOUNT, pd.REASON FROM billing.PURCHASES p, billing.PAYMENT_DETAIL pd WHERE pd.RECEIPTID='$receiptid' AND p.BILLID=pd.BILLID AND pd.TRANS_NUM = '$ivr_number'";
+		$sql = "SELECT p.USERNAME,pd.ENTRY_DT, pd.PROFILEID, pd.AMOUNT, pd.REASON,pd.TYPE FROM billing.PURCHASES p, billing.PAYMENT_DETAIL pd WHERE pd.RECEIPTID='$receiptid' AND p.BILLID=pd.BILLID AND pd.TRANS_NUM = '$ivr_number'";
 		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
@@ -168,6 +189,7 @@ if(isset($data))
 			$profileid=$row['PROFILEID'];
 			$amt=$row['AMOUNT'];
 			$reason=$row['REASON'];
+            $type = $row['TYPE'];
 		}
 		else
 		{
@@ -178,6 +200,7 @@ if(isset($data))
 			$smarty->assign("phrase",$phrase);
 			$smarty->assign("criteria",$criteria);
 			$smarty->assign("billid",$billid);
+            $smarty->assign("type",$type);
 
 			$smarty->display("charge_back.htm");
 			exit;

@@ -133,7 +133,7 @@ class EditContactDetails extends EditProfileComponent {
 					else
 					{
 						//Insert into autoexpiry table, to expire all autologin url coming before date
-						$autoExObj=new jsadmin_AUTO_EXPIRY();
+						$autoExObj=new ProfileAUTO_EXPIRY();
 						$autoExObj->replace($this->action->profileId,'E',date("Y-m-d H:i:s"));
 						//end
 						

@@ -50,18 +50,19 @@ EOF;
 			$serviceArr = $memObj->getActiveServices();
 			unset($memObj);
 			$vdObj = new VariableDiscount();
-        	foreach ($profilesArr as $key => $details) {
-        		if(!$discountObj->ifAlreadyOfferedWD($details["PROFILEID"]))
+        		foreach ($profilesArr as $key => $details) {
+        		//if(!$discountObj->ifAlreadyOfferedWD($details["PROFILEID"]))
         		{
                 	//activate discount
                 	$startDate = date('Y-m-d', strtotime($details["ENTRY_DT"]));
                 	$endDate = date("Y-m-d",strtotime($discountDuration, strtotime($startDate)));
-                	$discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>date('Y-m-d'),"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
+                	$discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>date('Y-m-d'),"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
                 	$vdObj->activateVDForProfile($details["PROFILEID"],$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
                 	unset($discountDetails);
                 	$discountObj->addEntry($details["PROFILEID"]); 
-                }
-            }
+                	}
+            	}
+		unset($vdObj);
         }
         unset($profilesArr);
         unset($discountObj);

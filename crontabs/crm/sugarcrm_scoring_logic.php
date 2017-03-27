@@ -6,7 +6,7 @@
         include_once($_SERVER['DOCUMENT_ROOT']."/classes/SugarScoring.class.php");
 
 	$parameter = "GENDER_C,RELIGION_C,CASTE_C,MOTHER_TONGUE_C,MARITAL_STATUS_C,OCCUPATION_C,EDUCATION_C,INCOME_C,AGE_C,HAVE_PHOTO_C";
-	$myDb=connect_737();
+	$myDb=connect_slave();
 	$myDb_master=connect_db();
 	mysql_query('set session wait_timeout=50000',$myDb);
 	mysql_query('set session wait_timeout=50000',$myDb_master);

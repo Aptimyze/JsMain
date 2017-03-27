@@ -44,6 +44,12 @@ interface SearchChannelInterface
         public static function getSearchTypeTwoWayMatches();
         
         /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches();
+        
+        
+        /**
         * get Education and occupation detailed clusters
         */
         public function eduAndOccClusters($clustersToShow,$params="");
@@ -68,6 +74,11 @@ interface SearchChannelInterface
 	* This function will set the channel type
 	*/
 	public function getChannelType();
-
-}
+         
+        /**
+         * This fucntion will set the cluster block if page is calling search without cluster
+         * @param params : need to be set  
+         */
+        public function setRequestParameters($params);
+} 
 ?>

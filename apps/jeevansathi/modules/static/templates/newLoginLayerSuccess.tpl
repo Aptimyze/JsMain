@@ -5,7 +5,7 @@
   <!-- end:close button--> 
   <!--start:login layer-->
   <div id="newLoginLayerJspc" class="pos_fix layersZ fontlig setshare" >
-	~include_partial('global/JSPC/_jspcCommonLoginLayer')`
+	~include_partial('global/JSPC/_jspcCommonLoginLayer',["captchaDiv"=>$captchaDiv])`
 </div>
 <div id="Hidden_iFrame">
 	<iframe id="iframe_login"  style="display:none"  name="iframe_login">

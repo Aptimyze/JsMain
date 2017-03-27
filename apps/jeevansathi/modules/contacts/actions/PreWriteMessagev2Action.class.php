@@ -76,11 +76,23 @@ class PreWriteMessagev2Action extends sfAction
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 			$MembershipMessage = $data2['hamburger_message']['top']; 
 			//$MembershipMessage = "get 30% off";
-			$responseArray["errmsglabel"]= "To Send Personalized messages & initiate chat with ".$this->Profile->getUSERNAME();
-			$responseArray["footerbutton"]["label"]  = "View Membership Plans";
-			$responseArray["footerbutton"]["value"] = "";
-			$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
-			$responseArray["footerbutton"]["text"] = $MembershipMessage;
+			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+			}
+			else
+			{
+				$responseArray["errmsglabel"]= "Upgrade membership to Send messages & initiate chat with ".$this->Profile->getUSERNAME();
+				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+				$responseArray["footerbutton"]["value"] = "";
+				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+				$responseArray["footerbutton"]["text"] = $MembershipMessage;
+			}
 			
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);

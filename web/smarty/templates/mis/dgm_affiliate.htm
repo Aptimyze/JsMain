@@ -96,7 +96,7 @@
 		
 			~section name=index loop=$dataarr`
 				<tr class="fieldsnew">
-					<td align="center"><a href="../jsadmin/showstat.php?cid=~$CHECKSUM`&profileid=~$dataarr[index].profilechecksum`'>"><b>~$dataarr[index].username`</b></a></td>
+					<td align="center"><a href="../operations.php/commoninterface/ShowProfileStats?cid=~$CHECKSUM`&profileid=~$dataarr[index].profilechecksum`'>"><b>~$dataarr[index].username`</b></a></td>
 					<td align="center">~$dataarr[index].password`</td>
 					<td align="center">~$dataarr[index].email`</td>
 					<td align="center">~$dataarr[index].ipadd`</td>

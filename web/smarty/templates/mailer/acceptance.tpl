@@ -12,10 +12,15 @@
 ~$PREHEADER`
 </td>
 </tr>
+    <tr>
+<td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
+This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.
+</td>
+</tr>
   <tr>
     <td style="border-bottom:1px solid #ededed"><table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
-          <td width="373" height="52" style="padding-left:10px;"><div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/mailer/ADRM/logo.gif"></div></td>
+          <td width="373" height="52" style="padding-left:10px;"><div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"></div></td>
           <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
               <tr>
                 <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a></td>
@@ -218,7 +223,7 @@
                     <tr>
                       <td></td>
                     
-                      <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~else`Upgrade Membership~/if`</strong></a></td>
+                      <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~if $VD_END_DAY neq ''`till ~$VD_END_DAY` ~$VD_END_MONTH` ~/if`~else`Upgrade Membership~/if`</strong></a></td>
                     </tr>
                     <tr>
                       <td></td>

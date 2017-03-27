@@ -37,7 +37,7 @@
             <td class=bigwhite bgcolor="6BB97B"> 
             <div align="center"><span class="class1"><a href="../../index.php">Home</a> | 
             <a href="../../mainmenu.php?checksum=~$CHECKSUM`">My JeevanSathi</a> | <a href="../../whyjeevansathi.php?checksum=~$CHECKSUM`">Why JeevanSathi</a> 
-            | <a href="../../advance_search.php?FLAG=search&checksum=~$CHECKSUM`">Search JeevanSathi</a> | <a href="../../memberships.php?checksum=~$CHECKSUM`">Memberships</a> 
+            | <a href="../../advance_search.php?FLAG=search&checksum=~$CHECKSUM`">Search JeevanSathi</a> | <a href="/membership/jspc">Memberships</a> 
             | <a href="#">Success Stories</a> | <a href="http://Jeevansathi.tolshop.com/" target=_blank">JeevanSathi Shop</a></span>
             </div>
             </td>
@@ -172,7 +172,7 @@
                 <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr> 
                 <td class=mediumblack height="2"> 
-                <div align="center"><span class="class3"><a href="http://www.naukri.com"><br>
+                <div align="center"><span class="class3"><a href="https://www.naukri.com"><br>
                 Naukri.com</a> |<a href="~$SITE_URL`/profile/faqs.php?checksum=~$CHECKSUM`"> FAQs </a>| <a href="~$SITE_URL`/profile/feedback.php?checksum=~$CHECKSUM`">Feedback</a> | <a href="#">Disclaimer</a> | <a href="~$SITE_URL`/profile/site_map.php?checksum=~$CHECKSUM`">Site Map</a> | <a href="~$SITE_URL`/profile/contact.php?checksum=~$CHECKSUM`">Contact Us</a></span><br>
                 <br>
                 Copyright &copy; 2004, JeevanSathi Internet Services. 

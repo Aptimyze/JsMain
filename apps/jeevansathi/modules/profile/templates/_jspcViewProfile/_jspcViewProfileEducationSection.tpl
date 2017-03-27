@@ -1,6 +1,6 @@
 <!--start:Education-->
               <div class="prfbr3">
-              <div class="prfp5" id="section-career">
+              <div class="prfp5 noMultiSelect" id="section-career">
                 <div class="clearfix"> <i class="sprite2 fl prfic12"></i>
                   <div class="fl colr5 pl8 f17 pt2" >Education & Career</div>
                    <!--unclock div-->              
@@ -17,7 +17,7 @@
                     <li>
                       <p class="color12 pt15">Highest Education</p>
                       <p class="pt2 pr20">
-                        <span id="educationView1" ~if $bEditView && $apiData["about"]["education"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="educationView1" ~if $bEditView && $apiData["about"]["education"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["education"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["education"] neq null || $bEditView`
                             ~$apiData["about"]["education"]`
                           ~else`
@@ -34,7 +34,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20">
-                        <span id="schoolView" ~if $bEditView && $apiData["about"]["school"] eq $notFilledInText`  class="color5" ~/if` >  
+                        <span id="schoolView" ~if $bEditView && $apiData["about"]["school"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["school"] eq null` class="notFilledInColor" ~/if` >  
                           ~if $apiData["about"]["school"] neq null || $bEditView`
                             ~$apiData["about"]["school"]`
                           ~else`
@@ -43,23 +43,31 @@
                         </span>
                       </p>
                     </li>
+                    ~if $apiData["about"]["non_grad"] neq 1 && $apiData["about"]["under_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15">UG Degree</p>
                       <p class="pt2 pr20">
-                        <span id="under_grad_degView" ~if $bEditView && $apiData["about"]["under_grad"]["deg"] eq $notFilledInText`  class="color5" ~/if` >  
+                        <span id="under_grad_degView" ~if $bEditView && $bEditView && $apiData["about"]["under_grad"] neq null &&$apiData["about"]["under_grad"]["deg"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["under_grad"]["deg"] eq null` class="notFilledInColor" ~/if` >  
                           ~if $apiData["about"]["under_grad"]["deg"] neq null || $bEditView`
-                            ~$apiData["about"]["under_grad"]["deg"]`
+                            ~if $bEditView && $apiData["about"]["under_grad"] eq null`
+                                Not Applicable
+                            ~else`
+                              ~$apiData["about"]["under_grad"]["deg"]`
+                            ~/if`
+                            
                           ~else`
                             Not filled in
-                          ~/if`
+                            ~/if`
                         </span>  
                       </p>
                     </li>
+                    ~/if`
+
                     ~if $apiData["about"]["education"] neq $apiData["about"]["under_grad"]["deg"] && $apiData["about"]["post_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15">PG Degree</p>
                       <p class="pt2 pr20">
-                        <span id="post_grad_degView" ~if $bEditView && $bEditView && $apiData["about"]["post_grad"] neq null &&$apiData["about"]["post_grad"]["deg"] eq $notFilledInText`  class="color5" ~/if` >  
+                        <span id="post_grad_degView" ~if $bEditView && $bEditView && $apiData["about"]["post_grad"] neq null &&$apiData["about"]["post_grad"]["deg"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["post_grad"]["deg"] eq null` class="notFilledInColor" ~/if` >  
                           ~if $apiData["about"]["post_grad"]["deg"] neq null || $bEditView`
                             ~if $bEditView && $apiData["about"]["post_grad"] eq null`
                                 Not Applicable
@@ -74,6 +82,8 @@
                       </p>
                     </li>
                     ~/if`
+
+                     ~if $apiData["about"]["non_grad"] neq 1 && $apiData["about"]["under_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15" id="collegeLabelParent">UG College 
                         ~if $bEditView`
@@ -83,9 +93,14 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20"  >
-                        <span id="under_grad_collgView" ~if $bEditView && $apiData["about"]["under_grad"]["name"] eq $notFilledInText`  class="color5" ~/if` >
-                          ~if $apiData["about"]["under_grad"]["name"] neq null || $bEditView`
-                            ~$apiData["about"]["under_grad"]["name"]`
+                        <span id="under_grad_collgView" ~if $bEditView &&  $bEditView && $apiData["about"]["under_grad"] neq null && $apiData["about"]["under_grad"]["name"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["under_grad"]["name"] eq null` class="notFilledInColor" ~/if` >
+                         ~if $apiData["about"]["under_grad"]["name"] neq null || $bEditView`
+                            ~if $bEditView && $apiData["about"]["under_grad"] eq null`
+                              Not Applicable
+                            ~else`
+                              ~$apiData["about"]["under_grad"]["name"]`
+                            ~/if`
+                            
                           ~else`
                             Not filled in
                           ~/if`
@@ -93,6 +108,8 @@
                         
                       </p>
                     </li>
+                    ~/if`
+
                     ~if $apiData["about"]["education"] neq $apiData["about"]["under_grad"]["deg"] && $apiData["about"]["post_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15" id="pg_collegeLabelParent" >PG College ~if $bEditView`
@@ -102,7 +119,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                         <span id="post_grad_collgView" ~if $bEditView &&  $bEditView && $apiData["about"]["post_grad"] neq null && $apiData["about"]["post_grad"]["name"] eq $notFilledInText`  class="color5" ~/if` >
+                         <span id="post_grad_collgView" ~if $bEditView &&  $bEditView && $apiData["about"]["post_grad"] neq null && $apiData["about"]["post_grad"]["name"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["post_grad"]["name"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["post_grad"]["name"] neq null || $bEditView`
                             ~if $bEditView && $apiData["about"]["post_grad"] eq null`
                               Not Applicable
@@ -117,6 +134,7 @@
                       </p>
                     </li>
                     ~/if`
+                     ~if $apiData["about"]["non_grad"] neq 1 && $apiData["about"]["under_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15" id="other_ug_degreeLabelParent">Other UG Degree ~if $bEditView`
                         <span class="~if ($editApi.Education.OTHER_UG_DEGREE.value|count_characters:true) eq 0 || $editApi.Education.OTHER_UG_DEGREE.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 
@@ -125,15 +143,21 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                        <span id="edit_other_ug_degreeView" ~if $bEditView && $apiData["about"]["other_degree"]["other_ug_degree"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="edit_other_ug_degreeView" ~if $bEditView && $bEditView && $apiData["about"]["under_grad"] neq null && $apiData["about"]["other_degree"]["other_ug_degree"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["other_degree"]["other_ug_degree"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["other_degree"]["other_ug_degree"] neq null || $bEditView`
-                            ~$apiData["about"]["other_degree"]["other_ug_degree"]`
+                            ~if $bEditView && $apiData["about"]["under_grad"] eq null`
+                              Not Applicable
+                            ~else`
+                              ~$apiData["about"]["other_degree"]["other_ug_degree"]`
+                            ~/if`
+                            
                           ~else`
                             Not filled in
                           ~/if`
                         </span>
                       </p>
                     </li>
+                    ~/if`
                     ~if $apiData["about"]["education"] neq $apiData["about"]["under_grad"]["deg"] && $apiData["about"]["post_grad"] neq null || $bEditView`
                     <li>
                       <p class="color12 pt15" id="other_pg_degreeLabelParent">Other PG Degree 
@@ -144,7 +168,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                        <span id="edit_other_pg_degreeView" ~if $bEditView && $bEditView && $apiData["about"]["post_grad"] neq null && $apiData["about"]["other_degree"]["other_pg_degree"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="edit_other_pg_degreeView" ~if $bEditView && $bEditView && $apiData["about"]["post_grad"] neq null && $apiData["about"]["other_degree"]["other_pg_degree"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["other_degree"]["other_pg_degree"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["other_degree"]["other_pg_degree"] neq null || $bEditView`
                             ~if $bEditView && $apiData["about"]["post_grad"] eq null`
                               Not Applicable
@@ -162,7 +186,7 @@
                     <li>
                       <p class="color12 pt15">Occupation</p>
                       <p class="pt2 pr20">
-                        <span id="occupationView1" ~if $bEditView && $apiData["about"]["occupation"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="occupationView1" ~if $bEditView && $apiData["about"]["occupation"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["occupation"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["occupation"] neq null || $bEditView`
                             ~$apiData["about"]["occupation"]`
                           ~else`
@@ -174,7 +198,7 @@
                     <li>
                       <p class="color12 pt15">Work Status</p>
                     <p class="pt2 pr20">
-                        <span id="edit_work_statusView" ~if $bEditView && $apiData["about"]["decorated_work_status"]["work_status"] eq $notFilledInText` class="color5" ~/if` >
+                        <span id="edit_work_statusView" ~if $bEditView && $apiData["about"]["decorated_work_status"]["work_status"] eq $notFilledInText` class="color5" ~else if $apiData["about"]["decorated_work_status"]["work_status"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["decorated_work_status"]["work_status"] neq null || $bEditView`
                             ~$apiData["about"]["decorated_work_status"]["work_status"]`
                           ~else`
@@ -192,7 +216,7 @@
                         ~/if`
                         </p>
                       <p class="pt2 pr20">
-                        <span id="edit_company_nameView" ~if $bEditView && $apiData["about"]["work_status"]["company"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="edit_company_nameView" ~if $bEditView && $apiData["about"]["work_status"]["company"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["work_status"]["company"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["work_status"]["company"] neq null || $bEditView`
                             ~$apiData["about"]["work_status"]["company"]` 
                           ~else`
@@ -204,7 +228,7 @@
                     <li>
                       <p class="color12 pt15">Annual Income</p>
                       <p class="pt2 pr20">
-                        <span id="incomeView1" ~if $bEditView && $apiData["about"]["income"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="incomeView1" ~if $bEditView && $apiData["about"]["income"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["income"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["income"] neq null || $bEditView`
                             ~$apiData["about"]["income"]`
                           ~else`

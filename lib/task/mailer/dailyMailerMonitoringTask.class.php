@@ -42,7 +42,7 @@ EOF;
 		//Matchalert mailer
 		if($mailer_key[0]=='MATCHALERT_MAILER')
 		{
-			$maObj = new matchalerts_MAILER('newjs_slave');
+			$maObj = new matchalerts_MAILER();
 			$countArr = $maObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -51,7 +51,7 @@ EOF;
 		//New matchalert mailer
 		if($mailer_key[0]=='NMA_MAILER')
 		{
-			$nmaObj = new new_matches_emails_MAILER('newjs_slave');
+			$nmaObj = new new_matches_emails_MAILER();
 			$countArr = $nmaObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -78,7 +78,7 @@ EOF;
 		//Yes/No mailer
 		if($mailer_key[0]=='YESNO_MAILER')
 		{
-			$ynObj = new MAIL_YesNoMail('newjs_slave');
+			$ynObj = new MAIL_YesNoMail();
 			$countArr = $ynObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -137,6 +137,110 @@ EOF;
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }
+                //dpp review mailer
+                if($mailer_key[0]=='DPP_REVIEW_MAILER')
+                {
+                        $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG();
+                        $countArr = $dppMailerLogObj->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		//inactive mailers
+                if($mailer_key[0]=='INCOMPLETE_15')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(15);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_30')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(30);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_45')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(45);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_60')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(60);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_75')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(75);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+
+		if($mailer_key[0]=='INCOMPLETE_90')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(90);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_120')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(120);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+		if($mailer_key[0]=='INCOMPLETE_145')
+                {
+                        $inactiveMailerLogObj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+                        $countArr = $inactiveMailerLogObj->getMailCountForRange(145);
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }
+
+        if($mailer_key[0]=='SHORTLISTED_PROFILES_MAILER')
+        		{
+                        $dppMailerLogObj = new MAIL_SHORTLISTED_PROFILES();
+                        $countArr = $dppMailerLogObj->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+        		}
+
+         if($mailer_key[0]=='EMAIL_VER_MAILER')
+                {
+                        $mailVerOb = new MAIL_ALTERNATE_EMAIL_MAILER();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }        
+         if($mailer_key[0]=='ALTERNATE_EMAIL_VER_MAILER')
+                {
+                        $mailVerOb = new MAIL_EMAIL_VER_MAILER();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }        
+           if($mailer_key[0]=='REMINDER_MAILER')
+                {
+                        $mailVerOb = new MAIL_UNRESPONDED_CONTACTS();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }           
+        //Expiring interest mailer
+        if($mailer_key[0]=='ExpiringInterest_MAILER')
+        {
+            $eiObj = new MAIL_ExpiringInterest();
+            $countArr = $eiObj->getMailCountForRange();
+            $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+            unset($countArr);
+        }
 	}
   }
 }

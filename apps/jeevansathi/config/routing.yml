@@ -165,6 +165,10 @@ search_rule5_dpp:
   url:	/search/partnermatches
   param: {module: search, action:perform,searchBasedParam:partnermatches}
 
+search_rule5_lastSearchResult:
+  url:  /search/lastSearchResults
+  param: {module: search, action:perform,searchBasedParam:lastSearchResults}
+
 search_rule5_vm:
   url:	/search/verifiedMatches
   param: {module: search, action:perform,searchBasedParam:verifiedMatches,verifiedMatches:1}
@@ -204,10 +208,17 @@ search_rule_just_joined:
 search_rule11_twoway:
   url:  /search/twoway
   param: {module: search, action:perform,searchBasedParam:twowaymatch}
+search_rule11_match_of_day:
+  url:  /search/matchofday
+  param: {module: search, action:perform,searchBasedParam:matchofday}
 
 search_rule12_malerts:
   url:  /search/matchalerts
   param: {module: search, action:perform,searchBasedParam:matchalerts}
+
+#search_rule12_view_attempts:
+#  url:  /search/contactViewAttempts
+#  param: {module: search, action:perform,searchBasedParam:contactViewAttempts}
 
 search_rule13_valerts:
   url:  /search/kundlialerts

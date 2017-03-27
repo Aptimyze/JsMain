@@ -89,9 +89,9 @@ function PostRequest(action)
 							if(document.getElementById("from_reg").value==1){
 								if(document.getElementById("isMobile").value!=1){
 									if(action=="skip_to_fto")
-										window.location=SITE_URL+"/profile/intermediate.php?parentUrl=/fto/offer?fromReferer=0&profilechecksum="+document.myform.profilechecksum.value;
+										window.location=SITE_URL+"/fto/offer?fromReferer=0&profilechecksum="+document.myform.profilechecksum.value;
 										else
-								window.location=SITE_URL+"/profile/intermediate.php?parentUrl=/fto/offer?fromReferer=0&profilechecksum="+document.myform.profilechecksum.value;
+								window.location=SITE_URL+"/fto/offer?fromReferer=0&profilechecksum="+document.myform.profilechecksum.value;
 
 								}
 								else

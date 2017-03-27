@@ -25,7 +25,7 @@ $mobiles=@implode("','",$mob_arr);
 $landlines=@implode("','",$res_arr);
 if($mobiles)
 {
-	$sql="SELECT USERNAME,PHONE_MOB FROM newjs.JPROFILE WHERE ACTIVATED='Y' and PHONE_MOB IN ('$mobiles') AND LAST_LOGIN_DT < '$before_45_days'";
+	$sql="SELECT USERNAME,PHONE_MOB FROM newjs.JPROFILE WHERE ACTIVATED='Y' and PHONE_MOB IN ('$mobiles') AND DATE(LAST_LOGIN_DT) < '$before_45_days'";
 	$res=mysql_query($sql,$db_slave) or die(mysql_error());
 	while($row=mysql_fetch_array($res))
 	{
@@ -38,7 +38,7 @@ if($landlines)
 {
 	/*if($mobiles)
 		$landlines=$landlines."','".$mobiles;*/
-	$sql="SELECT USERNAME,PHONE_RES FROM newjs.JPROFILE WHERE ACTIVATED='Y' and PHONE_RES IN ('$landlines') AND LAST_LOGIN_DT < '$before_45_days'";
+	$sql="SELECT USERNAME,PHONE_RES FROM newjs.JPROFILE WHERE ACTIVATED='Y' and PHONE_RES IN ('$landlines') AND DATE(LAST_LOGIN_DT) < '$before_45_days'";
 	$res=mysql_query($sql,$db_slave) or die(mysql_error());
 	while($row=mysql_fetch_array($res))
 	{

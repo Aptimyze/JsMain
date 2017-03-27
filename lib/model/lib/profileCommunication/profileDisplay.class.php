@@ -3,10 +3,10 @@
 class profileDisplay{
 	
 	
-	public function getNextPreviousProfile($profileObj,$key,$offset)
+	public function getNextPreviousProfile($profileObj,$key,$offset,$stype='')
 	{
 		$data = unserialize(JsMemcache::getInstance()->get($key));
-		if(count($data)<$offset)
+		if(false === $data || count($data)<$offset)
 		{
 			$profileCommunication = new ProfileCommunication();
 			if(MobileCommon::isDesktop())
@@ -22,6 +22,12 @@ class profileDisplay{
 				$infoType.=$v."_";
 			}
 			$infoType = substr($infoType, 0, -1);
+                        if($infoType=="VISITORS"){
+                            if($stype=='5' || $stype=='IV' || $stype=='AV' || $stype=='WV')
+                                $infoTypenav['matchedOrAll']= 'A';
+                            elseif($stype=='M5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
+                                $infoTypenav['matchedOrAll']= 'M';
+                        }
 			$pageNo = ceil($offset/$config[$infoType]["COUNT"]);
 			$infoTypenav["PAGE"] = $infoType;
 			$infoTypenav["NUMBER"]=$pageNo;
@@ -49,4 +55,30 @@ class profileDisplay{
 		$profileid = $key;
 		return JsCommon::createChecksumForProfile($profileid);
 	}
+	
+	/*
+	* 	This function is used to handle next previous for myjs page
+	*	listing type denotes the list type and offset denotes the current profile number.
+	*/
+
+	public function getNextPreviousProfileForMyjs($iListingType,$iOffset)
+	{	
+
+
+		$profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+
+		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
+	
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
+
+
+		return JsCommon::createChecksumForProfile($profileIdToReturn);
+		
+	}
+
+
+
 }

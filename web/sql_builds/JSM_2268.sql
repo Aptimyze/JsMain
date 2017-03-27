@@ -1,0 +1,4 @@
+use newjs;
+INSERT INTO `SMS_TYPE` (`ID`, `SMS_KEY`, `SMS_TYPE`, `PRIORITY`, `SUBSCRIPTION`, `GENDER`, `COUNT`, `TIME_CRITERIA`, `CUSTOM_CRITERIA`, `SMS_SUBSCRIPTION`, `STATUS`, `MESSAGE`) VALUES ('201', 'MADELIVE_30', 'D', '110', 'F', 'A', 'SINGLE', '30', '0', 'SERVICE', 'Y', ' It''s been a while since you have registered on Jeevansathi. Please give your feedback on your experience: {SURVEY_SMS_30}');
+
+INSERT INTO `SMS_TYPE` (`ID`, `SMS_KEY`, `SMS_TYPE`, `PRIORITY`, `SUBSCRIPTION`, `GENDER`, `COUNT`, `TIME_CRITERIA`, `CUSTOM_CRITERIA`, `SMS_SUBSCRIPTION`, `STATUS`, `MESSAGE`) VALUES ('202', 'MADELIVE_90', 'D', '110 ', 'F', 'A', 'SINGLE', '90', '0', 'SERVICE', 'Y', ' It''s been a while since you have registered on Jeevansathi. Please give your feedback on your experience: {SURVEY_SMS_90}');

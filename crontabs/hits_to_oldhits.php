@@ -5,7 +5,7 @@
 
 include("connect.inc");
 
-$db=connect_db();
+$db=connect_ddl();
 
 $today=time();
 $today-=4*24*60*60;

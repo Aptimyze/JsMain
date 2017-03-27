@@ -55,7 +55,7 @@
                       ~/if`
                       ~if $apiData["dpp"]["dpp_city"] neq null`
                       <li class="js-countfields">
-                        <p class="disp_ib">City</p>
+                        <p class="disp_ib">State/City</p>
                         <p class="disp_ib moredes">~$apiData["dpp"]["dpp_city"]`</p>
                         <p class="disp_ib js-hideMatch"><i class="sprite2 ~if $matchingFields['CITYRES'] eq 'gnf'`prfic27~else`prfic28~/if`"></i></p>
                       </li>

@@ -136,7 +136,7 @@ class VerificationSealLib {
                 if(isset($fsoStatus))
                     return $fsoStatus;
                 else{
-                    $fsoObj = new PROFILE_VERIFICATION_FSO();
+                    $fsoObj = ProfileFSO::getInstance();
                     if(is_array($this->pID))
                     {
                         foreach($this->pID as $k=>$v)
@@ -169,7 +169,7 @@ class VerificationSealLib {
          */
         public function checkFsoVisitSeal() {
 
-                $fsoObj = new PROFILE_VERIFICATION_FSO();
+                $fsoObj = ProfileFSO::getInstance();
                 $visit = $fsoObj->check($this->pID);
                 if ($visit > 0)
                         $check[0] = "YES";
@@ -193,7 +193,7 @@ class VerificationSealLib {
          */
         public function setFsoVisitSeal() {
 
-                $fsoObj = new PROFILE_VERIFICATION_FSO();
+                $fsoObj = ProfileFSO::getInstance();
                 $fsoObj->insert($this->pID);
                 $this->setForSolrSearch();
         }
@@ -204,7 +204,7 @@ class VerificationSealLib {
          * @param $deletedBy - one who deleted
          */
         public function unsetFsoVisitSeal($reasonEnum,$reasonDetail, $deletedBy) {
-                $fsoObj = new PROFILE_VERIFICATION_FSO();
+                $fsoObj = ProfileFSO::getInstance();
                 $fsoObj->delete($this->pID);
                 $record = array("PROFILEID" => $this->pID, "REASON" => $reasonEnum,"DETAIL" => $reasonDetail, "BY" => $deletedBy);
                 $recordObj = new PROFILE_VERIFICATION_FSO_DELETION();

@@ -200,6 +200,19 @@ function getItemDetail($page, $filter)
                 "contactFlag" => "'I'"
             )
         ),
+        "eeoi" => array(
+            "R" => array(
+                "self" => "RECEIVER",
+                "contact" => "SENDER",
+                "type" => "R",
+                "flag" => "I",
+                "navigation_type" => "EEOI",
+                "SHOW_CATEGORY_SEARCH" => 1,
+                "CHECKBOX" => 1,
+                "contactFlag" => "'I'",
+                "filteredNotIn" => "'Y'"
+            ),
+        ),
         /*"archive_eoi"=>array(
         "R"=>array(
         "self"=>"RECEIVER",
@@ -213,6 +226,19 @@ function getItemDetail($page, $filter)
         "contactFlag"=>"'I'",
         ),
         ),*/
+        "aeoi" => array(
+            "R" => array(
+                "self" => "RECEIVER",
+                "contact" => "SENDER",
+                "type" => "R",
+                "flag" => "I",
+                "navigation_type" => "EOI",
+                "SHOW_CATEGORY_SEARCH" => 1,
+                "CHECKBOX" => 1,
+                "contactFlag" => "'I'",
+                "filteredNotIn" => "'Y'"
+            ),
+        ),
         "messages" => array(
             "R" => array(
                 "self" => "RECEIVER",
@@ -1422,8 +1448,9 @@ function getCategorySearchResults($pageDetail)
     if ($pageDetail["havephoto"])
         $LEADS = array();
     if (is_array($LEADS) && count($LEADS)) {
+	$dbslave = connect_slave();
         $sql = getLeadSearchQuery($pageDetail);
-        $res = mysql_query_decide($sql) or logError("Due to a temporary problem your problem could not be resolved. Please try again after a couple of minutes", $sql, "ShowErrTemplate");
+        $res = mysql_query_decide($sql,$dbslave) or logError("Due to a temporary problem your problem could not be resolved. Please try again after a couple of minutes", $sql, "ShowErrTemplate");
         $LEADS = array();
         if (mysql_num_rows($res)) {
             while ($row = mysql_fetch_assoc($res))

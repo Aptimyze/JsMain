@@ -18,7 +18,7 @@
 	<td class="formhead" valign="middle" colspan="3" align="center" >Modification Log : ~$kk`  </td>
 	</tr>
 <br>
-	<TR class="formhead" valign="middle" colspan="3" align="center"><TH>~$kk`</TH><TH>Mod_Date</TH><TH>IP</TH>
+	<TR class="formhead" valign="middle" colspan="3" align="center"><TH>~$kk`</TH><TH>Mod_Date (IST)</TH><TH>IP</TH>
 </tr>
 	~foreach $vv as $ii`
 	<TR>

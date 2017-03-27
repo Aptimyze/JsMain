@@ -7,12 +7,14 @@
 class SearchConfig
 {
 	const _nullValueAttributeLabel= "NS";
-	public static $maxSaveSearchesAllowed = 5;
+	const _noneValueHandicapped= "N";
+	const _doesntMatterValue= "0";
+        public static $maxSaveSearchesAllowed = 5;
 	public static $limitOfViewedFeatureProfile = 3;
 	public static $profilesPerPage = 25;
 	public static $matchMaxLimit = 5000;//overwriting limit set in matchalert
 	public static $profilesPerPageOnApp = 6;
-	public static $profilesPerPageOnWapSite = 10;
+	public static $profilesPerPageOnWapSite = 20;
 	public static $featuredProfilesCount = 5;
 	public static $suggestedAlgoCount = 15;
 	public static $ap_send_eoi_count = 100;
@@ -28,7 +30,7 @@ class SearchConfig
 	public static $filteredRemove = 1;		//Remove Filtered profiles from search
 	public static $moreClusters_alwaysShow = array('EDUCATION_GROUPING','OCCUPATION_GROUPING');
 	public static $possibleSearchParamters = 'GENDER,CASTE,SUBCASTE,MTONGUE,LAGE,HAGE,MSTATUS,LHEIGHT,HHEIGHT,HAVEPHOTO,MANGLIK,HAVECHILD,OCCUPATION,BTYPE,COMPLEXION,DIET,SMOKE,DRINK,HANDICAPPED,HIV,RELATION,COUNTRY_RES,CITY_RES,RELIGION,EDU_LEVEL,EDU_LEVEL_NEW,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,HOROSCOPE,AMRITDHARI,CUT_HAIR,MATHTHAB,NATURE_HANDICAP,WEAR_TURBAN,LIVE_PARENTS,INCOME,EDUCATION_GROUPING,NEWSEARCH_CLUSTERING,LAST_ACTIVITY,OCCUPATION_GROUPING,INDIA_NRI,STATE,CITY_INDIA,MARRIED_WORKING,GOING_ABROAD,ONLINE,CASTE_GROUP,VIEWED,SORT_LOGIC,SEARCH_TYPE,NoRelaxParams,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,CASTE_DISPLAY,WIFE_WORKING,WORK_STATUS,KEYWORD,KEYWORD_TYPE,PROFILE_ADDED,LAST_LOGIN_DT,HIV_IGNORE,MANGLIK_IGNORE,MSTATUS_IGNORE,HANDICAPPED_IGNORE,LVERIFY_ACTIVATED_DT,HVERIFY_ACTIVATED_DT,MATCHALERTS_DATE_CLUSTER,KUNDLI_DATE_CLUSTER,NATIVE_STATE';
-
+	public static $minAcceptedGunaScore = 17;
 	/* jpartner*/ /*last removed : PARTNER_BTYPE AS BTYPE,PARTNER_COMP AS COMPLEXION */
 	public static $dppSearchParamters = 'GENDER,PARTNER_CASTE AS CASTE,PARTNER_MTONGUE AS MTONGUE,LAGE,HAGE,PARTNER_MSTATUS AS MSTATUS,LHEIGHT,HHEIGHT,HAVEPHOTO,PARTNER_MANGLIK AS MANGLIK,CHILDREN AS HAVECHILD,PARTNER_OCC AS OCCUPATION,PARTNER_DIET AS DIET,PARTNER_SMOKE AS SMOKE,PARTNER_DRINK AS DRINK,HANDICAPPED,HIV,PARTNER_RELATION AS RELATION,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_RELIGION AS RELIGION,PARTNER_ELEVEL_NEW AS EDU_LEVEL_NEW,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,HOROSCOPE,AMRITDHARI,CUT_HAIR,MATHTHAB,NHANDICAPPED AS NATURE_HANDICAP,WEAR_TURBAN,LIVE_PARENTS,PARTNER_INCOME AS INCOME,EDUCATION_GROUPING,LAST_ACTIVITY,OCCUPATION_GROUPING,INDIA_NRI,STATE,CITY_INDIA,MARRIED_WORKING,GOING_ABROAD,CASTE_GROUP,VIEWED,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL';
 
@@ -50,14 +52,14 @@ class SearchConfig
         public static $gtalkOnline = 45;//minutes
         public static $jsOnline = 60;//minutes
 
-
-	public static $searchWhereParameters = 'CASTE,SUBCASTE,MTONGUE,OCCUPATION,BTYPE,RELATION,COUNTRY_RES,RELIGION,EDU_LEVEL,EDU_LEVEL_NEW,HOROSCOPE,MATHTHAB,INCOME,MSTATUS,HAVEPHOTO,MANGLIK,HAVECHILD,DIET,SMOKE,DRINK,COMPLEXION,HANDICAPPED,HIV,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,AMRITDHARI,CUT_HAIR,NATURE_HANDICAP,WEAR_TURBAN,LIVE_PARENTS,CITY_RES,LAST_ACTIVITY,EDUCATION_GROUPING,OCCUPATION_GROUPING,INDIA_NRI,STATE,CITY_INDIA,MARRIED_WORKING,GOING_ABROAD,CASTE_GROUP,WIFE_WORKING,WORK_STATUS,KEYWORD,KEYWORD_TYPE,PROFILE_ADDED,PHOTO_DISPLAY,PRIVACY,NATIVE_STATE';
+	public static $searchWhereParameters = 'CASTE,SUBCASTE,MTONGUE,OCCUPATION,BTYPE,RELATION,COUNTRY_RES,RELIGION,EDU_LEVEL,EDU_LEVEL_NEW,HOROSCOPE,MATHTHAB,INCOME,MSTATUS,HAVEPHOTO,MANGLIK,HAVECHILD,DIET,SMOKE,DRINK,COMPLEXION,HANDICAPPED,HIV,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,AMRITDHARI,CUT_HAIR,NATURE_HANDICAP,WEAR_TURBAN,LIVE_PARENTS,CITY_RES,LAST_ACTIVITY,EDUCATION_GROUPING,OCCUPATION_GROUPING,INDIA_NRI,STATE,CITY_INDIA,MARRIED_WORKING,GOING_ABROAD,CASTE_GROUP,WIFE_WORKING,WORK_STATUS,KEYWORD,KEYWORD_TYPE,PROFILE_ADDED,PHOTO_DISPLAY,PRIVACY,NATIVE_STATE,LAST_LOGIN_SCORE,SUBSCRIPTION,PHOTO_VISIBILITY_LOGGEDIN';
 	public static $searchRangeParameters = 'AGE,HEIGHT,ENTRY_DT,VERIFY_ACTIVATED_DT';
 	
 	public static $advanceSearchMoreParameters = "LIVE_PARENTS,SUBCASTE,MATHTHAB,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,AMRITDHARI,CUT_HAIR,WEAR_TURBAN,WORK_STATUS,BTYPE,DIET,SMOKE,DRINK,COMPLEXION,NATURE_HANDICAP,KEYWORD,KEYWORD_TYPE,ENTRY_DT";
 
 	public static $membersLookingForMeWhereParameters = 'PARTNER_MTONGUE,PARTNER_CASTE,PARTNER_RELIGION,PARTNER_COUNTRYRES,PARTNER_BTYPE,PARTNER_COMP,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_OCC,PARTNER_MSTATUS,PARTNER_CITYRES,PARTNER_DRINK,PARTNER_SMOKE,PARTNER_DIET,PARTNER_HANDICAPPED,PARTNER_MANGLIK';
 	public static $membersLookingForMeRangeParameters = 'PARTNER_LAGE,PARTNER_HAGE,PARTNER_LHEIGHT,PARTNER_HHEIGHT';
+        public static $featuredProfileParams = 'LAST_LOGIN_DT';
 	public static $textBasedSearchParameters = "KEYWORD_SEARCH_FIELD";
 	public static $featureProfileWhereParameters = "FEATURE_PROFILE";
 	//For Solr
@@ -73,8 +75,13 @@ class SearchConfig
 	public static $clustersWithDoesntMatter = array('HOROSCOPE','HANDICAPPED','HIV','MARRIED_WORKING','HAVECHILD');
 	public static $clustersWithAny = array('HANDICAPPED');
 	/* Search Cluster Info */
-
-	
+        public static $matchAlertCacheLifetime =300;
+	/**
+         * Db to be called in all search requests
+         */
+        public static $searchDbName = "newjs_masterRep";
+        public static $jsBoostSubscription = "N"; // JsBoost subscription value
+        
 	/*
 	* List The Array name corresponding to SEARCH_MALE/FEMALE fields used in cluster
 	*/
@@ -93,7 +100,7 @@ class SearchConfig
                         "MSTATUS"  => "marital_status",
                         "CASTE" => "caste_clusters_breadcrumb",
                         "CASTE_GROUP" => "caste_clusters_breadcrumb",
-                        "MANGLIK" => "manglik_label",
+                        "MANGLIK" => "mangliks_label", // label change for string change from 'dont know' to 'not filled in'
                         "DIET" => "diet",
                         "LAST_ACTIVITY" => "user_last_activity_array",
                         "INDIA_NRI" => "india_nri_array",
@@ -162,7 +169,9 @@ class SearchConfig
 	}
 
 	/* For Search UI */
-        public static $searchDisplayFields = 'HEIGHT,USERNAME,PROFILEID,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,INCOME,OCCUPATION,AGE,LAST_LOGIN_DT,ENTRY_DT,SUBSCRIPTION,CITY_RES,COUNTRY_RES,MSTATUS';
+
+        public static $searchDisplayFields = 'HEIGHT,USERNAME,PROFILEID,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,INCOME,OCCUPATION,AGE,LAST_LOGIN_DT,ENTRY_DT,SUBSCRIPTION,CITY_RES,COUNTRY_RES,MSTATUS,COLLEGE,PG_COLLEGE,COMPANY_NAME,NATIVE_CITY,NATIVE_STATE,ANCESTRAL_ORIGIN,NAME_OF_USER';
+
         public static $searchDisplayDecoratedFields = 'HEIGHT,RELIGION,CASTE,MTONGUE,EDU_LEVEL_NEW,OCCUPATION,INCOME,CITY_RES,COUNTRY_RES';
 	public static function decoratedMappingSearchDisplay()
 	{
@@ -194,4 +203,8 @@ class SearchConfig
 	/* For Search UI */
 
 	public static $advanceSearchMtongueHardCodeArray = array(19=>41,30=>70,36=>71);		//Same mtongue in different regions have some hardcoded values in advance search. This array keeps the mapping. Array index has the original vale and array value has the hardcoded value
+        
+        public static function getSearchDb($params = array()){
+                return self::$searchDbName;
+        }
 }

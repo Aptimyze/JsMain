@@ -2,6 +2,53 @@
 ~assign var=zedo value= $zedoValue["zedo"]`
 ~include_Partial("search/photoAlbum")`
 
+<div id='commHistoryOverlay-layer' class="pos_fix layersZ setshare disp-none">
+    <li id='commDiv' class="commDiv disp-none clearfix">
+                                  <div class="prfwid18 prfm2" style='margin-top:0px;'><img src="" border="0" class="js-profilePic prfdim14 prfrad vtop"></div>
+                                    <div class="pl10 prfwid19">
+                                      <p class="f15 js-commHeading"></p>
+                                        <p class="js-commMessage disp-none pt7 color2 f13"></p>
+                                        <p class="js-commTime pt10 f12 color12"></p>
+                                    </div>
+                                </li>
+      <div class="prfwid16 fontlig">
+        <div class="prfbg6">
+                <!--start:div-->          
+              <div class="">
+                <div class="clearfix shrp1">
+                    <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="otherProfilePic prfdim13 prfrad prfm2"> </div>
+                      <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
+                       <span class='js-usernameCC'></span><span class='pl10 pr10'>-</span><span class="colr2">Communication History</span>
+                      </div>
+                      <i class="sprite2 sendcross2 cursp pos-abs cepos4 closeCommLayer"></i>
+                  </div>
+
+                  <div id='commHistoryAbsent' class="f13 comhisp1 txtc">
+                      <p class="color5 f22">No Communication history</p>
+                        <p class="color2 f13 pt15">Send an interest to connect with <span class='js-usernameCC'></span></p>            
+                    </div>
+
+                     <!--start:form-->
+                     <img id='commHistoryLoader' src="/images/jspc/commonimg/loader.gif" style="visibility:hidden;margin: 0 auto;height: 22px;display: block;">
+                     <div id='commHistory' class="f13 comhp1">
+                        
+                          <div id='commLayerScroller' class="cEcontent">                        
+                            <ul id='mainDiv' class="listnone comhis fontlig color11">
+                              
+                                      
+                                                         
+                            </ul>
+                            </div>
+                       
+                    </div>
+                    <!--end:form-->
+              </div>        
+            <!--end:div-->
+               
+            </div>    
+      </div>  
+     </div>
+
     <!--start:we talk for you layer-->
     <div id="we-talk-layer" class="pos_fix layersZ disp-none">
         <i id="cls-we-talk" class="sprite2 close pos_fix closepos cursp"></i>
@@ -78,12 +125,14 @@
 <div class="clearfix reportInv2">
 <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
 <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2">Profile reported for Abuse</span>
+<span class="js-username"></span><span id ="hiphenForConfirm" class="pl10 pr10">-</span><span id = "reportAbuseConfirmHeading"class="colr2">Profile reported for Abuse</span>
 </div>
 </div>
 
 <div class="f13 reportInv1 txtc">
-<p class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.</p>
+<p id ="messageForReportAbuse" class="color11 f13 txtl" style="padding-left:70px;">
+  Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.
+</p>
 </div>
 </div>
 </div>
@@ -101,31 +150,22 @@
                     </div>
                 </div>
                 <div class="pl12 pt20">
-                  <p class="color12 f13">Select reason</p>
+                  <p id='RAReasonHead' class="color12 f13">Select reason</p>
                     <ul class="listnone reportlist fontlig f15 pt10 color2">
                       <li>
-                          <input type="radio"  name="report_profile">
-                        Profile is obscene/fraud</li>
+                          <input type="radio"  name="report_profile">Looks like fake profile</li>
                           <li>
-                          <input type="radio"   name="report_profile">
-                        Incorrect profile details</li>
+                          <input type="radio"   name="report_profile">Inappropriate content</li>
                            <li>
-                          <input type="radio"   name="report_profile">
-                        Duplicate profile</li>
+                          <input type="radio"   name="report_profile">Spam</li>
                             <li>
-                          <input type="radio"  name="report_profile">
-                        Fake photo</li>
+                          <input type="radio"  name="report_profile">Duplicate profile</li>
                             <li>
-                          <input type="radio"  name="report_profile">
-                          Member sends unsolicited and illicit emails/ads
-                        </li>
+                          <input type="radio"  name="report_profile">Already married/engaged</li>
                              <li>
-                          <input type="radio"  name="report_profile">
-                        Member is already married/engaged</li>
+                          <input type="radio"  name="report_profile">Incorrect details/photo</li>
                              <li>
-                          <input id='otherOptionBtn' type="radio"  name="report_profile">
-
-                        Other reasons
+                          <input id='otherOptionBtn' type="radio"  name="report_profile">Others
                         <div id='otherOptionMsgBox' class='disp-none' >
                         <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
                         <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Add Comments'></textarea></div>
@@ -168,13 +208,13 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     </div>
   </div>
   <!--end:top part-->
-~if $SHOW_NEXT_PREV`
+~if $SHOW_NEXT_PREV && $STYPE !='MOD'`
   <!--start:next/previous button-->
   ~if $SHOW_PREV`
   	<!--start:prv-->
-    <a ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
+    <a id="show_prevListingProfile" ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
     <div class="pos-abs prfpos5 cursp z1">
-    	<div class="disp-tbl prfdim6 prfbg5 txtc">
+    	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic33"></i></div>
         </div>
     </div>    
@@ -184,9 +224,10 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
   ~if $SHOW_NEXT`
     <!--start:next-->
 
-    <a ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
+
+    <a id="show_nextListingProfile" ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
     <div class="pos-abs prfpos6 cursp z1">
-    	<div class="disp-tbl prfdim6 prfbg5 txtc">
+    	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic34"></i></div>
         </div>
     </div>    
@@ -264,7 +305,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
         ~if $arrOutDisplay['pic']['pic_count'] eq "0"`
         <div class="fl pos-rel imgSize" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
         ~else`
-         <div class="fl pos-rel imgSize photoClick js-searchTupleImage cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
+         <div class="fl pos-rel imgSize photoClick js-searchTupleImage cursp ~if !$loginProfile->getPROFILEID()` loginLayerJspc loginAlbumSearch ~/if`" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">
          ~/if`
           <div class="prfpos2 pos-abs">
             ~if $arrOutDisplay['pic']['pic_count'] neq "0"` <div class="disp-tbl prfclr1 prfdim1 prfrad1 colrw txtc">
@@ -285,7 +326,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
             ~/if`
            </div>
         <!--end:photo--> 
-        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID()])`
+        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser,"dontShowNameReason"=>$dontShowNameReason,"SAMEGENDER"=>$SAMEGENDER])`
         
       </div>
       <!--end:photo div 1-->
@@ -375,59 +416,6 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
                         	<p class="f15 color11">Profile managed by ~$arrOutDisplay['about']['profile_posted']`</p>
                             <p class="f13 prfcolr2">Last updated on ~$arrOutDisplay['about']['last_mod']`</p>
                         </div>
-                        <div class="fr btmicon">
-                        	<ul class="clearfix">
-                            	<li class="pos-rel">
-                              ~if !$loginProfile->getPROFILEID()`
-                                	<i class="sprite2 prfic29 cursp loginLayerJspc"></i>
-                                  ~else`
-                                  <i class="sprite2 prfic29 cursp share js-action"></i>
-                                  ~/if`
-                                    <!--start:tooltip-->
-                                    <div class="tooltip1">
-                                    	<div class="boxtip colrw fontlig prfp8 wd70">
-                                        	Share Profile
-                                        </div>                                    
-                                    </div>
-                                    <!--end:tooltip-->
-                                </li>                 ~if $arrOutDisplay['page_info']['is_ignored']`
-                                <li id="IGNORE-~$arrOutDisplay['page_info']['profilechecksum']`-VDP-IGNORE" class="pos-rel cEIgnoreDetailProfile" data="&ignore=0">
-								~else`
-									<li id="IGNORE-~$arrOutDisplay['page_info']['profilechecksum']`-VDP-IGNORE" class="pos-rel ~if $loginProfile->getPROFILEID()`cEIgnoreDetailProfile~/if`" data="&ignore=1">
-								~/if`
-                                  ~if !$loginProfile->getPROFILEID()`
-                                  <i class="sprite2 prfic31 cursp loginLayerJspc"></i>
-                                  ~else`
-                                  <i class="sprite2 prfic31 cursp ignore "></i>
-                                  ~/if`
-                                     <!--start:ignore profile-->
-                                    <div class="tooltip1">
-                                      <div id="ignoreProfileToolTip" class="boxtip txtc colrw fontlig prfp8">
-                                      ~if $arrOutDisplay['page_info']['is_ignored']`
-                                          Unblock Profile 
-                                       ~else`
-									                   	Block Profile
-                                       ~/if` 
-                                        </div>                                    
-                                    </div>
-                                    <!--end:ignore profile-->
-                                </li>
-                                <li class="pos-rel">
-                                    ~if !$loginProfile->getPROFILEID()`
-                                	<i class="sprite2 prfic32 cursp loginLayerJspc"></i>
-                                    ~else`
-                                    <i class="sprite2 prfic32 cursp report js-action"></i>
-                                    ~/if`
-                                     <!--start:tooltip-->
-                                    <div class="tooltip1">
-                                    	<div class="boxtip colrw fontlig prfp8 wd74">
-                                        	Report Profile 
-                                        </div>                                    
-                                    </div>
-                                    <!--end:tooltip-->
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>              
               </div>              
@@ -483,4 +471,5 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     var searchId = "~$searchid`";
     var selfUsername='~$loginProfile->getUSERNAME()`';
     var selfEmail='~$loginProfile->getEMAIL()`';
+    var hideUnimportantFeatureAtPeakLoad='~JsConstants::$hideUnimportantFeatureAtPeakLoad`';
 </script>

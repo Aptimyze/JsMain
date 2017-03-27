@@ -3,9 +3,7 @@ include_once(JsConstants::$docRoot."/mis/connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db=connect_misdb();
-$db2=connect_master();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
-mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db2);
 $data=authenticated($checksum);
 
 if(isset($data)|| $JSIndicator)
@@ -225,6 +223,54 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::FILTERED_INTEREST_IOS:
 				$formattedString.="JS IOS:Filtered Ios Interest";
 				break;
+			case JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE:
+				$formattedString.="JS Exclusive Servicing II Mailer";
+				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED:
+				$formattedString.="INTEREST_ARCHIVED";
+				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED_JSMS:
+				$formattedString.="INTEREST_ARCHIVED_JSMS";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING:
+				$formattedString.="INTEREST_EXPIRING";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING_JSPC_MYJS:
+				$formattedString.="INTEREST_EXPIRING_JSPC_MYJS";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING_JSMS:
+				$formattedString.="INTEREST_EXPIRING_JSMS";
+				break;
+
+			case JSTrackingPageType::INTEREST_EXPIRING_IOS:
+				$formattedString.="INTEREST_EXPIRING_IOS";
+				break;
+
+			case JSTrackingPageType::INTEREST_EXPIRING_MYJS_IOS:
+				$formattedString.="INTEREST_EXPIRING_MYJS_IOS";
+				break;
+
+			case JSTrackingPageType::INTEREST_ARCHIVED_IOS:
+				$formattedString.="INTEREST_ARCHIVED_IOS";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING_ANDROID:
+				$formattedString.="INTEREST_EXPIRING_ANDROID";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS:
+				$formattedString.="INTEREST_EXPIRING_ANDROID_MYJS";
+				break;
+			case JSTrackingPageType::EXPIRING_INTEREST_MAILER:
+				$formattedString.="EXPIRING_INTEREST_MAILER";
+				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED_ANDROID:
+				$formattedString.="INTEREST_ARCHIVED_ANDROID";
+				break;
+                        case JSTrackingPageType::PENDING_EOI_ANDROID:
+                                $formattedString.="PENDING_EOI_ANDROID";
+                                break;
+                        case JSTrackingPageType::FILTERED_EOI_ANDROID:
+                                $formattedString.="FILTERED_EOI_ANDROID";
+                                break;
 		}
 	}
 	return $formattedString;

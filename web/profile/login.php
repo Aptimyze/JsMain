@@ -269,11 +269,11 @@
 		{
 			
 			echo "<script type=\"text/javascript\">
-			window.top.location.href='$SITE_URL/profile/intermediate.php?parentUrl=$return_url';
+			window.top.location.href='$return_url';
 			</script>";
 		}
 		else
-			header("Location:$SITE_URL/profile/intermediate.php?parentUrl=$return_url");
+			header("Location:$return_url");
 		die;
 	}
 	else

@@ -33,8 +33,13 @@ $this->addOptions(array(
   {
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
+	$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop)
+        	die('successfulDie');
+
         $this->notificationKey = $arguments["notificationKey"]; // NEW / EDIT
-	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterRep');
+	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 	$maxIdData = $this->scheduledAppNotificationObj->getArray("","","","max(ID) as maxId");
 	$this->maxId = $maxIdData[0][maxId];
 	$this->notificationSenderObj = new NotificationSender;
@@ -47,19 +52,19 @@ $this->addOptions(array(
 			foreach($details as $k=>$v)
 			{
 				$profileDetails[$v['PROFILEID']]=$v;
-				$profileDetails[$v['PROFILEID']]['PHOTO_URL']="D";
 				$idArr[] = $v['ID'];
 			}
 			
 			//filter profiles based on notification count
 			if(in_array($this->notificationKey,NotificationEnums::$scheduledNotificationPriorityArr))
-				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCount($profileDetails,$this->notificationKey);
+				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCountNew($profileDetails,$this->notificationKey);
 			else
 				$filteredProfileDetails = $profileDetails;
 			unset($profileDetails);
 			$this->sendPushNotifications($filteredProfileDetails,$idArr);
 			unset($details);
 			unset($filteredProfileDetails);
+			unset($idArr);
 		}
 		if($this->doneTillId>=$this->maxId)
 		{
@@ -70,9 +75,13 @@ $this->addOptions(array(
   }
   private function sendPushNotifications($profileDetails,$idArr)
   {
+	$status =0;//CommonUtility::hideFeaturesForUptime();
+	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+		successfullDie();
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
-		$this->scheduledAppNotificationObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
+		$this->scheduledAppNotificationUpdateSentObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
+	unset($status);
   }
   
   private function getDetails()

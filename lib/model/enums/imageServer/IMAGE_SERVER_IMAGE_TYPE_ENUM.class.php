@@ -6,7 +6,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
         static public $imageTypeEnum = array();
     	
 	/* All the enums for every module and image type combination required need to be mentioned in this initializing function*/
-	static public function init()
+	 static public function init()
         {
                 self::$imageTypeEnum["PICTURE"]["MainPicUrl"]="P_M";
                 self::$imageTypeEnum["PICTURE"]["ProfilePicUrl"]="P_P";
@@ -25,6 +25,8 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
                 self::$imageTypeEnum["SUCCESS_STORY"]["PIC_URL"]="S_P";
                 self::$imageTypeEnum["FIELD_SALES"]["PHOTO_URL"]="F_E";
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS"]["DOCURL"]="V_D";
+		self::$imageTypeEnum["VERIFICATION_DOCUMENTS_BYUSER"]["PROOF_VAL"]="V_DU";
+		self::$imageTypeEnum["PICTURE_DELETED"]["MAIN_PHOTO_URL"]="PD_M";
 
         }
 	
@@ -40,10 +42,9 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(array_key_exists($module,self::$imageTypeEnum) && array_key_exists($type,self::$imageTypeEnum[$module]))
 			$enum=self::$imageTypeEnum[$module][$type];
 		else
-			throw new Exception("Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-
+			throw new jsException('',"Invalid Image Type Enum is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
 		return $enum;
-        }
+    	}
 	
 	/* this function is used to retrieve Image type corrsponding to a module name and enum provided.
 	Exception class is used instead of jsException as it is an static function and jsException will not be recognised here
@@ -57,9 +58,10 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		if(array_key_exists($module,self::$imageTypeEnum))
                 	$imageType= array_search($enum,self::$imageTypeEnum[$module]);
 		if(!$imageType)		
-			throw new Exception("Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
-		
-		return $imageType;
+	  	{   
+			throw new jsException('',"Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
         }
+		return $imageType;
+    	}
 }
 ?>

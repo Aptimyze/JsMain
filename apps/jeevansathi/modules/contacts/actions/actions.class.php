@@ -266,6 +266,12 @@ class contactsActions extends sfActions
 		if( !$this->getParameter($request,"draft"))
 		{
 			$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+            
+            //If Event is Decline then No Preset Msg
+            if(ContactHandler::DECLINE == $this->contactHandlerObj->getToBeType()) {
+                $this->contactHandlerObj->setElement("MESSAGE","");
+            }
+            
 			$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 		}
 		else

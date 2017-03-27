@@ -7,8 +7,8 @@
 */
 class MonitotingJSMTask extends sfBaseTask
 {
-	CONST minNo  = 45000;
-	CONST maxNo  = 70000;
+	CONST minNo  = 80000;
+	CONST maxNo  = 120000;
 	protected function configure()
         {
                 $this->addOptions(array(

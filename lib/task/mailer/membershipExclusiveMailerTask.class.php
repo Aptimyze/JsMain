@@ -28,9 +28,9 @@ EOF;
 		$mmObj = new MembershipMailer();
 		$profilesArr =$mmObj->getJsExclusiveProfiles();
 		if(count($profilesArr)>0){
-			$jprofileObj = new JPROFILE();
+			$jprofileObj = new JPROFILE('newjs_slave');
 			$subsArr = $jprofileObj->getAllSubscriptionsArr($profilesArr);
-			foreach($profilesArr as $key=>$profileid)
+			foreach($profilesArr as $key=>$profileid){
 				if(strpos($subsArr[$profileid]['ISD'], "91") !== false){
 					$currency = "RS";
 				} else {
@@ -39,7 +39,15 @@ EOF;
 				$dataArr['currency'] =$currency;
 				$mmObj->sendMembershipMailer($mailId, $profileid, $dataArr);
 				unset($dataArr);
+				$count++;
+			}
 		}
 		unset($mmObj);
+                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com";
+		$latest_date	=date("Y-m-d");
+                $subject        ="Exclusive Feerback Monthly Mailer for ".date("jS F Y", strtotime($latest_date));
+                $fromEmail      ="From:JeevansathiCrm@jeevansathi.com";
+                $msg            ="Total mails sent : $count";
+                mail($to,$subject,$msg,$fromEmail);
 	}
 }

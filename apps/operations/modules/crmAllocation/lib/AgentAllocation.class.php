@@ -14,7 +14,7 @@ class AgentAllocation
 			// Special condition for CENTRAL_RENEWAL
 			if($subMethod == 'CENTRAL_RENEWAL' || $subMethod=='CENTRAL_RENEWAL_MONTHLY'){
 				// This is done to remove those profiles which are already allocated 
-               	$mainAdminObj=new incentive_MAIN_ADMIN();
+               	$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
                	$profiles = $processObj->getProfiles();
                	$newProfiles = array();
                	// This condition checks if profile is already Allocated in MAIN ADMIN, 
@@ -35,12 +35,13 @@ class AgentAllocation
 		{
 			$mainAdminObj           	=new incentive_MAIN_ADMIN();
 			$historyObj			=new incentive_HISTORY();
-			$jprofileContactObj    		=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj    		= new ProfileContact();
 			$iProfileAlternateNumberObj	=new PROFILE_ALTERNATE_NUMBER();
 			$crmDailyAllotObj       	=new CRM_DAILY_ALLOT();
 			$serviceStatusObj		=new BILLING_SERVICE_STATUS();
 			$profileid      		=$processObj->getProfiles();
 			$agentName			=$processObj->getExecutive();
+			$agentPrivilege = $paramsArr['PRIVILEGE'];
 
 			if(!$profileid)
 				$profileid		=$paramsArr['PROFILEID'];	
@@ -123,8 +124,11 @@ class AgentAllocation
                         if($paramsArr['ORDERS'])
                                 $this->updateOrderStatus($profileid,$paramsArr['WILL_PAY']);    
 
-			if($method!='MANUAL_EXT_DAYS' || ($method=='MANUAL_EXT' && !$alreadyAlloted))
+			if($method!='MANUAL_EXT_DAYS' || ($method=='MANUAL_EXT' && !$alreadyAlloted)){
+				// Code added for tracking process of executive while disposition
+				$paramsArr['MODE'] .= $this->getModeProcess($paramsArr['PRIVILEGE']);
 				$historyObj->addAllocationHistory($paramsArr);
+			}
 		}
 	}
 	public function fetchAllotedBucketDays($subMethod='',$bucketType='AP',$profileid='',$method='')
@@ -147,7 +151,7 @@ class AgentAllocation
 		else
 			$processId ='S';
 
-		$allocBucketObj 	=new incentive_ALLOCATION_BUCKET();
+		$allocBucketObj 	=new incentive_ALLOCATION_BUCKET('newjs_slave');
 		$result 		=$allocBucketObj->get($processId);
 		$allocDay 		=$result[$bucketType]['VALUE'];
 		return $allocDay;	
@@ -171,7 +175,7 @@ class AgentAllocation
 		if($expiryDate)
 			$allotTime =$expiryDate;
 		elseif($subMethod=='RENEWAL' || $subMethod=='RENEWAL_NOT_DUE' || $subMethod=='SUB_EXPIRY' || $subMethod=='UPSELL' || $subMethod=='CENTRAL_RENEWAL' || $subMethod=='CENTRAL_RENEWAL_MONTHLY'){
-			$serviceStatusObj 	=new BILLING_SERVICE_STATUS();
+			$serviceStatusObj 	=new BILLING_SERVICE_STATUS('newjs_slave');
 			$expiryDate		=$serviceStatusObj->getLastExpiry($profileid);
 			$allotTime		=$expiryDate;
 		}
@@ -209,17 +213,20 @@ class AgentAllocation
 	}
 	public function allocateProfiles($processObj)
         {
-		$jprofileObj            =new JPROFILE();
+		$jprofileObj            =new JPROFILE('newjs_masterRep');
+
+		// Queries cannot be moved to slave- due to slave lag spike arises in FS allocation
 		$lastAgentAllotedObj    =new AGENT_ALLOTED();
 		$manualAllotObj 	=new MANUAL_ALLOT();
+		// End
 
 		$currentExec		=0;
 		$method			=$processObj->getMethod();
 		$executives             =$processObj->getExecutives();
 		$totalExecutives        =count($executives);
-//$executives =array("amuda");
+		//$executives =array("amuda");
 		if($method=='FIELD_SALES'){
-			$mainAdminObj   =new incentive_MAIN_ADMIN();
+			$mainAdminObj   =new incentive_MAIN_ADMIN('newjs_masterRep');
 			$center		=$processObj->getCenter();
 			$allocationLimit=$processObj->getLimit();
 			if($totalExecutives>0)
@@ -538,5 +545,32 @@ class AgentAllocation
         {
 	        SendMail::send_email($to, $mailerMsg, $subject, $from,"","","","","","","1","",$from_name);
 	}
+    }
+
+    public function getModeProcess($priv){
+    	if(strpos($priv, 'ExcDIb') !== false){
+            return crmParams::$processFlag['INBOUND_TELE'];
+        }
+        else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
+           	return crmParams::$processFlag['CENTER_SALES'];
+        }
+        else if(strpos($priv, 'ExcFP') !== false){
+        	return crmParams::$processFlag['FP_TELE'];
+        }
+        else if(strpos($priv, 'ExcRnw') !== false){
+        	return crmParams::$processFlag['CENTRAL_RENEW_TELE'];
+        }
+        else if(strpos($priv, 'ExcFld') !== false){
+        	return crmParams::$processFlag['FIELD_SALES'];
+        }
+        else if(strpos($priv, 'ExcFSD') !== false || strpos($priv, 'ExcFID') !== false){
+        	return crmParams::$processFlag['FRANCHISEE_SALES'];
+        }
+        else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
+        	return crmParams::$processFlag['OUTBOUND_TELE'];
+        }
+        else{
+        	return crmParams::$processFlag['UNASSISTED_SALES'];
+        }
     }
 }

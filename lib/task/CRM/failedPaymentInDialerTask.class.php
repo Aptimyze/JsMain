@@ -38,10 +38,16 @@ EOF;
         $processObj->setMethod("NEW_FAILED_PAYMENT");
         $processObj->setSubMethod("NEW_FAILED_PAYMENT");
 
+	$processId =15;
+	$processObj->setIdAllot($processId);
+	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE();
+	$csvStartDt =$lastHandledDtObj->getHandledDate($processId);
+
         $startDt =date("Y-m-d H:i:s", time()-10*60);
         $endDt 	 =date("Y-m-d H:i:s", time()-05*60);
 	$processObj->setStartDate($startDt);
 	$processObj->setEndDate($endDt);
+	//$csvStartDt =$startDt;
 
        	$largeFileData  =$csvHandler->fetchLargeFileData();
        	$processObj->setLeadIdSuffix($largeFileData['LEAD_ID_SUFFIX']);
@@ -69,7 +75,7 @@ EOF;
 	}
 	// Generate CSV
 	$processName =$processObj->getProcessName();	
-	$dateSet =$startDt."#".$endDt;		
+	$dateSet =$csvStartDt."#".$endDt;		
         $csvHandler->generateCSV($processName,$dateSet);
 
         //Code added to copy FP Dialer csv file to Dialer
@@ -79,8 +85,10 @@ EOF;
         passthru("cp $sourceDir $destDir", $return_var);
 	if($return_var){
 		// error in copy command
-		mail("manoj.rana@naukri.com,vibhor.garg@jeevansathi.com,dheeraj.negi@naukri.com","ERROR: FP Dialer csv not copied on Dialer","","From:JeevansathiCrm@jeevansathi.com");
+		mail("manoj.rana@naukri.com,dheeraj.negi@naukri.com","ERROR: FP Dialer csv not copied on Dialer","","From:JeevansathiCrm@jeevansathi.com");
 	}
+	else
+		$lastHandledDtObj->setHandledDate($processId,$endDt);
 
   }
 }

@@ -22,6 +22,7 @@ class StaticDataV1Action extends sfActions
                 {
 			$inputValidateObj->validateStaticTablesData($request);
 			$output = $inputValidateObj->getResponse();
+
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
 				$param = json_decode($request->getParameter("json"),true);

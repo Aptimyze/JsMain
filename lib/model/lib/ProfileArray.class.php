@@ -30,10 +30,13 @@ class ProfileArray{
    * @param - $profileIdArray - array of profile objects
    **/
 
-  public function getResultsBasedOnJprofileFields($valueArray="",$excludeArray="",$greaterThanArray = "",$fields="PROFILEID",$table="JPROFILE",$connection="",$lessThanArray="",$greaterThanEqualArray="")
+  public function getResultsBasedOnJprofileFields($valueArray="",$excludeArray="",$greaterThanArray = "",$fields="PROFILEID",$table="JPROFILE",$connection="",$lessThanArray="",$greaterThanEqualArray="",$orderBy="",$limit="")
   {
-    if($table == "JPROFILE_EDUCATION")
+    if($table == "JPROFILE_EDUCATION") {
       $this->$table = new newjs_JPROFILE_EDUCATION($connection);
+      $msg = print_r($_SERVER,true);
+      mail("kunal.test02@gmail.com","ProfileArray JPROFILE_EDUCATION in Use",$msg);
+    }
     elseif($table == "NAME_OF_USER")
       $this->$table = new incentive_NAME_OF_USER($connection);
     elseif($table == "JPROFILE")
@@ -42,7 +45,12 @@ class ProfileArray{
     elseif($table == "JPROFILE_FOR_DUPLICATION")
       $this->$table = new test_JPROFILE_FOR_DUPLICATION($connection);
 
-    $profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,'','',$greaterThanEqualArray);
+    if($orderBy && $limit)
+    {
+    	$profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,$orderBy,$limit,$greaterThanEqualArray);
+    }
+    else		
+        $profileIdArray = $this->$table->getArray($valueArray,$excludeArray,$greaterThanArray,$fields,$lessThanArray,'','',$greaterThanEqualArray);
 
     if(!$connection)
       $connection = "newjs_master";
@@ -52,8 +60,8 @@ class ProfileArray{
     {
       foreach($profileIdArray as $key=>$pid)
       {
-        $this->profileArr[$key] = Profile::getInstance($connection,$pid);
-        $this->profileArr[$key]->setDetail($pid,$fields);
+	$this->profileArr[$key] = Profile::getInstance($connection,$pid);
+	$this->profileArr[$key]->setDetail($pid,$fields);
       }
     }
     return $this->profileArr;

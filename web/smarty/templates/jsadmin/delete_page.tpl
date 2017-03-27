@@ -4,6 +4,8 @@
 <title>AdminSearch : Jeevansathi.com Matrimonial Services</title>
 <link rel="stylesheet" href="jeevansathi.css" type="text/css">
 <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+<script src="~JsConstants::$jquery`"></script>
+
 </head>
 ~include file="head.htm"`
 
@@ -42,34 +44,43 @@
 	  <tr>
 	    <td colspan=2 bgcolor="#F9F9F9" class="label" align="center"><font color="red">~$MSG`</font></td>						
 	  </tr>	
-	~/if`
+	~/if`          
           <tr>
-            <td width="30%" class="label" bgcolor="#F9F9F9">Underage</td>
+            <td width="30%" class="label" bgcolor="#F9F9F9">Reason</td>
 
             <td width="70%" bgcolor="#F9F9F9">
-              <input type="radio" name="reasons" value="underage" class="textboxes1">
+
+              <select class="selectReason" name="reason">
+              <option disabled selected value> -- select an option -- </option>
+              <option name="reasons" value=" Abusive / Indecent Language" > Abusive / Indecent Language</option>
+                <option name="reasons" value="As per User Request">As per User Request</option>
+                <option name="reasons" value="Conditions for Marriage / Dowry / Financial Support/ Immigration Support">Conditions for Marriage / Dowry / Financial Support/ Immigration Support</option>
+                <option name="reasons" value="Below Age Limit">Below Age Limit</option>
+                <option name="reasons" value="Competitor Website">Competitor Website</option>                
+                <option name="reasons" value="Divorce Pending / Separated">Divorce Pending / Separated</option>
+                <option name="reasons" value="Duplicate Profile">Duplicate Profile</option>
+                <option name="reasons" value="Fake Profile">Fake Profile</option>
+                <option name="reasons" value="Foreign Origin">Foreign Origin</option>
+                <option name="reasons" value="Gender not Proper">Gender not Proper</option>
+                <option name="reasons" value="Marital Status Doubtful / Second Marriage
+">Marital Status Doubtful / Second Marriage
+</option>
+                <option name="reasons" value="Multiple Profile with same content
+">Multiple Profile with same content
+</option>
+                <option name="reasons" value="Non Serious (Love/ Friendship / No Marriage Commitment)">Non Serious (Love/ Friendship / No Marriage Commitment)</option>
+                <option name="reasons" value="Obscene Email ID
+">Obscene Email ID
+</option>
+                <option name="reasons" value="Related to Carrier / Publicity">Related to Carrier / Publicity</option>
+                <option name="reasons" value="Test Profile">Test Profile</option>
+                <option name="reasons" value="Other" onClick="displayOtherField()">Other Reason</option>
+              </select>		          
             </td>
-          </tr>
-          <tr>
-            <td width="30%" class="label" bgcolor="#F9F9F9">Fake</td>
-
+            <tr id = "otherField" style="display: none">
+            <td width="30%" class="label" bgcolor="#F9F9F9">Other Reason</td>
             <td width="70%" bgcolor="#F9F9F9">
-              <input type="radio" name="reasons" value="fake" class="textboxes1">
-            </td>
-          </tr>
-          <tr>
-            <td width="30%" class="label" bgcolor="#F9F9F9">Username not proper</td>
-
-            <td width="70%" bgcolor="#F9F9F9">
-              <input type="radio" name="reasons" value="unproper" class="textboxes1">
-            </td>
-          </tr>
-          <tr>
-            <td width="30%" class="label" bgcolor="#F9F9F9">Other</td>
-
-            <td width="70%" bgcolor="#F9F9F9">
-		 <input type="radio" name="reasons" value="Other" class="textboxes1">
-              <input type="text" name="other" value="Other" size="18" class="textboxes1">
+            <input type="text" name="other" placeholder = "specify reason" size="18" class="textboxes1">
             </td>
           </tr>
           <tr>
@@ -77,13 +88,6 @@
 
             <td width="70%" bgcolor="#F9F9F9">
         <textarea name="comments" class="testbox" cols="40" rows="2"></textarea>    
-            </td>
-          </tr>
-          <tr>
-            <td width="30%" class="label" bgcolor="#F9F9F9">Send Mail</td>
-
-            <td width="70%" bgcolor="#F9F9F9">
-              <input type="checkbox" name="send_mail" value="send_mail"  class="textboxes1">
             </td>
           </tr>
 
@@ -97,3 +101,18 @@
 
 </body>
 </html>
+<script>
+$(document).ready(function(){
+$(".selectReason").change(function(e)
+{
+  if(($( this ).val()) == "Other")
+  {
+    $("#otherField").show();
+  }
+  else
+  {
+    $("#otherField").hide();
+  }
+});
+});
+</script>

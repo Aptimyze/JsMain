@@ -18,7 +18,7 @@ class billing_WELCOME_DISCOUNT extends TABLE
     try
     {
 
-      $sql = "INSERT INTO billing.WELCOME_DISCOUNT (PROFILEID) VALUES(:PROFILEID)";
+      $sql = "INSERT IGNORE INTO billing.WELCOME_DISCOUNT (PROFILEID) VALUES(:PROFILEID)";
       $res = $this->db->prepare($sql);
       $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
       $res->execute();

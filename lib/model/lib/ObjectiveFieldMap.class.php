@@ -38,6 +38,8 @@ class ObjectiveFieldMap
 				'NATIVE_COUNTRY'=>'country',
 				'NATIVE_CITY'=>'city_india',
 				'NATIVE_STATE'=>'state_india',
+				'ID_PROOF_TYPE'=>'id_proof_type',
+				'ADDR_PROOF_TYPE'=>'addr_proof_type',
 				
 			);
 		if($from_whr=="MR")

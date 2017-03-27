@@ -17,9 +17,11 @@ class IncompleteProfiles{
 		global $current_user;
 		$current_user = new User();
 		$current_user->getSystemUser();
-		global $db;
+		$db = connect_db();
+		$db_slave = connect_slave();	
 		$this->duplicate=new Duplicate($db);
-		$this->db_js=connect_db();
+		$this->duplicateSlave = new Duplicate($db_slave);
+		$this->db_js=$db_slave;
 		mysql_select_db("sugarcrm",$this->db_js);
 		mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$this->db_js);
 	}
@@ -35,7 +37,7 @@ class IncompleteProfiles{
 		while($row=mysql_fetch_array($result)){
 			//If lead already exist with corresponding email and contact number, then update profileid field of the lead
 		//	if(false){
-			if($lead_id_Arr=$this->duplicate->getDuplicateLeadId($row['EMAIL'],$row['PHONE_MOB'],$row['STD'],$row['PHONE_RES'], false)){
+			if($lead_id_Arr=$this->duplicateSlave->getDuplicateLeadId($row['EMAIL'],$row['PHONE_MOB'],$row['STD'],$row['PHONE_RES'], false)){
 				foreach($lead_id_Arr as $lead_id)
 				addProfileId($lead_id,$row['USERNAME'],$this->duplicate->db);
 			}else{
@@ -55,11 +57,11 @@ class IncompleteProfiles{
 		$sql="select $select from newjs.JPROFILE where PROFILEID='$profileid' and ACTIVATED<> 'D'";
 		$sql1="select HOBBY from newjs.JHOBBY where PROFILEID='$profileid'";
 		$sql2="select PLACE_BIRTH from newjs.ASTRO_DETAILS where PROFILEID='$profileid'";
-		$profile_res=$this->duplicate->db->requireSingleRow($sql);
-		$profile_res1=$this->duplicate->db->requireSingleRow($sql1);
-		$profile_res2=$this->duplicate->db->requireSingleRow($sql2);
+		$profile_res=$this->duplicateSlave->db->requireSingleRow($sql);
+		$profile_res1=$this->duplicateSlave->db->requireSingleRow($sql1);
+		$profile_res2=$this->duplicateSlave->db->requireSingleRow($sql2);
 		$sql="select NAME from incentive.NAME_OF_USER where PROFILEID='$profileid'";
-		$res=$this->duplicate->db->requireSingleRow($sql);
+		$res=$this->duplicateSlave->db->requireSingleRow($sql);
 		if($profile_res1)
 			$profile_res=array_merge($profile_res,$profile_res1);
 		if($profile_res2)
@@ -137,7 +139,8 @@ class IncompleteProfiles{
 			return $resArr;
 		}
 	function createLead($leadData){
-		mysql_select_db_js("sugarcrm");
+		$db_to_update=connect_db();
+                mysql_select_db("sugarcrm",$db_to_update);
 		$jsLead=new Lead();
 		foreach($leadData as $key =>$value)
 			$jsLead->$key=$value;

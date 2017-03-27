@@ -93,10 +93,16 @@ class billing_SERVICES extends TABLE
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         if(is_array($serviceId) && !empty($serviceId)){
-        	$service_str = "'".implode("','", $serviceId)."'";
+        	foreach ($serviceId as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
         	try {
-	            $sql = "SELECT SERVICEID, NAME, {$rsKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ($service_str)";
+	            $sql = "SELECT SERVICEID, NAME, {$rsKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
 	            $resSelectDetail = $this->db->prepare($sql);
+	            foreach ($serviceId as $key => $val) {
+	            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+	            }
 	            $resSelectDetail->execute();
 	            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
 	            	$resultArr[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
@@ -126,10 +132,16 @@ class billing_SERVICES extends TABLE
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         if(is_array($serviceId) && !empty($serviceId)){
-        	$service_str = "'".implode("','", $serviceId)."'";
+        	foreach ($serviceId as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
         	try {
-	            $sql = "SELECT SERVICEID, NAME, {$dolKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ($service_str)";
+	            $sql = "SELECT SERVICEID, NAME, {$dolKey} AS PRICE, ADDON from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
 	            $resSelectDetail = $this->db->prepare($sql);
+	            foreach ($serviceId as $key => $val) {
+	            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+	            }
 	            $resSelectDetail->execute();
 	            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
 	            	$resultArr[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
@@ -155,15 +167,17 @@ class billing_SERVICES extends TABLE
     }
     
     public function fetchAllServiceDetails($serviceid_str) {
-    	$serviceid_str = "'".$serviceid_str."'";
-    	$serviceid_str = str_replace("''","'",$serviceid_str);
-        try {
-        	$tempCheck = str_replace("'", "", $serviceid_str);
-        	if(empty($tempCheck)){
-        		return NULL;
+    	try {
+        	$serviceIdArr = explode(",", $serviceid_str);
+        	foreach ($serviceIdArr as $key => $val) {
+        		$str[] = ":SERVICEID$key";
         	}
-            $sql = "SELECT * from billing.SERVICES WHERE SERVICEID IN ($serviceid_str)";
+            $newStr = @implode(",", $str);
+            $sql = "SELECT * from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
             $resSelectDetail = $this->db->prepare($sql);
+            foreach ($serviceIdArr as $key => $val) {
+            	$resSelectDetail->bindValue(":SERVICEID$key", trim($val,"'"), PDO::PARAM_STR);
+            }
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
                 $res[] = $rowSelectDetail;
@@ -353,27 +367,50 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getServiceInfo($search_id,$id,$offer,$price_str) {
+    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false) {
         try {
-        	if(is_array($id)){
-		        if ($offer) {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN('Y','S') order by PRICE ASC";
-		        } else {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE = 'Y' order by PRICE ASC";
-		        }
-	        } else {
-	        	if ($id == 'M') {
-	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
-	        	} elseif ($offer) {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN('Y','S') order by PRICE ASC";
-		        } else {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE = 'Y' order by PRICE ASC";
-		        }
-	        }
-            $resSelectDetail = $this->db->prepare($sql);
-            $resSelectDetail->execute();
-            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
-            	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"]);
+            if($fetchOnline == true || $fetchOffline == true){
+                $SHOW_ONLINE_OFFER = "(";
+                $SHOW_ONLINE = "(";
+                if($fetchOnline == true && $fetchOffline == true){
+                    $SHOW_ONLINE_OFFER .= "'Y','S','N'";
+                    $SHOW_ONLINE .= "'Y','N'";
+                }
+                else if($fetchOffline == true){
+                    $SHOW_ONLINE_OFFER .= "'N'";
+                    $SHOW_ONLINE .= "'N'";
+                }
+                else if($fetchOnline == true){
+                    $SHOW_ONLINE_OFFER .= "'Y','S'";
+                    $SHOW_ONLINE .= "'Y'";
+                }
+                $SHOW_ONLINE_OFFER .= ")";
+                $SHOW_ONLINE .= ")";
+                //var_dump($SHOW_ONLINE);
+            	if(is_array($id)){
+    		        if ($offer) {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        } else {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE." order by PRICE ASC";
+    		        }
+    	        } else {
+    	        	if ($id == 'M') {
+    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
+    	        	} elseif ($offer) {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        } else {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        }
+    	        }
+                //var_dump($sql);
+                $resSelectDetail = $this->db->prepare($sql);
+                $resSelectDetail->execute();
+                while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>$rowSelectDetail["SHOW_ONLINE"]);
+                }
+            }
+            else{
+                $row_services = null;
             }
         }
         catch(Exception $e) {
@@ -413,9 +450,15 @@ class billing_SERVICES extends TABLE
         	throw new jsException("", "SERVICEID IS BLANK");
         }
         try {
-        	$serviceIdStr = "'".implode("','",$serviceIdArr)."'";
-            $sql = "SELECT SQL_CACHE NAME, SERVICEID from billing.SERVICES WHERE SERVICEID IN ($serviceIdStr)";
+        	foreach ($serviceIdArr as $key => $val) {
+        		$str[] = ":SERVICEID$key";
+        	}
+            $newStr = @implode(",", $str);
+            $sql = "SELECT SQL_CACHE NAME, SERVICEID from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
             $resSelectDetail = $this->db->prepare($sql);
+            foreach ($serviceIdArr as $key => $val) {
+            	$resSelectDetail->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
+            }
             $resSelectDetail->execute();
             while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
             	$output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail['NAME'];
@@ -423,6 +466,114 @@ class billing_SERVICES extends TABLE
             return $output;
         }
         catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getServiceDetailsArr($fields='') {
+        try {
+            if(!$fields)
+                $fields ="*";
+            $sql = "SELECT SQL_CACHE $fields from billing.SERVICES";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+            }
+            return $output;
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getOnlineActiveDurations() {
+        try {
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                $output[$row['DURATION']] = $row['DURATION'];
+            }
+            return $output;
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getPreviousExpiryDetails($profileid, $rights, $mainCheck){
+        try{
+            if ($mainCheck == 'Y') {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC";
+            } else {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
+            }
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $resSelectDetail->execute();
+            if ($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                if ($row['CNT'] >= 2 ) {
+                    if ($mainCheck == 'Y') {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    } else {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    }
+                    $resSelectDetail1 = $this->db->prepare($sql1);
+                    $resSelectDetail1->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                    $resSelectDetail1->execute();
+                    if ($rowSelectDetail1 = $resSelectDetail1->fetch(PDO::FETCH_ASSOC)) {
+                        $previous_expiry = $rowSelectDetail1;
+                    }   
+                }
+            }
+        } catch(Exception $e) {
+            throw new jsException($e);
+        }
+        return $previous_expiry;
+    }
+
+    public function getServicesForActivationInterface($servArr) {
+        try {
+            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            foreach ($servArr as $key=>$val) {
+                $sqlArr[] = "SERVICEID LIKE '{$val}%'";
+            }
+            $sql .= implode(" OR ", $sqlArr);
+            $sql .= ") ORDER BY SERVICEID ASC";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function changeServiceActivations($servStr, $status) {
+        try {
+            if($status == 'Y'){
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
+            } else {
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='N' WHERE SERVICEID IN ($servStr)";
+            }
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getFinanceDataServiceNames() {
+        try {
+            $sql = "SELECT SQL_CACHE SERVICEID, NAME FROM billing.SERVICES WHERE SERVICEID LIKE 'T%' OR SERVICEID LIKE 'R%' OR SERVICEID LIKE 'A%' OR SERVICEID LIKE 'I%' OR SERVICEID LIKE 'B%' OR SERVICEID LIKE 'P%' OR SERVICEID LIKE 'C%' OR SERVICEID LIKE 'D%' OR SERVICEID LIKE 'NCP%' OR SERVICEID LIKE 'ESP%' OR SERVICEID LIKE 'X%'";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail['NAME'];
+            }
+            return $output;
+        } catch (Exception $e) {
             throw new jsException($e);
         }
     }

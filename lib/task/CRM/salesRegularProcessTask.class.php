@@ -76,10 +76,10 @@ EOF;
 	        $incSRLObj 	=new incentive_SALES_REGULAR_LOG();
 	        $latest_date 	=$incSRLObj->getLatestDate();
 	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date);
-	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,manoj.rana@naukri.com";
+	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
 	        $subject 	="CSVs FILTERED LOG for ".date("jS F Y", strtotime($latest_date));
 	        $csvObj 	=new csvGenerationHandler();
-	        $csvObj->sendEmailAlert($data, $to, $from, $subject);
+	       	$csvObj->sendEmailAlert($data, $to, $from, $subject);
   }
 }

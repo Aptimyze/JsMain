@@ -7,6 +7,9 @@ include_once("connect.inc");
 $db_master=connect_db();
 $db_slave=connect_slave();
 
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_master);
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_slave);
+
 $sql="SELECT A.STORYID AS SID, B.ID, B.EMAIL FROM newjs.INDIVIDUAL_STORIES AS A, newjs.SUCCESS_STORIES AS B WHERE A.MAIN_PIC_URL != '' AND A.STATUS = 'A' AND A.STORYID = B.ID";
 $res=mysql_query($sql,$db_slave) or die(mysql_error1($db_slave));
 while($row=mysql_fetch_array($res))
@@ -46,7 +49,7 @@ foreach($main_array as $key => $i)
 
 function mysql_error1($db)
 {
-	mail("nitesh.s@jeevansathi.com,nikhil.dhiman@jeevansathi.com","Error in crontabs/seo_ss.php ",mysql_error($db));
+	mail("nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com","Error in crontabs/seo_ss.php ",mysql_error($db));
 }
 
 

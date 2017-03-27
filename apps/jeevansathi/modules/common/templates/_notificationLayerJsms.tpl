@@ -1,16 +1,29 @@
 ~if $showLayer eq 1`
-	<!--start:activate notification-->
-	<div id="notificationLayer" class="fullwid bg10 pad18 white fontlig cursp">
-		<p class="f20">Activate Notifications</p>
-		<p class="f14 pt6">Get Notifications on receiving New Interest</p>	
-	</div>    
-	<!--end:activate notification-->
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#notificationLayer").click(function(e){
-				console.log('~JsConstants::$ssl_siteUrl`/notification/notify');
-				window.open('~JsConstants::$ssl_siteUrl`/notification/notify','Jeevansathi Notifications').focus();
-			})
-		});
-	</script>
+<script type="text/javascript">
+    function notificationLayerAction(buttonClick){
+    url = '/api/v1/notification/notificationLayerSettings';
+    $.ajax({
+            type: 'POST',
+            url: url,
+            data:{
+                active: buttonClick
+            },
+            success: function(data){
+                $("#notifBar").addClass("dn");
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("body").append('<div id="notifBar" class="fullwid posfix hgt180 btm0 boxshadow_new z1000 bg4"><div class="f20 fb fontlig color7 txtc padActi">Activate Notifications</div><div class="color7 f18 fontlig txtc">Jeevansathi would like to notify you about new matches, interests and acceptances</div><div class="posabs btm0 dispib bg7 white f19 fontthin txtc padd22 mt15 wid497p" id="activateNotif">Allow</div><div class="posabs btm0 dispib bg7 white f19 fontthin txtc padd22 mt15 wid50p" id="notNow" style="right:0px">Not Now</div></div>');
+
+        $("#activateNotif").click(function(e){
+            notificationLayerAction("Y");
+            console.log('~JsConstants::$ssl_siteUrl`/notification/notify');
+            window.open('~JsConstants::$ssl_siteUrl`/notification/notify','Jeevansathi Notifications').focus();
+        });
+        $("#notNow").click(function(e){
+            notificationLayerAction("N");
+        });
+    });
+</script>
 ~/if`

@@ -6,8 +6,8 @@
  */
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/P/pg/functions.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/P/pg/functions.php");
 }
 
 class Services
@@ -159,7 +159,7 @@ class Services
 
         if(!empty($serviceid)){
 			$serviceid = "'".$serviceid."'";
-			$billingServicesObj = new billing_SERVICES();
+			$billingServicesObj = new billing_SERVICES('newjs_slave');
 			$allServiceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid);
         }
         $price = 0;
@@ -300,7 +300,7 @@ class Services
         $serviceid_arr = @explode(",", $serviceid);
         $serviceid_str = "'".@implode("','", $serviceid_arr)."'";
         
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid_str);
         foreach($serviceid_arr as $key=>$val){
         	foreach($serviceDetails as $kk=>$vv){
@@ -314,7 +314,8 @@ class Services
         return $service_name;
     }
 
-    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj) {
+    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj,$fetchOnline=true,$fetchOffline=false) {
+
         global $user_disc;
         $search_id = "";
         if(is_array($id)){
@@ -329,8 +330,8 @@ class Services
         	$search_id = $id . '%';
         }
         
-        $billingServicesObj = new billing_SERVICES();
-        $discountOfferObj = new billing_DISCOUNT_OFFER();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
+        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_slave');
         
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
@@ -338,19 +339,19 @@ class Services
         	$price_str = $device."_RS";
         }
         
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str);
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
         $i = 0;
         
         if (!empty($userObj)){
         	if($userObj->getFestInfo()){
         		$fest = 1;
-	            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
+	            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP('newjs_slave');
 	            $festiveDetailsArr = $festiveOfferLookupObj->retrieveCurrentLookupTable();
         	}
         } else if ($this->getFestive()) {
             $fest = 1;
-            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
+            $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP('newjs_slave');
             $festiveDetailsArr = $festiveOfferLookupObj->retrieveCurrentLookupTable();
         }
         
@@ -358,7 +359,7 @@ class Services
         	$user_disc = $renew;
         }
 
-        $billingDccObj = new billing_DIRECT_CALL_COUNT();
+        $billingDccObj = new billing_DIRECT_CALL_COUNT('newjs_slave');
         $direct_call = $billingDccObj->getDirectCallCountForServiceArr(array_keys($row_services));
 
         $cashDiscountArr = $discountOfferObj->getDiscountOfferForServiceArr(array_keys($row_services));
@@ -388,6 +389,7 @@ class Services
             $services[$serviceid]['FESTIVE_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['SPECIAL_DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
+            $services[$serviceid]['SHOW_ONLINE'] = $row_services[$serviceid]["SHOW_ONLINE"];
             if (strpos($serviceid, "ESP") !== false || strpos($serviceid, "NCP") !== false) {
                 $durd = substr($serviceid, strlen($serviceid) - 1);
             } 
@@ -398,18 +400,17 @@ class Services
             if ($fest) {
                 $festiveDiscountPercent = $festiveDetailsArr[$serviceid]['DISCOUNT_PERCENT'];
                 if ($festiveDiscountPercent > 0) {
-                	$services[$serviceid]['FESTIVE_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100) , 2);
+                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100, 2);
                 }
             }
             
             $discountSrvc = $cashDiscountArr[$serviceid];
-            $services[$serviceid]['DISCOUNT_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100), 2);
+            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $discountSrvc) / 100, 2);
             
             $services[$serviceid]['DURATION'] = $componentsDurArr[$serviceid];
             unset($festiveDuration);
             unset($festiveDiscountPercent);
         }
-
         return $services;
     }
     
@@ -543,7 +544,7 @@ class Services
     }
     
     public function getFestive() {
-        $billingFestObj = new billing_FESTIVE_LOG_REVAMP();
+        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_slave');
         $isFestive = $billingFestObj->getFestiveFlag();
         return $isFestive;
     }
@@ -577,7 +578,7 @@ class Services
         }
     }
     public function getLowestActiveMainMembership($serviceArr = "", $device='desktop') {
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device);
         return $output;
     }
@@ -589,7 +590,7 @@ class Services
     }
     
     public function getActiveServices() {
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceTabs = $billingServicesObj->getEnabledServices();
         return $serviceTabs;
     }
@@ -601,7 +602,7 @@ class Services
         	$price_str = $device."_RS";
         }
 
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $addon = $billingServicesObj->getAddOnInfo($price_str,$offer);
         
         return $addon;

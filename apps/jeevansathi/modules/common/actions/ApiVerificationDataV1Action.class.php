@@ -19,7 +19,7 @@ class ApiVerificationDataV1Action extends sfActions
 	{	
 		//Contains login credentials
 		// $this->loginData = $request->getAttribute("loginData");
-		// $this->profile=Profile::getInstance("newjs_bmsSlave");
+		// $this->profile=Profile::getInstance("newjs_masterRep");
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		if(!$request->getParameter('profilechecksum'))
 		{

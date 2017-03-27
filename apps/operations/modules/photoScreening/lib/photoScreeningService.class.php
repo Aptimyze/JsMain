@@ -660,7 +660,7 @@ class photoScreeningService
 	{
 		$profilePicId == null;
 		$newUpload = false;
-
+	
 		/* for updating PICTURE_DETAILS */
 		if(is_array($_FILES["uploadPhotoNonScr"]["tmp_name"]))
 		foreach($_FILES["uploadPhotoNonScr"]["tmp_name"] as $k=>$v)
@@ -1285,10 +1285,8 @@ class photoScreeningService
 	*/
 	public function moveImageToScreened($source,$dest)
         {
-                if(strstr($source,'JS'))
-                {
-                        $source=str_replace('JS',JsConstants::$docRoot,$source);
-                }
+								$source = PictureFunctions::getCloudOrApplicationCompleteUrl($source,true);
+								$dest = PictureFunctions::getCloudOrApplicationCompleteUrl($dest,true);
                 chmod($source,0777);
                 
                 if($source==$dest)
@@ -1389,12 +1387,13 @@ class photoScreeningService
                 //Getting Album and separating in 
                 $pictureServiceObj = new PictureService($this->profileObj,"SCREENING");
                 $album = $pictureServiceObj->getAlbum("album");
-                
+                $haveProfilePicToScreen = false;     
                 //Preparing array for different interfaces 
                 foreach ($album as $key => $picObj) {
                         if (get_class($picObj) == "NonScreenedPicture") {
                                 $nonScreened[] = $picObj;
-                                if ($picObj->getORDERING() == 0) { 
+                                if ($picObj->getORDERING() == 0) {
+										$haveProfilePicToScreen = true;     
                                         $screenBit = $picObj->getSCREEN_BIT(); 
                                         $screenFlipBit = array_flip(array_keys($photoTypes));
                                         foreach ($photoTypes as $type => $size) {
@@ -1416,13 +1415,19 @@ class photoScreeningService
                                         if ($paramArr["interface"] == $interfaceArr["2"])
                                         {
                                                 if(strstr($picObj->getOriginalPicUrl(),"uploads"))
+                                                {
                                                        $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+                                                       $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
+                                                }
                                                 else
                                                 {
                                                         if($picObj->getOriginalPicUrl()==$picObj->getMainPicUrl())
-                                                                $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
+                                                            $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
                                                         else
-                                                       $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl());
+															$pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+														 $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
+                                               
+                                                      // $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl()); commented because image not displaying
                                                 }
                                                 /*
                                                 else
@@ -1449,11 +1454,20 @@ class photoScreeningService
                                 $screened[] = $picObj;
                                 $pictureToBeScreenedArr["screened"][$picObj->getPICTUREID()]["url"] = $picObj->getMainPicUrl();
                                 $screenedPictureIDs[] = $picObj->getPICTUREID();
+                                if($picObj->getORDERING()==0)
+                                {
+									$pictureToBeScreenedArr["OldProfilePicPresent"] = '1'; 
+									$pictureToBeScreenedArr["screenedProfilePicId"] = $picObj->getPICTUREID(); 
+								}
                         }
                 }
+                
                 $pictureToBeScreenedArr["pictureIDs"] = is_array($pictureID) ? implode(",", $pictureID) : "";
                 $pictureToBeScreenedArr["screenedPictureIDs"] = is_array($screenedPictureIDs) ? implode(",", $screenedPictureIDs) : "";
-
+				if($haveProfilePicToScreen && array_key_exists("OldProfilePicPresent",$pictureToBeScreenedArr))
+					$pictureToBeScreenedArr["OldProfilePicPresent"] = '1';
+				else
+					$pictureToBeScreenedArr["OldProfilePicPresent"] = '0';
                 return $pictureToBeScreenedArr;
         }
 
@@ -1464,25 +1478,49 @@ class photoScreeningService
 	*/
 	public function getFinalScreenedArray($formArr)
 	{
-                
+          
            $albumList = explode(",", $formArr['pictureIDs']);
+          
+           
                 if(stristr($formArr["set_profile_pic"],"screened")){
                         $profilePic = str_replace("screened", "", $formArr["set_profile_pic"]);
                         if(is_array($formArr["screenedPicDelete"]) && in_array($profilePic,$formArr["screenedPicDelete"])){
                                return "error0"; 
                         }
-                        $this->screenedPhotoAsProfilePic($profilePic);
+                        if($profilePic!=$formArr["screenedProfilePicId"])
+                        {
+							$this->screenedPhotoAsProfilePic($profilePic);
+						}
+						else
+						{
+							
+							$whereCondition["PROFILEID"]=$this->profileObj->getPROFILEID();
+							$whereCondition["INCREASE_ORDERING"]=1;
+							$PICTURE_FOR_SCREEN_NEW = new PICTURE_FOR_SCREEN_NEW();
+							$PICTURE_FOR_SCREEN_NEW->updateOrdering($whereCondition);
+   							$profilePic = "";
+   							unset($whereCondition);
+   							unset($PICTURE_FOR_SCREEN_NEW);
+   							
+						}
                 }
                 else{
                         $profilePic = $formArr["set_profile_pic"];
                 }
+                if(array_key_exists("profilePic_".$formArr["set_profile_pic"],$formArr) && $formArr["profilePic_".$formArr["set_profile_pic"]]=="DELETE")
+                {
+									if(sizeof(explode(",",$formArr["pictureIDs"]))==1 && sizeof(explode(",",$formArr["screenedPictureIDs"]))==0)
+										return "error0";
+								}
                 $approvCount = 0;
                 $edit = 0;
                 $profileEdit=0;
                 $rotate=array();
+             
                 foreach ($albumList as $albumKey => $albumVal) {  
                         if ($albumVal != $profilePic && !$formArr["profilePic_" . $albumVal]) {
-                                $picture[$albumVal]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["albumPic_" . $albumVal]];
+							
+								$picture[$albumVal]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["albumPic_" . $albumVal]];
                                 if ($formArr["titleNonScr_" . $albumVal])
                                         $picture[$albumVal]["title"] = $formArr["titleNonScr_" . $albumVal];
                                 if ($formArr["albumPic_" . $albumVal] == "APPROVE") {
@@ -1494,14 +1532,16 @@ class photoScreeningService
                                         $edit++;
                         }
                         else { 
-                                $picture[$albumVal]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["profilePic_" . $albumVal]];
-                                if ($formArr["profilePic_" . $albumVal] == "APPROVE" || $formArr["albumPic_" . $albumVal] == "APPROVE"){
+								 $picture[$albumVal]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["profilePic_" . $albumVal]];
+                                if ($formArr["profilePic_" . $albumVal] == "APPROVE" || $formArr["albumPic_" . $albumVal] == "APPROVE" || $formArr["profilePic_" . $albumVal] == "RETAIN"){
                                         $approved[] = $albumVal;
                                         $approvCount++;
                                 }
                                 elseif ($formArr["profilePic_" . $albumVal] == "DELETE" || $formArr["albumPic_" . $albumVal] == "DELETE"){
+																				
                                         $deleted[] = $albumVal;
                                         $deleted[] = $albumVal;
+																			
                                 }
                                 elseif ($formArr["profilePic_" . $albumVal] == "EDIT" || $formArr["albumPic_" . $albumVal] == "EDIT"){
                                         $edit++;
@@ -1515,9 +1555,11 @@ class photoScreeningService
                         {
                                 $watermark[$albumVal]=ProfilePicturesTypeEnum::$PICTURE_WATERMARK[array_flip(ProfilePicturesTypeEnum::$WATERMARK)["MainPicUrl"]];
                         }
-                } 
+                }
+                
+               
                 if ($formArr["profilePic_" . $profilePic] && $formArr["profilePic_" . $profilePic] != "DELETE") { 
-                        $photoTypes = ProfilePicturesTypeEnum::$PICTURE_SIZES;
+						$photoTypes = ProfilePicturesTypeEnum::$PICTURE_SIZES;
                         $picture[$profilePic]["bit"] = array_fill(0, (count($photoTypes) + 2), 0);
                         $picture[$profilePic]["bit"]["0"] = 1;
                         $picture[$profilePic]["bit"]["1"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["profilePic_" . $profilePic]];
@@ -1537,35 +1579,47 @@ class photoScreeningService
                                                 $watermark[$profilePic]=$watermark[$profilePic]*ProfilePicturesTypeEnum::$PICTURE_WATERMARK[array_flip(ProfilePicturesTypeEnum::$WATERMARK)[$typeVal]];
                                 }
                                 
-                        }
+                         }
+                    
                         if ($profileEdit==0) {
                                 $approved[] = $profilePic;
                         }
 
                         $picture[$profilePic]["bit"] = implode("", $picture[$profilePic]["bit"]);
                 } elseif ($approvCount == 0 && $formArr["profilePic_" . $profilePic] && $formArr["profilePic_" . $profilePic] == "DELETE") {
-                        $picture[$profilePic]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS["DELETE"];
+					$picture[$profilePic]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS["DELETE"];
                 } elseif ($approvCount > 0 && $formArr["profilePic_" . $profilePic] && $formArr["profilePic_" . $profilePic] == "DELETE") {
                         return "error0";
                 } else {
                         if ($approvCount > 0 && $formArr["albumPic_" . $profilePic] == "DELETE") {
                                 return "error0";
                         } else {
-                                $picture[$profilePic]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["albumPic_" . $profilePic]];
-                                if ($formArr["ProfilePic_" . $albumList["0"]]) {
-                                        $picture[$albumList["0"]]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["ProfilePic_" . $albumList["0"]]];
+								if($profilePic!='')
+								{
+									$picture[$profilePic]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["albumPic_" . $profilePic]];
+								}
+                                if ($formArr["profilePic_" . $albumList["0"]]) {
+									if($formArr["profilePic_" . $albumList["0"]] == "RETAIN")
+									{
+										$picture[$albumList["0"]]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS["APPROVE"];
+									}
+									else
+									{
+										$picture[$albumList["0"]]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["profilePic_" . $albumList["0"]]];
+                                    }
                                 }
                         }
                 }
                 $finalPictureArr["rotate"]=$rotate;
                 $finalPictureArr["watermark"]=$watermark;
-                $finalPictureArr["profile"] = $profilePic;
+                if($profilePic!='')
+					$finalPictureArr["profile"] = $profilePic;
                 $finalPictureArr["all"] = $picture;
                 if(is_array($deleted))
                         $finalPictureArr["DELETE"] = array_unique($deleted);
                 else
                         $finalPictureArr["DELETE"] = $deleted;
-                        
+              
                 if(is_array($approved))
                         $finalPictureArr["APPROVE"] = array_unique($approved);
                 else
@@ -1574,10 +1628,11 @@ class photoScreeningService
                 $finalPictureArr["approvedCount"]=$approvCount;
                 $finalPictureArr["EDIT"] = $edit;
                 $finalPictureArr["screenedPicToDelete"] = $formArr["screenedPicDelete"];
-                if (!$formArr["deleteReason"])
+                if (!$formArr["deleteReason"] || $deleted=='')
                         $finalPictureArr["DELETE_REASON"] = array();
                 else
                         $finalPictureArr["DELETE_REASON"] = implode(",", $formArr["deleteReason"]);
+				
                 return $finalPictureArr;
         }
         
@@ -1600,6 +1655,7 @@ class photoScreeningService
         {
               $pictureObj = new PICTURE_FOR_SCREEN_NEW();
               $status=$pictureObj->isSuitableForSubmit($this->profileObj->getPROFILEID());
+              
               return $status;
              
         }
@@ -1631,7 +1687,9 @@ class photoScreeningService
          *@return - array of patamenters
 	*/
 	public function prepareParameter($parameterFor='',$name='',$formArr='',$picture='',$picDataForTracking='')
-        {       
+        {    
+			
+			
                 if($parameterFor=="TRACK")
                 {
                         if ($formArr["source"] == PictureStaticVariablesEnum::$SOURCE["MASTER"]) {
@@ -1697,7 +1755,6 @@ class photoScreeningService
                         // ARRAY in CAPITAL and string or int in camel notation
                         $paramArr = array(
                             "profileId" => $this->profileObj->getPROFILEID(),
-                            "profilePic" => $picture["profile"],
                             "profileObj" => $this->profileObj,
                             "APPROVE" => $picture["APPROVE"],
                             "DELETE" => $picture["DELETE"],
@@ -1705,6 +1762,8 @@ class photoScreeningService
                             "SCREENED_DELETED" => count($picture["screenedPicToDelete"]),
                             "DELETE_REASON" => $picture["DELETE_REASON"],
                             "FINAL" => $picture["all"]);
+                            if($picture["profile"])
+								$paramArr["profilePic"]=$picture["profile"];
                 }
                 return $paramArr;
              
@@ -1732,22 +1791,25 @@ class photoScreeningService
 	*/
 	public function saveDecisionStatus($paramArr)
         {
+			
                 if ($this->isSuitableForSubmit() == 1) {
+									
                         // UPDATE ORDERING for profile pic
                         if ($paramArr["profilePic"]) {
                                 $picProfileDetail = array("PICTUREID" => $paramArr["profilePic"], "PROFILEID" => $paramArr["profileId"]);
                                 $pictureServiceObj = new PictureService($paramArr["profileObj"],"SCREENING");
                                 $picObj = $pictureServiceObj->getPicDetails($picProfileDetail);
-                                
+                               
                                 if($picObj[0] && $picObj[0]->getORDERING()!=0)
                                 {
                                         $previousOrdering = $picObj[0]->getORDERING();
-                                        $paramArr["FINAL"][$paramArr["profilePic"]]["bit"]=  ProfilePicturesTypeEnum::$SCREEN_BITS["FACE"].implode("",array_fill(0,(count(array_merge(ProfilePicturesTypeEnum::$SCREEN_BIT_POSITION,  array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES)))-1),ProfilePicturesTypeEnum::$SCREEN_BITS["EDIT"]));
+                                        $paramArr["FINAL"][$paramArr["profilePic"]]["bit"]=  ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"].ProfilePicturesTypeEnum::$SCREEN_BITS["RESIZE"].implode("",array_fill(0,(count(array_merge(ProfilePicturesTypeEnum::$SCREEN_BIT_POSITION,  array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES)))-2),ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"]));
                                         $paramArr["EDIT"]++;
                                 }
 				
                                 $result = $pictureServiceObj->setProfilePic($picObj[0]);
                         }
+                        
                         // UPDATE table entries with title
                         $photoUpdateObj = new PICTURE_FOR_SCREEN_NEW();
                         $pictureUpdate = $photoUpdateObj->updateScreeningDecision($paramArr);
@@ -1840,6 +1902,7 @@ class photoScreeningService
                 
                 $pictureServiceObj = new PictureService($this->profileObj,'SCREENING');
                 $photoDetails = $pictureServiceObj->getNonScreenedPhotos('album');
+                
                 if ($photoDetails) {
                         foreach ($photoDetails AS $key => $PICTURE) {
                                 if (in_array($PICTURE->getPICTUREID(), $paramArr["PICTUREID"], TRUE)) {
@@ -1987,15 +2050,20 @@ class photoScreeningService
 	*@param formArr : form array
 	*@return output : either error message or array of count and success message
 	*/	
-	public function processUpload($formArr)
+	public function processUpload($formArr,$ops=false,$filesGlobArr='')
         {
                 $photoFileServiceObj = new photoFileService();
-                $output = $photoFileServiceObj->fileValidate($formArr);
+		if(!$ops)
+			$output = $photoFileServiceObj->fileValidate($formArr);
+		elseif(is_array($filesGlobArr))
+			$output="Success";
+		else
+			$output = "Err..issue with cropping photos";
 		$count =0;
                 if($output=="Success")
                 {
 			
-                        if ($_FILES["uploadPhotoNonScr"])                       //If non screened photos exist
+                        if ($_FILES["uploadPhotoNonScr"] || $filesGlobArr)
                         {
                                 $pictureServiceObj =new PictureService($this->profileObj,'SCREENING');
                                 $pictureObj = new NonScreenedPicture('SCREENING');
@@ -2029,8 +2097,37 @@ class photoScreeningService
 							$count++;
 						}
 					}
-
                                 }
+                                if(array_key_exists("Save",$formArr)&& $formArr['Save']=="Save")
+                                {
+                                foreach ($filesGlobArr["uploadPhotoNonScr"]['name'] as $k=>$v)
+                                {
+					$imageT = $filesGlobArr["uploadPhotoNonScr"]["type"][$k];
+                                        if(array_key_exists($k,ProfilePicturesTypeEnum::$PICTURE_SIZES))
+                                        {
+                                                $pid = $formArr["picIdNonScr"][1];
+                                                $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                                $picUrl =  $pictureObj->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                        //        $result = $pictureFunctionsObj->moveImage($_FILES["uploadPhotoNonScr"]["tmp_name"][$k],$picSaveUrl);
+						$manipulator = new ImageManipulator();
+						$result = $manipulator->save($v,$picSaveUrl,$imageT);
+						$picturesToUpdate[$pid][$k]=$picUrl;
+						$count++;
+                                        }
+                                        else
+                                        {
+/*
+                                                $pid = $formArr["picIdNonScr"][1];
+                                                $picSaveUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+                                                $picUrl = $pictureObj->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$pid,$this->profileObj->getPROFILEID(),$imageT,'nonScreened');
+						$manipulator = new ImageManipulator();
+						$result = $manipulator->save($v,$picSaveUrl,$imageT);
+						$picturesToUpdate[$pid]["MainPicUrl"]=$picUrl;
+						$count++;
+*/
+                                        }
+				}
+				}
 				$pictureServiceObj->setPicProgressBit(ProfilePicturesTypeEnum::$INTERFACE["2"],$picturesToUpdate);
 				$profileScreened = "0";
 				$statusArr =$pictureObj->profilePictureStatusArr($this->profileObj->getPROFILEID());

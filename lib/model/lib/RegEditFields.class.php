@@ -1850,6 +1850,17 @@ break;
 break;
   case "APP1":
 					$page_obj=new PageFields("APP1");
+                                        $field=new Field(82);
+                                        $field->setName("MANGLIK");
+                                        $field->setFieldType("radio");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setJsValidation("");
+                                        $field->setDependentField("");
+                                        $field->setLabel("Manglik :");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("JPROFILE:MANGLIK");
+                                        $page_obj->setField(82,"","",$field);
 
 					$field=new Field(3);
 					$field->setName("RELATIONSHIP");
@@ -2186,7 +2197,20 @@ break;
 					$field->setBlankLabel("");
 					$field->setTableName("JPROFILE:HOROSCOPE_MATCH");
 					$page_obj->setField(91,"","",$field);
-          break;
+
+                                        $field=new Field(133);
+                                        $field->setName("DISPLAYNAME");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setDependentField("");
+                                        $field->setLabel("");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+                                        $page_obj->setField(133,"","",$field);
+                                        break;
+
+
 case "APP2":
 					$page_obj=new PageFields("APP2");
 
@@ -2363,6 +2387,53 @@ break;
 					$field->setBlankLabel("");
 					$field->setTableName("JPROFILE:FAMILY_INCOME");
 					$page_obj->setField(117,"","",$field);
+                                        $field=new Field(118);
+                                        $field->setName("NATIVE_COUNTRY");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setJsValidation("validate_select");
+                                        $field->setDependentField("");
+                                        $field->setLabel("");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("Select Country");
+                                        $field->setTableName("NATIVE_PLACE:NATIVE_COUNTRY");
+                                        $page_obj->setField(118,"","",$field);
+
+                                        $field=new Field(120);
+                                        $field->setName("NATIVE_CITY");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("native_place");
+                                        $field->setJsValidation("validate_select");
+                                        $field->setDependentField("");
+                                        $field->setLabel("");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("Select City");
+                                        $field->setTableName("NATIVE_PLACE:NATIVE_CITY");
+                                        $page_obj->setField(120,"","",$field);
+
+                                        $field=new Field(119);
+                                        $field->setName("NATIVE_STATE");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("native_place");
+                                        $field->setJsValidation("validate_select");
+                                        $field->setDependentField("");
+                                        $field->setLabel("Family based out of:");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("Select State");
+                                        $field->setTableName("NATIVE_PLACE:NATIVE_STATE");
+                                        $page_obj->setField(119,"","",$field);
+
+                                        $field=new Field(84);
+                                        $field->setName("ANCESTRAL_ORIGIN");
+                                        $field->setFieldType("text");
+                                        $field->setConstraintClass("string");
+                                        $field->setJsValidation("");
+                                        $field->setDependentField("");
+                                        $field->setLabel("Specify City/Town :");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("JPROFILE:ANCESTRAL_ORIGIN");
+                                        $page_obj->setField(84,"","",$field);
 break;
 }
 
@@ -2409,7 +2480,7 @@ case 'MP4':
 						$field_array=array('YOURINFO');
 					break;
 case 'APP1':
-						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH');
+						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK");
 					break;
 case 'APP2':
 						$field_array=array('YOURINFO');
@@ -2418,7 +2489,7 @@ case 'CP':
 						$field_array=array('PASSWORD');
 					break;
 case 'APP3':
-						$field_array=array('GOTHRA','FAMILYINFO','M_SISTER','T_SISTER','M_BROTHER','T_BROTHER','MOTHER_OCC','FAMILY_BACK','FAMILY_STATUS','FAMILY_TYPE','FAMILY_VALUES','FAMILY_INCOME');
+						$field_array=array('GOTHRA','FAMILYINFO','M_SISTER','T_SISTER','M_BROTHER','T_BROTHER','MOTHER_OCC','FAMILY_BACK','FAMILY_STATUS','FAMILY_TYPE','FAMILY_VALUES','FAMILY_INCOME',"NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","NATIVE_CITY","NATIVE_STATE","NATIVE_COUNTRY","ANCESTRAL_ORIGIN");
 					break;
 }
 					return $field_array;

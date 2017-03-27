@@ -92,6 +92,10 @@ class SetProfilePic extends PictureService
 				break;
 
 		}
+			MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+                        $memCacheObject = JsMemcache::getInstance();
+                        $memCacheObject->remove($this->profileid. "_THUMBNAIL_PHOTO");
+
 		return array(0=>true,1=>$case);
         }
         /*
@@ -188,7 +192,10 @@ class SetProfilePic extends PictureService
 			if($k=="TITLE" && $this->newPicObj->getUNSCREENED_TITLE()){
 				eval('$updateArray['.'"'.$v.'"'.']=$this->newPicObj->getUNSCREENED_TITLE();');
       }else
+      {
 				eval('$updateArray['.'"'.$v.'"'.']=$this->newPicObj->get'.$v.'(1);');
+				$updateArray[$v] = PictureFunctions::getPictureServerUrl($updateArray[$v]);
+			}
 		}
 		return $updateArray;
 	}

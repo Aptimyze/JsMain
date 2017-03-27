@@ -11,8 +11,13 @@ class ApiResponseHandler
 	private static $apiResponseHandlerObj = null;
 	private $authChecksum;
 	private $hamburgerDetails = null;
+	private $imageCopyServer = null;
 	private $phoneDetails = null;
-
+	private $cache_flag=true;
+	private $cache_interval=120000; //in milisecond should be integer always 
+	private $resetCache=false;
+	private $androidFlagForRatingLogic=true;
+	private $androidChatflag ;
 	//Constructor
 	private function __construct()
 	{
@@ -35,6 +40,19 @@ class ApiResponseHandler
 	public function getUpgradeDetails(){return $this->upgradeDetails;}
 	public function setPhoneDetails($phoneDetails){$this->phoneDetails = $phoneDetails;}
 	public function getPhoneDetails(){return $this->phoneDetails;}
+	public function getImageCopyServer(){return $this->imageCopyServer;}
+	public function setImageCopyServer($pid)
+	{
+		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
+	}
+	public function getAndroidChatFlag(){
+		return JsConstants::$androidChat["flag"];
+	}
+	public function setAndroidChatFlag(){
+		$this->androidChatflag = JsConstants::$androidChat["flag"];
+	}
+	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
+	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -64,7 +82,7 @@ class ApiResponseHandler
 		{
 			ApiResponseHandler::$apiResponseHandlerObj = new ApiResponseHandler;
 			return ApiResponseHandler::$apiResponseHandlerObj;
-			
+
 		}
 	}
 
@@ -97,13 +115,23 @@ class ApiResponseHandler
 		$output["responseMessage"] = $this->responseMessage;
 		$output["AUTHCHECKSUM"]=$this->authChecksum;
 		$output["hamburgerDetails"]=$this->hamburgerDetails;
+		$output["imageCopyServer"]=$this->imageCopyServer;
+		$output["imageCopyServer"]=$this->imageCopyServer;
+		$output["cache_flag"]=$this->cache_flag;
+		$output["cache_interval"]=$this->cache_interval;
+		$output["resetCache"]=$this->resetCache;
+		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
+		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))
-			$output["forceupgrade_message"]=$this->upgradeDetails[forceupgrade_message];
+				$output["forceupgrade_message"]=$this->upgradeDetails[forceupgrade_message];
 		}
-			
+
 		$output["phoneDetails"]=$this->phoneDetails;
+		$loggedIn=LoggedInProfile::getInstance();
+		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+			$output["userReligion"] = $loggedIn->getRELIGION();
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 
@@ -125,47 +153,47 @@ class ApiResponseHandler
 	public static function getStatusCodeMessage($status)
 	{
 		$codes = Array(
-		    100 => 'Continue',
-		    101 => 'Switching Protocols',
-		    200 => 'OK',
-		    201 => 'Created',
-		    202 => 'Accepted',
-		    203 => 'Non-Authoritative Information',
-		    204 => 'No Content',
-		    205 => 'Reset Content',
-		    206 => 'Partial Content',
-		    300 => 'Multiple Choices',
-		    301 => 'Moved Permanently',
-		    302 => 'Found',
-		    303 => 'See Other',
-		    304 => 'Not Modified',
-		    305 => 'Use Proxy',
-		    306 => '(Unused)',
-		    307 => 'Temporary Redirect',
-		    400 => 'Bad Request',
-		    401 => 'Unauthorized',
-		    402 => 'Payment Required',
-		    403 => 'Forbidden',
-		    404 => 'Not Found',
-		    405 => 'Method Not Allowed',
-		    406 => 'Not Acceptable',
-		    407 => 'Proxy Authentication Required',
-		    408 => 'Request Timeout',
-		    409 => 'Conflict',
-		    410 => 'Gone',
-		    411 => 'Length Required',
-		    412 => 'Precondition Failed',
-		    413 => 'Request Entity Too Large',
-		    414 => 'Request-URI Too Long',
-		    415 => 'Unsupported Media Type',
-		    416 => 'Requested Range Not Satisfiable',
-		    417 => 'Expectation Failed',
-		    500 => 'Internal Server Error',
-		    501 => 'Not Implemented',
-		    502 => 'Bad Gateway',
-		    503 => 'Service Unavailable',
-		    504 => 'Gateway Timeout',
-		    505 => 'HTTP Version Not Supported'
+			100 => 'Continue',
+			101 => 'Switching Protocols',
+			200 => 'OK',
+			201 => 'Created',
+			202 => 'Accepted',
+			203 => 'Non-Authoritative Information',
+			204 => 'No Content',
+			205 => 'Reset Content',
+			206 => 'Partial Content',
+			300 => 'Multiple Choices',
+			301 => 'Moved Permanently',
+			302 => 'Found',
+			303 => 'See Other',
+			304 => 'Not Modified',
+			305 => 'Use Proxy',
+			306 => '(Unused)',
+			307 => 'Temporary Redirect',
+			400 => 'Bad Request',
+			401 => 'Unauthorized',
+			402 => 'Payment Required',
+			403 => 'Forbidden',
+			404 => 'Not Found',
+			405 => 'Method Not Allowed',
+			406 => 'Not Acceptable',
+			407 => 'Proxy Authentication Required',
+			408 => 'Request Timeout',
+			409 => 'Conflict',
+			410 => 'Gone',
+			411 => 'Length Required',
+			412 => 'Precondition Failed',
+			413 => 'Request Entity Too Large',
+			414 => 'Request-URI Too Long',
+			415 => 'Unsupported Media Type',
+			416 => 'Requested Range Not Satisfiable',
+			417 => 'Expectation Failed',
+			500 => 'Internal Server Error',
+			501 => 'Not Implemented',
+			502 => 'Bad Gateway',
+			503 => 'Service Unavailable',
+			504 => 'Gateway Timeout',
+			505 => 'HTTP Version Not Supported'
 		);
 
 		return (isset($codes[$status])) ? $codes[$status] : '';

@@ -19,7 +19,7 @@ $ts-=1*24*60*60;
 $start_dt=date("Y-m-d",$ts);
 
 $ts = time();
-$ts-=3*24*60*60;
+$ts-=5*24*60*60; // changed 3 to 5 days
 $threeDaysOld=date("Y-m-d",$ts);
 
 
@@ -49,7 +49,7 @@ while($row=mysql_fetch_assoc($res))
 
 //--------------------------2nd chk------------------------------
 $dbM=connect_db();
-$sql="SELECT distinct(PROFILEID) as PID FROM PICTURE_FOR_SCREEN_NEW WHERE UPDATED_TIMESTAMP<'$threeDaysOld' AND  UPDATED_TIMESTAMP > '2016-03-19 00:00:00'";
+$sql="SELECT distinct(PROFILEID) as PID FROM PICTURE_FOR_SCREEN_NEW WHERE UPDATED_TIMESTAMP<'$threeDaysOld' AND  UPDATED_TIMESTAMP > '2017-01-01 00:00:00'";
 $res=mysql_query($sql,$dbM) or die(mysql_error());
 while($row=mysql_fetch_assoc($res))
 {
@@ -59,7 +59,7 @@ while($row=mysql_fetch_assoc($res))
 
 if(is_array($PICTURE_NOT_SCREENED_IN_3_DAYS))
 {
-	$sql = "SELECT USERNAME FROM newjs.JPROFILE WHERE PROFILEID IN (".implode(",",$PICTURE_NOT_SCREENED_IN_3_DAYS).")";
+	$sql = "SELECT USERNAME FROM newjs.JPROFILE WHERE PROFILEID IN (".implode(",",$PICTURE_NOT_SCREENED_IN_3_DAYS).") AND ACTIVATED!='D'";
 	$res=mysql_query($sql,$dbS) or die(mysql_error());
 
 	while($row=mysql_fetch_assoc($res))
@@ -87,7 +87,7 @@ if(is_array($MAIL_PICTURE_NOT_SCREENED_IN_3_DAYS))
 
 if(isset($notScreenedMsg))
 {  
-	mail("lavesh.rawat@jeevansathi.com,akashkumardce@gmail.com,reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 3 Days ","$notScreenedMsg","Reply-To: lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
+	mail("lavesh.rawat@jeevansathi.com,akashkumardce@gmail.com,reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 5 Days ","$notScreenedMsg","Reply-To: lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
 }
 
 // Check for Image from mail ended

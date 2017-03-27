@@ -1,3 +1,11 @@
+~assign var=module value= $sf_request->getParameter('module')`
+~assign var=loggedIn value= $sf_request->getAttribute('login')`
+~assign var=action value= $sf_context->getActionName()`
+~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
+~if JsConstants::$jsChatFlag eq "1"`
+    ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
+    ~assign var=selfUserChatName value= CommonUtility::fetchSelfUserName($loggedIn,$sf_request->getAttribute('profileid'),$module,$action,$showChat)`
+~/if`
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -17,6 +25,7 @@
     ~minify_include_javascripts('top')`
     ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
     <script>
+    var _rID = "~sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING')`";
         var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";
@@ -41,15 +50,65 @@
                         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
                 })();
         }
-        function trackJsEventGA(category, action, label){
-            if(ucode){
-                    _gaq.push(['_trackEvent', category, action, label]);
+        function trackJsEventGA(category, action, label, value){
+            if (ucode){
+                if (value) {
+                       _gaq.push(['_trackEvent', category, action, label, value]);
+                } else {
+                       _gaq.push(['_trackEvent', category, action, label]);
+                }
             } else {
-            return false;
+               return false;
             }
         }
-        var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        
     </script>
+    ~/if`
+    <script>
+        var loggedInJspcUser="~$sf_request->getAttribute('profileid')`";
+        var showChat = "~$showChat`";
+        var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
+        var self_checksum = "~$sf_request->getAttribute('profilechecksum')`";
+        var self_username = "~$sf_request->getAttribute('username')`";
+        var my_action = "~$action`";
+        var moduleChat = "~$module`";
+        var self_subcription = "~$subscription`";
+        var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
+        var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
+        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
+        var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
+        //console.log("dppLiveForAll",dppLiveForAll);
+        var betaDppExpression = "",specialDppProfiles="";
+        if(dppLiveForAll == "0"){
+            betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+            specialDppProfiles = "~JsConstants::$profilesEligibleForDpp['privilegedProfiles']`";
+        }
+        
+        //console.log("betaDppExpression",betaDppExpression);
+        var selfUserChatName = "~$selfUserChatName`";
+        localStorage.removeItem("self_subcription");
+        localStorage.setItem("self_subcription","~$subscription`");
+        //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
+        //console.log("in ...2");
+    </script>
+    ~if $showChat`
+        <script>
+            //console.log("in ...3");
+            var openfireUrl= "~JsConstants::$openfireConfig['HOST']`:~JsConstants::$openfireConfig['WSPORT']`";
+            var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
+            //var my_action = "~$action`";
+            //var moduleChat = "~$module`";
+            var chatTrackingVar = {"stype":"~SearchTypesEnums::PC_CHAT_NEW`","rtype":"~JSTrackingPageType::PC_CHAT_RTYPE`"};
+        //console.log("chatTrackingVar",chatTrackingVar);
+        </script>
+    ~else`
+        <script>
+            //console.log("in ...4");
+            var openfireUrl= "",openfireServerName="";
+            var chatTrackingVar = {"stype":"","rtype":""};
+        </script>
     ~/if`
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
@@ -60,16 +119,26 @@
         You have not enabled Javascript on your browser, please enable it to use the website
     </div>
 </noscript>
-<body >
+~if $showChat`
+    <body>
+    <!--start:chat panel-->
+        <div id="chatOpenPanel"> 
+        </div>
+    <!--end:chat panel-->
+~else if`
+    <body>
+~/if`
+<div id='mainContent'>
+
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
     <!--start:error layer-->
-<div class="pos_fix fullwid z6" style="background-color:#fdfdfd; display:none;" id="commonError">
+<div class="pos_fix fullwid z7" style="background-color:#fdfdfd; display:none;" id="commonError">
     <div class="container errwid2 pt10 pb10">
-        <div class="fl">
+        <div class="disp_ib pos-rel" style='margin:10px 0px 10px 30px;'>
             <i class="sprite2 erric1"></i>
         </div>
-        <div class="fl f20 fontlig color11 pt10 pl20" id="js-commonErrorMsg">
+        <div class="f20 fontlig color11 vtop disp_ib pos-rel" style='margin:13px; width:680px;' id="js-commonErrorMsg">
         Something went wrong. Please try again after some time.
         </div>
     </div>
@@ -82,29 +151,28 @@
     ~minify_include_javascripts('commonBottom')`
     ~minify_include_javascripts('bottom')`
     <!--Google Analytics Code-->
+</div>
 </body>
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 if (window.location.protocol == "https:")
 	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
-
 </script>
 ~if !get_slot('disableFbRemarketing')`
-<script>(function() {
-var _fbq = window._fbq || (window._fbq = []);
-if (!_fbq.loaded) {
-var fbds = document.createElement('script');
-fbds.async = true;
-fbds.src = '//connect.facebook.net/en_US/fbds.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(fbds, s);
-_fbq.loaded = true;
-}
-_fbq.push(['addPixelId', '569447716516417']);
-})();
-window._fbq = window._fbq || [];
-window._fbq.push(['track', 'PixelInitialized', {}]);
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '569447716516417');
+fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=569447716516417&ev=PageView&noscript=1"
+/></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
 ~/if`

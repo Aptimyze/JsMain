@@ -22,26 +22,21 @@ class DuplicateHandler
    
   public static function HandleDuplicatesInsert( rawDuplicate $rawDuplicateObj,$no_log=0 ) {
 	  $dupCon=new DUPLICATES_PROFILES();
-	  $probDupObj=new PROBABLE_DUPLICATES();
 	  
 	  $first=$rawDuplicateObj->getProfileid1();
 	  $second=$rawDuplicateObj->getProfileid2();
 	  $groupids=$dupCon->getDuplicateID($rawDuplicateObj);
+
+// added by Palash to ensure that once if a pair is marked confirmed duplicate then it cant be marked again as duplicate
+	  $alreadyLogged=(new DUPLICATE_PROFILE_LOG())->fetchResultForAPair($first,$second);
+	  if($alreadyLogged['IS_DUPLICATE']=='YES') return;
+//////////////////////////////////////////////	
 
 	//Added by Anand to handle duplicate profiles for fto
 	$HfdObj = new HandleFtoDuplicate;
        	$HfdObj->ftoDuplicateLogic($first,$second);	  
 	//Added by Anand ends
 
-	//Remove entry from probable duplicate if particular profiles are already marked as duplicate
-	if($probDupObj->ReasonPresent($rawDuplicateObj))
-	{
-		$probRawObj=clone($rawDuplicateObj);
-		$probRawObj->setComments("Already marked duplicate");
-		$probRawObj->setIsDuplicate(IS_DUPLICATE::NO);
-		DuplicateHandler::HandleProbableUpdates($probRawObj);
-		unset($probRawObj);
-	}
 	///////////////////////////////////
 	
 	  if(!is_array($groupids)) //No profile found
@@ -151,7 +146,7 @@ class DuplicateHandler
   public static function MarkPermanentNotDuplicate(RawDuplicate $rawDuplicateObj) {
 	  $obj=new PERMANENT_NOT_DUPLICATE();
 	  $obj->MarkPermanentNotDuplicates($rawDuplicateObj);
-  } // end of member function MarkNotDuplicate
+  } // end of member function MarkPermanentNotDuplicate
   
     
   
@@ -403,7 +398,7 @@ public static function IsPermanentDuplicate(RawDuplicate $rawDuplicateObj){
 		$valueArray=array("PROFILEID"=>$rawDuplicateObj->getProfileid1().",".$rawDuplicateObj->getProfileid2());
 		$now=date("Y-m-d");
 		$noOfMonths = CrawlerConfig::$greaterThanConditions["LAST_LOGIN_DT"];
-		$dateValue = date("Y-m-d", JSstrToTime("- $noOfMonths months",JSstrToTime(date("Y-m-d"))));
+		$dateValue = CommonUtility::makeTime(date("Y-m-d", JSstrToTime("- $noOfMonths months",JSstrToTime(date("Y-m-d")))));
 		$greaterThanArray['LAST_LOGIN_DT'] = $dateValue;
 		if($result=$obj->getArray($valueArray,"excludeArray",$greaterThanArray,"PROFILEID,SOURCE"))
 		{

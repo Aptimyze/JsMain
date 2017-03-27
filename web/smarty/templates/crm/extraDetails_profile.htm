@@ -60,9 +60,9 @@ function ProfileMTRequest()
 	~if $max_viewed_username1 eq '' && $max_viewed_username2 eq ''`
 		N/A
 	~else`
-		<a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$profileid1`" target=_blank>~$max_viewed_username1`</a>
+		<a href="/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$profileid1`" target=_blank>~$max_viewed_username1`</a>
 		 ~if max_viewed_username1 && $max_viewed_username2`<b>and</b> ~/if` 
-		<a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$profileid2`" target=_blank>~$max_viewed_username2` </a>
+		<a href="/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$profileid2`" target=_blank>~$max_viewed_username2` </a>
 	~/if`
      </td>
     </tr>
@@ -75,7 +75,7 @@ function ProfileMTRequest()
 		~section name=row loop=$high_viewed_username`
 			~if $high_viewed_username|@count gt 1 &&  $smarty.section.row.last`<b>and</b> ~elseif !$smarty.section.row.first`  <b>,</b> ~/if`
 
-	     <a href="/jsadmin/showstat.php?cid=~$cid`&profileid=~$high_viewed_username[row].PROFILEID`" target=_blank>~$high_viewed_username[row].USERNAME`</a>
+	     <a href="/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$high_viewed_username[row].PROFILEID`" target=_blank>~$high_viewed_username[row].USERNAME`</a>
                
                ~/section` 
         ~/if`

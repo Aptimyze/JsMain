@@ -1,6 +1,6 @@
  <!--start:Family Details-->
               <div class="prfbr3">
-              <div class="prfp6" id="section-family"> 
+              <div class="prfp6 noMultiSelect" id="section-family"> 
                 <div class="clearfix"> <i class="sprite2 fl prfic14"></i>
                   <div class="fl colr5 pl12 f17 pt2">Family Details</div>
                   ~if $bEditView`
@@ -8,26 +8,11 @@
                   ~/if`
                 </div>
                 <div class="pl31 prflist1 js-familyView">
-                  ~if $bEditView` 
-                  <p class="f24 pt25" id="profile_handler_nameLabelParent"><span class="edpcolr2" >Profile Handler Name</span> - 
-                    ~if isset($apiData.family.profile_handler_name) and $apiData.family.profile_handler_name neq $notFilledInText`
-                      <span class="color11" id='profile_handler_nameView'>
-                        ~$apiData.family.profile_handler_name`
-                      </span>
-                      ~else`
-                      <span class="color5" id='profile_handler_nameView'>
-                        ~$notFilledInText`
-                      </span>
-                    ~/if` 
-                    <span class="~if ($editApi.Contact.PROFILE_HANDLER_NAME.value|count_characters:true) eq 0 || $editApi.Contact.PROFILE_HANDLER_NAME.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 
-                      <span class="disp_ib color5 f13" > Under Screening</span></span>
-                  </p>
-                  ~/if`
                     <ul class="clearfix">
                     <li>
                       <p class="fontlig color12 pt15">Mother is</p>
                       <p class="pt2 pr20">
-                        <span id="mother_occView" ~if $bEditView && $apiData["family"]["mother_occ"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="mother_occView" ~if $bEditView && $apiData["family"]["mother_occ"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["mother_occ"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["mother_occ"] neq null || $bEditView`
                             ~$apiData["family"]["mother_occ"]`
                           ~else`
@@ -39,7 +24,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Father is</p>
                       <p class="pt2 pr20">
-                        <span id="father_occView" ~if $bEditView && $apiData["family"]["father_occ"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="father_occView" ~if $bEditView && $apiData["family"]["father_occ"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["father_occ"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["father_occ"] neq null || $bEditView`
                             ~$apiData["family"]["father_occ"]`
                           ~else`
@@ -51,7 +36,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Sister(s)</p>
                       <p class="pt2 pr20">
-                        <span id="sibling_sisterView" ~if $bEditView && $apiData["family"]["sibling"]["sibling_sister"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="sibling_sisterView" ~if $bEditView && $apiData["family"]["sibling"]["sibling_sister"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["sibling"]["sibling_sister"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["sibling"]["sibling_sister"] neq null || $bEditView`
                             ~$apiData["family"]["sibling"]["sibling_sister"]`
                           ~else`
@@ -63,7 +48,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Brother(s)</p>
                       <p class="pt2 pr20">
-                        <span id="sibling_brotherView" ~if $bEditView && $apiData["family"]["sibling"]["sibling_brother"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="sibling_brotherView" ~if $bEditView && $apiData["family"]["sibling"]["sibling_brother"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["sibling"]["sibling_brother"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["sibling"]["sibling_brother"] neq null || $bEditView`
                             ~$apiData["family"]["sibling"]["sibling_brother"]`
                           ~else`
@@ -82,7 +67,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                        <span id="sub_casteView" ~if $bEditView && $apiData["family"]["sub_caste"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="sub_casteView" ~if $bEditView && $apiData["family"]["sub_caste"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["sub_caste"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["sub_caste"] neq null || $bEditView`
                             ~$apiData["family"]["sub_caste"]`
                           ~else`
@@ -102,7 +87,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                        <span id="gothraView" ~if $bEditView && $apiData["family"]["gothra"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="gothraView" ~if $bEditView && $apiData["family"]["gothra"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["gothra"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["gothra"] neq null || $bEditView`
                             ~$apiData["family"]["gothra"]`
                           ~else`
@@ -122,23 +107,9 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20" >
-                        <span id="gothra_maternalView" ~if $bEditView && $apiData["family"]["gothra_maternal"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="gothra_maternalView" ~if $bEditView && $apiData["family"]["gothra_maternal"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["gothra_maternal"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["gothra_maternal"] neq null  || $bEditView`
                             ~$apiData["family"]["gothra_maternal"]`
-                          ~else`
-                            Not filled in
-                          ~/if`
-                        </span>
-                      </p>
-                    </li>
-                    ~/if`
-                    ~if !$bEditView`
-                    <li>
-                      <p class="fontlig color12 pt15">Profile managed by</p>
-                      <p class="pt2 pr20">
-                        <span id="profile_posted_byView" ~if $bEditView && $apiData["family"]["profile_posted_by"] eq $notFilledInText`  class="color5" ~/if` >
-                          ~if $apiData["family"]["profile_posted_by"] neq null  || $bEditView`
-                            ~$apiData["family"]["profile_posted_by"]`
                           ~else`
                             Not filled in
                           ~/if`
@@ -149,7 +120,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Family Status</p>
                       <p class="pt2 pr20">
-                        <span id="family_statusView" ~if $bEditView && $apiData["family"]["family_status"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="family_statusView" ~if $bEditView && $apiData["family"]["family_status"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["family_status"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["family_status"] neq null || $bEditView`
                             ~$apiData["family"]["family_status"]`
                           ~else`
@@ -161,7 +132,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Family Income</p>
                       <p class="pt2 pr20">
-                        <span id="family_incomeView" ~if $bEditView && $apiData["family"]["family_income"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="family_incomeView" ~if $bEditView && $apiData["family"]["family_income"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["family_income"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["family_income"] neq null || $bEditView`
                             ~$apiData["family"]["family_income"]`
                           ~else`
@@ -173,7 +144,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Family Type</p>
                       <p class="pt2 pr20">
-                        <span id="family_typeView" ~if $bEditView && $apiData["family"]["family_type"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="family_typeView" ~if $bEditView && $apiData["family"]["family_type"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["family_type"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["family_type"] neq null || $bEditView`
                             ~$apiData["family"]["family_type"]`
                           ~else`
@@ -185,7 +156,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Family Values</p>
                       <p class="pt2 pr20">
-                        <span id="family_valuesView" ~if $bEditView && $apiData["family"]["family_values"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="family_valuesView" ~if $bEditView && $apiData["family"]["family_values"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["family_values"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["family_values"] neq null || $bEditView`
                             ~$apiData["family"]["family_values"]`
                           ~else`
@@ -205,7 +176,7 @@
                         ~/if`
                       </p>
                       <p class="pt2 pr20">
-                        <span id="native_placeView" ~if $bEditView && $apiData["family"]["native_place"] eq $notFilledInText`  class="color5" ~/if` >
+                        <span id="native_placeView" ~if $bEditView && $apiData["family"]["native_place"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["native_place"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["native_place"] neq null || $bEditView`
                             ~$apiData["family"]["native_place"]`
                           ~else`

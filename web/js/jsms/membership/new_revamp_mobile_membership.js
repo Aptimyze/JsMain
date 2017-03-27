@@ -86,9 +86,11 @@ function changeMemCookie(mainMem, mainMemDur) {
                 createCookie('mainMem', mainMem, 0);
                 createCookie('mainMemDur', mainMemDur, 0);
             } else {
-                // when same duration is selected again
-                eraseCookie('mainMem');
-                eraseCookie('mainMemDur');
+                if(readCookie('backState') != "changePlan"){
+                    // when same duration is selected again
+                    eraseCookie('mainMem');
+                    eraseCookie('mainMemDur');
+                }
             }
         }
     } else {
@@ -217,30 +219,78 @@ function callRedirectManager() {
 }
 
 function autoPopupFreshdesk(username, email){
-  var len = $("#fc_chat_layout").length;
+  var len = $("#lc_chat_layout").length;
   if(len){
-    $("#fc_chat_layout").click();
-    if($("#fc_chat_layout input[id*='name']").length){
-      $("#fc_chat_layout input[id*='name']").val(username);
+    $("#lc_chat_layout").click();
+    if($("#lc_chat_layout input[id*='name']").length){
+      $("#lc_chat_layout input[id*='name']").val(username);
     }
-    if($("#fc_chat_layout input[id*='email']").length){
-      $("#fc_chat_layout input[id*='email']").val(email); 
+    if($("#lc_chat_layout input[id*='email']").length){
+      $("#lc_chat_layout input[id*='email']").val(email); 
     }
-    $("#fc_chat_header").click();
+    $("#lc_chat_header").click();
   }
 }
 
 function autoPopulateFreshdeskDetails(username, email){
-  if($("#fc_chat_layout input[id*='name']").length){
-    var checkName = $("#fc_chat_layout input[id*='name']").val();
+  if($("#lc_chat_layout input[id*='name']").length){
+    var checkName = $("#lc_chat_layout input[id*='name']").val();
     if(checkName != ''){
-      $("#fc_chat_layout input[id*='name']").val(username);
+      $("#lc_chat_layout input[id*='name']").val(username);
     }
   }
-  if($("#fc_chat_layout input[id*='email']").length){
-    var checkEmail = $("#fc_chat_layout input[id*='email']").val(); 
+  if($("#lc_chat_layout input[id*='email']").length){
+    var checkEmail = $("#lc_chat_layout input[id*='email']").val(); 
     if(checkEmail != ''){
-      $("#fc_chat_layout input[id*='email']").val(email); 
+      $("#lc_chat_layout input[id*='email']").val(email); 
     }
   }
+}
+
+function updateSelectedVas(action)
+{
+    var currentVas = readCookie('selectedVas');
+    if(currentVas.indexOf(",") > -1){
+        // case when more than one vas was selected
+        var tempArr = currentVas.split(",");
+    } else {
+        // case when only one vas was selected
+        var tempArr = [currentVas];
+    }
+    var memBasedFilteredVas = JSON.parse(filteredVasServices.replace(/&quot;/g,'"'));
+    var newVasArr = [];
+    var mainMem = readCookie('mainMem');
+
+    if(tempArr.length > 0)
+    {
+        // remove all other vas which start with supplied character except currently selected
+        $.each(tempArr, function(index, item){
+            var vasKey = item.substring(0, 1);
+
+            if(memBasedFilteredVas[mainMem]=== "undefined" || $.inArray(vasKey,memBasedFilteredVas[mainMem])===-1)
+            {
+                newVasArr.push(item);
+            }
+            if(index == 0)
+            {
+                if(index == 0){
+                    $("body").find("#"+item).parent().parent().addClass("scrollTo");
+                }
+            }
+            if(checkEmptyOrNull(readCookie('device'))){
+                $("#"+item).addClass(readCookie('device')+'_vassel');   
+            } else {
+                $("#"+item).addClass('vassel'); 
+            }
+        });
+        $('html, body').animate({
+            scrollTop: 0
+        }, 0); 
+        currentVas = newVasArr.join(",");
+        createCookie('selectedVas',currentVas,0);
+        if(action=="jsmsLandingPage") 
+            $("#continueBtn").show();
+        else if(action=="jsmsVasPage")
+            $("#nextButton").text('Cart');
+    }
 }

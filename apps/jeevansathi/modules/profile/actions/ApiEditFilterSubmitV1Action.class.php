@@ -37,15 +37,22 @@ class ApiEditFilterSubmitV1Action extends sfActions
 		{
 			if($this->ValidateFilterArr($filterArr))
 			{
-				$dbFilter=new NEWJS_FILTER();
-				$updStr="AGE='".$filterArr[AGE]."', MSTATUS='".$filterArr[MSTATUS]."', RELIGION='".$filterArr[RELIGION]."', COUNTRY_RES='".$filterArr[COUNTRY_RES]."', MTONGUE='".$filterArr[MTONGUE]."',CASTE='".$filterArr[CASTE]."',CITY_RES='".$filterArr[CITY_RES]."',INCOME='".$filterArr[INCOME]."'";
-				
-				$result=$dbFilterArr=$dbFilter->updateFilters($this->loginProfile->getPROFILEID(),$updStr);
-				if(!$result)
-				{
-					$result=$dbFilter->insertFilterEntry($this->loginProfile->getPROFILEID(),$updStr);
-				}
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $apiResponseStatus = ResponseHandlerConfig::$FAILURE;
+        try {
+          $dbFilter=new NEWJS_FILTER();
+          $bResult = $dbFilterArr=$dbFilter->updateRecord($this->loginProfile->getPROFILEID(),$filterArr);
+          if(false === $bResult)
+          {
+            $bResult1=$dbFilter->insertRecord($this->loginProfile->getPROFILEID(),$filterArr);
+          }
+          if($bResult || $bResult1>=0) {
+            $apiResponseStatus = ResponseHandlerConfig::$SUCCESS;
+          }
+        } catch (Exception $ex) {
+          jsException::log($ex);
+          $apiResponseHandlerObj->setResponseBody(array("ERROR"=>$ex->getMessage()));
+        }
+				$apiResponseHandlerObj->setHttpArray($apiResponseStatus);
 			}
 			else
 			{
@@ -72,10 +79,12 @@ class ApiEditFilterSubmitV1Action extends sfActions
 	{
 		$filterArrEnum=array("AGE","MSTATUS","COUNTRY_RES","CITY_RES","RELIGION","CASTE","MTONGUE","INCOME");
 		$count=count($filterArr);
+    $arrAllowedValues = array('Y','N');
 		foreach ($filterArr as $key=>$val)
 		{
-			if(!in_array($key,$filterArrEnum))
+			if(!in_array($key,$filterArrEnum) || !in_array($val, $arrAllowedValues)) {
 				return false;
+      }
 		}
 		if($count!=8)
 		{

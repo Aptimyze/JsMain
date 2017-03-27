@@ -10,7 +10,7 @@ class MailerGroup{
   const EDUCATION         = 9;
   const PHOTO_UPLOAD      = 10;
   const PHOTO_REQUEST     = 11;
-	const PHONE_VERIFY      = 12;
+  const PHONE_VERIFY      = 12;
   const WRITE_MESSAGE     = 13;
   const CALLDIRECTLY      = 14;
   const VISITOR_ALERT     = 15;
@@ -32,6 +32,22 @@ class MailerGroup{
   const DUPLICATE_PROFILES= 27;
   const MEMB_EXPIRY=30;	
   const IMPROVE_SCORE = 31;
-  const INCOMPLETE = 27;
-  const INACTIVE_2 = 28;
+  const INCOMPLETE_90 = 34;
+  const INCOMPLETE_120 = 35;
+  const INCOMPLETE_145 = 36;
+  const INACTIVE_15 = 37;
+  const INACTIVE_30 = 38;
+  const INACTIVE_45 = 39;
+  const INACTIVE_60 = 40;
+  const INACTIVE_75 = 41;
+  const SHORTLISTED = 42;
+  const DPP_REVIEW = 27;
+  const HOROSCOPE_REQUEST = 35;
+  const PHONE_UNVERIFY=43;
+  const REMINDER_MAILER=44;
+  const ASTRO_COMPATIBILTY = 27;
+  const JUNK_REMOVAL = 45;
+  const DELETE_PROFILE = 27;
+
+  const PROMOTIONAL_ALTERNATE_EMAIL = 46;
 }

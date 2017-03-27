@@ -71,10 +71,11 @@ class MobTopSearchBandAction extends sfActions
                 else
                         $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobTopSearchBandPageLogOutUrl);
                         
+                //die("y");
 		$this->dropdowns = $this->getDropDownOptions($populateDefaultValues);
 		$this->moredropdownArr = $this->getMoreDropDownOptions($populateDefaultValues);
 		$this->gender = $populateDefaultValues->gender;
-		$searchArr = "LAGE,HAGE,LHEIGHT,HHEIGHT,LINCOME,HINCOME,LOCATION,RELIGION,MTONGUE,OCCUPATION,EDUCATION,MANGLIK";
+		$searchArr = "LAGE,HAGE,LHEIGHT,HHEIGHT,LINCOME,HINCOME,LOCATION,LOCATION_CITIES,RELIGION,MTONGUE,OCCUPATION,EDUCATION,MANGLIK";
 		$this->searchFields = $searchArr;
 		$this->havephoto = $populateDefaultValues->havephoto;
 		$this->dispMore = '';
@@ -152,19 +153,25 @@ class MobTopSearchBandAction extends sfActions
 		$dropDown["MTONGUE"]["valueDependant"]["value"]=$defaultValues->mtongue_label_dep;
 		$dropDown["MTONGUE"]["valueDependant"]["data"]="";
 		
-		$dropDown["LOCATION"]["dd"]=Array("dropdownmenu"=>1,"dmove"=>"right","dshow"=>"location","dhide"=>"decide","dselect"=>"checkbox", "mylabel"=>"Country - City Living In", "haveSearch"=>"1");
+		$dropDown["LOCATION"]["dd"]=Array("dropdownmenu"=>1,"dmove"=>"right","dshow"=>"location","dhide"=>"decide","dselect"=>"checkbox", "mylabel"=>"Country", "haveSearch"=>"1");
 		$dropDown["LOCATION"]["label"]=$defaultValues->location_label;
 		$dropDown["LOCATION"]["value"]= $defaultValues->location;
 		$dropDown["LOCATION"]["valueDependant"]["value"]=$defaultValues->location_label_dep;
 		$dropDown["LOCATION"]["valueDependant"]["data"]="";
 		
+                $dropDown["LOCATION_CITIES"]["dd"]=Array("dropdownmenu"=>1,"dmove"=>"right","dshow"=>"location_cities","dhide"=>"decide","dselect"=>"checkbox", "mylabel"=>"State/City", "haveSearch"=>"1");
+		$dropDown["LOCATION_CITIES"]["label"]=$defaultValues->location_cities_label;
+		$dropDown["LOCATION_CITIES"]["value"]= $defaultValues->location_cities;
+		$dropDown["LOCATION_CITIES"]["valueDependant"]["value"]=$defaultValues->location_cities_label_dep;
+		$dropDown["LOCATION_CITIES"]["valueDependant"]["data"]="";
+                
 		$dropDown["LINCOME"]["dd"]=Array("dropdownmenu"=>1,"dmove"=>"right","dshow"=>"lincome","dhide"=>"single","dselect"=>"radio","mylabel"=>"Min Income","haveSearch"=>"0");
 		$dropDown["LINCOME"]["label"]=$defaultValues->lincome_label;
 		$dropDown["LINCOME"]["value"]= $defaultValues->lincome;
 		$dropDown["HINCOME"]["dd"]=Array("dropdownmenu"=>1,"dmove"=>"right","dshow"=>"hincome","dhide"=>"single","dselect"=>"radio", "mylabel"=>"Max Income", "haveSearch"=>"0");
 		$dropDown["HINCOME"]["label"]=$defaultValues->hincome_label;
 		$dropDown["HINCOME"]["value"]= $defaultValues->hincome;
-                
+                //print_r($dropDown);die;
 		return $dropDown;
 		
 	}

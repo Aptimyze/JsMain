@@ -40,6 +40,8 @@ class InboxJSPC extends InboxJS
 				$actionObject->pageNoForFullResponseApis = $params["request"]->getParameter("pageNo");
 			$this->setDefaultInboxTabs($params);
 			$actionObject->ccRequestTypeListMapping=InboxConfig::$ccRequestTypeListArr;
+                        if($ResponseArr["hidePaginationCount"])
+                            $actionObject->hidePaginationCount=1;
 			$actionObject->ccRequestTypeListArr=json_encode(InboxConfig::$ccRequestTypeListArr);
 			
 			//check religion(should be 'Hindu/Jain/Sikh/Buddhist' for horoscope case)

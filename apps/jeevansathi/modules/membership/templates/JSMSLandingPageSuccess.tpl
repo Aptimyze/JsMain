@@ -1,3 +1,8 @@
+~if $passedKey eq 'REQUEST_CALLBACK'`
+	~assign var=callbackSource value='SMS'`
+~else`
+	~assign var=callbackSource value='Membership_Page'`
+~/if`
 <meta name="format-detection" content="telephone=no">
 <div class="fullwid">
 	<!--start:header-->
@@ -10,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership'])`
+	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership','from_source'=>$callbackSource])`
 	<!--start:overlay1
 	<div id="callOvrOne" style="display:none;">
 		<div class="tapoverlay posfix"></div>
@@ -172,7 +177,13 @@
 							<div id="~$v.subscription_id`_serviceBenefits" class="rv2_list1">
 								<ul>
 									~foreach from=$v.benefits key=kk item=vv name=servBenefitsLoop`
-									<li>~$vv`~if $v.servMessage`~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`~if $vv eq $kkk` <span class="rv2_colr2">(~$vvv`)</span>~/if`~/foreach`~/if`</li>
+                                    <li><span ~if $vv eq 'Profile Boost'`class="fontmed"~/if`>~$vv`</span>~if $v.servMessage`~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`~if $vv eq $kkk` 
+                                    <span class="color2"> FREE with eAdvantage</span><br>
+                                    ~assign var=helpText value=". "|explode:$vvv`
+                                    ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                        ~$helpVal`<br>
+                                    ~/foreach`    
+                                    ~/if`~/foreach`~/if`</li>
 									~/foreach`
 								</ul>
 							</div>
@@ -328,7 +339,12 @@
 <script type="text/javascript">
 	var AndroidPromotion = 0;
 	var source = "~$passedKey`";
+	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        if(!checkEmptyOrNull(readCookie('expCheck'))){
+            eraseCookie('selectedVas');
+            createCookie('expCheck', '1');
+        }
 		~if $data.device eq 'Android_app'`
 		createCookie('device',"~$data.device`");
 		~/if`
@@ -338,33 +354,7 @@
 		eraseCookie('mainMem');
 		eraseCookie('mainMemDur');
 		if(readCookie('selectedVas')){
-			var currentVas = readCookie('selectedVas');
-			if(currentVas.indexOf(",") > -1){
-				// case when more than one vas was selected
-				var tempArr = currentVas.split(",");
-			} else {
-				// case when only one vas was selected
-				var tempArr = [currentVas];
-			}
-			if(tempArr.length > 0){
-				// remove all other vas which start with supplied character except currently selected
-				$.each(tempArr, function(index, item){
-					if(index == 0){
-						if(index == 0){
-							$("body").find("#"+item).parent().parent().addClass("scrollTo");
-						}
-					}
-					if(checkEmptyOrNull(readCookie('device'))){
-						$("#"+item).addClass(readCookie('device')+'_vassel');	
-					} else {
-						$("#"+item).addClass('vassel');	
-					}
-				});
-				$('html, body').animate({
-					scrollTop: 0
-				}, 0);  
-				$("#continueBtn").show();
-			}
+			updateSelectedVas("jsmsLandingPage");	
 		}
 		~/if`
 		if(checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))){
@@ -398,16 +388,20 @@
 			});
 			if(checkEmptyOrNull(readCookie('device'))){
 				if($(this).hasClass(readCookie('device')+'_selected_d')){
-					$(this).removeClass(readCookie('device')+'_selected_d')
-					$("#continueBtn").hide();
+					if(readCookie('backState') != "changePlan") {
+						$(this).removeClass(readCookie('device')+'_selected_d')
+						$("#continueBtn").hide();
+					}
 				} else {
 					$(this).addClass(readCookie('device')+'_selected_d')
 					$("#continueBtn").show();
 				}
 			} else {
 				if($(this).hasClass('selected_d')){
-					$(this).removeClass('selected_d')
-					$("#continueBtn").hide();
+					if(readCookie('backState') != "changePlan") {
+						$(this).removeClass('selected_d')
+						$("#continueBtn").hide();
+					}
 				} else {
 					$(this).addClass('selected_d')
 					$("#continueBtn").show();
@@ -476,7 +470,7 @@
 			$("#mainContent").addClass('posrel');
 			$("#callButton").hide();
 		});
-		$('.tapoverlay').click(function(e){
+		$('#callOvrOneJS .tapoverlay,#callOvrTwoJS .tapoverlay').click(function(e){
 			$("#callOvrTwo").hide();
 			$("#callOvrOne").hide();
 			$("#callOvrTwoJS").hide();
@@ -508,22 +502,22 @@
 			$("#callButton").show();
 			historyStoreObj.pop(clearOverlay);
 		});
-		$("#reqCallBack").click(function(e){
-			e.preventDefault();
-			$("#callOvrOne").hide();
-			var paramStr = '~$data.topHelp.params`';
-			paramStr = paramStr.replace(/amp;/g,'');
-			url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr;
-			$.ajax({
-				type: 'POST',
-				url: url,
-				success:function(data){
-					response = data;
-					$("#reqCallBackMessage").text(data.message);
-				}
-			});
-			$("#callOvrTwo").show();
-		});
+		// $("#reqCallBack").click(function(e){
+		// 	e.preventDefault();
+		// 	$("#callOvrOne").hide();
+		// 	var paramStr = '~$data.topHelp.params`';
+		// 	paramStr = paramStr.replace(/amp;/g,'');
+		// 	url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr;
+		// 	$.ajax({
+		// 		type: 'POST',
+		// 		url: url,
+		// 		success:function(data){
+		// 			response = data;
+		// 			$("#reqCallBackMessage").text(data.message);
+		// 		}
+		// 	});
+		// 	$("#callOvrTwo").show();
+		// });
 		$("#jsExCallback").click(function(e){
 			e.preventDefault();
 			historyStoreObj.push(clearOverlay,"#overlay");
@@ -579,13 +573,18 @@
 				createCookie('selectedVas', currentVas, 0);
 			}
 			if(readCookie('backState') == "changePlan"){
-				if(checkEmptyOrNull(readCookie('selectedVas')) && readCookie('mainMem') != "X" && readCookie('mainMem') != "NCP" && readCookie('mainMem') != "ESP"){
-					if(checkEmptyOrNull(readCookie('mainMem'))){
+				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1)
+				{
+					updateSelectedVas();
+					if(checkEmptyOrNull(readCookie('mainMem')))
+					{
 						paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")+"&selectedVas="+readCookie('selectedVas');
-					} else {
+					} else 
+					{
 						paramStr = "displayPage=3&selectedVas="+readCookie('selectedVas');
 					}
-				} else {
+				} 
+				else {
 					paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")+"&selectedVas=";
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
@@ -600,7 +599,8 @@
 				~if $data.serviceContent`
 				var paramStr = "";
 				if(checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))){ 
-					if(readCookie("mainMem") == "ESP" || readCookie("mainMem") == "X" || readCookie("mainMem") == "NCP"){
+					if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1)
+					{
 						paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					} else {
 						paramStr = "displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")
@@ -637,6 +637,9 @@
 				~/if`
 			}
 		});
+		if(readCookie('backState') == "changePlan"){
+			$("#pageBack").hide();	
+		}
 		$("#pageBack").click(function(e){
 			if(readCookie('backState') != "changePlan"){
 				eraseCookie('mainMem');
@@ -650,8 +653,9 @@
 				window.history.back();
 			}
 		});
-		if(source == "REQUEST_CALLBACK")
-			$('#reqCallBack').trigger('click');
+		if(source == "REQUEST_CALLBACK"){
+			$('#jsmsReqCallbackBtn').trigger('click');
+		}
 		var username = "~$data.userDetails.USERNAME`";
 		var email = "~$data.userDetails.EMAIL`";
 		setInterval(function(){
@@ -659,6 +663,6 @@
   		},100);
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>

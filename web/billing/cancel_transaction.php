@@ -13,7 +13,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/jsadmin/connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 include_once($_SERVER["DOCUMENT_ROOT"]."/classes/Membership.class.php");
-$db_slave = connect_slave();
 if(authenticated($cid))
 {
 	maStripVARS_sums('stripslashes');
@@ -40,7 +39,7 @@ if(authenticated($cid))
 			$profileid = $row_det["PROFILEID"];
 			$billid = $row_det["BILLID"];
 			$receiptid = $row_det["RECEIPTID"];
-
+            
 			$changes = "TRANSACTION CANCELLED \n";
 			$changes .= "REASON :- ".$reason;
 			$changes = addslashes(stripslashes($changes));
@@ -50,7 +49,11 @@ if(authenticated($cid))
 			mysql_query_decide($sql_log) or logError_sums($sql_log,1);
 
 			//passing billid, the modified string and "C" indicating that the transaction has been cancelled
-			change_notify_mail($billid, $changes,"C",$db_slave);
+			change_notify_mail($billid, $changes,"C");
+            
+            //Get the Receiptids of STATUS 'DONE' which are going to be marked CANCEL for negative entry
+            $memHandlerObject = new MembershipHandler();
+            $receiptidArr = $memHandlerObject->getReceiptids($billid);
 
 			//set STATUS=CANCEL in PURCHASES table.
 			$reason = addslashes(stripslashes($reason));
@@ -76,7 +79,14 @@ if(authenticated($cid))
 		        $memCacheObject->remove($row_det['PROFILEID'] . "_MEM_HAMB_MESSAGE");
 		        $memCacheObject->remove($row_det['PROFILEID'] . "_MEM_SUBSTATUS_ARRAY");
 		    }
-
+            
+            
+            //**START - Entry for negative transactions
+            $memHandlerObject = new MembershipHandler();
+            $memHandlerObject->handleNegativeTransaction($receiptidArr,'CANCEL');
+            unset($memHandlerObject);
+            //**END - Entry for negative transactions
+            
 			$smarty->assign("flag","1");
 			$smarty->display("cancel_transaction.htm");
 		}

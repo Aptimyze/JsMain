@@ -33,7 +33,8 @@ class NEWJS_VIRTUALNO extends TABLE
         **/
 	public function getVNoFromVId($vId)
 	{
-		if (!$vId) throw new Exception("no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1);
+		if (!$vId){
+		 throw new jsException('',"no virtual ID passed in arguements in getVNoFromVId in NEWJS_VIRTUALNO", 1);}
 
 		try
 		{
@@ -59,7 +60,9 @@ class NEWJS_VIRTUALNO extends TABLE
 	public function getVIdFromVNo($vNumber)
 	{
 
-		if (!$vNumber) throw new Exception("no virtual no passed in arguements IN getVIdFromVNo in NEWJS_VIRTUALNO", 1);
+		if (!$vNumber){
+
+		 throw new jsException('',"no virtual no passed in arguements IN getVIdFromVNo in NEWJS_VIRTUALNO", 1);}
 		
 		try
 		{
@@ -82,7 +85,10 @@ class NEWJS_VIRTUALNO extends TABLE
 public function updateVIdAsLatest($vId)
 	{
 
-		if (!$vId) throw new Exception("no virtual ID passed in arguements in updateVIdAsLatest in NEWJS_VIRTUALNO", 1);
+		if (!$vId){
+
+		throw new jsException('',"no virtual ID passed in arguements in updateVIdAsLatest in NEWJS_VIRTUALNO", 1);
+	}
 		
 		try
 		{

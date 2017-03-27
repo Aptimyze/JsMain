@@ -4,9 +4,14 @@
   ~/if`
 <div class="perspective" id="perspective">
 	<div class="pcontainer" id="pcontainer">
-<!--start:div-->
+<!--start:div--> 
 		<!--start:div-->
-		<div class="fullwid bg1" id="topbar">
+		
+            <div id="newLoader" class='otplayer' style="display:none;">
+                <img src="/images/jsms/commonImg/loader.gif" class="posabs" style="left: 44%;top: 50%;"/>
+            </div>
+
+                <div class="fullwid bg1" id="topbar">
 		  <div class="pad1">
 			<div class="rem_pad1">
 			  <div class="fl wid20p white"><i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
@@ -106,7 +111,7 @@
 </div>
 <div id="filterButton" class ="dn">
 	<div class="fullwid bg7">
-	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Set Contact Filters</div>
+	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Strict Filters</div>
 	</div>
  </div>
 ~if isset($horoExist)`
@@ -123,10 +128,55 @@
   </div>
 </div>
 ~/if`
+<!-- <div id='dppToolTip' class='dn'>
+  <div  class="fullwid  brdr1 bwhite">
+  <div class="pad1">
+    <div class="pad2">
+      <div class="fl wid94p wwrap fontlig f14 color3">
+      The criteria you mention here determines the ‘Desired Partner Matches’ you see. So please review this information carefully. Moreover, Filters determine whose Interests/Calls you want to receive.
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
+</div> -->
+
+<div id="dppMatchalertToggle" class="dn">
+
+	<div class="fullwid dpbg1">
+		<div class="dpbg2 fontlig txtc">
+			<p class="f14"> The criteria below influences the matches and interests you recieve</p>
+			<p class="f16 pt10">No. of Mutual Matches with below criteria - <span id="mutualMatchCountMobile"></span></p>
+
+		</div>
+	</div>
+
+
+
+<div class="fullwid brdr1 bwhite">
+<div class="pad1">
+<div class="pad2">
+<div class="fl wwrap fontlig f14 color3">
+<div class="fl wwrap fontlig color3">
+<div class="f13 wid76p dispibl">Also send me matches outside my Desired Partner Profile
+<!-- <div class="f12 color4 pt10">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div> -->
+</div>
+    <div id="toggleButton" class="fr dispibl filter-onoff-new ~if $toggleMatchalerts eq 'dpp'` filter-off ~else` filter-on ~/if`" onclick="toggleDppMatchalerts();"></div>
+</div>
+</div>
+<div class="clr"></div>
+</div>
+</div>
+</div>
+</div>    
+
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
+		 var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+		 var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
 </script>
 </div>
 <div class="hamburger dn fullwid" id="ehamburger">
@@ -143,4 +193,20 @@
 
 <div id="albumPage" class="dn">
 ~include_partial("social/mobile/mobilePhotoUploadProgress",[gender=>~$GENDER`,username=>~$USERNAME`,selectTemplate=>~$selectTemplate`,alreadyPhotoCount=>~$alreadyPhotoCount`,profilepicurl=>~$profilepicurl`,selectFile=>~$selectFile`,privacy=>~$privacy`,selectFileOrNot=>~$selectFileOrNot`,picturecheck=>~$picturecheck`])`
+</div>
+~if $sourcename && $groupname && $fromPhoneVerify`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
+~/if`
+
+<div id='emailSentConfirmLayer' class="otplayer dispnone">
+        <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
+    <div id="altEmailinnerLayer" class="otpcenter cssLayerFix bg4 fontlig f18">
+        <div class="txtc pt40">
+        </div>
+        <p class="color3 txtc pt10">Email Verification</p>
+        <p id="emailConfirmationText" style='padding-left: 4px; padding-right: 4px; word-wrap: break-word;' class="color4 txtc pt10 pb30"></p>
+        <div class="otpbr2 txtc otplh60">
+            <div id='js-okIncorrectOtp'  onclick='$("#emailSentConfirmLayer").hide();return true;' class="f19 otpcolr2 fontthin">OK</div>
+        </div>
+    </div>
 </div>

@@ -470,6 +470,34 @@ $sql="UPDATE newjs.HOROSCOPE_REQUEST SET SEEN='Y' WHERE PROFILEID_REQUEST_BY=:PR
 
 
    }			
-		
+   /**
+    * This function fetches the data of profiles to send email. Data to be fetched a day before
+    * @param type $date a day before date 
+    * @return array of receiver and 
+    * @throws jsException
+    */
+   public function getHoroscopeForMails($date){
+                try{
+                        $sql = "select PROFILEID ,PROFILEID_REQUEST_BY,Count(*) as total_count from `HOROSCOPE_REQUEST` where SEND_MAIL != 'Y'";
+                        if($date)
+                                $sql = $sql." AND DATE BETWEEN :DATE1 AND :DATE2 ";
+
+                        $sql .= 'Group By PROFILEID_REQUEST_BY';
+
+                        $res = $this->db->prepare($sql);
+                        if($date)
+                        {
+                                $res->bindValue(":DATE1", $date." 00:00:00", PDO::PARAM_STR);
+                                $res->bindValue(":DATE2", $date." 23:59:59", PDO::PARAM_STR);
+                        }
+                        $res->execute();
+                        $output = array();
+                        $output = $row = $res->fetchAll(PDO::FETCH_ASSOC);
+                        return $output;
+                }catch (PDOException $e){
+			jsException::log("Error in getting horoscope data");
+                        return array();
+		}
+   }
 }
 ?>

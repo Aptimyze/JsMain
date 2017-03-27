@@ -9,10 +9,10 @@
 <table width="80%" border="0" cellspacing="1" cellpadding="2" align="center">
 <tr class="fieldsnew">
 	
-	<td class="formhead" valign="middle" colspan="6" align="center" >Contact History  </td>
+	<td class="formhead" valign="middle" colspan="7" align="center" >Contact History  </td>
 	</tr>
 <br>
-	<TR class="formhead" valign="middle" colspan="6" align="center"><TH>Sender</TH><TH>Receiver</TH><TH>Date (IST)</TH><TH>TYPE</TH><TH>IP</TH><TH style="width:40%">MESSAGE</TH>
+	<TR class="formhead" valign="middle" colspan="7S" align="center"><TH>Sender</TH><TH>Receiver</TH><TH>Date (IST)</TH><TH>TYPE</TH><TH>IP</TH><TH style="width:40%">MESSAGE</TH><TH style="width:20%">Contact Details</TH>
 	<TR><TD style="height:20px"> </TD></TR>
 	~if !$EOIArr`
 	<tr><TD class="label" colspan=6 style="color:red">No records found
@@ -30,6 +30,15 @@
 	<TD class="label" valign="middle" colspan="1" align="center" >~$data.TYPE`</TD>
 	<TD class="label" valign="middle" colspan="1" align="center" >~$data.IP`</TD>
 	<TD class="label" valign="middle" colspan="1" align="center" >~$data.MESSAGE`</TD>
+	<TD class="label" valign="middle" colspan="1" align="center" >
+                Phone: ~if $data.PHONE_MOB eq ""` - ~else` ~$data.PHONE_MOB` ~/if`
+                </br>
+                Phone Res: ~if $data.PHONE_RES eq ""` - ~else` ~$data.PHONE_RES` ~/if`
+                </br>
+                Phone Alt: ~if $data.PHONE_ALT eq ""` - ~else` ~$data.PHONE_ALT` ~/if`
+                </br>
+                CONTACT: ~if $data.CONTACT eq ""` - ~else` ~$data.CONTACT` ~/if`
+        </TD>
 </TR>
 	~/foreach`
 	

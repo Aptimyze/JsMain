@@ -81,7 +81,15 @@ class EmailTemplate implements MessageTemplate{
     return ($this->htmlCode);
   }
   public function getSenderEMailId(){
-    return $this->email_type->getSenderEmailId();
+    $senderEmail = $this->email_type->getSenderEmailId();
+    //search for dynamic values in from email id if any
+    if(strpos($senderEmail,'~') !== false){
+        $regex='/~\$(.*)`/';
+        preg_match($regex,$senderEmail,$matches);
+        $senderEmail=str_replace($matches[0],$this->smarty->get_template_vars($matches[1]),$senderEmail);
+
+    }
+    return $senderEmail;
   }
 
   public function getReplyToEnabled() {
@@ -93,7 +101,14 @@ class EmailTemplate implements MessageTemplate{
   }
 
   public function getFromName() {
-    return $this->email_type->getFromName();
+    $fromName = $this->email_type->getFromName();
+    if(strpos($fromName,'~') !== false){
+        $regex='/~\$(.*)`/';
+        preg_match($regex,$fromName,$matches);
+        $fromName=str_replace($matches[0],$this->smarty->get_template_vars($matches[1]),$fromName);
+
+    }
+    return $fromName;
   }
 
   public function getProcessedSubject(){

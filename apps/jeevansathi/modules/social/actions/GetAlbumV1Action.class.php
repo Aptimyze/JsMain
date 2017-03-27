@@ -37,7 +37,7 @@ class GetAlbumV1Action extends sfActions
 					$profileid = $loggedInProfileid;
 
 				if($profileid!=$loggedInProfileid )
-					$viewerObj = Profile::getInstance("newjs_bmsSlave",$profileid);
+					$viewerObj = Profile::getInstance("newjs_masterRep",$profileid);
 				else
 					$viewerObj = $loggedInProfile;
 				$viewerObj->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
@@ -47,7 +47,8 @@ class GetAlbumV1Action extends sfActions
 					$contactsRecordObj = new ContactsRecords();
 		                        $contact_status_new = $contactsRecordObj->getContactType($viewerObj,$loggedInProfile);
                                 	$contact_status = $contact_status_new["TYPE"];
-                		}
+                		}         
+                
 				$picServiceObj = new PictureService($viewerObj);
 				$album = $picServiceObj->getAlbum($contact_status);
 				if($album && is_array($album))
@@ -84,7 +85,29 @@ class GetAlbumV1Action extends sfActions
 				}
 				if($albumArr && is_array($albumArr))
 				{
-                                        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					//Code for album view logging
+					if($profileid != $loggedInProfileid)
+					{
+//						$channel = MobileCommon::getChannel();
+//						$date = date("Y-m-d H:i:s");
+                                                $producerObj = new Producer();
+                                                if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfile->getGENDER()!= $viewerObj->getGENDER()){
+                                                    if($producerObj->getRabbitMQServerConnected()){
+                                                        $triggerOrNot = "inTrigger";
+                                                        $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$profileid)), 'redeliveryCount'=>0 );
+                                                        $producerObj->sendMessage($queueData);
+                                                    }
+                                                    else{    
+                                                        $vlt=new VIEW_LOG_TRIGGER();
+                                                        $vlt->updateViewTrigger($loggedInProfileid,$profileid);
+//                                                        $albumViewLoggingObj = new albumViewLogging();
+//                                                        $albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
+                                                    }
+                                                }
+					}
+
+
+                    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 					if($request->getParameter("profileChecksum"))
                                         	$respObj->setResponseBody(array("albumUrls"=>$albumArr));
 					else

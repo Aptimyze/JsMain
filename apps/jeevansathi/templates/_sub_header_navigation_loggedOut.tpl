@@ -7,7 +7,7 @@
                 <a href="~sfConfig::get('app_site_url')`/search/matchalerts" onclick="return sub_header_fn(0,'~$pageName`',6);" class="layer1 cursp">
                     	<div class="fullwidth padleft22">
                         	<div class="fl bold_gnb" id="myMatchesLoggedOut">
-                            	My Matches
+                            	Desired Partner Matches
                             </div>
                             <div class="fl droparw">
                             	<div class="droparrow1"></div>
@@ -37,7 +37,7 @@
 								 <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/search/matchalerts" onclick="return sub_header_fn(0,'~$pageName`',16);"class="fullwidth cursp">
-                                       <div class="paddallfive" id="MatchAlertsLoggedOut">Match Alerts</div>                                       
+                                       <div class="paddallfive" id="MatchAlertsLoggedOut">Daily Recommendations</div>                                       
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -54,7 +54,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/search/reverseDpp" onclick="return sub_header_fn(0,'~$pageName`',7);" class="fullwidth cursp">
-                                        <div class="paddallfive" id="memberslookingForMeLoggedOut">People Looking for me</div>
+                                        <div class="paddallfive" id="memberslookingForMeLoggedOut">Members Looking for Me</div>
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -104,7 +104,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp" href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?checksum=~$sf_request->getAttribute('checksum')`&page=visitors&filter=R" onclick="return sub_header_fn(0,'~$pageName`',11);" >
-                                        <div class="paddallfive" id="recentProfileLoggedOut">Recent Profile Visitors</div>
+                                        <div class="paddallfive" id="recentProfileLoggedOut">Profile Visitors</div>
                                      </a>                                        
                                   </div>  
                                 </li>                                
@@ -132,7 +132,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp" href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?checksum=~$sf_request->getAttribute('checksum')`&page=favorite&filter=M" onclick="return sub_header_fn(0,'~$pageName`',15);" >
-                                        <div class="paddallfive" id="shortlistedLoggedOut">Shortlisted Members</div>
+                                        <div class="paddallfive" id="shortlistedLoggedOut">Shortlisted Profiles</div>
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -264,7 +264,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/profile/before_log.php?page=7" class="fullwidth cursp thickbox">
-                                        <div class="paddallfive" id="memberslookingForMeLoggedOut">People Looking for me</div>
+                                        <div class="paddallfive" id="memberslookingForMeLoggedOut">Members Looking for Me</div>
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -305,7 +305,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp thickbox" href="~sfConfig::get('app_site_url')`/profile/before_log.php?page=11">
-                                        <div class="paddallfive" id="recentProfileLoggedOut">Recent Profile Visitors</div>
+                                        <div class="paddallfive" id="recentProfileLoggedOut">Profile Visitors</div>
                                      </a>                                        
                                   </div>  
                                 </li>                                
@@ -333,14 +333,14 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp thickbox" href="~sfConfig::get('app_site_url')`/profile/before_log.php?page=15">
-                                        <div class="paddallfive" id="shortlistedLoggedOut">Shortlisted Members</div>
+                                        <div class="paddallfive" id="shortlistedLoggedOut">Shortlisted Profiles</div>
                                      </a>                                        
                                   </div>  
                                 </li>
                                 <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/profile/before_log.php?page=16" class="fullwidth cursp thickbox">
-                                       <div class="paddallfive" id="MatchAlertsLoggedOut">Match Alerts</div>                                       
+                                       <div class="paddallfive" id="MatchAlertsLoggedOut">Daily Recommendations</div>                                       
                                      </a>                                        
                                   </div>  
                                 </li>

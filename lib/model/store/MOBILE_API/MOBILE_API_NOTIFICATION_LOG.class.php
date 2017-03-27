@@ -11,16 +11,19 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
 			$this->SENT_BIND_TYPE = "STR";
 			$this->OS_TYPE_BIND_TYPE = "STR";
 			$this->MESSAGE_ID_BIND_TYPE = "INT";
+            $this->SEND_DATE_BIND_TYPE = "STR";
         }
 	public function insert($profileid,$key,$messageId,$sent,$osType)
 	{
-		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`SEND_DATE`,`SENT`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,now(),:SENT,:OS_TYPE)";
+        $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`SEND_DATE`,`SENT`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,:IST_TIME,:SENT,:OS_TYPE)";
 		$resInsert = $this->db->prepare($sqlInsert);
 		$resInsert->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 		$resInsert->bindValue(":NOTIFICATION_KEY",$key,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
 		$resInsert->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
 		$resInsert->bindValue(":SENT",$sent,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
+        $resInsert->bindValue(":IST_TIME",$istTime,constant('PDO::PARAM_'.$this->{'SEND_DATE_BIND_TYPE'}));
 		$resInsert->execute();
 	}
         public function updateSentPrev($pid,$notificationKey,$status)
@@ -46,7 +49,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                 if(!$messageId || !$status || !$osType)
                      throw new jsException("","pid/notificationKey/status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try{
-			$sql = "UPDATE MOBILE_API.NOTIFICATION_LOG SET SENT =:SENT,`UPDATE_DATE`=now() WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT NOT IN('Y')";
+			$sql = "UPDATE MOBILE_API.NOTIFICATION_LOG SET SENT =:SENT,`UPDATE_DATE`=now() WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT IN('I','N','P','L')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
                         $res->bindValue(":SENT",$status,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
@@ -63,7 +66,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                 if(!$messageId || !$osType)
                      throw new jsException("","pid/notificationKey/status not provided to updatestatus in MOBILE_API.SCHEDULED_APP_NOTIFICATIONS");
                 try{
-                        $sql = "DELETE FROM MOBILE_API.NOTIFICATION_LOG WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT NOT IN('Y')";
+			$sql = "DELETE FROM MOBILE_API.NOTIFICATION_LOG WHERE MESSAGE_ID=:MESSAGE_ID AND OS_TYPE=:OS_TYPE AND SENT IN('I','N','P','L')";
                         $res=$this->db->prepare($sql);
                         $res->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
                         $res->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
@@ -92,11 +95,13 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                         	{
 					if($fields)
 					{
-						foreach($defaultFieldsRequired as $k=>$fieldName)
-						{
-							if(!stristr($fields,$fieldName))
-								$fields.=",".$fieldName;
-						}
+                        if(is_array($defaultFieldsRequired))
+    						foreach($defaultFieldsRequired as $k=>$fieldName)
+    						{
+    							if(!stristr($fields,$fieldName))
+    								$fields.=",".$fieldName;
+    						}
+
 					}
 					else
 					{
@@ -144,7 +149,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
 						$paramBindValue = $this->{$param."_BIND_TYPE"};
 						$values = explode(",",$value);
 						foreach($values as $k1=>$val)
-							$resSelectDetail->bindValue(":".$param."_".$count."_".$k1,$val,constant('PDO::PARAM_'.$paramBindValue));
+							$resSelectDetail->bindValue(":".$param."_".$count."_".$k1,$val,PDO::PARAM_STR);
 						$count++;
 					}
 				}
@@ -283,6 +288,31 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                         throw new jsException($e);
                 }
         }
-
+	public function selectRecord($sdate,$edate)
+        {
+                $sql = "SELECT * FROM MOBILE_API.NOTIFICATION_LOG WHERE SEND_DATE>:ST_DATE AND SEND_DATE<:END_DATE";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+                $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                $res->execute();
+		while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                	$rowArr[] =$row;
+                }
+                return $rowArr;
+ 	}
+	public function deleteRecordDateWise($sdate,$edate)
+        {
+                try{
+                        $sql = "delete FROM MOBILE_API.NOTIFICATION_LOG WHERE SEND_DATE>:ST_DATE AND SEND_DATE<:END_DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+	                $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                        $res->execute();
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+                return NULL;
+        }
 }
 ?>

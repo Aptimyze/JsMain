@@ -9,7 +9,10 @@ include($_SERVER['DOCUMENT_ROOT']."/jsadmin/ap_dpp_common.php");
 
 $db=connect_db();
 
-$sql="SELECT * FROM Assisted_Product.AP_TEMP_DPP WHERE CREATED_BY='ONLINE'";
+if($argv[1] == 'insertMissing')
+    $sql="SELECT T.* FROM Assisted_Product.AP_TEMP_DPP T LEFT JOIN Assisted_Product.AP_DPP_FILTER_ARCHIVE F ON T.PROFILEID = F.PROFILEID WHERE F.PROFILEID IS NULL";
+else
+    $sql="SELECT * FROM Assisted_Product.AP_TEMP_DPP WHERE CREATED_BY='ONLINE'";
 $res=mysql_query_decide($sql);
 if(mysql_num_rows($res))
 {

@@ -9,13 +9,14 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP");
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
-	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP");
+	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
+	private $sendToInternational = array("FORGOT_PASSWORD");
 	private $eoiSMSLimit = 2;
-	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS");
+	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST");
 	private $kycCity = array("DE00", "UP25", "UP06", "RA07", "UP47", "UP12");
 	private $kycLocality = "";//Comma separated
 	
@@ -32,7 +33,7 @@ class InstantSMS {
 	
 	private function setProfileDetails() {
 				
-		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
+		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,COUNTRY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
 		if(!in_array($this->smsKey,$this->settingIndependent))
 			$sql.=" and  (JPROFILE_ALERTS.SERVICE_SMS !=  'U' OR JPROFILE_ALERTS.SERVICE_SMS IS NULL)";
 		if($this->smsKey != "REGISTER_CONFIRM")
@@ -57,7 +58,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		}
                 if($this->varArray) 
                     $this->profileDetails = array_merge($this->profileDetails,$this->varArray);
-		//print_r($this->profileDetails);
+//		print_r($this->profileDetails);
 		
 	}	
 	private function inDNC() {
@@ -70,7 +71,19 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}	
 		
 	private function isWhitelistedProfile() {
-		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
+		if($this->smsKey=='OTP') return true;
+		if($this->smsKey=="DEL_OTP") return true;
+		if($this->smsKey=="MEM_BACK_DISC_SMS") return true;
+		if($this->smsKey=="CRM_SMS_OFFER") return true;
+		if($this->smsKey=="CRM_SMS_BRANCH") return true;
+		if($this->smsKey=="CRM_SMS_APP_DOWNLOAD") return true;
+		if($this->smsKey=="CRM_SMS_NOT_REACH") return true;
+		if($this->smsKey=='PHONE_UNVERIFY') return true;
+		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
+		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
+		
+		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
+		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
 		switch ($this->smsKey) {
 			
@@ -123,6 +136,18 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				 case "OTP":
 				 return true;
 
+					 case "DEL_OTP":
+				 		return true;
+
+				 //added case for sending sms to a user in case mail gets bounced
+				 case "BOUNCED_MAILS":
+				 	return true;
+
+				 case "REQ_CRM_DEL_SELF":
+				 	return true;
+
+				 case "REQ_CRM_DEL_OTHER":
+				 	return true;
 
 			default:
 				return $this->profileDetails["MOB_STATUS"] == 'Y';
@@ -169,7 +194,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	
 	private function setOtherProfile() {
 				
-		$sql = "SELECT PROFILEID, GENDER, USERNAME, PASSWORD,AGE,HEIGHT, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EDU_LEVEL,INCOME,OCCUPATION,CITY_RES,EMAIL, SEC_SOURCE,EDU_LEVEL_NEW, ISD, SHOWPHONE_MOB,PHONE_WITH_STD  FROM newjs.JPROFILE WHERE PROFILEID = '$this->otherProfileId'";
+		$sql = "SELECT PROFILEID, GENDER, USERNAME, PASSWORD,AGE,HEIGHT, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EDU_LEVEL,INCOME,OCCUPATION,COUNTRY_RES,CITY_RES,EMAIL, SEC_SOURCE,EDU_LEVEL_NEW, ISD, SHOWPHONE_MOB,PHONE_WITH_STD  FROM newjs.JPROFILE WHERE PROFILEID = '$this->otherProfileId'";
 		$res = mysql_query($sql,$this->SMSLib->dbMaster) or logError($this->error,$sql,"ShowErrTemplate");
 		$row = mysql_fetch_assoc($res);
 		// set ProfileDetails for the given ProfileID
@@ -199,7 +224,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}
 	
 	private function getActualMessage ($message) {
-		
 		$mLength = strlen($message);
 		$messageToken = "";
 		$startToken = 0;
@@ -207,9 +231,11 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		$this->smsKey;
 		if(in_array($this->smsKey,$this->otherProfileRequired))
 		{
+                        
 			$this->setOtherProfile();
 			$this->otherProfileDetails["RECEIVER"]["USERNAME"] = $this->profileDetails["USERNAME"];
 			$this->otherProfileDetails["RECEIVER"]["PROFILEID"] = $this->profileDetails["PROFILEID"];
+			$this->otherProfileDetails["EMAIL"] = $this->profileDetails["EMAIL"];
 			$this->otherProfileDetails["DATA_TYPE"] = "OTHER";
 		}
 		for ($i = 0; $i < $mLength; $i++) {
@@ -236,12 +262,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 	//Returns sms text	
 	private function getSMS () {
-		
+
 		$this->setProfileDetails();
 		$message = "";
-		if ($this->isWhitelistedProfile()) {
+		if ($this->isWhitelistedProfile()) { 
 			$message = $this->getMessage();
 			$message = $this->getActualMessage($message);
+			
 		}
 		return $message;
 		
@@ -252,46 +279,35 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
         {
 			$message = addslashes($message);
             
-                $sql = "INSERT INTO newjs.SMS_DETAIL(PROFILEID, SMS_TYPE, SMS_KEY, MESSAGE, PHONE_MOB, ADD_DATE,SENT) VALUES ('$this->profileid', 'I', '$this->smsKey', '$message', '".$this->profileDetails["PHONE_MOB"]."', now(),'$sent')";
+                $sql = "INSERT INTO newjs.SMS_DETAIL(PROFILEID, SMS_TYPE, SMS_KEY, MESSAGE, PHONE_MOB, ADD_DATE,SENT) VALUES ('$this->profileid', 'I', '$this->smsKey', '$message', '".$this->profileDetails['ISD'].$this->profileDetails["PHONE_MOB"]."', now(),'$sent')";
                 mysql_query($sql,$this->SMSLib->dbMaster) or logError($this->errorMessage,$sql,"ShowErrTemplate");
+    }
+
+    // GET SMS Message
+    public function getSmsMessage()
+    {
+        $message = '';
+        $this->setProfileDetails();
+        $message = $this->getMessage();
+        $message = $this->getActualMessage($message);
+        return $message;
+    }
+    //Send sms
+    public function send($acc = "transaction")
+    {
+        $message = $this->getSMS();
+        if ($message) {
+            include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
+            $sent = "N";
+
+            if (in_array($this->smsKey, $this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()) {
+                $sent         = "Y";
+                $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
+                $xmlResponse  = $smsVendorObj->generateXml($this->profileid, $this->profileDetails['ISD'] . $this->profileDetails["PHONE_MOB"], $message, $this->smsSettings["SEND_TIME"]);
+                $smsVendorObj->send($xmlResponse, $acc);
+            }
+            //Insert in sms log
+            $this->insertInSmsLog($message, $sent);
         }
-
-	// GET SMS Message
-        public function getSmsMessage() {
-		$message ='';
-                $this->setProfileDetails();
-                $message = $this->getMessage();
-                $message = $this->getActualMessage($message);
-                return $message;
-        }
-	//Send sms
-	public function send($acc="transaction"){
-		$message = $this->getSMS(); 
-		        	if($message){
-			include_once($this->SMSLib->path . "/classes/SmsVendorFactory.class.php");
-			$sent = "N";
-//echo "\n\nPROFILEID:".$this->profileid." ,PHONE_NUMBER:".$this->profileDetails["PHONE_MOB"]." ,MESSAGE:".$message." ,SEND_TIME:".$this->smsSettings["SEND_TIME"]."\n";
-//die;
-
-			if(in_array($this->smsKey,$this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()){
-				$sent = "Y";
-				$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
-				$xmlResponse = $smsVendorObj->generateXml($this->profileid,$this->profileDetails["PHONE_MOB"],$message,$this->smsSettings["SEND_TIME"]);
-				$smsVendorObj->send($xmlResponse,$acc);
-				//$xmlResponse = generateReceiverXmlData($this->profileid, $message, $from="", $this->profileDetails["PHONE_MOB"], $this->smsSettings["SEND_TIME"]);	
-				//sendSMS($xmlResponse, "priority");
-                                //pankaj trac #918 starts here
-				//Commented as hide functionality is not required
-				/*if(in_array($this->smsKey,$this->unverified_key)){
-					$sql = "UPDATE newjs.JPROFILE SET ACTIVATED = 'H' WHERE PROFILEID = '".$this->profileid."'";
-					$res = mysql_query_decide($sql) or die("$res".mysql_error_js());
-				}*/
-				//ends here 
-			}
-			//Insert in sms log
-			$this->insertInSmsLog($message,$sent);
-		}
-	}
-}	
-
-?>
+    }
+}

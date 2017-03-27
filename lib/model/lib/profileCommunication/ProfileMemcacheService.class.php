@@ -28,6 +28,7 @@ class ProfileMemcacheService
     const SAVED_SEARCH=41;
     const INTRO_CALLS= 43;
     const SKIP_PROFILES = 47;
+    const MESSAGE_ALL = 53;
     private $groups = array(
 						ProfileMemcacheService::CONTACTS => array(
 							'ACC_BY_ME', 
@@ -36,10 +37,12 @@ class ProfileMemcacheService
 							'DEC_BY_ME', 
 							'DEC_ME', 
 							'DEC_ME_NEW', 
-							'AWAITING_RESPONSE', 
+                            'AWAITING_RESPONSE', 
+							'INTEREST_EXPIRING', 
 							'AWAITING_RESPONSE_NEW', 
 							'FILTERED', 
                             'FILTERED_NEW',
+                            'INTEREST_ARCHIVED',
 							'NOT_REP', 
 							'OPEN_CONTACTS', 
 							'CANCELLED_EOI'), 
@@ -65,13 +68,13 @@ class ProfileMemcacheService
                             'PHOTO_REQUEST_BY_ME'), 
 						ProfileMemcacheService::CUSTOM_MESSAGE => array(
 							'MESSAGE', 
-							'MESSAGE_NEW',
-							'MESSAGE_ALL'), 
+							'MESSAGE_NEW'), 
+                                                ProfileMemcacheService::MESSAGE_ALL => array('MESSAGE_ALL'),
 						ProfileMemcacheService::MATCHALERT => array('MATCHALERT','MATCHALERT_TOTAL'),
 						ProfileMemcacheService::JUST_JOINED_MATCHES => array('JUST_JOINED_MATCHES','JUST_JOINED_MATCHES_NEW'), 
 						ProfileMemcacheService::CONTACTS_VIEWED => array('CONTACTS_VIEWED'), 
 						ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS => array('PEOPLE_WHO_VIEWED_MY_CONTACTS'),
-                        ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT'), 
+                        ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT','VISITORS_ALL'), 
 						ProfileMemcacheService::CHAT_REQUEST => array('CHAT_REQUEST'), 
 						ProfileMemcacheService::BOOKMARK => array('BOOKMARK'),
 						ProfileMemcacheService::SAVED_SEARCH => array('SAVED_SEARCH'),
@@ -119,7 +122,6 @@ class ProfileMemcacheService
      */
     public function get($key, $optionalDataFlag = false)
     {
-        
         $set = $this->checkPreSettings($key, $optionalDataFlag);
         if ($set === true)
             return call_user_func(array(
@@ -280,6 +282,9 @@ public function unsett()
             case ProfileMemcacheService::BOOKMARK:
                 $this->unsetBookmarkData();
                 break;
+            case ProfileMemcacheService::MESSAGE_ALL:
+                $this->unsetMessageAllData();
+                break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
                 $this->unsetJustJoinedMatchesData();
                 break;
@@ -307,7 +312,7 @@ public function unsett()
 
     private function print_data()
     {
-        $md = unserialize(JsMemcache::getInstance()->get($this->profileid));
+        //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
        // print_r($md);   die;
     }
     /**
@@ -354,6 +359,9 @@ public function unsett()
                 break;
             case ProfileMemcacheService::BOOKMARK:
                 $this->setBookmarkData();
+                break;
+            case ProfileMemcacheService::MESSAGE_ALL:
+                $this->setMessageAllData();
                 break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
                 $this->setJustJoinedMatchesData();
@@ -475,18 +483,25 @@ public function unsett()
                 'E',
                 'C'
             )
-        ), $group, 1,$skipProfile);
+        ), $group, 1,$skipProfile,1);
 
         if (is_array($contactsCount)) {
             foreach ($contactsCount as $key => $value) {
                 switch ($value["TYPE"]) {
                     case 'A':
-                        $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'D':
-                        $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'I':
+                        
                         if ($value["FILTERED"] == 'Y'){
                                     if ($value['TIME1']=='0'){
                                     if ($value["SEEN"] != 'Y')
@@ -494,7 +509,8 @@ public function unsett()
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
                         }
-                        else {
+                        else 
+                        {
 							if($value["TIME1"] == 0)
 							{
 	                            if ($value["SEEN"] != 'Y')
@@ -503,20 +519,34 @@ public function unsett()
 								}
 								$AWAITING_RESPONSE = $AWAITING_RESPONSE + $value["COUNT"];
 							}
+                            if ( $value["TIME1"] == 1 )
+                            {
+                               $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
+                            }
+                            if ( $value["TIME1"] == 2 )
+                            {
+                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];
+                            }
+
                         }
                         break;
                     case 'C':
                     case 'E':
-                        if ($value["SEEN"] != 'Y') {
-                            $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            if ($value["SEEN"] != 'Y') {
+                                $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                            }
+                            $DEC_ME = $DEC_ME + $value["COUNT"];
                         }
-                        $DEC_ME = $DEC_ME + $value["COUNT"];
                         break;
+
                     default:
                         break;
                 }
             }
         }
+
         $this->memcache->setACC_BY_ME($ACC_BY_ME ? $ACC_BY_ME : 0);
         $this->memcache->setACC_ME($ACC_ME ? $ACC_ME : 0);
         $this->memcache->setACC_ME_NEW($ACC_ME_NEW ? $ACC_ME_NEW : 0);
@@ -530,6 +560,8 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
+        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
     }
     public function unsetContactsData()
     {
@@ -546,6 +578,8 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
+        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING = 0);
     }
     /**
      * fucntion setPhotoRequestData()
@@ -716,17 +750,22 @@ public function unsett()
         $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+	if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+		unset($skipProfile);
+	}
        // print_r($skipProfile);
-        $msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile);
-        $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
-        $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
-        $condition["WHERE"]["IN"]["TYPE"]     = "R";
-        $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
-        if(is_array($profilesArray))
-					$MESSAGE_ALL = count($profilesArray);
+	if(is_array($considerProfiles) && count($considerProfiles)>0)
+		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
+//        $configObj            = new ProfileInformationModuleMap();
+//        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
+//        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
         
-                
-       
+        
+        
         
         //print_r($msgCount); die;
         if(is_array($msgCount))
@@ -744,7 +783,6 @@ public function unsett()
 		$MESSAGE_SENT =  $msgCount[0]["COUNT"]; */
 		$this->memcache->setMESSAGE($MESSAGE ? $MESSAGE : 0);
         $this->memcache->setMESSAGE_NEW($MESSAGE_NEW ? $MESSAGE_NEW : 0);
-        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
        
     }
     public function unsetCustomMessageData()
@@ -768,20 +806,34 @@ public function unsett()
         $this->memcache->setMATCHALERT($matchAlertCount["NEW"] ? $matchAlertCount["NEW"] : 0);
         $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"] ? $matchAlertCount["TOTAL"] : 0);
     }
+    
     public function unsetMatchAlertData()
     {
         $this->memcache->setMATCHALERT($matchAlertCount["NEW"]=0);
         $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"]=0);
     }
+ 
+        public function setMATCHALERT($new=0)
+    {
+        $this->memcache->setMATCHALERT($new);
+    }
+ 
+    
     public function setVisitorAlertData()
     {
-        $visitorObj = new Visitors($this->profileid);
-		$visitors = $visitorObj->getVisitorProfile();
+        $profileObj=LoggedInProfile::getInstance('newjs_master');
+        $visitorObj = new Visitors($profileObj);
+                $infoTypenav["matchedOrAll"]='A';
+		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);
 	}
     public function unsetVisitorAlertData()
     {
 		$this->memcache->setVISITOR_ALERT(0);
+    }
+    public function setVisitorsAll($allVisitorCount)
+    {
+		$this->memcache->setVISITORS_ALL($allVisitorCount ? $allVisitorCount : 0);
     }
     public function setChatRequestData()
     {
@@ -796,7 +848,7 @@ public function unsett()
     public function setBookmarkData()
     {
         $bookmarkObj = new Bookmarks();
-        $skipContactedType = SkipArrayCondition::$default;
+        $skipContactedType = SkipArrayCondition::$SHORTLIST;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
         $count       = $bookmarkObj->getBookmarkCount($this->profileid,$skipProfile);
@@ -805,6 +857,41 @@ public function unsett()
     public function unsetBookmarkData()
     {
         $this->memcache->setBOOKMARK($count=0);
+    }
+    public function setMessageAllData()
+    {
+        $skipContactedType = SkipArrayCondition::$MESSAGE;
+        $message           = new MessageLog;
+        $skipProfileObj    = SkipProfile::getInstance($this->profileid);
+        $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+        if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+	}
+       // print_r($skipProfile);
+        $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
+        $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
+        $condition["WHERE"]["IN"]["TYPE"]     = "R";
+	if(InboxEnums::$messageLogInQuery)
+	{
+		if(is_array($considerProfiles) && count($considerProfiles)>0)
+		{
+			$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
+		}
+	}
+	else
+	{
+		$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
+	}
+        if(is_array($profilesArray))
+		$MESSAGE_ALL = count($profilesArray);
+        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
+    }
+    public function unsetMessageAllData()
+    {
+        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL=0);
     }
     /**
      * fucntion setJustJoinedMatchesData()

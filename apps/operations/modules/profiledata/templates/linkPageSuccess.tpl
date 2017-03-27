@@ -42,45 +42,52 @@
 <table width="40%" border="0" cellspacing="2" cellpadding="2" align="center">
 <tr class="fieldsnew">
 	
-	<td class="formhead" valign="middle" colspan="3" align="center" ><span style="font-weight:normal">User Name:</span> ~$username`  <span style="font-weight:normal">-- Status:</span> ~$activated`</td>
+	<td class="formhead" valign="middle" colspan="4" align="center" ><span style="font-weight:normal">User Name:</span> ~$username`  <span style="font-weight:normal">-- Status:</span> ~$activated`</td>
 	</tr>
 <br>
 	<TR>
-	<TD class="label" valign="middle"  align="center" colspan="3" ><a href="~$pdfUrl`/allPdf?cid=~$cid`&profileid1=~$profileid`&dialer_check=1">Generate ALL PDF</a> </TD>
+	<TD class="label" valign="middle"  align="center" colspan="4" ><a href="~$pdfUrl`/allPdf?cid=~$cid`&profileid1=~$profileid`&dialer_check=1">Generate ALL PDF</a> </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >User Login Details</TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/Login?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=Login&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall=Login&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >User Logout Details</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/Logout?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall='Logout'&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall='Logout'&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Profile Details</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/ProfileLog?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=ProfileLog&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" > - </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Profile Modification Details</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/EditLog?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=EditLog&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall=EditLog&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Expression Of Interest History</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/EOILog?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=EOILog&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall=EOILog&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
 	<TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Payment Details</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/PaymentLog?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=PaymentLog&dialer_check=1">Generate PDF</a> </TD>
+	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall=PaymentLog&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Album</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="/operations.php/photoScreening/getAlbum?cid=~$cid`&profileid=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid=~$profileid`&profileid1=~$profileid`&actiontocall=getAlbum&dialer_check=1">Generate PDF</a></TD>
+	<TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
 	</TR>
 	
 </table>

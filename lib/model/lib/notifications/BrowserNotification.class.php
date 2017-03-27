@@ -4,7 +4,12 @@
  * Browser Notification Library
  */ 
 class BrowserNotification{
-    public function __construct($method="",$processObj="") {
+    public function __construct($method="",$processObj="") 
+    {
+        include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
+        $this->casteDetail = $CASTE_DROP;
+        $this->cityDetail = $CITY_INDIA_DROP;
+        $this->countryDetail = $COUNTRY_DROP;
         if($method=="SCHEDULED")
             $this->allNotificationsTemplate = $this->getAllNotificationsTemplate();
         else if($method=="INSTANT" && $processObj!="")
@@ -33,14 +38,13 @@ class BrowserNotification{
                 else
                     $processObj->setprofileId($processObj->getselfUserId());
                 $browserRegistrationIdArr = $this->getChannelWiseRegId($processObj);
-                //if(in_array("M", $processObj->getchannel()))
-                {
-                    $browserRegistrationIdArr = $this->filterProfiles($browserRegistrationIdArr,$processObj);
-                }
+                //print_r($browserRegistrationIdArr);die("123");
+                //filter profiles based either on login history or daily limit if set
+                $browserRegistrationIdArr = $this->filterProfiles($browserRegistrationIdArr,$processObj);
                 if($browserRegistrationIdArr){
                     $browserProfilesData = array("SELF"=>$browserRegistrationIdArr,"OTHER"=>$processObj->getotherUserId());
                     $notificationData = $this->getNotificationData($browserProfilesData, $processObj);
-                    //print_r($notificationData);
+                    //print_r($notificationData);die;
                     $this->insert($notificationData,$processObj);
                 }
             }
@@ -57,7 +61,7 @@ class BrowserNotification{
                     $browserProfilesData = $this->filterProfiles($browserProfilesData,$processObj);
                     //print_r($browserProfilesData);
                     $notificationData = $this->getNotificationData($browserProfilesData, $processObj);
-                    //print_r($notificationData);die;
+                    //print_r($notificationData);
                     $this->insert($notificationData,$processObj);
                 }
             }
@@ -70,7 +74,7 @@ class BrowserNotification{
      * @return : registration id array
      */
     public function getChannelWiseRegId($processObj){
-        $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_slave");
+        $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_masterRep");
         $channel = $processObj->getchannel();
         if($channel){
             $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel);
@@ -94,12 +98,9 @@ class BrowserNotification{
                     $paramsArr["TITLE"] = $val["TITLE"];
                     $paramsArr["ICON"] = $val["ICON"];
                     $paramsArr["TAG"] = $val["TAG"];
-                    if(in_array("CRM_AND", $processObj->getchannel()))
-                        $paramsArr["LANDING_ID"] = BrowserNotificationEnums::$landingIdToUrl[$val["LANDING_ID"]];
-                    else
-                        $paramsArr["LANDING_ID"] = JsConstants::$siteUrl.BrowserNotificationEnums::$landingIdToUrl[$val["LANDING_ID"]];
-                    $paramsArr["MSG_ID"] = $val["MSG_ID"];
                     $paramsArr["PROFILE_CHECKSUM"] = $val["OTHER_PROFILE_CHECKSUM"];
+                    $paramsArr["LANDING_ID"] = $this->mapNotificationLandingID($val['LANDING_ID'],$processObj->getchannel(),$val["NOTIFICATION_KEY"],$val["OTHER_PROFILE_CHECKSUM"]);
+                    $paramsArr["MSG_ID"] = $val["MSG_ID"];
                     $paramsArr["USERNAME"] = $val["SELF"]["USERNAME"];
                     $paramsArr["SENT_TO_QUEUE"] = 'Y';
                     $paramsArr["TTL"] = $val["TTL"];
@@ -185,64 +186,8 @@ class BrowserNotification{
                 $poolObj = new NotificationDataPool();
                 $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
                 unset($poolObj);
-                
-                /*
-    			if(is_array($applicableProfiles))
-    			{
-    				foreach($applicableProfiles as $profileid=>$profiledetails)
-    				{
-                        $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
-                        $loggedInProfileObj->setDetail($profiledetails);
-                        $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj);
-                        $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT'];
-                        if($matchCount[$profileid]>0)
-                            $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
-    				}
-    				unset($loggedInProfileObj);
-    				unset($dppMatchDetails);
-    				unset($applicableProfilesData);
-    				if(is_array($matchedProfiles))
-    				{
-    					foreach($matchedProfiles as $k1=>$v1)
-    					{
-    						foreach($v1 as $k2=>$v2)
-    							$otherProfiles[] = $v2;
-    					}
-    				}
-    				if(is_array($otherProfiles))
-    				{
-    					$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE");
-    				}
-    				unset($otherProfiles);
-    				$counter = 0;
-    				if(is_array($matchedProfiles))
-    				{
-    					foreach($matchedProfiles as $k1=>$v1)
-    					{
-    						if($matchCount[$k1]>0)
-    						{
-    							$dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
-    							foreach($matchedProfiles[$k1] as $k2=> $v2)
-    							{
-    								if(count($dataAccumulated[$counter]['OTHER'])>=2)
-    									break;
-    								if($getOtherProfilesData[$v2])
-    									$dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v2];
-    							}
-    							$dataAccumulated[$counter]['COUNT'] = ($matchCount[$k1]==1)?"SINGLE":"MUL";
-    							$dataAccumulated[$counter]['MATCH_COUNT'] = $matchCount[$k1];
-    							$dataAccumulated[$counter]['COUNT_BELL'] = $matchCount[$k1];
-    						$counter++;
-    						}
-    					}
-    				}
-    				unset($applicableProfiles);
-    				unset($getOtherProfilesData);
-    				unset($matchedProfiles);
-    				unset($matchCount);
-    			}
-                */
 			 break;
+
         case "AGENT_ONLINE_PROFILE":  //instant notification sent to agents for online profile intimation
 
         case "AGENT_FP_PROFILE": //instant notification sent to agents for FP profile intimation
@@ -260,28 +205,41 @@ class BrowserNotification{
             break;
         
         case "PROFILE_VISITOR":
-            $applicableProfiles=array();
-            $applicableProfiles = $this->getProfileApplicableForNotification($browserProfilesArr,$notificationKey);
-            $profileArr = array_keys($applicableProfiles);
+            //$applicableProfiles=array();
+            //$applicableProfiles = $this->getProfileApplicableForNotification($browserProfilesArr,$notificationKey);
+
+            //$profileArr = array_keys($applicableProfiles);
 
             $poolObj = new NotificationDataPool();
-			$details = $poolObj->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
-            $dataAccumulated = $poolObj->getProfileVisitorData($applicableProfiles, $details, $processObj->getmessage());
-            
+			$details = $poolObj->getProfilesData($browserProfilesArr,"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData($browserProfilesArr,"JPROFILE","newjs_masterRep");
+            }
+            //print_r($details);die;
+            $dataAccumulated = $poolObj->getProfileVisitorData($browserProfilesArr, $details, $processObj->getmessage());
+            //print_r($dataAccumulated);die;
             unset($poolObj);
             
             break;
            
-        case "MEM_EXPIRE_A5":
-        case "MEM_EXPIRE_A10":
-        case "MEM_EXPIRE_A15":
-        case "MEM_EXPIRE_B1":	 
-        case "MEM_EXPIRE_B5":
+        case "MEM_EXPIRE":
             $applicableProfiles=array();
             $poolObj = new NotificationDataPool();
-            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $notificationKey, $processObj->getchannel());
+            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $processObj->getchannel());
             $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
             unset($applicableProfiles);
+            break;
+
+        case "EOI":
+        case "MESSAGE_RECEIVED":
+        case "EOI_REMINDER":
+            $poolObj = new NotificationDataPool();
+            $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"JPROFILE","newjs_masterRep");
+            }
+            $dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$browserProfilesArr, $details,$processObj->getmessage());
+            unset($poolObj);
             break;
         }
         
@@ -297,11 +255,21 @@ class BrowserNotification{
                 if($notificationId)
                 {
                     $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
+                    $notificationDataPoolObj = new NotificationDataPool();
+                    $completeNotificationInfo[$counter]["ICON"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["ICON"],$dataPerNotification['ICON_PROFILEID']);
+                    unset($notificationDataPoolObj);
                     $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
                     $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);
                     $completeNotificationInfo[$counter]['OTHER_PROFILE_CHECKSUM'] = JsCommon::createChecksumForProfile($dataPerNotification['OTHER'][0]['PROFILEID']);
-                    if($notificationMethod=="INSTANT" && (in_array("CRM_AND",$processObj->getchannel()) || in_array("M", $processObj->getchannel())))
-                        $completeNotificationInfo[$counter]['REG_IDS'] = $browserProfilesData['SELF'][$dataPerNotification['SELF']['RESID']];
+
+                    if($notificationMethod=="INSTANT")
+                    {
+
+                        if(in_array("CRM_AND",$processObj->getchannel()))
+                            $completeNotificationInfo[$counter]['REG_IDS'] = $browserProfilesData['SELF'][$dataPerNotification['SELF']['RESID']];
+                        else
+                            $completeNotificationInfo[$counter]['REG_IDS'] = $browserProfilesData['SELF'][$dataPerNotification['SELF']['PROFILEID']];
+                    }
                     else
                         $completeNotificationInfo[$counter]['REG_IDS'] = $browserProfilesData[$dataPerNotification['SELF']['PROFILEID']];
                     $counter++;
@@ -309,6 +277,7 @@ class BrowserNotification{
             }
             unset($notificationId);
             unset($dataAccumulated);
+            //print_r($completenotificationinfo);die;
             return $completeNotificationInfo;
         }
         
@@ -320,7 +289,7 @@ class BrowserNotification{
         $currentNotificationSetting = $this->allNotificationsTemplate[$notificationKey];
         $timeCriteria = $currentNotificationSetting['TIME_CRITERIA'];
         unset($notifications);
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_slave");
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
         $varArray['PROFILEID']=implode(",",array_filter($profiles));
         unset($profiles);
         if($timeCriteria!='')
@@ -361,7 +330,7 @@ class BrowserNotification{
     }
     
     public function getAllNotificationsTemplate(){
-        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_slave");
+        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_masterRep");
         $notificationArr = $notificationsTempObj->getAll();
         foreach($notificationArr as $notificationName => $value){
             foreach($value as $key => $val){
@@ -593,35 +562,58 @@ class BrowserNotification{
      * @param : $browserProfilesData(all channels data),$processObj (The process object)
      * @return : $allChannelFilteredProfiles
      */
-    public function filterProfiles($browserProfilesData,$processObj){
-        //var_dump($browserProfilesData);
+    public function filterProfiles($browserProfilesData,$processObj)
+    {
         $channelsArr = $processObj->getchannel();
         $todayDate =date("Y-m-d");
         $notificationKey = $processObj->getnotificationKey();
         $allChannelFilteredProfiles = array();
+        $dateToday = date("Y-m-d");
+        $greaterThanDt=$dateToday." 00:00:00";
+        $lessThanDt=$dateToday." 23:59:59";
         foreach ($channelsArr as $key => $channel) 
         {
             //echo "----".$channel."----".$notificationKey."----";
             $channelWiseProfiles = array();
             if(is_array($browserProfilesData[$channel]))
             {
-                $channelWiseProfiles = array_keys($browserProfilesData[$channel]);
-            
-                if(BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel] && !in_array($notificationKey, BrowserNotificationEnums::$notificationWithoutLoginFilter))
-                {        
-                    $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_slave");
-                    $date15DaysBack = date("Y-m-d", strtotime("$todayDate -14 days"))." 00:00:00";
-                    $profileStr = implode(",", $channelWiseProfiles);
-                    $channelStr = BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel];
-                    $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $date15DaysBack, $channelStr);
-                    //print_r($loginDataForProfiles);
-                    $browserProfilesData = $this->filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles);
-                    
-                }  
-                //print_r($browserProfilesData[$channel]);
-                foreach ($browserProfilesData[$channel] as $key => $value) 
+                //filter profile based on daily limit of instant notification
+                if($processObj->getmethod()=="INSTANT" && in_array($channel,BrowserNotificationEnums::$channelForDailyLimitNotificationFilter))
                 {
-                    $allChannelFilteredProfiles[$key][] = $value;
+                    $channelWiseProfiles = array_keys($browserProfilesData[$channel]);
+                    foreach ($this->allNotificationsTemplate[$notificationKey] as $key => $value) 
+                    {
+                        $dailyLimit = $value["DAILY_LIMIT"];
+                    }
+                    if($dailyLimit)
+                    {
+                        $notificationObj = new MOBILE_API_BROWSER_NOTIFICATION();//???slave
+                        $count = $notificationObj->getSentNotificationCount($browserProfilesData[$channel][$channelWiseProfiles[0]],$channel,$notificationKey,$lessThanDt,$greaterThanDt);
+                        if($count>=$dailyLimit)
+                            unset($browserProfilesData[$channel][$channelWiseProfiles[0]]);
+                        unset($notificationObj);
+                    }    
+                }
+                if(is_array($browserProfilesData[$channel]) && $browserProfilesData[$channel])
+                {
+                    $channelWiseProfiles = array_keys($browserProfilesData[$channel]);
+                    //filter profiles based on login history
+                    if(BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel] && !in_array($notificationKey, BrowserNotificationEnums::$notificationWithoutLoginFilter))
+                    {        
+                        $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_local111");
+                        $date15DaysBack = date("Y-m-d", strtotime("$todayDate -14 days"))." 00:00:00";
+                        $profileStr = implode(",", $channelWiseProfiles);
+                        $channelStr = BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel];
+                        $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $date15DaysBack, $channelStr);
+                        //print_r($loginDataForProfiles);
+                        $browserProfilesData = $this->filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles);
+                        
+                    }  
+                    //print_r($browserProfilesData[$channel]);
+                    foreach ($browserProfilesData[$channel] as $key => $value) 
+                    {
+                        $allChannelFilteredProfiles[$key][] = $value;
+                    }
                 }
             }
         }
@@ -659,23 +651,20 @@ class BrowserNotification{
             }
         return $browserProfilesData;
     }
-
-    /*public function getProfilesData($profiles,$className="JPROFILE")---same func in NotificationDataPool class
-    {
-        if(is_array($profiles))
-        {
-            $varArray['PROFILEID'] = implode(",",$profiles);
-            $smsTempTableObj = new $className;
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
-        }
-        if(is_array($profiledetails))
-        {
-            foreach($profiledetails as $k=>$v)
-                $details[$v['PROFILEID']] = $v;
-        }
-        unset($profiledetails);
-        return $details;	
-    }*/
-
     
+    private function mapNotificationLandingID($landingid,$channelArr,$notificationKey,$profileChecksum)
+    {
+        if(in_array("CRM_AND", $channelArr))
+            $landingid = BrowserNotificationEnums::$landingIdToUrl[$landingid];
+        else
+        {  
+            $extraParams="";
+            if($landingid==6)
+            {
+                $extraParams = "?profilechecksum=".$profileChecksum."&responseTracking=".BrowserNotificationEnums::$notificationResponseTracking[$notificationKey];
+            }
+            $landingid = JsConstants::$siteUrl.BrowserNotificationEnums::$landingIdToUrl[$landingid].$extraParams;
+        }
+        return $landingid;
+    }
 }

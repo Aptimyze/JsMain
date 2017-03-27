@@ -9,6 +9,7 @@ Created : 27 March 2014
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 //MAKE CONNECTION TO MASTER AND SLAVE
 $mysqlObj = new Mysql;
@@ -30,8 +31,10 @@ while($row = $mysqlObj->fetchArray($result))
 }
 if(is_array($profileIds))
 {
-	$sql2 = "UPDATE newjs.JPROFILE SET PHOTOSCREEN = '1' WHERE PROFILEID IN (".implode(",",$profileIds).");";
-	$mysqlObj->executeQuery($sql2,$dbM,'',1) or $mysqlObj->logError($sql2,1);
+	$params["PHOTOSCREEN"]='1';
+	$JProfileUpdateLibObj = JProfileUpdateLib::getInstance();
+	$JProfileUpdateLibObj->updateForMutipleProfiles($params,$profileIds);
+	unset($params);
 }
 
 // newjs.JPROFILE,newjs.PICTURE_FOR_SCREEN_NEW and newjs.PICTURE_NEW 
@@ -57,9 +60,13 @@ while($row = $mysqlObj->fetchArray($result2))
 }
 if(is_array($profileArray))
 {
-	$sql5 = "UPDATE newjs.JPROFILE SET PHOTOSCREEN = '1',HAVEPHOTO = 'Y' WHERE PROFILEID IN (".implode(",",$profileArray).");";
-	$mysqlObj->executeQuery($sql5,$dbM,'',1) or $mysqlObj->logError($sql5,1);
+	$params["PHOTOSCREEN"]='1';
+	$params["HAVEPHOTO"]='Y';
+	$JProfileUpdateLibObj = JProfileUpdateLib::getInstance();
+	$JProfileUpdateLibObj->updateForMutipleProfiles($params,$profileArray);
 }
+$sql10="update PICTURE_FOR_SCREEN_NEW set SCREEN_BIT='1' where ORDERING >0 and OriginalPicURl!= '' and SCREEN_BIT = '0000000'";
+$res3 = $mysqlObj->executeQuery($sql10,$dbM,'',1) or $mysqlObj->logError($sql10,1);
 
 mysql_close($dbM);
 mysql_close($dbS);

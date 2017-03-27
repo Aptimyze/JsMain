@@ -3,7 +3,7 @@ include_once("connect.inc");
 include_once("../profile/pg/functions.php");
 
 $cid = $_COOKIE["CRM_NOTIFICATION_AGENTID"];
-$name = $_COOKIE["CRM_NOTIFICATION_AGENT"];
+$name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
 
 if(authenticated($cid))
 {
@@ -173,9 +173,9 @@ if(authenticated($cid))
 						$mode_wise_amt[$m]+= $row['AMOUNT'];
 
 						//code added by sriram to show call source for inbound users.
-						if($privilage && ($center=='NOIDA' || $center=='MUMBAI' || $center=='PUNE' || $center=='BANGALORE' || $center=='CHENNAI' || $center=='HYDERABAD'))
+						if($privilage && ($center=='NOIDA' || $center=='MUMBAI' || $center=='PUNE' || $center=='BANGALORE' || $center=='CHENNAI' || $center=='HYDERABAD') || $xls == 1)
 						{
-							if(in_array("IA",$privilage) || in_array("IUI",$privilage))
+							if(in_array("IA",$privilage) || in_array("IUI",$privilage) || $xls == 1)
 							{
 								$sql_inb = "SELECT CALL_SOURCE FROM incentive.INBOUND_ALLOT WHERE PROFILEID='$profileid' AND ALLOTED_TO='$operator_name' ORDER BY ID DESC LIMIT 1";
 								$res_inb = mysql_query_decide($sql_inb) or die("$sql_inb".mysql_query_decide());
@@ -216,7 +216,7 @@ if(authenticated($cid))
 		else
 			$header = "Profileid"."\t"."Username"."\t"."Registered Date"."\t"."Paid Date"."\t"."Allocation Date"."\t"."Last Handling Date"."\t"."Status"."\t"."Amount Paid"."\t"."Mode of payment"."\t";
 		if($show_inbound==1)
-			$header.="Query Source"."\t";
+			$header.="Query/Call Source"."\t";
 		for($i=0;$i<count($profilearr);$i++)
 		{
 			if($operator_name == 'all')

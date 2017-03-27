@@ -65,3 +65,10 @@ all:
     enable_login: on
   mobHorscope:
   enable_login: on
+  deleteHoroscopeV1:
+    enable_login: on
+  
+  ApiProfileCacheV1:
+    enable_login: off
+  VSPLoadCheckV1:
+    enable_login: off

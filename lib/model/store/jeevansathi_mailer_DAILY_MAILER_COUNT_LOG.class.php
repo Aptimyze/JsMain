@@ -22,6 +22,7 @@ class jeevansathi_mailer_DAILY_MAILER_COUNT_LOG extends TABLE{
                         throw new jsException($e);
                 }
 	}
+
 	public function getID($mailerKey)
         {
                 try{

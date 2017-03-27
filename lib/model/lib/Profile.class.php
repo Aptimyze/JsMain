@@ -154,6 +154,7 @@ class Profile{
 	private $PG_COLLEGE;
 	private $COLLEGE;
 	private $NAME;
+	private $SERIOUSNESS_COUN;
 	private $education_other;
 	protected $fieldsArray=array();
         /**
@@ -1119,7 +1120,7 @@ class Profile{
                         if(isset($hobbies) && $onlyValues == '')
                             $userHobbies = $hobbies;
                         else{
-                            $hobbyObj=new NEWJS_HOBBIES();
+                            $hobbyObj=new JHOBBYCacheLib();
                             $userHobbies = $hobbyObj->getUserHobbies($this->PROFILEID,$onlyValues);
                         }
 			if($onlyValues)
@@ -1143,15 +1144,15 @@ class Profile{
 	 */
 	public function getAstroKundali($onlyValues="")
 	{
-		$astro=new NEWJS_ASTRO();
+		$astro= ProfileAstro::getInstance();
 
 		$astroDetails=$astro->getAstros($this->PROFILEID);
 		if($onlyValues)
 			return $astroDetails;
 		if($astroDetails[CITY_BIRTH])
 		{
-				$cityOfBirth = $astro_details['CITY_BIRTH'];
-				$countryOfBirth=$astro_details['COUNTRY_BIRTH'];
+				$cityOfBirth = $astroDetails['CITY_BIRTH'];
+				$countryOfBirth=$astroDetails['COUNTRY_BIRTH'];
 		}
 		else{
 				$countryOfBirth=$this->DecoratedBirthCountry;
@@ -1285,20 +1286,34 @@ class Profile{
          * Returns profile information
          */
 	public function getDecoratedYourInfo(){
+
+                
                 if(Flag::isFlagSet("yourinfo",$this->SCREENING))
-                        return nl2br($this->YOURINFO);
-                if($this->YOURINFO=="")
                 {
-					if(!in_array("YOURINFO",$this->fieldsArray))
-					ProfileFieldsLogging::callFieldStack(1);
-				}
-	}
+                    return nl2br($this->YOURINFO);
+                }
+                else
+                {
+                    $profileYourInfoOld = new ProfileYourInfoOld();
+                    $oldYourInfo = $profileYourInfoOld->getAboutMeOld($this->PROFILEID)['YOUR_INFO_OLD'];
+                    if($this->YOURINFO=="")
+                    {
+                        if(!in_array("YOURINFO",$this->fieldsArray))
+                        ProfileFieldsLogging::callFieldStack(1);
+                    }
+
+                    if ( $oldYourInfo !== NULL )
+                    {
+                        return $oldYourInfo;
+                    }
+                }
+    }
         /**
          * getDecoratedFamilyInfo()
          *
          * Returns family information
          */
-	public function getDecoratedFamilyInfo(){
+    public function getDecoratedFamilyInfo(){
                 if(Flag::isFlagSet("familyinfo",$this->SCREENING))
                         return nl2br($this->FAMILYINFO);
                 if($this->FAMILYINFO=="")
@@ -1479,7 +1494,7 @@ class Profile{
         public function getExtendedContacts($onlyValues="")
 		{
 			if($this->HAVE_JCONTACT=="Y"){
-				$pc=new NEWJS_JPROFILE_CONTACT();
+				$pc= new ProfileContact();
 				$contacts_arr=$pc->getProfileContacts($this->PROFILEID);
 				if($onlyValues)
 					return $contacts_arr;
@@ -1501,13 +1516,13 @@ class Profile{
          *
          * Returns education detail array of profile
          */
-        public function getEducationDetail($valuesOnly="")
+        public function getEducationDetail($valuesOnly="",$dbname="")
         {
 			if($this->HAVE_JEDUCATION=='Y'){
 				//If already fetched then return the fetched object
 				//otherwise fetch education details
 				if(! $this->education_other instanceof ProfileComponent){
-				$pe=new NEWJS_JPROFILE_EDUCATION();
+				$pe = ProfileEducation::getInstance($dbname);
 				$education_arr=$pe->getProfileEducation($this->PROFILEID);
 				if($valuesOnly)
 					return $education_arr;
@@ -1599,6 +1614,8 @@ class Profile{
 		 */
 			foreach($res as $field=>$value){
 				$this->$field=$value;
+				if(in_array($field,ProfileEnums::$saveBlankIfZeroForFields) &&$value=="0")
+					$this->$field='';
 			}
 		}
 		return $res;
@@ -1777,6 +1794,14 @@ class Profile{
 					ProfileFieldsLogging::callFieldStack(1);
 			}
 		return $this->ENTRY_DT; }
+        function setSERIOUSNESS_COUNT($SERIOUSNESS_COUNT) { $this->SERIOUSNESS_COUNT = $SERIOUSNESS_COUNT; }
+        function getSERIOUSNESS_COUNT() {
+                if(!$this->SERIOUSNESS_COUNT)
+                        {
+                                if(!in_array("SERIOUSNESS_COUNT",$this->fieldsArray))
+                                        ProfileFieldsLogging::callFieldStack(1);
+                        }
+                return $this->SERIOUSNESS_COUNT; }
 	function setMOD_DT($MOD_DT) { $this->MOD_DT = $MOD_DT; }
 	function getMOD_DT() { 
 		if(!$this->MOD_DT)

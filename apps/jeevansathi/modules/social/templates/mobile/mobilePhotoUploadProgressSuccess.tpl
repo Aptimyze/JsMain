@@ -52,6 +52,7 @@
         var appMaxPhotoSize = ~sfConfig::get("app_max_photo_size")`;
         var maxNoOfPhotos = ~sfConfig::get("app_max_no_of_photos")`;
         var SITE_URL = "~sfConfig::get('app_site_url')`";
+	var imageCopyServer = "~$imageCopyServer`";
 	$("body").css("background",'white');
 </script>
 

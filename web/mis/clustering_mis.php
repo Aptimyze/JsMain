@@ -1,4 +1,5 @@
 <?php
+die("Please contact on lavesh.rawat@jeevansathi.com.");
 include_once("connect.inc");
 include("../profile/arrays.php");
 $db=connect_misdb();

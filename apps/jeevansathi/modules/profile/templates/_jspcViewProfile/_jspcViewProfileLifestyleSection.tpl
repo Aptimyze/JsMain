@@ -1,6 +1,6 @@
 <!--start:Lifestyle-->
                <div class="prfbr3">
-              <div class="prfp6" id="section-lifestyle"> 
+              <div class="prfp6 noMultiSelect" id="section-lifestyle"> 
                 <div class="clearfix"> <i class="sprite2 fl prfic37"></i>
                   <div class="fl colr5 pl12 f17 pt2">Lifestyle</div>
                   ~if $bEditView`
@@ -12,7 +12,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Appearance</p>
                       <p class="pt2 pr20">
-                        <span id="appearanceView">
+                        <span id="appearanceView" ~if $apiData["lifestyle"]["appearance"] eq null` class="notFilledInColor" ~/if`>
                           ~if $apiData["lifestyle"]["appearance"] neq null || $bEditView`
                             ~$apiData["lifestyle"]["appearance"]`
                           ~else`
@@ -24,7 +24,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Habits</p>
                       <p class="pt2 pr20">
-                        <span id="habbitsView">
+                        <span id="habbitsView" ~if $apiData["lifestyle"]["habbits"] eq null` class="notFilledInColor" ~/if`>
                           ~if $apiData["lifestyle"]["habbits"] neq null || $bEditView`
                             ~$apiData["lifestyle"]["habbits"]`
                           ~else`
@@ -36,7 +36,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Assets</p>
                       <p class="pt2 pr20">
-                        <span id="assetsView">
+                        <span id="assetsView" ~if $apiData["lifestyle"]["assets"] eq null` class="notFilledInColor" ~/if`>
                           ~if $apiData["lifestyle"]["assets"] neq null || $bEditView`
                             ~$apiData["lifestyle"]["assets"]`
                           ~else`
@@ -48,7 +48,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Languages Known</p>
                       <p class="pt2 pr20">
-                        <span id="languageView" ~if $bEditView && $apiData["lifestyle"]["language"] eq $notFilledInText` class="color5"  ~/if` >
+                        <span id="languageView" ~if $bEditView && $apiData["lifestyle"]["language"] eq $notFilledInText` class="color5" ~else if $apiData["lifestyle"]["language"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["lifestyle"]["language"] neq null || $bEditView`
                             ~$apiData["lifestyle"]["language"]`
                           ~else`
@@ -60,7 +60,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Blood Group</p>
                       <p class="pt2 pr20">
-                        <span id="blood_groupView" ~if $bEditView && $apiData["lifestyle"]["blood_group"] eq $notFilledInText` class="color5"  ~/if` >
+                        <span id="blood_groupView" ~if $bEditView && $apiData["lifestyle"]["blood_group"] eq $notFilledInText` class="color5" ~else if $apiData["lifestyle"]["blood_group"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["lifestyle"]["blood_group"] neq null || $bEditView`
                             ~$apiData["lifestyle"]["blood_group"]`
                           ~else`
@@ -78,7 +78,7 @@
                     ~elseif !$bEditView`
                     <li>
                       <p class="fontlig color12 pt15">Residential Status</p>
-                      <p class="pt2 pr20">Not filled in</p>
+                      <p class="pt2 pr20 notFilledInColor">Not filled in</p>
                     </li>
                     ~elseif $bEditView`
                     <li>
@@ -92,7 +92,7 @@
                     <li>
                       <p class="fontlig color12 pt15">Special Cases</p>
                       <p class="pt2 pr20">
-                      <span id="special_casesView">
+                      <span id="special_casesView" ~if $apiData["lifestyle"]["special_cases"] eq null` class="notFilledInColor" ~/if`>
                         ~if $apiData["lifestyle"]["special_cases"] neq null || $bEditView`
                           ~$apiData["lifestyle"]["special_cases"]`
                         ~else`
@@ -110,7 +110,7 @@
                         </span>
                       </p>
                       <p class="pt2 pr20">
-                      <span id="religious_beliefsView">
+                      <span id="religious_beliefsView" ~if $apiData["lifestyle"]["religious_beliefs"] eq null` class="notFilledInColor" ~/if`>
                         ~if $apiData["lifestyle"]["religious_beliefs"] neq null || $bEditView`
                           ~$apiData["lifestyle"]["religious_beliefs"]`
                         ~else`

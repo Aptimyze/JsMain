@@ -53,9 +53,9 @@ class billing_COMPONENTS extends TABLE{
         {
         	if(is_array($serviceid)){
         		$serviceIdArr = "'".implode("','",$serviceid)."'";
-        		$sql="SELECT SQL_CACHE c.DURATION as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID IN ($serviceIdArr)";
+        		$sql="SELECT SQL_CACHE MAX(c.DURATION) as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID IN ($serviceIdArr) GROUP BY s.SERVICEID";
         	} else {
-            	$sql="SELECT SQL_CACHE c.DURATION as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID = :SERVICEID";
+            	$sql="SELECT SQL_CACHE MAX(c.DURATION) as DURATION, s.SERVICEID AS SERVICEID FROM billing.SERVICES s, billing.COMPONENTS c, billing.PACK_COMPONENTS pc WHERE s.PACKID = pc.PACKID AND pc.COMPID=c.COMPID AND s.SERVICEID = :SERVICEID GROUP BY s.SERVICEID";
         	}
             $prep=$this->db->prepare($sql);
             if(!is_array($serviceid)) {
@@ -218,6 +218,32 @@ class billing_COMPONENTS extends TABLE{
             return $output;
         }
         catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getDurationRightsForServiceDetails($serviceid, $package) {
+        try {
+        	if($package == "Y"){
+	            $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = :SERVICEID";
+	            $resSelectDetail = $this->db->prepare($sql);
+	            $resSelectDetail->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+	            $resSelectDetail->execute();
+	            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+	            	$output[] = $rowSelectDetail;
+	            }
+	        } else {
+	        	$sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.COMPONENTS c where c.COMPID = a.COMPID AND a.SERVICEID = :SERVICEID";
+	            $resSelectDetail = $this->db->prepare($sql);
+	            $resSelectDetail->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
+	            $resSelectDetail->execute();
+	            if ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+	            	$output = $rowSelectDetail;
+	            }
+	        }
+            return $output;
+        }
+        catch(Exception $e) {
             throw new jsException($e);
         }
     }

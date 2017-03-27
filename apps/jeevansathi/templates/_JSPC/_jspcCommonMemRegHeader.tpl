@@ -94,11 +94,9 @@
         if(stickyTopNavBar){
             $(window).scroll(function () {
                 if ($(this).scrollTop() > stickyHeader) {
-                    $("#topNavigationBar").addClass("pos_fix");
-                    $("#topNavigationBar").removeClass("pos_rel");
+                    $("#topNavigationBar").addClass("pos_fix").removeClass("pos_rel");
                 } else {
-                    $("#topNavigationBar").addClass("pos_rel");
-                    $("#topNavigationBar").removeClass("pos_fix");
+                    $("#topNavigationBar").addClass("pos_rel").removeClass("pos_fix");
                 }
             });
         }

@@ -164,7 +164,7 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
                 }
                 $insertColumns = substr($insertColumns, 0,-1);
                 $insertValues = substr($insertValues, 0,-1);
-                $sql = "INSERT INTO MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION(".$insertColumns.") VALUES (".$insertValues.")";
+                $sql = "INSERT IGNORE INTO MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION(".$insertColumns.") VALUES (".$insertValues.")";
                 $prep = $this->db->prepare($sql);
                 foreach ($paramsArr as $key => $value) {
                     $prep->bindValue(":".$key,$value,constant('PDO::PARAM_'.$this->{$key.'_BIND_TYPE'}));
@@ -227,6 +227,25 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
             if($channel)
                 $prep->bindValue(":CHANNEL",$channel,PDO::PARAM_STR);
             $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    
+    /*
+     * @desc: get all data of website users leaving the CRM agents
+     * @params: none
+     * @return: all data of the table
+     */
+    public function getAllWebsiteUsers(){
+        try{
+            $sql = "SELECT * FROM MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION WHERE PROFILEID IS NOT NULL";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                $result[$row['PROFILEID']][] = $row;
+            }
+            return $result;
         } catch (Exception $ex) {
             throw new jsException($ex);
         }

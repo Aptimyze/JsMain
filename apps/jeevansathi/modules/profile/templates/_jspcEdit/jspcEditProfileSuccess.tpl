@@ -1,6 +1,7 @@
 ~include_Partial("search/photoAlbum")`
 
 
+
 <input id='hiddenPhoneMain' type='hidden' value='' phonetype='M'>
 <input id='hiddenIsd1' type='hidden' value=''>
 <input id='hiddenPhoneOther' type='hidden' value='' phonetype='A'>
@@ -83,6 +84,10 @@
             <li class="pl10"><a href="/social/addPhotos?uploadType=F" class="color11">Facebook</a></li>
           </ul>
           <p class="f13 edpcolr1 txtc pt20">You can set Photo Privacy</p>
+          ~if $arrOutDisplay['pic']['pic_count'] neq "0"`
+          
+          <div class="pos-rel pt10 pl47"><p class="f13 colr5 txtc txtl  photoClick js-previewAlbum disp_ib  cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">Preview Album</p></div>
+          ~/if`
         </div>
         <!--end:upload div--> 
         <!--start:make your profile-->
@@ -129,15 +134,15 @@
               <div class="f15 fontlig color11">        
                 <!--start:Basic Details-->
                 <div class="prfbr3">
-                  <div class="prfp5" id="section-basic">
+                  <div class="prfp5 noMultiSelect" id="section-basic">
                     <div class="clearfix"> <i class="sprite2 fl edpic6"></i>
                       <div class="fl colr5 pl8 f17 pt2" >Basic Details</div>
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
                     </div>
                     <div class="pl30 prflist1 fontlig js-basicView">
-                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Name</span> - 
+                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Full Name</span> - 
                         ~if isset($arrOutDisplay.about.name) and $arrOutDisplay.about.name neq $notFilledInText`
-                          <span class="color11" id='nameView'>
+                          <span class="color11 js-syncChatHeaderName" id='nameView'>
                             ~$name`
                           </span>
                           ~else`
@@ -151,7 +156,7 @@
                       <ul class="clearfix fontreg">
                         <li>
                           <p class="color12 pt15 fontlig">Age, Height</p>
-                          <p class="pt2 fontlig">~$arrOutDisplay.about.age`, <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
+                          <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`), <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Highest Education</p>
@@ -266,7 +271,7 @@
           <!--start:right div-->
           <div class="fr fontlig prfwid12"> 
             <!--start:contact details-->
-            <div class="bg-white fullwid fontlig" id="section-contact">
+            <div class="bg-white fullwid fontlig noMultiSelect" id="section-contact">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
@@ -280,15 +285,45 @@
                   <li>
                     <p class="color12" id="emailLabelParent">
                       Email id <span class="ml5 ~if ($editApiResponse.Contact.EMAIL.value|count_characters:true) eq 0 || $editApiResponse.Contact.EMAIL.screenBit neq 1` disp-none ~/if` js-undSecMsg">
-                          <span class="disp_ib color5 f13" > Under Screening</span>
+                      <span class="disp_ib color5 f13" > Under Screening</span>
+                    </span>
+                  </p>
+                  <div class="clearfix pos-rel">
+                  <div class="fl wid70p">
+                      <p class="color11">
+                        <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
+                          ~$arrOutDisplay['contact']['my_email']`
                         </span>
+                      </p>
+                    </div>
+                    <div class="fr wid25p pos-abs right0">
+                      <div ~if $arrOutDisplay['contact']['email_status'] eq Verified` class="color12" ~else` class="cursp color5" ~/if` id="email_statusView" >~$arrOutDisplay['contact']['email_status']`</div>
+                    </div> 
+                  </div>
+
+                </li>
+                  <!-- added alt email -->
+                  <li>
+                    <p class="color12" id="emailLabelParent">
+                      Alternate Email id
                     </p>
-                    <p class="color11">
-                      <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
-                        ~$arrOutDisplay['contact']['my_email']`
-                      </span>
-                    </p>  
+
+                    
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid70p">
+                        <p class="color11">
+                          <span id='my_alt_emailView' ~if $arrOutDisplay.contact.my_alt_email eq $notFilledInText` class="color5"  ~/if`>
+                            ~$arrOutDisplay['contact']['my_alt_email']`
+                          </span>
+                        </p>
+                      </div>
+                      <div class="fr wid25p pos-abs right0">
+                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
+                      </div>
+                    </div>
+                     <div id="showAlternateEmailHint" ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify` class="f12 color12  pt5" ~else` class="f12 color12  pt5 disp-none"  ~/if`>Verify email id to receive mails.</div>
                   </li>
+
                   <li>
                     <p class="color12" >
                       Mobile No. 
@@ -467,18 +502,39 @@
                 </div>
             </div>
             <!--end:gunna layer-->
+             <!--start:gunna layer-->
+            <div class="pos_fix layerMidset layersZ disp-none" id="removeHoroscopeLayer">
+                <div class="edpwid18 upHoroClr pos-rel">
+                    <i id="removeClosebtnHL" class="sprite2 edpcross1 pos-abs  CPclosepos cursp"></i>
+                    <!--start:layer add your horoscope-->
+                    <div>
+                        <!--start:heading-->
+                        <div class="upperCase f16 fontreg colrw lh61 bg5 pl30">REMOVE HOROSCOPE</div>
+                        <!--end:heading-->
+                        <div id="removeHoroscopeDiv">
+                            <div class="txtc pt10">This will delete your Horoscope, Time of Birth and Place of Birth. Would you like to proceeed?</div>
+                            <div class="fontreg  txtc pt10 pb30">
+                                <button id="Rbt_yes" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 f15 cursp">Yes</button>
+                                <button id="Rbt_no" class="lh41 bg_pink txtc colrw brdr-0 wid33p_1 ml10 f15 cursp">No</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:layer add your horoscope-->
+                </div>
+            </div>
+            <!--end:gunna layer-->
             
             <!--end:Horoscope Details--> 
             <!--start:verifcation id-->
-            <div class="bg-white fullwid fontlig mt15" id="section-verification">
+            <div class="bg-white fullwid fontlig mt15 noMultiSelect" id="section-verification">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
-                    <p class="fl color5 f17 pt3 pl5">Verification ID </p>
+                    <p class="fl color5 f17 pt3 pl5">ID & Address Proof</p>
                   </li>
                   <li class="pt4">
                       <a  class="color5 fontreg f15 js-editBtn js-verificationView cursp" data-section-id="verification">
-                          ~if $editApiResponse.Contact.ID_PROOF_TYP.value && $editApiResponse.Contact.ID_PROOF_NO.value`
+                          ~if $editApiResponse.Contact.ID_PROOF_TYPE.value || $editApiResponse.Contact.ADDR_PROOF_TYPE.value`
                             Edit
                           ~else`
                             Add
@@ -488,17 +544,43 @@
                 </ul>
               </div>
               <div class="prfp12 f14 js-verificationView">
-                <p class="color2 f11 txtc">* ID will not be visible to any member.</p>
-                <p class="txtc color12 f14 pt40 pb48">
-                    <span id='my_verification_idView' ~if $arrOutDisplay.contact.my_verification_id eq $notFilledInText` class="color5" ~else` class="color11"  ~/if`>
-                        ~$arrOutDisplay['contact']['my_verification_id']`
-                      </span>
-                    
-                </p>
+                        <ul class="listn gunna">
+                        <li>
+                                <p class="color12">~$editApiResponse.Contact.ID_PROOF_TYPE.label`</p>
+                                <p class="~if $editApiResponse.Contact.ID_PROOF_TYPE.value` color11 ~else` color5 ~/if` pt6">
+                                        <span id="id_proof_typeView">
+                                                ~if $editApiResponse.Contact.ID_PROOF_TYPE.value`
+                                                        ~$editApiResponse.Contact.ID_PROOF_TYPE.label_val`
+                                                ~else`
+                                                        Not filled in
+                                                ~/if`
+                                        </span>
+                                </p>
+                        </li>
+                        <li>
+                                <p class="color12">~$editApiResponse.Contact.ADDR_PROOF_TYPE.label`</p>
+                                <p class="~if $editApiResponse.Contact.ADDR_PROOF_TYPE.value` color11 ~else` color5 ~/if` pt6">
+                                        <span id="addr_proof_typeView">
+                                                ~if $editApiResponse.Contact.ADDR_PROOF_TYPE.value`
+                                                        ~$editApiResponse.Contact.ADDR_PROOF_TYPE.label_val`
+                                                ~else`
+                                                        Not filled in
+                                                ~/if`
+                                        </span>
+                                </p>
+                        </li>
+                        </ul>
               </div>
                 <!--start:Edit Basic Details-->
               <div class="prfp12 f14 fontlig">
-                <div class="clearfix cntct" id="verificationEditForm"><!---Edit Form--></div>
+                
+                <div class="clearfix cntct" id="verificationEditForm">
+                        <!--<ul class="listn gunna disp-none">
+                                <li>
+                                <p class=" color11  pt6">Upload at least one document</p>
+                                </li>
+                        </ul>-->
+                        <!---Edit Form--></div>
               </div>
               <!--end:Edit Basic Details-->   
             </div>
@@ -516,7 +598,22 @@
   </div>
   <!--end:second part--> 
 </div>
+<div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+    <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
+<div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<i class="sprite2 sendcross cursp pos-abs crosspos closeCommLayer"></i>
+<div class="color11">
+<!--start:div-->
+<div class="phnvwid3 mauto pt40 pb27 fontlig">
+<p id='altEmailConfirmText' class=" f17 txtc lh26"></p>
+</div>
+</div>
+<!--end:layer 1-->
+</div>    
+    
 <script type="text/javascript">
+  var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+  var fromCALAlternate=~if $fromCALAlternate == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
   var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
   var profileGender = "~$arrOutDisplay["about"]["gender"]`";
@@ -531,3 +628,4 @@
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
 </script>
+

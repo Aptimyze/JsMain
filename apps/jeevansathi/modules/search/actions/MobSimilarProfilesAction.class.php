@@ -50,6 +50,15 @@ class MobSimilarProfilesAction extends sfActions
                 
                 $this->firstResponse=$jsonResponse;
 		$ResponseArr = json_decode($jsonResponse,true);
+		 if($ResponseArr["no_of_results"]==0 && $request->getParameter("fromViewSimilarActionMobile")){
+                        $url=JsConstants::$siteUrl.'/myjs/jsmsPerform';
+                        header('Location: '.$url);die;
+                }
+		if($request->getParameter("fromViewSimilarActionMobile"))
+                        $this->historyBackStop=1;
+                else
+                        $this->historyBackStop=0;
+
 		if($isLogout==1)
 		        $this->forward("static","logoutPage");
                 

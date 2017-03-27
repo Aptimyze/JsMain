@@ -40,13 +40,14 @@ class csvUploadActions extends sfActions
                                 $this->invalidFile =1;
                         }
                         else{
-                                $notificationCsvObj =new MOBILE_API_CSV_NOTIFICATION_TEMP;
+                                $notificationCsvObj =new MOBILE_API_CSV_NOTIFICATION_TEMP('newjs_masterDDL');
                                 $notificationCsvObj->truncate();
                                 $status =$notificationCsvObj->insertRecord($fileTemp);
 				if($status){
 	                                $this->successful =1;
                                 	// Execution in background to send CSV Notification
                                 	$command = JsConstants::$php5path." ".JsConstants::$cronDocRoot."/symfony smsNotification:sendCsvNotifications >/dev/null &";
+					$command = preg_replace('/[^A-Za-z0-9\. -_>&]/', '', $command);
                                 	passthru($command);
 				}
                         }

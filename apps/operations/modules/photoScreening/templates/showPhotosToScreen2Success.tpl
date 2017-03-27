@@ -37,7 +37,8 @@
 	~/if`
 <br>
 </br>
- <form name="list" enctype="multipart/form-data" action="~sfConfig::get('app_site_url')`/operations.php/photoScreening/uploadScreeningAction?cid=~$cid`" method="POST">
+ <form name="list" enctype="multipart/form-data" action="~sfConfig::get('app_site_url')`~$imageCopyServer`/operations.php/photoScreening/uploadScreeningAction?cid=~$cid`" method="POST">
+ 
    <input type=hidden name="profileid" value="~$profileData['PROFILEID']`">
    <input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
    <input type=hidden name="source" value="~$source`">

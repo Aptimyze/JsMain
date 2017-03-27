@@ -5,7 +5,8 @@ include("../billing/comfunc_sums.php");
 include ("display_result.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 $sno=1;
-
+$db = connect_db();
+$db_slave = connect_rep();
 if(authenticated($cid))
 {
 	$name= getname($cid);
@@ -32,7 +33,7 @@ if(authenticated($cid))
 	if($centre_label!="HO")
 	{	
 		$sql="SELECT VALUE from incentive.BRANCH_CITY where UPPER(LABEL) ='".strtoupper($centre_label)."'";
-		$myrow=mysql_fetch_array(mysql_query_decide($sql));
+		$myrow=mysql_fetch_array(mysql_query_decide($sql,$db_slave));
 		$centre=$myrow['VALUE'];
 	}
 	else
@@ -41,10 +42,10 @@ if(authenticated($cid))
 	if($Confirm && $FLAG==1)
 	{
 		$sql3 = "INSERT INTO incentive.LOG (PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,REF_ID,PREFIX_NAME,LANDMARK) SELECT PROFILEID,USERNAME,NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICE,ADDRESS,CITY,PIN,BYUSER,CONFIRM,AR_GIVEN,ENTRY_DT,ARAMEX_DT,STATUS,BILLING,ENTRYBY,COMMENTS,PREF_TIME,COURIER_TYPE,'$id',PREFIX_NAME,LANDMARK FROM incentive.PAYMENT_COLLECT where ID='$id'";
-                mysql_query_decide($sql3) or die("$sql3".mysql_error_js());
+                mysql_query_decide($sql3,$db) or die("$sql3".mysql_error_js());
 
 		$sql="UPDATE incentive.PAYMENT_COLLECT set CONFIRM='Y', ENTRYBY='$name',ENTRY_DT=now(),COMMENTS = '$new_comment',COURIER_TYPE='$courier_type', ACC_REJ_MAIL_BY='$name' where ID='$id'";
-		mysql_query_decide($sql) or die("$sql".mysql_error_js());
+		mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
 		
 
 		echo "<br>";
@@ -57,7 +58,7 @@ if(authenticated($cid))
 		if($name == 'jayaprabha')
                 {
                         $sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE IN_REGION='S'";
-                        $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                        $result=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                                 $ar_branch[]=$myrow['VALUE'];
 
@@ -70,7 +71,7 @@ if(authenticated($cid))
 		elseif($user_type=='outbound')
 		{
 			$sql = "SELECT AR_BRANCH FROM incentive.ARAMEX_BRANCHES WHERE 1";
-			$res = mysql_query_decide($sql) or die($sql.mysql_error_js());
+			$res = mysql_query_decide($sql,$db_slave) or die($sql.mysql_error_js());
 			while($row = mysql_fetch_array($res))
 				$arm_city_arr[] = $row["AR_BRANCH"];
 
@@ -80,7 +81,7 @@ if(authenticated($cid))
 			unset($arm_city_arr);
 
 			$sql = "SELECT PROFILEID FROM incentive.MAIN_ADMIN WHERE ALLOTED_TO = '$name'";
-			$res = mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$res = mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
 			while($row = mysql_fetch_array($res))
 				$profileid_arr[] = $row['PROFILEID'];
 
@@ -101,7 +102,7 @@ if(authenticated($cid))
 					if($profileid_str)
 					{
 						$sql_jp = "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID IN($profileid_str) AND CITY_RES IN('$arm_city_str')";
-						$res_jp = mysql_query_decide($sql_jp) or die($sql_jp.mysql_error_js());
+						$res_jp = mysql_query_decide($sql_jp,$db_slave) or die($sql_jp.mysql_error_js());
 						while($row_jp = mysql_fetch_array($res_jp))
 							$final_profileid_arr[] = $row_jp['PROFILEID'];
 					}
@@ -129,7 +130,7 @@ if(authenticated($cid))
 				$sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE VALUE like('GU%') or VALUE like('MH%') or VALUE like('MP%')";
 			else
 				$sql="SELECT VALUE FROM incentive.BRANCH_CITY WHERE NEAR_BRANCH='$centre'";
-                        $result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                        $result=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                         {
                                 $ar_branch[]=$myrow['VALUE'];
@@ -141,7 +142,7 @@ if(authenticated($cid))
 	/**********Code added by Aman to show the records alloted to those who have left*****************/
 		
 			$sql="SELECT UPPER(LABEL) FROM incentive.BRANCH_CITY WHERE VALUE IN('$ar')";
-			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$result=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
                         while($myrow=mysql_fetch_array($result))
                         {
                                 $branch_label[]=$myrow['LABEL'];
@@ -150,7 +151,7 @@ if(authenticated($cid))
                                 $br_lbl=implode("','",$branch_label);
 
 			$sql_sel="SELECT USERNAME FROM jsadmin.PSWRDS WHERE UPPER(CENTER) IN ('$br_lbl') AND PRIVILAGE LIKE  '%IUO%' AND ACTIVE='N'";
-			$res_sel=mysql_query_decide($sql_sel) or die(mysql_error_js());
+			$res_sel=mysql_query_decide($sql_sel,$db_slave) or die(mysql_error_js());
                         while($row=mysql_fetch_array($res_sel))
                         {
                                 $usernamearr[]=$row['USERNAME'];
@@ -160,7 +161,7 @@ if(authenticated($cid))
 			{
 				$user_str=implode("','",$usernamearr);
 				$sql_cnt_dif="SELECT COUNT(*) from incentive.PAYMENT_COLLECT,incentive.MAIN_ADMIN,incentive.BRANCH_CITY where CONFIRM='' and PAYMENT_COLLECT.CITY IN ('$ar') and DISPLAY <> 'N' and incentive.PAYMENT_COLLECT.PROFILEID=incentive.MAIN_ADMIN.PROFILEID and incentive.MAIN_ADMIN.ALLOTED_TO IN('$user_str') and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
-                        	$result_diff=mysql_query_decide($sql_cnt_dif) or die(mysql_error_js());
+                        	$result_diff=mysql_query_decide($sql_cnt_dif,$db_slave) or die(mysql_error_js());
                         	$myrow_diff = mysql_fetch_row($result_diff);
                         	$count_diff = $myrow_diff[0];
 			}
@@ -168,7 +169,7 @@ if(authenticated($cid))
 			if(in_array('IUO',$privilage))
 			{
 				$sql="SELECT COUNT(*) from incentive.PAYMENT_COLLECT,incentive.MAIN_ADMIN,incentive.BRANCH_CITY where CONFIRM='' and PAYMENT_COLLECT.CITY IN ('$ar') and DISPLAY <> 'N' and incentive.PAYMENT_COLLECT.PROFILEID=incentive.MAIN_ADMIN.PROFILEID and incentive.MAIN_ADMIN.ALLOTED_TO='$name' and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";
-				$result=mysql_query_decide($sql,$db) or die(mysql_error_js());
+				$result=mysql_query_decide($sql,$db_slave) or die(mysql_error_js());
 				$myrow = mysql_fetch_row($result);
 				$count_out = $myrow[0];
 			}
@@ -199,7 +200,7 @@ if(authenticated($cid))
 //		$sql="SELECT PROFILEID,USERNAME,PAYMENT_COLLECT.NAME,EMAIL,PHONE_RES,PHONE_MOB,SERVICES.NAME as SERVICE,ADDRESS,BRANCH_CITY.LABEL as CITY,PIN from incentive.PAYMENT_COLLECT, billing.SERVICES,incentive.BRANCH_CITY where CONFIRM='' and AR_GIVEN='' and PAYMENT_COLLECT.SERVICE=SERVICES.SERVICEID and PAYMENT_COLLECT.CITY=BRANCH_CITY.VALUE";	
 
 		if(!$do_not_run_query)
-			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+			$result=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js());
 		if($myrow=@mysql_fetch_array($result))
 		{
 			do

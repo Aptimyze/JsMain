@@ -1,5 +1,5 @@
 ~include_partial('global/header')`
-<form action="~sfConfig::get('app_site_url')`/operations.php/commoninterface/selectGateway`" method="POST">
+<form action="~sfConfig::get('app_site_url')`/operations.php/commoninterface/selectGateway" method="POST">
     <input type=hidden name="cid" value="~$cid`">
     <input type=hidden name="name" value="~$name`">
     <table width=760 align="CENTER" >

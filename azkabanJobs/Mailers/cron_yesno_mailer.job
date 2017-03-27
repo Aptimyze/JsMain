@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony mailer:NEWJS_YesNoMailer 1
+command=${php5} ${docRoot}/symfony mailer:NEWJS_YesNoMailer 100

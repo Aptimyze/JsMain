@@ -18,6 +18,9 @@
         
 		$scope.MaxHeight = Constants.getWindowHeight();
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getHeaderHeight() - /*Top Header Height*/72;
+
+		localStorage.setItem($scope.screenName,new Date().getTime());
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myNext = function()
 		{
@@ -140,6 +143,15 @@
 		$scope.dob	  = $scope.fields[1];
         
 		$scope.hamOn = false;
+
+		var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -179,7 +191,7 @@
 			Gui.setSlideDir('left');
 			$scope.slideDir = Gui.getSlideDir();
             
-            var pinCodeField = $scope.fields[4];
+            var pinCodeField = $scope.fields[6];
             var timeOut = 1;
             if(pinCodeField.show)
             {
@@ -208,7 +220,16 @@
 			if(indexPos == '3')/*Country*/
 			{
 				var countryField = $scope.fields[3];
-                $scope.initPinCodeWidget();
+				$scope.initStateWidget();
+				$scope.initCityWidget();
+			}
+			if(indexPos=='4')
+			{
+				$scope.initCityWidget();
+			}
+			if(indexPos=='5')
+			{
+				$scope.initPinCodeWidget();
 			}
 			if(!error)
     		{
@@ -265,20 +286,48 @@
 		$scope.initPinCodeWidget = function()
 		{
 			var countryField = $scope.fields[3];
-			var pinCodeField = $scope.fields[4];
+			var cityField = $scope.fields[5];
+			var pinCodeField = $scope.fields[6];
 			var optFields = Gui.getRegOptionalFields($scope.screenName);
 			var allowedCity = ['DE00','MH04','MH08'];
 			pinCodeField.show=true;
 		
-			if(parseInt(countryField.userDecision) != 51 || allowedCity.indexOf(optFields[countryField.optIndex].userDecision) === -1)
+			if(parseInt(countryField.userDecision) != 51 || allowedCity.indexOf(cityField.userDecision) === -1)
 			{
 				pinCodeField.show=false;
 			}
 		}
+		$scope.initStateWidget = function()
+		{
+			var countryField = $scope.fields[3];
+			var stateField = $scope.fields[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=true;
+			}
+			else
+			{
+				stateField.show=false;
+			}
+		}
+		$scope.initCityWidget = function()
+		{
+			var countryField = $scope.fields[3];
+			var stateField = $scope.fields[4];
+			var cityField = $scope.fields[5];
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=true;
+                        }
+                        else
+                        {
+                                cityField.show=false;
+                        }
+		}
 		$scope.checkPinCode = function()
 		{					
 			var error = 0;
-			var pinCodeField = $scope.fields[4];
+			var pinCodeField = $scope.fields[6];
 			if(!Validate.validatePinCode($scope.screenName))
 			{
 				error = 1;
@@ -310,11 +359,13 @@
 		$scope.onPinHover =function()
 		{
 			var notFilled = "Not Filled In";
-			var pinCodeField = $scope.fields[4];
+			var pinCodeField = $scope.fields[6];
 			var countryField = $scope.fields[3];
 			var hieghtField = $scope.fields[2];
 			var dobField = $scope.fields[1];
 			var genderField = $scope.fields[0];
+			var stateField = $scope.fields[4];
+			var cityField = $scope.fields[5];
 			
 			if(genderField.value && genderField.value.length && genderField.value !== notFilled && 
 			dobField.value && dobField.value.length && dobField.value !== notFilled && 
@@ -330,6 +381,8 @@
         }
         //TrackParams.trackClientInfo($scope.screenName);
 		$scope.initPinCodeWidget();
+		$scope.initStateWidget();
+		$scope.initCityWidget();
 		$scope.initGenderWidget();
 		$scope.enableNextBtn();
 	});
@@ -354,6 +407,14 @@
 		
     $scope.degreeGroupMap = {};
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -544,6 +605,14 @@
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getNextBtnHeight() - Constants.getHeaderHeight();
 		
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -591,9 +660,10 @@
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
       
-      if($scope.screenName=='s4' && indexPos==2)
+			if($scope.screenName=='s4' && indexPos==2)
 			{
-        $scope.initHoroscope();
+				$scope.initHoroscope();
+				$scope.initCasteNoBar();
 			}
 			$scope.hamOn = false;
 			$scope.enableNextBtn();
@@ -620,7 +690,7 @@
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 3;
+      var horoscopeFieldIndex = 4;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -629,8 +699,25 @@
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
-    $scope.initHoroscope();
-		$scope.enableNextBtn();
+	$scope.initCasteNoBar = function()    
+	{
+	        var allowedReligion = ['1','4','9'];
+		var religionFieldIndex= 2;
+		var casteNoBarFieldIndex = 3;
+
+	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = true;
+		} 
+		else 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = false;
+		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
+		}     
+	 }
+	$scope.initHoroscope();
+	$scope.initCasteNoBar();
+	$scope.enableNextBtn();
         //TrackParams.trackClientInfo($scope.screenName);
 	});
 
@@ -661,6 +748,13 @@
 		$scope.field_phone = $scope.fields[3];
     $scope.field_name = $scope.fields[0];
 		
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myBack = function()
 		{
@@ -677,6 +771,9 @@
 				var email	=$scope.field_email.value;
 				var phone	=$scope.field_phone.value;
 				var isd 	=$scope.field_phone.isdVal;
+				var name	=$scope.field_name.value;
+				if(typeof name === "undefined")
+					name=1;
 				if(typeof email === "undefined")
 					email =1;
 				if(typeof pwd === "undefined")
@@ -686,7 +783,7 @@
 				if(typeof isd === "undefined")
 					isd =1;
 
-				if(email && pwd && phone && isd)
+				if(email && pwd && phone && isd && name)
 	                        	$scope.bNextEnable = true;
 				else
 					$scope.bNextEnable = false;	
@@ -900,6 +997,7 @@
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1380,6 +1478,8 @@
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&AUTHCHECKSUM=&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },       
+
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1463,7 +1563,16 @@
 				Gui.showModalWindow($scope);
 				//$scope.showServerError("provide a valid date of birth");
 			}
-			
+                        if(indexPos == '3')/*Country*/
+			{
+				var countryField = $scope.fields2[3];
+				$scope.initIncompleteStateWidget();
+				$scope.initIncompleteCityWidget();
+			}
+                        if(indexPos=='4')
+			{
+				$scope.initIncompleteCityWidget();
+			}
 			if(checkValid)
 			{
 				$scope.validation();
@@ -1497,11 +1606,40 @@
 				setTimeout(function(){$(".errClass").remove();},300);
 			},2000);
 		}
+                $scope.initIncompleteStateWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=false;
+			}
+			else
+			{
+				stateField.show=true;
+			}
+		}
+		$scope.initIncompleteCityWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			var cityField = $scope.fields2[5];
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=false;
+                        }
+                        else
+                        {
+                                cityField.show=true;
+                        }
+		}
 		 $scope.showHamMsg = function(szMsg)
         {
             Gui.toastMsg($scope,szMsg);
         }
 		$scope.enableNextBtn();
+                $scope.initIncompleteStateWidget();
+               $scope.initIncompleteCityWidget();
 	});
     
     //Splash Controller
@@ -1531,7 +1669,7 @@
 		$scope.bNextEnable = true;
 		$scope.bEnableBack = false;
 		$scope.bHardReload = false;
-        
+       		$scope.optionFields = Gui.getRegOptionalFields($scope.screenName); 
         $scope.bShowSkip   = true;
 		$scope.fields = Gui.getRegFields($scope.screenName);
 		$scope.MaxHeight = Constants.getWindowHeight();
@@ -1554,6 +1692,11 @@
         $scope.myFormSubmit = function(ele,output,json,indexPos)
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
+
+        if($scope.screenName=="s9" && indexPos==8)
+        {
+        $scope.initOtherCity();
+        }
 			$scope.hamOn = false;
 		}
 		$scope.$on('$locationChangeStart', function (event, newUrl, oldUrl) 
@@ -1590,6 +1733,19 @@
         {
             Gui.toastMsg($scope,szMsg);
         }
+    $scope.initOtherCity = function()
+    {
+	var otherCityIndex = 9;
+	var dec = $scope.optionFields[2].userDecision;
+      if(dec!='' && dec==="0") {
+        $scope.fields[otherCityIndex].show = true;
+      } else {
+        $scope.fields[otherCityIndex].show = false;
+        Gui.resetField('s9','dindex',otherCityIndex);
+      }
+    }
+    $scope.initOtherCity();
+
         //TrackParams.trackClientInfo($scope.screenName);
     });
     
@@ -1638,14 +1794,15 @@
             $timeout(function(){
                 var groupName = '';
                 var adnetwork1 = '';
+                var source = '';
                 try{
                     groupName = serverTrackParams.groupname;
                     adnetwork1 = serverTrackParams.adnetwork1;
+                    source = serverTrackParams.source;
                 }catch(e){
                     //console.log(e.stack);
                 }
-
-                var urlParams = "?fromReg=1&groupname="+groupName+"&adnetwork1=" + adnetwork1;
+                var urlParams = "?fromReg=1&groupname="+groupName+"&adnetwork1=" + adnetwork1+"&source=" + source;
                 
                 //If From Incomplete Flow then dont pass url params
                 if(Gui.isIncompleteFlow()){

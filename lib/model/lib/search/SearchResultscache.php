@@ -141,7 +141,18 @@ Class SearchResultscache
 				$tempPage = ($page-1)*$profilesPerPage;
 				$params = $params["URL"]."&start=".$tempPage."&rows=".$profilesPerPage;
 				unset($tempPage);
-				$res = CommonUtility::sendCurlPostRequest(JsConstants::$solrServerUrl."/select",$params);
+				$profileObj = LoggedInProfile::getInstance('newjs_master');
+				if($profileObj->getPROFILEID())
+				{
+						//if($profileObj->getPROFILEID()%7>2)
+						if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
+										$solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
+						else
+										$solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+				}else{
+                                        $solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
+                                }
+				$res = CommonUtility::sendCurlPostRequest($solrServerUrl,$params);
 				$res = unserialize($res);
 				if($res['response']['docs'])
 					foreach($res['response']['docs'] as $v)

@@ -21,12 +21,12 @@ EOF;
             sfContext::createInstance($this->configuration);
         
         
-        $communityPagesObjMaster = new NEWJS_COMMUNITY_PAGES();
+        $communityPagesObjMaster = new NEWJS_COMMUNITY_PAGES("newjs_masterDDL");
         $communityPagesObjSlave = new NEWJS_COMMUNITY_PAGES("newjs_slave");
-        $communityPagesMappingObjMaster = new NEWJS_COMMUNITY_PAGES_MAPPING();
+        $communityPagesMappingObjMaster = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_masterDDL");
         $communityPagesMappingObjSlave = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_slave");
         
-        //Create backup table before performing title change;
+        //Create backup table before performing title changes;
         $communityPagesObjMaster->createBackupTable();
         $communityPagesMappingObjMaster->createBackupTable();
         

@@ -82,11 +82,6 @@ class desktopRegister1 extends registrationBaseClass {
       
       $jprofileDefaultData = $this->getJprofileDefaultData();
       $this->id = $this->form->updateData('', $jprofileDefaultData);
-      if($name = trim($this->arrFormValues['name_of_user']))
-      {
-        $name_pdo = new incentive_NAME_OF_USER();
-        $name_pdo->insertName($this->id, $name);
-      }
     }
   }
 /*
@@ -129,6 +124,13 @@ class desktopRegister1 extends registrationBaseClass {
 
     RegistrationFunctions::unsetCampaignCookies($this->request->getParameter("domain"));
 
+// email for verification
+          $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+          
+          (new emailVerification())->sendVerificationMail($this->id,$emailUID);
+          ////////
+                    
+
     if ('C' == $this->pageVar['secondary_source'])
       RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);
     $this->regLead();
@@ -164,6 +166,7 @@ class desktopRegister1 extends registrationBaseClass {
   {
 	$this->pageVar[groupNameParams]=RegistrationFunctions::assignGroupName($this->sourceVar['source']);
 	$this->groupname = $this->pageVar['groupNameParams'][GROUPNAME];
+	$this->sourcename = $this->sourceVar['source'];
   }
 
   public function preSubmit() {
@@ -222,7 +225,7 @@ class desktopRegister1 extends registrationBaseClass {
       $phone_with_std = $phone[std] . $phone[landline];
 
     $now = date("Y-m-d G:i:s");
-    $today = date("Y-m-d");
+    $today = CommonUtility::makeTime(date("Y-m-d"));
 
     return $jprofileArr = array('INCOMPLETE' => 'Y', 'ACTIVATED' => 'N', 'SCREENING' => 0, 'SERVICE_MESSAGES' => $this->alertArr[SERVICE_EMAIL], 'ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today, 'SORT_DT' => $now, 'IPADD' => $this->pageVar['ip'], 'PROMO_MAILS' => $this->alertArr[PROMO_MAIL], 'CRM_TEAM' => $this->pageVar['crm'], 'PERSONAL_MATCHES' => $matchDef, 'GET_SMS' => $smsDef, 'SEC_SOURCE' => $this->pageVar['secondary_source'], 'KEYWORDS' => $keywords, 'AGE' => $age, 'PHONE_WITH_STD' => "$phone_with_std","SHOWPHONE_MOB" =>"Y");
   }

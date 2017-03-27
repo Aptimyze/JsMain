@@ -1,0 +1,39 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/13-View
+
+indexSuccess:
+
+  metas:
+    title:        
+    description:  
+  stylesheets:    
+  javascripts: 
+      
+JSPCHelpSuccess:
+    
+    metas:
+        title: Help
+        description:
+    stylesheets: [jspc/help/JSPCHelp_css]
+    javascripts: [jspc/help/JSPCHelp_js@bottom]
+    layout: jspcLayout
+    
+JSMSHelpSuccess:
+    
+    metas:
+        title: Help
+        description:
+    stylesheets: [-*,jsms/hamburger/ham_css,jsms/common/commoncss,jsms/common/mediaquery,jsms/common/errorBar,jsms/help/JSMSHelp_css]
+    javascripts: [jsms/help/autoPopulateFreshdesk_js,jsms/help/JSMSHelp_js@bottom,jsms/hamburger/ham_js@bottom]
+    layout: jsmsMobLayout
+    
+JSMSPostQuerySuccess:
+    
+    metas:
+        title: Post Your Query
+        description:
+    stylesheets: [-*,jsms/hamburger/ham_css,jsms/common/commoncss,jsms/common/mediaquery,jsms/common/errorBar,jsms/help/JSMSHelp_css]
+    javascripts: [jsms/help/autoPopulateFreshdesk_js,jsms/help/jsmsPostQuery_js,jsms/hamburger/ham_js@bottom]
+    layout: jsmsMobLayout
+
+    

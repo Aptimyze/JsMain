@@ -271,6 +271,22 @@ class NEWJS_SEARCH_MALE extends TABLE
        throw new jsException($e);
      }
    }
+
+   public function updateModifiedTime($profileId,$currentTime)
+   {
+    try
+    {
+        $sql = "UPDATE newjs.SEARCH_MALE set MOD_DT = :CURRENTTIME WHERE PROFILEID = :PROFILEID";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
+        $res->bindValue(":CURRENTTIME", $currentTime, PDO::PARAM_STR);
+        $res->execute();
+    }
+    catch(PDOException $e)
+    {
+       throw new jsException($e);
+    }
+   }
            
 }
 ?>

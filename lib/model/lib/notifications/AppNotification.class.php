@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
   {
 	  switch($notificationKey)
 	  {
@@ -101,83 +101,32 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
+            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            $applicableProfilesArr = array_keys($applicableProfiles);
-            $applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+            //$xx2 = count($applicableProfiles);
+            		$applicableProfilesArr = array_keys($applicableProfiles);
+            		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+            //$xx3 = count($applicableProfilesData);
 			unset($applicableProfilesArr);
             
-            $poolObj = new NotificationDataPool();
-            $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
-            unset($poolObj);
-        
-			/*
-            if(is_array($applicableProfiles))
-			{
-				foreach($applicableProfiles as $profileid=>$profiledetails)
-				{
-					if($applicableProfilesData[$profileid])
-					{
-						$loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
-						$loggedInProfileObj->setDetail($applicableProfilesData[$profileid]);
-						$dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj);
-						$matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT'];
-						if($matchCount[$profileid]>0)
-							$matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
-					}
-				}
-				unset($loggedInProfileObj);
-				unset($dppMatchDetails);
-				unset($applicableProfilesData);
-				if(is_array($matchedProfiles))
-				{
-					foreach($matchedProfiles as $k1=>$v1)
-					{
-						foreach($v1 as $k2=>$v2)
-							$otherProfiles[] = $v2;
-					}
-				}
-				if(is_array($otherProfiles))
-				{
-					$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE");
-				}
-				unset($otherProfiles);
-				$counter = 0;
-				if(is_array($matchedProfiles))
-				{
-					foreach($matchedProfiles as $k1=>$v1)
-					{
-						if($matchCount[$k1]>0)
-						{
-							$dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
-							foreach($matchedProfiles[$k1] as $k2=> $v2)
-							{
-								if(count($dataAccumulated[$counter]['OTHER'])>=2)
-									break;
-								if($getOtherProfilesData[$v2])
-									$dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v2];
-							}
-							$dataAccumulated[$counter]['COUNT'] = ($matchCount[$k1]==1)?"SINGLE":"MUL";
-							$dataAccumulated[$counter]['MATCH_COUNT'] = $matchCount[$k1];
-							$dataAccumulated[$counter]['COUNT_BELL'] = $matchCount[$k1];
-						$counter++;
-						}
-					}
-				}
-				unset($applicableProfiles);
-				unset($getOtherProfilesData);
-				unset($matchedProfiles);
-				unset($matchCount);
-			} 
-             */
+            		$poolObj = new NotificationDataPool();
+            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            //$xx4 = count($dataAccumulated);
+            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
+            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
+            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
+            		unset($poolObj);
 			break;
 
 
-
+        /*commented to move matchalert notification from scheduled concept to instant mailer triggered notification*/
+        /*
 		  case "MATCHALERT":
 			$applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
 			$applicableProfilesArr = array_keys($applicableProfiles);
 			$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+			//print_r($applicableProfilesData);
 			unset($applicableProfilesArr);
 			if(is_array($applicableProfiles))
 			{
@@ -185,12 +134,15 @@ public function microtime_float()
 				{
 					if($applicableProfilesData[$profileid])
 					{
-						$loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
-						$loggedInProfileObj->setDetail($applicableProfilesData[$profileid]);
-						$matchCount[$profileid] = MatchalertNotification::getCount($profileid);
+						//$loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
+						//$loggedInProfileObj->setDetail($applicableProfilesData[$profileid]);
+						//$matchCount[$profileid] = MatchalertNotification::getCount($profileid);
+						$matchalertData 	=MatchalertNotification::getCount($profileid);
+						$matchCount[$profileid] =$matchalertData['COUNT'];
+						$matchProfilePhoto[$profileid] =$matchalertData['PHOTO'];;
 					}
 				}
-				unset($loggedInProfileObj);
+				//unset($loggedInProfileObj);
 				unset($dppMatchDetails);
 				unset($applicableProfilesData);
 				$counter = 0;
@@ -198,6 +150,7 @@ public function microtime_float()
 					{
 						if($v1>0)
 						{
+							$dataAccumulated[$counter]['PHOTO_URL'] =$matchProfilePhoto[$k1];
 							$dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
 							$dataAccumulated[$counter]['COUNT'] = ($v1==1)?"SINGLE":"MUL";
 							$dataAccumulated[$counter]['MATCHALERT_COUNT'] = $v1;
@@ -211,109 +164,35 @@ public function microtime_float()
 				unset($matchCount);
 			}
 			break;
+         */
 		  case "PENDING_EOI":
 		    $applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
 			$poolObj = new NotificationDataPool();
-            $dataAccumulated = $poolObj->getPendingInterestData($applicableProfiles);
-            unset($poolObj);
-            /*
-            if(is_array($applicableProfiles))
-			{
-				$contactRecordsObj = new ContactsRecords;
-
-				foreach($applicableProfiles as $profileid=>$profiledetails)
-				{
-					$condition['WHERE']['IN']["RECEIVER"] = $profileid;
-					$condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED; 
-					$condition["WHERE"]["IN"]["COUNT"]    = 1;
-					$condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
-					$condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
-					$cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
-					if(is_array($cntArr))
-					{
-						$cp=0;
-						foreach($cntArr as $ck=>$cv)
-						{
-							if($cv['FILTERED']!='Y'&& $cv["TIME1"] == 0)
-								$cp = $cp+$cv['COUNT'];
-						}
-						$eoiCount[$profileid] = $cp;
-						unset($cp);
-						unset($cntArr);
-					}
-					if($eoiCount[$profileid]>0)
-					{
-						$eoiProfiles[$profileid] = $contactRecordsObj->getContactedProfileArray($profileid,$condition,$skipArray);
-					}
-				}
-				if(is_array($eoiProfiles))
-				{
-					foreach($eoiProfiles as $k1=>$v1)
-					{
-						foreach($v1 as $k2=>$v2)
-							$otherProfiles[] = $k2;
-					}
-				}
-				if(is_array($otherProfiles))
-                                {
-					$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE");
-                                }
-				unset($otherProfiles);
-				$counter = 0;
-				if(is_array($eoiProfiles))
-				{
-					foreach($eoiProfiles as $k1=>$v1)
-					{
-						if($eoiCount[$k1]>0)
-						{
-							$dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
-							foreach($eoiProfiles[$k1] as $k2=> $v2)
-							{
-								if(count($dataAccumulated[$counter]['OTHER'])>=2)
-									break;
-								if($getOtherProfilesData[$k2])
-									$dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$k2];
-							}
-							$dataAccumulated[$counter]['COUNT'] = ($eoiCount[$k1]==1)?"SINGLE":(($eoiCount[$k1]==2)?"DOUBLE":"MUL");
-							$dataAccumulated[$counter]['EOI_COUNT'] = ($eoiCount[$k1]>2)?($eoiCount[$k1]-2):0;
-							$dataAccumulated[$counter]['COUNT_BELL'] = $eoiCount[$k1];
-							$counter++;
-						}
-					}
-				}
-				unset($applicableProfiles);
-				unset($getOtherProfilesData);
-				unset($eoiProfiles);
-				unset($eoiCount);
-			}
-            */
+            		$dataAccumulated = $poolObj->getPendingInterestData($applicableProfiles);
+            		unset($poolObj);
 			break;
+          case "MATCHALERT":
+ 				if($count > 0){
+ 					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+ 					$poolObj = new NotificationDataPool();
+ 					$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message,$count);
+ 					unset($poolObj);
+ 				}
+ 				else{
+ 					$dataAccumulated = null;
+ 				}
+ 				break;
 		  case "ACCEPTANCE":
 		  case "PHOTO_REQUEST":
 		  case "EOI":
-			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
-			foreach($appProfiles as $k=>$v)
-			{
-				if($k=="OTHER")
-					$dataAccumulated[0][$k][0] = $details[$v];
-				else
-					$dataAccumulated[0][$k] = $details[$v];	
-			}
-			$dataAccumulated[0]['COUNT'] = "SINGLE";
-			break;
+		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
-			foreach($appProfiles as $k=>$v)
-			{
-				if($k=="OTHER")
-					$dataAccumulated[0][$k][0] = $details[$v];
-				else
-					$dataAccumulated[0][$k] = $details[$v];	
-			}
-			$dataAccumulated[0]['COUNT'] = "SINGLE";
-			if($message)
-				$dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
+			$poolObj = new NotificationDataPool();
+			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
+			// print_r($dataAccumulated);
+			unset($poolObj);
 			break;
                   case "CSV_UPLOAD":
                         $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
@@ -328,26 +207,30 @@ public function microtime_float()
                         if($message)
                                 $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
                         break;
+           	case "EOI_DIGEST": //eoi digest notification
+           		if($count)
+				{
+					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+					$poolObj = new NotificationDataPool();
+					$dataAccumulated = $poolObj->getProfileDigestNotificationData($notificationKey,$appProfiles,$details,$count);
+					unset($poolObj);
+				}
+				else
+					$dataAccumulated = null;
+            		break;
+
 		  case "PROFILE_VISITOR":
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-			$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
-            
-            $poolObj = new NotificationDataPool();
-            $dataAccumulated = $poolObj->getProfileVisitorData($applicableProfiles, $details,$message);
-            unset($poolObj);
-            
-            /*
-			foreach($applicableProfiles as $k=>$v)
-			{
-				if($k=="OTHER")
-					$dataAccumulated[0][$k][0] = $details[$v];
-				else
-					$dataAccumulated[0][$k] = $details[$v];	
+			//$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
+            		$poolObj = new NotificationDataPool();
+			$applicableProfilesArr =array_keys($applicableProfiles);
+			$appSelfProfile =$appProfiles['SELF'];
+			//$applicableProfilesNew =array('SELF'=>$applicableProfilesArr[0],'OTHER'=>$appProfiles['OTHER']);
+			if(in_array("$appSelfProfile", $applicableProfilesArr)){
+				$applicableProfilesNew =array('SELF'=>$appSelfProfile,'OTHER'=>$appProfiles['OTHER']);
+	            		$dataAccumulated = $poolObj->getProfileVisitorData($applicableProfilesNew, $applicableProfiles,$message);
 			}
-			$dataAccumulated[0]['COUNT'] = "SINGLE";
-			if($message)
-				$dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
-            */
+            		unset($poolObj);
 			break;
                   case "BUY_MEMB":
                         $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -365,83 +248,39 @@ public function microtime_float()
                         break;
 		  case "ATN":
                     	$applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-			$counter =0;	
-                        if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "ETN":
                         $applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "VD":
                         $applicableProfiles=array();
 			$applicableProfilesNonNri =array();
 			$applicableProfilesNri =array();
+			$poolObj = new NotificationDataPool();
                         $applicableProfilesNonNri = $this->getVDProfilesApplicableForNotification($appProfiles);
                         if(count($applicableProfilesNonNri)>0){
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
                         }
                         $applicableProfiles =array_merge($applicableProfilesNonNri,$applicableProfilesNri);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
+			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
-			$counter =0;
-			if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;	
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
-		  case "MEM_EXPIRE_A5":
-		  case "MEM_EXPIRE_A10":
-		  case "MEM_EXPIRE_A15":
-		  case "MEM_EXPIRE_B1":	 
-                  case "MEM_EXPIRE_B5":
+		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
                         $poolObj = new NotificationDataPool();
-                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles, $notificationKey);
+                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles);
                         $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
-                        /*
-                        $applicableProfiles = $this->getMembershipProfilesForNotification($appProfiles, $notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
-                        */
                         break;
 		case "PHOTO_UPLOAD":
 			$applicableProfiles=array();
@@ -455,22 +294,17 @@ public function microtime_float()
                         }
                         $dataAccumulated[0]['COUNT'] = "SINGLE";
                         break;
-        case "FILTERED_EOI":
+        	case "FILTERED_EOI":
 		    $applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
 			if(is_array($applicableProfiles))
 			{
 				$contactRecordsObj = new ContactsRecords;
-
-				foreach($applicableProfiles as $profileid=>$profiledetails)
-				{
+				foreach($applicableProfiles as $profileid=>$profiledetails){
 					$cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED),"FILTERED",1);
-
-					if(is_array($cntArr))
-					{
+					if(is_array($cntArr)){
 						$cp=0;
-						foreach($cntArr as $ck=>$cv)
-						{
+						foreach($cntArr as $ck=>$cv){
 							if($cv['FILTERED']=='Y'&& $cv["TIME1"] == 0)
 								$cp = $cp+$cv['COUNT'];
 						}
@@ -478,35 +312,41 @@ public function microtime_float()
 						unset($cp);
 						unset($cntArr);
 					}
-					if($eoiCount[$profileid]==0)
-					{
+					if($eoiCount[$profileid]==0){
 						unset($applicableProfiles[$profileid]);
 					}
 				}
+				// New logic
+				foreach($applicableProfiles as $profileid=>$profiledetails)
+				{
+				    $condition['WHERE']['IN']["RECEIVER"] = $profileid;
+				    $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+				    $condition["WHERE"]["IN"]["COUNT"]    = 1;
+				    $condition["WHERE"]["IN"]["FILTERED"] = 'Y';
+				    $condition["LIMIT"] 		  = "0,1";
+				    $condition["ORDER"] 		  ='TIME';
+				    if($eoiCount[$profileid]>0){
+					$eoiProfiles[$profileid] =$contactRecordsObj->getContactedProfileArray($profileid,$condition,$skipArray);
+				    }
+        			}
+				//print_r($eoiProfiles);
 				//additional condition for others details req in future
 				/*if(!in_array($notificationKey, NotificationEnums::$staticContentNotification))
-				{
-					if(is_array($eoiProfiles))
-					{
-						foreach($eoiProfiles as $k1=>$v1)
-						{
-							foreach($v1 as $k2=>$v2)
-								$otherProfiles[] = $k2;
-						}
-					}
-					if(is_array($otherProfiles))
-	                		{
-						$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE");
-	                		}
             			}*/
-				unset($otherProfiles);
-				$counter = 0;
-				if(is_array($applicableProfiles))
+			        if(is_array($eoiProfiles))
 				{
-					foreach($applicableProfiles as $k1=>$v1)
-					{
-						if($eoiCount[$k1]>0)
-						{
+				    foreach($eoiProfiles as $k1=>$v1){
+					foreach($v1 as $k2=>$v2){
+					    $otherProfiles[$k1] = $k2;
+					    break;	
+					}
+				    }
+				}
+				$counter = 0;
+				if(is_array($applicableProfiles)){
+					foreach($applicableProfiles as $k1=>$v1){
+						if($eoiCount[$k1]>0){
+			        	                $dataAccumulated[$counter]['ICON_PROFILEID']=$otherProfiles[$k1];
 							$dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
 							$dataAccumulated[$counter]['COUNT'] = ($eoiCount[$k1]==1)?"SINGLE":(($eoiCount[$k1]==2)?"DOUBLE":"MUL");
 							$dataAccumulated[$counter]['EOI_COUNT'] = ($eoiCount[$k1]>2)?($eoiCount[$k1]-2):0;
@@ -515,31 +355,18 @@ public function microtime_float()
 						}
 					}
 				}
-
+				unset($otherProfiles);
 				unset($applicableProfiles);
 				unset($getOtherProfilesData);
 				unset($eoiProfiles);
 				unset($eoiCount);
 			}
 			break;
-		case "EOI_REMINDER":
-			$details = $this->getProfilesData($appProfiles,$className="newjs_SMS_TEMP_TABLE"); //jprofile???
-			foreach($appProfiles as $k=>$v)
-			{
-				if($k=="OTHER")
-					$dataAccumulated[0][$k][0] = $details[$v];
-				else
-					$dataAccumulated[0][$k] = $details[$v];	
-			}
-			$dataAccumulated[0]['COUNT'] = "SINGLE";
-			if($message)
-				$dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
-			break;
         case "CONTACTS_VIEWED_BY":
             $applicableProfiles=array();
             $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
             if(is_array($applicableProfiles)){
-                $viewContactsLog = new JSADMIN_VIEW_CONTACTS_LOG("newjs_slave");
+                $viewContactsLog = new JSADMIN_VIEW_CONTACTS_LOG("newjs_local111");
                 $endDt = date("Y-m-d H:i:s");
                 $startDt = date("Y-m-d H:i:s", strtotime('-1 day 1 sec', strtotime($endDt)));
                 $viewedContactData = $viewContactsLog->getViewedContact($applicableProfiles, $startDt, $endDt);
@@ -569,7 +396,7 @@ public function microtime_float()
             	$applicableProfilesIdArr = array_keys($applicableProfiles);
             	
             	//get remaining contacts for profiles
-                $contactObj  = new jsadmin_CONTACTS_ALLOTED("newjs_slave");
+                $contactObj  = new jsadmin_CONTACTS_ALLOTED("newjs_masterRep");
                 $contactViewsData = $contactObj->getContactViewsDataForProfiles($applicableProfilesIdArr);
                 unset($applicableProfilesIdArr);
                 unset($contactObj);
@@ -579,7 +406,7 @@ public function microtime_float()
                 {
 	                //get current membership details of only paid profiles
 	                $profileIdArr = array_keys($contactViewsData);
-	                $serviceObj = new billing_SERVICE_STATUS("newjs_slave");
+	                $serviceObj = new billing_SERVICE_STATUS("newjs_masterRep");
 	                $membershipData = $serviceObj->getLatestActiveMemInfoForProfiles($profileIdArr);
 	                unset($profileIdArr);
 	                unset($serviceObj);
@@ -608,6 +435,25 @@ public function microtime_float()
             }
             unset($applicableProfiles);
         	break;
+    	case "INCOMPLETE_SCREENING":
+			// single profile should be passed here
+			$details = $this->getProfilesData(array($appProfiles['SELF']),$className="JPROFILE");
+			$counter = 0;
+			foreach($details as $key=>$val){
+				$dataAccumulated[$counter]['SELF']  = $details[$key];
+				$dataAccumulated[$counter]['COUNT'] = "SINGLE";
+			}
+			// print_r($dataAccumulated);
+			break;
+        case "MATCH_OF_DAY":
+            $applicableProfiles=array();
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
+            $notificationDataPoolObj = new NotificationDataPool();
+            $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
+            //print_r($dataAccumulated);
+            
+            unset($poolObj);
+            break;
 	  }
 
 	  $completeNotificationInfo = array();
@@ -617,16 +463,22 @@ public function microtime_float()
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
 		  {
 			  $notificationId = NULL;
-			  $notificationId = $this->matchNotificationKeyData($notificationKey,$dataPerNotification);
-	
+			  $notificationId = $this->matchNotificationKeyData($notificationKey,$dataPerNotification);	
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  
+				  // print_r($completeNotificationInfo); die;
+				  $notificationDataPoolObj = new NotificationDataPool();
+				  if($notificationKey=='MATCHALERT')	
+				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
+				  else
+			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
 				  //$completeNotificationInfo[$counter]['MSG_ID']=time().rand(0,99);
 				  $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);
 				  $completeNotificationInfo[$counter]['OTHER_PROFILE_CHECKSUM'] = JsCommon::createChecksumForProfile($dataPerNotification['OTHER'][0]['PROFILEID']);
+                  
+                  $this->checkNotificationExtension($completeNotificationInfo[$counter]["PHOTO_URL"],$notificationKey,$dataPerNotification['ICON_PROFILEID']);
 				  $counter++;
 			  }
 		  }
@@ -638,6 +490,7 @@ public function microtime_float()
   public function generateNotification($notificationId, $notificationKey,$dataPerNotification)
   {
 	  $notifications = $this->getNotifications();
+	  //print_r($notifications);
 	  $variableValues = array();
 	  if(is_array($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE']) && $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'])
 		{  
@@ -667,6 +520,7 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
   }
@@ -676,7 +530,7 @@ public function microtime_float()
 	  {
 		  $varArray['PROFILEID'] = implode(",",$profiles);
 		  $smsTempTableObj = new $className;
-		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+		  $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES");
 	  }
 	  if(is_array($profiledetails))
 	  {
@@ -707,7 +561,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey)
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
 
 	  unset($applicableProfiles);
@@ -715,7 +569,12 @@ public function microtime_float()
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)
 		$timeCriteria = $notificationKeyDetails['TIME_CRITERIA'];
 	  unset($notifications);
-	  $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      if($className == "JPROFILE"){
+          $smsTempTableObj = new JPROFILE("crm_slave");
+      }
+      else{
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+      }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);
 	  if($timeCriteria!='')
@@ -750,17 +609,21 @@ public function microtime_float()
 	// filter check for already sent ATN/ETN notification	
 	  $varArray['NOTIFICATION_KEY'] =$notificationKey;
 	  $varArray['SENT'] 		='Y';
-	  $notificationLogObj 		=new MOBILE_API_NOTIFICATION_LOG("newjs_slave");          		           	  	  	
-	  $profilesNew			=$notificationLogObj->getNotificationProfiles($notificationKey);
-	  if(is_array($profilesNew))
-		  $profilesArr 		=array_diff($profiles, $profilesNew);
+	  if($notificationKey=='ATN')
+	  	$notificationLogObj	=new MOBILE_API_NOTIFICATION_LOG_ATN("newjs_local111");          		           	  	  		else if($notificationKey=='ETN')
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG_ETN("newjs_local111");
+	  else
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG("newjs_local111");
+	  $profilesOld			=$notificationLogObj->getNotificationProfiles();
+	  if(is_array($profilesOld))
+		  $profilesArr 		=array_diff($profiles, $profilesOld);
 	  else
 		  $profilesArr		=$profiles;
 	  $profilesArr =array_values($profilesArr);			
           unset($varArray);
 
 	// filter check in ETN notification, CASE: if profile is already considered for ATN  on the same day. 
-	  if($notificationKey=='ETN'){	
+	  /*if($notificationKey=='ETN'){	
 	  	$scheduledAppNotificationObj  =new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();					
           	$varArray['NOTIFICATION_KEY'] ='ATN';
           	$profilesAtn                  =$scheduledAppNotificationObj->getArray($varArray);
@@ -773,11 +636,11 @@ public function microtime_float()
 			$profilesArr =$profilesNew;
 		}
 		unset($varArray);
-	  }
+	  }*/
 
 	// get PROFILE data
           if(is_array($profilesArr)){
-		  $smsTempTableObj 	= new newjs_SMS_TEMP_TABLE("newjs_slave");
+		  $smsTempTableObj 	= new newjs_SMS_TEMP_TABLE("newjs_masterRep");
 		  $varArray['PROFILEID']=implode(",",$profilesArr);
 		  $fields		='PROFILEID,USERNAME,SUBSCRIPTION,GENDER';
                   $todayDate      	=date("Y-m-d");
@@ -825,8 +688,8 @@ public function microtime_float()
 		$replaceStr		=array('<','>','/','strong');
 		$memHandlerObj 		=new MembershipHandler();
 		$vdObj 			=new VariableDiscount();
-		$discountOfferLogObj 	=new billing_DISCOUNT_OFFER_LOG('newjs_slave');
-		$renewalDisObj 		=new billing_RENEWAL_DISCOUNT('newjs_slave');
+		$discountOfferLogObj 	=new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
+		$renewalDisObj 		=new billing_RENEWAL_DISCOUNT('newjs_masterRep');
 		$cashDiscountArray	=$discountOfferLogObj->getActiveOfferDetails();
 
 		if(is_array($cashDiscountArray)){
@@ -912,7 +775,7 @@ public function microtime_float()
 	}
 	// filter-in last 7days logged-in app profiles
 	if(is_array($profilesNewArr)){
-		$loginTrackingObj     	=new MIS_LOGIN_TRACKING('newjs_slave');
+		$loginTrackingObj     	=new MIS_LOGIN_TRACKING('newjs_local111');
 		$profilesNewStr        	=@implode(",",$profilesNewArr);
 		$profilesArr  		=$loginTrackingObj->getLast7DaysLoginProfiles($profilesNewStr);
 	}
@@ -946,13 +809,13 @@ public function microtime_float()
 
         // Negative Treatment check
         if(is_array($profilesArr)){
-                $negTreatObj = new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_slave');
+                $negTreatObj = new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_masterRep');
                 $parameters['FLAG_OUTBOUND_CALL'] = 'N';
                 $profilesArr =$negTreatObj->removeNegativeIdsFromList($parameters, $profilesArr);
         }
         // filter-in last 15days logged-in app profiles
         if(is_array($profilesArr)){
-                $loginTrackingObj       =new MIS_LOGIN_TRACKING('newjs_slave');
+                $loginTrackingObj       =new MIS_LOGIN_TRACKING('newjs_local111');
                 $profilesNewStr         =@implode(",",$profilesArr);
                 $date15DaysBack         =date("Y-m-d",strtotime("$todayDate -14 days"))." 00:00:00";
                 $channelStr = "'A','I'";
@@ -960,7 +823,7 @@ public function microtime_float()
         }
         // get profile details  
         if(is_array($profilesArr)){
-                $smsTempTableObj      = new newjs_SMS_TEMP_TABLE("newjs_slave");
+                $smsTempTableObj      = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
                 $varArray['PROFILEID']=implode(",",$profilesArr);
                 $fields               ='PROFILEID,SUBSCRIPTION,GENDER,ISD,AGE';
                 $profiledetails       =$smsTempTableObj->getArray($varArray,'','',$fields);
@@ -1025,6 +888,60 @@ public function microtime_float()
   	else
   		return false;
   }
-
+  
+  public function checkNotificationExtension($url,$notificationKey,$profileid){
+      $validPicArray = array('P','D','O');
+      if(!in_array($url, $validPicArray)){
+          $validExtensionArr = array("jpg", "jpeg", "png");
+          $imgname = "";
+          $ext = explode(".",$url);
+          $l = end($ext);
+          if(!in_array($l,$validExtensionArr)){
+              /*
+              $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
+              $cc = "nitishpost@gmail.com";
+              $sub = "Invalid Extension for notification key $notificationKey";
+              $from = "info@jeevansathi.com";
+              $msg = "Url Generated $url for $profileid for $notificationKey";
+              SendMail::send_email($to, '', $sub, $from,$cc);
+              */
+              $date = date('Y-m-d');
+              $msg = "Url:$url, Key:$notificationKey, pid: $profileid\n";
+              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrlNew".$date.".txt",$msg,FILE_APPEND);
+          }
+      }
+      unset($validPicArray);
+      unset($validExtensionArr);
+      unset($ext);
+  }
+  
+  public function checkNotificationOnLastLogin($notificationKey, $lastLoginDate){
+	  $notifications = $this->getNotifications();
+      $timeCriteria = $notifications["TIME_CRITERIA"][$notificationKey];
+	  unset($notifications);
+	  if($timeCriteria!='')
+	  {
+		  $timeCriteriaArr = explode("|",$timeCriteria);
+		  if($timeCriteriaArr[0]!='')
+		  {
+			  $dateformatGreaterThan = $this->getDate($timeCriteriaArr[0]);
+			  $greaterThan['LAST_LOGIN_DT']=$dateformatGreaterThan;
+		  }
+		  if($timeCriteriaArr[1]!='')
+		  {
+			  $dateformatLessThan = $this->getDate($timeCriteriaArr[1]);
+			  $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
+		  }
+	  }
+      if($greaterThan["LAST_LOGIN_DT"]){
+          if(strtotime($lastLoginDate) >= strtotime($greaterThan["LAST_LOGIN_DT"])){
+              return true;
+          }
+          else{
+              return false;
+          }
+      }
+	  return true;
+  }
 }
 ?>

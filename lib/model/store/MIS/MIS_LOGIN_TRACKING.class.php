@@ -82,5 +82,44 @@ class MIS_LOGIN_TRACKING extends TABLE{
                 }
         }
 
+        public function getLoginChannel($profileid,$date)
+        {
+                if (!$profileid)
+                        throw new jsException("", "Profile id not passed");
+                try {
+                        $sql = "SELECT DISTINCT `WEBSITE_VERSION` FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=:PROFILEID AND date(DATE)>=:DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":PROFILEID", $profileid,PDO::PARAM_INT);
+                        $res->bindValue(":DATE", $date,PDO::PARAM_STR);
+                        $res->execute();
+                        while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                                $output[] = $result['WEBSITE_VERSION'];
+                        }
+                        return $output;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
+
+        public function insert($profileid,$date,$url,$channel,$websiteVersion,$stype)
+        {
+                if (!$profileid)
+                        throw new jsException("", "Profile id not passed");
+                try {
+			$sql ="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES (:PROFILEID , :URL , :DATE, :CHANNEL, :WEBSITE_VERSION, :STYPE)";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":PROFILEID",$profileid, PDO::PARAM_STR);
+                        $res->bindValue(":URL",$url, PDO::PARAM_STR);
+                        $res->bindValue(":DATE",$date, PDO::PARAM_STR);
+                        $res->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
+                        $res->bindValue(":WEBSITE_VERSION",$websiteVersion, PDO::PARAM_STR);
+                        $res->bindValue(":STYPE",$stype, PDO::PARAM_STR);
+                        $res->execute();
+                        return true;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
+
 }
 ?>

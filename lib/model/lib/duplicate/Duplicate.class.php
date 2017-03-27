@@ -94,6 +94,56 @@ class Duplicate
 
 
 
+// implements the new logic for duplicate profiles added by Palash based on phone verification updation
+public static function logIfDuplicate($profileObj,$phoneNumVerified){
+
+if(!$profileObj || !$phoneNumVerified) return;
+$startDate=date('Y-m-d H:i:s',(strtotime ( '-90 days'  ) ));
+$endDate=date('Y-m-d H:i:s');
+$profileId=$profileObj->getPROFILEID();    
+if($phoneVerRow=(new PHONE_VERIFIED_LOG())->getLogForOtherNumberVerified($profileId,$phoneNumVerified,$startDate,$endDate))
+{
+	$profileObj2=new Profile();
+	foreach ($phoneVerRow as $key => $value) {
+		# code...
+
+		$profileObj2->getDetail($value['PROFILEID'],'PROFILEID','PROFILEID,ACTIVATED,INCOMPLETE,GENDER,ENTRY_DT');
+		if( ($profileObj2->getACTIVATED() != 'D') && ($profileObj->getACTIVATED() != 'D') && ($profileObj2->getINCOMPLETE() != 'Y') && ($profileObj2->getGENDER()==$profileObj->getGENDER()))
+		{
+			$rawDuplicateObj=new RawDuplicate();
+			$timeStamp1=JSstrToTime($profileObj->getENTRY_DT());
+			$timeStamp2=JSstrToTime($profileObj2->getENTRY_DT());
+			
+			if($timeStamp1 > $timeStamp2)
+			{
+				$rawDuplicateObj->setProfileid2($profileId); //profile found as a duplicate
+				$rawDuplicateObj->setProfileid1($value['PROFILEID']); 
+			}
+			else 
+			{	
+				$rawDuplicateObj->setProfileid2($value['PROFILEID']); //profile found as a duplicate
+				$rawDuplicateObj->setProfileid1($profileId); 
+			}	
+			$rawDuplicateObj->setReason(REASON::PHONE); 
+			$rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::YES); 
+			$rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
+	  		$rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
+	  		$rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
+	  		$rawDuplicateObj->setComments("None");
+			DuplicateHandler::HandleDuplicatesInsert($rawDuplicateObj);
+//			duplicateProfilesMail::sendEmailToDuplicateProfiles($profileId);
+
+		}
+	
+
+	}
+
+
+
+}
+
+
+}
 
 
 } // end of Duplicate

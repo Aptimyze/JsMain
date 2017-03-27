@@ -25,6 +25,9 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
+    $specificDomain = explode('/',$request->getUri());
+    $segregateCode = $specificDomain[3];  
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404."_".$segregateCode));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -108,6 +111,8 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
+  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX500));
+  $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){
 			// Hide hamburger when 500 page opened within App WebView
@@ -154,8 +159,10 @@ class staticActions extends sfActions
   	} else {
   		$this->personalVerif = 0;
   	}
-        if(MobileCommon::isAppWebView())
+        if(MobileCommon::isAppWebView() || $request->getParameter("iosWebview") == 1)
           $this->webView = 1;
+        if($request->getParameter("iosWebview") == 1)
+            $this->removeBack = 1;
         if(MobileCommon::isNewMobileSite()){
             $this->setTemplate("jsmsVerificationStaticPage");
         }
@@ -175,13 +182,33 @@ class staticActions extends sfActions
 		$this->nextAction = "/search/perform?searchId=$searchId&currentPage=$currentPage";*/
 		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+		if($request->getcookie('loginAttemptNew'))
+    {
+    	
+        		$this->captchaDiv=1;
+        	}
+        	else
+        		$this->captchaDiv=0;
+        	//print_r($this->captchaDiv);die;
 		if($loggedInProfileObj->getPROFILEID() != '')
 		{
 			//echo "<script>$.colorbox.close();document.location.href='".$this->nextAction."';</script>";
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+    }
 	}
         public function executeNewMobLogin(sfWebRequest $request)
         { 
+        	//$loginFailedObj = new LOGIN_FAILED1;
+        	//$count=
+        	// check
+          if(isset($_SERVER['HTTP_REFERER']))
+          {
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+          }
 			$this->forward("static","LogoutPage");
         }
 
@@ -241,7 +268,10 @@ class staticActions extends sfActions
 			die;
 		}
             if($request->getParameter("success")==1)
-                $this->setTemplate("resetLinkSent");
+            {
+              $this->message = $request->getParameter("message"); 
+              $this->setTemplate("resetLinkSent");
+            }
         }
         public function executeResetPass(sfWebRequest $request) 
          {
@@ -267,6 +297,37 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
         }
+
+        public function executeHideOption(sfWebRequest $request) {}
+
+        public function executeUnHideOption(sfWebRequest $request) {}
+
+        public function executeUnHideResult(sfWebRequest $request) {}
+
+        public function executeHideCheckPassword(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+        }
+
+        public function executeHideDuration(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+            if($this->hideOption=="1")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION1." days";
+            }
+            elseif ($this->hideOption=="2")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION2." days";
+            }
+            elseif ($this->hideOption=="3")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
+            }
+        }
+
         public function executeDeleteReason(sfWebRequest $request) {
         	//echo "string";die;
             $loginData = $request->getAttribute("loginData");
@@ -274,29 +335,39 @@ class staticActions extends sfActions
             $this->deleteOption=$request->getParameter("delete_option");
            // print_r($this->deleteOption);die;
             if($this->deleteOption=="2")
-            	$this->deleteText = "Name website";
+            	$this->deleteText = "Please write name of website";
             elseif ($this->deleteOption=="4") {
-            	$this->deleteText = "Please provide your reason for dissatisfaction";
+            	$this->deleteText = "Kindly specify reason for your dissatisfaction";
             }
             elseif ($this->deleteOption=="5") {
-            	$this->deleteText = "Please specify the reason";
+            	$this->deleteText = "Kindly specify your reason";
             }
             else
-            	$this->deleteText = "Specify the source";
+            	$this->deleteText = "Kindly specify the source";
         }
         public function executePassCheck(sfWebRequest $request) {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
+            $this->phoneNum =  $pObj->getPHONE_MOB();
+            $this->showOTP = $this->phoneNum ? 'Y' : 'N';
+            $this->isd =  $pObj->getISD();
             $this->deleteReason=$request->getParameter("delete_reason");
             $this->deleteOption=$request->getParameter("delete_option");
             $this->successFlow=$request->getParameter("successFlow");
         }
+        
         public function executeSettings(sfWebRequest $request){
             
             $loginData = $request->getAttribute("loginData");
 			if($loginData['PROFILEID'])
 			{
 				$this->loggedIn=1;
+                // show hide profile
+                $this->hide = 1;
+                if($loginData['ACTIVATED'] == 'H')
+                {
+                    $this->hide = 0;
+                }
         $notificationObj = new NotificationConfigurationFunc();
         $toggleOutput = $notificationObj->showNotificationToggleLayer($loginData['PROFILEID']);
         $this->showNotificationBox = $toggleOutput["showToggleLayer"];
@@ -329,14 +400,29 @@ class staticActions extends sfActions
    * also it is called for tracking when user hits any of the button*/
   public function executeCriticalActionLayerDisplay(sfWebRequest $request) {
     $layerToShow = $request->getParameter("layerId");
+    if($layerToShow==9)
+    {
+           $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+           $nameData=(new NameOfUser())->getNameData($profileId);
+           $this->nameOfUser=$nameData[$profileId]['NAME'];
+           $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+    }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+    
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
+    $this->contentTextNEW = $layerData[TEXTNEW];
+    $this->button1TextNEW = $layerData[BUTTON1NEW];
+    $this->button2TextNEW = $layerData[BUTTON2NEW];
     $this->action1 = $layerData[ACTION1];
     $this->action2 = $layerData[ACTION2];
+    $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+    $this->subtitle = $layerData[SUBTITLE];
+    $this->textUnderInput = $layerData[TEXTUNDERINPUT];
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -377,7 +463,14 @@ public function executeCALRedirection($request){
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
-    
+    if($request->getcookie('loginAttemptNew'))
+    {
+    	
+        		$this->captchaDiv=1;
+        	}
+        	else
+        		$this->captchaDiv=0;
+        	//print_r($this->captchaDiv);die;
     
         $loginData = $request->getAttribute("loginData");
 		if($loginData[PROFILEID])
@@ -386,6 +479,11 @@ public function executeCALRedirection($request){
 			$authenticationLoginObj->logout($loginData[PROFILEID]);
 			
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+    }
     if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)  
     {
        //For JPSC/JSMS, disable notifications
@@ -399,6 +497,14 @@ public function executeCALRedirection($request){
 			$this->fromSignout=1;
 		else
 			$this->fromSignout=0;
+		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+			}
+		else{
+			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");
+			$this->getResponse()->addMeta('description', "Logout - Jeevansathi");
+		}
     if(MobileCommon::isMobile())
       {
 		  $this->getResponse()->addMeta('theme-color', "#6b6b6b");
@@ -406,6 +512,34 @@ public function executeCALRedirection($request){
 	$this->PREV_URL=$this->getRequestURI();
 	$this->SITE_URL=sfConfig::get("app_site_url");
         if(MobileCommon::isNewMobileSite()){
+
+          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+          $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
+          $this->hamCss='css/'.getCssFileName('jsms/hamburger/ham_css').'.css';   
+          $this->cssArray = getCommaSeparatedCSSFileNames(array(
+            'jsms/common/commoncss',
+            'jsms/common/errorBar',
+            'jsms/common/fonts',
+            'jsms/common/mediaquery',
+            'jsms/common/jsmsApp_promo_css',
+            'rippleEffectCommon_css'));
+          $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(
+              'modernizr_p_js',
+              'tracking_js',
+              'jsms/common/CommonFunctions',
+              'jsms/common/scrollTo',
+              'jsms/common/urlParamHandling',
+              'app_promo_js',
+              'commonMob',
+              'jsms/common/touchswipe_js',
+              'jsms/common/disableScroll_js',
+              'jsms/common/history_js',
+              'commonExpiration_js',
+              'rippleEffectCommon_js',
+              'common_comscore_js')));
+            $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js')));
+              
+            $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
           $this->showRegisterMsg='Y';
@@ -476,6 +610,7 @@ public function executeCALRedirection($request){
       $this->RELOGIN="Y";
     }
     $this->chat_hide = 1;
+    $this->logoutChat = 1;
     $request->setAttribute('loginData', '');
 	$request->setAttribute('login', false);
 	$this->setTemplate("logoutPage");
@@ -540,8 +675,12 @@ public function executeCALRedirection($request){
 	public function executeRedirectToOldJsms(sfWebRequest $request)
 	{
 		$this->getResponse()->setCookie('TO_OLD_JSMS',1,time()+60*60*24*150,"/");
-		$rUrl=$request->getParameter("rUrl");	
-		$this->redirect($rUrl);
+		$rUrl=$request->getParameter("rUrl");
+		if(!$rUrl){
+				$this->redirect(JsConstants::$siteUrl);
+			}
+		else
+			$this->redirect($rUrl);
 		die;
 	}
 public function executeAppredirect(sfWebRequest $request)
@@ -627,7 +766,12 @@ public function executeAppredirect(sfWebRequest $request)
 	{
 		$this->redirect("https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=%{idfa}&cs=organic&cm=JSMS&cn=JSIA&cc=hamburger");
 	}	
-	else{
+	elseif($playstore=="apppromotionSRPAndroid")
+	{
+                $this->redirect("https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3DSRP_M%26utm_campaign%3DJSAA");
+        }elseif($playstore=="apppromotionSRPIos"){
+                $this->redirect("https://itunes.apple.com/in/app/jeevansathi/id969994186?mt=8");
+        }else{
 
 		$ua = $_SERVER['HTTP_USER_AGENT']; 
         if(JsCommon::checkIOSPromoValid($ua)) 
@@ -654,6 +798,71 @@ public function executeAppredirect(sfWebRequest $request)
 	readfile("$IMG_URL/profile/ser4_images/zero.gif");
 	die;
   }
+
+
+
+
+
+  public function executeVerifyEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_EMAIL_CHANGE_LOG();
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+    
+  else if($loggedInProfile->getVERIFY_EMAIL()!='Y')
+    {   
+      $paramArr=array('VERIFY_EMAIL'=>'Y');
+      JPROFILE::getInstance('')->edit($paramArr, $profileid, 'PROFILEID');
+      $changeLog->markAsVerified($profileid,$loggedInProfile->getEMAIL());
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
+
+
+
+  public function executeVerifyAlternateEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_ALTERNATE_EMAIL_LOG();
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+
+  else if($row['STATUS']!='Y')
+    {   
+        $paramArr=array('ALT_EMAIL_STATUS'=>'Y');
+        $contactObj=new ProfileContact();
+        $contactObj->update($profileid,$paramArr);
+        $changeLog->markAsVerified($profileid);
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
+
+
 
   public function executeAppPromo($request)
   {
@@ -710,16 +919,76 @@ public function executeAppredirect(sfWebRequest $request)
 		  
 		  foreach($arrKeys as $key=>$val)
 		  {
-			  if($val !== "reg_caste_")
+			  if($val !== "reg_caste_" && $val!=="reg_city_")
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+			if($val=="family_income")
+			{
+				$optionalArr[0] = array("0"=>array("0"=>"Select"));
+				foreach($outData['family_income'] as $x=>$y)
+				{
+					$mergedArr = array_merge($optionalArr,$y);
+					$outData['family_income'][$x]=$mergedArr;
+				}
+			}
+			if($val=="state_india" || $val=="native_country")
+			{
+				$optionalArr = array("0"=>array("0"=>"Select"));
+				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
+				$outData[$val][0]=$mergedArr;
+			}
+			if($val=="reg_city_jspc")
+			{
+				$output = $outData;
+				unset($outData);
+				$outData[51]=$output;
+                                $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+                                $i=0;
+                                foreach($Arr[128] as $key=>$val)
+                                {
+                                        foreach($val as $k=>$v)
+                                                $outData[128][]=array($i=>array($k=>$v));
+                                        $i++;
+                                }
+			    $outData['128'][][0] = array('0'=>'Others');
+			}
 		  }
 		  echo json_encode($outData);
 	  }
 	  else if($k)
 	  {
-		  $output = $this->getFieldMapData($k);
+			$output = $this->getFieldMapData($k);
+			if($k=="reg_city_jspc")
+			{
+				$outData = $output;
+				unset($output);
+				$output[51]=$outData;
+				$Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+				$i=0;
+				foreach($Arr[128] as $key=>$val)
+				{
+					foreach($val as $k=>$v)
+						$output[128][]=array($i=>array($k=>$v));
+					$i++;
+				}
+			    $output['128'][][0] = array('0'=>'Others');
+			}
+			if($k=="family_income")
+			{
+                                $optionalArr[0] = array("0"=>array("0"=>"Select"));
+                                foreach($output as $x=>$y)
+                                {
+                                        $mergedArr = array_merge($optionalArr,$y);
+                                        $output[$x]=$mergedArr;
+                                }
+			}
+                        if($k=="state_india" || $k=="native_country")
+                        {
+                                $optionalArr = array("0"=>array("0"=>"Select"));
+                                $mergedArr = array_merge($optionalArr,$output[0]);
+                                $output[0]=$mergedArr;
+                        }
 		  echo json_encode($output,JSON_FORCE_OBJECT);
 	  }	
 	  
@@ -734,6 +1003,10 @@ public function executeAppredirect(sfWebRequest $request)
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;
+    if(strpos($k, 'p_') !== false)
+    {
+      $forDpp = 1; //This has been added so as to remove Select from the output where not required
+    }
 		$output = "";
 		if($k=="relationship")
 		{
@@ -760,8 +1033,8 @@ public function executeAppredirect(sfWebRequest $request)
 		{
 		$output=$this->getJspcCity_Edit();
 		}
-		if($k=="p_city")
-		$output=$this->getCity(1);
+                if($k=="p_city")
+                $output=$this->getCityState();
     if($k=="dpp_city")
     {
     $output=$this->getJSPCDppCity(0);
@@ -782,12 +1055,11 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_manglik")
 		$k="manglik";
 		if($k=="manglik")
-		$output=$this->getField("manglik_label");
+                $output=  $this->removeDontKnowManglik();              
 		if($k=="p_height" || $k=="height")
 		$k="height_without_meters";
 		if($k=="p_age")
 		$k="age";
-
 		if($k=="p_diet" || $k=="diet")
 		$output=$this->getField("diet");
 		if($k=="p_smoke" || $k=="smoke")
@@ -803,7 +1075,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_typ","degree_grouping_reg");
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
 
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);
@@ -814,7 +1086,9 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
 		$output=$this->getField("mstatus");
-		if($k=="parent_city_same")
+		if($k=="p_havechild")
+                    $output=$this->getField("children");
+                if($k=="parent_city_same")
 		{
 		$output=$this->getField("live_with_parents");
 		}
@@ -863,6 +1137,8 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getJspcSect();
 		if($k=="p_caste" || $k=="p_sect")
 		$output=$this->getCaste(1);
+		if($k=="p_caste_jsms" || $k=="p_sect_jsms")
+		$output=$this->getNonOtherCaste();
 
 		if($k=="mtongue")
 			$output=$this->getMtongue();
@@ -887,6 +1163,10 @@ public function executeAppredirect(sfWebRequest $request)
 			{
 				$output= $this->getRegCaste($k);
 			}
+		}
+		if(stristr($k,'reg_city'))
+		{
+				$output = $this->getNativeCity();
 		}
 		if($k=="isd")
 		{
@@ -925,14 +1205,28 @@ public function executeAppredirect(sfWebRequest $request)
     if(strstr($k,"stdcodes")){
       $output = $this->getSTDCode();
     }
+if($k=="state_res")
+{
+			$output = $this->getJspcState();
+}
     if($k=="native_state_jsms")
 		{
 			$output = $this->getJsmsNativeState();
+		}
+    if($k=="jspc_state")
+		{
+			$output = $this->getJspcState();
 		}
     if($k=="native_country_jsms")
 		{
 			$output = $this->getJsmsNativeCountry();
 		}
+    if($forDpp) //To remove Select from fields where it is not required
+    {
+      if($output[0][0][0] == DPPConstants::$removeLabelFromDpp || $output[0][0][S0] == DPPConstants::$removeLabelFromDpp)
+        unset($output[0][0]);
+    }
+    
 		return $output;
 	}
   
@@ -1029,6 +1323,32 @@ public function executeAppredirect(sfWebRequest $request)
 	  }
 	  
 		return $Arr;
+  }
+  private function getNonOtherCaste()
+  {
+          $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+          $casteArr=FieldMap::getFieldLabel("caste",'',1);
+	  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	  {
+		unset($casteArr[$v]);
+	  }
+          foreach($arr as $key=>$val)
+          {
+		$val = $this->unsetOtherCaste($val);
+		$Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
+
+          }
+	return $Arr;
+  }
+  private function unsetOtherCaste($val)
+  {
+	$valArr = explode(",",$val);
+	$flipArr = array_flip($valArr);
+	foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	{
+		unset($valArr[$flipArr[$v]]);
+	}
+	return implode(",",$valArr);
   }
   private function getCasteArr($needleArr,$searchArr)
   {
@@ -1134,15 +1454,10 @@ public function executeAppredirect(sfWebRequest $request)
   }
   private function getCountry($onlyCountry)
   {
-	  if($onlyCountry!='p_country')
-	  {
-		  $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
-		  $Arr[1]=Array("-1"=>"--More");
-		  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
-		  
-	   }
-	else
-		$Arr[0]=FieldMap::getFieldLabel("country",'',1);
+
+          $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
+	  $Arr[1]=Array("-1"=>"--More");
+	  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 	  foreach($Arr as $key=>$val)
 		  {
 				foreach($val as $k=>$v)
@@ -1195,6 +1510,41 @@ public function executeAppredirect(sfWebRequest $request)
 				$output[128][]=array($i=>array($k=>$v));
 		$i++;		
 	  } 
+	  return $output;		
+  }
+  private function getCityState()
+  {
+	  $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
+	  
+	  $state = FieldMap::getFieldLabel("state_india",'',1);
+	  $Arr[51][0]=Array();
+	  $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
+	  foreach($state as $key=>$value)
+	  {
+		  unset($cityIndia[$key]);
+	  }
+            foreach($tempArray as $key=>$val)
+            {
+                    $temp=explode(",",$val);
+                    foreach($temp as $key=>$val)
+                          $topIndia[$val]=$cityIndia[$val];
+
+            }
+            
+            $delhiNcrCities = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
+            $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
+            $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
+            
+            $Arr[51][0] = array_merge($topIndia,array("-1 "=>"States"));
+	    $Arr[51][1] = array_merge($state,array("-1 "=>"Cities"));
+            $Arr[51][2]=$cityIndia;
+            $i=0;
+	  foreach($Arr[51] as $key=>$val)
+	  {
+			foreach($val as $k=>$v)
+				$output[51][]=array($i=>array($k=>$v));
+		$i++;		
+	  }
 	  return $output;		
   }
 
@@ -1328,65 +1678,76 @@ public function executeAppredirect(sfWebRequest $request)
   private function getJSPCDppCity($partnerCity="")
   {
     $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
-    
     $state = FieldMap::getFieldLabel("state_india",'',1);
-    $Arr[0]=Array();
+    $Arr['topCityIndia']=Array();
     $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
     foreach($state as $key=>$value)
     {
       unset($cityIndia[$key]);
     }
-    
-    unset($state);
     if(!$partnerCity)
     {
       foreach($tempArray as $key=>$val)
       {
         $temp=explode(",",$val);
-        foreach($temp as $key=>$val){
+        foreach($temp as $key=>$val)
+        {
           $topIndia[$val]=$cityIndia[$val];
           unset($cityIndia[$val]);
         }
-        
       }
       $delhiNcrCities = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
-	 
-		  $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
-		  $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
-      $Arr[0] = array_merge($topIndia,array("-1 "=>"startAlpha"));
+
+      $topIndia[$delhiNcrCities]=TopSearchBandConfig::$ncrLabel;
+      $topIndia[TopSearchBandConfig::$mumbaiRegion]=TopSearchBandConfig::$mumbaiRegionLabel;
+      $Arr['topCityIndia'] = array_merge($topIndia,array("-1 "=>"startAlpha"));
     }
     else
     {
       unset($Arr);
-      $Arr[0]=$cityIndia;
+      $Arr['topCityIndia']=$cityIndia;
     }
-    
-    $Arr[2]=$cityIndia;
+    $Arr['state']=$state;
+    array_unshift($Arr['state'],"statesIndia");
+    $Arr['city']=$cityIndia;
     $i=0;
     $arrAlpha = array();
     $sym = "";
     $bStartAplha = false;
+    $bStateIndia = false;
     foreach($Arr as $key=>$val)
     {
       foreach($val as $k=>$v){
+        if($v == "statesIndia"){
+          $bStateIndia = true;
+          continue;
+        }
         if($v == "startAlpha"){
           $bStartAplha = true;
           continue;
         }
-
-        $sym = strtoupper(substr($v, 0,1));
-        if($bStartAplha && !in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[0][]=array("-1"=>$sym);  
-          $i++;  
+        if($key!='state')
+        {
+          $sym = strtoupper(substr($v, 0,1));
+          if($bStartAplha && !in_array($sym, $arrAlpha)){
+            $arrAlpha[] = $sym;
+            $output[0][]=array("-1"=>$sym);  
+            $i++;  
+          }
+        }
+        if($bStateIndia)
+        {
+          $output[0][]=array("-1"=>"States");
+          $bStateIndia= false;
         }
         $output[0][]=array($k=>$v);
         $i++;   
       }
     }
-
+   //print_r($output);die;
     return $output;   
   }
+
   private function getJSPCDppCountry($partnerCountry="")
   {
     $tempArray=FieldMap::getFieldLabel("impcountry",'',1);
@@ -1454,86 +1815,63 @@ public function executeAppredirect(sfWebRequest $request)
   }
  
   private function getJspcCity_Edit(){
-    $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
-	  
-	  $state = FieldMap::getFieldLabel("state_india",'',1);
-	  $Arr[51][0]=Array();
-	  $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
-	  foreach($state as $key=>$value)
-	  {
-		  unset($cityIndia[$key]);
-	  }
-    
-	  $Arr[51][2]=$cityIndia;
-	  unset($state);
-	  if(!$partnerCity)
-	  {
-		  foreach($tempArray as $key=>$val)
-		  {
-			  $temp=explode(",",$val);
-			  foreach($temp as $key=>$val)
-				$topIndia[$val]=$cityIndia[$val];
-			  
-		  }
-		  $Arr[51][0] = array_merge($topIndia,array('-1'=>'startAlpha'));
-	  }
-	  else
-	  {
-		  unset($Arr);
-		  $Arr[51][0]=$cityIndia;
-	  }
-	  $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
-    $Arr[128][0]["0"] = "Others" ;
-	  $i=0;
-	  $arrAlpha = array();
-    $sym = "";
-    $bStartAplha = false;
-	  foreach($Arr[51] as $key=>$val)
-	  {
-      
-			foreach($val as $k=>$v){
-        if($v == "startAlpha"){
-          $bStartAplha = true;
-          continue;
-        }
-        $sym = strtoupper(substr($v, 0,1));
-        if($bStartAplha && !in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[51][]=array($i=>array("-1"=>$sym));  
-          $i++; 
-        }
-        if($v === "Others"){
-          $output[51][]=array($i=>array("-1"=>""));
-          ++$i;
-        }
-				$output[51][]=array($i=>array($k=>$v));
-      }  
-		$i++;		
-	  }
-    
-    $arrAlpha = array();
-    $sym = "";
-    $bStartAplha = false;
-	 foreach($Arr[128] as $key=>$val)
-	  {
-			foreach($val as $k=>$v){
-        $sym = strtoupper(substr($v, 0,1));
-        if(!in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[128][]=array($i=>array("-1"=>$sym));  
-          $i++; 
-        }
-        
-        if($v === "Others"){
-          $output[128][]=array($i=>array("-1"=>""));
-          ++$i;
-        }
-				
-        $output[128][]=array($i=>array($k=>$v));
-      }
-		$i++;		
-	  } 
-	  return $output;		
+    $arrCity=FieldMap::getFieldLabel("city_india",'',1);
+
+                ksort($arrCity);
+                $arrFinalOut = array();
+                foreach($arrCity as $key=>$val)
+                {
+                        if(strlen($key)===2)
+                        {
+				if(array_key_exists($currentKey, $arrFinalOut))
+				{
+					asort($arrFinalOut[$currentKey]);
+				}
+				else
+					$arrFinalOut[$currentKey] = array();
+                        }
+                        else
+                        {
+				$currentKey = substr($key,0,2);
+                                $arrFinalOut[$currentKey][$key] = $val;
+                        }
+                }
+		asort($arrFinalOut[$currentKey]);
+	foreach($arrFinalOut as $k=>$v)
+	{
+		foreach($v as $kx=>$vx)
+		{
+			$returnArr[$k][0][]=array($kx=>$vx);
+		}
+                    $returnArr[$k][0][] = array('0'=>'Others');
+	}
+            $cityUsa = FieldMap::getFieldLabel("city_usa",'',1);
+            $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+            $Arr[128][0]["0"] = "Others" ;
+            $i=0;
+            $arrAlpha = array();
+            $sym = "";
+            $bStartAplha = false;
+            foreach($Arr[128] as $key=>$val)
+            {
+                foreach($val as $k=>$v){
+                    $sym = strtoupper(substr($v, 0,1));
+                    if(!in_array($sym, $arrAlpha)){
+                        $arrAlpha[] = $sym;
+                        $returnArr[128][]=array($i=>array("-1"=>$sym));  
+                        $i++; 
+                    }
+
+                    if($v === "Others"){
+                        $returnArr[128][]=array($i=>array("-1"=>""));
+                        ++$i;
+                    }
+
+                    $returnArr[128][]=array($i=>array($k=>$v));
+                }
+                $i++;		
+            }
+	return $returnArr;		
   }
   
   
@@ -1689,7 +2027,19 @@ public function executeAppredirect(sfWebRequest $request)
    */
   private function getJsmsNativeState(){
     $arr=FieldMap::getFieldLabel("state_india",'',1);
+    $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
+	  foreach($arr as $key=>$val)
+			$Arr[0][]=array($key=>$val);
+	  return $Arr;   
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  private function getJspcState(){
+    $arr=FieldMap::getFieldLabel("state_india",'',1);
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
 	  return $Arr;   
@@ -1705,6 +2055,7 @@ public function executeAppredirect(sfWebRequest $request)
     $Arr[1]=Array("-1"=>"--More");
     $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 		
+    $output[] = array("0"=>"Select");
     $output[] = array("FI"=>"From India");
     foreach($Arr as $key=>$val)
     {
@@ -1715,4 +2066,17 @@ public function executeAppredirect(sfWebRequest $request)
     }
 	  return array($output);
   }
+  
+  /*
+         * this function removes don't know value from array coming from field map
+         * @return - array with don't know removed
+         */
+        private function removeDontKnowManglik(){
+            $arr=FieldMap::getFieldLabel("manglik_label",'',1);
+            foreach($arr as $key=>$val){
+                if($val != "Don't know")
+                        $Arr[0][]=array($key=>$val);
+            }
+            return $Arr;
+        }
 }

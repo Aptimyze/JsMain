@@ -159,11 +159,17 @@ public function isFtoDuplicate($profileId){
 			$prep->bindValue(":FLAG_INBOUND_CALL", $paramArr["FLAG_INBOUND_CALL"], PDO::PARAM_STR);
 			$prep->bindValue(":CHAT_INITIATION", $paramArr["CHAT_INITIATION"], PDO::PARAM_STR);
 			$prep->execute();
+                        return $this->db->lastInsertId();
 		}
 		catch(Exception $e)
 		{
-			throw new jsException($e);
-		}
+
+            if(sfContext::getInstance()->getRequest()->getParameter('phoneVerification')==1)
+                jsCacheWrapperException::logThis($e);
+            else 
+                throw new jsException($e);
+
+        }
 	}
 	/*
         *This function inserts record into the incentive.NEGATIVE_TREATMENT_LIST table
@@ -350,4 +356,37 @@ public function isFtoDuplicate($profileId){
       throw new jsException($e);
     }
   }
+
+
+  public function removeProfile($negType, $negativeVal) 
+  {
+        try {
+            $sql = "DELETE FROM incentive.NEGATIVE_TREATMENT_LIST WHERE $negType=:VALUE_VAL";
+            $prep = $this->db->prepare($sql);
+	    $prep->bindValue(":VALUE_VAL", $negativeVal, PDO::PARAM_STR);
+            $prep->execute();
+	    $rows_affected =$prep->rowCount();
+	    return $rows_affected;
+        }
+        catch (Exception $e) {
+            throw new jsException($e);
+        }
+  }
+
+    //Three function for innodb transactions
+    public function startTransaction()
+    {
+        $this->db->beginTransaction();
+    }
+    public function commitTransaction()
+    {
+        $this->db->commit();
+    }
+
+    public function rollbackTransaction()
+    {
+        $this->db->rollback();
+    }
+    //Three function for innodb transactions
+
 }

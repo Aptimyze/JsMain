@@ -26,7 +26,7 @@
     <div class="fl wid67p ml20">
       <div class="fullwid bg11 fontlig" id="loggedout"> 
         <!-- ===================id="loggedout" is neccesary to overwrite the earlier defined css for login layer ============================--> 
-        ~include_partial('global/JSPC/_jspcCommonLoginLayer')`
+        ~include_partial('global/JSPC/_jspcCommonLoginLayer',["captchaDiv"=>$captchaDiv])`
       </div>
     </div>
     <div id="Hidden_iFrameLoggedOut">
@@ -50,5 +50,7 @@
 <script>
 var LoggedoutPage=1;
 var fromSignout=~$fromSignout`;
+var logoutChat = ~$logoutChat`;
+if(logoutChat) localStorage.setItem("cout","1");
 $("#loginRegistration").addClass("logout");
 </script>

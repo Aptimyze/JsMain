@@ -40,7 +40,7 @@ function MM_openBrWindow(theURL,winName,features)
 ~section name=sec loop=$arr`
 <tr class=fieldsnew>
         <td align=center   width=5>&nbsp;~$arr[sec].SNO`</td>
-        <td align=center width=60 >&nbsp;<a href='/jsadmin/showstat.php?cid=~$checksum`&profileid=~$arr[sec].PROFILEID`'>~$arr[sec].USERNAME`</a></td>
+        <td align=center width=60 >&nbsp;<a href='/operations.php/commoninterface/ShowProfileStats?cid=~$checksum`&profileid=~$arr[sec].PROFILEID`'>~$arr[sec].USERNAME`</a></td>
         <td align=center   width=80>&nbsp;~$arr[sec].EMAIL`</td>
         <td align=center   width=80>&nbsp;~$arr[sec].PHONE_MOB`</td>
         <td align=center   width=80>&nbsp;~$arr[sec].PHONE_RES`</td>

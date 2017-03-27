@@ -24,7 +24,7 @@
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
-    margin-top: 52px
+    margin-top: 83px
 }
 
 .widclr {
@@ -69,7 +69,7 @@ i, em {
 
 .Widposabs {
     position: absolute;
-    height: 120px;
+    height: 171px;
 }
 
 .r0 {
@@ -315,4 +315,318 @@ form#Widget input:-webkit-autofill {
 
 .curspointer {
     cursor: pointer;
+}
+
+.rcb_pos1 {
+    background-position: 1px 1px
+}
+
+.rcb_pos2 {
+    background-position: -102px 1px
+}
+
+.rcb_pos3 {
+    background-position: -200px 1px
+}
+
+.rcb_pos4 {
+    background-position: 1px -95px
+}
+
+.rcb_pos5 {
+    background-position: -102px -95px
+}
+
+
+/*-- color and background color --*/
+
+.rcb_bg1 {
+    background-color: #d9475c
+}
+
+.rcb_bg2 {
+    background-color: #1c2d40
+}
+
+.rcb_bg3 {
+    background-color: #b4b6b9
+}
+
+.rcb_bg4 {
+    background-color: #1c2d40
+}
+
+.rcb_colr1 {
+    color: #fff
+}
+
+.rcb_colr2 {
+    color: #d9475c
+}
+
+.rcb_color3 {
+    color: #1c2d40
+}
+
+.rcb_color4 {
+    color: #000
+}
+
+.rcb_cursp {
+    cursor: pointer
+}
+
+
+/*-- padding --*/
+
+.rcb_pada {
+    padding: 20px 0
+}
+
+.rcb_padb {
+    padding: 0 10px
+}
+
+.rcb_padc {
+    padding: 19px 21px
+}
+
+.rcb_padd {
+    padding: 60px 0
+}
+
+.rcb_pade {
+    padding: 40px 0 30px
+}
+
+.rcb_padf {
+    padding: 50px 0
+}
+
+.rcb_padg {
+    padding: 25px 0
+}
+
+.rcb_padk {
+    padding: 19px 0 14px 0
+}
+
+.rcb_padh {
+    padding: 20px 0px 0 116px
+}
+
+.rcb_padi {
+    padding: 40px 0px 0px 32px
+}
+
+.rcb_padj {
+    padding: 17px 35px 0px 20px
+}
+
+.rcb_pt10 {
+    padding-top: 10px
+}
+
+.rcb_pt13 {
+    padding-top: 13px
+}
+
+.rcb_pt17 {
+    padding-top: 17px
+}
+
+.rcb_pt25 {
+    padding-top: 25px
+}
+
+.rcb_pt35 {
+    padding-top: 35px
+}
+
+.rcb_pt45 {
+    padding-top: 45px
+}
+
+.rcb_pt40 {
+    padding-top: 40px
+}
+
+.rcb_pt123 {
+    padding-top: 123px
+}
+
+.rcb_pl25 {
+    padding-left: 25px
+}
+
+.rcb_padl {
+    padding-left: 9px
+}
+
+.rcb_pl120 {
+    padding-left: 120px
+}
+
+.rcb_ml2 {
+    margin-left: 2px
+}
+
+.rcb_ml5 {
+    margin-left: 5px
+}
+
+.rcb_m2 {
+    margin-left: 20px
+}
+
+.rcb_ml100 {
+    margin-left: 100px
+}
+
+.rcb_mt11n {
+    margin-top: -11px
+}
+
+.rcbfield input, select {
+    background-color: #697581;
+    border: 0;
+    font-size: 15px
+}
+
+.rcb_mainimg {
+    background: url(IMG_URL/images/membership-img/top-image1.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.rcb_endqoute {
+    background-image: url(IMG_URL/images/membership-img/rcb_new_sprite.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-position: -253px -121px;
+    width: 33px;
+    height: 19px;
+    margin-left: 15px
+}
+
+.rcb_sprite {
+    background-image: url(IMG_URL/images/membership-img/rcb_new_sprite.png);
+    background-repeat: no-repeat;
+    display: block
+}
+
+.rcb_opa60 {
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+.rcb_lh30 {
+    line-height: 30px
+}
+
+.rcb_lh40 {
+    line-height: 40px
+}
+
+.rcb_btn {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.rcb_fl {
+    float: left
+}
+
+.rcb_fr {
+    float: right
+}
+
+.rcb_disib {
+    display: inline-block
+}
+
+.wid88 {
+    width: 88px;
+}
+
+.rcbdropdown dd, .rcbdropdown dt, .rcbdropdown ul, dl {
+    margin: 0px;
+    padding: 0px;
+}
+
+.rcbdropdown dt {
+    line-height: 30px
+}
+
+.rcbdropdown ul {
+    height: 90px;
+    overflow: auto
+}
+
+.rcbdropdown dd {
+    position: relative;
+}
+
+.rcbdropdown, .rcbdropdown li:visited {
+    color: #000;
+    text-decoration: none;
+    outline: none;
+    position: relative;
+    z-index: 1;
+}
+
+.rcbdropdown li:hover {
+    color: #000;
+}
+
+.rcbdropdown dt li:hover {
+    color: #000;
+    border: 1px solid #b5b5b5;
+}
+
+.rcbdropdown dt {
+    background: #d4d4d4 url(IMG_URL/images/membership-img/dropdown1.png) no-repeat scroll right center;
+    display: block;
+    width: 100%;
+}
+
+.rcbdropdown dt span {
+    cursor: pointer;
+    display: block;
+    padding: 5px;
+}
+
+.rcbdropdown dd ul {
+    background: #d4d4d4 none repeat scroll 0 0;
+    color: #000;
+    display: none;
+    left: 0px;
+    padding: 0px;
+    position: absolute;
+    top: 2px;
+    width: 100%;
+    list-style: none;
+}
+
+.rcbdropdown span.value {
+    display: none;
+}
+
+.rcbdropdown dd ul li {
+    padding: 5px;
+    display: block;
+}
+
+.rcbdropdown dd ul li:hover {
+    background-color: #b5b5b5;
+}
+
+.wid35 {
+    width:36%;
+}
+
+.wid60 {
+    width:60%;
 }

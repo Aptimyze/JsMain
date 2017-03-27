@@ -112,6 +112,23 @@ class JSADMIN_VIEW_CONTACTS_LOG extends TABLE{
 				throw new jsException($e);
 			}
 	}
+	public function totalContactsByViewer($viewerPid)
+	{
+		try
+		{
+			$sql = "SELECT count(*) CNT FROM jsadmin.VIEW_CONTACTS_LOG WHERE VIEWER=:viewerPid AND SOURCE='".CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING."'";
+			$prep=$this->db->prepare($sql);
+			$prep->bindValue(":viewerPid", $viewerPid, PDO::PARAM_INT);
+			$prep->execute();
+			$result = $prep->fetch(PDO::FETCH_ASSOC);
+			return $result['CNT'];
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
 	
 	/**
  * @fn 	public function FinalTotalContactsViewed($viewerPid)
@@ -434,6 +451,25 @@ RETURNS TOTAL NO of viewers of the given profile
 		}
 		return $res;
 	}
+        public function countContactsViewForDates($profileid, $start_dt, $end_dt)
+        {
+                try{
+                        $sql = "SELECT VIEWED,DATE FROM jsadmin.`VIEW_CONTACTS_LOG` WHERE `VIEWER`=:PROFILEID AND `DATE`>=:START_DT AND `DATE`<=:END_DT";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                        $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+                        $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
+                        $prep->execute();
+                        while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+				$pid =$row['VIEWED'];
+                                $res[$pid] =$row;
+                        }
+                }
+                catch(Exception $e){
+                        throw new jsException($e);
+                }
+                return $res;
+        }
     public function getViewedContact($viewedProfiles, $startDt, $endDt)
     {
         try{

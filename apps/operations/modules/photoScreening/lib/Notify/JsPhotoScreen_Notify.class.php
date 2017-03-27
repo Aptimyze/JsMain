@@ -135,8 +135,9 @@ class JsPhotoScreen_Notify
 			}
 			break;
 			case JsPhotoScreen_Enum::enNOTIFY_CHANNEL_MAIL_SMS:
-			{
-				$objNotifySMS 	= new JsPhotoScreen_NotifySms($this->m_iProfileID,$this->m_szSmsMsgType);
+			{				
+				$this->photoRejectionReason["PHOTO_REJECTION_REASON"] = $this->m_arrMailParams["REJECT_REASON"];
+				$objNotifySMS 	= new JsPhotoScreen_NotifySms($this->m_iProfileID,$this->m_szSmsMsgType,$this->photoRejectionReason);
 				$objNotifyEmail = new JsPhotoScreen_NotifyEmail($this->m_arrMailParams);
 			}
 			break;
@@ -197,7 +198,7 @@ class JsPhotoScreen_Notify
 			}
 			if(count($arrActualReason))
 			{
-				$szReason = implode(" or ",$arrActualReason);
+				$szReason = implode(" or ",$arrActualReason); 
 			}
 		}
 		return $szReason;

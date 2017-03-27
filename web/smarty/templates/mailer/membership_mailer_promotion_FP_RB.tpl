@@ -61,7 +61,7 @@
               1. Response booster - finding it difficult to spend lot of time in discovering matches and sending interests? Here is a feature where our system identifies best matches and sends them interests. <br>
               You get access to users who already like your profile<br><br>
               2. Featured Profile - unable to receive more interests? Get featured on top of search results and get noticed!<br><br>
-              You may avail these services by clicking on this link or call us on 18004196299.<br><br>
+              You may avail these services by clicking on this <a href="~$membershipAutoLoginLink`">link</a> or call us on 18004196299.<br><br>
               Best Regards,<br>
               Team Jeevansathi<br>
               </td>

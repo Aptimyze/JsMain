@@ -37,6 +37,8 @@
 </div>
 <script type="text/javascript">
   var AndroidPromotion = 0;
+  var skipVasPageMembershipBased = JSON.parse("~$skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+  
   $(document).ready(function(){
     $(".bg4").css('height', $(window).height()-$(".bg1").height());
     $("#cancelBtn").click(function(e){
@@ -53,13 +55,13 @@
         url: url,
         success:function(data){
           response = data;
-          console.log(data);
+          //console.log(data);
           if(data.success_code!=1){
             ShowTopDownError([""+data.message+""]);
           }
           else{
             createCookie('couponID', couponID);
-            if(readCookie('mainMem') == "ESP" || readCookie('mainMem') == "X" || readCookie('mainMem') == "NCP"){
+            if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1){
               createCookie('backState', "couponMain");
             } else {
               createCookie('backState', "couponVas");

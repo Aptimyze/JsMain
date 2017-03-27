@@ -108,7 +108,17 @@ Class SubjectHandler
 			$picture = new PictureArray;
 			$photoCount = $picture->getNoOfPics($profileArr);
 			if($photoCount[$receiver->getPROFILEID()]>0)
-				$subjectCode = $subjectCodeArr[0]["SUBJECT_CODE"];
+			{
+				// Photo is visible on accept
+				if($receiver->getPHOTO_DISPLAY() == 'C')
+				{
+					$subjectCode = $subjectCodeArr[2]["SUBJECT_CODE"];
+				}
+				else
+				{
+					$subjectCode = $subjectCodeArr[0]["SUBJECT_CODE"];
+				}
+			}
 			else
 				$subjectCode = $subjectCodeArr[1]["SUBJECT_CODE"];
 		}	

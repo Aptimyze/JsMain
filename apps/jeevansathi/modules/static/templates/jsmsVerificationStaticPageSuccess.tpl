@@ -14,7 +14,7 @@
         <div class="pad5 cursp" style="float:left;"> <i class="mainsp backIcon"></i>
 
         </div></a>
-        ~else`
+        ~elseif $removeBack != 1`
         <div class="pad5 cursp goBack" style="float:left;"> <i class="mainsp backIcon"></i>
 
         </div>

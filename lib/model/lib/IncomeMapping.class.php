@@ -456,7 +456,35 @@ class IncomeMapping
 		$incomeArr = $this->getIncomeDrop(array('TRENDS_SORTBY'=>$income,'VISIBLE'=>'Y'),null,array('VALUE'=>'','MIN_VALUE'=>'','MAX_VALUE'=>'','TYPE'=>'','SORTBY'=>''),'array');
 		return $incomeArr;
 	}
-	
+        
+        /**
+         * This function finds incomes lower than a particular value on the basis of income sort by
+         * @param type $currentValue current income index
+         * @return array of incomes
+         */
+        public function getLowerIncomes($currentValue){
+                $incomeSortByArr=FieldMap::getFieldLabel("income_sortby",'',1);
+                $currentOrder = $incomeSortByArr[$currentValue];
+                $lowerArray = array();
+                foreach($incomeSortByArr as $key=>$inc){
+                        if($inc <= $currentOrder)
+                                $lowerArray[] = $key;
+                }
+                return($lowerArray);
+        }
+        /**
+         * This function removes no income index from income array if array size is greater than 1
+         * @param type $incomeArr array of incomes
+         * @return income array without no income value
+         */
+	public function removeNoIncome($incomeArr){
+                if(count($incomeArr)> 1){
+                        if(($key = array_search(15, $incomeArr)) !== false) {
+                                unset($incomeArr[$key]);
+                        }
+                }
+                return $incomeArr;
+        }
 	
 }
 ?>

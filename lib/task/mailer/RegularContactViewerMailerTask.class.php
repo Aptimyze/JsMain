@@ -63,7 +63,7 @@ EOF;
 	$temp=new DateTime();
 	$day=$temp->format('d'); 
 	$month=substr($temp->format('F'),0,3); 
-	$mailtrackObj=new MAIL_contactViewers('newjs_master');
+	$mailtrackObj=new MAIL_contactViewers('newjs_masterDDL');
 	$mailtrackObj->EmptyMailerCV();
 	if(is_array($this->receiversData))
 	{	
@@ -359,7 +359,7 @@ public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 
   	public function getEducationDetails($pid)
 	{
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $Education = $educationObj->getProfileEducation($pid,$from="mailer");
                 $edu=$this->getEducationDisplay($Education);
                 $eduDisplay="";
@@ -418,7 +418,22 @@ return $edu;
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],'','','','','','','1','',$senderDetails["ALIAS"]);
+                        
+                        if(CommonConstants::contactMailersCC)
+                        {    
+
+                	                $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$pid),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                        {
+                           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                        }
+                        else
+                            $ccEmail = "";
+                        }
+                        else $ccEmail = "";
+
+                        $mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$ccEmail,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;

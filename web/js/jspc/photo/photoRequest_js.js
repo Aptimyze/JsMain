@@ -10,6 +10,7 @@ function requestphoto(profilechecksum,element,addClass)
 		success: function(response)
 		{
 			hideCommonLoader();
+			callAfterContact();
 			if(response.actionDetails && response.actionDetails.errmsglabel)
 			{
 				innerDiv = "<div class=' txtc colrw opa80 "+addClass+" mauto wid150'>"+response.actionDetails.errmsglabel+"</div>";

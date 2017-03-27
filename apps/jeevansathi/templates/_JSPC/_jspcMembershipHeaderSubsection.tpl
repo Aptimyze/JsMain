@@ -1,13 +1,39 @@
-<div id="memebershipPageContent" class='disp-none'>
-    <!--start:expand div-->
+<div class="disp-none" id="memebershipPageContent" class='disp-none'>
+    <!--start:close view-->
+    <div class="mempad30 js-closeview">
+        <div class="wid63p mem_bgwh clearfix mem_pad13 fontmed colrw disp_ib">
+            <div class="fl pl30" id="bannerTextMinimize">
+                <span class="f24 disp_ib">
+                </span>
+            </div>
+            <div class="fr f20 timer pr30" id="bannerMinimizedTimer">
+            </div>
+        </div>
+        <div class="wid36p disp_ib vtop">
+            <div class="mar_mem_new10 colrw f16 fontlig cursp" id="knowMore">
+                Why Paid Member?
+                <span class="cursp f15 fontlig ">
+                    Know More
+                </span>
+            </div>
+            <div class="mem_mar_lf_55 colrw f16 fontlig cursp" id="landJSExc">
+                Buy Personalized Services
+                <span class="cursp f15 fontlig">
+                   - JS Exclusive
+                </span>
+            </div>
+        </div>
+    </div>
+    <!--end:close view-->
+    <!--start:toggle icon-->
+    <!--end:toggle icon-->
+</div>
+<!-- <div id="memebershipPageContent" class='disp-none'>
     <div class="padallk f15 colrw js-expand">
         <div class="pt37">Why Jeevansathi Membership</div>
         <div class="mem_pad15">
             <div class="fullwid clearfix">
-                <!--start:left-->
                 <div class="fl"> <img src="~sfConfig::get('app_site_url')`/images/jspc/membership_img/image-1.png"> </div>
-                <!--end:left-->
-                <!--start:right-->
                 <div id="bannerContent" class="fr">
                     <div class="mem_bgwh fontmed mem_wid278">
                         <div class="mem-pad2">
@@ -16,12 +42,9 @@
                         </div>
                     </div>
                 </div>
-                <!--end:right-->
             </div>
         </div>
     </div>
-    <!--ent:expand div-->
-    <!--start:close view-->
     <div class="mem_pad12 js-closeview disp-none">
         <div class="fullwid mem_bgwh clearfix mem_pad13 fontmed colrw">
             <div id="bannerTextMinimize" class="fl pl30"> <span class="f24 disp_ib"></span> </div>
@@ -29,12 +52,8 @@
             </div>
         </div>
     </div>
-    <!--end:close view-->
-    <!--start:toggle icon-->
     <div id="bannerMinimize" class="txtc mem_pad11"> <i id="js-panelbtn" class="cursp headfootsprtie mem-up"></i> </div>
-    <!--end:toggle icon-->
-</div>
-
+</div> -->
 <div id="vasPageContent" class='disp-none'>
     <!--start:div-->
     <div class="pt30 mauto mem-wid13 pb30">
@@ -96,6 +115,19 @@
                 </div>
             </div>
         </div>
+        <div class="fl mem-widp12 disp-none" id="UpgradeMembershipDiv">
+            <!--div class="f19 color12 pb15" id ="messageDiv"></div>
+            <ul id="paidBenefits" class="clearfix hor_list memfealist colrw fontlig f15">
+            </ul>
+            <div class="mem_pad22">
+                <div class="pt5 colrw mem-brd10 clearfix">
+                    <div class="fl">
+                        <div id="bannerTextVas" class="mt10 f20"></div>
+                        <div class="pt17 f20" id="bannerTimerVas"></div>
+                    </div>
+                </div>
+            </div-->
+        </div>
         <div class="fl mem-widp12 disp-none" id="ConditionsBasedDivVasPaid">
             <div class="f19 color12 pb15">Benefits of your membership; for more benefits choose from value added services</div>
             <ul id="paidBenefitsVasPaid" class="clearfix hor_list memfealist colrw fontlig f15">
@@ -124,7 +156,7 @@
         </div>
         <!--end:left-->
         <!--start:right-->
-        <div class="fr fontlig mem-widp5 colrw">
+        <div class="fr fontlig mem-widp5 colrw" id="memExpiryContent">
             <div id="topBlockTitleMsg" class="txtc fontlig f15"></div>
             <!--start:timer-->
             <div id="unlimitedTimer" class="mauto wid89p pt16 disp-none">
@@ -261,31 +293,33 @@
     </div>
 </div>
 <script type="text/javascript">
-$(window).load(function() {
+$(document).ready(function() {
     bindEscapeKey();
     
     if(pageType == 'membershipPage'){
         $("#memebershipPageContent").show();
     }
 
-    if(pageType == 'ConditionsBasedHeader'){
+    else if(pageType == 'ConditionsBasedHeader'){
         $("#messageDiv").html(message);
-        $("#ConditionsBasedDiv").show();
-        $("#vasPagePaidMemberContent").show();
+        $("#ConditionsBasedDiv,#vasPagePaidMemberContent").show();
     }
 
-    if (pageType == 'vasPage'){
+    else if(pageType == 'upgradeMembershipPage'){
+        $("#UpgradeMembershipDiv,#vasPagePaidMemberContent").show();
+        $("#memExpiryContent").hide();
+    }
+
+    else if (pageType == 'vasPage'){
         $("#vasPageContent").show();
     }
 
-    if (pageType == 'vasPagePaidMember'){
-        $("#NoConditionsBasedDiv").show();
-        $("#vasPagePaidMemberContent").show();
+    else if (pageType == 'vasPagePaidMember'){
+        $("#NoConditionsBasedDiv,#vasPagePaidMemberContent").show();
     }
 
-    if (pageType == 'ConditionsBasedDivVasPaid'){
-        $("#ConditionsBasedDivVasPaid").show();
-        $("#vasPagePaidMemberContent").show();
+    else if (pageType == 'ConditionsBasedDivVasPaid'){
+        $("#ConditionsBasedDivVasPaid,#vasPagePaidMemberContent").show();
         if(paidBenefits){
             var insertText = "";
             paidBenefits.forEach(function(item, index){
@@ -295,19 +329,19 @@ $(window).load(function() {
     }
     }
     
-    if (pageType == 'cartPage'){
+    else if (pageType == 'cartPage'){
         $("#cartPageContent").show();
     }
     
-    if (pageType == 'successPage'){
+    else if (pageType == 'successPage'){
         $("#successPageContent").show();
     }
     
-    if (pageType == 'failurePage'){
+    else if (pageType == 'failurePage'){
         $("#failurePageContent").show();
     }
     
-    if (pageType == 'chequeSuccessPage'){
+    else if (pageType == 'chequeSuccessPage'){
         $("#chequeSuccessPageContent").show();
     }
     
@@ -320,27 +354,28 @@ $(window).load(function() {
     
     $('#bannerContent').show();
     if(openedCount >= 5){
-        $('#bannerMinimize').show();
         if(bannerMsg)
         {
-            $('#bannerTextTop').html(bannerMsg);
-            $('#bannerTextVas').html(bannerMsg); 
-            $('#bannerTextMinimize span').html(bannerMsg);
+            $('#bannerTextVas,#bannerTextMinimize span').html(bannerMsg);
         }     
         else
         {
-            $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
-            $('#bannerTextMinimize span').html("Thanks for considering upgrading. Choose from our range of exciting plans or request a call back from the Help menu").removeClass('f24').addClass('f18');
+            // $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
+            $('#bannerTextMinimize span').html("Upgrade now to find your perfect life partner!").removeClass('f24').addClass('f18');
         }
-        $('.js-expand').animate({
-            height: "toggle"
-        }, 1000, function() {
-            changeclass();
-            $('.js-closeview ').css('display', 'block');
-        });
-    } else {    
-        $('#bannerTextTop').html("<div class='f24 pb5'>More Value</div><div class='fontreg f14 pb10'>LESS PRICE</div><div class='lh20 f14'>Lowest Price per contact<br>Maximum benefits per month<br>Biggest Savings Per Plan</div>");
-        $('#bannerMinimize').hide();
+        // $('.js-expand').animate({
+        //     height: "toggle"
+        // }, 1000, function() {
+        //     changeclass();
+        //     $('.js-closeview ').css('display', 'block');
+        // });
+    } else {   
+        if(bannerMsg)
+        {
+           $('#bannerTextMinimize span').html(bannerMsg); 
+        } 
+        else
+            $('#bannerTextMinimize span').html("Upgrade now to find your perfect life partner!").removeClass('f24').addClass('f18');
     }
     
     if(checkEmptyOrNull(showCountdown)){

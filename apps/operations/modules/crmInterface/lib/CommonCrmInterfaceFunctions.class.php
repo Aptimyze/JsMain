@@ -59,6 +59,7 @@ class CommonCrmInterfaceFunctions
 			// Execute VD Process in background
 			$filePath =JsConstants::$cronDocRoot."/crontabs/crm/vd_discount.php >/dev/null &";
 			$cmd 	  =JsConstants::$php5path." -q ".$filePath;	
+			$cmd = preg_replace('/[^A-Za-z0-9\. -_>&]/', '', $cmd);
 			passthru($cmd);
 		}
 		}

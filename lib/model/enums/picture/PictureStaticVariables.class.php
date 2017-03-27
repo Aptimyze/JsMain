@@ -15,22 +15,24 @@ class PictureStaticVariablesEnum
 	const maxPhotoSize = 6291456;//6*1024*1024
 	const maxNumberOfPhotos = 20;
 	const profilePicOrdering = 0;
+        const photoLoggingMod=1;
+        const photoLoggingRem=0;
 	public static $photoFormats = array("jpeg", "gif", "jpg");
 	public static $orientationToAngle= array("6"=>"-90","3"=>"180","8"=>"90");
 	public static $PICTURE_ALLOWED_FORMATS = array("image/gif","image/jpg","image/jpeg");
         public static $DELETE_REASONS = array("The photo is not clear.",
                                            "We find that the photo you have submitted is inappropriate.",
-                                           "The photo is of a well known personality. If the photo is yours then submit a proof of identity.",
+                                           "The photo is of a well known personality. If it is yours, submit an identity.",
 					   "Gender not proper.",
 					   "Group photo.",
-					   "Age not proper/ age not match.",
+					   "Age not proper/Age does not match.",
 					   "Obscene photo.",
 					   "Side face.",
 					   "Attachment error.",
 					   "Small size / size is not proper.",
-					   "Same photo.",
-					   "Edited photo/ body not match.",
-					   "Watermark photo."	);
+					   "Repeated photo.",
+					   "Edited/Morphed photo.",
+					   "Watermarked photo."	);
         
         public static $PICTURE_STATUS = array("UPLOAD_COMPLETED",
                                               "RESIZE_CRON_COMPLETED",
@@ -65,9 +67,7 @@ class PictureStaticVariablesEnum
 		const PHOTO_SCREEN_OPERATION_FACEDETECTION_CRON		= 2;
 		
 		public static $arrPHOTO_SCREEN_DEVELOPERS = array(
-													'lavesh.rawat@gmail.com',
-													'akashkumardtu@gmail.com',
-													'reshu.rajput@gmail.com',
+													'reshu.rajput@gmail.com'
 													);
 
 		//variables for photo albums import vertical bar(limit and height)

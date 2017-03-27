@@ -1,4 +1,8 @@
 <?php
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class protect
 {
 	/***
@@ -33,6 +37,8 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
+        private $dateTime1 ='11';
+        private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor
 	**** @include: the class configuration file: Mysql.class.php
@@ -268,7 +274,7 @@ class protect
 			{
 				$mysql= new Mysql;
 				$db=$mysql->connect();
-				$sql="select PROFILEID,PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where activatedKey=1 and PROFILEID='$temp[PR]'";
+				$sql="select PROFILEID,PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where activatedKey=1 and PROFILEID='$temp[PR]'";
 				$result=$mysql->executeQuery($sql,$db);
 				$myrow=mysql_fetch_array($result);
 				$data["PROFILEID"]=$myrow["PROFILEID"];
@@ -432,7 +438,7 @@ class protect
                         //die;
                         $request_uri=$_SERVER['REQUEST_URI'];
                         //print_r("request_uri is >>>>".$request_uri);
-                        $fileslist=array("login.php","intermediate.php","login_redirect.php","jsChat.php","social/import","register/","sugarcrm","autoSug");
+                        $fileslist=array("login.php","login_redirect.php","social/import","register/","sugarcrm","autoSug");
 
                         $iftrue=true;
                         foreach($fileslist as $key=>$val)
@@ -442,10 +448,10 @@ class protect
                                         $iftrue=false;
 
                         }
-                        if($iftrue && !$isMobile){
+                        /*if($iftrue && !$isMobile){
                                         header("Location:".$SITE_URL."/profile/intermediate.php?parentUrl=".$request_uri);
                                         exit;
-                                }
+                                }*/
                         //}
                 }
 
@@ -495,12 +501,12 @@ class protect
 		$mysql= new Mysql;
 		$db=$mysql->connect();
 
-		$sql="select PROFILEID, PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and USERNAME = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
+		$sql="select PROFILEID, PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and USERNAME = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
 		$result=$mysql->executeQuery($sql,$db);
 
 		if(mysql_num_rows($result) <= 0)
 		{
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and EMAIL = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and EMAIL = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
 			$result=$mysql->executeQuery($sql,$db);
 
 			if(mysql_num_rows($result) <= 0)
@@ -624,13 +630,13 @@ class protect
 		if(!$imp_email_check && !$this->allowUsernameLogin)
 			return null;
 
-		$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $first_check = '" .mysql_real_escape_string($username). "'";
+		$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $first_check = '" .mysql_real_escape_string($username). "'";
 		$result=$mysql->executeQuery($sql,$db);
 		$myrow=mysql_fetch_array($result);
 		$numRows = mysql_num_rows($result);
 		if(mysql_num_rows($result) <= 0 && $this->allowUsernameLogin)
 		{
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $second_check = '" .mysql_real_escape_string($username). "'";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $second_check = '" .mysql_real_escape_string($username). "'";
 			$result=$mysql->executeQuery($sql,$db);
 			$myrow=mysql_fetch_array($result);
 			$numRows = mysql_num_rows($result);
@@ -857,8 +863,10 @@ class protect
 
                         }
                 }
-		$sql="update JPROFILE set LAST_LOGIN_DT=now(),SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>SORT_DT,DATE_SUB(NOW(),INTERVAL 7 DAY),SORT_DT) where PROFILEID='" . $profileid . "'";
-                $mysql->executeQuery($sql,$db);
+                $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+                $jprofileUpdateObj->updateJProfileLoginSortDate($profileid);
+		//$sql="update JPROFILE set LAST_LOGIN_DT=now(),SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>SORT_DT,DATE_SUB(NOW(),INTERVAL 7 DAY),SORT_DT) where PROFILEID='" . $profileid . "'";
+          //      $mysql->executeQuery($sql,$db);
 		}
 	}
 
@@ -1289,10 +1297,13 @@ class protect
     		$curTime = time();
         	$timediff = $curTime-$autoLoginTime;
             $mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
-            $db = connect_db();
-            $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
-            $result = mysql_query($sql,$db) or die(mysql_error($result));
-            $row = mysql_fetch_assoc($result);   
+//            $db = connect_db();
+//            $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
+//            $result = mysql_query($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($result)));
+//            $row = mysql_fetch_assoc($result);   
+            
+            $objAuto_Expiry = new ProfileAUTO_EXPIRY;
+            $row = $objAuto_Expiry->getRecord($profileid, $mailedtime);
             
         	if($timediff > $this->expiryTime || $row['CNT']) //30*24*60*60 seconds or email or password changed after mail sent.
         		return false;
@@ -1318,9 +1329,20 @@ class protect
 			}
                         if($allow)
                         {
+				/*
 				$time=date("Y-m-d G:i:s");
                                 $sql="replace into userplane.recentusers(userID,lastTimeOnline) values('$pid','$time')";
-                                $mysql->executeQuery($sql,$db);
+                                $mysql->executeQuery($sql,$db);*/
+
+	                        // Add Online-User
+	                        $dateTime =date("H");
+	                        $redisOnline =true;
+	                        if(($dateTime>=$this->dateTime1) && ($dateTime<$this->dateTime2))
+	                                $redisOnline =false;
+				if($redisOnline){
+	                        	$jsCommonObj =new JsCommon();
+	                        	$jsCommonObj->setOnlineUser($pid);
+				}
                         }
                 }
                 
@@ -1331,10 +1353,21 @@ class protect
 	{
 		if(is_numeric($pid))
                 {
+			/*
                         $mysql= new Mysql;
                         $db=$mysql->connect();
                         $sql="delete from  userplane.recentusers where userID='$pid'";
-                        $mysql->executeQuery($sql,$db);
+                        $mysql->executeQuery($sql,$db);*/
+
+                        // Remove Online-User
+                        $dateTime =date("H");
+                        $redisOnline =true;
+                        if(($dateTime>$this->dateTime1) && ($dateTime<$this->dateTime2))
+                                $redisOnline =false;
+			if($redisOnline){
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
                 }
 	}
 

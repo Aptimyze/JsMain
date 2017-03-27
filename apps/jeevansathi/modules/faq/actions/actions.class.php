@@ -21,7 +21,7 @@ class faqActions extends sfActions
     }
     public function executeIndex(sfWebRequest $request)
     {
-    	$this->redirect('/contactus/index');
+      $this->redirect('/contactus/index');
         //Contains login credentials
         $loginData=$request->getAttribute("loginData");
         $this->profileID=$loginData[PROFILEID]; 
@@ -65,13 +65,7 @@ class faqActions extends sfActions
             $loginProfile->getDetail($loginData['PROFILEID'],"PROFILEID");
             $this->USERNAME=$loginData[USERNAME];
         }
-
-        else {
-            $respObj = ApiResponseHandler::getInstance();
-            $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
-            $respObj->generateResponse();
-            die;
-            }
+        
         $success=false;
         if($feedBackObj->ProcessData($request)){
             $success=true;
@@ -79,7 +73,7 @@ class faqActions extends sfActions
 
         $objNameStore = new incentive_NAME_OF_USER;
         $loginProfile=LoggedInProfile::getInstance();
-		$this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());
+    $this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());
         $feedBackForm = new FeedBackForm(0);
         $this->form = $feedBackObj->getForm();
         $this->tracepath = $feedBackObj->getTracePath();
@@ -103,4 +97,51 @@ class faqActions extends sfActions
         }
         
     }
+
+    public function executeReportAbuseForUserLog(sfWebRequest $request)
+{
+
+  $resultArr = $request->getParameter('feed');
+  $reporterName = $resultArr['reporter'];
+  $reporteeName = $resultArr['reportee'];
+  $crmUser = $resultArr['crmUser'];
+//  $reason = $resultArr['reason'];
+  $message = $resultArr['message'];
+
+
+  $profileObj = NEWJS_JPROFILE::getInstance();
+  $reporterPFID = $profileObj->getProfileIdFromUsername($reporterName);
+  $reporteePFID = $profileObj->getProfileIdFromUsername($reporteeName);
+
+  if($reporterPFID==NULL || $reporteePFID == NULL)
+  { 
+    if($reporterPFID==NULL && $reporteePFID == NULL)
+    $error[message] = "both are not correct";
+
+    else if($reporterPFID==NULL) 
+      $error[message] = "reporter profileID is not correct";
+    else
+      $error[message] = "reportee profileID is not correct"; 
+    echo json_encode($error);
+    exit;
+  }
+  else
+  { 
+    $selfProfile = new Profile('',$reporterPFID);
+    $resultArr['email'] = $profileObj->getProfileSelectedDetails($reporterPFID,'EMAIL')['']['EMAIL'];
+    $request->setParameter('feed',$resultArr);
+    $request->setParameter('reporterPFID',$reporterPFID);
+    $request->setParameter('reporteePFID',$reporteePFID);
+    $request->setParameter('fromCRM','1');
+    ob_start();
+    sfContext::getInstance()->getController()->getPresentationFor("faq", "ApiFeedbackV1"); 
+    $output = ob_get_contents();
+    ob_end_clean();
+    die();
+    $data = json_decode($output, true);
+    return $data;
+
+  }
+}
+
 }

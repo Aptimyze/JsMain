@@ -77,10 +77,8 @@ class page5Action extends sfAction {
 		}
 		//else
 		$parentUrl = "/social/addPhotos?from_registration=1";
-		if (MobileCommon::isMobile())
 			$this->redirect("$parentUrl");
-		else
-			$this->redirect("/profile/intermediate.php?parentUrl=$parentUrl");
+		
 
 
 	}
@@ -97,24 +95,36 @@ class page5Action extends sfAction {
         $dbObj = new MIS_REG_COUNT;
         $dbObj->updateEntryRegPage("PAGE5", $status, LoggedInProfile::getInstance()->getPROFILEID());
     }
-    private function UpdateFilter($partnerField) {
-        $mstatus_filter = '';
-        $religion_filter = '';
-        $caste_filter = '';
-        if ($partnerField->partnerObj->getPARTNER_MSTATUS()) $mstatus_filter = 'Y';
-        if ($partnerField->partnerObj->getPARTNER_RELIGION()) $religion_filter = 'Y';
-        if ($partnerField->partnerObj->getPARTNER_CASTE()) $caste_filter = 'Y';
-        if($mstatus_filter || $religion_filter || $caste_filter ){
-			$hardSoft="Y";
-			$count=10;
-		}
-		else{
-			$hardSoft="N";
-			$count=0;
-		}
-        $upStr = "MSTATUS='$mstatus_filter',RELIGION='$religion_filter',CASTE='$caste_filter',COUNT=$count,HARDSOFT='$hardSoft'";
-        $dbObj = new NEWJS_FILTER;
-        $dbObj->insertFilterEntry(LoggedInProfile::getInstance()->getPROFILEID(), $upStr);
+    
+    /**
+     * UpdateFilter
+     * @param type $partnerField
+     */
+    private function UpdateFilter($partnerField) 
+    {
+      $arrFilter = array();
+      if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {
+        $arrFilter["MSTATUS"] = 'Y';
+      } 
+      if ($partnerField->partnerObj->getPARTNER_RELIGION()) {
+        $arrFilter["RELIGION"] = 'Y';
+      } 
+      if ($partnerField->partnerObj->getPARTNER_CASTE()) {
+        $arrFilter["CASTE"] = 'Y';
+      } 
+
+      if(count($arrFilter)) {
+        $hardSoft="Y";
+        $count=10;
+      } else {
+        $hardSoft="N";
+        $count=0;
+      }
+      $arrFilter['HARDSOFT'] = $hardSoft;
+      $arrFilter['COUNT'] = $count;
+
+      $dbObj = new NEWJS_FILTER;
+      $dbObj->insertRecord(LoggedInProfile::getInstance()->getPROFILEID(), $arrFilter);
     }
     private function UpdateScore($request) {
         $loginProfile = LoggedInProfile::getInstance();

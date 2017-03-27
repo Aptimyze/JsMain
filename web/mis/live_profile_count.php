@@ -10,8 +10,7 @@
 ************************************************************************************************************************/
 include_once("connect.inc");
 include_once("../jsadmin/time1.php");
-$db=connect_misdb();
-$db2=connect_master();
+$db=connect_rep();
 
 if(authenticated($cid) || $JSIndicator==1)
 {
@@ -49,7 +48,19 @@ if(authenticated($cid) || $JSIndicator==1)
 		if($type == "new")
 		{
 			//finding count of those profiles which are yet to be screened.
-			$sql_new_unscreened = "SELECT COUNT(*) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date' GROUP BY DAY";
+			//$sql_new_unscreened = "SELECT COUNT(*) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) GROUP BY DAY";
+      $sql_new_unscreened = <<<SQL
+        SELECT COUNT(J.PROFILEID) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY 
+        FROM newjs.JPROFILE J
+        LEFT JOIN newjs.JPROFILE_CONTACT C
+        ON J.PROFILEID=C.PROFILEID 
+        WHERE 
+        ACTIVATED='N' 
+        AND INCOMPLETE='N' 
+        AND MOD_DT BETWEEN '$st_date' AND '$end_date' 
+        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
+        GROUP BY DAY
+SQL;
 			$res_new_unscreened = mysql_query_decide($sql_new_unscreened) or die("$sql_new_unscreened".mysql_error_js());
 			while($row_new_unscreened = mysql_fetch_array($res_new_unscreened))
 			{
@@ -58,18 +69,32 @@ if(authenticated($cid) || $JSIndicator==1)
 			}
 
 			//finding count of those profiles which are under screening.
-			$sql_under_screening = "SELECT COUNT(*) AS COUNT, DAYOFMONTH(RECEIVE_TIME) AS DAY FROM jsadmin.MAIN_ADMIN mad, newjs.JPROFILE jp WHERE mad.PROFILEID = jp.PROFILEID AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' AND jp.ACTIVATED = 'U' GROUP BY DAY";
+			$sql_under_screening = "SELECT COUNT(*) AS COUNT, DAYOFMONTH(RECEIVE_TIME) AS DAY FROM jsadmin.MAIN_ADMIN mad, newjs.JPROFILE jp WHERE mad.PROFILEID = jp.PROFILEID AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' AND jp.ACTIVATED = 'U' GROUP BY DAY"; 
 			$res_under_screening = mysql_query_decide($sql_under_screening) or die("$sql_under_screening".mysql_error_js());
 			while($row_under_screening = mysql_fetch_array($res_under_screening))
 			{
 				$day = $row_under_screening['DAY'] -1;
-				$total_to_screen_temp[$day] += $row_under_screening['COUNT'];
+        $total_to_screen_temp[$day] += $row_under_screening['COUNT'];
 			}
 		}
 		elseif($type=="edit")
 		{
 			//finding count of those profiles which are edited today (i.e needs to be screened.)
-			$sql_edit_unscreened = "SELECT COUNT(*) AS COUNT, DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='Y' AND SCREENING < '4094303' AND MOD_DT BETWEEN '$st_date' AND '$end_date' GROUP BY DAY";
+			//$sql_edit_unscreened = "SELECT COUNT(*) AS COUNT, DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='Y' AND SCREENING < '4094303' AND MOD_DT BETWEEN '$st_date' AND '$end_date' GROUP BY DAY";
+      
+      $sql_edit_unscreened = <<<SQL
+        SELECT COUNT(J.PROFILEID) AS COUNT, DAYOFMONTH(J.MOD_DT) AS DAY 
+        FROM newjs.JPROFILE J
+        LEFT JOIN newjs.JPROFILE_CONTACT C
+        ON J.PROFILEID=C.PROFILEID 
+        WHERE 
+        J.ACTIVATED='Y' 
+        AND J.SCREENING < '1099511627775' 
+        AND J.MOD_DT BETWEEN '$st_date' AND '$end_date' 
+        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
+        GROUP BY DAY
+SQL;
+      
 			$res_edit_unscreened = mysql_query_decide($sql_edit_unscreened) or die("$sql_edit_unscreened".mysql_error_js());
 			while($row_edit_unscreened = mysql_fetch_array($res_edit_unscreened))
 			{
@@ -80,10 +105,12 @@ if(authenticated($cid) || $JSIndicator==1)
 		}
 
 		//finding the count of those profiles which has been screened already.
-		if($type=="new")
-			$sql = "SELECT DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) SDAY, MONTH(SUBMITED_TIME) AS SMONTH FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL='0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
-		elseif($type=="edit")
-			$sql="SELECT DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) AS SDAY, MONTH(SUBMITED_TIME) AS SMONTH FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL > '0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
+		if($type=="new") {
+			$sql = "SELECT STATUS,DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID  FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL='0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
+    }
+		elseif($type=="edit"){
+			$sql="SELECT STATUS,DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) AS SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL > '0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
+    }
 		$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db));
 		while($row = mysql_fetch_array($res))
 		{
@@ -93,24 +120,52 @@ if(authenticated($cid) || $JSIndicator==1)
 			$total_screened[$rday]++;
 			$sday = $row['SDAY'] - 1;				
 			if($row['RMONTH'] == $row['SMONTH'])
-				$total_screened_day[$rday][$sday]++;
+				$total_screened_day[$row['STATUS']][$rday][$sday]++;
 			//need to select values(1-5) from the end of table
 			else
-				$total_screened_day[$rday][$sday+31]++;
-
-			$total_to_screen[$rday] = $total_to_screen_temp[$rday] + $total_screened[$rday];
-			$total_to_screen_perc[$rday] = round((($total_screened[$rday]/$total_to_screen[$rday]) * 100),2);
+				$total_screened_day[$row['STATUS']][$rday][$sday+31]++;
 		}
-
+		for($rday=0;$rday<31;$rday++)
+		{
+			$total_to_screen[$rday] = $total_to_screen_temp[$rday] + $total_screened[$rday];
+			$total_to_screen_perc[$rday] = round(((($total_screened[$rday])/$total_to_screen[$rday]) * 100),2);
+		}
 		//if no entry exists in MAIN_ADMIN_LOG satisfying the above condition.
 		if(!$no_entry_in_main_admin_log)
 			$total_to_screen = $total_to_screen_temp;
 
 		//finding unassigned profiles and showing them zone-wise(comfort,rush etc.)
-		if($type == "new")
-			$sql_unassigned = "SELECT MOD_DT FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date'";
-		elseif($type == "edit")
-			$sql_unassigned = "SELECT MOD_DT FROM newjs.JPROFILE jp USE INDEX(SCREENING) LEFT JOIN jsadmin.MAIN_ADMIN mad ON mad.PROFILEID = jp.PROFILEID WHERE (mad.PROFILEID IS NULL) AND (ACTIVATED = 'Y' AND SCREENING < '4094303') AND jp.MOD_DT BETWEEN '$st_date' AND '$end_date'";
+		if($type == "new"){
+			//$sql_unassigned = "SELECT MOD_DT FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date'";
+      $sql_unassigned = <<< SQL
+        SELECT J.MOD_DT 
+        FROM newjs.JPROFILE J
+        LEFT JOIN newjs.JPROFILE_CONTACT C
+        ON J.PROFILEID=C.PROFILEID 
+        WHERE 
+        J.ACTIVATED='N' AND J.INCOMPLETE='N' 
+        AND MOD_DT BETWEEN '$st_date' AND '$end_date'
+        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
+SQL;
+    }
+		elseif($type == "edit"){
+			//$sql_unassigned = "SELECT MOD_DT FROM newjs.JPROFILE jp USE INDEX(SCREENING) LEFT JOIN jsadmin.MAIN_ADMIN mad ON mad.PROFILEID = jp.PROFILEID WHERE (mad.PROFILEID IS NULL) AND (ACTIVATED = 'Y' AND SCREENING < '4094303') AND jp.MOD_DT BETWEEN '$st_date' AND '$end_date'";
+      $sql_unassigned = <<< SQL
+        SELECT MOD_DT 
+        FROM newjs.JPROFILE J 
+        LEFT JOIN newjs.JPROFILE_CONTACT C
+        ON J.PROFILEID=C.PROFILEID 
+        LEFT JOIN jsadmin.MAIN_ADMIN mad 
+        ON mad.PROFILEID = J.PROFILEID  
+        WHERE 
+        (mad.PROFILEID IS NULL) 
+        AND (ACTIVATED = 'Y' AND SCREENING < '4094303') 
+        AND J.MOD_DT BETWEEN '$st_date' AND '$end_date'
+        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
+SQL;
+      
+      
+    }
 
 		$res_unassigned = mysql_query_decide($sql_unassigned) or die("$sql_unassigned".mysql_error_js());
 		while($row_unassigned = mysql_fetch_array($res_unassigned))
@@ -154,7 +209,8 @@ if(authenticated($cid) || $JSIndicator==1)
                 }
 
 		$smarty->assign("total_screened",$total_screened);
-		$smarty->assign("total_screened_day",$total_screened_day);
+		$smarty->assign("total_screened_day_approve",$total_screened_day[APPROVED]);
+		$smarty->assign("total_screened_day_disapprove",$total_screened_day[DELETED]);
 		$smarty->assign("total_to_screen",$total_to_screen);
 		$smarty->assign("total_to_screen_perc",$total_to_screen_perc);
 		$smarty->assign("count",$count);

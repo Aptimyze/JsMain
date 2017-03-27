@@ -19,7 +19,8 @@ class MembershipActionFunctions
         $mainMembership = "&mainMembership=" . $request->getParameter('mainMembership');
         $vasImpression = "&vasImpression=" . $request->getParameter('vasImpression');
         $authchecksum = "&AUTHCKECHSUM=" . $request->getParameter('AUTHCHECKSUM');
-        
+        $userProfile = $request->getParameter('userProfile');
+
         $fromBackend = $request->getParameter('from_source');
         $backendRedirect = $request->getParameter('backendRedirect');
         if ($fromBackend == "discount_link" || $backendRedirect == 1) {
@@ -28,18 +29,25 @@ class MembershipActionFunctions
             $reqid = $request->getParameter("reqid");
             if ($backendRedirect == 1) {
                 $displayPage = 5;
-                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&backendRedirect=1";
+                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&backendRedirect=1&userProfile=" . $userProfile;
             } 
             else {
                 $displayPage = 3;
                 $fromBackend = 1;
-                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link";
+                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link&userProfile=" . $userProfile;
             }
         }
         
         $fromGCM = $request->getParameter('FROM_GCM');
         if ($fromGCM) {
             $pageURL.= "&FROM_GCM=" . $fromGCM;
+            $msgId = $request->getParameter("messageId");
+            $notificationKey = $request->getParameter("notificationKey");
+            $loginData =$request->getAttribute("loginData");
+            $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
+            //error_log("in api request membership ankita-".$msgId."---".$notificationKey);
+            //file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
+            NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$msgId,"notificationKey"=>$notificationKey));
         }
         return array(
             $displayPage,
@@ -75,6 +83,7 @@ class MembershipActionFunctions
         $mainMembership = "&mainMembership=" . $request->getParameter('mainMembership');
         $vasImpression = "&vasImpression=" . $request->getParameter('vasImpression');
         $authchecksum = "&AUTHCKECHSUM=" . $request->getParameter('AUTHCHECKSUM');
+        $userProfile = $request->getParameter('userProfile');
         
         $fromBackend = $request->getParameter('from_source');
         $backendRedirect = $request->getParameter('backendRedirect');
@@ -84,12 +93,12 @@ class MembershipActionFunctions
             $reqid = $request->getParameter("reqid");
             if ($backendRedirect == 1) {
                 $displayPage = 5;
-                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&backendRedirect=1";
+                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&backendRedirect=1&userProfile=" . $userProfile;
             } 
             else {
                 $displayPage = 3;
                 $fromBackend = 1;
-                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link";
+                $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link&userProfile=" . $userProfile;
             }
         }
         

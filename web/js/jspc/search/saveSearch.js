@@ -1,4 +1,7 @@
 var blankSaveErrorMsg = "Please provide save search name";
+$("#manageSearch").bind("click",function(){
+        window.location.href="/search/savedSearches";
+});
 
 /**
 * save this search button click displayes name the search field
@@ -65,6 +68,7 @@ $("#saveThisSearchWithName").click(function(){
                             //alert(result.saveDetails.successMsg);
                         });
                     });
+                    $("#manageSearch").removeClass('disp-none');
                 }else
 		{
 			showErrorMsg("#saveThisSearchName",result.saveDetails.errorMsg);
@@ -405,7 +409,7 @@ function showPersonalizedOptions(){
 
 
 function hidesaveSearchSuccess(){
-     $("#saveSearchSuccess").slideUp("normal",function(){$("#saveThisSearch").slideDown()});
+     $("#saveSearchSuccess").slideUp("normal",function(){ $("#manageSearch").addClass("disp-none");$("#saveThisSearch").slideDown()});
 }
 function showsaveSearchSuccess(){
     $("#saveThisSearch").slideUp("normal",function(){$("#saveSearchSuccess").slideDown()});

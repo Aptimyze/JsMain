@@ -1,18 +1,18 @@
-
+var loginAttempts=0;
 function LoginValidation()
 {
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
-
+   
 		if($("#remember").is(':checked'))
 			remember=1;
 		else
 			remember=0;
 		if(email && password)
 		{				
-			if(validateEmail(email))
+			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?fromPc=1&rememberme="+$("#remember").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val();
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
@@ -28,15 +28,19 @@ function LoginValidation()
 				return true;
 			}
 			else
-			{    
-				$("#emailErr").addClass("visb").html("Invalid Format");
-				$("#EmailContainer").addClass("brderred");
-				setTimeout(function(){
-					$("#emailErr").removeClass("visb");
-					$("#EmailContainer").removeClass("brderred");
-				},3000);
+			{   
+        
+				if(validateCaptcha()){
+					$("#emailErr").addClass("visb").html("Invalid Format");
+					$("#EmailContainer").addClass("brderred");
+					setTimeout(function(){
+						$("#emailErr").removeClass("visb");
+						$("#EmailContainer").removeClass("brderred");
+					},3000);
+				}
 				return false; 
 			}
+      
 		}
 		else
 		{
@@ -85,10 +89,68 @@ function LoginValidation()
 		}
 }
 function validateEmail(email) {
-    var x = email;
+    var x = $.trim(email);
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
-    return re.test(email);
+    return re.test(x);
     }
+    
+function validateMobile(mobile) {
+	var str = $.trim(mobile);
+	// removes leading zeros
+	str = str.replace(/^0+/, '');
+	if(str.indexOf('-') > -1)
+	{
+		var result = str.split("-");
+		// remove leading zeros from number
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("-");
+	}
+
+	if(str.indexOf('+') > -1)
+	{
+		var result = str.split("+");
+		// remove leading zeros from isd
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("+");
+	}
+	var re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
+	var isd = '';
+	var phone = '';
+	var data = new Array();
+	if(re.test(str))
+	{
+		str = str.split('+').join('');
+		if(str.indexOf('-') > -1)
+		{
+			isd = str.slice(0, str.indexOf('-'));
+			phone = str.slice(str.indexOf('-')+1, str.length);
+		}
+		else
+		{
+			isd = '';
+			phone = str;
+		}
+		data['flag'] = 1;
+		data['phone'] = phone;
+		data['isd'] = isd;
+	}
+	else
+	{
+		data['flag'] = 0;
+	}
+	return data;
+}
+function validateCaptcha()
+{
+	 // if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
+  //   {
+  //     $("#LoginMessage").hide();
+  //     $("#LoginErrMessage").addClass("disp-none");
+  //     $("#LoginErrMessage2").removeClass("disp-none");
+  //     return false;
+  //   }
+    return true;
+}
 
 function after_login(response)
 	{
@@ -97,9 +159,9 @@ function after_login(response)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
 		if(response==0)
 		if( window.top.location.pathname=="/static/logoutPage" || window.top.location.pathname=="/jsmb/login_home.php")
-			window.top.location.href = "/profile/intermediate.php?parentUrl=/myjs/jspcPerform";
+			window.top.location.href = "/myjs/jspcPerform";
 		else
-			window.top.location.href = "/profile/intermediate.php?parentUrl="+address_url;
+			window.top.location.href = address_url;
 	}
 
 function onFrameLoginResponseReceived(message)
@@ -113,17 +175,71 @@ function onFrameLoginResponseReceived(message)
 				response= message.data.body;
 		if(response==1)
 		{
+		  if(document.cookie.indexOf("loginAttemptNew")!=-1 && captchaShow!=1)
+		  {
+			  createCaptcha("logoutPage");
+				captchaShow=1;
+				hideCommonLoader();
+				$("#LoginMessage").addClass("disp-none");
+				$("#LoginErrMessage").addClass("disp-none");
+				$("#CaptchaErrMessage").removeClass("disp-none");
+			  // $("#LoginErrMessage2").removeClass("disp-none");
+			  hideCommonLoader();
+				removeCaptcha();
+				if($("#commonOverlay").is(':visible')){
+				 createCaptcha();
+			   }
+				else
+				{ 
+				  createCaptcha("logoutPage");
+				}
+		  }
+      else{
+  		/*	hideCommonLoader();
+        removeCaptcha();
+        if($("#commonOverlay").is(':visible')){
+          console.log("aaa");
+         createCaptcha();
+        }
+        else
+        { 
+          console.log("bbb");
+          createCaptcha("logoutPage");
+        }*/
+        hideCommonLoader();
+  			$("#LoginErrMessage").removeClass("disp-none");
+  			$("#LoginMessage").addClass("disp-none");
+			$("#CaptchaErrMessage").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
+  			$("#EmailContainer").addClass("brderred");
+  			$("#PasswordContainer").addClass("brderred");
+			if(captchaShow == 1)
+			{
+				createCaptcha();
+			}
+  			setTimeout(function(){
+  				$("#emailErr").removeClass("visb");
+  				$("#EmailContainer").removeClass("brderred");
+  				$("#passwordErr").removeClass("visb");
+  				$("#PasswordContainer").removeClass("brderred");
+  				},3000);
+      }
+		}
+		else if(response == 2)
+		{
 			hideCommonLoader();
-			$("#LoginErrMessage").removeClass("disp-none");
-			$("#LoginMessage").addClass("disp-none");
-			$("#EmailContainer").addClass("brderred");
-			$("#PasswordContainer").addClass("brderred");
-			setTimeout(function(){
-				$("#emailErr").removeClass("visb");
-				$("#EmailContainer").removeClass("brderred");
-				$("#passwordErr").removeClass("visb");
-				$("#PasswordContainer").removeClass("brderred");
-				},3000);
+			$("#CaptchaErrMessage").removeClass("disp-none");
+  			$("#LoginErrMessage").addClass("disp-none");
+  			$("#LoginMessage").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
+  			$("#EmailContainer").addClass("brderred");
+  			$("#PasswordContainer").addClass("brderred");
+  			setTimeout(function(){
+  				$("#emailErr").removeClass("visb");
+  				$("#EmailContainer").removeClass("brderred");
+  				$("#passwordErr").removeClass("visb");
+  				$("#PasswordContainer").removeClass("brderred");
+  				},3000);
 		}
 		else
 		{
@@ -134,6 +250,16 @@ function onFrameLoginResponseReceived(message)
 		
 }
 
+function resetCaptcha(){
+	/*resetCaptchaClass();
+          $(".slideCap").width("0px");
+          $("#captchaDiv").removeClass("valid");
+          $(".handle").removeClass("slide-to-captcha-handle-verified").addClass("slide-to-captcha-handle").css("left","0px");
+           //$('#blueText').html('Slide to Verify');
+           $('#blueText').hide();
+           $("#blueText").html("Slide to Verify");          
+          $('.captcha').slideToCAPTCHA('captcha');*/
+}
 if(window.addEventListener)	
 	{
 		window.addEventListener("message", onFrameLoginResponseReceived, false);
@@ -171,6 +297,8 @@ function LoginBinding()
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
+            context:this,
+            //data:{'captchaShow':captchaShow},
             beforeSend: function() {
                 $('#commonOverlay').fadeIn(200, "linear");
                 $('#topNavigationBar').removeClass("z2");
@@ -178,26 +306,59 @@ function LoginBinding()
             success: function(response) {
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
+                if($(this).hasClass("loginAlbumSearch")){
+					$("#loginRegistration").addClass("loginAlbumSearch");
+					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
+				}
+				else if($(this).hasClass("loginProfileSearch")){
+					$("#loginRegistration").addClass("loginProfileSearch");
+					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
+				}
                 $('#cls-login').click(function() {
+                  //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {
                         $('.js-overlay').fadeOut(300, "linear");
                          $('#login-layer').remove();
                          $('#forgotPasswordLayer').remove();
+                       // $('.captcha2').slideToCAPTCHA('captcha')
+                       if(typeof(LoggedoutPage)!="undefined")
+                      {  
+                        if(LoggedoutPage){
+                        removeCaptcha();
+                        createCaptcha("logoutPage");
+                        }
+                      }
+        
                     });
+                    
                     commonLoginBinding();
+                 
                 });
                  $('.js-overlay').bind("click",function(){
 					 $('#login-layer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
                          $('#login-layer').remove();
                          $('#forgotPasswordLayer').remove();
+                          if(typeof(LoggedoutPage)!="undefined")
+                      {  
+                        if(LoggedoutPage){
+                        // removeCaptcha();
+                        createCaptcha("logoutPage");
+                        }
+                      }
 					});
                  $(this).unbind("click");
+                  
+			  
              });
                 //start remember me script
                commonLoginBinding();
                forgotPasswordBinding(1);
                customCheckboxLogin("remember",0);
+               if(captchaShow==1)
+      				{
+      				   createCaptcha();
+      				}
             },
             error: function(response) {
                 $('.js-overlay').fadeOut(300, "linear");
@@ -224,6 +385,10 @@ function commonLoginBinding()
                 $("#loginRegistration").click(function() {
 					if($(this).hasClass("logout"))
 						location.href="/register/page1?source=login_p";
+					else if($(this).hasClass("loginAlbumSearch"))
+						location.href="/register/page1?source=album_l";
+					else if($(this).hasClass("loginProfileSearch"))
+						location.href="/register/page1?source=profile_l";
 					else
 						location.href="/register/page1?source=login_l";
                 });
@@ -267,6 +432,20 @@ $(document).ready(function(){
 		if(ResetPasswordPage)
 			postForgotEmailLayer(3);
 	}
+  
+    if(typeof(captchaShow)!="undefined")
+    {
+		if(captchaShow==1){
+			if(typeof(LoggedoutPage)!="undefined")
+			{ 	
+				if(LoggedoutPage){
+					createCaptcha('loggedout');
+				}
+			}
+		}
+    }
+
+
 		
 });
 
@@ -275,7 +454,7 @@ function forgotPasswordBinding(fromLayer)
 	
 	$('#forgotPasswordLoginLayer').click(function() {
 		
-		$("#ForgotPasswordMessage").html("Enter your registered email of Jeevansathi to receive an Email and SMS with the link to reset your password.");
+		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
 		
 		$('#closeForgotLogin').unbind();
@@ -292,6 +471,7 @@ function forgotBindings(fromLayer)
                          $('#forgotPasswordLayer').removeClass("disp-none");
                     });
                     $('.js-overlay').bind("click",function(){
+                    	$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 						$('#forgotPasswordLayer').remove();
@@ -304,6 +484,7 @@ function forgotBindings(fromLayer)
 			 $('.js-overlay').fadeIn(200, "linear");
 			 $('#forgotPasswordLayer').removeClass("disp-none").attr("style","block");
 			 $('.js-overlay').bind("click",function(){
+			 		$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 					});
@@ -315,6 +496,7 @@ function forgotBindings(fromLayer)
 		if(fromLayer==1)
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').remove();
@@ -325,6 +507,7 @@ function forgotBindings(fromLayer)
 		else
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').addClass("disp-none");
@@ -346,11 +529,21 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			$("#sendLinkForgot").unbind();
+			
 			var email=$("#userEmail").val();
 			if(email)
 			{
-				if(validateEmail(email))
+				var flag = validateEmail(email)?'E':false;
+				var phone = null;
+				var isd = null;
+				if(!flag)
+				{
+					var data = validateMobile(email);
+					flag = data['flag']?'M':false;
+					phone = data['phone'];
+					isd = data['isd'];
+				}
+				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
 					 $.ajax({
@@ -359,12 +552,13 @@ function postForgotEmailLayer()
 						 datatype:'json',
 						 cache: true,
 						 async:false,
-						 data:{email:email.trim()},
+						 data:{'email':email.trim(), 'flag':flag, 'phone':phone, 'isd':isd},
 						 success: function(result){
 							 if(result.responseStatusCode==0)
 							 {
-								 $("#ForgotPasswordMessage").html("Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.");
+								 $("#ForgotPasswordMessage").html(result.responseMessage);
 								 $("#forgotPasswordForm").addClass("disp-none");
+								 $("#sendLinkForgot").unbind('click');
 							 }
 							 else
 							 {
@@ -373,7 +567,7 @@ function postForgotEmailLayer()
 								 setTimeout(function(){
 									 $("#forgotPasswordErr").removeClass("visb");
 									$("#userEmailBox").removeClass("brderred");
-								},3000);
+								},10000);
 							 }
 							 hideCommonLoader();
 							  return;
@@ -381,7 +575,7 @@ function postForgotEmailLayer()
 					});
 				}
 				else{
-					$("#forgotPasswordErr").html("Provide a valid email address").addClass("visb");
+					$("#forgotPasswordErr").html("Provide a valid email address or phone number").addClass("visb");
 					$("#userEmailBox").addClass("brderred");
 					 setTimeout(function(){
 						 $("#forgotPasswordErr").removeClass("visb");
@@ -391,7 +585,7 @@ function postForgotEmailLayer()
 			}
 			else
 			{
-				$("#forgotPasswordErr").html("Provide your email address").addClass("visb");
+				$("#forgotPasswordErr").html("Provide your email address or phone number").addClass("visb");
 				$("#userEmailBox").addClass("brderred");
 				 setTimeout(function(){
 					 $("#forgotPasswordErr").removeClass("visb");
@@ -399,4 +593,23 @@ function postForgotEmailLayer()
 				},3000);
 			}
 		});
+}
+
+function createCaptcha(fromLoggedOut){
+	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
+	if($(".g-recaptcha").length !=0){
+            removeCaptcha();
+    }
+    $("#afterCaptcha").before(captchaDiv).promise().done(function() {
+            setTimeout(function() {
+                $(".loaderSmallIcon2").remove();
+                $(".g-recaptcha").removeClass("dn");
+            }, 1000);               
+    });
+}
+
+function removeCaptcha()
+{
+  $('.captchaDiv').each(function(index, element) {
+      $(element).remove();});
 }

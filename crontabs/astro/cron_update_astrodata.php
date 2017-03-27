@@ -17,11 +17,11 @@ include_once($_SERVER['DOCUMENT_ROOT']."/classes/globalVariables.Class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 //END
-
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 $db=connect_db();
 $sql = "SELECT MAX( ENTRY_DT )  AS ENTRY_DT , PROFILEID,TYPE FROM newjs.ASTRO_PULLING_REQUEST WHERE PENDING IN ('Y','U') AND COUNTER < 3 GROUP BY PROFILEID";
 $res = mysql_query($sql,$db) or logError($sql,"ShowErrTemplate");
-
+$objReplace = ProfileReplaceLib::getInstance();
 while($row = mysql_fetch_array($res))
 {
 	$profileid = $row['PROFILEID'];
@@ -228,8 +228,9 @@ while($row = mysql_fetch_array($res))
 					mysql_query($sql,$db) or logError($sql,"ShowErrTemplate");
 				}
 
+
 				//store the astro details.
-				 $sql1 = "REPLACE INTO newjs.ASTRO_DETAILS(
+				 /*$sql1 = "REPLACE INTO newjs.ASTRO_DETAILS(
 						PROFILEID,
 						DATE,
 						CITY_BIRTH,
@@ -293,7 +294,41 @@ while($row = mysql_fetch_array($res))
 						'".addslashes(stripslashes($astrodata['MASA']))."',
 						'".$row_is_same["SHOW_HOROSCOPE"]."')";
 
-				mysql_query($sql1,$db) or logError($sql1,"ShowErrTemplate");
+				mysql_query($sql1,$db) or logError($sql1,"ShowErrTemplate");*/
+				if(strlen($row_is_same["SHOW_HOROSCOPE"]) === 0 || false === isset($row_is_same["SHOW_HOROSCOPE"])) {
+					$row_is_same["SHOW_HOROSCOPE"] = "";
+				}
+				$arrParams = array(
+					"CITY_BIRTH" => addslashes(stripslashes($astrodata['CITY_BIRTH'])) ,
+					"DTOFBIRTH" => $astrodata['DTOFBIRTH'],
+					"BTIME" => $astrodata['BTIME'],
+					"COUNTRY_BIRTH" => addslashes(stripslashes($astrodata['COUNTRY_BIRTH'])),
+					"PLACE_BIRTH" => addslashes(stripslashes($astrodata['CITY_BIRTH'])),
+					"LATITUDE" => addslashes(stripslashes($astrodata['LATITUDE'])),
+					"LONGITUDE" => addslashes(stripslashes($astrodata['LONGITUDE'])),
+					"TIMEZONE" => addslashes(stripslashes($astrodata['TIMEZONE'])),
+					"DST" => addslashes(stripslashes($astrodata['DST'])),
+					"LAGNA_DEGREES_FULL" => addslashes(stripslashes($astrodata['LAGNA_DEGREES_FULL'])),
+					"SUN_DEGREES_FULL" => addslashes(stripslashes($astrodata['SUN_DEGREES_FULL'])),
+					"MOON_DEGREES_FULL" => addslashes(stripslashes($astrodata['MOON_DEGREES_FULL'])),
+					"MARS_DEGREES_FULL" => addslashes(stripslashes($astrodata['MARS_DEGREES_FULL'])),
+					"MERCURY_DEGREES_FULL" => addslashes(stripslashes($astrodata['MERCURY_DEGREES_FULL'])),
+					"JUPITER_DEGREES_FULL" => addslashes(stripslashes($astrodata['JUPITER_DEGREES_FULL'])),
+					"VENUS_DEGREES_FULL" => addslashes(stripslashes($astrodata['VENUS_DEGREES_FULL'])),
+					"SATURN_DEGREES_FULL" => addslashes(stripslashes($astrodata['SATURN_DEGREES_FULL'])),
+					"RAHU_DEGREES_FULL" => addslashes(stripslashes($astrodata['RAHU_DEGREES_FULL'])),
+					"KETU_DEGREES_FULL" => addslashes(stripslashes($astrodata['KETU_DEGREES_FULL'])),
+					"MOON_RETRO_COMBUST" => addslashes(stripslashes($astrodata['MOON_RETRO_COMBUST'])),
+					"MARS_RETRO_COMBUST" => addslashes(stripslashes($astrodata['MARS_RETRO_COMBUST'])),
+					"MERCURY_RETRO_COMBUST" => addslashes(stripslashes($astrodata['MERCURY_RETRO_COMBUST'])),
+					"JUPITER_RETRO_COMBUST" => addslashes(stripslashes($astrodata['JUPITER_RETRO_COMBUST'])),
+					"VENUS_RETRO_COMBUST" => addslashes(stripslashes($astrodata['VENUS_RETRO_COMBUST'])),
+					"SATURN_RETRO_COMBUST" => addslashes(stripslashes($astrodata['SATURN_RETRO_COMBUST'])),
+					"VARA" => addslashes(stripslashes($astrodata['VARA'])),
+					"MASA" => addslashes(stripslashes($astrodata['MASA'])),
+					"SHOW_HOROSCOPE" => $row_is_same["SHOW_HOROSCOPE"],
+				);
+				$objReplace->replaceASTRO_DETAILS($profileid, $arrParams);
 
 				$key = $profileid."_KUNDLI_LINK";
 				memcache_call($key,"");

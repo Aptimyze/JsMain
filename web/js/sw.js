@@ -68,24 +68,21 @@ self.addEventListener('push', function(event) {
                 if(icon == 'D')
                     icon = '/images/JSLogo.png';
                 //console.log("Icon:"+icon);
-                return self.registration.showNotification(title,{
-                   body: message,
-                   icon: icon,
-                   tag: tag,
-                   data: url
-                });
+                if(title){
+                    return self.registration.showNotification(title,{
+                       body: message,
+                       icon: icon,
+                       tag: tag,
+                       data: url,
+                       requireInteraction: true
+                    });
+                }
             })
         }).catch(function(err){
             //console.log("11");
             //console.error('Unable to retrieve data', err);
             var title = 'Jeevansathi Notification';
             var message = 'You have new notifications';
-            return self.registration.showNotification(title,{
-                   body: message,
-                   icon: '/images/JSLogo.png',
-                   tag: 'Demo',
-                   data: 'http://www.jeevansathi.com/'
-                });
         })
         
     }));

@@ -365,11 +365,11 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		
 		if($this->m_objProfile->getMANGLIK())
 		{
-			$iPercentage+=1;
+			$iPercentage+=3;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['ASTRO'] += 1;
+			$this->m_arrIncompletePercentage['ASTRO'] += 3;
 		}
 		
 		if($this->m_objProfile->getRASHI())
@@ -391,11 +391,11 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		
 		if($this->IsHoroscopeFilled($this->m_objProfile->getPROFILEID()))
 		{
-			$iPercentage += 7;
+			$iPercentage += 5;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['ASTRO'] += 7;
+			$this->m_arrIncompletePercentage['ASTRO'] += 5;
 		}
 		
 		if($this->m_arrIncompletePercentage['ASTRO'] === 0 || $this->m_arrIncompletePercentage['ASTRO'] == 0)
@@ -425,9 +425,9 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		// Get Education Details from JPROFILE_EDUCATION
 		
 		$iPercentage = 0;
-		$jsEdu = new NEWJS_JPROFILE_EDUCATION;
+		$jsEdu = ProfileEducation::getInstance();
 		$arrEducation = $jsEdu->getProfileEducation($this->m_objProfile->getPROFILEID());
-
+                
 		$iHighestDegree = $this->m_objProfile->getEDU_LEVEL_NEW();
 	
 		//List of Master Degree
@@ -441,7 +441,7 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		}
 				
 		//Check Name of School
-		if($arrEducation['SCHOOL'])
+		/*if($arrEducation['SCHOOL'])
 		{
 			$iPercentage+=3;
 			$this->m_arrSection_Max['EDUCATION'] +=3;
@@ -450,31 +450,54 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		{
 			$this->m_arrIncompletePercentage['EDUCATION'] = 3;
 			$this->m_arrSection_Max['EDUCATION'] +=3;
-		}
+		}*/
 		//Highest Degree Check
 		$arrNotAllowedEdu_Level = array(23,24);//23(High School) & 24(Trade School)		
 		//Check Name of College
 		if($arrEducation['COLLEGE'] && !in_array($iHighestDegree,$arrNotAllowedEdu_Level))
 		{
-			$iPercentage+=4;
-			$this->m_arrSection_Max['EDUCATION'] +=4;
+			$iPercentage+=2;
+			$this->m_arrSection_Max['EDUCATION'] +=2;
 		}
 		else if(!in_array($iHighestDegree,$arrNotAllowedEdu_Level))
 		{
-			$this->m_arrIncompletePercentage['EDUCATION'] += 4;
-			$this->m_arrSection_Max['EDUCATION'] +=4;
+			$this->m_arrIncompletePercentage['EDUCATION'] += 2;
+			$this->m_arrSection_Max['EDUCATION'] +=2;
 		}
 		
 		//Check Name of PG College		
 		if($arrEducation['PG_COLLEGE'] && in_array($iHighestDegree,$arrPG_Group))
 		{
-			$iPercentage+=3;
-			$this->m_arrSection_Max['EDUCATION'] +=3;
+			$iPercentage+=2;
+			$this->m_arrSection_Max['EDUCATION'] +=2;
 		}
 		else if(in_array($iHighestDegree,$arrPG_Group))
 		{
-			$this->m_arrIncompletePercentage['EDUCATION'] += 3;
-			$this->m_arrSection_Max['EDUCATION'] +=3;
+			$this->m_arrIncompletePercentage['EDUCATION'] += 2;
+			$this->m_arrSection_Max['EDUCATION'] +=2;
+		}
+                
+                //Check UG Degree		
+		if($arrEducation['UG_DEGREE'] && !in_array($iHighestDegree,$arrNotAllowedEdu_Level))
+		{
+			$iPercentage+=4;
+			$this->m_arrSection_Max['CAREER'] +=4;
+		}
+		else if(!in_array($iHighestDegree,$arrNotAllowedEdu_Level))
+		{
+			$this->m_arrIncompletePercentage['CAREER'] += 4;
+			$this->m_arrSection_Max['CAREER'] +=4;
+		}
+                //Check PG Degree		
+		if($arrEducation['PG_DEGREE'] && in_array($iHighestDegree,$arrPG_Group))
+		{
+			$iPercentage+=4;
+			$this->m_arrSection_Max['CAREER'] +=4;
+		}
+		else if(in_array($iHighestDegree,$arrPG_Group))
+		{
+			$this->m_arrIncompletePercentage['CAREER'] += 4;
+			$this->m_arrSection_Max['CAREER'] +=4;
 		}
 		
 		if($this->m_arrIncompletePercentage['EDUCATION'] === $this->m_arrSection_Max['EDUCATION'])
@@ -509,10 +532,10 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		if($this->m_objProfile->getOCCUPATION() && !in_array($this->m_objProfile->getOCCUPATION(),$arrOcc_Group))
 		{
 			if($this->m_objProfile->getCOMPANY_NAME())
-				$iPercentage+=5;
+				$iPercentage+=2;
 			else
-				$this->m_arrIncompletePercentage['CAREER'] += 5;
-			$this->m_arrSection_Max['CAREER'] +=5;
+				$this->m_arrIncompletePercentage['CAREER'] += 2;
+			$this->m_arrSection_Max['CAREER'] +=2;
 		}
 		
 		
@@ -542,51 +565,51 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		// About Family - 20%
 		$iPercentage = 0;
 		
-		$this->m_arrSection_Max['FAMILY'] = 20;
+		$this->m_arrSection_Max['FAMILY'] = 21;
 		
 		if($this->m_objProfile->getFAMILYINFO())
 		{
-			$iPercentage+=5;
+			$iPercentage+=7;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['FAMILY'] = 5;
+			$this->m_arrIncompletePercentage['FAMILY'] = 7;
 		}
 		
 		if($this->m_objProfile->getFAMILY_BACK())
 		{
-			$iPercentage+=5;
+			$iPercentage+=4;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['FAMILY'] +=5;
+			$this->m_arrIncompletePercentage['FAMILY'] +=4;
 		}
 		
 		if($this->m_objProfile->getMOTHER_OCC())
 		{
-			$iPercentage+=2;
+			$iPercentage+=4;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['FAMILY'] +=2;
+			$this->m_arrIncompletePercentage['FAMILY'] +=4;
 		}
 		
 		if($this->m_objProfile->getFAMILY_INCOME() ||  $this->m_objProfile->getFAMILY_STATUS())
 		{
-			$iPercentage+=2;
+			$iPercentage+=1;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['FAMILY'] +=2;
+			$this->m_arrIncompletePercentage['FAMILY'] +=1;
 		}
 		
 		if($this->m_objProfile->getFAMILY_VALUES())
 		{
-			$iPercentage+=2;
+			$iPercentage+=1;
 		}
 		else
 		{
-			$this->m_arrIncompletePercentage['FAMILY'] +=2;
+			$this->m_arrIncompletePercentage['FAMILY'] +=1;
 		}
 		
 		if($this->m_objProfile->getFAMILY_TYPE())
@@ -652,7 +675,7 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		}
 		
 				
-		$objHobbies = new NEWJS_HOBBIES;
+		$objHobbies = new JHOBBYCacheLib;
 		$arrHobbies = $objHobbies->getUserHobbies($this->m_objProfile->getPROFILEID());
 		
 		if($arrHobbies['HOBBY'] || $arrHobbies['INTEREST'])
@@ -779,17 +802,16 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		if($iProfileID === null || $iProfileID == null )
 			return false;
 			
-		$objHoroscope1 = new newjs_HOROSCOPE;
+		/*$objHoroscope1 = new newjs_HOROSCOPE;
 		$iCount1 = $objHoroscope1->getIfHoroscopePresent($iProfileID);
 		
 		$objHoroscope2 = new NEWJS_HOROSCOPE_FOR_SCREEN;
-		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);
+		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);*/
 		
-		$objHoroscope3 = new NEWJS_ASTRO;
+		$objHoroscope3 = ProfileAstro::getInstance();
 		$iCount3 = $objHoroscope3->getIfAstroDetailsPresent($iProfileID);
-		$arrRes = $objHoroscope3->getAstroDetails(array($iProfileID),'');
 		
-		if($iCount1 || $iCount2 || $iCount3)
+		if($iCount3) /*$iCount1 || $iCount2 ||*/
 			return true;
 			
 		return false;

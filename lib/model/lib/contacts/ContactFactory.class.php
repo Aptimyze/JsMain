@@ -30,8 +30,10 @@ class ContactFactory
 		$engineType=$contactHandlerObj->getEngineType();
 		$contactType=$contactHandlerObj->getContactType();
 		$viewerObj=$contactHandlerObj->getViewer();
-		$viewedObj=$contactHandlerObj->getViewer();
-		if(!$viewerObj || !$viewerObj)
+		$viewedObj=$contactHandlerObj->getViewed();
+
+
+		if(!$viewerObj || !$viewedObj)
 			throw new JsException("","Sender,Receiver not specified");
 		if($engineType==ContactHandler::EOI)
 		{
@@ -116,7 +118,14 @@ class ContactFactory
 						break;
 				}
 			}
+
+					$memObject=JsMemcache::getInstance();
+					$memObject->delete('commHistory_'.$viewerObj->getPROFILEID().'_'.$viewedObj->getPROFILEID());
+					$memObject->delete('commHistory_'.$viewedObj->getPROFILEID().'_'.$viewerObj->getPROFILEID());
+					// block to delete the myjs cached data for ms and apps
+					MyJsMobileAppV1::deleteMyJsCache(array($viewerObj->getPROFILEID(),$viewedObj->getPROFILEID()));
 			return $action;
+
 		}
 		else if($engineType==ContactHandler::INFO)
 		{

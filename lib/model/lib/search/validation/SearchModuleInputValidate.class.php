@@ -202,12 +202,15 @@ class SearchModuleInputValidate extends ValidationHandler
 		else
 		{
 			$tempArr = FieldMap::getFieldLabel("solr_clusters","",1);
+        
 			$value2 = $tempArr[$value2];
 
 			if($value2=='OCCUPATION_GROUPING')
 			{
 				$value2 = 'OCCUPATION';
 				$value = str_replace('@','',$value);
+                                $mergeForKeyArr = FieldMap::getFieldLabel("occupation_grouping_mapping_to_occupation","",1);
+                                $mergeForKeyArr = array_keys($mergeForKeyArr);
 			}
 			elseif($value2=='EDUCATION_GROUPING')
 			{
@@ -217,9 +220,12 @@ class SearchModuleInputValidate extends ValidationHandler
 			$fieldMapArrayLabelMapping = searchConfig::fieldMapArrayLabelMapping();
 			$clusterNameForFieldLabel = $fieldMapArrayLabelMapping[$value2];
 			$tempArr = FieldMap::getFieldLabel($clusterNameForFieldLabel,'',1);
+                        
 			if(!$tempArr)
 				return false;
 			$arr = $tempArr + self::$allowSomeValuesArr;
+                        if($mergeForKeyArr)
+                                   $arr = array_merge ($mergeForKeyArr,$arr);
 			return self::valuesExistsInArr($value,$arr);
 		}
 	}

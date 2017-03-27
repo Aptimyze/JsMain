@@ -36,7 +36,13 @@ class SearchJS implements SearchChannelInterface
         {
                 
         }
-        
+        /**
+        * getSearchTypeContactViewAttempt.
+        */
+        public static function getSearchTypeContactViewAttempt()
+        {        
+                
+        }
         /**
         * getMembersLookingForMe
         */
@@ -58,6 +64,17 @@ class SearchJS implements SearchChannelInterface
                  
         }
         
+        /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 
+        }        
+	public static function getSearchTypeMatchOfDay()
+	{
+		return SearchTypesEnums::MatchOfDay;
+	}
         
         /**
 	* This function will set the No. Of results for search Page
@@ -80,13 +97,7 @@ class SearchJS implements SearchChannelInterface
                 return ResponseHandlerConfig::$SEARCH_O_RESULTS;
         }
         
-        /**
-        * Featured Profile
-        */
-        public function showFeaturedProfile($featuredProfile,$currentPage,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$noOfProfiles,$searchId,$actionObject) {
-                 return $responseObj;
-        }
-        
+       
         /**
 	* This function will set the No. Of featured profiles results for search Page
 	*/
@@ -111,5 +122,99 @@ class SearchJS implements SearchChannelInterface
 		{
 			return "PC";
 		}
+                public function setRequestParameters($params){
+                  return array();
+                }
+                
+      /**
+        * Featured Profile
+        */
+        public function showFeaturedProfile($featuredProfile,$currentPage,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$noOfProfiles,$searchId,$actionObject) {
+                 
+                 if(count($responseObj->getsearchResultsPidArr())<1)
+                        return $responseObj;
+                /* feature profile */
+               
+                if($featuredProfile)
+                {
+                        if($currentPage==1)
+                        { 
+                                $featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
+                                $featureProfileIdArr = $featuredProfileObj->getProfile("","",$searchId);
+                               
+                                $featureProfileId = $featureProfileIdArr["PROFILEID"];
+                                	
+                                if(!$featureProfileId)
+                                {
+																
+                                        $featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj);
+                                        $SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
+                                       
+                                        $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
+                                        
+                                        if(count($respObj->getSearchResultsPidArr())==0)
+                                        {
+                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+                                                /*unset($featuredProfileObj);
+                                                $featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
+                                                $featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
+                                                
+                                                $SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
+                                                
+                                                $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);*/
+                                        }
+
+                                        if(count($respObj->getSearchResultsPidArr())>0)
+                                        {
+																								
+                                                $featureProfileId = $featuredProfileObj->performDbAction($searchId,$respObj->getSearchResultsPidArr());
+                                                if(count($respObj->getSearchResultsPidArr())>1)
+                                                        $actionObject->featurePosition = 'first';
+                                                else
+                                                        $this->featurePosition = 'single';
+                                                $actionObject->featuredResultNo=0;
+                                                $actionObject->totalFeaturedProfiles = count($respObj->getSearchResultsPidArr());
+                                        }
+                                }
+                                else
+                                { 
+																	
+                                        $SearchParamtersObjF = new SearchParamters;
+                                        $SearchParamtersObjF->setProfilesToShow($featureProfileIdArr["All"]);
+                                        $SearchParamtersObjF->setGENDER('ALL');
+                                        
+                                                                             
+                                        $respObj = $SearchServiceObj->performSearch($SearchParamtersObjF,'onlyResults','','',0,$loggedInProfileObj);
+                                        $actionObject->featurePosition = $featureProfileIdArr["POSITION"];
+                                        $actionObject->featuredResultNo=0;
+                                        $actionObject->totalFeaturedProfiles = $featureProfileIdArr["TOTAL"];
+                                        unset($SearchParamtersObjF);
+                                }
+                                unset($featuredProfileObj);
+                        }
+                }
+                /* feature profile */
+                if($respObj && is_array($respObj->getsearchResultsPidArr())){
+                        $featuredProfilesArr = $respObj->getsearchResultsPidArr();
+                        $searchedProfilesArr = $responseObj->getsearchResultsPidArr();
+                       
+                        //$featuredProfileToShow = array_diff($featuredProfilesArr,$searchedProfilesArr);
+                        $featuredProfileToShow = array_slice($featuredProfilesArr,0,$noOfProfiles);
+                        foreach($featuredProfileToShow as $key=>$value){
+                                if($value){
+                                        $featuredProfileDetailsToShow = $respObj->getResultsArr()[$key];
+                                        $featuredProfileArray[]=$featuredProfileDetailsToShow;
+                                }
+                        } 
+                        if(count($featuredProfileArray)>0)
+                                $responseObj->setFeturedProfileArr($featuredProfileArray);
+                }
+								
+                return $responseObj;
+                
+        }
+        
+        
+        
 }
 ?>

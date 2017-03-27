@@ -32,7 +32,12 @@ $this->addOptions(array(
     ini_set('max_execution_time',0);
     ini_set('memory_limit',-1);
     if(!sfContext::hasInstance())
-            sfContext::createInstance($this->configuration);
+      sfContext::createInstance($this->configuration);
+
+    $notificationStop =JsConstants::$notificationStop;
+    if($notificationStop)
+      die('successfulDie');
+
     $notificationKey = $arguments["notificationKey"];
     $noOfScripts = $arguments["noOfScripts"];
     $currentScript = $arguments["currentScript"];

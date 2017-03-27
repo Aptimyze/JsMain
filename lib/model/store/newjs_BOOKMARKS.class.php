@@ -121,6 +121,34 @@ class NEWJS_BOOKMARKS extends TABLE{
 			return $output;
 			
 	}
+
+
+	public function getBookmarkedAllForAPeriod($noOfDays, $remainderArray)
+	{
+		try{
+			if(!$noOfDays){
+				$noOfDays=30;
+			}
+			$str = "";
+
+			$sql = "SELECT BOOKMARKER, BOOKMARKEE FROM  newjs.BOOKMARKS WHERE BOOKMARKER % :DIVISOR=:REMAINDER  AND DATE(BKDATE) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) ORDER BY `BKDATE` DESC";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":DIVISOR",$remainderArray['divisor'],PDO::PARAM_INT);
+			$res->bindValue(":REMAINDER",$remainderArray['remainder'],PDO::PARAM_INT);
+			$res->execute();
+			while($row=$res->fetch(PDO::FETCH_ASSOC)){
+
+				$result[]=$row;
+			}
+
+			}
+			catch(PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $result;
+			
+	}
 	
 	
 	public function getBookmarkedProfile($profileid,$conditionArray, $skipArray)
@@ -290,5 +318,8 @@ class NEWJS_BOOKMARKS extends TABLE{
 		$res->bindValue(":BOOKMARKEE", $bookmarkee, PDO::PARAM_INT);
 		$res->execute();
 	}
+
+
+
 }
 ?>

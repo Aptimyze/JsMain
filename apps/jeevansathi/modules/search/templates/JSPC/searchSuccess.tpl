@@ -14,7 +14,7 @@
 	
 	<!-- Listing Tabs -->
 	~if $searchListings`
-	~include_partial("search/JSPC/searchListingTabs",['isRightListing'=>$isRightListing,'clickOn'=>$clickOn,'setGap'=>$setGap,'showKundliList'=>$showKundliList])`
+	~include_partial("search/JSPC/searchListingTabs",['isRightListing'=>$isRightListing,'clickOn'=>$clickOn,'setGap'=>$setGap,'subscriptionType'=>$subscriptionType,'showKundliList'=>$showKundliList])`
 	~/if`
 
 	<!-- loader -->
@@ -35,7 +35,13 @@
 		<div class="clearfix">
 			<!--start:left col-->
 			<div class="fl srpwid5 fontlig">
+                                
 				<div class="f22 color11 pb8 pl15" id="pageHeading">~$pageHeading`</div>
+                                <span ~if $searchListings` style="display:none;" ~/if`>
+                                ~if $showSaveSearchIcon`
+						~include_partial("search/JSPC/saveSearchTop",['loggedIn'=>$loggedIn,'savedSearches'=>$savedSearches,'searchSummaryFormatted'=>$searchSummaryFormatted])`
+				~/if`
+                                </span>
 				<!--start:filter-->
 				<div class="filter" id="ClusterTupleStructure"> 
 				</div>
@@ -99,7 +105,15 @@
 				~/if`
 				
 				<!-- sort -->
-
+                                
+                                ~if $loggedIn`
+					<div class="fontlig f14 relv ulinline clearfix disp-none" id="heightRightVisitors">
+						<ul class="fr">
+              <li  class="~if $matchedOrAll eq 'A'`js-sort-grey cursd ~else` cursp~/if` js-visitors js-visTypeA" value=A><span class="disp_ib srpbdr3 pr10">All Profile Visitors</span></li>
+            <li  class="~if $matchedOrAll eq 'M' || $matchedOrAll eq ''`js-sort-grey cursd ~else` cursp~/if` js-visitors js-visTypeM" value=M><span class="disp_ib pr10 pl10">Matching Visitors Only</span></li>
+						</ul>
+					</div>
+                                ~/if`
 
 				<!--start:search result-->
 				<div id="featuredListing">
@@ -153,6 +167,7 @@
 	var newTagJustJoinDate = 0;
 	var setGap='~$setGap`';
 	var profilesPerPage = '~$profilesPerPage`';
+        var matchedOrAll='~$matchedOrAll`';
 	
 	//var populateDefaultValues = ~$populateDefaultValues|decodevar`;
 	$(document).ready(function() {

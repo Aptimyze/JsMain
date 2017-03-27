@@ -7,7 +7,7 @@
 <div id='profileContent'>
 	~if !isset($errorMsg)`
     ~include_partial("global/jsms3DotLayer")`
-    ~include_partial("profile/mobViewProfile/_tabHeader",['username'=>$arrOutDisplay.about.username,'showComHistory'=>$showComHistory,'myPreview'=>$myPreView])`
+    ~include_partial("profile/mobViewProfile/_tabHeader",['username'=>$arrOutDisplay.about.username,'name_of_user'=>$arrOutDisplay.about.name_of_user,'showComHistory'=>$showComHistory,'myPreview'=>$myPreView])`
 		~include_partial("profile/mobViewProfile/_imageWidget",['arrData'=>$arrOutDisplay.pic,'gender'=>$arrOutDisplay.about.gender,'myPreview'=>$myPreView,'verificationValue'=>$arrOutDisplay.about.verification_status])`
 		<div id="aboutContent">
 			~include_partial("profile/mobViewProfile/_basicInfo",['arrData'=>$arrOutDisplay.about])`

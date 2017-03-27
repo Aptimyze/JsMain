@@ -1,6 +1,11 @@
 /**
 * This file is contactCenter.js for loading contact center tuples
 */
+
+var emailReg = /([\w\_]+@([\w]+\.)+[\w]{2,4})/g;
+var phoneReg = /([0-9]{10,}|[0-9]{3}-[0-9]{6,}|[0-9]{4}-[0-9]{6,}|[0-9]{4}-[0-9]{3}-[0-9]{4,}|[0-9]{3}-[0-9]{3}-[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{4,}|[0-9]{4}\s[0-9]{3}\s[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}\s[0-9]{3,}|[0-9]{4}\s[0-9]{6,}|[0-9]{3}\s[0-9]{7,})/g;
+var matchedStr,data,newData;
+
 /** 
 * This function will set horizontal line below active horizontal tab
 * 
@@ -32,7 +37,18 @@ function performCCListingAction(thisElement)
 	infoArr["action"] = "stayOnPage";
 	clearTimedOutVar = setTimeout(function(){sendProcessCCRequest(postParams,infoArr) },20);
 }
-
+/**
+* This function sets the heading for inbox listing page
+* @param response Page Response
+**/
+function setcontactCenterHeading(response){
+        if(typeof response.subheading !="undefined" && response.subheading != ""){
+                $(".ccSubHeader").html(response.subheading);
+                $('.ccSubHeader').removeClass('disp-none');
+        }else{
+                $('.ccSubHeader').addClass('disp-none');
+        }
+}
 /** 
 * This function will load cc tuple data
 * 
@@ -152,7 +168,7 @@ if(typeof response.searchid!="undefined")
     }
 	//show horroscope/photo request option if requests tab is selected
 	showRequestsSubTypeListings(response,uploadRequestParamArr);
-	   
+	
        	//typeOfApi='';
 	if(response.no_of_results!=0)
 	{
@@ -185,11 +201,22 @@ if(typeof response.searchid!="undefined")
 		//}
 		
 		/** Comment end */
-
 		loadContactCenterTuples(response);
+                setcontactCenterHeading(response);
 		dataForCCPagination(parseInt(response.total),parseInt(response.page_index),parseInt(response.no_of_results));
 		handleCCPagination(response);
-		if(response.total)
+		handleArchiveExpireInterest(activeHorizontalTabInfoID);
+		/*
+			If this is the interest received page and at the last page , do show horizontal tab.
+		 */
+
+		if(activeHorizontalTabInfoID == 1 && response.page_index == response.paginationArray[response.paginationArray.length - 1])
+		{
+			$('#HorizontalTab22_Label_nonzero').show();
+			$('#HorizontalTab22_Label_nonzero').removeClass('jsButton-disabled');
+		}
+
+		if(response.total && response.hidePaginationCount != 1)
 		{ 
 			$(".js-resultsCount").remove();
 			var countClass = "js-resultsCount";
@@ -202,8 +229,18 @@ if(typeof response.searchid!="undefined")
 	}
 	else
 	{
+		handleArchiveExpireInterest(activeHorizontalTabInfoID);
+		/*
+			If this is the interest received page, do show horizontal tab.
+		 */
+		if(activeHorizontalTabInfoID == 1)
+		{
+			$('#HorizontalTab22_Label_zero').show();
+			$('#HorizontalTab22_Label_zero').removeClass('jsButton-disabled');
+		}
 		updateHistory("",1);
 		/** handling zero results message */
+		$("#HorizontalTab"+activeHorizontalTabInfoID+" .js-resultsCount").remove();
 		var zeroResultsHeading = "<span class='bold f28'> 0</span> ",upgradeButtonText="View Membership Plans";
 		$("#upgradeMembershipButton").html(upgradeButtonText);
 		if(activeVerticalTab == "1")
@@ -240,8 +277,13 @@ if(typeof response.searchid!="undefined")
 		$("#js-ccContainer").hide();
 		$("#ccPaginationDiv").hide();
 		$("#zeroResultSection").show();
+
+	 
 	}
-	
+	if ( activeHorizontalTabInfoID == 22 )
+	{
+		$(window).scrollTop(0);
+	}
 	if(typeof zmt_get_tag== "function")
 	{
 		renderBanners();
@@ -253,13 +295,14 @@ if(typeof response.searchid!="undefined")
     var countOfProfiles = Object.keys(response.profiles).length;
     
     if(countOfProfiles >= 3){
-      $("<div class='rel_c js-rcbMessage' id='callDiv1'><div class='ccp2 fontlig color11'><div class='mainBrdr clearfix'><div class='f14 fontlig wid60p inDisp fl'>To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benifits of our membership plans?</div><div class='pt15 pb30 color2 f14 fr inDisp verTop'><span class='hlpcl1 calUserDiv cursp' id='callUser'>Yes, call me</span><span id='noButton' class='hlpcl11 cursp bg6 noUserDiv'>No, Later</span></div></div></div></div>").insertAfter("#outerCCTupleDiv3");
+      $("<div class='rel_c js-rcbMessage' id='callDiv1'><div class='ccp2 fontlig color11'><div class='mainBrdr clearfix'><div class='f14 fontlig wid60p inDisp fl'>To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?</div><div class='pt15 pb30 color2 f14 fr inDisp verTop'><span class='hlpcl1 calUserDiv cursp' id='callUser'>Yes, call me</span><span id='noButton' class='hlpcl11 cursp bg6 noUserDiv'>No, Later</span></div></div></div></div>").insertAfter("#outerCCTupleDiv3");
       
       //On Yes Call Now
       $("#callUser").off("click");
       $("#callUser").on("click", function () {
         $('<input>').attr({type: 'hidden',id:'rcbResponse', name: 'rcbResponse',value:'Y'}).appendTo('#Widget');
-        $(".js-openRequestCallBack").click();
+        toggleRequestCallBackOverlay(1, 'Accepted_Members_List');
+        //$(".js-openRequestCallBack").click();
       });
       
       //On Not Now Button
@@ -272,7 +315,7 @@ if(typeof response.searchid!="undefined")
           url: url,
           cache: false,
           timeout: 5000, 
-          data: {rcbResponse:'N'},
+          data: {rcbResponse:'N','device':'desktop','channel':'JSPC','callbackSource':'Accepted_Members_List'},
           success:function(result){
             $("#callDiv1").remove();
             $("<div class='rel_c js-rcbMessage' id='callDiv2'><div class='ccp11 pb20 fontlig color11'><div class='mainBrdr2'><div class='f14 fontlig'>Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.</div></div></div></div>").insertAfter("#outerCCTupleDiv3");        
@@ -291,6 +334,65 @@ if(typeof response.searchid!="undefined")
     }
   }
 }
+
+/**
+ * Function is added to add link for expire interests listing.
+ * @param  {int} activeHorizontalTabInfoID to check whether activeHorizontalTabInfoID is 22 and make changes accordingly.
+ */
+ function handleArchiveExpireInterest(activeHorizontalTabInfoID) {
+ 	if ( activeHorizontalTabInfoID == 23 )
+ 	{
+ 		$('#horizontalActiveLine22').remove();
+ 		$('#ccHorizontalTabsBar > li').hide();
+ 		if ( $('#HorizontalTab23').length == 0)
+ 		{
+ 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Expiring Interests</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
+ 		}
+ 		else
+ 		{
+ 			$('#HorizontalTab23').addClass('jsButton-disabled');
+ 			$('#horizontalActiveLine23').show();
+ 			$('#HorizontalTab23').show();
+ 		}
+ 	}
+ 	else
+ 	{
+ 		$('#horizontalActiveLine23').remove();
+ 		if ( $('#HorizontalTab22_Label_nonzero').length == 0)
+ 		{
+ 			$("#ccTuplesMainDiv").append('<div id="HorizontalTab22_Label_nonzero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20 ">Archived Interests</div>');
+ 		}
+ 		if ( $('#HorizontalTab22_Label_zero').length == 0)
+ 		{
+ 			$("#zeroResultSection").append('<div id="HorizontalTab22_Label_zero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20">Archived Interests</div>');
+ 		}
+ 		$('#HorizontalTab22_Label_zero').hide();
+ 		$('#HorizontalTab22_Label_nonzero').hide();
+
+ 		if ( activeHorizontalTabInfoID == 22 )
+ 		{
+ 			$('#ccHorizontalTabsBar > li').hide();
+ 			if ( $('#HorizontalTab22').length == 0)
+ 			{
+ 				$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Archived Interests</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>');
+ 			}
+ 			else
+ 			{
+
+ 				$('#HorizontalTab22').addClass('jsButton-disabled');
+ 				$('#horizontalActiveLine22').show();
+
+ 				$('#HorizontalTab22').show();
+ 			}
+ 		}
+ 		else
+ 		{
+ 			$('#ccHorizontalTabsBar > li').show();	
+ 			$('#HorizontalTab22').show();
+ 			$('#horizontalActiveLine22').hide();
+ 		}
+ 	}
+ }
 
 /***
 * This function will get all the mapping variables related to contact center tuples.
@@ -331,7 +433,10 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 			personalizedmessage=readMore(personalizedmessage,profileIDNo)
 			
 		}
-			
+                
+		if(val.name_of_user!='' && val.name_of_user!=null)
+			val.username = val.name_of_user;
+                
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 
@@ -424,7 +529,16 @@ function ccTupleInnerContentResultMapping(val,profileIDNo) {
 		}
 		else
 		{		
-				var casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+			var casteStr;	
+			if(val.caste == val.religion)
+			{
+				casteStr = ''; 
+			}
+			else
+			{
+				casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+				casteStr = ", "+casteStr;
+			}
 				
 				//for dev environment only
 				if(val.income =="undefined" || val.income == null)
@@ -483,6 +597,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 		data: postParams,
 		timeout: 60000,
 		cache: false,
+		updateChatList:(action == "pagination") ? true : false,
 		beforeSend: function( xhr ) 
 		{               
 			$("#mainUploadRequestDiv").hide();
@@ -512,7 +627,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 				hideCommonLoader();
 				animationToTop();
 			}
-						
+                        
 			loadCCPageResponse(response);
 			jsLoadFlag = 1;
 			timeE = new Date().getTime();
@@ -601,6 +716,13 @@ function dataForCCPagination(totalCount,page_index,no_of_results) {
  */
 function setActiveCCTabs(VerticalTab,HorizontalTabInfoID)
 {
+	if ( HorizontalTabInfoID == 23 )
+		VerticalTab = 0;
+	/*
+		Added this condition for expire interest check.
+	 */
+	if ( HorizontalTabInfoID == 22 )
+		VerticalTab = 0;
 	$("#VerticalTab"+VerticalTab).addClass("active").addClass("jsButton-disabled");
 	$("#HorizontalTab"+HorizontalTabInfoID).addClass("jsButton-disabled");
 	$("#Request"+activeRequestTypeID).addClass("jsButton-disabled");
@@ -654,6 +776,7 @@ function showCCLoader(type)
 	else
 	{
 		$('#ccResultsLoaderTop').hide();
+		setTimeout(function(){hidePersonalisedMessage();},100);
 	}
 }
 
@@ -843,5 +966,29 @@ $(document).ready(function() {
 			var vspRedirectUrl = "/search/viewSimilarProfile?profilechecksum="+profilechecksum+"&stype="+stype+"&SIM_USERNAME="+username+"&contactedProfileDetails="+showContactedUsernameDetails;
 			window.location.href = vspRedirectUrl;
 		});
+
+			hidePersonalisedMessage();
 	});
 
+function hidePersonalisedMessage()
+{
+	$(".js-hideDetail").each(function(index, element) {
+		data = $(element).html();
+		if(data != ""){
+			if(data.match(emailReg) != null){
+				matchedStr = data.match(emailReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+			if(data.match(phoneReg) != null){
+				matchedStr = data.match(phoneReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+		}
+	});
+}

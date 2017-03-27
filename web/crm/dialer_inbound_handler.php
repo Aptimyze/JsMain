@@ -14,7 +14,7 @@
 		{
 			if($name==$agent_name)
 			{
-				$sql_db = "(SELECT USERNAME,EMAIL,ENTRY_DT,SUBSCRIPTION,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PHONE_WITH_STD='$phone') UNION (SELECT USERNAME,EMAIL,ENTRY_DT,SUBSCRIPTION,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PHONE_MOB IN ('0$phone','+91$phone','91$phone','$phone'))";
+				$sql_db = "(SELECT USERNAME,EMAIL,ENTRY_DT,SUBSCRIPTION,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PHONE_WITH_STD='$phone') UNION (SELECT USERNAME,EMAIL,ENTRY_DT,SUBSCRIPTION,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PHONE_MOB IN ('0$phone','+91$phone','91$phone','$phone'))";
 				$res_db = mysql_query($sql_db,$db) or die("no_response");
 				$no_of_profiles=mysql_num_rows($res_db);
 				if(!$no_of_profiles)

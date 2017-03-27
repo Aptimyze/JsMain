@@ -3,13 +3,13 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include("$docRoot/crontabs/connect.inc");
-$db=connect_db();
+$db=connect_slave();
 
                 $strArr   	   	=array(); 
 		$cnt			=0;
 		$totcnt			=0;
 		$todayDate		=date("Y-m-d");
-		$dateSel		=date("Y-m-d",strtotime("$todayDate -2 days"));
+		$dateSel		=date("Y-m-d",strtotime("$todayDate -1 days"));
 
                 $sql ="SELECT COUNT(*) as CNT,TYPE FROM MIS.LTF WHERE DATE>='$dateSel 00:00:00' AND DATE<='$dateSel 23:59:59' group by TYPE";
                 $res = mysql_query_decide($sql,$db) or die($sql.mysql_error_js());

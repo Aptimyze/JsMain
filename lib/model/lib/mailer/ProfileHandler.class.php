@@ -128,6 +128,21 @@ class ProfileHandler implements VariableHandler{
 			$output = $output.$caste;
 			return $output;
 			break;
+    case "RELIGION_CASTE_VALUE_TEMPLATE_2":
+      if($this->__profile_obj->getRELIGION())
+      {
+        $temp = explode(":",$this->__profile_obj->getDecoratedCaste());
+        $caste = $temp[1];
+        unset($temp);
+      }
+      else
+        $caste = $this->__profile_obj->getDecoratedCaste();
+      $output = $this->__profile_obj->getDecoratedReligion();
+      if($this->__profile_obj->getDecoratedReligion() && $caste)
+        $output = $output.", ";
+      $output = $output.$caste;
+      return $this->__truncatedString($output,20);
+      break;  
 		case "CITY_SMALL":
 		case "OCCUPATION_SMALL":
 			return $this->__truncatedString(call_user_func(array($this->__profile_obj, $this->__getTokenCallback($token))),16);

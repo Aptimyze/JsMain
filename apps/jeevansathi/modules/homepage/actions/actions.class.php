@@ -90,6 +90,11 @@ class homepageActions extends sfActions
 
 	if($this->loginData[PROFILEID])
 		$this->redirectLoggedInProfile($this->loginData,$is_mob,$mobile_view,$desktop_view,$request);
+	// log referer
+	else if(isset($_SERVER['HTTP_REFERER']))
+	{
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+	}
 	/***********Mobile (To be integrated)****************/
 	if($mobile_view || ($is_mob && ($request->getParameter("desktop")!='Y' && $request->getcookie('NEWJS_DESKTOP')!='Y')))
 	{
@@ -100,8 +105,10 @@ class homepageActions extends sfActions
 			$this->redirectToRegister("source=$this->source");
 			die;
 		}
-		if(MobileCommon::isNewMobileSite() && !$data[PROFILEID])
-		MobileCommon::gotoModuleUrl("static","logoutPage");
+		if(MobileCommon::isNewMobileSite() && !$data[PROFILEID]){
+			$request->setParameter("homepageRedirect",1);
+			MobileCommon::gotoModuleUrl("static","logoutPage");
+	}
 
 	else
 	{
@@ -161,7 +168,7 @@ class homepageActions extends sfActions
                 header("Location:".$SITE_URL."/profile/mem_comparison.php");
                 die;
         }
-        $request->setParameter("fromHomepage",1);
+        //$request->setParameter("fromHomepage",1);
         //$a=MobileCommon::isNewMobileSite();
         //var_dump($a);die;
 		if(!MobileCommon::isNewMobileSite() && MobileCommon::isMobile()){

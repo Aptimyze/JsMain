@@ -213,10 +213,10 @@
  <field name="CASTE" type="int" indexed="true" stored="true" />
  <field name="MTONGUE" type="int" indexed="true" stored="true" />
  <field name="FEATURE_PROFILE" type="int" indexed="true" stored="true" />
- <field name="CITY_RES" type="string" indexed="true" stored="true" />
+ <field name="CITY_RES" indexed="true" stored="true" type="commaDelimited" multivalued="true"/>
  <field name="AGE" type="int" indexed="true" stored="true" />
  <field name="HEIGHT" type="int" indexed="true" stored="true" />
- <field name="EDU_LEVEL_NEW" type="int" indexed="true" stored="true" />
+ <field name="EDU_LEVEL_NEW" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
  <field name="EDU_LEVEL" type="int" indexed="true" stored="false" />
  <field name="OCCUPATION" type="int" indexed="true" stored="true" />
  <field name="INCOME" type="int" indexed="true" stored="true" />
@@ -259,12 +259,12 @@
  <field name="FAMILYINFO" type="text_general" indexed="true" stored="false" />
  <field name="EDUCATION" type="text_general" indexed="true" stored="false" />
  <field name="JOB_INFO" type="text_general" indexed="true" stored="false" />
- <field name="ANCESTRAL_ORIGIN" type="text_general" indexed="true" stored="false" />
+ <field name="ANCESTRAL_ORIGIN" type="text_general" indexed="true" stored="true" />
  <field name="LIVE_PARENTS" type="string" indexed="true" stored="false" />
  <field name="SUBSCRIPTION" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
- <field name="COMPANY_NAME" type="text_general" indexed="true" stored="false" />
- <field name="COLLEGE" type="text_general" indexed="true" stored="false" />
- <field name="PG_COLLEGE" type="text_general" indexed="true" stored="false" />
+ <field name="COMPANY_NAME" type="text_general" indexed="true" stored="true" />
+ <field name="COLLEGE" type="text_general" indexed="true" stored="true" />
+ <field name="PG_COLLEGE" type="text_general" indexed="true" stored="true" />
  <field name="SCHOOL" type="text_general" indexed="true" stored="false" />
  <field name="KEYWORDS" type="text_general" indexed="true" stored="false" />
  <field name="NAKSHATRA" type="text_general" indexed="true" stored="false" />
@@ -279,11 +279,13 @@
  <field name="PROFILE_ADDED" type="int" indexed="true" stored="false" />
  <field name="GOING_ABROAD" type="string" indexed="true" stored="false" />
  <field name="MARRIED_WORKING" type="string" indexed="true" stored="false" />
- <field name="EDUCATION_GROUPING" type="int" indexed="true" stored="false" />
+ <!--field name="EDUCATION_GROUPING" type="int" indexed="true" stored="false" /-->
+<field name="EDUCATION_GROUPING" type="commaDelimited" indexed="true" multivalued="true" stored="false" />
  <field name="OCCUPATION_GROUPING" type="int" indexed="true" stored="false" />
- <field name="STATE" type="string" indexed="true" stored="false" />
+ <field name="STATE" indexed="true" stored="true" type="commaDelimited" multivalued="true"/>
  <field name="NATIVE_STATE" type="string" indexed="true" stored="false" />
- <field name="CITY_INDIA" type="string" indexed="true" stored="false" />
+<field name="NATIVE_CITY" type="string" indexed="true" stored="false" />
+ <field name="CITY_INDIA" indexed="true" stored="false" type="commaDelimited" multivalued="true"/>
  <field name="CITY_METRO" type="int" indexed="true" stored="false" />
  <field name="CASTE_GROUP" type="commaDelimited" indexed="true" multivalued="true" stored="false" />
  <field name="PHOTO_DISPLAY" type="string" indexed="true" stored="true" />
@@ -330,7 +332,9 @@
  <field name="INCOME_FILTER" type="string" indexed="true" stored="false" />
  <field name="ONLINE" type="string" indexed="true" stored="true" />
  <field name="VERIFY_ACTIVATED_DT" type="date" indexed="true" stored="true" />
+ <field name="VERIFY_ACTIVATED_DT_ONLY" type="date" indexed="true" stored="false" />
  <field name="VERIFICATION_SEAL" type="string" indexed="true" stored="true" />
+ <field name="NAME_OF_USER" type="string" indexed="true" stored="true" />
  </fields>
 
  <!-- Field to use to determine and enforce document uniqueness. 

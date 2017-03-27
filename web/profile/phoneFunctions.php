@@ -1,17 +1,26 @@
 <?php
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function getOpsPhoneNumber()
 {
 	return "+91-9560885794";
 }
+
 function hideNumbers($profileid,$flag)
 {
 	if(!in_array($flag,array("N","C","Y")))
 		return;
-        $sql="UPDATE newjs.JPROFILE SET `SHOWPHONE_RES` = '".$flag."',`SHOWPHONE_MOB` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
-        $res=mysql_query_decide($sql);
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+		$profileid=$profileid;
+		$arrFields = array('SHOWPHONE_RES'=>$flag,'SHOWPHONE_MOB'=>$flag);
+		$exrtaWhereCond = "";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+      // $sql="UPDATE newjs.JPROFILE SET `SHOWPHONE_RES` = '".$flag."',`SHOWPHONE_MOB` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
+ //       $res=mysql_query_decide($sql);
         deleteCachedJprofile_ContactDetails($profileid);
-        $sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `SHOWALT_MOBILE` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
-        $resAlt=mysql_query_decide($sqlAlt);
+        $arrParams = array('SHOWALT_MOBILE'=>$flag);
+		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+        //$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `SHOWALT_MOBILE` = '".$flag."' WHERE `PROFILEID` = '".$profileid."'";
+        //$resAlt=mysql_query_decide($sqlAlt);
 }
 function entryInDuplcationCheckOnEdit($profileid,$phoneType)
 {
@@ -114,8 +123,11 @@ function contact_archive($profileid,$field="",$val="")
 }
 function offerCallSettingsChange($profileid,$flag)
 {
-	$sql="UPDATE newjs.JPROFILE_ALERTS SET OFFER_CALLS='".$flag."' WHERE `PROFILEID` = '".$profileid."'";
-	$res=mysql_query_decide($sql);
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$objUpdate->updateJPROFILE_ALERTS($profileid,'OFFER_CALLS',$flag);
+
+	/*$sql="UPDATE newjs.JPROFILE_ALERTS SET OFFER_CALLS='".$flag."' WHERE `PROFILEID` = '".$profileid."'";
+	$res=mysql_query_decide($sql);*/
 }
 function checkIfDuplicate($profileid)
 {
@@ -140,19 +152,32 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		entryInDuplcationCheckOnEdit($profileid,'phone_mob');
 		$val=$isd."-".$phoneNo;
 		contact_archive($profileid,'PHONE_MOB',$val);
-		$sql ="update newjs.JPROFILE SET `PHONE_MOB`='".$phoneNo."',`PHONE_FLAG`='',`MOB_STATUS`='N',`MOD_DT`=now() ";
-		if($isd!='')
-			$sql.=",`ISD`='".$isd."'";
-		if($isdFlag=="DIFF"&& $isd!='')
-			$sql.=" ,`LANDL_STATUS`='N' ";
-		$sql.=" where `PROFILEID`='".$profileid."'";
-		mysql_query_decide($sql);
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+		$profileid=$profileid;
+		$arrFields = array('PHONE_MOB'=>$phoneNo,'PHONE_FLAG'=>'','MOB_STATUS'=>'N','MOD_DT'=>'now()');
+		
+		//$sql ="update newjs.JPROFILE SET `PHONE_MOB`='".$phoneNo."',`PHONE_FLAG`='',`MOB_STATUS`='N',`MOD_DT`=now() ";
+		if($isd!=''){
+			//$sql.=",`ISD`='".$isd."'";
+			$arrFields['ISD']=$isd;
+		}
+		if($isdFlag=="DIFF"&& $isd!=''){
+			//$sql.=" ,`LANDL_STATUS`='N' ";
+			$arrFields['LANDL_STATUS']='N';
+		}
+		//$sql.=" where `PROFILEID`='".$profileid."'";
+		$exrtaWhereCond = "";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+		
+		//mysql_query_decide($sql);
 		removeFlag("PHONEMOB",$screenflag);
 		if($isdFlag=="DIFF" &&$isd!='')
 		{
       deleteCachedJprofile_ContactDetails($profileid);
-	                $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE_ISD`='".$isd."',`ALT_MOB_STATUS`='N' where `PROFILEID`='".$profileid."'";
-			$res=mysql_query_decide($sql);
+       $arrParams = array('ALT_MOBILE_ISD'=>$isd,'ALT_MOB_STATUS'=>'N');
+		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+	            //    $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE_ISD`='".$isd."',`ALT_MOB_STATUS`='N' where `PROFILEID`='".$profileid."'";
+			//$res=mysql_query_decide($sql);
 		}
 	}
 	elseif($phoneType=='L'){
@@ -164,17 +189,32 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 			$phone_std="";
 		$val=$isd."-".$std."-".$phoneNo;
 		contact_archive($profileid,'PHONE_RES',$val);
-		$sql ="update newjs.JPROFILE SET `PHONE_RES`='".$phoneNo."',`STD`='".$std."',`PHONE_FLAG`='',`LANDL_STATUS`='N',PHONE_WITH_STD='".$phone_std."',`MOD_DT`=now() ";
-		if($isd!='')
-			$sql.=", `ISD`='".$isd."'";
-		if($isdFlag=="DIFF" && $isd!='')
-			$sql.=" ,`MOB_STATUS`='N' ";
-		$sql.=" where `PROFILEID`='".$profileid."'";
-		mysql_query_decide($sql);
+		
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+		$profileid=$profileid;
+		$arrFields = array('PHONE_RES'=>$phoneNo,'STD'=>$std,'PHONE_FLAG'=>'','LANDL_STATUS'=>'N','PHONE_WITH_STD'=>$phone_std,'MOD_DT'=>'now()');
+		
+		
+		//$sql ="update newjs.JPROFILE SET `PHONE_RES`='".$phoneNo."',`STD`='".$std."',`PHONE_FLAG`='',`LANDL_STATUS`='N',PHONE_WITH_STD='".$phone_std."',`MOD_DT`=now() ";
+		if($isd!=''){
+			//$sql.=", `ISD`='".$isd."'";
+			$arrFields['ISD']=$isd;
+		}
+		if($isdFlag=="DIFF" && $isd!=''){
+			//$sql.=" ,`MOB_STATUS`='N' ";
+			$arrFields['MOB_STATUS']='N';
+		}
+		//$sql.=" where `PROFILEID`='".$profileid."'";
+		$exrtaWhereCond = "";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+		//mysql_query_decide($sql);
 		removeFlag("PHONERES",$screenflag);
 		if($isdFlag=="DIFF" && $isd!='')
 		{
       deleteCachedJprofile_ContactDetails($profileid);
+      
+		 $arrParams = array('ALT_MOBILE_ISD'=>$isd);
+		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
 			$sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE_ISD`='".$isd."' where `PROFILEID`='".$profileid."'";
 			$res=mysql_query_decide($sql);
 		}
@@ -185,21 +225,35 @@ function savePhone($profileid,$phoneType,$phoneNo,$std='',$isd='',$screenflag=''
 		entryInDuplcationCheckOnEdit($profileid,'alt_mobile');
 		$val=$isd."-".$phoneNo;
 		contact_archive($profileid,'PHONE_ALT',$val);
-                $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE`='".$phoneNo."',`ALT_MOB_STATUS`='N' ";
-		if($isd!='')
-			$sql.=", `ALT_MOBILE_ISD`='".$isd."'";
-		$sql.="where `PROFILEID`='".$profileid."'";
-		$res=mysql_query_decide($sql);
-		if(@mysql_affected_rows($res)<1)
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+		$profileid=$profileid;
+		$arrParams = array('ALT_MOBILE'=>$phoneNo,'ALT_MOB_STATUS'=>'N');
+		
+              //  $sql ="update newjs.JPROFILE_CONTACT SET `ALT_MOBILE`='".$phoneNo."',`ALT_MOB_STATUS`='N' ";
+		if($isd!=''){
+			$arrParams['ALT_MOBILE_ISD']=$isd;
+			//$sql.=", `ALT_MOBILE_ISD`='".$isd."'";
+		}
+		$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+		//$sql.="where `PROFILEID`='".$profileid."'";
+		//$res=mysql_query_decide($sql);
+		//already happening in update
+		/*if(@mysql_affected_rows($res)<1)
 		{
 			$sql="INSERT IGNORE INTO `JPROFILE_CONTACT` ( `PROFILEID` , `ALT_MOBILE` , `ALT_MOBILE_ISD` , `SHOWALT_MOBILE` ,`ALT_MOB_STATUS` ) VALUES (".$profileid.", '".$phoneNo."', '".$isd."', 'Y', 'N')";//default show alternate mobile number setting
 			mysql_query_decide($sql);
-		}
-                $sql ="update newjs.JPROFILE SET `PHONE_FLAG`='',`MOD_DT`=now(),`HAVE_JCONTACT`='Y' ";
-		if($isdFlag=="DIFF" && $isd!='')
+		}*/
+		$arrFields = array('PHONE_FLAG'=>'','MOD_DT'=>'now()','HAVE_JCONTACT'=>'Y');
+        //        $sql ="update newjs.JPROFILE SET `PHONE_FLAG`='',`MOD_DT`=now(),`HAVE_JCONTACT`='Y' ";
+		if($isdFlag=="DIFF" && $isd!=''){
+			$arrFields['MOB_STATUS']='N';
+			$arrFields['LANDL_STATUS']='N';
 			$sql.=" ,MOB_STATUS='N' , LANDL_STATUS='N' ";
-		$sql.=" where `PROFILEID`='$profileid'";
-                mysql_query_decide($sql);
+		}
+		//$sql.=" where `PROFILEID`='$profileid'";
+		$exrtaWhereCond = "";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+             //   mysql_query_decide($sql);
 	}
 	$value = hidePhoneLayer($profileid);
 	JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$value);
@@ -281,6 +335,7 @@ function getProfilePhoneDetails($profileid)
 }
 
 function deleteCachedJprofile_ContactDetails($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

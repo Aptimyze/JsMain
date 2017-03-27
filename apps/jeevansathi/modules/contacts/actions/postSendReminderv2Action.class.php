@@ -41,7 +41,7 @@ class postSendReminderv2Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'R',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","R");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
@@ -67,7 +67,7 @@ class postSendReminderv2Action extends sfAction
 	
 	
 	private function getContactArray($request)
-	{
+	{  
 		$pictureServiceObj=new PictureService($this->Profile);
 		$profilePicObj = $pictureServiceObj->getProfilePic();
 		
@@ -96,10 +96,13 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["headerthumbnailurl"] = $thumbNail;;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&receiver=".$this->Profile->getPROFILEID();
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&receiver=".$this->Profile->getPROFILEID().'&contactId='.$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
+				
+
 			}
 			else
 			{
@@ -148,6 +151,13 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["headerlabel"] = "Hidden Profile";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
 			elseif($errorArr["REMINDER_LIMIT"] == 2)
 			{
 				if($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
@@ -192,6 +202,22 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 				$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
+			{	
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = "Reminder cannot be sent";
+				//$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
+			{  
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = "Second Reminder cannot be sent";
+				//$responseArray["redirect"] = true;
 			}
 			else
 			{

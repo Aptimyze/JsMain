@@ -188,6 +188,7 @@
 </div>
 <script type="text/javascript">
 	var AndroidPromotion = 0;
+	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
 		eraseCookie('couponID');
 		$("#continueBtn").show();
@@ -196,30 +197,9 @@
 			createCookie('selectedVas', preSelectedESathiVas, 0);
 		}
 		var preSelectedEValuePlusVas = "~$data.preSelectedEValuePlusVas`";
-		if(checkEmptyOrNull(preSelectedEValuePlusVas)){
-			createCookie('selectedVas', preSelectedEValuePlusVas, 0);
-		}
+		
 		if(readCookie('selectedVas') && checkEmptyOrNull(readCookie('selectedVas'))){
-			var currentVas = readCookie('selectedVas');
-			if(currentVas.indexOf(",") > -1){
-				// case when more than one vas was selected
-				var tempArr = currentVas.split(",");
-			} else {
-				// case when only one vas was selected
-				var tempArr = [currentVas];
-			}
-			if(tempArr.length > 0){
-				// remove all other vas which start with supplied character except currently selected
-				tempArr.forEach(function(item, index){
-					if(checkEmptyOrNull(readCookie('device'))){
-						$("#"+item).addClass(readCookie('device')+'_vassel');	
-					} else {
-						$("#"+item).addClass('vassel');	
-					}
-				});
-			}
-			$('html,body').animate({scrollTop: 0}, 0);
-			$("#nextButton").text('Cart');
+			updateSelectedVas("jsmsVasPage");
 		}
 		$(".vasClick").click(function(e){
 			var that = this;
@@ -257,6 +237,9 @@
 		$("#continueBtn, #nextButton").click(function(){
 			callRedirectManager();
 		});
+		if(readCookie('backState') == "changePlan"){
+			$("#pageBack").hide();	
+		}
 		$("#pageBack").click(function(e){
 			if(readCookie('backState') != "changePlan"){
 				eraseCookie('backState');
@@ -273,7 +256,7 @@
 		var email = "~$data.userDetails.EMAIL`";
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>
 ~/if`

@@ -20,7 +20,7 @@
         <div class="tabwidt pos-rel" style="height: 49px;">
 		<ul class="matchtabs listnone clearfix fontlig f15 color11 pos-rel" style="~if $isRightListing eq 1`left: -~$setGap`px;~else`left: 0px;~/if`">
 			<li class="active">
-				<div><span data-attr="0" id="js-matchalerts" class="js-searchLists cursp">Match Alerts</span></div>
+				<div><span data-attr="0" id="js-matchalerts" class="js-searchLists cursp">Daily Recommendations</span></div>
 			</li>
 			<li>
 				<div><span data-attr="1" id="js-searchListsDpp" class="js-searchLists cursp">Desired Partner Matches</span></div>
@@ -29,13 +29,13 @@
 				<div><span data-attr="2" id="js-searchListsJJ" class="js-searchLists cursp">Just Joined Matches</span></div>
 			</li>
                         <li>
-				<div><span data-attr="3" id="js-fsoVerified" class="js-searchLists cursp">Matches verified by Visit</span></div>
+				<div><span data-attr="3" id="js-fsoVerified" class="js-searchLists cursp">Verified Matches</span></div>
 			</li>
 			<li>
 				<div><span data-attr="4" id="js-searchListsMM" class="js-searchLists cursp">Mutual Matches</span></div>
 			</li>
 			<li>
-				<div><span data-attr="5" id="js-searchListsRdpp" class="js-searchLists cursp">People Looking for me</span></div>
+				<div><span data-attr="5" id="js-searchListsRdpp" class="js-searchLists cursp">Members Looking for Me</span></div>
 			</li>
 			~if $showKundliList`
 			<li>
@@ -43,11 +43,19 @@
 			</li>
 			~/if`
 			<li>
-				<div><span data-attr="3" id="js-shortlisted" class="js-searchLists cursp">Shortlisted Members</span></div>
+				<div><span data-attr="3" id="js-shortlisted" class="js-searchLists cursp">Shortlisted Profiles</span></div>
 			</li>
 			<li>
 				<div><span data-attr="4" id="js-visitors" class="cursp js-searchLists">Profile Visitors</span></div>
 			</li>
+                        <!--
+                        ~if CommonFunction::getMainMembership($subscriptionType) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscriptionType) eq mainMem::EADVANTAGE`
+                        ~else`
+                        <li>
+				<div><span data-attr="3" id="js-viewAttempts" class="js-searchLists cursp">Contact View Attempts</span></div>
+			</li>
+                        ~/if`
+                        -->
 		</ul>
             <div id="leftPointUnderline" class="pos-abs" style="left:~$clickOn`px;height: 2px; background: #34495e;width: 200px;"></div>
             

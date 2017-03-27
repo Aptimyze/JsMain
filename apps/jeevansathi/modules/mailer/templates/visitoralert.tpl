@@ -1,8 +1,11 @@
 ~include_partial("global/mailerheader")`
 <body>
 		<table align="center" style="font-size: 11px;">
-        <tr>
+        <tr align="center" style="font-size: 11px;">
             <td>Please add ~$mailerName` to your address book to ensure delivery of this mail into you inbox</td>
+        </tr>
+        <tr align="center" style="font-size: 11px;">
+            <td>This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.</td>
         </tr>
      </table>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:650px; text-align:left" align="center">

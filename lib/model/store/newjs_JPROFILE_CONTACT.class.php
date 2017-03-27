@@ -25,13 +25,15 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
          * @exception PDOException for database level error handling
          */
 
-	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID")
+	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$indexProfileId = 0)
 	{
 		if(!$valueArray && !$excludeArray  && !$greaterThanArray)
 			throw new jsException("","no where conditions passed");
 		try
 		{
-			$fields = $fields?$fields:$this->getFields();//Get columns to query
+			if (strpos($fields, 'PROFILEID') === false) {
+			    $fields .= ',PROFILEID';
+			}
 			$sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE_CONTACT WHERE ";
 			$count = 1;
 			if(is_array($valueArray))
@@ -76,9 +78,14 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			}
 			*/
 			$resSelectDetail->execute();
+      $this->logFunctionCalling(__FUNCTION__);
 			while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
-				$detailArr[] = $rowSelectDetail;
+                                if($indexProfileId == 1){
+                                        $detailArr[$rowSelectDetail['PROFILEID']] = $rowSelectDetail;
+                                }else{
+                                        $detailArr[] = $rowSelectDetail;
+                                }
 			}
 			return $detailArr;
 		}
@@ -93,12 +100,18 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
         {
 			try 
 			{
-                                //Memcache to be moved to library - JSM-938
-                                $memObject=JsMemcache::getInstance();
-                                if($memObject->get("JPROFILE_CONTACT_".$pid)){
-                                        return $memObject->get("JPROFILE_CONTACT_".$pid);
-                                }
-				else if($pid)
+				$trace = debug_backtrace();
+				if($trace[1])
+				{
+					$caller = $trace[1];
+				}
+				else
+				{
+					$caller = $trace[0];
+				}
+				$file = $caller['file'];
+        $this->logFunctionCalling(__FUNCTION__);
+				if($pid)
 				{ 
                                         $sql="SELECT * FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
 					$prep=$this->db->prepare($sql);
@@ -106,12 +119,9 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 					$prep->execute();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,$result);
 						return $result;
 					}
-                                        else
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,"false");
-					return false;
+                    return false;
 				}	
 			}
 			catch(PDOException $e)
@@ -123,8 +133,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 		public function updateAltMobile($profileid, $altMobile){
                 try{
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
                         $sql = "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
                         $prep=$this->db->prepare($sql);
@@ -144,6 +152,8 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                 $prep->bindValue(":ALT_MOBILE",$altMobile,PDO::PARAM_INT);
                                 $prep->execute();
                         }
+                        $this->logFunctionCalling(__FUNCTION__);
+                        return true;
                 }catch(PDOException $e)
                 {
                         throw new jsException($e);
@@ -154,8 +164,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 	{
    
 		try {
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
 			$keys="PROFILEID,";
 			$values=":PROFILEID ,";
@@ -191,6 +199,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 						$resEditContact->execute();
 					}
 				}
+        $this->logFunctionCalling(__FUNCTION__);
 				return true;
 			}catch(PDOException $e)
 				{
@@ -237,7 +246,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                         $res[$i]['TYPE']="ALTERNATE";
 					$i++;
                                 }
-
+                                $this->logFunctionCalling(__FUNCTION__);
                         }
                         else
                                 throw new jsException("No phone number as Input paramter");
@@ -251,5 +260,197 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                         throw new jsException($e);
                 }
         }
+        
+    private function logFunctionCalling($funName)
+    {
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
+
+
+    public function getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript=1,$script=0,$limit='',$offset='')
+    {
+        $activateDateStart = $activateDate." 00:00:00";
+        $activateDateEnd = $activateDate." 23:59:59";
+    	try 
+    	{
+    		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
+    		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID 
+    		WHERE t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE AND t1.ENTRY_DT > :ENTRYDATE  AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
+
+    		if($limit && $offset==""){
+                $sql = $sql." LIMIT :LIMIT";
+    		}
+            else if($limit && $offset!=""){
+                $sql = $sql." LIMIT :OFFSET,:LIMIT";
+            }
+
+    		$prep=$this->db->prepare($sql);
+            $prep->bindValue(":START_ACTIVATEDATE",$activateDateStart,PDO::PARAM_STR);
+    		$prep->bindValue(":END_ACTIVATEDATE",$activateDateEnd,PDO::PARAM_STR);
+    		$prep->bindValue(":ENTRYDATE",$entryDate,PDO::PARAM_STR);
+    		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+            $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
+
+            if($limit && $offset==""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+    		}
+            else if($limit && $offset!=""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+                $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+            }
+
+    		$prep->execute();
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	}
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    	return false;
+    }
+
+
+    public function getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript=1,$script=0,$limit='',$offset='')
+    {
+        $activateDateStart = $activateDate." 00:00:00";
+        $activateDateEnd = $activateDate." 23:59:59";
+    	try 
+    	{
+            $sql = "select t1.PROFILEID from newjs.JPROFILE as t1
+            WHERE  t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
+
+    		if($limit && $offset==""){
+                $sql = $sql." LIMIT :LIMIT";
+    		}
+            else if($limit && $offset!=""){
+                $sql = $sql." LIMIT :OFFSET,:LIMIT";
+            }
+
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":START_ACTIVATEDATE",$activateDateStart,PDO::PARAM_STR);
+            $prep->bindValue(":END_ACTIVATEDATE",$activateDateEnd,PDO::PARAM_STR);
+    		$prep->bindValue(":ENTRYDATE",$entryDate,PDO::PARAM_STR);
+    		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+            $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
+    		
+    		if($limit && $offset==""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+    		}
+            else if($limit && $offset!=""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+                $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+            }
+
+
+    		$prep->execute();
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
+    	return false;
+    }
+
+    
+    public function getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript=1,$script=0,$limit='',$offset='')
+    {
+    	try 
+    	{
+    		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
+    		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID
+    		WHERE  t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
+
+    		if($limit && $offset==""){
+                $sql = $sql." LIMIT :LIMIT";
+    		}
+            else if($limit && $offset!=""){
+                $sql = $sql." LIMIT :OFFSET,:LIMIT";
+            }
+
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":ACTIVATEDATE",$activateDate,PDO::PARAM_STR);
+    		$prep->bindValue(":LAST_LOGIN_DT",$lastLoginDate,PDO::PARAM_STR);
+    		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+            $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
+
+    		
+    		if($limit && $offset==""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+    		}
+            else if($limit && $offset!=""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+                $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+            }
+
+
+    		$prep->execute();
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
+    	return false;
+    }
+
+    public function getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript=1,$script=0,$limit='',$offset='')
+    {
+    	try 
+    	{
+    		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
+    		WHERE t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT  AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
+
+    		if($limit && $offset==""){
+                $sql = $sql." LIMIT :LIMIT";
+    		}
+            else if($limit && $offset!=""){
+                $sql = $sql." LIMIT :OFFSET,:LIMIT";
+            }
+
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":ACTIVATEDATE",$activateDate,PDO::PARAM_STR);
+    		$prep->bindValue(":LAST_LOGIN_DT",$lastLoginDate,PDO::PARAM_STR);
+    		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+            $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
+    		
+    		if($limit && $offset==""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+    		}
+            else if($limit && $offset!=""){
+                $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+                $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+            }
+
+
+    		$prep->execute();
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
+    	return false;
+    }
 }
 ?>

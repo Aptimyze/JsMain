@@ -17,6 +17,7 @@ class billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH extends TABLE
             $prep->execute();
             while($result = $prep->fetch(PDO::FETCH_ASSOC))
             {
+		$discountArr[] = $result['2_DISCOUNT'];
                 $discountArr[] = $result['3_DISCOUNT'];
 		$discountArr[] = $result['6_DISCOUNT'];
 		$discountArr[] = $result['12_DISCOUNT'];

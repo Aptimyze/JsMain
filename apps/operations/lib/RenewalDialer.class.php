@@ -13,7 +13,7 @@ class RenewalDialer {
     //Create Temp Pool
     public function createTempPoolForRenewalDialer()
     {
-        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
+        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_masterDDL');
         $inRenewalDialerTempPool->truncate();
         $profiles = $this->inRenewalDialerInsObj->fetchRenewalDialerProfiles();
         if($profiles)
@@ -33,7 +33,8 @@ class RenewalDialer {
         $method =$processObj->getMethod();
         if($method =='IN_RENEWAL_DIALER_ELIGIBILITY')
         {
-            $inRenewDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
+            $inRenewDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_slave');
+	    $inRenewDialerTempPoolRemove = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
             
             // DO NOT CALL Filter
             $filter ='DO_NOT_CALL';
@@ -41,7 +42,7 @@ class RenewalDialer {
             if(count($profiles) > 0)
             {
                 $this->updateRenewalDialer($profiles,"N");
-                $inRenewDialerTempPool->removeDoNotCallProfiles();
+                $inRenewDialerTempPoolRemove->removeDoNotCallProfiles();
                 unset($profiles);
             }
             
@@ -51,7 +52,7 @@ class RenewalDialer {
             if(count($profiles) > 0)
             {
                 $this->updateRenewalDialer($profiles,"N");
-                $inRenewDialerTempPool->removeNegativeTreatmentProfiles();
+                $inRenewDialerTempPoolRemove->removeNegativeTreatmentProfiles();
                 unset($profiles);
             }
             
@@ -61,7 +62,7 @@ class RenewalDialer {
             if(count($profiles) > 0)
             {
                 $this->updateRenewalDialer($profiles,"N");
-                $inRenewDialerTempPool->removePreAllocatedProfiles();
+                $inRenewDialerTempPoolRemove->removePreAllocatedProfiles();
                 unset($profiles);
             }
         }
@@ -91,9 +92,9 @@ class RenewalDialer {
                     $eligibleProfilesArr[] = $val["PROFILEID"];
                 }
             }
-            $alertsObj = new newjs_JPROFILE_ALERTS('newjs_bmsSlave');
-            $historyObj = new incentive_HISTORY('newjs_bmsSlave');
-            $jprofileObj = new JPROFILE('newjs_bmsSlave');
+            $alertsObj = new JprofileAlertsCache('newjs_slave');
+            $historyObj = new incentive_HISTORY('newjs_slave');
+            $jprofileObj = new JPROFILE('newjs_slave');
             
             $excl_dnc_dt    =@date('Y-m-d',time()-(7-1)*86400);
             $excl_cf_dt     =@date('Y-m-d',time()-(7-1)*86400);
@@ -148,6 +149,14 @@ class RenewalDialer {
                         $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");
                         continue;
                     }
+		    if($disposition=='NI'){
+			$todayDate 	=date("Y-m-d");
+			$prev2Days    	=date('Y-m-d', strtotime('-1 days',strtotime($todayDate)));
+			if(strtotime($dispEntryDt)>=strtotime($prev2Days)){
+				$this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");	
+				continue;	
+			}
+		    }	
                 }
                 $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "Y");
                 unset($jProfileArr);

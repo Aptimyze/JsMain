@@ -5,7 +5,6 @@ Created by sriram to search for users who can avail 40% special discount
 include("connect.inc");
                                                                                                                              
 $db = connect_misdb();
-$db2 = connect_master();
                                                                                                                              
 $data = authenticated($cid);
                                                                                                                              

@@ -62,14 +62,35 @@ class AppNotificationScheduler extends NotificationScheduler
 			  $insertData[$k]['COUNT']=$v['COUNT'];
 			  $insertData[$k]['MSG_ID']=$v['MSG_ID'];
 			  $insertData[$k]['SENT']='N';	
+		          $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
 			  if($v['NOTIFICATION_KEY']=='VD')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
-				$insertData[$k]['TITLE']=$v['TITLE'];	
+				$insertData[$k]['TITLE']=$v['TITLE'];
+              if($v['OTHER_PROFILE_CHECKSUM']){
+                $insertData[$k]['PROFILE_CHECKSUM']=$v['OTHER_PROFILE_CHECKSUM'];
+              }
+
+				/*$dataSet =$insertData[$k];	
+			  	$this->insert($dataSet);
+				unset($dataSet);*/		
 		  }
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
 	  }
   }
+
+  public function insert($dataSet){
+        $producerObj = new JsNotificationProduce();
+        if(is_array($dataSet))
+	    if($producerObj->getRabbitMQServerConnected()){
+		$msgdata = FormatNotification::formatPushNotification($dataSet,$dataSet["OS_TYPE"],true);
+		$producerObj->sendMessage($msgdata);
+	    }
+	    else{
+		$str = "\nRabbitmq Notification Error Alert: Rabbitmq Server is down.";
+		RabbitmqHelper::sendAlert($str,"browserNotification");
+	    }
+    }
 }
 ?>

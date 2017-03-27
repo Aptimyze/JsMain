@@ -18,13 +18,24 @@ function gethistory($USERNAME,$limit='')
         while($myrow=mysql_fetch_array($res))
         {
 		$profileid = $myrow["PROFILEID"];
+		$mode = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $myrow["MODE"]);
+		if(is_numeric($myrow["MODE"])){
+			$modeVal = '';
+			$processVal = $myrow["MODE"];
+		} else {
+			$modeVal = $mode[0];
+			$processVal = $mode[1];
+		}
+		$process = crmParams::$processNames[crmParams::$processFlagReverse[$processVal]];
 	        $values[] = array("SNO"=>$i,
                                   "NAME"=>$myrow["ENTRYBY"],
                                   "DATE"=>$myrow["ENTRY_DT"],
-                                  "MODE"=>$myrow["MODE"],
+                                  "MODE"=>$modeVal,
+                                  "PROCESS"=>$process,
                                   "COMMENTS"=>str_replace("\n","<br>",$myrow["COMMENT"])
                                  );
                 $i++;
+        unset($process);
         }
 	$factor = getfactor($profileid);
 	$sql="SELECT Display FROM incentive.show_IM";

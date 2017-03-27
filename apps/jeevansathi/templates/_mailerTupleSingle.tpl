@@ -1,7 +1,8 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
     <tr>
         <td></td>
-        <td colspan="2" height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
+        <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
+        <td height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""`Guna Match ~$user->getGUNA()`/36 ~/if`</td>
     </tr>
     <tr>
         <td width="22"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="20" height="1" vspace="0" hspace="0" align="left"></td>

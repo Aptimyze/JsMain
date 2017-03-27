@@ -12,11 +12,14 @@ include("connect.inc");
 //include("pg/functions.php");
 $db=connect_db();
 $data=authenticated($checksum);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if($data)
 {
 	$profileid=$data['PROFILEID'];
 	if($Submit)
 	{
+		$msg = print_r($_SERVER,true);
+		mail("kunal.test02@gmail.com"," web/profile/activate_astro.php in USE",$msg);
 		$sql="SELECT VALUE from newjs.COUNTRY where LABEL = '$birth_country'";
 		$result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");;
 		$myrow=mysql_fetch_array($result);
@@ -24,6 +27,7 @@ if($data)
 		$btime=$Hour_Birth.":".$Min_Birth;
 		$sql="UPDATE newjs.JPROFILE set CITY_BIRTH='$birth_place', COUNTRY_BIRTH='$count_birth', BTIME='$btime' where PROFILEID='$profileid'";
 		mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");;
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
 		$smarty->assign("astro",$astro);
                 $smarty->assign("FOOT",$smarty->fetch("foot.htm"));
                 $smarty->assign("HEAD",$smarty->fetch("headnew.htm"));

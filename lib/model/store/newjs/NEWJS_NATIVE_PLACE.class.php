@@ -38,6 +38,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 				$pdoStatement->bindValue(($count), $value);
 			}
 			$pdoStatement->execute();
+      $this->logFunctionCalling(__FUNCTION__);
 			return $pdoStatement->rowCount();
 		}
 		catch(Exception $e)
@@ -84,6 +85,8 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			$pdoStatement->bindValue($count,$iProfileID);
 			
 			$pdoStatement->execute();
+      $this->logFunctionCalling(__FUNCTION__);
+            return true;
 		}
 		catch(Exception $e)
 		{
@@ -110,6 +113,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			$pdoStatement->execute();
 			
 			$arrResult = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+      $this->logFunctionCalling(__FUNCTION__);
 			return $arrResult[0];
 		}
 		catch(Exception $e)
@@ -117,5 +121,58 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			throw new jsException($e);
 		}	
 	}
+   public function getNativeData($profileid)
+   {
+	try
+	{
+		$sql = "SELECT NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY FROM newjs.NATIVE_PLACE WHERE PROFILEID = :PROFILEID";
+		$pdoStatement = $this->db->prepare($sql);
+		$pdoStatement->bindValue(":PROFILEID",$profileid);
+		$pdoStatement->execute();
+		$arrResult = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+    $this->logFunctionCalling(__FUNCTION__);
+		return $arrResult[0];
+	}
+	catch(Exception $e)
+	{
+		throw new jsException($e);
+	}
+   }
+   public function getNativeDataForMultipleProfiles($profileidArray)
+   {
+	try
+	{
+                foreach($profileidArray as $k=>$v)
+                {
+                        $idArr[]=$v;		
+                        $idSqlArr[]=":v$k";
+                }
+                $strId=implode(",",$idSqlArr);
+		$sql = "SELECT PROFILEID,NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY FROM newjs.NATIVE_PLACE WHERE PROFILEID IN ($strId)";
+		$pdoStatement = $this->db->prepare($sql);
+                foreach($idArr as $k=>$v)
+                        $pdoStatement->bindValue(":v$k", $v, PDO::PARAM_INT);
+                
+		$pdoStatement->execute();
+		$resultArray=array();
+                while($result = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+                {
+                        $resultArray[]=$result;
+                }
+                $this->logFunctionCalling(__FUNCTION__);
+                return $resultArray;
+	}
+	catch(Exception $e)
+	{
+		throw new jsException($e);
+	}
+   }
+   private function logFunctionCalling($funName)
+    {return;
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
 }
 ?>

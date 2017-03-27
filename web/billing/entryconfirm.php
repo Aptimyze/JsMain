@@ -10,8 +10,8 @@
 * Copyright 2005, InfoEdge India Pvt Ltd
 ***********************************************************************************************/
 
-include("../jsadmin/connect.inc");
-include_once("../profile/pg/functions.php"); //puneet
+include_once(JsConstants::$docRoot."/jsadmin/connect.inc");
+include_once(JsConstants::$docRoot."/profile/pg/functions.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 
 $ip=FetchClientIP();
@@ -82,8 +82,11 @@ if(authenticated($cid))
 			$subscription = implode(",",$subscription_ar);
 		else
 			$subscription = $subscription_ar;	
-		$sql="UPDATE newjs.JPROFILE set SUBSCRIPTION='$subscription' where PROFILEID='$profileid'";
-		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());
+		/*$sql="UPDATE newjs.JPROFILE set SUBSCRIPTION='$subscription' where PROFILEID='$profileid'";
+		mysql_query_decide($sql) or die("$sql<br>".mysql_error_js());*/
+                        $jprofileObj    =JProfileUpdateLib::getInstance();
+                        $paramArr      	=array("SUBSCRIPTION"=>$subscription);
+                        $jprofileObj->editJPROFILE($paramArr,$profileid,'PROFILEID');
 
 		$tax_value = $TAX_RATE;
 		 /*add puneet*/

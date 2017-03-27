@@ -36,18 +36,30 @@ $this->addOptions(array(
 
 	$instantNotifObj =new InstantAppNotification('PHOTO_UPLOAD');
 	$photo_firstObj =new PHOTO_FIRST();
-	$photoProfiles =$photo_firstObj->getProfilesScreenedForNotification($dateTimeStart);	
-
+	$photoProfiles =$photo_firstObj->getProfilesScreenedForNotification($dateTimeStart);
+        //$photoProfiles = array(0=>array('PROFILEID'=>924,'ENTRY_DT'=>'2015-03-22'));
 	if(is_array($photoProfiles)){
 		foreach($photoProfiles as $key=>$data){
 			$profileid 	=$data['PROFILEID'];
 			$dateTimeSet 	=$data['ENTRY_DT'];
 			$InformationTypeAdapterObj =new InformationTypeAdapter('PHOTO_REQUEST_RECEIVED',$profileid);	
 			$profiles =$InformationTypeAdapterObj->getProfiles('','');
-
+                        
+                        //$profiles = array('658'=>658);
 			// send Instant Notification
 			foreach($profiles as $key=>$pid){
-				$instantNotifObj->sendNotification($key,$profileid);
+                                $profileObj1 = Profile::getInstance('', $key);
+                                $profileObj2 = Profile::getInstance('', $profileid);
+                                $contactsObj = new Contacts($profileObj1,$profileObj2);
+                                $ignore=new IgnoredProfiles("newjs_master");
+                                
+                                $type = $contactsObj->getTYPE();
+                                if($type != 'C' && $type != 'D' && $type != 'E'){
+                                    if(!$ignore->ifIgnored($profileid,$key) && !$ignore->ifIgnored($key,$profileid)){
+                                        $instantNotifObj->sendNotification($key,$profileid);
+                                        requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
+                                    }
+                                }
 			}
 			unset($profiles);
 		}

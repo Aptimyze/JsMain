@@ -35,5 +35,25 @@ class LOGIN_FAILED1 extends TABLE
                 }
 	}
 
+	public function selectFailedLoginPerDay($username,$intervalInDays)
+	{
+		try
+		{
+			$sql = "SELECT COUNT(*) FROM LOGIN_FAILED1 WHERE USERNAME = :USERNAME AND DATE > DATE_SUB(now(), INTERVAL :INTERVALTIME MINUTE)";
+			$res = $this->db->prepare($sql);
+			$intervalInMinute=24*$intervalInDays*60;
+			$res->bindParam(":USERNAME", $username, PDO::PARAM_STR);
+			$res->bindParam(":INTERVALTIME", $intervalInMinute, PDO::PARAM_STR);
+			$res->execute();
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
+				$profileloginAttempt =$row['COUNT(*)'];
+		}
+		catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+        return $profileloginAttempt;
+	}
+
 }
 ?>

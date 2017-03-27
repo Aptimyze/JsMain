@@ -55,6 +55,8 @@ EOF;
 			//print_r($key);
 			if($key)
 				$mailStatus = $this->sendMail($key,$value,$count[$index++],$instanceID);
+			else
+				$index++;
 				$mailerEOIFilterObj->UpdateFilterEOI($key,$mailStatus);
 		}
 			$totalScriptVar = $arguments["totalScript"];
@@ -85,7 +87,7 @@ EOF;
         $diff = abs(strtotime($date) - strtotime($lastActive));
         $diff = floor(($diff)/ (60*60*24));
         if($diff>90)
-        	return;
+        	return 'A';
         $subscriptionStatus = $profileObj->getPROFILE_STATE()->getPaymentStates()->isPaid();
         $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
         $tpl->getSmarty()->assign("count", $count);
@@ -130,10 +132,26 @@ EOF;
         $EmailTemplateObj= new EmailTemplate(1802);
         $date= strtotime(date("Y-m-d"));
     	$date = date('d M ', $date);
-        $subject = "Did you see the interests received in your filtered folder? | ".$date;
+        $subject = "Did you see the $count Interests in your Filtered Inbox? | ".$date;
 		$tpl->setSubject($subject);
-        $emailSender->send();
+
+        if(CommonConstants::contactMailersCC)
+        {    
+
+        $contactNumOb=new ProfileContact();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+
+        $emailSender->send('','',$ccEmail);
+
         $status = $emailSender->getEmailDeliveryStatus();
         return $status;
+
     }
 }

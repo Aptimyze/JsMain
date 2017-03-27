@@ -10,6 +10,8 @@ class NEWJS_MESSAGE_LOG extends TABLE{
 
         public function __construct($dbname="")
         {
+			if(strpos($dbname,'master')!==false && JsConstants::$communicationRep)
+				$dbname=$dbname."Rep";
 			parent::__construct($dbname);
         }
 		
@@ -118,31 +120,54 @@ class NEWJS_MESSAGE_LOG extends TABLE{
                                 throw new jsException($e);
                         }
 		}
-		 public function MessageLogAndDeletedLog($pid)
-		{
-                        try
-                        {
-                                if($pid)
-                                {
-                                        $sql="SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  ORDER by DATE ASC  ";
-                                        $prep=$this->db->prepare($sql);
-                                        $prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
-                                        $prep->execute();
-                                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                        {
-                                                $res[]= $result;
-                                        }
+  
+    /**
+     * 
+     * @param type $pid
+     * @return type
+     * @throws jsException
+     */
+    public function MessageLogAndDeletedLog($pid)
+    {
+      try {
+        if ($pid) {
+          
+          $archiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+          $archivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
+          
+          $archiveTableSql = " UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.{$archivePrefix}DELETED_MESSAGE_LOG{$archiveSuffix} WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+          
+          $sql =  <<<SQL
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID 
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID
+          {$archiveTableSql} 
+          ORDER by DATE ASC
+SQL;
+          $prep = $this->db->prepare($sql);
+          $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+          $prep->execute();
+          while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+            $res[] = $result;
+          }
 
-                                        return $res;
-                                }
-                        }
-                        catch(PDOException $e)
-                        {
-                                /*** echo the sql statement and error message ***/
-                                throw new jsException($e);
-                        }
-                }
-    public function getMessageLogProfile($condition,$skipArray)
+          return $res;
+        }
+      } catch (PDOException $e) {
+        /*       * * echo the sql statement and error message ** */
+        throw new jsException($e);
+      }
+    }
+
+  public function getMessageLogProfile($condition,$skipArray)
 		{
 			$string = array('TYPE','SEEN','IS_MSG','DATE');
 		try{
@@ -286,7 +311,7 @@ class NEWJS_MESSAGE_LOG extends TABLE{
         return $output;
 	}
 
-		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='')
+		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='',$considerProfile='')
 		{
 			try{
 				if(!$where)
@@ -343,7 +368,19 @@ class NEWJS_MESSAGE_LOG extends TABLE{
 				$str = $str.")";
 				$sql = $sql.$str;
 			}
-			
+			if($considerProfile)
+			{
+				$sql.=" AND SENDER IN (";
+				foreach($considerProfile as $key1=>$value1)
+                                {
+                                        $str = $str.":VALUE".$count.",";
+                                        $bindArr["VALUE".$count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                $str = $str.")";
+                                $sql = $sql.$str;
+			}
 			if($group)
 			{
 				$sql = $sql." GROUP BY ".$group;				
@@ -614,7 +651,7 @@ public function updateMessageLogDetails($msgCommObj)
 				$str = substr($str, 0, -1);
 				$str = $str.")";
 				$strS = " RECEIVER ".$str." AND SENDER ".$str;
-				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
+				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE,MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
 				$prep=$this->db->prepare($sql);
 				foreach($bindArr as $k=>$v)
 					$prep->bindValue($k,$v);
@@ -633,8 +670,52 @@ public function updateMessageLogDetails($msgCommObj)
 			}
 			return $output;
 		}
+
+	public function getEOIMessagesForChat($receiverProfiles,$senderProfiles)
+	{
+		try{
+			if(!is_array($receiverProfiles) && !is_array($senderProfiles))
+			{
+				throw new jsException("","profile id is not specified in function getEOIMessages of newjs_MESSAGE_LOG.class.php");
+			}
+			$count = 1;
+			$str = " IN (";
+			foreach($senderProfiles as $key1=>$value1)
+			{
+				$str = $str.":VALUE".$count.",";
+				$bindArr["VALUE".$count] = $value1;
+				$count++;
+			}
+			foreach($receiverProfiles as $key1=>$value1)
+			{
+				$str = $str.":VALUE".$count.",";
+				$bindArr["VALUE".$count] = $value1;
+				$count++;
+			}
+			$str = substr($str, 0, -1);
+			$str = $str.")";
+			$strS = " RECEIVER ".$str." AND SENDER ".$str;
+			$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGE_LOG.ID FROM  newjs.`MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS."  AND TYPE = 'I' ORDER BY SENDER,DATE ASC LIMIT 1";
+			$prep=$this->db->prepare($sql);
+			foreach($bindArr as $k=>$v)
+				$prep->bindValue($k,$v);
+			$prep->execute();
+
+			while($row = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+			//print_r($output); die;
+
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $output;
+	}
 		
-		public function getMessageListing($condition,$skipArray)
+		public function getMessageListing($condition,$skipArray='',$inArray='')
 		{
 			try{
 				if(!$condition["WHERE"]["IN"]["PROFILE"])
@@ -659,15 +740,57 @@ public function updateMessageLogDetails($msgCommObj)
 						}
 						$str = substr($str, 0, -1);
 						$str = $str.")";
-						$sender = " AND SENDER ".$str." ";
-						$receiver = "AND RECEIVER ".$str." ";
+						if($skipArray)
+						{
+							$sender = " AND SENDER ".$str." ";
+							$receiver = "AND RECEIVER ".$str." ";
+						}
 					}
-					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
+					if(count($inArray)<1000 && count($inArray)>0)
+						$inSql = 1;
+					else
+						$inSql = 0;
+					if($inSql)
+					{
+						
+                                                $str =  "  IN (";
+							$count = 0;
+                                                foreach($inArray as $key1=>$value1)
+                                                {
+                                                        $str = $str.":VALUE".$count.",";
+                                                        $bindInArr["VALUE".$count] = $value1;
+                                                        $count++;
+                                                }
+                                                $str = substr($str, 0, -1);
+                                                $str = $str.")";
+						if(is_array($inArray))
+						{
+							$sender1 = " AND SENDER ".$str." ";
+							$receiver1 = "AND RECEIVER ".$str." ";
+						}
+					}
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID";
+					if($sender)
+						$sql.= $sender;
+					if($sender1)
+						$sql.=$sender1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ";
+					if($receiver)
+						$sql.=$receiver;
+					if($receiver1)
+						$sql.=$receiver1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
 					if($skipSql){
 						foreach($bindArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
+					if($inSql){
+						foreach($bindInArr as $k=>$v)
 						{	
 							$res->bindValue($k,$v,PDO::PARAM_INT);
 						}
@@ -713,6 +836,30 @@ public function updateMessageLogDetails($msgCommObj)
 				else
 				{
 					$sql = "UPDATE newjs.MESSAGE_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'R' AND IS_MSG = 'Y'";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					$prep->execute();
+					$count = $prep->rowCount();
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $count;
+		}
+		
+		public function alterMessageSeen($viewer,$viewed)
+		{
+			try{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql = "UPDATE newjs.MESSAGE_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER ";
 					$res=$this->db->prepare($sql);
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
@@ -738,7 +885,7 @@ public function updateMessageLogDetails($msgCommObj)
 				}
 				else
 				{
-					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE,RECEIVER FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
@@ -755,7 +902,35 @@ public function updateMessageLogDetails($msgCommObj)
 			}
 			return $output;
 		}
-
+		
+		public function getPaidMemberCommunicationHistory($viewer,$viewed)
+		{	
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ))  AND TYPE ='R' ORDER BY DATE";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
+	
                 public function getFirstAcceptanceCount($pid)
         	{
                         try
@@ -935,9 +1110,673 @@ return $result;
 
 }
 
+	public function getInterestRecievedInLastWeek($profileid)
+	{
+		try 
+		{
+			if($profileid)
+			{ 
+				$startDt = date("Y-m-d H:i:s", (time()-7*24*60*60));
+				$sql="SELECT SQL_CACHE COUNT(1) AS CNT FROM newjs.MESSAGE_LOG WHERE RECEIVER=:PROFILEID and TYPE ='I' AND DATE>=:START_DT";
+				$prep=$this->db->prepare($sql);
+				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+				$prep->bindValue(":START_DT",$startDt,PDO::PARAM_STR);
+				$prep->execute();
+				if ($result = $prep->fetch(PDO::FETCH_ASSOC))
+				{
+					$res = $result['CNT'];
+				}
+				
+				return $res;
+			}	
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+		
+	}
+
+	//Three function for innodb transactions
+	public function startTransaction()
+	{
+		$this->db->beginTransaction();
+	}
+	public function commitTransaction()
+	{
+		$this->db->commit();
+	}
+
+	public function rollbackTransaction()
+	{
+		$this->db->rollback();
+	}
+
+	public function getAllMessageIdLog($profileid,$senderRecevierStr='SENDER')
+	{
+		try 
+		{
+				if(!$profileid)
+				{
+					throw new jsException("","profile id is not specified in function getAllMessageIdLog of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="select ID FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row['ID'];
+					}
+				
+					return $output;
+				}	
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+
+	public function deleteMessageLog($profileid,$senderRecevierStr='SENDER')
+	{
+		try 
+		{
+				if(!$profileid)
+				{
+					throw new jsException("","profile id is not specified in function getAllMessageIdLog of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->execute();
+					return true;
+				}	
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			return false;
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+	
+	public function insertIntoMessageLog($generatedId,$sender,$receiver,$isMsg,$obscene,$idObscene,$type,$seen='',$senderStatus='',$receiverStatus='',$folderId='')
+	{
+		try 
+		{
+				if(!$sender || !$receiver || !$isMsg || !$obscene ||!$type)
+				{
+					throw new jsException("","mandatory params are not specified in function insertIntoMessageLog of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$ip=FetchClientIP();
+					if(strstr($ip, ","))    
+					{                       
+						$ip_new = explode(",",$ip);
+						$ip = $ip_new[1];
+					}
+					$sql="INSERT INTO MESSAGE_LOG (ID,SENDER,RECEIVER,DATE,IP,IS_MSG,OBSCENE,MSG_OBS_ID,TYPE, SENDER_STATUS, RECEIVER_STATUS, SEEN, FOLDERID) VALUES (:GENERATEDID,:VIEWERID,:VIEWEDID,:DATE,:IP,:ISMSG,:OBSCENE,:IDOBSCENE,:TYPE,:SENDER_STATUS, :RECEIVER_STATUS, :SEEN, :FOLDERID)  ";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":GENERATEDID",$generatedId,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWERID",$sender,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWEDID",$receiver,PDO::PARAM_INT);
+					$prep->bindValue(":DATE",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+					$prep->bindValue(":IP",$ip,PDO::PARAM_STR);
+					$prep->bindValue(":ISMSG",$isMsg,PDO::PARAM_STR);
+					$prep->bindValue(":OBSCENE",$obscene,PDO::PARAM_STR);
+					$prep->bindValue(":IDOBSCENE",$idObscene,PDO::PARAM_INT);
+					$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
+					$prep->bindValue(":SEEN",$seen,PDO::PARAM_STR);
+					$prep->bindValue(":SENDER_STATUS",$senderStatus,PDO::PARAM_STR);
+					$prep->bindValue(":RECEIVER_STATUS",$receiverStatus,PDO::PARAM_STR);
+					$prep->bindValue(":FOLDERID",$folderId,PDO::PARAM_INT);
+					$prep->execute();
+					return true;
+				}	
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			return false;
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+
+	public function getMessageCountSmsActivity($profileid,$lastLoginDt)
+	{
+		try 
+		{
+			if(!$profileid || !$lastLoginDt )
+			{
+				throw new jsException("","mandatory params are not specified in function getMessageCountSmsActivity of newjs_MESSAGE_LOG.class.php");
+			}
+			else
+			{
+				$sql="SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = :PROFILEID AND IS_MSG='Y' AND TYPE='R' AND `DATE`>= :LAST_LOGIN_DT";
+				$prep=$this->db->prepare($sql);
+				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+				$prep->bindValue(":LAST_LOGIN_DT",$lastLoginDt,PDO::PARAM_STR);
+				$prep->execute();
+				if($result = $prep->fetch(PDO::FETCH_ASSOC))
+				{
+					$output = $result['MSG_COUNT'];
+				}
+				return $output;
+			}
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+	
 
 
+	public function deleteMessageLogById($msgId)
+	{
+		try 
+		{
+				if(!$msgId)
+				{
+					throw new jsException(""," id is not specified in function deleteMessageLogById of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ID=:MSG_ID";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":MSG_ID",$msgId,PDO::PARAM_INT);
+					$prep->execute();
+					return true;
+				}	
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
 	}
 
 
+	public function insertMessageLogFromDeletedLogContact($id)
+	{
+		try 
+		{
+				if(!$id )
+				{
+					throw new jsException("","mandatory params are not specified in function insertMessageLogFromDeletedLogContact of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					
+					$sql="Insert ignore into newjs.MESSAGE_LOG select * from newjs.DELETED_MESSAGE_LOG where ID=:ID ";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":ID",$id,PDO::PARAM_INT);
+					$prep->execute();
+					return true;
+				}	
+		}
+		catch(PDOException $e)
+		{
+			jsCacheWrapperException::logThis($e);
+			return false;
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+	
+	public function getMessagesDataSearchPageDetails($profileid,$senderRecevierStr='SENDER')
+	{
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profile id is not specified in function getMessagesDataSearchPageDetails of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,IP,RECEIVER FROM newjs.MESSAGE_LOG  where ".$senderRecevierStr." = :PROFILEID ORDER BY DATE DESC limit 20";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+                        if(false === inet_pton($row['IP'])) {
+                            $row['IP']=long2ip($row['IP']);
+                        }
+                                                        
+						$output[] = $row;
+					}
+				
+					return $output;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	
+	
+	
+	public function deleteMultipleLogForSingleProfile($profileArray)
+	{
+		try 
+			{
+				if(!is_array($profileArray))
+				{
+					throw new jsException("","profile id is not specified in function deleteMultipleLogForSingleProfile of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$idStr=implode(",",$profileArray);
+					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
+					$prep=$this->db->prepare($sql);
+					$prep->execute();
+				
+					return true;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function sugarcrmCronSelectSender($profileId,$regDate,$regDurDate)
+	{
+		
+		try 
+			{
+				if(!$profileId || !$regDate || !$regDurDate)
+				{
+					throw new jsException("","mandatory params is not specified in function sugarcrmCronSelectSender of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="select DATE from newjs.MESSAGE_LOG WHERE SENDER=:PROFILEID1 AND TYPE='I' AND DATE>=:REGDATE AND DATE<:REGULARDATE ORDER BY DATE ASC LIMIT 1";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID1",$profileId,PDO::PARAM_INT);
+					$prep->bindValue(":REGDATE",$regDate,PDO::PARAM_STR);
+					$prep->bindValue(":REGULARDATE",$regDurDate,PDO::PARAM_STR);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				
+					return $output[0];
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogBilling($profileid,$senderRecevierStr='SENDER',$type='')
+	{
+		
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if($type)
+						$typeStr=" AND TYPE=:TYPE";
+					else
+						$typeStr=" ";
+					$sql="SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where ".$senderRecevierStr."=:PROFILEID ".$typeStr." order by ID desc limit 20";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					if($type)
+						$prep->bindValue(":TYPE",$type,PDO::PARAM_STR);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				
+					return $output[0];
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogScoringAb100($profileid,$senderRecevierStr='SENDER',$date)
+	{
+		
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT COUNT(*) as cnt,TYPE FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."= :PROFILEID AND DATE >= :DATE GROUP BY TYPE";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				
+					return $output;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogCountScoringAb100($profileid,$senderRecevierStr='SENDER',$date)
+	{
+		
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."= :PROFILEID AND DATE >= :DATE";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output = $row['cnt'];
+					}
+				
+					return $output;
+				}
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogCountEOIScoringAb100($profileid,$senderRecevierStr='SENDER',$date,$date1)
+	{
+		
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT COUNT(*) as cnt FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."= :PROFILEID AND DATE >= :DATE AND DATE<:DATE1 AND TYPE='I'" ;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+					$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+					$prep->bindValue(":DATE1",$date1,PDO::PARAM_STR);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output = $row['cnt'];
+					}
+				
+					return $output;
+				}
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageLogIDCMR($sender,$receiver)
+	{
+		
+		try 
+			{
+				if(!$sender || !$receiver)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="select ID from newjs.MESSAGE_LOG where SENDER=:PROFILEID1 and RECEIVER=:PROFILEID2 AND IS_MSG='Y' order by ID limit 1" ;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID1",$sender,PDO::PARAM_INT);
+					$prep->bindValue(":PROFILEID2",$receiver,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output = $row['ID'];
+					}
+				
+					return $output;
+				}
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function deleteFromMessageLog($profileid,$senderRecevierStr='SENDER')
+	{
+		
+		try 
+			{
+				if(!$profileid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID" ;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);					
+					$prep->execute();
+				
+					return $output;
+				}
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	 public function getContactIP($pid)
+        {
+			try{
+				if(!$pid)
+				{
+					throw new jsException("","profileId is not specified in function getMessageLogBilling of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$contactsIPArr =array();
+					$sql="select SQL_CACHE distinct inet_ntoa(IP) as IP from newjs.MESSAGE_LOG where SENDER=:PROFILEID ORDER BY ID DESC";
+					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);					
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$contactsIPArr[]=$row['IP'];
+					}
+					if(is_array($contactsIPArr))
+					$contactsIPStr =@implode(", ",$contactsIPArr);
+					return $contactsIPStr;
+				}
+			}
+            catch(PDOException $e)
+            {
+				jsCacheWrapperException::logThis($e);
+                        /*** echo the sql statement and error message ***/
+                        throw new jsException($e);
+            }
+	}
+	
+	public function insertMessageLogData($pid,$listOfActiveProfile,$whereStrLabel1='RECEIVER',$whereStrLabel2='SENDER')
+        {
+			if(!$pid || !$listOfActiveProfile)
+                        throw new jsException("","VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_MESSAGES.class.php");
+			try 
+			{ 
+					$sql="INSERT IGNORE INTO newjs.MESSAGE_LOG SELECT * FROM newjs.DELETED_MESSAGE_LOG WHERE (".$whereStrLabel1."=:PROFILEID OR ".$whereStrLabel2."=:PROFILEID) AND (".$whereStrLabel1." IN (".$listOfActiveProfile.") OR ".$whereStrLabel2." IN (".$listOfActiveProfile."))";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
+					$prep->execute();
+					return true;
+			
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				return false;
+				throw new jsException($e);
+			}
+		}
+		
+		public function getMessageLogHousekeeping($profileId1,$profileId2)
+	{
+		
+		
+		try 
+			{
+				if(!$profileId1 || !$profileId2)
+				{
+					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql="SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER IN (:PROFILEID1,:PROFILEID2) AND RECEIVER IN (:PROFILEID1,:PROFILEID2)";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID1",$profileId1,PDO::PARAM_INT);
+					$prep->bindValue(":PROFILEID2",$profileId2,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+					return $output;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				/*** echo the sql statement and error message ***/
+				throw new jsException($e);
+			}
+	}
+	
+	public function getMessageHistoryPagination($viewer,$viewed,$limit="",$msgId="")
+		{
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if($limit)
+						$limitStr= " limit :limit ";
+					else
+						$limitStr="";
+						
+					if($msgId)	
+						$paginationStr=" AND MESSAGE_LOG.ID<:MSG_ID ";
+					else
+						$paginationStr="";
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE,MESSAGE_LOG.ID FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE = 'R' ".$paginationStr." ORDER BY DATE Desc ".$limitStr;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					if($msgId)
+						$prep->bindValue(":MSG_ID",$msgId,PDO::PARAM_INT);
+					if($limit)
+						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
+        
+        /**
+         * 
+         * @param type $pid
+         * @param type $listOfActiveProfile
+         * @param type $whereStrLabel1
+         * @param type $whereStrLabel2
+         * @return boolean
+         * @throws jsException
+         */
+        public function insertMessageLogDataFromEligibleForRet($pid, $listOfActiveProfile, $whereStrLabel1 = 'RECEIVER', $whereStrLabel2 = 'SENDER')
+        {
+            if (!$pid || !$listOfActiveProfile)
+                throw new jsException("", "VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_MESSAGES.class.php");
+            try {
+                $sql = "INSERT IGNORE INTO newjs.MESSAGE_LOG SELECT * FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET WHERE (" . $whereStrLabel1 . "=:PROFILEID OR " . $whereStrLabel2 . "=:PROFILEID) AND (" . $whereStrLabel1 . " IN (" . $listOfActiveProfile . ") OR " . $whereStrLabel2 . " IN (" . $listOfActiveProfile . "))";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+                $prep->execute();
+                return true;
+            }
+            catch (PDOException $e) {
+                jsCacheWrapperException::logThis($e);
+                return false;
+                throw new jsException($e);
+            }
+        }
+
+}
 	?>

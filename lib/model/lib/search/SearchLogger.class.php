@@ -8,15 +8,20 @@
 class SearchLogger extends SearchParamters
 {
 	private $ID;
+	private $dbname;
 	private $pid;
-        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App);
+        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App,SearchTypesEnums::iOS);
 
         public function __construct($loggedInProfileObj='')
         {
 		parent::__construct();
                 $this->possibleSearchParamters = SearchConfig::$possibleSearchParamters;
+                $this->dbname = searchConfig::getSearchDb();
                 if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
+                {
                         $this->pid =  $loggedInProfileObj->getPROFILEID();
+                        $this->gender = $loggedInProfileObj->getGENDER();
+                }
         }
 
 	/*
@@ -28,7 +33,7 @@ class SearchLogger extends SearchParamters
 	public function logSearchCriteria($SearchParamtersObj,$totalResults)
 	{ 
                 $flag = 0;
-		$SEARCHQUERYObj = new SEARCHQUERY;
+		$SEARCHQUERYObj = new SEARCHQUERY($this->dbname);
 		$possibleSearchParamters = explode(",",$this->possibleSearchParamters);
                 foreach($possibleSearchParamters as $v)
                 {
@@ -71,13 +76,28 @@ class SearchLogger extends SearchParamters
                 
                 /* Addition Things need to be stored */
                 $searchId = $SEARCHQUERYObj->addRecords($updateArr);
+                
+                //setting state and city in memcache which user has selected without mapping to use while inserting in table 
+                $memObject=JsMemcache::getInstance();
+                if($displayState = $SearchParamtersObj->getDisplayState())
+                    $memObject->set('stateToSet-'.$searchId,$displayState);
+                if($displayCity = $SearchParamtersObj->getDisplayCity())
+                    $memObject->set('cityToSet-'.$searchId,$displayCity);
+                
                 if($this->pid && in_array(trim($updateArr["SEARCH_TYPE"],"/'"),$this->LastSearchRequiredFor))
 		{
-                        $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY;
+                        $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY($this->dbname);
 			$paramArray["ID"]=$searchId;
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
-                        $search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+                        
+                        if(array_key_exists("GENDER",$updateArr) && $updateArr["GENDER"]!='' && $this->gender != trim($updateArr["GENDER"],"'"))
+						{                            
+							$search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+					
+						}                        
+                        
+                        
                        
 		}
 		if($flag == 1)
@@ -102,7 +122,7 @@ class SearchLogger extends SearchParamters
 		$arr = unserialize(JsMemcache::getInstance()->get($keySC));
 		if(!$arr)
 		{
-               		$SEARCHQUERYobj = new SEARCHQUERY;
+               		$SEARCHQUERYobj = new SEARCHQUERY($this->dbname);
 	                $arr = $SEARCHQUERYobj->get($paramArr,$this->possibleSearchParamters,$ifNonCritical);
 			if($arr)
 			{
@@ -114,8 +134,12 @@ class SearchLogger extends SearchParamters
                 {
                         foreach($arr[0] as $field=>$value)
                         {
-                                if(strstr($this->possibleSearchParamters,$field))
+                                if(strstr($this->possibleSearchParamters,$field)){
+                                    if($field=='STATE' || $field=='CITY_RES')
+                                        eval ('$this->set'.$field.'($value,"",1);');
+                                    else
                                         eval ('$this->set'.$field.'($value);');
+                                }
                         }
                         unset($arr);
                 }
@@ -131,18 +155,24 @@ class SearchLogger extends SearchParamters
 	
 	public function getLastSearchCriteria($id,$stype='')
 	{
-                $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY;
+                $search_LATEST_SEARCHQUERYObj = new search_LATEST_SEARCHQUERY($this->dbname);
 		$paramArray["PROFILEID"]= $id;
                 $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
                 if($stype)
                         $paramArray["SEARCH_TYPE"]=$stype;
                 $arr =  $search_LATEST_SEARCHQUERYObj->getSearchQuery($paramArray,$this->possibleSearchParamters);
-		if(is_array($arr))
+		      
+        if(is_array($arr))
                 {
                         foreach($arr as $field=>$value)
                         {
                                 if(strstr($this->possibleSearchParamters,$field))
-                                        eval ('$this->set'.$field.'($value);');
+				{
+					if($field=='STATE' || $field=='CITY_RES')
+                                        	eval ('$this->set'.$field.'($value,"",1);');
+					else
+	                                        eval ('$this->set'.$field.'($value);');
+				}
                         }
                         unset($arr);
                         return 1;

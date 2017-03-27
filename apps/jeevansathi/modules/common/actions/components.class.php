@@ -36,7 +36,7 @@ class commonComponents extends sfComponents{
                 $phoneNumber = $loggedInProfileObj->getPHONE_WITH_STD();
             }
             else{//Check Alternate Phone numbmer
-                $objAlternate = new NEWJS_JPROFILE_CONTACT;
+                $objAlternate = new ProfileContact();
                 $arrResult = $objAlternate->getProfileContacts($iProfileId);
                 if($arrResult["ALT_MOB_STATUS"] == "Y"){
                     if(trim($arrResult["ALT_MOBILE_ISD"]))
@@ -52,10 +52,6 @@ class commonComponents extends sfComponents{
         $moduleName = sfContext::getInstance()->getModuleName();
         
         $this->showExpandMode = 0;
-        // if(stripos($scriptname,'mainmenu.php')!==false || stripos($scriptname,'membership')!==false || stripos($moduleName,'membership')!==false)
-        // {
-        //    $this->showExpandMode = 1; 
-        // }
         
         $this->mobileNumber = CommonConstants::HELP_NUMBER_INR;
         if($bIsNRI != "RS")
@@ -74,10 +70,12 @@ class commonComponents extends sfComponents{
         $loginData = $request->getAttribute('loginData');
         $this->profileid = $loginData['PROFILEID'];
         
-        if(MobileCommon::isApp()){
+        if(MobileCommon::isApp() || MobileCommon::isAppWebView()){
         	$this->device = "Android_app";
+        	$this->channel = "JSAA";
         } else {
         	$this->device = "mobile_website";
+        	$this->channel = "JSMS";
         }
 
         $data['device'] = $this->device;
@@ -91,7 +89,7 @@ class commonComponents extends sfComponents{
                 "value" => "18004196299",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource="
             );
         } 
         else {
@@ -102,7 +100,7 @@ class commonComponents extends sfComponents{
                 "value" => "+911204393500",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource="
             );
         }
         $this->data = $data;

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script checks if RabbitMQ is working, checks memory consumption (memory alarm and/or disk alarm are raised if memory/disk consumption is more than the specified limit),
 number of active consumer instances and sends alert if queues have number of messages more than N(a pre specified limit). Consumer instance is run if there are queued messages 
@@ -7,6 +7,10 @@ present in queues on the second server.
 
 class cronRabbitmqRecovery extends sfBaseTask
 {
+
+  private $consumerRestarted = 0;
+  private $consumerToCountMapping = array();
+
   /**
    * 
    * Configuration details for cron:cronRabbitmqRecovery
@@ -39,6 +43,7 @@ EOF;
   private function callRabbitmqServerApi($serverid)
   {
     $messageCount=0;
+    $msgOverflow = 0;
     //checks whether server is alive or not.
     $aliveApi_url="/api/aliveness-test/%2F";
     $status_result=$this->checkRabbitmqServerStatus($serverid,$aliveApi_url);
@@ -75,35 +80,21 @@ EOF;
           if($serverid=="FIRST_SERVER" && $queue_data->messages_ready>$messageLimit)
           {
             $str="\nRabbitmq Error Alert: Number of unconsumed messages pending in {$queue_data->name} is  {$queue_data->messages_ready} on first server";
+            $msgOverflow = 1;
             RabbitmqHelper::sendAlert($str,"default");
           } 
-          exec("ps aux | grep \"MessageQueues::CRONCONSUMER_STARTCOMMAND\" | grep -v grep | awk '{ print $2 }'", $out);
+          //exec("ps aux | grep \"MessageQueues::CRONCONSUMER_STARTCOMMAND\" | grep -v grep | awk '{ print $2 }'", $out);
           if($serverid=="FIRST_SERVER" && $queue_data->messages_unacknowledged>$messageLimit)
           {
             $str="\nRabbitmq Error Alert: Number of unacknowledged messages pending in {$queue_data->name} is  {$queue_data->messages_unacknowledged} on first server. Restarting the consumers";
-            exec("ps aux | grep \"".MessageQueues::CRONCONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $out);
-            exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationConsumerOut);
-         
-            if(!empty($out) && is_array($out))
-              foreach ($out as $key => $value) 
-              {
-                $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
-                if($count1 >0)
-                  exec("kill -9 ".$value);
-              }
-            if(!empty($notificationConsumerOut) && is_array($notificationConsumerOut))
-              foreach ($notificationConsumerOut as $key => $value) 
-              {
-                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
-                if($count2 >0)
-                  exec("kill -9 ".$value);
-              }
-            for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
-              passthru(JsConstants::$php5path." ".MessageQueues::CRONCONSUMER_STARTCOMMAND." > /dev/null &"); 
-            for($i=1;$i<=MessageQueues::NOTIFICATIONCONSUMERCOUNT ;$i++)
-              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &"); 
+            $msgOverflow = 1;
             RabbitmqHelper::sendAlert($str,"default");
           }
+        }
+        if($msgOverflow == 1 && $serverid == "FIRST_SERVER"){
+          //echo "killAndRestartConsumer"."\n";
+          //kill and start consumers again
+          $this->killAndRestartConsumer();
         }
       }
       //checks whether rabbitmq has raised either the memory alarm or disk alarm.
@@ -163,6 +154,39 @@ EOF;
     return $response;
   }
 
+  /*kill active instances of consumer and restart them
+  * $@param : none
+  */
+  private function killAndRestartConsumer(){
+    
+    //print_r($consumerToCountMapping);
+    foreach ($this->consumerToCountMapping as $command => $count) 
+    {
+        if($this->checkRestart($command)){
+            exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
+            //echo "\n".$command."-";
+            //print_r($output);
+            if(!empty($output) && is_array($output))
+            {
+              foreach ($output as $key => $value) 
+              {
+                $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count1 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
+            unset($output);
+            for($i=1;$i<=$count ;$i++)
+            { 
+              //var_dump(JsConstants::$php5path." ".$command." > /dev/null &");
+              passthru(JsConstants::$php5path." ".$command." > /dev/null &"); 
+            }
+        }
+    }
+    //echo "flag set";
+    $this->consumerRestarted = 1;
+  }
+
   /*restart inactive instances of consumer
   * $totalInstancesNum,$CONSUMER_STARTCOMMAND,$sendAlertTo
   */
@@ -185,6 +209,22 @@ EOF;
     }
 
   }
+  
+  private function checkRestart($command){
+    if($command == MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND){
+      $inactiveHours = array("00","01","02","10","11","12","13","14");
+      $currentHr = date("H");
+      if(in_array($currentHr, $inactiveHours)){
+          return false;
+      }
+      else{
+          return true;
+      }
+    }
+    else{
+        return true;
+    }
+  }
   /**
    * 
    * Function for executing cron- checks status of rabbitmq server, checks memory consumption, no of messages pending in queues,
@@ -198,30 +238,63 @@ EOF;
      
     if(!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
+  
+    $this->consumerToCountMapping = array(
+                                    MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
+                                  MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
+                                  MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
+                                  MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
+                                  MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
+                                  MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
+                                  MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
+                                  MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
+                                  MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
+                                  MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
+                                  MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
+                                  MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT
+                                    );
     $this->callRabbitmqServerApi("FIRST_SERVER");
-    
-    if(MessageQueues::FALLBACK_STATUS==true)
+   
+    if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
+      //echo "111";die;
       $messageCount=$this->callRabbitmqServerApi("SECOND_SERVER");
     }
-    
-    //restart inactive default consumer for queues bound to default exchange
-    $this->restartInactiveConsumer(MessageQueues::CONSUMERCOUNT,MessageQueues::CRONCONSUMER_STARTCOMMAND);
+    if($this->consumerRestarted == 0){
+        //echo "restartInactiveConsumer ..";
+        //restart inactive default consumer for queues bound to default exchange
+        foreach ($this->consumerToCountMapping as $command => $count) {
+            if($this->checkRestart($command)){
+                $this->restartInactiveConsumer($count,$command);
+            }
+        }
+    }
 
-    //restart inactive notification consumer for queues bound to InstantNotificationExchange exchange
-    $this->restartInactiveConsumer(MessageQueues::NOTIFICATIONCONSUMERCOUNT,MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND,"browserNotification");
-
-    //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
-    if(MessageQueues::FALLBACK_STATUS==true)
+      //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
+    /*if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
       if($messageCount > 0)
       {  
-        $consumerObj=new Consumer('SECOND_SERVER',$messageCount);
+        $msgPickCount = MessageQueues::FALLBACK_SERVER_MSGPICK_COUNT;
+        $consumerObj=new Consumer('SECOND_SERVER',$msgPickCount);
         $consumerObj->receiveMessage(); 
-        $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$messageCount);
-        $notificationConsumerObj->receiveMessage();   
+        $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$msgPickCount);
+        $notificationConsumerObj->receiveMessage();
+        $delRetrieveConsumerObj=new deleteRetrieveConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $delRetrieveConsumerObj->receiveMessage();   
+        $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateSeenConsumerObj->receiveMessage();
+        $updateFeaturedProfileConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateFeaturedProfileConsumerObj->receiveMessage();
+        $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $msgPickCount);
+        $profileCacheConsumerObj->receiveMessage();
+        $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $msgPickCount);
+        $updateViewLogConsumerObj->receiveMessage();
+        $notificationLogConsumerObj = new JsNotificationsLogConsume('SECOND_SERVER', $msgPickCount);
+        $notificationLogConsumerObj->receiveMessage();
       }
-    }    
+    }*/  
   }
 }
 ?>

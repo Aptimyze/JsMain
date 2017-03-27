@@ -1,0 +1,239 @@
+.smallred {
+	FONT-SIZE: 9px; COLOR: #ff0000; FONT-FAMILY: Arial, Helvetica, sans-serif;
+}
+.mediumblack {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.bigblack {
+	FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.mediumblack12 {
+	FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.mediumwhite12 {
+	FONT-SIZE: 12px; COLOR: #ffffff; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+
+.mediumblackb {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+.mediumgreyb {
+	FONT-SIZE: 11px; COLOR: #333333; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+.mediumgreybl {
+	FONT-SIZE: 11px; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+
+.mediummaroonb {
+	FONT-SIZE: 11px; COLOR: #990000; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight:bold
+}
+
+.mediumbrown {
+	FONT-SIZE: 11px; COLOR: #F5A77C; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.bblack {
+	FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: verdana;
+	}
+.mblack {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: verdana;
+}
+.sblack {
+	FONT-SIZE: 10px; COLOR: #000000; FONT-FAMILY: verdana;
+}
+.mpink {
+	FONT-SIZE: 11px; COLOR: #D33B6A; FONT-FAMILY: verdana;
+}
+.sred {
+	FONT-SIZE: 9px; COLOR: #ff0000; FONT-FAMILY: Verdana;
+}
+.sgrey {
+	FONT-SIZE: 9px; COLOR: #999999; FONT-FAMILY: Verdana;
+}
+
+
+
+
+
+.formselect1{FONT-FAMILY: verdana; FONT-SIZE: 11px;}
+
+.formselect{FONT-FAMILY: Arial; FONT-SIZE: 11px;}
+
+.bgbrowndark {background-color:#DB6422}
+.bgbrown {background-color:#F5A77C}
+.bgbrown1 {background-color:#F4AF69}
+.bgbrownL {background-color:#FDB88C}
+.bgbrownL1 {background-color:#FFC9A6}
+.bgbrownL2 {background-color:#FFD3A1}
+.bgbrownL3 {background-color:#FFE5CC}
+.bgbrownL4 {background-color:#FFF2E5}
+.bgyellow {background-color:#FFED9F}
+.bgwhite {background-color:#ffffff}
+.bggrey {background-color:#cccccc}
+.bggreyl {background-color:#e4e4e4}
+.bggrey2 {background-color:#999999}
+
+
+
+img.floatLeft { float: left; margin: 2px; }
+img.floatRight { float: right; margin: 2px; }
+
+
+.redlink A:link {text-decoration: underline; color: #ff0000;}
+.redlink A:visited {text-decoration: underline; color: #ff0000;}
+.redlink A:active {text-decoration: underline; color: #ff0000;}
+.redlink A:hover {text-decoration: underline; color: #ff0000;}
+
+.blacklink A:link {text-decoration: none; color: #000000;}
+.blacklink A:visited {text-decoration: none; color: #000000;}
+.blacklink A:active {text-decoration: none; color: #000000;}
+.blacklink A:hover {text-decoration: none; color: #000000;}
+
+.blacklinku A:link {text-decoration: underline; color: #000000;}
+.blacklinku A:visited {text-decoration: underline; color: #000000;}
+.blacklinku A:active {text-decoration: underline; color: #000000;}
+.blacklinku A:hover {text-decoration: underline; color: #000000;}
+
+.bluelink A:link {text-decoration: none; color: blue;}
+.bluelink A:visited {text-decoration: none; color: blue;}
+.bluelink A:active {text-decoration: none; color: blue;}
+.bluelink A:hover {text-decoration: none; color: blue;}
+
+.bluelinku A:link {text-decoration: underline; color: blue;}
+.bluelinku A:visited {text-decoration: underline; color: blue;}
+.bluelinku A:active {text-decoration: underline; color: blue;}
+.bluelinku A:hover {text-decoration: underline; color: blue;}
+
+.greenlinku A:link {text-decoration: underline; color: green;}
+.greenlinku A:visited {text-decoration: underline; color: green;}
+.greenlinku A:active {text-decoration: underline; color: green;}
+.greenlinku A:hover {text-decoration: underline; color: green;}
+
+body { margin-left: 0px; margin-top: 0px; margin-right: 0px;}
+
+.bigmahroon {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-style: normal;
+        line-height: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        color: #990000;
+}
+.link { font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        color: #990000; text-decoration:none;}
+.link a:link{   font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        color: #990000; text-decoration:underline;}
+.link a:visited{font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        color: #990000; text-decoration:underline;}
+.link a:active{ font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        color: #990000; text-decoration:underline;}
+.link a:hover{  font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        color: #990000; text-decoration:none;}
+		
+.mbsearch{
+	FONT-SIZE: 10px; COLOR: #000000; FONT-FAMILY: Arial, Helvetica, sans-serif; cursor:pointer; padding-left:4; margin-bottom:0.5em
+}
+
+.button { background-color: #FFFFFF; BORDER-RIGHT: black 1px groove; BORDER-TOP: black 1px groove; FONT-SIZE: 10pt;BORDER-LEFT: black 1px groove; BORDER-BOTTOM: black 1px groove; FONT-FAMILY: Verdana,arial; cursor:pointer; background-image:url(http://www.jeevansathi.com/profile/imagesnew/bgimagebutton.gif)}
+
+.button1 {FONT: Verdana; font-weight:bold; font-size:12px; color:#ffffff; cursor:pointer;}
+.button2 { background-color: #FFFFFF; BORDER-RIGHT: black 1px groove; BORDER-TOP: black 1px groove; BORDER-LEFT: black 1px groove; BORDER-BOTTOM: black 1px groove; font-family:Verdana,Arial,Helvetica,sans-serif; color:#000000; font-weight:bold ; font-size:12px; cursor:pointer;  background-image:url(http://www.jeevansathi.com/profile/imagesnew/bgimagebutton.gif)}
+
+.button3 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #000000;
+        background-color:#f3f3f3;
+        background-image:url(http://ser4.jeevansathi.com/profile/images/button_gif2.gif);
+        background-repeat:repeat-x;
+        font-weight: normal;
+        padding-bottom: 6px;
+        BORDER-RIGHT: #999999 1px solid;
+        BORDER-TOP: #999999 1px solid;
+        BORDER-LEFT: #999999 1px solid;
+        BORDER-BOTTOM: #999999 1px solid;
+        HEIGHT: 17px;
+        cursor:pointer;
+}
+
+.buttongrey { background-color: #D4D0C8; FONT-SIZE: 8pt; FONT-FAMILY: Verdana,arial; cursor:pointer; }
+
+.buttonbrown { background-color: #FFFFFF; BORDER-RIGHT: black 1px groove; BORDER-TOP: black 1px groove; BORDER-LEFT: black 1px groove; BORDER-BOTTOM: black 1px groove; font:Verdana; color:#000000 ; font-size:12px; cursor:pointer;  background-image:url(/profile/imagesnew/brown_button_bg.jpg)}
+
+.buttonbw { background-color: #FFFFFF; BORDER-RIGHT: black 1px groove; BORDER-TOP: black 1px groove; BORDER-LEFT: black 1px groove; BORDER-BOTTOM: black 1px groove; font-family:Verdana,Arial,Helvetica,sans-serif; color:#ffffff; font-weight:bold ; font-size:12px; cursor:pointer;  background-image:url(/profile/imagesnew/brown_button_bg.jpg)}
+
+.buttonblue { background-color: #FFFFFF; BORDER-RIGHT: #666666 1px groove; BORDER-TOP: #666666 1px groove; BORDER-LEFT: #666666 1px groove; BORDER-BOTTOM: #666666 1px groove; font-family:Verdana; font-size:12px; cursor:pointer; height:25px;  
+background-image:url(http://www.jeevansathi.com/profile/imagesnew/chat_butt_bg.gif)}
+
+.buttongreen { background-color: #FFFFFF; BORDER-RIGHT: #000000 1px groove; BORDER-TOP: #000000 1px groove; BORDER-LEFT: #000000 1px groove; BORDER-BOTTOM: #000000 1px groove; font-family:Verdana; font-size:11px; cursor:pointer;
+background-image:url(/profile/imagesnew/greenbuttbg.gif)}
+
+
+
+.buttontxt {
+  padding-top: 0px;
+   padding-right: 0px;
+   padding-bottom: 0px;
+   padding-left: 0px;
+   font-family: Verdana;
+   font-size: 11px;
+   font-weight: normal;
+   color:#0000FF;
+   text-decoration: none;
+   background-color: #ffffff;
+   width:60px;      BORDER-RIGHT: #CEDDF2 0px groove;
+   BORDER-TOP: #CEDDF2 0px groove;
+   BORDER-LEFT: #CEDDF2 0px groove;
+   BORDER-BOTTOM: #CEDDF2 0px groove;
+   CURSOR: hand;
+}
+
+.conbg {background-color:#FFBD8C; border:1px solid #DE6321; margin-left:1px ; padding:0px 2px 0px 2px; line-height:2}
+
+.buttonbw1 {
+        font-family: Arial;
+        font-size: 11px;
+        color: #FFFFFF;
+        background-color:#f3f3f3;
+        background-image:url(/profile/imagesnew/brown_button_bg.jpg);
+        background-repeat:repeat-x;
+        font-weight: normal;
+        padding-bottom: 6px;
+        BORDER: #999999 1px solid;
+        HEIGHT: 17px;
+        cursor:pointer;
+}
+
+.buttong {
+        font-family: Arial;
+        font-size: 11px;
+        color: #000000;
+        background-color:#f3f3f3;
+        background-image:url(http://ser4.jeevansathi.com/profile/images/button_gif2.gif);
+        background-repeat:repeat-x;
+        font-weight: normal;
+        padding-bottom: 6px;
+        BORDER: #999999 1px solid;
+        HEIGHT: 17px;
+        cursor:pointer;
+}
+
+.psts{ float:left;line-height:20px; width:65%}
+.baro{width:200px; border:1px solid #C5C5C5; line-height:20px}
+.barin{ background-color:#99CC00; background-image:url(SITE_URL/profile/images/bar_complete.gif)}
+.space15 {line-height:15px}
+.greyele{font:normal 11px verdana,Arial; color:#666666}                                                                                                                                                                                                                                                         
+.wordbreakwrap{
+    word-wrap: break-word;
+}

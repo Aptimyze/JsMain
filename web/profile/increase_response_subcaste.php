@@ -11,7 +11,15 @@ include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 
 $db=connect_db();
-
+//adding mailing to gmail account to check if file is being used
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='sanyam1204@gmail.com';
+               $msg1='increase_response_subcaste is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="increase_response_subcaste";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+ //ending mail part
 //Bms code
 $smarty->assign("data",$data["PROFILEID"]);
 $smarty->assign("bms_topright",18);
