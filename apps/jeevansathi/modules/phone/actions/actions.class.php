@@ -243,13 +243,25 @@ class phoneActions extends sfActions
 	die;
      	}
 
+     	$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
+     	$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
+     	$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
+     	$ReportInvalidLibObj = new ReportInvalid();
 
+     	$anotherMarkInvalid = $ReportInvalidLibObj->entryAlreadyExists($selfProfileID,$profileid,$phone,$mobile);
+
+     	if($anotherMarkInvalid)
+     	{
+     		$respObj->setHttpArray(ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE);
+     		$result['message'] = ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE['message'];
+     		$result['heading'] = "Cannot report invalid";
+			$respObj->setResponseBody($result);
+			$respObj->generateResponse();
+			die;
+     	}
 
    		$profile2=new Profile();
-		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
-   		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
    		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
-		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
 
 		if($reasonNumber == 3)
