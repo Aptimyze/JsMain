@@ -660,21 +660,18 @@ class Membership
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true || in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
-            error_log("ankita doneupto generatebill in makePaid");
             $this->setGenerateBillParams();
         } else {
             $this->generateBill();
         }
-
+        
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
-            error_log("ankita doneupto PAYMENT_DETAILS in makePaid");
             $this->setGenerateReceiptParams();
         }
         else{
             $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
             $this->generateReceipt();
         }
-        //die("123");
         if($memUpgrade != "NA" && $doneUpto!="MEM_DEACTIVATION"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
