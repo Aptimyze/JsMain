@@ -4,7 +4,7 @@
 */
 Class HandlingCommonReqDatabaseId
 {
-	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform","/api/v1/notification","/api/v3/notification");
+	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform","/api/v1/notification","/api/v3/notification","/search/perform");
 
 	public static function isMasterMasterDone(){
 		foreach(self::$modulesWhereMasterMasterDone as $v){
