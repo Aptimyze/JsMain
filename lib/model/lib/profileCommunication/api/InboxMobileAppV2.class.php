@@ -785,7 +785,7 @@ class InboxMobileAppV2
 			 * Bookmark query commented as not specified in any listing in any channel by Reshu
 			 */
 			$arrShortlistAllowedInfoKey = array("MATCH_ALERT","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","VISITORS");
-			if((MobileCommon::isNewMobileSite() && in_array($infoKey, $arrShortlistAllowedInfoKey))|| (MobileCommon::isDesktop() && $infoKey == 'VISITORS'))
+			if((MobileCommon::isNewMobileSite() && in_array($infoKey, $arrShortlistAllowedInfoKey))|| ( (MobileCommon::isDesktop() || MobileCommon::isApp()) && $infoKey == 'VISITORS'))
 			{
 				foreach ($displayObj[$infoKey]["TUPLES"] as $key => $value) {
 					$value->setIS_BOOKMARKED(0);
