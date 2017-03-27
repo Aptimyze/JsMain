@@ -375,6 +375,29 @@ BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N"
 ),     
 
+17=>array(LAYERID=>"17",
+PRIORITY=>"11",
+TIMES=>"3",
+MINIMUM_INTERVAL=>"168",
+TITLE=>"Upload More Photos",
+BUTTON1=>"Let's Upload more!",
+BUTTON2=>"No, I Don't want more responses",
+ACTION1=>"/",
+ACTION2=>"close",
+JSMS_ACTION1=>"/",
+JSMS_ACTION2=>"/",
+TEXT=>"Why? Because 75% of our users believe they need AT LEAST 3 photos to get complete sense of appearance and send an interest. Also you can add variety to your profile by uploading your photo along with family members, your house/locality etc etc",
+BUTTON1_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON1_PAGEID_IOS=>"",
+BUTTON1_PAGEID_ANDROID=>"",
+BUTTON2_PAGEID_IOS=>"",
+BUTTON2_PAGEID_ANDROID=>"",
+UNLIMITED => "N"
+),     
+
         
 );
 if ($label) {

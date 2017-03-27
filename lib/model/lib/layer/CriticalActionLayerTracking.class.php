@@ -74,7 +74,7 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
-
+    return 17;
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -136,6 +136,7 @@ return 0;
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
   { 
+
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -351,6 +352,13 @@ return 0;
                           } 
                     break;
 
+                    case '17': 
+                      $profileId=$profileObj->getPROFILEID();
+                      $entryDate = $profileObj->getENTRY_DT();
+                      if($profileId % 9 == 0 && time() - strtotime($entryDate) > 15*24*60*60*60 ){
+                          $show=1;
+                          break; 
+                        }
 
           default : return false;
         }
