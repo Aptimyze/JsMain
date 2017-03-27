@@ -262,6 +262,7 @@ public function microtime_float()
                         $applicableProfiles=array();
 			$applicableProfilesNonNri =array();
 			$applicableProfilesNri =array();
+			$poolObj = new NotificationDataPool();
                         $applicableProfilesNonNri = $this->getVDProfilesApplicableForNotification($appProfiles);
                         if(count($applicableProfilesNonNri)>0){
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
@@ -271,6 +272,7 @@ public function microtime_float()
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
+			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
 			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
