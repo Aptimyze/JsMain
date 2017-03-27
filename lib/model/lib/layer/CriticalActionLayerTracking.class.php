@@ -359,10 +359,11 @@ return 0;
                       if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ))
                       {
                           $show=1;
-                          break; 
+                           
                       }
                       
                       }
+                    break;
           default : return false;
         }
         /*check if this layer is to be displayed
