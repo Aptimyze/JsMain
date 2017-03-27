@@ -31,5 +31,32 @@ class NEWJS_OCCUPATION extends TABLE
                 }
                 return $output;	
 	}
+
+    /**
+     * insert into newjs_occupation
+     * @param  associative array $arrayData contains key as sorting number and data
+     * @return true            on success
+     */
+    public function insert($arrayData)
+    {
+        try 
+        {
+            $sql = "INSERT INTO `OCCUPATION_TEST` (LABEL,VALUE,SORTBY,GROUPING) VALUES ";
+            $insertString = "";
+            foreach ($arrayData as $key => $value) {
+                $insertString.= "('".$value['occupationValue']."',".$value['occupationNumber'].",".($key+1).",".$value['groupNumber']."),";
+            }
+            $insertString = rtrim($insertString,",");
+
+            $sql = $sql.$insertString;
+            $res = $this->db->prepare($sql);
+            $res->execute();
+        } 
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+        return true;
+    }
 }
 ?>
