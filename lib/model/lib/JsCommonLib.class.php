@@ -532,7 +532,7 @@ public static function insertConsentMessageFlag($profileid) {
 -                       $result = array_intersect($ARR, $incomeArray);
                          */
 			if(is_array($inc) && !empty($inc)){
-                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+                                if(in_array($profile->getINCOME(),$inc))
                                 {
                                         $CODE['INCOME']='gnf';
                                         $CODE['Income']='gnf';
