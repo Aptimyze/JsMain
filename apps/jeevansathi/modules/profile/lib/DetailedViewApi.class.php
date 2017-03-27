@@ -286,7 +286,10 @@ class DetailedViewApi
 			$this->m_arrOut['caste'] = $objProfile->getDecoratedCaste();
 		}
 		//Caste End Here
-		$this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
+                if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())
+                    $this->m_arrOut['last_active'] = "Online now";
+                else
+                    $this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
         
         $mtongue = $objProfile->getMTONGUE();
         $communityLabel = FieldMap::getFieldLabel("community_small",$mtongue);
