@@ -127,7 +127,7 @@ function display(){
 			html = html+"<tr>";
 		html = html + "<td><b>"+v.whoami+"</b></td>";
 		$.each(healthArr, function (k1,v1) {
-			if(v.hasOwnProperty[v1])
+			if(v.hasOwnProperty(v1))
 				html = html+"<td>"+v[v1]+"</td>";
                         else
                                 html = html+"<td></td>";
