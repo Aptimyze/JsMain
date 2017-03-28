@@ -264,6 +264,10 @@ class NotificationDataPool
         }
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        if($notificationKey == 'CHAT_MSG' || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){
+            $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
+            $dataAccumulated[0]['OTHER_USERNAME']=$details[$profilesArr["OTHER"]]["USERNAME"];
+        }
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -541,6 +545,25 @@ class NotificationDataPool
                 print_r($val);
                 print_r("\n");
             }
+        }
+    }
+    
+    public function getNotificationServiceData(){
+        $notificationServiceUrl = JsConstants::$chatNotificationService."/communication/v1/notification";
+        $headerArr[] = "JB-Internal: true";
+        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
+        $modifiedData = json_decode($response,true);
+        return $modifiedData;
+    }
+    
+    public function sendChatNotification($notificationData){
+        if(!empty($notificationData) && is_array($notificationData)){
+            $chatMsgInstantNotObj = new InstantAppNotification("MESSAGE_RECEIVED");
+            foreach($notificationData as $key => $valOld){
+                    $val = json_decode($valOld, true);
+                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
+            }
+            unset($chatMsgInstantNotObj);
         }
     }
 }

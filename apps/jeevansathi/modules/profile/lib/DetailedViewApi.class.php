@@ -299,6 +299,16 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
+            if(MobileCommon::isAndroidApp()){ 
+                $this->m_arrOut['thumbnailPic'] = null;
+                $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+                if($havePhoto=='Y'){
+                    if($this->m_actionObject->THUMB_URL) {
+                        $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+                        $this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
+                    }
+                }
+            }
 	}
 	
 	/**

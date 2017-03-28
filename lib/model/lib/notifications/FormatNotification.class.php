@@ -26,6 +26,12 @@ class FormatNotification
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;
     	if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
 		$dataArray['STYPE'] =SearchTypesEnums::AndroidMatchOfDay;
+    if($details['NOTIFICATION_KEY']=='CHAT_MSG' || $details['NOTIFICATION_KEY'] == "CHAT_EOI_MSG" || $details['NOTIFICATION_KEY'] == "MESSAGE_RECEIVED"){
+		$dataArray['OTHER_PROFILEID'] =$details['OTHER_PROFILEID'];
+        $dataArray['CHAT_ID'] =$details['CHAT_ID'];
+        $dataArray['OTHER_USERNAME'] =$details['OTHER_USERNAME'];
+    }
+    
 
         if($details['NOTIFICATION_KEY']=='MATCHALERT')
                 $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_ANDROID;
