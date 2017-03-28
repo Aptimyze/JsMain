@@ -356,7 +356,7 @@ return 0;
                       {  
                      // $profileId=$profileObj->getPROFILEID();
                         $picture_new = new ScreenedPicture;
-                        $ordering = $picture_new->getMaxOrdering($profileId);
+                        $ordering = $picture_new->getMaxOrdering($profileid);
                         $oneTwoPhotos;
                         if($ordering == null)
                         {
