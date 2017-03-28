@@ -359,9 +359,9 @@ class chatActions extends sfActions
 					$response["errorMsg"] = "Message not delivered, Please try later";
 					$responseArray["cansend"] = true;
 					$responseArray['sent'] = false;
-					$responseArray["infomsglabel"] = "Message not delivered, Please try later";
-					$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-					$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
+					$responseArray["errmsglabel"] = "Message not delivered, Please try later";
+					$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge($responseArray);
+					$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge(array());
 				}
 				else if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
 					if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
