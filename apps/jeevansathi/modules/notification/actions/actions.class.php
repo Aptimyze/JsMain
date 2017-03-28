@@ -110,9 +110,10 @@ class notificationActions extends sfActions
                         $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
                         $producerObj->sendMessage($msgdata);
                 }
-        		else{
-        			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
-        		}
+       		/*else{
+       			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
+       		}*/
+
                 // temporary_logging    
                 //$fileName ="manoj_".$notificationKey.".txt";
                 //passthru("echo ' $profileid $status ' >>/tmp/$fileName");

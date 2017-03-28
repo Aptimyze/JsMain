@@ -428,7 +428,7 @@
 <div class="clearfix reportInv2">
 <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
 <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2">Phone no. reported as invalid</span>
+<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2" id = 'headingReportInvalid'>Phone no. reported as invalid</span>
 </div>
 </div>
 

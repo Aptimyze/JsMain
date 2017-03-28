@@ -234,7 +234,7 @@ class WriteMessage extends ContactEvent{
       }
     }
     
-    JsMemcache::getInstance()->setHashObject($key,$arrValue);
+    JsMemcache::getInstance()->setHashObject($key,$arrValue,3600*6);
 
     date_default_timezone_set($orgTZ);
     return $key;
