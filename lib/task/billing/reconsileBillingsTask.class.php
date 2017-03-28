@@ -79,7 +79,7 @@ EOF;
                          * If details do not exist then we will run the makePaid function after bill generation to complete tables
                          * Also, pre-setting params required to populate rest of the tables
                          */
-                        echo "\n"."PAYMENT_DETAILS entry absent-".$val['BILLID'];
+                        //echo "\n"."PAYMENT_DETAILS entry absent-".$val['BILLID'];
                         $membershipObj->billid = $val['BILLID'];
                         $membershipObj->device = $billOrdDev->getOrderDeviceFromBillid($val['BILLID']);
                         $billingOrderObj->updateOrderForReconsiliation($orderDet[$val['BILLID']]['ID']);
@@ -96,7 +96,7 @@ EOF;
                             $jprofileObj->updateSubscriptionStatus($serveFor, $orderDet[$val['BILLID']]['PROFILEID']);
                             //deactivate done and upgrade done but upgrade status not updated
                             if(is_array($isUpgradeCaseEntry) && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && $isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && strpos($serveFor,"F")!==false){
-                                echo "\n"."upgrade status not updated case 1-".$val['BILLID'];
+                                //echo "\n"."upgrade status not updated case 1-".$val['BILLID'];
                                 $memHandlerObj = new MembershipHandler(false);
                                 $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
                                 unset($memHandlerObj);
@@ -104,7 +104,7 @@ EOF;
                         }
                         else if(is_array($isUpgradeCaseEntry) && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && $isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && strpos($serveFor, "F") === false){
                             //deactivation done but upgrade not done
-                            echo "\n"."deactivate done but upgrade not done case 1-".$val['BILLID'];
+                            //echo "\n"."deactivate done but upgrade not done case 1-".$val['BILLID'];
                             $membershipObj->billid = $val['BILLID'];
                             $membershipObj->device = $billOrdDev->getOrderDeviceFromBillid($val['BILLID']);
                             if (empty($membershipObj->device) || $membershipObj->device == '') {
@@ -121,14 +121,14 @@ EOF;
                             if($serveFor != $currentSubscription){
                                 $jprofileObj->updateSubscriptionStatus($serveFor, $orderDet[$val['BILLID']]['PROFILEID']);
                             }
-                            echo "\n"."upgrade status not updated case 2-".$val['BILLID'];
+                            //echo "\n"."upgrade status not updated case 2-".$val['BILLID'];
                             $memHandlerObj = new MembershipHandler(false);
                             $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
                             unset($memHandlerObj);
                         }
                         else if($isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && $isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "PENDING" && $serveFor==$currentSubscription){
                             //neither deactivation nor upgrade done
-                            echo "\n"."neither deactivation nor upgrade-".$val['BILLID'];
+                            //echo "\n"."neither deactivation nor upgrade-".$val['BILLID'];
                             $membershipObj->billid = $val['BILLID'];
                             $membershipObj->device = $billOrdDev->getOrderDeviceFromBillid($val['BILLID']);
                             if (empty($membershipObj->device) || $membershipObj->device == '') {
@@ -138,7 +138,7 @@ EOF;
                         }
                         else if($isUpgradeCaseEntry["DEACTIVATED_STATUS"] == "DONE" && $isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING" && strpos($serveFor, "F") === false){
                             //deactivation done but upgrade not done
-                            echo "\n"."deactivate done but upgrade not done case 2-".$val['BILLID'];
+                            //echo "\n"."deactivate done but upgrade not done case 2-".$val['BILLID'];
                             $membershipObj->billid = $val['BILLID'];
                             $membershipObj->device = $billOrdDev->getOrderDeviceFromBillid($val['BILLID']);
                             if (empty($membershipObj->device) || $membershipObj->device == '') {
