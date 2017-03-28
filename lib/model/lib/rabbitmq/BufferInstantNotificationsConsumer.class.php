@@ -8,7 +8,7 @@ use MessageQueues as MQ;     //MessageQueues-having values defined for constants
 /*
 This class defines rabbitmq consumer for receiving messages from queues and process messages based on type of msg.
 */
-class Consumer
+class BufferInstantNotificationsConsumer
 {
   private $connection;
   private $channel;
@@ -70,9 +70,7 @@ class Consumer
   {   
     try 
     {
-      $this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);   
-      $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      $this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
     } 
     catch (Exception $exception) 
     {
@@ -82,9 +80,7 @@ class Consumer
     }  
     try
     {
-      $this->channel->basic_consume(MQ::MAILQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      $this->channel->basic_consume(MQ::SMSQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      $this->channel->basic_consume(MQ::DUPLICATE_LOG_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
+      $this->channel->basic_consume(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
     }
     catch (Exception $exception) 
     {
@@ -132,21 +128,9 @@ class Consumer
       $handlerObj=new ProcessHandler();
       switch($process)
       {
-        case 'MAIL':  
-          $handlerObj->sendMail($type,$body);  
-          break;
-        case 'SMS':   
-          $handlerObj->sendSMS($type,$body);  
-          break;
-        case 'GCM':   
-          $handlerObj->sendGCM($type,$body);  
-          break;
         case 'BUFFER_INSTANT_NOTIFICATIONS':
           $handlerObj->sendInstantNotification($type,$body);
             break;
-        case 'DUPLICATE_LOG':
-            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
-          break;
       }     
     }
     catch (Exception $exception) 
