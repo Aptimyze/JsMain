@@ -355,8 +355,19 @@ return 0;
                       if(!$isApp)
                       {  
                      // $profileId=$profileObj->getPROFILEID();
+                        $picture_new = new ScreenedPicture;
+                        $ordering = $picture_new->getMaxOrdering($profileId);
+                        $oneTwoPhotos;
+                        if($ordering == null)
+                        {
+                          $oneTwoPhotos = 0;
+                        }
+                        else if ($ordering === 0 || $ordering === 1)
+                        {
+                          $oneTwoPhotos = 1;
+                        }
                       $entryDate = $profileObj->getENTRY_DT();
-                      if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ))
+                      if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ) && $oneTwoPhotos)
                       {
                           $show=1;
                            
