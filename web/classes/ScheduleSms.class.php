@@ -2510,7 +2510,7 @@ class ScheduleSms
         public function userLoggedInFromApp($profileid,$date)
         {
                         $sql = "SELECT count(*) as CNT FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=$profileid AND date(DATE)>='$date' AND WEBSITE_VERSION IN ('A','I')";
-                        $result = mysql_query($sql, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function while executing on shards: " . $conn);
+                        $result = mysql_query($sql, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key:  EOI  in processData() function while executing on MIS.LOGIN_TRACKING");
                         if($row = mysql_fetch_assoc($result))
                         {
                            if($row['CNT']==0) return false;
