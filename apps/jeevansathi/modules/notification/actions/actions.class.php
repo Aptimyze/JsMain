@@ -149,7 +149,8 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
-	if($deviceUpgrade=='true'){
+	//if($deviceUpgrade=='true'){
+	if($apiappVersion>=90){
 		$upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 	}
 	$respObj = ApiResponseHandler::getInstance();
