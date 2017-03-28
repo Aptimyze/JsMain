@@ -726,5 +726,68 @@ class CommonFunction
         $cityList=explode(",",trim($cityList,","));
         return $cityList;
     }
+
+    /**
+     * [getOccupationGroup description]
+     * @param  [type] $occupationValues [description]
+     * @return [type]                   [description]
+     */	
+    
+    public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+
+        if ( $isSingleQuote)
+        {
+        	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
+        }
+        else
+        {
+        	$occupationValuesArray = explode (",", $occupationValues);
+        }
+
+        $occupationGroupString = "";
+
+    	foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+    	{
+    		$occupationGroupingValuesArray = array_map('intval',explode(',',$occupationGroupingValues));
+    		if ( count(array_intersect($occupationValuesArray,$occupationGroupingValuesArray)) > 0)
+    		{
+    			$occupationGroupString .= $key.",";
+    		}	
+    	}
+    	$occupationGroupString = rtrim($occupationGroupString,",");
+    	return $occupationGroupString;
+    }
+
+    /**
+     * [getOccupationValues description]
+     * @param  [type] $occupationGroups [description]
+     * @return [type]                   [description]
+     */
+    public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+		$occupationGroupsArray = array_map('intval',explode(',',$occupationGroups));
+
+		$occupationValuesString = "";
+
+		foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+		{
+			if ( in_array($key,$occupationGroupsArray))
+			{
+				$occupationValuesString .= $occupationGroupingValues.",";
+			}		
+		}
+
+		$occupationValuesString = rtrim($occupationValuesString,",");
+
+		if ( $isSingleQuote )
+		{
+			$occupationValuesString = "'".$occupationValuesString."'";
+			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
+		}
+		return $occupationValuesString;
+    }
 }
 ?>
