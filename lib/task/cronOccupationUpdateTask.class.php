@@ -38,6 +38,7 @@ EOF;
         $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
 
         $insertOccupationArray = array();
+        $insertOccupationGroupingArray = array();
         $count = 0;
         foreach ($occupation as $key => $value) {
             $insertOccupationArray[$count]['occupationValue'] = $value;
@@ -53,8 +54,25 @@ EOF;
           }
           $count++;
       }
+      unset($count);
       $newjs_occupation = new NEWJS_OCCUPATION();
       $newjs_occupation->insert($insertOccupationArray);
+      unset($insertOccupationArray);
+
+      //occupation grouping table update part
+      $occGroupingObj = new NEWJS_OCCUPATION_GROUPING();
+      $occGroupingObj->createNewTable();
+      
+      $occGroupingArr = FieldMap::getFieldLabel('occupation_grouping', '',1);
+      foreach($occGroupingArr as $key=>$val)
+      {
+        $insertOccupationGroupingArray[$count]["occupationGroupingValue"] = $val;
+        $insertOccupationGroupingArray[$count]["occupationGroupingNumber"] = $key;
+        $count++;
+      }
+      $occGroupingObj->insertDataToTable($insertOccupationGroupingArray);            
+      $occGroupingObj->RenameTable();
+      unset($insertOccupationGroupingArray);
   } 
   catch (Exception $e) 
   {

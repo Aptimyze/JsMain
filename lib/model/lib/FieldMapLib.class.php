@@ -8346,13 +8346,13 @@ case "occupation_grouping":
                 "1"=>"Management Professionals",
                 "2"=>"Media Professionals",              
                 "22"=>"Merchant Navy",
-                "10"=>"Not working",
-                "19"=>"Other Occupations",
+                "10"=>"Not working",                
                 "16"=>"Pilot",
                 "9"=>"Research Professionals",
                 "8"=>"Software/IT Professionals",
                 "23"=>"Sportsperson",
-                "5"=>"Teachers/Lecturers",              
+                "5"=>"Teachers/Lecturers",
+                "19"=>"Other Occupations",              
         );
 
         break;
