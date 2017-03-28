@@ -702,22 +702,19 @@ public function getNegativeScoreForUser()
 
     public function sendDataOfQueue($process, $type, $body)
     {
-	    if($this->tasksThruQueue)
-        {
-            if($this->producerObj->getRabbitMQServerConnected())
-            {
-                    $trackingData = array('process' => $process,
-                                            'data' =>
-                                            array(
-                                            'body' => $body,
-                                            'type' => $type,
-                                            'redeliveryCount' => 0)
-                                            );
-                    $this->producerObj->sendMessage($trackingData);
-                    return true;
-            }
-		}
-        return false;
-	}
+	    if($this->tasksThruQueue && $this->producerObj->getRabbitMQServerConnected())
+      {
+          $trackingData = array('process' => $process,
+                                  'data' =>
+                                  array(
+                                  'body' => $body,
+                                  'type' => $type,
+                                  'redeliveryCount' => 0)
+                                  );
+          $this->producerObj->sendMessage($trackingData);
+          return true;
+		  }
+      return false;
+    }
 
 } // end of Initiate Class.
