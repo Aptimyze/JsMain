@@ -362,7 +362,7 @@ return 0;
                         {
                           $oneTwoPhotos = 0;
                         }
-                        else if ($ordering === 0 || $ordering === 1)
+                        else if ($ordering === "0" || $ordering === "1")
                         {
                           $oneTwoPhotos = 1;
                         }
