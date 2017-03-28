@@ -74,9 +74,13 @@
 
 <br>
 <div>=== Ha Proxy Health === </div>
+~if $marGayServers.length > 0`
 ~foreach from=$marGayeServers item=v key=k`
 	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
 ~/foreach`
+~else`
+	<div>All servers up</div>
+~/if`
 <br>
 <div>=== Mysql Status Detail=== </div>
 <br>
@@ -123,7 +127,10 @@ function display(){
 			html = html+"<tr>";
 		html = html + "<td><b>"+v.whoami+"</b></td>";
 		$.each(healthArr, function (k1,v1) {
+			if(v.hasOwnProperty[v1])
 				html = html+"<td>"+v[v1]+"</td>";
+                        else
+                                html = html+"<td></td>";
 		});
 		html = html+"<tr>";
 	});
