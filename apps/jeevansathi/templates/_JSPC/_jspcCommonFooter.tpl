@@ -169,7 +169,7 @@
                                 <ul>
                                     <li class="pl55"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
                                     <li class="pl55"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
-                                    <li class="pl30"><a href="#" target="_blank" title="ambitionbox"><i class="headfootsprtie ambitionbox"></i></a></li>
+                                    <li class="pl30"><a href="http://www.ambitionbox.com" target="_blank" title="ambitionbox"><i class="headfootsprtie ambitionbox"></i></a></li>
                                 </ul>
                             </div>
                         </div>
