@@ -148,7 +148,7 @@ var errorMsg = "Something went wrong!! Please try again later";
                     angular.element('#perspective').scope().hamTrigger(true,ele);
                 }),
             10);
-           // setTimeout(function(){
+            setTimeout(function(){
                 try{
                     if(ele.isMultiOption())
                         ele.MultiHamburger();
@@ -167,7 +167,7 @@ var errorMsg = "Something went wrong!! Please try again later";
                     //Bind touch events on HAM_OPTION div.
                     startTouchEvents(animationtimer);
                 }	
-            //},animationtimer);
+            },animationtimer);
 			
 			
 			
