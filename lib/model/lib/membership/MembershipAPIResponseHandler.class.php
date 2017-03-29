@@ -494,7 +494,7 @@ class MembershipAPIResponseHandler {
         
         //fetch the upgrade membership content based on eligibilty and channel
         if(in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse();
+            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request);
             if(is_array($output["upgradeMembershipContent"]) && is_array($output)){
                 $output["title"] = "Upgrade to ".$output["upgradeMembershipContent"]["upgradeMainMemName"];
             }
@@ -536,7 +536,7 @@ class MembershipAPIResponseHandler {
     * sets the display content for upgrade membership section in apiObj
     * @inputs : $request
     */
-    public function generateUpgradeMemResponse($fromSource=""){
+    public function generateUpgradeMemResponse($request,$fromSource=""){
         if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['ORIG_SERVICEID']);
             if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['SHOW_ONLINE'] == 'Y'){
@@ -1830,7 +1830,7 @@ class MembershipAPIResponseHandler {
         
         if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0))) {
             if($this->upgradeActive == '1'){
-                $upgardeMemResponse = $this->generateUpgradeMemResponse("Hamburger");
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger");
                 if(is_array($upgardeMemResponse)){
                     $top = "Pay ".$upgardeMemResponse["upgardeCurrency"]." ".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $bottom = $upgardeMemResponse["upgradeOCBBenefits"];
