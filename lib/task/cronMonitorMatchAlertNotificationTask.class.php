@@ -39,8 +39,8 @@ EOF;
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
     
-    $curTime = date('Y-m-d H:i:s');
-    $stTime = date('Y-m-d H:i:s', strtotime($curTime) - 5*60);
+    $curTime = date('Y-m-d H:i:s', strtotime('+9 hour 30 minutes'));
+    $stTime = date('Y-m-d H:i:s', strtotime('+9 hour 25 minutes'));
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
     if($count==0){
