@@ -16,7 +16,4 @@ if($counter != 0 && $counter != ''){
         $sql = "REPLACE INTO search.DAILY_SEARCH_COUNT VALUES ('".date("Y-m-d")."',$counter,NULL)";
         mysql_query($sql,$db) or die("DAILY_SEARCH_COUNT".mysql_error1($db));
 }
-for($i=10;$i<=25;$i++){
-        $memcache->delete("TOTAL_SEARCH_COUNT_".date("d",strtotime("-".$i." day")));
-}
-
+$memcache->delete("TOTAL_SEARCH_COUNT_".date("d",strtotime("-20 day")));
