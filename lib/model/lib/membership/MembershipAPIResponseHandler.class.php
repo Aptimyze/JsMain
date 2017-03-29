@@ -548,10 +548,10 @@ class MembershipAPIResponseHandler {
                 //name of upgrade service
                 $output["upgradeMainMemName"] = $this->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
                 if($this->currency == "RS"){
-                    $output["upgardeCurrency"] = "Rs";
+                    $output["upgradeCurrency"] = "₹";
                 }
                 else{
-                    $output["upgardeCurrency"] = "USD";
+                    $output["upgradeCurrency"] = "$";
                 }
                 
                 //formatting output for ocb banner or hamburger text
@@ -1729,8 +1729,13 @@ class MembershipAPIResponseHandler {
             if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
                 if(is_array($upgardeMemResponse)){
-                    $top = "Pay ".$upgardeMemResponse["upgardeCurrency"]." ".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                    $bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                 }
             }
             else if ($this->renewCheckFlag) {
@@ -1808,7 +1813,8 @@ class MembershipAPIResponseHandler {
                 'membership_message' => array(
                     'top' => $top,
                     'bottom' => $bottom,
-                    'pageId' => $pageId
+                    'pageId' => $pageId,
+                    'extra' => $extra
                 )
             );
         } 
@@ -1839,8 +1845,11 @@ class MembershipAPIResponseHandler {
             if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger");
                 if(is_array($upgardeMemResponse)){
-                    $top = "Pay ".$upgardeMemResponse["upgardeCurrency"]." ".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                    $bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                     $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
                 }
             }
@@ -1904,7 +1913,8 @@ class MembershipAPIResponseHandler {
                 'hamburger_message' => array(
                     'top' => $top,
                     'bottom' => $bottom,
-                    'expiry' => $expiryDate
+                    'expiry' => $expiryDate,
+                    'extra'=>$extra
                 )
             );
         } 

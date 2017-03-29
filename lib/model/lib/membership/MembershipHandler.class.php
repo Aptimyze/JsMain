@@ -838,7 +838,7 @@ class MembershipHandler
         }
         return array(
             $ipAddress,
-            $currency,
+            $currency
         );
     }
 
