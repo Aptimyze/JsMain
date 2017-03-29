@@ -1220,17 +1220,31 @@ case "occupation_grouping_mapping_to_occupation":
 // "9"=>"27,61,62",
 // "2"=>"64,21,69,30,59,20,71,17",          
 // );
+
+//         $arr=array(
+// "8"=>"Administration",
+// "1"=>"Businessmen",
+// "4"=>"Defence",
+// "7"=>"Finance (CA, CS)",
+// "10"=>"Government",
+// "5"=>"Marketing/Sales/Adv",
+// "3"=>"Medical Professional",
+// "9"=>"Production/Maintenance",
+// "2"=>"Software",
+// "6"=>"Teaching",
+// "11"=>"Others",
+// );
 	$arr=array(
                 "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
                 "2"=>"54,9",//Media Professionals
-                "3"=>"13,52,3,18",//Businessperson
+                "3"=>"13,52,3",//Businessperson
                 "4"=>"7,1,65",//Finance Professionals
                 "5"=>"60,58,31",//Teachers/Lecturers
                 "6"=>"24,70,53,74",//Healthcare Professionals
                 "7"=>"34",//Defence
-                "8"=>"30,20,75,26,21",//Software/IT Professionals
+                "8"=>"30,20,75,21",//Software/IT Professionals
                 "9"=>"61,62",//Research Professionals
-                "10"=>"44,36,41,37",//Not working
+                "10"=>"44,36,41",//Not working
                 "11"=>"22",//Lawyer/Legal Professionals
                 "12"=>"17,15,51,6,71",//Architecture/ Design
                 "13"=>"57",//Doctor
@@ -1239,7 +1253,7 @@ case "occupation_grouping_mapping_to_occupation":
                 "16"=>"45",//Pilot
                 "17"=>"35,56",//Govt
                 "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
-                "19"=>"29,43,39,4,14,25",//Other Occupations
+                "19"=>"29,43",//Other Occupations
                 "20" => "46",//Air Hostess
                 "21" => "32",//farming
                 "22" => "42",//Merchant Navy
