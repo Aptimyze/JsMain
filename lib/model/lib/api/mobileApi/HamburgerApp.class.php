@@ -50,10 +50,10 @@ class HamburgerApp
 					$hamburgerDetails["FILTERED_NEW"] = 0;
 				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
-			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1 || ($isApp=='A' && $appVersion>89))
 				$hamburgerDetails['MESSAGE_NEW']=0;
 			else
-	                $hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
+	          	$hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
 	                
 	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 				$hamburgerDetails['MATCHALERT']=0;
