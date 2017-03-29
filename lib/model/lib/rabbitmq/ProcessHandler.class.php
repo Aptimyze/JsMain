@@ -210,6 +210,21 @@ class ProcessHandler
 	$profileid = $body['profileid']; 
 	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
  }
+ public function updateMatchAlertsLaseSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
+ }
+ 
+ public function updateJustJoinedLastSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
+ }
  public function updateFeaturedProfile($type,$body)
  {
 	if($body['profileid']!=null|| $body['profileid']!='')
