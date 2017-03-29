@@ -1189,12 +1189,18 @@ function checkAuthentication(timer,loginType) {
     var n = d.getTime();
     //console.log("timestamp",n);
     var loggedInUserAuth = readCookie("AUTHCHECKSUM");
+        var chatParams = {
+            "authchecksum":loggedInUserAuth
+        };
+        console.log("NN");
     if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
         $.ajax({
-            url: listingWebServiceUrl["chatAuth"]+"?authchecksum="+loggedInUserAuth+"&p="+n,
+            url: listingWebServiceUrl["chatAuth"]+"?p="+n,
             async: false,
             timeout: 60000,
             cache: false,
+            type: 'POST',
+            data: chatParams,
             success: function (authResponse) {
                 if (authResponse.data) {
                     if(typeof authResponse.data.hash !== 'undefined'){
