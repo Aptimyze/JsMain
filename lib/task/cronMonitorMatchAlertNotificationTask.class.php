@@ -49,8 +49,7 @@ EOF;
         $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com";
         $subject = "[Match Alert] Instant Notification Queue Consumer killed";
         $msgBody = "[Match Alert] Instant Notification Queue Consumer killed";
-        $from = "js-sums@jeevansathi.com";
-        SendMail::send_email($to, $msgBody, $subject, $from);
+        SendMail::send_email($to, $msgBody, $subject);
     }
   }
 }
