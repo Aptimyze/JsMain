@@ -17,7 +17,8 @@ var strophieWrapper = {
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
         "RECEIVER_RECEIVED_READ": 'receiver_received_read',
-        "FORWARDED": 'forwarded'
+        "FORWARDED": 'forwarded',
+        "MESSAGE_RECEIVED": 'message_received'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
@@ -838,7 +839,7 @@ strophieWrapper.sendPresence();
                     to: to,
                     type: 'chat',
                     id:messageId
-                    }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type,username:self_username},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 //console.log(reply);
