@@ -555,7 +555,7 @@ class MembershipAPIResponseHandler {
                 }
                 
                 //formatting output for ocb banner or hamburger text
-                if($fromSource == "Hamburger"){
+                if($fromSource == "Hamburger" || $fromSource == "MyjsOCB"){
                     $output["upgradeOfferExpiry"] = date('d-m-Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
                     //extra amount to be paid for upgrade
                     $output["upgradeExtraPay"] = number_format($this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 0, '.', ','); 
@@ -1725,8 +1725,15 @@ class MembershipAPIResponseHandler {
             $bottom = json_decode(json_encode($overrideMsg['bottom']) , true);
             $pageId = $overrideMsg['pageId'];
         } 
-        else if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1)) {
-            if ($this->renewCheckFlag) {
+        else if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0))) {
+            if($this->upgradeActive == '1'){
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
+                if(is_array($upgardeMemResponse)){
+                    $top = "Pay ".$upgardeMemResponse["upgardeCurrency"]." ".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $bottom = $upgardeMemResponse["upgradeOCBBenefits"];
+                }
+            }
+            else if ($this->renewCheckFlag) {
                 if ($this->fest == 1) {
                     $top = "Get flat " . $this->renewalPercent . "% OFF";
                     $bottom = "or extra months if you renew before <strong>" . date("d M", strtotime($this->userObj->expiryDate)) . "</strong> !";
