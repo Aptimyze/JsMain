@@ -178,11 +178,11 @@ class NotificationFunctions
 			$producerObj->sendMessage($msgdata);
 			return true;
 		}
-		else{
+		/*else{
                         $registationIdObj = new MOBILE_API_REGISTRATION_ID();
                         $registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 			return true;
-		}
+		}*/
 		return false;
         }
 
