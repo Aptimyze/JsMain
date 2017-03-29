@@ -114,5 +114,21 @@ class RabbitmqHelper
       return null;
     
   }
+  
+  public function killConsumerForCommand($command){
+    exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
+    //echo "\n".$command."-";
+    //print_r($output);
+    if(!empty($output) && is_array($output))
+    {
+      foreach ($output as $key => $value) 
+      {
+        $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+        if($count1 >0)
+          exec("kill -9 ".$value);
+      }
+    }
+    unset($output);
+  }
 }
 ?>
