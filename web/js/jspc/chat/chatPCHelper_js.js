@@ -1192,7 +1192,6 @@ function checkAuthentication(timer,loginType) {
         var chatParams = {
             "authchecksum":loggedInUserAuth
         };
-        console.log("NN");
     if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
         $.ajax({
             url: listingWebServiceUrl["chatAuth"]+"?p="+n,
