@@ -35,8 +35,8 @@ class ThirdPartyConfig
                 self::$PROFILE["IP"]["PROFILE_67"]= "http://10.10.18.67:8290";
                 self::$PROFILE["IP"]["PROFILE_72"]= "http://10.10.18.72:8290";
                 self::$PROFILE["URL"]="/profile/v1/profile?view=shortview&pfids=7902447";
-                self::$LISTINGS["IP"]["LISTINGS_67"]= "http://10.10.18.67:8190";
-                self::$LISTINGS["IP"]["LISTINGS_72"]= "http://10.10.18.73:8190";
+                self::$LISTINGS["IP"]["LISTINGS_104"]= "http://10.10.18.104:8190";
+                self::$LISTINGS["IP"]["LISTINGS_72"]= "http://10.10.18.72:8190";
                 self::$LISTINGS["URL"]="/listings/v1/discover?type=CHATDPP";
                 self::$AUTH["IP"]["AUTH_73"]= "http://10.10.18.73:8390";
                 self::$AUTH["IP"]["AUHT_67"]= "http://10.10.18.67:8390";
