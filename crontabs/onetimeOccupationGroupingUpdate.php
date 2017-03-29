@@ -57,13 +57,22 @@ foreach ($updateArray as $key => $tableArr)
 }
 
 
-
+/**
+ * function updates new grouping values
+ * @param  string $tableName            table name
+ * @param  string $occupationValueField name of the occupation field, i.e., occupation or partner_occ etc
+ * @param  string $occupationGroupField name of the occupation group field
+ * @param  mysql connection $slaveConn            mysql connection on slave to select data
+ * @param  mysql $masterConn           mysql connection on master
+ * @param  string $primaryKey           the key on which fetching and updation is done
+ * @param  boolean $isSingleQuote        whether occupation values are stored as sigle quoted or not
+ * @param  boolean $isOccupationChange   whether we need to change occupation values too. in some case, only occupation grouping needs to be changed
+ */
 function updateOccupationGrouping($tableName,$occupationValueField,$occupationGroupField,$slaveConn,$masterConn,$primaryKey,$isSingleQuote,$isOccupationChange)
 {
     global $mysqlObjS , $mysqlObjM;
 
     $selectSql = "SELECT $primaryKey,$occupationValueField from $tableName where ".$occupationValueField." != ''";
-
 
     $result = $mysqlObjS->executeQuery($selectSql,$slaveConn) or $mysqlObjS->logError($selectSql);
     while($row = $mysqlObjS->fetchAssoc($result))
@@ -75,15 +84,14 @@ function updateOccupationGrouping($tableName,$occupationValueField,$occupationGr
             if ( $isOccupationChange )
             {
                 $occupationValues = CommonFunction::getOccupationValues($occupationGroups,$isSingleQuote);
-                $setQuery = ' SET '.$occupationValueField.' = "'.$occupationValues .'" AND '.$occupationGroupField.'= "'.$occupationGroups;
+                $setQuery = ' SET '.$occupationValueField.' = "'.$occupationValues .'",'.$occupationGroupField.'= "'.$occupationGroups;
             }
             else
             {
                 $setQuery = ' SET '.$occupationGroupField.'= "'.$occupationGroups;
             }
 
-            $updateSql = 'UPDATE '.$tableName.$setQuery.'" WHERE '. $primaryKey.' = '.$row['PROFILEID'];
-            // die(print_r($occupationValues));
+            $updateSql = 'UPDATE '.$tableName.$setQuery.'" WHERE '. $primaryKey.' = '.$row[$primaryKey];
             $mysqlObjM->executeQuery($updateSql,$masterConn) or $mysqlObjM->logError($updateSql);
 
         }

@@ -727,12 +727,13 @@ class CommonFunction
         return $cityList;
     }
 
+    	
     /**
-     * [getOccupationGroup description]
-     * @param  [type] $occupationValues [description]
-     * @return [type]                   [description]
-     */	
-    
+     * this function returns occupation groups
+     * @param  string  $occupationValues comma separated occuaptaion values
+     * @param  boolean $isSingleQuote    whether occupation values are stored as single quote sorrounded
+     * @return string                    returns comma separated string.
+     */		
     public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
     {
         $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
@@ -760,9 +761,10 @@ class CommonFunction
     }
 
     /**
-     * [getOccupationValues description]
-     * @param  [type] $occupationGroups [description]
-     * @return [type]                   [description]
+     * returns occupation values, given occupation groups.
+     * @param  string  $occupationGroups comma separated groups
+     * @param  boolean $isSingleQuote    whether return values needs to be sorrounded by comma or not
+     * @return string                    occupation values, comma separated
      */
     public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
     {
