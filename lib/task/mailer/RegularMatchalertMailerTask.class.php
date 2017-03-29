@@ -249,7 +249,7 @@ EOF;
   
   public function getValidImage($url){
     $photo = "D";
-    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request')) )
+    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request') || strstr($url, 'photo_coming')) )
         $photo = $url;
     return $photo;
   }
