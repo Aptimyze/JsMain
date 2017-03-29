@@ -243,15 +243,15 @@ class Initiate extends ContactEvent{
   
         try
         {
-			if(!$this->sendDataOfQueue(
-					MQ::INSTANT_EOI_PROCESS,
-					'INSTANT_EOI',
-					array("selfUserId" => $this->viewed->getPROFILEID(),"otherUserId" => $this->viewer->getPROFILEID()))
-			)
-			{
-				$instantNotificationObj = new InstantAppNotification("EOI");
-				$instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
-			}
+					if(!$this->sendDataOfQueue(
+							MQ::INSTANT_EOI_PROCESS,
+							'INSTANT_EOI',
+							array("otherUserId" => $this->viewed->getPROFILEID(),"selfUserId" => $this->viewer->getPROFILEID()))
+					)
+					{
+						$instantNotificationObj = new InstantAppNotification("EOI");
+						$instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
+					}
         }
         catch(Exception $e)
         {

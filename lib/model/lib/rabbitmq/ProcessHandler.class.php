@@ -309,7 +309,7 @@ public function logDiscount($body,$type){
     if($type == "INSTANT_EOI")
     {
       $instantNotificationObj = new InstantAppNotification("EOI");
-      $instantNotificationObj->sendNotification($body['selfUserId'], $body['otherUserId']);
+      $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId']);
     }
   }
 
