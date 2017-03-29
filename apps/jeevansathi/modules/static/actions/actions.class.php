@@ -1002,7 +1002,7 @@ public function executeAppredirect(sfWebRequest $request)
   
 	private function getFieldMapData($szKey)
 	{
-		$k = $szKey;
+		$k = $szKey;    
     if(strpos($k, 'p_') !== false)
     {
       $forDpp = 1; //This has been added so as to remove Select from the output where not required
@@ -1050,6 +1050,8 @@ public function executeAppredirect(sfWebRequest $request)
 
 		if($k=="p_occupation")
 		$k="occupation";
+    if($k=="p_occupation_grouping")
+      $k="occupation_grouping";
 		if($k=="p_religion")
 		$k="religion";
 		if($k=="p_manglik")
@@ -1075,7 +1077,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
 
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);

@@ -39,6 +39,7 @@ class JPartnerDecorated extends JPartner{
 					"HINCOME"=>"hincome",
 					"PARTNER_INCOME"=>"partner_income",
 					"STATE"=>"state_india",
+					"OCCUPATION_GROUPING"=>"occupation_grouping",
 				);
 				//Add  Fields to this array if want to show Does Not matter in value instead of hyphen
 				$this->dosntMatterArr=array(
@@ -61,7 +62,7 @@ class JPartnerDecorated extends JPartner{
 			public function __call($name,$arguments){
 				if(preg_match("/^getDecorated/",$name)){
 					 $funcName=str_replace("getDecorated","get",$name);
-					 $labelName=str_replace("getDecorated","",$name);
+					 $labelName=str_replace("getDecorated","",$name);						
 					 if($this->fromPage=="View")
 						$def_val="";
 					else

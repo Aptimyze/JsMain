@@ -736,8 +736,7 @@ class CommonFunction
     public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
     {
         $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
-
-        if ( $isSingleQuote)
+        if($isSingleQuote)
         {
         	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
         }
@@ -772,9 +771,9 @@ class CommonFunction
 
 		$occupationValuesString = "";
 
-		foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+		foreach($occupationGrouping as $key => $occupationGroupingValues) 
 		{
-			if ( in_array($key,$occupationGroupsArray))
+			if(in_array($key,$occupationGroupsArray))
 			{
 				$occupationValuesString .= $occupationGroupingValues.",";
 			}		
@@ -782,12 +781,25 @@ class CommonFunction
 
 		$occupationValuesString = rtrim($occupationValuesString,",");
 
-		if ( $isSingleQuote )
+		if($isSingleQuote)
 		{
 			$occupationValuesString = "'".$occupationValuesString."'";
 			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
 		}
 		return $occupationValuesString;
+    }
+
+    public static function getOccupationGroupsLabelsFromValues($occupationGroups)
+    {
+    	$occupationGroupsArr = explode(",",$occupationGroups);
+    	$decoratedOccGroups = "";
+    	$occupationGroupingFieldMapLib = FieldMap::getFieldLabel('occupation_grouping', '',1);    	
+    	foreach($occupationGroupsArr as $key=>$value)
+    	{
+    		$decoratedOccGroups.= $occupationGroupingFieldMapLib[$value].", ";
+    	}
+    	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
+    	return $decoratedOccGroups;
     }
 }
 ?>
