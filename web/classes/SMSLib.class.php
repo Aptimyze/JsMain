@@ -617,12 +617,35 @@ class SMSLib
                 return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
 
             case "REPORT_INVALID_PHONE_ISD_COMMA":
-                if (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"])) {
+
+                $toSendForPrivacy = 0;
+
+                if($messageValue["SHOWPHONE_MOB"] == 'C')
+                { 
+                    include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+                   $contactDetails = Contacts::getContactsTypeCache($messageValue["RECEIVER"]["PROFILEID"],$messageValue["PROFILEID"]);
+                   $contactArr = explode('_',$contactDetails);
+                   $smaller = $messageValue["RECEIVER"]["PROFILEID"] > $messageValue["PROFILEID"] ? $messageValue["PROFILEID"] :
+                   $messageValue["RECEIVER"]["PROFILEID"]; 
+                   $type = $contactArr[0];
+                   $senderReceiver = $contactArr[1];
+
+                   if($type == 'A' || $smaller == $messageValue["PROFILEID"] && $senderReceiver == 'S' && $type == 'I')
+                   {
+                        $toSendForPrivacy = 1;
+                   }
+                   else
+                   {
+                        $toSendForPrivacy = 0;
+                   }
+                }
+                if ($toSendForPrivacy || (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"]))) { 
                     $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
                     $mob_len = $this->getVariables("PHONE_ISD_COMMA");
                     $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
                     $mob     = '+' . $mob . ' , ';
-                } else {
+                } 
+                else {
                     $mob = '';
                 }
                 return $mob;
