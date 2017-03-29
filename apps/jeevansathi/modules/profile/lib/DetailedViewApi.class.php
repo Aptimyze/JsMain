@@ -286,7 +286,10 @@ class DetailedViewApi
 			$this->m_arrOut['caste'] = $objProfile->getDecoratedCaste();
 		}
 		//Caste End Here
-		$this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
+                if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())
+                    $this->m_arrOut['last_active'] = "Online now";
+                else
+                    $this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
         
         $mtongue = $objProfile->getMTONGUE();
         $communityLabel = FieldMap::getFieldLabel("community_small",$mtongue);
@@ -296,6 +299,16 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
+            if(MobileCommon::isAndroidApp()){ 
+                $this->m_arrOut['thumbnailPic'] = null;
+                $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+                if($havePhoto=='Y'){
+                    if($this->m_actionObject->THUMB_URL) {
+                        $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+                        $this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
+                    }
+                }
+            }
 	}
 	
 	/**
@@ -1294,9 +1307,9 @@ class DetailedViewApi
 		
 		//Response Tracking
 		$this->m_arrOut['responseTracking'] = $actObj->responseTracking;
-		$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
+		//$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
     	$isOnline = $this->m_actionObject->ISONLINE;
-    	if($gtalkOnline || $isOnline)
+    	if($isOnline) // this part was removed -> $gtalkOnline || 
     		$this->m_arrOut["userloginstatus"] = "Online now";
     
     

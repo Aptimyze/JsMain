@@ -34,6 +34,8 @@ public static $all =
 
 		"jquery"             => 'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
 		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
+		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
+    	"androidChatNew"=>'array("chatOn"=>true,"flushLocalStorage"=>false,"xmppBackgroundConnectionTimeout"=>300000)',
 	];
 
 public static $dev = 
@@ -160,6 +162,7 @@ public static $dev =
 		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
 		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover","shortlist"=>"http://%URL_INPUT%:8190/listings/v1/activities","chatAuth"=>"http://%URL_INPUT%:8390/auth/v1/chat")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
+		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
 		"nonRosterRefreshUpdate" => 300000,
 		"stopOnPeakLoad"     => 1,
 		"useMongoDb" => false,
@@ -174,7 +177,7 @@ public static $dev =
 
 		//if set to 1, hides unimportant features at time of peak load on site
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
-
+                "solrServerUrls"      => "array(0=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',1=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',2=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',3=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',4=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/')",
 		/*Search*/
 		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
@@ -210,7 +213,15 @@ public static $dev =
 		"bmsMemcache"        => 'array("HOST"=>"172.16.3.185", "PORT"=>"11211")',
 		"communicationServiceUrl" => "http://172.16.3.203:8390",
 		"profileServiceUrl" => "http://172.16.3.187:8290",
-		"presenceServiceUrl" => "http://192.168.120.70:8290"
+		"presenceServiceUrl" => "http://192.168.120.70:8290",
+		"presenceServiceUrl2" => "http://192.168.120.70:8590",
+        "chatNotificationService" => "http://192.168.120.239:8490",
+
+        "chatOnlineFlag" => "array('profile'=>true,'contact'=>true,'search'=>true)",
+
+		/**Kibana constants**/
+
+		"kibana" =>  "array('ELK_SERVER' =>'elkjs.js.jsb9.net', 'ELASTIC_PORT' => '9200', 'KIBANA_PORT'=>'5601','AURA_SERVER' => 'es.aura.resdex.com','AURA_PORT'=>'9203')",
 	];
 
 public static $test = 
@@ -354,6 +365,7 @@ public static $test =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
+                "solrServerUrls"      => "array(0=>'172.16.3.203:8983/solr/techproducts',1=>'172.16.3.203:8983/solr/techproducts',2=>'172.16.3.203:8983/solr/techproducts',3=>'172.16.3.203:8983/solr/techproducts',4=>'172.16.3.203:8983/solr/techproducts')",
 		"solrServerUrl"      => '172.16.3.203:8983/solr/techproducts',
 		"solrServerUrl1"     => '172.16.3.203:8983/solr/techproducts',
 		"solrServerUrl2"     => '172.16.3.203:8983/solr/techproducts',
@@ -387,6 +399,7 @@ public static $test =
 		"bmsMemcache"        => 'array("HOST"=>"172.16.3.203", "PORT"=>"11211")',
 		"communicationServiceUrl" => "http://172.16.3.203:8390",
 		"profileServiceUrl" => "http://172.16.3.187:8290",
-		"presenceServiceUrl" => "http://192.168.120.70:8290"
+		"presenceServiceUrl" => "http://192.168.120.70:8290",
+        "chatNotificationService" => "http://192.168.120.239:8490"
 	];
 }

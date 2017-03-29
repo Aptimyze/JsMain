@@ -79,11 +79,14 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
+    var selfSub = getMembershipStatus();
+    //console.log("ankita",selfSub);
+    //console.log("ankita1",chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]);
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId]){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]){
             valid = false;
         }
     }
@@ -1271,6 +1274,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
+            //send Message receieved stanza
+            strophieWrapper.sendReceivedReadEvent(msgObj["to"]+"@"+openfireServerName, msgObj["from"]+"@"+openfireServerName, msgObj["msg_id"], strophieWrapper.msgStates["MESSAGE_RECEIVED"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
@@ -1466,18 +1471,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                 if (response["responseStatusCode"] == "0") {
                    // console.log(response);
                     if (response["actiondetails"]) {
-                        if (response["actiondetails"]["errmsglabel"]) {
-                            outputData["cansend"] = outputData["cansend"] || false;
-                            outputData["sent"] = false;
-                            outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                            outputData["errorMsg"] = (response["errorMsg"] == undefined ? response["actiondetails"]["errmsglabel"] : response["errorMsg"]);
+                            outputData["cansend"] = (response["cansend"] != undefined ? response["cansend"] : true);
+                            outputData["sent"] = (response["sent"] != undefined ? response["sent"] : false);
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                        } else {
-                            outputData["cansend"] = true;
-                            outputData["sent"] = true;
-                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                            outputData['eoi_sent'] = response['eoi_sent'];
-                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
-                        }
+                            outputData['eoi_sent'] = (response["eoi_sent"] != undefined ? response["eoi_sent"] : false);
+                            if(outputData["sent"] == true){
+                                strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
+                            }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];

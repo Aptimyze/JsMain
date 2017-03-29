@@ -998,5 +998,23 @@ die;
 		}
 		return $redirectUrl;
 	}
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
+  public static function runFeatureAtNonPeak(){
+		
+		if(in_array(date('H'),array("17","18","19","20","21")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
 }
 ?>

@@ -546,11 +546,13 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-						unset($featuredProfileObj);
+                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+						/*unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
 						$SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
 						$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
+                                                 */
 					}
 
 					if(count($respObj->getSearchResultsPidArr())>0)
@@ -1845,4 +1847,29 @@ class searchActions extends sfActions
     $this->searchList = $savedSearchesResponse;
     $this->setTemplate('JSPC/advancedSearch');
   }
+
+ public function executeStyleheight50px(sfWebRequest $request){
+		$app = MobileCommon::isApp();
+                if(!$app){
+                        if(MobileCommon::isDesktop()){
+                                $app = "D";
+                        }elseif(MobileCommon::isNewMobileSite()){
+                                $app = "J";
+                        }else{
+                                $app = "O";
+                        }
+                }
+                $searchKey .= $app."_";
+                if(php_sapi_name() === 'cli'){
+                        $searchKey .= "CLI_";
+                }
+
+         $http_msg=print_r($_SERVER,true);
+         mail("lavesh.rawat@gmail.com","Style Height called $searchKey","CALLED:$http_msg");
+	 die;
+   }
+
+
+
+
 }

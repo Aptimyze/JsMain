@@ -340,6 +340,15 @@ class LoggingManager
 
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
 		}
+		else
+		{
+			$logData[LoggingEnums::REFERER] = $_SERVER['HTTP_REFERER'];
+		}
+
+		if($exception instanceof Exception)
+		{
+			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
+		}
 		return $logData;
 	}
 
@@ -637,14 +646,15 @@ class LoggingManager
 		}
 		// set module name
 		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
+		// check Log Level
+		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName) || ($this->szLogPath != null));
+
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);
-		// check Log Level
-		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName));
 		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
