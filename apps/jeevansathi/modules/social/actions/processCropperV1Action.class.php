@@ -17,12 +17,15 @@ class processCropperV1Action extends sfActions
                 $profileid = $profileObj->getPROFILEID();
                 $profileObj->getDetail("","","HAVEPHOTO");
 
-                $cropImageSource = $request->getParameter('imageSource');
                 $cropBoxDimensionsArr = $request->getParameter("cropBoxDimensionsArr");
                 $imgPreviewTypeArr = $request->getParameter('imgPreviewTypeArr');
+
+		$pictureServiceObj=new PictureService($profileObj);
+		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+		$cropImageSource = $ProfilePicUrlObj->getMainPicUrl();
+
                 $cropperProcessObj = new CropperProcess($profileObj);
                 $profilesUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
-                $pictureServiceObj =new PictureService($profileObj);
                 if(is_array($profilesUpdate))
                         $output = $pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
                 else
