@@ -102,7 +102,7 @@ class MessageQueues
       "SCHEDULED_NOTIFICATION_QUEUE4" => 0.5,
       "SCHEDULED_NOTIFICATION_QUEUE5" => 10,
       "SCHEDULED_NOTIFICATION_QUEUE6" => 1,
-      "MatchAlertNotification"        => 0.5
+      "MatchAlertNotification"        => 1
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
