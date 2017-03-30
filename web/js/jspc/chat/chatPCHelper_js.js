@@ -1191,58 +1191,68 @@ function checkAuthentication(timer,loginType) {
     var d = new Date();
     var n = d.getTime();
     //console.log("timestamp",n);
-    $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication?p="+n,
-        async: false,
-        success: function (data) {
-            if (data.responseStatusCode == "0") {
-                if(typeof data.hash !== 'undefined'){
-                    auth = 'true';
-                    pass = data.hash;
-                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                        objJsChat.manageLoginLoader();
-                    }
-                    if(loginType == "first"){
-                        initiateChatConnection();
-                        objJsChat._loginStatus = 'Y';
-                        objJsChat._startLoginHTML();
-                    }
-                }
-                else{
-                    if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
-                        setTimeout(function(){
-                            checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
-                        },timer);
-                    }
-                    else{
-                        auth = 'false';
-                        invokePluginLoginHandler("failure");
+    var loggedInUserAuth = readCookie("AUTHCHECKSUM");
+        var chatParams = {
+            "authchecksum":loggedInUserAuth
+        };
+    if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
+        $.ajax({
+            url: listingWebServiceUrl["chatAuth"]+"?p="+n,
+            async: false,
+            timeout: 60000,
+            cache: false,
+            type: 'POST',
+            data: chatParams,
+            success: function (authResponse) {
+                if (authResponse.data) {
+                    if(typeof authResponse.data.hash !== 'undefined'){
+                        auth = 'true';
+                        pass = authResponse.data.hash;
                         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                             objJsChat.manageLoginLoader();
                         }
+                        if(loginType == "first"){
+                            initiateChatConnection();
+                            objJsChat._loginStatus = 'Y';
+                            objJsChat._startLoginHTML();
+                        }
                     }
+                    else{
+                        if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
+                            setTimeout(function(){
+                                checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
+                            },timer);
+                        }
+                        else{
+                            auth = 'false';
+                            invokePluginLoginHandler("failure");
+                            if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                                objJsChat.manageLoginLoader();
+                            }
+                        }
+                    }
+                    localStorage.removeItem("cout");
+
+                    /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
+                        format: CryptoJSAesJson
+                    }).toString(CryptoJS.enc.Utf8));
+                    */
+                } else {
+                    auth = 'false';
+                    checkForSiteLoggedOutMode(data);
+                    invokePluginLoginHandler("failure");
                 }
-                localStorage.removeItem("cout");
-                
-                /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
-                    format: CryptoJSAesJson
-                }).toString(CryptoJS.enc.Utf8));
-                */
-            } else {
-                auth = 'false';
-                checkForSiteLoggedOutMode(data);
-                invokePluginLoginHandler("failure");
+            },
+            error: function (xhr) {
+                    auth = 'false';
+                    invokePluginLoginHandler("failure");
+                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                        objJsChat.manageLoginLoader();
+                    }
+                    //return "error";
             }
-        },
-        error: function (xhr) {
-                auth = 'false';
-                invokePluginLoginHandler("failure");
-                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                    objJsChat.manageLoginLoader();
-                }
-                //return "error";
-        }
-    });
+        });
+    }
     return auth;
 }
 
