@@ -794,7 +794,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//Occupation
 		$szOcc = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_OCC());
 		$p_occlevel=trim($jpartnerObj->getDecoratedPARTNER_OCC());
-		if($szEdu=="DM")
+		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);

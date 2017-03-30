@@ -1,7 +1,7 @@
-~if $loggedIn eq 1`
+~if $loggedIn eq 1 && $premiumDummyUser eq 1`
 	<!--start:div-->
 	<div class="mt15 f14 fontlig">
-		<div class="bg5 txtc lh40 colrw cursp js-email"> Email me matches like these </div>
+		<div class="bg5 txtc lh40 colrw cursp js-email"> Email me matches like these</div>
 		<!--start:div-->
 		<div class="js-email-desc disp-none">
 			<div class="srpbg2">
