@@ -887,9 +887,11 @@ class Membership
 
     function generateReceipt() {
 
-    	// Invoice generation Logic
-		$invNo = $this->generateInvoiceNo();
-
+        //New invoice generation logic 
+        if(date('Y-m-d H:i:s') > '2017-03-31 23:59:59')
+            $invNo = $this->generateNewInvoiceNo();
+        else
+            $invNo = $this->generateInvoiceNo();
         $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
         $paramsStr = "PROFILEID, BILLID, MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, BANK, OBANK, REASON, STATUS, BOUNCE_DT, ENTRY_DT, ENTRYBY,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD,SOURCE,TRANS_NUM,INVOICE_NO";
         $valuesStr = "'$this->profileid','$this->billid','$this->mode','$this->curtype','$this->amount','$this->cheque_number','$this->cheque_date','$this->cheque_city','$this->bank','$this->obank','$this->reason','$this->status','$this->bounced_date',now(),'$this->entryby','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->source','$this->transaction_number','$invNo'";
@@ -2374,6 +2376,28 @@ class Membership
                 $mailerObj->sendServiceActivationMail($mailId, $profileDetails);
             }
         }
+    }
+    
+    public function generateNewInvoiceNo(){
+        $fullYr = date('Y');
+        $yr = date('y');$mn = date('m');$dt = date('d');
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID();
+        if($mn == "04" && $dt == "01"){
+            //truncate table logic
+            $result = $autoIncReceiptidObj->getLastInsertedRow();
+            if($result["ENTRY_DT"]<$fullYr."-"."04"."-"."01 00:00:00"){
+                $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
+            }
+        }
+        $id = $autoIncReceiptidObj->insertNewAutoIncrementReceiptId();
+        
+        $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
+        $trailingZero = 7 - strlen($id);
+        $receiptId = $yr.($yr+1)."-";
+        for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
+        $receiptId.=$id;
+        
+        return $receiptId;
     }
 }
 ?>
