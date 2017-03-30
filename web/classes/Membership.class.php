@@ -2393,11 +2393,15 @@ class Membership
         
         $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
         $trailingZero = 7 - strlen($id);
-        $receiptId = $yr.($yr+1)."-";
+        if($mn == "01" || $mn == "02" || $mn == "03" )
+            $receiptId = ($yr-1).$yr."-";
+        else
+            $receiptId = $yr.($yr+1)."-";
         for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
         $receiptId.=$id;
         
-        return $receiptId;
+        $finalReceiptid = "JS-".$receiptId;
+        return $finalReceiptid;
     }
 }
 ?>
