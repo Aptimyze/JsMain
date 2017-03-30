@@ -56,7 +56,9 @@ EOF;
       }
       unset($count);
       $newjs_occupation = new NEWJS_OCCUPATION();
+      $newjs_occupation->createNewTable();
       $newjs_occupation->insert($insertOccupationArray);
+      $newjs_occupation->RenameTable();
       unset($insertOccupationArray);
 
       //occupation grouping table update part
