@@ -52,7 +52,24 @@ EOF;
         $subject = "[Match Alert] Instant Notification Queue Consumer killed";
         $msgBody = "[Match Alert] Instant Notification Queue Consumer killed";
         SendMail::send_email($to, $msgBody, $subject);
+        $this->sendAlertSMS();
     }
   }
+  
+  public function sendAlertSMS(){
+    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104","ankita"=>"9650879575");
+    foreach($mobileNumberArr as $k=>$v){
+        $this->sms($v);
+    }
+  }
+  
+  public function sms($mobile){
+        $t = time();
+        $message        = "Mysql Error Count have reached InstantNotificationConsumer killed $t";
+        $from           = "JSSRVR";
+        $profileid      = "144111";
+        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $date = date("Y-m-d h");
+    }
 }
 ?>
