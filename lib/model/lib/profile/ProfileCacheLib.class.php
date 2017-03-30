@@ -342,7 +342,6 @@ class ProfileCacheLib
         
         if(count(array_diff(array_unique($arrFields),$array))){
           $this->logThis(LoggingEnums::LOG_INFO, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
-          return false;
           //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
         }
         
