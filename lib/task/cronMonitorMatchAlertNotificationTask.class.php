@@ -44,6 +44,7 @@ EOF;
     $hr = date('H', strtotime('+9 hour 30 minutes'));
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
+    print_r(array("curTime"=>$curTime,"stTime"=>$stTime,"curHr"=>$hr,"count"=>$count));
     if($count==0 && !($hr == 10 || $hr == 11)){
         $rmqObj = new RabbitmqHelper();
         $rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
