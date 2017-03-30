@@ -1251,7 +1251,7 @@ case "occupation_grouping_mapping_to_occupation":
                 "14"=>"27",//Engineering
                 "15"=>"12,8",//BPO/Customer Services
                 "16"=>"45",//Pilot
-                "17"=>"35,56",//Govt
+                "17"=>"35,56",//Govt. Services
                 "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
                 "19"=>"29,43",//Other Occupations
                 "20" => "46",//Air Hostess
@@ -8354,7 +8354,7 @@ case "occupation_grouping":
                 "14"=>"Engineering",
                 "21"=>"Farming",
                 "4"=>"Finance Professionals",
-                "17"=>"Govt",
+                "17"=>"Govt. Services",
                 "6"=>"Healthcare Professionals",
                 "11"=>"Lawyer/Legal Professionals",
                 "1"=>"Management Professionals",
