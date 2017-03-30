@@ -38,7 +38,7 @@ EOF;
   {
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
-    
+    include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
     $curTime = date('Y-m-d H:i:s', strtotime('+9 hour 30 minutes'));
     $stTime = date('Y-m-d H:i:s', strtotime('+9 hour 25 minutes'));
     $hr = date('H', strtotime('+9 hour 30 minutes'));
