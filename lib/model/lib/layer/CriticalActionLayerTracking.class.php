@@ -352,8 +352,7 @@ return 0;
                     break;
 
                     case '17': 
-                      if(!$isApp)
-                      {  
+                       
                      // $profileId=$profileObj->getPROFILEID();
                         $picture_new = new ScreenedPicture;
                         $ordering = $picture_new->getMaxOrdering($profileid);
@@ -373,7 +372,7 @@ return 0;
                            
                       }
                       
-                      }
+                      
                     break;
           default : return false;
         }
