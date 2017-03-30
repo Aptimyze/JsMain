@@ -15,11 +15,13 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 
 $updateArray = array(
-    0 => array('TABLE_NAME'=>'newjs.JPARTNER','IS_MASTER'=>FALSE,'OCCUPATION_VALUE_FIELD'=>'PARTNER_OCC','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => TRUE,'IS_OCCUPATION_CHANGE' => TRUE),
-    1 => array('TABLE_NAME'=>'newjs.SEARCH_MALE','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => FALSE),
-    2 => array('TABLE_NAME'=>'newjs.SEARCH_FEMALE','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => FALSE),
-    3 => array('TABLE_NAME'=>'newjs.SEARCH_AGENT','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"ID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE),
-    4 => array('TABLE_NAME'=>'search.LATEST_SEARCHQUERY','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"ID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE),
+    0 => array('TABLE_NAME'=>'newjs.JPARTNER','IS_MASTER'=>FALSE,'OCCUPATION_VALUE_FIELD'=>'PARTNER_OCC','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => TRUE,'IS_OCCUPATION_CHANGE' => TRUE,'IS_OCCUPATION_GROUPING_CHANGE' => TRUE),
+    1 => array('TABLE_NAME'=>'newjs.SEARCH_MALE','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => FALSE,'IS_OCCUPATION_GROUPING_CHANGE' => TRUE),
+    2 => array('TABLE_NAME'=>'newjs.SEARCH_FEMALE','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => FALSE,'IS_OCCUPATION_GROUPING_CHANGE' => TRUE),
+    3 => array('TABLE_NAME'=>'newjs.SEARCH_AGENT','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"ID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE,'IS_OCCUPATION_GROUPING_CHANGE' => TRUE),
+    4 => array('TABLE_NAME'=>'search.LATEST_SEARCHQUERY','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'OCCUPATION','OCCUPATIN_GROUP_FIELD'=>'OCCUPATION_GROUPING',"PRIMARY_KEY"=>"ID",'IS_SINGLE_QUOTE' => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE,'IS_OCCUPATION_GROUPING_CHANGE' => TRUE),
+    5 => array('TABLE_NAME'=>'newjs.SEARCH_FEMALE_REV','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'PARTNER_OCC','OCCUPATIN_GROUP_FIELD'=>'',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE'  => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE,'IS_OCCUPATION_GROUPING_CHANGE' => FALSE),
+    6 => array('TABLE_NAME'=>'newjs.SEARCH_MALE_REV','IS_MASTER'=>TRUE,'OCCUPATION_VALUE_FIELD'=>'PARTNER_OCC','OCCUPATIN_GROUP_FIELD'=>'',"PRIMARY_KEY"=>"PROFILEID",'IS_SINGLE_QUOTE'  => FALSE, 'IS_OCCUPATION_CHANGE' => TRUE,'IS_OCCUPATION_GROUPING_CHANGE' => FALSE),
     );  
 // Master and slave connection object
 global $mysqlObjS , $mysqlObjM;
@@ -46,13 +48,13 @@ foreach ($updateArray as $key => $tableArr)
             $connArray = getShardConnection($activeServerId);  
             if($connArray['slave'] && $connArray['master'])
             {
-                updateOccupationGrouping($tableArr["TABLE_NAME"],$tableArr['OCCUPATION_VALUE_FIELD'],$tableArr['OCCUPATIN_GROUP_FIELD'],$connArray['slave'],$connArray['master'],$tableArr['PRIMARY_KEY'],$tableArr['IS_SINGLE_QUOTE'],$tableArr['IS_OCCUPATION_CHANGE']);
+                updateOccupationGrouping($tableArr["TABLE_NAME"],$tableArr['OCCUPATION_VALUE_FIELD'],$tableArr['OCCUPATIN_GROUP_FIELD'],$connArray['slave'],$connArray['master'],$tableArr['PRIMARY_KEY'],$tableArr['IS_SINGLE_QUOTE'],$tableArr['IS_OCCUPATION_CHANGE'],$tableArr['IS_OCCUPATION_GROUPING_CHANGE']);
             }
         }
     }
     else
     {
-         updateOccupationGrouping($tableArr["TABLE_NAME"],$tableArr['OCCUPATION_VALUE_FIELD'],$tableArr['OCCUPATIN_GROUP_FIELD'],$connSlave,$connMaster,$tableArr['PRIMARY_KEY'],$tableArr['IS_SINGLE_QUOTE'],$tableArr['IS_OCCUPATION_CHANGE']);              
+         updateOccupationGrouping($tableArr["TABLE_NAME"],$tableArr['OCCUPATION_VALUE_FIELD'],$tableArr['OCCUPATIN_GROUP_FIELD'],$connSlave,$connMaster,$tableArr['PRIMARY_KEY'],$tableArr['IS_SINGLE_QUOTE'],$tableArr['IS_OCCUPATION_CHANGE'],$tableArr['IS_OCCUPATION_GROUPING_CHANGE']);              
     }
 }
 
@@ -67,8 +69,9 @@ foreach ($updateArray as $key => $tableArr)
  * @param  string $primaryKey           the key on which fetching and updation is done
  * @param  boolean $isSingleQuote        whether occupation values are stored as sigle quoted or not
  * @param  boolean $isOccupationChange   whether we need to change occupation values too. in some case, only occupation grouping needs to be changed
+ * @param  boolean $isOccupationGroupingChange whether we need to update occupation groupings too
  */
-function updateOccupationGrouping($tableName,$occupationValueField,$occupationGroupField,$slaveConn,$masterConn,$primaryKey,$isSingleQuote,$isOccupationChange)
+function updateOccupationGrouping($tableName,$occupationValueField,$occupationGroupField,$slaveConn,$masterConn,$primaryKey,$isSingleQuote,$isOccupationChange,$isOccupationGroupingChange)
 {
     global $mysqlObjS , $mysqlObjM;
 
@@ -78,19 +81,27 @@ function updateOccupationGrouping($tableName,$occupationValueField,$occupationGr
     while($row = $mysqlObjS->fetchAssoc($result))
     { 
         if ( $row[$occupationValueField] )
-        {   
+        {
+            unset($occupationGroups);   
+            unset($occupationValues);   
+            unset($setQuery);   
+            unset($updateSql);   
+            unset($setQuery);   
             $occupationGroups = CommonFunction::getOccupationGroups($row[$occupationValueField],$isSingleQuote);
-
-            if ( $isOccupationChange )
+            if ( $isOccupationChange && $isOccupationGroupingChange)
             {
                 $occupationValues = CommonFunction::getOccupationValues($occupationGroups,$isSingleQuote);
                 $setQuery = ' SET '.$occupationValueField.' = "'.$occupationValues .'",'.$occupationGroupField.'= "'.$occupationGroups;
             }
-            else
+            else if ( $isOccupationGroupingChange )
             {
                 $setQuery = ' SET '.$occupationGroupField.'= "'.$occupationGroups;
             }
-
+            else
+            {
+                $occupationValues = CommonFunction::getOccupationValues($occupationGroups,$isSingleQuote);
+                $setQuery = ' SET '.$occupationValueField.' = "'.$occupationValues;
+            }
             $updateSql = 'UPDATE '.$tableName.$setQuery.'" WHERE '. $primaryKey.' = '.$row[$primaryKey];
             $mysqlObjM->executeQuery($updateSql,$masterConn) or $mysqlObjM->logError($updateSql);
 
