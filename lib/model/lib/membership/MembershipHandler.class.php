@@ -331,6 +331,7 @@ class MembershipHandler
                 }
 
             }
+
             $minPriceArr[$mainMem]['OFFER_PRICE'] = min($offerPrice);
         }
 
@@ -2417,5 +2418,37 @@ class MembershipHandler
             $disHistObj->insertDiscountHistory($servDisc);
         }
         unset($nonZero);
+    }
+
+    /*function to compute starting price of membership plans with and without discount
+    * @inputs:$profileid
+    * @return:$output
+    */
+    public function computeMembershipPlanStartingRange($profileid,$device="desktop"){
+        $displayPage = 1;
+        $userObj = new memUser($profileid);
+        $userObj->setMemStatus();
+        $memHandlerObj = new MembershipHandler();
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
+        list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, false);
+        unset($userObj);
+        unset($memHandlerObj);
+
+        print_r($minPriceArr);die;
+        $origStartingPrice = 9999999;
+        $discountedStartingPrice = 9999999;
+        if(is_array($minPriceArr)){
+            foreach($minPriceArr as $service => $val){
+                $origStartingPrice = ($val['OFFER_PRICE']>=0 && $origStartingPrice > $val['OFFER_PRICE'] ? $val['OFFER_PRICE'] : $origStartingPrice);
+            }
+        }
+        if($origStartingPrice < 9999999){
+            $output = null;
+        }
+        else{
+            $output = array("origStartingPrice"=>$origStartingPrice,"discountedStartingPrice"=>$discountedStartingPrice);
+        }
+        print_r($output);die;
+        return $output;
     }
 }
