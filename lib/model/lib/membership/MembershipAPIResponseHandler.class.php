@@ -1729,12 +1729,8 @@ class MembershipAPIResponseHandler {
             if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
                 if(is_array($upgardeMemResponse)){
-                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
-                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
-                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only valid. Till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                 }
             }
@@ -1846,9 +1842,7 @@ class MembershipAPIResponseHandler {
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger");
                 if(is_array($upgardeMemResponse)){
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
-                    //$top = "Pay ".$upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." to upgrade to ".$upgardeMemResponse["upgradeMainMemName"]." till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                    //$bottom = $upgardeMemResponse["upgradeOCBBenefits"];
-                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only valid. Till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                     $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
                 }
