@@ -1730,7 +1730,7 @@ class MembershipAPIResponseHandler {
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
                 if(is_array($upgardeMemResponse)){
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
-                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only valid. Till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                 }
             }
@@ -1842,7 +1842,7 @@ class MembershipAPIResponseHandler {
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger");
                 if(is_array($upgardeMemResponse)){
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
-                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only valid. Till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                     $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
                 }
