@@ -13,6 +13,8 @@ class TrendsPartnerProfiles extends SearchParamters {
   private $filterArray = array();
   // Jpartner data
   private $jpartnerData = array();
+  private $VERIFIED_CHECK = 2;
+  private $LAST_LOGGEDIN_STARTFROM = "1960-01-01 00:00:00";
   /**
    * 
    * @param type $loggedInProfileObj
@@ -32,7 +34,6 @@ class TrendsPartnerProfiles extends SearchParamters {
         $this->setNoOfResults($limit);
         $this->rangeParams .= ",LAST_LOGIN_DT";
         $this->setRangeParams($this->rangeParams);
-        
         // Set login Date condition
         if($sort == SearchSortTypesEnums::SortByTrendsScore){
                 $endDate = date("Y-m-d H:i:s", strtotime("now"));
@@ -44,6 +45,11 @@ class TrendsPartnerProfiles extends SearchParamters {
                 $this->setLLAST_LOGIN_DT("1960-01-01 00:00:00");
                 $this->setHLAST_LOGIN_DT($endDate);
         }
+        
+        //just joined 2 day check
+        $endDate = date("Y-m-d H:i:s", strtotime("now") - $this->VERIFIED_CHECK*24*3600);
+        $this->setLVERIFY_ACTIVATED_DT($this->LAST_LOGGEDIN_STARTFROM);
+        $this->setHVERIFY_ACTIVATED_DT($endDate);
   }
   /**
    * This function returns table store object
