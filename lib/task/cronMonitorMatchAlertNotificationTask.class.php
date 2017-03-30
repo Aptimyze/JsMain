@@ -41,9 +41,10 @@ EOF;
     
     $curTime = date('Y-m-d H:i:s', strtotime('+9 hour 30 minutes'));
     $stTime = date('Y-m-d H:i:s', strtotime('+9 hour 25 minutes'));
+    $hr = date('H', strtotime('+9 hour 30 minutes'));
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
-    if($count==0){
+    if($count==0 && !($hr == 10 || $hr == 11)){
         $rmqObj = new RabbitmqHelper();
         $rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
         $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com";
