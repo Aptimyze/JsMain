@@ -283,6 +283,10 @@ class SearchSort
                                         $sortArray[] = "or(tf(PARTNER_INCOME_FILTER," . $loggedInProfileObj->getINCOME() . "),tf(PARTNER_INCOME_FILTER," . $doesntMatterValue . "))";
                         }
                 }
+                //another bucket for caste
+                if ($loggedInProfileObj->getCASTE()) {
+                                $sortCasteCondition = "if(or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . ")),5,0)";
+                }
                 if (!empty($sortArray)) {
                         $brace = '';
                         $strCondition = '';
@@ -290,11 +294,11 @@ class SearchSort
                                 $strCondition .= "if(" . $arr . ",";
                                 $brace .= ",0)";
                         }
-                        $strCondition .= "1" . $brace;
+                        $strCondition .= "10" . $brace;
                         if($sortLastLogin == 1)
-                                $strCondition = "sum(" . $sortLogin . "," . $strCondition . ")";
+                                $strCondition = "sum(" . $sortLogin . "," . $strCondition .",". $sortCasteCondition .")";
                         else
-                                $strCondition = "sum(". $strCondition . ")";
+                                $strCondition = "sum(". $strCondition . ",". $sortCasteCondition .")";
                 } else {
                         $strCondition = $sortLogin;
                 }
