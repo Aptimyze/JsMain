@@ -68,17 +68,28 @@ class NotificationSender
 	}
 
     }
-    public function getRegistrationIds($profileid,$osType)
+    public function getRegistrationIds($profileid,$osType,$notificationKey='')
     {
 	$valArr['PROFILEID']=$profileid;
 	if($osType != "ALL")
 		$valArr['OS_TYPE']=$osType;
 	$valArr['NOTIFICATION_STATUS'] = "Y";
-
+    
+    if(array_key_exists($notificationKey, NotificationEnums::$appVersionCheck)){
+        $appVersion = NotificationEnums::$appVersionCheck[$notificationKey];
+    }
+    else{
         $appVersion = NotificationEnums::$appVersionCheck["DEFAULT"];
-       	$appVersionAnd =$appVersion['AND'];
-       	$appVersionIos =$appVersion['IOS'];
-
+    }
+    if($osType=='AND' || $osType=='ALL')
+        $appVersionAnd =$appVersion['AND'];
+    if($osType=='IOS' || $osType=='ALL')
+        $appVersionIos =$appVersion['IOS'];
+    
+    //$appVersion = NotificationEnums::$appVersionCheck["DEFAULT"];
+    //$appVersionAnd =$appVersion['AND'];
+    //$appVersionIos =$appVersion['IOS'];
+    
 	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
 	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
 	if(is_array($registrationIdData))
