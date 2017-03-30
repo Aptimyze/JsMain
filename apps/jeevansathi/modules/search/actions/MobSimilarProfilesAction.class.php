@@ -34,7 +34,7 @@ class MobSimilarProfilesAction extends sfActions
                 //Whether and what to show as successfull message
 		if($request->getParameter("fromProfilePage") && $query_params["profilechecksum"]==$this->viewedProfilechecksum){
 			$this->InterestSentMessage=$request->getParameter("fromProfilePage");
-                        if($viewedProfileID != 0){
+                        if($viewedProfileID != 0 && $viewedProfileObj && $viewedProfileObj->getPROFILEID() != ""){
                                 $this->InterestSentToUsername=$viewedProfileObj->getUSERNAME();
                         }else{
                                 $this->InterestSentToUsername = "this profile";
