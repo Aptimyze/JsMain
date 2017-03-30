@@ -205,10 +205,10 @@
     	<div class="clearfix" style="padding:0 30px 0;">
         	<div class="fl fontlig wid88p">
             	<div class="f24 white">~$apiData.membership_message.top|decodevar`</div>
-                <div class="f14 white">~$apiData.membership_message.bottom|decodevar`</div>
-                ~if $apiData.membership_message.extra && $apiData.membership_message.extra neq ""`
+            	~if $apiData.membership_message.extra && $apiData.membership_message.extra neq ""`
                 	<div class="f14 white">~$apiData.membership_message.extra|decodevar`</div>
                 ~/if`
+                <div class="f14 white">~$apiData.membership_message.bottom|decodevar`</div>
             </div>
             <div class="fr wid10p">
             	<div style="padding-top:26px"><i class="mainsp" style="background-position: -323px -168px;width: 17px;height: 27px;"></i></div>
