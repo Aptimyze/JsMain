@@ -19,11 +19,37 @@ class InstantAppNotification
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
 	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT');
   }
-  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array())
+
+  // Push Notification to MQ
+  public function pushInstantAppNotificationToMq($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array()){
+
+    	$producerObj=new Producer();
+    	if($producerObj->getRabbitMQServerConnected())
+    	{
+	        $gcmData=array('process'=>'GCM','data'=>array('type'=>$this->notificationKey,'body'=>array('receiverid'=>$selfProfile,'senderid'=>$otherProfile,'message'=>$message,'exUrl'=>$exUrl,'extraParams'=>$extraParams)), 'redeliveryCount'=>0 );
+		//print_r($gcmData);
+        	$producerObj->sendMessage($gcmData);
+	}
+  }
+
+  // Function to send Notification
+  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array(), $rabbitMq='')
   {
     if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
         return;
     }
+
+    // Push Instant Notification To Queue Logic
+    $notificationFunction =new NotificationFunctions();
+    $notificationFunction->appNotificationCountCachng($this->notificationKey, $rabbitMq);
+
+    if(!$rabbitMq){	 
+    	$this->pushInstantAppNotificationToMq($selfProfile,$otherProfile,$message,$exUrl,$extraParams);
+	return;
+    }
+    // Push Instant Notification To Queue Logic	End
+
+
     $notSendObj = new NotificationSender;
     $regIds = $notSendObj->getRegistrationIds($selfProfile, "ALL");
     unset($notSendObj);
@@ -104,15 +130,15 @@ class InstantAppNotification
 					$profileDetails[$selfProfile]['PROFILEID']=$selfProfile;
 					$profileDetails[$selfProfile]['PRIORITY']=$notificationData['PRIORITY'];
 					$profileDetails[$selfProfile]['COUNT']=$notificationData['COUNT'];
-                    if($notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
-                        $profileDetails[$selfProfile]['COUNT']=$extraParams["COUNT"];
-                        $profileDetails[$selfProfile]['PHOTO_URL']=$extraParams["OTHER_PROFILE_URL"];
-                    }
+                    			if($notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
+                        			$profileDetails[$selfProfile]['COUNT']=$extraParams["COUNT"];
+                        			$profileDetails[$selfProfile]['PHOTO_URL']=$extraParams["OTHER_PROFILE_URL"];
+                    			}	
 					$profileDetails[$selfProfile]['SENT']='P';
 					$scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
                   			$profileDetails[$selfProfile]['ID'] = $scheduledAppNotificationsObj->insert($profileDetails);
                   			$profileDetails=$notificationSenderObj->filterProfilesBasedOnNotificationCount($profileDetails,'PROFILE_VISITOR');
-                            //This profileDetails is being unset in case of the notification has been send above limit
+                            		//This profileDetails is being unset in case of the notification has been send above limit
 				}
 				if($notificationData['NOTIFICATION_KEY']=='CSV_UPLOAD'){
 					$profileDetails[$selfProfile]['IMG_URL']=$exUrl;
