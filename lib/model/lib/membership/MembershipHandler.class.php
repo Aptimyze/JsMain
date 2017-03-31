@@ -2424,48 +2424,14 @@ class MembershipHandler
     * @inputs:$profileid
     * @return:$output
     */
-    public function computeMembershipPlanStartingRange($profileid){
-        $displayPage = 1;
-        $device = "desktop";
-        $userObj = new memUser($profileid);
-        $userObj->setMemStatus();
-        list($ipAddress, $currency) = $this->getUserIPandCurrency($profileid);
-
-        $memHandlerObj = new MembershipHandler();
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
-        list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, false);
-        unset($userObj);
-        unset($memHandlerObj);
-        //print_r($allMainMem);
-        //print_r($minPriceArr);
-        $origStartingPrice = 9999999;
-        $discountedStartingPrice = 9999999;
-        if(is_array($minPriceArr)){
-            foreach($minPriceArr as $service => $val){
-                if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
-                    $discountedStartingPrice = $val['OFFER_PRICE'];
-                    if($currency == "RS"){
-                        $origStartingPrice = $val['PRICE_INR'];
-                    }
-                    else{
-                        $origStartingPrice = $val['PRICE_USD'];
-                    }
-                }
-            }
-        }
-        $output = array();
-        if($origStartingPrice < 9999999){
-            if($currency == "RS"){
-                $output["membetshipDisplayCurrency"] = '₹';
-            }
-            else{
-                $output["membetshipDisplayCurrency"] = '$';
-            }
-            $output["origStartingPrice"] = number_format($origStartingPrice, 0, '.', ',');
-            if($origStartingPrice != $discountedStartingPrice){
-                $output["discountedStartingPrice"] = number_format($discountedStartingPrice, 0, '.', ',');
-            }
-        }
-        return $output;
+    public function fetchMembershipPlansStartingRange($request){
+        $request->setParameter('getMembershipPlansStartingRange', 1);
+        $request->setParameter('INTERNAL', 1);
+        ob_start();
+        $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
+        $output = ob_get_contents();
+        ob_end_clean();
+        $data = json_decode($output, true);
+        return $data;
     }
 }
