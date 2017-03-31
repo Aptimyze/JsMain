@@ -6,7 +6,7 @@
  * @package    jeevansathi
  * @author     Hemant Agrawal
  */
-class WapSiteMapTask extends sfBaseTask
+class WapSiteMapNewTask extends sfBaseTask
 {
 	private $errorMsg;
 	public function Showtime($mes)
@@ -28,7 +28,7 @@ $this->addOptions(array(
 The [WebSiteMap|INFO] task does things.
 Call it with:
 
-  [php symfony WebSiteMap|INFO]
+  [php symfony WebSiteMapNew|INFO]
 EOF;
 
 //Parameters that are passed as arguments.
@@ -327,7 +327,7 @@ EOF;
 	private function UpdateXML($domtree,$domEle,$url,$priority,$changefreq='weekly')
 	{
 		
-		$domEle->appendChild($domtree->createElement("loc",JsConstants::$siteUrl.$url));
+		$domEle->appendChild($domtree->createElement("loc",JsConstants::$ssl_siteUrl.$url));
 		$domEle->appendChild($domtree->createElement("lastmod",date("c")));
 		$domEle->appendChild($domtree->createElement("priority",$priority));
 		$domEle->appendChild($domtree->createElement("changefreq",$changefreq));
@@ -348,7 +348,7 @@ EOF;
 		$arr[1][1]="new-sitemap_index_mobile_daily.xml";
 		$path=JsConstants::$docRoot;
 		if($webpath)
-		$path=JsConstants::$siteUrl;
+		$path=JsConstants::$ssl_siteUrl;
 		return $path."/".$arr[$this->mobile][$this->daily];
 		
 	}
@@ -361,7 +361,7 @@ EOF;
 		$path=JsConstants::$docRoot;
 		if($webpath)
 		{
-			$path=JsConstants::$siteUrl;
+			$path=JsConstants::$ssl_siteUrl;
 			return $path."/xmlnew/".$arr[$this->mobile][$this->daily].".gz";
 		}
 		return $path."/xmlnew/".$arr[$this->mobile][$this->daily];
