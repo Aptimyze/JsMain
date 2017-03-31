@@ -8,7 +8,7 @@ Class HandlingCommonReqDatabaseId
 
 	public static function isMasterMasterDone(){
 		foreach(self::$modulesWhereMasterMasterDone as $v){
-			if(strstr($_SERVER["REQUEST_URI"],$v))
+			if(stristr($_SERVER["REQUEST_URI"],$v))
 				return true;
 		}
 		return false;
