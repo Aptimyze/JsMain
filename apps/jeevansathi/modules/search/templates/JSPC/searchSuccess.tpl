@@ -59,7 +59,7 @@
 					</div>
 					<!--end:search summary-->
 					~if $showSaveSearchIcon`
-						~include_partial("search/JSPC/saveSearch",['loggedIn'=>$loggedIn,'savedSearches'=>$savedSearches,'searchSummaryFormatted'=>$searchSummaryFormatted])`
+						~include_partial("search/JSPC/saveSearch",['loggedIn'=>$loggedIn,'savedSearches'=>$savedSearches,'searchSummaryFormatted'=>$searchSummaryFormatted,'premiumDummyUser'=>$premiumDummyUser])`
 					~/if`
 				</span>
 				

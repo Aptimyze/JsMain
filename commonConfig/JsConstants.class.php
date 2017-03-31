@@ -160,7 +160,7 @@ public static $dev =
 		"communicationRep" => true,
 		"jsChatFlag" => 1, //1=>enable chat, 0=>disable chat
 		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
-		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover")',
+		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover","shortlist"=>"http://%URL_INPUT%:8190/listings/v1/activities","chatAuth"=>"http://%URL_INPUT%:8390/auth/v1/chat")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
 		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
 		"nonRosterRefreshUpdate" => 300000,
@@ -347,7 +347,7 @@ public static $test =
 		"communicationRep" => 1,
 		"jsChatFlag"  => '0',
 		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
-		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover")',
+		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover","shortlist"=>"http://%URL_INPUT%:8190/listings/v1/activities","chatAuth"=>"http://%URL_INPUT%:8390/auth/v1/chat")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
 		"nonRosterRefreshUpdate" => 300000,
 		"stopOnPeakLoad"     => 1,
