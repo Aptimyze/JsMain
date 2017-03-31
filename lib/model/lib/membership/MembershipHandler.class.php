@@ -331,6 +331,7 @@ class MembershipHandler
                 }
 
             }
+
             $minPriceArr[$mainMem]['OFFER_PRICE'] = min($offerPrice);
         }
 
@@ -2417,5 +2418,20 @@ class MembershipHandler
             $disHistObj->insertDiscountHistory($servDisc);
         }
         unset($nonZero);
+    }
+
+    /*function to compute starting price of membership plans with and without discount
+    * @inputs:$profileid
+    * @return:$output
+    */
+    public function fetchMembershipPlansStartingRange($request){
+        $request->setParameter('getMembershipPlansStartingRange', 1);
+        $request->setParameter('INTERNAL', 1);
+        ob_start();
+        $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
+        $output = ob_get_contents();
+        ob_end_clean();
+        $data = json_decode($output, true);
+        return $data;
     }
 }

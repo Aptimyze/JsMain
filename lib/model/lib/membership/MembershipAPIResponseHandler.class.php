@@ -96,6 +96,7 @@ class MembershipAPIResponseHandler {
         $this->internalParamCheck = $request->getParameter('INTERNAL');
         $this->getMembershipMessage = $request->getParameter('getMembershipMessage');
         $this->getHamburgerMessage = $request->getParameter('getHamburgerMessage');
+        $this->getMembershipPlansStartingRange = $request->getParameter('getMembershipPlansStartingRange');
         $this->appVersion = $request->getParameter('API_APP_VERSION');
 
         $this->callbackSource = $request->getParameter('callbackSource');
@@ -295,7 +296,10 @@ class MembershipAPIResponseHandler {
         } 
         // elseif ($this->PayUOrderProcess == 1) {
         //     $output = $this->handlePayUOrderProcessing($request);
-        // } 
+        // }
+        else if($this->getMembershipPlansStartingRange == 1) {
+            $output = $this->generateMembershipPlansStartingRange();
+        }  
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -1881,6 +1885,44 @@ class MembershipAPIResponseHandler {
         
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_HAMB_MESSAGE', serialize($output) , 1800);
+        return $output;
+    }
+
+    /*function to generate Membership plans starting range with discount details
+    *@return: $output
+    */
+    public function generateMembershipPlansStartingRange(){
+        $origStartingPrice = 9999999;  //max integer value
+        $discountedStartingPrice = 9999999;  //max integer value
+
+        if(is_array($this->minPriceArr) && $this->profileid){
+            foreach($this->minPriceArr as $service => $val){
+                if($val['PRICE_INR']>=0 && $origStartingPrice > $val['PRICE_INR']){
+                    $discountedStartingPrice = $val['OFFER_PRICE'];
+                    if($this->currency == "RS"){
+                        $origStartingPrice = $val['PRICE_INR'];
+                    }
+                    else{
+                        $origStartingPrice = $val['PRICE_USD'];
+                    }
+                }
+            }
+        }
+        $output = array();
+        if($origStartingPrice < 9999999){
+            if($this->currency == "RS"){
+                $output["startingPlan"]["membershipDisplayCurrency"] = '₹';
+            }
+            else{
+                $output["startingPlan"]["membershipDisplayCurrency"] = '$';
+            }
+             
+            $output["startingPlan"]["origStartingPrice"] = "".$origStartingPrice;
+            $output["startingPlan"]["discountedStartingPrice"] = "".$discountedStartingPrice;
+        }
+        else{
+            $output["startingPlan"] = null;
+        }
         return $output;
     }
     
