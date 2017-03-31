@@ -663,7 +663,7 @@ class Membership
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
-            $this->generateBill();
+            $this->generateBill($memUpgrade);
         }
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
@@ -747,7 +747,7 @@ class Membership
         $this->sales_type = $myrow_sales['CRM_TEAM'];
     }
     
-    function generateBill() {
+    function generateBill($memUpgrade = "NA") {
 
         if(empty($this->discount_type) || $this->discount_type == 0){
             $this->discount_type = 12;
@@ -786,7 +786,10 @@ class Membership
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY,DISCOUNT_PERCENT";
         $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$modifiedServeFor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content','$geoIpCountryName','$this->discount_percent'";
-        
+        if($memUpgrade != 'NA'){
+            $paramsStr .= ", MEM_UPGRADE";
+            $valuesStr .= ",'$memUpgrade'";
+        }
         // TAX FOR RS ONLY
         if ($this->curtype == 'RS') {
             $paramsStr .= ", TAX_RATE";
@@ -1406,7 +1409,12 @@ class Membership
 
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
-        $smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
+        //Start:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
+        //$smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $ser_name = $serviceObj->get_servicename(substr($purDetRow['SERVICEID'],0,4));
+        $smarty->assign("eAdvantageServiceName", $ser_name);
+        //End:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
         $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
         unset($purDetRow);
 
@@ -1426,7 +1434,7 @@ class Membership
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
 	    $entryBy =$myrow['ENTRYBY'];
-
+            $memUpgrage = $myrow['MEM_UPGRADE'];
 	    if($entryBy=='ONLINE')
 		$ipCountry =$myrow['COUNTRY'];
 	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
@@ -1485,7 +1493,7 @@ class Membership
                 $qty = "1";
                 $ser_name_dur = $ser_name;
             }
-            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
+            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "MEM_UPGRADE" => $memUpgrage, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
             $i++;
         }
         unset($i);
