@@ -1889,14 +1889,18 @@ class MembershipAPIResponseHandler {
         return $output;
     }
 
+    /*function to generate Membership plans starting range with discount details
+    *@return: $output
+    */
     public function generateMembershipPlansStartingRange(){
         $origStartingPrice = 9999999;
         $discountedStartingPrice = 9999999;
+        
         if(is_array($this->minPriceArr) && $this->profileid){
             foreach($this->minPriceArr as $service => $val){
                 if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
                     $discountedStartingPrice = $val['OFFER_PRICE'];
-                    if($currency == "RS"){
+                    if($this->currency == "RS"){
                         $origStartingPrice = $val['PRICE_INR'];
                     }
                     else{
@@ -1908,16 +1912,14 @@ class MembershipAPIResponseHandler {
         $output = array();
         if($origStartingPrice < 9999999){
             if($this->currency == "RS"){
-                $output["membetshipDisplayCurrency"] = '₹';
+                $output["membershipDisplayCurrency"] = '₹';
             }
             else{
-                $output["membetshipDisplayCurrency"] = '$';
+                $output["membershipDisplayCurrency"] = '$';
             }
              
-            $output["origStartingPrice"] = number_format($origStartingPrice, 0, '.', ',');
-            if($origStartingPrice != $discountedStartingPrice){
-                $output["discountedStartingPrice"] = number_format($discountedStartingPrice, 0, '.', ',');
-            }
+            $output["origStartingPrice"] = $origStartingPrice;
+            $output["discountedStartingPrice"] = $discountedStartingPrice;
         }
         return $output;
     }
