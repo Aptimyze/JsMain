@@ -588,17 +588,6 @@ public function microtime_float()
 	  unset($profiles);
 	  if($timeCriteria!='')
 	  {
-		  $timeCriteriaArr = explode("|",$timeCriteria);
-		  if($timeCriteriaArr[0]!='')
-		  {
-			  $dateformatGreaterThan = $this->getDate($timeCriteriaArr[0]);
-			  $greaterThan['LAST_LOGIN_DT']=$dateformatGreaterThan;
-		  }
-		  if($timeCriteriaArr[1]!='')
-		  {
-			  $dateformatLessThan = $this->getDate($timeCriteriaArr[1]);
-			  $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
-		  }
 	  }
 	  $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields="*",$lessThan);
 	  if(is_array($profiles))
