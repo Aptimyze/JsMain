@@ -1899,12 +1899,12 @@ class MembershipAPIResponseHandler {
         if(is_array($this->minPriceArr) && $this->profileid){
             foreach($this->minPriceArr as $service => $val){
                 if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
-                    $discountedStartingPrice = $val['OFFER_PRICE'];
+                    $discountedStartingPrice = intval($val['OFFER_PRICE']);
                     if($this->currency == "RS"){
-                        $origStartingPrice = $val['PRICE_INR'];
+                        $origStartingPrice = intval($val['PRICE_INR']);
                     }
                     else{
-                        $origStartingPrice = $val['PRICE_USD'];
+                        $origStartingPrice = intval($val['PRICE_USD']);
                     }
                 }
             }
