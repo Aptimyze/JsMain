@@ -18,7 +18,8 @@ class RabbitmqHelper
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
 			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
                           "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
-                          "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com"
+                          "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
+                          "screening" => "nitesh.s@jeevansathi.com,nikmittal4994@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -30,7 +31,10 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    //SendMail::send_email($emailTo,$message,$subject);           
+    if($to == "screening")
+    {
+      SendMail::send_email($emailTo,$message,$subject);
+    }
   }
 
   public static function sendChatConsumerAlert($message)
@@ -113,6 +117,22 @@ class RabbitmqHelper
     else
       return null;
     
+  }
+  
+  public function killConsumerForCommand($command){
+    exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
+    //echo "\n".$command."-";
+    //print_r($output);
+    if(!empty($output) && is_array($output))
+    {
+      foreach ($output as $key => $value) 
+      {
+        $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+        if($count1 >0)
+          exec("kill -9 ".$value);
+      }
+    }
+    unset($output);
   }
 }
 ?>

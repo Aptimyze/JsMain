@@ -65,6 +65,12 @@ EOF;
 		              "lt"=> "now"
 		            ]
 		          ]
+		        ],
+		        [
+		        	"exists" => 
+		        	[
+                    	"field" => "LogMessage"
+                	]
 		        ]
 		      ],
 		      "must_not" => [

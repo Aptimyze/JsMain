@@ -1,14 +1,14 @@
-<?
+<?php
 /*
 * This class will generate the radom-id for database so that we can use that same id across 
 */
 Class HandlingCommonReqDatabaseId
 {
-	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform","/api/v1/notification","/api/v3/notification");
+	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform","/api/v1/notification","/api/v3/notification","/search/perform","/search/verifiedMatches","/search/twoway","/search/reverseDpp","/search/search","/search/ViewSim","/search/saveSearch","/search/Advanced","/search/advance","/search/populate","/search/MobSim","/search/visitor","/search/guna","/search/kund","/search/shortlisted","/search/topSearchBand","/profile/search.php","/search/quick","/search/lastSearchResults","/search/savedSearches");
 
 	public static function isMasterMasterDone(){
 		foreach(self::$modulesWhereMasterMasterDone as $v){
-			if(strstr($_SERVER["REQUEST_URI"],$v))
+			if(stristr($_SERVER["REQUEST_URI"],$v))
 				return true;
 		}
 		return false;
