@@ -663,7 +663,7 @@ class Membership
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
-            $this->generateBill();
+            $this->generateBill($memUpgrade);
         }
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
@@ -747,7 +747,7 @@ class Membership
         $this->sales_type = $myrow_sales['CRM_TEAM'];
     }
     
-    function generateBill() {
+    function generateBill($memUpgrade = "NA") {
 
         if(empty($this->discount_type) || $this->discount_type == 0){
             $this->discount_type = 12;
@@ -786,7 +786,10 @@ class Membership
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY,DISCOUNT_PERCENT";
         $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$modifiedServeFor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content','$geoIpCountryName','$this->discount_percent'";
-        
+        if($memUpgrade != 'NA'){
+            $paramsStr .= ", MEM_UPGRADE";
+            $valuesStr .= ",'$memUpgrade'";
+        }
         // TAX FOR RS ONLY
         if ($this->curtype == 'RS') {
             $paramsStr .= ", TAX_RATE";
@@ -887,9 +890,11 @@ class Membership
 
     function generateReceipt() {
 
-    	// Invoice generation Logic
-		$invNo = $this->generateInvoiceNo();
-
+        //New invoice generation logic 
+        if(date('Y-m-d H:i:s') > '2017-03-31 23:59:59')
+            $invNo = $this->generateNewInvoiceNo();
+        else
+            $invNo = $this->generateInvoiceNo();
         $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
         $paramsStr = "PROFILEID, BILLID, MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, BANK, OBANK, REASON, STATUS, BOUNCE_DT, ENTRY_DT, ENTRYBY,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD,SOURCE,TRANS_NUM,INVOICE_NO";
         $valuesStr = "'$this->profileid','$this->billid','$this->mode','$this->curtype','$this->amount','$this->cheque_number','$this->cheque_date','$this->cheque_city','$this->bank','$this->obank','$this->reason','$this->status','$this->bounced_date',now(),'$this->entryby','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->source','$this->transaction_number','$invNo'";
@@ -1404,7 +1409,12 @@ class Membership
 
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
-        $smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
+        //Start:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
+        //$smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $ser_name = $serviceObj->get_servicename(substr($purDetRow['SERVICEID'],0,4));
+        $smarty->assign("eAdvantageServiceName", $ser_name);
+        //End:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
         $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
         unset($purDetRow);
 
@@ -1424,7 +1434,7 @@ class Membership
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
 	    $entryBy =$myrow['ENTRYBY'];
-
+            $memUpgrage = $myrow['MEM_UPGRADE'];
 	    if($entryBy=='ONLINE')
 		$ipCountry =$myrow['COUNTRY'];
 	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
@@ -1483,7 +1493,7 @@ class Membership
                 $qty = "1";
                 $ser_name_dur = $ser_name;
             }
-            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
+            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "MEM_UPGRADE" => $memUpgrage, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
             $i++;
         }
         unset($i);
@@ -2374,6 +2384,32 @@ class Membership
                 $mailerObj->sendServiceActivationMail($mailId, $profileDetails);
             }
         }
+    }
+    
+    public function generateNewInvoiceNo(){
+        $fullYr = date('Y');
+        $yr = date('y');$mn = date('m');$dt = date('d');
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID();
+        if($mn == "04" && $dt == "01"){
+            //truncate table logic
+            $result = $autoIncReceiptidObj->getLastInsertedRow();
+            if($result["ENTRY_DT"]<$fullYr."-"."04"."-"."01 00:00:00"){
+                $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
+            }
+        }
+        $id = $autoIncReceiptidObj->insertNewAutoIncrementReceiptId();
+        
+        $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
+        $trailingZero = 7 - strlen($id);
+        if($mn == "01" || $mn == "02" || $mn == "03" )
+            $receiptId = ($yr-1).$yr."-";
+        else
+            $receiptId = $yr.($yr+1)."-";
+        for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
+        $receiptId.=$id;
+        
+        $finalReceiptid = "JS-".$receiptId;
+        return $finalReceiptid;
     }
 }
 ?>

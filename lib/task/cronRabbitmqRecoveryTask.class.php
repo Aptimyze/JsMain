@@ -30,6 +30,9 @@ EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
     ));
+    $this->addArguments(array(
+      new sfCommandArgument('server', sfCommandArgument::OPTIONAL, 'My argument')
+        ));
   }
 
    /**
@@ -238,8 +241,14 @@ EOF;
      
     if(!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
-  
-    $this->consumerToCountMapping = array(
+    
+    if($arguments["server"] == "72"){
+        $this->consumerToCountMapping = array(
+                                    MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT
+                                    );
+    }
+    else{
+        $this->consumerToCountMapping = array(
                                     MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
                                   MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
@@ -256,8 +265,9 @@ EOF;
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
                                   MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT
                                     );
+    }
     $this->callRabbitmqServerApi("FIRST_SERVER");
-   
+    
     if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
       //echo "111";die;
