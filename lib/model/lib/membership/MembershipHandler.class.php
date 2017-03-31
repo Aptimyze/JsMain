@@ -2436,8 +2436,8 @@ class MembershipHandler
         list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, false);
         unset($userObj);
         unset($memHandlerObj);
-        print_r($allMainMem);
-        print_r($minPriceArr);
+        //print_r($allMainMem);
+        //print_r($minPriceArr);
         $origStartingPrice = 9999999;
         $discountedStartingPrice = 9999999;
         if(is_array($minPriceArr)){
@@ -2453,11 +2453,18 @@ class MembershipHandler
                 }
             }
         }
-        if($origStartingPrice >= 9999999){
-            $output = array("origStartingPrice"=>"","discountedStartingPrice"=>"");
-        }
-        else{
-            $output = array("origStartingPrice"=>number_format($origStartingPrice, 2, '.', ','),"discountedStartingPrice"=>number_format($discountedStartingPrice, 2, '.', ','));
+        $output = array();
+        if($origStartingPrice < 9999999){
+            if($currency == "RS"){
+                $output["membetshipDisplayCurrency"] = '₹';
+            }
+            else{
+                $output["membetshipDisplayCurrency"] = '$';
+            }
+            $output["origStartingPrice"] = number_format($origStartingPrice, 0, '.', ',');
+            if($origStartingPrice != $discountedStartingPrice){
+                $output["discountedStartingPrice"] = number_format($discountedStartingPrice, 0, '.', ',');
+            }
         }
         return $output;
     }
