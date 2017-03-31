@@ -32,9 +32,9 @@ EOF;
 	   
     $user = $arguments["user"];
     if($user){
-      $memHandlerObj = new MembershipHandler(false);
-      $output = $memHandlerObj->computeMembershipPlanStartingRange($user);
-      print_r($output);
+      //$memHandlerObj = new MembershipHandler(false);
+      //$output = $memHandlerObj->computeMembershipPlanStartingRange($user);
+      //print_r($output);
     }
     die;
 
