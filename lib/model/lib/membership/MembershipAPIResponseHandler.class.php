@@ -1894,10 +1894,10 @@ class MembershipAPIResponseHandler {
     public function generateMembershipPlansStartingRange(){
         $origStartingPrice = 9999999;  //max integer value
         $discountedStartingPrice = 9999999;  //max integer value
-        
+
         if(is_array($this->minPriceArr) && $this->profileid){
             foreach($this->minPriceArr as $service => $val){
-                if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
+                if($val['PRICE_INR']>=0 && $origStartingPrice > $val['PRICE_INR']){
                     $discountedStartingPrice = $val['OFFER_PRICE'];
                     if($this->currency == "RS"){
                         $origStartingPrice = $val['PRICE_INR'];
