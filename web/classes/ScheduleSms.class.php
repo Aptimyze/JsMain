@@ -765,13 +765,26 @@ class ScheduleSms
                 break;
             case "EOI_WEEKLY":
             case "EOI":
+                $date7daysBack = date("Y-m-d",strtotime("-7 days"));
                 foreach ($this->dbShards as $k => $conn) {
+                    switch($k){
+                        case $this->ShardIdForProfile(3) :
+                            $shardNum = 0;
+                         break;
+                        case $this->ShardIdForProfile(2) :
+                            $shardNum = 2;
+                         break;
+                        case $this->ShardIdForProfile(1) :
+                            $shardNum = 1;
+                         break;
+                        
+                    }
                     $temp      = array();
                     $eoi_count = array();
                     if ($key == "EOI")
-                        $sql = "SELECT SENDER,RECEIVER FROM newjs.CONTACTS where TIME BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "' AND TYPE='I' AND FILTERED!='Y' AND COUNT=1 AND SEEN!='Y'";
+                        $sql = "SELECT SENDER,RECEIVER FROM newjs.CONTACTS where RECEIVER % 3 = $shardNum AND TIME BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "' AND TYPE='I' AND FILTERED!='Y' AND COUNT=1 AND SEEN!='Y'";
                     elseif ($key == "EOI_WEEKLY")
-                        $sql = "SELECT SENDER,RECEIVER FROM newjs.CONTACTS where TIME BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "' AND TYPE='I' AND FILTERED!='Y' AND COUNT=1 AND SEEN!='Y'";
+                        $sql = "SELECT SENDER,RECEIVER FROM newjs.CONTACTS where RECEIVER % 3 = $shardNum AND TIME BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "' AND TYPE='I' AND FILTERED!='Y' AND COUNT=1 AND SEEN!='Y'";
                     echo $sql . "\n";
                     $res = mysql_query($sql, $conn) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function while executing on shards: " . $conn);
                     /*					$count = mysql_num_rows($res);
@@ -791,11 +804,12 @@ class ScheduleSms
                     $eoi_count[$row["RECEIVER"]][] = $row["SENDER"];
                     $trans++;
                     }*/
+
+
                     while ($row = mysql_fetch_assoc($res)) {
-                        if ($k == $this->ShardIdForProfile($row["RECEIVER"])) {
+                            if($this->userLoggedInFromApp($row["RECEIVER"],$date7daysBack))continue;
                             $temp[$row["RECEIVER"]]        = $row["SENDER"];
                             $eoi_count[$row["RECEIVER"]][] = $row["SENDER"];
-                        }
                     }
                     if ($temp) {
                         $receiver = array_unique(array_keys($temp));
@@ -2492,5 +2506,20 @@ class ScheduleSms
             break;
         }
     }
+
+        public function userLoggedInFromApp($profileid,$date)
+        {
+                        $sql = "SELECT count(*) as CNT FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=$profileid AND date(DATE)>='$date' AND WEBSITE_VERSION IN ('A','I')";
+                        $result = mysql_query($sql, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key:  EOI  in processData() function while executing on MIS.LOGIN_TRACKING");
+                        if($row = mysql_fetch_assoc($result))
+                        {
+                           if($row['CNT']==0) return false;
+                           else return true;
+                        }
+                        
+                        return false;      
+        }
+    
+    
 }
 ?>

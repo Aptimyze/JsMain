@@ -482,7 +482,7 @@ class InboxMobileAppV1
 		self::init();
 		if (!empty($displayObj[$infoKey]["TUPLES"]))
 		 {
-			if($infoKey == "MATCH_ALERT")
+			if($infoKey == "MATCH_ALERT" || $infoKey == "VISITORS")
 			{
 				$profiles = array_keys($displayObj[$infoKey]["TUPLES"]);
 				$bookmarkObj  = new Bookmarks();

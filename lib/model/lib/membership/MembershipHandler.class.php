@@ -2354,7 +2354,7 @@ class MembershipHandler
     * @inputs: $orderid
     * @outputs: none
     */
-    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
+    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=false){
         $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
         $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
         unset($upgradeOrdersObj);
@@ -2364,7 +2364,7 @@ class MembershipHandler
         }
     }
 
-    function checkMemUpgrade($orderid,$profileid,$flushCache=true){
+    function checkMemUpgrade($orderid,$profileid,$flushCache=false){
         //check whether user is eligible for membership upgrade or not
         $memCacheObject = JsMemcache::getInstance();
         $checkForMemUpgrade = $memCacheObject->get($profileid.'_MEM_UPGRADE_'.$orderid);
