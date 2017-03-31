@@ -1,7 +1,7 @@
 <div class="pos-abs fullwid z5 disp-none" id="prfDay" style="top:-25px">
         <div class="clearfix">
             <div class="fl fontreg f16 colrw uppercase">
-                profile of the day
+                match of the day
             </div>
             <i class="fr sprite2 stk_cls cursp"></i>
         </div>

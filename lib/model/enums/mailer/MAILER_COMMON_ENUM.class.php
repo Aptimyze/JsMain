@@ -25,8 +25,8 @@ class MAILER_COMMON_ENUM
 		self::$mailerSenders["MATCHALERT"]["ALIAS"]="Jeevansathi Matches";
 		self::$mailerSenders["NEW_MATCHES"]["SENDER"]="matchalert@jeevansathi.com";
                 self::$mailerSenders["NEW_MATCHES"]["ALIAS"]="Jeevansathi Matches";
-		self::$mailerSenders["VISITORALERT"]["SENDER"]="visitoralert@jeevansathi.com";
-                self::$mailerSenders["VISITORALERT"]["ALIAS"]="Jeevansathi Alerts";
+		self::$mailerSenders["VISITORALERT"]["SENDER"]="info@jeevansathi.com";
+                self::$mailerSenders["VISITORALERT"]["ALIAS"]="Jeevansathi Info";
                 self::$mailerSenders["SAVED_SEARCH"]["SENDER"]="matchalert@jeevansathi.com";
                 self::$mailerSenders["SAVED_SEARCH"]["ALIAS"]="Jeevansathi Matches";
                 self::$mailerSenders["KUNDLI_ALERTS"]["SENDER"]="matchalert@jeevansathi.com";

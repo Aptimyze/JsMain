@@ -144,7 +144,7 @@ class SolrResponse implements ResponseHandleInterface
                                $msgReqForDebug[]=$searchParamtersObj;
                                $msgReqForDebug[]=$loggedInProfileObj;
                                $subject="CITY_RES Solr error";
-                               SendMail::send_email("lavesh.rawat@gmail.com,akashkumardtu@gmail.com",print_r($msgReqForDebug,true),$subject);
+                               //SendMail::send_email("lavesh.rawat@gmail.com,akashkumardtu@gmail.com",print_r($msgReqForDebug,true),$subject);
                         }
                         
 			if($res['grouped'])

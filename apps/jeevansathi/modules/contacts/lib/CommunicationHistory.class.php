@@ -69,6 +69,13 @@ class CommunicationHistory
 					$side = "R";
 				}
 				$previousStatus                            = $value['TYPE'];
+ 				if($message_log[$value['DATE']]){
+ 					$dtObj = new DateTime($value['DATE']);
+ 					$dtObj->modify('+1 second');
+ 					$newDate = $dtObj->format("Y-m-j H:i:s");
+ 					$messagelog[$key]['DATE']=$newDate;
+ 					$value = $messagelog[$key];
+ 				}
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
 				if($value['MESSAGE']){

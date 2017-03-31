@@ -76,7 +76,7 @@ class ThirdPartyService
 		}
 		
 		$start_tm=microtime(true);
-		$response = CommonUtility::sendCurlPostRequest($url,"","",$header);
+		$response = CommonUtility::sendCurlPostRequest($url,"","100",$header);
 		$timeConsumed=microtime(true)-$start_tm;
 		$data = (Array)json_decode($response);
 		

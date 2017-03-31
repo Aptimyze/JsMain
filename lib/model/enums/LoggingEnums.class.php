@@ -28,6 +28,8 @@ class LoggingEnums
     const COMMONLOG = 'common';
     const EX500 = '500';
     const EX404 = '404';
+    // status code for SQL syntax error
+    const ERR_STATUS_CODE = '42000';
     // name of channels returned
     const P = 'P';
     const A = 'A';
@@ -77,6 +79,8 @@ class LoggingEnums
     const JPC = 'Jprofile_Contact';
     const MAPPING = 'Parent';
     const SCRIPT = 'Script';
+    const LOG_DELETION = 1;
+    const TRACE_STRING = 'traceString';
 
     public static $MappingNames = array(
         // JSC module names
