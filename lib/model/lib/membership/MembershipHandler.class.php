@@ -2424,8 +2424,9 @@ class MembershipHandler
     * @inputs:$profileid
     * @return:$output
     */
-    public function computeMembershipPlanStartingRange($profileid,$device="desktop"){
+    public function computeMembershipPlanStartingRange($profileid){
         $displayPage = 1;
+        $device = "desktop";
         $userObj = new memUser($profileid);
         $userObj->setMemStatus();
         list($ipAddress, $currency) = $this->getUserIPandCurrency($profileid);
@@ -2436,7 +2437,6 @@ class MembershipHandler
         unset($userObj);
         unset($memHandlerObj);
 
-        //print_r($minPriceArr);die;
         $origStartingPrice = 9999999;
         $discountedStartingPrice = 9999999;
         if(is_array($minPriceArr)){
@@ -2453,12 +2453,11 @@ class MembershipHandler
             }
         }
         if($origStartingPrice >= 9999999){
-            $output = null;
+            $output = array("origStartingPrice"=>"","discountedStartingPrice"=>"");
         }
         else{
             $output = array("origStartingPrice"=>number_format($origStartingPrice, 2, '.', ','),"discountedStartingPrice"=>number_format($discountedStartingPrice, 2, '.', ','));
         }
-        print_r($output);die;
         return $output;
     }
 }
