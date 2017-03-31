@@ -1912,14 +1912,17 @@ class MembershipAPIResponseHandler {
         $output = array();
         if($origStartingPrice < 9999999){
             if($this->currency == "RS"){
-                $output["membershipDisplayCurrency"] = '₹';
+                $output["startingPlan"]["membershipDisplayCurrency"] = '₹';
             }
             else{
-                $output["membershipDisplayCurrency"] = '$';
+                $output["startingPlan"]["membershipDisplayCurrency"] = '$';
             }
              
-            $output["origStartingPrice"] = $origStartingPrice;
-            $output["discountedStartingPrice"] = $discountedStartingPrice;
+            $output["startingPlan"]["origStartingPrice"] = $origStartingPrice;
+            $output["startingPlan"]["discountedStartingPrice"] = $discountedStartingPrice;
+        }
+        else{
+            $output["startingPlan"] = null;
         }
         return $output;
     }
