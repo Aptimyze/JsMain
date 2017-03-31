@@ -28,7 +28,9 @@ EOF;
 	{
 	    // SET BASIC CONFIGURATION
 	   //send instant JSPC/JSMS notification
-
+    $memHandlerObj = new MembershipHandler(false);
+    $output = $memHandlerObj->computeMembershipPlanStartingRange(3777);
+    print_r($output);die;
     /*$instantNotificationObj = new InstantAppNotification("BUY_MEMB");
     $instantNotificationObj->sendNotification(939764339,'',"upgrade");*/
         $instantNotificationObj = new InstantAppNotification("EOI");
