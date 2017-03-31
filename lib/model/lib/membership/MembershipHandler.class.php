@@ -2436,18 +2436,19 @@ class MembershipHandler
         list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, false);
         unset($userObj);
         unset($memHandlerObj);
-
+        print_r($allMainMem);
+        print_r($minPriceArr);
         $origStartingPrice = 9999999;
         $discountedStartingPrice = 9999999;
         if(is_array($minPriceArr)){
             foreach($minPriceArr as $service => $val){
-                if($val['OFFER_PRICE']>=0 && $origStartingPrice > $val['OFFER_PRICE']){
-                    $origStartingPrice = $val['OFFER_PRICE'];
+                if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
+                    $discountedStartingPrice = $val['OFFER_PRICE'];
                     if($currency == "RS"){
-                        $discountedStartingPrice = $val['PRICE_INR'];
+                        $origStartingPrice = $val['PRICE_INR'];
                     }
                     else{
-                        $discountedStartingPrice = $val['PRICE_USD'];
+                        $origStartingPrice = $val['PRICE_USD'];
                     }
                 }
             }
