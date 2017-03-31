@@ -96,6 +96,7 @@ class MembershipAPIResponseHandler {
         $this->internalParamCheck = $request->getParameter('INTERNAL');
         $this->getMembershipMessage = $request->getParameter('getMembershipMessage');
         $this->getHamburgerMessage = $request->getParameter('getHamburgerMessage');
+        $this->getMembershipPlansStartingRange = $request->getParameter('getMembershipPlansStartingRange');
         $this->appVersion = $request->getParameter('API_APP_VERSION');
 
         $this->callbackSource = $request->getParameter('callbackSource');
@@ -295,7 +296,10 @@ class MembershipAPIResponseHandler {
         } 
         // elseif ($this->PayUOrderProcess == 1) {
         //     $output = $this->handlePayUOrderProcessing($request);
-        // } 
+        // }
+        else if($this->getMembershipPlansStartingRange == 1) {
+            $output = $this->generateMembershipPlansStartingRange();
+        }  
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -1882,6 +1886,39 @@ class MembershipAPIResponseHandler {
         
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_HAMB_MESSAGE', serialize($output) , 1800);
+        return $output;
+    }
+
+    public function generateMembershipPlansStartingRange(){
+        $origStartingPrice = 9999999;
+        $discountedStartingPrice = 9999999;
+        if(is_array($this->minPriceArr) && $this->profileid){
+            foreach($this->minPriceArr as $service => $val){
+                if($val['OFFER_PRICE']>=0 && $discountedStartingPrice > $val['OFFER_PRICE']){
+                    $discountedStartingPrice = $val['OFFER_PRICE'];
+                    if($currency == "RS"){
+                        $origStartingPrice = $val['PRICE_INR'];
+                    }
+                    else{
+                        $origStartingPrice = $val['PRICE_USD'];
+                    }
+                }
+            }
+        }
+        $output = array();
+        if($origStartingPrice < 9999999){
+            if($this->currency == "RS"){
+                $output["membetshipDisplayCurrency"] = '₹';
+            }
+            else{
+                $output["membetshipDisplayCurrency"] = '$';
+            }
+             
+            $output["origStartingPrice"] = number_format($origStartingPrice, 0, '.', ',');
+            if($origStartingPrice != $discountedStartingPrice){
+                $output["discountedStartingPrice"] = number_format($discountedStartingPrice, 0, '.', ',');
+            }
+        }
         return $output;
     }
     
