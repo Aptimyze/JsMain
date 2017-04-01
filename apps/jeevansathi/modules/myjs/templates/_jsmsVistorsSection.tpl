@@ -12,7 +12,7 @@
 				~assign var=counter value=$counter+1`
 				
 					<div class="fl~if $counter eq 1`~else` pl_a~/if`">
-                                            <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&stype=~SearchTypesEnums::VISITORS_MYJS_JSMS`"><img src="~$tupleInfo.photo.url`" height="60" width="60"/></a>
+                                            <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&stype=~SearchTypesEnums::VISITORS_MYJS_JSMS`&actual_offset=~$id+1`&contact_id=~$visitorData.contact_id`&total_rec=~$visitorData.view_all_count`"><img src="~$tupleInfo.photo.url`" height="60" width="60"/></a>
 					</div>
 				
 					
@@ -21,7 +21,7 @@
 	~/foreach`
 	~if $visitorData.new_count>3`
 	       <div class="fl pl_a">
-                   <a href="~$SITE_URL`/profile/contacts_made_received.php?page=visitors&filter=R">
+                   <a href="~$SITE_URL`/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A">
 			<div class="bg7 txtc disptbl" style="width:60px; height:60px;">
 				<div class="dispcell fontlig f18 white lh0 vertmid">+~math equation="x-y" x=$visitorData.new_count y=3`</div>
 			</div>

@@ -24,7 +24,7 @@ $db1=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db1);
 $prevDate=date('Y-m-d',strtotime("-1 days"));
 $curDate=date('Y-m-d');
-$duplicate=new Duplicate(); 
+$duplicate=new Duplicate($db); 
 $sql="select EMAIL,PHONE_RES, PHONE_MOB,INCOMPLETE,USERNAME,SOURCE,PROFILEID,STD,SERIOUSNESS_COUNT from newjs.JPROFILE where MOD_DT BETWEEN '$prevDate 00:00:00' AND '$curDate 23:59:59'";
 $res=mysql_query_decide($sql,$db) or die(mysql_error($db));
 while($row=mysql_fetch_assoc($res))

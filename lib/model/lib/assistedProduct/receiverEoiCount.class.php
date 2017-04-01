@@ -34,7 +34,7 @@ class receiverEoiCount
          * this function empties the table
          */
         public function emptyTable(){
-            $receiverEoiCountObj = new ASSISTED_PRODUCT_EOI_RECEIVED_COUNT();
+            $receiverEoiCountObj = new ASSISTED_PRODUCT_EOI_RECEIVED_COUNT('newjs_masterDDL');
             $eoiCount = $receiverEoiCountObj->emptyTable();
         }
         

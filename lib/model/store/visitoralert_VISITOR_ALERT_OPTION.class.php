@@ -39,5 +39,44 @@ class visitoralert_VISITOR_ALERT_OPTION extends TABLE
             throw new jsException($e);
         }
     }
+    /**
+     * fetch receivers whose alert option is not equal to U
+     * @param  [Array] $receiverData [description]
+     */
+    public function fetchReceivers($receiverData)
+    {
+
+        try
+        {
+            if(is_array($receiverData))
+            {
+                $sql="SELECT PROFILEID FROM visitoralert.VISITOR_ALERT_OPTION WHERE ALERT_OPTION = 'U' AND PROFILEID IN ( ";
+
+                foreach($receiverData as $key=>$value)
+                {
+                    $sql .=":PROFILEID".$key.",";
+                }
+                $sql = rtrim($sql,",");
+                $sql .= ")";
+                $res = $this->db->prepare($sql);
+                foreach($receiverData as $key => $value)
+                {
+                    $res->bindValue(":PROFILEID".$key, $value["VIEWED"], PDO::PARAM_INT);
+                }
+                $res->execute();
+                $output = array();
+                while($row = $res->fetch(PDO::FETCH_ASSOC))
+                {
+                   $output[] = $row["PROFILEID"];
+                }
+                return $output;
+            }
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+        
+    }
 }
 ?>

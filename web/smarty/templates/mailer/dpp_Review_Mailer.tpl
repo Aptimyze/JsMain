@@ -32,7 +32,7 @@
 </tr>
 <tr>
 <td></td>
-<td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">Your Desired Partner Profile determines the matches recommended to you under<strong> ‘My Matches’ </strong>on the site/app and the matches we send to you in Match Alert Emails.</td>
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">Your Desired Partner Profile determines the matches recommended to you under<strong> "Desired Partner Matches" </strong>on the site/app and the matches we send to you in Match Alert Emails.</td>
 <td></td>
 </tr>
 <tr>

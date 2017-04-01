@@ -4,7 +4,7 @@
 *    DESCRIPTION        : Include all intermediate pages after user logins
 *    CREATED BY         : lavesh
 ***********************************************************************************************************************/
-
+ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function intermediate_page($return_url=0)
 {
 	global $data,$checksum;
@@ -24,11 +24,17 @@ function intermediate_page($return_url=0)
 		$std = $myrow_in["STD"];
 		$activated=$myrow_in["ACTIVATED"];
 		$after_login=is_incomplete($profileid);
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 		if($after_login)
 		{
-			$sql_in="UPDATE JPROFILE SET INCOMPLETE='Y',ACTIVATED ='N', PREACTIVATED='$activated' WHERE PROFILEID='$profileid'";
 
-			$result_in=mysql_query_decide($sql_in) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_in,"ShowErrTemplate");
+			$profileid=$profileid;
+			$arrFields = array('INCOMPLETE'=>'Y','ACTIVATED'=>'N','PREACTIVATED'=>$activated);
+			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
+			
+			//$sql_in="UPDATE JPROFILE SET INCOMPLETE='Y',ACTIVATED ='N', PREACTIVATED='$activated' WHERE PROFILEID='$profileid'";
+
+			//$result_in=mysql_query_decide($sql_in) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_in,"ShowErrTemplate");
 			
 			$profilechecksum = md5($profileid)."i".$profileid;
 	                if($return_url==1)
@@ -41,8 +47,15 @@ function intermediate_page($return_url=0)
 		}
 		else
 		{
-			$sql_up="update newjs.JPROFILE set ACTIVATED='N',SCREENING=0,INCOMPLETE='N',ENTRY_DT=now(),MOD_DT=now() where INCOMPLETE='Y' AND PROFILEID='$profileid'";
-        		$result_up=mysql_query_decide($sql_up) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_up,"ShowErrTemplate");
+			$nowDate = date('Y-m-d H:i:s');
+			$arrParams = array('ACTIVATED'=>'N', 'SCREENING'=>0, 'INCOMPLETE'=>'N', 'ENTRY_DT'=>$nowDate, 'MOD_DT'=>$nowDate);
+			$result = $jprofileUpdateObj->editJPROFILE($arrParams, $profileid, 'PROFILEID', " INCOMPLETE='Y'");
+			if(false === $result) {
+				$sql_up="update newjs.JPROFILE set ACTIVATED='N',SCREENING=0,INCOMPLETE='N',ENTRY_DT=now(),MOD_DT=now() where INCOMPLETE='Y' AND PROFILEID='$profileid'";
+				logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_up,"ShowErrTemplate");
+			}
+//			$sql_up="update newjs.JPROFILE set ACTIVATED='N',SCREENING=0,INCOMPLETE='N',ENTRY_DT=now(),MOD_DT=now() where INCOMPLETE='Y' AND PROFILEID='$profileid'";
+//        		$result_up=mysql_query_decide($sql_up) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_up,"ShowErrTemplate");
 			if($myrow_in[INCOMPLETE]=='Y'){
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 				if(!FTOStateHandler::profileExistsInFTOStateLog($profileid)){

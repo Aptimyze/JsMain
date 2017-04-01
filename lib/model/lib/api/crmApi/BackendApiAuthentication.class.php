@@ -38,7 +38,7 @@ Abstract class BackendApiAuthentication
 	**/
 	public function backendLogin($loginCredentials=array())
 	{	
-		$this->backendObj = new backendActionsLib(array("jsadmin_PSWRDS"=>"newjs_slave","jsadmin_CONNECT"=>"newjs_master"),$this->useCrmMemcache);
+		$this->backendObj = new backendActionsLib(array("jsadmin_PSWRDS"=>"newjs_master","jsadmin_CONNECT"=>"newjs_master"),$this->useCrmMemcache);
 		//get login details
 		$this->loginData = $this->backendObj->getLoginDetails($loginCredentials);
 

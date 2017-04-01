@@ -15,7 +15,7 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
                 try
                 {
 
-                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) AND activatedKey ='1' AND ACTIVATED = 'Y'";
+                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) AND activatedKey ='1' AND ACTIVATED = 'Y'";
                 	$prep = $this->db->prepare($sql);
                 	$prep->bindValue(":INTERVALTIME", $interval, PDO::PARAM_INT);            	
                 	$prep->execute();
@@ -36,7 +36,7 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
                 try
                 {
 
-                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE (LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) OR LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME1 DAY) OR LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME2 DAY) OR LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME3 DAY) OR LAST_LOGIN_DT = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME4 DAY))  AND activatedKey ='1' AND ACTIVATED = 'Y'";
+                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE (DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) OR DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME1 DAY) OR DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME2 DAY) OR DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME3 DAY) OR DATE(LAST_LOGIN_DT) = DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME4 DAY))  AND activatedKey ='1' AND ACTIVATED = 'Y'";
                 	$prep = $this->db->prepare($sql);
                 	$prep->bindValue(":INTERVALTIME", $interval, PDO::PARAM_INT);
                 	$prep->bindValue(":INTERVALTIME1", $interval+15, PDO::PARAM_INT);
@@ -65,7 +65,7 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
                 try
                 {
 
-                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE LAST_LOGIN_DT <= DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) AND LAST_LOGIN_DT > DATE_SUB(CURDATE(), INTERVAL :OneTimeInterval DAY) AND activatedKey ='1' AND ACTIVATED = 'Y'";
+                	$sql = "SELECT PROFILEID from newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) <= DATE_SUB(CURDATE(), INTERVAL :INTERVALTIME DAY) AND DATE(LAST_LOGIN_DT) > DATE_SUB(CURDATE(), INTERVAL :OneTimeInterval DAY) AND activatedKey ='1' AND ACTIVATED = 'Y'";
                 	$prep = $this->db->prepare($sql);
                 	$prep->bindValue(":INTERVALTIME", $interval, PDO::PARAM_INT);
                 	$prep->bindValue(":OneTimeInterval", $OneTimeInterval, PDO::PARAM_INT);               	
@@ -86,8 +86,8 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
                 try
                 {//print_r($profileIdMailSent);die;
                 	$sqlPart="";
-                	$status="N";
-					 $sql = "INSERT IGNORE INTO `INACTIVE_PROFILES` (PROFILEID,STATUS,TIME_INTERVAL) VALUES ";
+                	$status="NULL";
+					$sql = "INSERT IGNORE INTO `INACTIVE_PROFILES` (PROFILEID,STATUS,TIME_INTERVAL) VALUES ";
 					foreach($profileIdMailSent as $key=>$value)
 					{
 						if($sqlPart!='')
@@ -101,7 +101,6 @@ class NEWJS_INACTIVE_PROFILES extends TABLE
 					$res->bindValue(":PROFILEID".$k,$v,PDO::PARAM_INT);
 					$res->bindValue(":STATUS".$k,$status,PDO::PARAM_STR);
 					$res->bindValue(":INTERVAL".$k,$interval,PDO::PARAM_INT);
-				
 				}
                 		$res->execute();
                 }

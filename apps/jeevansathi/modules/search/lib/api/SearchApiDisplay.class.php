@@ -81,7 +81,7 @@ class SearchApiDisplay
 
 	public function getDisplayData($searchId='')
 	{
-		$chatObj = new ChatLibrary();
+		$chatObj = new ChatLibrary(searchConfig::getSearchDb());
 
 		//logged in profile object
 //		$this->viewerObj = LoggedInProfile::getInstance("newjs_master",'');
@@ -154,7 +154,7 @@ class SearchApiDisplay
 			}
 			*/
 			//get logged-in user's bookmarks
-			$bookmarkObj = new Bookmarks();
+			$bookmarkObj = new Bookmarks(searchConfig::getSearchDb());
 			$bookmarks = $bookmarkObj->getProfilesBookmarks($viewer, $this->profileids, 1);
 
 			//get chat requests received by logged-in user
@@ -210,7 +210,8 @@ class SearchApiDisplay
 		}
 
 		//get users online on gtalk
-		$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		//$gtalkUsers = $chatObj->getIfUserIsOnlineInGtalk($this->profileIdStr,1);
+		
 
 		//get users online on JS chat
 		$jsChatUsers = $chatObj->getIfUserIsOnlineInJSChat($this->profileIdStr,1);
@@ -218,7 +219,7 @@ class SearchApiDisplay
 		//user's detail fields to be displayed in the search tuple: username, age, height, etc
 		$fieldStr = SearchConfig::$searchDisplayFields;
 		$fieldsArr = explode(",",$fieldStr);
-	
+		
 		if(is_array($this->searchResultsData))
 		{
 			$offsetVal=1;
@@ -242,6 +243,9 @@ class SearchApiDisplay
 				$this->profileObjArr[$key]->setMTONGUE($this->searchResultsData[$key]['MTONGUE']);
 				$this->profileObjArr[$key]->setCASTE($this->searchResultsData[$key]['CASTE']);
 				$this->profileObjArr[$key]->setMSTATUS($this->searchResultsData[$key]['MSTATUS']);
+				$this->profileObjArr[$key]->setCOMPANY_NAME($this->searchResultsData[$key]['COMPANY_NAME']);
+				$this->profileObjArr[$key]->setCOLLEGE($this->searchResultsData[$key]['COLLEGE']);
+				$this->profileObjArr[$key]->setPG_COLLEGE($this->searchResultsData[$key]['PG_COLLEGE']);
 				
 				//get DPP values for profiles with privacy as 'F'
 				if($this->searchResultsData[$key]['PRIVACY']=='F')
@@ -267,6 +271,13 @@ class SearchApiDisplay
 						}
 						//$this->finalResultsArray[$pid][$fieldName]=substr($this->searchResultsData[$key][$fieldName],0,8)."..".$pid;
 					}
+					if($fieldName =="NAME_OF_USER")
+					{
+						$name = "";
+						$nameOfUserObj = new NameOfUser;
+						$name = $nameOfUserObj->getNameStr($this->searchResultsData[$key][$fieldName],$this->viewerObj->getSUBSCRIPTION());
+						$this->finalResultsArray[$pid][$fieldName]=$name;
+					}
 					if(strstr(SearchConfig::$searchDisplayDecoratedFields,$fieldName))
 					{
 						$decoratedFieldName = $decoratedMappingSearchDisplay[$fieldName];
@@ -284,12 +295,14 @@ class SearchApiDisplay
 						}
 						else if($fieldName == 'CITY_RES')
 						{
-							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
-							{
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
-							}
-							else
-								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+//							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
+//							{
+//								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
+//							}
+//							else
+//								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+                                                        //echo '<pre>';print_r($this->finalResultsArray);die;
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
@@ -318,6 +331,7 @@ class SearchApiDisplay
 				}
 				
 				$this->finalResultsArray[$pid]['HOROSCOPE']=$this->searchResultsData[$key]['HOROSCOPE'];
+				$this->finalResultsArray[$pid]['GUNASCORE']=array_key_exists("GUNASCORE",$this->searchResultsData[$key])?$this->searchResultsData[$key]['GUNASCORE']:"";
 				if($this->finalResultsArray[$pid]['HOROSCOPE'] == 'Y')
 				{
 					$iconsSize += 30;
@@ -349,6 +363,12 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
+					
+				$this->finalResultsArray[$pid]['availforchat']= false;
+				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
+				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
+					$this->finalResultsArray[$pid]['availforchat']= true;
+
 //				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::statName($pid,$this->searchResultsData[$key]['USERNAME']);
 				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::CanonicalProfile($this->profileObjArr[$key]);
 				$this->finalResultsArray[$pid]['PROFILECHECKSUM']=JsAuthentication::jsEncryptProfilechecksum($pid);
@@ -357,6 +377,7 @@ class SearchApiDisplay
 				$this->finalResultsArray[$pid]['HAVEPHOTO']=$this->searchResultsData[$key]['HAVEPHOTO'];
 				$this->finalResultsArray[$pid]['PRIVACY']=$this->searchResultsData[$key]['PRIVACY'];
 				$this->finalResultsArray[$pid]['PHOTO_DISPLAY']=$this->searchResultsData[$key]['PHOTO_DISPLAY'];
+				$this->finalResultsArray[$pid]['GENDER']=$this->searchResultsData[$key]['GENDER'];
 				$this->finalResultsArray[$pid]['MSTATUS']=FieldMap::getFieldLabel("mstatus",$this->searchResultsData[$key]['MSTATUS']);
 
 				if($ignProfArr[$pid] == 1)
@@ -437,7 +458,7 @@ class SearchApiDisplay
                 	                        $tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
                                 	        if(!$tempArr)
                                         	{
-                                                	$MatchAlerts = new MatchAlerts;
+                                                	$MatchAlerts = new MatchAlerts();
 	                                                $tempArr = $MatchAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
         	                                        $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
                 	                        }
@@ -462,7 +483,7 @@ class SearchApiDisplay
                                         	$tempArr = $this->SearchParamtersObj->getAlertsDateConditionArr();
 	                                        if(!$tempArr)
         	                                {
-                	                                $KundliAlerts = new KundliAlerts;
+                	                                $KundliAlerts = new KundliAlerts();
                         	                        $tempArr = $KundliAlerts->getProfilesWithOutSorting($this->viewerObj->getPROFILEID());
                                 	                $this->SearchParamtersObj->setAlertsDateConditionArr($tempArr);
                                         	}
@@ -580,6 +601,7 @@ class SearchApiDisplay
 		}
 
 		//getting search results
+	
 		$this->profileids1 = $SearchResponseObj->getSearchResultsPidArr();
 		$this->searchResultsData1 = $SearchResponseObj->getResultsArr();
 
@@ -595,19 +617,17 @@ class SearchApiDisplay
 			return NULL;
                 else
 		{
-			if(MobileCommon::isDesktop() || MobileCommon::isMobile())
-			{
-	                        if(count($SearchResponseObj->getFeturedProfileArr())>0){
-        	                        $featuredProfileArr=$SearchResponseObj->getFeturedProfileArr();
-                	                foreach($featuredProfileArr as $k=>$v){
-                        	                $featuredProfileArrNew[$v["id"]]=$v;
-                                	        $this->profileids[] = $v["id"];
-                                	        
-                                        	$this->searchResultsData[] = $v;
-	                                }
+			if(count($SearchResponseObj->getFeturedProfileArr())>0){
+				$featuredProfileArr=$SearchResponseObj->getFeturedProfileArr();
+				foreach($featuredProfileArr as $k=>$v){
+								$featuredProfileArrNew[$v["id"]]=$v;
+								$this->profileids[] = $v["id"];
+								
+								$this->searchResultsData[] = $v;
 				}
-                        }
-                }   
+			}
+										   
+    }
 
 		$this->profileIdStr = trim(implode(",",$this->profileids),",");
 
@@ -619,6 +639,7 @@ class SearchApiDisplay
 
 		$this->getDisplayData($searchId);
 		$this->getProfilePhotoForMultipleUsers();
+                
 		return $this->finalResultsArray;
 
 	}
@@ -630,11 +651,17 @@ class SearchApiDisplay
 	**/
 	public function getProfilePhotoForMultipleUsers()
 	{
+//VA Whitelisting
+         $whitelistedPhotoTypes = array_keys(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR);
+	 if($this->photoType!='' && !in_array($this->photoType,$whitelistedPhotoTypes))
+		 SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/search/lib/api/SearchApiDisplay.class.php phototype not whitelisted and came as".$v,"SearchApiDisplay.class.php phototype not whitelisted");
+ 
 		$multiplePictureObj = new PictureArray($this->profileObjArr);
+                
 		if($this->isMobile)
-			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'mobile');
+			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'mobile','',searchConfig::getSearchDb());
 		else
-			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts);
+			$photosArr = $multiplePictureObj->getProfilePhoto('',$this->viewedProfilesDpp,'','',$this->allContacts,'','',searchConfig::getSearchDb());
 
 		$noOfPhotosArr = $multiplePictureObj->getNoOfPics($this->profileObjArr);
 		$this->viewerObj = LoggedInProfile::getInstance("newjs_master",'');
@@ -654,7 +681,7 @@ class SearchApiDisplay
 				{
 					if(!MobileCommon::isDesktop())
 					{
-                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+                                		$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 		                                $pictureSize = $pictureSizeObj->getPictureSize($pictureId);
 					}
 				}
@@ -673,6 +700,8 @@ class SearchApiDisplay
 					{
 						eval('$temp =$photoObj->get'.$this->photoType.'();');
 						$this->finalResultsArray[$profileId]['PHOTO'] = $temp;
+                                                if(MobileCommon::isAndroidApp())
+                                                    $this->finalResultsArray[$profileId]['THUMBNAIL_PIC'] = $photoObj->getThumbailUrl();
 						if(!MobileCommon::isDesktop())
 							$this->finalResultsArray[$profileId]['SIZE']=$this->getpictureSizeToShow($profileId,$pictureSize[$profileId]);
 						unset($temp);
@@ -852,6 +881,42 @@ class SearchApiDisplay
 							
 		
 	}
-        
-	
+        /**
+         * 
+         * @param type $country
+         * @param type $state
+         * @param type $cityVal
+         * @param type $nativeCityOpenText
+         * @param type $decoredVal
+         * @return string
+         */
+	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+                $label = '';
+                $city = explode(',',$cityVal);
+                $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
+                if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
+                {
+                        $label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
+                }
+                else{
+                        $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
+                }
+                if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
+                }else{
+                     $states = explode(',',$state);
+                     if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
+                        $nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
+                        
+                        if($nativeCityOpenText != '' && $nativeState != '')
+                           $nativePlace = $nativeCityOpenText.', ';
+                        
+                        $nativePlace .= $nativeState;
+                     }
+                }
+                if($nativePlace != '' && $nativePlace != $label)
+                        $label .= ' & '.$nativePlace;
+                
+                return $label;
+        }
 }

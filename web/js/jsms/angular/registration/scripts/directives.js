@@ -454,4 +454,133 @@
 			}	
 		}
 	}]);
+
+
+
+    app.directive('regNameField',['$timeout',function(timer){
+		return {
+			restrict : 'A',
+			replace  : true,
+			template : '<div class="brdr1" id={{\'reg_\'+info.label}} name={{info.label}}> 					        <div class="pad1"> 					          <div class="pad2" style="cursor:pointer"> 					            <div class="fl wid50p"> 					              <div class="color8 f12 fontlig {{info.errClass}}">{{info.label}}</div> 					              <input class="reginp fontlig fullwid" ng-model="info.value"    ng-keyup="onKeyPress($event,info.value)" ng-keyup="enableNext()" 					              type={{info.inputType}} 					              class="color11 f15 pt10 fontlig" placeholder={{info.hint}} 					              value={{info.value}}/> 			    	            </div>  <span id="showAll" rel="N" orel="N" class="fr fontlig pt15 " onclick="CalloverlayName(this);">       <span id="showText" class="vTop padr5 f14">Show to All</span><i class="iconImg2 iconSprite"></i>               </span>  	 										            <div ng-if="info.errClass" class="fr wid8p pt8 mrr10"><i class="mainsp reg_errorIcon"></i> </div> 					            <div class="clr"></div> 					          </div> 					        </div> 				        </div>',
+			scope :{
+					info :'=data',
+          onNext:'=',
+          validationType:'@'          
+				},
+			controller:function($scope,$element,$window,Constants,$timeout,UserDecision)
+			{
+				$scope.onKeyPress = function(event,val)
+				{
+          if(event.keyCode == '13')
+          {
+              $scope.onNext();
+              return;
+          }
+          $scope.info.userDecision = val;
+          UserDecision.store($scope.info.storeKey,$scope.info.userDecision);
+				}
+        //Validation
+        $scope.$watch('info.value', function(newValue, oldValue){
+            if (typeof $scope.validationType != "undefined" && 
+            $scope.validationType == "nameField") {
+              // Check if value has changes
+//              var regex = /[^a-zA-Z'., ]+/g;
+  //            var value = newValue;
+    //          value = value.trim().replace(regex,"");
+
+      //        if(value.trim() != newValue.trim()){
+        //        $scope.info.value = value;
+         //     }
+            }
+            
+            // Do anything you like here
+        });
+			}	
+		}
+	}]);
+app.directive('regCasteNoBarField',function(Gui){
+                return {
+                        restrict : 'A',
+                        replace  : true,
+                        template : '<div class="brdr1" id={{"reg_casteNoBar"}} name={{"reg_casteNoBar"}}><div class="pad1"><div class="pad2"><div class="fl reg_wid90 casteNoBar_check"><input type="checkbox" ng-model="info.value" ng-click="optionSelected()" id="casteNoBar_check" /><label class="fontlig" for="casteNoBar_check">{{info.label}}</label></div><div class="clr"></div></div></div></div>',
+                        scope :{
+                                        info :'=data',
+                                },
+                        controller:function($scope)
+                        {       
+                                var updateData = true;
+                                if($scope.info.value == "true") {
+                                        $scope.info.value = true;
+                                }
+                                $scope.optionSelected = function() 
+                                {
+                                        setTimeout(function () {
+                                                var output={};
+                                                output["casteNoBar"] = {"label":'casteNoBar',"value":$scope.info.value};
+                                                Gui.updateGuiFields('s4',3,output);
+                    }, 50);
+                                                
+                                }
+                        }       
+                }
+        });
+
 })()
+function CalloverlayName(thisObject){
+        var selectedVal = $(thisObject).attr("rel");
+        var tickSelectedShow = "tickSelected iconSprite";
+        var tickSelectedNoShow = "";
+        if(selectedVal == 'N'){
+             tickSelectedNoShow = tickSelectedShow;
+             tickSelectedShow = '';
+        }
+        overlayNameTemplate=$("#nameSettingOverlay").html();
+        $("#nameSettingOverlay").html('');
+        overlayNameTemplate=overlayNameTemplate.replace(/\{\{tickSelectedShow\}\}/g,tickSelectedShow); 
+        overlayNameTemplate=overlayNameTemplate.replace(/\{\{tickSelectedNoShow\}\}/g,tickSelectedNoShow);
+        $("#nameSettingOverlay").append(overlayNameTemplate);
+        $("#nameSettingOverlay").removeClass('dn');
+        $("#nameSettingOverlay").css("min-height",screen.height);
+        NameOverLayerAnimation();
+}
+function NameOverLayerAnimation(close)
+{       
+        if (close)
+        {
+                $("#nameSettingOverlay").removeClass("top_2").addClass('top_3');
+                setTimeout(function () {
+                        $("#nameSettingOverlay").addClass("dn").removeClass("top_3").css("margin-top", "").addClass("top_1");
+                }, animationtimer3s);
+        } else
+        {
+                var height = $("#nameSettingOverlay").outerHeight();
+                var sh = Math.floor(($(window).height() - height) / 2);
+
+                $("#nameSettingOverlay").removeClass("dn");
+                setTimeout(function () {
+                        $("#nameSettingOverlay").removeClass("top_1").css("margin-top", sh).addClass("top_2");
+                }, 10);
+        }
+
+}
+$("document").ready(function () {
+		window.displayName = "Y";
+        $(document).on("click",".changeSetting",function(){
+                $(this).parent().find(".changeSetting i").removeClass("tickSelected iconSprite");
+                $(this).find("i").addClass("tickSelected iconSprite");
+		window.displayName = $(this).attr('rel');
+        });
+        $(document).on("click","#doneBtn",function(){
+		var showToAll = "Show to All";
+		var Dontshow = "Don't Show";
+                var selectedVal = $(".changeSetting .iconTick.tickSelected").parent().attr('rel');
+                if(selectedVal=='N'){
+                        $("#showText").html(Dontshow);
+                }else{
+                        $("#showText").html(showToAll);
+                }
+                $("#showAll").attr('rel',selectedVal);
+                NameOverLayerAnimation(1);
+        });
+});
+

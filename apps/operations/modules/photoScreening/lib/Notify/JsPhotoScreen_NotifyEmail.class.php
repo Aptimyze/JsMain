@@ -122,7 +122,7 @@ class JsPhotoScreen_NotifyEmail
 	{
 		if(!$this->m_enMailerType)
 		{
-			throw new jsException("","Mailer Type is not specified in JsPhotoScreen_NotifyEmail");
+			//throw new jsException("","Mailer Type is not specified in JsPhotoScreen_NotifyEmail");
 		}
 		switch($this->m_enMailerType)
 		{
@@ -160,7 +160,6 @@ class JsPhotoScreen_NotifyEmail
 		}
 		$search_array1=SearchCommonFunctions::getDppMatches($this->m_iProfileID,'mailer_photo_upload');	//5 DPP matches with photo and no popular sorting
 		$search_array2=SearchCommonFunctions::getDppMatches($this->m_iProfileID,'mailer_photo_upload','','');	//Dpp matches count with no condition of have photo
-
 		$objEmailSender=new EmailSender($this->m_szMailGroup,JsPhotoScreen_Enum::PHOTO_UPLOADED_MAILER);
 		$objTemplate = $objEmailSender->setProfileId($this->m_iProfileID);
 
@@ -192,12 +191,12 @@ class JsPhotoScreen_NotifyEmail
 		{
 			throw new jsException("","ProfileID or Reject Reason is null in sendRejectMailer method of JsPhotoScreen_NotifyEmail");
 		}
-		
-		$objEmailSender=new EmailSender($this->m_szMailGroup,JsPhotoScreen_Enum::PHOTO_REJECT_MAILER);
-		
+		$rejectReason = ":<br><br>* ".str_replace(" or ","<br>* ",$this->m_szRejectReason);		
+		$rejectReason = rtrim($rejectReason,".");		
+		$objEmailSender=new EmailSender($this->m_szMailGroup,JsPhotoScreen_Enum::PHOTO_REJECT_MAILER);		
         $objTemplate = $objEmailSender->setProfileId($this->m_iProfileID);
 		$smartyObj = $objTemplate->getSmarty();
-        $smartyObj->assign("REJECT_REASON",$this->m_szRejectReason);
+        $smartyObj->assign("REJECT_REASON",$rejectReason);
    		$objEmailSender->send();
 	}
 	

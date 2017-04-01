@@ -69,14 +69,18 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			global $protect;
-			JsCommon::oldIncludes();
-			$protect = new protect();
-			$protect->logout();
-			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
-			$echecksum = $protect->js_encrypt($checksum);
-			$this->autologinUrl = JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
 			$this->profileid = $this->profile->getPROFILEID();
+			//global $protect;
+			//JsCommon::oldIncludes();
+			//$protect = new protect();
+			//$protect->logout();
+			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
+		//	$echecksum = $protect->js_encrypt($checksum);
+			$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+			$authenticationLoginObj->setTrackLogin(false);
+			$authenticationLoginObj->setCrmAdminAuthchecksum($checksum);
+			$this->autologinUrl = JsConstants::$siteUrl;//JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
+			//$this->profileid = $this->profile->getPROFILEID();
 		}
 	}
 	$this->setTemplate('generateAutologin');
@@ -210,7 +214,7 @@ class commoninterfaceActions extends sfActions
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 	connect_db();
     $billingObj = new billing_SERVICE_STATUS("newjs_slave"); 
-    $activeServiceDetails =$billingObj->getActiveJsExclusiveServiceID($premiumProfileID);
+    $activeServiceDetails =$billingObj->checkJsExclusiveServiceIDEver($premiumProfileID);
     list($mainServiceID,$mainServiceDuration) = sscanf($activeServiceDetails["SERVICEID"], "%[A-Z]%d");
     if($mainServiceID == 'X')
     {
@@ -271,7 +275,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
@@ -352,28 +356,27 @@ class commoninterfaceActions extends sfActions
 
   public function executeWebServiceMonitoring(sfWebRequest $request)
   {
-  	$date = date("Ymd");
-  	if($request->getParameter("ajax") == 1)
-  	{	
-  		$data['sql_query'] =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-  		$data['cache_connection'] = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-  		$data['cache_problem_sql'] = sfRedis::getClient()->get($date."_SQL_REQUEST");
-  		$data['cache_inprocess'] = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-  		$data['cache_not_set'] = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-  		$data['create_cache_process'] = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-  		$data['total'] = sfRedis::getClient()->get($date."_Total");
-  		$data['execption'] = sfRedis::getClient()->get($date."_EXECPTION");
-  		echo json_encode($data);
-  		die;
-  	}
-  	$this->sql_query =  sfRedis::getClient()->hgetall($date."_SQL_QUERY");
-	$this->cache_connection = sfRedis::getClient()->get($date."_CACHE_CONNECTION");
-	$this->cache_problem_sql = sfRedis::getClient()->get($date."_SQL_REQUEST");
-	$this->cache_inprocess = sfRedis::getClient()->get($date."_INPROCESS_CACHE_REQUEST");
-	$this->cache_not_set = sfRedis::getClient()->get($date."_CACHE_NOT_SET");
-	$this->create_cache_process = sfRedis::getClient()->get($date."_CREATE_CACHE_INPROCESS");
-	$this->total = sfRedis::getClient()->get($date."_Total");
-	$this->execption = sfRedis::getClient()->get($date."_EXECPTION");
+
+	  $url = JsConstants::$contactUrl . "/v1/contacts";
+	 $url = $url . "/getloggingdata";
+	  $result = CommonUtility::webServiceRequestHandler($url);
+	  $date = date("Ymd");
+	  if(is_array($result[$date."_CACHE_NOT_SET"])) {
+		  foreach ($result[$date . "_CACHE_NOT_SET"] as $key => $value) {
+			  $this->cache_not_set += $value;
+		  }
+	  }
+	  if(is_array($result[$date."_SQL_QUERY"])) {
+		  foreach ($result[$date . "_SQL_QUERY"] as $key => $value) {
+			  $this->sql_query += $value;
+		  }
+	  }
+	$this->cache_connection =  $result[$date."_CACHE_CONNECTION"];
+	$this->cache_problem_sql =  $result[$date."_SQL_REQUEST"];
+	$this->cache_inprocess = $result[$date."_INPROCESS_CACHE_REQUEST"];
+	$this->create_cache_process =  $result[$date."_CREATE_CACHE_INPROCESS"];
+	$this->total =  $result[$date."_Total"];
+	$this->execption = $result[$date."_EXECPTION"];
 	$this->setTemplate('webservicemonitor');
   }
   
@@ -381,14 +384,21 @@ class commoninterfaceActions extends sfActions
   {
     $this->cid = $request->getAttribute("cid");
     $this->name = $request->getAttribute('name');
-    $this->newGateway = $request->getParameter('payment');
-    $path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
-    $content = htmlspecialchars(file_get_contents($path));
-    preg_match('/&quot;([^"]+)&quot;/', $content, $m);
-    $this->preSelectedGateway = $m[1];
+    $this->newGateway = $request->getParameter('payment');  
+    //$path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
+    //$content = htmlspecialchars(file_get_contents($path));
+    //preg_match('/&quot;([^"]+)&quot;/', $content, $m);  
+    $billingSelectedGateway = new billing_CURRENT_GATEWAY('newjs_master');
+    $this->preSelectedGateway = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
+    $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
+    if(!in_array($this->preSelectedGateway,$gatewayOption) || $this->preSelectedGateway == ''){
+        $this->preSelectedGateway = $billingSelectedGateway->fetchCurrentGateway();
+    }
     if($request->getParameter('gatewaySubmit')){
-        $newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
-        file_put_contents($path, htmlspecialchars_decode($newContent));
+        //$newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
+        //file_put_contents($path, htmlspecialchars_decode($newContent));
+        $billingSelectedGateway->setCurrentGateway($this->newGateway,$this->name);
+        JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;
         $this->message = "Gateway changed to ".$this->newGateway;
     }

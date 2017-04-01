@@ -41,7 +41,7 @@ class postAcceptv2Action extends sfAction
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'A',ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS","A");
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
@@ -62,6 +62,8 @@ class postAcceptv2Action extends sfAction
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}
+                if($request->getParameter("internal") == 1)
+                return sfView::NONE;
 		die;
 	}
 	
@@ -122,6 +124,14 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Hidden Profile";
 			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+			}
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
 			{
 				$responseArray["errmsglabel"]= 'You have exceeded limit of expresssion of interest for this '.$errorArr["LIMIT"];
@@ -163,7 +173,12 @@ class postAcceptv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
+
+			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
+			else
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
+
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
             $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];

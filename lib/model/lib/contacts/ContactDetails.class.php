@@ -461,8 +461,6 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function setEvalueLimitUser($evalueLimitUser){ $this->evalueLimitUser=$evalueLimitUser; }
-	
-	
 	/**
 	 * This function used to set the whether the paid user is viewing details of free member
 	 * @param Integer 1 or 0
@@ -479,12 +477,40 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function setHiddenPhoneMsg($hiddenPhoneMsg){ $this->hiddenPhoneMsg=$hiddenPhoneMsg; }
-	/**
+
+        /**
+	 * This function used to set the message shown for primary mobile hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+	
+        public function setPrimaryMobileHiddenMessage($message){$this->primaryMobileHiddenMessage=$message;}
+        /**
+	 * This function used to set the message shown for  landline number hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+	
+        public function setLandlMobileHiddenMessage($message){$this->landlMobileHiddenMessage=$message;}
+        
+        /**
+	 * This function used to set the message shown for alt mobile hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+	
+        public function setAltMobileHiddenMessage($message){$this->altMobileHiddenMessage=$message;}
+        
+        /**
 	 * This function used to get the ALT_MOBILE_LABEL attribute of {@link ContactDetails} Class
 	 * @return string
 	 * @access public
 	 */
 	
+        
 	public function getALT_MOBILE_LABEL(){ return $this->ALT_MOBILE_LABEL; }
 	/**
 	 * This function used to get the ALT_MOBILE attribute of {@link ContactDetails} Class
@@ -661,7 +687,34 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function getHiddenPhoneMsg(){ return $this->hiddenPhoneMsg; }
-	/**
+      /**
+	 * This function used to get the message shown for  primary mobile number hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+        public function getPrimaryMobileHiddenMessage(){return $this->primaryMobileHiddenMessage;}
+        /**
+	 * This function used to get the message shown for  landline number hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+	
+        public function getLandlMobileHiddenMessage(){return $this->landlMobileHiddenMessage;}
+        
+        /**
+	 * This function used to get the message shown for alt mobile hidden or visible on accept
+	 * @param String
+	 * @return  void
+	 * @access public
+	 */
+	
+        public function getAltMobileHiddenMessage(){return $this->altMobileHiddenMessage;}
+        
+        
+        
+        /**
 	* calculate the view contact details of a viewed member and set the corresponding attribute
 	* @uses profileObj dbPrivilegeObj
 	* @uses jsadmin_CONTACTS_ALLOTED 
@@ -729,7 +782,7 @@ class ContactDetails {
 			if($this->profileObj->getISD())
 			$this->setMOB_PHONE_NO($this->profileObj->getISD()."-".$mob_phone);
         }
-        
+                
 		/*********Ends here******************/
 		
 		//Email Detail
@@ -802,14 +855,14 @@ class ContactDetails {
 		/*********Alternative number********/
 		$altMob = "";
 		$altMobDetail = "";
-		$jProfileContactObj= new NEWJS_JPROFILE_CONTACT();
+		$jProfileContactObj= new ProfileContact();
 		$altArr=$jProfileContactObj->getProfileContacts($this->profileObj->getPROFILEID()); 
 		if($altArr["ALT_MOB_STATUS"]==Messages::YES || $altArr["SHOWALT_MOBILE"] == "C")
 			$this->setVERIFIED_ALT_MOB(Messages::YES);
 		else
 			$this->setVERIFIED_ALT_MOB(Messages::NO);
 			
-		if(($altArr["SHOWALT_MOBILE"]==Messages::YES || ($altArr["SHOWALT_MOBILE"]=="C" && ($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT ||($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))))&& $altArr["ALT_MOBILE"] && $ALT_NUM!="I") 
+		if(($altArr["SHOWALT_MOBILE"]==Messages::YES || !$altArr["SHOWALT_MOBILE"] || ($altArr["SHOWALT_MOBILE"]=="C" && ($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT ||($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))))&& $altArr["ALT_MOBILE"] && $ALT_NUM!="I") 
 		{
 				if($altArr["ALT_MOBILE_ISD"])
 					$altIsd = $altArr["ALT_MOBILE_ISD"]."-";
@@ -835,6 +888,42 @@ class ContactDetails {
 			$this->setALT_MOBILE_LABEL($altMobDetail);
 			$this->setALT_MOBILE($altMob);
 		}
+       // block for setting  hidden contacts messages         
+                
+                if(!($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT) && !($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))
+                    $contactedFlag=0;
+                else 
+                    $contactedFlag=1;
+                
+                    
+                    if($altArr['ALT_MOBILE'] && $altArr["ALT_MOB_STATUS"]=='Y')
+                    {
+                        if($altArr["SHOWALT_MOBILE"]=="C" && !$contactedFlag)
+                            $this->setAltMobileHiddenMessage(Messages::PHONE_VISIBLE_ON_ACCEPT);
+                        elseif($altArr["SHOWALT_MOBILE"]=='N')
+                            $this->setAltMobileHiddenMessage(Messages::PHONE_HIDDEN);
+                    }      
+
+                    if($this->profileObj->getPHONE_RES() && $this->profileObj->getLANDL_STATUS()=='Y' )
+                    {
+                        $showPhoneRes = $this->profileObj->getSHOWPHONE_RES();
+                        if($showPhoneRes=="C" && !$contactedFlag)
+                            $this->setLandlMobileHiddenMessage(Messages::PHONE_VISIBLE_ON_ACCEPT);
+                        elseif($showPhoneRes=='N')
+                            $this->setLandlMobileHiddenMessage(Messages::PHONE_HIDDEN);
+                    }      
+
+                    if($this->profileObj->getPHONE_MOB() && $this->profileObj->getMOB_STATUS()=='Y' )
+                    {
+                        $showPhoneMob = $this->profileObj->getSHOWPHONE_MOB();
+                        if($showPhoneMob=="C" && !$contactedFlag)
+                        $this->setPrimaryMobileHiddenMessage(Messages::PHONE_VISIBLE_ON_ACCEPT);
+                        elseif($showPhoneMob=='N')
+                            $this->setPrimaryMobileHiddenMessage(Messages::PHONE_HIDDEN);
+                    }      
+             // block for setting  hidden contacts messages ends here
+                    
+                    
 		if($altArr["SHOWBLACKBERRY"] == Messages::YES && $altArr["BLACKBERRY"])
 		{
 			$this->setBlackberry($altArr["BLACKBERRY"]);

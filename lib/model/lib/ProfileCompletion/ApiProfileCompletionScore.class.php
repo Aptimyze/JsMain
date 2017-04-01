@@ -425,7 +425,7 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		// Get Education Details from JPROFILE_EDUCATION
 		
 		$iPercentage = 0;
-		$jsEdu = new NEWJS_JPROFILE_EDUCATION;
+		$jsEdu = ProfileEducation::getInstance();
 		$arrEducation = $jsEdu->getProfileEducation($this->m_objProfile->getPROFILEID());
                 
 		$iHighestDegree = $this->m_objProfile->getEDU_LEVEL_NEW();
@@ -675,7 +675,7 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		}
 		
 				
-		$objHobbies = new NEWJS_HOBBIES;
+		$objHobbies = new JHOBBYCacheLib;
 		$arrHobbies = $objHobbies->getUserHobbies($this->m_objProfile->getPROFILEID());
 		
 		if($arrHobbies['HOBBY'] || $arrHobbies['INTEREST'])
@@ -802,17 +802,16 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		if($iProfileID === null || $iProfileID == null )
 			return false;
 			
-		$objHoroscope1 = new newjs_HOROSCOPE;
+		/*$objHoroscope1 = new newjs_HOROSCOPE;
 		$iCount1 = $objHoroscope1->getIfHoroscopePresent($iProfileID);
 		
 		$objHoroscope2 = new NEWJS_HOROSCOPE_FOR_SCREEN;
-		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);
+		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);*/
 		
-		$objHoroscope3 = new NEWJS_ASTRO;
+		$objHoroscope3 = ProfileAstro::getInstance();
 		$iCount3 = $objHoroscope3->getIfAstroDetailsPresent($iProfileID);
-		$arrRes = $objHoroscope3->getAstroDetails(array($iProfileID),'');
 		
-		if($iCount1 || $iCount2 || $iCount3)
+		if($iCount3) /*$iCount1 || $iCount2 ||*/
 			return true;
 			
 		return false;

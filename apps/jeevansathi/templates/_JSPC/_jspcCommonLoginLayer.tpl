@@ -1,14 +1,16 @@
 <script>
     var captchaShow=~$captchaDiv`;
+    var site_key = "~CaptchaEnum::SITE_KEY`";
 </script>
-   	<div class="mauto layerbg wid520">
-    	<div class="layerp3">
-        	<div id="LoginMessage" class="f17 grey5">Login to continue..</div>
-        	<div id="LoginErrMessage" class="f17 errcolr disp-none">Invalid e-mail ID or password. Please try again!</div>
-            <div id="LoginErrMessage2" class="f17 errcolr disp-none">Please slide to verify</div>
+    <div class="mauto layerbg wid520">
+        <div class="layerp3">
+            <div id="LoginMessage" class="f17 grey5">Login to continue..</div>
+            <div id="LoginErrMessage" class="f17 errcolr disp-none">Invalid e-mail ID or password. Please try again!</div>
+            <div id="CaptchaErrMessage" class="f17 errcolr disp-none">Please click the box 'I'm not a robot'</div>
+            <!-- <div id="LoginErrMessage2" class="f17 errcolr disp-none">New Captcha message here</div> -->
             <div class="mt20">
-            	<form id="homePageLogin" method="post" target="iframe_login" onsubmit="return LoginValidation()">
-                	<div id="EmailContainer" class="clearfix wid92p brderinp layerp2 ">
+                <form id="homePageLogin" method="post" target="iframe_login" onsubmit="return LoginValidation()">
+                    <div id="EmailContainer" class="clearfix wid92p brderinp layerp2 ">
                        <input type="text" class="bgnone f15 grey6 brdr-0 fl wid70p" placeholder="Email ID" value="" id="email" name="email">
                        <span id="emailErr" class="errcolr f15 fr hgt18 vishid"></span>
                     </div>
@@ -16,6 +18,8 @@
                        <input type="password" class="bgnone f15 grey6 brdr-0 fl wid70p" placeholder="Password" value="" id="password" name="password">
                        <span id="passwordErr" class="errcolr f15 fr hgt18 vishid"></span>
                     </div>
+                    <script>
+                    </script>
 <div class = "clearfix wid92p mt10"></div>
                     
         

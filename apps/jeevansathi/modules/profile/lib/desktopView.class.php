@@ -35,14 +35,12 @@ class desktopView extends DetailedViewApi
     $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
     $viewedProfile = $this->m_objProfile->getPROFILEID();
     parent::getDecorated_PrimaryInfo();
-    $this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
+    //$this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
     $this->m_arrOut['isOnline'] = $this->m_actionObject->ISONLINE;
     $this->m_arrOut['profile_posted'] = $this->m_objProfile->getDecoratedRelation();
     $this->m_arrOut['posted_name'] = $this->m_objProfile->getDecoratedPersonHandlingProfile();
     $this->m_arrOut['religion'] = $this->m_objProfile->getDecoratedReligion();
     $this->m_arrOut['income'] = $this->m_objProfile->getDecoratedIncomeLevel();
-    if( $this->m_objProfile->getMSTATUS() != "N")
-        $this->m_arrOut['have_child'] =  ApiViewConstants::$hasChildren[$this->m_objProfile->getHAVECHILD()];
     $this->m_arrOut['documents_provided'] = $this->m_objProfile->getDecoratedID_PROOF_TYP();
     $subscription = $this->getMembershipType();
     $this->m_arrOut['subscription_icon'] = $this->getFormattedSubscription($subscription);
@@ -73,6 +71,22 @@ class desktopView extends DetailedViewApi
         }
         $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
     }
+        $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
+            
     $havePhoto=$this->m_objProfile->getHAVEPHOTO();
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {
@@ -191,6 +205,11 @@ class desktopView extends DetailedViewApi
        $this->m_arrOut['dpp_mtongue'] = strip_tags($this->m_arrOut['dpp_mtongue']);
        $this->m_arrOut['dpp_occupation'] = strip_tags($this->m_arrOut['dpp_occupation']);
        $this->m_arrOut['dpp_have_children'] = $jPartnerObj->getDecoratedCHILDREN();
+       $state = $jPartnerObj->getDecoratedSTATE();
+       if($state && $this->m_arrOut['dpp_city'])
+           $this->m_arrOut['dpp_city'] = $state.','.$this->m_arrOut['dpp_city'];
+       elseif($state)
+           $this->m_arrOut['dpp_city'] = $state;
        if($jPartnerObj->getDecoratedNHANDICAPPED())
    $this->m_arrOut['dpp_natureHandi']= $jPartnerObj->getDecoratedNHANDICAPPED(); 
   }
@@ -672,6 +691,7 @@ class desktopView extends DetailedViewApi
 
       }
       $this->m_arrOut["verification_value"] = $this->verificationSeal;
+      $this->m_arrOut["verification_value_arr"] = array_unique($displaySeal);
 
     if($this->bResponseForEditView){
       $objEducation = $objProfile->getEducationDetail();
@@ -792,19 +812,21 @@ class desktopView extends DetailedViewApi
         $profileId = $objProfile->getPROFILEID();
         if($this->bResponseForEditView){
             if (!check_astro_details($profileId, "Y")){
-                include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
+                /*include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
                     if (get_horoscope($profileId)){
                     $HOROSCOPE = "Y";
                 }
                 else{
                     $HOROSCOPE = "N";
-                }
+                }*/
+                $HOROSCOPE = "N";
+                $this->m_arrOut['NO_ASTRO']=1;
             }
             else{
                 $HOROSCOPE = "Y";
             }
             
-            $horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
+            /*$horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
             $horoRow =  $horoStoreObj->getHoroscopeIfNotDeleted($objProfile->getPROFILEID());
             unset($horoStoreObj);
 
@@ -813,8 +835,8 @@ class desktopView extends DetailedViewApi
             }
             else{
                 $horo_for_screen = 'Y';
-            }
-            if($horo_for_screen == 'Y' || $HOROSCOPE == 'Y')
+            }*/
+            if($HOROSCOPE == 'Y')/*$horo_for_screen == 'Y' || */
                 $this->m_arrOut['horo_available'] = 'Y';
             else
                 $this->m_arrOut['horo_available'] = 'N';
@@ -913,7 +935,22 @@ class desktopView extends DetailedViewApi
     
     //Email
     $this->m_arrOut['my_email'] = $objProfile->getEMAIL();
-    
+    $this->m_arrOut['email_status'] = "Verify";
+      if($objProfile->getVERIFY_EMAIL() == "Y"){
+        $this->m_arrOut['email_status'] = "Verified";
+      }
+    //alternate Email
+    $this->m_arrOut['my_alt_email'] = $objProfile->getExtendedContacts("onlyValues")["ALT_EMAIL"];
+    $this->m_arrOut['alt_email_status'] = "Verify";
+    if (  $objProfile->getExtendedContacts("onlyValues")["ALT_EMAIL_STATUS"] == 'Y')
+    {
+      $this->m_arrOut['alt_email_status'] = "Verified";
+    }
+    if ( $this->m_arrOut['my_alt_email'] == NULL )
+    {
+      $this->m_arrOut['alt_email_status'] = "";
+      $this->m_arrOut['my_alt_email'] = ApiViewConstants::JSPC_NULL_VALUE_MARKER;
+    }
     //Mobile number
     $mobile_label = ApiViewConstants::getNullValueMarker();
     $this->m_arrOut['mobile_desc'] = '';
@@ -1077,6 +1114,10 @@ class desktopView extends DetailedViewApi
     return $out;
   }
   private function getCasteLabelForGrouping($casteArr){
+        $casteArr = trim(str_replace("'1'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'153'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'148'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'496'", '', $casteArr),',');
         $casteGroupArr=FieldMap::getFieldLabel("caste_group_array",'',1);
         foreach(explode(",",$casteArr) as $v)
         {

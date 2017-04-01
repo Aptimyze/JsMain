@@ -58,7 +58,7 @@ class LoginTracking
         //Function to track all logins happening through autologin
 		//channel can be Mailer(M),SMS(S)
 		//Webiste Version Desktop(D),Mobile(M)
-		public function loginTracking($requestURI="")
+		public function loginTracking($requestURI="",$currentTime='')
 		{
                 if (!strstr($_SERVER["REQUEST_URI"],'notification/poll') && !strstr($_SERVER["REQUEST_URI"],'notification/deliveryTracking'))
                 {
@@ -66,8 +66,6 @@ class LoginTracking
 			{
 				if($requestURI)
 					$this->setRequestURI($requestURI);
-				$mysql= new Mysql;
-				$db=$mysql->connect();
 				if($this->requestURI)
 				{
 					$page=explode('?',$this->requestURI);
@@ -77,6 +75,16 @@ class LoginTracking
 					$pageName=$pageName[$no-1];
 					
 					$pageStype=$_GET["stype"];
+                                        if(!$pageStype){
+                                            $pgArr=explode('&',$page[1]);
+                                            foreach ($pgArr as $key => $value) {
+                                                if(strpos($value,'stype')!==false && (strlen($value)>strlen('stype='))){$tempStr=$value;break;}
+                                            }  
+                                            if($tempStr){
+                                                $tempArr=explode('=',$tempStr);
+                                                $pageStype=$tempArr[1];
+                                            }
+                                        } 
 				}
 				else
 				{
@@ -85,8 +93,9 @@ class LoginTracking
 				}
 				$pageStype=substr($pageStype,0,4);
 				$pageStype=addslashes($pageStype);
-				$sqlLog="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES ('".$this->profileId."', '".$pageName."', now(),'".$this->channel."','".$this->websiteVersion."','".$pageStype."')";
-				$mysql->executeQuery($sqlLog,$db);
+				$pageName=addslashes($pageName);
+                                $time = $currentTime ? $currentTime : date("Y-m-d H:i:s");
+                                (new MIS_LOGIN_TRACKING())->insert($this->profileId,$time,$pageName,$this->channel,$this->websiteVersion,$pageStype);
 			}
 		}
 		}

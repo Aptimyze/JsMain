@@ -36,15 +36,15 @@ EOF;
 		// Set date past which all data is to be archived
 		$startDt = date('Y-m-d 00:00:00', strtotime('today - 15 days'));
 		include_once(JsConstants::$docRoot."/profile/connect_db.php");
-		//  Slave connection
-		$misSearchqueryObj = new MIS_SEARCHQUERY('newjs_slave');
-		$startingID = $misSearchqueryObj->getMinID();
-		$lastID = $misSearchqueryObj->getIdForCorrespondingDateTime($startDt);
-		unset($misSearchqueryObj);
-		
-		//  Master connection
-		$misSearchqueryObj = new MIS_SEARCHQUERY();
 
+		//  Slave connection
+		$misSearchquerySlaveObj = new MIS_SEARCHQUERY('newjs_slave');
+		//  Master connection
+                $misSearchqueryObj = new MIS_SEARCHQUERY('newjs_masterDDL');
+
+		$startingID = $misSearchquerySlaveObj->getMinID();
+		$lastID = $misSearchquerySlaveObj->getIdForCorrespondingDateTime($startDt);
+		
 		//  Transfer records 
 		if(!empty($startingID) && !empty($lastID)) {
 			$misSearchqueryObj->transferRecordsToTempArchivingTable($startingID, $lastID);
@@ -53,11 +53,13 @@ EOF;
 		}
 
 		// Finally check if temp table needs archiving
-		$date = $misSearchqueryObj->getFirstInsertedRecordInTempTableDate();
+		$date = $misSearchquerySlaveObj->getFirstInsertedRecordInTempTableDate();
 		if(strtotime($date) < strtotime(date('Y-m-d 00:00:00', strtotime('today - 90 days')))) {
 			$newName = "SEARCHQUERY_".date('d_M_Y');
 			$misSearchqueryObj->renameTempTableForArchiving($newName);
 			$misSearchqueryObj->createTempArchivingTable();
 		}	
+		unset($misSearchqueryObj);
+		unset($misSearchquerySlaveObj);
 	}
 }

@@ -77,7 +77,7 @@ abstract class AbstractProfileCompletionScore {
 		}	
 		else
 		{
-			throw new Exception('Profile Object Init Error');
+			throw new jsException('','Profile Object Init Error');
 		}
         
         //Fill Up Details 
@@ -88,7 +88,7 @@ abstract class AbstractProfileCompletionScore {
 		}
 		else
         {
-            $this->m_objProfile->getDetail("","",self::LIST_FIELDS);
+            $this->m_objProfile->getDetail($this->m_objProfile->getPROFILEID(),"PROFILEID",self::LIST_FIELDS);
         }
         $this->m_objProfile->setNullValueMarker("");
         //If Activated is set to D then, profile is delete marked
@@ -125,7 +125,7 @@ abstract class AbstractProfileCompletionScore {
 			$objScoreTable->replaceRecord($this->m_objProfile->getPROFILEID(), intval($iScore));
 		}
 		catch(Exception $e)
-		{
+		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
 			$subject = "ProfileCompletionScore : Exception While updaing score";
 			SendMail::send_email("kunal.test02@gmail.com","'".print_r($e,true)."'",$subject);
 		}

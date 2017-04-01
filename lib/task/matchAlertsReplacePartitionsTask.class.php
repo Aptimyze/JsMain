@@ -33,10 +33,14 @@ EOF;
         $lastPartitionRange = intval($matchAlertsObj->getLatestPartitionRange('p'.$lastPartitionName));
         if($gap >= ($lastPartitionRange-1)){
             //drop and create partition
-            $matchAlertsObj->replacePartitions('p'.($lastPartitionName-2),'p'.($lastPartitionName+1),$lastPartitionRange+15);
+            $matchAlertsObj->replacePartitions('p'.($lastPartitionName-5),'p'.($lastPartitionName+1),$lastPartitionRange+6);
             //update new partition number
             $lastActiveLogObj->updateLastActivePartition($lastPartitionName+1, $date);
         }
+        
+        // Get least date range value of partition
+        $lastValue = intval($matchAlertsObj->getLastPartitionRange());
+        JsMemcache::getInstance()->set("MATCHALERTS_PARTITIONED_DT",$lastValue,864000);
   }
   public function getNoOfDays()
     {

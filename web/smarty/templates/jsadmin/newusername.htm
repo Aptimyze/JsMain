@@ -138,8 +138,8 @@ function create_list()
 ~section name=i loop=$ROWS`
 <tr >
 <td class="label" border=1 align="center">~$ROWS[i].sno`</td>
-<td class="label" border=1 align="center"><a href="~$SITE_URL`/jsadmin/showstat.php?cid=~$CID`&profileid=~$ROWS[i].PROFILEID`" target="_blank">~$ROWS[i].OLD_USERNAME`</a></td>
-<td class="label" border=1 align="center"><a href="~$SITE_URL`/jsadmin/showstat.php?cid=~$CID`&profileid=~$ROWS[i].PROFILEID`" target="_blank">~$ROWS[i].USERNAME`</a></td>
+<td class="label" border=1 align="center"><a href="~$SITE_URL`/operations.php/commoninterface/ShowProfileStats?cid=~$CID`&profileid=~$ROWS[i].PROFILEID`" target="_blank">~$ROWS[i].OLD_USERNAME`</a></td>
+<td class="label" border=1 align="center"><a href="~$SITE_URL`/operations.php/commoninterface/ShowProfileStats?cid=~$CID`&profileid=~$ROWS[i].PROFILEID`" target="_blank">~$ROWS[i].USERNAME`</a></td>
 <td class="label" border=1 align="center"><input type=checkbox name=markeda onchange="removeother('d');" value='~$ROWS[i].PROFILEID`'></td>
 <input type="hidden" name="a_username" value='~$ROWS[i].USERNAME`'>
 <td class="label" border=1 align="center"><input type=checkbox name=markedd  onchange="removeother('a');" value='~$ROWS[i].PROFILEID`'></td>

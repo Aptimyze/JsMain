@@ -41,7 +41,6 @@ class apieditdppv1Action extends sfAction
 		
 		//Get symfony form object related to Edit Fields coming.
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		
 		if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 		{
 			$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
@@ -58,6 +57,8 @@ class apieditdppv1Action extends sfAction
 					$this->form->updateData();
 				}	
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
+				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
                                 if($request->getParameter("getData")=="dpp"){
                                     ob_start();
                                     $request->setParameter("sectionFlag","dpp");
@@ -66,7 +67,7 @@ class apieditdppv1Action extends sfAction
                                     $this->dppData = ob_get_contents();
                                     ob_end_clean();
                                     $apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-                                    
+				    
                                 }
 			}
 			else
@@ -100,7 +101,6 @@ class apieditdppv1Action extends sfAction
 	{
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		
 		//
 		//Update Partner Income Also if Income is updated
 		//if(stristr($scase,"LINCOME") || stristr($scase,"HINCOME") || stristr($scase,"LINCOME_DOL") ||stristr($scase,"HINCOME_DOL"))
@@ -159,7 +159,7 @@ class apieditdppv1Action extends sfAction
 		$request = sfContext::getInstance()->getRequest();		
 		$this->m_objLoginProfile->getDetail($this->profileId,"","*","RAW");
 		
-		if(in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION()))) 
+		/*if(in_array("T", explode(",", $this->m_objLoginProfile->getSUBSCRIPTION()))) 
 			$userType = UserType::AP_USER;
 		
 		if ($userType == UserType::AP_EXECUTIVE) 
@@ -225,7 +225,7 @@ class apieditdppv1Action extends sfAction
 			}
 		} 
 		else
-		{
+		{*/
 			if($scase)
 				$scase.= ",DPP='E',DATE=now()";
 			
@@ -244,7 +244,15 @@ class apieditdppv1Action extends sfAction
 			$jpartnerEditLog = new JpartnerEditLog();
 			$param["fromBackend"] = $fromBackend;
 			$jpartnerEditLog->logDppEdit($jpartnerObj,$this->dppUpdateArray,$param);
-		}
+                        
+                        // remove entry from list count table used in Match alerts mailer
+                        TwoWayBasedDppAlerts::deleteEntry($this->profileId);
+                        
+                        // remove Low Dpp flag when user changes dpp
+                        $memObject=JsMemcache::getInstance();
+                        $memObject->remove('MA_LOWDPP_FLAG_'.$this->profileId);
+                        (new MIS_CA_LAYER_TRACK())->truncateForUserAndLayer($this->profileId,11,'');
+		//}
 		
 		//If profile's Source is ofl_prof Then do following
 		if (strtolower($this->m_objLoginProfile->getSOURCE()) == "ofl_prof") 
@@ -311,13 +319,63 @@ class apieditdppv1Action extends sfAction
 				$this->m_bEditSpouse = true;
 				$arrOut[$key] = ($val == -1)? "" : $val ;
 			}
+			else if($key == 'P_CITY')
+			{
+				$this->m_bDppUpdate = true;
+				$cityStateArr = explode(",",$val);
+				$stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
+				foreach($cityStateArr as $k=>$v)
+				{
+					if(array_key_exists($v, $stateIndiaArr))
+					{
+						$stateArr[] =$v;
+					}
+					else
+					{
+						$cityArr[]= $v;
+					}
+					
+				}
+				if(is_array($cityArr))
+				{
+					foreach($cityArr as $key=>$value)
+					{	
+						if(!in_array(substr($value,0,2),$stateArr))
+						{
+							$cityString .= $value.",";
+						}
+					}
+					$arrOut["P_CITY"] = rtrim($cityString,",");
+				}
+				else
+				{
+					$arrOut["P_CITY"] = "";
+				}
+				if(is_array($stateArr))
+				{
+					$arrOut['P_STATE'] = implode(",",$stateArr);	
+				}
+				else
+				{
+					$arrOut["P_STATE"] = "";
+				}
+					$arrOut['CITY_INDIA'] = NULL;
+			}
+			else if($key == "P_COUNTRY")
+			{
+				$this->m_bDppUpdate = true;
+				if(strpos($val,'51') !== false)
+				{
+						$arrOut['CITY_INDIA'] = NULL;
+				}
+				$arrOut["P_COUNTRY"] = $val;
+			}
 			else
 			{
 				$arrOut[$key] = ($val == -1)? "" : $val ;
 				$this->m_bDppUpdate = true;
 			}
 		}//End of For loop
-		
 		$request->setParameter("editFieldArr",$arrOut);
 	}
 }

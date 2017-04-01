@@ -4,14 +4,20 @@
 */
 class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 {
+        public $logProfile = 0;
 	/**
 	* 
 	* @param type $loggedInProfileObj logged in user object
 	* @param type $limit number of records to be fetched
 	*/
-	public function __construct($loggedInProfileObj,$limit)
+	public function __construct($loggedInProfileObj,$limit,$type)
 	{
-		$this->sort = SearchSortTypesEnums::dateSortFlag;
+                $this->sort = SearchSortTypesEnums::SortByLoginDate;
+                if($type == MailerConfigVariables::$TrendsLoggedinWithTrendsScoreSort){
+                        $this->sort = SearchSortTypesEnums::SortByTrendsScore;
+                }else{
+                        $this->logProfile = 1;
+                }
 		$this->loggedInProfileObj = $loggedInProfileObj;
 		$this->limit = $limit;
 		$this->searchEngine = 'solr';
@@ -22,32 +28,38 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	* This function set Trends Criteria and creates a search Service and Search Service object to fetch result
 	* @return type array of user profile Ids
 	*/
-	public function getMatches($intersection = '')
+
+	public function getMatches($notInProfiles = array(),$matchesSetting='')
 	{
-                if($intersection){
-                    $this->TrendsProfileObj = new TrendsIntersectionDppProfiles($this->loggedInProfileObj);
-                    $toSendFromIntersection = $this->TrendsProfileObj->getDppTrendsCriteria($this->sort, $this->limit);
-                    if(!$toSendFromIntersection)
-                        return false;
-                }
-                else{
-                    $this->TrendsProfileObj = new TrendsPartnerProfiles($this->loggedInProfileObj);
-                    $this->TrendsProfileObj->getDppCriteria($this->sort, $this->limit);
-                }
+                $this->TrendsProfileObj = new TrendsPartnerProfiles($this->loggedInProfileObj);
+                $this->TrendsProfileObj->getDppCriteria($this->sort, $this->limit);
+                
 		$SearchServiceObj = new SearchService($this->searchEngine,$this->outputFormat,0);
 		$SearchUtilityObj =  new SearchUtility;
-                if($intersection){
-                    $pidsAndCount =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj,$intersection);
-                    $pids = $pidsAndCount['PIDS'];
-                    $totalCount = $pidsAndCount['CNT'];
+                $pids =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj,0,implode(' ',$notInProfiles));
+                if(is_array($pids)){
+                        if($this->logProfile == 0){
+                                if(count($pids)<$this->limit){
+                                        return array("CNT"=>count($pids),"profiles"=>$pids);   
+                                }else{
+                                        if(!empty($notInProfiles)){
+                                                $pids = array_merge($pids, $notInProfiles);
+                                        }
+                                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
+                                }
+                        }else{
+                                if(!empty($notInProfiles)){
+                                        $pids = array_merge($pids, $notInProfiles);
+                                }
+                                $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
+                        }
+                }else{
+                     if(!empty($notInProfiles) && $this->logProfile == 1) {
+                             $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $notInProfiles, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
+                     }  
                 }
-                else
-                    $pids =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj);
-                if(is_array($pids))
-                	$this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit);
-                if($intersection)
-                    return $totalCount;
-	}
+                return array("CNT"=>count($pids),"profiles"=>$pids);   
+        }
 
 	/**
 	* 
@@ -55,10 +67,10 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	* @param type $SearchUtilityObj object of Search Utility Class
 	* @return type array, array of user profile Ids 
 	*/
-	private function getSearchResult($SearchServiceObj,$SearchUtilityObj,$returnTotalCount='')
+	private function getSearchResult($SearchServiceObj,$SearchUtilityObj,$returnTotalCount='',$notInProfiles = '')
 	{
 		$SearchServiceObj->setSearchSortLogic($this->TrendsProfileObj,$this->loggedInProfileObj,"","");
-		$SearchUtilityObj->removeProfileFromSearch($this->TrendsProfileObj,'spaceSeperator',$this->loggedInProfileObj,'',"",$this->removeMatchAlerts);
+		$SearchUtilityObj->removeProfileFromSearch($this->TrendsProfileObj,'spaceSeperator',$this->loggedInProfileObj,'',1,$this->removeMatchAlerts,$notInProfiles,'',1);
 		$responseObj = $SearchServiceObj->performSearch($this->TrendsProfileObj,"","","",'',$this->loggedInProfileObj);
 		$PIDS = $responseObj->getsearchResultsPidArr();
                 if($returnTotalCount){

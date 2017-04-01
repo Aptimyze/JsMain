@@ -281,5 +281,74 @@ class NEWJS_FILTER extends TABLE{
     }
     return $arrOut;
   }
+
+
+  public function fetchField($field,$limit='',$offset='')
+  {
+  	try
+  	{
+  		
+  		$sql="SELECT PROFILEID FROM FILTERS WHERE ".$field." =  ''";
+
+  		if($limit && $offset==""){
+  			$sql = $sql." LIMIT :LIMIT";
+  		}
+  		else if($limit && $offset!=""){
+  			$sql = $sql." LIMIT :OFFSET,:LIMIT";
+  		}
+
+  		$prep=$this->db->prepare($sql);
+
+		if($limit && $offset==""){
+            $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+		}
+        else if($limit && $offset!=""){
+            $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+            $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+        }
+
+  		$prep->execute();
+  		if($result = $prep->fetchAll(PDO::FETCH_ASSOC))
+  		{
+  			return $result;
+  		}
+  		return false;
+  	}
+  	catch(PDOException $e)
+  	{
+  		throw new jsException($e);
+  	}
+  }
+
+  public function updateField($field,$profileIdArr)
+  {
+  	try
+  	{
+  		foreach($profileIdArr as $key=>$pid)
+		{
+			if($key == 0)
+				$str = ":PROFILEID".$key;
+			else
+				$str .= ",:PROFILEID".$key;
+		}
+
+  		$sql="UPDATE FILTERS SET ".$field." = 'Y' WHERE profileid in ($str) AND ".$field." = ''";
+
+  		$prep=$this->db->prepare($sql);
+
+  		foreach($profileIdArr as $key=>$pid)
+  		{
+  			$prep->bindValue(":PROFILEID".$key, $pid['PROFILEID'], PDO::PARAM_INT);
+  		}
+  		$prep->execute();
+  	}
+  	catch(PDOException $e)
+  	{
+  		throw new jsException($e);
+  	}
+  }
+
+
+
 }
 ?>

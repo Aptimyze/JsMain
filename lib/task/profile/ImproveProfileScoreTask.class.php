@@ -22,6 +22,14 @@ class ImproveProfileScoreTask extends sfBaseTask
      */
     private $m_SlaveObj =null;
     
+    
+    /*
+     * MySql Object For master dll Connection
+     * @access private
+     * @var Object of Mysql Store Class
+     */
+    private $m_MasterDDLObj =null;
+    
     /*
      * MySql Object For Slave Connection
      * @access private
@@ -96,6 +104,8 @@ EOF;
       //NewJs_Slave Connection
       $this->m_SlaveObj  =  new PROFILE_PROFILE_COMPLETION_SCORE('newjs_slave');
       $this->m_MasterObj  =  new PROFILE_PROFILE_COMPLETION_SCORE();
+      $this->m_MasterDDLObj  =  new PROFILE_PROFILE_COMPLETION_SCORE('newjs_masterDDL');
+      
     }
     
     /*
@@ -146,7 +156,7 @@ EOF;
        */
       try{
         if(false === $this->m_MasterObj->isImproveScoreTableExist()){
-          $this->m_MasterObj->createImproveScoreTable();
+          $this->m_MasterDDLObj->createImproveScoreTable();
         }
 
         //Get Profile Id in Improve Score Table From Slave
@@ -238,9 +248,10 @@ EOF;
       
       if(count($this->m_arrProfiles)){
         //Drop table if all goes well
-        $this->m_MasterObj->dropImproveScoreTable();
+        $this->m_MasterDDLObj->dropImproveScoreTable();
       }
       unset($this->m_MasterObj);
+      unset($this->m_MasterDDLObj);
     }    
     
     /*

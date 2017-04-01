@@ -34,7 +34,7 @@
   </div>
   <!--end:div--> 
   <div class=" posabs fullwid btmo">
-    <div class="pt20"> <a  onClick="validatePhone();return false;" class="bg7 white lh30 fullwid dispbl txtc lh50">Continue</a> </div>
+    <div class="pt20"> <a id='js-phoneContinue' onClick="validatePhone();return false;" class="bg7 white lh30 fullwid dispbl txtc lh50">Continue</a> </div>
   </div>
 </form>
 </div>

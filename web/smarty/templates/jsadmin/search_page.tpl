@@ -107,7 +107,6 @@ function loadForm()
       <td class="label" width=10% height="21"><b>Show Stats</b></td>
       <td class="label" width=10% height="21"><b>&nbsp;</b></td>
       <td class="label" width=12% height="21"><b>Mark for Email Verification</b></td>
-      <td class="label" width=11% height="21"><b>Delete</b></td>
       <td class="label" width=10% height="21"><b>Change Request</b></td>
       <td class="label" width=10% height="21"><b>Verify Email</b></td>
       <td class="label" width=10% height="21"><b>Email Manager</b></td>
@@ -147,6 +146,11 @@ function loadForm()
                 <td height="21" align="CENTER"><a href="#" onclick="MM_openBrWindow('showdeletion_detail.php?profileid=~$ROW[index].Profileid`','search','width=640,height=480,scrollbars=yes'); return false;"> ~$ROW[index].del_ret_by`</a></td>
                 <td height="21" align="CENTER">Date: ~$JSARCH_DATE`</td><td>Deleted by system because of inactivity </td>
                 </tr>
+    ~elseif $ROW[index].negativeListcheck eq "1"`
+        <tr bgcolor="#fbfbfb" class=fieldsnew>
+                    <td>&nbsp;</td>
+                    <td height="21" align="CENTER" colspan=3>Deleted due to Negative Treatment</td>
+        </tr>
 	~else`
 	 ~if $ROW[index].del_scr eq "N"  and $ROW[index].activated eq "D"`
         <tr bgcolor="#fbfbfb" class=fieldsnew>
@@ -178,13 +182,7 @@ function loadForm()
 
     ~/section`
    
-    <tr>
-      <td colspan="7" height="21" align="CENTER">&nbsp;</td>
-      <td height="21" align="CENTER">~if $SHOW eq "Y"`
-	<input type="submit" name="Delete" value="Delete">		
-	~/if`
-      </td>
-   </tr>
+
   </table>
                                                                                                  
 ~else`
@@ -195,7 +193,7 @@ function loadForm()
     </tr>
 </table>
 ~/if`
-~if $ADMIN eq 'Y'`
+<!--~if $ADMIN eq 'Y'`
 <table width=50% cellspacing="1" cellpadding='3' ALIGN="CENTER" >
 	<tr class="fieldsnew">
 		<td colspan="7" height="21" align="CENTER">&nbsp;</td>
@@ -205,7 +203,7 @@ function loadForm()
 		</td>
 	</tr>
 </table>
-~/if`
+~/if`-->
 </form> 
 
 <table align="CENTER">

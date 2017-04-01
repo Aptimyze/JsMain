@@ -1,11 +1,12 @@
 <?php
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER['DOCUMENT_ROOT'] . "/jsadmin/ap_common.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/jsadmin/ap_common.php");
 }
 
-include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php");
+include_once (JsConstants::$docRoot . "/classes/Services.class.php");
+include_once (JsConstants::$cronDocRoot . "/lib/model/lib/FieldMapLib.class.php");
 
 class Membership
 {
@@ -53,7 +54,10 @@ class Membership
     private $curtype;
     private $entry_from;
     private $membership;
-    
+    private $orderid_part1;
+    private $device;
+    private $checkCoupon;
+
     //payment detail insertion variables.
     private $billid;
     private $mode;
@@ -79,6 +83,7 @@ class Membership
     private $set_activate;
     private $dol_conv_bill;
     private $assisted_arr = array();
+    private $discount_percent;
 
     function setBillid($billid) {
         $this->billid = $billid;
@@ -110,6 +115,26 @@ class Membership
 
     function setProfileid($profileid) {
         $this->profileid = $profileid;
+    }
+    
+    function setCurtype($curtype) {
+        $this->curtype = $curtype;
+    }
+    
+    function getCurtype() {
+        return $this->curtype;
+    }
+
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
     }
 
     function generateOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '') {
@@ -164,14 +189,25 @@ class Membership
             $myrow = $orderDetails[0];
             if ($myrow["PMTRECVD"] == '0000-00-00' || $myrow["STATUS"] == 'N' || $myrow["STATUS"] == 'B') {
                 $date = date("Y-m-d", time());
-                $updateStatus = $billingOrderObj->updatePaymentReceivedStatus($date, $updateStatus, $part2, $part1);
-                if ($updateStatus) {
+                $updateRowStatus = $billingOrderObj->updatePaymentReceivedStatus($date, $updateStatus, $part2, $part1);
+                if ($updateRowStatus) {
                     $ret = true;
                 }
                 else {
                     $ret = false;
                 }
                 $dup = false;
+                if($updateStatus == 'N' || $updateStatus == "N"){
+                    //check whether user was eligible for membership upgrade or not
+                    $memCacheObject = JsMemcache::getInstance();
+                    $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
+                    if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                        $memHandlerObj = new MembershipHandler(false);
+                        //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
+                        $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                        unset($memHandlerObj);
+                    }
+                }
             } 
             else {
                 $dup = true;
@@ -181,11 +217,11 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid) {
+    function startServiceOrder($orderid, $skipBill = false) {
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
-        
+
         $billingOrderObj = new BILLING_ORDERS();
         $orderDetails = $billingOrderObj->getOrderDetailsForOrderID($part2, $part1);
         $myrow = $orderDetails[0];
@@ -265,24 +301,47 @@ class Membership
         $this->expiry_dt = $myrow["EXPIRY_DT"];
         $this->set_activate = $myrow["SET_ACTIVATE"];
         
-        $this->makePaid();
+        //check whether user is eligible for membership upgrade or not
+        $memCacheObject = JsMemcache::getInstance();
+        $checkForMemUpgrade = $memCacheObject->get($this->profileid.'_MEM_UPGRADE_'.$orderid);
+        
+        if($checkForMemUpgrade == null || $checkForMemUpgrade == false){
+            $upgradeOrderObj = new billing_UPGRADE_ORDERS();
+            $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$this->profileid);
+            if(is_array($isUpgradeCaseEntry)){
+                $memUpgrade = $isUpgradeCaseEntry["MEMBERSHIP"];
+            }
+            else{
+                $memUpgrade = "NA";
+            }
+        }
+        else{
+            if(in_array($checkForMemUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $memUpgrade = $checkForMemUpgrade;
+            }
+            else{
+                $memUpgrade = "NA";
+            }
+        }
+        $this->makePaid($skipBill,$memUpgrade,$orderid);
 
-        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/suspected_ip.php");
+        include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
         
         if ($suspected_check) send_email('vikas@jeevansathi.com', $this->profileid, "Payment Profileid of suspected email-id", "payment@jeevansathi.com");
         
-        $subject = "Bill for your online subscription";
+        // $subject = "Bill for your online subscription";
         
-        $msg = $this->order_mail_content($this->username, $this->type, $this->amount, $this->entry_dt, $myrow['ORDERID'], $myrow['ID']);
+        // $msg = $this->order_mail_content($this->username, $this->type, $this->amount, $this->entry_dt, $myrow['ORDERID'], $myrow['ID']);
         
         $receiptid = $this->receiptid;
         $billid = $this->billid;
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/invoiceGenerate.php");
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
         
         //different mail function called to send html mail along with pdf attachment.
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$this->email,"EMAIL_TYPE"=>"29"),$myrow['PROFILEID']);
         $canSend = $canSendObj->canSendIt();
+
         if($canSend)
         {
         	$ordrDeviceObj = new billing_ORDERS_DEVICE();
@@ -291,7 +350,9 @@ class Membership
             	// Disable sending bills to iOS Customers
             	unset($bill);
             }
-	        send_email($this->email, $msg, $subject, 'membership@jeevansathi.com', '', 'payments@jeevansathi.com', $bill, '', '', '', "1", '', 'Jeevansathi Membership');
+            $membershipMailer = new MembershipMailer();
+            $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
+	        //send_email($this->email, $msg, $subject, 'membership@jeevansathi.com', '', 'payments@jeevansathi.com', $bill, '', '', '', "1", '', 'Jeevansathi Membership');
 		}
         
         if (strstr($this->serviceid, 'M')) {
@@ -391,31 +452,37 @@ class Membership
     }
 
     function order_mail_content($USERNAME, $type, $amount, $entry_dt, $ORDERID, $ID) {
-        global $payment_gateway;
-        //header
-        $msg = "Please add membership@jeevansathi.com to your address book to ensure delivery of this mail into you inbox.<br><br>";
+        $membershipMailer = new MembershipMailer();
+        $receiptid = $this->receiptid;
+        $billid = $this->billid;
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
+        $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
+
+        // global $payment_gateway;
+        // //header
+        // $msg = "Please add membership@jeevansathi.com to your address book to ensure delivery of this mail into you inbox.<br><br>";
         
-        $msg.= "Dear $USERNAME,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $type $amount on $entry_dt. Please use your ORDER ID. No. - $ORDERID-$ID in all your future communication with us in order for us to serve you better.\n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+        // $msg.= "Dear $USERNAME,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $type $amount on $entry_dt. Please use your ORDER ID. No. - $ORDERID-$ID in all your future communication with us in order for us to serve you better.\n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
         
-        if ($payment_gateway == 'CCAVENUE') {
-            $msg.= "\n\nPlease Note :- The charge will appear on your credit card as 'ccavenue.com/charge'";
-        } 
-        elseif ($payment_gateway == 'TRANSECUTE') {
-            $msg.= "\n\nPlease Note :- The charge that will be appearing on your Credit Card Statement will display pay.transecute.com";
-        } 
-        elseif ($payment_gateway == 'PAYPAL') {
-            $msg.= "\n\nPlease Note :- The credit card transaction will appear on your bill as \"PAYPAL *JEEVANSATHI\".";
-        }
+        // if ($payment_gateway == 'CCAVENUE') {
+        //     $msg.= "\n\nPlease Note :- The charge will appear on your credit card as 'ccavenue.com/charge'";
+        // } 
+        // elseif ($payment_gateway == 'TRANSECUTE') {
+        //     $msg.= "\n\nPlease Note :- The charge that will be appearing on your Credit Card Statement will display pay.transecute.com";
+        // } 
+        // elseif ($payment_gateway == 'PAYPAL') {
+        //     $msg.= "\n\nPlease Note :- The credit card transaction will appear on your bill as \"PAYPAL *JEEVANSATHI\".";
+        // }
         
-        $msg.= "\n\nRegards,\nJeevansathi.com Team";
+        // $msg.= "\n\nRegards,\nJeevansathi.com Team";
         
         //Footer
-        $mailerServiceObj = new MailerService();
-        $mailerLinks = $mailerServiceObj->getLinks();
-        $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];        
-        $msg.="<br><br>You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. To stop receiving these mails <a href='$unsubscribeLink/0/0' target='_blank'>Unsubscribe</a>.";
+        // $mailerServiceObj = new MailerService();
+        // $mailerLinks = $mailerServiceObj->getLinks();
+        // $unsubscribeLink = $mailerLinks['UNSUBSCRIBE'];        
+        // $msg.="<br><br>You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. To stop receiving these mails <a href='$unsubscribeLink/0/0' target='_blank'>Unsubscribe</a>.";
 
-        return $msg;
+        // return $msg;
     }
 
     function isRenewable($profileid) {
@@ -461,15 +528,28 @@ class Membership
         return 0;
     }
     
-    function getMemUserType($profileid) {
+    function getMemUserType($profileid,$fromBackend="") {
         $billingPurObj = new BILLING_PURCHASES();
         $billingServStatObj = new BILLING_SERVICE_STATUS();
         $count = $billingPurObj->getPaidStatus($profileid);
         if ($count) {
             $row = $billingServStatObj->getLastActiveServiceDetails($profileid);
             if ($row['EXPIRY_DT']) {
+                $memUpgradeOffset = intval("-".VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]);
+                $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $row['SERVICEID']);
+                
+                if(strpos($memID[0], 'L')!=false){
+                    $memID[0] = substr($memID[0],0,-1);
+                    $memID[1] = 'L';
+                }
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
-                    return array(5, $row["EXPIRY_DT"], $row['SERVICEID']);
+                    if($fromBackend != "discount_link" && $row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"])==false
+                       ){
+                        return array(memUserType::UPGRADE_ELIGIBLE, $row["EXPIRY_DT"], $row["SERVICEID"]);
+                    }
+                    else{
+                        return array(5, $row["EXPIRY_DT"], $row['SERVICEID']);
+                    }
                 } 
                 else {
                     if ($row['DIFF'] >= - 10 && $row['DIFF'] < 30) {
@@ -478,13 +558,28 @@ class Membership
                         $ts1 = mktime(0, 0, 0, $mm, $dd, $yy);
                         $expiry_date_plus_10 = date("j-M-Y", $ts);
                         $expiry_date = date("j-M-Y", $ts1);
+                        
                         if ($row['DIFF'] < 0) return array(4, $expiry_date_plus_10, $row["SERVICEID"]);
-                        else return array(6, $expiry_date, $row['SERVICEID']);
+                        else{
+                            if($fromBackend != "discount_link" && $row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"])==false){
+                                return array(memUserType::UPGRADE_ELIGIBLE, $expiry_date, $row["SERVICEID"]);
+                            }
+                            else{
+                                return array(6, $expiry_date, $row['SERVICEID']);
+                            }
+                        }
                     } 
                     else if ($row['DIFF'] < - 10) {
                         return array(3, 0, $row["SERVICEID"]);
                     } 
-                    else return array(5, 0, $row["SERVICEID"]);
+                    else {
+                        if($fromBackend != "discount_link" && $row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"])==false){
+                            return array(memUserType::UPGRADE_ELIGIBLE, 0, $row["SERVICEID"]);
+                        }
+                        else{
+                            return array(5, 0, $row["SERVICEID"]);
+                        }
+                    }
                 }
             } 
             else {
@@ -563,15 +658,69 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid() {
-        $this->generateBill();
+    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
+        $userObjTemp = $this->getTempUserObj();
+        if($skipBill == true){
+            $this->setGenerateBillParams();
+        } else {
+            $this->generateBill($memUpgrade);
+        }
+        $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
+        if($memUpgrade != "NA"){
+            $this->deactivateMembership($memUpgrade,$orderid);
+        }
         $this->setServiceActivation();
-        $this->populatePurchaseDetail();
+        $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
+        $this->checkIfDiscountExceeds($userObjTemp);
+        if($memUpgrade != "NA"){
+            $memHandlerObj = new MembershipHandler(false);
+            //$memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid),false);
+            $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
+            unset($memHandlerObj);
+        }
     }
-    
-    function generateBill() {
+
+
+    /*function - deactivateMembership
+    * deactivates currently active membership of user
+    * @inputs: $memUpgrade="NA",$orderid=""
+    * @outputs: none
+    */
+    function deactivateMembership($memUpgrade="NA",$orderid=""){
+        $urlToHit = JsConstants::$siteUrl."/api/v1/membership/deactivateCurrentMembership";
+        $profileCheckSum = JsAuthentication::jsEncryptProfilechecksum($this->profileid);
+        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>$memUpgrade,"NEW_ORDERID"=>$orderid);
+        $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$memUpgradeConfig["deactivationCurlTimeout"]);
+        if($deactivationResponse){
+            $finalOutput = json_decode($deactivationResponse,true);
+            //error_log("end of deactivateMembership...".$finalOutput["responseStatusCode"]);
+        }
+        else{
+            $finalOutput = array("responseStatusCode"=>"1");
+        }
+        //if not deactivated then send alert mail
+        if($finalOutput["responseStatusCode"] == "1"){
+            $subject = "Curl hit to deactivate main membership failed";
+            $msg = "Details: new_orderid {$orderid} in deactivateMembership called by makepaid function for Username : {$this->username},curlResponse:$deactivationResponse";
+            SendMail::send_email("ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com",$msg,$subject);
+        }
+        unset($finalOutput);
+        unset($deactivationResponse);
+    }
+
+    function getTempUserObj() {
+        $memHandlerObj = new MembershipHandler();
+        $userObj = new memUser($this->profileid);
+        list($ipAddress1, $currency1) = $memHandlerObj->getUserIPandCurrency($this->profileid);
+        $userObj->setIpAddress($ipAddress1);
+        $userObj->setCurrency($currency1);
+        $userObj->setMemStatus();
+        return $userObj;
+    }
+
+    function setGenerateBillParams(){
         if (strstr($this->serviceid, 'C') || strstr($this->serviceid, 'P') || strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'X') || strstr($this->serviceid, 'NCP')) {
             $this->membership = 'Y';
             $dur_arr = array('1W', '2W', '6W', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'L', '10');
@@ -586,54 +735,111 @@ class Membership
             $this->membership = 'N';
         }
         
-        $this->service_tax_content = billingVariables::SERVICE_TAX_CONTENT;
-        /*
-        if($this->curtype=='RS')
-        {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-31 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-11-14 23:59:59"))){
-                $this->service_tax_content ="(Inclusive of Swachh Bharat Cess)";
-            }  elseif(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2015-05-31 23:59:59"))){
-                $this->service_tax_content = NULL;
-            } else {
-                $this->service_tax_content ="(Including 2% Education Cess and 1% Secondary Higher Education Cess on Service Tax)";
-            }
+        if ($this->curtype == 'RS') {
+            $this->service_tax_content = billingVariables::SERVICE_TAX_CONTENT;
+        } else {
+            $this->service_tax_content = '';
         }
-        elseif ($this->curtype == 'DOL') {
-            if(strtotime(date("Y-m-d H:i:s")) > strtotime(date("2016-05-25 23:59:59"))){
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-            }
-            else{
-                $this->service_tax_content = "(Inclusive of Swachh Bharat Cess)";
-            }
-        }
-         */
-        
+
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
         $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+    }
+    
+    function generateBill($memUpgrade = "NA") {
+
+        if(empty($this->discount_type) || $this->discount_type == 0){
+            $this->discount_type = 12;
+        }
+
+        $this->setGenerateBillParams();
+
+        $geoIpCountryName = $_SERVER['GEOIP_COUNTRY_NAME'];
+        if(!$geoIpCountryName){
+		$geoIpCountryId = $_SERVER['GEOIP_COUNTRY_CODE'];
+		if($geoIpCountryId){
+			if($geoIpCountryId=='IN')
+				$geoIpCountryName ='India';
+			else
+                		$geoIpCountryName =$geoIpCountryId;
+		}
+		else{
+			if($this->curtype == 'RS')
+				$geoIpCountryName ='India';
+			else
+				$geoIpCountryName ='Foreign';
+		}
+        }
+        
+        unset($modifiedServeFor);
+        if(strstr($this->servefor,'X') && !strstr($this->servefor,'J')){
+            $modifiedServeFor = $this->servefor.',J';
+        }
+        else{
+            $modifiedServeFor = $this->servefor;
+        }
+        
+        $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
 
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
-        $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT";
-        $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$this->servefor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content'";
-        
-        // TAX FOR ALL CURRENCY
-        $paramsStr .= ", TAX_RATE";
-        $valuesStr .= ",'$this->tax_rate'";
+        $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY,DISCOUNT_PERCENT";
+        $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$modifiedServeFor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content','$geoIpCountryName','$this->discount_percent'";
+        if($memUpgrade != 'NA'){
+            $paramsStr .= ", MEM_UPGRADE";
+            $valuesStr .= ",'$memUpgrade'";
+        }
+        // TAX FOR RS ONLY
+        if ($this->curtype == 'RS') {
+            $paramsStr .= ", TAX_RATE";
+            $valuesStr .= ",'$this->tax_rate'";
+        }
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
+        
+        /**
+         * Code added for tracking discount given per transaction
+         */
+        $memHandlerObj = new MembershipHandler();
+        list($execName, $supervisor) = $memHandlerObj->getAllotedExecSupervisor($this->profileid);
+        if(empty($supervisor)){
+            $supervisor = 'rohan.m';
+        }
+        $servicesObj = new Services();
+        $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
+        $serArr = $servicesObj->getServiceName($this->serviceid);
+        foreach($serArr as $key=>$val){
+            $services_names[] = $val['NAME'];
+        }
+        $serName = implode(",", $services_names);
+        $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
+        $finAmt = round($iniAmt - $this->discount, 2);
+        $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
+        $transObj->insert($this->billid, $this->profileid, $this->discount_type, $supervisor, $discPerc, $iniAmt, $finAmt, $this->serviceid);
+        if ($supervisor != 'rohan.m') {
+            $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+            $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
+            $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
+            $msg = "Bill Details ({$serName})";
+            $msg .= "Username : {$this->username} \n";
+            $msg .= "Billid : {$this->billid} \n";
+            SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+        }
+        /**
+         * End Code
+         */
+    }
 
+    function getDeviceAndCheckCouponCodeAndDropoffTracking() {
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);
-            $checkCoupon = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
+            $this->checkCoupon = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
             $this->device = $ordrDeviceObj->getOrderDevice($this->orderid,$this->orderid_part1);
-            if(!empty($checkCoupon) && $checkCoupon != ''){
+            if(!empty($this->checkCoupon) && $this->checkCoupon != ''){
                 $couponOffrObj = new billing_COUPON_OFFER();
-                $couponOffrObj->updateCouponCount($checkCoupon);
+                $couponOffrObj->updateCouponCount($this->checkCoupon);
                 unset($couponOffrObj);
             }
         }
@@ -644,26 +850,26 @@ class Membership
         }
         
         if(empty($this->device) || $this->device == ''){
-        	$this->device = 'desktop';
+            $this->device = 'desktop';
         }
-        
+
+        $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+        $billingDropSrcObj->deleteSourceTracking($this->profileid, $this->device);
     }
 
-    function generateReceipt() {
-
-    	// Invoice generation Logic
-		$billyear = (date('m', strtotime(date("Y-m-d H:i:s")))<'04') ? date('y',strtotime('-1 year')) : date('y');
+    function generateInvoiceNo(){
+        $billyear = (date('m', strtotime(date("Y-m-d H:i:s")))<'04') ? date('y',strtotime('-1 year')) : date('y');
         $billid_toassign = $billyear;
         $d = $billid_toassign + 1;
         if ($d < 10) {
-        	$d = "0" . $d;
+            $d = "0" . $d;
         }
         $billid_toassign.= $d;
         $serviceid_arr = @explode(",", $this->serviceid);
         for ($i = 0; $i < count($serviceid_arr); $i++) {
-        	$service_type[] = get_service_type($serviceid_arr[$i]);
+            $service_type[] = get_service_type($serviceid_arr[$i]);
         }
-		$sid = end($serviceid_arr);
+        $sid = end($serviceid_arr);
         if (@in_array("P", $service_type)) $billid_toassign.= "-F";
         if (@in_array("D", $service_type)) $billid_toassign.= "-D";
         if (@in_array("C", $service_type)) $billid_toassign.= "-C";
@@ -679,7 +885,16 @@ class Membership
         for ($i = 0; $i < $no_zero; $i++) $billid_toassign.= "0";
         $billid_toassign.= $this->billid;
         $invNo = $billid_toassign;
+        return $invNo;
+    }
 
+    function generateReceipt() {
+
+        //New invoice generation logic 
+        if(date('Y-m-d H:i:s') > '2017-03-31 23:59:59')
+            $invNo = $this->generateNewInvoiceNo();
+        else
+            $invNo = $this->generateInvoiceNo();
         $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
         $paramsStr = "PROFILEID, BILLID, MODE, TYPE, AMOUNT, CD_NUM, CD_DT, CD_CITY, BANK, OBANK, REASON, STATUS, BOUNCE_DT, ENTRY_DT, ENTRYBY,DEPOSIT_DT,DEPOSIT_BRANCH,IPADD,SOURCE,TRANS_NUM,INVOICE_NO";
         $valuesStr = "'$this->profileid','$this->billid','$this->mode','$this->curtype','$this->amount','$this->cheque_number','$this->cheque_date','$this->cheque_city','$this->bank','$this->obank','$this->reason','$this->status','$this->bounced_date',now(),'$this->entryby','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->source','$this->transaction_number','$invNo'";
@@ -688,6 +903,12 @@ class Membership
             $valuesStr .= ",'$this->DOL_CONV_RATE'";
         }
         $this->receiptid = $billingPaymentDetObj->genericPaymentInsert($paramsStr, $valuesStr);
+        if($this->status != 'REFUND'){
+            $paramsStr = "RECEIPTID, ".$paramsStr;
+            $valuesStr = "'$this->receiptid', ".$valuesStr;
+            $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+            $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+        }
     }
     
     function setServiceActivation() {
@@ -705,7 +926,17 @@ class Membership
             if (count($serviceid_arr1)) {
                 $serviceid_arr = array_merge($serviceid_arr, $serviceid_arr1);
             }
-        } 
+        }
+        elseif(strstr($this->serviceid, 'X')){
+            $mainServ = $this->serviceid;
+            $mainServDur = preg_replace("/[^0-9]/","",$mainServ);
+            $serviceArr = array();
+            foreach(VariableParams::$jsExclusiveComboAddon as $key => $val){
+                $serviceArr[] = $val.$mainServDur;
+            }
+            $serviceid_arr = @explode(",", $this->serviceid);
+            $serviceid_arr = array_merge($serviceid_arr, $serviceArr);
+        }
         else $serviceid_arr = @explode(",", $this->serviceid);
         for ($i = 0; $i < count($serviceid_arr); $i++) {
             unset($insert_query_str);
@@ -764,7 +995,7 @@ class Membership
         $this->sendServiceBasedMailer($serviceid_arr);
     }
     
-    function populatePurchaseDetail() {
+    function populatePurchaseDetail($upgradeMem="NA") {
         $serviceObj = new Services;
         if (strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'NCP')) {
             $serarr = explode(",", $this->serviceid);
@@ -824,7 +1055,9 @@ class Membership
         $billingServStatObj = new BILLING_SERVICE_STATUS();
         $billingDetails = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
         $billingPurDetObj = new billing_PURCHASE_DETAIL();
+
         foreach ($billingDetails as $key=>$row) {
+            list($actual_start_date, $actual_end_date) = $this->calculateASSD_ASEDLogic($row);
             $price = $amount[$row['SERVICEID']];
             $net_price = $amount_net[$row['SERVICEID']];
             $discount = $price - $net_price;
@@ -851,15 +1084,98 @@ class Membership
                 $deferrable = 'Y';
             }
 
-
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
-            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$start_date','$end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+
+            //handling for main membership upgrade
+            if($price != 0 && $upgradeMem == 'MAIN'){
+                $actualAmount = $this->amount + $this->discount;
+                $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$actualAmount','$this->discount','$this->amount','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            }
+            else{
+                $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            }
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
             unset($paramsPDStr);
             unset($valuesPDStr);
-
+            unset($deferrable);
             $billingPurDetObj->updateDiscountForBillid($discount, $this->billid, $row['SERVICEID']);
         }
+    }
+
+    function calculateASSD_ASEDLogic($row) {
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $billingPurDetObj = new billing_PURCHASE_DETAIL();
+        $billingServObj = new billing_SERVICES();
+        $serviceObj = new Services;
+        $constantYears = 1;
+        // ASSD / ASED logic start
+        $duration = $serviceObj->getDuration($row['SERVICEID']);
+        $rights_str = @implode(",", $serviceObj->getRights($row['SERVICEID']));
+        if(strstr($this->serviceid, 'NCP') && strstr($row['SERVICEID'], 'C')){
+            $rights_str .= ",N";
+        }
+        if(strstr($row['SERVICEID'], 'C') || strstr($row['SERVICEID'], 'P')) { // Main Service Check
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str, 'Y');
+        } else {
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
+        }
+        if ($pExpiry) {
+            list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DT"]);
+            if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
+                if ($duration == '35640') { // current is also unlimited duration
+                    $actual_start_date = date("Y-m-d", time());
+                    $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration 
+                {
+                    $actual_start_date = date("Y-m-d", time()); 
+                    $actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
+                }
+            } 
+            else if ($yy >= '2099')  // Case when another membership is already bought after unlimited plan
+            {
+                $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                if ($duration == '35640') { // current is unlimited duration
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration 
+                {
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                }
+            }
+            else // previous expiry is not unlimited plan
+            {
+                if ($duration == '35640') { // current is unlimited duration
+                    $actual_start_date = $row['ACTIVATED_ON'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration
+                {    // Here we pick the SUBSCRIPTION_END_DATE of previous service with similar rights
+                     // and use that as SUBSCRIPTION_START_DATE for next service
+                     // instead of referring to SERVICE_STATUS TABLE
+                    $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                    $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                }
+            }
+        } 
+        else // no previous membership with current subscription rights
+        {
+            $actual_start_date = $row['ACTIVATED_ON'];
+            if ($actual_start_date == '0000-00-00') {
+                $actual_start_date = $row['ACTIVATE_ON'];
+            }
+            $actual_end_date = $row['EXPIRY_DT'];
+        }
+        // ASSD / ASED logic end
+        return array($actual_start_date, $actual_end_date);
     }
     
     function updateJprofileSubscription() {
@@ -898,6 +1214,7 @@ class Membership
         foreach ($this->assisted_arr as $k => $v) {
             if ($v == 'T') {
                 startAutoApply($this->profileid, $this->walkin);
+		addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
             }
             if ($v == 'L') {
                 if (!in_array('T', $this->assisted_arr)) startHomeDelivery($this->profileid, '');
@@ -907,7 +1224,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com');
+            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
 
             //add entry in EXCLUSIVE_MEMBERS TABLE
             $this->addExclusiveMemberEntry();
@@ -921,25 +1238,75 @@ class Membership
         $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
         $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
         $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
-    }   
+    }
+
+    function checkIfDiscountExceeds($userObj) {
+        $memHandlerObj = new MembershipHandler();
+        $serviceObj  = new billing_SERVICES();
+        $servObj = new Services();
+        $mainMembership = array_shift(@explode(",", $this->serviceid));
+        if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
+        } else {
+            $mainMembership = null;
+        }
+        $allMemberships = $this->serviceid;
+        $festCondition = false;
+        $fest = $servObj->getFestive();
+        // Fetch all variables regarding discount for current user
+        $excludeMains = array('PL','P12','CL','C12','ESPL','ESP12','NCPL','NCP12','XL','X12');
+        if ($fest == 1 && !in_array($mainMembership, $excludeMains) && !empty($mainMembership)) {
+            $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
+            $actualServiceid = $festOffrLookup->fetchReverseOfferedServiceId($mainMembership);
+            if ($actualServiceid != $mainMembership && !empty($actualServiceid)) {
+                $festCondition = true;
+            }
+        }
+        if((!empty($this->checkCoupon) && $this->checkCoupon != '') || $festCondition){
+            // Dont handle coupon code and when extra duration is offered in festive extra duration case
+        } else {
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true);
+            if ($total > $this->amount) {
+                $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
+                $actDisc = $iniAmt - $this->amount;
+                $siteDisc = $iniAmt - $total;
+                $actDiscPerc = round($actDisc/$iniAmt, 2)*100;
+                $siteDiscPerc = round($siteDisc/$iniAmt, 2)*100;
+                $netOffTax = round($this->amount*(1-billingVariables::NET_OFF_TAX_RATE),2);
+		if($actDiscPerc>=$siteDiscPerc)
+			$netDiscPer =$actDiscPerc-$siteDiscPerc;
+		if($netDiscPer>=5){
+                   $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
+                   if (JsConstants::$whichMachine == 'prod') {
+                     SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="manoj.rana@naukri.com");
+                   }
+		}
+            }
+        }
+    }
     
     function addExclusiveMemberEntry()
     {
         $exclusiveObj = new billing_EXCLUSIVE_MEMBERS();
-        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
+        $detailsArr = array("PROFILEID"=>$this->profileid,"ASSIGNED_TO"=>NULL,"ASSIGNED"=>'N',"BILLING_DT"=>date("Y-m-d H:i:s"),"BILL_ID"=>$this->billid,"ASSIGNED_DT"=>'0000-00-00');
         $exclusiveObj->addExclusiveMember($detailsArr);
         unset($exclusiveObj);
     }
 
     function membership_mail() {
-        $serviceid_arr = @explode(",", $this->serviceid);
-        for ($i = 0; $i < count($serviceid_arr); $i++) $service_type[] = get_service_type($this->serviceid);
+    	$membershipMailer = new MembershipMailer();
+    	$receiptid = $this->receiptid;
+        $billid = $this->billid;
+        include_once (JsConstants::$docRoot . "/billing/invoiceGenerate.php");
+        $membershipMailer->sendWelcomeMailerToPaidUser(1835, $this->profileid, $bill, $this->serviceid);
 
-            $msg = "Dear $this->username,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $this->curtype $this->amount . \n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+        // $serviceid_arr = @explode(",", $this->serviceid);
+        // for ($i = 0; $i < count($serviceid_arr); $i++) $service_type[] = get_service_type($this->serviceid);
 
-        $msg.= "\n\n\nWarm Regards,\nThe Jeevansathi Team\n";
+        //     $msg = "Dear $this->username,\n\nThank you for subscribing to Jeevansathi.com.\n\nWe have received your payment of $this->curtype $this->amount . \n\nCopy of your bill (BILL.pdf) has been attached with this mail. Kindly revert back for any discrepancies in the bill.";
+
+        // $msg.= "\n\n\nWarm Regards,\nThe Jeevansathi Team\n";
         
-        return $msg;
+        // return $msg;
     }
     
     function membership_details($serviceid = "") {
@@ -987,6 +1354,7 @@ class Membership
         $billingServObj = new billing_SERVICES();
         $jsadminPswrdsObj = new jsadmin_PSWRDS();
         $newjsContactUsObj = new NEWJS_CONTACT_US();
+        $jProfileObj =new JPROFILE('newjs_slave');
 
         if ($this->billid) {
             $billid = $this->billid;
@@ -1036,10 +1404,18 @@ class Membership
         $i = 0;
 
         $printBillDataArr = $billingPurObj->fetchPrintBillDataForBillid($billid);
+	$this->profileid =$printBillDataArr[0]['PROFILEID'];
+	$jProfileArr = $jProfileObj->get($this->profileid,'PROFILEID','COUNTRY_RES,CITY_RES');
 
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
-        $smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
+        //Start:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
+        //$smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $ser_name = $serviceObj->get_servicename(substr($purDetRow['SERVICEID'],0,4));
+        $smarty->assign("eAdvantageServiceName", $ser_name);
+        //End:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
+        $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
         unset($purDetRow);
 
         foreach ($printBillDataArr as $key=>$myrow) {
@@ -1057,6 +1433,19 @@ class Membership
             $email = $myrow['EMAIL'];
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
+	    $entryBy =$myrow['ENTRYBY'];
+            $memUpgrage = $myrow['MEM_UPGRADE'];
+	    if($entryBy=='ONLINE')
+		$ipCountry =$myrow['COUNTRY'];
+	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
+	    $resCity =$jProfileArr['CITY_RES'];
+	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);	
+	    if($resCountryVal==51 && $resCity){	
+		$stateRes =substr($resCity,0,2);
+	    	$stateRes =FieldMap::getFieldLabel('state_india',$stateRes);
+                $resCountry =$stateRes." , ".$resCountry;
+	    }
+	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied
                 $otherTaxes = billingVariables::SWACHH_TAX_RATE + billingVariables::KRISHI_KALYAN_TAX_RATE;
                 $service_tax_content ="Service Tax @ ".($tax_rate-$otherTaxes)."%";
@@ -1104,7 +1493,7 @@ class Membership
                 $qty = "1";
                 $ser_name_dur = $ser_name;
             }
-            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
+            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "MEM_UPGRADE" => $memUpgrage, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
             $i++;
         }
         unset($i);
@@ -1233,6 +1622,8 @@ class Membership
         $smarty->assign("phone_br", $phone_br);
         $smarty->assign("mobile_br", $mobile_br);
         $smarty->assign("feevalue", $feevalue);
+	$smarty->assign("ipCountry", $ipCountry);
+        $smarty->assign("resCountry", $resCountry);
         
         // Cost value from payment without tax
         $feevalue_exTax = round(($feevalue * 100 / ($tax_rate + 100)), 2);
@@ -1357,6 +1748,18 @@ class Membership
         } 
         else $servicecost = convert($servicecostvalue_rs) . " only";
         
+        // Display nothing if start or end date is greater than 2099
+        foreach ($ser as $key=>&$val) {
+            list($dd,$mm,$yy) = explode("-", $val['S_DATE']);
+            list($dd1,$mm1,$yy1) = explode("-", $val['E_DATE']);
+            if ($yy >= '2099') {
+                $val['S_DATE'] = "-";
+            }
+            if ($yy1 >= '2099') {
+                $val['E_DATE'] = "-";
+            }
+        }
+
         // Service cost net with tax
         $smarty->assign("servicecostvalue", $servicecostvalue);
         $smarty->assign("servicecostvalue_rs", $servicecostvalue_rs);
@@ -1657,7 +2060,7 @@ class Membership
 
     function getSpecialDiscount($profile) {
         $today = date('Y-m-d');
-        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $row = $billingVarDiscObj->getDiscountDetails($profile);
         if ($row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
@@ -1779,161 +2182,130 @@ class Membership
         return $PRICE;
     }
 
-    function forOnline($service_str, $type, $mainServiceId, $link_discount = '', $paymentOptionSel = '', $device = 'desktop', $couponCodeVal = '') {
-        include_once (JsConstants::$cronDocRoot . "/apps/jeevansathi/lib/MembershipHandler.class.php");
-        include_once (JsConstants::$cronDocRoot . "/apps/jeevansathi/lib/memUser.class.php");
+    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL,$apiResHandlerObj="")
+    {
+        if($apiResHandlerObj == "" || !($apiResHandlerObj->upgradeMem)){
+            $upgradeMem = "NA";
+        }
+        else{
+            $upgradeMem = $apiResHandlerObj->upgradeMem;
+        }
+        
+        $profileid = $this->profileid;
+        $userObj = new memUser($profileid);
+        $userObj->setMemStatus();
+        $userObj->setCurrency($type);
         $memHandlerObj = new MembershipHandler();
-        $userObj = new memUser($this->profileid);
-        $serObj = new Services;
-        $disc = $this->isRenewable($this->profileid);
-        if ($disc && $disc == "1") $disc = '';
+        $memApiFuncs = new MembershipApiFunctions();
+        $memApiRespHandlerObj = new MembershipAPIResponseHandler();
+        $servObj = new Services();
 
-        $Fest = $serObj->getFestive();
-        if ($link_discount) {
-            global $renew_discount_rate;
-            $id_arr = explode("i", $link_discount);
-            if (md5($id_arr[1]) == $id_arr[0]) {
-                $renew_discount_rate = $this->getLinkDiscount($id_arr[1], $this->profileid);
-                $discount_type = 10;
-                if ($renew_discount_rate) $disc = 1;
-            } 
-            else $disc = 0;
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+        $screeningStatus = $profileObj->getACTIVATED();
 
-            //$Fest ='';
-
-        } 
-        elseif ($disc) {
-
-            // Renewal Discount
-            global $renew_discount_rate;
-            $discount_type = 1;
-            $renew_discount_rate = $memHandlerObj->getVariableRenewalDiscount($this->profileid);
-        } 
-        else {
-
-            // Special Discount (VD)
-            $Spec = $this->getDiscountDetailsForProfile($this->profileid, $mainServiceId);
-            if ($Spec) {
-                global $renew_discount_rate;
-                $renew_discount_rate = $Spec;
-                $disc = 1;
-                $discount_type = 5;
-            } 
-            else if ($Fest) {
-
-                // Festive Discount
-                $discount_type = 6;
-            } 
-            else {
-
-                // Cash Discount
-                global $renew_discount_rate;
-                $otherDis = $this->getOtherDiscount($mainServiceId);
-                if ($otherDis) {
-                    $renew_discount_rate = $otherDis;
-                    $disc = 1;
-                    $discount_type = 11;
-                } 
-                else {
-
-                    // Others
-                    $discount_type = 12;
-                }
-            }
-        }
-        $service_str_arr = @explode(",", $service_str);
-
-        $service_str_new = $service_str;
-
-        // get total amount
-        $total = $serObj->getTotalPrice($service_str_new, $type, $device);
-        $main_service = $mainServiceId;
-
-        // main service check added
-        if ($main_service) {
-            $service_str_off = $serObj->OfferMapping($service_str_new);
-            $total_off = $serObj->getTotalPrice($service_str_off, $type, $device);
-        }
-
-        // renewal/special/Offer discount
-        if ($disc) {
-            if ($discount_type == 11) {
-                $totalMainPrice = $serObj->getTotalPrice($main_service, $type, $device);
-                $discount = $serObj->getDiscountedPrice($discount_type, $totalMainPrice, '', $this->profileid);
-            } 
-            else $discount = $serObj->getDiscountedPrice($discount_type, $total, '', $this->profileid);
-            $totalNew = $total - $discount;
-        }
-
-        //Unlimited festive offer
-        //if($Fest && ($main_service=='PL' || $main_service=='CL' || $main_service=='ESPL' || $main_service=='DL')){
-        $festiveOfferLookupObj = new billing_FESTIVE_OFFER_LOOKUP();
-        $festiveDiscountPercent = $festiveOfferLookupObj->getPercDiscountOnService($main_service);
-        if ($Fest && $festiveDiscountPercent > 0) {
-            $discount = $serObj->getDiscountedPrice($discount_type, $total, $main_service, $this->profileid);
-            $totalNew = $total - $discount;
-            if ($discount_type == '5') $discount_type = 9;
-            else $discount_type = 6;
-        }
-
-        // only festive duration
-        else if ($Fest && $main_service) {
-            if ($total_off > $total) $discount+= $total_off - $total;
-            if ($discount_type == '1') $discount_type = 7;
-            else if ($discount_type == '5') $discount_type = 9;
-            else if ($discount_type == '10') {
-            } 
-            else $discount_type = 6;
-        }
-        if (!$main_service) $service_str_off = $service_str;
-        if ($totalNew) $total = $totalNew;
-
-        // Code added to compute Discount via Coupon Code additively after calculating other applicable discounts if any.
-        if ($couponCodeVal != '' && $main_service) {
-            $discount_type = 14;
-            $memHandlerObj = new MembershipHandler();
-            $discountVal = $memHandlerObj->validateCouponCode($main_service, $couponCodeVal);
-            if (is_numeric($discountVal) && $discountVal > 0) {
-                $coupDisc = round($total * ($discountVal / 100), 2);
-                $total-= $coupDisc;
-                $discount+= $coupDisc;
-            }
-        }
-
-        // Setting defaults for IOS since we cannot show any offers !!
-        $profileObj= LoggedInProfile::getInstance();
-        $profileDetail = $profileObj->getDetail();
-        $screeningStatus = $profileDetail['ACTIVATED'];
-
-        if ($device == "iOS_app" || $screeningStatus == "N") {
-            $total = $serObj->getTotalPrice($service_str_new, $type, $device);
+        if ($device == "iOS_app") {
             $main_service = $mainServiceId;
-            $service_str_off = $service_str_new;
+            $allMembershipsNew = $mainServiceId;
+            $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;
+            $total = $servObj->getTotalPrice($allMemberships, $type, $device);
+        }else if ($screeningStatus == "N") {
+            $main_service = $mainServiceId;
+            $allMembershipsNew = $allMemberships;
+            $service_str_off = $allMemberships;
+            $discount = 0;
+            $discount_type = 12;
+            $total = $servObj->getTotalPrice($allMemberships, $type, $device);
+        }else {
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
+        
+            // Existing codes for setting discount type in billing.ORDERS
+            // 10 - Backend Discount Link
+            // 1 - Renewal Discount
+            // 7 - Renewal + Festive Discount
+            // 6 - Festive Discount
+            // 11 - Cash Discount
+            // 5 - Special Discount
+            // 9 - Special + Festive Discount
+            // 12 - Others / Default
+            // 14 - Coupon Code was applied 
+
+            if ($link_discount) {
+                $id_arr = explode("i", $link_discount);
+                if (md5($id_arr[1]) == $id_arr[0]) {
+                    $discount_type = 10;
+                    $backendRedirect = 1;
+                    $profileCheckSum = md5($profileid)."i".$profileid;
+                    $reqid = $link_discount;
+                }
+            } else if ($renewalActive){
+                $discount_type = 1;
+                if ($fest) {
+                    $discount_type = 7;
+                }
+            } else if ($fest) {
+                $discount_type = 6;
+            } else if ($discountActive) {
+                $discount_type = 11;
+            } else if ($specialActive) {
+                $discount_type = 5;
+                if ($fest) {
+                    $discount_type = 9;
+                }
+            } else if($upgradeActive == "1"){
+                $discount_type = 15;
+            } else {
+                $discount_type = 12;
+            }
+
+            $allMembershipsNew = rtrim($allMemberships, ",");
+
+            if ($fest && $mainServiceId) { // Get reverse Offer Mapping in case of festive 
+                $allMembershipsNew = $servObj->OfferMapping($allMembershipsNew);
+            }
+
+            if (!$mainServiceId) {
+                $allMembershipsNew = $allMemberships;
+            }
+
+            $allMembershipsNew = rtrim($allMembershipsNew, ",");
+            
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem,$apiResHandlerObj);
         }
 
+        if ($couponCodeVal && $mainServiceId) {
+            $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
+            if (is_numeric($discountVal) && $discountVal > 0) {
+                $additionalDisc = round(($total*$discountVal)/100, 2);
+                $discount = $discount + $additionalDisc;
+                $total = $total - $additionalDisc;
+                $discount_type = 14;
+            }
+        } 
+
         $payment['total'] = $total;
-        $payment['service_str'] = $service_str_off;
+        $payment['service_str'] = $allMembershipsNew;
         $payment['discount'] = $discount;
         $payment['discount_type'] = $discount_type;
 
-        // Tracking for failed payment is added irrespective of Main membership/VAS is selected
-        //if($mainServiceId){
-        $userObj->setCurrency($type);
-        $service_str_off = rtrim($service_str_off, ",");
+        $service_str_off = rtrim($allMembershipsNew, ",");
+
         if ($device == "JSAA_mobile_website") {
             $device = 'Android_app';
         }
-        $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);
 
-        //}
-        // Tracking ends
+        if ($allMembershipsNew != $allMemberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$allMemberships}' vs final sent to newOrder '{$allMembershipsNew}'<br>Profileid : '{$profileid}', Device : '{$device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in forOnline function', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
+        }
+
+        $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);
         return $payment;
     }
 
     function sendInstantSms() {
-        include_once ($_SERVER["DOCUMENT_ROOT"] . "/profile/InstantSMS.php");
+        include_once (JsConstants::$docRoot . "/profile/InstantSMS.php");
         $sms = new InstantSMS("PAYMENT_PHONE_VERIFY", $this->profileid);
         $sms->send();
         if ($this->amount > 0 && $this->curtype == "RS") {
@@ -1952,7 +2324,7 @@ class Membership
         if (1)
          //$ftoStateArray['STATE']=='DUPLICATE')
         {
-            include_once ($_SERVER['DOCUMENT_ROOT'] . "/../apps/operations/lib/JsCommonLib.class.php");
+            include_once (JsConstants::$docRoot . "/../apps/operations/lib/JsCommonLib.class.php");
             $checked[0] = $this->profileid;
             JsOpsCommon::updateFtoStatus($checked, 1);
         } 
@@ -2012,6 +2384,32 @@ class Membership
                 $mailerObj->sendServiceActivationMail($mailId, $profileDetails);
             }
         }
+    }
+    
+    public function generateNewInvoiceNo(){
+        $fullYr = date('Y');
+        $yr = date('y');$mn = date('m');$dt = date('d');
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_masterDDL');
+        if($mn == "04" && $dt == "01"){
+            //truncate table logic
+            $result = $autoIncReceiptidObj->getLastInsertedRow();
+            if($result["ENTRY_DT"]<$fullYr."-"."04"."-"."01 00:00:00"){
+                $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
+            }
+        }
+        $id = $autoIncReceiptidObj->insertNewAutoIncrementReceiptId();
+        
+        $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
+        $trailingZero = 7 - strlen($id);
+        if($mn == "01" || $mn == "02" || $mn == "03" )
+            $receiptId = ($yr-1).$yr."-";
+        else
+            $receiptId = $yr.($yr+1)."-";
+        for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
+        $receiptId.=$id;
+        
+        $finalReceiptid = "JS-".$receiptId;
+        return $finalReceiptid;
     }
 }
 ?>

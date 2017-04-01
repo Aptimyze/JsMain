@@ -27,9 +27,12 @@ class MobSearchAction extends sfActions
                         $this->loggedIn=1;
                 }
                 /**temp soln for logged-out case untill nitesh handles loggedout scenario*/
-		if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("verifiedMatches")==1  || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')) || $request->getParameter("dashboard")==1) && $isLogout==1)
+		if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("lastSearchResults")==1  || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','lastSearchResults')) || $request->getParameter("dashboard")==1) && $isLogout==1)
 		        $this->forward("static","logoutPage");
                 $this->szNavType = 'SR';
+                
+               
+								
                 if($request->getParameter("twowaymatch")==1){
 			$this->searchBasedParam = 'twowaymatch';
                 }
@@ -38,7 +41,6 @@ class MobSearchAction extends sfActions
 		ob_start();
 		$request->setParameter('useSfViewNone','1');
 		$QuickSearchBand = $request->getParameter("QuickSearchBand");
-
 		if(in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors')) ) //LATER- LOGGEDOUT
 		{
 			$this->ccListings=1;
@@ -48,6 +50,8 @@ class MobSearchAction extends sfActions
                             	mail("lavesh.rawat@gmail.com","MobSearchAction - CC page","$http_msg");
                                 $request->setParameter("currentPage",1);
                         }
+                        if($request->getParameter("matchedOrAll"))
+                            $this->matchedOrAll=$request->getParameter("matchedOrAll");
 			$request->setParameter("infoTypeId",$request->getParameter("searchId"));
 			$request->setParameter("pageNo",$request->getParameter("currentPage"));
             		$request->setParameter("ContactCenterDesktop",1);
@@ -71,7 +75,7 @@ class MobSearchAction extends sfActions
 		/* capturing api */
 
 		$ResponseArr = json_decode($jsonResponse,true);
-		if(($ResponseArr["searchBasedParam"]=="justJoinedMatches" || $ResponseArr["searchBasedParam"]=="twowaymatch" || $ResponseArr["searchBasedParam"]=="reverseDpp" || $ResponseArr["searchBasedParam"]=="partnermatches" || $ResponseArr["searchBasedParam"]=="contactViewAttempts" || $ResponseArr["searchBasedParam"]=="verifiedMatches") && $isLogout==1)
+		if(($ResponseArr["searchBasedParam"]=="justJoinedMatches" || $ResponseArr["searchBasedParam"]=="twowaymatch" || $ResponseArr["searchBasedParam"]=="reverseDpp" || $ResponseArr["searchBasedParam"]=="partnermatches" || $ResponseArr["searchBasedParam"]=="contactViewAttempts" || $ResponseArr["searchBasedParam"]=="verifiedMatches" || $ResponseArr["searchBasedParam"]=="lastSearchResults") && $isLogout==1)
 		        $this->forward("static","logoutPage");
                 
 		$params["actionObject"] = $this;
@@ -85,9 +89,13 @@ class MobSearchAction extends sfActions
 		//Setting cookie for search id
 		$searchId = $ResponseArr["searchid"];
 		setcookie("JSSearchId", $searchId, time() + 86400, "/"); // 86400 = 1 day
-		
+		if(($request->hasParameter('kundlialerts') && $request->getParameter("kundlialerts") == 1) || $ResponseArr["searchBasedParam"]=="kundlialerts" ){
+					
+									$this->szNavType = $this->stypeName;
+		}
+	
                 //Navigator
-                $currentPage=1;
+                $currentPage=1;                
                 $this->NAVIGATOR = navigation($this->szNavType,$searchId.":".$currentPage,'','Symfony');
                 
 		if(is_array($ResponseArr) && $ResponseArr["no_of_results"]==0)

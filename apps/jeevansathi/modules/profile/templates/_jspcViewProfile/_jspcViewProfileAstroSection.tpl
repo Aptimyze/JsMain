@@ -1,6 +1,6 @@
 ~assign var="rel_val" value=$apiData['lifestyle']['religion_value']`
 ~if $rel_val eq '1' || $rel_val eq '4' || $rel_val eq '7' || $rel_val eq '9'`
-<div class="bg-white ~if $bEditView` fullwid fontlig mt15~else` mb15 prfwid12 fontlig ~/if`" id="section-horoscope">
+<div class="bg-white noMultiSelect ~if $bEditView` fullwid fontlig mt15~else` mb15 prfwid12 fontlig ~/if`" id="section-horoscope">
                 	~if $bEditView`
                     <div class="edpp3 prfbr2">
                         <ul class="hor_list clearfix  fullwid">
@@ -156,8 +156,45 @@
                                 </div>
                                 <!--end:overlay-->
                                 
+                                <!--start:horoscope sample layer-->
+                                <div id ="astroComp" class="disp-none">
+                                <div class="setshare pos_fix smplHp20" id="smplH">
+                                  <div class="pos-rel">	
+                                        <i id="cls-astroComp" class="sprite2 layersZ close pos-abs closeHoroSam cursp"></i>
+                                      <!--start:top row-->
+                                      <div class="clearfix p50">
+                                        <!--start:left-->
+                                        <div class="fl color11 fontlig wid64p">
+                                            <p class="f28">Get Astro compatibility</p>        
+                                            <p id="textMem" class="f15 pt15 lh22">You can view a detailed report of your compatibility with XYZ1234 with Astro compatibility add-on along with your membership.</p>
+                                        </div>    
+                                        <!--end:left-->
+                                        <!--start:right-->
+                                        <div class="fr">
+                                            <div class="lh63 wid280 txtc bg_pink mt15">
+                                                <a id="buttonMem" class="fontreg f18 colrw">Upgrade Membership</a>
+                                            </div>
+                                        </div>    
+                                        <!--end:right-->
+                                      </div>  
+                                      <!--end:top row-->
+                                      <!--start:sample report-->
+                                      <div class="bg-white content" id="sampleHrep" style="height:295px">
+                                        <img src="~sfConfig::get('app_img_url')`/images/jspc/viewProfileImg/horoscope-sample_2.jpg"/>
+                                      </div>    
+                                      <!--end:sample report-->
+                                   </div>
+                                </div>
+                                </div>
+                                <!--end:horoscope sample layer-->
+                                
                                 
                             </div>
+                        <div id="astroCompatibility" class="mt25">
+                            ~if !$apiData['about']['NO_ASTRO'] AND !$bEditView AND $apiData['about']['sameGender'] neq 1`
+                                    <button id="astroCompatibilityButton" class="bg5 colrw f14 fontlig brdr-0 lh40 txtc fullwid outl1 cursp ~if $apiData['about']['COMPATIBILITY_SUBSCRIPTION'] eq 'N' AND $apiData['about']['paidMem'] eq 'Y'` js-astroCompMem ~elseif $apiData['about']['COMPATIBILITY_SUBSCRIPTION'] eq 'N'` js-freeAstroComp ~elseif $apiData['about']['COMPATIBILITY_SUBSCRIPTION'] neq 'N'` js-astroMem ~/if`" ~if $apiData['about']['COMPATIBILITY_SUBSCRIPTION'] neq 'N'` onclick="window.open('~$SITE_URL`/profile/check_horoscope_compatibility.php?profilechecksum=~$apiData["page_info"]["profilechecksum"]`','_blank','width=1100, height=650')"~/if`>Check Astro Compatibility</button>
+                            ~/if`
+                        </div>
                             ~if $apiData['about']['myHoroscope'] eq 'N' && $apiData['about']['othersHoroscope'] eq 'Y' && $apiData['about']['toShowHoroscope'] eq 'Y' && !$bEditView`
                             <p class="mt25 color11 f14">Check your Astro compatability</p>
                                 <div class="mt10" style="position:relative;overflow:hidden;">

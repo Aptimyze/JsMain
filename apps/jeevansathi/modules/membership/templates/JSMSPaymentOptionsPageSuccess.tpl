@@ -79,6 +79,7 @@
          <input type="hidden" name="couponCodeVal" value="~$data.couponID`">
          <input type="hidden" name="couponID" value="~$data.couponID`">
          <input type="hidden" name="mainMembership" value="~$data.tracking_params.mainMembership`">
+         <input type="hidden" name="userProfile" value="~$data.userProfile`">
         ~if $data.eSathiFlag eq '1' and $data.backendLink.fromBackend neq '1'`
           <input id="vasImpression" type="hidden" name="vasImpression" value="">
         ~else`
@@ -278,6 +279,14 @@
   },100);
   setTimeout(function(){
     autoPopupFreshdesk(username,email);
-  }, 60000);
+  }, 90000);
+  // function to make sure window is resized properly on table view 
+  $(window).load(function(){
+    var h = $(window).height();
+    var b = $('body').height();
+    if (h-53 > b) {
+      $(".rv2_pad5").css({'height':h-53});
+    }
+  });
 </script>
 ~/if`

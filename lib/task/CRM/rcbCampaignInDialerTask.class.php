@@ -42,7 +42,10 @@ EOF;
 	$processObj->setIdAllot($processId);
 	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE();
 	$startDt =$lastHandledDtObj->getHandledDate($processId);
-        $endDt 	 =date("Y-m-d H:i:s", time());
+	// get IST	
+	//$endDt  =date("Y-m-d H:i:s", time());
+	$crmUtilityObj =new crmUtility();
+	$endDt =$crmUtilityObj->getIST();
 	$processObj->setStartDate($startDt);
 	$processObj->setEndDate($endDt);
 

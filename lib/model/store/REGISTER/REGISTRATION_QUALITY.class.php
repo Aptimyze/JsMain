@@ -5,7 +5,7 @@ class REGISTRATION_QUALITY extends TABLE
   public function __construct($dbname="")
   {
           parent::__construct($dbname);
-          $this->fields = "`REG_DATE` , `SOURCEID` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC`";
+          $this->fields = "`REG_DATE` , `SOURCEID`, `SOURCECITY` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC` , `SCREENED_CC` , `OTHERS_COMMUNITY`";
   }
 
 	//Three function for innodb transactions
@@ -24,32 +24,37 @@ class REGISTRATION_QUALITY extends TABLE
 	}
 	//Three function for innodb transactions
   public function insertQualityRegistration($registrationData){
-    foreach ($registrationData as $key => $regDateData) {
-      $sql = "REPLACE INTO REGISTER.REGISTRATION_QUALITY ($this->fields) VALUES ";
-      $param = array();
-      $countReg = count($regDateData);
-      for($i = 1;$i<=$countReg;$i++){
-        $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.")";
-      }
-      $paramStr = implode(",",$param);
-      $sql = $sql.$paramStr;
-      $i = 1;
-      $res = $this->db->prepare($sql);
-      foreach($regDateData as $sourceGroup=>$regData){
-        $res->bindValue(":REG_DATE_".$i, $regData['date'], PDO::PARAM_STR);
-        $res->bindValue(":SOURCEID_".$i, $sourceGroup, PDO::PARAM_STR);
-        $res->bindValue(":TOTAL_REG_".$i, $regData['total_reg'], PDO::PARAM_INT);
-        $res->bindValue(":F22_".$i, $regData['F'], PDO::PARAM_INT);
-        $res->bindValue(":F22MV_".$i, $regData['FMV'], PDO::PARAM_INT);
-        $res->bindValue(":F22MVCC_".$i, $regData['FMVCC'], PDO::PARAM_INT);
-        $res->bindValue(":M26_".$i, $regData['M'], PDO::PARAM_INT);
-        $res->bindValue(":M26MV_".$i, $regData['MMV'], PDO::PARAM_INT);
-        $res->bindValue(":M26MVCC_".$i, $regData['MMVCC'], PDO::PARAM_INT);
-        $res->bindValue(":SCREENED_SIC_".$i, $regData['screened_SIC'], PDO::PARAM_INT);
-        $i++;
-      }
-      $res->execute();
-    }
+        foreach ($registrationData as $key => $regCityData){
+                foreach ($regCityData as $sourceGroup => $regDateData) {
+                    $sql = "REPLACE INTO REGISTER.REGISTRATION_QUALITY ($this->fields) VALUES ";
+                    $param = array();
+                    $countReg = count($regDateData);
+                    for($i = 1;$i<=$countReg;$i++){
+                      $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :SOURCECITY_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.", :SCREENED_CC_".$i.",:OTHERS_COMMUNITY_".$i.")";
+                    }
+                    $paramStr = implode(",",$param);
+                    $sql = $sql.$paramStr;
+                    $res=$this->db->prepare($sql);
+                    $i = 1;
+                    foreach($regDateData as $sourceCity=>$regData){
+                      $res->bindValue(":REG_DATE_".$i, $regData['date'], PDO::PARAM_STR);
+                      $res->bindValue(":SOURCEID_".$i, $sourceGroup, PDO::PARAM_STR);
+                      $res->bindValue(":SOURCECITY_".$i, $sourceCity, PDO::PARAM_STR);
+                      $res->bindValue(":TOTAL_REG_".$i, $regData['total_reg'], PDO::PARAM_INT);
+                      $res->bindValue(":F22_".$i, $regData['F'], PDO::PARAM_INT);
+                      $res->bindValue(":F22MV_".$i, $regData['FMV'], PDO::PARAM_INT);
+                      $res->bindValue(":F22MVCC_".$i, $regData['FMVCC'], PDO::PARAM_INT);
+                      $res->bindValue(":M26_".$i, $regData['M'], PDO::PARAM_INT);
+                      $res->bindValue(":M26MV_".$i, $regData['MMV'], PDO::PARAM_INT);
+                      $res->bindValue(":M26MVCC_".$i, $regData['MMVCC'], PDO::PARAM_INT);
+                      $res->bindValue(":SCREENED_SIC_".$i, $regData['screened_SIC'], PDO::PARAM_INT);
+                      $res->bindValue(":SCREENED_CC_".$i, $regData['SCREENED_CC'], PDO::PARAM_INT);
+                      $res->bindValue(":OTHERS_COMMUNITY_".$i, $regData['OTHERS_COMMUNITY'], PDO::PARAM_INT);
+                      $i++;
+                    }
+                    $res->execute();
+                }
+        }
     return "success";
   }
   public function getRegisrationData($filters){
@@ -64,6 +69,11 @@ class REGISTRATION_QUALITY extends TABLE
       $filters['source_names'] = '"'.$filters['source_names'].'"';
       $condition[] = 's.GROUPNAME IN ('.$filters['source_names'].')';
     }
+    if(isset($filters['source_cities'])){
+      $filters['source_cities'] = implode('","', array_map('addSlashes',$filters['source_cities']));
+      $filters['source_cities'] = '"'.$filters['source_cities'].'"';
+      $condition[] = 'rq.SOURCECITY IN ('.$filters['source_cities'].')';
+    }
     
     $where .= implode(' AND ',$condition);
     if($filters['range_format'] == 'Y'){
@@ -73,7 +83,8 @@ class REGISTRATION_QUALITY extends TABLE
       $fields = 'rq.*,s.GROUPNAME';
       $groupBy = '';
     }
-    $sql = "SELECT ".$fields." FROM REGISTER.REGISTRATION_QUALITY as rq LEFT JOIN MIS.SOURCE as s ON s.SourceID = rq.SOURCEID ".$where.$groupBy;	
+    $sql = "SELECT ".$fields." FROM REGISTER.REGISTRATION_QUALITY as rq LEFT JOIN MIS.SOURCE as s ON s.SourceID = rq.SOURCEID ".$where.$groupBy;
+    
     $prep=$this->db->prepare($sql);	
     
     if(isset($filters['start_date']))

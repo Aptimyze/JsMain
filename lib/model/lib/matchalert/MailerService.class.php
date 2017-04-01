@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="")
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -54,7 +54,7 @@ class MailerService
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],'','','','','','','1','',$senderDetails["ALIAS"]);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -173,7 +173,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();
@@ -343,6 +343,7 @@ class MailerService
                         throw  new jsException("No values or pattern in setUsersToSend() function in RegularMatchAlerts.class.php");
 		$userList = Array();
 		$pattern = "/".$pattern."\d/";
+      
 		foreach($values as $key=>$v)
 		{
 			if(preg_match($pattern,$key) && $v!=0)
@@ -350,6 +351,10 @@ class MailerService
 				$this->userList["MATCH_ALERT"][$v]=Array("PROFILEID"=>$v);
 				$this->userIds[]=$v;
 			}
+		}
+		if(count($this->userList)==0)
+		{
+			unset($this->userList);
 		}
 	}
 
@@ -361,47 +366,59 @@ class MailerService
 	*/	
 	public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 	{
-		if(!is_array($this->userList) && !$profileObj)
-			throw  new jsException("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
-
-		if($profileObj->getGENDER()=='F')
-			$requiredGender= "M";
-		else
-			$requiredGender= "F";
-		$tupleService = new TupleService();
-		$tupleService->setLoginProfileObj($profileObj);
-		$tupleFields            = $tupleService->getFields($this->tupleName);
-		$tupleService->setProfileInfo($this->userList,$tupleFields);
-		unset($this->userList);
-		$tuplesValues = $tupleService->getMATCH_ALERT();
-		if(is_array($tuplesValues))
+		if(!is_array($this->userList) || !$profileObj)
 		{
-			foreach($tuplesValues as $tuples=>$tupleObj)
-			{	
-				if(($filterGenderFlag && $tupleObj->getGENDER()!=$requiredGender) || $tupleObj->getACTIVATED()!="Y")
-					unset($tuplesValues[$tuples]);
-				else
-				{
-					$yourInfo = $tupleObj->getYOURINFO();
-					if($yourInfo!='')
-					{
-						$yourInfoTemp=strlen($yourInfo);
-						if($yourInfoTemp>160)
-						{
-							$newInfo=substr($yourInfo,0,strrpos(substr($yourInfo,0,161)," "));
-						}
-						else
-						{
-							$newInfo=$yourInfo;
-						}
-						$tupleObj->setYOURINFO(strip_tags($newInfo));
-					}					
-				}
-			}
-			return $tuplesValues;
+			jsException::log("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
+			return null;
 		}
 		else
-			return null;				
+		{
+			if($profileObj->getGENDER()=='F')
+				$requiredGender= "M";
+			else
+				$requiredGender= "F";
+			$tupleService = new TupleService();
+			$tupleService->setLoginProfileObj($profileObj);
+			$tupleFields            = $tupleService->getFields($this->tupleName);
+			$tupleService->setProfileInfo($this->userList,$tupleFields);
+			unset($this->userList);
+			$tuplesValues = $tupleService->getMATCH_ALERT();
+			if(is_array($tuplesValues))
+			{
+				foreach($tuplesValues as $tuples=>$tupleObj)
+				{	
+					if(($filterGenderFlag && $tupleObj->getGENDER()!=$requiredGender) || $tupleObj->getACTIVATED()!="Y")
+						unset($tuplesValues[$tuples]);
+					else
+					{
+						$yourInfo = $tupleObj->getYOURINFO();
+						if($yourInfo!='')
+						{
+							$yourInfoTemp=strlen($yourInfo);
+							if($yourInfoTemp>160)
+							{
+								$newInfo=substr($yourInfo,0,strrpos(substr($yourInfo,0,161)," "));
+							}
+							else
+							{
+								$newInfo=$yourInfo;
+							}
+							$tupleObj->setYOURINFO(strip_tags($newInfo));
+						}
+						//This has been added in case of Kundli Matches Mailer
+						if(is_array($this->gunaScoreArr))
+						{
+							$tupleObj->setGUNA($this->gunaScoreArr[$tupleObj->getPROFILEID()]);						
+						}
+						
+					}
+				}
+				return $tuplesValues;
+			}
+			else
+				return null;
+		}
+						
 	}
 	
 	/*This function is used to set users logical level based on type NEW_MATCHES or matchalert
@@ -607,13 +624,13 @@ class MailerService
 	}
 	/* This function is used to load partials , all the partials load is not neccessary so single is uploaded
 	*/
-	private function loadPartials()
+	public function loadPartials()
 	{
         	sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerheader");
   	}
         public function getEducationDetails($pid)
 	{
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $Education = $educationObj->getProfileEducation($pid,$from="mailer");
                 $edu=$this->getEducationDisplay($Education);
                 $eduDisplay="";
@@ -625,7 +642,7 @@ class MailerService
 public function getMultipleEducationDetails($profileIdArray)
 	{
 		if(!is_array($profileIdArray)) return false;
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $EducationArray = $educationObj->getProfileEducation($profileIdArray,'mailer');
                 foreach($EducationArray as $k=>$Education)
                 {
@@ -664,11 +681,16 @@ return $edu;
 	*@param $widgetArray:  Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>true,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true); 
 	*@return $data : complete data to be sent in mail 
 	*/
-	public function getRecieverDetails($pid,$values,$mailerName,$widgetArray)
+	public function getRecieverDetails($pid,$values,$mailerName,$widgetArray,$gunaScoreArr="")
 	{
 		if(!$pid || !is_array($values) || !$mailerName)
 			throw new jsException("No pid/values/mailerName passed in getRecieverDetails RegularMatchAlerts.class.php");
 		
+		//In case gunaScoreArr is set like in case of kundli Matches Mailer, then this array is assigned so that it can be used later in getUsersListToSend()
+		if(is_array($gunaScoreArr))
+		{
+			$this->gunaScoreArr = $gunaScoreArr;
+		}
 		$operatorProfileObj = Operator::getInstance('newjs_master',$pid);
                 if(!$operatorProfileObj)
                                 throw new jsException("Invalid pid passed in getRecieverDetails RegularMatchAlerts.class.php");
@@ -683,6 +705,34 @@ return $edu;
 			$data = array();
 			$receiverProfilechecksum = JsAuthentication::jsEncryptProfilechecksum($pid);
                         $emailId = $operatorProfileObj->getEMAIL();
+
+            if ( $widgetArray["alternateEmailSend"] === true )
+            {
+	            $jprofileContactObj    =new ProfileContact();
+	            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
+
+	            if ( is_array($receiverProfileData ))
+	            {
+		            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
+		            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
+		            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+		            {
+		            	$alternateEmailID = '';
+		            }
+	            }
+	            else
+	            {
+	            	$alternateEmailID = '';	
+	            }
+            }
+            else
+            {
+            	$alternateEmailID = '';
+            }
+
+            $data["RECEIVER"]["ALTERNATEEMAILID"] = $alternateEmailID;
+
+
 			$data["RECEIVER"]["PROFILE"] = $operatorProfileObj;
 			$data["RECEIVER"]["PROFILECHECKSUM"] = $receiverProfilechecksum;
 			$data["RECEIVER"]["EMAILID"] = $emailId;
@@ -708,6 +758,12 @@ return $edu;
 			{
 				$dpp = $this->getDppData($operatorProfileObj);
 				$data["DPP"] = $dpp;
+			}
+
+			if($widgetArray["primaryMailGifFlag"])
+			{
+				$data["GifFlag"] = $this->getGifFlag($emailId);
+				
 			}
 			if($widgetArray["membershipFlag"])
 			{
@@ -736,6 +792,10 @@ return $edu;
 			if($widgetArray["sortPhotoFlag"])
 				$users = $this->sortUsersListByPhoto($users);
                         
+                        
+			if($widgetArray["sortSubscriptionFlag"])
+				$users = $this->sortUsersListBySubscription($users,SearchConfig::$jsBoostSubscription);
+                        
 			//if($widgetArray["logicLevelFlag"] && 0)
 				//$users = $this->setUsersLogicalLevel($users,$operatorProfileObj,$mailerName);
 			
@@ -744,11 +804,11 @@ return $edu;
 			$data["COUNT"] = $usersCount;
                         
                         foreach($users as $profileID=>$ProfileData){
-                                $Education = $this->getEducationDetails($ProfileData->getPROFILEID());
+                                $Education = $ProfileData->getedu_level_new();
                                 if($Education!="")
                                         $ProfileData->setEDUCATION($Education);
                         }
-                        
+          
 			if($widgetArray["googleAppTrackingFlag"])
 			{
 				
@@ -764,9 +824,149 @@ return $edu;
 			return $data;
 			
 		}
-		else
+		else{
 			return null;		
+		}
 	}
 
+	/* This function is used to get saved search receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getSavedSearchMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$savedSearchObj = new send_saved_search_mail();
+		$recievers = $savedSearchObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each savedSearch mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForSavedSearchUsers($sno,$flag,$searchId)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
+		$savedSearchObj = new send_saved_search_mail();
+                $savedSearchObj->update($sno,$flag,$searchId);
+
+	}
+
+	public function getGifFlag($email)
+	{
+		if(strpos($email,"gmail"))
+		{
+			return ((date("d")%2));
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+
+	/* This function is used to get featured profile receivers to send mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getFeaturedProfileMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+		$recievers = $featuredProfileObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each featured Profile mail receiver
+	*@param profileId : profileId of person to whom mail is sent
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForFeaturedProfileUsers($profileId,$flag)
+	{
+		if(!$profileId || !$flag)
+			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+                $featuredProfileObj->update($profileId,$flag);
+
+	}
+
+
+	/* This function is used to get kundli match alert receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getKundliAlertMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$kundliMailerObj = new KUNDLI_ALERT_KUNDLI_MATCHES_MAILER();
+		$recievers = $kundliMailerObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each savedSearch mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForKundliMatchesMailer($sno,$flag,$pid)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForKundliMatchesMailer() in kundliAlertsMailerTask.class.php");
+		$kundliMailerObj = new KUNDLI_ALERT_KUNDLI_MATCHES_MAILER();
+                $kundliMailerObj->updateKundliMatchesUsersFlag($sno,$flag,$pid);
+
+	}
+        /**
+         * This function sort profile on the basis of subscription
+         * @param type $userList
+         * @param type $subscription
+         * @return type
+         * @throws jsException
+         */
+        public function sortUsersListBySubscription($userList, $subscription)
+	{
+		if(!is_array($userList))
+			throw  new jsException("No userList in sortUsersListBySubscription() function in RegularMatchAlerts.class.php");
+
+		foreach($userList as $k=>$v)
+		{
+			if(in_array($subscription, explode(",",$v->getSUBSCRIPTION())) && $v->getHAVEPHOTO()== $this->photoPresent)
+                        {
+                                if($v->getPHOTO_DISPLAY()!= PhotoProfilePrivacy::photoVisibleIfContactAccepted)
+					$sortArr[$v->getPROFILEID()] = 1;
+				else
+					$sortArr[$v->getPROFILEID()] = 2;
+			}
+			elseif(in_array($subscription, explode(",",$v->getSUBSCRIPTION()))){
+				$sortArr[$v->getPROFILEID()] = 3;
+			}elseif($v->getHAVEPHOTO()== $this->photoUnderScreening)
+			{
+				$sortArr[$v->getPROFILEID()] = 4;
+			}else
+			{
+				$sortArr[$v->getPROFILEID()] = 5;
+			}
+		}
+		asort($sortArr);
+		$i=0;
+		foreach($sortArr as $k=>$v)
+		{
+			foreach($userList as $kk=>$vv)
+			{
+				if($vv->getPROFILEID()==$k)
+				{
+					$matchesDataFinal[$i]=$vv;
+					$i++;
+				}
+			}
+		}
+		unset($userList);
+		return $matchesDataFinal;
+	}
 }
 ?>

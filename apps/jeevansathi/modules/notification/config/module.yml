@@ -4,3 +4,9 @@ all:
     
   getNotificationV1:
     enable_login:  off
+
+  monitoringNotificationsKeyV1:
+    enable_login:  off
+
+  notificationOpenedTrackingV1:
+    enable_login:  off

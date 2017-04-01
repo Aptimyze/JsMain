@@ -41,16 +41,18 @@ class postNotInterestedv1Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'D',ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS","D");	
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
-					$responseArray           = $this->getContactArray();
+					$responseArray           = $this->getContactArray($request);
 				}
 			}
 		}
 		if (is_array($responseArray)) {
+			//CommonFunction::removeCanChat($this->loginProfile->getPROFILEID(),$this->Profile->getPROFILEID());
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -65,21 +67,39 @@ class postNotInterestedv1Action extends sfAction
 	}
 	
 	
-	private function getContactArray()
+	private function getContactArray($request)
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = array();
+		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+		{
+			$actionType = "CHATDECLINE";
+		}
+		else{
+			$actionType = ContactHandler::DECLINE;
+		}
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::DECLINE);
+			$responseButtonArray = $buttonObj->getAfterActionButton($actionType);
 		}
 		else
 		{
-			$responseArray["errmsglabel"]= "You cannot perform this action";
-			$responseArray["errmsgiconid"] = "16";
-			$responseArray["headerlabel"] = "Unsupported action";
-			$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
+			else
+			{
+				$responseArray["errmsglabel"]= "You cannot perform this action";
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
 		}
 		if(is_array($responseArray))
 			$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);

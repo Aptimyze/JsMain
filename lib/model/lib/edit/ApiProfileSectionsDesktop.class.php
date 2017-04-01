@@ -47,7 +47,25 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 			$basicArr[]  =$this->getApiFormatArray("SECT","Sect" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
 			$basicArr[]  =$this->getApiFormatArray("SECT","Caste" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
+           
+                
+    //state
+        $stateVal = substr($this->profile->getCITY_RES(),0,2);
+        $basicArr[] =$this->getApiFormatArray("STATE_RES","State Living in" ,"",$stateVal,$this->getApiScreeningField("COUNTRY_RES"));
     
+    $value='';
+    if($this->profile->getCITY_RES()!='0'){
+    if($this->profile->getCITY_RES())
+    {
+            if(substr($this->profile->getCITY_RES(),2)=="OT")
+                    $city = "0";
+            else
+                    $city = $this->profile->getCITY_RES();
+            $value= $city;
+            $label = FieldMap::getFieldLabel("city",$city);
+    }
+        $basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"));
+    }
     //gothra_maternal 
     if($religion==RELIGION::HINDU )
       $basicArr[] =$this->getApiFormatArray("GOTHRA_MATERNAL","Gothra (maternal)" ,$this->profile->getDecoratedGothraMaternal(),$this->profile->getGOTHRA_MATERNAL(),$this->getApiScreeningField("GOTHRA_MATERNAL"));
@@ -108,9 +126,9 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $contactArr = parent::getApiContactInfo();
     $extendedContactArray = $this->profile->getExtendedContacts("onlyValues");
     $extendedContactObj   = $this->profile->getExtendedContacts();
-    
     //Mobile Number Owner Name
     $contactArr[]=$this->getApiFormatArray("MOBILE_OWNER_NAME","Name of owner" ,$this->profile->getMOBILE_OWNER_NAME(),$this->profile->getMOBILE_OWNER_NAME(),$this->getApiScreeningField("MOBILE_OWNER_NAME"));
+
     
     //Landline Number Owner Name
     $contactArr[]=$this->getApiFormatArray("PHONE_OWNER_NAME","Name of owner" ,$this->profile->getPHONE_OWNER_NAME(),$this->profile->getPHONE_OWNER_NAME(),$this->getApiScreeningField("PHONE_OWNER_NAME"));
@@ -126,16 +144,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     
     //Alt Number Owner Name
     $contactArr[]=$this->getApiFormatArray("ALT_MOBILE_NUMBER_OWNER","Relationship",$extendedContactObj->ALT_MOBILE_NUMBER_OWNER,$extendedContactArray['ALT_MOBILE_NUMBER_OWNER'],$this->getApiScreeningField("ALT_MOBILE_NUMBER_OWNER"));
-    
-    //Mobile Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
-    
-    //Landline Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
-    
-    //Alt Number Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$extendedContactArray['SHOWALT_MOBILE'],$extendedContactArray['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
-    
     
     //Contact Address
     $contactArr[]=$this->getApiFormatArray("CONTACT","Contact Address" ,$this->profile->getCONTACT(),$this->profile->getCONTACT(),$this->getApiScreeningField("CONTACT"));
@@ -201,7 +209,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
       $educationValues = (array) $educationValues;
     }
     
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		
 		$eduArr[]=$this->getApiFormatArray("EDUCATION","About My Education" ,$this->profile->getDecoratedEducationInfo(),$this->profile->getEDUCATION(),$this->getApiScreeningField("EDUCATION"));
@@ -210,11 +218,11 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , FieldMap::getFieldLabel("degree_pg",$education['PG_DEGREE']),$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
-			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
-      $eduArr[]=$this->getApiFormatArray("OTHER_PG_DEGREE","Other PG Degree",$education->OTHER_PG_DEGREE,$educationValues['OTHER_PG_DEGREE'],$this->getApiScreeningField("OTHER_PG_DEGREE"));
+      $eduArr[]=$this->getApiFormatArray("OTHER_PG_DEGREE","Other PG Degree",$education["OTHER_PG_DEGREE"],$educationValues['OTHER_PG_DEGREE'],$this->getApiScreeningField("OTHER_PG_DEGREE"));
 		}
 		else
 		{
@@ -225,11 +233,11 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , FieldMap::getFieldLabel("degree_ug",$education['UG_DEGREE']),$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
-			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education->COLLEGE,$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       
-      $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree",$education->OTHER_UG_DEGREE,$educationValues['OTHER_UG_DEGREE'],$this->getApiScreeningField("OTHER_UG_DEGREE"));
+      $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree",$education["OTHER_UG_DEGREE"],$educationValues['OTHER_UG_DEGREE'],$this->getApiScreeningField("OTHER_UG_DEGREE"));
 		}
 		else
 		{
@@ -237,7 +245,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College","","",$this->getApiScreeningField("COLLEGE"));
       $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree","","",$this->getApiScreeningField("OTHER_PG_DEGREE"));
 		}
-		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
+		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
 
 		return $eduArr;
 	}
@@ -254,7 +262,9 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     //Have Child
     $szHaveChild = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
     $szDecordateHaveChild = $this->getPartnerChildren($szHaveChild);
-		$arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($szDecordateHaveChild),$szHaveChild,$this->getApiScreeningField("PARTNER_HAVECHILD"));
+    $arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($szDecordateHaveChild),$szHaveChild,$this->getApiScreeningField("PARTNER_HAVECHILD"));
+  
+
     
     return $arrOut;
   }

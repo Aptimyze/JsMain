@@ -182,3 +182,63 @@ box-shadow: 2px 3px 5px 0px rgba(218,218,218,1);}
 .notshwd{-webkit-box-shadow: 2px 3px 5px 0px rgba(218,218,218,1);
 -moz-box-shadow: 2px 3px 5px 0px rgba(218,218,218,1);
 box-shadow: 2px 3px 5px 0px rgba(218,218,218,1);border:1px solid #dadada; }
+
+.edit{background-position: -9px -283px;width: 20px;height: 20px;display: block;}
+.phn{background-position:71px -296px}
+.phnv_icon1{background-position: -276px -102px;width: 37px;height: 47px;}
+.phnv_heart1{background-position: -190px -123px;width: 47px;height: 47px;}
+.phn_overlay1 {                position: fixed;top: 0;right: 0;bottom: 0;left: 0;height: 100%;width: 100%;margin: 0;padding: 0;background: rgb(0,0,0);             z-index: 101;overflow-x:none;}
+.phn_overlay2 {width:100%;position: fixed;top: 20%;z-index: 102;}
+.phn_ofverf{background-position:-276px -150px;width: 37px;height: 47px;}
+.opaer1 {
+background-color: rgba(102, 102, 102, 0.5);
+}
+input{border:0; background:none; outline:none}
+.phn_pl{padding:40px 15px}
+.phone_box {
+        width:76px;
+        height:76px;
+        border-top-left-radius:40px;
+        border-top-right-radius:40px;
+        border-bottom-right-radius:40px;
+        border-bottom-left-radius:40px;
+}
+#mydiv {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1000;
+ }
+
+.ajax-loader {
+    position: absolute;
+    left: 44%;
+    top: 50%;
+    display: block;     
+}
+
+.otplh60{line-height:60px}
+.otpp1{padding:0 21px}
+.otpp2{padding:20px 20px 0 20px}
+.otpp3{padding:10px 16px;}
+.optp4{padding-bottom:70px}
+.optp5{padding-top:15%}
+.otpp6{padding:20px 20px}
+.otpp7{padding:10px 20px 0 20px}
+.otpma{margin:0 auto}
+.otpwid1{width:220px;}
+.otpwid2{width:82px;}
+.otpwid3{width:130px;}
+.otpbr1{border-top:1px solid #e7e7e7}
+.otpbr2{border-top:1px solid #dbdbdb}
+.otpbg1{background-color:#f8f8f8}
+.otpcolr1{color:#4c4151}
+.otpcolr2{color:#d03e43}
+.otplh60{ line-height:60px}
+.otpic1{background-position: -144px -124px;width: 35px;height: 47px;}
+.otplayer {position: fixed;top: 0;right: 0;bottom: 0;left: 0;height: 100%;width: 100%;margin: 0;padding: 0;background-color:rgba(0, 0, 0, 0.85);z-index: 101;overflow-x:none;}
+.otpcenter {position: absolute;left: 50%;top: 50%;width: 90%;}
+.otppos1{    right: 0;
+    top: 19px;}

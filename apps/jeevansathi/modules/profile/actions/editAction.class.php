@@ -44,13 +44,16 @@ class editAction extends sfAction {
                 $this->GotItBandMessage = GotItBand::$educationPROFILE;
 		$this->loginProfile->setNullValueMarker("-");
 		//Assign user name
-		$db= new incentive_NAME_OF_USER;
-		if((!Flag::isFlagSet("name",$this->loginProfile->getSCREENING()))&&($db->getName($this->loginProfile->getPROFILEID())!="")){
-			$this->Name=$db->getName($this->loginProfile->getPROFILEID())."<br/><span class=\"green lf\" style=\"font-size:11px;\">Under screening</span>";
+		$nameObj= new NameOfUser;
+                $nameData = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+                if(!empty($nameData))
+                        $this->Name=$nameData[$this->loginProfile->getPROFILEID()]["NAME"];
+                
+		if((!Flag::isFlagSet("name",$this->loginProfile->getSCREENING()))&& ($this->Name != '') ){
+			$this->Name .= "<br/><span class=\"green lf\" style=\"font-size:11px;\">Under screening</span>";
 		}
-		else
-			$this->Name=$db->getName($this->loginProfile->getPROFILEID());
         /////////////////////////////// Profile Completion Score --------------------
+
 		$this->loginProfile->setNullValueMarker("");
 		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
@@ -59,13 +62,20 @@ class editAction extends sfAction {
 		$this->arrMsgDetails = $cScoreObject->GetIncompleteDetails($noOfMsg);
 		$this->arrLinkDetails = $cScoreObject->GetLink();
 		$this->loginProfile->setNullValueMarker("-");
+                
+                if($request->getParameter('fromCALHoro') == 1)
+			$this->fromCALHoro = 1;
+		
+		 if($request->getParameter('fromCALAlternate') == 1)
+			$this->fromCALAlternate = 1;
+
 		///////////////////////////////
         $this->EditWhatNew = $request->getParameter("EditWhatNew");
         $this->EditWhatNew = $this->changeEditWhatNew();
     if(MobileCommon::isDesktop() &&  !$request->getParameter("oldjspc") && $request->getParameter("oldjspc") !== 1){
       $this->setJspcLayout();
       return;
-    }
+    } 
 		$this->USERNAME = $this->loginProfile->getUSERNAME();
 		$this->TopUsername = $this->loginProfile->getUSERNAME();
 		$len = strlen($this->TopUsername);
@@ -87,8 +97,9 @@ class editAction extends sfAction {
 			}
 		}
 		//end of rocketfuel code
+                
 		if(MobileCommon::isMobile())
-		{	
+		{
 			//for non screened no photos case
 			$this->noScreenPhoto=$pictureServiceObj->isProfilePhotoPresent(1);
 			//Pixel code to run only when coming from mobile registration page 4 
@@ -243,7 +254,6 @@ class editAction extends sfAction {
 	}
 	
 	
-	
 	//echo $this->getLayout();
 	//echo $this->getTemplate();die;
 	}
@@ -257,8 +267,11 @@ class editAction extends sfAction {
     $this->editApiResponse = $this->getExistingUserData();
     $this->jsonEditResp = json_encode($this->editApiResponse);
     //Name of User
-    $name_pdo = new incentive_NAME_OF_USER();
-    $this->name = $name_pdo->getName($this->loginProfile->getPROFILEID());
+    $nameObj= new NameOfUser;
+    $nameData = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+    $this->name = null;
+    if(!empty($nameData))
+        $this->name = $nameData[$this->loginProfile->getPROFILEID()]["NAME"];
 
     //Call Desktop View 
     $nullMarker = ApiViewConstants::JSPC_NULL_VALUE_MARKER;
@@ -287,6 +300,7 @@ class editAction extends sfAction {
     $this->BIRTH_DAY = $BIRTH_DAY;
     $this->BIRTH_MON = $BIRTH_MON;
     $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcEditProfileUrl);
+
     $this->setTemplate("_jspcEdit/jspcEditProfile");
   }
   

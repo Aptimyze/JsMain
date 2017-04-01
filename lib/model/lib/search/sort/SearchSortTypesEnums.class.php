@@ -20,5 +20,9 @@ class SearchSortTypesEnums
         const matchAlertFlag = 'MA'; 
         const kundliAlertFlag = 'KA'; 
         const viewAttemptFlag = 'VA'; 
+        const SortByTrendsScore = 'DT'; 
+        const FullDppWithReverseFlag = 'DR'; 
+        const SortByLoginDate = 'LT';
+        const SortByVisitorsTimestamp = 'VT';
 }
 ?>

@@ -4,7 +4,7 @@ include_once("/usr/local/scripts/DocRoot.php");
 
 include("connect.inc");
 $db =connect_db();
-$db_slave =connect_slave();
+$db_slave =connect_db();
 
 $ts=time();
 $ts-=24*60*60;

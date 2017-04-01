@@ -22,6 +22,7 @@ class SortByVerifyActivationDateStrategy extends SearchSort implements SortStrat
                 $this->SearchParamtersObj = $SearchParamtersObj;
 		parent::isPhotoSorting($SearchParamtersObj,$loggedInProfileObj,1);
 		parent::isFilterSorting($loggedInProfileObj);
+		parent::setReverseDppSorting($loggedInProfileObj, 0); // Called with second parameter as 0 When LAst login score is not required in sort string
         }
 
 
@@ -65,7 +66,23 @@ class SortByVerifyActivationDateStrategy extends SearchSort implements SortStrat
 		$sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
 
-		/* sorting 4 */
+                /**
+                 * Sorting 4 Sorting on the basis of activated Date
+                 */
+                $sortString[$counter] = "VERIFY_ACTIVATED_DT_ONLY";
+		$sortAscOrDesc[$counter] = $this->sortByDesc;
+		$counter++;
+                
+                /**
+                 * Sorting 5 sorting on the basis of reverse Dpp
+                 */
+                if(parent::getReverseDppSort()){
+                        $sortString[$counter] = parent::getReverseDppSort();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
+                
+                /* sorting 6 on the basis of cerify activated timestamp */
 		$sortString[$counter] = "VERIFY_ACTIVATED_DT";
 		$sortAscOrDesc[$counter] = $this->sortByDesc;
 		$counter++;

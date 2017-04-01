@@ -89,13 +89,15 @@ class LinkClass {
 		$app_screen_id="";
 		if($this->_app_screen_id !="")
 			$app_screen_id=$this->_app_screen_id."/"; 
+		
   		if($this->_link_auto_login && $noMailGroup!="1"){ 
 			$sender_id=$this->_var_object->getParam('profileid');
 			if(!$sender_id){
 				$do_not_send=true;
 				return;
 			}
-
+			
+			$EmailUID=$this->_var_object->getParam('EmailUID');
 			$checksum=md5($sender_id)."i".$sender_id;
 			$protect_obj=new protect;
 			$echecksum=$protect_obj->js_encrypt($checksum);
@@ -104,6 +106,8 @@ class LinkClass {
   	 	}
   		else
 	  		$url=JsConstants::$siteUrl.'/e/'.$app_screen_id.$this->_link_id.'/'.$mail_group;
+	  	if($EmailUID)
+			$url=$url."?EmailUID=".$EmailUID;
 	}
 	html_entity_decode($url);
   	return $url;
@@ -137,6 +141,9 @@ class LinkClass {
 		}
 		$checksum=$request->getParameter('checksum');
 		$echecksum=$request->getParameter('echecksum');
+		
+		
+
 		if($param_str){
 			$url.="?$param_str";
 		}
@@ -144,19 +151,35 @@ class LinkClass {
 			$append=strpos($url,'?')?"&":"?";
 			$url.=$append.$this->_other_get_params;
 		}
+
 		if($this->_link_auto_login=='Y'){
 			$append=strpos($url,'?')?"&":"?";
 			$stypeNew =$request->getParameter('stype');
 			if($stypeNew)
-                                $url.=$append."checksum=$checksum&echecksum=$echecksum&CMGFRMMMMJS=y";
+                                $url.=$append."checksum=$checksum";
                         else
-				$url.=$append."checksum=$checksum&echecksum=$echecksum&CMGFRMMMMJS=y&stype=$stype";
+				$url.=$append."checksum=$checksum&stype=$stype";
 			$_SERVER['REQUEST_URI']=$url;
+			if($checksum){
+				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+				if($authenticationLoginObj->decrypt($echecksum,"Y")==$checksum)
+				{
+					$authenticationLoginObj->setAutologinAuthchecksum($checksum,$url);
+				}
+				else
+				{
+					$authenticationLoginObj->removeCookies();
+				}
+			}
 		}
-		$site_url=sfConfig::get('app_site_url');
-	    $loc=$site_url."/".$url;
-	    $append=strpos($loc,'?')?"&":"?";
-	    $loc.=$append.'from_mailer=1';
+	    
+	        $site_url=sfConfig::get('app_site_url');
+                $loc=$site_url."/".$url;
+                $append=strpos($loc,'?')?"&":"?";
+                $loc.=$append.'from_mailer=1';
+
+		
+		
 	//	echo "<script>document.location='$loc';</script>";
 		header("Location:$loc");
 		die;

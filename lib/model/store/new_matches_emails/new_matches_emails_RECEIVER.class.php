@@ -50,6 +50,7 @@ class new_matches_emails_RECEIVER  extends TABLE
 	{
 		try 
 		{
+			// All parameters are in date time format.
 			$sql= " INSERT INTO  new_matches_emails.RECEIVER(PROFILEID,SENT) SELECT J.PROFILEID AS PROFILEID,'N' FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS JA ON J.PROFILEID = JA.PROFILEID WHERE (J.ACTIVATED='Y' OR ( J.ACTIVATED = 'N' AND J.INCOMPLETE = 'Y' ) ) AND J.SORT_DT >= :SORTDATE AND (J.ENTRY_DT >= :ENTRYDATE || (J.ENTRY_DT < :ENTRYDATE && (J.MOB_STATUS = 'Y' || J.LANDL_STATUS = 'Y')) && (J.LAST_LOGIN_DT >= :LOGINDATE)) AND (JA.NEW_MATCHES_MAILS IS NULL OR JA.NEW_MATCHES_MAILS='' OR JA.NEW_MATCHES_MAILS='S')";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":SORTDATE",$sortDate,PDO::PARAM_STR);
@@ -84,7 +85,7 @@ class new_matches_emails_RECEIVER  extends TABLE
 	{
 		try 
 		{
-			$sql= " SELECT PROFILEID FROM new_matches_emails.RECEIVER WHERE SENT = 'N' AND PROFILEID%:TOTALSCRIPT= :CURRENTSCRIPT";
+			$sql= " SELECT PROFILEID,HASTRENDS,DPP_SWITCH FROM new_matches_emails.RECEIVER WHERE SENT = 'N' AND PROFILEID%:TOTALSCRIPT= :CURRENTSCRIPT";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":TOTALSCRIPT",$totalScript,PDO::PARAM_INT);
                         $prep->bindValue(":CURRENTSCRIPT",$currentScript,PDO::PARAM_INT);
@@ -98,6 +99,36 @@ class new_matches_emails_RECEIVER  extends TABLE
 			throw new jsException($e);
 		}
 	}
-        
+        /*
+         * 
+         * This function updates HASTRENDS column if user has data in trends table
+         */
+        public function updateTrends(){
+                try
+		{
+			$sql = "UPDATE new_matches_emails.RECEIVER m , twowaymatch.TRENDS t SET HASTRENDS = '1' WHERE m.PROFILEID =t.PROFILEID and ((t.INITIATED + t.ACCEPTED)>20)";
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+        }
+        /*
+         * This function reset HASTRENDS column to '0' if user switched to old match logic
+         */
+        public function resetTrendsIfOldLogicSet(){
+                try
+		{
+			$sql = "UPDATE new_matches_emails.RECEIVER m , newjs.MATCH_LOGIC t SET HASTRENDS = '0', DPP_SWITCH = '1' WHERE m.PROFILEID =t.PROFILEID AND LOGIC_STATUS = 'O' AND HASTRENDS='1'";
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+        }
         
 }

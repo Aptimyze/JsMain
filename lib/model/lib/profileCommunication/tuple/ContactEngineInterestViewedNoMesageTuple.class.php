@@ -7,7 +7,7 @@
 class ContactEngineInterestViewedNoMesageTuple extends Tuple {
     /* It defines all the fields and icons for a particular tuple */
     static public function init() {
-        self::$fields =Array("USERNAME", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "INCOME", "CITY", "IS_ALBUM", "SUBSCRIPTION","ACTIVATED","IS_ALBUM_TEXT","SearchPicUrl","edu_level_new","MOBPHOTOSIZE","INTEREST_VIEWED_DATE");
+        self::$fields =Array("USERNAME", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "INCOME", "CITY", "IS_ALBUM", "SUBSCRIPTION","ACTIVATED","IS_ALBUM_TEXT","SearchPicUrl","edu_level_new","MOBPHOTOSIZE","INTEREST_VIEWED_DATE","NATIVE_CITY","NAME_OF_USER");
     }
     /* This function returns fields and icons configurations of the tuple*/
     static public function getFields() {

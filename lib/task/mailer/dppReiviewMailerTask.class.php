@@ -62,7 +62,7 @@ EOF;
                 
                 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring DPP_REVIEW_MAILER");
                 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring DPP_REVIEW_MAILER#INSERT");
-                $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG();
+                $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG('newjs_masterDDL');
                 $dppMailerLogObj->truncateTable();
 	}
 }

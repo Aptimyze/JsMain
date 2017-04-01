@@ -8,10 +8,7 @@ Created By   :  Vibhor Garg
 $flag_using_php5=1;
 include_once("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 $data=authenticated($checksum);
-$mysqlObj=new Mysql;
-$myDb1=$mysqlObj->connect("11Master");
 if(isset($data))
 {
 	$searchMonth='';
@@ -49,7 +46,7 @@ if(isset($data))
                         $k++;
                 }
 		$sql="SELECT PROFILE_SENT,ALERT_SENT,SENT_DATE FROM visitoralert.VISITOR_ALERT_RECORD WHERE SENT_DATE BETWEEN '$searchYear-$searchMonth-01' AND '$searchYear-$searchMonth-$monthDays'";
-                $result=mysql_query($sql,$myDb1) or die("$sql".mysql_error_js($myDb1));
+                $result=mysql_query($sql,$db) or die("$sql".mysql_error_js($db));
 		$ptotal=0;
 		$atotal=0;
                 for($i=1;$i<=count($monthDaysArray);$i++)

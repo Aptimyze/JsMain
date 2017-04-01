@@ -1,4 +1,6 @@
 <?php
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class ScheduleSms
 {
     var $scheduleSettings = array();
@@ -39,8 +41,8 @@ class ScheduleSms
         $this->dbMatch  = $match_slave;
         $this->dbShards = $myDbarr;
         include_once(JsConstants::$docRoot."/classes/SMSLib.class.php");
-		include_once(JsConstants::$docRoot."/profile/connect_functions.inc");
-		include_once(JsConstants::$docRoot."/profile/horoscope_upload.inc");
+	include_once(JsConstants::$docRoot."/profile/connect_functions.inc");
+	include_once(JsConstants::$docRoot."/profile/horoscope_upload.inc");
         $this->SMSLib                  = new SMSLib("S");
         $this->scheduleSettings        = $this->getScheduleSmsSettings();
         $this->helplineContacts        = $this->getHelplineContacts();
@@ -329,7 +331,7 @@ class ScheduleSms
 
             case "PHOTO_REQUEST":
                 foreach ($this->dbShards as $k => $conn) {
-                    $sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM newjs.PHOTO_REQUEST where DATE BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "'  AND SEEN!='Y'";
+                    $sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM newjs.PHOTO_REQUEST where DATE BETWEEN '" . $back_day_format . "' AND '" . $today_date_format . "'  AND SEEN!='Y' ORDER BY  `DATE` DESC ";
                     //$sql = "SELECT PROFILEID_REQ_BY AS REQ_RECEIVER,PROFILEID AS REQUESTEE FROM PHOTO_REQUEST where DATE BETWEEN '2012-01-01 00:00:00' AND '".$back_day_format." 23:59:59'";
                     $res = mysql_query($sql, $conn) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function");
                     $count       = mysql_num_rows($res);
@@ -357,25 +359,14 @@ class ScheduleSms
                             $sender       = implode(",", $req_sender);
                             $details2     = $this->getReceiverDetail($sender);
                             foreach ($temp as $k => $v) {
-                                if ($details1[$k]["FTO_SUB_STATE"] == 'C1' || $details1[$k]["FTO_SUB_STATE"] == 'C2') {
-                                    if ($details1[$k]) {
-                                        $finalSms[$key][$k]["RECEIVER"]                    = $details1[$k];
-                                        $finalSms[$key][$k]["RECEIVER"]["COUNT"]           = count($v);
-                                        $finalSms[$key][$k]["DATA_TYPE"]                   = "SELF";
-                                        $finalSms[$key][$k]["DATA"]                        = $details1[$k];
-                                        $finalSms[$key][$k]["DATA"]["PHOTO_REQUEST_COUNT"] = count($v);
-                                        if (count($v) == 1) {
-                                            $finalSms[$key][$k]["DATA"]      = $details2[$v[0]];
-                                            $finalSms[$key][$k]["DATA_TYPE"] = "OTHER";
-                                        }
-                                    }
-                                } else {
                                     if ($details1[$k] && $details2[$v[0]]) {
                                         $finalSms[$key][$k]["RECEIVER"]  = $details1[$k];
+                                        $finalSms[$key][$k]["RECEIVER"]["COUNT"]           = count($v);
+					
                                         $finalSms[$key][$k]["DATA_TYPE"] = "OTHER";
                                         $finalSms[$key][$k]["DATA"]      = $details2[$v[0]];
+                                        $finalSms[$key][$k]["DATA"]["PHOTO_REQUEST_COUNT"] = count($v)-1;
                                     }
-                                }
                             }
                         }
                         $this->smsDetail = $finalSms;
@@ -1556,30 +1547,39 @@ class ScheduleSms
                 break;
             case "VD1" :
             case "VD2" :
-            	$entry_dt = $num;
-            	$vd_pool = 0;
+            	$entry_dt 		=$num;
+                $flatCount              =0;
+                $uptoCount              =0;
+                $flatDiscountKey        ='VD2';
+                $uptoDiscountKey        ='VD1';
+
+            	//$vd_pool = 0;
 		$membershipObj 		=new Membership();
             	$negTreatObj 		=new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_slave');
             	$vdDiscObj 		=new billing_VARIABLE_DISCOUNT();
             	$vdDiscountSmsLog 	=new billing_VARIABLE_DISCOUNT_SMS_LOG();
 
+                $variableDiscountObj 	=new VariableDiscount();
+                $durationArr =$variableDiscountObj->getActiveDurations();
+
 		$smsLogDetails	=$vdDiscountSmsLog->getFrequencyAndTimes($entry_dt);		
             	list($frequency, $noOfTimes) =$smsLogDetails;
-            	if($key == "VD1"){
+            	//if($key == "VD1"){
             		$vdDiscountSmsLog->updateStartTime($entry_dt);
-            	}
+            	//}
+
             	// Condition added for same day SMS Scheduling
-            	$profileCount = $vdDiscObj->checkValidProfileCountForDate($entry_dt,$noOfTimes,$frequency);
+            	/*$profileCount = $vdDiscObj->checkValidProfileCountForDate($entry_dt,$noOfTimes,$frequency);
             	if(empty($profileCount) || $profileCount == 0){
             		$new_entry_dt = date("Y-m-d", (strtotime($entry_dt)+86400));
             	} else {
             		$new_entry_dt = $entry_dt;
-            	}
+            	}*/
             	// End condition
             	if($noOfTimes > 1 && $frequency < $noOfTimes){
-			$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$new_entry_dt' BETWEEN SDATE AND EDATE AND PROFILEID%$noOfTimes=$frequency AND SENT!='Y'";            		
+			$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE AND PROFILEID%$noOfTimes=$frequency AND SENT!='Y'";            		
             	} else {
-            		$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$new_entry_dt' BETWEEN SDATE AND EDATE AND SENT!='Y'";
+            		$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE AND SENT!='Y'";
             	}
 		$res = mysql_query($sql, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function");
 		$count = mysql_num_rows($res);
@@ -1601,25 +1601,25 @@ class ScheduleSms
                     	$sdate = $row['SDATE'];
                     	$edate = $row["EDATE"];
                     	$discountEndDate = date("d-M",strtotime($edate));
-			$flatVdDiscount =$this->checkFlatVdDiscount($profileid);
+			$flatVdDiscount =$this->checkFlatVdDiscount($profileid, $durationArr);
 			if($flatVdDiscount)
-				$tempKey = "VD2";
+				$tempKey = $flatDiscountKey;
 			else
-				$tempKey = "VD1";
-			if($tempKey!= $key)
-				continue;	
+				$tempKey = $uptoDiscountKey;
+			/*if($tempKey!= $key)
+				continue;*/	
 			$sqlJ ="SELECT PHONE_MOB,EMAIL,PHONE_FLAG,GET_SMS,SUBSCRIPTION,AGE,GENDER FROM newjs.JPROFILE WHERE PROFILEID='$profileid' AND ACTIVATED IN('Y','H')";
 			$resJ = mysql_query($sqlJ, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function");
 			if($rowJ=mysql_fetch_array($resJ))
 			{
-				$phoneMob = $rowJ["PHONE_MOB"];
-				$email = $rowJ["EMAIL"];
-				$phoneFlag = $rowJ["PHONE_FLAG"];
-				$getSms	= $rowJ["GET_SMS"];
-				$subscription = $rowJ['SUBSCRIPTION'];
-				$ageVal = $rowJ['AGE'];
-				$genderVal = $rowJ['GENDER'];
-				$subArr = @explode(",",$subscription);		
+				$phoneMob 	= $rowJ["PHONE_MOB"];
+				$email 		= $rowJ["EMAIL"];
+				$phoneFlag 	= $rowJ["PHONE_FLAG"];
+				$getSms		= $rowJ["GET_SMS"];
+				$subscription 	= $rowJ['SUBSCRIPTION'];
+				$ageVal 	= $rowJ['AGE'];
+				$genderVal 	= $rowJ['GENDER'];
+				$subArr 	= @explode(",",$subscription);		
 				if($genderVal=='M' && $ageVal<=23)
 					continue;
 
@@ -1638,47 +1638,65 @@ class ScheduleSms
 				if($phoneMob && $phoneFlag!='I' && $getSms!='N'){
 					$fieldVal =$this->filterProfileForVD($profileid,$phoneMob,$this->dbSlave);
 					if($fieldVal){
-			                	$row_pool[$trans] = $profileid;
-			                	$discount_pool[$trans] = $discount;
+			                	$row_pool[$trans] 	= $profileid;
+			                	$discount_pool[$trans] 	= $discount;
 						$discount_endDt[$trans] = $discountEndDate;
-						$url_pool[$trans] = $profileid;
+						$url_pool[$trans] 	= $profileid;
+						$keyPool[$trans]        = $tempKey;
 			                	$trans++;
-			                	$vd_pool++;
-			                	$vdDiscObj->updateSendVDStatus($profileid,"Y");
+                                                if($tempKey==$flatDiscountKey)
+                                                       $flatCount++;   
+                                                elseif($tempKey==$uptoDiscountKey)
+                                                       $uptoCount++;   
+                                                //$vdDiscObj->updateSendVDStatus($profileid,"Y");
 					}
 				}
 				unset($renewalFlag);
 			}
                     }
                     if ($row_pool) {
-                        $details = $this->getDetailArr($row_pool, 'getReceiverDetail', $key);
+                        //$details = $this->getDetailArr($row_pool, 'getReceiverDetail', $key);
+			$details = $this->getDetailArr($row_pool, 'getReceiverDetail');
                         foreach ($row_pool as $row_k => $row_v) {
                             if ($details[$row_v]) {
-                                $finalSms[$key][$row_v]["DATA"] = $details[$row_v];
-                                $finalSms[$key][$row_v]["DATA"]["VD_DISCOUNT"] = $discount_pool[$row_k];
-                                $finalSms[$key][$row_v]["DATA"]["VD_END_DT"] = $discount_endDt[$row_k];
-                                $finalSms[$key][$row_v]["DATA"]["VD_URL"] = $url_pool[$row_k];
-                                $finalSms[$key][$row_v]["DATA_TYPE"] = "SELF";
-                                $finalSms[$key][$row_v]["RECEIVER"] = $details[$row_v];
+                                $key1           =$keyPool[$row_k];
+                                $profileid      =$row_v;
+
+                                $finalSms[$key1][$row_v]["DATA"] = $details[$row_v];
+                                $finalSms[$key1][$row_v]["DATA"]["VD_DISCOUNT"] = $discount_pool[$row_k];
+                                $finalSms[$key1][$row_v]["DATA"]["VD_END_DT"] = $discount_endDt[$row_k];
+                                $finalSms[$key1][$row_v]["DATA"]["VD_URL"] = $url_pool[$row_k];
+                                $finalSms[$key1][$row_v]["DATA_TYPE"] = "SELF";
+                                $finalSms[$key1][$row_v]["RECEIVER"] = $details[$row_v];
+				$vdDiscObj->updateSendVDStatus($profileid,"Y");
                             }
                         }
                         $this->smsDetail = $finalSms;
-                        $this->getSmsContent($key);
+                        // Flat Calculation
+			$this->vd_sms=1;
+                        $this->getSmsContent($flatDiscountKey);
                         $this->insertInSmsLog();
+
+                        // Upto Calculation
+                        $this->getSmsContent($uptoDiscountKey);
+                        $this->insertInSmsLog();
+
 			//$this->updateVDSmsSent($row_pool); // Removed as part of requirement
                         unset($this->smsDetail);
+			unset($this->vd_sms);
                     }
                 }
-                if($key == "VD1"){
+                /*if($key == "VD1"){
                 	$upto_count = $vd_pool;
                 	$vdDiscountSmsLog->updateUptoCount($entry_dt, $upto_count);
                 } else if($key == "VD2"){
                 	$flat_count = $vd_pool;
                 	$vdDiscountSmsLog->updateFlatCount($entry_dt, $flat_count);
-                }
-                if($key == "VD2"){
-                	$vdDiscountSmsLog->updateEndTime($entry_dt);
-                }
+                }*/
+                //if($key == "VD2"){
+                	//$vdDiscountSmsLog->updateEndTime($entry_dt);
+			$vdDiscountSmsLog->updateEndTime($entry_dt,$flatCount,$uptoCount);
+                //}
                 unset($vdDiscountSmsLog);
                 unset($vdDiscObj);
                 unset($negTreatObj);
@@ -1880,7 +1898,9 @@ class ScheduleSms
                     }
                 }
             }
-            unset($this->smsDetail);
+	    if($this->vd_sms){}
+	    else		
+            	unset($this->smsDetail);
             return $data;
         }
     }
@@ -2029,8 +2049,14 @@ class ScheduleSms
     }
     function getJPROFILEFields()
     {
+        return "PROFILEID, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, COUNTRY_RES,CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL, INCOME, ENTRY_DT,MOB_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, SERVICE_MESSAGES,EMAIL,COMPANY_NAME,OWN_HOUSE,FAMILY_INCOME,VIEW_COUNT,FTO_SUB_STATE,FTO_ENTRY_DATE,FTO_EXPIRY_DATE,INCOMPLETE,ACTIVATED,LANDL_STATUS,VERIFY_ACTIVATED_DT,FAMILYINFO,EDUCATION,JOB_INFO,ISD";
+    }
+    
+    function getJPROFILEFieldsNew()
+    {
         return "PROFILEID, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL, INCOME, ENTRY_DT,MOB_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, SERVICE_MESSAGES,EMAIL,COMPANY_NAME,OWN_HOUSE,FAMILY_INCOME,VIEW_COUNT,FTO_SUB_STATE,FTO_ENTRY_DATE,FTO_EXPIRY_DATE,INCOMPLETE,ACTIVATED,LANDL_STATUS,VERIFY_ACTIVATED_DT,FAMILYINFO,EDUCATION,JOB_INFO,ISD";
     }
+    
     function setTempJPROFILE()
     {
         $today = mktime(0, 0, 0, date("m"), date("d"), date("Y")); //timestamp for today
@@ -2046,7 +2072,7 @@ class ScheduleSms
             $this->tempJPROFILE = "newjs.SMS_TEMP_TABLE";
             */
             $chunk       = 2000;
-            $sql_a       = "SELECT EMAIL, jp.PROFILEID, INCOMPLETE, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL_NEW, INCOME, ENTRY_DT,MOB_STATUS, LANDL_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, ACTIVATED, COMPANY_NAME, FAMILY_INCOME, OWN_HOUSE, VERIFY_ACTIVATED_DT, FAMILYINFO, EDUCATION, JOB_INFO, ISD, jt.NTIMES,fs.SUBSTATE AS FTO_SUB_STATE,fto.FTO_ENTRY_DATE,fto.FTO_EXPIRY_DATE FROM newjs.JPROFILE jp LEFT JOIN newjs.JP_NTIMES jt ON (jt.PROFILEID = jp.PROFILEID) LEFT JOIN FTO.FTO_CURRENT_STATE fto ON (fto.PROFILEID = jp.PROFILEID) LEFT JOIN FTO.FTO_STATES fs ON (fto.STATE_ID = fs.STATE_ID) WHERE LAST_LOGIN_DT>='$time_format' and activatedKey=1 ";
+            $sql_a       = "SELECT EMAIL, jp.PROFILEID, INCOMPLETE, GENDER, USERNAME, SUBSCRIPTION, PHONE_MOB, PASSWORD, CASTE, DTOFBIRTH, MSTATUS, MTONGUE, COUNTRY_RES,CITY_RES, WEIGHT, AGE, HEIGHT, EDU_LEVEL_NEW, INCOME, ENTRY_DT,MOB_STATUS, LANDL_STATUS, LAST_LOGIN_DT, HAVEPHOTO, OCCUPATION, COUNTRY_RES, GET_SMS, SOURCE, ACTIVATED, COMPANY_NAME, FAMILY_INCOME, OWN_HOUSE, VERIFY_ACTIVATED_DT, FAMILYINFO, EDUCATION, JOB_INFO, ISD, jt.NTIMES,fs.SUBSTATE AS FTO_SUB_STATE,fto.FTO_ENTRY_DATE,fto.FTO_EXPIRY_DATE FROM newjs.JPROFILE jp LEFT JOIN newjs.JP_NTIMES jt ON (jt.PROFILEID = jp.PROFILEID) LEFT JOIN FTO.FTO_CURRENT_STATE fto ON (fto.PROFILEID = jp.PROFILEID) LEFT JOIN FTO.FTO_STATES fs ON (fto.STATE_ID = fs.STATE_ID) WHERE LAST_LOGIN_DT>='$time_format' and activatedKey=1 ";
             //			echo $sql_a = "SELECT J.PROFILEID, J.GENDER, J.USERNAME, J.SUBSCRIPTION, J.PHONE_MOB, J.PASSWORD, J.CASTE, J.DTOFBIRTH, J.MSTATUS, J.MTONGUE, J.CITY_RES, J.WEIGHT, J.AGE, J.HEIGHT, J.EDU_LEVEL, J.INCOME, J.ENTRY_DT,J.MOB_STATUS, J.LAST_LOGIN_DT, J.HAVEPHOTO, J.OCCUPATION, J.COUNTRY_RES, A.SERVICE_SMS, J.GET_SMS, J.SOURCE FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS A ON J.PROFILEID = A.PROFILEID AND J.LAST_LOGIN_DT>='$time_format' AND J.ACTIVATED='Y' and J.activatedKey=1";
             $res_a = mysql_query($sql_a, $this->dbSlave) or $this->SMSLib->errormail($sql_a, mysql_errno() . ":" . mysql_error(), "Error occured while fetching 5 months active details from JPROFILE in setTempJPROFILE() function");
             ;
@@ -2074,7 +2100,7 @@ class ScheduleSms
                 $res_sms_alert = mysql_query($sql_sms_alert, $this->dbSlave) or $this->SMSLib->errormail($sql_sms_alert, mysql_errno() . ":" . mysql_error(), "Error occured while fetching data from JPROFILE_ALERTS in setTempJPROFILE() function");
                 while ($row_sms_alert = mysql_fetch_assoc($res_sms_alert))
                     $row_pool[$row_sms_alert['PROFILEID']]['SERVICE_SMS'] = $row_sms_alert['SERVICE_SMS'];
-                $sql_ins = "INSERT INTO newjs.SMS_TEMP_TABLE(" . $this->getJPROFILEFields() . ") VALUES";
+                $sql_ins = "INSERT INTO newjs.SMS_TEMP_TABLE(" . $this->getJPROFILEFieldsNew() . ") VALUES";
                 foreach ($row_pool as $k => $v) {
                     $sql_ins .= "('$v[PROFILEID]', '$v[GENDER]', '" . addslashes($v["USERNAME"]) . "', '$v[SUBSCRIPTION]', '$v[PHONE_MOB]', '" . addslashes($v["PASSWORD"]) . "', '$v[CASTE]', '$v[DTOFBIRTH]', '$v[MSTATUS]', '$v[MTONGUE]', '$v[CITY_RES]', '$v[WEIGHT]', '$v[AGE]', '$v[HEIGHT]', '$v[EDU_LEVEL_NEW]', '$v[INCOME]', '$v[ENTRY_DT]', '$v[MOB_STATUS]', '$v[LAST_LOGIN_DT]', '$v[HAVEPHOTO]', '$v[OCCUPATION]', '$v[COUNTRY_RES]', '$v[GET_SMS]', '$v[SOURCE]', '$v[SERVICE_SMS]','$v[EMAIL]','" . addslashes($v[COMPANY_NAME]) . "','$v[OWN_HOUSE]','$v[FAMILY_INCOME]','$v[VIEW_COUNT]','$v[FTO_SUB_STATE]','$v[FTO_ENTRY_DATE]','$v[FTO_EXPIRY_DATE]', '$v[INCOMPLETE]','$v[ACTIVATED]','$v[LANDL_STATUS]','$v[VERIFY_ACTIVATED_DT]','" . addslashes($v[FAMILYINFO]) . "','" . addslashes($v[EDUCATION]) . "','" . addslashes($v[JOB_INFO]) . "','$v[ISD]'),";
                 }
@@ -2162,7 +2188,7 @@ class ScheduleSms
     function matchAlertArray($profileid, $gap)
     {
         $sql = "SELECT DISTINCT USER from matchalerts.LOG WHERE DATE >= " . $gap . " AND RECEIVER = " . $profileid . " AND USER NOT IN (SELECT BEST_MATCH FROM BEST_MATCH_SMS_LOG WHERE PROFILEID =" . $profileid . " AND SENT = 'Y' ) ";
-        $res = mysql_query($sql, $this->dbMatch) or die(mysql_error());
+        $res = mysql_query($sql, $this->dbMatch) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
         $count = 0;
         while ($row = mysql_fetch_assoc($res)) {
             $arr[$count++] = $row['USER'];
@@ -2394,7 +2420,7 @@ class ScheduleSms
     		return false;
 
     	$sqlNegative = "SELECT PROFILEID FROM incentive.NEGATIVE_PROFILE_LIST WHERE MOBILE IN('$number','0$number','91$number')";
-    	$resNegative = mysql_query($sqlNegative,$db_slave) or die("$sqlNegative".mysql_error($db_slave));
+    	$resNegative = mysql_query($sqlNegative,$db_slave) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("$sqlNegative".mysql_error($db_slave)));
     	$rowCnt =mysql_num_rows($resNegative); 
     	if($rowCnt>0)
     		return false;
@@ -2402,7 +2428,7 @@ class ScheduleSms
     }
 
     // check Flat VD Discount
-    function checkFlatVdDiscount($profileid)
+    function checkFlatVdDiscount($profileid,$durationArr)
     {
                 $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
                 $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
@@ -2411,8 +2437,10 @@ class ScheduleSms
                         $discountArr =$val;
                         unset($discountArr['PROFILEID']);
                         unset($discountArr['SERVICE']);
-                        foreach($discountArr as $key1=>$val1)
-                                $discountNewArr[] =$val1;
+                        foreach($discountArr as $key1=>$val1){
+				if(in_array($key1, $durationArr))
+	                                $discountNewArr[] =$val1;
+			}
                 }
                 $discountUniqueArr =array_values(array_unique($discountNewArr));
                 $totCount =count($discountUniqueArr);
@@ -2435,7 +2463,7 @@ class ScheduleSms
     		return false;
 
     	$sqlJunk ="select count(*) cnt from newjs.PHONE_JUNK WHERE PHONE_NUM='$number'";
-    	$resJunk = mysql_query($sqlJunk,$db_slave) or die("$sqlJunk".mysql_error($db_slave));
+    	$resJunk = mysql_query($sqlJunk,$db_slave) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("$sqlJunk".mysql_error($db_slave)));
     	$rowJunk = mysql_fetch_array($resJunk);
     	if($rowJunk['cnt']>0)
     		return false;

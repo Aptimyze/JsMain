@@ -180,10 +180,18 @@ class EditStories
 						$individualStoryObj->setHOME_PIC_URL('');
 						$individualStoryObj->setSQUARE_PIC_URL('');
 						$individualStoryObj->UpdateRecord();
-						passthru("rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."F.jpg");
-						passthru("rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."M.jpg");
-						passthru("rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."H.jpg");
-						passthru("rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."S.jpg");
+						$cmd1 = "rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."F.jpg";
+						$cmd2 = "rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."M.jpg";
+						$cmd3 = "rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."H.jpg";
+						$cmd4 = "rm ".JsConstants::$docRoot."/uploads/ScreenedImages/".$this->paramsArr['sid']."S.jpg";
+						$cmd1 = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd1);
+						$cmd2 = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd2);
+						$cmd3 = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd3);
+						$cmd4 = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd4);
+						passthru($cmd1);
+						passthru($cmd2);
+						passthru($cmd3);
+						passthru($cmd4);
 					}
 				}
 				/*else

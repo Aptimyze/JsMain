@@ -39,6 +39,10 @@ class PageForm extends sfForm
 	* */
 	public function updateData($profileid='',$values_that_are_not_in_form=array()){
 	  $this->formValues=$this->getValues();
+ 	  if(in_array("casteNoBar", array_keys($this->formValues)))
+ 	  {
+ 	  	unset($this->formValues['casteNoBar']);	  	
+ 	  }
 	  $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
 		  if($value!==null){
@@ -96,7 +100,7 @@ class PageForm extends sfForm
                                                 }
 					  break;
                                  case "NAME_OF_USER":
-						$nameOfUserArr[$column_name] = $value;
+						$nameOfUserArr[$column_name] = trim($value);
 					  break;
 			  }
 			  //Handle religion related fields here as religion table names start with JP_
@@ -155,6 +159,17 @@ class PageForm extends sfForm
 				  $rel =  FieldMap::getFieldLabel('religion',$jprofileFieldArr[RELIGION] );
 				  $jprofileFieldArr[CASTE] = array_search($rel,FieldMap::getFieldLabel('caste',1,1));
 			  }
+                        if(is_array($nameOfUserArr) && array_key_exists("NAME",$nameOfUserArr) && $nameOfUserArr['NAME'])
+                        {
+                              $nameOfUserObj = new NameOfUser();
+                              $nameOfUserArr['NAME']=$nameOfUserObj->filterName($nameOfUserArr['NAME']);
+                              $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($nameOfUserArr['NAME'],$jprofileFieldArr['GENDER']);
+                                if($isNameAutoScreened)
+                                {
+                                        $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$jprofileFieldArr['SCREENING']);
+                                }
+                        }
+
 			  $id=$loggedInObj->insert($jprofileFieldArr);
 		  }else{
 		  	  //Update screening flag
@@ -170,6 +185,11 @@ class PageForm extends sfForm
 					}
 					$jprofileFieldArr['SCREENING']=$screen_flag;
 			  }
+                                if(in_array("ANCESTRAL_ORIGIN",array_keys($jprofileFieldArr)) && $jprofileFieldArr['ANCESTRAL_ORIGIN']=='')
+                                {       
+                                        $screen_flag = Flag::setFlag('ANCESTRAL_ORIGIN',$screen_flag);
+                                        $jprofileFieldArr['SCREENING']=$screen_flag;
+                                } 
 			  //For nakshatra we save label in JPROFILE
 			  if(isset($jprofileFieldArr['NAKSHATRA']))
 				  $jprofileFieldArr['NAKSHATRA']=FieldMap::getFieldLabel('nakshatra',$jprofileFieldArr['NAKSHATRA']);
@@ -211,17 +231,18 @@ class PageForm extends sfForm
 	  }
 	  if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$profileid;
-			$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
 				$nativePlaceObj->UpdateRecord($profileid,$nativePlaceArr);
 			}
 	  }
-           if(count($nameOfUserArr)){
-			$nameOfUserArr[PROFILEID]=$id;
-			$nameOfUserObj = new incentive_NAME_OF_USER;
-			$nameOfUserObj->insertName($nameOfUserArr[PROFILEID],$nameOfUserArr[NAME]);
+           if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!='')){
+                $nameOfUserObj = new NameOfUser();
+                if(!array_key_exists("DISPLAY",$nameOfUserArr))
+                        $nameOfUserArr['DISPLAY']="";
+                $nameOfUserObj->insertName($id,$nameOfUserArr['NAME'],$nameOfUserArr['DISPLAY']);
 	  }
 	  return $id;
 	}

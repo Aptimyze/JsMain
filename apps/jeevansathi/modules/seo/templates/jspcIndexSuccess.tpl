@@ -172,7 +172,7 @@
                                             ~/foreach`
                                         </ul>
                                         <!--end:listing-->
-                                        ~if $page_source eq 'N' && $levelObj->getBrideURL() && $leftCnt gt 11`
+                                        ~if $page_source eq 'N' && $levelObj->getBrideURL()`
                                         <p class="f15 fontlig txtr pt15"><a href="~$levelObj->getBrideURL()`" class="color11">View More ~$levelObj->getH1Tag()` Brides</a></p>
                                         ~/if`
                                     </div>
@@ -201,7 +201,7 @@
                                             ~/foreach`
                                         </ul>
                                         <!--end:listing-->
-                                        ~if $page_source eq 'N' && $levelObj->getGroomURL() && $rightCnt gt 11`
+                                        ~if $page_source eq 'N' && $levelObj->getGroomURL()`
                                         <p class="f15 fontlig txtr pt15"><a href="~$levelObj->getGroomURL()`" class="color11">View More ~$levelObj->getH1Tag()` Grooms</a></p>
                                         ~/if`
                                     </div>
@@ -256,32 +256,40 @@
                 <!--start:right-->
                 ~if $breadCrumbObj->getLevelTwoBreadCrumb()`
                 <div class="fr comwid2 fontlig">
-                    <p class="f20 color11 comp2">Filter profiles by</p>
-                    ~assign var=LevelTwoBreadCrumb value=$breadCrumbObj->getLevelTwoBreadCrumb()`
-                    ~foreach $LevelTwoBreadCrumb as $key=>$val`
-                    ~if $val`
-                    <!--start:filter 1-->
-                    <div class="pt40">
-                        <p class="color2 f20 comp2">~$val[3][0]`</p>
-                        <ul class="hor_list clearfix comnfil">
-                            ~assign var="tab" value=0`
-                            ~section name="tr1" start=0 loop=count($val[0])`
-                            ~if stripos($val[2][$tab],$seoUrl)`
-                            <li class="currPage">
-                                <a href="~$urlLevel1`" title="~$val[6][$tab]`">~$val[1][$tab]`&nbsp;&nbsp;<span class="disp_ib vicons comnCross pr10 cursp"></span></a>
-                            </li>
-                            ~else`
-                            <li>
-                                <a href="~$val[2][$tab]`" title="~$val[6][$tab]`">~$val[1][$tab]`</a>
-                            </li>
-                            ~/if`
-                            ~assign var="tab" value=$tab+1`
-                            ~/section`
-                        </ul>
-                    </div>
-                    <!--end:filter 1-->
-                    ~/if`
-                    ~/foreach`
+                    <table>
+                        <tbody><tr>
+                            <th class="f20 color11 comp2 fontlig">Filter profiles by</th>
+                        </tr>
+                        ~assign var=LevelTwoBreadCrumb value=$breadCrumbObj->getLevelTwoBreadCrumb()`
+                        ~foreach $LevelTwoBreadCrumb as $key=>$val`
+                        ~if $val`
+                        <tr>
+                            <td class="pt40">
+                                <table class="fillist">
+                                    <tbody><tr>
+                                        <td class="f20 color11 comp2 fontlig">~str_ireplace('Mtongue','Mother Tongue',$val[3][0])`</td>
+                                    </tr>
+                                    ~assign var="tab" value=0`
+                                    <tr>
+                                        ~section name="tr1" start=0 loop=count($val[0])`
+                                        ~if stripos($val[2][$tab],$seoUrl)`
+                                        <td class="cells" style="background-color:#d9475c;">
+                                            <a href="~$urlLevel1`" title="~$val[6][$tab]`" style="color:#fff">~$val[1][$tab]`&nbsp;&nbsp;<span class="disp_ib vicons comnCross pr10 cursp"></span></a>
+                                        </td>
+                                        ~else`
+                                        <td class="cells">
+                                            <a href="~$val[2][$tab]`" title="~$val[6][$tab]`">~$val[1][$tab]`</a>
+                                        </td>
+                                        ~/if`
+                                        ~assign var="tab" value=$tab+1`
+                                        ~/section`
+                                    </tr>
+                                </tbody></table>
+                            </td>
+                        </tr>
+                        ~/if`
+                        ~/foreach`
+                    </tbody></table>
                     <div class="f11 fontlig color13 pt40 pb5 combdr1 comp2">
                         Last updated on ~$curDate`
                     </div>
@@ -300,8 +308,18 @@
         <!--start:matrimonial-->
         ~if $levelObj->getContent()`
         <div class="pt40 pb48 txtc">
-            <h2>~$levelObj->getH1Tag()` ~if $levelObj->getPageSource() eq 'N'`Matrimonial~/if`</h2>
-            <p class="f15 fontlig color11 pt20 lh18">~$levelObj->getContent()|decodevar`</p>
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        <h2>~$levelObj->getH1Tag()` ~if $levelObj->getPageSource() eq 'N'`Matrimonial~/if`</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="f15 fontlig color11 pt20 lh18">~$levelObj->getContent()|decodevar`</td>
+                </tr>
+            </tbody>
+        </table>
         </div>
         ~/if`
         <!--end:matrimonial-->

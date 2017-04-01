@@ -276,7 +276,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		}
 
 		list($message,$offer_msg) = $this->getMessageFromCode($this->code);
-		if($this->userObj->userType == 5 || $this->userObj->userType == 6){
+		if($this->userObj->userType == 5 || $this->userObj->userType == 6 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
 			$benefitMsg = VariableParams::$apiPageOnePerMembershipBenefits ;
 			$benefitArr = VariableParams::$apiPageOnePerMembershipBenefitsVisibility;
 			foreach($benefitArr as $key=>$value){
@@ -995,7 +995,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		$output = array('title'=>'Receipt',
 			'message'=>$username.', you are now an '.$main_serv_name.' member',
 			'order_content'=>$order_content,
-			'proceed_text'=>'Browse My Matches');
+			'proceed_text'=>'Browse Desired Partner Matches');
 
 		return $output;
 	}
@@ -1010,14 +1010,14 @@ class ApiMembershipDetailsV2Action extends sfAction
 			'failure_message'=>$message,
 			'try_again'=>'Try Again',
 			'toll_free'=>array('label'=>'Call 1800-419-6299','value'=>'18004196299','action'=>'CALL'),
-			'proceed_text'=>'Skip To My Matches');
+			'proceed_text'=>'Skip To Desired Partner Matches');
 		}
 		else{
 		$output = array('title'=>$title,
                         'failure_message'=>$message,
                         'try_again'=>'Try Again',
                         'toll_free'=>array('label'=>'Call +911204393500','value'=>'+911204393500','action'=>'CALL'),
-                        'proceed_text'=>'Skip To My Matches');
+                        'proceed_text'=>'Skip To Desired Partner Matches');
 		}
 		unset($jprofileObj);
 		return $output;
@@ -1500,9 +1500,11 @@ class ApiMembershipDetailsV2Action extends sfAction
 				}
 			} elseif($this->specialActive == 1){
 				// Logic for differentiating between flat and upto Variable Discount
-				$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);
-				unset($discountVD['PROFILEID']);
+				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
+                                $vdodObj =new VariableDiscount();
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
+
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
 				if (count(array_unique($discountVD)) == 1 ) {
@@ -1648,24 +1650,18 @@ class ApiMembershipDetailsV2Action extends sfAction
 
 			} elseif($this->specialActive == 1){
 				// Logic for differentiating between flat and upto Variable Discount
-				$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
-				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);
+				/*$vdodObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
+				$discountVD = $vdodObj->getDiscountDetailsForProfile($this->profileid);*/
+                                $vdodObj =new VariableDiscount();
+                                $discountVD =$vdodObj->getAllDiscountForProfile($this->profileid);
+
 				$maxVDDisc = max(array_values($discountVD));
 				unset($vdodObj);
-				unset($discountVD['PROFILEID']);
 				if (count(array_unique($discountVD)) == 1 ) {
 					$flat = true;
 				} else {
 					$flat = false;
 				}
-				/*if($this->renewCheckFlag){
-					if($this->renewalPercent > $maxVDDisc){
-						$this->discPerc = $this->renewalPercent;
-						$renewVDFlag = 1;
-					} else {
-						$this->discPerc = $maxVDDisc;
-					}
-				}*/
 				$this->discPerc = $maxVDDisc;
 				if($this->fest == 1){
                                         if($flat){

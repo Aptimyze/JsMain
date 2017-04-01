@@ -109,6 +109,10 @@ class NEWJS_CONTACTS_TEMP extends TABLE
             if ($error)
                 $prep->bindValue(":ERROR", $error, PDO::PARAM_STR);
             $prep->execute();
+            $currdate = date('Y-m-d');
+            $file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQConsume-$currdate", "a+");
+            fwrite($file, "set delivered for $sender with error : $error\n");
+            fclose($file);
         }
         catch (PDOException $e) {
             throw new jsException($e);
@@ -150,6 +154,31 @@ class NEWJS_CONTACTS_TEMP extends TABLE
 			throw new jsException($e);
 		}
         return $result;
+    }
+
+    //This function is used to find the Profiles that were contacted by a user
+    public function getTempContactProfilesForUser($pid,$seperator)
+    {
+        try
+        {
+            $sql = "SELECT RECEIVER from newjs.CONTACTS_TEMP where SENDER= :SENDER AND DELIVERED='N'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SENDER",$pid,PDO::PARAM_INT);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                if($seperator == 'spaceSeperator')
+                    $result.= $row["RECEIVER"]." ";
+                else
+                    $result[] = $row["RECEIVER"];
+            }
+            //print_r($result);die;
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
     }
     
 }

@@ -8,14 +8,15 @@
 		~foreach from=$result item=valued key=profileid`
 		<tr align="CENTER" bgcolor="#fbfbfb" id="exRow~$valued.PROFILEID`">
 			<td height="21" align="CENTER">~$valued.PROFILE_NAME`</td>
-		    <td height="21" align="CENTER"><a href="/jsadmin/showstat.php?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a></td>
+		    <!--<td height="21" align="CENTER"><a href="/jsadmin/showstat.php?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a></td>-->
+		    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a></td>	
 		    <td height="21" align="CENTER">~$valued.AGE`</td>
 		    <td height="21" align="CENTER">~$valued.GENDER`</td>
 		    <td height="21" align="CENTER">~$valued.MSTATUS`</td>
 		    <td height="21" align="CENTER">~$valued.HEIGHT`</td>
 		    <td height="21" align="CENTER">~$valued.RELIGION` : ~$valued.CASTE`</td>
 		    <td height="21" align="CENTER">~$valued.INCOME`</td>
-		    <td height="21" align="CENTER">~$valued.MATCHES`</td>
+		    <!-- <td height="21" align="CENTER">~$valued.MATCHES`</td> -->
 		    <td height="21" align="CENTER">~$valued.PHONE_MOB`</td>
 		    <td height="21" align="CENTER">~$valued.EMAIL`</td>
 		    <td height="21" align="CENTER">~$valued.BILLING_DT`</td>

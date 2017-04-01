@@ -193,7 +193,9 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		}
 		else
 		{
-			throw new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			$ex = new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$ex);
+			throw $ex;
 		}
 		return $DPP_PARAMETERS;
 	}
@@ -459,7 +461,9 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		}
 		else
 		{
-			throw new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			$ex = new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		return $dpp_parameters;
 	}
@@ -539,17 +543,28 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 	 * 
 	 */	
 	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='')
-	{
+	{								
 		$ALBUM_CNT=0;
 		$PHOTO="";
-		$pictureServiceObj=new PictureService($profileObj);
+		$loggedInProfileObj = LoggedInProfile::getInstance();	
+		if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
+		{				
+			$pictureServiceObj=new PictureService($loggedInProfileObj);				
+		}			
+		else
+		{
+			$pictureServiceObj=new PictureService($profileObj);
+		}
+		
 		$pictureObj=new ScreenedPicture;
 		$stopAlbumView=0;
                 if($contact_status == 'I')
                     $contact_status = 'RI';
                 else if($contact_status == 'RI')
                     $contact_status = 'I';
+       
         $album=$pictureServiceObj->getAlbum($contact_status);
+       	//print_R($album);die;
         $mobile="";
 		$request=sfContext::getInstance()->getRequest();	
         
@@ -581,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                
 				$ALBUM_CNT=count($album);
 			}		
 		}
@@ -730,8 +747,14 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$actObj->profilechecksum=$jc->profilechecksum;
 			$actObj->SHOW_NEXT_PREV=$jc->SHOW_NEXT_PREV;
 			$actObj->other_params=$jc->other_params;
-			$actObj->SHOW_PREV=$jc->SHOW_PREV;
-			$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			// Array of Kundli matches stype as profile next prev not required
+			$KundliStypeArray = array(SearchTypesEnums::KundliAlerts,SearchTypesEnums::KundliAlertsAndroid,SearchTypesEnums::KundliAlertsIOS,SearchTypesEnums::KundliAlertsJSMS);
+			
+			if(!in_array($actObj->stype,$KundliStypeArray))
+			{
+				$actObj->SHOW_PREV=$jc->SHOW_PREV;
+				$actObj->SHOW_NEXT=$jc->SHOW_NEXT;
+			}
 			
 			$actObj->next_prev_prof=$jc->next_prev_prof;
 			
@@ -1150,6 +1173,88 @@ public static function getAnnulled($profileid,$mstatus)
         $cScoreObject = ProfileCompletionFactory::getInstance(null,null,$iProfileID);
         $cScoreObject->updateProfileCompletionScore();      
         unset($cScoreObject);
+    }
+    
+    public static function getGunaApiParams($loginProfileObj, $otherProfileObj)
+    {
+        $loginProfile = $loginProfileObj;
+        $otherProfile = $otherProfileObj;
+        
+        $profileid = $loginProfile->getPROFILEID();
+        $oProfile = $otherProfile->getPROFILEID();
+        
+        $result = null;
+        
+        if($otherProfile->getPROFILEID() && $loginProfile->getPROFILEID()) {
+            
+            $arrloginProfileData = array('GENDER'=>$loginProfile->getGENDER(),'CASTE'=>$loginProfile->getCASTE());
+            $arrOtherProfileData = array('GENDER'=>$otherProfile->getGENDER(),'CASTE'=>$otherProfile->getCASTE());
+            
+            if($arrloginProfileData['GENDER']==$arrOtherProfileData['GENDER']) {
+                $notshow = true;
+            }
+            
+            if($arrloginProfileData['GENDER'] == 'M') {
+                $gender_value = 1;
+            } else {
+                $gender_value = 2;
+            }
+            
+            if($arrloginProfileData['CASTE'])
+			{
+				$dbObj=new NEWJS_CASTE;
+				$parent=$dbObj->getParentIfSingle($arrloginProfileData['CASTE']);
+			}
+            
+            if(in_array($parent,array(1,9,4,7)) && !$notshow)
+			{
+                $dbObj= ProfileAstro::getInstance();
+				$dbdata=$dbObj->getAstroDetails(array(intval($profileid),intval($oProfile)),"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1);
+                
+                if(is_array($dbdata)) {
+                    foreach($dbdata as $key=>$myrow_astro)
+                    {
+                        $astro_pid1=$myrow_astro["PROFILEID"];
+                        if($astro_pid1)
+                        {
+                            $lagna=$myrow_astro['LAGNA_DEGREES_FULL'];
+                            $sun=$myrow_astro['SUN_DEGREES_FULL'];
+                            $mo=$myrow_astro['MOON_DEGREES_FULL'];
+                            $ma=$myrow_astro['MARS_DEGREES_FULL'];
+                            $me=$myrow_astro['MERCURY_DEGREES_FULL'];
+                            $ju=$myrow_astro['JUPITER_DEGREES_FULL'];
+                            $ve=$myrow_astro['VENUS_DEGREES_FULL'];
+                            $sa=$myrow_astro['SATURN_DEGREES_FULL'];
+                            $gender_val=1;
+                            if($gender_value==1)
+                                $gender_val=2;
+                            if($astro_pid1==$profileid)
+                                $logged_astro_details="$astro_pid1:$gender_value:$lagna:$sun:$mo:$ma:$me:$ju:$ve:$sa";
+                            else
+                                $compstring="$astro_pid1:$gender_val:$lagna:$sun:$mo:$ma:$me:$ju:$ve:$sa@";
+                        }
+                    }
+                }
+                
+                if($logged_astro_details && $compstring) {
+                    $result = $logged_astro_details."&".$compstring;
+                }
+            }
+        }
+        return $result;
+    }
+    
+    
+    //performs actions as received from mailer and outputs the button array.
+    public static function performContactEngineAction($request,$pageSource=''){
+        
+        $request->setParameter("actionName","postAccept");
+        $request->setParameter("moduleName",'contacts');
+        $request->setParameter("pageSource",$pageSource);
+        ob_start();
+        sfContext::getInstance()->getController()->getPresentationFor("contacts", "postAcceptv2");
+        ob_end_clean();
+       
     }
 }
 ?>

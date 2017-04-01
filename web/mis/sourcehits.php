@@ -71,7 +71,6 @@ include("../profile/arrays.php");
 //get_today->checkbox marked determining whether Y or N
 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($checksum) || $JSIndicator)
 {

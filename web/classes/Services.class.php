@@ -6,8 +6,8 @@
  */
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/P/pg/functions.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/P/pg/functions.php");
 }
 
 class Services
@@ -159,7 +159,7 @@ class Services
 
         if(!empty($serviceid)){
 			$serviceid = "'".$serviceid."'";
-			$billingServicesObj = new billing_SERVICES();
+			$billingServicesObj = new billing_SERVICES('newjs_slave');
 			$allServiceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid);
         }
         $price = 0;
@@ -300,7 +300,7 @@ class Services
         $serviceid_arr = @explode(",", $serviceid);
         $serviceid_str = "'".@implode("','", $serviceid_arr)."'";
         
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid_str);
         foreach($serviceid_arr as $key=>$val){
         	foreach($serviceDetails as $kk=>$vv){
@@ -314,7 +314,8 @@ class Services
         return $service_name;
     }
 
-    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj) {
+    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj,$fetchOnline=true,$fetchOffline=false) {
+
         global $user_disc;
         $search_id = "";
         if(is_array($id)){
@@ -338,7 +339,7 @@ class Services
         	$price_str = $device."_RS";
         }
         
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str);
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
         $i = 0;
         
@@ -388,6 +389,7 @@ class Services
             $services[$serviceid]['FESTIVE_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['SPECIAL_DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
+            $services[$serviceid]['SHOW_ONLINE'] = $row_services[$serviceid]["SHOW_ONLINE"];
             if (strpos($serviceid, "ESP") !== false || strpos($serviceid, "NCP") !== false) {
                 $durd = substr($serviceid, strlen($serviceid) - 1);
             } 
@@ -398,18 +400,17 @@ class Services
             if ($fest) {
                 $festiveDiscountPercent = $festiveDetailsArr[$serviceid]['DISCOUNT_PERCENT'];
                 if ($festiveDiscountPercent > 0) {
-                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100);
+                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100, 2);
                 }
             }
             
             $discountSrvc = $cashDiscountArr[$serviceid];
-            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100);
+            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $discountSrvc) / 100, 2);
             
             $services[$serviceid]['DURATION'] = $componentsDurArr[$serviceid];
             unset($festiveDuration);
             unset($festiveDiscountPercent);
         }
-
         return $services;
     }
     

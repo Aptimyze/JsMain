@@ -33,7 +33,10 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-        
+    if ( firstResponse.searchid == 23 && firstResponse.total != "0")
+    {
+    	$("#interestExpiringMessage").removeClass('dispnone');
+    }
         
 //        onBackBtnSRP = function()
 //        { 
@@ -75,11 +78,14 @@ function showProfilePage(url){
 function updateHistory(tupleNo)
 {
 	if (window.location.href.indexOf('profile/viewprofile.php')==-1 && window.location.href.indexOf('saveLayer')==-1){
-		var addMoreParams = 'searchId='+firstResponse.searchid+'&currentPage=1';
+		var sbPar = removeNull(firstResponse.searchBasedParam);
+		var addMoreParams = 'searchId='+firstResponse.searchid+'&currentPage=1&searchBasedParam='+sbPar;
 		if(viewSimilar==1)
 			addMoreParams += '&profilechecksum='+viewedProfilechecksum+'&'+NAVIGATOR;
 		if(fmBack==1)
 			addMoreParams += '&fmBack=1';
+                if(window.location.href.indexOf('matchedOrAll')!=-1)
+			addMoreParams += '&matchedOrAll='+window.location.href.split('matchedOrAll=')[1].slice(0,1);
 		$.urlUpdateHistory('Search Results Page '+tupleNo,tupleNo,addMoreParams);
 	}
 	BindNextPage();
@@ -104,7 +110,6 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 	var triggerPoint = $(document).height() - ($(window).scrollTop() + $(window).height());
 	if(!isLoading)
 	{
-		
 		if(loadPageToLoadId)
 		{			
 			loadsNextResult(loadPageToLoadId,idToLoad);
@@ -125,14 +130,20 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 					loadsNextResult(callPage,'','Prev');
 				}
 			}
+			if(firstResponse.searchBasedParam == 'kundlialerts' && type=='Next' && $(document).height() <= $(window).height())
+				loadsNextResult();
+			else if(firstResponse.searchBasedParam == 'kundlialerts' && type=='Prev')
+				loadsNextResult('',idToLoad);
+			
 		}
 		else if(triggerPoint <=_TRIGGER_POINT_BOTTOM || type=='Next') /* 1st priority is to load below results */
 		{
 			
 			if(reachedEnd==0)
-				loadsNextResult();
+				loadsNextResult();	
 		}
 	}
+	
 }
 
 /**
@@ -219,6 +230,8 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 { 
         if(typeof contactTracking == 'undefined')
 		contactTracking="&stype="+stypeKey;
+
+		
 		
         var tupleStructure = 
 	'<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}">\
@@ -260,9 +273,20 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 {
+		
+	if(firstResponse.infotype != 'VISITORS')
+            contactTracking="&stype="+tupleStype;
+    if ( firstResponse.infotype == "INTEREST_ARCHIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
+			
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
 
-		if(typeof contactTracking == 'undefined')
-			contactTracking="&stype="+stypeKey;
+	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{
 			if(contactCenter==1)
@@ -326,17 +350,17 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		tupleStructure+='<a tupleNo="idd'+idd+'" class="searchNavigation" href="javascript:void(0)" onclick=showProfilePage("/profile/viewprofile.php?total_rec='+totalNoOfResults+'&profilechecksum='+profilechecksum+contactTracking+'&tupleId='+idd+'&searchid='+firstResponse.searchid+'&'+NAVIGATOR+showECPPage+'&'+'offset='+(idd-1)+'")>';
 		tupleStructure+='<div class="fullwid grad1 padl10 padr10" style="padding: 10px 15px 10px;">\
 				<div class="fontlig" id="username'+idd+'" style="padding-top: 30px;">\
-						<span class="f16 white fontreg">\
-							{username}\
+						<span class="f16 white fontreg textTru dispibl vbtm wid51p">\
+						{username}\
 						</span>\
-						<span class="f12 colred fontreg">\
-							{isNewProfile}\
-						</span>\
-						<span class="f12 white padl10">\
+						<span class="f12 white">\
 							{userloginstatus}\
 						</span>\
+						<span class="f12 white fr fontrobbold">\
+							{gunascore}\
+						</span>\
 				</div>\
-				<div class="fullwidth f14 fontlig white">\
+				<div class="fullwidth f14 fontreg white">\
 					<div class="clearfix">\
 						<div class="fl wid48p textTru">\
 							{age}, {height}\
@@ -369,6 +393,21 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
+if(idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
+        if(getAndroidVersion() || getIosVersion()){
+                var mbtext = "";
+                if(getAndroidVersion()){
+                        var type = "apppromotionSRPAndroid";
+                        var lableText = "Android";
+                        var mbtext = "<div class='txtc fontlig f14 pt5'>(3 MB only)</div>";
+                }
+                if(getIosVersion()){
+                        var type = "apppromotionSRPIos";
+                        var lableText = "iOS";
+                }                
+                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=\"trackJsEventGA(\'Download App\',\'SRP\', \''+lableText+'\');\" href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
+        }
+}
 	return tupleStructure;
 }
 
@@ -498,7 +537,7 @@ function albumcheck(count,idd,profilechecksum,IsProfilefiltered,tupleStype,total
 	if(typeof IsProfilefiltered == 'undefined')
 		var IsProfilefiltered = 0;
 	if(typeof contactTracking == 'undefined')
-		contactTracking="&stype="+stypeKey;
+		contactTracking="&stype="+tupleStype;
 	
 	if(IsProfilefiltered==1)
 		$("#album"+idd).attr("href", "/profile/viewprofile.php?total_rec="+totalNoOfResults+"&profilechecksum="+profilechecksum+contactTracking+"&tupleId="+idd+"&"+NAVIGATOR+"&"+"offset="+(idd-1)+"&similarOf="+viewedProfilechecksum+"");
@@ -581,7 +620,9 @@ function showLoaderToScreen()
 function generateParams(page)
 {
 	var searchid = firstResponse.searchid;
-	var temp = "results_orAnd_cluster=onlyResults&searchId="+searchid+"&currentPage="
+	var sbPar = removeNull(firstResponse.searchBasedParam);
+        if(firstResponse.visitorAllOrMatching!='' || typeof(firstResponse.visitorAllOrMatching) !="undefined")
+	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&matchedOrAll="+firstResponse.visitorAllOrMatching+"&currentPage="
 	temp = $.addReplaceParam(temp,'currentPage',page)
 	return temp;
 }
@@ -594,6 +635,7 @@ function generateParams(page)
 */
 function loadsNextResult(forcePage,idToJump,ifPrePend)
 { 
+	
 	var url = '/api/v1/search/perform';
 	
 	if(contactCenter==1)
@@ -622,12 +664,18 @@ function loadsNextResult(forcePage,idToJump,ifPrePend)
         dataType: 'json',
 		type: 'GET', data: searchResultsPostParams1,
 		timeout: 60000,
+		beforeSend : function( xhr ) {
+						if(firstResponse.searchBasedParam == 'kundlialerts')
+							isLoading = true;
+        },
 		success: function(response) 
 		{ 	
 			if(!CommonErrorHandling(response))
 				return;
 			if(response.responseStatusCode=='0')
+			{
 				dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple);
+			}
 			else{
 				var d = new Date();
 				if($('.loaderTopDiv:visible').length>0)
@@ -668,7 +716,17 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	var tuplesOfOnePage='';
 	var arr1 = {};
 	var defaultImage = response.defaultImage;
-
+	if(response.searchBasedParam == 'kundlialerts')
+	{
+					profileLength = 0;
+					if('profiles' in response && Array.isArray(response.profiles))
+					{
+						
+						profileLength = response.profiles.length;
+					}
+						
+	}
+				
 	/** reading json **/
 	$.each(response, function( key, val ) {
 
@@ -758,8 +816,10 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	}
 	else
   $("#iddf1").css("margin-top",$("#searchHeader").height()+"px");
+ 	
   if(nextAvail!='false')
 	{ 	
+		
 		$(".initialLoader").remove();
 		$("div.loaderBottomDiv").remove();
 		{
@@ -770,10 +830,15 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 					var height = ($(window).height()-20)/2;
 					$("div.loaderBottomDiv").css("margin-top",height+"px");
 				}
+				
 			}
 		}
 	}
 	else{
+		if ( response.archivedInterestLinkAtEnd )
+		{
+			bottomErrorMsg('<a href="/profile/contacts_made_received.php?page=aeoi&filter=R" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+		}
 		noScrollingAction=1;
 		reachedEnd=1;
 		$("div.loaderBottomDiv").remove();
@@ -878,13 +943,20 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 		val1.photo.label=1;
 	else
 		val1.photo.label=0;
+	if(val1.gunascore!=null)
+		gunascore=val1.gunascore+"/36";
+	else
+		gunascore=null;
 	if(typeof val1.religion=='undefined')
 		val1.religion = '';
-	var isNewProfile = (val1.seen=="N")?"New":"";
+	//var isNewProfile = (val1.seen=="N")?"New":"";
 	var subscriptionOrFeatured = val1.subscription_icon;
 	if(key=='featuredProfiles')
 		subscriptionOrFeatured = 'Featured';
 		
+        if(val1.name_of_user!='' && val1.name_of_user!=null){
+                val1.username = val1.name_of_user;
+        }
 	var mapping={
 			
 			'{noPhotoDiv}':removeNull(noPhotoDiv),
@@ -898,7 +970,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{album_count}':removeNull(val1.album_count),
 			'{username}':removeNull(val1.username),
 			'{userloginstatus}':removeNull(setPriority(val1.userloginstatus,val1.timetext)),
-			'{isNewProfile}':isNewProfile,
+			'{gunascore}':removeNull(gunascore),
 			'{age}':removeNull(val1.age),
 			'{height}':removeNull(val1.height),
 			'{occupation}':removeNull(val1.occupation),
@@ -991,7 +1063,18 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				$("div.loaderBottomDiv").remove();
 				var pageAct = parseInt($("div.tupleOuterDiv").last().attr("id").replace(/[^-\d\.]/g, ''))+1;
 				pageAct = "idd"+pageAct;
-				var newAction = "/search/perform/?searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				var sbPar = removeNull(firstResponse.searchBasedParam);
+				/*
+					Added this check for contacts section more listing.
+				 */
+				if ( contactCenter == 1 )
+				{
+					var newAction = "/profile/contacts_made_received.php?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
+				else
+				{
+					var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
 				bottomErrorMsg('<a href="'+newAction+'" class="color2 txtc">Load More Profiles.</a>','','');
 			}
 		}
@@ -1006,6 +1089,9 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				$('body, html').scrollTop(0);
 			}
 			loadPrevTuple=0;
+			if(firstResponse.searchBasedParam == 'kundlialerts' && typeof profileLength != 'undefined' && profileLength<3)
+				triggerLoader('Next');
+			else
 			triggerLoader();
 
 			var scrollTopPositioning = $(window).scrollTop();
@@ -1033,7 +1119,11 @@ function forceJumpToPage(idToJump){
 				var top = $('#idd'+idToJump).offset().top;
 			else
 				var top = $('#iddf1').offset().top;
-			$("html, body").scrollTop(top);		
+
+			if ( idToJump != 1 )
+			{
+				$("html, body").scrollTop(top);		
+			}
 			loadNextImages();
 		},timedOut);
 	}
@@ -1064,6 +1154,5 @@ function referHandling(searchId,referer)
 		sessionStorage.setItem("searchId"+searchId,referer);
                 refererValue=referer;
         }
-        console.log(refererValue);
-	return refererValue;
+   return refererValue;
 }

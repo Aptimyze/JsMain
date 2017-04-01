@@ -34,6 +34,11 @@ if(authenticated($cid))
                 if($pid){
                 	$sql ="SELECT PROFILEID, USERNAME, EMAIL, MOD_DT, SUBSCRIPTION, INCOMPLETE, ACTIVATED ,SOURCE, VERIFY_EMAIL,CASTE from newjs.JPROFILE where PROFILEID='$pid'";
                         $res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                } else {
+                    $msg = "Search for : " . $username. "\n\n";
+                    $msg = print_r($_SERVER,true);
+                    mail("kunal.test02@gmail.com"," web/jsadmin/searchpage_userdetails in USE",$msg);
+                    die("Username not found in database");
                 }
 	}	
 	// Ends
@@ -50,11 +55,11 @@ if(authenticated($cid))
 	$profileid = $row['PROFILEID'];
 	$activ = $row['ACTIVATED'];
 	$myCaste = $row['CASTE'];
-
+  
 	//Getting connection on sharded server.
-	$myDbname=getProfileDatabaseConnectionName($profileid,'slave',$mysql);
-	$myDb=$mysql->connect($myDbname);
-
+	//$myDbname=getProfileDatabaseConnectionName($profileid,'slave',$mysql);
+	//$myDb=$mysql->connect($myDbname);
+	$profileShard=JsDbSharding::getShardNo($profileid,'slave');
 	$sql="SELECT OLD_EMAIL FROM newjs.OLDEMAIL WHERE PROFILEID='$profileid'";
 	$res_email=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 	while($row_email=mysql_fetch_array($res_email))
@@ -95,18 +100,34 @@ if(authenticated($cid))
 		}
 	}
 	
-	if($activ=="D")	
-		$fromtable = "DELETED_MESSAGE_LOG";
-	else
-		$fromtable = "MESSAGE_LOG";
-
+	if($activ=="D")	{
+    $sql_ser = "SELECT HOUSKEEPING_DONE FROM newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$pid' ORDER BY DATE DESC LIMIT 1 ";
+    $res_ser = mysql_query_decide($sql_ser) or die("Unable to select from SERVICES".mysql_error_js());
+    $myrow=mysql_fetch_array($res_ser);
+    $houseKeepingDone =$myrow['HOUSKEEPING_DONE'];
+    
+    if($houseKeepingDone == 'Y') {
+      $dbMessageLog=new NEWJS_DELETED_MESSAGE_LOG($profileShard);
+    } else {
+      $dbMessageLog=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET($profileShard);
+    }
+		
+		//$fromtable = "DELETED_MESSAGE_LOG";
+	}
+	else{
+		$dbMessageLog=new NEWJS_MESSAGE_LOG($profileShard);
+		//$fromtable = "MESSAGE_LOG";
+	}
+		
+		$result=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,'SENDER');
 	//$sql_conts_i = "SELECT COUNT(*) as cnt,IP FROM newjs.$fromtable where SENDER = '$profileid' GROUP BY IP ";
-	$sql_conts_i = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable where SENDER = '$profileid' ORDER BY DATE DESC limit 20 ";
+	//$sql_conts_i = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable where SENDER = '$profileid' ORDER BY DATE DESC limit 20 ";
 
-	$result_conts_i =$mysql->ExecuteQuery($sql_conts_i,$myDb) or die("Unable to select from $fromtable".mysql_error_js());
+	//$result_conts_i =$mysql->ExecuteQuery($sql_conts_i,$myDb) or die("Unable to select from $fromtable".mysql_error_js());
 	
 	$i=0;
-	while($row_conts_i = $mysql->fetchArray($result_conts_i))
+	//while($row_conts_i = $mysql->fetchArray($result_conts_i))
+	foreach($result as $key=>$row_conts_i)
 	{
 		//$cont_made[$i]['COUNT'] = $row_conts_i['cnt'];
 		$cont_made[$i]['DATE'] = $row_conts_i['DATE'];
@@ -115,12 +136,14 @@ if(authenticated($cid))
 		$i++;
 	}
 	
+	$response=$dbMessageLog->getMessagesDataSearchPageDetails($profileid,'RECEIVER');
 	//$sql_conts_a = "SELECT COUNT(*) as cnt,IP FROM newjs.$fromtable WHERE RECEIVER = '$profileid' AND TYPE='A' GROUP BY IP";
-	$sql_conts_a = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable WHERE RECEIVER = '$profileid' AND TYPE='A' ORDER BY DATE limit 20";
-        $result_conts_a =$mysql->ExecuteQuery($sql_conts_a,$myDb) or die("Unable to select from $fromtable".mysql_error_js());
+	//$sql_conts_a = "SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.$fromtable WHERE RECEIVER = '$profileid' AND TYPE='A' ORDER BY DATE limit 20";
+     //   $result_conts_a =$mysql->ExecuteQuery($sql_conts_a,$myDb) or die("Unable to select from $fromtable".mysql_error_js());
          
 	$j=0;
-	while($row_conts_a =$mysql->fetchArray($result_conts_a))
+	//while($row_conts_a =$mysql->fetchArray($result_conts_a))
+	foreach($response as $key=>$row_conts_a)
 	{
 		//$cont_acc[$j]['COUNT'] = $row_conts_a['cnt'];
 		$cont_acc[$j]['DATE'] = $row_conts_a['DATE'];

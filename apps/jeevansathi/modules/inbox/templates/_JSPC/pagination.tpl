@@ -11,6 +11,6 @@
 		<span class="disp_ib pr5">{startPageNo}-{endPageNo}</span><span class="opa50">of {totalCount}</span>   
 	</div>  
 	<!--next:count-->
-	<div id="ccPaginationCountDiv" class="fr fontlig f15 color11 pt5 pr10">
+	<div id="ccPaginationCountDiv" class="fr fontlig f15 color11 pt5 pr10 ~if $hidePaginationCount eq 1` disp-none ~/if`">
 	</div>
 </div> 

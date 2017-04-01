@@ -108,11 +108,78 @@ EOF;
 	 */
 	public function execute($arguments = array(), $options = array())
 	{
+		
+		  if(CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
+
+		$LockingService = new LockingService;
 		ini_set('memory_limit','1024M');	
 		ini_set("gd.jpeg_ignore_warning", 1);
 		error_reporting(E_ALL & ~E_NOTICE);
 		$this->initVariables();
                 $this->UpdateForCorruptPrevent();
+		if(PictureFunctions::IfUsePhotoDistributed('X'))
+		{
+			$matchToBeArr = JsConstants::$photoServerShardingEnums;
+	
+			/** copyyyyyyyyyyyyyyyy **/
+			$PICTURE_FOR_SCREEN_NEW = new PICTURE_FOR_SCREEN_NEW;
+			$arrDataForCopy = $PICTURE_FOR_SCREEN_NEW->getPreProcessData(array("MainPicUrl"=>"%".JsConstants::$photoServerName."%"));
+			foreach($arrDataForCopy as $k=>$pid)
+			{
+				$paramArr["PROFILEID"] = $pid; 
+				$others = 'JSPIC';
+				$carr = $PICTURE_FOR_SCREEN_NEW->get($paramArr);
+				if(is_array($carr))
+				{
+					$copyMe = '0';
+					foreach($carr as $cakk => $cavv)
+					{
+						$serverName = PictureFunctions::getNameIfUsePhotoDistributed($cavv["MainPicUrl"]);
+						$orderMinFinder[$cavv["ORDERING"]] = $serverName;
+					}
+					ksort($orderMinFinder);
+					
+					$minOrderingPhotoServer = $orderMinFinder[0];
+					if($minOrderingPhotoServer == JsConstants::$photoServerName)
+						$copyMe = 1;
+					if($copyMe)
+					{
+						$abcArr = array( 'MainPicUrl','ProfilePicUrl','ThumbailUrl','Thumbail96Url','ProfilePic120Url','ProfilePic235Url','ProfilePic450Url','OriginalPicUrl','MobileAppPicUrl');
+						foreach($carr as $cakk => $cavv)
+						{
+							unset($copyUpdatedArr);
+							if(!strstr($cavv["MainPicUrl"],JsConstants::$photoServerName))
+							{
+								foreach($abcArr as $avk => $av1)
+								{	
+									$temp1  = $cavv[$av1];
+									if($temp1)
+									{
+										$source = PictureFunctions::getCloudOrApplicationCompleteUrl($temp1);
+										$dest = PictureFunctions::getCloudOrApplicationCompleteUrl($temp1,true);
+										copy($source,$dest);
+										foreach($matchToBeArr as $abcde)
+										{
+											if(strstr($temp1,$abcde)!=FALSE)	
+												$copyUpdatedArr[$av1] = str_replace($abcde,JsConstants::$photoServerName,$temp1);
+										}
+									}
+								}
+							}
+							if($copyUpdatedArr && $cavv["PICTUREID"] && $cavv["PROFILEID"])
+							{
+								$PICTURE_FOR_SCREEN_NEW = new PICTURE_FOR_SCREEN_NEW;
+								$PICTURE_FOR_SCREEN_NEW->edit($copyUpdatedArr,$cavv["PICTUREID"],$cavv["PROFILEID"]);
+							}
+						}
+					}
+				}
+				}
+			
+			
+			
+		}
 		$arrPictures =  $this->getPictures($arguments);
 		if( !$arrPictures || !count($arrPictures))
 		{
@@ -122,38 +189,33 @@ EOF;
 		{
 			foreach($arrPictures as $key=>$arrData)
 			{
-				$copy= false;
-			
 				if($this->m_bDebug)
 				{
 					$this->logSection("ProfileId : ",$arrData['PROFILEID']);
 					$this->logSection("PictureId : ",$arrData['PICTUREID']);
 				}
 				$iPicId = $arrData['PICTUREID'];
-				$this->m_objProfile	= new Profile("",$arrData['PROFILEID']);
-				$this->m_objProfile->getDetail("","","HAVEPHOTO");
-				$arrData['PROFILE_TYPE'] = $this->getProfileType($this->m_objProfile->getHAVEPHOTO());
-				$szType = $this->m_objPicFunction->getImageFormatType($arrData['MainPicUrl']);
-				//////////////////////////////// Copy to local if required
-				if(strpos($arrData["MainPicUrl"],JsConstants::$docRoot) == FALSE)
+				if(!is_array($arrDataForCopy) || in_array($arrData['PROFILEID'],$arrDataForCopy))
 				{
-					$copy= true;
+					$this->m_objProfile	= new Profile("",$arrData['PROFILEID']);
+					$this->m_objProfile->getDetail("","","HAVEPHOTO");
+					$arrData['PROFILE_TYPE'] = $this->getProfileType($this->m_objProfile->getHAVEPHOTO());
+					$szType = $this->m_objPicFunction->getImageFormatType($arrData['MainPicUrl']);
+					
+					//////////////////////////////////////////////////////////////
+					//Move Main Pic To Orginial Pic Directory
+					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
+					//If Required, Resize Main Pic and Store into same MainPicUrl
+					$this->resizePic($iPicId,$arrData['PROFILEID'],$arrData['MainPicUrl']);
+					//Update Store
+					$this->updateStore($iPicId,$arrData);
+					//Track This in Master Log
+					$this->trackPhotoScreenMasterLog($arrData);
 				}
-				if($copy)
+				else if(!$this->m_bDebug)
 				{
-					$szMainPicUrl =$this->m_objNonScreenedPicture->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["MainPicUrl"],$iPicId,$arrData["PROFILEID"],$szType,'nonScreened');
-					$bstatus = copy($arrData["MainPicUrl"],$szMainPicUrl);
-					$arrData['MainPicUrl'] = $szMainPicUrl;
+					$this->logSection('Info', 'No data found in copy array');
 				}
-				//////////////////////////////////////////////////////////////
-				//Move Main Pic To Orginial Pic Directory
-				$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
-				//If Required, Resize Main Pic and Store into same MainPicUrl
-				$this->resizePic($iPicId,$arrData['PROFILEID'],$arrData['MainPicUrl']);
-				//Update Store
-				$this->updateStore($iPicId,$arrData);
-				//Track This in Master Log
-				$this->trackPhotoScreenMasterLog($arrData);
 			}
 		}
 		else if(!$this->m_bDebug)

@@ -330,7 +330,10 @@ function insertIntoContacts($sender_profileid,$receiver_profileid,$type,$time,$c
                                         $tempDb1=$affectedDb[1];
                                         $sql_del="DELETE FROM CONTACTS WHERE CONTACTID=$generated_contact_id";
                                         $mysqlObj->executeQuery($sql_del,$tempDb1) or ($query_died==1);
-                                        $mysqlObj->logError($sql_update,"",$tempDb);
+                                        if($query_died){
+											$show_query_logerror=1;
+											//$mysqlObj->logError($sql_update,"",$tempDb);
+										}
                                 }
                         }
 
@@ -344,7 +347,10 @@ function insertIntoContacts($sender_profileid,$receiver_profileid,$type,$time,$c
                                         $tempDb1=$affectedDb[0];
                                         $sql_del="DELETE FROM CONTACTS WHERE CONTACTID=$generated_contact_id";
                                         $mysqlObj->executeQuery($sql_del,$tempDb1) or ($query_died==1);
-                                        $mysqlObj->logError($sql_update,"",$tempDb);
+                                        if($query_died){
+											$show_query_logerror=1;
+											//$mysqlObj->logError($sql_update,"",$tempDb);
+										}
                                 }
                         }
 
@@ -508,6 +514,7 @@ function updateContactsSeen($sender_profileid, $receiver_profileid, $who, $conta
 		}
 		$profileid = $receiver_profileid;
                 $mypid = $sender_profileid;
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterContactFunctions.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
                 include_once("alter_seen_table.php");
 }
 

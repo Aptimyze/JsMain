@@ -9,7 +9,7 @@
 					<ul class="listnone f13 color11 fontlig">
 						<li class="clearfix">
 							<div class="fl"><input type="radio" class="js-mato changeListingLogic changeListingLogicO cursp" value="dpp" name="changeDPP"></div>
-							<div class="fl pl10 srpboxm1">Send matches strictly based on my Desired Partner Profile</div>
+							<div class="fl pl10 srpboxm1">Send matches strictly based on Desired Partner Profile</div>
 							<canvas id="listingLogicO" height="30" width="40" style="float: right; margin-top: -12px;"></canvas>
 						</li>
 

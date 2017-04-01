@@ -12,7 +12,7 @@ class logAndFetchProfilesForZeroMatches {
      */
     public static function insertEntry($profileId){
         $date = Date("Y-m-d H:m:s");
-        $tableObj = new matchalerts_ZERO_TvDPP_MATCHES("newjs_master");
+        $tableObj = new matchalerts_ZERO_TvDPP_MATCHES();
         $tableObj->insertEntryOfProfile($profileId, $date);
     }
     
@@ -25,7 +25,7 @@ class logAndFetchProfilesForZeroMatches {
         $noOfDaysSeconds = 10*24*60*60;
         $todaysDate = time();
         $tableObj = new matchalerts_ZERO_TvDPP_MATCHES();
-        $tableMasterObj = new matchalerts_ZERO_TvDPP_MATCHES("newjs_master");
+        $tableMasterObj = new matchalerts_ZERO_TvDPP_MATCHES();
         $entryDate = $tableObj->getEntryDateForProfile($profileId);
         $diff = $todaysDate-strtotime($entryDate);
         if($diff > $noOfDaysSeconds){

@@ -3,7 +3,7 @@ include_once("connect.inc");
 include_once("../profile/pg/functions.php");
 
 $cid = $_COOKIE["CRM_NOTIFICATION_AGENTID"];
-$name = $_COOKIE["CRM_NOTIFICATION_AGENT"];
+$name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
 
 if(authenticated($cid))
 {

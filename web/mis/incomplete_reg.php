@@ -10,7 +10,6 @@
 
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 
 $user=getname($cid);
 $smarty->assign("user",$user);

@@ -36,14 +36,19 @@ successLayerSuccess:
   stylesheets: [-*]
   javascripts: [-*]
 
+requestCallBackJSMSSuccess:
+  stylesheets: [-*,jsms/membership/new_revamp_membership_css]
+  javascripts: [-*]
+  layout: jsmsMobLayout
+
 resetPasswordSuccess:
   javascripts: [jspc/settings/settings,jspc/settings/jspc_visibility,jspc/login/resetPassword_js]
   stylesheets: [jspc/settings/settings]
   layout: jspcLayout
 
 CALJSMSSuccess:
-  stylesheets: [-*,jsms/common/commoncss]
-  javascripts: [-*]
+  stylesheets: [-*,jsms/common/commoncss,jsms/myjs/CALJSMS_css]
+  javascripts: [-*,jsms/myjs/CALJSMS_js]
   layout: jsmsMobLayout
 
 _notificationLayerJSPC:

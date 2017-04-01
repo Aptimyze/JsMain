@@ -21,7 +21,7 @@ class VCDTracking{
          */
         public function getContactAttemptProfiles($profileId){
           $fieldCond  = array('CONTACT_TYPE'=>"'N','A'"); // if need to add more contact type add after 'N' comma separated
-          $VcdTrackingDbObj = new MIS_VCD_TRACKING();
+          $VcdTrackingDbObj = new MIS_VCD_TRACKING(SearchConfig::getSearchDb());
           $profiles = $VcdTrackingDbObj->getContactAttemptProfiles($profileId,$fieldCond);
           return $profiles;
         }

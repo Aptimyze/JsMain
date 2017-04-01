@@ -4,7 +4,7 @@
 *    DESCRIPTION        : This file contains the functions used in phone verification process
                         : Used in IVR, SMS, Backened Team, JS aplication. 
 ***********************************************************************************************************************/
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 	function getCallsInitiatedToday($number,$isd)
 	{
 		$date = date("Y-m-d");
@@ -435,7 +435,7 @@ return $returnArray;
 			$PHONE_STATUS 	='MOB_STATUS';
 			$phone 		=trim(substr($phone_num,-10,10));
 			if($phone){
-				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 		}
@@ -455,7 +455,7 @@ return $returnArray;
 			}
 			$cnt_no =strlen($landline_std);
 			if($cnt_no >5){
-				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT  from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 				
@@ -606,32 +606,47 @@ return $returnArray;
 	}
 	// function update the phone status for the profile depending upon the verification status
 	// for landline phone = [std+landline]
-	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='')
+	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='',$isd='')
 	{
 		if(!trim($profileid))
 			return false;
 		include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 		if($actionStatus == 'Y')	// Verified marked status
 		{
 			$anyPhoneVerified = anyPhoneVerified($profileid);
 			$profileArr =array();
 			$newProfileArr =array();
-			if($phoneType=='M')
-				$query_param = "MOB_STATUS='Y',PHONE_FLAG=''";
-			elseif($phoneType=='L')
-				$query_param = "LANDL_STATUS='Y',PHONE_FLAG=''";
+			if($phoneType=='M'){
+				//$query_param = "MOB_STATUS='Y',PHONE_FLAG=''";
+				$arrFields[ "MOB_STATUS"]='Y';
+				$arrFields[ "PHONE_FLAG"]='';
+			}
+			elseif($phoneType=='L'){
+				//$query_param = "LANDL_STATUS='Y',PHONE_FLAG=''";
+				$arrFields[ "LANDL_STATUS"]='Y';
+				$arrFields[ "PHONE_FLAG"]='';
+			}
 			elseif($phoneType=='A')
 			{
-        deleteCachedJprofile_Contact($profileid);
-				$query_param = "PHONE_FLAG=''";
-				$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='Y' WHERE `PROFILEID` =  '".$profileid."'";
-				mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
-				$profileContactRowAffected = mysql_affected_rows();
+				deleteCachedJprofile_Contact($profileid);
+				
+				$profileid=$profileid;
+				$arrParams = array('ALT_MOB_STATUS'=>'Y');
+				$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+        
+				//$query_param = "PHONE_FLAG=''";
+				$arrFields[ "PHONE_FLAG"]='';
+				//$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='Y' WHERE `PROFILEID` =  '".$profileid."'";
+				//mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
+				//$profileContactRowAffected = mysql_affected_rows();
 			}
-
-			$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='".$profileid."' AND activatedKey=1";
-			mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
-			$jprofileRowAffected =mysql_affected_rows();
+			$exrtaWhereCond = "activatedKey=1";
+			//$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='".$profileid."' AND activatedKey=1";
+			//mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
+			//$jprofileRowAffected =mysql_affected_rows();
+			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+			
 			$action = FTOStateUpdateReason::NUMBER_VERIFY;
 			SymfonyFTOFunctions::updateFTOState($profileid,$action);
 			include_once "../profile/InstantSMS.php";
@@ -645,7 +660,7 @@ return $returnArray;
 			}
 			// Check app login in last 7 days:
 			if($appRegProfile){
-		                $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		                $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
                 		$profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			if($appRegProfile && count($profileArr)>0){
@@ -728,29 +743,54 @@ return $returnArray;
 		}
 		else if($actionStatus == 'D') // Denied marked status (profile is marked as Unverified state if user denies the request)
 		{
-			if($phoneType=='M')
+			if($phoneType=='M'){
+				$arrFields['MOB_STATUS']='N';
+				$arrFields['PHONE_FLAG']='';
 				$query_param = "MOB_STATUS='N',PHONE_FLAG=''";
-			elseif ($phoneType=='L')
+			}
+			elseif ($phoneType=='L'){
+				$arrFields['LANDL_STATUS']='N';
+				$arrFields['PHONE_FLAG']='';
 				$query_param = "LANDL_STATUS='N',PHONE_FLAG=''";
+			}
 			else 
 			{
-        deleteCachedJprofile_Contact($profileid);
-				if($phoneType!='A')
-					$query_param = "MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG=''";	
-				$sqlAlt="UPDATE  newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='N' WHERE `PROFILEID`='".$profileid."'";
-				mysql_query_decide($sqlAlt) or logError("Could not update profile details from JPROFILE_CONTACT ",$sqlAlt);
+				deleteCachedJprofile_Contact($profileid);
+				
+				
+				if($phoneType!='A'){
+					//$query_param = "MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG=''";	
+					$arrFields['MOB_STATUS']='N';
+					$arrFields['LANDL_STATUS']='N';
+					$arrFields['PHONE_FLAG']='';
+				}
+				//$sqlAlt="UPDATE  newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='N' WHERE `PROFILEID`='".$profileid."'";
+				$arrParams = array('ALT_MOB_STATUS'=>'N');
+				$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+				//mysql_query_decide($sqlAlt) or logError("Could not update profile details from JPROFILE_CONTACT ",$sqlAlt);
 			}
 			if($phoneType!='A')
 			{
-				$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";	
-				mysql_query_decide($sql) or logError("Could not update profile details from JPROFILE ",$sql);
+				$exrtaWhereCond = "activatedKey=1";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+			//	$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";	
+				//mysql_query_decide($sql) or logError("Could not update profile details from JPROFILE ",$sql);
 			}
 			$action = FTOStateUpdateReason::NUMBER_UNVERIFY;
 			SymfonyFTOFunctions::updateFTOState($profileid,$action);
-                        include_once "../profile/InstantSMS.php";
-                        $sms= new InstantSMS("PHONE_UNVERIFY",$profileid);
-                        $sms->send();
-		
+			if($phoneType!='L')
+			{
+			        include_once "../profile/InstantSMS.php";
+			        $arr=array('PHONE_MOB'=>$phone_num, 'ISD'=>$isd);
+					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
+					$smsViewer->send();
+			}
+			$emailSender = new EmailSender(MailerGroup::PHONE_UNVERIFY, 1838);
+			$tpl = $emailSender->setProfileId($profileid);
+			$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
+			$subject = "We were unable to reach you. Kindly authenticate your contact details.";
+			$tpl->setSubject($subject);
+			$emailSender->send();
 			//$sql ="insert into jsadmin.PHONE_UNVERIFIED_LOG (`PROFILEID`,`ENTRY_DT`) VALUES('$profileid',now())";
 			//mysql_query_decide($sql) or logError("Could not insert profile details in PHONE_UNVERIFIED_LOG in deleted case",$sql);
 
@@ -760,13 +800,20 @@ return $returnArray;
 			$action = FTOStateUpdateReason::NUMBER_UNVERIFY;
 			SymfonyFTOFunctions::updateFTOState($profileid,$action);
 
-			$query_param = "MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='I'";
-			$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
-			mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
+			//$query_param = "MOB_STATUS='N',LANDL_STATUS='N',PHONE_FLAG='I'";
+			$arrFields['MOB_STATUS'] = 'N';
+			$arrFields['LANDL_STATUS'] = 'N';
+			$arrFields['PHONE_FLAG'] = 'I';
+			//$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
+			//mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
+			$exrtaWhereCond = "activatedKey=1";
+			$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
       
       deleteCachedJprofile_Contact($profileid);
-			$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET  `ALT_MOB_STATUS`='N' WHERE  `PROFILEID` =  '".$profileid."'";
-			mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
+			$arrParams = array('ALT_MOB_STATUS'=>'N');
+			$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+			//$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET  `ALT_MOB_STATUS`='N' WHERE  `PROFILEID` =  '".$profileid."'";
+			//mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
 
 			$sql = "REPLACE into incentive.INVALID_PHONE (PROFILEID,MSG,OP_USERNAME,ENTRY_DT) VALUES('$profileid','$message','$username',now())";
 			mysql_query_decide($sql) or logError("Could not update profile details in incentive.INVALID_PHONE ",$sql);
@@ -780,20 +827,31 @@ return $returnArray;
 		}
 		else if($actionStatus =='J') // Junk marked status
 		{
-			if($phoneType=='M')
-				$query_param = "MOB_STATUS='J',PHONE_FLAG=''";
-			elseif ($phoneType=='L')
-				$query_param = "LANDL_STATUS='J',PHONE_FLAG=''";
+			if($phoneType=='M'){
+				$arrFields['MOB_STATUS']='J';
+				$arrFields['PHONE_FLAG']='';
+				//$query_param = "MOB_STATUS='J',PHONE_FLAG=''";
+			}
+			elseif ($phoneType=='L'){
+				$arrFields['LANDL_STATUS']='J';
+				$arrFields['PHONE_FLAG']='';				
+				//$query_param = "LANDL_STATUS='J',PHONE_FLAG=''";
+			}
 			elseif($phoneType=='A')
 			{
         deleteCachedJprofile_Contact($profileid);
-				$sqlAlt="UPDATE  newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='J' WHERE `PROFILEID`='".$profileid."'";
-				mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
+        
+				$arrParams = array('ALT_MOB_STATUS'=>'J');
+				$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+				//$sqlAlt="UPDATE  newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='J' WHERE `PROFILEID`='".$profileid."'";
+				//mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
 			}
 			if($phoneType!='A')
 			{
-				$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
-				mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);				
+				$exrtaWhereCond = "activatedKey=1";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+				//$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
+				//mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);				
 			}
 		}
 		else if($actionStatus =='E') // Edit marked status	
@@ -814,20 +872,30 @@ return $returnArray;
                         $sql1.=" where PROFILEID='$profileid'";
                         mysql_query_decide($sql1) or logError("Could not update the table incentive.MAIN_ADMIN_POOL",$sql1,"ShowErrTemplate");             
 
-                        if($phoneType=='M')
-                                $query_param = "MOB_STATUS='N',PHONE_FLAG=''";
-                        elseif ($phoneType=='L')
-                                $query_param = "LANDL_STATUS='N',PHONE_FLAG=''";
+                        if($phoneType=='M'){
+                                $arrFields['MOB_STATUS']='N';
+								$arrFields['PHONE_FLAG']='';
+                                //$query_param = "MOB_STATUS='N',PHONE_FLAG=''";
+							}
+                        elseif ($phoneType=='L'){
+								$arrFields['LANDL_STATUS']='N';
+								$arrFields['PHONE_FLAG']='';
+                                //$query_param = "LANDL_STATUS='N',PHONE_FLAG=''";
+							}
 			elseif($phoneType=='A')
 			{
         deleteCachedJprofile_Contact($profileid);
-				$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='N' WHERE `PROFILEID`='".$profileid."'";
-                        	mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
+				$arrParams = array('ALT_MOB_STATUS'=>'N');
+				$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
+				//$sqlAlt="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='N' WHERE `PROFILEID`='".$profileid."'";
+                  //      	mysql_query_decide($sqlAlt) or logError("Could not update profile details in JPROFILE_CONTACT ",$sqlAlt);
 			}
 			if($phoneType!='A')
 			{
-	                        $sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
-        	                mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
+				$exrtaWhereCond = "activatedKey=1";
+				$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+	                        //$sql ="update newjs.JPROFILE SET $query_param where PROFILEID='$profileid' AND activatedKey=1";
+        	                //mysql_query_decide($sql) or logError("Could not update profile details in JPROFILE ",$sql);
 			}
 		}
 		$value = hidePhoneLayer($profileid);
@@ -1053,7 +1121,85 @@ function getIsdInFormat($isd)
 	return false;
 }
 
+function UnverifyNum($profileId, $phoneType, $number)
+{
+	// Profile Id of Submittee, its phone type and the reported number
+	$interval = 10;
+	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
+	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
+	// array of profile ids of Submitters
+	$arrSubmitter = array();
+	$ReportedDate = array();
+	$arrUpdatedProfiles = array();
+	if($result)
+	{
+		foreach ($result as $row)
+		{
+			if($phoneType == 'L' && $row['PHONE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+			elseif ($phoneType == 'M' && $row['MOBILE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+		}
+		if(count($arrSubmitter) == 0)
+		{
+			return ;
+		}
+		$arrSubmitter = array_unique($arrSubmitter);
+		$jobj = new Jprofile;
+		$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+		$jsCommonObj =new JsCommon();
+		$ProfileIds = array('PROFILEID' => implode(",", $arrSubmitter));
+		$arrSubscription = $jobj->getArray($ProfileIds,"","",'PROFILEID, SUBSCRIPTION');
+    	foreach ($arrSubscription as $key => $value)
+		{
+			if($jsCommonObj->isPaid($value['SUBSCRIPTION']))
+			{
+				// Paid User
+				if($contactAllotedObj->updateAllotedContacts($value['PROFILEID'],1))
+				{
+					// contacts allocated increased
+					array_push($arrUpdatedProfiles, $value['PROFILEID']);
+				}
+			}
+		}
+
+		if(count($arrUpdatedProfiles) == 0)
+		{
+			return ;
+		}
+		//Todo: get allocated contacts quota for all profiles
+		$arrContactQuota = $contactAllotedObj->getAllotedContactsForProfiles($arrUpdatedProfiles);
+
+		foreach ($arrUpdatedProfiles as $value)
+		{
+			// send mail to user about increase in contact quota
+			$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
+			
+			$tpl = $top8Mailer->setProfileId($value);
+			$date = date('d-m-Y');
+			$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value]));
+			$subject = "A contact has been added to your quota of contacts | $date";
+			$quota = $arrContactQuota[$value];
+			$tpl->setSubject($subject);
+			// PogId is profile id of submittee
+			$tpl->getSmarty()->assign("otherProfile", $profileId);
+			$tpl->getSmarty()->assign("number", $number);
+			$tpl->getSmarty()->assign("date", $reportedDate);
+			$tpl->getSmarty()->assign("quota", $quota);
+			$top8Mailer->send();
+		}		
+	}
+	
+}
+
 function deleteCachedJprofile_Contact($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

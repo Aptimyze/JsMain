@@ -1,5 +1,13 @@
 <?php
+  
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
+if(MobileCommon::isNewMobileSite()) {
+  header("Location: http://www.jeevansathi.com/static/settings");
+} else {
+  header("Location: http://www.jeevansathi.com/settings/jspcSettings?hideDelete=1");
+}
+die();
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
@@ -10,7 +18,9 @@
 
 	include("connect.inc");
 	$db=connect_db();
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/profile/deleteprofile.php in USE",$msg);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 	if($from_search_error)
 		$smarty->assign("from_search_error",1);
 	$data=authenticated($checksum);
@@ -136,8 +146,14 @@
 			}
 			else  
 			{
-				$sql="update JPROFILE set PREACTIVATED=if(ACTIVATED<>'H',ACTIVATED,PREACTIVATED), ACTIVATED='H', ACTIVATE_ON=DATE_ADD(CURDATE(), INTERVAL $HIDEFOR DAY) where PROFILEID='$profileid'";
-				mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				$objProfileUpdate = JProfileUpdateLib::getInstance('newjs_master');
+				$res = $objProfileUpdate->updateHideJPROFILE('',$profileid,$HIDEFOR);
+				if(false === $res ) {
+					$sql="update JPROFILE set PREACTIVATED=if(ACTIVATED<>'H',ACTIVATED,PREACTIVATED), ACTIVATED='H', ACTIVATE_ON=DATE_ADD(CURDATE(), INTERVAL $HIDEFOR DAY) where PROFILEID='$profileid'";
+					logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				}
+//				$sql="update JPROFILE set PREACTIVATED=if(ACTIVATED<>'H',ACTIVATED,PREACTIVATED), ACTIVATED='H', ACTIVATE_ON=DATE_ADD(CURDATE(), INTERVAL $HIDEFOR DAY) where PROFILEID='$profileid'";
+//				mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 			
 				$data["ACTIVATED"]='H';
 				$protect_obj->setcookies($data);
@@ -194,8 +210,14 @@
 			}  
 			else
 			{
-				$sql="update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID='$profileid'";
-				mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				$objProfileUpdate = JProfileUpdateLib::getInstance('newjs_master');
+				$res = $objProfileUpdate->updateUnHideJPROFILE('',$profileid);
+				if(false === $res) {
+					$sql="update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID='$profileid'";
+					logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				}
+//				$sql="update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID='$profileid'";
+//				mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 			
 				$sql="select PREACTIVATED from JPROFILE where  activatedKey=1 and PROFILEID='$profileid'";
 				$act_result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
@@ -471,8 +493,15 @@
 				
 				mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_jp,"ShowErrTemplate");
 
-				$sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0, MOD_DT=now() where PROFILEID='$profileid'";
-                                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				//Mark Delete Single Profile
+				$objProfileUpdate = JProfileUpdateLib::getInstance('newjs_master');
+				$res = $objProfileUpdate->deactiveSingleProfile($profileid);
+				if(false === $res) {
+					$sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0, MOD_DT=now() where PROFILEID='$profileid'";
+					logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+				}
+//				$sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', activatedKey=0, MOD_DT=now() where PROFILEID='$profileid'";
+//                                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 
 				//added by neha
 				$now= date("Y-m-d H:i:s");

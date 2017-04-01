@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/symfony SMSkibanaAlerts
+retries=5
+retry.backoff=60000

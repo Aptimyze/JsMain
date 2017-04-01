@@ -15,6 +15,10 @@
             <div class="f12 color1">Family Income</div>
             <div class="fontlig pb15" id="vpro_family_income" >~$arrData.family_income`</div>
         ~/if`
+        ~if isset($arrData.native_place)`   
+            <div class="f12 color1">Family based out of</div>
+            <div class="fontlig pb15" id="vpro_native_place">~$arrData.native_place`</div>
+        ~/if`
         ~if isset($arrData.father_occ)`
             <div class="f12 color1">Father is</div>
             <div class="fontlig pb15" id="vpro_father_occ">~$arrData.father_occ`</div>
@@ -34,11 +38,7 @@
         ~if isset($arrData.gothra)`
             <div class="f12 color1">Gothra</div>
             <div class="fontlig pb15" id="vpro_gothra">~$arrData.gothra`</div>
-        ~/if`
-        ~if isset($arrData.native_place)`	
-            <div class="f12 color1">Family based out of</div>
-            <div class="fontlig pb15" id="vpro_native_place">~$arrData.native_place`</div>
-        ~/if`
+        ~/if`        
         ~if isset($arrData.caste)`
             <div class="f12 color1">Caste</div>
             <div class="fontlig pb15" id="vpro_caste">~$arrData.caste`</div>

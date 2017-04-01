@@ -11,8 +11,8 @@ if(authenticated($cid))
 		$priv=explode("+",$prev);
                 if(in_array('MA',$priv) || in_array('MC',$priv))
                         $smarty->assign("SHOW","Y");
-                if(in_array('A',$priv))
-                        $smarty->assign("ADMIN","Y");
+                //if(in_array('A',$priv))
+                //        $smarty->assign("ADMIN","Y");
 
 		//mysql_close($db);
 		//$db=connect_slave();
@@ -123,6 +123,11 @@ if(authenticated($cid))
 				{
 					$del_scr="N";	
 				}
+                $sql_negative = "select PROFILEID from incentive.NEGATIVE_LIST where PROFILEID = $Profileid";
+                $result_negaive=mysql_query_decide($sql_negative) or die("$sql_negative".mysql_error_js());
+                if(mysql_num_rows($result_negaive)!=0){
+                    $negativeListcheck = 1;
+                }
 				$sqljs="select DEACTIVE_DATE,PROFILEID from newjs.JSARCHIVED where PROFILEID='$myrow[PROFILEID]' and STATUS ='Y'";
 				$resjs=mysql_query_decide($sqljs) or die("$sql_del".mysql_error_js());
 				if($jsarch=mysql_fetch_array($resjs))
@@ -145,7 +150,8 @@ if(authenticated($cid))
 						  "timeofdel"=>$myrow_del['TIME'],
 						  "Verify_Email"=>$Verify_Email,
 						  "source"=>$source,
-						  "marked_del"=>$marked_del 
+						  "marked_del"=>$marked_del,
+                          "negativeListcheck"=>$negativeListcheck
 						);
 			$i++;
 			
@@ -224,30 +230,6 @@ if(authenticated($cid))
 		}
 		$smarty->display("search_page.tpl");
 		//echo $date1."kush".$date2."kush".$username."kush".$email;
-	}
-	elseif($Delete)
-	{
-                $c=0;
-                foreach( $_POST as $key => $value )
-                {
-                        if( substr($key, 0, 2) == "cb" )
-                        {
-                                $c=$c+1;
-                                $proid[]=ltrim($key, "cb");
-                        }
-                }
-		if(count($proid)>0)
-			$pid=implode($proid,",");
-			
-		$smarty->assign("profiles",$pid);
-		$smarty->assign("c",$c);
-		$smarty->assign("submit","Y");
-		$smarty->assign("count",1);
-		$smarty->assign("cid",$cid);
-	        $smarty->assign("name",$user);
-		$smarty->assign("Handicapped","All");
-
-		$smarty->display("del_profile_bulk.htm");
 	}
 	else
 	{

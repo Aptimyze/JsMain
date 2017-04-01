@@ -44,6 +44,12 @@ interface SearchChannelInterface
         public static function getSearchTypeTwoWayMatches();
         
         /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches();
+        
+        
+        /**
         * get Education and occupation detailed clusters
         */
         public function eduAndOccClusters($clustersToShow,$params="");

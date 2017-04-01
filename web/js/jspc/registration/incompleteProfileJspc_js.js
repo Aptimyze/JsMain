@@ -46,7 +46,7 @@ function prefillGridFields(eleId){
 //          click = "nfi";
 //        }
 //    }
-    if(x != 0 && x && x!='0')
+    if(idName == 'cityReg' || (x != 0 && x && x!='0'))
     {
 //            if(click == "nfi")
 //              $("#NfiLink").mousedown();
@@ -67,11 +67,16 @@ function prefillGridFields(eleId){
                     prefillTextFields("subcaste_value");
                 },0);
             }
-            if(idName == "countryReg" && (x == '51' || x == '128')){
+            if((idName == "countryReg" && x == '128') || idName == "stateReg"){
                 setTimeout(function(){
                     prefillGridFields("cityReg");
                 },0);
             }
+            if(idName == "countryReg" && x == '51'){
+                setTimeout(function(){
+                    prefillGridFields("stateReg");
+                },0);
+            }  
     }
     
 }

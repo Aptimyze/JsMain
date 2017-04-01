@@ -63,8 +63,8 @@ class ContactHandler
   const CANCEL_RECEIVED       = 'C';
   const CANCEL_EOI_SENT       = 'RE';
   const CANCEL_EOI_RECEIVED   = 'E';
+  const CANCEL_ALL   = 'CER';
 /* contact enums where we distinguish contact type based on sender/receiver. */
-  
   /**
      * Profile Obj
      * Stores the Profile Obj of viewer, Who is trying to view the engine

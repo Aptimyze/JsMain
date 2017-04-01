@@ -89,12 +89,14 @@ public static function insertConsentMessageFlag($profileid) {
         		
        			$loggedInProfileObj=LoggedInProfile::getInstance();
                	if(!$loggedInProfileObj->getPROFILEID()) $loggedInProfileObj->getDetail($profileid,'','*');
-                if ($primaryNum=$loggedInProfileObj->getPHONE_MOB())
+               	$primaryNum=$loggedInProfileObj->getPHONE_MOB();
+                if ($primaryNum)
                 {
+					$isd=$loggedInProfileObj->getISD();
                 	$jprofileObj=new JPROFILE();
-                	$resultArray=$jprofileObj->checkPhone(array($primaryNum));
+                	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
-                	$isd=$loggedInProfileObj->getISD();
+                	
 
                 	foreach ($resultArray as $key => $value) 
                 	{
@@ -119,7 +121,7 @@ public static function insertConsentMessageFlag($profileid) {
         		if (!CommonConstants::SHOW_CONSENT_MSG) return false; //check if the global constant flag is set to true
         
         //check whether it is subscribed to both offerCalls and membershipCalls
-        		$dbObj=new newjs_JPROFILE_ALERTS();	
+        		$dbObj=new JprofileAlertsCache();	
         		$res=$dbObj->fetchMembershipStatus($profileid);  
         		if (($res['MEMB_CALLS']!='S')||($res['OFFER_CALLS']!='S')) return false;
 
@@ -136,7 +138,7 @@ public static function insertConsentMessageFlag($profileid) {
                 	}
 
 
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb= new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
                 if($numArray['0']['ALT_MOBILE']){
                 	$resultArray=$dncOb->DncStatus(array($numArray['0']['ALT_MOBILE']));
@@ -405,7 +407,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 				$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MANGLIK()));
 			if(is_array($ARR))
-			if(in_array($profile->getMANGLIK(),$ARR))
+			if(in_array($profile->getMANGLIK(),$ARR) || ($profile->getMANGLIK() == '' && in_array('N',$ARR)))
 			{
 				$CODE["MANGLIK"]='gnf';
 				$CODE["Manglik/Chevvai Dosham"]='gnf';
@@ -481,15 +483,23 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_ELEVEL_NEW()));
+                        $ugPg = $profile->getEducationDetail(1);
+                        $pg = 0;
+                        $ug = 0;
+                        if(!empty($ugPg) && is_array($ugPg)){
+                                if($ugPg["PG_DEGREE"])
+                                      $pg = $ugPg["PG_DEGREE"];
+                                if($ugPg["UG_DEGREE"])
+                                      $ug = $ugPg["UG_DEGREE"];
+                        }
 			if(is_array($ARR))
-			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR))
+			if(in_array($profile->getEDU_LEVEL_NEW(),$ARR) || in_array($pg,$ARR) || in_array($ug,$ARR))
 			{
 				$CODE['ELEVEL_NEW']='gnf';
 				$CODE['Highest Degree']='gnf';
 				$CODE['Education']='gnf';
 				
 			}
-			
 			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MTONGUE()));
 			if(is_array($ARR))
 			if(in_array($profile->getMTONGUE(),$ARR))
@@ -513,20 +523,50 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 				$CODE['COUNTRYRES']='gnf';
 			}
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME()));
-			if(is_array($ARR))
-			if(in_array($profile->getINCOME(),$ARR))
+			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $incomeObj = new IncomeMapping;
+                        $ARR = $incomeObj->removeNoIncome($ARR);
+                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+                        $result = array_intersect($ARR, $incomeArray);
+                        
+			if(is_array($ARR) && !empty($ARR)){
+                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+                                {
+                                        $CODE['INCOME']='gnf';
+                                        $CODE['Income']='gnf';
+                                        $CODE['Annual Income']='gnf';
+                                }
+                        }else{
+                                $CODE['INCOME']='gnf';
+                                $CODE['Income']='gnf';
+                                $CODE['Annual Income']='gnf';
+                        }
+			$cityArr=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
+			if($jpartnerObj->getSTATE())
 			{
-				$CODE['INCOME']='gnf';
-				$CODE['Income']='gnf';
-				$CODE['Annual Income']='gnf';
+				$stateArr=explode(",",JsCommon::remove_quot($jpartnerObj->getSTATE()));
+			}	
+			$stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
+			if(count($stateArr))
+			{
+				$cityString = self::getCitiesForStates($stateArr);
+				$ARR = array_merge($cityArr,explode(",",rtrim($cityString,",")));
 			}
-			$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
-			if(is_array($ARR))
-			if(in_array($profile->getCITY_RES(),$ARR))
+			else
 			{
+				$ARR = $cityArr;
+			}
+                        $nativePlaceObj = ProfileNativePlace::getInstance();
+                        $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
+                        $nativeState = $nativeData['NATIVE_STATE'];
+                        $nativeCity = $nativeData['NATIVE_CITY'];
+                        if(strlen($profile->getCITY_RES())==2){
+                            $resState = $profile->getCITY_RES();
+                            if(is_array($stateArr) && in_array($resState,$stateArr))
+                                $CODE['CITYRES']='gnf';
+                        }
+                        if((is_array($stateArr) && in_array($nativeState,$stateArr)) || (is_array($ARR) && (in_array($profile->getCITY_RES(),$ARR) || ($nativeCity && in_array($nativeCity,$ARR)))))
 				$CODE['CITYRES']='gnf';
-			}
 		}
 		return $CODE;	
 	}
@@ -626,22 +666,24 @@ public static function insertConsentMessageFlag($profileid) {
 	 * @throws jsException of profileid not present
 	 * @return true/false
 	 */
-	public static function gtalkOnline($profile)
-	{
-		if($profile)
-		{
-			$onlineObj=new USER_ONLINE();
-			if($onlineObj->isOnline($profile)==true)
-			{
-				return true;
-			}
+
+	// public static function gtalkOnline($profile)   //COMMENTING THIS CODE SINCE IT IS NO LONGER USED
+	// {
+	// 	if($profile)
+	// 	{
+	// 		$onlineObj=new USER_ONLINE();
+	// 		if($onlineObj->isOnline($profile)==true)
+	// 		{
+	// 			return true;
+	// 		}
 			
-		}
-		else
-			throw new jsException("online status of user gtalk: Profileid missing.");
+	// 	}
+	// 	else
+	// 		throw new jsException("online status of user gtalk: Profileid missing.");
 		
-		return false;
-	}
+	// 	return false;
+	// }
+	
 	/**
 	 * returns online status of user on jeevansathi
 	 * @param $profile int profileid of user
@@ -652,11 +694,20 @@ public static function insertConsentMessageFlag($profileid) {
 	{
 		if($profile)
 		{
-			$onlineObj=new USERPLANE_USERS();
-			if($onlineObj->isOnline($profile)==true)
+			if(JsConstants::$jsChatFlag=='1')
+	                {
+				$arr = ChatLibrary::getPresenceOfIds($profile);
+				if(is_array($arr) && count($arr)>0)
+					return true;
+        	        }
+                	else
 			{
-				return true;
-			}	
+				$onlineObj=new USERPLANE_USERS();
+				if($onlineObj->isOnline($profile)==true)
+				{
+					return true;
+				}	
+			}
 		}
 		else
 			throw new JSException("online status of user userplane: Profileid missing.");
@@ -932,8 +983,7 @@ public static function insertConsentMessageFlag($profileid) {
 		$isPhoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
 		if(!$isPhoneVerified)
 		{
-			include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-			$isPhoneVerified = hidePhoneLayer($profileid);
+			$isPhoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$isPhoneVerified);
 		}
                 if($profileid && $isPhoneVerified!='Y'&& $moduleName!="register" && $moduleName!="static" && $moduleName!="phone")
@@ -976,18 +1026,108 @@ public static function insertConsentMessageFlag($profileid) {
 			return $num;
 	}
 
-		public static function checkIosPromoValid($ua)
+	public static function checkIosPromoValid($ua)
         {
                 $ua = $_SERVER['HTTP_USER_AGENT'];
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
                  if(!strstr($ua,"iPhone"))
                         return false;
-                $av = explode(" ",explode("OS ",$ua)[1])[0];
+                $av = intval(explode(" ",explode("OS ",$ua)[1])[0]);
                 if($av>=7)
                 	return true;
                 return false;
+	}
+        public static function setOnlineUser($pid)
+        {
+        	$JsMemcacheObj =JsMemcache::getInstance();
+                $expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+                $listName =CommonConstants::ONLINE_USER_LIST;
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj->set($key, time(), $expiryTime);
+                $JsMemcacheObj->zAdd($listName,time(),$pid);
+        }
+        public static function getOnlineUsetList($score1='',$score2='')
+        {
+                $JsMemcacheObj  =JsMemcache::getInstance();
+                $listName       =CommonConstants::ONLINE_USER_LIST;
+                if($score1 && $score2)
+                        $onlineProfilesArr =$JsMemcacheObj->zRangeByScore($listName, $score1, $score2);
+                else
+                        $onlineProfilesArr =$JsMemcacheObj->zRange($listName, 0, -1);
+                return $onlineProfilesArr;
+        }
+        public static function removeOnlineUser($pid)
+        {
+        	// Remove Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key=$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->delete($key);
+                $listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj->zRem($listName, $pid);
+        }
+        public static function getOnlineStatus($pid)
+        {
+                // Check Online-User 
+		$onlineUserKey =CommonConstants::ONLINE_USER_KEY;
+		$key =$onlineUserKey.$pid;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $online =$JsMemcacheObj->get($key);
+		if($online)
+			return true;
+		return false;
+        }
+        public static function removeOfflineProfiles($score1='',$score2='')
+        {
+                // Remove Online-User list
+		$score1 =0;
+		if(!$score2){
+			$expiryTime =CommonConstants::ONLINE_USER_EXPIRY;
+			$start  =date("Y-m-d H:i:s", time()-$expiryTime);
+			$score2 =strtotime($start);
 		}
+		$listName =CommonConstants::ONLINE_USER_LIST;
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $JsMemcacheObj->zRemRangeByScore($listName, $score1, $score2);
+        }
 
-		
+        public static function getCitiesForStates($stateArr){
+            $stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
+            foreach($stateArr as $key=>$val)
+            {
+                    if(array_key_exists($val, $stateCityMapping))
+                    {
+                            $cityString .= $stateCityMapping[$val];
+                            $cityString .= ",";
+                    }
+            }
+            return $cityString;
+        }
+        
+        /**
+         * Function to log Function Calling in Redis
+         * @param type $className
+         * @param type $funName
+         */
+        public static function logFunctionCalling($className, $funName)
+        {
+            $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+            //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+        }
+        public static function setAutoScreenFlag($screenVal,$editArr)
+        {
+                $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
+                foreach($editArr as $k=>$v)
+                {
+                        if(in_array($v,$autoScreenArr))
+                        {
+				$screenVal = Flag::setFlag(strtolower($v),$screenVal);
+                        }
+                }
+		return $screenVal;
+        }
 }
 ?>

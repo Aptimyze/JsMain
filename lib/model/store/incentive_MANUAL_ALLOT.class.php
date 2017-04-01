@@ -235,5 +235,29 @@ class MANUAL_ALLOT extends TABLE
         return $stat;
     }
 
+    public function getAgentAllotedProfileArrayforRCBCallSource($allotedTo,$startDt,$endDt)
+    {
+        try
+        {
+            $startDt = date("Y-m-d", strtotime($startDt)) . " 00:00:00";
+            $endDt = date("Y-m-d", strtotime($endDt)) . " 23:59:59";
+            $sql="SELECT PROFILEID, ALLOT_TIME FROM incentive.MANUAL_ALLOT WHERE ALLOTED_TO=:ALLOTED_TO AND ALLOT_TIME>=:START_DT AND ALLOT_TIME<=:END_DT AND CALL_SOURCE IN ('RCB','WL')";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ALLOTED_TO",$allotedTo,PDO::PARAM_STR);
+            $prep->bindValue(":START_DT",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DT",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC)) {
+                $agentAllotedProfileArray[] = array('PROFILEID'=>$row['PROFILEID'], 'ALLOT_TIME'=>$row['ALLOT_TIME']);
+            }
+            return $agentAllotedProfileArray;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+        return $stat;
+    }
+
 }	
 ?>

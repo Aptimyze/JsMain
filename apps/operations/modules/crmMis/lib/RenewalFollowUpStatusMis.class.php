@@ -8,20 +8,20 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfilesWithoutFollowupDateCount($reporters){
 		foreach($reporters as $agent){
-			$maObj = new incentive_MAIN_ADMIN();
+			$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$res[$agent] = $maObj->countProfilesWithoutFollowupDate($agent);
 		}
 		return $res;
 	}
 	public function isPaymentSuccessful($profileId, $billid){
-		$pdObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+		$pdObj = new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 		return ($pdObj->getLatestPaymentDateOfProfileByAgent($profileId, $billid));
 	}
 
 	public function fetchSubscriptionExpiryDate($profileId){
 		$start_dt = date('Y-m-d')." 00:00:00";
 		$end_dt = date('Y-m-d', strtotime('+30 day'))." 00:00:00";
-		$ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
+		$ssObj = new BILLING_SERVICE_STATUS('newjs_masterRep');
 		$billids = $ssObj->getBillId($profileId);
 
 		foreach($billids as $bid=>$exp_dt){
@@ -39,7 +39,7 @@ class RenewalFollowUpStatusMis
 	public function fetchSubscriptionExpiryDate1($profileId){
                 $start_dt = date('Y-m-d')." 00:00:00";
                 $end_dt = date('Y-m-d', strtotime('+30 day'))." 00:00:00";
-                $ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
+                $ssObj = new BILLING_SERVICE_STATUS('newjs_masterRep');
                 $exp_dt = $ssObj->getBillId1($profileId);
 		if($exp_dt && strtotime($exp_dt)>=strtotime($start_dt) && strtotime($exp_dt)<strtotime($end_dt))
                         return $exp_dt;
@@ -48,7 +48,7 @@ class RenewalFollowUpStatusMis
         }
 
 	public function fetchSubscriptionExpiryDate_follow($profileId){
-		$ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
+		$ssObj = new BILLING_SERVICE_STATUS('newjs_masterRep');
 		$billids = $ssObj->getBillId($profileId);
 
 		foreach($billids as $bid=>$exp_dt){
@@ -74,7 +74,7 @@ class RenewalFollowUpStatusMis
 				$edate_0 = $edate." 23:59:59";
 				$edate_29 = date('Y-m-d 00:00:00', (strtotime($edate) - 29*24*60*60));
 
-				$hObj = new incentive_HISTORY('newjs_slave');
+				$hObj = new incentive_HISTORY('newjs_masterRep');
 				$lastHandled_dt = $hObj->getLastHandledDateForProfile($id, $agent); 
 
 				if(!$lastHandled_dt || ($lastHandled_dt && strtotime($lastHandled_dt) <= strtotime($edate_29))){
@@ -133,13 +133,13 @@ class RenewalFollowUpStatusMis
 		$start_dt = date('Y-m-d')." 00:00:00";
 		$end_dt = date('Y-m-d', strtotime('+30 day'))." 00:00:00";
 		foreach($profileArray as $key=>$value){
-			$ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
+			$ssObj = new BILLING_SERVICE_STATUS('newjs_masterRep');
 			$billids = $ssObj->getBillId($value['PROFILEID']);
 
 			if($billids && is_array($billids) && count($billids)>=1){
 				foreach($billids as $bid=>$exp_dt){
 					if($fstatus==1){
-						$pdObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+						$pdObj = new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 						$profileArray[$key]['PAID_ON'] = $pdObj->getLatestPaymentDateOfProfileByAgent($value['PROFILEID'], $bid);
 						if($profileArray[$key]['PAID_ON'])
 							break;
@@ -174,7 +174,7 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfileDataWithoutFollowupDate($agent){
 		$profileData = array();
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$fsObj = new FieldSalesFollowUpStatusMis();
 		$profileData = $maObj->getProfilesWithoutFollowupDate($agent);
 		$profileData = $fsObj->getAllProfileDataForExecutive($profileData, $agent);
@@ -185,7 +185,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfileIds($agent){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$renewalProfiles = array();
 		foreach($allotedProfiles as $id){
@@ -197,7 +197,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfilesWithoutFollowedupIds($agent){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$exp_dt = array();
 		foreach($allotedProfiles as $id){
@@ -211,7 +211,7 @@ class RenewalFollowUpStatusMis
 			$edate_0 = $edate." 23:59:59";
 			$edate_29 = date('Y-m-d 00:00:00', (strtotime($edate) - 29*24*60*60));
 
-			$hObj = new incentive_HISTORY('newjs_slave');
+			$hObj = new incentive_HISTORY('newjs_masterRep');
 			$lastHandled_dt = $hObj->getLastHandledDateForProfile($id, $agent); 
 
 			if(!$lastHandled_dt || $lastHandled_dt && strtotime($lastHandled_dt) <= strtotime($edate_29))
@@ -222,7 +222,7 @@ class RenewalFollowUpStatusMis
 	}
 
 	public function fetchRenewalProfilesWithoutFollowedupRangeWiseIds($agent, $expireRangeArr, $col_id){
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$allotedProfiles = $maObj->getAllotedProfiles($agent);
 		$exp_dt = array();
 		foreach($allotedProfiles as $id){
@@ -236,7 +236,7 @@ class RenewalFollowUpStatusMis
 			$edate_0 = $edate." 23:59:59";
 			$edate_29 = date('Y-m-d 00:00:00', (strtotime($edate) - 29*24*60*60));
 
-			$hObj = new incentive_HISTORY('newjs_slave');
+			$hObj = new incentive_HISTORY('newjs_masterRep');
 			$lastHandled_dt = $hObj->getLastHandledDateForProfile($id, $agent); 
 
 			if(!$lastHandled_dt || $lastHandled_dt && strtotime($lastHandled_dt) <= strtotime($edate_29)){
@@ -251,7 +251,7 @@ class RenewalFollowUpStatusMis
 
 	public function fetchProfileData($agent, $expireRangeArr, $col_id){
 		$profileData = array();
-		$maObj = new incentive_MAIN_ADMIN();
+		$maObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$fsObj = new FieldSalesFollowUpStatusMis();
 		if($col_id == 2)
 			$profileIds = $this->fetchRenewalProfileIds($agent);

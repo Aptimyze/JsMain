@@ -16,7 +16,7 @@ class CommonUtility
 		{
 			$dbObj=new MIS_SOURCE;
 			$date=date("Y-m-d G:i:s");
-			
+
 			if(!$dbObj->isPresent($source))
 			{
 				$dbObj=new MIS_UNKNOWN_SOURCE;
@@ -41,11 +41,11 @@ class CommonUtility
 	}
 	/**
 	* @param currentPage
-	* @param noOfResults 
+	* @param noOfResults
 	* @return $arr array (pages to be shown)
 	*/
 	public static function pagination($currentPage,$noOfResults,$SearchParametersObj="",$actionPoint='search')
-	{	
+	{
 		if($actionPoint=='search')
 		{
 			$maxPages = 9;
@@ -56,9 +56,9 @@ class CommonUtility
 		{
 			$maxPages = 9;
 			$bucket = 4;
-			$profilesPerPage = InboxConfig::$ccPCProfilesPerPage; 
+			$profilesPerPage = InboxConfig::$ccPCProfilesPerPage;
 		}
-	
+
 
 		if($noOfResults%$profilesPerPage == 0)
 			$noOfPages = $noOfResults / $profilesPerPage;
@@ -86,7 +86,7 @@ class CommonUtility
 	}
 
 	static public function getBlankValues($objName, $fieldsArr)
-	{ 
+	{
 		foreach($fieldsArr as $fieldName)
 		{
 			$functionName = "get".$fieldName;
@@ -103,16 +103,16 @@ class CommonUtility
                 // to the approriate days using 86400 seconds for a day
                 return (date('U', JSstrToTime($StopDate)) - date('U', JSstrToTime($StartDate))) / 86400; //seconds a day
         }
-	
+
 	/* This function is added by Reshu.
 
 	* It will return date differnce from current date in the format of xx days/weeks/months ago
 	*@param : date string to find difference from current date
-	*@return : jsDate string with required date 
-	*/ 
+	*@return : jsDate string with required date
+	*/
 	static public function ConvertDateDiffToJsFormat($date)
 	{
-		$dateTime= new DateTime();	
+		$dateTime= new DateTime();
                 $dateToConvert = $dateTime->setTimestamp(strtotime($date));
 		$now = new DateTime;
                 $diff = date_diff($now,$dateToConvert);
@@ -124,7 +124,7 @@ class CommonUtility
                         else
                                 $jsDate.=" months ago";
 
-		}	
+		}
 		elseif($diff->format('%d') < 1)
 			$jsDate = "today";
 		elseif($diff->format('%d') >= 1 && $diff->format('%d') < 7)
@@ -154,7 +154,7 @@ class CommonUtility
 	* This function returns IP address of the current user
 	* @return ipaddr - ip address of current machine
 	**/
-	
+
 	public static function getCurrentIP()
 	{
 		$ipaddr=getenv("HTTP_TRUE_CLIENT_IP")?getenv("HTTP_TRUE_CLIENT_IP"):(getenv("HTTP_X_FORWARDED_FOR")?getenv("HTTP_X_FORWARDED_FOR"):getenv("REMOTE_ADDR"));
@@ -166,11 +166,11 @@ class CommonUtility
 		return $ipaddr;
 	}
 
-	
+
 	/**
 	  * This function returns whether a religion has caste/sect/none of these associated to it
 	  * @param - $religion - religion for which the above needs to be done
-	  * @return - caste/sect/null 
+	  * @return - caste/sect/null
 	**/
 
 	public static function getCasteOrSectToBeUsed($religion)
@@ -242,22 +242,22 @@ class CommonUtility
 		$drafts[$i][MESSAGE]='';
 		$drafts[$i][DRAFTID]='WNM';
 		$drafts[$i][DRAFTNAME]='Write New Message';
-		
-		
-		
+
+
+
 		return $drafts;
 	}
 	/**
 	 * Returns trueif caste is present in following religion
-	 * @param religion int 
+	 * @param religion int
 	 * return boolean true/false
 	 */
 	public static function CasteAllowed($religion)
 	{
 		if(in_array($religion,array(1,2,3,4,9)))
 			return true;
-		else	
-			return false;	
+		else
+			return false;
 	}
 	/**
 	 * return canonical url of profile
@@ -276,8 +276,8 @@ class CommonUtility
 				$can_url="groom-".$can_url;
 			else
 				$can_url="bride-".$can_url;
-				
-				
+
+
 			return $can_url;
 	}
 
@@ -287,7 +287,7 @@ class CommonUtility
         public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
         {
 	        if(!$timeout)
-		        $timeout = 50;
+		        $timeout = 50000;
 /*
 $postParams1=str_replace("&wt=phps","",$postParams);
 $x = explode("sort=",$postParams1);
@@ -307,10 +307,12 @@ die;
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		if($postParams)
                 	curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+                curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
-		return $output;
+	    return $output;
                 /*
                 header('Content-Type: text/xml');
                 echo $api_output;
@@ -322,15 +324,22 @@ die;
         /**
         * General Utility function to send 'get' curl request.
         */
-        public static function sendCurlGetRequest($urlToHit,$timeout='')
+        public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
 	        if(!$timeout)
-		        $timeout = 500;
-                $ch = curl_init($urlToHit);
+		        $timeout = 50000;
+		     $ch = curl_init($urlToHit);
+		    if($headerArr)
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+			else
                 curl_setopt($ch, CURLOPT_HEADER, 0);
+               
+                
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+	        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
@@ -386,16 +395,16 @@ die;
         $j=1;
         $wordstats[0] = $words[0];
         for ($i=1; $i<=$array_size; $i++)
-        { 
+        {
            if($words[$i] != $words[$i-1])
-           $wordstats[($j++)]=$words[$i];  
+           $wordstats[($j++)]=$words[$i];
         }
         $url=implode('-',$wordstats);
         $url = rtrim($url, "-");
 		//$url=urlencode($url);
 		return $url;
 	}
-	
+
 	public static function InvalidLimitReached($profileObj)
 	{
 		$limits=CommonFunction::getContactLimits($profileObj->getSUBSCRIPTION(),$profileObj->getPROFILEID());
@@ -403,7 +412,7 @@ die;
 		$overall_cont=CommonUtility::getContactsMadeAfterDuplication($profileObj);
 		if($overall_cont>=$invalidNumberLimit)
                 	return true;
-		     
+
 	}
 	public static function getContactsMadeAfterDuplication($profileObj)
 	{
@@ -453,13 +462,13 @@ die;
 			else
 			{
 				if(!in_array($size[2],array(1,2,3,4,5,6,7,8)))
-					$error="Only jpg, gif, png, swf, psd, bmp, tif photo format allowed";	
+					$error="Only jpg, gif, png, swf, psd, bmp, tif photo format allowed";
 			}
 			return $error;
-			
+
 		}
 		return $error;;
-		
+
 	}
 	public static function CheckValidEmail($email)
 	{
@@ -479,7 +488,7 @@ die;
 	}
 	public static function UploadPic($id,$where,$photoContent)
 	{
-			
+
 			$site_url=sfConfig::get("app_site_url");
 			$web_dir=sfConfig::get("sf_web_dir");
 			$symRoot=
@@ -488,13 +497,13 @@ die;
 
 			//  echo $filepath;die;
 			$file = fopen($filepath,"w");
-			//var_dump($file);die;
+				//var_dump($file);die;
 			//$photoContent="";
 			fwrite($file,$photoContent);
 			fclose($file);
 			return $fileAbs;
 	}
-	/** 
+	/**
 	* This function will remove quotes
 	*/
 	public static function removeQuotes($input)
@@ -520,7 +529,7 @@ die;
 		$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
 		/***Check error code here ***/
-		if($httpCode == 200) 
+		if($httpCode == 200)
 		{
 			return 'Y';
 		}
@@ -538,7 +547,7 @@ die;
 			return NULL;
 		return true;
 	}
-	
+
 	/**
 	* check if indian city
 	*/
@@ -554,7 +563,7 @@ die;
                 }
         	return $httpRef;
 	}
-	
+
 	//This function return number in xx,xx,xxx format
 	public static function moneyFormatIndia($num)
 	{
@@ -578,8 +587,8 @@ die;
 				}
 			}
 			$thecash = $explrestunits.$lastthree;
-		} 
-		else 
+		}
+		else
 		{
 			$thecash = $num;
 		}
@@ -599,11 +608,11 @@ die;
 	}
 	/**
          * This function converts the $date date variable into IST timezone and on the basis of date difference returns the formatted string
-         * @param type $date date 
+         * @param type $date date
          * @return formatted Date
          */
 	public static function convertDateToDay($date){
-                
+
                 /*
                   Comment below two lines and uncomment commented line. For date time change.
                 */
@@ -743,23 +752,29 @@ die;
   }
 
   //send instant sms with tracking
-  public static function sendPlusTrackInstantSMS($key,$profileid)
+  public static function sendPlusTrackInstantSMS($key,$profileid,$tokenArr=null)
   {
   	include_once(sfConfig::get("sf_web_dir")."/P/InstantSMS.php");
-	$sms=new InstantSMS($key,$profileid);
+	if (!empty($tokenArr) && is_array($tokenArr)) {
+		$sms=new InstantSMS($key,$profileid, $tokenArr);
+	} else {
+		$sms=new InstantSMS($key,$profileid);
+	}
 	$sms->send();
   }
 
 	function sendCurlDeleteRequest($url,$timeout)
 	{
 		if(!$timeout)
-			$timeout = 10;
+			$timeout = 10000;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
@@ -770,67 +785,241 @@ die;
 		return $result;
 	}
 
+	/*checkChatPanelCondition
+	* check whether to show chat panel or not acc to module
+	* @inputs: $loggedIn,$module
+	* @return: $showChat
+	*/
+	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
+		$showChat = 1;
+		if(!$loggedIn){
+			$showChat = 0;
+        }
+		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr) || $activated != 'Y'){
+			$showChat = 0;
+		}
+		return $showChat;
+	}
+
+	/*fetchSelfUserName
+	* fetch user self name for chat header
+	* @inputs: $loggedIn,$loggedInProfile,$module, $action,$showChat
+	* @return: $userName
+	*/
+	public static function fetchSelfUserName($loggedIn,$loggedInProfile,$module, $action,$showChat){
+		$excludeModuleArr = ["profile","myjs","homepage"];
+        $excludeActionArr = ["edit","jspcPerform"];
+        $getName = 1;
+        $userName = "";
+        if(!$loggedIn || !$loggedInProfile || $showChat == 0){
+			$getName = 0;
+        }
+		else if(in_array($module, $excludeModuleArr) || in_array($action, $excludeActionArr)){
+			$getName = 0;
+		}
+		if($getName){
+			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+			$userName = $nameOfUserObj->getName($loggedInProfile);
+		}
+		//error_log("ankita-".$getName);
+		return $userName;
+	}
 
 
 
-	public static function webServiceRequestHandler($url,$params="",$type="GET",$timeout='')
+
+	public static function webServiceRequestHandler($url,$params="",
+	                                                $type="GET",$timeout='',
+	                                                $doinvalidate=0)
 	{
+		//echo $timeout;die;
 		if(!$timeout)
 			$timeout = 5;
 		$result = null;
-		if($type!="POST")
+		if($type=="GET")
 		{
-			if(php_sapi_name() == 'cli'){
-				$parse = parse_url($url);
-				$params = explode("&",$parse['query']);
-				$params[] = "nocache=1";
-				$parse['query'] = implode("&",$params);
-				$url = $parse['scheme']."://".$parse['host'].$parse['path']."?".$parse['query'];
-			}
 			$response = CommonUtility::sendCurlGetRequest($url,$timeout);
 		}
 		elseif($type=="POST")
 		{
-			if(php_sapi_name() == 'cli'){
-				$params['nocache'] = 1;
-			}
 			$response = self::sendCurlPostRequest($url,$params,$timeout);
 		}
 		elseif($type == "DELETE")
 		{
-			if(php_sapi_name() == 'cli'){
-				$parse = parse_url($url);
-
-				$params = explode("&",$parse['query']);
-				$params[] = "nocache=1";
-				$parse['query'] = implode("&",$params);
-				$url = $parse['scheme']."://".$parse['host'].$parse['path']."?".$parse['query'];
-			}
 			$response = CommonUtility::sendCurlDeleteRequest($url,$timeout);
 		}
 
 		$response = json_decode($response,true);
-		if($response['_meta']['status'] == "SUCCESS" && $response['_meta']['count'])
+		if($response['_meta']['status'] == "SUCCESS" )
 		{
-			$result = $response['records'];
-
+			if($response['_meta']['count'])
+			{
+				$result = $response['records'];
+			}
+			else{
+				$result = null;
+			}
 		}
 		else
 		{
+			if(is_array($doinvalidate))
+			{
+				self::sendtoRabbitMq($doinvalidate[0],1);
+				self::sendtoRabbitMq($doinvalidate[1],1);
+			}
 			$result = false;
 		}
 		return $result;
 	}
 
 
-	public static function sendtoRabbitMq($profileid){
-		$producerObj=new Producer();
-		if($producerObj->getRabbitMQServerConnected())
+	public static function sendtoRabbitMq($profileid,$invalidate=0){
+		if(JsConstants::$webServiceFlag == 1)
 		{
-			$sendCacheData = array('process' =>'CACHE','data'=>$profileid, 'redeliveryCount'=>0 );
-			$producerObj->sendMessage($sendCacheData);
+			if($invalidate == 1)
+				$process = "INVALIDATE";
+			else
+				$process = "CACHE";
+			$producerObj=new Producer();
+			if($producerObj->getRabbitMQServerConnected())
+			{
+				$sendCacheData = array('process' =>$process,'data'=>$profileid, 'redeliveryCount'=>0 );
+				$producerObj->sendMessage($sendCacheData);
+			}
 		}
 		return;
+	}
+
+	public static function validatePhoneNo($phone){
+		$regExIndian = "/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([0-9]{10})$/";
+        $regExIndianLandline = "/^[0-9]\d{2,4}[-. ]?\d{6,8}$/";
+        $regExInternational = "/^\+(?:[0-9][-. ]? ?){7,14}[0-9]$/";
+		if (preg_match($regExIndian, $phone) || preg_match($regExInternational, $phone) || preg_match($regExIndianLandline, $phone)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+	public static function validateEmail($email){
+		$regExEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/";
+		if (preg_match($regExEmail, $email)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function makeTime($date, $format = 'YYYY-MM-DD')
+	{
+		$value = CommonUtility::datetotime($date, $format);
+		$time = mktime(date('H'), date('i'), date('s'), $value["month"], $value["day"], $value["year"]);
+		return date("Y-m-d H:i:s", $time);
+	}
+
+	public static function datetotime ($date, $format = 'YYYY-MM-DD')
+	{
+		if ($format == 'YYYY-MM-DD') list($year, $month, $day) = explode('-', $date);
+		if ($format == 'YYYY/MM/DD') list($year, $month, $day) = explode('/', $date);
+		if ($format == 'YYYY.MM.DD') list($year, $month, $day) = explode('.', $date);
+
+		if ($format == 'DD-MM-YYYY') list($day, $month, $year) = explode('-', $date);
+		if ($format == 'DD/MM/YYYY') list($day, $month, $year) = explode('/', $date);
+		if ($format == 'DD.MM.YYYY') list($day, $month, $year) = explode('.', $date);
+
+		if ($format == 'MM-DD-YYYY') list($month, $day, $year) = explode('-', $date);
+		if ($format == 'MM/DD/YYYY') list($month, $day, $year) = explode('/', $date);
+		if ($format == 'MM.DD.YYYY') list($month, $day, $year) = explode('.', $date);
+
+		$result = array("day" => $day, "month" => $month, "year" => $year);
+		return $result;
+	}
+
+	public static function hideFeaturesForUptime(){
+		
+		if(in_array(date('H'),array("10","11","12","13")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
+	
+	/*function to redirect site to appropriate language based on cookie
+	* @inputs: $request
+	* @return : $redirectUrl
+	*/	
+	public static function translateSiteLanguage($request){
+		$redirectUrl = "";
+		$loginData = $request->getAttribute("loginData");
+        $authchecksum = $request->getcookie('AUTHCHECKSUM');
+       
+		if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
+			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
+				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+				if(isset($_SERVER["REQUEST_URI"])){
+					$newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
+					if(strpos($newRedirectUrl,"?") != false){
+						$newRedirectUrl = $newRedirectUrl."&";
+					}
+					else{
+						$newRedirectUrl = $newRedirectUrl."?";
+					}
+					$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+					return $newRedirectUrl;
+				}
+				return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+			}
+            else if($request->getcookie("redirected_hindi_new")=='Y'){
+				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                //redirect to hindi site if referer is blank and newRedirect is not set
+                if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
+                	$newRedirectUrl = JsConstants::$hindiTranslateURL;
+                	if(isset($_SERVER["REQUEST_URI"])){
+						$newRedirectUrl = $newRedirectUrl.$_SERVER["REQUEST_URI"];
+					}
+					if(strpos($newRedirectUrl,"?") != false){
+						$newRedirectUrl = $newRedirectUrl."&";
+					}
+					else{
+						$newRedirectUrl = $newRedirectUrl."?";
+					}
+					$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+					return $newRedirectUrl;
+                }
+            }
+		} else {
+			if($request->getcookie("redirected_hindi_new")=='Y'){
+				@setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
+				return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
+			}
+			else{
+				@setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
+			}
+		}
+		return $redirectUrl;
+	}
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
+  public static function runFeatureAtNonPeak(){
+		
+		if(in_array(date('H'),array("17","18","19","20","21")))
+		{
+			return 1;
+		}
+		return 0;
+
 	}
 }
 ?>

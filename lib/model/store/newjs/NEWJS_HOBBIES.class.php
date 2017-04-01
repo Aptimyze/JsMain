@@ -73,6 +73,7 @@ class NEWJS_HOBBIES extends TABLE{
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
+          $this->logFunctionCalling(__FUNCTION__);
 					$hobbies = array();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
@@ -121,6 +122,12 @@ class NEWJS_HOBBIES extends TABLE{
 					$resUpdateHobby->bindValue(":".$key, $val);
 				$resUpdateHobby->bindValue(":PROFILEID", $pid);
 				$resUpdateHobby->execute();
+				if(!$resUpdateHobby->rowCount()) {
+					$sqlUpdateHobby="SELECT 1 FROM newjs.JHOBBY where PROFILEID=:PROFILEID";
+					$resUpdateHobby = $this->db->prepare($sqlUpdateHobby);
+					$resUpdateHobby->bindValue(":PROFILEID", $pid);
+					$resUpdateHobby->execute();
+				}
 				if(!$resUpdateHobby->rowCount())
 				{
 					$sqlEditHobby = "REPLACE INTO JHOBBY ($keys) VALUES ($values)";
@@ -130,6 +137,7 @@ class NEWJS_HOBBIES extends TABLE{
 					$resEditHobby->bindValue(":PROFILEID", $pid);				
 					$resEditHobby->execute();
 				}
+        $this->logFunctionCalling(__FUNCTION__);
 				return true;
 			}catch(PDOException $e)
 				{
@@ -151,6 +159,7 @@ class NEWJS_HOBBIES extends TABLE{
 			$res->bindValue(":TYPE2", 'INTEREST',PDO::PARAM_STR);
 			$res->bindValue(":TYPE3", 'LANGUAGE',PDO::PARAM_STR);
 			$res->execute();
+      $this->logFunctionCalling(__FUNCTION__);
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
                         {
                                 $output[] = $row;
@@ -164,7 +173,7 @@ class NEWJS_HOBBIES extends TABLE{
 	}
 	
 	
-	 public function getUserHobbiesApi($pid)
+	 public function getUserHobbiesApi($pid,$callFromCache)
         {
 			try 
 			{
@@ -174,9 +183,12 @@ class NEWJS_HOBBIES extends TABLE{
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
+          $this->logFunctionCalling(__FUNCTION__);
 					$hobbies = array();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
-					{
+					{		
+						  if($callFromCache)
+						  	return $result;
 							$hobby=$result[HOBBY];
 							if($result){
 								if($hobby)
@@ -208,6 +220,7 @@ class NEWJS_HOBBIES extends TABLE{
 				$sql="select SQL_CACHE TYPE,LABEL,VALUE from newjs.HOBBIES where VALUE IN ($hobby) order by SORTBY";
 				$prep=$this->db->prepare($sql);
 				$prep->execute();
+        $this->logFunctionCalling(__FUNCTION__);
 				while($result = $prep->fetch(PDO::FETCH_ASSOC))
 				{
 					$res[$result[TYPE]]["LABEL"][]=$result[LABEL];
@@ -236,6 +249,13 @@ class NEWJS_HOBBIES extends TABLE{
 			throw new jsException($e);
 		}
 	}
-	
+  
+	private function logFunctionCalling($funName)
+  {
+    $key = __CLASS__.'_'.date('Y-m-d');
+    JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+  }
 }
 ?>

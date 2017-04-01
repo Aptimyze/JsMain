@@ -54,9 +54,18 @@ if(isset($data))
 	
         if($Submit)
         {
-		$today=date("Y-m-d");
-	        $sql = "UPDATE newjs.JPROFILE SET PRIVACY='$new_value' , MOD_DT=now(),LAST_LOGIN_DT='$today' WHERE PROFILEID='$PROFILEID' and activatedKey=1";
-                mysql_query_decide($sql) or logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+			$today = CommonUtility::makeTime(date("Y-m-d"));
+
+			include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+			$objUpdate = JProfileUpdateLib::getInstance();
+			$nowDate = date('Y-m-d H:i:s');
+			$result = $objUpdate->editJPROFILE(array('PRIVACY'=>$new_value,'MOD_DT'=>$nowDate,'LAST_LOGIN_DT'=>$today), $PROFILEID, 'PROFILEID', 'activatedKey=1');
+			if (false === $result) {
+				$sql = "UPDATE newjs.JPROFILE SET PRIVACY='$new_value' , MOD_DT=now(),LAST_LOGIN_DT='$today' WHERE PROFILEID='$PROFILEID' and activatedKey=1";
+				logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+			}
+//	        $sql = "UPDATE newjs.JPROFILE SET PRIVACY='$new_value' , MOD_DT=now(),LAST_LOGIN_DT='$today' WHERE PROFILEID='$PROFILEID' and activatedKey=1";
+//                mysql_query_decide($sql) or logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		//$msg=$new_value;
 		die('Profile visibility settings saved');
 	}

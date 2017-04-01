@@ -42,32 +42,34 @@ class AgentAllocationDetails
 		}
 		else
 		{
-			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 			$agents=$mainAdminObj->fetchAgentsForDisp($processObj);
 			$subMethod=$processObj->getSubMethod();
-			if($subMethod=="LIMIT_EXCEED")
+			if($subMethod=="LIMIT_EXCEED" || $subMethod=='LIMIT_EXCEED_RENEWAL')
 			{
-				$priv="%FTAFTO%";
-				$ftaftoagents1=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv);
-
 				/*  Check added for ignoring Renewal Agents, as discussed with Rohan */
-				$priv1="%ExcRnw%";
+				/*$priv1="%ExcRnw%";
 				$renewalAgents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv1);
-				$ftaftoagents =array_merge($ftaftoagents1,$renewalAgents);
+				if(!is_array($renewalAgents))
+					$renewalAgents =array();*/
 				/* Check ended */	
 
 				$resArr1 = array();
-				for ($i = 0; $i < count($agents); $i++)
-				{
+				for ($i = 0; $i < count($agents); $i++){
 					$agent_name = explode(":",$agents[$i]);
-					if(!in_array($agent_name[0],$ftaftoagents))
-						$restofagents[]=$agent_name[0];
+					$Allagents[]=$agent_name[0];
 				}
-				for ($k = 0; $k < count($agents); $k++)
-				{
+				/*if($subMethod=='LIMIT_EXCEED_RENEWAL')
+					$restofagents =array_intersect($Allagents,$renewalAgents);
+				elseif($subMethod=='LIMIT_EXCEED')
+					$restofagents =array_diff($Allagents,$renewalAgents);*/
+
+				$restofagents =$Allagents;
+				$restofagents =array_unique($restofagents);
+				$restofagents =array_values($restofagents);
+				for ($k = 0; $k < count($agents); $k++){
 					$agent_name = explode(":",$agents[$k]);
-					for ($j = 0; $j < count($restofagents); $j++)
-					{
+					for ($j = 0; $j < count($restofagents); $j++){
 						if(($restofagents[$j]== $agent_name[0]) && !in_array($agents[$k],$resArr1))
 							$resArr1[] = $agents[$k];
 					}
@@ -145,16 +147,16 @@ class AgentAllocationDetails
 			$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcFP%");
 		elseif($method=="WEBMASTER_LEADS" || $subMethod=='WEBMASTER_LEADS')
 		{
-            if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
-                $agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
-            }
-            else{
-                $agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
-            }
-            if($agents){
-                shuffle($agents);
-            }
-        }
+            		if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExPmWL%");
+            		}
+            		else{
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
+            		}
+            		if($agents){
+                		shuffle($agents);
+            		}
+        	}
 		elseif($method=="MANUAL"){
 			$headAgent	=$processObj->getExecutive();
 			$agents 	=$this->fetchAgentsByHierarchy($headAgent);
@@ -177,7 +179,7 @@ public function fetchProfiles($processObj)
 {	
 	if($processObj->getProcessName()=="DeAllocation")
 	{
-		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 		$subMethod=$processObj->getSubMethod();
 		if($subMethod=="NEGATIVE_LIST")
 		{
@@ -220,9 +222,9 @@ public function fetchProfiles($processObj)
 			$startDt = $processObj->getStartDate();
 			$endDt = $processObj->getEndDate();
 			foreach($fsAgents as $key=>$val){
-				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 				$profileList = $mainAdminObj->getAllotedProfilesWithAllotTimeForAgent($val);
-				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 				foreach($profileList as $profileid=>$allotDate){
 					// IF RETURN IS TRUE, WE ADD IT TO THE LIST OF PROFILES FOR FURTHER PROCESSING
 					if($paymentDetailObj->getPaidStatusForProfileInRange($profileid, $allotDate, $startDt, $endDt)){
@@ -239,12 +241,12 @@ public function fetchProfiles($processObj)
 			$startDt 	=date('Y-m-d',time()-86400)." 00:00:00";			
 			$endDate 	=date('Y-m-d H:i:s');
 			$status 	='D';	
-			$jprofileObj 	=new JPROFILE('newjs_slave');			
+			$jprofileObj 	=new JPROFILE('newjs_masterRep');			
 			$profileDetails =$jprofileObj->getProfilesForDateRange($startDt, $endDate, $status);
 			$profiles 	=array_keys($profileDetails);
 			$processObj->setUsername($profileDetails);
 		}
-        elseif($subMethod == 'DISPOSITION_BASED'){
+        	elseif($subMethod == 'DISPOSITION_BASED'){
             /*JSC-1094 
              * 1. No disposition has been marked within 2 days of allocation
                2. No 'field visit done' disposition is marked within 10 days
@@ -252,9 +254,9 @@ public function fetchProfiles($processObj)
             $profiles = array();
             $profilesFVD = array();
             $processId = $processObj->getIdAllot();
-            $agentsObj = new jsadmin_PSWRDS("newjs_slave");
+            $agentsObj = new jsadmin_PSWRDS("newjs_masterRep");
             $agents = $agentsObj->fetchAgentsWithPriviliges("%ExcFld%");
-            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_slave");
+            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_masterRep");
             $lastHandledDate = $lastHandledDateObj->getHandledDate($processId);
             $curDate = date('Y-m-d');
             $lastHandledDate = $lastHandledDate?$lastHandledDate:date('Y-m-d',  strtotime('-1 day', strtotime($curDate)));
@@ -268,7 +270,7 @@ public function fetchProfiles($processObj)
             unset($lastHandledDateObj);
             unset($lastHandledDate);
             unset($agentDeallocationObj);
-        }
+        	}
 		else
 			$profiles=$mainAdminObj->fetchProfilesForAgent($processObj);
 	}
@@ -287,14 +289,16 @@ public function fetchProfiles($processObj)
 		if($level==1||$level==2||$level==4||$level==5){
 			$cities=array();
 			$cities=$processObj->getProfileCities();
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
 		if($level==2||$level==6){
 			//$locationObj=new incentive_LOCATION('newjs_slave');	
 			//$citySelArr=$locationObj->fetchSpecialCities();
 			$citySelArr =$processObj->getSpecialCityList();
-			if(array_key_exists($city,$citySelArr))
-				$lowerScoreLimit=1;
+			if(array_key_exists($city,$citySelArr)){
+				//$lowerScoreLimit=1;
+				$lowerScoreLimit=70;	
+			}
 			if($level==6){
 				$cityNewArr=$processObj->getSpecialCities();
 				$state=$citySelArr[$city];
@@ -316,7 +320,7 @@ public function fetchProfiles($processObj)
 				$cityNewArr[$state]=$cities_str;
 				$processObj->setSpecialCities($cityNewArr);
 			}
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
                 if($level==-5){
 			$preAllocationTempPoolObj =new incentive_PRE_ALLOCATION_TEMP_POOL();
@@ -427,28 +431,29 @@ public function fetchProfiles($processObj)
 			elseif($method=="NEW_FAILED_PAYMENT")
 				$profiles=$this->fetchNewFailedPaymentEligibleProfiles();
 			elseif($method=="WEBMASTER_LEADS")
-                $profiles=$this->fetchWebmasterLeadsEligibleProfiles($subMethod);
+		                $profiles=$this->fetchWebmasterLeadsEligibleProfiles($subMethod);
 			elseif($method=='FIELD_SALES'){
 				$processId 		=$processObj->getIdAllot();
-				$lastHandledDtObj 	=new incentive_LAST_HANDLED_DATE('newjs_slave');
+				$lastHandledDtObj 	=new incentive_LAST_HANDLED_DATE();
 				$screenedTimeStart 	=$lastHandledDtObj->getHandledDate($processId);
 				$processObj->setStartDate($screenedTimeStart);
 
                                 if($subMethod=='FIELD_SALES_VISIT'){
-                                        $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_slave');
+                                        $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_masterRep');
         	                        $widgetTimeEnd =$widgetLogObj->getMaxDate();
-					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($widgetTimeEnd)));
+					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($widgetTimeEnd)));
 	                                $processObj->setEndDate($widgetTimeEndSet);
                 	                $profiles =$widgetLogObj->getLastHourScheduledProfiles($screenedTimeStart,$widgetTimeEnd);
                                 }
                                 else{
-                                        $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_slave');
+                                        $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($screenedTimeEnd)));
-					$processObj->setEndDate($screenedTimeEndSet);
+					//$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
+					$processObj->setEndDate($screenedTimeEnd);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
+					/*
 					if($subMethod != 'FIELD_SALES_VISIT'){
 						$phVerifiedProfiles =array();
 						$phVerifiedProfiles =$processObj->getPhoneVerifiedProfiles();
@@ -456,9 +461,9 @@ public function fetchProfiles($processObj)
 							$profiles =array_intersect($profiles, $phVerifiedProfiles);
 							$profiles =array_values($profiles);
 						}
-					}
+					}*/
 					// get profiles from field sales allocation log
-					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG('newjs_slave');
+					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG();
 					$preDate 	=date("Y-m-d",time()-9*24*60*60);
 					$logProfiles 	=$fieldSalesAllocLog->getProfiles($preDate);
 					if(count($logProfiles)>0){
@@ -478,23 +483,15 @@ public function fetchProfiles($processObj)
 		$startDt	=$processObj->getStartDate();
 		$endDt		=$processObj->getEndDate();
                 $profiles	=$this->fetchNewFailedPaymentEligibleProfiles($processName,$startDt,$endDt);
-		/*
-		$profilesWebMaster	=$this->fetchWebmasterLeadsEligibleProfiles();
-		if(count($profilesWebMaster)>0){
-			foreach($profilesWebMaster as $key=>$profileid){					
-				$profilesWebMaster1[] =array('PROFILEID'=>$profileid,'WEB_LEAD'=>'rcb');
-			}
-			$profiles =array_merge($profiles,$profilesWebMaster1);
-		}*/
 	}
 	elseif($processObj->getProcessName()=="rcbCampaignInDialer"){
                 $processName    =$processObj->getProcessName();
                 $subMethod      =$processObj->getSubMethod();
                 $startDt        =$processObj->getStartDate();
                 $endDt          =$processObj->getEndDate();
-                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
+                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt, $processObj);
 		if(count($profiles)>0){
-			$obj =new incentive_MAIN_ADMIN('newjs_slave');
+			$obj =new incentive_MAIN_ADMIN();
 			$profilesAllocated =$obj->getProfilesDetails($profiles);
 			if(count($profilesAllocated)>0){
 				foreach($profilesAllocated as $key=>$value){
@@ -534,7 +531,6 @@ public function fetchProfiles($processObj)
 				$profiles[] =$dataSet;	
 			}	
 		}
-		//print_r($profiles);die;
 	}
 	return $profiles;
 }
@@ -654,7 +650,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 	unset($noLoop);
 	if($method!='NEW_FAILED_PAYMENT' && $method!='FIELD_SALES' && $method!="WEBMASTER_LEADS"){
 		$mainAdminPoolObj	=new incentive_MAIN_ADMIN_POOL('newjs_slave');
-		$alertsObj		=new newjs_JPROFILE_ALERTS('newjs_slave');
+		$alertsObj		=new JprofileAlertsCache('newjs_slave');
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
@@ -665,11 +661,11 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 		$excludeMtongue 	=crmParams::$fieldSalesIgnoreCommunity;
 		$pincodeMappedCity	=crmParams::$fieldSalesPincodeMappedCity;
 		$fieldSalesCity         =$this->fetchFieldSalesCity(); 
-		$screeningObj		=new jsadmin_SCREENING_LOG('newjs_slave');
+		$screeningObj		=new jsadmin_SCREENING_LOG('newjs_masterRep');
 		$screenedTimeHandled 	=$processObj->getStartDate();
 		$subMethod		=$processObj->getSubMethod();	  
 		$pincodeList		=$this->getPincodeList();
-		$profileData 		=$this->applyGenericFilters($profiles, $method);
+		$profileData 		=$this->applyGenericFilters($profiles, $method,$subMethod);
 		unset($profiles);
 		foreach($profileData as $pid=>$data)
 			$profiles[] =$pid;		
@@ -701,6 +697,8 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 
 			// first time screening check
 			if($subMethod=='FIELD_SALES'){
+				$screenedTimeHandled =date('Y-m-d H:i:s');
+				$screenedTimeHandled =date('Y-m-d H:i:s', strtotime('-24 hours',strtotime($screenedTimeHandled)));
 				$lastScreenedTime=$screeningObj->lastScreenedTime($profileid,$screenedTimeHandled);	
 				if(JSstrToTime($entryDt)>=JSstrToTime($lastScreenedTime)){}
 				else
@@ -760,8 +758,8 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 {
 	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
-	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
-	$jprofileContactObj	=new NEWJS_JPROFILE_CONTACT('newjs_slave');		
+	$jprofileAlertsObj	=new JprofileAlertsCache ('newjs_slave');		
+	$jprofileContactObj	= new ProfileContact('newjs_slave');
 	$vdObj 			=new billing_VARIABLE_DISCOUNT('newjs_slave');
 	$consentDncObj  	=new NEWJS_CONSENTMSG('newjs_slave');
 	
@@ -815,7 +813,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 				continue;
 		}
 
-		$fields="LAST_LOGIN_DT,GENDER,DTOFBIRTH,SOURCE,SEC_SOURCE,PHONE_WITH_STD,PHONE_RES,PHONE_MOB,ISD,STD,COUNTRY_RES,HAVE_JCONTACT,MOB_STATUS,LANDL_STATUS,ENTRY_DT,INCOME,FAMILY_INCOME,MTONGUE,ACTIVATE_ON,SUBSCRIPTION,HAVEPHOTO,RELATION,INCOMPLETE";
+		$fields="DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,GENDER,DTOFBIRTH,SOURCE,SEC_SOURCE,PHONE_WITH_STD,PHONE_RES,PHONE_MOB,ISD,STD,COUNTRY_RES,HAVE_JCONTACT,MOB_STATUS,LANDL_STATUS,ENTRY_DT,INCOME,FAMILY_INCOME,MTONGUE,ACTIVATE_ON,SUBSCRIPTION,HAVEPHOTO,RELATION,INCOMPLETE";
 		$valueArray['ACTIVATED']="'Y'";
 		$valueArray['INCOMPLETE']="'N'";
 		$valueArray['PROFILEID']="$profileid";
@@ -823,7 +821,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 
 		if($level != -1 && $level !=-3 && $level!=-2){
 			if($level==0 || $level==-4 || $level==-5){
-				$lastLoginFiter =date('Y-m-d',time()-15*86400);
+				$lastLoginFiter = date('Y-m-d',time()-15*86400);
 				$greaterArray['LAST_LOGIN_DT'] ="$lastLoginFiter";
 			}
 		}
@@ -854,7 +852,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 			$mtongue=$profileData[0]['MTONGUE'];
 			$income=$profileData[0]['INCOME'];
 			$familyIncome=$profileData[0]['FAMILY_INCOME'];
-			$premiumIncome=array(13,14,16,17,18,19,20,21,22,23);
+			$premiumIncome=array(13,14,17,18,19,20,21,22,23,24,25,26,27);
 			if($level==-2)
 				array_push($premiumIncome,12,16);
 			$exclude_mtongue=array(1,3,16,17,31);
@@ -1246,9 +1244,13 @@ public function fetchOrderDetails($profileid)
 function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 {
 	if(!$fields)
-		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
+		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
 
 	$profileStr=implode(",",$profilesArr);
+	if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+		$billPurObj = new billing_PURCHASES('newjs_slave');
+		$everPaidProfiles = $billPurObj->isPaidEver($profileStr);
+	}
 	if($profileStr){
 		$crmUtilityObj          =new crmUtility();	
 		$cityObj		=new newjs_CITY_NEW();
@@ -1287,6 +1289,7 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 			$setProfileArr[$pid]["HAVEPHOTO"]       =$val['HAVEPHOTO'];
 			$setProfileArr[$pid]["ADDRESS"]       	=trim($val['CONTACT']);
 			$setProfileArr[$pid]["PINCODE"]       	=$val['PINCODE'];
+			$setProfileArr[$pid]["ISD"]         	=$isdNo;
 
 		        if($subMethod=='NEW_PROFILES' || $subMethod=='ONLINE_NEW_PROFILES' || $subMethod=='FOLLOWUP' || $subMethod=='FFOLLOWUP'){
         		        if($setProfileArr[$pid]["MOB_NO"] && $isdNo)
@@ -1295,6 +1298,13 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
                         		$setProfileArr[$pid]["RES_NO"] =$isdNo."-".$setProfileArr[$pid]["RES_NO"];
 				if($setProfileArr[$pid]["ALTERNATE_NO"] && $isdNo)
 					$setProfileArr[$pid]["ALTERNATE_NO"] =$isdNo."-".$setProfileArr[$pid]["ALTERNATE_NO"];
+				if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+					if(in_array($pid, array_keys($everPaidProfiles))) {
+						$setProfileArr[$pid]["EVER_PAID"] = 'Y';
+					} else {
+						$setProfileArr[$pid]["EVER_PAID"] = 'N';
+					}
+				}
 			}
 			
 			$setProfileArr[$pid]["CHECKSUM"]         =md5($pid)."i".$pid;
@@ -1348,7 +1358,7 @@ public function fetchJprofileContact($profileidArr=array(),$profileDetailsArr=ar
 	if(count($profileidArr)==0)
 		return;
 
-	$jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+	$jprofileContactObj    = new ProfileContact();
 	$valueArr['PROFILEID']  =@implode(",",$profileidArr);;
 	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOB_STATUS,ALT_MOBILE_ISD');
 	if($result){
@@ -1433,7 +1443,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	}
 	if(count($profileidIdArr)>0){
 		$profileStr =implode(",",$profileidIdArr);
-		$everPaidProfileArr =$purchasesObj->isPaidEver($profileStr);
+		$everPaidProfileArr =array_keys($purchasesObj->isPaidEver($profileStr));
 	}
 	// everPaid
 
@@ -1480,18 +1490,27 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	return $profilesFinalArr;
 }
 
-public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
+public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='',$processObj='')
 {
-        $execCallbackObj      =new billing_EXC_CALLBACK('newjs_slave');
+        $execCallbackObj      =new billing_EXC_CALLBACK();
+	$crmUtilityObj        =new crmUtility();
 	if($subMethod!='RCB_WEBMASTER_LEADS'){
 		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
         	$endDt          =date("Y-m-d H:i:s", time());
+                $startDt        =$crmUtilityObj->getIST($startDt);
+                $endDt          =$crmUtilityObj->getIST($endDt);
 	}
         if($subMethod == "WEBMASTER_LEADS_EXCLUSIVE"){
-            $profiles = $execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
         }
+        elseif($subMethod == "RCB_WEBMASTER_LEADS"){
+            $profilesNew 	=$execCallbackObj->getRcbLeads($startDt, $endDt);
+	    $profilesFinalArr 	=array_keys($profilesNew);
+	    $processObj->setProfiles($profilesNew); 		
+	    return $profilesFinalArr;	
+	}
         else{
-            $profiles       =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
         }
 	for($i=0; $i<count($profiles); $i++){
                 $profileid      =$profiles[$i]['PROFILEID'];
@@ -1512,12 +1531,16 @@ public function fetchOutboundProfiles($processObj)
 	}
 	else if($subMethod=="ONLINE_NEW_PROFILES"){
                 $profileAllocTechObj    =new incentive_PROFILE_ALLOCATION_TECH();
-                $recentusersObj         =new userplane_recentusers();
+                //$recentusersObj       =new userplane_recentusers();
+		$onlineProfiles		=$this->getOnlineProfiles();
                 $preallocateArr         =$profileAllocTechObj->getPreAllocatedProfiles($agentName);
-		for($i=0; $i<count($preallocateArr); $i++)
-			$idArr[] = $preallocateArr[$i]['PROFILEID'];
-		if(count($idArr)>0)
-	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);
+		for($i=0; $i<count($preallocateArr); $i++){
+			$profileid =$preallocateArr[$i]['PROFILEID'];
+			if(in_array($profileid, $onlineProfiles))
+				$profileArr[] = $profileid;
+		}
+		/*if(count($idArr)>0)
+	                $profileArr = $recentusersObj->fetchOnlineProfiles($idArr);*/
 	}
 	else if($subMethod=="FTA"){
 		$ftaAllocTechObj        =new incentive_FTA_ALLOCATION_TECH();
@@ -1901,7 +1924,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 	$methodForJprofileFilter =array('WEBMASTER_LEADS','NEW_FAILED_PAYMENT','FIELD_SALES');
 
         // Main admin check
-        $mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+        $mainAdminObj=new incentive_MAIN_ADMIN();
         $profileDetails =$mainAdminObj->getProfilesDetails($profileArr);
 	if(count($profileDetails)>0){
 		foreach($profileDetails as $key=>$val)
@@ -1913,6 +1936,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 		unset($profileDetails);
 	}
         // Do not call check
+	if($method!='WEBMASTER_LEADS'){
 	if(count($profileArr)>0){
 	        $DNCObj=new incentive_DO_NOT_CALL('newjs_slave');
 	        $profileArrNew =$DNCObj->getDoNotCallProfiles($profileArr);
@@ -1930,12 +1954,13 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 			$profileArr =array_diff($profileArr,$profileArrNew);
 		$profileArr =array_values($profileArr);
 		unset($profileArrNew);
-	}
+	}}
+
         // Pre-Allocation Check
         if($method=='FIELD_SALES' || $method=='PRE_ALLOCATION'){
                 if(count($profileArr)>0){
 			if($method=='FIELD_SALES')
-				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_slave');
+				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_masterRep');
 			else
                         	$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH();
                         $profileArrNew =$preAllocationObj->getAllotedProfiles($profileArr);
@@ -1947,20 +1972,30 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
         }
         // Invalid phone check
         if(in_array($method, $methodForJprofileFilter) && count($profileArr)>0){
-		$jprofileObj =new JPROFILE('newjs_slave');
-		$fields	='PROFILEID,ISD,PHONE_FLAG,ACTIVATED,GENDER,AGE,ENTRY_DT,MTONGUE,SUBSCRIPTION,CITY_RES,PINCODE,MOB_STATUS,LANDL_STATUS';
+		$jprofileObj =new JPROFILE('newjs_masterRep');
+		$fields	='PROFILEID,ISD,PHONE_FLAG,ACTIVATED,GENDER,AGE,ENTRY_DT,MTONGUE,SUBSCRIPTION,CITY_RES,PINCODE,MOB_STATUS,LANDL_STATUS,INCOME';
 		$profileStr =implode(",", $profileArr);	
 		$valueArray['PROFILEID'] =$profileStr;
                 $resDetails=$jprofileObj->getArray($valueArray,"","",$fields);
 
 		foreach($resDetails as $key=>$data){
 			$profileid =$data['PROFILEID'];
-	                if($data['PHONE_FLAG']=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24))
-				$profileArrNew[] =$profileid; 
-			else{
+			$phoneFlag =$data['PHONE_FLAG'];
+			$flag =1;
+            if($subMethod=='FIELD_SALES' && (($data['GENDER']=='M' && ($data['AGE'] <=24 || $data['INCOME'] == 15) ) || ($data['GENDER']=='F' && $data['AGE'] <=21))){
+                $profileArrNew[] =$profileid;
+                $flag=0;
+            }
+            if($flag == 1 && ($phoneFlag=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24))){
+                if($subMethod!='WEBMASTER_LEADS'){
+					$profileArrNew[] =$profileid;
+					$flag=0;
+				}
+			}
+			if($flag==1){
 				$indianNo =$this->isIndianNo($data['ISD']);
-				if( ($method=='NEW_FAILED_PAYMENT' || $method=='WEBMASTER_LEADS') && $subMethod != 'WEBMASTER_LEADS_EXCLUSIVE' ){
-					if($indianNo)
+				if($method=='NEW_FAILED_PAYMENT' || $subMethod=='WEBMASTER_LEADS'){
+					if($indianNo || $phoneFlag=='I')
 						$profileArrNew[] =$profileid;
 				}
 				else if($method=='FIELD_SALES'){
@@ -1997,7 +2032,7 @@ public function check_profile($profileid,$method='')
 		return false;
 
 	// Main admin check
-	$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+	$mainAdminObj=new incentive_MAIN_ADMIN();
 	$alloted=$mainAdminObj->get($profileid,"PROFILEID","COUNT(*) AS CNT");
 	if($alloted['CNT']>0)
 		return false;
@@ -2005,7 +2040,7 @@ public function check_profile($profileid,$method='')
 
 	// Invalid phone check
 	if($method!='FIELD_SALES'){
-		$resDetails=$jprofileObj->get($profileid,"PROFILEID","PHONE_FLAG,ACTIVATED,LAST_LOGIN_DT,ISD");
+		$resDetails=$jprofileObj->get($profileid,"PROFILEID","PHONE_FLAG,ACTIVATED,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,ISD");
 		if($method=='RENEWAL'){
 			$lastLoginDt =$resDetails['LAST_LOGIN_DT'];
 			$checkDay =JSstrToTime(date("Y-m-d",time()-14*24*60*60));
@@ -2298,7 +2333,7 @@ public function fetchPincodesOfCities($cities)
 }
 	public function getValidUsersForSalesTarget($usernameArr='')
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
 		if($usernameArr && is_array($usernameArr))
 			$privileges = $jsadminPswrdsObj->get_name_priv($usernameArr);
 		else
@@ -2321,7 +2356,7 @@ public function fetchPincodesOfCities($cities)
 
 	public function getValidUsersForFieldSalesTarget()
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
         	$privileges = $jsadminPswrdsObj->getPrivilegesForSalesTarget();
 
         	$usernames = array();
@@ -2514,8 +2549,9 @@ public function fetchPincodesOfCities($cities)
 	}
         public function createPhoneVerifiedPool($processObj)
 	{
-		$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
-                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_slave');
+		//$dateTime =date("Y-m-d H:i:s",time()-10*24*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
+                $phoneVerifiedObj =new PHONE_VERIFIED_LOG('newjs_masterRep');
                 $verifiedProfiles =$phoneVerifiedObj->fetchVerifiedProfiles($dateTime);
 		$processObj->setPhoneVerifiedProfiles($verifiedProfiles);
         }
@@ -2523,7 +2559,7 @@ public function fetchPincodesOfCities($cities)
     	{
                 $billingSerStatusObj    =new BILLING_SERVICE_STATUS('newjs_slave');
                 $startDate              =date("Y-m-d", time()-9*86400);
-                $endDate                =date("Y-m-d", time()+29*86400);
+                $endDate                =date("Y-m-d", time()+15*86400);
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);
                 foreach($profiles as $key=>$data){
                         $profileid =$data['PROFILEID'];
@@ -2539,6 +2575,21 @@ public function fetchPincodesOfCities($cities)
 		$agentInfoArr =$pswrdsObj->fetchAgentInfo();
 		return $agentInfoArr;
 	}
+        public function getOnlineProfiles()
+        {
+        	$jsCommonObj =new JsCommon();
+                $profilesArr =$jsCommonObj->getOnlineUsetList();
+		return $profilesArr;
+        }
+	
+    public function mailForLowDiscount($username,$agentName,$discountNegVal){
+        $to = "anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,amit.malhotra@jeevansathi.com,princy.gulati@jeevansathi.com,shubhda.sinha@jeevansathi.com";
+        //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
+        $from = "js-sums@jeevansathi.com";
+        $subject = "Low Capped Discount by executive";
+        $msgBody = "Username: $username<br>Discount Capped Value: $discountNegVal<br>CRM ID: $agentName";
+        SendMail::send_email($to, $msgBody, $subject, $from);
+    }
 
 }
 ?>

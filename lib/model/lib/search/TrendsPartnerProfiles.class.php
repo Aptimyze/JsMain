@@ -1,7 +1,18 @@
 <?php
 
 class TrendsPartnerProfiles extends SearchParamters {
-
+        /**
+        * @private LAST_LOGGEDIN [No. of days in which we consider for last logged in matches]
+        */
+  private $LAST_LOGGEDIN = 15;
+  //Jpartner fields to be fetched from table
+  private $jpartnerFields = 'PROFILEID,GENDER,LAGE,HAGE,LHEIGHT,HHEIGHT,PARTNER_MSTATUS,PARTNER_MANGLIK,PARTNER_COUNTRYRES,PARTNER_INCOME,PARTNER_ELEVEL_NEW,PARTNER_OCC,PARTNER_CITYRES,PARTNER_CASTE,PARTNER_MTONGUE';
+  
+//Trends and jpartner table fields mapping
+  private $jpartnerTrendsFieldsMapping = array('GENDER'=>'GENDER','LAGE'=>'LAGE','HAGE'=>'HAGE','MSTATUS'=>'MSTATUS','CASTE'=>'CASTE','CITY_RES'=>'CITY_RES','MTONGUE'=>'MTONGUE','INCOME'=>'INCOME');
+  private $filterArray = array();
+  // Jpartner data
+  private $jpartnerData = array();
   /**
    * 
    * @param type $loggedInProfileObj
@@ -17,8 +28,22 @@ class TrendsPartnerProfiles extends SearchParamters {
    * @param type $limit number of records
    */
   public function setSortParam($sort,$limit){
-    $this->setSORT_LOGIC($sort);
-    $this->setNoOfResults($limit);
+        $this->setSORT_LOGIC($sort);
+        $this->setNoOfResults($limit);
+        $this->rangeParams .= ",LAST_LOGIN_DT";
+        $this->setRangeParams($this->rangeParams);
+        
+        // Set login Date condition
+        if($sort == SearchSortTypesEnums::SortByTrendsScore){
+                $endDate = date("Y-m-d H:i:s", strtotime("now"));
+                $startDate = date("Y-m-d 00:00:00", strtotime($endDate) - $this->LAST_LOGGEDIN*24*3600);
+                $this->setLLAST_LOGIN_DT($startDate);
+                $this->setHLAST_LOGIN_DT($endDate);
+        }else{
+                $endDate = date("Y-m-d H:i:s", strtotime("now") - $this->LAST_LOGGEDIN*24*3600);
+                $this->setLLAST_LOGIN_DT("1960-01-01 00:00:00");
+                $this->setHLAST_LOGIN_DT($endDate);
+        }
   }
   /**
    * This function returns table store object
@@ -28,8 +53,20 @@ class TrendsPartnerProfiles extends SearchParamters {
     $mtObj = new TWOWAYMATCH_TRENDS;
     return $mtObj;
   }
+  /**
+   * function to fetch filter data
+   * @return type array filter data
+   */
+  public function getFilterData() {
+    $mtObj = new NEWJS_FILTER();
+    return $mtObj->fetchEntry($this->loggedInProfileObj->getPROFILEID());
+  }
 
   public function setMaritalStatus() {
+        if($this->filterArray && $this->filterArray["MSTATUS"] == 'Y'){ // if jpartner filter is set, return jpartner condition criteria
+                $mstatus = trim($this->jpartnerData[0][$this->jpartnerTrendsFieldsMapping["MSTATUS"]],"'");
+                return implode(" ",explode("','",$mstatus));
+        }
     if ($this->loggedInProfileObj->getMSTATUS() == 'N') {
       $MSTATUS = "N";
     } else {
@@ -40,11 +77,16 @@ class TrendsPartnerProfiles extends SearchParamters {
     return $MSTATUS;
   }
 
-  public function isManglik($MANGLIK_M_P, $MANGLIK_N_P) {
-    if ($MANGLIK_M_P>90)
-      return true;
-    elseif ($MANGLIK_N_P>90)
-      return false;
+  public function isManglik() {
+          if($this->jpartnerData[0]["MANGLIK"]=="" || $this->jpartnerData[0]["MANGLIK"]=="N"){
+                  return false;
+          }else{
+                  $manglikValues = trim(str_replace("','",' ',$this->jpartnerData[0]["MANGLIK"]),"'");
+                  if(strstr($manglikValues,"N")){
+                          $manglikValues .= " D";
+                  }
+                  return $manglikValues;
+          }
   }
 
   public function setCountry($NRI_N_P, $NRI_M_P) {
@@ -69,7 +111,24 @@ class TrendsPartnerProfiles extends SearchParamters {
   public function getDppCriteria($sort, $limit) {
     $this->setSortParam($sort,$limit);
     $mtObj = $this->getTableObj();
+    $this->filterArray = $this->getFilterData();
+    //if(!empty($this->filterArray)){} // if filter set get jpartner data
+    // Get jpartner in each condition
+        $memObject=JsMemcache::getInstance();
+        $jpartnerData = $memObject->get('SEARCH_JPARTNER_'.$this->loggedInProfileObj->getPROFILEID());
+
+        if(empty($jpartnerData)){
+                $dbName = JsDbSharding::getShardNo($this->loggedInProfileObj->getPROFILEID());
+                $JPARTNERobj = new newjs_JPARTNER($dbName);
+                $fields = SearchConfig::$dppSearchParamters.",MAPPED_TO_DPP";
+                $this->jpartnerData = $JPARTNERobj->get(array("PROFILEID"=>$this->loggedInProfileObj->getPROFILEID()),$fields);
+                $memObject->set('SEARCH_JPARTNER_'.$this->loggedInProfileObj->getPROFILEID(),serialize($this->jpartnerData),SearchConfig::$matchAlertCacheLifetime);
+        }else{
+              $this->jpartnerData = unserialize($jpartnerData);
+        }
+        
     $myrow = $mtObj->getData($this->loggedInProfileObj->getPROFILEID());
+    $this->setTRENDS_DATA(serialize($myrow));
     if ($myrow) {
       $forward_filter = $this->setForwardData($myrow);
       $l = 0;
@@ -86,10 +145,10 @@ class TrendsPartnerProfiles extends SearchParamters {
         } elseif ($k == 'MSTATUS') {
           $this->MSTATUS = $this->setMaritalStatus();
         } elseif ($k == 'MANGLIK') {
-          $isManglik = $this->isManglik($myrow["MANGLIK_M_P"], $myrow["MANGLIK_N_P"]);
-          if ($isManglik)
-            $this->MANGLIK = "M A";
-          elseif($isManglik === false)
+          $isManglik = $this->isManglik();
+          if ($isManglik){
+            $this->MANGLIK = $isManglik;
+          }elseif($isManglik === false)
             $this->MANGLIK_IGNORE = "M A";
         } elseif ($k == 'COUNTRYRES') {
           $isNRI = $this->setCountry($myrow["NRI_N_P"], $myrow["NRI_M_P"]);
@@ -163,6 +222,17 @@ class TrendsPartnerProfiles extends SearchParamters {
     elseif ($k == 'CITY_RES')
       $value = $myrow['CITY_VALUE_PERCENTILE'];
 
+    if($this->filterArray && $this->filterArray[$k] == 'Y'){ // if jpartner filter is set, return jpartner condition criteria
+        if($rangeCase == 1){
+                $valueL = $this->jpartnerData[0][$this->jpartnerTrendsFieldsMapping['L'.$k]];
+                $valueH = $this->jpartnerData[0][$this->jpartnerTrendsFieldsMapping['H'.$k]];
+                $value = array($valueH,$valueL);
+        }else{
+            $value = $this->jpartnerData[0][$this->jpartnerTrendsFieldsMapping[$k]];
+            $value = implode(" ",explode("','",trim($value,"'")));
+        }
+        return $value;
+    }
     $forward_temp = explode("|", $value);
     foreach ($forward_temp as $tempF) {
       if ($tempF) {
@@ -171,7 +241,7 @@ class TrendsPartnerProfiles extends SearchParamters {
           $forward_temp2[] = $temparr[0];
         }
       }
-    }
+    } 
     if ($forward_temp2) {
       if ($rangeCase) {
         $str[0] = max($forward_temp2);

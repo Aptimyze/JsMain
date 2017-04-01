@@ -4,6 +4,7 @@ if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !sfContext::g
 	$url=JsConstants::$siteUrl."/static/oldMobileSite?redirectFromOldSite=1";
 		header("Location: " . $url);die;
 }
+ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function login($username,$password,$allowDeactive=0)
 {
 	
@@ -153,6 +154,7 @@ function js_checkCookie()
 
 function is_complete_now($profileid)
 {
+	
 	$db_slave=connect_737();
 	$db=connect_db();
 	$count=0;
@@ -162,8 +164,14 @@ function is_complete_now($profileid)
 		$count=$row1["cnt"];
 	if($count)
 	{
-		$sql2="UPDATE JPROFILE SET INCOMPLETE='N',ENTRY_DT=now(),MOD_DT=now() WHERE PROFILEID=$profileid and activatedKey=1";
-		$res2=mysql_query($sql2,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql2,"ShowErrTemplate");
+		$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+	
+		$profileid=$profileid;
+		$arrFields = array('INCOMPLETE'=>'N','ENTRY_DT'=>'now()','MOD_DT'=>'now()');
+		$exrtaWhereCond = "activatedKey='1";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+//		$sql2="UPDATE JPROFILE SET INCOMPLETE='N',ENTRY_DT=now(),MOD_DT=now() WHERE PROFILEID=$profileid and activatedKey=1";
+	//	$res2=mysql_query($sql2,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql2,"ShowErrTemplate");
 	}
 }
 function LoggedInAppPromo($profileid){

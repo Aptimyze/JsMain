@@ -72,7 +72,7 @@ class BrowserGCM {
             JsNotificationsConsume::$sendAlert = JsNotificationsConsume::$sendAlert+1;
             if(JsNotificationsConsume::$sendAlert==1)
             {
-                CRMAlertManager::sendMailAlert("no gcm response to live notification","test");
+                //CRMAlertManager::sendMailAlert("no gcm response to live notification","test");
             }
             return null;
         }

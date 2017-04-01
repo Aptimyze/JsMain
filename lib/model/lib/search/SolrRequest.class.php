@@ -8,6 +8,7 @@ class SolrRequest implements RequestHandleInterface
 {
 	private $searchResults;
 	private $solrPagination;
+        private $solrCurlTimeout = 400;
 	/**
 	* constructor of solr Request class
 	* @param responseObj contains information about output type (array/xml/...) and engine used(solr/sphinx/mysql....)
@@ -21,21 +22,34 @@ class SolrRequest implements RequestHandleInterface
 		{
 	                $this->searchParamtersObj = $searchParamtersObj;
 
+                        //$this->logSearch();
+                        JsMemcache::getInstance()->incrCount("TOTAL_SEARCH_COUNT_".date("d"));
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
-                        	if($profileObj->getPROFILEID()%2==0)
-	                                $this->solrServerUrl = JsConstants::$solrServerUrl1."/select";
+                        	//if($profileObj->getPROFILEID()%7>2)
+				if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
+	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
-                	                $this->solrServerUrl = JsConstants::$solrServerUrl."/select";
+                	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 	                }
         	        else
                 	{ 
 				if(JsConstants::$whichMachine=='matchAlert') /* new matches load on one server */
-	                        	$this->solrServerUrl = JsConstants::$solrServerUrl1."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 				else
-	                        	$this->solrServerUrl = JsConstants::$solrServerUrl."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
+                        
+                        if($this->searchParamtersObj->getIS_VSP() && $this->searchParamtersObj->getIS_VSP() == 1){
+                                $this->solrServerUrl = JsConstants::$solrServerForVSP."/select";
+                        }
+                        if($this->searchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES'){
+                                $this->solrServerUrl = JsConstants::$solrServerForKundali."/select"; 
+                        }
+                        if($this->searchParamtersObj->getSORT_LOGIC()==SearchSortTypesEnums::SortByVisitorsTimestamp){
+								$this->solrServerUrl = JsConstants::$solrServerForVisitorAlert."/select"; 
+                        }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
 			if($this->responseObj->getShowAllClustersOptions())
@@ -62,10 +76,15 @@ class SolrRequest implements RequestHandleInterface
 			$pid = str_replace(' ','',$pid);
 			$pid = str_replace(',',' ',$pid);
 		}
-		$url = JsConstants::$solrServerUrl."update";
-		$post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
-		$this->sendCurlPostRequest($url,$post);
-		//print_r($this->searchResults);
+                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
+                foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
+                        $index = array_search($solrUrl, JsConstants::$solrServerUrls);
+                        if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
+                                $url = $solrUrl."/update";
+                                $this->sendCurlPostRequest($url,$post);
+                        }
+                }
+		//print_r($this->searchResults);die;
 		$this->responseObj->getFormatedResults($this->searchResults); // ????????
 	}
 	
@@ -102,10 +121,14 @@ class SolrRequest implements RequestHandleInterface
         {
                 $this->setWhereCondition(1,$loggedInProfileObj);
 		$this->groupConditions[] = '&group=true';
-		$this->groupConditions[] = '&group.field='.$grpField;
-		$this->groupConditions[] = '&group.limit='.$grpLimit;
-		$this->groupConditions[] = '&group.sort='.$grpSort;
-		$this->groupConditions[] = '&rows='.$grpRows;
+                if($grpField)
+                        $this->groupConditions[] = '&group.field='.$grpField;
+                if($grpLimit)
+                        $this->groupConditions[] = '&group.limit='.$grpLimit;
+                if($grpSort)
+                        $this->groupConditions[] = '&group.sort='.$grpSort;
+                if($grpRows)
+                        $this->groupConditions[] = '&rows='.$grpRows;
 	
                 $this->formSolrSearchUrl();
                 $this->sendCurlPostRequest($this->solrServerUrl,$this->solrPostParams.$this->solrPagination);
@@ -161,7 +184,22 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
-		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+		$start = microtime(TRUE);
+                if(php_sapi_name() === 'cli')
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                else
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
+                $end= microtime(TRUE);
+                $diff = $end - $start;
+                if($diff > 2 ){
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d-h').".txt";
+                        //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
+                
+                if(!$this->searchResults){
+                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
+                        file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
 	}
 
         /**
@@ -199,10 +237,16 @@ class SolrRequest implements RequestHandleInterface
 		if($this->searchParamtersObj->getINCOME_SORTBY())
 			$valueWhereArr[]=  'INCOME_SORTBY';
 
+                $setOrCond = array();
                 foreach($valueWhereArr as $field)
                 { 
                         eval('$value = $this->searchParamtersObj->get'.$field.'();');
-
+                        
+                        if($field=='INDIA_NRI' || ($field=='CITY_RES' && $this->searchParamtersObj->getCITY_RES()!='') || ($field=='CITY_INDIA' && $this->searchParamtersObj->getCITY_INDIA()!='') || ($field=='COUNTRY_RES' && $this->searchParamtersObj->getCOUNTRY_RES()!='') || ($field=='STATE' && $this->searchParamtersObj->getSTATE()!='')) {
+                                $setOrCond[$field] = $value;
+                                continue;
+                        }
+                                
 												if($field=='OCCUPATION_GROUPING' && $this->searchParamtersObj->getOCCUPATION()!='')
 													continue;
 												if($field=='EDUCATION_GROUPING' && $this->searchParamtersObj->getEDU_LEVEL_NEW()!='')
@@ -270,7 +314,7 @@ class SolrRequest implements RequestHandleInterface
 							$valGroup = $this->searchParamtersObj->getOCCUPATION_GROUPING();
 							$solrFormatValueGroup = str_replace(","," ",$valGroup);
 							$solrFormatValueGroup = str_replace("','"," ",$solrFormatValueGroup);
-							$this->specialCases($field,$solrFormatValue,'occupation,occuapation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
+							$this->specialCases($field,$solrFormatValue,'occupation,occupation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
 						}
 						elseif(strstr($field,'EDU'))
 						{
@@ -308,7 +352,98 @@ class SolrRequest implements RequestHandleInterface
 				}
                         }
                 }
-                
+                if(!empty($setOrCond)){
+                        if((isset($setOrCond["CITY_RES"]) || isset($setOrCond["CITY_INDIA"]) || isset($setOrCond["STATE"])) && isset($setOrCond["COUNTRY_RES"])){ 
+                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                $this->clusters[]="&facet.field={!ex=city_india}CITY_INDIA";
+                                $this->clusters[]="&facet.field={!ex=state}STATE";
+                                $setWhereParams[]="COUNTRY_RES";
+                                $setWhereParams[]="CITY_RES";
+                                $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
+                                $solrFormatValueCity = str_replace("','"," ",$solrFormatValueCity);
+                                $solrFormatValueCity='"'.implode('","',explode(" ",$solrFormatValueCity)).'"';
+                                $solrFormatValueCityIndia = '';
+                                if(isset($setOrCond["CITY_INDIA"])){
+                                        $solrFormatValueCityIndia = str_replace(","," ",$setOrCond["CITY_INDIA"]);
+                                        $solrFormatValueCityIndia = str_replace("','"," ",$solrFormatValueCityIndia);
+                                        $solrFormatValueCityIndia='"'.implode('","',explode(" ",$solrFormatValueCityIndia)).'"';
+                                }else{
+                                    $solrFormatValueCityIndia = $solrFormatValueCity;
+                                }
+                                $solrFormatValueStateIndia = '';
+                                if(isset($setOrCond["STATE"])){
+                                        $solrFormatValueStateIndia = str_replace(","," ",$setOrCond["STATE"]);
+                                        $solrFormatValueStateIndia = str_replace("','"," ",$solrFormatValueStateIndia);
+                                        $solrFormatValueStateIndia='"'.implode('","',explode(" ",$solrFormatValueStateIndia)).'"';
+                                        $setWhereParams[]="STATE";
+                                }
+                                $country = explode(',',$setOrCond["COUNTRY_RES"]);
+                                $country = array_unique($country);
+                                $countryCount = count($country);
+                                foreach($country as $c){
+                                        if($c!=51 || $countryCount == 1)
+                                                $countries[] = $c;
+                                }
+                                $setOrCond["COUNTRY_RES"] = implode(',',$countries);
+                                $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
+                                $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY);
+                                
+                                $solrFormatValueCOUNTRY_RES = str_replace(","," ",implode(',',$country));
+                                $solrFormatValueCOUNTRY_RES = str_replace("','"," ",$solrFormatValueCOUNTRY_RES);
+                                //$this->filters[]="&fq={!tag=country_res}COUNTRY_RES:($solrFormatValueCOUNTRY_RES)";
+                                //{!tag=country_res,city_res,city_india,state}
+                                $searchOperator = "OR";
+                                if($countryCount == 1 && $solrFormatValueCOUNTRY == '51'){
+                                        $searchOperator = "AND";      
+                                }
+                                $stateCheck = '';
+                                if($solrFormatValueStateIndia){
+                                        $stateCheck = "AND STATE :($solrFormatValueStateIndia)";
+                                }
+                                if($solrFormatValueCityIndia){
+                                        if($solrFormatValueCOUNTRY){
+                                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}(CITY_RES:($solrFormatValueCityIndia) $stateCheck) $searchOperator  COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}(CITY_INDIA:($solrFormatValueCityIndia) $stateCheck) $searchOperator  COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                        }else{
+                                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}(CITY_RES:($solrFormatValueCityIndia) $stateCheck)";
+                                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}(CITY_INDIA:($solrFormatValueCityIndia) $stateCheck)";
+                                        }
+                                }elseif(isset($setOrCond["COUNTRY_RES"])){                                      
+                                        if($stateCheck){
+                                         $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}STATE:($solrFormatValueStateIndia) $searchOperator COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                        }else{
+                                                $setWhereParams[]="COUNTRY_RES";
+                                                $this->clusters[]="&facet.field={!ex=country_res,city_res,city_india,state}COUNTRY_RES";
+                                                $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
+                                                $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY); 
+                                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}COUNTRY_RES:($solrFormatValueCOUNTRY_RES)";       
+                                        }
+                                }
+                        }elseif(isset($setOrCond["COUNTRY_RES"])){
+                                $setWhereParams[]="COUNTRY_RES";
+                                $this->clusters[]="&facet.field={!ex=country_res,city_res,city_india,state}COUNTRY_RES";
+                                $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
+                                $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY);
+                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                        }elseif($setOrCond["STATE"]){
+                                $solrFormatValueStateIndia = str_replace(","," ",$setOrCond["STATE"]);
+                                $solrFormatValueStateIndia = str_replace("','"," ",$solrFormatValueStateIndia);
+                                $solrFormatValueStateIndia='"'.implode('","',explode(" ",$solrFormatValueStateIndia)).'"';
+                                $setWhereParams[]="STATE";
+                                $this->clusters[]="&facet.field={!ex=city_res,city_india,state}STATE";
+                                $this->filters[]="&fq={!tag=city_res,city_india,state}STATE:($solrFormatValueStateIndia)";
+                        }elseif($setOrCond['CITY_RES'] && is_numeric($setOrCond['CITY_RES'])){
+                            //added for seo solr for countries other than india
+                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                $this->clusters[]="&facet.field={!ex=city_india}CITY_INDIA";
+                                $this->clusters[]="&facet.field={!ex=state}STATE";
+                                $setWhereParams[]="CITY_RES";
+                                $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
+                                $solrFormatValueCity = str_replace("','"," ",$solrFormatValueCity);
+                                $solrFormatValueCity='"'.implode('","',explode(" ",$solrFormatValueCity)).'"';
+                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}CITY_RES:($solrFormatValueCity)";
+                        }
+                }
 		
 	
 		// value where for ends here
@@ -384,6 +519,8 @@ class SolrRequest implements RequestHandleInterface
 			$this->filters[]="&fq=-MSTATUS:(".str_replace(","," ",$this->searchParamtersObj->getMSTATUS_IGNORE()).")";
 		if($this->searchParamtersObj->getHANDICAPPED_IGNORE())
 			$this->filters[]="&fq=-HANDICAPPED:(".str_replace(","," ",$this->searchParamtersObj->getHANDICAPPED_IGNORE()).")";
+                if($this->searchParamtersObj->getOCCUPATION_IGNORE())
+			$this->filters[]="&fq=-OCCUPATION:(".str_replace(","," ",$this->searchParamtersObj->getOCCUPATION_IGNORE()).")";
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches
@@ -398,6 +535,7 @@ class SolrRequest implements RequestHandleInterface
 				if(in_array($field,$valueWhereArr)) // => if(!in_array($field,array('VIEWED','AGE','HEIGHT','INCOME')))
 					$this->clusters[]="&facet.field=$field";
 		}
+                
 	        if(is_array($rangeWhereArr))
                 foreach($rangeWhereArr as $field)
                 {
@@ -408,6 +546,7 @@ class SolrRequest implements RequestHandleInterface
 				$this->filters[]="&fq=$field:[$lvalue $hvalue]";
                         }
                 }
+                
 		if($this->results_cluster!='onlyCount')
 		{
 			if(!$noSorting)
@@ -451,7 +590,7 @@ class SolrRequest implements RequestHandleInterface
 
 			$sortstringArr[] = $exp." ".$asc_or_descArr[$k];
 		}
-
+                $sortstringArr[] = 'id desc';
 		if($sortstringArr)
 			$this->filters[]="&sort=".implode(",",$sortstringArr);
 		if($this->searchParamtersObj->getFL_ATTRIBUTE())
@@ -530,4 +669,39 @@ class SolrRequest implements RequestHandleInterface
 		echo $zzz;		echo "<br><br>";
 		}
 	}
+
+        public function logSearch(){
+                $Keytime = 3600000;
+                $keyAuto = "COUNTER_SEARCH_TYPE_KEYS";
+                $searchKey = "COUNTER_SEARCH_TYPE_";
+                $Rurl = explode("/",trim($_SERVER["REQUEST_URI"],"/"));
+                if(strpos($Rurl[0],"rand")){
+                        $searchKey .= "random_";
+                }elseif(strpos($Rurl[0],"matrimony") || strpos($Rurl[0],"brides")  || strpos($Rurl[0],"grooms")){
+                        $searchKey .= "matrimony_";
+                }else{
+                        if($Rurl[0] == "" || strpos($_SERVER["REQUEST_URI"],"myjs")){
+                                $searchKey .= "myjs_";
+                        }else{
+                                $searchKey .= $Rurl[0]."_";
+                        }
+                }
+                $app = MobileCommon::isApp();
+                if(!$app){
+                        if(MobileCommon::isDesktop()){
+                                $app = "D";
+                        }elseif(MobileCommon::isNewMobileSite()){
+                                $app = "J";
+                        }else{
+                                $app = "O";
+                        }
+                }
+                $searchKey .= $app."_";
+                if(php_sapi_name() === 'cli'){
+                        $searchKey .= "CLI_";
+                }
+                $searchKey .= $this->searchParamtersObj->getSEARCH_TYPE();
+                JsMemcache::getInstance()->storeDataInCacheByPipeline($keyAuto,array($searchKey),$Keytime);
+                JsMemcache::getInstance()->incrCount($searchKey);
+        }
 }

@@ -14,9 +14,11 @@ include("connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/globalVariables.Class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $mysql=new Mysql;
 $db=connect_db();
+$objUpdate = JProfileUpdateLib::getInstance();
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
 	$myDbName=getActiveServerName($activeServerId);
@@ -29,16 +31,20 @@ while($row=mysql_fetch_array($res))
 {
        $profileid=$row['PROFILEID'];
        
-	$sql="update newjs.JPROFILE set SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>=SORT_DT,DATE_ADD(SORT_DT,INTERVAL 7 DAY),SORT_DT) where PROFILEID='$profileid'";
-	mysql_query($sql,$db) or logError($sql);
+	//$sql="update newjs.JPROFILE set SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>=SORT_DT,DATE_ADD(SORT_DT,INTERVAL 7 DAY),SORT_DT) where PROFILEID='$profileid'";
+	//mysql_query($sql,$db) or logError($sql);
+
+        $affectedRows = $objUpdate->updateSortDateForAPLogin($row[PROFILEID]);
 		
-	if(mysql_affected_rows())
+	if($affectedRows)
 	{
 		$sqlup="SELECT SORT_DT FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
                 $resup=mysql_query($sqlup,$db) or logError($sqlup);
                 $rowup=mysql_fetch_assoc($resup);
-		$sqlup="update newjs.JPROFILE set LAST_LOGIN_DT='$rowup[SORT_DT]' where PROFILEID='$profileid'";
-		mysql_query($sqlup,$db) or logError($sqlup);
+		//$sqlup="update newjs.JPROFILE set LAST_LOGIN_DT='$rowup[SORT_DT]' where PROFILEID='$profileid'";
+		//mysql_query($sqlup,$db) or logError($sqlup);
+                $arrFields1 = array('LAST_LOGIN_DT'=>CommonUtility::makeTime($rowup[SORT_DT]));
+                $objUpdate->editJPROFILE($arrFields1,$row[PROFILEID],"PROFILEID");
 		$myDbName=getProfileDatabaseConnectionName($profileid);
 
 		if(!$myDb[$myDbName])

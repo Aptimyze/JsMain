@@ -36,6 +36,15 @@ $(document).ready(function()
 		$(".js-overlay").show();
 		$(".js-cropper").show();
 	}
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto=='1')
+	{	
+		 $('html, body').animate({
+        scrollTop: $("#photoPrivacyDiv").offset().top
+    }, 500);
+
+     }
+	
 });
 
 function handleUploadType()
@@ -282,7 +291,7 @@ function addPhotosInFolder()
 }
 function setPhotoInHtm(photoUrl,photoid,count)
 {
-          listHtml = $("#userPhoto").html();
+          listHtml ='<li>            <div class="disp-tbl txtc pos-rel imagePreview opa50 uploading{{COUNT}}" style = "background-size:100% 100%;background-image: url({{PHOTO_URL}});">               <i class="cursp sprite2 pos-abs photocross deletePhoto dp{{COUNT}}" id="deletePhoto{{COUNT}}" data-pictureid="{{PICTUREID}}" style="display:none;"></i>              <div class="disp-cell vmid ">                <span id="{{PHOTO_ID}}" ><img  class="vtop pudim1"  oncontextmenu="return false;" galleryimg="NO" src="/profile/ser4_images/transparent_img.gif"></span>                </div>                <div class="pos_abs fullwid stillUploading uploadingBar{{COUNT}}">                        <div class="puwid9 brdr12 pum3">                                <div class="bg_pink mrl0 uploadingPercent{{COUNT}}" style="width:0px;">                                </div>                        </div>                </div>            </div>          </li>';
 	listHtml = listHtml.replace(/{{PHOTO_URL}}/g, photoUrl);
 	listHtml = listHtml.replace(/userPhoto/g, "userPhoto"+photoid);
 	listHtml = listHtml.replace(/{{PHOTO_ID}}/g, photoid);
@@ -544,7 +553,14 @@ function loadPhotos(val,albumDiv)
                 var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
                 $("#js-addImportPhotos").append(albumTuple);
 		var htm = "<img src="+removeNull(val1.display)+" class='pudim5 brdr-1'/>";
-		$(".photonumber"+key1).append(htm);
+		if (key1 == 0)
+		{
+			$(".photonumber").append(htm);
+		}
+		else
+		{
+			$(".photonumber"+key1).append(htm);
+		}
 		cnt++;
         });
 	if(fbImportData["'"+albumPosition+"'"])

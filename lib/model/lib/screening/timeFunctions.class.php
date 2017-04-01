@@ -127,12 +127,6 @@ class timeFunctions
 	    /*********CALCULATE NUMBER OF HOLIDAYS BERTWEEN GIVEN DATES*******************/
 		$holidayObj = new HOLIDAY();
 		$holidays = $holidayObj->calculateNoOfHolidaysBetweenDates($time1_new,$time2_new);
-		/*
-		$sql= "SELECT count(DATE) NUM from HOLIDAY where DATE>'$time1_new' and DATE<'$time2_new'";
-		$result=mysql_query_decide($sql);
-		$myrow=mysql_fetch_row($result);
-		$holidays=$myrow[0];
-		*/		
 	    /****************************************************************************/	
 
 		if (($time1_year%4==0 && $time1_year%100 != 0) || $time1_year%400 == 0 )
@@ -355,12 +349,6 @@ class timeFunctions
 													 
 		$holidayObj = new HOLIDAY();
 		$holidays = $holidayObj->calculateNoOfHolidaysBetweenDates($time1_new,$time2_new);
-		/*
-		$sql= "SELECT count(DATE) NUM from HOLIDAY where DATE>='$time1_new' and DATE<='$time2_new'";
-		$result=mysql_query_decide($sql);
-		$myrow=mysql_fetch_row($result);
-		$holidays=$myrow[0];
-		*/
 		$return_date=strftime("%Y-%m-%d %H:%M",JSstrToTime("$newdate + $holidays days 0 hours 0 minutes" ));
 													 
 		while($flag==0)
@@ -371,17 +359,6 @@ class timeFunctions
 				$return_date=strftime("%Y-%m-%d %H:%M",JSstrToTime("$return_date + 1 day"));
 			else
 				$flag=1;
-			/*
-			$sql1= "SELECT count(DATE) NUM from HOLIDAY where DATE='".strftime("%Y-%m-%d",JSstrToTime("$return_date"))."'";
-			$result1=mysql_query_decide($sql1);
-			$myrow1=mysql_fetch_row($result1);
-			if($myrow1[0]>0)
-			{
-				$return_date=strftime("%Y-%m-%d %H:%M",JSstrToTime("$return_date + 1 day"));
-			}
-			else
-				$flag=1;
-			*/
 		}
 
 		list($ret_date,$ret_time)=explode(" ",$return_date);

@@ -39,119 +39,45 @@ class NewMatchesMailer extends SearchParamters
 		$sent_date = $paramArr["sent_date"];
 		if($sent_date && !is_numeric($sent_date))
                 	$sent_date = "";				//White Listing ends
-
+                
+                
 		if($logic_used==6)					//For Trends profile
 		{
-			$obj = new TrendsPartnerProfile();
-			$obj->setPartnerDetails($this->pid);
-			$this->setGENDER($obj->getGENDER());
-                        $this->setLAGE($obj->getLAGE());
-                        $this->setHAGE($obj->getHAGE());
-                        $this->setLHEIGHT($obj->getLHEIGHT());
-                        $this->setHHEIGHT($obj->getHHEIGHT());
-                        $this->setMSTATUS(str_replace("'","",$obj->getPARTNER_MSTATUS()));
-                        $this->setRELIGION(str_replace("'","",$obj->getPARTNER_RELIGION()));
-                        $this->setMTONGUE(str_replace("'","",$obj->getPARTNER_MTONGUE()));
-                        $this->setCASTE(str_replace("'","",$obj->getPARTNER_CASTE()));
-                        $this->setEDU_LEVEL_NEW(str_replace("'","",$obj->getPARTNER_ELEVEL_NEW()));
-                        $this->setOCCUPATION(str_replace("'","",$obj->getPARTNER_OCC()));
-                        $this->setCITY_RES(str_replace("'","",$obj->getPARTNER_CITYRES()));
-
-			$income = str_replace("'","",$obj->getPARTNER_INCOME());
-
-			if($income || $income=='0')			//Get income values from TRENDS_SORTBY column starts
+                        $searchCObj = new NewMatchesTrendsMailer($this->loggedInProfileObj);
+                        
+			$searchCObj->setSearchCriteria($this->pid);
+                        
+                        foreach($searchCObj->forwardCriteria as $k=>$v)	
 			{
-				$imObj = new IncomeMapping;
-				$incomeArr = explode(",",$income);
-				foreach($incomeArr as $k=>$v)
-				{
-					$temp = $imObj->getIncomeFromTrendsSortBy($v);
-					if($temp && is_array($temp))
-					{
-						foreach($temp as $kk=>$vv)
-						{
-							$incomeFinalArr[] = $vv;
-						}
-						unset($temp);
-					}
-				}
-				unset($incomeArr);
-				unset($imObj);
-			}						//Get income values from TRENDS_SORTBY column ends
-
-			if($incomeFinalArr && is_array($incomeFinalArr))	//Get LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL values from income
+                                if(array_key_exists($v,$searchCObj->incomeStrings))
+                                        $tempVal = $searchCObj->incomeStrings[$v];
+                                else
+                                        eval('$tempVal = $searchCObj->get'.$v.'();');
+                                
+				if($tempVal)
+					eval('$this->set'.$v.'("'.$tempVal.'");');
+			}
+                        
+                        foreach($searchCObj->trendsSearchReverseForwardCriteria as $k=>$v)	
 			{
-				$lincome = 100;
-				$hincome = -1;
-				$lincome_dol = 100;
-				$hincome_dol = -1;
-				$incomeStr = "";
-				foreach($incomeFinalArr as $k=>$v)
-				{
-					if($v["SORTBY"]!=0)
-					{
-						if($v["TYPE"]=="RUPEES")
-						{
-							if($lincome>$v["MIN_VALUE"])
-								$lincome = $v["MIN_VALUE"];
-							if($hincome<$v["MAX_VALUE"])
-								$hincome = $v["MAX_VALUE"];
-						}
-						elseif($v["TYPE"]=="DOLLARS")
-						{
-							if($lincome_dol>$v["MIN_VALUE"])
-                                                                $lincome_dol = $v["MIN_VALUE"];
-                                                        if($hincome_dol<$v["MAX_VALUE"])
-                                                                $hincome_dol = $v["MAX_VALUE"];
-						}
-					}
-					$incomeStr = $incomeStr.$v["VALUE"].",";
-				}
-				$incomeStr = rtrim($incomeStr,",");
-				if($lincome==100)
-					$lincome = "";
-				if($hincome==-1)
-					$hincome = "";
-				if($lincome_dol==100)
-					$lincome_dol = "";
-				if($hincome_dol == -1)
-					$hincome_dol = "";
-			}						//Get LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL values from income ends
-			unset($incomeFinalArr);
-
-                        $this->setINCOME($incomeStr);
-			$this->setLINCOME($lincome);
-			$this->setHINCOME($hincome);
-			$this->setLINCOME_DOL($lincome_dol);
-			$this->setHINCOME_DOL($hincome_dol);
-
-			$this->setMSTATUS_IGNORE(str_replace("'","",$obj->getPARTNER_MSTATUS_IGNORE()));
-			$this->setMANGLIK_IGNORE(str_replace("'","",$obj->getPARTNER_MANGLIK_IGNORE()));
+				eval('$tempVal = $searchCObj->get'.$v.'();');
+                                $tempVal = str_replace("'","",$tempVal);
+				if($tempVal)
+					eval('$this->set'.$k.'("'.$tempVal.'");');
+			}
 		}
 		else				//For Non Trends profile
 		{
-			$obj = new PartnerProfile($this->loggedInProfileObj);
-			$obj->getDppCriteria();
-			$this->setGENDER($obj->getGENDER());
-			$this->setLAGE($obj->getLAGE());
-			$this->setHAGE($obj->getHAGE());
-			$this->setLHEIGHT($obj->getLHEIGHT());
-			$this->setHHEIGHT($obj->getHHEIGHT());
-			$this->setMSTATUS($obj->getMSTATUS());
-			$this->setRELIGION($obj->getRELIGION());
-			$this->setMTONGUE($obj->getMTONGUE());
-			$this->setCASTE($obj->getCASTE());
-			$this->setEDU_LEVEL_NEW($obj->getEDU_LEVEL_NEW());
-			$this->setOCCUPATION($obj->getOCCUPATION());
-			$this->setCITY_RES($obj->getCITY_RES());
-			$this->setCITY_INDIA($obj->getCITY_INDIA());
-			$this->setINCOME($obj->getINCOME());
-			$this->setLINCOME($obj->getLINCOME());
-			$this->setHINCOME($obj->getHINCOME());
-			$this->setLINCOME_DOL($obj->getLINCOME_DOL());
-			$this->setHINCOME_DOL($obj->getHINCOME_DOL());
+                        $searchCObj = new NewMatchesDppMailer($this->loggedInProfileObj);
+			$searchCObj->setSearchCriteria();
+                        foreach($searchCObj->forwardCriteria as $k=>$v)	
+			{
+                                eval('$tempVal = $searchCObj->get'.$v.'();');
+				if($tempVal)
+					eval('$this->set'.$v.'("'.$tempVal.'");');
+			}
 		}
-		unset($obj);
+		unset($searchCObj);
 		
 		if($sent_date)		//If mailer sent date is available then find a 7 days before date from the sent date
 		{
@@ -169,7 +95,9 @@ class NewMatchesMailer extends SearchParamters
                             $dateString = date("Y-m-d",strtotime("-".$this->daysOldProfiles_3." days"));
                 }
 
-		$this->setLAST_LOGIN_DT($dateString);
+		$this->setLVERIFY_ACTIVATED_DT($dateString."T00:00:00Z");
+		$this->setHVERIFY_ACTIVATED_DT(date("Y-m-d")."T00:00:00Z");
+                
 		$this->setSORT_LOGIC(SearchSortTypesEnums::newMatchesMailer);
 		$this->setSEARCH_TYPE(SearchTypesEnums::NewMatchesMailer);
 

@@ -4,7 +4,7 @@
 		<div class="pad1">
 		  <div class="rem_pad1">
 			<div class="fl wid20p white"> <i class="mainsp arow2" id="arw_1"></i> </div>
-			<div class="fl wid71p txtc white fontthin f19 " id="TAPNAME_1"></div>
+			<div class="fl wid65p txtc white fontthin f19 " id="TAPNAME_1"></div>
 			<div class="clr"></div>
 		  </div>
 		</div>

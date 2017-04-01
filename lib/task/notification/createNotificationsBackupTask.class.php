@@ -27,7 +27,7 @@ EOF;
 			sfContext::createInstance($this->configuration);
 		}
 		$backupObj = new MOBILE_API_BROWSER_NOTIFICATION_BACKUP();
-		$sourceSlaveObj = new MOBILE_API_BROWSER_NOTIFICATION("newjs_slave");
+		$sourceSlaveObj = new MOBILE_API_BROWSER_NOTIFICATION("newjs_masterRep");
 		$sourceMasterObj = new MOBILE_API_BROWSER_NOTIFICATION();
 
 		//count of notifications picked from BROWSER_NOTIFICATION and backed up at a time

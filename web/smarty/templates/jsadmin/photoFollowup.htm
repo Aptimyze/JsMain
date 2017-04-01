@@ -56,7 +56,10 @@
 	~section name=next loop=$lusers`
 	<tr class="label">
 		<td>~$lusers[next].S_NO`</td>
-		<td> <a href="showstat.php?cid=~$cid`&profileid=~$lusers[next].PROFILEID`" target=_blank>~$lusers[next].USERNAME`</a></td>
+		<td>
+			<!--<a href="showstat.php?cid=~$cid`&profileid=~$lusers[next].PROFILEID`" target=_blank>~$lusers[next].USERNAME`</a>-->
+			<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$lusers[next].PROFILEID`" target=_blank>~$lusers[next].USERNAME`</a>
+		</td>
                 <td>~$lusers[next].PHONE_NUMBER`</td>
                 <td>~$lusers[next].PHOTO_UPLOAD`</td>
                 <td>~$lusers[next].PHOTO_LIVE`</td>

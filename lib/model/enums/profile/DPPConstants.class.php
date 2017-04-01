@@ -33,7 +33,9 @@
 										'P_OCCUPATION'=>'PARTNER_OCC',
 										'P_INCOME'=>'PARTNER_INCOME',
 										'P_GENDER'=>'GENDER',
-                                                                                'P_HAVECHILD'=>'CHILDREN'
+                                        'P_HAVECHILD'=>'CHILDREN',
+                                        'P_STATE'=>'STATE',
+                                        'CITY_INDIA'=>'CITY_INDIA'
 										);
 	public static $FormatColums = array(
 									'P_RELIGION',
@@ -52,7 +54,9 @@
 									'P_COMPLEXION',
 									'P_COUNTRY',
 									'P_CITY',
-                                                                        'P_HAVECHILD',
+                                    'P_HAVECHILD',
+                                    'P_STATE',
+                                    'CITY_INDIA'
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(
 										'GENDER',
@@ -105,7 +109,7 @@
 	 public static function BakeQuery($szKey,$InputVal)
 	 {
 		 $szInput = $InputVal;
-		 if($szkey == 'P_CITY' || $szkey =='P_MTONGUE' )
+		 if($szkey == 'P_CITY' || $szkey =='P_MTONGUE' || $szkey=='P_STATE')
 		 {
 			 if(is_array($InputVal))
 					$InputVal = array_unique($InputVal);
@@ -194,7 +198,7 @@
 	  		"MARITAL_STATUS" =>"Marital Status",
 	  		"HAVE_CHILDREN" => "Have Children",
 	  		"COUNTRY" => "Country",
-	  		"CITY" => "City living in",),
+	  		"CITY" => "State/City"),
 	  	"RELIGION_ETHINICITY" => array(
 	  		"RELIGION" => "Religion",
 	  		"CASTE" => "Caste",
@@ -214,7 +218,7 @@
 	  		"CHALLENGED" =>"Challenged",
 	  		"NATURE_OF_HANDICAP" => "Nature of handicap"),
 	  	"DESIRED_PARTNER" => array(
-	  		"DESCRIBE_PARTNER" => "About My Desired Partner",),
+	  		"DESCRIBE_PARTNER" => "About Desired Partner",),
 	  	);	
 	  public static $fieldTypeArray = array(
 	  	"BASIC" => array(
@@ -344,7 +348,7 @@
                                 "FILTER_MAP" => 'CITY_RES',
 	  			"FILTER" => self::VALUE_YES,
 	  			"FILTER_VALUE" => self::VALUE_NO,
-	  			"FILTER_HINT_TEXT" => "Interests from people outside specified cities will go to your Filtered Inbox, and they will also not be able to see your Phone/EmailID.",),),
+	  			"FILTER_HINT_TEXT" => "Interests from people outside specified states/cities will go to your Filtered Inbox, and they will also not be able to see your Phone/EmailID.",),),
 	  	"RELIGION_ETHINICITY" => array(
 	  		"RELIGION" => array(
                                 "FILTER_MAP" => 'RELIGION',
@@ -470,7 +474,8 @@
 	const VALUE_NO = "N";
 
   const AP_SCREEN_MSG = 'Your desired partner profile will be vetted by our matchmaking expert before it is updated on your profile';
- 
+  public static $removeCasteFromDppArr = array("242","243","244","245","246");
+  public static $removeLabelFromDpp = "Select";
  }
  
 ?>

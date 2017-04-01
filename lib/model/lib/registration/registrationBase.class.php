@@ -215,8 +215,8 @@ abstract class registrationBaseClass {
   /*
    * checks if the form is submitted correctly and sets Jpartner fields
    */
-  protected function postSubmit(){
-    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()]);
+  protected function postSubmit(){ 
+    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()],$this->arrFormValues["casteNoBar"]);
   }
 
   protected function preDisplay(){

@@ -5,10 +5,49 @@ var sliderCurrentPage="";
 var underScreenStr="";
 var filterJson="";
 var albumPresent=0;
-var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
+var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
+var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
+var editInArr = {};
+editInArr['Details'] = new Array("YOURINFO","basic","Ethnicity","Appearance","SpecialCases");
+editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editInArr['Education'] = new Array("EDUCATION","CollegeDetails");
+editInArr['Career']= new Array("JOB_INFO","CarrerDetails","FuturePlans");
+editInArr['Family']=new Array("FAMILYINFO","Family","Parents","Siblings");
+editInArr['Lifestyle']=new Array("Habits","Assets","Skills","hobbies","Interests","Favourite");
+editInArr['Contact']=new Array("PROFILE_HANDLER_NAME","EMAIL","ALT_EMAIL","PHONE_MOB","ALT_MOBILE","PHONE_RES","TIME_TO_CALL_START");
+editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifestyle");
+var editValArr={};
+editValArr["YOURINFO"]=new Array("YOURINFO");
+editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS");
+editValArr["Ethnicity"]=new Array("RELIGION","CASTE","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
+editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
+editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
+editValArr["SpecialCases"]=new Array("HANDICAPPED","NATURE_HANDICAP","THALASSEMIA","HIV");
+editValArr["EDUCATION"]=new Array("EDUCATION");
+editValArr["CollegeDetails"]=new Array("EDU_LEVEL_NEW","DEGREE_PG","PG_COLLEGE","DEGREE_UG","COLLEGE","SCHOOL");
+//editValArr["Kundli"]=new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editValArr["JOB_INFO"]=new Array("JOB_INFO");
+editValArr["CarrerDetails"]=new Array("COMPANY_NAME","OCCUPATION","INCOME");
+editValArr["FuturePlans"]=new Array("MARRIED_WORKING","GOING_ABROAD");
+editValArr["FAMILYINFO"]=new Array("FAMILYINFO");
+editValArr["Family"]=new Array("FAMILY_VALUES","FAMILY_TYPE","FAMILY_STATUS","PARENT_CITY_SAME");
+editValArr["Parents"]=new Array("FAMILY_BACK","MOTHER_OCC","FAMILY_INCOME");
+editValArr["Siblings"]=new Array("T_BROTHER","T_SISTER");
+editValArr["Habits"]=new Array("DIET","SMOKE","DRINK","OPEN_TO_PET");
+editValArr["Assets"]=new Array("OWN_HOUSE","HAVE_CAR");
+editValArr["Skills"]=new Array("HOBBIES_LANGUAGE","FAV_FOOD");
+editValArr["hobbies"]=new Array("HOBBIES_HOBBY");
+editValArr["Interests"]=new Array("HOBBIES_INTEREST");
+editValArr["Favourite"]=new Array("HOBBIES_MUSIC","HOBBIES_BOOK","HOBBIES_DRESS","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_BOOK","FAV_TVSHOW","FAV_VAC_DEST");
+editValArr["SPOUSE"]=new Array("SPOUSE");
+editValArr["BasicDetails"]=new Array("P_HEIGHT","P_AGE","P_MSTATUS","P_HAVECHILD","P_COUNTRY","P_CITY","P_MATCHCOUNT");
+editValArr["Religion"]=new Array("P_RELIGION","P_CASTE","P_SECT","P_MTONGUE","P_MANGLIK");
+editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION","P_INCOME_RS","P_INCOME_DOL");
+editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P_BTYPE","P_CHALLENGED","P_NCHALLENGED");
  $("document").ready(function() {
-	 
+
+ 	getFieldsOnCal();
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -28,6 +67,7 @@ var bCallCreateHoroscope = false;
       bxslider.gotoSlide(index);
     }
    },200);
+   
 });
 var albumNoPhotoStr="";
 (function($){
@@ -48,10 +88,37 @@ var mobEditPage=(function(){
 		{
 			result=formatJsonOutput(result);
 			
-			//console.log(result);
+			for( var k in result.Dpp.BasicDetails.OnClick )
+			{
+				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
+				{
+					/*
+				   	variable to store threshold for mutual match count.
+				    */
+				   	var mutualMatchCountThreshold = 100;
+
+					$("#mutualMatchCountMobile").css("padding","2px");
+
+					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
+					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
+
+                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
+                    {
+                    	$("#mutualMatchCountMobile").css('color', '')
+                    	$("#mutualMatchCountMobile").removeClass("bg7");
+                    	$("#mutualMatchCountMobile").addClass("dpbg1");
+                    }
+                    else
+                    {
+                    	$("#mutualMatchCountMobile").css('color', 'white')
+                    	$("#mutualMatchCountMobile").removeClass("dpbg1");
+                    	$("#mutualMatchCountMobile").addClass("bg7");
+                    }
+				}
+			}
+
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
-			//console.log(changingEditData);
 			ele.sliderDiv=$( "#sw" ).html();
 			ele.ed_sliderDiv=$( "#ed_slider" ).html();
 			underScreenStr=$("#under_screening").html();
@@ -73,7 +140,16 @@ var mobEditPage=(function(){
                         });
 			PhotoUpload();
                         privacybind();
-                        setTimeout(function(){stopLoader()},200);
+                        // check for showing email verification link sent confirmation
+                        if(typeof editFieldArr != 'undefined')
+                        {
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.Contact.ALT_EMAIL.outerSectionValue) && editFieldArr.ALT_EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.ALT_EMAIL);
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.Contact.EMAIL.outerSectionValue) && editFieldArr.EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.EMAIL);
+                        }
+                        
+                            setTimeout(function(){stopLoader()},200);
 		}
 		else{
 			//setTimeout(function(){stopLoader()},200);
@@ -100,10 +176,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][2]["label_val"]==="Male")
-                                current="Groom's Details";
-                            else
-                                current="Bride's Details";
+                                current="Basic Info";
                         }
 			//sliderDiv=sliderDiv.replace('sw', key+'_info_slider');
 			sliderDiv=sliderDiv.replace(/subHeadTab/g, key+'SubHead');
@@ -117,6 +190,8 @@ var mobEditPage=(function(){
 			sliderDiv=sliderDiv.replace(/MainTabValue/g, current);
                         if((key=="Education"||key=="Kundli")&&(flag1==0))
                         {
+                            if(key=="Kundli")
+                                editWhatsNew["FocusDpp"] = "8";
                             $("#DetailsRightTab").html(current);
                             flag1=1;
                         }
@@ -161,6 +236,8 @@ var mobEditPage=(function(){
 		$("#albumPage").remove();
 		$.each(this.pageJson, function(key, value)
 		{
+			if($.inArray(key,editSectionArr)>-1)
+			{
 			st++;
 			var sliderDiv=$( "#"+key+"EditSection" ).html();
 			var originalDiv=sliderDiv;
@@ -193,7 +270,20 @@ var mobEditPage=(function(){
 		$("#privacyOption").hide();
 		$("#topbar").hide();
 		$("#AlbumSubHead").hide();
-});
+}
+);
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto == '1')
+	{ 
+	    var newUrl=document.location.href.replace('fromCALphoto','');
+	    history.pushState('', '', newUrl);
+		$( "#"+key+"EditSection" ).height(privacyH);
+		$("#privacyoptionshow").show();
+		$("#privacyOption").hide();
+		$("#topbar").hide();
+		$("#AlbumSubHead").hide();
+	}
+
 	$("#privacyoptionclose").click(function()
        	{
 				$( "#"+key+"EditSection" ).height(editHgt);
@@ -206,8 +296,13 @@ var mobEditPage=(function(){
 			}
 			else
 			{
+				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if($.inArray(k,editInArr[key])>-1)
+					{
+					if(v.outerSectionKey!="NameoftheProfileCreator")
+					{
 					
 					sliderDiv=sliderDiv.replace('EditFieldName', v.outerSectionKey+'_name');
 					sliderDiv=sliderDiv.replace('EditFieldLabelValue', v.outerSectionKey+'_value');				
@@ -217,12 +312,34 @@ var mobEditPage=(function(){
 						$( "#"+key+"EditSection" ).html(sliderDiv);
 					else
 						$( "#"+key+"EditSection" ).append(sliderDiv);
-					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName)
+					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName);
 					
 					var emptyFields=0;
 						var jsonCnt=0;
-					var sectionStr="";
+					var sectionStr="";					
 					
+					//Email (Verify link or Verified text)
+					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindEmailButtons();
+					}
+					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+					
+					//alternateEmail (Verify link or Verified text)
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindEmailButtons();
+					}
+					else if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==1 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+
 					if(v.singleKey)
 					{
 						
@@ -273,6 +390,8 @@ var mobEditPage=(function(){
 						
 						$.each(v.OnClick, function(k1 ,v1)
 						{
+						if($.inArray(v1.key,editValArr[k])>-1)
+						{
 							var sectionArr={};
 							if(v1.label_val!="N_B")
 							{
@@ -319,6 +438,7 @@ var mobEditPage=(function(){
 									}
 								}
 							}
+						}
 						});
 							
 							sectionStr = sectionStr.replace(/,\ +$/, '');
@@ -335,11 +455,14 @@ var mobEditPage=(function(){
 					
 					i=2;
 					sliderDiv=originalDiv;
+  				  }
+				}
 				});
 				
 				if(st==1)
 					options.offsetTop=$("#"+key+"EditSection").offset().top;
 				$("#"+key+"EditSection").OnlyVertical(options);
+			}
 			}
 		});
 		
@@ -350,12 +473,21 @@ var mobEditPage=(function(){
 		$("#DppEditSection").after(filterButton);
     var dppHint = $("#dppToolTip").html();
     $("#DppEditSection").prepend(dppHint);
+    var dppMatchalertToggle = $("#dppMatchalertToggle").html();
+    $("#DppEditSection").prepend(dppMatchalertToggle);
     //Check horoscope button exist, if yes then add functionality
     if($("#horoscopeButton").length){
       var horoscopeButton=$("#horoscopeButton").html();
       $("#KundliEditSection").after(horoscopeButton);
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
+      if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
+      {
+      	var newUrl=document.location.href.replace('fromCALHoro','');
+	    history.pushState('', '', newUrl);
+
+      	onHoroscopeButtonClick();
+        }
     }
     
 	};
@@ -388,7 +520,46 @@ function formatJsonOutput(result)
 	delete(result.phoneDetails);
 	delete(result.responseMessage);
 	delete(result.responseStatusCode);
+        delete(result.imageCopyServer);
+        delete(result.cache_flag);
+        delete(result.cache_interval);
+        delete(result.resetCache);
+        delete(result.flagForAppRatingControl);
+	delete(result.xmppLoginOn);
+	$.each(result, function(key, value)
+	{
+		if($.inArray(key,editSectionArr)<=-1)
+		{
+			delete(result[key]);
+		}
+	});
 	return result;
+}
+
+function sendAjaxForToggleMatchalertLogic(setValue)
+{
+    $.ajax({
+          url: "/api/v1/search/matchAlertToggleLogic",
+          dataType: 'json',
+          method: "POST",
+          cache: true,
+          async: true,
+          data:{logic:setValue},
+          success: function(result) {
+	  }
+    });
+}
+function toggleDppMatchalerts(setValue){
+            $("#toggleButton").toggleClass("filter-off").toggleClass("filter-on");
+            
+            if($("#toggleButton").hasClass("filter-on"))
+            { 
+                sendAjaxForToggleMatchalertLogic("history");
+            }
+            else
+            {  
+                sendAjaxForToggleMatchalertLogic("dpp");
+            }
 }
 
 function readMore(string,keyName)
@@ -403,3 +574,151 @@ function readMore(string,keyName)
 	else
 		return string;
 }
+
+function showAlternateConfirmLayerMS(email){
+                var altEmail = typeof email !='undefined' ? email :   $("#AlternateEmailId_value").eq(0).text().trim();
+                var obj = $("#emailSentConfirmLayer");
+                var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,altEmail);
+                obj.find("#emailConfirmationText").eq(0).text(msg);
+                obj.show();
+                var tempOb=$("#altEmailinnerLayer");
+                tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
+                    .css('margin-top','-'+$(tempOb).height()/2+'px');   
+
+    
+    
+    
+    
+}
+
+function bindEmailButtons(){
+    $("#altEmailVerify,#EmailVerify").unbind();
+    $("#altEmailVerify,#EmailVerify").click(function(event)
+    {
+      event.stopPropagation();
+      $("#newLoader").show();
+      
+      var this_id = $(this).attr('id'),emailType='',email='';
+      if(this_id == 'altEmailVerify')
+      {
+          emailType=2;
+          email=$("#AlternateEmailId_value").eq(0).text().trim();
+      }
+      else 
+      {
+          emailType=1;
+          email=$("#EmailId_value").eq(0).text().trim();
+          
+      }
+      var ajaxData={'emailType':emailType};
+      $.ajax({
+                                url:'/api/v1/profile/sendEmailVerLink',
+                                dataType: 'json',
+                                data: ajaxData,
+                                type: "POST",
+                                success: function(response) 
+                                {
+                                    $("#newLoader").hide();
+                                    showAlternateConfirmLayerMS(email);
+                                }
+    
+            });
+    });
+}
+
+   /**
+    * function is called when a field needs to be opened
+    */
+  function getFieldsOnCal()
+  {
+    fieldIdMappingArray = {
+      "name" : { "type": "text","mobileDivFieldId":"BasicDetails_name","mobileFieldId":"NAME"},
+    	// contact section
+      "EMAIL" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
+      "ALT_EMAIL" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
+    };
+
+
+    mobileSectionArray = {"education":"Education","basic":"Details",
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp"
+    }
+
+    section = getUrlParameter('section');
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && mobileSectionArray.hasOwnProperty(section))
+    {
+      fieldType = '';
+      mobileDivFieldId = '';
+      mobileFieldId = '';
+      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
+      {
+        fieldType = fieldIdMappingArray[fieldName].type;
+        mobileDivFieldId = fieldIdMappingArray[fieldName].mobileDivFieldId;
+        mobileFieldId = fieldIdMappingArray[fieldName].mobileFieldId;
+      }
+      openFieldsOnCal(mobileSectionArray[section],fieldType,mobileFieldId,mobileDivFieldId);        
+    }
+    
+  }
+
+  /**
+   * opens a field
+   * @param  {String} section the section which must be clicked
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldDivId   the parent id
+   */
+  function openFieldsOnCal(section,fieldType,fieldId,fieldDivId) 
+  {
+  	var timeoutFieldCheck = 100;
+  	var timeoutDropdown = 100;
+    if ( fieldDivId === '')
+    {
+    	window.location.replace(window.location.href+"#"+section);
+  	}
+  	else
+  	{
+  		var checkExist = setInterval(function() 
+        {
+            if ($('#'+fieldDivId).length) 
+            {
+                $("#"+fieldDivId).click();
+                if ( fieldType == 'text' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).focus();
+					}, timeoutDropdown);
+                }
+                else if ( fieldType == 'dropdown' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).click();
+					}, timeoutDropdown);
+
+                }
+                clearInterval(checkExist);
+            }
+
+
+        }, timeoutFieldCheck);
+  	}
+  }
+
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
+	function getUrlParameter(sParam) {
+	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+	    sURLVariables = sPageURL.split('&'),
+	    sParameterName,
+	    i;
+
+	for (i = 0; i < sURLVariables.length; i++) {
+	    sParameterName = sURLVariables[i].split('=');
+
+	    if (sParameterName[0] === sParam) {
+	        return sParameterName[1] === undefined ? true : sParameterName[1];
+	    }
+	}
+};

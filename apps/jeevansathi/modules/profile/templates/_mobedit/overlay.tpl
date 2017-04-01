@@ -27,11 +27,16 @@ SECTION_HTML
         <div id="key_label" class="color3 f14 fontlig {{displayDiv}} pb10">TAB_LABEL {{underScreening}}</div>
         {{inputDiv}}
       </div>
+        <span id="showAll" rel="{{displaySettingsValue}}" orel="{{displaySettingsValue}}" class="fr fontlig pt15 {{displaySettings}}" onclick="{{ONCLICK_EVENT}}">
+              <span id="showText" class="vTop padr5 f14">{{displaySettingsLabel}}</span><i class="iconImg2 iconSprite"></i>
+        </span>
       <div class="fr wid4p pt8" style="{{HS}}"> <i class="mainsp {{displayArrow}}  " ></i> </div>
       <div class="clr"></div>
     </div>
   </div>
 </div>
 </div>
-
+<div class='overlayName' id = "overlayName">
+        ~include_partial("profile/mobedit/_showNamesOverlay")`
+</div>
 </form>

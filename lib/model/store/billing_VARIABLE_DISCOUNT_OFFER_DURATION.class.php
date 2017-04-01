@@ -127,7 +127,7 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION extends TABLE
             if(is_array($params["SERVICE"]) && $params["SERVICE"])
             {
                 if(count($params["SERVICE"])==1)
-                    $valuesStr = $valuesStr."(:PROFILEID0,:SERVICE0,DISC20,:DISC30,:DISC60,:DISC120,:DISCL0)";
+                    $valuesStr = $valuesStr."(:PROFILEID0,:SERVICE0,:DISC20,:DISC30,:DISC60,:DISC120,:DISCL0)";
                 else
                 {
                     foreach ($params["SERVICE"] as $key => $service) {

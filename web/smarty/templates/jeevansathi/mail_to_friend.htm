@@ -71,7 +71,7 @@
                   <div style="clear:both; height:7px;"><!-- --></div>
 		~if $is_album`
                 <a href="~$SITE_URL`/profile/viewprofile.php?username=~$PROFILENAME`&CALL_ME=~$SITE_URL`/profile/layer_photocheck.php%3Fchecksum%3D%26profilechecksum%3D~$PROFILECHECKSUM`%26seq%3D1" style="font-family:Verdana, Arial; font-size:11px; color:#03719f; text-decoration:underline;">View Album</a> ~/if`</td>
-              <td width="452" align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:11px; color:#676767; line-height:17px;" align="justify"><b>~$AGE`, ~$HEIGHT`,  ~$RELIGION`, ~$MTONGUE`, ~$EDUCATION`, ~$OCCUPATION`, ~if $CITY_RES neq ""`~$CITY_RES`, ~/if`~$COUNTRY_RES`</b></div></td>
+              <td width="452" align="left" valign="top"><div style="font-family:Verdana, Arial; font-size:11px; color:#676767; line-height:17px;" align="justify"><b>~$AGE`, ~$HEIGHT`,  ~$RELIGION`, ~$MTONGUE`,~if $EDUCATION neq "-"` ~$EDUCATION`,~/if` ~$OCCUPATION`, ~if $CITY_RES neq ""`~$CITY_RES`, ~/if`~$COUNTRY_RES`</b></div></td>
             </tr>
             <tr>
               <td height="10" align="left" valign="top"></td>

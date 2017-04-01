@@ -3,7 +3,7 @@
  include_once("/usr/local/scripts/DocRoot.php");
 
 include("connect.inc");
-$db2=connect_db();
+$db2=connect_ddl();
 
 $ts=time();
 $ts-=24*60*60;

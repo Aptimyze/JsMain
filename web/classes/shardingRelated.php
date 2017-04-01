@@ -25,9 +25,17 @@ $shardedServers[0]='11Master';
 $shardedServers[1]='211';  //3307
 $shardedServers[2]='303Master';  //3309
 
-$shardSlave112[0]='111Slave_shard1';// 3309
+$shardSlave112[0]='112Slave_shard1';// 3309
 $shardSlave112[1]='112Slave_shard2'; // 3306
 $shardSlave112[2]='112Slave_shard3'; // 3307
+
+$ddlShardUser[0]= 'shard1DDL';
+$ddlShardUser[1]= 'shard2DDL';
+$ddlShardUser[2]= 'shard3DDL';
+
+$ddlShardSlaveUser[0]= 'shard1SlaveDDL';
+$ddlShardSlaveUser[1]= 'shard2SlaveDDL';
+$ddlShardSlaveUser[2]= 'shard3SlaveDDL';
 
 /**
 * This function is used to map serverId to ServerName. Server name is required for connection.
@@ -39,13 +47,24 @@ $shardSlave112[2]='112Slave_shard3'; // 3307
 function getActiveServerName($activeServerId,$master_or_slave='master')
 {
         global $activeServers;
+        global $ddlShardUser;
+	global $ddlShardSlaveUser;
         global $slave_activeServers;
-	global $shardSlave112;
-
+        global $shardSlave112;
         if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
-	elseif($master_or_slave=='slave112')
-		return $shardSlave112[$activeServerId];
+        elseif($master_or_slave=='slave112')
+                return $shardSlave112[$activeServerId];
+        elseif($master_or_slave=='masterDDL')
+                return 'masterDDL';
+	elseif($master_or_slave=='alertsDDL')
+                return 'alertsDDL';
+	elseif($master_or_slave=='viewLogDDL')
+                return 'viewLogDDL';
+        elseif($master_or_slave=='shardDDL')
+                return $ddlShardUser[$activeServerId];
+	elseif($master_or_slave=='shardSlaveDDL')
+                return $ddlShardSlaveUser[$activeServerId];
         else
                 return $slave_activeServers[$activeServerId];
 }
@@ -117,10 +136,13 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 			else
 				$db=$mysqlObj->connect("slave");
 		}
-		$sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
-		$result = $mysqlObj->executeQuery($sql,$db);
-                $myrow=$mysqlObj->fetchArray($result);
-                $myDbId=$myrow["SERVERID"];
+		//This saves a query
+		$myDbId=JsDbSharding::getShardNumber($profileid);
+		
+		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
+		// $result = $mysqlObj->executeQuery($sql,$db);
+  //               $myrow=$mysqlObj->fetchArray($result);                
+  //               $myDbId=$myrow["SERVERID"];
 		if(!$matchalertServer)
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);
@@ -137,10 +159,13 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 		else
 			$db=$mysqlObj->connect("master");
 	
-		$sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
-		$result = $mysqlObj->executeQuery($sql,$db);
-		$myrow=$mysqlObj->fetchArray($result);
-		$myDbId=$myrow["SERVERID"];
+		//This saves a query
+		$myDbId=JsDbSharding::getShardNumber($profileid);
+		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
+		// $result = $mysqlObj->executeQuery($sql,$db);
+		// $myrow=$mysqlObj->fetchArray($result);
+		// $myDbId=$myrow["SERVERID"];
+
 		if(!$matchalertServer)
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);

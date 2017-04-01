@@ -13,7 +13,7 @@ function update_score($pid)
         global $start_dt;
 
 	
-        $sql_pid = "SELECT  AGE , ENTRY_DT,YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO  , FATHER_INFO , HAVEPHOTO , RELATION , LAST_LOGIN_DT  , CITY_RES, SOURCE , HAVEPHOTO,GENDER FROM newjs.JPROFILE WHERE PROFILEID ='$pid'";
+        $sql_pid = "SELECT  AGE , ENTRY_DT,YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO  , FATHER_INFO , HAVEPHOTO , RELATION , DATE(LAST_LOGIN_DT) LAST_LOGIN_DT , CITY_RES, SOURCE , HAVEPHOTO,GENDER FROM newjs.JPROFILE WHERE PROFILEID ='$pid'";
 
         $res_pid = mysql_query_decide($sql_pid) or logError($sql_pid);
 

@@ -33,9 +33,19 @@ class apiActions extends sfActions
     		$this->apiWebHandler = ApiRequestHandler::getInstance($request);
 		$request->setAttribute("mobileAppApi",1);
 		$respObj = ApiResponseHandler::getInstance();
-			if($request->getParameter("FROM_GCM")==1)
+			if($request->getParameter("FROM_GCM")==1){
 				$gcm=1;
+				$msgId = $request->getParameter("messageId");
+				$notificationKey = $request->getParameter("notificationKey");
+				$loginData =$request->getAttribute("loginData");
+        		$profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
+				//error_log("in api request ankita-".$msgId."---".$notificationKey);
+				//file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
+				NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$msgId,"notificationKey"=>$notificationKey));
+			}
     		$apiValidation=$this->apiWebHandler->getResponse();
+		$forwardingArray =$this->apiWebHandler->getModuleAndActionName($request);
+
 		if($apiValidation["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			$upgradeStatus=$this->apiWebHandler->forceUpgradeCheck($request,"apiAction");
@@ -48,7 +58,7 @@ class apiActions extends sfActions
 					$this->AfterAuth($loginData,$request);
 				}
 			}
-			$this->ForwardOrNot($request,$loginData,$upgradeStatus);
+			$this->ForwardOrNot($request,$loginData,$upgradeStatus,$forwardingArray);
 		}
 		else
 		{		
@@ -63,20 +73,17 @@ class apiActions extends sfActions
 		$request->setAttribute("loginData",$loginData);
 		$request->setAttribute('profileid', $loginData[PROFILEID]);
 		$respObj->setAuthChecksum($loginData[AUTHCHECKSUM]);
+		$respObj->setImageCopyServer($loginData[PROFILEID]);
 	}
-	private function ForwardOrNot($request,$loginData,$upgradeStatus)
+	private function ForwardOrNot($request,$loginData,$upgradeStatus,$forwardingArray)
 	{
 		$respObj = ApiResponseHandler::getInstance();
-		$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
+		//$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
 		$hamburgerDetails = HamburgerApp::getHamburgerDetails($loginData[PROFILEID],$request->getParameter("version"),$forwardingArray);
 		$respObj->setHamburgerDetails($hamburgerDetails);
 		if($upgradeStatus)
 			$respObj->setUpgradeDetails($upgradeStatus);
 
-		// Code added to update app device details (app version/os version/device model)
-		if($forwardingArray["moduleName"]=='myjs'){
-			NotificationFunctions::updateVersionDetails($request);
-		}// Code ends
 		$this->forward($forwardingArray["moduleName"],$forwardingArray["actionName"]);
 	}
         public function executeHamburgerDetailsV1(sfWebRequest $request)

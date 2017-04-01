@@ -153,5 +153,62 @@ class SEARCH_AGENT extends TABLE
                 }
                 return NULL;
 	}
+
+        /* This function inserts the receivers of mail along with there saved search names and the corresponding id's 
+        */
+        public function insertSavedSearchMailerData($receiverData)
+        {
+                try
+                {       if(is_array($receiverData))
+                        {
+                                $sql="INSERT IGNORE INTO search.send_saved_search_mail (RECEIVER,SEARCH_ID,SEARCH_NAME) VALUES ";                        
+                                $res = $this->db->prepare($sql);
+                                foreach($receiverData as $key=>$value)
+                                {
+                                        $sql .="(:RECEIVER".$key.",:SEARCH_ID".$key.",:SEARCH_NAME".$key."),";
+                                }
+                                $sql = rtrim($sql,",");
+                                $res = $this->db->prepare($sql);
+                                foreach($receiverData as $key => $value)
+                                {
+                                        $res->bindValue(":RECEIVER".$key, $value["PROFILEID"], PDO::PARAM_INT);
+                                        $res->bindValue(":SEARCH_ID".$key, $value["ID"], PDO::PARAM_INT);
+                                        $res->bindValue(":SEARCH_NAME".$key, $value["SEARCH_NAME"], PDO::PARAM_STR);
+                                }
+                                $res->execute();
+                        }
+                        
+                }
+                catch(PDOException $e)
+                {
+                        //throw new jsException($e);
+                        jsException::nonCriticalError("newjs/SEARCH_AGENT.class.php(1)-->.$sql".$e);
+                        return '';
+                }
+        }
+
+        public function selectSavedSearchMailerData($count,$totalInstances,$lastLoginDate)
+        {
+                try
+                {
+                        $sql = "SELECT S.PROFILEID, ID, SEARCH_NAME FROM `SEARCH_AGENT` S LEFT JOIN JPROFILE J USING ( PROFILEID ) WHERE J.ACTIVATED IN ('Y', 'U') AND S.PROFILEID%:TOTALINSTANCE=:REMAINDER AND J.activatedKey=1 AND DATE(J.LAST_LOGIN_DT) > :LASTLOGINDATE ORDER BY PROFILEID DESC";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":TOTALINSTANCE", $totalInstances, PDO::PARAM_INT);
+                        $res->bindValue(":REMAINDER", $count, PDO::PARAM_INT);
+                        $res->bindValue(":LASTLOGINDATE", $lastLoginDate, PDO::PARAM_STR);
+                        $res->execute();
+                        while($row = $res->fetch(PDO::FETCH_ASSOC))
+                        {
+                                $detailArr[] = $row;
+                        }
+                        return $detailArr;
+                }
+                catch(PDOException $e)
+                {
+                        //throw new jsException($e);
+                        jsException::nonCriticalError("newjs/SEARCH_AGENT.class.php(1)-->.$sql".$e);
+                        return '';
+                }
+        }
 }
 ?>

@@ -9,7 +9,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     public function modeDetails($pid) {
         try {
             if ($pid) {
-                $sql = "SELECT BILLID,MODE,CD_NUM,CD_DT,CD_CITY,BANK,IPADD,STATUS,ENTRY_DT FROM billing.PAYMENT_DETAIL WHERE PROFILEID = :PROFILEID ";
+                $sql = "SELECT BILLID,MODE,CD_NUM,CD_DT,CD_CITY,BANK,IPADD,STATUS,CONVERT_TZ(ENTRY_DT,'SYSTEM','right/Asia/Calcutta') as ENTRY_DT FROM billing.PAYMENT_DETAIL WHERE PROFILEID = :PROFILEID ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
                 $prep->execute();
@@ -320,14 +320,53 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function getAllDetailsForBillidArr($billidArr) {
+    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="") {
         try {
         	$billidStr = implode(",", $billidArr);
             $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
+            if($orderBy != ""){
+                $sql .= " ORDER BY ".$orderBy." DESC";
+            }
+            if($limit != ""){
+                $sql .= " LIMIT ".$limit;
+            }
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $output[$result['BILLID']] = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr) {
+        try {
+            $billidStr = implode(",", $billidArr);
+            $sql = "SELECT if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT, BILLID FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr) AND STATUS='DONE' AND AMOUNT>0";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output += $result['AMOUNT']*(1-billingVariables::NET_OFF_TAX_RATE);
+            }
+            return round($output,2);
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+    
+    public function getStatusTransactions($billId,$statusArr) {
+        try {
+            $statusStr = implode(",",$statusArr);
+            $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID=:BILLID AND STATUS IN ($statusStr)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billId, PDO::PARAM_INT);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result;
             }
             return $output;
         }

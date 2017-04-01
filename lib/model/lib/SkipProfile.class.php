@@ -32,7 +32,7 @@ class SkipProfile
      * Private construct so nobody else can instance it
      *
      */
-    private function __construct($profile)
+    public function __construct($profile)
     {
 	    $this->_profileid =$profile;
     }
@@ -157,6 +157,11 @@ class SkipProfile
 		if(count($profileid)<1)
 			return null;
 		return $profileid;
+	}
+
+	public static function unsetInstance($profileid)
+	{
+		unset(self::$_instance[$profileid]);
 	}
 }
 

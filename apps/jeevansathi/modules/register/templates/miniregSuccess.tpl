@@ -8,7 +8,7 @@ var mobileIds = [];
 	<div class="min_reg_cnt">
 		  <a href="~$SITE_URL`"><h1 class="lgo" style="margin-left: 25px"></h1></a>
 		  <p class="fr"> venture</p>
-			<a href="http://www.naukri.com"><i class="nkri_lgo fr sprte_mini"></i></a>
+			<a href="https://www.naukri.com"><i class="nkri_lgo fr sprte_mini"></i></a>
 		  <p class="fr">a </p>
 		  <p class="clr"></p>
 		  <div class="tp sprte_mini"> <i class="l sprte_mini"></i>

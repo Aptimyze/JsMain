@@ -1,6 +1,9 @@
 <?php
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," crontabs/update_phoneNos.php in USE",$msg);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 ini_set('max_execution_time','0');
 include('connect.inc');
 $db=connect_db();
@@ -58,7 +61,7 @@ for($k=1;$k<=$maxpid;$k++)
 		$q++;
 		$sql="UPDATE newjs.JPROFILE SET PHONE_MOB='$p' where PROFILEID='$profileid'";
 		$res = mysql_query($sql) or die(mysql_error());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
-		
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
 	}
 }
 function leaveonlydigits($num)

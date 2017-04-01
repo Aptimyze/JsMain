@@ -27,10 +27,16 @@ function check_obscene_word($string_to_check)
 	$string_to_check = remove_special_characters($string_to_check,"alphabets");
 	$sql = "SELECT SQL_CACHE WORD FROM newjs.OBSCENE_WORDS";
 	$res = mysql_query_decide($sql) or  logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
+	$string_to_check_array = explode(" ",$string_to_check); 
+
 	while($row = mysql_fetch_array($res))
 	{
-		if(strstr($string_to_check, $row['WORD']))
+		// var_dump($row['WORD']);
+		if(in_array($row['WORD'],$string_to_check_array))
+		{
 			return true;
+		}
 	}
 }
 
@@ -85,6 +91,13 @@ function check_for_minimum_character($string_to_check)
 //retiurns string with special characters removed.
 function remove_special_characters($string,$return_what="")
 {
+	$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$string);
+	$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $string);
+	$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
+
+	$string = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
+	$string = implode(' ',$string);
+
 	$let_go_dots = 0;
 	$string = strtolower($string);
 
@@ -101,7 +114,7 @@ function remove_special_characters($string,$return_what="")
 	{
 		if($retrun_what == "alphabets")
 		{
-			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122))
+			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || ord($string[$i]) == 32)
 				$string_actual .= $string[$i];
 		}
 		elseif($return_what == "numbers")
@@ -111,11 +124,10 @@ function remove_special_characters($string,$return_what="")
 		}
 		else
 		{
-			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || (ord($string[$i]) >= 48 && ord($string[$i]) <= 57) || ($let_go_dots && ord($string[$i]) == 46))
+			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || (ord($string[$i]) >= 48 && ord($string[$i]) <= 57) || ($let_go_dots && ord($string[$i]) == 46) || (ord($string[$i]) == 32))
 				$string_actual .= $string[$i];
 		}
 	}
-
 	return $string_actual;
 }
 /**********************Code Added by sriram on May 21 2007******************/
@@ -124,9 +136,15 @@ function makes_username_changes($profileid,$newusername)
 {
 	//echo $profileid." = >  ".$newusername."<br>";
 	global $db;
-	
-	$sql="UPDATE newjs.JPROFILE SET USERNAME='$newusername' where PROFILEID='$profileid'";
-	$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate"); 
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$result = $objUpdate->editJPROFILE(array("USERNAME"=>$newusername),$profileid,'PROFILEID');
+	if(false === $result) {
+		$sql="UPDATE newjs.JPROFILE SET USERNAME='$newusername' where PROFILEID='$profileid'";
+		logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	}
+	//$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
 	$sql="INSERT into newjs.NAMES VALUES('$newusername')";
 	$row=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	$sql="UPDATE newjs.CONNECT SET USERNAME='$newusername' WHERE PROFILEID='$profileid'";
@@ -364,7 +382,9 @@ function delete_record($pid)
 	include_once("$path/classes/Mysql.class.php");
 	include_once("$path/classes/Memcache.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/profile/contacts_functions.php");
-
+	include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+	
+	
 	global $mysqlObj;
 	global $noOfActiveServers;
 	$mysqlObj=new Mysql;
@@ -376,6 +396,14 @@ function delete_record($pid)
 		$mysqlObj->executeQuery("set session wait_timeout=1000",$myDbarr[$myDbName]);
 
 	}
+	
+	$messageShardCount=0;
+	$dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+	$dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+	$dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+	$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+	$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+	$dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
 //	$myDb=$mysqlObj->connect("$myDbName");
 	
 	//Sharding of CONTACTS done by Sadaf
@@ -447,8 +475,24 @@ function delete_record($pid)
 	if(count($myDbarr))
         foreach($myDbarr as $key=>$val)
 	{
+		$messageShardCount++;
 		$mysqlObj->ping($myDbarr[$key]);
 		$myDb=$myDbarr[$key];
+		if($messageShardCount==1)
+		{
+			$dbMessageLogObj=$dbMessageLogObj1;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj1;
+		}
+		if($messageShardCount==2)
+		{
+			$dbMessageLogObj=$dbMessageLogObj2;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj2;
+		}
+		if($messageShardCount==3)
+		{
+			$dbMessageLogObj=$dbMessageLogObj3;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj3;
+		}
 
 		$sql1="DELETE FROM newjs.PHOTO_REQUEST WHERE PROFILEID='$pid' OR PROFILEID_REQ_BY='$pid'";
                 $mysqlObj->executeQuery($sql1,$myDb);
@@ -469,41 +513,60 @@ function delete_record($pid)
 		$mysqlObj->ping($myDbarr[$key]);
 		$myDb=$myDbarr[$key];	
 		//Deleting contacts from newjs.MESSAGE_LOG
-		$sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
-                	$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
-        	}
-
-	        $sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE RECEIVER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
-        	        $mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
-        	}	
+		
+		$result=$dbMessageLogObj->getAllMessageIdLog($pid,'SENDER');
+		//$sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($result)){
+				foreach($result as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbMessageLogObj->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
+				}
+			}
+		$res=$dbMessageLogObj->getAllMessageIdLog($pid,'RECEIVER');
+	       // $sql  = "SELECT ID FROM newjs.MESSAGE_LOG WHERE RECEIVER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb) or die(mysql_error_js($myDb));
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($res)){
+				foreach($res as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbMessageLogObj->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
+				}
+			}
 	
 		//Deleting contacts from newjs.DELETED_MESSAGE_LOG
-		$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER='$pid'";
-	        $res=$mysqlObj->executeQuery($sql,$myDb) or die("$sql".mysql_error_js());
-        	while($row=$mysqlObj->fetchArray($res))
-	        {
-        	        $id=$row['ID'];
-                	$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
-	                $mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
-        	}			
-	
-		$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE RECEIVER='$pid'";
-        	$res=$mysqlObj->executeQuery($sql,$myDb)  or die("$sql".mysql_error_js());
-	        while($row=$mysqlObj->fetchArray($res))
-        	{
-                	$id=$row['ID'];
-	                $sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
-        	        $mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
-        	}	
+		$resp=$dbDeletedMessageLogObj->getAllMessageIdLog($pid,'SENDER');
+		//$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER='$pid'";
+	      //  $res=$mysqlObj->executeQuery($sql,$myDb) or die("$sql".mysql_error_js());
+        	//while($row=$mysqlObj->fetchArray($res))
+        	if(is_array($resp)){
+				foreach($resp as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
+				}
+			}
+			$response=$dbDeletedMessageLogObj->getAllMessageIdLog($pid,'RECEIVER');
+		//$sql  = "SELECT ID FROM newjs.DELETED_MESSAGE_LOG WHERE RECEIVER='$pid'";
+        	//$res=$mysqlObj->executeQuery($sql,$myDb)  or die("$sql".mysql_error_js());
+	        //while($row=$mysqlObj->fetchArray($res))
+	        if(is_array($response)){
+				foreach($response as $key=>$row)
+				{
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj->deleteMessageLogById($id);
+						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
+						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
+				}
+			}
 	}
 }?>

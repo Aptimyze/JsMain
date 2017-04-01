@@ -85,6 +85,7 @@ class CrmLoginAction extends sfActions
 	{
 		$dom = "";
 		$timeout = 14400;
+		$name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $name);
 		setcookie("CRM_NOTIFICATION_AGENTID",$cid,time() + $timeout,"/",$dom);
 		setcookie("CRM_NOTIFICATION_AGENT",$name,time() + $timeout,"/",$dom);
 		if($dialer==true)

@@ -60,41 +60,46 @@ var saveDetail=(function(){
           url: "/api/v1/profile/editsubmit",
           type: 'POST',
           datatype: 'json',
+          headers: { 'X-Requested-By': 'jeevansathi' },       
           cache: true,
           async: true,
           data: {editFieldArr : editFieldArr},
-          success: function(result) {               
-				if(CommonErrorHandling(result))
+          success: function(result) {
+
+				if(CommonErrorHandling(result)||(result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && (result.error[0].indexOf("banned")!=-1 || result.error[0].indexOf("country")!=-1)))
 				{
 					if(result.hasOwnProperty("error") && result.error)
-                                        {
-                                            startTouchEvents();
-					$("#validation_error").text("");
-					if(result.error)
-						$("#validation_error").text(result.error);
+					{
+						startTouchEvents();
+						$("#validation_error").text("");
+						if(result.error)
+							$("#validation_error").text(result.error);
 						
-					setTimeout(function(){
-					if($("#validation_error").text())
-						ShowTopDownError([$("#validation_error").text()]);
+						setTimeout(function(){
+							if($("#validation_error").text())
+								ShowTopDownError([$("#validation_error").text()]);
 					//setTimeout(function(){RemoveOverLayer();},animationtimer);
-					},
-					animationtimer);
-                                        }
-                                        else
-                                        {
-                                            RemoveOverLayer();
-                                        
-                                            result=formatJsonOutput(result);
-                                            hideLoader();
-                                        }
+				},
+				animationtimer);
+					}
+					else
+					{
+						RemoveOverLayer();
+
+						result=formatJsonOutput(result);
+						hideLoader();
+					}
 					//startTouchEvents();
 					
 					return true;
+
 				}
 				else
 				{
-					
+			
 				}
+                                
+
 			},
 		  error: function() {
 			hideLoader();

@@ -53,8 +53,6 @@ height: 22px;}
     -ms-transition: all 0.3s ease-in;
 }
 
-.myjs_hgt1{min-height:200px; min-width:280px;}
-
 .pie { width:62px; height:62px; background:#e4e4e4; border-radius:100%; position:absolute; margin:0px; }
 .pie1 { clip:rect(0px,62px,62px,31px); -o-transform:rotate(0deg); -moz-transform:rotate(0deg); -webkit-transform:rotate(0deg);  }
 .pie2 { clip:rect(0px,31px,62px,0px); -o-transform:rotate(0deg); -moz-transform:rotate(0deg); -webkit-transform:rotate(0deg);  }
@@ -63,7 +61,6 @@ height: 22px;}
 .hold2 { clip:rect(0px,31px,62px,0px); }
 .bg { width:60px; height:60px; background-color:#e4e4e4; border-radius:100%; border: 1px solid #d9475c; position:absolute;margin-left: 1px; margin-top: 1px;  }
 
-.brdr50p {border-radius:100%;}
 .image{ width:52px; height:52px; margin-top: 5px; margin-left: 5px; z-index:3; position:relative; border-radius:100%; float:left;}
 .pl_a{padding-left:10px;}
 .myjs_pad1{padding:8px 0px;}
@@ -109,17 +106,24 @@ height: 29px;}
   background: #ffffff;
   padding:0 4px;
 }
-
+.wid497p{width: 49.7%;}
 .myjs_f30{font-size:30px;}
 .lifestyle_2{background-position: -364px -59px; width: 27px; height: 31px;}
 
 /*Notification Layer*/
-.wid497p{width: 49.7%;}
 .hgt156 {
 	height:156px}
 .btm0 {bottom:0px}
-.boxshadow_new{-webkit-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
--moz-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
-.dispib {display:inline-block}
 .padActi {padding: 25px 10px 10px 10px;}
+
+.newBgBand{
+background-image: url(IMG_URL/images/mrevamp/loginbg.jpg);    
+background-position: -200px -200px;
+}
+
+ .boxshadow_new{-webkit-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+ -moz-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
+ 
+ 
+.loaderSmallIcon{width:20px;height:20px}

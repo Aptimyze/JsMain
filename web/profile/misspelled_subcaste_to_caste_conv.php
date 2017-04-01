@@ -2,6 +2,14 @@
 ini_set('max_execution_time','0');
 include('../profile/connect.inc');
 //include("contacts_functions.php");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
+               $cc='eshajain88@gmail.com';
+               $to='bhavanakadwal@gmail.com';
+               $msg1='misspelled subcaste to caste is being hit. We can wrap this to JProfileUpdateLib';
+               $subject="misspelled subcaste to caste";
+               $msg=$msg1.print_r($_SERVER,true);
+               send_email($to,$msg,$subject,"",$cc);
+
 $db = connect_db();
 
 $cst_arr = array("14","2","149","154");

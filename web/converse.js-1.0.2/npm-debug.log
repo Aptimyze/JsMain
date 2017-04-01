@@ -1,0 +1,317 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.1.66
+3 info using node@v0.8.15
+4 verbose read json /var/www/html/branches/membership/converse.js-1.0.2/package.json
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/var/www/html/branches/membership/converse.js-1.0.2',
+6 verbose install   [ 'requirejs',
+6 verbose install     'bower',
+6 verbose install     'grunt',
+6 verbose install     'grunt-cli',
+6 verbose install     'grunt-contrib-cssmin',
+6 verbose install     'grunt-contrib-jst',
+6 verbose install     'grunt-json',
+6 verbose install     'http-server',
+6 verbose install     'jshint',
+6 verbose install     'phantom-jasmine',
+6 verbose install     'phantomjs',
+6 verbose install     'po2json' ] ]
+7 verbose from cache /var/www/html/branches/membership/converse.js-1.0.2/package.json
+8 info preinstall converse.js@1.0.2
+9 verbose from cache /var/www/html/branches/membership/converse.js-1.0.2/package.json
+10 verbose readDependencies using package.json deps
+11 verbose cache add [ 'requirejs@~2.1.15', null ]
+12 silly cache add name=undefined spec="requirejs@~2.1.15" args=["requirejs@~2.1.15",null]
+13 verbose parsed url { pathname: 'requirejs@~2.1.15',
+13 verbose parsed url   path: 'requirejs@~2.1.15',
+13 verbose parsed url   href: 'requirejs@~2.1.15' }
+14 silly cache add name="requirejs" spec="~2.1.15" args=["requirejs","~2.1.15"]
+15 verbose parsed url { pathname: '~2.1.15', path: '~2.1.15', href: '~2.1.15' }
+16 verbose addNamed [ 'requirejs', '~2.1.15' ]
+17 verbose addNamed [ null, '>=2.1.15- <2.2.0-' ]
+18 verbose cache add [ 'bower@latest', null ]
+19 silly cache add name=undefined spec="bower@latest" args=["bower@latest",null]
+20 verbose parsed url { pathname: 'bower@latest',
+20 verbose parsed url   path: 'bower@latest',
+20 verbose parsed url   href: 'bower@latest' }
+21 silly cache add name="bower" spec="latest" args=["bower","latest"]
+22 verbose parsed url { pathname: 'latest', path: 'latest', href: 'latest' }
+23 verbose addNamed [ 'bower', 'latest' ]
+24 verbose addNamed [ null, null ]
+25 silly lockFile c0b8173c-requirejs-2-1-15 requirejs@~2.1.15
+26 verbose lock requirejs@~2.1.15 /home/ankita/.npm/c0b8173c-requirejs-2-1-15.lock
+27 silly lockFile 09819b10-bower-latest bower@latest
+28 verbose lock bower@latest /home/ankita/.npm/09819b10-bower-latest.lock
+29 silly addNameRange { name: 'requirejs', range: '>=2.1.15- <2.2.0-', hasData: false }
+30 info addNameTag [ 'bower', 'latest' ]
+31 verbose cache add [ 'grunt@^1.0.1', null ]
+32 silly cache add name=undefined spec="grunt@^1.0.1" args=["grunt@^1.0.1",null]
+33 verbose parsed url { pathname: 'grunt@^1.0.1',
+33 verbose parsed url   path: 'grunt@^1.0.1',
+33 verbose parsed url   href: 'grunt@^1.0.1' }
+34 silly cache add name="grunt" spec="^1.0.1" args=["grunt","^1.0.1"]
+35 verbose parsed url { pathname: '^1.0.1', path: '^1.0.1', href: '^1.0.1' }
+36 verbose addNamed [ 'grunt', '^1.0.1' ]
+37 verbose addNamed [ null, null ]
+38 silly lockFile fbf6df7a-grunt-1-0-1 grunt@^1.0.1
+39 verbose lock grunt@^1.0.1 /home/ankita/.npm/fbf6df7a-grunt-1-0-1.lock
+40 verbose cache add [ 'grunt-cli@^1.1.0', null ]
+41 silly cache add name=undefined spec="grunt-cli@^1.1.0" args=["grunt-cli@^1.1.0",null]
+42 verbose parsed url { pathname: 'grunt-cli@^1.1.0',
+42 verbose parsed url   path: 'grunt-cli@^1.1.0',
+42 verbose parsed url   href: 'grunt-cli@^1.1.0' }
+43 silly cache add name="grunt-cli" spec="^1.1.0" args=["grunt-cli","^1.1.0"]
+44 verbose parsed url { pathname: '^1.1.0', path: '^1.1.0', href: '^1.1.0' }
+45 verbose addNamed [ 'grunt-cli', '^1.1.0' ]
+46 verbose addNamed [ null, null ]
+47 silly lockFile 4ee3e357-grunt-cli-1-1-0 grunt-cli@^1.1.0
+48 verbose lock grunt-cli@^1.1.0 /home/ankita/.npm/4ee3e357-grunt-cli-1-1-0.lock
+49 verbose cache add [ 'grunt-contrib-cssmin@~1.0.1', null ]
+50 silly cache add name=undefined spec="grunt-contrib-cssmin@~1.0.1" args=["grunt-contrib-cssmin@~1.0.1",null]
+51 verbose parsed url { pathname: 'grunt-contrib-cssmin@~1.0.1',
+51 verbose parsed url   path: 'grunt-contrib-cssmin@~1.0.1',
+51 verbose parsed url   href: 'grunt-contrib-cssmin@~1.0.1' }
+52 silly cache add name="grunt-contrib-cssmin" spec="~1.0.1" args=["grunt-contrib-cssmin","~1.0.1"]
+53 verbose parsed url { pathname: '~1.0.1', path: '~1.0.1', href: '~1.0.1' }
+54 verbose addNamed [ 'grunt-contrib-cssmin', '~1.0.1' ]
+55 verbose addNamed [ null, '>=1.0.1- <1.1.0-' ]
+56 silly lockFile 4382e358-grunt-contrib-cssmin-1-0-1 grunt-contrib-cssmin@~1.0.1
+57 verbose lock grunt-contrib-cssmin@~1.0.1 /home/ankita/.npm/4382e358-grunt-contrib-cssmin-1-0-1.lock
+58 verbose cache add [ 'grunt-contrib-jst@~1.0.0', null ]
+59 silly cache add name=undefined spec="grunt-contrib-jst@~1.0.0" args=["grunt-contrib-jst@~1.0.0",null]
+60 verbose parsed url { pathname: 'grunt-contrib-jst@~1.0.0',
+60 verbose parsed url   path: 'grunt-contrib-jst@~1.0.0',
+60 verbose parsed url   href: 'grunt-contrib-jst@~1.0.0' }
+61 silly cache add name="grunt-contrib-jst" spec="~1.0.0" args=["grunt-contrib-jst","~1.0.0"]
+62 verbose parsed url { pathname: '~1.0.0', path: '~1.0.0', href: '~1.0.0' }
+63 verbose addNamed [ 'grunt-contrib-jst', '~1.0.0' ]
+64 verbose addNamed [ null, '>=1.0.0- <1.1.0-' ]
+65 silly lockFile 1b6136ae-grunt-contrib-jst-1-0-0 grunt-contrib-jst@~1.0.0
+66 verbose lock grunt-contrib-jst@~1.0.0 /home/ankita/.npm/1b6136ae-grunt-contrib-jst-1-0-0.lock
+67 verbose cache add [ 'grunt-json@^0.2.0', null ]
+68 silly cache add name=undefined spec="grunt-json@^0.2.0" args=["grunt-json@^0.2.0",null]
+69 verbose parsed url { pathname: 'grunt-json@^0.2.0',
+69 verbose parsed url   path: 'grunt-json@^0.2.0',
+69 verbose parsed url   href: 'grunt-json@^0.2.0' }
+70 silly cache add name="grunt-json" spec="^0.2.0" args=["grunt-json","^0.2.0"]
+71 verbose parsed url { pathname: '^0.2.0', path: '^0.2.0', href: '^0.2.0' }
+72 verbose addNamed [ 'grunt-json', '^0.2.0' ]
+73 verbose addNamed [ null, null ]
+74 silly lockFile 4b1200bc-grunt-json-0-2-0 grunt-json@^0.2.0
+75 verbose lock grunt-json@^0.2.0 /home/ankita/.npm/4b1200bc-grunt-json-0-2-0.lock
+76 info addNameTag [ 'grunt', '^1.0.1' ]
+77 info addNameTag [ 'grunt-cli', '^1.1.0' ]
+78 silly addNameRange { name: 'grunt-contrib-cssmin',
+78 silly addNameRange   range: '>=1.0.1- <1.1.0-',
+78 silly addNameRange   hasData: false }
+79 silly addNameRange { name: 'grunt-contrib-jst',
+79 silly addNameRange   range: '>=1.0.0- <1.1.0-',
+79 silly addNameRange   hasData: false }
+80 info addNameTag [ 'grunt-json', '^0.2.0' ]
+81 verbose url raw requirejs
+82 verbose url resolving [ 'https://registry.npmjs.org/', './requirejs' ]
+83 verbose url resolved https://registry.npmjs.org/requirejs
+84 info trying registry request attempt 1 at 18:10:56
+85 verbose etag "2VIRFJZKFOXBKFGUOAUCLGBHX"
+86 http GET https://registry.npmjs.org/requirejs
+87 verbose url raw bower
+88 verbose url resolving [ 'https://registry.npmjs.org/', './bower' ]
+89 verbose url resolved https://registry.npmjs.org/bower
+90 info trying registry request attempt 1 at 18:10:56
+91 verbose etag "B2UYTOT6VYA7570UGI4GF73CJ"
+92 http GET https://registry.npmjs.org/bower
+93 verbose url raw grunt-cli
+94 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-cli' ]
+95 verbose url resolved https://registry.npmjs.org/grunt-cli
+96 info trying registry request attempt 1 at 18:10:56
+97 verbose etag "2BD4XSNLOU739NY3R5BVFC743"
+98 http GET https://registry.npmjs.org/grunt-cli
+99 verbose url raw grunt
+100 verbose url resolving [ 'https://registry.npmjs.org/', './grunt' ]
+101 verbose url resolved https://registry.npmjs.org/grunt
+102 info trying registry request attempt 1 at 18:10:56
+103 verbose etag "9K2EF2RXHNNHKDER6EXMGS5D"
+104 http GET https://registry.npmjs.org/grunt
+105 verbose url raw grunt-contrib-jst
+106 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-jst' ]
+107 verbose url resolved https://registry.npmjs.org/grunt-contrib-jst
+108 info trying registry request attempt 1 at 18:10:56
+109 verbose etag "4BJ7X91VHKQY7DUZBRYRRRCWG"
+110 http GET https://registry.npmjs.org/grunt-contrib-jst
+111 verbose url raw grunt-contrib-cssmin
+112 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-cssmin' ]
+113 verbose url resolved https://registry.npmjs.org/grunt-contrib-cssmin
+114 info trying registry request attempt 1 at 18:10:56
+115 verbose etag "BAGLCR50RETC8IUJJBX28JPG2"
+116 http GET https://registry.npmjs.org/grunt-contrib-cssmin
+117 verbose url raw grunt-json
+118 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-json' ]
+119 verbose url resolved https://registry.npmjs.org/grunt-json
+120 info trying registry request attempt 1 at 18:10:56
+121 verbose etag "2HXEYNO7BNXCCWKVRI8C5EPOI"
+122 http GET https://registry.npmjs.org/grunt-json
+123 verbose cache add [ 'http-server@^0.7.4', null ]
+124 silly cache add name=undefined spec="http-server@^0.7.4" args=["http-server@^0.7.4",null]
+125 verbose parsed url { pathname: 'http-server@^0.7.4',
+125 verbose parsed url   path: 'http-server@^0.7.4',
+125 verbose parsed url   href: 'http-server@^0.7.4' }
+126 silly cache add name="http-server" spec="^0.7.4" args=["http-server","^0.7.4"]
+127 verbose parsed url { pathname: '^0.7.4', path: '^0.7.4', href: '^0.7.4' }
+128 verbose addNamed [ 'http-server', '^0.7.4' ]
+129 verbose addNamed [ null, null ]
+130 silly lockFile e6ce3c8f-http-server-0-7-4 http-server@^0.7.4
+131 verbose lock http-server@^0.7.4 /home/ankita/.npm/e6ce3c8f-http-server-0-7-4.lock
+132 verbose cache add [ 'jshint@^2.8.0', null ]
+133 silly cache add name=undefined spec="jshint@^2.8.0" args=["jshint@^2.8.0",null]
+134 verbose parsed url { pathname: 'jshint@^2.8.0',
+134 verbose parsed url   path: 'jshint@^2.8.0',
+134 verbose parsed url   href: 'jshint@^2.8.0' }
+135 silly cache add name="jshint" spec="^2.8.0" args=["jshint","^2.8.0"]
+136 verbose parsed url { pathname: '^2.8.0', path: '^2.8.0', href: '^2.8.0' }
+137 verbose addNamed [ 'jshint', '^2.8.0' ]
+138 verbose addNamed [ null, null ]
+139 silly lockFile 44d500ba-jshint-2-8-0 jshint@^2.8.0
+140 verbose lock jshint@^2.8.0 /home/ankita/.npm/44d500ba-jshint-2-8-0.lock
+141 verbose cache add [ 'phantom-jasmine@0.1.8', null ]
+142 silly cache add name=undefined spec="phantom-jasmine@0.1.8" args=["phantom-jasmine@0.1.8",null]
+143 verbose parsed url { pathname: 'phantom-jasmine@0.1.8',
+143 verbose parsed url   path: 'phantom-jasmine@0.1.8',
+143 verbose parsed url   href: 'phantom-jasmine@0.1.8' }
+144 silly cache add name="phantom-jasmine" spec="0.1.8" args=["phantom-jasmine","0.1.8"]
+145 verbose parsed url { pathname: '0.1.8', path: '0.1.8', href: '0.1.8' }
+146 verbose addNamed [ 'phantom-jasmine', '0.1.8' ]
+147 verbose addNamed [ '0.1.8', '0.1.8' ]
+148 silly lockFile dc1cd259-phantom-jasmine-0-1-8 phantom-jasmine@0.1.8
+149 verbose lock phantom-jasmine@0.1.8 /home/ankita/.npm/dc1cd259-phantom-jasmine-0-1-8.lock
+150 verbose cache add [ 'phantomjs@~1.9.7-1', null ]
+151 silly cache add name=undefined spec="phantomjs@~1.9.7-1" args=["phantomjs@~1.9.7-1",null]
+152 verbose parsed url { pathname: 'phantomjs@~1.9.7-1',
+152 verbose parsed url   path: 'phantomjs@~1.9.7-1',
+152 verbose parsed url   href: 'phantomjs@~1.9.7-1' }
+153 silly cache add name="phantomjs" spec="~1.9.7-1" args=["phantomjs","~1.9.7-1"]
+154 verbose parsed url { pathname: '~1.9.7-1', path: '~1.9.7-1', href: '~1.9.7-1' }
+155 verbose addNamed [ 'phantomjs', '~1.9.7-1' ]
+156 verbose addNamed [ null, '>=1.9.7-1 <1.10.0-' ]
+157 silly lockFile b7c43d1c-phantomjs-1-9-7-1 phantomjs@~1.9.7-1
+158 verbose lock phantomjs@~1.9.7-1 /home/ankita/.npm/b7c43d1c-phantomjs-1-9-7-1.lock
+159 verbose cache add [ 'po2json@^0.3.0', null ]
+160 silly cache add name=undefined spec="po2json@^0.3.0" args=["po2json@^0.3.0",null]
+161 verbose parsed url { pathname: 'po2json@^0.3.0',
+161 verbose parsed url   path: 'po2json@^0.3.0',
+161 verbose parsed url   href: 'po2json@^0.3.0' }
+162 silly cache add name="po2json" spec="^0.3.0" args=["po2json","^0.3.0"]
+163 verbose parsed url { pathname: '^0.3.0', path: '^0.3.0', href: '^0.3.0' }
+164 verbose addNamed [ 'po2json', '^0.3.0' ]
+165 verbose addNamed [ null, null ]
+166 silly lockFile 379bf96b-po2json-0-3-0 po2json@^0.3.0
+167 verbose lock po2json@^0.3.0 /home/ankita/.npm/379bf96b-po2json-0-3-0.lock
+168 info addNameTag [ 'http-server', '^0.7.4' ]
+169 info addNameTag [ 'jshint', '^2.8.0' ]
+170 silly addNameRange { name: 'phantomjs',
+170 silly addNameRange   range: '>=1.9.7-1 <1.10.0-',
+170 silly addNameRange   hasData: false }
+171 info addNameTag [ 'po2json', '^0.3.0' ]
+172 verbose url raw http-server
+173 verbose url resolving [ 'https://registry.npmjs.org/', './http-server' ]
+174 verbose url resolved https://registry.npmjs.org/http-server
+175 info trying registry request attempt 1 at 18:10:56
+176 verbose etag "2VHMY7D4UY6RH840AG8K1YEEU"
+177 http GET https://registry.npmjs.org/http-server
+178 verbose url raw phantom-jasmine/0.1.8
+179 verbose url resolving [ 'https://registry.npmjs.org/', './phantom-jasmine/0.1.8' ]
+180 verbose url resolved https://registry.npmjs.org/phantom-jasmine/0.1.8
+181 info trying registry request attempt 1 at 18:10:56
+182 verbose etag "AYLGW8LZ0K4GPN8STUWN2OQ81"
+183 http GET https://registry.npmjs.org/phantom-jasmine/0.1.8
+184 verbose url raw jshint
+185 verbose url resolving [ 'https://registry.npmjs.org/', './jshint' ]
+186 verbose url resolved https://registry.npmjs.org/jshint
+187 info trying registry request attempt 1 at 18:10:56
+188 verbose etag "3NKYMCDUSOSDM7CSENVPUTYEI"
+189 http GET https://registry.npmjs.org/jshint
+190 verbose url raw po2json
+191 verbose url resolving [ 'https://registry.npmjs.org/', './po2json' ]
+192 verbose url resolved https://registry.npmjs.org/po2json
+193 info trying registry request attempt 1 at 18:10:56
+194 verbose etag "QS7ZQJX9XNF1C2IYZ32Z1MPP"
+195 http GET https://registry.npmjs.org/po2json
+196 verbose url raw phantomjs
+197 verbose url resolving [ 'https://registry.npmjs.org/', './phantomjs' ]
+198 verbose url resolved https://registry.npmjs.org/phantomjs
+199 info trying registry request attempt 1 at 18:10:56
+200 verbose etag "5WY43RX331V29PNOVUSCM97KJ"
+201 http GET https://registry.npmjs.org/phantomjs
+202 http 304 https://registry.npmjs.org/grunt-contrib-jst
+203 silly registry.get cb [ 304,
+203 silly registry.get   { date: 'Mon, 13 Jun 2016 12:40:56 GMT',
+203 silly registry.get     via: '1.1 varnish',
+203 silly registry.get     'cache-control': 'max-age=300',
+203 silly registry.get     etag: '"4BJ7X91VHKQY7DUZBRYRRRCWG"',
+203 silly registry.get     age: '0',
+203 silly registry.get     connection: 'keep-alive',
+203 silly registry.get     'x-served-by': 'cache-sin6922-SIN',
+203 silly registry.get     'x-cache': 'MISS',
+203 silly registry.get     'x-cache-hits': '0',
+203 silly registry.get     'x-timer': 'S1465821656.234460,VS0,VE212',
+203 silly registry.get     vary: 'Accept-Encoding' } ]
+204 verbose etag grunt-contrib-jst from cache
+205 silly addNameRange number 2 { name: 'grunt-contrib-jst',
+205 silly addNameRange   range: '>=1.0.0- <1.1.0-',
+205 silly addNameRange   hasData: true }
+206 silly addNameRange versions [ 'grunt-contrib-jst',
+206 silly addNameRange   [ '0.2.0',
+206 silly addNameRange     '0.2.1',
+206 silly addNameRange     '0.2.2',
+206 silly addNameRange     '0.2.3',
+206 silly addNameRange     '0.2.4',
+206 silly addNameRange     '0.3.0',
+206 silly addNameRange     '0.3.1',
+206 silly addNameRange     '0.3.2',
+206 silly addNameRange     '0.4.1',
+206 silly addNameRange     '0.5.0',
+206 silly addNameRange     '0.5.1',
+206 silly addNameRange     '0.6.0',
+206 silly addNameRange     '1.0.0',
+206 silly addNameRange     '0.4.0-rc7',
+206 silly addNameRange     '0.4.1-rc7' ] ]
+207 verbose addNamed [ 'grunt-contrib-jst', '1.0.0' ]
+208 verbose addNamed [ '1.0.0', '1.0.0' ]
+209 silly lockFile 776215eb-grunt-contrib-jst-1-0-0 grunt-contrib-jst@1.0.0
+210 verbose lock grunt-contrib-jst@1.0.0 /home/ankita/.npm/776215eb-grunt-contrib-jst-1-0-0.lock
+211 verbose read json /home/ankita/.npm/grunt-contrib-jst/1.0.0/package/package.json
+212 silly lockFile 776215eb-grunt-contrib-jst-1-0-0 grunt-contrib-jst@1.0.0
+213 silly lockFile 1b6136ae-grunt-contrib-jst-1-0-0 grunt-contrib-jst@~1.0.0
+214 http 304 https://registry.npmjs.org/grunt
+215 silly registry.get cb [ 304,
+215 silly registry.get   { date: 'Mon, 13 Jun 2016 12:40:56 GMT',
+215 silly registry.get     via: '1.1 varnish',
+215 silly registry.get     'cache-control': 'max-age=300',
+215 silly registry.get     etag: '"9K2EF2RXHNNHKDER6EXMGS5D"',
+215 silly registry.get     age: '0',
+215 silly registry.get     connection: 'keep-alive',
+215 silly registry.get     'x-served-by': 'cache-sin6924-SIN',
+215 silly registry.get     'x-cache': 'HIT',
+215 silly registry.get     'x-cache-hits': '1',
+215 silly registry.get     'x-timer': 'S1465821656.231352,VS0,VE249',
+215 silly registry.get     vary: 'Accept-Encoding' } ]
+216 verbose etag grunt from cache
+217 silly lockFile fbf6df7a-grunt-1-0-1 grunt@^1.0.1
+218 error Error: No compatible version found: grunt@'^1.0.1'
+218 error Valid install targets:
+218 error ["0.1.0","0.1.1","0.1.2","0.2.0","0.2.1","0.2.2","0.2.3","0.2.4","0.2.5","0.2.6","0.2.7","0.2.8","0.2.9","0.2.10","0.2.11","0.2.12","0.2.13","0.2.14","0.2.15","0.3.0","0.3.1","0.3.2","0.3.3","0.3.4","0.3.5","0.3.6","0.3.7","0.3.8","0.3.9","0.3.10","0.3.11","0.3.12","0.3.13","0.3.14","0.3.15","0.3.16","0.3.17","0.4.0","0.4.1","0.4.2","0.4.3","0.4.4","0.4.5","1.0.0-rc1","1.0.0","1.0.1","0.3.13-a","0.4.0-a","0.4.0-rc1","0.4.0-rc2","0.4.0-rc3","0.4.0-rc4","0.4.0-rc5","0.4.0-rc6","0.4.0-rc7","0.4.0-rc8"]
+218 error     at installTargetsError (/usr/local/lib/node_modules/npm/lib/cache.js:563:10)
+218 error     at /usr/local/lib/node_modules/npm/lib/cache.js:478:10
+218 error     at saved (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:138:7)
+218 error     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:218:7
+218 error     at Object.oncomplete (fs.js:297:15)
+219 error If you need help, you may report this log at:
+219 error     <http://github.com/isaacs/npm/issues>
+219 error or email it to:
+219 error     <npm-@googlegroups.com>
+220 error System Linux 3.13.0-66-generic
+221 error command "/usr/local/bin/node" "/usr/local/bin/npm" "install"
+222 error cwd /var/www/html/branches/membership/converse.js-1.0.2
+223 error node -v v0.8.15
+224 error npm -v 1.1.66
+225 verbose exit [ 1, true ]

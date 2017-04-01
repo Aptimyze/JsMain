@@ -67,7 +67,7 @@ if($echecksum && $checksum && !$data[PROFILEID])
 			//tracking logins #2550 by nitesh
 			loginTracking($profileid,$request_uri,$channel);
 			
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL FROM newjs.JPROFILE WHERE  PROFILEID=$profileid and  activatedKey=1";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL FROM newjs.JPROFILE WHERE  PROFILEID=$profileid and  activatedKey=1";
 			$res=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 			if(($row=mysql_fetch_assoc($res)))
 			{
@@ -88,13 +88,11 @@ if($echecksum && $checksum && !$data[PROFILEID])
 					if($show_chatbar)
 					{
 						$pos = strpos($request_uri,"login.php");
-						$pos1= strpos($request_uri,"intermediate.php");
 						$pos2= strpos($request_uri,"login_redirect.php");
-						$pos3=strpos($request_uri,"jsChat.php");
 						$pos4=in_array("fromRegister=1",$param);
-						if($pos == false && $pos1 == false && $pos2== false && $pos3 == false && !$pos4 && !$isMobile){
+						if($pos == false  && $pos2== false && $pos3 == false && !$isMobile){
 							if(($_COOKIE['JS_MOBILE']=='N' || !isset($_COOKIE['JS_MOBILE'])))
-								$url_to_go="$SITE_URL/profile/intermediate.php?parentUrl=/$request_uri";
+								$url_to_go="$SITE_URL/$request_uri";
 						}
 					}
 				}

@@ -6,10 +6,10 @@ include("../connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 
 // today's date
-$today_dt=date('Y-m-d',time()-86400);
+$today_dt	=date('Y-m-d',time()-86400);
+$db2 		=connect_slave();
+$db		=connect_db();
 
-$db2 = connect_slave();
-$db=connect_db();
 $sql_pid = "SELECT  PROFILEID, ENTRY_DT, CITY_RES, SOURCE, MTONGUE FROM newjs.JPROFILE WHERE ENTRY_DT BETWEEN '$today_dt 00:00:00' AND '$today_dt 23:59:59'";
 $res_pid = mysql_query($sql_pid,$db2) or logError($sql_pid,$db2);
 while($row_pid = mysql_fetch_array($res_pid))
@@ -36,7 +36,20 @@ while($row_pid = mysql_fetch_array($res_pid))
 		{
 			$sql_insert = "INSERT INTO incentive.MAIN_ADMIN_POOL (PROFILEID,ALLOTMENT_AVAIL,TIMES_TRIED,SOURCE,ENTRY_DT,CITY_RES,MTONGUE) VALUES ('$pid','Y','0','".addslashes($source)."','$entry_dt','$city_res','$mtongue')";
 			mysql_query($sql_insert,$db) or logError($sql_insert,$db);
+			$countArr[] =$pid;
 		}
 	}
 }
+
+// Mail 
+$totProfiles =count($countArr);
+if($totProfiles<1000){
+	$to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com";
+	$latest_date    =date("Y-m-d");
+	$subject        ="Total Fresh Profiles added for Date: ".date("jS F Y", strtotime($today_dt));
+	$fromEmail      ="From:JeevansathiCrm@jeevansathi.com";
+	$msg            ="Total fresh profiles added: $totProfiles";
+	mail($to,$subject,$msg,$fromEmail);
+}
+
 ?>

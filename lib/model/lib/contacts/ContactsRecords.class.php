@@ -10,14 +10,14 @@ class ContactsRecords
 	private $contactTypeC = "C";
 	private $contactTypeD = "D";
 
-	/** 
-	  * 
-	  *  @param - $senders - users for whom it is to be checked if the contact is made
-	  *  @param - $receiver - user who has been contacted
-	  *  @param - $contactStatus - status of the contact
-	  *  @param - $key - if key=1, profileids are returned in the key of the array, else they are returned in the value of the array
-	  *  @return - array of users who have contacted the $receiver
-	**/
+	/**
+	 *
+	 *  @param - $senders - users for whom it is to be checked if the contact is made
+	 *  @param - $receiver - user who has been contacted
+	 *  @param - $contactStatus - status of the contact
+	 *  @param - $key - if key=1, profileids are returned in the key of the array, else they are returned in the value of the array
+	 *  @return - array of users who have contacted the $receiver
+	 **/
 	public function ifContactSent($senders, $receiver, $contactStatus, $key)
 	{
 		$dbName = JsDbSharding::getShardNo($receiver);
@@ -49,14 +49,14 @@ class ContactsRecords
 			foreach ($ridArr as $k => $v)
 				$ridSqlArr[] = ":u$k";
 
-			$profilelist['PROFILE'] = array_unique(array_merge($idArr, $ridArr));
+			$profilelist['PROFILE'] = array_values(array_unique(array_merge($idArr, $ridArr)));
 
 			$query = http_build_query($profilelist);
 			$url = $url . "?" . $query;
 			$url = $url . "&fields=SENDER,RECEIVER,TYPE";
 			$results = CommonUtility::webServiceRequestHandler($url,"","",$timeout);
 		}
-		if($results == false) {
+		if($results === false) {
 			$dbName = JsDbSharding::getShardNo($viewer);
 			$contactsObj = new newjs_CONTACTS($dbName);
 			$results = $contactsObj->getContactsSent($senders, $receivers, $viewerObj->getPROFILEID());
@@ -94,10 +94,10 @@ class ContactsRecords
 		$contactsTempObj = new newjs_CONTACTS_TEMP();
 		$results = $contactsTempObj->getTempContacts($sender, $receivers);
 		if(is_array($results))
-		foreach($results as $receiverVal)
-		{
-			$rec[$receiverVal['RECEIVER']]=1;
-		}
+			foreach($results as $receiverVal)
+			{
+				$rec[$receiverVal['RECEIVER']]=1;
+			}
 		return $rec;
 	}
 
@@ -129,7 +129,7 @@ class ContactsRecords
 				}
 			}
 		}
-		if($result == false) {
+		if($result === false) {
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactsObj = new newjs_CONTACTS($dbName);
 			if ($noAwaitingContacts)
@@ -168,16 +168,16 @@ class ContactsRecords
 								$output[]=$v["RECEIVER"];
 							else
 								$output[]=$v["SENDER"];
-						}	
+						}
 					}
 				}
 			}
 			unset($contactInfo);
 		}
 		catch(PDOException $e)
-                {
-                        throw new jsException($e);
-                }
+		{
+			throw new jsException($e);
+		}
 		return $output;
 	}
 
@@ -209,7 +209,7 @@ class ContactsRecords
 		unset($dbNameArr);
 		return $acceptCount;
 	}
-	
+
 	public function getEoiCountForMultipleProfiles($senderArr)
 	{
 		if(!$senderArr)
@@ -233,13 +233,13 @@ class ContactsRecords
 		unset($dbNameArr);
 		return $eoiCount;
 	}
-	
+
 	/*
 	* This function is used to get the contacts count from given condition
 	* @param - while condition, group by condition
 	* @return - array of count with given condition
 	*/
-	public function getContactsCount( $where, $group='',$time='',$skipProfile='')
+	public function getContactsCount( $where, $group='',$time='',$skipProfile='',$isProfileMemCacheService = '')
 	{
 		if(!$where["RECEIVER"]&&!$where["SENDER"])
 		{
@@ -270,18 +270,67 @@ class ContactsRecords
 				}
 			}
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactsObj = new newjs_CONTACTS($dbName);
 			$contactsCount = $contactsObj->getContactsCount($where,$group,$time,$skipProfile);
 		}
-		
+
+		$newArrayTime2 = array();
+		if ( is_array($contactsCount))
+		{
+			foreach ($contactsCount as $key => $value) {
+				if ( $value['TIME1'] == 2 )
+				{
+					$newArray = array('FILTERED' => $value['FILTERED'], 'TYPE' => $value['TYPE'],'SEEN'=>$value['SEEN'],'COUNT'=>$value['COUNT'] );
+					array_push($newArrayTime2, $newArray);
+				}
+
+			}
+		}
+
+		$finalArray = array();
+		foreach ($newArrayTime2 as $keyTime2 => $valueTime2) {
+			$isPresent = 0;
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
+				if ( $value['TIME1'] == 0 )
+				{
+					if ( $valueTime2['FILTERED'] == $value['FILTERED'] && $valueTime2['TYPE'] == $value['TYPE'] && $valueTime2['SEEN'] == $value['SEEN'])
+					{
+						$contactsCount[$key]['COUNT'] += $valueTime2['COUNT'];
+						$isPresent = 1;
+						break;
+					}
+				}
+			}
+
+			}
+			if ( !$isPresent )
+			{
+				array_push($contactsCount,array('FILTERED' => $valueTime2['FILTERED'], 'TYPE' => $valueTime2['TYPE'],'SEEN'=>$valueTime2['SEEN'],'COUNT'=>$valueTime2['COUNT'] ));
+			}
 			
-		return $contactsCount;
-		
-	}
+		}
 	
+		if ( $isProfileMemCacheService == '')
+		{
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
+					if ( $value['TIME1'] == 2 )
+					{
+						unset($contactsCount[$key]);
+					}
+				}
+			}	
+		}
+		return $contactsCount;
+
+	}
+
 	public function getContactedProfiles($profileId, $senderReceiver, $type='',$count='')
 	{
 		$result = false;
@@ -304,18 +353,18 @@ class ContactsRecords
 				}
 			}
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileId);
 			$contactsObj = new newjs_CONTACTS($dbName);
 			$contactedProfile = $contactsObj->getContactedProfiles($profileId,$senderReceiver,$type,$count);
 		}
-		
-			
+
+
 		return $contactedProfile;
 	}
-	
-	
+
+
 	public function getSkipContactedProfile($profileId,$skipContactType)
 	{
 		$senderProfile = $this->getContactedProfiles($profileId,"SENDER",$skipContactType);
@@ -326,6 +375,7 @@ class ContactsRecords
 	}
 	public function getContactedProfileArray($profileid,$condition,$skipArray)
 	{
+
 		$result = false;
 		if(JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') {
 			$result = true;
@@ -346,13 +396,13 @@ class ContactsRecords
 				}
 			}
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactsObj = new newjs_CONTACTS($dbName);
 			$output = $contactsObj->getContactedProfileArray($condition,$skipArray);
 		}
-			
+
 		return $output;
 	}
 	public function getTempContact($sender,$receiver)
@@ -374,7 +424,7 @@ class ContactsRecords
 			$url = $url . "?" . $query;
 			$result = CommonUtility::webServiceRequestHandler($url,"","",$timeout);
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactsObj = new newjs_CONTACTS($dbName);
@@ -382,7 +432,7 @@ class ContactsRecords
 		}
 		return $result;
 	}
-	
+
 	public function getContactType($viewerObj,$viewedObj)
 	{
 		if($viewerObj->getPROFILEID()==$viewedObj->getPROFILEID())
@@ -399,13 +449,13 @@ class ContactsRecords
 			else
 				$output["TYPE"] = "R".$contactObj->getTYPE();
 		}
-			
+
 		return $output;
 	}
-       /** This lib function is used to get SENDER or RECEIVER for a profile ID
-        *@param $parameter : Parameters to be fetched or *
-        *@param $whereArr : Array specified whether SENDER or RECEIVER to be find out
-        */
+	/** This lib function is used to get SENDER or RECEIVER for a profile ID
+	 *@param $parameter : Parameters to be fetched or *
+	 *@param $whereArr : Array specified whether SENDER or RECEIVER to be find out
+	 */
 	public function getResultSet($parameter="*",$whereArr)
 	{
 		if(isset($whereArr['SENDER']))
@@ -427,14 +477,14 @@ class ContactsRecords
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["resultset"];
 			$result = CommonUtility::webServiceRequestHandler($url,"","",$timeout);
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactResultSetObj = new newjs_CONTACTS($dbName);
 			$result=$contactResultSetObj->contactResultInfo($parameter,$whereArr);
 		}
 		return $result;
-	}	
+	}
 
 	public function makeAllContactSeen($profileid,$type)
 	{
@@ -443,24 +493,38 @@ class ContactsRecords
 			$result = true;
 			$url = JsConstants::$contactUrl . "/v1/contacts/updateseen/" . $profileid;
 			$params['TYPE'] = $type;
-			if ($type == ContactHandler::INITIATED)
+			if ($type == ContactHandler::INITIATED ||$type == ContactHandler::FILTERED )
 				$params["VIEWEDTYPE"] = "RECEIVER";
 			elseif ($type == ContactHandler::ACCEPT)
+				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::DECLINE)
+				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::CANCEL_ALL)
 				$params["VIEWEDTYPE"] = "SENDER";
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["updateseen"];
 			$result = CommonUtility::webServiceRequestHandler($url, $params, "POST",$timeout);
 		}
-		if($result == false)
+		if($result === false)
 		{
+			if($type == ContactHandler::CANCEL_ALL)
+			{
+				$dbName = JsDbSharding::getShardNo($profileid);
+			$contactResultSetObj = new newjs_CONTACTS($dbName);
+			$result = $contactResultSetObj->updateCancelSeen($profileid);
+			}
+			else
+			{	
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactResultSetObj = new newjs_CONTACTS($dbName);
 			$result = $contactResultSetObj->updateContactSeen($profileid,$type);
+			}
 		}
 		return $result;
 	}
 
 	public function getContactRecords($profileId1,$profileId2,$checkdb=0)
 	{
+
 		$result = false;
 		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
 			$result = true;
@@ -469,7 +533,7 @@ class ContactsRecords
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["viewerviewed"];
 			$result = CommonUtility::webServiceRequestHandler($url,"","",$timeout);
 		}
-		if($result == false)
+		if($result === false)
 		{
 			$dbName = JsDbSharding::getShardNo($profileId1);
 			$contactObj = new newjs_CONTACTS($dbName);
@@ -477,8 +541,8 @@ class ContactsRecords
 		}
 		return $result;
 	}
-	
-	
+
+
 	public function update($contactObj)
 	{
 		$url = JsConstants::$contactUrl . "/v1/contacts";
@@ -494,10 +558,11 @@ class ContactsRecords
 		$data['FILTERED'] = $contactObj->getFILTERED();
 		$data['FOLDER'] = $contactObj->getFOLDER();
 		$timeout = WebServicesTimeOut::$contactServiceTimeout["update"];
-		$response = CommonUtility::webServiceRequestHandler($url, $data, "POST",$timeout);
+		$response = CommonUtility::webServiceRequestHandler($url, $data,
+			"POST",$timeout,array($data["SENDER"],$data["RECEIVER"]));
 		return $response;
 	}
-	
+
 	public function insert($contactObj)
 	{
 		$url = JsConstants::$contactUrl . "/v1/contacts";
@@ -507,23 +572,30 @@ class ContactsRecords
 		$data['COUNT'] = $contactObj->getCOUNT();
 		$data['TYPE'] = $contactObj->getTYPE();
 		$data['TIME'] = $contactObj->getTIME();
-		$data['MSG_DEL'] = $contactObj->getMSG_DEL();
+		if($contactObj->getPageSource()=="AP")
+			$data['MSG_DEL'] = "Y";
+		else
+			$data['MSG_DEL'] = "N";
 		$data['SEEN'] = $contactObj->getSEEN();
 		$data['FILTERED'] = $contactObj->getFILTERED();
 		$data['FOLDER'] = $contactObj->getFOLDER();
 		$timeout = WebServicesTimeOut::$contactServiceTimeout["insert"];
-		$response = CommonUtility::webServiceRequestHandler($url, $data, "POST",$timeout);
-		return $response; 
+		$response = CommonUtility::webServiceRequestHandler($url, $data,
+			"POST",$timeout,array($data["SENDER"],$data["RECEIVER"]));
+		return $response;
 	}
 
 	public function delete($contactObj)
 	{
 		$url = JsConstants::$contactUrl . "/v1/contacts";
-		$url = $url."/viewer/".$contactObj->getSenderObj()."/viewed/".$contactObj->getReceiverObj();
+		$url = $url."/viewer/".$contactObj->getSenderObj()->getPROFILEID()
+			."/viewed/".$contactObj->getReceiverObj()->getPROFILEID();
 		$timeout = WebServicesTimeOut::$contactServiceTimeout["delete"];
-		$response = CommonUtility::webServiceRequestHandler($url, "", "DELETE",$timeout);
+		$response = CommonUtility::webServiceRequestHandler($url, "",
+			"DELETE",$timeout,array($contactObj->getSenderObj()->getPROFILEID
+			(),$contactObj->getReceiverObj()->getPROFILEID()));
 		return $response;
 	}
-			
+
 }
 ?>

@@ -8,7 +8,7 @@ var tollFree_NRI='~$apiData.phoneDetails.TOLL_FREE_NRI`';
 var tollFree_INR='~$apiData.phoneDetails.TOLL_FREE_INR`';
 var showDuplicateConsentMsg='~$showDuplicateConsentMsg`';
 </script>
-~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
 ~if $sf_request->getAttribute('currency') eq 'RS'`~assign var='tollFree' value=CommonConstants::HELP_NUMBER_INR`~else`~assign var='tollFree' value=CommonConstants::HELP_NUMBER_NRI`~/if`
 
   <!--start:body-->

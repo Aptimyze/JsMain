@@ -52,6 +52,19 @@ var interestReceivedBar = function(name) {
   this.emptyInnerHtml=$("#noEngagementCard").html();
 };
 
+
+var filteredInterestBar = function(name) {
+  this.ContainerHtml = $("#filteredInterestContainer").html();
+  this.innerHtml= $("#interestReceivedCard").html();
+  this.emptyInnerHtml=$("#noEngagementCard").html();
+};
+
+var expiringInterestBar = function(name) {
+  this.ContainerHtml = $("#expiringInterestContainer").html();
+  this.innerHtml= $("#interestReceivedCard").html();
+  this.emptyInnerHtml=$("#noEngagementCard").html();
+};
+
 var MessageBar = function(name) {
   this.ContainerHtml = $("#messageContainer").html();
   this.innerHtml= $("#messageCard").html();
@@ -70,6 +83,8 @@ AcceptanceBar.prototype = new container();
 
 photoRequestBar.prototype = new container();
 interestReceivedBar.prototype = new container();
+filteredInterestBar.prototype = new container();
+expiringInterestBar.prototype = new container();
 
 //MESSAGES
     
@@ -285,7 +300,7 @@ var acceptance = function() {
         innerHtml=innerHtml.replace(/\{\{email\}\}/g,'email'+i);
           innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
           
-        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
+        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(i+1)+"&contact_id="+this.data.contact_id);
         this.containerHtml=this.containerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
         sendMessage = profiles[i]["buttonDetailsJSMS"]["canwrite"];
 			if(sendMessage==null){
@@ -367,110 +382,331 @@ if(profiles[i]["gender"]=='M')
 		
 	}
 
-//PHOTOREQUEST
-    var photoRequest = function() {
-        this.name="PHOTOREQUEST"; //define here
+
+
+  var filteredInterest = function() {
+
+
+		this.name = "FILTEREDINTEREST";
 		this.containerName = this.name+"_Container";
-		this.heading = "These people have requested for your Photo";
+		this.heading = "These people have sent interests to you.";
 		this.headingId = this.name+"_head";
 		this.isEngagementBar = 1;
 		this.list = this.name+"_List";
-		this.error=0;
-        component.apply(this, arguments);
+		this.error=0;		
+		component.apply(this, arguments);
     };
-    photoRequest.prototype = Object.create(component.prototype);
-    photoRequest.prototype.constructor = photoRequest;
-
+    filteredInterest.prototype = Object.create(component.prototype);
+    filteredInterest.prototype.constructor = filteredInterest;
     
-    
-photoRequest.prototype.post = function() {
-        var profiles=this.data.profiles;
-        var innerHtml="";
-        var count = this.data.total;
-        remainingCount=0;
-		if(count>5)
-		{
-			remainingCount = count-4;
-			count = 4;
-		}
-		if(count>0)
-		{
-			for (i = 0; i < count; i++) {
-				innerHtml=innerHtml+this.innerHtml;
-				innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD1_ID\}\}/g,profiles[i]["profilechecksum"]+this.name+"_id");
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
-                innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic120url"]+"'");
-			}
-			if(remainingCount!=0)
-			{
-				if(remainingCount==1)
-				{
-					numberInnerHtml=$("#smallCard1").html();
-					innerHtml=innerHtml+this.innerHtml;
-					innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD1_ID\}\}/g,profiles[i]["profilechecksum"]+this.name+"_id");
-					innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic120url"]+"'");
-				}
-				else
-				{
-					innerHtml=innerHtml+this.viewAllInnerHtml;
-					innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD2_ID\}\}/g,profiles[i]["profilechecksum"]+this.name+"_id");
-					innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic120url"]+"'");
-					innerHtml=innerHtml.replace(/\{\{COUNT\}\}/g,remainingCount);
-					innerHtml=innerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-				}
-			
-			}
-			this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-			$("#engagementContainer").after(this.containerHtml);
+    filteredInterest.prototype.post = function() {
 
-			 /*
-			 if(profilePic !='N')
-            {
-				$("#upload"+this.list).remove();
-			}*/
-			$("#engagementContainer").addClass("disp-none");
-			topSliderInt("init");
-			$("#"+this.containerName).removeClass("disp-none");
-		}
-		else
-        {   
-            if(profilePic == "N" || profilePic=='')
-            { 
-            	$("#engagementContainer").after(this.containerHtml);
-				$("#"+this.containerName).html($("#noPhotoNoRequest").html());
-            	$("#engagementContainer").addClass("disp-none");
-				$("#"+this.containerName).removeClass("disp-none");
-
-            }
-            else
-            {
-				this.noResultCase();
-            }
+try{
+		var profiles=this.data.profiles;
+		var tracking = this.data.tracking;
+		var interestsCount=0;
+		var innerHtml="";
+		var viewAllCard="";
+		var noOfRes=this.data.no_of_results;
+		var current = 1;
+		var interestsCount=0;
+		var totalCount=this.data.total;
+		var showViewAll=0,totalPanels=0;
+		if (totalCount>20) showViewAll=1;
+        if(!noOfRes){
+        	this.noResultCase(); return ;
         }
-        removeOtherDiv();
-        photo_init();
-}
-//PHOTO REQUEST
-photoRequest.prototype.noResultCase = function() {
-	this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+this.name);
-	if(this.error)
-		this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
-	else
-		this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"People who have requested your photo will appear here.");
-		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,this.emptyInnerHtml);
-		$("#engagementContainer").after(this.containerHtml);
+		else {
+                    for (i = 0; i < noOfRes && interestsCount<20; i++) 
+                       {
+          if(++interestsCount==20 && showViewAll==1)
+            break;
+        innerHtml=innerHtml+this.innerHtml;
+        innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,profiles[i]["profilechecksum"]+'_'+this.name);
+        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"','Y')");
+        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"','Y')");
+        innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,profiles[i]["profilechecksum"]+"_id");
+        innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
+        
+        if(profiles[i]['album_count']=='0')
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
+        else 
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,''); 
+
+        innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic450url"]+"'");
+        innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
+        innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
+        innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
+        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id);
+        innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
+        innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
+        var caste = profiles[i]["caste"].split(':');
+        innerHtml=innerHtml.replace(/\{\{CASTE\}\}/g,caste[caste.length-1]);
+        innerHtml=innerHtml.replace(/\{\{AGE\}\}/g,profiles[i]["age"]);
+        innerHtml=innerHtml.replace(/\{\{HEIGHT\}\}/g,profiles[i]["height"]);
+        innerHtml=innerHtml.replace(/\{\{RELIGION\}\}/g,profiles[i]["religion"]);
+        innerHtml=innerHtml.replace(/\{\{MTONGUE\}\}/g,profiles[i]["mtongue"]);
+			}
+    var totalPanels = Math.ceil(interestsCount/4);
+		}
+    innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
+    this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
+    this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
+    $("#totalFilteredInterestReceived").text(totalCount);
+    if (!totalCount){
+    temp2= $(this.containerHtml.trim());
+    temp2.find("#seeAllId_FILTEREDINTEREST").addClass('disp-none');
+    this.containerHtml=temp2.outerHtml();
+    }
+		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,totalCount?totalCount:'');
+    if($("#"+Object.name+"_Container").length == 1)
+    { 
+
+      $("#FILTEREDINTEREST_Container").html($(this.containerHtml.trim()).html());
+    }
+    else
+   	$("#engagementContainer").after(this.containerHtml);
 		$("#engagementContainer").addClass("disp-none");
-		$("#"+this.headingId).after(this.emptyInnerHtml);
+
+    
+	if (totalPanels>=2)
+        {
+		var listName=this.list;
+		$("#panelCounter_FILTEREDINTEREST").removeClass('disp-none');
+		$("#arrowKeys_FILTEREDINTEREST").removeClass('opa50');
+		$("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
+			myjsSlider("prv-"+listName);
+		});
+		$("#nxt-"+this.list).addClass('cursp').click(function()
+                {
+		  myjsSlider("nxt-"+listName);
+		});
+
+	}
+
+        if($('#totalFilteredInterestReceived').text()>4)
+          $('#seeAll_FILTEREDINTEREST_List').show();
+
+              
+            topSliderInt('init');
+	    removeOtherDiv();
+	    photo_init();
+
+            
+}
+catch(e){
+  console.log('getting error '+e+' in function post of interestReceived object');
+
+}
+
+
+}
+
+
+filteredInterest.prototype.noResultCase = function() {
+		this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+this.name);
+		if(this.error)
+			this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
+		else
+			this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests received by you which don't match your filter criteria will appear here");
+		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,'');
+		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,'');
+		$("#engagementContainer").after(this.containerHtml);
+		$("#engagementContainer").addClass("disp-none")
+		$("#disp_"+this.list).after(this.emptyInnerHtml);
+		$("#disp_"+this.list).remove();
 		if(!this.error)
-			$("#Error"+this.name).remove();
-		$("#headError"+this.name).removeClass("myjs-bg3");	
-		$("#"+this.list).remove();
-		$("#"+this.headingId).remove();
-		$("#upload"+this.list).remove();
-		$("#"+this.containerName).removeClass("disp-none").addClass("pt45");
+                    $("#Error"+this.name).remove();
+		$("#seeAll_"+this.list).remove();
+		$("#panelCounter_message").remove();
+		$("#arrowKeys_"+this.name).remove();
+}
+
+
+	filteredInterest.prototype.getCards=function(interestsCount,showViewAll) {    
+		var html="";
+		if (showViewAll==1){
+			viewAllCard=$("#viewAllCard li").html();
+			
+      viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
+      viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
+      viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
+     	var tempDiv=$('<li style="padding-top:0px;background:none"></li>');
+		tempDiv.append(viewAllCard);
+			
+      html+=tempDiv.outerHtml();
+      return html;
+		}
+                
+                return "";
 	}
 
 
+  var expiringInterest = function() {
+    this.name = "EXPIRINGINTEREST";
+    this.containerName = this.name+"_Container";
+    this.headingId = this.name+"_head";
+    this.isEngagementBar = 1;
+    this.list = this.name+"_List";
+    this.error=0;   
+    component.apply(this, arguments);
+    };
+    expiringInterest.prototype = Object.create(component.prototype);
+    expiringInterest.prototype.constructor = expiringInterest;
+    
+    expiringInterest.prototype.post = function() {
+
+try{
+    var profiles=this.data.profiles;
+    var tracking = this.data.tracking;
+    var interestsCount=0;
+    var innerHtml="";
+    var viewAllCard="";
+    var noOfRes=this.data.no_of_results;
+    var current = 1;
+    var interestsCount=0;
+    var totalCount=this.data.total;
+    var showViewAll=0,totalPanels=0;
+    if (totalCount>20) showViewAll=1;
+        if(!noOfRes){
+          this.noResultCase(); return ;
+        }
+    else {
+                    for (i = 0; i < noOfRes && interestsCount<20; i++) 
+                       {
+          if(++interestsCount==20 && showViewAll==1)
+            break;
+        innerHtml=innerHtml+this.innerHtml;
+        innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,profiles[i]["profilechecksum"]+'_'+this.name);
+        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"','Y')");
+        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"','Y')");
+        innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,profiles[i]["profilechecksum"]+"_id");
+        innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
+        
+        if(profiles[i]['album_count']=='0')
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
+        else 
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,''); 
+
+        innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic450url"]+"'");
+        innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
+        innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
+        innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
+        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id);
+        innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
+        innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
+        var caste = profiles[i]["caste"].split(':');
+        innerHtml=innerHtml.replace(/\{\{CASTE\}\}/g,caste[caste.length-1]);
+        innerHtml=innerHtml.replace(/\{\{AGE\}\}/g,profiles[i]["age"]);
+        innerHtml=innerHtml.replace(/\{\{HEIGHT\}\}/g,profiles[i]["height"]);
+        innerHtml=innerHtml.replace(/\{\{RELIGION\}\}/g,profiles[i]["religion"]);
+        innerHtml=innerHtml.replace(/\{\{MTONGUE\}\}/g,profiles[i]["mtongue"]);
+      }
+    var totalPanels = Math.ceil(interestsCount/4);
+    }
+    innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
+    this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
+    this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
+    setTimeout(function(){ 
+      $("#engBarInfoMessage").html('<span id="expiringCount">'+expiringCount + '</span> interests are expiring this week and will be removed from your Inbox. Please Accept/Decline');
+    }, 50);
+    
+    $("#totalExpiringInterestReceived").text(totalCount);
+    if (!totalCount){
+    temp2= $(this.containerHtml.trim());
+    temp2.find("#seeAllId_EXPIRINGINTEREST").addClass('disp-none');
+    this.containerHtml=temp2.outerHtml();
+    }
+    this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,totalCount?totalCount:'');
+    if($("#"+Object.name+"_Container").length == 1)
+    { 
+      $("#"+Object.name+"_Container").html($(this.containerHtml.trim()).html());
+    }
+    else
+    $("#engagementContainer").after(this.containerHtml);
+    $("#engagementContainer").addClass("disp-none");
+
+    
+  if (totalPanels>=2)
+        {
+    var listName=this.list;
+    $("#panelCounter_EXPIRINGINTEREST").removeClass('disp-none');
+    $("#arrowKeys_EXPIRINGINTEREST").removeClass('opa50');
+    $("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
+      myjsSlider("prv-"+listName);
+    });
+    $("#nxt-"+this.list).addClass('cursp').click(function()
+                {
+      myjsSlider("nxt-"+listName);
+    });
+
+  }
+  if($('#totalExpiringInterestReceived').text() > 4)
+    $('#seeAll_EXPIRINGINTEREST_List').show();
+            
+            topSliderInt('init');
+      removeOtherDiv();
+      photo_init();
+
+            
+}
+catch(e){
+  console.log('getting error '+e+' in function post of interestReceived object');
+
+}
+
+
+}
+
+
+expiringInterest.prototype.noResultCase = function() {
+    this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+this.name);
+    if(this.error)
+      this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
+    else
+      this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests which expire in next 7 days will appear here. Respond to them immediately after they appear here");
+    this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,'');
+    this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,'');
+    $("#engagementContainer").after(this.containerHtml);
+    $("#engagementContainer").addClass("disp-none")
+    $("#disp_"+this.list).after(this.emptyInnerHtml);
+    $("#disp_"+this.list).remove();
+    if(!this.error)
+                    $("#Error"+this.name).remove();
+    $("#seeAll_"+this.list).remove();
+    $("#panelCounter_message").remove();
+    $("#arrowKeys_"+this.name).remove();
+}
+
+
+  expiringInterest.prototype.getCards=function(interestsCount,showViewAll) {    
+    var html="";
+    if (showViewAll==1){
+      viewAllCard=$("#viewAllCard li").html();
+      
+      viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
+      viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
+      viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
+      var tempDiv=$('<li style="padding-top:0px;background:none"></li>');
+    tempDiv.append(viewAllCard);
+      
+      html+=tempDiv.outerHtml();
+      return html;
+    }
+                
+                return "";
+  }
+
+
+	var removeOtherDiv = function(){
+	$.each(currentPanelArray, function(index,value){
+      if(index!=currentPanelEngagement && value ==1)
+      {
+          $('#'+index).addClass("disp-none");
+      }
+    }); 
+
+	}
 
   var interestReceived = function() {
 
@@ -514,8 +750,8 @@ try{
         }
 				innerHtml=innerHtml+this.innerHtml;
         innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,profiles[i]["profilechecksum"]+'_'+this.name);
-        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"')");
-        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"')");
+        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"','N')");
+        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"','N')");
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,profiles[i]["profilechecksum"]+"_id");
 			  innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
         
@@ -528,7 +764,7 @@ try{
 				innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
         innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
 				innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id.split('_')[0]+"_INTEREST_RECEIVED");
         innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
 				innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
 				var caste = profiles[i]["caste"].split(':');
@@ -549,12 +785,17 @@ try{
     this.containerHtml=temp2.outerHtml();
     }
 		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,totalCount?totalCount:'');
+    if($("#"+Object.name+"_Container").length == 1)
+    { 
+      $("#INTERESTRECEIVED_Container").html($(this.containerHtml.trim()).html());
+    }
+    else
    	$("#engagementContainer").after(this.containerHtml);
 		$("#engagementContainer").addClass("disp-none");
 
     
 	if (totalPanels>=2){
-		listName=this.list;
+		var listName=this.list;
 		$("#panelCounter_INTERESTRECEIVED").removeClass('disp-none');
 		$("#arrowKeys_INTERESTRECEIVED").removeClass('opa50');
 		$("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
@@ -564,7 +805,9 @@ try{
 		  myjsSlider("nxt-"+listName);
 		});
 
-	}
+	}    
+      if($('#totalInterestReceived').text()>4)
+      $('#seeAllId_INTERESTRECEIVED').show();
 	    topSliderInt('init');
 	    removeOtherDiv();
 	    photo_init();
@@ -610,7 +853,7 @@ interestReceived.prototype.noResultCase = function() {
       viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
       viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
 			viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-     	tempDiv=$('<li style="padding-top:0px;"></li>');
+     	tempDiv=$('<li style="padding-top:0px;background:none"></li>');
 		tempDiv.append(viewAllCard);
 			
       html+=tempDiv.outerHtml();
@@ -662,15 +905,5 @@ interestReceived.prototype.noResultCase = function() {
 			html+=temp1.outerHtml();
 			return html;
 		}
-	}
-
-	var removeOtherDiv = function(){
-	$.each(currentPanelArray, function(index,value){
-      if(index!=currentPanelEngagement && value ==1)
-      {
-          $('#'+index).addClass("disp-none");
-      }
-    }); 
-
 	}
 

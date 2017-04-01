@@ -86,12 +86,20 @@ class Decline extends ContactEvent{
 
     //    $this->updateContactSeen();//
     $producerObj=new Producer();
+
     if($producerObj->getRabbitMQServerConnected())
-    {
+    {   
+      if($this->contactHandler->getContactObj()->getMSG_DEL() != 'Y')
+      {
         $receiver = $this->contactHandler->getViewed();
         $sender = $this->contactHandler->getViewer();
         $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
+      }
+
+        //Remove from contact roster
+        $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'DECLINE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
+        $producerObj->sendMessage($chatData);
     }
     else
     {
@@ -138,17 +146,31 @@ class Decline extends ContactEvent{
     try {
         $profileMemcacheServiceViewerObj = new ProfileMemcacheService($this->contactHandler->getViewer());
         $profileMemcacheServiceViewedObj = new ProfileMemcacheService($this->contactHandler->getViewed());
+        $ContactTime = strtotime($this->contactHandler->getContactObj()->getTIME());
+        $time = time();
+        $daysDiff  = floor(($time - $ContactTime)/(3600*24));
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewedObj->update("DEC_ME",1);
         $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",1);
       if($currentFlag==ContactHandler::INITIATED)
       {
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+        {
+          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+        }
         if ($filtered!='Y'){
+          if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
+          {
+            $profileMemcacheServiceViewerObj->update("INTEREST_ARCHIVED",-1);
+          }
+          else
+          {
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
         $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
 		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+          }
 }
  else $profileMemcacheServiceViewerObj->update("FILTERED",-1);
       }
@@ -167,10 +189,15 @@ class Decline extends ContactEvent{
     }
   }
 	public function sendMail(){
-		$receiver = $this->contactHandler->getViewed();
-		$sender = $this->contactHandler->getViewer();
+
+    if($this->contactHandler->getContactObj()->getMSG_DEL() != 'Y'){
+    $receiver = $this->contactHandler->getViewed();
+    $sender = $this->contactHandler->getViewer();
 		ContactMailer::sendDeclineMail($receiver,$sender);
 		return true;
+  }
+
+  return false;
 	}
 
 }

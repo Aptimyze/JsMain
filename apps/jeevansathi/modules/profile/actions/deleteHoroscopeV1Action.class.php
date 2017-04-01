@@ -11,7 +11,7 @@ class deleteHoroscopeV1Action extends sfAction{
         $apiResponseHandlerObj=ApiResponseHandler::getInstance();
         if($profileid){
                 //DELETE CREATED HOROSCOPE
-                $deleteAstroDetailsObj = new NEWJS_ASTRO();
+                $deleteAstroDetailsObj = ProfileAstro::getInstance();
                 $deleteAstroDetailsObj->deleteEntry($profileid);
                 //DELETE TIME ,PLACE OF BIRTH
                 $deleteTimePlaceOfBirthObj = new JPROFILE();

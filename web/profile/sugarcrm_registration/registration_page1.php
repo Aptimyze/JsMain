@@ -27,6 +27,7 @@ include_once($path."/profile/mobile_detect.php");
 include_once($path."/sugarcrm/include/utils/JsToLeadFieldMapping.php");
 include_once($path."/sugarcrm/custom/crons/JsSuccessAutoRegEmail.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/ProfileInsertLib.php");
 $jpartnerObj=new Jpartner;
 $mysqlObj=new Mysql;
 
@@ -721,7 +722,7 @@ if(isset($_COOKIE["JS_GENDER"]))
 $smarty->assign("CONTACT_OPTION",'M');
 
 $now = date("Y-m-d G:i:s");
-$today=date("Y-m-d");
+$today= CommonUtility::makeTime(date("Y-m-d"));
 if($submit_pg2) // for the IE
 {
 	/*Code to check spammer, checking for request from same ip. Block registration if request > 5 within 1 minute*/
@@ -1078,11 +1079,81 @@ if(!empty($record_id)){
 			 //Field for identifying the team to which profile belong
 			 if($record_id)
 				 $crm_team='online';
+
+			$arrCheck = array('drink','speak_urdu','smoke','city_residence','pincode');
+			foreach ( $arrCheck as $item) {
+				if(!$$item) {
+					$$item = '';
+				}
+			}
 			include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 			$passwordEncrypted=PasswordHashFunctions::createHash($password);
-			$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
-			mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
-			$id=mysql_insert_id_js();
+			$objInsert = ProfileInsertLib::getInstance();
+			$arrFields = array(
+				"RELATION" => $relationship,
+				"EMAIL" => $email,
+				"PASSWORD" => $passwordEncrypted,
+				"USERNAME" => $username,
+				"GENDER" => $gender,
+				"DTOFBIRTH" => $date_of_birth,
+				"MSTATUS" => $mstatus,
+				"HAVECHILD" => $has_children,
+				"HEIGHT" => $height,
+				"COUNTRY_RES" => $country_residence,
+				"CITIZENSHIP" => '',
+				"ISD" => $country_code,
+				"STD" =>  $state_code,
+				"CITY_RES" =>  $city_residence,
+				"PHONE_RES" =>  $phone,
+				"SHOWPHONE_RES" =>  $showphone,
+				"PHONE_NUMBER_OWNER" =>  '',
+				"PHONE_OWNER_NAME" =>  '',
+				"PHONE_MOB" =>  $mobile,
+				"SHOWPHONE_MOB" =>  $showmobile,
+				"MOBILE_NUMBER_OWNER" =>  '',
+				"MOBILE_OWNER_NAME" =>  '',
+				"TIME_TO_CALL_START" =>  '',
+				"TIME_TO_CALL_END" =>  '',
+				"EDU_LEVEL_NEW" =>  $degree,
+				"OCCUPATION" =>  $occupation,
+				"INCOME" =>  $income,
+				"MTONGUE" =>  $mtongue,
+				"RELIGION" =>  $religion_val,
+				"SPEAK_URDU" =>  $speak_urdu,
+				"CASTE" =>  $caste,
+				"PROMO_MAILS" =>  $promo,
+				"SERVICE_MESSAGES" =>  $service_email,
+				"ENTRY_DT" =>  $now,
+				"MOD_DT" =>  $now,
+				"LAST_LOGIN_DT" =>  $today,
+				"SORT_DT" =>  $now,
+				"AGE" =>  $age,
+				"IPADD" => $ip,
+				"SOURCE" =>  $tieup_source,
+				"ACTIVATED" =>  'N',
+				"INCOMPLETE" =>  'Y',
+				"KEYWORDS" =>  $keyword,
+				"SCREENING" => 0,
+				"YOURINFO" => '',
+				"DRINK" =>  $drink,
+				"SMOKE" => $smoke,
+				"CRM_TEAM" => $crm_team,
+				"PERSONAL_MATCHES" => $match_def,
+				"GET_SMS" => $sms_def,
+				"SHOW_HOROSCOPE" => $show_horoscope,
+				"SEC_SOURCE" => $secondary_source,
+				"SERIOUSNESS_COUNT" => $seriousness_count,
+				"PINCODE" =>  $pincode,
+			);
+			$result = $objInsert->insertJPROFILE($arrFields);
+			if(false === $result) {
+				$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
+				logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
+			}
+//			$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
+//			mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
+//			$id=mysql_insert_id_js();
+        $id  = $result;
       //New Login
       $authWeb = new WebAuthentication();
         $authWeb->loginFromReg();
@@ -1090,9 +1161,31 @@ if(!empty($record_id)){
 		assignServerToProfile($id);
 		//Added By Lavesh Rawat for Sharding Purpose
 		$profileid=$id;
-			
-		$sql2="INSERT INTO newjs.JPROFILE_ALERTS(PROFILEID,MEMB_CALLS,OFFER_CALLS,SERV_CALLS_SITE,SERV_CALLS_PROF,MEMB_MAILS,CONTACT_ALERT_MAILS,KUNDLI_ALERT_MAILS,PHOTO_REQUEST_MAILS,SERVICE_MAILS,SERVICE_SMS,SERVICE_MMS,SERVICE_USSD,PROMO_USSD,PROMO_MMS) VALUES ('$profileid','$memb_ivr','$memb_ivr','$service_call','$service_call','$memb_mails','$service_email','$service_email','$service_email','$service_email','$service_sms','$service_sms','$service_sms','$memb_sms','$memb_sms')";
-		mysql_query_decide($sql2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql2,"ShowErrTemplate");
+
+		$arrAlertFields = array(
+			"PROFILEID" => $profileid,
+			"MEMB_CALLS" => $memb_ivr,
+			"OFFER_CALLS" => $memb_ivr,
+			"SERV_CALLS_SITE" => $service_call,
+			"SERV_CALLS_PROF" => $service_call,
+			"MEMB_MAILS" => $memb_mails,
+			"CONTACT_ALERT_MAILS" => $service_email,
+			"KUNDLI_ALERT_MAILS" => $service_email,
+			"PHOTO_REQUEST_MAILS" => $service_email,
+			"SERVICE_MAILS" => $service_email,
+			"SERVICE_SMS" => $service_sms,
+			"SERVICE_MMS" => $service_sms,
+			"SERVICE_USSD" => $service_sms,
+			"PROMO_USSD" => $memb_sms,
+			"PROMO_MMS" => $memb_sms,
+		);
+		$result = $objInsert->insertJPROFILE_ALERTS($arrAlertFields);
+		if($result === false) {
+			$sql2="INSERT INTO newjs.JPROFILE_ALERTS(PROFILEID,MEMB_CALLS,OFFER_CALLS,SERV_CALLS_SITE,SERV_CALLS_PROF,MEMB_MAILS,CONTACT_ALERT_MAILS,KUNDLI_ALERT_MAILS,PHOTO_REQUEST_MAILS,SERVICE_MAILS,SERVICE_SMS,SERVICE_MMS,SERVICE_USSD,PROMO_USSD,PROMO_MMS) VALUES ('$profileid','$memb_ivr','$memb_ivr','$service_call','$service_call','$memb_mails','$service_email','$service_email','$service_email','$service_email','$service_sms','$service_sms','$service_sms','$memb_sms','$memb_sms')";
+			logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql2,"ShowErrTemplate");
+		}
+//		$sql2="INSERT INTO newjs.JPROFILE_ALERTS(PROFILEID,MEMB_CALLS,OFFER_CALLS,SERV_CALLS_SITE,SERV_CALLS_PROF,MEMB_MAILS,CONTACT_ALERT_MAILS,KUNDLI_ALERT_MAILS,PHOTO_REQUEST_MAILS,SERVICE_MAILS,SERVICE_SMS,SERVICE_MMS,SERVICE_USSD,PROMO_USSD,PROMO_MMS) VALUES ('$profileid','$memb_ivr','$memb_ivr','$service_call','$service_call','$memb_mails','$service_email','$service_email','$service_email','$service_email','$service_sms','$service_sms','$service_sms','$memb_sms','$memb_sms')";
+//		mysql_query_decide($sql2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql2,"ShowErrTemplate");
 		$sql = "INSERT INTO MIS.REG_COUNT(PROFILEID,PAGE1) VALUES ('$profileid','Y')";
 		mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
 		//For EDIT_LOG_JPROFILE_ALERTS
@@ -1408,7 +1501,10 @@ if(!empty($record_id)){
 
 		// Mailer on Registration
     if ('C' == $secondary_source) {
-		  first_time_registration_mail($id);
+
+    	$emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($id,$email);
+		(new emailVerification())->sendVerificationMail($id,$emailUID);
+		first_time_registration_mail($id);
     }
 
 		// Mailer Intergrated for the duplicate contact number holders.

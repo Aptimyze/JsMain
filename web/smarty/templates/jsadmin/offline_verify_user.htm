@@ -87,10 +87,18 @@
 			<tr class="fieldsnew" align="center" colspan="2"><td align="center">~$v.phoneres`</td></tr>
 			<tr class="fieldsnew" align="center">
 			<td align="center">
-			<input type="radio" name="~$k`rcheck" value="valid" ~if $v.landl_status eq 'Y'` checked ~/if`>Verified</input>
-			<input type="radio" name="~$k`rcheck" value="invalid" ~if $v.phone_flag eq 'I'` checked ~/if`>Invalid</input>
+			<input type="radio" name="~$k`rcheck" value="valid">Verified</input>
+			<input type="radio" name="~$k`rcheck" value="invalid" >Unverify</input>
+			<input type="radio" name="~$k`rcheck" value="noAction" >No Action</input>			
 			</td>
 			</tr>
+            <tr></tr>
+            <tr></tr>
+            <tr class="fieldsnew" align="center">
+            <td align="center">Current Status: ~if $v.landl_status eq 'Y'`Verified~else`Unverified~/if`
+            </td>
+            </tr>	
+
 			</table>
 		</td>
 		~else`
@@ -102,10 +110,17 @@
                         <tr class="fieldsnew" align="center" colspan="2"><td align="center">~$v.phonemob`</td></tr>
                         <tr class="fieldsnew" align="center">
                         <td align="center">
-                        <input type="radio" name="~$k`mcheck" value="valid" ~if $v.mob_status eq 'Y'` checked ~/if`>Verified</input>
-		        <input type="radio" name="~$k`mcheck" value="invalid" ~if $v.phone_flag eq 'I'` checked ~/if`>Invalid</input>
+                        <input type="radio" name="~$k`mcheck" value="valid">Verified</input>
+		        		<input type="radio" name="~$k`mcheck" value="invalid" >Unverify</input>
+		        		<input type="radio" name="~$k`mcheck" value="noAction" >No Action</input>
                         </td>
                         </tr>
+                        <tr></tr>
+                        <tr></tr>
+                        <tr class="fieldsnew" align="center">
+                        <td align="center">Current Status: ~if $v.mob_status eq 'Y'`Verified~else`Unverified~/if`
+                        </td>
+                        </tr>	
                         </table>
                 </td>
 		~else`
@@ -119,10 +134,18 @@
                         <tr class="fieldsnew" align="center" colspan="2"><td align="center">~$v.altmob`</td></tr>
                         <tr class="fieldsnew" align="center">
                         <td align="center">
-                        <input type="radio" name="~$k`acheck" value="valid" ~if $v.alt_mob_status eq 'Y'` checked ~/if`>Verified</input>
-                        <input type="radio" name="~$k`acheck" value="invalid" ~if $v.phone_flag eq 'I'` checked ~/if`>Invalid</input>
+                        <input type="radio" name="~$k`acheck" value="valid">Verified</input>
+                        <input type="radio" name="~$k`acheck" value="invalid" >Unverify</input>
+                        <input type="radio" name="~$k`acheck" value="noAction">No Action</input>
                         </td>
-                        </tr>
+                        </tr>                        
+                        <tr></tr>
+                        <tr></tr>
+                        <tr class="fieldsnew" align="center">
+                        <td align="center">Current Status: ~if $v.alt_mob_status eq 'Y'`Verified~else`Unverified~/if`
+                        </td>
+                        </tr>	
+
                         </table>
                 </td>
                 ~else`
@@ -139,10 +162,29 @@
 			<td align="center"><input type="submit" name="submitchange" value="Save Changes"></input></td>
 			</tr>
 		</table>
+		<table align="center" width="50%" cellspacing="1" cellpadding="0">
+			<tr class="formhead">
+			<td align="center"><input onclick='resetFields();' style='margin-top:20px;' type="button" name="Clear" value="Clear"></input></td>
+			</tr>
+		</table>
 		~/if`
 	~/if`
 
 	<input type="hidden" name="cid" value="~$cid`">
 	</form>
+	<script>
+	var profileId='~$k`';
+		function resetFields(){
+			   var ele = document.getElementsByName(profileId+"mcheck");
+			   for(var i=0;i<ele.length;i++)
+      				ele[i].checked = false;
+			   var ele = document.getElementsByName(profileId+"acheck");
+			   for(var i=0;i<ele.length;i++)
+      				ele[i].checked = false;
+			   var ele = document.getElementsByName(profileId+"rcheck");
+			   for(var i=0;i<ele.length;i++)
+      				ele[i].checked = false;
+		}
+	</script>
 </body>
 </html>

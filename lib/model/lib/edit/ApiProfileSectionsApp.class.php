@@ -13,7 +13,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
-		$dbHobbies = new NEWJS_HOBBIES();
+		$request=sfContext::getInstance()->getRequest();
+		$this->showAlternateEmail = $request->getParameter("showAlternateEmail");		
+		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
                 $this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
@@ -125,6 +127,16 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$AstroKundali = $this->profile->getAstroKundali();
 		
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
+                $horoscope = new Horoscope();
+		$horoExists = $horoscope->isHoroscopeExist($this->profile);
+		if($horoExists=="Y")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Update Horoscope"; 
+		}
+		elseif($horoExists=="N")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Create Horoscope"; 
+		}
 		
     $this->addSunSign($astro,$AstroKundali);
     
@@ -152,7 +164,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("ASTRO_COUNTRY_BIRTH","Country" , $this->profile->getDecoratedBirthCountry(),"",$this->getApiScreeningField(""));
 		
 		$astro[]=$this->getApiFormatArray("ASTRO_PLACE_BIRTH","City/Town" , $this->profile->getDecoratedBirthCity(),"",$this->getApiScreeningField(""));
-		
 		return $astro;
 	}
 	
@@ -166,7 +177,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       $educationValues = (array) $educationValues;
     }
     
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		
 		$eduArr[]=$this->getApiFormatArray("EDUCATION","About My Education" ,$this->profile->getDecoratedEducationInfo(),$this->profile->getEDUCATION(),$this->getApiScreeningField("EDUCATION"));
@@ -175,9 +186,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , FieldMap::getFieldLabel("degree_pg",$education['PG_DEGREE']),$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
-			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
 		}
 		else
@@ -188,9 +199,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , FieldMap::getFieldLabel("degree_ug",$education['UG_DEGREE']),$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
-			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education->COLLEGE,$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       
 		}
 		else
@@ -198,7 +209,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree","","",$this->getApiScreeningField("DEGREE_UG"));		
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College","","",$this->getApiScreeningField("COLLEGE"));
 		}
-		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
+		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
 
 		return $eduArr;
 	}
@@ -238,9 +249,13 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	public function getApiContactInfo() {
 
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Profile Handler Name" , $this->profile->getDecoratedPersonHandlingProfile(),$this->profile->getPROFILE_HANDLER_NAME(),$this->getApiScreeningField("PROFILE_HANDLER_NAME"));
-		
-		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"));
 
+		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),"Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
+		
+		if(MobileCommon::isDesktop() || MobileCommon::isApp() == "A" || (MobileCommon::isApp() == "I" && $this->showAlternateEmail == "1"))
+		{
+			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"2","Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
+		}
 		//mobile number
 		if($this->profile->getPHONE_MOB())
 		{
@@ -296,6 +311,18 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$time_to_call_label="";
 			$time_to_call_value="";
 		}
+                
+                if(MobileCommon::isApp()!="I"){
+                //Mobile Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+                //Landline Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+                //Alt Number Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+                }
+    
 		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
 		
 		return $contactArr;
@@ -309,13 +336,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//your info
 		$basicArr[]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),$this->profile->getYOURINFO(),$this->getApiScreeningField("YOURINFO"));
 		//username
-		$dbNameOfUser=new incentive_NAME_OF_USER();
-		$name=$dbNameOfUser->getNAME($this->profile->getPROFILEID());
+		$NameOfUser=new NameOfUser;
+		$nameData=$NameOfUser->getNameData($this->profile->getPROFILEID());
 //		if($this->profile->getGENDER()=="M")
 //			$basicArr[]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
 //		else
 //			$basicArr[]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
-		$basicArr[]=$this->getApiFormatArray("NAME","Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$name = $nameData[$this->profile->getPROFILEID()]['NAME'];
+		$basicArr[]=$this->getApiFormatArray("NAME","Full Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[$this->profile->getPROFILEID()]['DISPLAY'],'','Y');
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
@@ -327,9 +356,23 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
-		
+                
+		$stateValue = substr($this->profile->getCITY_RES(),0,2);
+                $stateLabel = FieldMap::getFieldLabel("state_india",$stateValue);
+                
+		$basicArr[] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"));
+                
 		//city
-		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$this->profile->getDecoratedCity(),$this->profile->getCITY_RES(),$this->getApiScreeningField("CITY_RES"));
+                if($this->profile->getCITY_RES()!='')
+		{
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
+				$city = "0";
+			else
+				$city = $this->profile->getCITY_RES();
+			$value= $city;
+			$label = FieldMap::getFieldLabel("city",$city);
+		}
+		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"));
 		
 		//religion
 		$basicArr[]  =$this->getApiFormatArray("RELIGION","Religion" ,$this->profile->getDecoratedReligion(),$this->profile->getRELIGION(),$this->getApiScreeningField("RELIGION"),"N");
@@ -474,13 +517,26 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$arrOut[] = $this->getApiFormatArray("P_AGE","Age",$szAge,$szAgeVal,$this->getApiScreeningField("PARTNER_AGE"));
 		//Marital Status
 		$szMStatus = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_MSTATUS());
-		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));     
+		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));
+                //Have Children
+		$szChildren = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
+		$arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($jpartnerObj->getDecoratedCHILDREN()),$szChildren,$this->getApiScreeningField("CHILDREN"));
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		$arrOut[] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"));
-		//City
+		//State/City
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
-		$arrOut[] = $this->getApiFormatArray("P_CITY","City",trim($jpartnerObj->getDecoratedPARTNER_CITYRES()),$szCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
+		$arrOut[] = $this->handleStateCityData($szState,$szCity);
+
+		$count_matches = SearchCommonFunctions::getMyDppMatches("",$this->profile,'',"",'',"","",1)["CNT"];
+
+	    if ( !isset($count_matches))
+	    {
+	      $count_matches = 0;
+	    }
+
+	    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",$count_matches,"");
 		return $arrOut;
 	}
 
@@ -757,13 +813,14 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit="2",$edit="Y") {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit="2",$edit="Y",$verifyStatus="") {
 		$arr["key"]=$key;
 		$arr["label"]=$label;
 		$arr["label_val"]=$labelVal;
 		$arr["value"]=$value;
 		$arr["screenBit"]=$screenBit;
 		$arr["edit"]=$edit;
+		$arr["verifyStatus"]=strval($verifyStatus);
 		return $arr;
 
 	}
@@ -845,11 +902,60 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       $nativePlaceObj->getInfo();		
 		//native or Family based out of
       $basicArr[] =$this->getApiFormatArray("ANCESTRAL_ORIGIN","Family based out of" ,$nativePlaceObj->getDecorated_ViewField(),$this->profile->getANCESTRAL_ORIGIN(),$this->getApiScreeningField("ANCESTRAL_ORIGIN"));
+    $szNativeState = FieldMap::getFieldLabel("state_india", $nativePlaceObj->getNativeState());
+    $szNativeCity = FieldMap::getFieldLabel("city", $nativePlaceObj->getNativeCity());
+    $szNativeCountry = FieldMap::getFieldLabel("country", $nativePlaceObj->getNativeCountry());
+    $basicArr[] =$this->getApiFormatArray("NATIVE_STATE","Family based out of" ,$szNativeState,$nativePlaceObj->getNativeState(),$this->getApiScreeningField("NATIVE_STATE"));
+    $basicArr[] =$this->getApiFormatArray("NATIVE_CITY","Select City" ,$szNativeCity,$nativePlaceObj->getNativeCity(),$this->getApiScreeningField("NATIVE_CITY"));
+    $basicArr[] =$this->getApiFormatArray("NATIVE_COUNTRY","Family based out of" ,$szNativeCountry,$nativePlaceObj->getNativeCountry(),$this->getApiScreeningField("NATIVE_COUNTRY"));
     }
     
     protected function addSunSign(&$astro,$AstroKundali){
      //Not exist for APP
     }
+
+    /** @function
+	 * @returns state and city array
+	 * @param $stateVal String
+	 * @param $cityVal String
+	 * */
+    public function handleStateCityData($stateVal,$cityVal)
+    {	$jpartnerObj=$this->profile->getJpartner();
+    	if($stateVal == "DM" && $cityVal == "DM")
+    	{
+    		$szStateCity = "DM";
+    		$stateCityNames = "Doesn't Matter";
+    	}
+    	elseif($stateVal == "DM")
+    	{
+    		$szStateCity = $cityVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    	}
+    	elseif($cityVal == "DM")
+    	{
+    		$szStateCity = $stateVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedSTATE());	
+    	}
+    	else
+    	{
+    		$szStateCity = $stateVal.",".$cityVal;
+    		$stateNames = trim($jpartnerObj->getDecoratedSTATE(),',');
+    		$cityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES(),',');
+    		$stateCityNames = $stateNames.",".$cityNames;
+    	}
+    	$stateCityArr = $this->getApiFormatArray("P_CITY","City/State",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+    	return($stateCityArr);
+    }
+
+    
+  public function getVerificationStatusForAltEmailAndMail($altEmailStatus)
+  {    
+    
+    if($altEmailStatus == "Y")
+      return 1;
+    else
+      return 0;
+  }
     
 }
 ?>

@@ -11,24 +11,24 @@ class gunaScore
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
 
-        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender)
+        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='',$shutDownConnections='')
         {	$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
         	//To convert profilechecksum to profileId array
         	foreach($profilechecksumArr as $val)
         	{
-        		$profileid = JsCommon::getProfileFromChecksum($val);
+        		$profileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
         		$searchIdArr[] = $profileid;
         		$flipIdArr[$val] = $profileid;
         	}
         	//FlippedSearchIdArr used to map gunaScore to profilechecksum
         	$this->flippedSearchIdArr = array_flip($flipIdArr);
-        
+					
         	$parent = $this->getParent($caste);
         	if(in_array($parent, $parentValueArr))
         	{
-        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr);
+        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections);
         			//uses $artroDetails data to compile $logged_astro_details and compstring[]
         			if(is_array($astroDetails))
         			{
@@ -108,11 +108,11 @@ class gunaScore
         }
 
         //This function uses loggedin user profileId and $searchIdArr to call NEWJS_ASTRO to fetch astroDetails
-        public function getAstroDetailsForIds($profileId,$searchIdArr)
+        public function getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections='')
         {
         	$searchIdArr[]=$profileId;
-        	$newjsAstroObj = new NEWJS_ASTRO;
-			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1);
+        	$newjsAstroObj = ProfileAstro::getInstance();
+			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1,$shutDownConnections);
 			unset($newjsAstroObj);
 			return $astroData;
         }
@@ -120,26 +120,32 @@ class gunaScore
         //This is a third party vendor call where a curl request is made to fetch guna scores corresponding to the data supplied which is then converted into desired form and returned in $gunaData
         public function thirdPartyVendorCall($logged_astro_details,$compstring)
         {	
+					$gunaData = array();
         	$compstring = implode(",",$compstring);
         	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
-        	$fresult = CommonUtility::sendCurlGetRequest($url);
-        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
-        	foreach($fresult as $key=>$val)
-        	{
-        		$subject = $val;
-        		$guna_pid = strstr($val,':',true);
-        		$pattern = gunaScoreConstants::PATTERN;
-        		preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE);
-        		$matches[1][0]=intval($matches[1][0]);
-        		foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
-        		{
-        			if($guna_pid == $pid)
-        			{
-        				$gunaData[$key][$profchecksum]=$matches[1][0];
-        			}
-        		}
-        	}
-        	curl_close ($ch);
+        	$fresult = CommonUtility::sendCurlGetRequest($url,4000);
+		if($fresult)
+		{
+	        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
+		}
+		if(is_array($fresult))
+		{
+			foreach($fresult as $key=>$val)
+			{
+				$subject = $val;
+				$guna_pid = strstr($val,':',true);
+				$pattern = gunaScoreConstants::PATTERN;
+				preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE);
+				$matches[1][0]=intval($matches[1][0]);
+				foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
+				{
+					if($guna_pid == $pid)
+					{
+						$gunaData[$key][$profchecksum]=$matches[1][0];
+					}
+				}
+			}
+		}
         	return($gunaData);
         }
 }

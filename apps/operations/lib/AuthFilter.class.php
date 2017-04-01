@@ -13,7 +13,7 @@ class AuthFilter extends sfFilter
 			{
 				$status = false;
 				$authenticationLoginObj= BackendAuthenticationFactory::getBackendAuthenicationObj();
-				if($request->getParameter("dialer_check")==1)
+				if($request->getParameter("dialer_check")==1 || $request->getParameter("curlReq")==1)
 				{
 					if(isset($_COOKIE["CRM_LOGIN"]))
 						$checksum = $_COOKIE["CRM_LOGIN"];

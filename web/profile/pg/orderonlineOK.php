@@ -16,6 +16,14 @@ if ($data = authenticated($checksum)) {
     $profileid = $data["PROFILEID"];
 }
 
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $Order_Id);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'CCAVENUE', $responseMsg);
+}
+
 if (JsConstants::$whichMachine == 'test') {
     $WorkingKey = gatewayConstants::$CCAvenueTestRsSalt;
 } 
@@ -33,11 +41,11 @@ $Checksum = CCAvenueRsManager::verifyChecksum($Merchant_Id, $Order_Id, $Amount, 
 $dup = false;
 
 if ($Checksum == "true" && $AuthDesc == "Y") {
-    $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
-    
+    // if ($ret) $membershipObj->startServiceOrder($Order_Id);
+
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
     $res = mysql_query_decide($sql);
@@ -118,7 +126,7 @@ if ($Checksum == "true" && $AuthDesc == "Y") {
 } 
 else if ($Checksum == "true" && $AuthDesc == "B") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-    
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
     $res = mysql_query_decide($sql);
@@ -225,6 +233,7 @@ else if ($Checksum == "true" && $AuthDesc == "B") {
 } 
 else if ($Checksum == "true" && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     list($part1, $part2) = explode("-", $Order_Id);
     $ordrDeviceObj = new billing_ORDERS_DEVICE();
     $device = $ordrDeviceObj->getOrderDevice($part2, $part1);

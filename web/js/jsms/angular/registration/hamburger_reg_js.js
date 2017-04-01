@@ -172,6 +172,14 @@ var errorMsg = "Something went wrong!! Please try again later";
         }
 		Hamburger.prototype.hideHamburger=function()
 		{
+			var myScope = angular.element('#perspective').scope();
+			if(myScope.fields.length>=3 && localStorage.getItem("UD"))
+			{
+				if(myScope.fields[3].storeKey == "casteNoBar" && JSON.parse(localStorage.getItem("UD")).casteNoBar == "true") 
+				{
+					myScope.fields[3].value=true;
+				}
+			}
 			if(this.bHideStatus)
 				return;
 			var ele=this;	
@@ -230,7 +238,8 @@ var errorMsg = "Something went wrong!! Please try again later";
 				$("#TAPNAME_1").html("");
 				},animationtimer+250);
 			startScrolling();
-		};
+		
+};
 		Hamburger.prototype.UpdateHamburgerHTML=function()
 		{
 			var ele=this;
@@ -470,6 +479,10 @@ var errorMsg = "Something went wrong!! Please try again later";
 					startTouchEvents();
 					return;
                                 }
+                                if(this.type=="native_state_jsms" && (value=="undefined" ||value==undefined||value=="0"))
+                                {
+                                        this.dependant='';
+                                }
 			if(this.whenHide=="multiple")
 			{
 				
@@ -510,7 +523,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.SpecialDependantLogic=function()
 		{
-			var specialType = ['religion','reg_mstatus','country_res','t_brother','t_sister',"native_state_jsms"];
+			var specialType = ['religion','reg_mstatus','t_brother','t_sister',"native_state_jsms"];
 			if(specialType.indexOf(this.type)!=-1)
 			{
 				var o = this.output[this.type];
@@ -541,14 +554,6 @@ var errorMsg = "Something went wrong!! Please try again later";
 					this.bIndependantCall = true;
 				}
 				
-				if(this.type=='country_res' && o)
-				{
-					if(o.value == 51)
-					{
-						this.dependant = "city_res";
-					}
-				}
-                
                 if((this.type == 't_brother' || this.type == 't_sister') && o ){
                     if (o.value==='0')
                         this.dependant = '';
@@ -612,13 +617,25 @@ var errorMsg = "Something went wrong!! Please try again later";
 			}
 			if(this.type=="native_country_jsms" && json)
 				return json;
-			if(this.type.indexOf("reg_city_")>-1)
+			if(this.type.indexOf("reg_city_")>-1 && this.screenName!="s2")
 			{
 				var split = this.type.split("_");
 				var state = split[2];
 				return json[state];
 			}
-				
+			if(this.type.indexOf("reg_city_jspc")>-1 && this.screenName=="s2")
+			{
+                            this.countryValue = staticTables.getUserData('familyIncomeDep');
+				if(this.countryValue=='51')
+				{
+					this.stateValue = staticTables.getUserData('stateDep').replace(/\"/g, "");
+					return json[this.countryValue][this.stateValue];
+				}
+				else
+				{
+					return json[this.countryValue];
+				}
+			}
 			if(this.selectedValue!=-1 && json)
 			{
 				if(json[this.selectedValue] && !this.bIndependantCall)

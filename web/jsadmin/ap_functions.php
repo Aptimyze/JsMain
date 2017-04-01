@@ -7,7 +7,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 function get_jprofile_query($viewer="",$viewed="")
 {
 	global $jprofile_result;
-	$sql = "SELECT PROFILEID , SOURCE , SUBSCRIPTION , EMAIL , GENDER , MTONGUE , CASTE , SHOWPHONE_RES , SHOWPHONE_MOB , SHOW_HOROSCOPE , BTIME , CITY_BIRTH , COUNTRY_BIRTH , OCCUPATION , PRIVACY , GET_SMS , COUNTRY_RES , CITY_RES , ACTIVATED , AGE , MOD_DT , SHOW_PARENTS_CONTACT , PARENTS_CONTACT , CONTACT , PINCODE , STD , SHOWADDRESS , PHONE_RES , PHONE_MOB , MESSENGER_ID , MESSENGER_CHANNEL , PHOTOSCREEN , HAVEPHOTO , PHOTO_DISPLAY , USERNAME , HEIGHT , RELATION , MSTATUS , HAVECHILD , MANGLIK , BTYPE , COMPLEXION , DIET , SMOKE , DRINK , RES_STATUS , HANDICAPPED , RELIGION , INCOME , EDU_LEVEL , EDU_LEVEL_NEW , FAMILY_BACK , FAMILYINFO , FAMILY_TYPE , FAMILY_STATUS , FAMILY_VALUES , MOTHER_OCC , T_BROTHER , M_BROTHER ,T_SISTER , M_SISTER , WIFE_WORKING , MARRIED_WORKING , PARENT_CITY_SAME , SUBCASTE , YOURINFO , JOB_INFO , SPOUSE  , FATHER_INFO , SCREENING , GOTHRA , NAKSHATRA , EDUCATION , DTOFBIRTH , SIBLING_INFO , SHOWMESSENGER , LAST_LOGIN_DT , CITIZENSHIP , BLOOD_GROUP , WEIGHT , NATURE_HANDICAP , HIV , PHONE_NUMBER_OWNER , PHONE_OWNER_NAME , MOBILE_NUMBER_OWNER , MOBILE_OWNER_NAME , TIME_TO_CALL_START , TIME_TO_CALL_END , WORK_STATUS , RASHI , ANCESTRAL_ORIGIN , HOROSCOPE_MATCH , SPEAK_URDU , INCOMPLETE , ENTRY_DT , ISD FROM newjs.JPROFILE";
+	$sql = "SELECT PROFILEID , SOURCE , SUBSCRIPTION , EMAIL , GENDER , MTONGUE , CASTE , SHOWPHONE_RES , SHOWPHONE_MOB , SHOW_HOROSCOPE , BTIME , CITY_BIRTH , COUNTRY_BIRTH , OCCUPATION , PRIVACY , GET_SMS , COUNTRY_RES , CITY_RES , ACTIVATED , AGE , MOD_DT , SHOW_PARENTS_CONTACT , PARENTS_CONTACT , CONTACT , PINCODE , STD , SHOWADDRESS , PHONE_RES , PHONE_MOB , MESSENGER_ID , MESSENGER_CHANNEL , PHOTOSCREEN , HAVEPHOTO , PHOTO_DISPLAY , USERNAME , HEIGHT , RELATION , MSTATUS , HAVECHILD , MANGLIK , BTYPE , COMPLEXION , DIET , SMOKE , DRINK , RES_STATUS , HANDICAPPED , RELIGION , INCOME , EDU_LEVEL , EDU_LEVEL_NEW , FAMILY_BACK , FAMILYINFO , FAMILY_TYPE , FAMILY_STATUS , FAMILY_VALUES , MOTHER_OCC , T_BROTHER , M_BROTHER ,T_SISTER , M_SISTER , WIFE_WORKING , MARRIED_WORKING , PARENT_CITY_SAME , SUBCASTE , YOURINFO , JOB_INFO , SPOUSE  , FATHER_INFO , SCREENING , GOTHRA , NAKSHATRA , EDUCATION , DTOFBIRTH , SIBLING_INFO , SHOWMESSENGER , DATE(LAST_LOGIN_DT) LAST_LOGIN_DT , CITIZENSHIP , BLOOD_GROUP , WEIGHT , NATURE_HANDICAP , HIV , PHONE_NUMBER_OWNER , PHONE_OWNER_NAME , MOBILE_NUMBER_OWNER , MOBILE_OWNER_NAME , TIME_TO_CALL_START , TIME_TO_CALL_END , WORK_STATUS , RASHI , ANCESTRAL_ORIGIN , HOROSCOPE_MATCH , SPEAK_URDU , INCOMPLETE , ENTRY_DT , ISD FROM newjs.JPROFILE";
 	if($viewer && $viewed)
 	{
 		$sql .=" WHERE PROFILEID IN($viewer,$viewed)";
@@ -666,15 +666,16 @@ function check_ex_form_detail($profileid)
 // This function gets the PROFILEID corresponding to the LEAD_ID
 function get_UserProfileid($id="")
 {
+	$db = connect_slave();
         $sql="SELECT `jsprofileid_c` AS `USERNAME` from sugarcrm.leads_cstm where id_c='$id'";     
-        $resName=mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+        $resName=mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
         $rowName=mysql_fetch_assoc($resName);
         $username=$rowName["USERNAME"];
         $username =trim($username);
 
         if($username){
                 $sql="SELECT `PROFILEID` FROM newjs.JPROFILE WHERE `USERNAME`='$username'";
-                $resid=mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+                $resid=mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
                 $row=mysql_fetch_assoc($resid);
                 $profileid=$row["PROFILEID"];
         }
@@ -687,8 +688,9 @@ function get_UserProfileid($id="")
 function leadDetails($id="")
 {
 	$leadData_arr =array();
+	$db = connect_slave();
 	$sql ="SELECT leads_cstm.type_c as newspaper,leads_cstm.edition_date_c as edition_date,leads.lead_source as source,leads.assistant as assistant from sugarcrm.leads,sugarcrm.leads_cstm where leads.id=leads_cstm.id_c AND leads.id='$id'";
-	$res =mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());	
+	$res =mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());	
 	$row=mysql_fetch_assoc($res);
 	$edition_date 	=$row['edition_date'];
 	$source 	=$row['source'];
@@ -708,7 +710,7 @@ function leadDetails($id="")
 		$source_name ="Email";
 
 	$sql ="SELECT `id`,`filename` from sugarcrm.notes where parent_id='$id'";
-	$res =mysql_query_decide($sql) or die("Error while fetching username   ".mysql_error_js());
+	$res =mysql_query_decide($sql,$db) or die("Error while fetching username   ".mysql_error_js());
 	$row=mysql_fetch_assoc($res);
 	$filename   =$row['filename']; 
 	$file_id    =$row['id'];	
@@ -721,8 +723,9 @@ function leadDetails($id="")
 function leadContactDetails($id="")
 {
 	global $smarty;
+	$db = connect_slave();
         $sql ="SELECT `phone_mobile`,`phone_home`,`primary_address_street`,`primary_address_city`,`primary_address_state`,`primary_address_country`,`primary_address_postalcode` from sugarcrm.leads where id='$id'";
-        $res =mysql_query_decide($sql) or die("Error while fetching lead contact details   ".mysql_error_js());
+        $res =mysql_query_decide($sql,$db) or die("Error while fetching lead contact details   ".mysql_error_js());
         $row=mysql_fetch_assoc($res);
         $show_mobile   		=$row['phone_mobile'];
         $show_phone   		=$row['phone_home'];
@@ -743,7 +746,7 @@ function leadContactDetails($id="")
 		$address1 .=" , ".$primary_address_code;
 
 	$sql1 ="SELECT eadd.email_address as EMAIL from sugarcrm.email_addr_bean_rel as emap,sugarcrm.email_addresses as eadd where emap.bean_id='$id' AND emap.bean_module='Leads' AND emap.email_address_id=eadd.id";
-	$res1 =mysql_query_decide($sql1) or die("Error while fetching lead contact details   ".mysql_error_js());
+	$res1 =mysql_query_decide($sql1,$db) or die("Error while fetching lead contact details   ".mysql_error_js());
 	$row1=mysql_fetch_assoc($res1);	
 	$email_id =$row['EMAIL'];	
 

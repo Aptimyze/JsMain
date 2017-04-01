@@ -4,6 +4,8 @@
 	//also update the HOROSCOPE_COMPATIBILITY table with profileid's, date and MTONGUE of other person
 
         include_once("connect.inc");
+		include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+                include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
         $db=connect_db();
 	//Added by Vibhor for Astro Service of Offline Module
 	if(!$via_ofm)
@@ -35,8 +37,8 @@
                         $smarty->assign("HEAD",$smarty->fetch("headnew.htm"));
                         $smarty->assign("SUBFOOTER",$smarty->fetch("subfooternew.htm"));
                         $smarty->assign("LEFTPANEL",$smarty->fetch("leftpanelnew.htm"));
-
-			$smarty->display("horoscope_compatibility_error.htm");
+                        
+                            $smarty->display("horoscope_compatibility_error.htm");
                         exit;
                 }
 
@@ -101,7 +103,7 @@
 					$row = mysql_fetch_array($result);
 
 					//find astro details of logged in person and astro details of other person
-					astro_details($profileid,$profileid_other);
+					$detailArr = astro_details($profileid,$profileid_other);
 
 					//find astro details of other person
 					//astro_details($profileid_other);
@@ -134,7 +136,30 @@
 						$smarty->assign("COMPATIBILITY_SUBSCRIPTION",'Y');
 					*/
 				}
-				$smarty->display("check_horoscope_compatibility.htm");	
+                                if($sendMail){
+                                    $astrodata = $detailArr['astrodata'];
+                                    $astrodata_other = $detailArr['astrodata_other'];
+                                    if($data['GENDER']=='M'){
+                                        $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$data['USERNAME'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
+                                    }
+                                    else{
+                                        $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$data['USERNAME'];
+                                    }
+				    $file=PdfCreation::PdfFile($urlToVedic);
+                                    
+                                    $email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
+                                    $emailTpl = $email_sender->setProfileId($data['PROFILEID']);
+                                    $smartyObj = $emailTpl->getSmarty();
+                                    $smartyObj->assign('otherUsername',$row['USERNAME']);
+                                    $smartyObj->assign('otherProfile',$profileid_other);
+                                    $email_sender->setAttachment($file);
+                                    $email_sender->setAttachmentName("astroCompatibility-".$row['USERNAME'].".pdf");
+                                    $email_sender->setAttachmentType('application/pdf');
+                                    $email_sender->send();
+                                    return;
+                                }
+                                else
+                                    $smarty->display("check_horoscope_compatibility.htm");	
 			}
 		}
 	}
@@ -154,6 +179,8 @@
 		$astrodata['VENUS_DEGREES_FULL'] = $row['VENUS_DEGREES_FULL'];
 		$astrodata['LAGNA_DEGREES_FULL'] = $row['LAGNA_DEGREES_FULL'];
 		$smarty->assign("astrodata",$astrodata);
+                
+                $returnArr['astrodata']=$astrodata;
 
 		unset($astrodata);
 		
@@ -166,13 +193,21 @@
 		$astrodata_other['VENUS_DEGREES_FULL'] = $row_other['VENUS_DEGREES_FULL'];
 		$astrodata_other['LAGNA_DEGREES_FULL'] = $row_other['LAGNA_DEGREES_FULL'];
 		$smarty->assign("astrodata_other",$astrodata_other);
+                $returnArr['astrodata_other']=$astrodata_other;
 		unset($astrodata_other);
+                return $returnArr;
 	}
         //function to save values in HOROSCOPE_COMPATIBILITY table
         function horoscope_compatibility_log($profileid,$profileid_other)
 	{
-		$sql="REPLACE into HOROSCOPE_COMPATIBILITY(PROFILEID,PROFILEID_OTHER,DATE) values ('$profileid','$profileid_other',now()) ";
-                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		$objReplaceLib = ProfileReplaceLib::getInstance();
+		$result = $objReplaceLib->replaceHOROSCOPE_COMPATIBILITY($profileid, $profileid_other);
+		if (false === $result) {
+			die('Due to a temporary problem your request could not be processed. Please try after a couple of minutes');
+		}
+		/*$sql="REPLACE into HOROSCOPE_COMPATIBILITY(PROFILEID,PROFILEID_OTHER,DATE) values ('$profileid','$profileid_other',now()) ";
+                mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");*/
+		
 	}
 
 ?>

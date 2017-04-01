@@ -1,8 +1,11 @@
 ~include_partial("global/mailerheader")`
 <body>
 		<table align="center" style="font-size: 11px;">
-        <tr>
+        <tr align="center" style="font-size: 11px;">
             <td>Please add ~$mailerName` to your address book to ensure delivery of this mail into you inbox</td>
+        </tr>
+        <tr align="center" style="font-size: 11px;">
+            <td>This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.</td>
         </tr>
      </table>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:650px; text-align:left" align="center">
@@ -96,6 +99,11 @@
                                         		</table>
                                     		</td>
                                 	</tr>
+                                    ~if $data.GifFlag eq 1`
+                                    <tr>
+                                        <td>~include_partial("global/primaryMailGif")`</td>
+                                    </tr><br>
+                                    ~else`
                         	~if $data.MEMBERSHIP.membership eq 0 || ( $data.MEMBERSHIP.membership eq 1 && $data.MEMBERSHIP.renew.RENEW eq 1)`
                                 	<tr>
                                     		<td style="padding-left:10px;">
@@ -112,6 +120,7 @@
                                     		</td>
                                 	</tr>
                        		 ~/if`
+                             ~/if`
                             	</table>
                         </td>
                         <td></td>

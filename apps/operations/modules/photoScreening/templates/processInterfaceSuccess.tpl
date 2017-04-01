@@ -1,11 +1,29 @@
-~include_partial('global/header')`
+<!DOCTYPE html>
+<head>
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta http-equiv="content-language" content="en" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="shortcut icon" href="/favicon1.ico" />
+<link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" type="text/css" href="/min/?f=/css/jspc/common/commonJspc_css.css,/css/jspc/photoUpload/photoup_css.css,/css/jspc/photoUpload/cropper.css,/css/jspc/photoUpload/main.css" />
+
+<script type="text/javascript" language="Javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+
 <br>
  <div align="center" ><b>PICTURE PROCESS INTERFACE</b> </div>
+
 ~if $noProfileFound`
 	<div align="center" ><b>No More Profiles to be Screened. Please try after some time. </b> </div>
 ~elseif $noPhotosFound`
 	<div align="center" ><b>This profile has no photos to be screened. </b> </div>
 ~else`
+<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
+~include_partial('photoScreening/cropper',["uploadUrl"=>$uploadUrl,"photoArr"=>$photoArr,"profileData"=>$profileData,"search"=>$search])`
 	~if $search neq 1`
 		<table width="600" border="1" cellspacing="0" cellpadding='3' ALIGN="CENTER" >
 		    <tr class=label align=center>
@@ -39,22 +57,27 @@
 ~if $photoArr['screened']`
         ~include_partial("screenedCrousel",["screened"=>$photoArr['screened']])`
 ~/if`
-<form name="list" id="ScreenForm" enctype="multipart/form-data"  action="~JsConstants::$siteUrl`/operations.php/photoScreening/uploadProcessScreening?name=~$name`&cid=~$cid`&source=~$source`"  method="POST">
-	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`">
+	<input type=hidden name="profileid" value="~$profileData['PROFILEID']`" id="profileid">
 	<input type = "hidden" name= "emailAdd" value = "~$profileData['EMAIL']`">
 	<input type=hidden name="source" value="~$source`">
 	<input type=hidden name="cid" value="~$cid`">
+	<input type=hidden name="profileid" value="~$profileid`">
 	<input type=hidden name="mailid" value="~$mailid`">
 	<input type=hidden name="pictureIDs" value="~$photoArr['pictureIDs']`">
 	<input type=hidden name="username" value="~$name`">
 	<input type=hidden name="mail" value="~$mail`">
 	<input type = "hidden" name = "screenedProfilePicId" value = "~$screenedProfilePicId`">
 	<input type="hidden" name="havePhotoValue" value="~$profileData['HAVEPHOTO']`">
+	<input type="hidden" name="cropBoxDimensionsArr" value="" id="cropBoxDimensionsArr">
+	<input type="hidden" name="imageSource" value="" id="imageSource">
+	<input type="hidden" name="imgPreviewTypeArr" value="" id="imgPreviewTypeArr">
+	<input type="hidden" name="ops" value=false id="ops">
+	<input type="hidden" name="hideCropper" value="~$hideCropper`" id="hideCropper">
 	<table width=760 align="CENTER" cellspacing="0px;">
         	~assign var = "tabIndex" value = 1`
         	<tr class="formhead topDetails" style="background:#EFEFD3;">
 			<td colspan="2">Username : <span tabIndex="~$tabIndex++`" selected="selected">~$profileData['USERNAME']`</span></td>
-			<td colspan="2">Gender : <font class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
+			<td colspan="2">Gender : <font style="font-size:16px;" class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
 		</tr>  
         
 		<tr><td colspan="4" align="center" style="font-size: 12px; font-weight:bold;"><br><a id="goBackInterface" href="~JsConstants::$siteUrl`/operations.php/photoScreening/screen?name=~$name`&cid=~$cid`&source=~$source`&switchProfile=~$profileData['PROFILEID']`">Go Back To Accept / Reject Interface</a></br></td></tr>   
@@ -148,6 +171,10 @@
 ~include_partial('global/footer')`
 <script>
         window.onload = function (){
+		if($("#hideCropper").val()==true)
+		{
+			closeCropper();
+		}
 		$("#ScreenForm").submit(function(event)
                 {
 			var val = $("input[type=submit][clicked=true]").val();
@@ -174,6 +201,10 @@
 				if(!bool)
                                  event.preventDefault();
 			}
+			else
+			{
+				sendOpsProcessCropperRequest();
+			}
 
 		});
 		$("form input[type=submit]").click(function() {
@@ -182,4 +213,7 @@
 		});
 	}
 </script>
+<script type="text/javascript" src="/min/?f=/js/jspc/common/commonJspc_js.js,/js/jspc/common/AjaxWrapper.js"></script>
+
+<script type="text/javascript" src="/min/?f=/js/jspc/photoUpload/cropper.js,/js/jspc/photoUpload/main.js,/js/jspc/photoUpload/bootstrap.js,/js/jspc/photoUpload/tooltip.js"></script>
 </body>

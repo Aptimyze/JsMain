@@ -239,12 +239,12 @@ if(typeof SSL_SITE_URL=="undefined")
                         }
 			else if((address_url.indexOf("success_stories")!=-1 || address_url.indexOf("successStory")!=-1 || temp_url.indexOf("success_stories")!=-1) && $("#nextAction").val()=="")
 			{
-				window.top.location="/profile/intermediate.php?parentUrl=/success/success_stories.php";
+				window.top.location="/success/success_stories.php";
 				return 1;
 			}
 			else if(address_url.indexOf("intermediate.php")!=-1 || address_url.indexOf("login.php")!=-1)
 			{
-				address_url = SITE_URL+"/profile/intermediate.php?parentUrl=/search/perform?searchId="+searchId+"&currentPage="+currentPage;
+				address_url = SITE_URL+"/search/perform?searchId="+searchId+"&currentPage="+currentPage;
 				window.top.location = address_url;
 				return 1;
 			}
@@ -260,7 +260,7 @@ if(typeof SSL_SITE_URL=="undefined")
 			{
 				var nextAction = "/search/perform?searchId="+searchId+"&currentPage="+currentPage;
 			}
-			window.location = SITE_URL+"/profile/intermediate.php?parentUrl="+nextAction;
+			window.location = SITE_URL+nextAction;
 			return 1;
 		}
 		

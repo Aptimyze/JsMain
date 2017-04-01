@@ -42,7 +42,7 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                You have shortlisted these profiles recently. Take the next step and let them know you are interested by sending them an interest.<a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)SHORTLISTED:profileid=~$profileid`(/LINK)">View All Shortlisted Members</a>
+                You have shortlisted these profiles recently. Take the next step and let them know you are interested by sending them an interest.<a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)SHORTLISTED:profileid=~$profileid`(/LINK)">View All Shortlisted Profiles</a>
             </td>
 
                         <td width="20"></td>
@@ -112,7 +112,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~else`Upgrade Membership~/if`</strong></a> </td>
+                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~if $VD_END_DAY neq ''`till ~$VD_END_DAY` ~$VD_END_MONTH` ~/if`~else`Upgrade Membership~/if`</strong></a> </td>
                                 </tr>
                                 <tr>
                                     <td></td>

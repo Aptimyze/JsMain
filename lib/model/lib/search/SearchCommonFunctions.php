@@ -182,13 +182,7 @@ class SearchCommonFunctions
                     return SearchConfig::$profilesPerPageOnApp;
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
-		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
-			$profileid = $loggedInProfileObj->getPROFILEID();
-
-		if($profileid && JsMemcache::getInstance()->get($profileid."_DUMMY_USER")==CommonFunction::createChecksumForProfile($profileid))
-			return SearchConfig::$premium_dummy_user_search_count;
-		elseif($SearchParametersObj && $SearchParametersObj->getNoOfResults())
+		if($SearchParametersObj && $SearchParametersObj->getNoOfResults())
 			return $SearchParametersObj->getNoOfResults();
 		else
 			return SearchConfig::$profilesPerPage;
@@ -197,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='',$source='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -215,7 +209,11 @@ class SearchCommonFunctions
                 if($twoWayMatches)
                     $SearchParamtersObj->getSearchCriteria();
                 else
-                    $SearchParamtersObj->getDppCriteria();
+                    $SearchParamtersObj->getDppCriteria('',$source);
+                if($verifiedProfilesDate){
+                    $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
+                    $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
+                }
 		if($paramArr && is_array($paramArr))
 		{
 			foreach($paramArr as $k=>$v)
@@ -226,11 +224,27 @@ class SearchCommonFunctions
                 $SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
 		$SearchUtilityObj =  new SearchUtility;
-                if($notInProfiles)
-                   $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,$notInProfiles);
-                else
-                    $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
-                $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		if($removeShortlisted)
+		{
+				$shortlistObj							= new Bookmarks("newjs_masterRep");
+				$condition["WHERE"]["IN"]["BOOKMARKER"] = $loggedInProfileObj->getPROFILEID();
+				$notInProfiles = implode(array_keys($shortlistObj->getBookmarkedProfile($loggedInProfileObj->getPROFILEID(),$condition))," ");
+				unset($shortlistObj);
+		}
+		$showOnlineArr = '';
+		if($showOnlineOnly)
+		{
+			$ChatLibraryObj = new ChatLibrary(SearchConfig::getSearchDb());
+			$showOnlineArr = $ChatLibraryObj->findOnlineProfiles(" ",$SearchParamtersObj);
+			
+		}
+		if($notInProfiles)
+			 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,$notInProfiles,$showOnlineArr);
+		else
+				$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,'',$showOnlineArr);
+		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		if($completeResponse)
+			return $responseObj;
 		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
 		$arr['CNT']  = $responseObj->getTotalResults();
                 if($clustersToShow)
@@ -310,5 +324,56 @@ class SearchCommonFunctions
 		$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
 		return $arr;
 	}
+	/**
+	* This section will show the match of the matches.
+	*/
+	public static function getMatchofTheDay($profileid=null,$limit=10,$currentPage=0,$alertLogic='')
+	{
+		$limit = $limit?$limit:SearchConfig::$matchMaxLimit;
+		$searchEngine = 'solr';
+		$outputFormat = 'array';
+		$noAwaitingContacts=1;
+		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master',$profileid);
+		$loggedInProfileObj->getDetail("","","AGE,MSTATUS,RELIGION,CASTE,COUNTRY_RES,CITY_RES,MTONGUE,INCOME");
+		
+		$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MatchOfDay',$loggedInProfileObj);
+		$SearchParamtersObj->setNoOfResults($limit);
+    
+	    //Get Reset Match Alert Count Params
+	    $request=sfContext::getInstance()->getRequest();   
+		$SearchParamtersObj->getSearchCriteria();
+		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
+		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj);
+		$SearchUtilityObj =  new SearchUtility;
+		$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
+		$results_orAnd_cluster = 'onlyResults';
+		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		$profileids = $responseObj->getsearchResultsPidArr();    
+		//$arr["profiles"] = $responseObj->getResultsArr();
+		$arr['PIDS'] = $profileids;
+		$arr['TIME'] = $date;
+		$arr['CNT']  = count($arr['PIDS']);
+		//$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
+		return $arr;
+	}
+        public static function getOccupationMappingData($occupationArray = array()){
+                $mappingOccupationData = array();
+                if(!empty($occupationArray)){
+                        $mappedArr = FieldMap::getFieldLabel("newoccupation_mapping_for_dpp",1,1);
+                        $map = array();
+                        foreach($mappedArr as $key=>$mappedOcc){
+                                $map[$key] = explode(",", $mappedOcc);
+                        }
+                        foreach($occupationArray as $occupation){
+                                foreach($map as $k=>$occupations){
+                                        if(in_array($occupation, $occupations)){
+                                                $mappingOccupationData = array_merge($mappingOccupationData,$occupations);
+                                        }
+                                }
+                        }
+                }
+                $mappingOccupationData = array_unique($mappingOccupationData);
+                return $mappingOccupationData;
+        }
 }
 ?>

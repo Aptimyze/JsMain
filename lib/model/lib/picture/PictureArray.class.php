@@ -16,7 +16,7 @@ class PictureArray
 	private $photoVisibleToAll = PhotoProfilePrivacy::photoVisibleToAll;
 	private $viewedProfilesRequiredDetails = array("PROFILEID","PHOTO_DISPLAY","PRIVACY","HAVEPHOTO","GENDER");
 	private $viewerProfilesRequiredDetails = "PHOTO_DISPLAY,PRIVACY,HAVEPHOTO,PHOTOSCREEN,AGE,INCOME,MSTATUS,COUNTRY_RES,RELIGION,CASTE,MTONGUE,CITY_RES,GENDER";
-	private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID";
+	private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID,STATE";
 
 	public function __construct($viewedObjArr='')
 	{
@@ -33,12 +33,17 @@ class PictureArray
 	  * @param - $skipContacts - If this flag is set as Y, then we would consider an Accepted contact between viewer and viewed profiles
 	  * @param - $contactsBetweenViewedAndViewer - An array of contacts between the logged in profile and the profiles for which photo is to be fetched
 			Refer ContactsRecord->getContactsSent() to get the format in which the contacts array needs to be given
+
 	  * @param - $isMobile - Set this value as 'Y' for WAP site
+	  * @param - $skipPrivacyFilterArr - An array of profiles for which filters are not to be checked
 	  * @return - Array of Picture Objects of all profiles having Photos
 	**/
 
-	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='')
+	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='',$dbname='',$skipPrivacyFilterArr='')
 	{
+                if($dbname == ''){
+                        $dbname = 'newjs_master';
+                }
 		$this->viewerObj = $viewerObj;
 		//checking if atleast one profile is passed for which photo is to be fetched
 		if(!is_array($this->viewedObjArr))
@@ -51,12 +56,12 @@ class PictureArray
 		{
 			if(strstr($_SERVER['PHP_SELF'],'symfony_index.php'))
 			{
-				$this->viewerObj=LoggedInProfile::getInstance('newjs_master');
+				$this->viewerObj=LoggedInProfile::getInstance($dbname);
 			}
 			else
 			{
 				global $data;
-				$this->viewerObj=LoggedInProfile::getInstance('newjs_master',$data['PROFILEID']);
+				$this->viewerObj=LoggedInProfile::getInstance($dbname,$data['PROFILEID']);
 			}
 
 			if(!$this->viewerObj || $this->viewerObj->getPROFILEID() == '')
@@ -87,7 +92,8 @@ class PictureArray
 			{
 				if($viewedObj->getPRIVACY() == $this->filteredPrivacy)
 				{
-					$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
+					if(!$skipPrivacyFilterArr || !in_array($viewedObj->getPROFILEID(), $skipPrivacyFilterArr))
+						$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
 				}
 			}
 			if(is_array($profilesWithPrivacySet))
@@ -124,7 +130,8 @@ class PictureArray
 			{
 				if($viewedObj->getPRIVACY() == $this->filteredPrivacy)
 				{
-					$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
+					if(!$skipPrivacyFilterArr || !in_array($viewedObj->getPROFILEID(), $skipPrivacyFilterArr))
+						$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
 				}
 			}
 		}
@@ -134,7 +141,7 @@ class PictureArray
 		{
 			if($this->viewerObj && $profilesWithPrivacySet && is_array($viewedDppArr))
 			{
-				$viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet);
+				$viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet,$dbname);
 				$viewerParameters = $this->viewerObj->getFilterParameters();
 				$filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $this->viewerObj->getPROFILEID(), $profilesWithPrivacySet);
 				$profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
@@ -194,6 +201,8 @@ class PictureArray
 				}
 			}
 		}
+		//print_r($contactsBetweenViewedAndViewer);
+		//echo "---";
 
 		//Since the table newjs.PICTURE_DISPLAY_LOGIC is being used to decide whether the photo is displayed or not, I am passing 'showPhoto', so that I get all photos and then based on the table it would be decided which all would be shown.
 		/*Implementation of this condition is changed by Reshu Rajput
@@ -239,6 +248,8 @@ class PictureArray
 			$photoObjArr = $this->getProfilePics($this->viewedObjArr,$tempContacts,'mobile',1,$photoType);
 		else
 			$photoObjArr = $this->getProfilePics($this->viewedObjArr,$tempContacts,'',1,$photoType);
+                
+                
 		unset($tempContacts); 
 		$pictureDisplayLogic = FieldMap::getFieldLabel('photo_display_logic', '', 1);
 
@@ -573,7 +584,7 @@ class PictureArray
 
 		if($profilesWithScreenedPhoto)	
 		{
-			$PICTURE_NEW = new PICTURE_NEW("newjs_bmsSlave");
+			$PICTURE_NEW = new PICTURE_NEW("newjs_masterRep");
 			$arr = $PICTURE_NEW->getScreendPictureCountByPid($profilesWithScreenedPhoto);
 		}
 		return $arr;

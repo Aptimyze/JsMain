@@ -165,8 +165,10 @@ function MM_openBrWindow(theURL,winName,features)
  ~section name=index loop=$ROW`
     <tr align="CENTER" bgcolor="#fbfbfb" class="~$ROW[index].bandcolor`">
       <td height="20" align="CENTER" width="8%">~$ROW[index].Sno`</td>
-      <!--td height="21" width="15%" align="LEFT"><a href="viewprofile_jsadmin.php?checksum=~$cid`&profilechecksum=~$ROW[index].Profilechecksum`&viewprofile=INTERNAL" target="_blank">~$ROW[index].Username`</a></td-->
-      <td height="21" width="15%" align="LEFT"><a href="showstat.php?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">~$ROW[index].Username`</a></td>
+      <td height="21" width="15%" align="LEFT">
+	<!--<a href="showstat.php?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">~$ROW[index].Username`</a>-->
+	<a href="../operations.php/commoninterface/ShowProfileStats?cid=~$cid`&profileid=~$ROW[index].Profileid`" target="_blank">~$ROW[index].Username`</a>
+      </td>
       <td height="21" width="15%">~$ROW[index].Email`</td>
       <td height="21" width="15%">~$ROW[index].Del_dt`</td>
 <!--      <td><input type=checkbox name="cb~$ROW[index].Profileid`" value="Y" ></td>-->

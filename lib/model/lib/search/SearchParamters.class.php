@@ -14,6 +14,7 @@ class SearchParamters
 	protected $LAGE;
 	protected $HAGE;
 	protected $HAVEPHOTO;
+	protected $PHOTO_VISIBILITY_LOGGEDIN;
 	protected $MANGLIK;
 	protected $MSTATUS;
 	protected $HAVECHILD;
@@ -110,7 +111,13 @@ class SearchParamters
         protected $CITY_INDIA_SELECTED;
         protected $FSO_VERIFIED;
         protected $INCOME_SORTBY;
-
+        protected $NATIVE_STATE;
+        protected $NATIVE_CITY;
+        protected $SHOW_RESULT_FOR_SELF;
+        protected $LAST_LOGIN_SCORE;
+        protected $TRENDS_DATA;
+        protected $IS_VSP; // check for VSP Search
+        
         public function __construct()
 	{
 		$this->whereParams = SearchConfig::$searchWhereParameters;
@@ -135,6 +142,12 @@ class SearchParamters
 			$this->GENDER = $GENDER;
 	}
 	public function getGENDER() { return $this->GENDER; }
+        
+	/* Getter and Setter functions*/
+	public function setLAST_LOGIN_SCORE($LAST_LOGIN_SCORE) {
+			$this->LAST_LOGIN_SCORE = $LAST_LOGIN_SCORE;
+	}
+	public function getLAST_LOGIN_SCORE() { return $this->LAST_LOGIN_SCORE; }
 
         public function setNATIVE_STATE($NATIVE_STATE) 
 	{ 
@@ -143,6 +156,15 @@ class SearchParamters
 			$this->NATIVE_STATE = $NATIVE_STATE;
 	}
 	public function getNATIVE_STATE() { return $this->NATIVE_STATE; }
+        
+        public function setNATIVE_CITY($NATIVE_CITY) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("NATIVE_CITY",$NATIVE_CITY);
+		if($validInput)
+			$this->NATIVE_CITY = $NATIVE_CITY;
+	}
+	public function getNATIVE_CITY() { return $this->NATIVE_CITY; }
+        
         
 	public function setCASTE($CASTE,$setCaste='') 
 	{
@@ -201,6 +223,13 @@ class SearchParamters
 			$this->HAVEPHOTO = $HAVEPHOTO; 
 	}
         public function getHAVEPHOTO() { return $this->HAVEPHOTO; }
+        public function setPHOTO_VISIBILITY_LOGGEDIN($PHOTO_VISIBILITY_LOGGEDIN)
+        {
+                $validInput = SearchInputValidation::validateInput("PHOTO_VISIBILITY_LOGGEDIN",$PHOTO_VISIBILITY_LOGGEDIN);
+                if($validInput)
+                        $this->PHOTO_VISIBILITY_LOGGEDIN = $PHOTO_VISIBILITY_LOGGEDIN;
+        }
+        public function getPHOTO_VISIBILITY_LOGGEDIN() { return $this->PHOTO_VISIBILITY_LOGGEDIN; }
 	public function setMANGLIK($MANGLIK) 
 	{ 
                 // append Dont know to search string if 'not manglik' is selected. Exclude cluster search by APPLY_ONLY_CLUSTER enum.
@@ -258,29 +287,46 @@ class SearchParamters
 	public function setDIET($DIET) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DIET",$DIET);
-                if($validInput)
-			$this->DIET = $DIET; 
+                if($validInput){
+                        if($DIET && !strstr($DIET,SearchConfig::_doesntMatterValue) && !strstr($DIET,SearchConfig::_nullValueAttributeLabel) && !strstr($DIET,SearchTypesEnums::APPLY_ONLY_CLUSTER))   
+                                $this->DIET = $DIET.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DIET = $DIET;
+                }
 	}
 	public function getDIET() { return $this->DIET; }
 	public function setSMOKE($SMOKE) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("SMOKE",$SMOKE);
-                if($validInput)
-			$this->SMOKE = $SMOKE; 
+                if($validInput){
+                        if($SMOKE && !strstr($SMOKE,SearchConfig::_doesntMatterValue) && !strstr($SMOKE,SearchConfig::_nullValueAttributeLabel))   
+                                $this->SMOKE = $SMOKE.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->SMOKE = $SMOKE;
+                }
 	}
 	public function getSMOKE() { return $this->SMOKE; }
 	public function setDRINK($DRINK) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DRINK",$DRINK);
-                if($validInput)
-			$this->DRINK = $DRINK; 
+                if($validInput){
+                        if($DRINK && !strstr($DRINK,SearchConfig::_doesntMatterValue) && !strstr($DRINK,SearchConfig::_nullValueAttributeLabel))   
+                                $this->DRINK = $DRINK.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DRINK = $DRINK; 
+                }
 	}
 	public function getDRINK() { return $this->DRINK; }
 	public function setHANDICAPPED($HANDICAPPED) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("HANDICAPPED",$HANDICAPPED);
-                if($validInput)
-			$this->HANDICAPPED = $HANDICAPPED; 
+                if($validInput){
+                    if(strstr($HANDICAPPED,SearchConfig::_noneValueHandicapped) && !strstr($HANDICAPPED,SearchConfig::_nullValueAttributeLabel))   
+			$this->HANDICAPPED = $HANDICAPPED.",".SearchConfig::_nullValueAttributeLabel;
+                    else  
+			$this->HANDICAPPED = $HANDICAPPED;
+                    
+                }
 	}
 	public function getHANDICAPPED() { return $this->HANDICAPPED; }
 	public function setOCCUPATION($OCCUPATION) 
@@ -290,6 +336,13 @@ class SearchParamters
 			$this->OCCUPATION = $OCCUPATION; 
 	}
 	public function getOCCUPATION() { return $this->OCCUPATION; }
+        public function setOCCUPATION_IGNORE($OCCUPATION_IGNORE) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("OCCUPATION_IGNORE",$OCCUPATION_IGNORE);
+                if($validInput)
+                    $this->OCCUPATION_IGNORE = $OCCUPATION_IGNORE;
+	}
+	public function getOCCUPATION_IGNORE() {   return $this->OCCUPATION_IGNORE; }
 	public function setCOUNTRY_RES($COUNTRY_RES) 
 	{
 		$validInput = SearchInputValidation::validateInput("COUNTRY_RES",$COUNTRY_RES);
@@ -301,11 +354,16 @@ class SearchParamters
 		}
 	}
 	public function getCOUNTRY_RES() { return $this->COUNTRY_RES; }
-	public function setCITY_RES($CITY_RES) 
+	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
+		if(!$noMapping)
+		{
+                	if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
+		 	       $this->setCityForState();
+		}
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
 	public function setCITY_RES_SELECTED($CITY_RES) 
@@ -816,11 +874,17 @@ class SearchParamters
 	}
 	public function getCITY_INDIA() { return $this->CITY_INDIA; }
         public function getCITY_INDIA_SELECTED() { return $this->CITY_INDIA_SELECTED; }
-	public function setSTATE($STATE) 
+	public function setSTATE($STATE,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE = $STATE; 
+			
+		if(!$noMapping)
+		{
+	                if($this->getCITY_RES() && $this->STATE && !$fromCityForStateFunction)
+        	            $this->setCityForState();
+		}
 	}
 	public function getSTATE() { return $this->STATE; }
 	public function setSTATE_SELECTED($STATE) 
@@ -828,7 +892,7 @@ class SearchParamters
 		$validInput = SearchInputValidation::validateInput("STATE",$STATE);
                 if($validInput)
 			$this->STATE_SELECTED = $STATE; 
-	}
+                }    
 	public function getSTATE_SELECTED() { return $this->STATE_SELECTED; }
 	public function setOCCUPATION_GROUPING($OCCUPATION_GROUPING) 
 	{ 
@@ -956,6 +1020,35 @@ class SearchParamters
 		}
 	}
         public function getLAST_LOGIN_DT(){return $this->LAST_LOGIN_DT;}
+        
+        public function setLLAST_LOGIN_DT($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->LLAST_LOGIN_DT = $x;
+	}
+        public function getLLAST_LOGIN_DT(){return $this->LLAST_LOGIN_DT;}
+        public function setHLAST_LOGIN_DT($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->HLAST_LOGIN_DT = $x;
+	}
+        public function getHLAST_LOGIN_DT(){return $this->HLAST_LOGIN_DT;}
 
 	public function setNoOfResults($x)
 	{
@@ -1045,5 +1138,94 @@ class SearchParamters
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
+        public function getVisitorsDateConditionArr(){return $this->visitorsDateConditionArr;}
+	public function setVisitorsDateConditionArr($x){$this->visitorsDateConditionArr = $x;}
+        
+        public function getToSortByPhotoVisitors(){return $this->sortByPhotoVisitors;}
+	public function setToSortByPhotoVisitors($x){$this->sortByPhotoVisitors = $x;}
+
+        public function getDisplayCity(){return $this->displayCity;}
+        public function getDisplayState(){return $this->displayState;}
 	/* Getter and Setter public functions*/
+        
+        public function setCityForState(){
+            
+            $city_arr = explode(",",$this->getCITY_RES());
+            $state_arr = explode(",",$this->getSTATE());
+
+		if(!$this->displayCity)
+			$this->displayCity = $this->getCITY_RES();
+		if(!$this->displayState)
+			$this->displayState = $this->getSTATE();
+            
+            if($state_arr){
+                foreach ($state_arr as $k=>$stateVal){
+                    if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
+
+                        $city_from_state =  $this->cityStateConversion("",$stateVal); 
+                        array_push($city_from_state, $stateVal.'000'); // 00 for native place native city field if not filled and only native state is present
+                        $city_arr = array_merge($city_arr,$city_from_state);
+                        $city_arr = array_unique($city_arr);
+                    }
+
+                }
+            }
+            
+
+            if($city_arr)
+            {
+                foreach ($city_arr as $k=>$cityVal){
+                    if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
+                        $state_from_city =  $this->cityStateConversion($cityVal);
+                            $state_arr = array_merge($state_arr,$state_from_city);
+                        $state_arr = array_unique($state_arr);
+                    }
+                }
+
+            }
+            
+            if(is_array($state_arr))
+                    $this->setSTATE(implode(",",$state_arr),1);
+            else
+                    $this->setSTATE($state_arr,1);
+            if(is_array($city_arr))
+            {
+                    $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
+                    $this->setCITY_RES(implode(",",array_unique($city_arr)),1);
+            }
+            else
+            {
+                    $this->setCITY_INDIA($city_arr);
+                    $this->setCITY_RES($city_arr,1);
+            }
+        }
+        private function cityStateConversion($city = '', $state = '') {
+                if ($city) {
+                        $city = explode(",", $city);
+                        foreach ($city as $key => $value) {
+                                $state[$key] = substr($value, 0, 2);
+                        }
+                        $state = array_unique($state);
+                        return $state;
+                } elseif ($state) {
+                        $cityList = FieldMap::getFieldLabel("state_CITY", $state);
+                        $cityList=explode(",",$cityList);
+                        return $cityList;
+                }
+                return NULL;
+        }
+        
+        
+      public function setSHOW_RESULT_FOR_SELF($SHOW_RESULT_FOR_SELF='') 
+			{ 
+					$this->SHOW_RESULT_FOR_SELF = $SHOW_RESULT_FOR_SELF; 
+			}
+			public function getSHOW_RESULT_FOR_SELF() { return $this->SHOW_RESULT_FOR_SELF; }
+        public function setTRENDS_DATA($TRENDS_DATA='') 
+        { 
+                $this->TRENDS_DATA = $TRENDS_DATA; 
+        }
+        public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
+        public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
+        public function getIS_VSP() { return $this->IS_VSP; }
 }

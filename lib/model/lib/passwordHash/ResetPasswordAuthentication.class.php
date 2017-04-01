@@ -60,7 +60,7 @@ we can reset this varibable and all the links will stop working and user will ha
     {
 	$compareDate	= date("Y-m-d H:i:s");
 	$diff = abs(JsCommon::dateDiff($getData[0]['TIME'],$compareDate));
-        if(is_array($getData) && $getData[0]['USED']=="N" && $diff<3)
+        if(is_array($getData) && $getData[0]['USED']=="N" && $diff<1)
 		return true;
 	return false;
     }

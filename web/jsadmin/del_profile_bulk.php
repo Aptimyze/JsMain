@@ -7,16 +7,16 @@ if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 if($zipIt)
         ob_start("ob_gzhandler");
 //end of it
-include("connect.inc");
-include("../crm/func_sky.php");
+include_once(JsConstants::$docRoot."/crm/func_sky.php");
+include_once(JsConstants::$docRoot."/jsadmin/connect.inc");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 global $cnt;
-;
+
 $data=authenticated($cid);
 if($data)
 {
 $name=getname($cid);
-$db=connect_db();
-//print_r($_POST);
+$db=connect_ddl();
 if($send)
 {
 	$cnt++;
@@ -101,22 +101,45 @@ elseif($confirm)
 	$len=count($pid);
 	if($reason=='I')
 	{
+		$jprofileObj =JProfileUpdateLib::getInstance();
 		while($j<$len)
 		{
 			$profile=$pid[$j];
-			$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
-	        	mysql_query_decide($sql2) or die(logError($sql2,$db));
+			/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
+	        	mysql_query_decide($sql2) or die(logError($sql2,$db));*/
+			$extraStr ="PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0";
+			$jprofileObj->updateJProfileForBilling('',$profile,'PROFILEID',$extraStr);
+
 	       		$tm = date("Y-M-d");
 	        	$sql1= "SELECT USERNAME FROM newjs.JPROFILE WHERE PROFILEID=$profile";
 	        	$res1=mysql_query_decide($sql1) or die(logError($sql1,$db));
 	        	$row1=mysql_fetch_assoc($res1);
 	        	$username=$row1['USERNAME'];
+
+	        	$profileDeleteObj = new PROFILE_DELETE_LOGS();
+				$startTime = date('Y-m-d H:i:s');
+		      	$arrDeleteLogs = array(
+		          'PROFILEID' => $profile,
+		          'DELETE_REASON' => 'Immediate deletion',
+		          'SPECIFY_REASON' => $comments,
+		          'USERNAME'  => $username,
+		          'CHANNEL' => 'back(searchpg)',
+		          'START_TIME' => $startTime,
+		          'INTERFACE' => 'B',
+		      );
+
+		      $profileDeleteObj->insertRecord($arrDeleteLogs);
+
+
+
 	        	$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','Immediate deletion','$comments','$name','$tm')";
 	        	mysql_query_decide($sql) or die(logError($sql,$db));
 	        	$producerObj=new Producer();
 	        	if($producerObj->getRabbitMQServerConnected())
 				{
 					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profile)), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+					$sendMailData = array('process' =>'USER_DELETE','data' => ($profile), 'redeliveryCount'=>0 );
 					$producerObj->sendMessage($sendMailData);
 				}
 				else
@@ -125,7 +148,13 @@ elseif($confirm)
 	        		$cmd = JsConstants::$php5path." -q ".$path;
 	        		passthru($cmd);
 				}
-	        	
+				
+	      $arrDeleteLogs = array(
+        'END_TIME' => date('Y-m-d H:i:s'),
+        'COMPLETE_STATUS' => 'Y',
+    );
+    $profileDeleteObj->updateRecord($profile, $startTime, $arrDeleteLogs);
+	
 			$j++;
 		}
 		$msg="Selected Profiles are deleted Immediately.<br>";
@@ -196,7 +225,7 @@ elseif($confirm)
 		if(!$res1)
 		{
 			$sql2= "CREATE TABLE jsadmin.T_EMAILS (EMAIL varchar(100))";
-			$res2= mysql_query_decide($sql2) or die(mysql_error_js());
+			$res2= mysql_query_decide($sql2,$db) or die(mysql_error_js());
 			$sql1="INSERT INTO jsadmin.T_EMAILS (EMAIL) SELECT EMAIL FROM newjs.JPROFILE WHERE PROFILEID IN ($profiles_n) ";
 			$res1= mysql_query_decide($sql1) or die(mysql_error_js());	
 		}

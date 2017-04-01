@@ -291,7 +291,28 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
             throw new jsException($ex);
         }
     }
+
+    public function selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday()
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="SELECT PROFILEID FROM billing.VARIABLE_DISCOUNT WHERE EDATE<:EDATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":EDATE", $todayDate, PDO::PARAM_STR);
+            $res->execute();
+            while($row = $res->fetch(PDO::FETCH_ASSOC)){
+            	$output[$row['PROFILEID']] = $row['PROFILEID'];
+            }
+            return $output;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
     
+    /*Used earlier to generate VD Impact Report
+     * Now removed the join with VARIABLE_DISCOUNT_POOL_TECH
+     * 2016-06-30
+     */
     public function getVariableDiscountProfilesEndingYesterday()
     {
         try{
@@ -309,6 +330,37 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
         catch(Exception $e)
         {
             throw new jsException($e);
+        }
+    }
+    
+    public function getVDProfilesEndingYesterday(){
+        try{
+            $yesterdayDate = date("Y-m-d", strtotime("-1 day"));
+            $sql = "SELECT vd.PROFILEID, vd.DISCOUNT, vd.SDATE, vd.EDATE FROM billing.VARIABLE_DISCOUNT as vd WHERE vd.EDATE = :EDATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EDATE",$yesterdayDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $vdData[] = $result;
+            }
+            return $vdData;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    public function getVDProfilesExpiringToday($todayDate){
+        try{
+            $sql = "SELECT * FROM billing.VARIABLE_DISCOUNT WHERE EDATE=:EDATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EDATE",$todayDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                $dataArr[] = $result;
+            }
+            return $dataArr;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
         }
     }
 }

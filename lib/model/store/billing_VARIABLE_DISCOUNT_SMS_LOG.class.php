@@ -10,7 +10,7 @@ class billing_VARIABLE_DISCOUNT_SMS_LOG extends TABLE{
 	{
 		try
 		{
-			$sql="SELECT COUNT(*) AS CNT FROM billing.VARIABLE_DISCOUNT_SMS_LOG WHERE ENTRY_DT=:ENTRY_DT AND STATUS='Y'";
+			$sql="SELECT COUNT(1) AS CNT FROM billing.VARIABLE_DISCOUNT_SMS_LOG WHERE ENTRY_DT=:ENTRY_DT AND STATUS='Y'";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":ENTRY_DT",$entry_dt,PDO::PARAM_STR);
 			$prep->execute();
@@ -62,12 +62,14 @@ class billing_VARIABLE_DISCOUNT_SMS_LOG extends TABLE{
 		}
 	}
 
-	public function updateEndTime($entry_dt){
+	public function updateEndTime($entry_dt,$flatCount,$uptoCount){
 		try
 		{	
-			$sql="UPDATE billing.VARIABLE_DISCOUNT_SMS_LOG SET END_TIME=CURRENT_TIMESTAMP(), STATUS='N' WHERE ENTRY_DT=:ENTRY_DT AND STATUS='Y'";	
+			$sql="UPDATE billing.VARIABLE_DISCOUNT_SMS_LOG SET END_TIME=CURRENT_TIMESTAMP(), STATUS='N',FLAT_COUNT=:FLAT_COUNT,UPTO_COUNT=:UPTO_COUNT WHERE ENTRY_DT=:ENTRY_DT AND STATUS='Y'";	
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":ENTRY_DT",$entry_dt,PDO::PARAM_STR);
+			$prep->bindValue(":FLAT_COUNT",$flatCount,PDO::PARAM_INT);
+			$prep->bindValue(":UPTO_COUNT",$uptoCount,PDO::PARAM_INT);
 			$prep->execute();
 		}
 		catch(Exception $e)

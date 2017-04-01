@@ -42,6 +42,18 @@
 					</select>
 				</td>
 			</tr>		
+                        <tr align="left">
+                                <td class="label"><font size=2>
+                                        Select Channel Type
+                                </font></td>
+                                <td class="fieldsnew">
+                                        <select id="channel" name="channelKey">
+                                                ~foreach from=$channelArr item=channel key=keyVal`
+                                                      <option value="~$keyVal`">~$channel`</option>
+                                                ~/foreach`
+                                        </select>
+                                </td>
+                        </tr>
 			<tr align="left">
 				<td class="label"><font size=2>
 					Select Notification Type 

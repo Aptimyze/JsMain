@@ -21,6 +21,20 @@ function connect_misdb()
         return $db;
 }
 
+function connect_ddl()
+{
+        $db = db_set_active("masterDDL",MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die("Can't connect to Database".mysql_error());
+        mysql_select_db_js("MIS",$db);         // connection string
+        return $db;
+}
+
+function connect_rep()
+{
+        $db = db_set_active("masterRep",MysqlDbConstants::$masterRep[HOST].":".MysqlDbConstants::$masterRep[PORT],MysqlDbConstants::$masterRep[USER],MysqlDbConstants::$masterRep[PASS]) or die("Can't connect to Database".mysql_error());
+        mysql_select_db_js("MIS",$db);               // connection string
+        return $db;
+}
+
 function connect_master()
 {
         $db=db_set_active("master",MysqlDbConstants::$master[HOST].":".MysqlDbConstants::$master[PORT],MysqlDbConstants::$master[USER],MysqlDbConstants::$master[PASS]) or die("Coudnt connect to master".mysql_error());
@@ -64,9 +78,18 @@ if(!function_exists('connect_slave81'))
                 return $db;
         }
 }
+
 function connect_dnc()
 {
         $db_dnc = mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or die("Unable to connect to dnc server");
         return $db_dnc;
 }
+
+// crmSlave server
+function connect_crmSlave()
+{
+	$crm_slave = mysql_connect(MysqlDbConstants::$crmSlave[HOST].":".MysqlDbConstants::$crmSlave[PORT],MysqlDbConstants::$crmSlave[USER],MysqlDbConstants::$crmSlave[PASS]) or die("Unable to connect to crmSlave server");
+        return $crm_slave;
+}
+
 ?>

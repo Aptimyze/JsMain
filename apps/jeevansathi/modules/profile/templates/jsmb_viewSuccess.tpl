@@ -33,7 +33,7 @@
 			~if $PERSON_SELF`
 				~if $HAVEPHOTO eq N || !$HAVEPHOTO`
 				<div style="padding-bottom:10px;">Upload your photo to get better responses.<br>
-					<a href="/search/partnermatches" style="text-decoration:none;color: #0045a9" >Skip to My Matches</a>
+					<a href="/search/partnermatches" style="text-decoration:none;color: #0045a9" >Skip to Desired Partner Matches</a>
 				</div>
 				~/if`
 			~/if`

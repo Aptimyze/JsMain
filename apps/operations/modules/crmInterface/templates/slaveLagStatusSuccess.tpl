@@ -21,16 +21,23 @@
 			</tr>
 		</table>
 		<br>
-		<div width="100%" style="background-color:lightblue;text-align:center;padding:20px;font-size:12px;">
+		<div width="100%" style="background-color:lightblue;text-align:left;padding:20px;font-size:12px;">
                         <div>
-                                Master server up-time : &nbsp; ~$masterTime` 
+                                - Master Server up-time : &nbsp; ~$masterTime` 
                         </div><br>
                         <div>
-                                Mis-Slave Server lag: &nbsp; ~$misSlave`
+                                 - Mis-Slave Server lag : &nbsp; ~$misSlave`
                         </div><br>
                         <div>
-                                111-Slave server lag: &nbsp; ~$slave111`
+                                - crm-Slave Server lag(crm/Billing jobs) : &nbsp; ~$crmSlave`
+                        </div><br>
+                        <div>
+                                - master-Replication Server lag : &nbsp; ~$masterRep`
+                        </div><br>
+                        <div>
+                                 - 111-Slave server lag : &nbsp; ~$slave111`
                         </div>
+
 		</div>
 		<br>
 </body>

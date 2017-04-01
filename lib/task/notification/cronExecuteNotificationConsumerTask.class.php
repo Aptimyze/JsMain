@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeNotificationsQueueMessage.
 */
@@ -37,15 +37,14 @@ EOF;
   {
     if (!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
-    /*JsMemcache::getInstance()->set("mqMemoryAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqMemoryAlarmSECOND_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmSECOND_SERVER",false);*/
+    
     $instancesNum=MessageQueues::NOTIFICATIONCONSUMERCOUNT;
     for($i=1;$i<=$instancesNum;$i++)
     {
       passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
     }
-	}
+  }
+
+
 }
 ?>

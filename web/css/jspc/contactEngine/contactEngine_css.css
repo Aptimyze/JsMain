@@ -269,3 +269,44 @@ ul.comhis li.setr > div > p {text-align:right}
                 -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
 
 }
+.prfic42{background-position: -148px -403px;width: 30px;height: 21px;}
+.prfic43{background-position:-150px -425px;width: 21px;height: 21px;}
+.prfp22{padding:31px 21px 4px 21px}
+.prfp20{padding:15px 0}
+.prfdim5{width:50px; height:50px;}
+
+
+
+.custom-checkbox-reportAbuse {
+    width: 12px;
+    height: 13px;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    margin-right: 7px;
+    top: 2px;
+    background: url(IMG_URL/images/jspc/commonimg/sprite-two.png) no-repeat -40px -21px transparent;
+}
+
+
+.selected .custom-checkbox-reportAbuse{background-position:-39px -33px}
+.selected #otherOptionMsgBox{display: block;}
+
+
+.custom-checkbox-reportAbuse  input[type="radio"]{
+    margin: 0;
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+    outline: none;
+    opacity: 0;
+    /* CSS hacks for older browsers */
+    _noFocusLine: expression(this.hideFocus=true);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -khtml-opacity: 0;
+    -moz-opacity: 0;
+}
+ul.reportlist li a{color:#999999; display:inline-block; padding-left:10px}
+ul.reportlist li{padding-bottom:12px}
+.colorerror{color:#d9475c}

@@ -8,6 +8,10 @@
 	class FieldMap{
 		/*This will return label corresponding to value*/
 public static function getFieldLabel($label,$value,$returnArr=''){
+if(($label=="city"||$label=="city_india")&& (substr($value,2)=="OT"))
+{
+	$value=0;
+}
 	switch($label){
 	case "income":
 		$arr=array( 
@@ -618,7 +622,7 @@ case "caste":
 "428"=>"Hindu: Gondhali",
 "429"=>"Hindu: Gramani",
 "430"=>"Hindu: Gurav",
-"431"=>"Hindu: Gurjar",
+//"431"=>"Hindu: Gurjar",
 "432"=>"Hindu: Kahar",
 "433"=>"Hindu: Kalal",
 "434"=>"Hindu: Kalinga Vysya",
@@ -1131,15 +1135,18 @@ case "occupation":
 "44"=>"Looking for a job",
 "36"=>"Not working",
 "5"=>"Actor/Model",
+"63"=>"Admin",
 "2"=>"Advertising Professional",
 "3"=>"Agent",
 "32"=>"Agriculture/Dairy",
 "46"=>"Air Hostess",
+"64"=>"Analyst",
 "6"=>"Architect",
 "7"=>"Banking Professional",
 "40"=>"Beautician",
-"8"=>"BPO/ITES",
+"8"=>"BPO/Customer service",
 "13"=>"Businessperson",
+"65"=>"Chartered accountant",
 "33"=>"Civil Services (IAS/ IFS/ IPS/ IRS)",
 "50"=>"Consultant",
 "10"=>"Corporate Communication",
@@ -1149,10 +1156,8 @@ case "occupation":
 "57"=>"Doctor",
 "60"=>"Education Professional",
 "27"=>"Engineer - Non IT",
-"14"=>"Export/Import",
 "15"=>"Fashion Designer",
 "1"=>"Financial Services/Accounting",
-"39"=>"Fitness Professional",
 "35"=>"Govt. Services",
 "21"=>"Hardware/Telecom",
 "24"=>"Healthcare Professional",
@@ -1162,32 +1167,33 @@ case "occupation":
 "9"=>"Journalist",
 "22"=>"Lawyer/Legal Professional",
 "23"=>"Logistics/SCM Professional",
+"66"=>"Manager",
 "49"=>"Marketing Professional",
 "54"=>"Media Professional",
 "42"=>"Merchant Navy",
 "38"=>"NGO/Social Services",
 "53"=>"Nurse",
+"67"=>"Operator/Technician",
 "45"=>"Pilot",
 "56"=>"Police",
-"25"=>"Printing/Packaging",
+"68"=>"Product manager",
 "58"=>"Professor/Lecturer",
+"69"=>"Program Manager",
+"70"=>"Psychologist",
 "30"=>"Project Manager - IT",
 "59"=>"Project Manager - Non IT",
 "61"=>"Research Professional",
-"18"=>"Restaurateur",
-"37"=>"Retired",
 "28"=>"Sales Professional",
 "62"=>"Scientist",
 "16"=>"Secretary/Front Office",
 "29"=>"Security Professional",
 "52"=>"Self Employed",
-"26"=>"Service Engineering",
 "20"=>"Software Professional",
 "55"=>"Sportsperson",
 "41"=>"Student",
 "31"=>"Teacher",
 "48"=>"Top Management (CXO, M.D. etc.)",
-"4"=>"Travel/Ticketing",
+"71"=>"UI/UX designer",
 "17"=>"Web/Graphic Design",
 "43"=>"Others",
 );
@@ -1197,21 +1203,44 @@ case "occupation":
 case "occupation_grouping_mapping_to_occupation":
 
 	$arr=array(
-"11"=>"44,36,32,46,6,40,39,47,51,42,38,45,18,37,55,41,48,43",
-"5"=>"5,2,8,50,10,11,14,15,9,49,54,28,4",
-"8"=>"3,12,19,22,23,56,16,29",
-"7"=>"7,1",
+"11"=>"44,36,63,32,46,6,40,47,51,42,38,67,45,55,41,48,43",
+"5"=>"5,2,8,50,10,11,15,9,49,54,68,28",
+"8"=>"3,12,19,22,23,66,56,16,29",
+"7"=>"7,65,1",
 "1"=>"13,52",
 "10"=>"33,35",
 "4"=>"34",
-"3"=>"57,24,53",
+"3"=>"57,24,53,70",
 "6"=>"60,58,31",
-"9"=>"27,25,61,62,26",
-"2"=>"21,30,59,20,17",
+"9"=>"27,61,62",
+"2"=>"64,21,69,30,59,20,71,17",          
 );
 
 	break;
+case "newoccupation_mapping_for_dpp":
 
+        $arr=array(
+                "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
+                "2"=>"54,9",//Media Professionals
+                "3"=>"13,52,18",//Businessperson
+                "4"=>"7,1,65",//Finance Professionals
+                "5"=>"60,58,31",//Teachers/Lecturers
+                "6"=>"24,70",//Healthcare Professionals
+                "7"=>"34",//Defence
+                "8"=>"30,20,26",//Software/IT Professionals
+                "9"=>"61,62",//Research Professionals
+                "10"=>"44,36,41,37",//Not working
+                "11"=>"22",//Lawyer/Legal Professionals
+                "12"=>"17,15,51,6",//Architecture/ Design
+                "13"=>"57",//Doctor
+                "14"=>"27",//Engineering
+                "15"=>"12,8",//BPO/Customer Services
+                "16"=>"45",//Pilot
+                "17"=>"35,56",//Govt
+                "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
+                "19"=>"39,5,16,67,32,4,63,29,3,55,40,14,46,25",//Other Occupations
+        );
+        break;
 case "height":
 
 	$arr=array(
@@ -2061,6 +2090,7 @@ case "state_CITY":
 "TR"=>"TR01",
 "UK"=>"UK05,UK11,UK10,UK07,UK02,UK01,UK08,UK04,UK12,UK06,UK03,UK09",
 "UP"=>"UP13,UP12,UP42,UP14,UP53,UP41,UP26,UP48,UP47,UP21,UP46,UP18,UP19,UP17,UP24,UP45,UP22,UP16,UP44,UP54,UP25,UP43,UP33,UP20,UP34,UP04,UP39,UP02,UP37,UP50,UP36,UP38,UP52,UP05,UP35,UP30,UP51,UP06,UP01,UP40,UP32,UP29,UP11,UP10,UP03,UP08,UP09,UP49",
+"WB"=>"WB23,WB19,WB11,WB12,WB09,WB24,WB39,WB31,WB20,WB04,WB34,WB22,WB10,WB18,WB21,WB05,WB38,WB02,WB35,WB42,WB07,WB29,WB32,WB03,WB06,WB30,WB14,WB33,WB13,WB40,WB17,WB26,WB01,WB37,WB16,WB08,WB27,WB28,WB41,WB36,WB25",
 );
 
 	break;
@@ -2332,10 +2362,9 @@ case "city_usa":
 case "impcountry":
 
         $arr=array(
+"51"=>"India",
 "7"=>"Australia",
 "22"=>"Canada",
-"51"=>"India",
-"88"=>"Pakistan",
 "125"=>"United Arab Emirates",
 "126"=>"United Kingdom",
 "128"=>"United States",
@@ -3023,7 +3052,7 @@ case "income_level":
 case "degree_grouping":
 
         $arr=array(
-"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 9 , 17 , 22 , 23 , 24 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
+"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 17 , 22 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
 "PG"=>" 7 , 8 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 18 , 19 , 20 , 21 , 29 , 30 , 31 , 36 , 37 , 41 , 42 , 43 ",
 );
 
@@ -3034,8 +3063,6 @@ case "degree_grouping":
 case "degree_ug":
 
 	$arr=array(
-"23"=>"High School",
-"24"=>"Trade School",
 "1"=>"B.A",
 "35"=>"B.Arch",
 "2"=>"B.Com",
@@ -3052,7 +3079,6 @@ case "degree_ug":
 "26"=>"BHMS",
 "6"=>"BL/LLB",
 "32"=>"BVSc.",
-"9"=>"Diploma",
 "17"=>"MBBS",
 "22"=>"Other",
 );
@@ -3113,6 +3139,7 @@ case "education_label":
 case "family_background":
 
 	$arr=array(
+"0"=>"Select",
 "1"=>"Business/Entrepreneur",
 "2"=>"Service - Private",
 "3"=>"Service - Govt./PSU",
@@ -3128,6 +3155,7 @@ case "family_background":
 case "mother_occupation":
 
 	$arr=array(
+"0"=>"Select",
 "1"=>"Housewife",
 "2"=>"Business/Entrepreneur",
 "3"=>"Service-Private",
@@ -3538,7 +3566,7 @@ case "caste_small":
 "428"=>"-Gondhali",
 "429"=>"-Gramani",
 "430"=>"-Gurav",
-"431"=>"-Gurjar",
+//"431"=>"-Gurjar",
 "432"=>"-Kahar",
 "433"=>"-Kalal",
 "434"=>"-Kalinga Vysya",
@@ -4005,7 +4033,7 @@ case "caste_without_religion":
 "428"=>"Gondhali",
 "429"=>"Gramani",
 "430"=>"Gurav",
-"431"=>"Gurjar",
+//"431"=>"Gurjar",
 "432"=>"Kahar",
 "433"=>"Kalal",
 "434"=>"Kalinga Vysya",
@@ -8667,7 +8695,7 @@ case "caste_clusters_breadcrumb":
 "428"=>"Gondhali",
 "429"=>"Gramani",
 "430"=>"Gurav",
-"431"=>"Gurjar",
+//"431"=>"Gurjar",
 "432"=>"Kahar",
 "433"=>"Kalal",
 "434"=>"Kalinga Vysya",
@@ -8999,6 +9027,7 @@ case "children_ascii_array":
 	case "family_values":
 
 		$arr=array(
+"0"=>"Select",
 "4" => "Orthodox",
 "1" => "Conservative",
 "2" => "Moderate",
@@ -9010,6 +9039,7 @@ case "children_ascii_array":
 	case "family_type":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Joint Family",
 "2" => "Nuclear Family",
 "3" => "Others",
@@ -9020,8 +9050,9 @@ case "children_ascii_array":
 	case "family_status":
 
 		$arr=array(
+"0"=>"Select",
 "3" => "Rich/Affluent",
-"2" => "Upper Middle Class",
+"2" => "Upper Middle",
 "1" => "Middle Class",
 );
 
@@ -9030,6 +9061,7 @@ case "children_ascii_array":
 	case "manglik":
 
 		$arr=array(
+"S0"=>"Select",
 "D" => "Don't know",
 "M" => "Yes",
 "A" => "Angshik (partial manglik)",
@@ -9041,6 +9073,7 @@ case "children_ascii_array":
 	case "manglik_label":
 
 		$arr=array(
+"S0"=>"Select",		
 "M" => "Manglik",
 "N" => "Non Manglik",
 "D" => "Don't know",
@@ -9098,6 +9131,7 @@ case "children_ascii_array":
 	case "bodytype":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Slim",
 "2" => "Average",
 "3" => "Athletic",
@@ -9109,6 +9143,7 @@ case "children_ascii_array":
 	case "complexion":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Very Fair",
 "2" => "Fair",
 "3" => "Wheatish",
@@ -9121,6 +9156,7 @@ case "children_ascii_array":
 	case "smoke":
 
 		$arr=array(
+"0"=>"Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
@@ -9131,8 +9167,9 @@ case "children_ascii_array":
 	case "diet":
 
 		$arr=array(
+"0"=>"Select",
 "V" => "Vegetarian",
-"N" => "Non Vegetarian",
+"N" => "Non Veg",
 "J" => "Jain",
 "E" => "Eggetarian",
 );
@@ -9142,6 +9179,7 @@ case "children_ascii_array":
 	case "drink":
 
 		$arr=array(
+"0"=>"Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
@@ -9996,10 +10034,16 @@ $arr["Non-Graduate"]["Trade School"] = "24";
 $arr["Non-Graduate"]["Diploma"] = "9";
 $arr["Others"]["Other"] = "22";
 break;
+        case "qualityMis_top_cities":
+                //$arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","PU01","PU10","OR01");
+                $arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","UP47","MH12","MH28");
+                break;
 default:
 
 				break;
-
+	case "displayname":
+		$arr['Y']='Y';
+		$arr['N']='N';
 			}
 
 			if($returnArr)

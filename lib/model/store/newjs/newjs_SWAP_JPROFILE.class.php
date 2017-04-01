@@ -34,5 +34,22 @@ class NEWJS_SWAP_JPROFILE extends TABLE
                 }
 
 	}
+
+                //Three function for innodb transactions
+        public function startTransaction()
+        {
+                $this->db->beginTransaction();
+        }
+        public function commitTransaction()
+        {
+                $this->db->commit();
+        }
+
+        public function rollbackTransaction()
+        {
+                $this->db->rollback();
+        }
+        //Three function for innodb transactions
+
 }
 ?>

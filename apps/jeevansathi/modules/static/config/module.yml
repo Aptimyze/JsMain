@@ -64,3 +64,13 @@ all:
     enable_login: off
   oldMobileSite:
     enable_login: off
+  hideOption:
+    enable_login:  on
+  unHideOption:
+    enable_login:  on
+  unHideResult:
+    enable_login:  on
+  hideCheckPassword:
+    enable_login: on
+  hideDuration:
+    enable_login: on

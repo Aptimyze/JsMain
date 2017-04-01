@@ -62,6 +62,8 @@ class ViewSimilarPageProfiles extends SearchParamters
 			$this->profilesToShow=('9999999999');
 			//$this->setProfilesToShow($str);
 		}
+                //call viewsimilar profiles from another URL 
+                $this->IS_VSP(1);
 	return $str;	
 	}
 	

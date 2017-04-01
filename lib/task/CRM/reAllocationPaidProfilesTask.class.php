@@ -37,17 +37,20 @@ EOF;
 		$agentBucketHandlerObj=new AgentBucketHandler();
 		
 		// setting dates for picking up paid profiles 
-		$start_dt = date("Y-m-d", time() - 60 * 60 * 24)." 00:00:00";
-		$end_dt = date("Y-m-d", time() - 60 * 60 * 24)." 23:59:59";
+		//$start_dt = date("Y-m-d", time() - 60 * 60 * 24)." 00:00:00";
+		//$end_dt = date("Y-m-d", time() - 60 * 60 * 24)." 23:59:59";
+
+                $start_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 27);
+		$end_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 2);
 
 		$processObj->setStartDate($start_dt);
 		$processObj->setEndDate($end_dt);
 		$processObj->setMethod("REALLOCATION");
 		$processObj->setSubMethod("CENTRAL_RENEWAL");
 
-		// Using DeAllocation process to first deallocate profiles
+		// Using DeAllocation process to deallocate profiles
 		$processObj->setProcessName("DeAllocation");
 		$agentBucketHandlerObj->deallocate($processObj);
-		echo "DeAllocation of Paid Field Sales Profiles Completed !!! \n";
+		echo "DeAllocation of Central renewal Profiles having agents LR,ExcFld privilege Completed !!! \n";
 	}
 }

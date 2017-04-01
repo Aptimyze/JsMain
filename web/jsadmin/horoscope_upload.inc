@@ -4,7 +4,9 @@
 *       Function        :       horoscope_save
 *       Description     :       Inserts or Update the User's picture information
 **/
-
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/classes/ProfileDeleteLib.php");
 function horoscope_save($profileid,$horoscope_content)
 {
 	//echo "here";
@@ -14,6 +16,8 @@ function horoscope_save($profileid,$horoscope_content)
         mysql_query_decide($sql_insert) or die("$sql_insert".mysql_error_js());//logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_insert,"ShowErrTemplate");*/
 
 	//make an entry in the log
+	$objReplace = ProfileReplaceLib::getInstance();
+	
 	$sql="SELECT RECEIVE_TIME FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$profileid' and SCREENING_TYPE='H'";
 	$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 	$resf=mysql_fetch_array($res);
@@ -33,27 +37,46 @@ function horoscope_save($profileid,$horoscope_content)
 	mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 	//update HOROSCOPE_FOR_SCREEN to set UPLOADED='Y'
-        $sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET HOROSCOPE='$horoscope_content',UPLOADED='Y' WHERE PROFILEID='$profileid'";
-        mysql_query_decide($sql) or die("$sql".mysql_error_js()); 
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$result = $objUpdate->updateHOROSCOPE_FOR_SCREEN($profileid,array('HOROSCOPE'=>$horoscope_content,'UPLOADED'=>'Y'));
+	if(false === $result) {
+		die('Issue while updating horoscope at line 42');
+	}
+//        $sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET HOROSCOPE='$horoscope_content',UPLOADED='Y' WHERE PROFILEID='$profileid'";
+//        mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 
 	/********************** CRON PART STARTS ****************************/	
 	//now a cron to shift all entries with UPLOADED='Y' from HOROSCOPE_FOR_SCREEN to HOROSCOPE table and update the HOROSCOPE_SCREENING='1' in ASTRO_DETAILS table
-	
-	$sql="REPLACE into newjs.HOROSCOPE (PROFILEID,HOROSCOPE) select PROFILEID,HOROSCOPE from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y'";
-	mysql_query_decide($sql) or die("$sql".mysql_error_js());
+
+	$result = $objReplace->copyAllHoroscopFromScreen();
+	if($result === false) {
+		die('Error While copying horoscope at line 47.');
+	}
+	/*$sql="REPLACE into newjs.HOROSCOPE (PROFILEID,HOROSCOPE) select PROFILEID,HOROSCOPE from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y'";
+	mysql_query_decide($sql) or die("$sql".mysql_error_js());*/
 
 	//query to update the HOROSCOPE_SCREENING='1' in ASTRO_DETAILS table
-	$sql_update="update newjs.ASTRO_DETAILS set HOROSCOPE_SCREENING='1' where PROFILEID='$profileid'";
-	mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
+	$result = $objUpdate->updateASTRO_DETAILS($profileid,array('HOROSCOPE_SCREENING'=>'1'));
+	if(false === $result) {
+		die('Issue while updating horoscope at line 61');
+	}
+//	$sql_update="update newjs.ASTRO_DETAILS set HOROSCOPE_SCREENING='1' where PROFILEID='$profileid'";
+//	mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
 
 	//query to insert record into newjs.SWAP_JPROFILE
 	$sql_sj="INSERT IGNORE INTO newjs.SWAP_JPROFILE (PROFILEID) VALUES ($profileid)";
 	mysql_query_decide($sql_sj) or die("$sql_sj".mysql_error_js());
 
 	//query to remove the entries from HOROSCOPE_FOR_SCREEN table which have UPLOADED field as 'Y' or 'D'
-	$sql_del="delete from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y' or UPLOADED='D'";
-	mysql_query_decide($sql_del) or die("$sql_del".mysql_error_js());
+	$objDelete = ProfileDeleteLib::getInstance();
+	$result = $objDelete->deleteAllScreenedRecords();
+
+	if(false === $result) {
+		die('Issue while updating Horoscope for screen at line 75');
+	}
+//	$sql_del="delete from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y' or UPLOADED='D'";
+//	mysql_query_decide($sql_del) or die("$sql_del".mysql_error_js());
 	/********************** CRON PART ENDS ****************************/	
 	//Code added by Vibhor as discussed with Lavesh
 	global $mysqlObj;

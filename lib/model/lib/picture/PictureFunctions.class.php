@@ -32,10 +32,29 @@ class PictureFunctions
 	public static function getPictureDocUrl($imageUrl)
 	{ 
 		if(strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
-		{  
-                	$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,JsConstants::$docRoot,$imageUrl);
-                        
-                }
+		{
+			$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,JsConstants::$docRoot,$imageUrl);
+		}
+		if(PictureFunctions::IfUsePhotoDistributed('X'))
+		{
+			$imageUrl = str_replace(JsConstants::$photoServerName.'/','',$imageUrl);
+		}
+
+		return $imageUrl;
+	}
+	
+	
+	/*This function is used to get image server enum url instead of application url of pictures
+	@param imageUrl : imageUrl
+	@return imageUrl : image url with image server
+	*/
+	public static function getPictureServerUrl($imageUrl)
+	{ 
+		if(PictureFunctions::IfUsePhotoDistributed('X') && strpos($imageUrl,JsConstants::$applicationPhotoUrl)!=1)
+		{
+			$imageUrl=str_replace(JsConstants::$applicationPhotoUrl,IMAGE_SERVER_ENUM::$appPicUrl,$imageUrl);
+		}
+		
 		return $imageUrl;
 	}
 	
@@ -349,18 +368,34 @@ class PictureFunctions
 		$remaining=substr($value,2);
 		switch($flag)
 		{
-			case IMAGE_SERVER_ENUM::$appPicUrl : $setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
+			case IMAGE_SERVER_ENUM::$appPicUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$httpsApplicationPhotoUrl;
+							else
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
 							     break;
-			case IMAGE_SERVER_ENUM::$cloudUrl : $setServer=JsConstants::$cloudUrl;
+			case IMAGE_SERVER_ENUM::$cloudUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=JsConstants::$httpsCloudUrl;
+							else
+								$setServer=JsConstants::$cloudUrl;
 							    break;
 			 case IMAGE_SERVER_ENUM::$cloudArchiveUrl : $setServer=JsConstants::$cloudArchiveUrl;
                                                             break;
 		}
+		
 		if($setServer)
 			$setServer = $setServer.$remaining;
 		else
 			$setServer=$value;
-
+		if(PictureFunctions::IfUsePhotoDistributed('X') && $getAbsoluteUrl)
+		{
+			$matchToBeArr = JsConstants::$photoServerShardingEnums;
+			foreach($matchToBeArr as $k=>$v)
+				$setServer = str_replace($v.'/','',$setServer);
+			//$setServer = str_replace(JsConstants::$photoServerName.'/','',$setServer);
+			
+		}
 		return $setServer;
 	}
 	/*
@@ -393,7 +428,7 @@ class PictureFunctions
 	* @param url : url of the photo to be displayed.
 	* @return arr aray containg photo message and action on message;
 	*/
-	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="")
+	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="", $noStaticImage=false)
 	{
 		$clickAction = null;
 		$msg = null;
@@ -445,7 +480,7 @@ class PictureFunctions
 		$arr["label"] = $msg;
 		if($msg!=null)
 		{
-			if(MobileCommon::isApp())
+			if(MobileCommon::isApp() || $noStaticImage)
 				$arr["url"] = null;
 			else
 				$arr["url"] =self::getNoPhotoJSMS($gender,$photoType);
@@ -527,7 +562,12 @@ class PictureFunctions
 					$pictureServiceObj = new PictureService($loginProfile);
 					$profilePicObj = $pictureServiceObj->getProfilePic();
 				   	if($profilePicObj){
-					   	$photoArray = self::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$gender);
+				   		if($profilePic=='U')	
+							$picUrl = $profilePicObj->getThumbail96Url();
+						else
+							$picUrl = $profilePicObj->getProfilePic120Url();
+
+					   	$photoArray = self::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$gender);
 					   	if($photoArray[label] != ''){
 	                    	$thumbnailUrl = self::getNoPhotoJSMS($gender,'ProfilePic120Url');
 					   	} else {
@@ -557,6 +597,58 @@ class PictureFunctions
         		case "image/gif" : $result = "gif";break;
         	}
         	return $result;
+        }
+
+	/**
+	* pid = 'X' fro  face detection,preproces
+	*/
+	public static function IfUsePhotoDistributed($pid)
+	{
+		if(in_array($pid,array('9061321','2114','1572'))) //add 'X' for facedet/copy to orig on live server
+			return 1;
+
+		if(JsConstants::$usePhotoDistributed)
+			return 1;
+		return 0;
+	}
+
+	public static function getNameIfUsePhotoDistributed($mainPic) 
+	{
+		$matchToBeArr = JsConstants::$photoServerShardingEnums;
+		foreach($matchToBeArr as $k=>$v)
+		{
+			if($mainPic)
+			{
+				if(strstr($mainPic,$v))
+				{
+					return $v;
+				}
+			}
+		}
+		return NULL;
+	}
+        /**
+         * 
+         * @param type $viewedProfileId
+         * @param type $photoDisplayArray
+         * @param type $photoType
+         * @param type $loggedInprofileId
+         * @param type $perform
+         * @param type $value
+         */
+        public static function photoUrlCachingForChat($viewedProfileId,$photoDisplayArray = array(),$photoType,$loggedInprofileId = '',$perform,$value = ""){
+                
+                if( ($value!='' || $perform=='remove') && $loggedInprofileId != '' && array_key_exists($viewedProfileId, $photoDisplayArray)){
+                        $key = $photoType."_".$loggedInprofileId."_".$viewedProfileId;
+                }else{
+                        $key = $photoType."_".$viewedProfileId;
+                }
+		//echo $key."<br>\n"  ;
+                if($perform == 'set'){
+                        JsMemcache::getInstance()->set($key,$value,3600);
+                }elseif($perform == 'remove'){
+                        JsMemcache::getInstance()->remove($key);
+                }
         }
 }
 ?>

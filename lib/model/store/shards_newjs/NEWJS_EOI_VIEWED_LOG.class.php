@@ -25,7 +25,7 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
                 }
 		return null;
 	}
-	
+        
 	public function getEoiViewed($viewer,$viewed)
 	{
 		if(!$viewer  || !$viewed)
@@ -80,6 +80,39 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
 		}
 		return $output;
 	}
-	
+
+        
+        public function insertMultiple($array,$time)
+	{
+		if(!$array || !is_array($array))
+			throw new jsException("","Problem in eoi viewed log in function insertMultiple");
+
+		try
+		{
+			$valueStr="";
+                        $timeNow=$time ? $time : (new DateTime)->format('Y-m-j H:i:s');
+			foreach($array as $k=>$v)
+                        {
+                            $valueStr.="(:vR$k , :vS$k, '$timeNow' ),";
+                        }
+                        $valueStr=substr($valueStr,0,-1);
+			$sql = "INSERT IGNORE INTO newjs.EOI_VIEWED_LOG(VIEWER,VIEWED,DATE) VALUES $valueStr";
+			$res = $this->db->prepare($sql);
+			foreach($array as $k=>$v)
+                            {
+                        
+				$res->bindValue(":vR$k",$v['R'], PDO::PARAM_INT); 
+				$res->bindValue(":vS$k",$v['S'], PDO::PARAM_INT); 
+                            }
+			$res->execute();
+						
+		}
+		catch(PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $output;
+	}
+        
 }
 ?>

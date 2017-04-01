@@ -7,6 +7,8 @@
 class SearchJSAPP extends SearchJS
 {
 
+private static $featuredProfileCount= 1;
+
 	//Constructor 
 	function __construct($params="")
 	{
@@ -77,6 +79,15 @@ class SearchJSAPP extends SearchJS
                  return SearchTypesEnums::VERIFIED_MATCHES_ANDROID;
         }
         
+        
+        /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsAndroid;
+        }
+        
         /**
         * get No of results for srp page
         */
@@ -124,5 +135,38 @@ class SearchJSAPP extends SearchJS
 			{
 				return SearchTypesEnums::AAFeatureProfile;
 			}
+		
+		
+		 /**
+	* This function will set the No. Of featured profiles results for search Page
+	*/
+        
+        public function getFeaturedProfilesCount()
+        {
+					return self::$featuredProfileCount;
+		}
+				
+				
+        /**
+        * getMatchOfDay.
+        */
+        public static function getSearchTypeMatchOfDay()
+        {
+                 return SearchTypesEnums::AndroidMatchOfDay;
+        }
+        
+         public function setRequestParameters($params){
+            $output = array();
+            $request = $params["request"];
+            if($params["searchCat"] == 'kundlialerts'){
+				
+				if($params['profileCount']==0 && $params["nextAvail"]=='false' && $params['noOfResults']!="")
+				{
+					$output['noresultmessage'] = SearchTitleAndTextEnums::$MESSAGE_0RESULT_MAPPING["V1"]["APP"]["kundlialerts"]["withHoro"];
+            	}
+               
+            }
+            return $output;
+       }
 }
 ?>

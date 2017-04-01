@@ -7,16 +7,25 @@ include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
 $serObj = new Services;
 $membershipObj = new Membership;
 
-$checksum = $udf1;
-$returnCurrency = $udf2;
+// Checksum is split into 4 chunks of 20 characters
+$checksum = $udf1.$udf2.$udf3.$udf4;
+$returnCurrency = $udf5;
+
+if ($data = authenticated($checksum)) {
+    $profileid = $data["PROFILEID"];
+}
+
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $txnid);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'PAYU', $responseMsg);
+}
 
 if (MobileCommon::isMobile()) {
     include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/common_functions.inc");
     assignHamburgerSmartyVariables($profileid);
-}
-
-if ($data = authenticated($checksum)) {
-    $profileid = $data["PROFILEID"];
 }
 
 if($returnCurrency == "RS"){
@@ -58,7 +67,7 @@ $memHandlerObj = new MembershipHandler();
 $userData = $memHandlerObj->getUserData($profileid);
 $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
 $membershipObj->log_payment_status($Order_Id, $ret_status, 'PAYU', $status);
-$hashText = "$salt|$status|||||||||$returnCurrency|$checksum|$email|$firstname|$productinfo|$amount|$Order_Id|$merchantID";
+$hashText = "$salt|$status||||||$udf5|$udf4|$udf3|$udf2|$udf1|$email|$firstname|$productinfo|$amount|$Order_Id|$merchantID";
 $reverseHash = hash("sha512", $hashText);
 
 $dup = false;
@@ -66,7 +75,11 @@ $dup = false;
 if ($hash == $reverseHash && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-    if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
+    if (!$dup && $ret) {
+        $membershipObj->startServiceOrder($Order_Id);
+    }
+    //if ($ret) $membershipObj->startServiceOrder($Order_Id);
     
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
@@ -147,6 +160,7 @@ if ($hash == $reverseHash && $AuthDesc == "Y") {
 } 
 else if ($hash == $reverseHash && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     list($part1, $part2) = explode("-", $Order_Id);
     $ordrDeviceObj = new billing_ORDERS_DEVICE();
     $device = $ordrDeviceObj->getOrderDevice($part2, $part1);

@@ -25,6 +25,12 @@ class WriteMessagev2Action extends sfAction
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 			{
 				$this->loginData    = $request->getAttribute("loginData");
+				$msgId=$request->getParameter("MSGID");
+				$chatId=$request->getParameter("CHATID");
+				$pagination=$request->getParameter("pagination");
+				if($request->getParameter("pagination"))
+					$limit=CONTACT_ELEMENTS::PAGINATION_LIMIT;
+
 				//Contains logined Profile information;
 				$this->loginProfile = LoggedInProfile::getInstance();
 		//		$this->loginProfile->getDetail($this->loginData["PROFILEID"], "PROFILEID");
@@ -41,7 +47,39 @@ class WriteMessagev2Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'M',ContactHandler::PRE);
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$messageLogObj = new MessageLog();
-					$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
+					if($limit && $pagination){
+						$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
+						$chatLogObj = new NEWJS_CHAT_LOG($dbName);
+						$msgDetailsArr = $messageLogObj->getMessageHistoryPagination($this->loginProfile->getPROFILEID(),$profileid,$limit,$msgId);
+						$chatDetailsArr = $chatLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid,$limit,$chatId);
+						//print_r($chatDetailsArr);
+						//print_r($msgDetailsArr);die;
+						if(count($chatDetailsArr))
+						{
+								if(count($msgDetailsArr))
+										$messageDetailsArr=array_merge($msgDetailsArr,$chatDetailsArr);
+								else
+										$messageDetailsArr=$chatDetailsArr;
+								//print_r($messageDetailsArr);die;
+						}
+						else
+							$messageDetailsArr=$msgDetailsArr;
+						//print_r($messageDetailsArr);die;
+						usort($messageDetailsArr, function ($a, $b)	{		$t1 = strtotime($a['DATE']);		$t2 = strtotime($b['DATE']);		return $t2 - $t1;	}  );
+						//print_r($messageDetailsArr);die;
+						if(count($messageDetailsArr)>20){
+							$messageDetailsArr=array_slice($messageDetailsArr,0,20);
+							$nextPaginationCall=true;
+						}
+						else
+							$nextPaginationCall=false;
+						$countChat = $chatLogObj->markChatSeen($this->loginProfile->getPROFILEID(),$profileid);
+					}
+					else{
+						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
+						$nextPaginationCall=false;
+					}
+						
 					$count = $messageLogObj->markMessageSeen($this->loginProfile->getPROFILEID(),$profileid);
 					if($count>0)
 					{
@@ -61,7 +99,13 @@ class WriteMessagev2Action extends sfAction
 						$tuplesValues = $tupleService->getINTEREST_RECEIVED();
 						$profileDisplay =  $this->getProfileDisplayData($tuplesValues[$profileid]);
 					}
-					$responseArray = $this->getContactArray($messageDetailsArr,$request);
+					$responseArray = $this->getContactArray($messageDetailsArr,$request,$pagination);
+					if($pagination){
+						if($nextPaginationCall)
+							$responseArray['hasNext'] = true;
+						else
+							$responseArray['hasNext'] = false;
+					}
 					$responseArray['profile'] = $profileDisplay;
 				}
 			}
@@ -83,12 +127,13 @@ class WriteMessagev2Action extends sfAction
 	}
 
 	
-	private function getContactArray($messageDetailsArr,$request)
+	private function getContactArray($messageDetailsArr,$request,$pagination=false)
 	{
 			
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		if(!empty($messageDetailsArr))
 		{
+			
 			foreach ($messageDetailsArr as $key=>$value)
 			{
 				$arr["messages"][$key]["message"] = CommonUtility::strip_selected_tags($value["MESSAGE"],'script');
@@ -104,6 +149,19 @@ class WriteMessagev2Action extends sfAction
 					$arr["messages"][$key]["mymessage"] = "false";
 					$arr["messages"][$key]["timeTxt"] =$timeTxtVal;
 				}
+				if($pagination){
+					if($value["CHATID"])
+						$arr["CHATID"]=$value["ID"];
+					else
+						$arr["MSGID"]=$value["ID"];
+				}
+			}
+			if($pagination){
+				$arr["messages"]=array_reverse($arr["messages"]);
+				if(!$arr["CHATID"] && $request->getParameter("CHATID"))
+					$arr["CHATID"]=$request->getParameter("CHATID");
+				if(!$arr["MSGID"] && $request->getParameter("MSGID"))
+					$arr["MSGID"]=$request->getParameter("MSGID");	
 			}
 		}
 		else
@@ -164,6 +222,7 @@ class WriteMessagev2Action extends sfAction
 
 	private function getProfileDisplayData($profileDisplay)
 	{
+           
 		$display["PROFILECHECKSUM"] = $profileDisplay->PROFILECHECKSUM;
 		$display["USERNAME"] = $profileDisplay->USERNAME;
 		$display["AGE"] = $profileDisplay->AGE;
@@ -177,12 +236,13 @@ class WriteMessagev2Action extends sfAction
 		$display["SUBCASTE"] = $profileDisplay->SUBCASTE;
 		$display["MTONGUE"] = $profileDisplay->SUBCASTE;
 		$display["INCOME"] = $profileDisplay->INCOME;
-		$display["edu_level_new"] = $profileDisplay->EDUCATION;
+		$display["edu_level_new"] = (new MailerService())->getEducationDetails($profileDisplay->PROFILEID);
 		$display["ProfilePic120Url"] = $profileDisplay->ProfilePic120Url;
 		$display['subscription_icon'] = $profileDisplay->getsubscription_icon();
 		$display['userloginstatus'] = $profileDisplay->getuserloginstatus();
 		return array_change_key_case($display,CASE_LOWER);
 		
 	}
+	
 }
 

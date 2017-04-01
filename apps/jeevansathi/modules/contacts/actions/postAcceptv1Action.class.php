@@ -40,17 +40,18 @@ class postAcceptv1Action extends sfAction
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'A',ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS","A");
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
-					$responseArray           = $this->getContactArray();
+					$responseArray           = $this->getContactArray($request);
 				}
 			}
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -65,14 +66,21 @@ class postAcceptv1Action extends sfAction
 	}
 	
 	
-	private function getContactArray()
+	private function getContactArray($request)
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
+		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+		{
+			$actionType = "CHATACCEPT";
+		}
+		else{
+			$actionType = ContactHandler::ACCEPT;
+		}
 		
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::ACCEPT);
+			$responseButtonArray = $buttonObj->getAfterActionButton($actionType);
 		}
 		else
 		{
@@ -83,19 +91,7 @@ class postAcceptv1Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Deleted Profile";
 			}
-			elseif($errorArr["PROFILE_HIDDEN"] == 2)
-			{
-				$responseArray["errmsglabel"] = "This profile is Hidden";
-				$responseArray["errmsgiconid"] = "13";
-				$responseArray["headerlabel"] = "Hidden Profile";
-			}
-			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
-			{
-				$responseArray["errmsglabel"]= 'You have exceeded limit of expresssion of interest for this '.$errorArr["LIMIT"];
-				$responseArray["errmsgiconid"] = "13";
-				$responseArray["headerlabel"] = "Limit Exceeded";
-			}
-			elseif($errorArr["PHONE_NOT_VERIFIED"] == 2)
+                        elseif($errorArr["PHONE_NOT_VERIFIED"] == 2)
 			{
 				$responseArray["headerlabel"] = "Phone Verification Complusory";
 				$responseArray["errmsglabel"] = "Its is complusory to verify your number on jeevansathi.com or you will not able send expression of interest. \n\n You only have to give the missed call ";
@@ -103,6 +99,27 @@ class postAcceptv1Action extends sfAction
 				$responseArray["footerbutton"]["label"] = "Verify your number";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
+			}
+
+			elseif($errorArr["PROFILE_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"] = "This profile is Hidden";
+				$responseArray["errmsgiconid"] = "13";
+				$responseArray["headerlabel"] = "Hidden Profile";
+			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
+
+			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
+			{
+				$responseArray["errmsglabel"]= 'You have exceeded limit of expresssion of interest for this '.$errorArr["LIMIT"];
+				$responseArray["errmsgiconid"] = "13";
+				$responseArray["headerlabel"] = "Limit Exceeded";
 			}
 			elseif($errorArr["PROFILE_IGNORE"] == 2)
 			{

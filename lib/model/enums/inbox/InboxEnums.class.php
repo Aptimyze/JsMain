@@ -4,7 +4,7 @@
  */
 
 class InboxEnums {
-
+    public static $messageLogInQuery = true;
         //mapping of infotype id to page and filter
         static public $INBOX_ACTION_MAPPING = array(1 => array("page" => "eoi", "filter" => "R"),
             2 => array("page" => "accept", "filter" => "R"),
@@ -26,7 +26,9 @@ class InboxEnums {
             18 => array("page" => "horoscope", "filter" => "R"),
             19 => array("page" => "intro_call", "filter" => "R"),
             20 => array("page" => "ignore", "filter" => "M"),
-            21 => array("page" => "intro_call_complete", "filter" => "R")
+            21 => array("page" => "intro_call_complete", "filter" => "R"),
+            23 => array("page" => "eeoi", "filter" => "R")
+
         );
         //fromPage to be passed as viewProfilePage param
         static public $fromPage = "contacts";
@@ -307,6 +309,7 @@ class InboxEnums {
                 self::$INBOX_SUBHEADING_MAPPING["PC"][1]  = "<span class='opa70'>Receiving too many irrelevant interests? You can </span><a href='/profile/dpp' class='color5'>Set Filters</a>";
                 self::$INBOX_SUBHEADING_MAPPING["PC"][12] = "<span class='opa70'>These interests do not match the filters you have set.</span> <a href='/profile/dpp' class='color5'>Edit/Review Filters</a>";
                 self::$INBOX_SUBHEADING_MAPPING["PC"][17] = "<span><subscription_label> Benefit: </span><span class='opa70'><cnt> free member(s) out of <cntTotal> shown below could view your contacts</span>";
+                self::$INBOX_SUBHEADING_MAPPING["PC"][6] = "<span class='opa70'>To get faster response, you may 'Send Reminder' to these members</span>";
         }
         /**
          * This function returns the custom headings for inbox listings
@@ -315,6 +318,7 @@ class InboxEnums {
          */
         static public function getInboxSubHeading($params){
                 self::initSubHeading();
+                
                 if($params['searchid'] == '')
                         $params['searchid'] = 'default';
                 $str = str_replace('<cntTotal>',$params["headingTotalCount"],self::$INBOX_SUBHEADING_MAPPING['PC'][$params['searchid']]);

@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID','THUMBNAIL_PIC','availforchat');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -107,7 +107,7 @@ class SearchApiStrategyV1
 		elseif($request->getParameter("contactViewAttempts")==1)
                         $this->searchCat = 'contactViewAttempts';
 
-                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj);
+                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request);
                 if($this->noResults!=1)
 		{
 			if($this->results_orAnd_cluster!='onlyClusters')
@@ -119,8 +119,16 @@ class SearchApiStrategyV1
                 $params['searchCat'] = $this->searchCat;
                 $params['loggedInProfileObj'] = $loggedInProfileObj;
                 $params['noOfResults'] = $this->responseObj->getTotalResults();
-                $outputArray = $this->SearchChannelObj->setRequestParameters($params);
+                $params['result_count'] = $this->output['result_count'];
+                $params['pageSubHeading'] = $this->output['pageSubHeading'];
+                $params['profileCount'] = 0;
+                $params["nextAvail"] = $this->output['next_avail'];
+                if(is_array($this->output["profiles"]))
+					$params['profileCount'] = sizeOf($this->output["profiles"]);
+				$outputArray = $this->SearchChannelObj->setRequestParameters($params);
+              
                 $this->output = array_merge($this->output,$outputArray);
+               
 		return $this->output;
 	}
 
@@ -137,7 +145,7 @@ class SearchApiStrategyV1
         * @param string $casteMappingCastes list of caste suggested
         * @param array $relaxCriteria array to be relaxed
 	*/ 
-	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj)
+	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request)
 	{
 		$cnt = $this->responseObj->getTotalResults();
 		$this->output["dppLinkAtEnd"] = null;
@@ -157,9 +165,21 @@ class SearchApiStrategyV1
 		$this->output["matchAlertsLogic"] = null;
 		if($this->output["searchBasedParam"]=='matchalerts' || $this->searchCat=='matchalerts')
 		{
-			$newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+			$newjsMatchLogicObj = new newjs_MATCH_LOGIC(SearchConfig::getSearchDb());
 			$this->output["matchAlertsLogic"] = $newjsMatchLogicObj->getPresentLogic($loggedInProfileObj->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
 		}
+		// For kundli alerts message changes as per horoscope uploaded condition
+        if(($this->output["searchBasedParam"]=='kundlialerts' || $this->searchCat=='kundlialerts')&& $cnt==0)
+        {   
+         	$params["horoscope"] = "withoutHoro";  	
+			$this->output["uploadHoroscope"] = "1";
+           	//The same check has been applied on apps/jeevansathi/modules/profile/templates/_jspcViewProfile/_jspcViewProfileAstroSection.tpl
+           	if($loggedInProfileObj->getBTIME()!="" && $loggedInProfileObj->getCITY_BIRTH()!="" && $loggedInProfileObj->getCOUNTRY_BIRTH()!="")
+           	{
+           		$params["horoscope"] = "withHoro";
+           		$this->output["uploadHoroscope"] = "0";
+           	}
+        }
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
 		$this->output["pageTitle"] = SearchTitleAndTextEnums::getTitle($params);
 		$this->output["result_count"] = SearchTitleAndTextEnums::getHeading($params);
@@ -175,7 +195,7 @@ class SearchApiStrategyV1
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{
 			$this->output["newTagJustJoinDate"] = $SearchParamtersObj->getNewTagJustJoinDate();
-			$this->output["dppLinkAtEnd"] = 'Go To My Matches.';
+			$this->output["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
 		}
 
 		$this->output["no_of_results"]= "$cnt";
@@ -191,6 +211,10 @@ class SearchApiStrategyV1
 		else
 			$this->output["sortType"]= 'Relevance';
 		$this->output["stype"]= $SearchParamtersObj->getSEARCH_TYPE();
+                if($request->getParameter("retainSearchType"))
+                {
+                        $this->output["stype"]= $request->getParameter("retainSearchType");
+                }
 		$this->output["defaultImage"]= PictureFunctions::getNoPhotoJSMS($SearchParamtersObj->getGENDER(),$this->photoType);
 		if($noOfPages>$currentPage)
 			$this->output["next_avail"]= "true";
@@ -203,7 +227,12 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
-		
+		$this->output["checkonline"]=false;
+		if (JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
+		{
+			//$this->output["checkonline"]=true;
+		}
+
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{
 			$this->output["relaxation_text1"] = self::search_relaxation_text1;
@@ -337,11 +366,10 @@ class SearchApiStrategyV1
                     $resultsArray=$resultArrNew;
                 }
                 $profilesArr["profiles"] = $resultsArray;
+             
                 $profilesArr["featuredProfiles"] = $featuredProfileArrNew;
-								
-								
-            
-               
+		$nameOfUserObj = new NameOfUser;
+		$nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());	
 		foreach($profilesArr as $profileKey=>$profileVal){
                         $gender = $loggedInProfileObj->getGENDER()=="M"?"F":"M";
                         $decoratedMappingSearchDisplay = SearchConfig::decoratedMappingSearchDisplay();
@@ -356,8 +384,9 @@ class SearchApiStrategyV1
                                 {
                                 	    foreach($this->profileTupleInfoArr as $kk=>$vv)
                                         { 
-																					
+																			
                                                 $fieldName = $this->customizedFieldName($vv);
+
                                                 if(!$searchResultArray)
                                                 {
                                                         $value = $this->handlingSpecialCasesForSearch($fieldName,$v[$vv],$profileVal[$k]['PHOTO_REQUESTED'],$SearchParamtersObj->getGENDER(),$SearchParamtersObj,$profileVal[$k]);                
@@ -365,24 +394,50 @@ class SearchApiStrategyV1
                                                                 $this->output[$profileKey][$i]['subscription_text'] = $this->handlingSpecialCasesForSearch('subscription_text',$v[$vv],$profileVal[$k]['PHOTO_REQUESTED'],$SearchParamtersObj->getGENDER(),$SearchParamtersObj,$profileVal[$k]); 
                                                 }
                                                 
-                                                if(in_array($fieldName,array('bookmarked','album_count','eoi_label')))
+                                                if(in_array($fieldName,array('bookmarked','album_count','eoi_label','ignore_button')))
                                                 {
                                                         if($fieldName=='album_count')
                                                                 $this->output[$profileKey][$i][$fieldName] = $value["value"];
 
                                                         $tempkey = $fieldName=='eoi_label'?0:($fieldName=='bookmarked'?1:2);
-                                                        $button[$tempkey] = $value;
+
+                                                        /// added by Palash for android app for ignore button and ruling out album button
+                                                        $appVersion=sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION');
+                                                        if($fieldName!='ignore_button' && !($fieldName=='album_count' && MobileCommon::isApp()=='A' && $appVersion >=51) )	
+                                                     	   $button[$tempkey] = $value;
+                                                        else if($fieldName=='ignore_button' && MobileCommon::isApp()=='A' && $appVersion>=51 )
+                                                        	$button[$tempkey] = $value;
+                                                        /// added by Palash for android app for ignore button and ruling out album button
+
+
                                                 }
+                                                elseif($fieldName=='availforchat'){
+                                                        $this->output[$profileKey][$i][$fieldName] = $value;
+						}
                                                 elseif($fieldName=='photo')
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 elseif($fieldName=='size'){
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
+                                                }
+                                                elseif(in_array($fieldName,array('college','pg_college','company_name'))){
+                                                        if(!$v[$vv]){
+                                                                $v[$vv] = null;
+                                                        }
+                                                        $this->output[$profileKey][$i][$fieldName] = $v[$vv];
                                                 }
                                                 elseif($fieldName=="filter_score"){
                                                         $searchDisplayObj = new SearchDisplay();
                                                         //if($i<3){$value="";}else{$value=64;}  // Testing Purpose
                                                         $this->output[$profileKey][$i][$fieldName] = ucwords($searchDisplayObj->checkFilterReasons($value));
                                                 }
+						elseif($fieldName=="name_of_user")
+						{
+							if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
+							{
+								$name = $nameOfUserObj->getNameStr($value,$loggedInProfileObj->getSUBSCRIPTION());
+							}
+							$this->output[$profileKey][$i][$fieldName]=$name;
+						}
                                                 else
                                                 {
 							if($fieldName=='stype' && $value=='')
@@ -416,7 +471,7 @@ class SearchApiStrategyV1
                                                   $userloggedin=1;
                                             }
                                                 $params = array("SHORTLIST"=>$bookm,
-                                                "PAGE"=>array("stype"=>$this->output["stype"]),
+						"PAGE"=>array("stype"=>($this->output[$profileKey][$i]["stype"])?$this->output[$profileKey][$i]["stype"]:$this->output["stype"]),
                                                 "PHOTO"=>$this->output[$profileKey][$i]["photo"],
                                                 "USERNAME"=>$this->output[$profileKey][$i]["username"],
                                                 "GENDER"=>$gender,
@@ -446,6 +501,7 @@ class SearchApiStrategyV1
                                             //"LOGIN"=>$this->output["profiles"][$i]["userloginstatus"]);
                                             "LOGIN"=>$userloggedin,
                                             "IGNORE"=>0,
+	                                            "CHAT_GROUP"=>$contactState?$contactState:"N"
                                             );
                                            // print_r($params);die;
                                             $this->output[$profileKey][$i]['buttonDetailsJSMS'] = ButtonResponseFinal::getListingButtons("S",$source,"",$contactState,$params);
@@ -500,6 +556,8 @@ class SearchApiStrategyV1
                 //echo $key."\n\n";
 		switch($key) 
 		{
+			case "availforchat":
+				return $value;
 			 case "gender":
                                 $value = $SearchParamtersObj->getGENDER();
                                 break;
@@ -518,9 +576,9 @@ class SearchApiStrategyV1
                                         $value='Y';
                                 break;
 			case "timetext":
-				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
+				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
 				{
-					if($this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts')
+					if($this->searchCat == 'matchalerts')
 					{
                                                 $value = CommonUtility::convertDateToDay($infoArr['SENT_DATE']);
                                                 if(stripos($value,'today') === false){
@@ -562,9 +620,16 @@ class SearchApiStrategyV1
 			case "photo":
 				$value = PictureFunctions::mapUrlToMessageInfoArr($value,$this->photoType,$isPhotoRequested,$gender);
 				break;
+                        case "THUMBNAIL_PIC":
+				$value = PictureFunctions::mapUrlToMessageInfoArr($value,'ThumbailUrl',$isPhotoRequested,$gender);
+				break;
 			case "album_count":
 				$value =  ButtonResponseApi::getAlbumButton($value,$gender);
 				break;
+			case "ignore_button":
+				$value =  ButtonResponseApi::getIgnoreButton('','','',true,'Ignore');
+				break;
+			
 			case "age":
 				$value = $value." Years";
 				break;
@@ -650,6 +715,12 @@ class SearchApiStrategyV1
 						break;
 				}
 				break;
+                        case "college":
+                                $value = "Studied at ".$value;
+                                break;
+                        case "company_name":
+                                $value = "Works at ".$value;
+                                break;
 			default:
 				break;
 		}

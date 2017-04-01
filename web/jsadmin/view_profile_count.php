@@ -10,6 +10,9 @@ include("connect.inc");
 include("time1.php");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 
+//creating a master_rep db connection for this particular file
+$db=connect_rep();
+
 global $screen_time;
 $tdate=date("Y-m-d");
 $lastweek_date=strftime("%Y-%m-%d",JSstrToTime("$tdate-5days "));

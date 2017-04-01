@@ -10,6 +10,9 @@ class EmailSender{
   private $email_tpl;
   private $_profileArray;
   private $_emailTplArray;
+  private $emailAttachment;
+  private $emailAttachmentName;
+  private $emailAttachmentType;
 
   /**
    * @uses LRUObjectCache for profile object pooling 
@@ -39,6 +42,15 @@ class EmailSender{
   }
   public function setCustomCriteria(CustomCriteria $customCritera1){
     $this->custom_criteria=$customCritera1;
+  }
+  public function setAttachment($attachment){
+    $this->emailAttachment = $attachment;
+  }
+  public function setAttachmentName($attachmentName){
+    $this->emailAttachmentName = $attachmentName;
+  }
+  public function setAttachmentType($attachmentType){
+    $this->emailAttachmentType = $attachmentType;
   }
 
   /**
@@ -117,8 +129,16 @@ class EmailSender{
               $replyToAddress = ($this->_emailTplArray[$profileid]->getReplyToEnabled() === "Y") ? 
                 $this->_emailTplArray[$profileid]->getReplyToAddress() : 
                 $this->_emailTplArray[$profileid]->getSenderEMailId();
-
-              if (SendMail::send_email($to, $message, $subject, $from, '', '', '', '', '', '', "1", $replyToAddress)) {
+              if(empty($this->emailAttachment)){
+              	$this->emailAttachment= '';
+              }
+              if(empty($this->emailAttachmentName)){
+              	$this->emailAttachmentName= '';
+              }
+              if(empty($this->emailAttachmentType)){
+              	$this->emailAttachmentType= '';
+              }
+              if (SendMail::send_email($to, $message, $subject, $from, '', '', $this->emailAttachment , $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress)) {
                 //Sending mail succeeded
               }
               else {
@@ -225,7 +245,7 @@ class EmailSender{
     }
   } // end of _bulkSetTemplates
 
-  public function send($to="", $partialList=''){
+  public function send($to="", $partialList='',$ccList=''){
 
     $replyToEnabled = null;
     $replyToAddress = null;
@@ -246,6 +266,7 @@ class EmailSender{
       if($partialList instanceOf PartialList) {
         $this->email_tpl->setPartials($partialList);
       }
+     // print_r($this->email_tpl); die('lets try');
 //Do not send mail to deleted profiles except success story mailers whose group is success_story_photo or success_story_mailer.
 	  if($this->profile->getACTIVATED()=='D' && ($this->mail_group!=MailerGroup::SUCCESS_STORY_PHOTO && $this->mail_group!=MailerGroup::SUCCESS_STORY_DELETE))
 		  return false;
@@ -268,7 +289,16 @@ class EmailSender{
 	$canSend = $canSendObj->canSendIt();
 
 	$this->deliveryStatus = $canSendObj->getDeliveryStatus();
-      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from, '', '', '', '', '', '', "1", $replyToAddress,$from_name)) {
+	  if(empty($this->emailAttachment)){
+      	$this->emailAttachment= '';
+      }
+      if(empty($this->emailAttachmentName)){
+      	$this->emailAttachmentName= '';
+      }
+      if(empty($this->emailAttachmentType)){
+      	$this->emailAttachmentType= '';
+      }
+      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from,$ccList, '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
         return true;
       }
       else {
@@ -292,7 +322,7 @@ class EmailSender{
     if($this->email_tpl)
       return $this->email_tpl;
     else{
-      throw new Exception("Please call setTemplate first");
+      throw new jsException('',"Please call setTemplate first");
     }
   }
 

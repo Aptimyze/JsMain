@@ -96,7 +96,7 @@
                                   </tr>
                                   <tr>
                                     <td valign="top"><img src="~$IMG_URL`/images/mailer/revampMailer/bulletIMG.gif" width="24" height="12" vspace="3" hspace="0" align="left" /></td>
-                                    <td style="font-size:12px; color:#000000; line-height:normal;">Find people you are interested in through &#34;My Matches&#34; and &#34;Search&#34;</td>
+                                    <td style="font-size:12px; color:#000000; line-height:normal;">Find people you are interested in through &#34;Desired Partner Matches&#34; and &#34;Search&#34;</td>
                                   </tr>
                                   <tr>
                                     <td colspan="2" height="15"></td>

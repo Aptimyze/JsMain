@@ -33,11 +33,11 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		ini_set('memory_limit','512M');
+		ini_set('memory_limit','912M');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_master");
+	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_masterDDL");
 	            $mailerYNObj->EmptyMailer();
 	            echo "Truncated Mailer Table\n\n";
 	            $chunk=$arguments["chunks"];
@@ -80,14 +80,16 @@ public function skipProfiles($arranged)
 {
 	foreach ($arranged as $key => $value) 
 	{
-		$skipProfileObj     = SkipProfile::getInstance($key);
-		$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+		$skipProfileObj     = new SkipProfile($key);
+		$skipConditionArray = SkipArrayCondition::$SkippedAll;			
+                $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 		if(is_array($skipProfiles))
 			$temp=array_diff($value,$skipProfiles); 
 		else
 			$temp=$value;
 		if(count($temp)>0)
 			$result[$key]=$temp;
+		
 	}
 	return $result;
 }

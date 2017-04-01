@@ -265,3 +265,54 @@ border-left-color: #d9475c;
 }
 
 .regbgHead{background-color:#365373}
+.iconImg2{height:18px;width:18px; background-repeat: no-repeat; background-position: -6px -34px; }
+.iconSprite{background-image: url(IMG_URL/images/jsms/profile/viewProfile/iconSprite.png);}
+.iconTick {
+        height: 15px;
+        width: 18px;
+        background-repeat: no-repeat;
+        position: absolute;
+        right: 32px;
+        margin-top: -11px;
+ }
+.tickSelected{background-position: -6px -63px;}
+.vTop{vertical-align:top;}
+.padr5{padding-right:5px}
+.topLeft50{top:50%;left:50%;position:absolute;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-ms-transform::translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
+.padd1015{padding:10px 15px}
+        .f10 {
+                font-size:10px;
+        }
+
+     .casteNoBar_check label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 28px;
+    margin-right: 15px;
+    font-size: 15px;
+        line-height: 20px;
+}
+.casteNoBar_check label:before {
+    content:"";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    top: 1px;
+    background-color: #fff;
+    border:1px solid #515050;
+    border-radius: 3px;
+}
+.casteNoBar_check input[type=checkbox] {
+    display: none;
+}
+.casteNoBar_check input[type=checkbox]:checked + label:before {
+    content:"\2713";
+    font-size: 20px;
+    color: #000;
+    text-align: center;
+    line-height: 15px;
+}

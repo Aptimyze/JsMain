@@ -17,17 +17,17 @@ class Horoscope
 	}
 
 	public function ifHoroscopePresent($profileId) {
-		$astroObj = new NEWJS_ASTRO();
+		$astroObj = ProfileAstro::getInstance();
 		$result = $astroObj->getIfAstroDetailsPresent($profileId);
 		if($result == 1)
 			return 'Y';
-		else
+		/*else
 		{
 			$horoscope = new newjs_HOROSCOPE();
 			$result = $horoscope->getIfHoroscopePresent($profileId);
 			if($result == 1)
 				return 'Y';
-		}
+		}*/
 		return 'N';
 	}
 	
@@ -46,7 +46,7 @@ class Horoscope
 
 	public function getMultipleAstroDetails($profileObjArray)
 	{	
-		$astroObj = new NEWJS_ASTRO();
+		$astroObj = ProfileAstro::getInstance();
 		$fields = "PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL";
 		foreach($profileObjArray as $key=>$profileObj)
 		{
@@ -150,9 +150,9 @@ class Horoscope
     
     if (in_array($iReligion, $arrAllowedReligion)) {
 			$horoExist = $this->ifHoroscopePresent($iProfileID);
-			if ($checkForScreened && 'N' == $horoExist) {
+			/*if ($checkForScreened && 'N' == $horoExist) {
 				$horoExist = $this->isHoroscopeUnderScreen($iProfileID);
-			}
+			}*/
 	
 		}
 	

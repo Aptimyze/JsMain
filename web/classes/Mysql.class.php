@@ -7,6 +7,8 @@
 */
 
 //require_once("mysqlConnections.php");
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 class Mysql
 {
@@ -148,7 +150,7 @@ class Mysql
 					$dbPasswd = MysqlDbConstants::$viewLogRep[PASS];
 					$dbName = MysqlDbConstants::$viewLogRep[DEFAULT_DB];
 					break;
-                                case '111Slave_shard1' :
+                                case '112Slave_shard1' :
                                         $dbHost = MysqlDbConstants::$shard1Slave112[HOST].":".MysqlDbConstants::$shard1Slave112[PORT];
                                         $dbUser = MysqlDbConstants::$shard1Slave112[USER];
                                         $dbPasswd = MysqlDbConstants::$shard1Slave112[PASS];
@@ -166,6 +168,59 @@ class Mysql
                                         $dbPasswd = MysqlDbConstants::$shard3Slave112[PASS];
                                         $dbName = MysqlDbConstants::$shard3Slave112[DEFAULT_DB];
 					break;
+				case 'masterDDL' :
+                                        $dbHost = MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT];
+                                        $dbUser = MysqlDbConstants::$masterDDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$masterDDL[PASS];
+                                        $dbName = MysqlDbConstants::$masterDDL[DEFAULT_DB];
+                                        break;
+                                case 'shard1DDL' :
+                                        $dbHost = MysqlDbConstants::$shard1DDL[HOST].":".MysqlDbConstants::$shard1DDL[PORT];
+                                        $dbUser = MysqlDbConstants::$shard1DDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$shard1DDL[PASS];
+                                        $dbName = MysqlDbConstants::$shard1DDL[DEFAULT_DB];
+                                        break;
+				case 'shard1SlaveDDL' :
+                                                $dbHost = MysqlDbConstants::$shard1SlaveDDL[HOST].":".MysqlDbConstants::$shard1SlaveDDL[PORT];
+                                                $dbUser = MysqlDbConstants::$shard1SlaveDDL[USER];
+                                                $dbPasswd = MysqlDbConstants::$shard1SlaveDDL[PASS];
+                                                $dbName = MysqlDbConstants::$shard1SlaveDDL[DEFAULT_DB];
+                                                break;
+                                case 'shard2DDL' :
+                                        $dbHost = MysqlDbConstants::$shard2DDL[HOST].":".MysqlDbConstants::$shard2DDL[PORT];
+                                        $dbUser = MysqlDbConstants::$shard2DDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$shard2DDL[PASS];
+                                        $dbName = MysqlDbConstants::$shard2DDL[DEFAULT_DB];
+                                        break;
+				case 'shard2SlaveDDL' :
+                                                $dbHost = MysqlDbConstants::$shard2SlaveDDL[HOST].":".MysqlDbConstants::$shard2SlaveDDL[PORT];
+                                                $dbUser = MysqlDbConstants::$shard2SlaveDDL[USER];
+                                                $dbPasswd = MysqlDbConstants::$shard2SlaveDDL[PASS];
+                                                $dbName = MysqlDbConstants::$shard2SlaveDDL[DEFAULT_DB];
+                                                break;
+                                case 'shard3DDL' :
+                                        $dbHost = MysqlDbConstants::$shard3DDL[HOST].":".MysqlDbConstants::$shard3DDL[PORT];
+                                        $dbUser = MysqlDbConstants::$shard3DDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$shard3DDL[PASS];
+                                        $dbName = MysqlDbConstants::$shard3DDL[DEFAULT_DB];
+                                        break;
+				case 'shard3SlaveDDL' :
+                                                $dbHost = MysqlDbConstants::$shard3SlaveDDL[HOST].":".MysqlDbConstants::$shard3SlaveDDL[PORT];
+                                                $dbUser = MysqlDbConstants::$shard3SlaveDDL[USER];
+                                                $dbPasswd = MysqlDbConstants::$shard3SlaveDDL[PASS];
+                                                $dbName = MysqlDbConstants::$shard3SlaveDDL[DEFAULT_DB];
+                                                break;
+				case 'alertsDDL' :
+                                        $dbHost = MysqlDbConstants::$alertsDDL[HOST].":".MysqlDbConstants::$alerts[PORT];
+                                        $dbUser = MysqlDbConstants::$alertsDDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$alertsDDL[PASS];
+                                        $dbName = MysqlDbConstants::$alertsDDL[DEFAULT_DB];
+				case 'viewLogDDL' :
+                                        $dbHost = MysqlDbConstants::$viewLogDDL[HOST].":".MysqlDbConstants::$viewLogDDL[PORT];
+                                        $dbUser = MysqlDbConstants::$viewLogDDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$viewLogDDL[PASS];
+                                        $dbName = MysqlDbConstants::$viewLogDDL[DEFAULT_DB];
+                                        break;
 				default : 
 					$dbHost = $this->dbHost;
 					$dbUser = $this->dbUser;
@@ -382,6 +437,7 @@ class Mysql
 	*/
 	public function logError($sql,$backend="")
 	{
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($sql));
 		global $smarty,$ajax_error;
 
 		$errorString = "\n".date("Y-m-d G:i:s",time() + 37800)."\nMysql Error: ".addslashes($this->error())."\nMysql Error Number:".$this->errNo()."\nSQL: $sql\nUser Agent : ".$_SERVER['HTTP_USER_AGENT']."\nReferer : ".$_SERVER['HTTP_REFERER']."\nSelf : ".$_SERVER['PHP_SELF']."\nUri : ".$_SERVER['REQUEST_URI']."\nMethod : ".$_SERVER['REQUEST_METHOD']."\n";

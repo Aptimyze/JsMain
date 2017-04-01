@@ -39,6 +39,23 @@ function removeNull(msg)
         return '';
 }
 
+function isSessionStorageExist()
+    {
+        var bVal = true;
+        if(typeof(Storage)=='undefined')
+            bVal = false;
+        
+        try{
+            sessionStorage.setItem('testLS',"true");
+            sessionStorage.getItem('testLS');
+            sessionStorage.removeItem('testLS');
+        }catch(e)
+        {
+            bVal = false;
+        }
+        return bVal;
+    }
+
 /**
 * This function will show slider with validation message {e} at a particular height {divhgt}
 * @param className {string} 
@@ -261,19 +278,47 @@ function SingleTonNextPage(data,nottostore,url,transition)
    });
    cancelUrl[random]=1;
    
-   xhrReq[random]=$.ajax({url: url}).done(function(data){
-       
-                    if(cancelUrl[random]==1)
-			ShowNextPageTrue(data,nottostore,url,transition);
+   //Before hitting AJAX call for HTML, we will check the URL with MYJS URL and 
+   //check timestamp in session storage and if it is less than 1 minute, 
+   //we will use HTML from session storage and not hit Ajax
+   var mySiteUrl = location.protocol + "//" + location.hostname;
+   var arrAllowedUrls = [mySiteUrl + "/#mham",mySiteUrl,mySiteUrl+"/?mobile_view=Y#mham",mySiteUrl+"/?mobile_view=Y",mySiteUrl+"/profile/mainmenu.php",mySiteUrl+"/profile/mainmenu.php#mham","/","//"];
+   var cacheMin = 2;
+   var ttl = 60000 * cacheMin;
+    
+   if(isSessionStorageExist() && arrAllowedUrls.indexOf(url) != -1 && 
+     sessionStorage.getItem("myjsTime") != undefined && 
+     new Date().getTime() - sessionStorage.getItem("myjsTime") < ttl) 
+   {
+      var data = sessionStorage.getItem("myjsHtml");
+      
+      trackJsEventGA("jsms","fetchLocalHtml", "", "");
+      if(cancelUrl[random]==1) {
+        ShowNextPageTrue(data,nottostore,url,transition);  
+      }
+			
+      startTouchEvents(timer);
+   } else  {
+      xhrReq[random]=$.ajax({url: url}).done(function(data){
+      if(arrAllowedUrls.indexOf(url) != -1 && isSessionStorageExist()) {
+      	sessionStorage.setItem("myjsTime",new Date().getTime());
+        sessionStorage.setItem("myjsHtml",data);	
+      }
+      
+      if(cancelUrl[random]==1) {
+        ShowNextPageTrue(data,nottostore,url,transition);
+      }
+        
+      startTouchEvents(timer);
+
+      })
+      .fail(function(){
+                      if(cancelUrl[random]==1)
+        StopNextPage();
         startTouchEvents(timer);
-                    
-		})
-		.fail(function(){
-                    if(cancelUrl[random]==1)
-			StopNextPage();
-		startTouchEvents(timer);
-		});
-   
+      });
+    }
+    
 }
 function StopNextPage(transition)
 {
@@ -430,7 +475,7 @@ function ShowTopDownError(jsonError,timeToHide)
             }
         },10);
 	setTimeout(function(){$(".errClass").removeClass("showErr");
-		setTimeout(function(){$(".errClass").remove();},timeToHide);
+		setTimeout(function(){$(".errClass").remove();},100);
 		startTouchEvents(1);
 		},timeToHide);
 	
@@ -452,7 +497,6 @@ function CommonErrorHandling(json,toAppend)
 	}
 	else
 		output=json;
-		
 	if(typeof(output)!='object')
 	{
 		ShowTopDownError(['Something went wrong']);
@@ -472,8 +516,20 @@ function CommonErrorHandling(json,toAppend)
 				ShowNextPage("/register/newJsmsReg?incompleteUser=1",0);	
 			if(json.responseStatusCode==8)
 				ShowNextPage("/phone/jsmsDisplay",0);
-			if(statusCode)
-				if($.inArray(parseInt(statusCode),[0,9,8,7])!=-1)
+			if(statusCode==1)
+			{
+               if(json.error.indexOf("banned") !=0 || json.error.indexOf("same phone number")!=0)
+               {
+               		ShowTopDownError([json.error],5000);
+               }
+               else
+               {
+               		ShowTopDownError([json.responseMessage],5000);
+               }            
+			}
+
+                        if(statusCode)
+				if($.inArray(parseInt(statusCode),[1,0,9,8,7])!=-1)
 					throw new Error("Redirecting you");
             startTouchEvents(1);	
             return false;		
@@ -554,7 +610,7 @@ function hostReachable() {
                     ShowTopDownError(["You are now online."]);
                     localStorage.removeItem("offline");
                     // localStorage.removeItem("offline_timestamp");
-                    setTimeout(function(){ 
+      /*              setTimeout(function(){ 
                         var startTime, endTime, download = new Image();
                         var currentLocation = window.location.href;
                         download.onload = function () {
@@ -574,6 +630,7 @@ function hostReachable() {
                         startTime = (new Date()).getTime();
                         download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
                     }, 2000);
+	*/
                     // if(totalTime <= 1800){
                         // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);
                         // alert("logging user : "+offlineData+", totalTime : "+totalTime);
@@ -604,7 +661,7 @@ function hostReachable() {
           // var totalTime = (onlineTime-offlineTime);
           if(offlineData != null) {
               localStorage.removeItem("offline");
-              setTimeout(function(){ 
+          /*    setTimeout(function(){ 
                   var startTime, endTime, download = new Image();
                   var currentLocation = window.location.href;
                   download.onload = function () {
@@ -623,7 +680,7 @@ function hostReachable() {
                   }
                   startTime = (new Date()).getTime();
                   download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
-              }, 2000);
+              }, 2000); */
               // localStorage.removeItem("offline_timestamp");
               // if(totalTime <= 1800){
                   // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);

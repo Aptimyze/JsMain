@@ -124,9 +124,10 @@ class SolrResponse implements ResponseHandleInterface
 
 				if($dt=="2015-06-17" || $dt =="2015-06-18")
 				{
+					$channel= MobileCommon::getChannel();
 					$search_SEARCH_SOLR_ANALYSIS = new search_SEARCH_SOLR_ANALYSIS;
 			                $URL_PATH = $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-					$search_SEARCH_SOLR_ANALYSIS->ins($pid,$stype,$noOfRes,$time,$URL_PATH);
+					$search_SEARCH_SOLR_ANALYSIS->ins($pid,$stype,$noOfRes,$time,$URL_PATH,$channel);
 				}
 			}
 			$this->totalResults = $res['response']['numFound'];
@@ -143,7 +144,7 @@ class SolrResponse implements ResponseHandleInterface
                                $msgReqForDebug[]=$searchParamtersObj;
                                $msgReqForDebug[]=$loggedInProfileObj;
                                $subject="CITY_RES Solr error";
-                               SendMail::send_email("lavesh.rawat@gmail.com,akashkumardtu@gmail.com",print_r($msgReqForDebug,true),$subject);
+                               //SendMail::send_email("lavesh.rawat@gmail.com,akashkumardtu@gmail.com",print_r($msgReqForDebug,true),$subject);
                         }
                         
 			if($res['grouped'])

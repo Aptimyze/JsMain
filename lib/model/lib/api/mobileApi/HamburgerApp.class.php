@@ -7,20 +7,33 @@ class HamburgerApp
 		$actionName = $forwardingArray['actionName'];
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
-			$profileObj=LoggedInProfile::getInstance('newjs_master');
-			$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
+                        $isNewMobileSite = MobileCommon::isNewMobileSite();
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$profileObj->getDetail("","","*");
+		$profilePic = $profileObj->getHAVEPHOTO();
+		if (empty($profilePic))
+			$profilePic="N";
+		if($profilePic  && $profilePic!="N")
+		{
 			$pictureServiceObj=new PictureService($profileObj);
-			if($profileObj->getHAVEPHOTO()!="U"||MobileCommon::isApp() != "I")
-			{
-				$profilePicObj = $pictureServiceObj->getProfilePic();
-				if($profilePicObj)
-					$thumbNail = $profilePicObj->getThumbailUrl();
-				if(!$thumbNail)
-					$thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
-				$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
-			}
+			$profilePicObj = $pictureServiceObj->getProfilePic();
+			if($profilePicObj)
+                        {
+			if($profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
 			else
-				$thumbNail = NULL;
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
+                        $thumbNail =$photoArray;
+			}
+			
+		}
+                else
+                {
+                        $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
+                        $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
+                }
+
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
 			$memHandlerObj = new MembershipHandler();
@@ -32,17 +45,46 @@ class HamburgerApp
 			$hamburgerDetails['AWAITING_RESPONSE_NEW']=$profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 			$hamburgerDetails['AWAITING_RESPONSE']=$profileMemcacheObj->get("AWAITING_RESPONSE");
 			$hamburgerDetails['FILTERED']=$profileMemcacheObj->get("FILTERED");
+			$hamburgerDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
+				if(!$hamburgerDetails["FILTERED_NEW"]){
+					$hamburgerDetails["FILTERED_NEW"] = 0;
+				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
-	                $hamburgerDetails['MESSAGE_NEW']=0;
-	                //$profileMemcacheObj->get("MESSAGE_NEW");
-			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
-			$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
-			$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1 || ($isApp=='A' && $appVersion>89))
+				$hamburgerDetails['MESSAGE_NEW']=0;
+			else
+	          	$hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
+	                
+	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+				$hamburgerDetails['MATCHALERT']=0;
+			else
+				$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
+			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
+			{
+				$hamburgerDetails['VISITOR_ALERT']=0;
+				//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
+			}
+			else
+			{
+				$hamburgerDetails['VISITOR_ALERT']=0;
+				//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
+			}
+			
+			$hamburgerDetails['VISITORS_ALL']=0;
+			//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+				$hamburgerDetails['BOOKMARK']=0;
+				$hamburgerDetails['JUST_JOINED_COUNT'] = 0;
+				$hamburgerDetails['JUST_JOINED_NEW'] = 0;
+			}
+			else{
+				$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
 				$hamburgerDetails['JUST_JOINED_COUNT'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES');
 				$hamburgerDetails['JUST_JOINED_NEW'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+			}
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
-				if(MobileCommon::isApp() == "I")
+				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
 					ob_start();

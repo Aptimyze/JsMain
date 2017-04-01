@@ -39,7 +39,10 @@ class postEOIv1Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					if($request->getParameter('chatMessage'))
+                        $this->contactHandlerObj->setElement("MESSAGE",$request->getParameter('chatMessage'));
+                    else
+						$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));
@@ -56,6 +59,7 @@ class postEOIv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -94,20 +98,30 @@ class postEOIv1Action extends sfAction
 		
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
+		{
+			$androidText = true;
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["cansend"] = true;
+			$responseButtonArray["sent"] = true;
+		}
+		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		if($this->contactEngineObj->messageId)
 		{
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+        	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
+				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+                                if($request->getParameter('API_APP_VERSION')>=80 && $this->getParameter($request,"page_source") != "chat")
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+		                        $responseArray["headerthumbnailurl"] = $thumbNail;
+                        		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        		$responseArray["selfthumbnailurl"] = $ownthumbNail;
 			}
-			if($this->getParameter($request,"page_source") == "VDP")
+
+                        if($this->getParameter($request,"page_source") == "VDP")
 			{
 				$redirection = "true";
 			}
@@ -141,7 +155,7 @@ class postEOIv1Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Deleted Profile";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
-				}
+                        }
 			elseif($errorArr["PROFILE_HIDDEN"] == 2)
 			{
 				$responseArray["errmsglabel"] = "You cannot express interest as your profile is hidden";
@@ -149,6 +163,15 @@ class postEOIv1Action extends sfAction
 				$responseArray["headerlabel"] = "Your Profile is Hidden";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+                        }
+
 			elseif($errorArr["PROFILE_IGNORE"] == 2)
 			{
 				$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
@@ -224,9 +247,9 @@ class postEOIv1Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
-				$responseArray["errmsglabel"] = "Your profile is currently being screened by our screening team. Your interest would be delivered only after your profile is screened";
+				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["headerlabel"] = "Profile Under Screening";
 			}
 			elseif($errorArr["DECLINED"] == 2)
 			{

@@ -8,7 +8,7 @@ class PartnerProfile extends SearchParamters
 {
 	private $isDppExist;
 	public function getIsDppExist(){return $this->isDppExist;}
-	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK','HANDICAPPED');
+	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK');
 
         public function __construct($loggedInProfileObj)
         {
@@ -38,9 +38,8 @@ class PartnerProfile extends SearchParamters
 	* @param (optional) only sent in case of forward search for assisted_product
 	* @return array containing dpp info.
 	*/
-	public function getDppCriteria($param="",$source="")
+	public function getDppCriteria($param="",$source="",$getFromCache=0)
 	{
-		
 		if($param)
 		{
 			$apObj = new ASSISTED_PRODUCT_AP_TEMP_DPP;
@@ -118,11 +117,26 @@ class PartnerProfile extends SearchParamters
 			/**
 			* called the store(JPARTNER) to get details for the id.
 			*/	
-			$dbName = JsDbSharding::getShardNo($this->pid);
-			$JPARTNERobj = new newjs_JPARTNER($dbName);
-			$fields = SearchConfig::$dppSearchParamters.",MAPPED_TO_DPP";
-			$arr = $JPARTNERobj->get($paramArr,$fields);
+			if($getFromCache == 1){
+                                $memObject=JsMemcache::getInstance();
+                                $jpartnerData = $memObject->get('SEARCH_JPARTNER_'.$this->pid);
 
+                                if(empty($jpartnerData)){
+                                        $dbName = JsDbSharding::getShardNo($this->pid);
+                                        $JPARTNERobj = new newjs_JPARTNER($dbName);
+                                        $fields = SearchConfig::$dppSearchParamters.",MAPPED_TO_DPP";
+                                        $arr = $JPARTNERobj->get($paramArr,$fields);
+                                        $memObject->set('SEARCH_JPARTNER_'.$this->pid,serialize($arr),  SearchConfig::$matchAlertCacheLifetime);
+                                }else{
+                                      $arr = unserialize($jpartnerData);
+                                }
+                        }else{
+                                $dbName = JsDbSharding::getShardNo($this->pid);
+                                $JPARTNERobj = new newjs_JPARTNER($dbName);
+                                $fields = SearchConfig::$dppSearchParamters.",MAPPED_TO_DPP";
+                                $arr = $JPARTNERobj->get($paramArr,$fields);
+                        }
+                        
 			if(is_array($arr[0]))
 			{
 				$this->isDppExist = 1;
@@ -139,7 +153,8 @@ class PartnerProfile extends SearchParamters
 						eval ('$this->set'.$field.'($value);');
 					}
 				}
-
+				if($this->getCITY_RES() && $this->getCITY_INDIA()=="")
+					$this->setCITY_INDIA($this->getCITY_RES());
 				/*as state is mapped to city and if both are same , it means we have mapped them and in order to show city cluser , we need to unset city*/
 				if($this->getSTATE()==$this->getCITY_RES())
 					$this->setCITY_RES('');
@@ -157,7 +172,13 @@ class PartnerProfile extends SearchParamters
                                                 }
                                         }
                                 }
-				
+                                if($this->getOCCUPATION() && $source != 'AP'){
+                                        $occpationArray = explode(",",$this->getOCCUPATION());
+                                        $occupationNewWithGrouping = SearchCommonFunctions::getOccupationMappingData($occpationArray);
+                                        if($occupationNewWithGrouping){
+                                               $this->setOCCUPATION(implode(',',$occupationNewWithGrouping)); 
+                                        }
+                                }
 				//Special case for mapped values. => useful for cluster display
 				$mappedStr = $arr[0]['MAPPED_TO_DPP'];
 				if($mappedStr)

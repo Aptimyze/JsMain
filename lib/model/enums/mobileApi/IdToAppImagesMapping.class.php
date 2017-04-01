@@ -29,7 +29,7 @@ class IdToAppImagesMapping
 	CONST DISABLE_MALE_ALBUM	= '037';
 	CONST IGNORE			= 'ignore';
 	CONST UNDO_IGNORE		= 'uignore';
-	CONST A_IGNORE			= '89';
+	CONST A_IGNORE			= '84';
 	CONST A_UNDO_IGNORE		= '90';
 	CONST REPORTABUSE 		= '021' ;
 	CONST EADVANTAGE_SRP 	='eadvantage';

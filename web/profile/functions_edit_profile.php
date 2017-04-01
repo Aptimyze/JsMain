@@ -80,28 +80,45 @@ function log_edit($paramArray, $table_name = "") {
     if (!$table_name) $table_name = "newjs.EDIT_LOG";
     $paramArray[IPADD] = FetchClientIP();
     foreach ($paramArray as $field => $value) {
-        $value = addslashes(stripslashes($value));
-        $fields.= $field . ",";
-        $values.= "'$value',";
+        if($field != "ALT_EMAIL" && $field != "ALT_EMAIL_STATUS")
+        {
+            $value = addslashes(stripslashes($value));
+            $fields.= $field . ",";
+            $values.= "'$value',";
+        }        
     }
     $fields = substr($fields, 0, -1);
     $values = substr($values, 0, -1);
-    $sql_el = "INSERT INTO $table_name ($fields) VALUES ($values)";
-    if (is_new_entry($paramArray[PROFILEID])) {
-        $sql_bckup = "SELECT PROFILEID,USERNAME,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT, EDU_LEVEL,EMAIL,RELATION,COUNTRY_BIRTH,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME, HANDICAPPED,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,FAMILY_VALUES,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,MOD_DT from newjs.JPROFILE where PROFILEID=" . $paramArray[PROFILEID];
-        $res_bckup = mysql_query_decide($sql_bckup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_bckup, "ShowErrTemplate");
-        $row_bckup = mysql_fetch_assoc($res_bckup);
-        foreach ($row_bckup as $field => $value) {
-            $value = addslashes(stripslashes($value));
-            $fields_backup.= $field . ",";
-            $values_backup.= "'$value',";
+    $fieldsArr = explode(",",$fields);    
+    $diffArr = array_diff($fieldsArr,array("PROFILEID","IPADD","MOD_DT"));    
+    if(count($diffArr) >0)
+    {
+        $sql_el = "INSERT INTO $table_name ($fields) VALUES ($values)";
+        if (is_new_entry($paramArray[PROFILEID])) {
+            $sql_bckup = "SELECT PROFILEID,USERNAME,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT, EDU_LEVEL,EMAIL,RELATION,COUNTRY_BIRTH,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME, HANDICAPPED,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,FAMILY_VALUES,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,MOD_DT from newjs.JPROFILE where PROFILEID=" . $paramArray[PROFILEID];
+            $res_bckup = mysql_query_decide($sql_bckup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_bckup, "ShowErrTemplate");
+            $row_bckup = mysql_fetch_assoc($res_bckup);
+            foreach ($row_bckup as $field => $value) {
+                $value = addslashes(stripslashes($value));
+                $fields_backup.= $field . ",";
+                $values_backup.= "'$value',";
+            }
+            $fields_backup = substr($fields_backup, 0, -1);
+            $values_backup = substr($values_backup, 0, -1);        
+            $sql_backup = "INSERT INTO $table_name ($fields_backup) VALUES ($values_backup)";
+            $result = mysql_query_decide($sql_backup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_backup, "ShowErrTemplate");
         }
-        $fields_backup = substr($fields_backup, 0, -1);
-        $values_backup = substr($values_backup, 0, -1);
-        $sql_backup = "INSERT INTO $table_name ($fields_backup) VALUES ($values_backup)";
-        $result = mysql_query_decide($sql_backup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_backup, "ShowErrTemplate");
-    }
     $result_el = mysql_query_decide($sql_el) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el, "ShowErrTemplate");
+    }
+
+    if(array_key_exists("ALT_EMAIL", $paramArray))
+    {
+        $emailUID=(new NEWJS_ALTERNATE_EMAIL_LOG())->insertEmailChange($paramArray["PROFILEID"],$paramArray['ALT_EMAIL']);
+        if($paramArray["ALT_EMAIL"]!="")
+        {
+            $result = (new emailVerification())->sendAlternateVerificationMail($paramArray["PROFILEID"], $emailUID,$paramArray['ALT_EMAIL']);
+        }
+    }
 }
 
 function is_new_entry($profileid) {
@@ -140,7 +157,14 @@ function update_annulled_reason($profileid, $COURT, $date_an, $REASON, $mstatus)
 
 function unset_diocese($profileid) {
     $sql_di = "update JP_CHRISTIAN set DIOCESE='' where PROFILEID='$profileid'";
-    mysql_query_decide($sql_di) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el1, "ShowErrTemplate");
+/*    mysql_query_decide($sql_di) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el1, "ShowErrTemplate");*/
+
+    include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+    $objUpdate = JProfileUpdateLib::getInstance();
+    $result = $objUpdate->updateJP_CHRISTIAN($profileid,array('DIOCESE'=>''));
+    if(false === $result) {
+        logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_di, "ShowErrTemplate");
+    }
 }
 
 function edit_religion_mis_updates($profileid, $Mtongue) {
@@ -328,7 +352,7 @@ function bot_email_entry($profileid, $Email) {
         
         $sql_bot_entry = "insert ignore into bot_jeevansathi.user_info(`gmail_ID`,`on_off_flag`,`show_in_search`,`profileID`,`jeevansathi_ID`) values('$Email',0,1,'$profileid','$username')";
         mysql_query_decide($sql_bot_entry) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql, "ShowErrTemplate");
-        send_chat_request_email($profileid, $Email, $username);
+        //send_chat_request_email($profileid, $Email, $username);
     }
 }
 

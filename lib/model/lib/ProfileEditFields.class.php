@@ -184,6 +184,12 @@ case 'EMAIL':
 					$field->setConstraintClass("email");
 					$field->setTableName("JPROFILE:EMAIL");
 				break;
+case 'ALT_EMAIL':
+					$field=new Field('','ALT_EMAIL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("alt_email");
+					$field->setTableName("JPROFILE_CONTACT:ALT_EMAIL");
+				break;
 
 case 'FAMILYINFO':
 					$field=new Field('','FAMILYINFO');
@@ -1179,8 +1185,25 @@ case 'ADDR_PROOF_VAL':
 					$field->setFieldType("text");
 					$field->setConstraintClass("proof_val");
 					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+                                break;
+case 'P_STATE':
+					$field=new Field('','P_STATE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_state");
+					$field->setTableName("JPARTNER:STATE");
 				break;
-                
+case 'CITY_INDIA':
+					$field=new Field('','CITY_INDIA');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_city_india");
+					$field->setTableName("JPARTNER:CITY_INDIA");
+				break;
+case "DISPLAYNAME":
+					$field=new Field('','DISPLAYNAME');
+					$field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+				break;
 }
 
 				return($field);

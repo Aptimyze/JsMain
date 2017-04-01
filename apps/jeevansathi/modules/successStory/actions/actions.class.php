@@ -670,6 +670,7 @@ class successStoryActions extends sfActions
         if ($row['ACTIVATED'] != 'D') {
             $path = sfConfig::get("sf_web_dir") . "/profile/deleteprofile_bg.php " . $row[PROFILEID] . " > /dev/null &";
             $cmd = "/usr/local/php/bin/php -q " . $path;
+	    $cmd = preg_replace('/[^A-Za-z0-9\. -_]/', '', $cmd);
             passthru($cmd);
         }
     }

@@ -6,72 +6,6 @@
     <div></div>
 </div>
 </div>
-
-<div id='reportInvalidLayer' class="layersZ pos_fix setshare disp-none">
-      <div class="prfwid16 fontlig">
-        <div class="prfbg6">
-                <!--start:div-->          
-              <div class="">
-                <div class="clearfix reportInv2">
-                    <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
-                      <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-                       <span class='js-usernameCC'></span><span class='pl10 pr10'>-</span><span class="colr2">Phone no. reported as invalid</span>
-                      </div>
-                  </div>
-
-                  <div id='commHistoryAbsent' class="f13 reportInv1 txtc">
-                        <p class="color11 f13 txtl pl75">Thank you for helping us. We will look into this and remove this number if found invalid.</p>            
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-
-
-<div id='commHistoryOverlay-layer' class="pos_fix layersZ setshare disp-none">
-      <div class="prfwid16 fontlig">
-        <div class="prfbg6">
-                <!--start:div-->          
-              <div class="">
-                <div class="clearfix shrp1">
-                    <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="otherProfilePic prfdim13 prfrad prfm2"> </div>
-                      <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-                       <span class='js-usernameCC'></span><span class='pl10 pr10'>-</span><span class="colr2">Communication History</span>
-                      </div>
-                      <i class="sprite2 sendcross2 cursp pos-abs cepos4 closeCommLayer"></i>
-                  </div>
-
-                  <div id='commHistoryAbsent' class="f13 comhisp1 txtc">
-                      <p class="color5 f22">No Communication history</p>
-                        <p class="color2 f13 pt15">Send an interest to connect with <span class='js-usernameCC'></span></p>            
-                    </div>
-
-                     <!--start:form-->
-                    <div id='commHistory' class="f13 comhp1">
-                          <div class="cEcontent mCustomScrollbar">                        
-                            <ul id='mainDiv' class="listnone comhis fontlig color11">
-                              <li id='commDiv' class="commDiv disp-none clearfix">
-                                  <div class="prfwid18 prfm2" style='margin-top:0px;'><img src="" border="0" class="js-profilePic prfdim14 prfrad vtop"></div>
-                                    <div class="pl10 prfwid19">
-                                      <p class="f15 js-commHeading"></p>
-                                        <p class="js-commMessage disp-none pt7 color2 f13"></p>
-                                        <p class="js-commTime pt10 f12 color12"></p>
-                                    </div>
-                                </li>
-                                      
-                                                         
-                            </ul>
-                            </div>
-                       
-                    </div>
-                    <!--end:form-->
-              </div>        
-            <!--end:div-->
-               
-            </div>    
-      </div>  
-     </div>
-
 <div class='disp-none'>
 
 
@@ -173,11 +107,12 @@
  <!--start:content-->
  <div class="cep6">
 	<div class="cEcontent ceght1s mCustomScrollbar f13 ">
-  <div  class="SMSContactsDiv posabs colr5 disp-none cursp" style='right:16px;top:3px;'>SMS these details to me</div>
+   ~if LoggedInProfile::getInstance()->getISD() eq '91'`
+  <div  class="SMSContactsDiv posabs colr5 disp-none cursp" style='right:16px;top:3px;'>SMS these details to me</div> ~/if`
 		<ul id="cEViewContactListing" class="ceviewcontct fontlig">
 			<li class="clearfix">
 				<div class="fl">{{CONTACT_NAME}}</div>
-				<div class="fl">{{CONTACT_VALUE}}<span class="{{DISP_REPORT}} cursp disp_ib pl30 color11 reportInvalid" {{phonetype}}>Report Invalid</span></div>
+				<div class="fl">{{CONTACT_VALUE}}<span id ="reportInvalidButton" class="{{DISP_REPORT}} cursp disp_ib pl30 color11 reportInvalid" {{prochecksum}} {{phonetype}}>Report Invalid</span></div>
 			
 			</li>
 		</ul>
@@ -194,7 +129,7 @@
                     </div>
                     <div class="disp-tbl fullwid">
 							<div class="disp-cell vmid txtc color11 f15" style="height:144px">
-						<p class="color11 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
+						<p class="color11 ptm25 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
                         <p class="color5 {{VisibilityClass_Info}}">{{InfoMsg}}</p>
                         <button id={{ACTION_ID}} class=" cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon  {{ButtonClass}} {{VisibilityClass_Button}}" data="{{paramData}}">{{ButtonLabel}}</button>
                         <div class="colr5 pt10 ">{{ButtonLabelText}}</div>
@@ -378,6 +313,11 @@
                       
 </div>
 
+
+  
+
+
+
 <div id="postCCErrorCommonLayer"><div id ="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero"><i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
                       <div class="disp-tbl fullwid cch2n">
                         <div class="disp-cell vmid txtc">
@@ -390,4 +330,82 @@
 </div>
 
 <!--End of ContactCenter Post layer Htmls    -->
+
+
 </div>
+<!-- Start of Report Invalid Option Layer -->
+ <div id="reportInvalidReason-layer" class="reportAbuse-layer pos_fix layersZ fontlig setshare disp-none">
+      <div class="prfwid16 mauto">
+          <div class="prfbg6">
+              <div class="prfp22">
+              <div class="clearfix">
+                  <div class="prfrad prfdim8 prfbr6 fl "> <img src="" border="0" class="js-otherProfilePic prfdim5 prfrad prfm2"> </div>
+                    <div class="fl ml10 prfbr7 pb10 f13 color11 wid80p pt16" style='white-space:pre;'>
+                      <span class='js-username'></span>    -    <span class="colr2"> Report invalid number</span>
+                    </div>
+                </div>
+                <div class="pl12 pt20">
+                  <p id='RAReasonHead' class="color12 f13">Select reason</p>
+                    <ul id ="reasonCode" class="listnone reportlist fontlig f15 pt10 color2">
+                      <li>
+                          <input type="radio"  name="report_profile" value = '1'>Switched off / Not reachable</li>
+                          <li>
+                          <input type="radio"   name="report_profile" value = '2'>Not an account holder's phone</li>
+                           <li>
+                          <input type="radio"   name="report_profile" value = '3'>Already married / engaged</li>
+                            <li>
+                          <input type="radio"  name="report_profile" value = '4'>Not picking up</li>
+                             <li>
+                          <input id='otherOptionBtn' type="radio"  name="report_profile" value = '5'>Others
+                        <div id='otherOptionMsgBox' class='disp-none' >
+                        <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
+                        <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Add Comments'></textarea></div>
+                           </li>
+                                                  
+                        
+                    
+                    </ul>
+                
+                
+                </div>
+            
+            </div>        
+          </div>
+            <div class="fullwid">
+              <div id = "reportInvalidReasonLayer" class="fl cursp wid50p bg_pink txtc prfp20">
+                  <i class="sprite2 prfic42 "></i>
+                </div>
+                <div id='reportInvalidCross' class="fr cursp wid50p bg5 txtc prfp20">
+                  <i class="sprite2 prfic43"></i>
+                </div>
+            </div>
+       
+        </div>    
+    </div>
+
+  <!--end:report this profile as Invalid-->
+
+  <!-- Start of Report Invalid Confirmation Layer -->
+
+<div id="reportInvalidConfirmLayer" class="pos_fix layersZ fontlig setshare disp-none">
+    
+  <div class="prfwid16 fontlig">
+<div class="prfbg6">
+<!--start:div-->
+<div class="">
+<div class="clearfix reportInv2">
+<div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
+<div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
+<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2">Phone no. reported as invalid</span>
+</div>
+</div>
+
+<div class="f13 reportInv1 txtc">
+<p id = "invalidConfirmMessage"class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation. </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- End of Report Invalid Confirmation Layer -->

@@ -101,7 +101,7 @@ function setPhoneValues()
 function showError(error)
 {
 		$( "#validation_error" ).text(error);
-		$( "#validation_error" ).slideDown( "slow", function() {}).delay( 800 );
+		$( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
 		$( "#validation_error" ).slideUp( "slow", function() {});
 }
 
@@ -243,7 +243,7 @@ function validatePhone()
 						$('#mydiv').hide(); 
                                                 changingData=result;
                                                 originalData=JSON.parse(JSON.stringify(changingData));
-						if(originalData.responseMessage=="Successful")
+						if(originalData.responseStatusCode=='0')
 						{
 							save = 1;
 							isd = isdVal;

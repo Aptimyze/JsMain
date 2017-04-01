@@ -52,6 +52,8 @@ class EditDetails{
 			if(MobileCommon::isApp()){
 				
 				$myProfileArr["album"]["privacy"] = $actionObj->loginProfile->getPHOTO_DISPLAY();
+                                if($myProfileArr["album"]["privacy"]=='')
+                                        $myProfileArr["album"]["privacy"]="A";
 				$picServiceObj = new PictureService($actionObj->loginProfile);
 				$album = $picServiceObj->getAlbum($request->getParameter("contactType"));
 				if($album && is_array($album))
@@ -92,11 +94,21 @@ class EditDetails{
 					//Screening Array
 					//$myProfileArr["ScreeningFields"]=$apiProfileSectionObj->getApiScreeningFields();
 			}	
-			
-			$myProfileArr["Dpp"] = $this->getDppValuesArr($apiProfileSectionObj);
+			$casteGrouping = 0;
+                        if(MobileCommon::isApp() && $request->getParameter("newdpplist") && $request->getParameter("newdpplist") == 1){
+                                $casteGrouping = 1;
+                        }
+			$myProfileArr["Dpp"] = $this->getDppValuesArr($apiProfileSectionObj,$casteGrouping);
+                        
 			if(MobileCommon::isApp()){
 				$myProfileArr["ScreeningMessage"]="under screening";
 				$myProfileArr["c_care"]="18004196299";
+                                $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+                                $cnt_logic = $newjsMatchLogicObj->getPresentLogic($actionObj->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+                                if($cnt_logic>0)
+                                        $myProfileArr["toggleMatchalert"] = "dpp";
+                                else
+                                        $myProfileArr["toggleMatchalert"] = "new";
 			}
 
                 //To get complete your profile Links on page save

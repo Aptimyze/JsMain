@@ -787,13 +787,25 @@
 					$field=new Field(67);
 					$field->setName("NAME_OF_USER");
 					$field->setFieldType("text");
-					$field->setConstraintClass("string");
+					$field->setConstraintClass("name_of_user");
 					$field->setDependentField("");
 					$field->setLabel("");
 					$field->setBlankValue("");
 					$field->setBlankLabel("");
-					$field->setTableName("NAME_OF_USER");
+					$field->setTableName("NAME_OF_USER:NAME");
 					$page_obj->setField(67,"","",$field);
+					break;
+				case "DISPLAYNAME":
+                                        $field=new Field(127);
+                                        $field->setName("DISPLAYNAME");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setDependentField("");
+                                        $field->setLabel("");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+                                        $page_obj->setField(127,"","",$field);
 					break;
 				case "SAMPRADAY":
 					$field=new Field(68);

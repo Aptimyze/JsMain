@@ -292,7 +292,7 @@ if(isset($data))
 
 		for($i=2005;$i<=date('Y')+1;$i++)
                         $yyarr[] = $i;
-
+			$branch = array();
 			$sql="SELECT NAME FROM billing.BRANCHES";
 			$res=mysql_query_decide($sql,$db) or die(mysql_error_js($db));
 			while($row=mysql_fetch_array($res))

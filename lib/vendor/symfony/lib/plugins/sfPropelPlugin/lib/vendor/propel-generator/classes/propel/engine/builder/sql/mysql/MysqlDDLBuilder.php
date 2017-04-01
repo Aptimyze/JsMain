@@ -65,6 +65,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 	 */
 	protected function addDropStatements(&$script)
 	{
+		$to = "nitesh.s@jeevansathi.com";
+        $from = "info@jeevansathi.com";
+        $subject = "Drop table";
+        $msgBody = "Drop table in lib/vendor/symfony/lib/plugins/sfPropelPlugin/lib/vendor/propel-generator/classes/propel/engine/builder/sql/mysql/MysqlDDLBuilder.php";
+        SendMail::send_email($to,$msgBody,$subject,$from);
 		$script .= "
 DROP TABLE IF EXISTS ".$this->quoteIdentifier($this->prefixTablename($this->getTable()->getName())).";
 ";

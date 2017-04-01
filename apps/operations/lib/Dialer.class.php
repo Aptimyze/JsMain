@@ -48,7 +48,7 @@ class Dialer
                         }
                         // Pre-Allocation Filter
                         $filter ='PRE_ALLOCATED';
-                        $profiles =$indialerTempPool->fetchPreAllocatedProfiles();
+                        $profiles =$indialerTempPoolRemove->fetchPreAllocatedProfiles();
                         if(count($profiles)>0){
                                 $this->dialerProfileLog($profiles,'N',$filter,'Y');
                                 $indialerTempPoolRemove->removePreAllocatedProfiles();
@@ -71,7 +71,7 @@ class Dialer
 
 		$method =$processObj->getMethod();
 		if($method=='IN_DIALER_ELIGIBILITY'){
-			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
+			$indialerObj    =new incentive_IN_DIALER_TEMP_POOL();
 			$profiles       =$indialerObj->getDialerProfileBasedOnJoins('incentive.MAIN_ADMIN_POOL', 'PROFILEID,ANALYTIC_SCORE');
 		}
 		return $profiles;	
@@ -80,7 +80,7 @@ class Dialer
 	public function filterProfiles($profileArr){
 
 		if($profileArr){
-			$alertsObj 	=new newjs_JPROFILE_ALERTS('newjs_slave');
+			$alertsObj 	=new JprofileAlertsCache('newjs_slave');
 			$historyObj 	=new incentive_HISTORY('newjs_slave');
 			$jprofileObj    =new JPROFILE('newjs_slave');
 	                $purchaseObj 	=new BILLING_PURCHASES('newjs_slave');

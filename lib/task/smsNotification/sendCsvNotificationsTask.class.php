@@ -30,6 +30,10 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
+        $notificationStop =JsConstants::$notificationStop;
+        if($notificationStop)
+	        die('successfulDie');
+
         $notificationKey ='CSV_UPLOAD'; 
 	$instantNotificationObj =new InstantAppNotification($notificationKey);
 

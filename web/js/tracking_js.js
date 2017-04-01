@@ -1,9 +1,14 @@
+
 var date;
 var jsb9TrackVal;
 var jsb9TrackStartTime;
 var jsb9recordTimes;
-var jsLoadFlag=0;
-var jsLogin_layer=0;
+if(typeof(jsLoadFlag) == "undefined") {
+    var jsLoadFlag=0;
+}
+if(typeof(jsLogin_layer) == "undefined") {
+    var jsLogin_layer=0;
+}
 var presentTime;
 var presentUrl;
 var jsServerTime;

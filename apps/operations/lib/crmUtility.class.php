@@ -6,6 +6,12 @@ class crmUtility
 	        $ISTtime=strftime("%Y-%m-%d %H:%M",JSstrToTime("$time + 10 hours 30 minutes"));
 	        return $ISTtime;
 	}
+        public function getIST($dateTime='')
+        {
+		$mainAdminObj =new incentive_MAIN_ADMIN();
+		$dateTime =$mainAdminObj->getIST($dateTime);
+                return $dateTime;
+        }
 	public function fetchActiveStatus($activated,$incomplete)
 	{
 	        $message='';
@@ -336,15 +342,16 @@ class crmUtility
                         $flag=0;
                 return $flag;
         }
-	public function getCurlData($profileid,$username,$cid)
+	public function getCurlData($profileid,$username='',$cid)
 	{	
-       		$SITE_URL               ='http://crm.jeevansathi.com';//sfConfig::get("app_site_url");
+		$SITE_URL   =JsConstants::$crmUrl;
+		$actualUrl  =JsConstants::$siteUrl;	
 	       
 	       	$tuCurl = curl_init();
-		$uname=urlencode($username);
-        	curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
+		//$uname=urlencode($username);
+        	//curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
+		curl_setopt($tuCurl, CURLOPT_URL,"$SITE_URL/operations.php/commoninterface/ShowProfileStats?cid=$cid&profileid=$profileid&curlReq=1&actualUrl=$actualUrl");
         	curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
-        	//curl_setopt($tuCurl, CURLOPT_GET, 1);
         	$tuData = curl_exec($tuCurl);
         	curl_close($tuCurl);
         	return $tuData;
@@ -364,7 +371,7 @@ class crmUtility
 		$priv9 =array('ExcFld','SupFld');
 		$priv10=array('PreAll','ExcPrm','RmnInd');
 		$priv11=array('ExcEP','PreNri');
-		$priv12=array('ExcWL','ExcPrm');
+		$priv12=array('ExcWL','ExPmWL');
                 $billingPriv 	=array('BU','BA');
                 $aramexPriv 	=array('IUP');
 		$offlineExclusive =array('OA','OB');
@@ -428,5 +435,40 @@ class crmUtility
 		}	
 		return $linkArr;	
 	}
+    	public function getProcessName($priv){
+		if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
+			$process ='RCB_TELE';			
+		}
+        	else if(strpos($priv, 'ExcDIb') !== false){
+        	    	$process ='INBOUND_TELE';
+        	}
+        	else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
+        	        $process ='CENTER_SALES';
+        	}
+        	else if(strpos($priv, 'ExcFP') !== false){
+        	        $process ='FP_TELE';
+        	}
+        	else if(strpos($priv, 'ExcRnw') !== false){
+        	        $process ='CENTRAL_RENEW_TELE';
+        	}
+        	else if(strpos($priv, 'ExcFld') !== false){
+        	        $process ='FIELD_SALES';
+        	}
+        	else if(strpos($priv, 'ExcFSD') !== false || strpos($priv, 'ExcFID') !== false){
+        	        $process ='FRANCHISEE_SALES';
+        	}
+        	else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
+        	        $process ='OUTBOUND_TELE';
+        	}
+        	else{
+        	        $process ='UNASSISTED_SALES';
+        	}
+		return $process;
+    	}
+        public function getProcessLimit(){
+		$allocationLimitObj =new incentive_ALLOCATION_LIMIT_CRM('newjs_slave');	
+		$limitArr =$allocationLimitObj->getAllocationLimit();
+		return $limitArr;
+	}	
 				
 }	

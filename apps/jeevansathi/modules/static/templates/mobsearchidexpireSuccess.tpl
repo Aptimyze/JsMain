@@ -13,7 +13,7 @@
 
 					<div class="row04">
 
-						<div>Results have changed since last time you searched. Kindly perform your search again. <a href="#" onclick="location.href = '~sfConfig::get(app_site_url)`/search/partnermatches'" style="color:#0046C5;">Go To My Matches</a></div>
+						<div>Results have changed since last time you searched. Kindly perform your search again. <a href="#" onclick="location.href = '~sfConfig::get(app_site_url)`/search/partnermatches'" style="color:#0046C5;">Go To Desired Partner Matches</a></div>
 
 					</div>
 

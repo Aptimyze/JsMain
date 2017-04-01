@@ -75,6 +75,11 @@ EOF;
         $this->logSection('doctrine', 'dropping table "'.$tableName.'"');
 
         try {
+          $to = "nitesh.s@jeevansathi.com";
+          $from = "info@jeevansathi.com";
+          $subject = "Drop table";
+          $msgBody = "Drop table in lib/vendor/symfony/lib/plugins/sfDoctrinePlugin/lib/task/sfDoctrineCreateModelTablesTask.class.php";
+          SendMail::send_email($to,$msgBody,$subject,$from);
           $conn->export->dropTable($tableName);
         }
         catch (Exception $e)

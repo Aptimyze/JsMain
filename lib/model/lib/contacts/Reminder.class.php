@@ -127,9 +127,9 @@ class Reminder extends ContactEvent {
     $now = date("Y-m-d");
     $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
 
-    if ($dateDiff <= 30) { // Instant mailer
+ // Instant mailer
       $this->sendMail();
-    }
+    
   }
 
   /**
@@ -152,8 +152,7 @@ class Reminder extends ContactEvent {
     }
   }
 
-  public function sendMail(){
-return true;    
+  public function sendMail(){   
     $viewed = $this->contactHandler->getViewed();
     $viewer = $this->contactHandler->getViewer();
     $viewedSubscriptionStatus = $viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();

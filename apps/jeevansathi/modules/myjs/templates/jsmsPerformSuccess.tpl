@@ -1,43 +1,11 @@
 <script type="text/javascript">
-    var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
-	var tupleObject,tupleObject2,responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`,
-                matchAlertNext=0,
-		full_loaded = 0;
-	$(window).load(function() {
-		profile_completion("~$apiData.my_profile.completion`");
-
-	});
-        
-
-	$(document).ready(function() {
-		jsmsMyjsReady();
-		var d = new Date();
-		var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
-		$("#calltopSearch").attr("href",hrefVal);
-                
-    });
-
-
-	function setNotificationView() {
-                    $("#darkSection").toggleClass("posabs");
-		$("#darkSection").toggleClass("tapoverlay");
-		$("#notificationBellView").toggle();
-        if ($("#mainContent").css("overflow")=="hidden") 
-                   scrollOn();
-               else scrollOff();
-		
-	};
-
-
-	function onnewtuples(_parent) {
-		if (_parent.page >= 0) {
-                        if (_parent._isRequested) return ;
-                        ++_parent.page;
-			loadnew(_parent.page,_parent);
-                        
-		}
-	};
-      
+    var userGender="~$apiData.gender`",siteUrl="~sfConfig::get('app_site_url')`";
+    var myjsdata = ~$jsonData|decodevar`;
+    var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
+    var hamJs= '~$hamJs`';
+    var showExpiring=~$showExpiring`;
+    var showMatchOfTheDay=~$showMatchOfTheDay`;   
+    var myJsCacheTime = 60000;//in microseconds
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -45,8 +13,13 @@
 <div class="fullwid bg1">
 	<div class="pad1">
 		<div class="rem_pad1">
-			<div class="fl wid20p"> <i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
-                        <div class="fl wid60p txtc color5  fontthin f19">Home</div>
+			<div class="fl wid20p">                             
+                            <div id="hamburgerIcon" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1">
+                                <i class="loaderSmallIcon dn"></i>
+                            <svg id="hamIc" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><line class="cls-1" x1="2" y1="3.04" x2="18" y2="3.04"/><line class="cls-1" x1="2.29" y1="10" x2="18.29" y2="10"/><line class="cls-1" x1="2" y1="16.96" x2="18" y2="16.96"/></svg>
+                            </div>
+                        </div>
+                        <div id='myJsHeadingId' class="fl wid60p txtc color5  fontthin f19">Home</div>
                                                 <div class="fr">
 				<div class="fullwid">
 					<div class="fl padr15 posrel">
@@ -114,7 +87,7 @@
                 <a href="~$SITE_URL`/profile/contacts_made_received.php?page=eoi&filter=R">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
-			<div class="fullwid txtc">People to Respond to</div>
+			<div class="fullwid txtc">Interests Received</div>
 		</div>
 		~if $apiData.BELL_COUNT.AWAITING_RESPONSE_NEW>0`
 		<div class="fr wid8p">
@@ -137,6 +110,18 @@
 		<div class="clr"></div>
 	</div>
                 </a>
+                  <a href="~$SITE_URL`/profile/contacts_made_received.php?page=decline&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+		<div class="fl wid92p">
+			<div class="fullwid txtc">Declined/Cancelled</div>
+		</div>
+		~if $apiData.BELL_COUNT.DEC_ME_NEW>0`
+		<div class="fr wid8p">
+			<div class="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">~$apiData.BELL_COUNT.DEC_ME_NEW`</div>
+		</div>
+		~/if`
+		<div class="clr"></div>
+	</div>
+</a>
            
            <a href="~$SITE_URL`/inbox/12/1">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
@@ -152,12 +137,15 @@
 	</div>
                 </a>
 
+              
+
 </div>
 
 <!--start:div-->
 <input type="hidden" id="awaitingResponseCount" value="~$apiData.interest_received.tuples|@count`">
 <input type="hidden" id="visitorCount" value="~$apiData.visitors.new_count`">
 <input type="hidden" id="matchalertCount" value="~$apiData.match_alert.tuples|@count`">
+<input type="hidden" id="matchOfDayCount" value="~$apiData.match_of_the_day.tuples|@count`">
 <a href="#" onClick="setNotificationView();" id="darkSection"></a>
 <div class="pad1 preload" id="profileDetailSection" style="overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;">
 	<div class="row" style=" width:250%;">
@@ -211,7 +199,7 @@
 <!--MembershipMessageStarts-->
 ~if $apiData.membership_message neq ''`
 <a href="~$IMG_URL`~$apiData.membership_message_link`">
-    <div class="posrel pt20 pb20" style='background-image: url("~$IMG_URL`/images/band-image.jpg");'>
+    <div class="posrel pt20 pb20 newBgBand">
     <div class="posrel fullwid" style="top:0px; left:0px;">
     	<div class="clearfix" style="padding:0 30px 0;">
         	<div class="fl fontlig wid88p">
@@ -292,17 +280,30 @@
 		<div class="clr"></div>
 	</div>
 </div>
+
+<!-- Interest Expiring section -->
+~if $apiData.interest_expiring.view_all_count > 0`
+	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~/if`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsAwaitingResponseSection",[eoiData=>$apiData.interest_received,gender=>$apiData.gender])`
 </span>
+
+<span id="matchOfDayPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
+	~if $showMatchOfTheDay eq 1`
+		~include_partial("myjs/jsmsMatchOfTheDaySection",[matchOfDay=>$apiData.match_of_the_day,gender=>$apiData.gender])`
+	~/if`
+</span>
+
 <span class="setWidth"  id="visitorPresent" style="background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsVistorsSection",[visitorData=>$apiData.visitors])`
 </span>
 <span id="matchalertPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
 </span>
+
 <span id="browseMyMatchBand" style="display:block; background-color: #e4e4e4;">
 	~include_partial("myjs/jsmsBrowseMyMatchesBand")`
 </span>
@@ -317,9 +318,7 @@
 </span>
 ~include_component('common', 'notificationLayerJsms')`	
 </div>
-
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
-	~include_component('static', 'newMobileSiteHamburger')`	
-</div>
 </div>
 <script>~$pixelcode|decodevar`</script>
+
+

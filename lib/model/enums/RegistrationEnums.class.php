@@ -22,8 +22,8 @@ class RegistrationEnums {
     "APP2" => array("YOURINFO"),
     "CP" => array("PASSWORD"),
     "APP3" => array("GOTHRA", "FAMILYINFO", "M_SISTER", "T_SISTER", "M_BROTHER", "T_BROTHER", "MOTHER_OCC", "FAMILY_BACK", "FAMILY_STATUS", "FAMILY_TYPE", "FAMILY_VALUES", "FAMILY_INCOME"),
-    "JSPCR1" => array("SOURCE", "EMAIL", "PASSWORD", "RELATIONSHIP", "NAME_OF_USER", "DTOFBIRTH", "PHONE_MOB", "GENDER"),
-    "JSPCR2" => array("MTONGUE", "RELIGION", "CASTE", "SUBCASTE", "MANGLIK", "MSTATUS", "HAVECHILD", "HEIGHT", "COUNTRY_RES", "CITY_RES", "PINCODE","HOROSCOPE_MATCH"),
+    "JSPCR1" => array("SOURCE", "EMAIL", "PASSWORD", "RELATIONSHIP", "NAME_OF_USER", "DTOFBIRTH", "PHONE_MOB", "GENDER","DISPLAYNAME"),
+    "JSPCR2" => array("MTONGUE", "RELIGION", "CASTE", "SUBCASTE", "MANGLIK", "MSTATUS", "HAVECHILD", "HEIGHT", "COUNTRY_RES", "CITY_RES", "PINCODE","HOROSCOPE_MATCH","CASTE_NO_BAR"),
     "JSPCR3" => array("YOURINFO", "INCOME", "OCCUPATION", "EDU_LEVEL_NEW","COLLEGE","PG_COLLEGE","DEGREE_PG","DEGREE_UG","OTHER_PG_DEGREE","OTHER_UG_DEGREE"),
     "JSPCR4" => array("FAMILY_TYPE", "M_SISTER", "M_BROTHER", "T_SISTER", "T_BROTHER", "MOTHER_OCC", "FAMILY_BACK", "CONTACT","NATIVE_CITY","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","FAMILYINFO"),
 
@@ -47,7 +47,7 @@ class RegistrationEnums {
 
   public static $fieldsOnPage = array(
     "JSPCR1" => array("gender", "cpf", "dob", "month"),
-    "JSPCR2" => array("mtongue", "religion", "caste", "subcaste", "manglik","horoscopeMatch", "mstatus","mstatus_muslim", "haveChildren", "height", "cityReg", "countryReg", "pincode"),
+    "JSPCR2" => array("mtongue", "religion", "caste", "subcaste", "manglik","horoscopeMatch", "mstatus","mstatus_muslim", "haveChildren", "height", "cityReg", "countryReg", "pincode","stateReg","casteNoBar"),
     "JSPCR3" => array("hdegree","ugDegree","pgDegree","ugCollege","pgCollege","occupation","income"),
     "JSPCR4" => array("familyType","brother","sister","fatherOccupation","motherOccupation","familyState","familyCity","country","ancestral_origin","familyinfo"),
   );
@@ -90,8 +90,8 @@ class RegistrationEnums {
     "JSPCR4"=>array("_csrf_token","leadid"),
   );
   public static $pageFields = array(
-    "JSPCR1"=>array("email","password","relationship","gender","name_of_user","dtofbirth","phone_mob","source","_csrf_token"),
-    "JSPCR2"=>array("mtongue", "religion", "caste", "subcaste", "manglik", "horoscope_match","mstatus","havechild", "height", "city_res", "country_res", "pincode","_csrf_token"),
+    "JSPCR1"=>array("email","password","relationship","gender","name_of_user","dtofbirth","phone_mob","source","_csrf_token","displayname"),
+    "JSPCR2"=>array("mtongue", "religion", "caste", "subcaste", "manglik", "horoscope_match","mstatus","havechild", "height", "city_res", "country_res", "pincode","_csrf_token","casteNoBar"),
     "JSPCR3"=>array("edu_level_new","occupation","income","yourinfo","college","degree_pg","degree_ug","pg_college","other_pg_degree","other_ug_degree","_csrf_token"),
     "JSPCR4"=>array("family_type", "m_sister", "t_sister", "m_brother", "t_brother", "mother_occ", "family_back","contact","native_city", "native_country","_csrf_token","native_state","ancestral_origin","familyinfo"),    
   );
@@ -102,5 +102,6 @@ class RegistrationEnums {
 		"JSPCR3"=>array("COUNTRY_RES","AGE"),
 		"JSPCR4"=>array("COUNTRY_RES","AGE")
 	);
+  public static $emailModification = "_deleted";
 }
 ?>

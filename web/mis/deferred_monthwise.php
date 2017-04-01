@@ -18,7 +18,6 @@ if($CMDGo)
 
 include("connect.inc");
 ini_set("memory_limit","32M");
-$db2=connect_master();
 
 $duration =array(	"S1" => 3,
 			"S2" => 6,

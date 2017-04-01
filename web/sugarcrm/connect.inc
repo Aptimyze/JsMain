@@ -7,6 +7,9 @@ include("../profile/connect_functions.inc");
 include("../profile/connect_db.php");
 
 include ("$path/smarty/Smarty.class.php");
+
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 if(!function_exists('mysql_query_decide'))
 {
         function mysql_query_decide($sql,$db="",$divert="")
@@ -34,6 +37,7 @@ if(!function_exists('mysql_query_decide'))
 
 function logError($sql="",$db="")
 {
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception(mysql_error()));
         if(!$db)
                 global $db;
 
@@ -47,7 +51,7 @@ function logTime()
         global $pagename;
         $pagename=$_SERVER['PHP_SELF'];
         $errorstring="\n" . date("Y-m-d G:i:s",time()).",$pagename\n";
-	error_log($errorstring,3,JsConstants::$docRoot."/sugarcrm/logtime.txt);
+	error_log($errorstring,3,JsConstants::$docRoot."/sugarcrm/logtime.txt");
 }
 
 $smarty = new Smarty;

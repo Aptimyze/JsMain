@@ -1,110 +1,93 @@
 <?php
 class JPayment extends Membership
 {
-    
-    public function get_nearest_branches($profileid) {
-        $sql = "SELECT CITY_RES FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-        $res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
-        if ($row = mysql_fetch_array($res)) $near_branches = $this->getBranches($row['CITY_RES']);
+    /**
+     * @return mixed
+     */
+    public function getBanks()
+    {
+        $bankObj = new billing_BANK('newjs_slave');
+        $bank    = $bankObj->getName();
+        return $bank;
+    }
+
+    /**
+     * @param $city_value
+     * @return mixed
+     */
+    public function getBranches($city_value)
+    {
+        $newjsContactObj = new NEWJS_CONTACT_US('newjs_slave');
+        $near_branches   = $newjsContactObj->fetchBranches($city_value);
         return $near_branches;
     }
-    
-    public function getStates() {
-        $SQL = " SELECT DISTINCT STATE ,STATE_VAL FROM newjs.CONTACT_US ORDER BY STATE";
-        $RESULT = mysql_query_decide($SQL) or die("$SQL" . mysql_error_js());
-        $i = 0;
-        while ($ROW = mysql_fetch_array($RESULT)) {
-            $STATES[$i]['STATE'] = $ROW['STATE'];
-            $STATES[$i]['STATE_VAL'] = $ROW['STATE_VAL'];
-            $i++;
-        }
+
+    /**
+     * @param $city_value
+     * @return mixed
+     */
+    public function getChangeBranches($city_value)
+    {
+        $newjsContactObj = new NEWJS_CONTACT_US('newjs_slave');
+        $near_branches   = $newjsContactObj->fetchBranches($city_value, true);
+        return $near_branches;
+    }
+
+    /**
+     * @param $cityArr
+     * @return mixed
+     */
+    public function getChangeBranchesArr($cityArr)
+    {
+        $newjsContactObj = new NEWJS_CONTACT_US('newjs_slave');
+        $near_branches   = $newjsContactObj->fetchBranches($cityArr, true);
+        return $near_branches;
+    }
+
+    /**
+     * @param $profileid
+     * @return mixed
+     */
+    public function getCityRes($profileid)
+    {
+        $jprofileObj = new JPROFILE();
+        $profileDet = $jprofileObj->get($profileid,'PROFILEID','CITY_RES');
+        $cityRes    = $profileDet['CITY_RES'];
+        return $cityRes;
+    }
+
+    /**
+     * @param $chequePickup
+     * @return mixed
+     */
+    public function getNearBycities($chequePickup = null)
+    {
+        $incBraCitObj = new incentive_BRANCH_CITY('newjs_slave');
+        $near_ar = $incBraCitObj->fetchNearBycities($chequePickup);
+        return $near_ar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStates()
+    {
+        $newjsContactObj = new NEWJS_CONTACT_US('newjs_slave');
+        $STATES          = $newjsContactObj->fetchStates();
         return $STATES;
     }
 
-    public function getChangeBranches($city_value) {
-        $sql = " SELECT CONTACT_PERSON,ADDRESS,PHONE,MOBILE,NAME,STATE FROM newjs.CONTACT_US WHERE STATE='" . $city_value . "'";
-        $res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
-        $i = 0;
-        while ($row_address = mysql_fetch_array($res)) {
-            $near_branches[$i]['CONTACT_PERSON'] = $row_address['CONTACT_PERSON'];
-            $near_branches[$i]['ADDRESS'] = nl2br($row_address['ADDRESS']);
-            $near_branches[$i]['PHONE'] = $row_address['PHONE'];
-            $near_branches[$i]['MOBILE'] = $row_address['MOBILE'];
-            $near_branches[$i]['NAME'] = $row_address['NAME'];
-            $near_branches[$i]['STATE'] = $row_address['STATE'];
-            $i++;
+    /**
+     * @param $profileid
+     * @return mixed
+     */
+    public function get_nearest_branches($profileid)
+    {
+        $profileObj = LoggedInProfile::getInstance('newjs_slave', $profileid);
+        $cityRes    = $profileObj->getCITY_RES();
+        if ($cityRes && !empty($cityRes) && $cityRes != '') {
+            $near_branches = $this->getBranches($cityRes);
         }
         return $near_branches;
-    }
-
-    public function getChangeBranchesArr($cityArr) {
-    	$cityStr = implode("','",$cityArr);
-        $sql = " SELECT SQL_CACHE CONTACT_PERSON,ADDRESS,PHONE,MOBILE,NAME,STATE FROM newjs.CONTACT_US WHERE STATE IN ('$cityStr')";
-        $res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
-        $i = 0;
-        while ($row_address = mysql_fetch_array($res)) {
-            $near_branches[$i]['CONTACT_PERSON'] = $row_address['CONTACT_PERSON'];
-            $near_branches[$i]['ADDRESS'] = nl2br($row_address['ADDRESS']);
-            $near_branches[$i]['PHONE'] = $row_address['PHONE'];
-            $near_branches[$i]['MOBILE'] = $row_address['MOBILE'];
-            $near_branches[$i]['NAME'] = $row_address['NAME'];
-            $near_branches[$i]['STATE'] = $row_address['STATE'];
-            $i++;
-        }
-        return $near_branches;
-    }
-    
-    public function getBranches($city_value) {
-        
-        $sql_address = " SELECT CONTACT_PERSON,ADDRESS,PHONE,MOBILE,NAME,STATE FROM newjs.CONTACT_US WHERE CITY_ID='" . $city_value . "'";
-        
-        $res_add = mysql_query_decide($sql_address) or die("$sql_address" . mysql_error_js());
-        $i = 0;
-        $row_address = mysql_fetch_array($res_add);
-        if ($row_address == '') {
-            $sql_address = " SELECT CONTACT_PERSON,ADDRESS,PHONE,MOBILE,NAME,STATE FROM newjs.CONTACT_US WHERE CITY_ID='UP25'";
-        }
-        $res_address = mysql_query_decide($sql_address) or die("$sql_address" . mysql_error_js());
-        $i = 0;
-        while ($row_address = mysql_fetch_array($res_address)) {
-            $near_branches[$i]['CONTACT_PERSON'] = $row_address['CONTACT_PERSON'];
-            $near_branches[$i]['ADDRESS'] = nl2br($row_address['ADDRESS']);
-            $near_branches[$i]['PHONE'] = $row_address['PHONE'];
-            $near_branches[$i]['MOBILE'] = $row_address['MOBILE'];
-            $near_branches[$i]['NAME'] = $row_address['NAME'];
-            $near_branches[$i]['STATE'] = $row_address['STATE'];
-            $i++;
-        }
-        return $near_branches;
-    }
-
-    public function getBanks() {
-        $sql = "SELECT NAME FROM billing.BANK";
-        $res = mysql_query_decide($sql) or die(mysql_error_js());
-        $i = 0;
-        while ($row = mysql_fetch_array($res)) {
-            $bank[$i] = $row['NAME'];
-            $i++;
-        }
-        
-        return $bank;
-    }
-    
-    public function getCityRes($profileid) {
-        
-        $sql_order = "SELECT COUNTRY_RES,CITY_RES FROM newjs.JPROFILE WHERE PROFILEID = $profileid ";
-        $result = mysql_query_decide($sql_order) or logError_sums($sql_order, 1);
-        $row = mysql_fetch_assoc($result);
-        if ($row["CITY_RES"] != '') return $row["CITY_RES"];
-    }
-    
-    public function getNearBycities() {
-        $sql_near = "SELECT LABEL,VALUE from incentive.BRANCH_CITY where PICKUP='Y' ";
-        $result_near = mysql_query_decide($sql_near) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes", $sql, "ShowErrTemplate");
-        while ($row_near = mysql_fetch_array($result_near)) {
-            if ($row_near["VALUE"] != "GU") $near_ar[$row_near["VALUE"]] = $row_near["LABEL"];
-        }
-        return $near_ar;
     }
 }
-?>

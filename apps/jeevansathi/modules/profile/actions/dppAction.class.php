@@ -33,6 +33,9 @@ class dppAction extends sfAction {
 		//Contains login credentials
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
+                if(MobileCommon::isNewMobileSite()){
+                        $this->forward("profile","edit");
+                }
 		//Contains loggedin Profile information;
 		new ProfileCommon($this->loginData,1);
 		$this->loginProfile = LoggedInProfile::getInstance();
@@ -46,7 +49,7 @@ class dppAction extends sfAction {
 		$this->profileId = $this->loginProfile->getPROFILEID();
 		$this->casteLabel = JsCommon::getCasteLabel($this->loginProfile);
 
-    if($request->getParameter("fromBackend")){
+    if($request->getParameter("allowLoginfromBackend")){
 				$this->fromBackend=1;
 				$this->cid=$request->getParameter("fromBackend");
 				
@@ -214,7 +217,14 @@ class dppAction extends sfAction {
                                         foreach($this->existingData as $ky=>$vl){
                                           if(DPPConstants::$prefilledKeyArray[$key1][$value]==$vl[key]){
                                             $this->arrOut[$key1]["fieldArray"][$value]["prefilledMap"]=$ky;
+
+
                                           }
+                                         if($vl['key'] == "P_MATCHCOUNT")
+                                         {
+                                         	$this->mutualMatchCount = $vl["value"];
+                                         }
+
                                         }
 
 		}
@@ -225,9 +235,15 @@ class dppAction extends sfAction {
 			                 }  							
                                          
                  }
-	
 		 $this->dropDownData = $this->getDropDowns($request);
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
+     
+     $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+    if($cnt_logic>0)
+            $this->toggleMatchalerts = "dpp";
+    else
+            $this->toggleMatchalerts = "new";
      
      if(isset($this->fromReg)){
       $name_pdo = new incentive_NAME_OF_USER();
@@ -261,7 +277,14 @@ class dppAction extends sfAction {
 		}
 		$this->staticFields["age"] = $this->alterAgeArray();
 		$this->staticFields["height_json"] = $this->orderHeightValues();
-                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);
+                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);		
+		foreach($this->staticFields as $k=>$v)
+		{
+			if($v[0][0][0]=="Select" || $v[0][0]["S0"]=="Select")
+			{
+				unset($this->staticFields[$k][0][0]);
+			}
+		}
 		return $this->staticFields;
 	}
 	/* This function changes the format of the array into the requried format so as to make all data 
@@ -329,25 +352,35 @@ class dppAction extends sfAction {
         
         private function getCasteValues()
         {
-	  
-						$arr=FieldMap::getFieldLabel("religion_caste",'',1);
-					  $casteArr=FieldMap::getFieldLabel("caste_without_religion",'',1);
-					  $casteObj = new NEWJS_CASTE;
-				    $caste_arr = $casteObj->getTopSearchBandCasteData();
-				
-					  foreach($caste_arr as $key=>$val)
-					  {
-							$parent = $val["PARENT"];
-							if(array_key_exists($parent,$arr) && $val["ISALL"]!="Y")
-							{
-										$label = ($casteArr[$val["VALUE"]]?$casteArr[$val["VALUE"]]:$val["LABEL"]).(($val["ISGROUP"]=="Y")?"- All":"");
-										$Arr[$parent][0][]=array($val["VALUE"]=>$label);
-						  }
-						}
-						
-						return $Arr;
+		  $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+		  $casteArr=FieldMap::getFieldLabel("caste_without_religion",'',1);
+		  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v)
+		  {
+			unset($casteArr[$v]);
+		  }
+		  $casteObj = new NEWJS_CASTE;
+		  $caste_arr = $casteObj->getTopSearchBandCasteData();
+		  $caste_arr = $this->unsetOtherCaste($caste_arr);
+		  foreach($caste_arr as $key=>$val)
+		  {
+			$parent = $val["PARENT"];
+			if(array_key_exists($parent,$arr) && $val["ISALL"]!="Y")
+			{
+				$label = ($casteArr[$val["VALUE"]]?$casteArr[$val["VALUE"]]:$val["LABEL"]).(($val["ISGROUP"]=="Y")?"- All":"");
+				$Arr[$parent][0][]=array($val["VALUE"]=>$label);
+			}
+		  }
+		  return $Arr;
         }
-        
+  private function unsetOtherCaste($arr)
+  {
+	foreach($arr as $k=>$v)
+	{
+		if(in_array($v['VALUE'],DPPConstants::$removeCasteFromDppArr))
+			unset($arr[$k]);
+	}
+	return $arr;
+  }      
    /*
    * Function to fromat and order height values in desired order
    */

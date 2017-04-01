@@ -9,7 +9,7 @@
 */
 
 include "connect.inc";
-$db=connect_db();
+$db=connect_ddl();
 
 $sql="SELECT MAX(DIALCODE) AS DIALCODE FROM newjs.DIALCODE_GENERATE";
 $res=mysql_query($sql) or logError("Could not retrieve the dialcode from the table",$sql);

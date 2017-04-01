@@ -111,6 +111,49 @@ class PICTURE_DELETE_NEW extends TABLE
                 }
                 return NULL;
 	}
+	
+	
+	
+	/**
+        This function is used to edit/alter pictures info (profile pic/album) of picture_delete_new table).
+        * @param paramArr array contains where condition on basis of which entry will be fetched.
+        * @param pictureId int update is only only by pictureId.
+        * @returns true on sucess
+        **/
+        public function edit($paramArr=array(),$pictureId,$profileId)
+        {
+                if(!$pictureId)
+                        throw new jsException("","PICTUREID IS BLANK IN edit() of PICTURE_DELETE_NEW.class.php");
+                try
+                {
+												foreach($paramArr as $key=>$val)
+												{
+													if($key=="MAIN_PHOTO_URL")
+														$set[] = $key." = :".$key;
+												}
+
+                        $setValues = implode(",",$set);
+
+                        $sql = "UPDATE newjs.PICTURE_DELETE_NEW SET $setValues WHERE PICTUREID = :PICTUREID AND PROFILEID = :PROFILEID";
+                        $res = $this->db->prepare($sql);
+                        foreach($paramArr as $key=>$val)
+                        {
+														if($key=="MAIN_PHOTO_URL")
+                                	$res->bindValue(":".$key, $val);
+                        }
+                        $res->bindValue(":PICTUREID",$pictureId,PDO::PARAM_INT);
+                        $res->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+                        $res->execute();
+                        return true;
+                }
+                catch(PDOException $e)
+                {
+                        /*** echo the sql statement and error message ***/
+                        throw new jsException($e);
+                }
+        }
+
+        
 
 }
 ?>

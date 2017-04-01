@@ -44,13 +44,19 @@ class PredefinedSearchFactory
                                 $object = new MatchAlertsSearch($loggedInProfileObj);
                                 break;
                         case 'KundliAlertsSearch' :
-                                $object = new KundliAlertsSearch($loggedInProfileObj);
+                                $object = new KundliMatches($loggedInProfileObj);
                                 break;
                         case 'verifiedMatches' :
                                 $object = new verifiedMatches($loggedInProfileObj);
                                 break;
                         case 'ContactViewAttempts' :
                                 $object = new ContactViewAttempts($loggedInProfileObj);
+                                break;
+			case 'MatchOfDay':
+				$object = new MatchOfDay($loggedInProfileObj);
+				break;
+                        case 'lastSearchResults'  :
+                                $object = new lastSearchResults($loggedInProfileObj);
                                 break;
                 }
                 return $object;

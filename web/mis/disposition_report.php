@@ -3,10 +3,9 @@
 
 include("connect.inc");
 include_once("user_hierarchy.php");
-$db2=connect_master();
 $data=authenticated($cid);
-mysql_close($db2);
 $db=connect_misdb();
+$db1 = connect_crmSlave();
 
 $data = authenticated($cid);
 $name =trim(getname($cid));
@@ -66,7 +65,7 @@ if($data)
 	
                 $dispositionNewArr =array("NAME"=>"Executive","TOTAL"=>"Total Disposition");
                 $sql ="SELECT DISPOSOTION_VALUE,DISPOSOTION_LABEL from incentive.CRM_DISPOSITION where ACTIVE='Y'";
-                $res_disp =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
+                $res_disp =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());
                 while($row_disp =mysql_fetch_array($res_disp))
                 {
 			$dispositionVal		=$row_disp["DISPOSOTION_VALUE"];
@@ -79,7 +78,7 @@ if($data)
 		$dispositionValStr = "'".@implode("','",$dispositionValArr)."'";	
 
 		$sql ="select VALIDATION_VALUE, VALIDATION_LABEL from incentive.CRM_DISPOSITION_VALIDATION";
-		$res_valid =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
+		$res_valid =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());
 		while($row_valid =mysql_fetch_array($res_valid))
 		{
 			$validationLabelArr[$row_valid["VALIDATION_VALUE"]] =$row_valid["VALIDATION_LABEL"];		
@@ -95,8 +94,8 @@ if($data)
 			for($i=0; $i<$agentCnt;$i++)
 			{
 				$agent_name =$agentArray[$i];
-				$sql ="select count(PROFILEID) AS CNT,DISPOSITION from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' AND DISPOSITION IN($dispositionValStr) group by DISPOSITION";
-				$res_disp =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());	
+				$sql ="select count(PROFILEID) AS CNT,DISPOSITION, MODE from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' AND DISPOSITION IN($dispositionValStr) group by DISPOSITION";
+				$res_disp =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());	
 				while($row_disp =mysql_fetch_array($res_disp))
 				{
 					$disp_count 		=$row_disp["CNT"];
@@ -152,8 +151,8 @@ if($data)
 			for($k=0; $k<$agentCnt;$k++)
 			{
 				$agent_name =$agentArray[$k];
-                                $sql ="select PROFILEID, DISPOSITION, VALIDATION, CONVERT_TZ(ENTRY_DT,'EST','IST') as ENTRY_DT,COMMENT from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' ORDER BY PROFILEID ASC";
-                                $res_disp =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
+                                $sql ="select PROFILEID, DISPOSITION, VALIDATION, ENTRY_DT, COMMENT, MODE from incentive.HISTORY where ENTRY_DT >='$start_dt 00:00:00' AND ENTRY_DT <='$end_dt 23:59:59' AND ENTRYBY='$agent_name' ORDER BY PROFILEID ASC,ENTRY_DT DESC";
+                                $res_disp =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());
 				$i= 0;
                                 while($row_disp =mysql_fetch_array($res_disp))
                                 {
@@ -162,21 +161,29 @@ if($data)
 					$disposition 	=$row_disp["DISPOSITION"];
 					$validation 	=$row_disp["VALIDATION"];
 					$comment     	=$row_disp["COMMENT"];
+					$mode     		=preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $row_disp["MODE"]);
+					if(is_numeric($row_disp["MODE"])){
+						$processVal = $row_disp["MODE"];
+					} else {
+						$processVal = $mode[1];
+					}
+					$process 		=crmParams::$processNames[crmParams::$processFlagReverse[$processVal]];
 
 					$data_arr[$agent_name]['PROFILEID'][$i] =$profileid;
 					$data_arr[$agent_name]['ENTRY_DT'][$i] =$entry_dt;
 					$data_arr[$agent_name]['COMMENT'][$i] =$comment;
 					$data_arr[$agent_name]['DISPOSITION'][$i] =$dispositionLabelArr[$disposition];
 					$data_arr[$agent_name]['VALIDATION'][$i] =$validationLabelArr[$validation];
+					$data_arr[$agent_name]['PROCESS'][$i] =$process;
 
                                         $sql ="select USERNAME from newjs.JPROFILE where PROFILEID='$profileid'";
-                                        $res_name =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
+                                        $res_name =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());
                                         $row_name =mysql_fetch_array($res_name);
                                         $profile_name =$row_name["USERNAME"];
                                         $data_arr[$agent_name]['USERNAME'][$i] =$profile_name;
 				
 					$sql ="select ALLOTED_TO from incentive.MAIN_ADMIN where PROFILEID='$profileid'";
-					$res_allotment =mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());	
+					$res_allotment =mysql_query_decide($sql,$db1) or die("$sql".mysql_error_js());	
 					$row_allotment =mysql_fetch_array($res_allotment);		
 					$allotedTo =$row_allotment["ALLOTED_TO"];
 					$data_arr[$agent_name]['ALLOTED_TO'][$i] =$allotedTo;
@@ -234,7 +241,7 @@ if($data)
 			else if($field_level =='DET')
 			{
 	                        $header_label = "Selected Time Period $start_dt To $end_dt"."\n\n\n";
-                                $header_label .="\tExecutive\tUsername\tDateTime\tDisposition\tValidation\tComments\tCurrently-Alloted-To";
+                                $header_label .="\tExecutive\tUsername\tDateTime\tDisposition\tValidation\tComments\tCurrently-Alloted-To\tAgent Process";
 	
 				$data ="\n"."$name";
 				foreach($data_arr as $key=>$val)
@@ -246,7 +253,7 @@ if($data)
 					{
 						$data .="\n\t\t";	
 						//$data .=$data_arr[$key]["PROFILEID"][$key1]."\t".$data_arr[$key]["USERNAME"][$key1]."\t".$val1."\t".$data_arr[$key]["DISPOSITION"][$key1]."\t".$data_arr[$key]["VALIDATION"][$key1]."\t".$data_arr[$key]["ALLOTED_TO"][$key1];			
-						$data .=$data_arr[$key]["USERNAME"][$key1]."\t".$val1."\t".$data_arr[$key]["DISPOSITION"][$key1]."\t".$data_arr[$key]["VALIDATION"][$key1]."\t".$data_arr[$key]["COMMENT"][$key1]."\t".$data_arr[$key]["ALLOTED_TO"][$key1];	
+						$data .=$data_arr[$key]["USERNAME"][$key1]."\t".$val1."\t".$data_arr[$key]["DISPOSITION"][$key1]."\t".$data_arr[$key]["VALIDATION"][$key1]."\t".$data_arr[$key]["COMMENT"][$key1]."\t".$data_arr[$key]["ALLOTED_TO"][$key1]."\t".$data_arr[$key]["PROCESS"][$key1];	
 
 					}
 				}	

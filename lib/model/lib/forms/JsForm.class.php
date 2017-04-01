@@ -14,17 +14,19 @@ class JsForm extends sfForm
 	  $formValues = $this->getOption('formValues');
 	  $this->page_obj=RegisterEditFields::getPageFields($page);    
 	  $field_array=RegistrationEnums::$pageFieldMap[$page];
-	  $fields=$this->page_obj->getFields();
+
+	  $fields=$this->page_obj->getFields();	  
 	  $widgets=array();
 	  foreach($fields as $field){
 		  //Set all fields in this form
 		  $widgets[strtolower($field->getNAME())]=FormInputFactory::getInputObject($field,$page);
 		  //Set all Validators in this form
 			$validators[strtolower($field->getNAME())]=jsValidatorsFactory::getValidatorObj($field,$formValues,$page);
-	  }
+	  }	  
 	  $this->setWidgets($widgets);
 	  $this->widgetSchema->setNameFormat('jsForm[%s]');
 	  $this->setValidators($validators);
+	
 	}
 	public function getPageObject(){
 	  return $this->page_obj;
@@ -35,7 +37,11 @@ class JsForm extends sfForm
 	* @returns LoggedInProfile object if it is created otherwise return id of entry that was updated
 	* */
 	public function updateData($profileid='',$values_that_are_not_in_form=array()){
-	  $this->formValues=$this->getValues();	
+	  $this->formValues=$this->getValues();	  
+	  if(in_array("casteNoBar", array_keys($this->formValues)))
+	  {
+	  	unset($this->formValues['casteNoBar']);	  	
+	  }
           $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
 		  if($value!==null){
@@ -89,6 +95,8 @@ class JsForm extends sfForm
 							$nativePlaceArr['NATIVE_CITY']='';
 							$nativePlaceArr['NATIVE_STATE']='';
 						}
+				  case "NAME_OF_USER":
+						$nameOfUserArr[$column_name]=trim($value);
 					  break;
 			  }
 			  
@@ -141,6 +149,16 @@ class JsForm extends sfForm
 				  $rel =  FieldMap::getFieldLabel('religion',$jprofileFieldArr[RELIGION] );
 				  $jprofileFieldArr[CASTE] = array_search($rel,FieldMap::getFieldLabel('caste',1,1));
 			  }
+			if(is_array($nameOfUserArr) && array_key_exists("NAME",$nameOfUserArr) && $nameOfUserArr['NAME'])
+			{
+			      $nameOfUserObj = new NameOfUser();
+			      $nameOfUserArr['NAME']=$nameOfUserObj->filterName($nameOfUserArr['NAME']);
+			      $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($nameOfUserArr['NAME'],$jprofileFieldArr['GENDER']);
+				if($isNameAutoScreened)
+				{
+					$jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$jprofileFieldArr['SCREENING']);
+				}
+			}
 			  $id=$loggedInObj->insert($jprofileFieldArr);
 		  }else{
 		  	  //Update screening flag
@@ -197,12 +215,19 @@ class JsForm extends sfForm
 	  }
 	  if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$profileid;
-			$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
 				$nativePlaceObj->UpdateRecord($profileid,$nativePlaceArr);
 			}
+	  }
+          if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!=''))
+	  {
+		$nameOfUserObj = new NameOfUser();
+		if(!array_key_exists("DISPLAY",$nameOfUserArr))
+			$nameOfUserArr['DISPLAY']="";
+		$nameOfUserObj->insertName($id,$nameOfUserArr['NAME'],$nameOfUserArr['DISPLAY']);
 	  }
 	  return $id;
 	}

@@ -8,6 +8,7 @@ MODIFIED BY		: Pankaj Khandelwal.
 
 include("connect.inc");
 include_once("../profile/functions_edit_profile.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $data = authenticated($cid);
 $name =getname($cid);
@@ -153,13 +154,14 @@ if($data)
    		{
       	$profileAlt = $row['ALT_MOBILE'];
       	}
-			
+			$arrFields = array();
       	if($phone == $profileMobile)
       	{
 	         $mobile ="";
       	}
       	else 
       	{
+			$arrFields["PHONE_MOB"]=$phone;
 	        $mobile = "PHONE_MOB = '$phone' ,";
          	$paramArray['PHONE_MOB'] = $phone;
          	$paramArray['PROFILEID'] = $profileid;
@@ -170,6 +172,7 @@ if($data)
       	}
       	else 
       	{
+			$arrFields["PHONE_RES"]=$phonestd;
 	        $phonetext = "PHONE_RES = '$phonestd' ,";
          	$paramArray['PHONE_RES'] = $phonestd;
          	$paramArray['PROFILEID'] = $profileid;
@@ -180,6 +183,7 @@ if($data)
       	}
       	else 
       	{
+			$arrFields["STD"]=$std;
 	        $stdtext = "STD = '$std' ,";
          	$paramArray['STD'] = $td;
          	$paramArray['PROFILEID'] = $profileid;
@@ -189,13 +193,19 @@ if($data)
 	        $paramArray['ALT_MOBILE'] = $altphone;
 	        $paramArray['PROFILEID'] = $profileid; 
       	}
-      	
-       $sql = "UPDATE newjs.JPROFILE SET $mobile $phonetext $stdtext ACTIVATED = 'Y' WHERE USERNAME = '".$user."'";
-      	$res_mp = mysql_query($sql,$db) or die("$res_mp".mysql_error_js());
+      	$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+		$USERNAME=$user;
+		$arrFields["ACTIVATED"]='Y';
+		$exrtaWhereCond = "";
+		$jprofileUpdateObj->editJPROFILE($arrFields,$USERNAME,"USERNAME",$exrtaWhereCond);
+		
+		
+      // $sql = "UPDATE newjs.JPROFILE SET $mobile $phonetext $stdtext ACTIVATED = 'Y' WHERE USERNAME = '".$user."'";
+ //     	$res_mp = mysql_query($sql,$db) or die("$res_mp".mysql_error_js());
         
-        $memObject=new UserMemcache;
-        $memObject->delete("JPROFILE_CONTACT_".$profileid);
-        unset($memObject);
+        // $memObject=new UserMemcache;
+        // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+        // unset($memObject);
         
       	$sql = "UPDATE newjs.JPROFILE_CONTACT SET ALT_MOBILE = '".$altphone."' WHERE PROFILEID = $profileid";
       	$res_mp = mysql_query($sql,$db) or die("$res_mp".mysql_error_js());

@@ -1,5 +1,5 @@
       <!--start:div three-->
-      <div class="pubdr3 bg-white fontlig">
+      <div id ="photoPrivacyDiv" class="pubdr3 bg-white fontlig">
         <div class="pup13">
           <p class="f17 pucolor3">Photo Privacy</p>
           <div class="clearfix pt20">

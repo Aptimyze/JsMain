@@ -9,9 +9,9 @@ include_once($path."/profile/hits.php");
 include_once($path."/profile/registration_functions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 //include_once($path."/sugarcrm/custom/crons/JsSuccessAutoRegEmail.php");
-
 include_once($path."/classes/Jpartner.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
+include_once(JsConstants::$docRoot."/classes/ProfileInsertLib.php");
 $db=connect_db();
 $db1=$db;
 //This function will validate email address and will return activated status if email already exists
@@ -355,11 +355,13 @@ function if_blank($values){
 		return 1;
 }
 function register_user($post_values)	{
+//function not in use
+        mail("kunal.test02@gmail.com","auto_reg_functions.php :: register_user() in USE",print_r($_SERVER,true));
 	global $smarty;
 	global $protect_obj;
 	$cookie=array();
 $now = date("Y-m-d G:i:s");
-$today=date("Y-m-d");
+$today=date("Y-m-d H:i:s");
 	                $date_of_birth = $post_values['year']."-".$post_values['month']."-".$post_values['day'];
                         $age = getAge($date_of_birth);
                         $religion_temp = explode("|X|",$post_values['religion']);
@@ -477,8 +479,63 @@ $today=date("Y-m-d");
 			include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 			$post_values['password'] = PasswordHashFunctions::createHash($post_values['password']);
 		/* end: Added by Esha for password encrytion on entry in JPROFILE*/
-			$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PERSONAL_MATCHES,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,CRM_TEAM) VALUES('".$post_values['relationship']."','".$post_values['email']."','".$post_values['password']."','".$username."','".$post_values['gender']."','".$date_of_birth."','".$post_values['mstatus']."','".$post_values['has_children']."','".$post_values['height']."','".$post_values['country_residence']."','','".$post_values['country_code']."','".$post_values['state_code']."','".$post_values['city_residence']."','".$post_values['phone']."','".$post_values['showphone']."','','','".$post_values['mobile']."','".$post_values['showmobile']."','','','','','".$post_values['degree']."','".$post_values['occupation']."','".$post_values['income']."','".$post_values['mtongue']."','".$post_values['religion']."','".$post_values['speak_urdu']."','".$post_values['caste']."','".$post_values['match_alerts']."','".$post_values['promo']."','".$post_values['service_messages']."','".$now."','".$now."','".$today."','".$now."','".$age."','".$post_values['ip']."','".$post_values['tieup_source']."','N','Y','".$keyword."',0,'','online')";
-			mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
+			$arrFields = array(
+				"RELATION" => $post_values['relationship'],
+				"EMAIL" => $post_values['email'],
+				"PASSWORD" => $post_values['password'],
+				"USERNAME" => $username,
+				"GENDER" => $post_values['gender'],
+				"DTOFBIRTH" => $date_of_birth,
+				"MSTATUS" => $post_values['mstatus'],
+				"HAVECHILD" => $post_values['has_children'],
+				"HEIGHT" => $post_values['height'],
+				"COUNTRY_RES" => $post_values['country_residence'],
+				"CITIZENSHIP" => '',
+				"ISD" => $post_values['country_code'],
+				"STD" => $post_values['state_code'],
+				"CITY_RES" => $post_values['city_residence'],
+				"PHONE_RES" => $post_values['phone'],
+				"SHOWPHONE_RES" => $post_values['showphone'],
+				"PHONE_NUMBER_OWNER" => '',
+				"PHONE_OWNER_NAME" => '',
+				"PHONE_MOB" => $post_values['mobile'],
+				"SHOWPHONE_MOB" => $post_values['showmobile'],
+				"MOBILE_NUMBER_OWNER" => '',
+				"MOBILE_OWNER_NAME" => '',
+				"TIME_TO_CALL_START" => '',
+				"TIME_TO_CALL_END" => '',
+				"EDU_LEVEL_NEW" => $post_values['degree'],
+				"OCCUPATION" => $post_values['occupation'],
+				"INCOME" => $post_values['income'],
+				"MTONGUE" => $post_values['mtongue'],
+				"RELIGION" => $post_values['religion'],
+				"SPEAK_URDU" => $post_values['speak_urdu'],
+				"CASTE" => $post_values['caste'],
+				"PERSONAL_MATCHES" => $post_values['match_alerts'],
+				"PROMO_MAILS" => $post_values['promo'],
+				"SERVICE_MESSAGES" => $post_values['service_messages'],
+				"ENTRY_DT" => $now,
+				"MOD_DT" => $now,
+				"LAST_LOGIN_DT" => $today,
+				"SORT_DT" => $now,
+				"AGE" => $age,
+				"IPADD" => $post_values['ip'],
+				"SOURCE" => $post_values['tieup_source'],
+				"ACTIVATED" => 'N',
+				"INCOMPLETE" => 'Y',
+				"KEYWORDS" => $keyword,
+				"SCREENING" => 0,
+				"YOURINFO" => '',
+				"CRM_TEAM" => 'online',
+			);
+			$objInsert = ProfileInsertLib::getInstance();
+			$result = $objInsert->insertJPROFILE($arrFields);
+			if(false === $result) {
+				$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PERSONAL_MATCHES,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,CRM_TEAM) VALUES('".$post_values['relationship']."','".$post_values['email']."','".$post_values['password']."','".$username."','".$post_values['gender']."','".$date_of_birth."','".$post_values['mstatus']."','".$post_values['has_children']."','".$post_values['height']."','".$post_values['country_residence']."','','".$post_values['country_code']."','".$post_values['state_code']."','".$post_values['city_residence']."','".$post_values['phone']."','".$post_values['showphone']."','','','".$post_values['mobile']."','".$post_values['showmobile']."','','','','','".$post_values['degree']."','".$post_values['occupation']."','".$post_values['income']."','".$post_values['mtongue']."','".$post_values['religion']."','".$post_values['speak_urdu']."','".$post_values['caste']."','".$post_values['match_alerts']."','".$post_values['promo']."','".$post_values['service_messages']."','".$now."','".$now."','".$today."','".$now."','".$age."','".$post_values['ip']."','".$post_values['tieup_source']."','N','Y','".$keyword."',0,'','online')";
+				logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
+			}
+//			$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PERSONAL_MATCHES,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,CRM_TEAM) VALUES('".$post_values['relationship']."','".$post_values['email']."','".$post_values['password']."','".$username."','".$post_values['gender']."','".$date_of_birth."','".$post_values['mstatus']."','".$post_values['has_children']."','".$post_values['height']."','".$post_values['country_residence']."','','".$post_values['country_code']."','".$post_values['state_code']."','".$post_values['city_residence']."','".$post_values['phone']."','".$post_values['showphone']."','','','".$post_values['mobile']."','".$post_values['showmobile']."','','','','','".$post_values['degree']."','".$post_values['occupation']."','".$post_values['income']."','".$post_values['mtongue']."','".$post_values['religion']."','".$post_values['speak_urdu']."','".$post_values['caste']."','".$post_values['match_alerts']."','".$post_values['promo']."','".$post_values['service_messages']."','".$now."','".$now."','".$today."','".$now."','".$age."','".$post_values['ip']."','".$post_values['tieup_source']."','N','Y','".$keyword."',0,'','online')";
+//			mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
 
 			$id=mysql_insert_id_js();
 			//Added By Lavesh Rawat for Sharding Purpose

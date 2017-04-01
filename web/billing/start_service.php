@@ -307,7 +307,7 @@ if(isset($data))
 			$bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
 
 			$sql="SELECT EMAIL from newjs.JPROFILE where PROFILEID='$profileid'";
-			$result=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js);
+			$result=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());
 			$myrow=mysql_fetch_array($result);
 			$email= $myrow['EMAIL'];
 

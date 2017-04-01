@@ -44,6 +44,8 @@ EOF;
   */
   protected function execute($arguments = array(), $options = array())
   {
+      if(CommonUtility::hideFeaturesForUptime())
+        successfullDie();
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
 	$mailerServiceObj = new MailerService();
@@ -66,21 +68,26 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
     $this->smarty->assign('mailerLinks',$mailerLinks); 
     $this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>false,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>false,"googleAppTrackingFlag"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>false,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>false,"googleAppTrackingFlag"=>true,"alternateEmailSend"=>true);
 		foreach($receivers as $sno=>$values)
 		{
+                    if(CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
 			$pid = $values["PROFILEID"];
                         $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
+                                
 			if(is_array($data))
 			{ 
 				$data["stypeMatch"] =$stypeMatch;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
-                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName);
-				$this->recentProfileVisitorNotification($pid,$subject);
-                $otherUserId = $data["USERS"][0]->getPROFILEID();
-                $this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
+                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,"",$data["RECEIVER"]["ALTERNATEEMAILID"]);
+				$otherUserId = $data["USERS"][0]->getPROFILEID();
+				if($pid && $subject){
+					$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
+	                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
+				}
 			}
 			else
 				$flag = "I"; // Invalid users given in database
@@ -92,11 +99,11 @@ EOF;
 		}
 	}
   }
-  protected function recentProfileVisitorNotification($profileid, $subject)
+  protected function recentProfileVisitorNotification($profileid, $subject,$otherUserId)
   {
 	$notificationKey ='PROFILE_VISITOR';
 	$instantNotificationObj =new InstantAppNotification($notificationKey);
-	$instantNotificationObj->sendNotification($profileid,'',$subject);	
+	$instantNotificationObj->sendNotification($profileid,$otherUserId,$subject);	
 
   }
   

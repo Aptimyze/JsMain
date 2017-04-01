@@ -20,6 +20,8 @@ class UpdateModuleTableFactory
                         $obj = new ProfileDocumentVerificationService;
 		elseif($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("VERIFICATION_DOCUMENTS_BYUSER"))
                         $obj = new ProfileDocumentVerificationByUserService;
+    if($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("PICTURE_DELETED"))
+			$obj = new DeletedPictures;
 		return $obj;
 	}
 }

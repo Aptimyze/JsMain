@@ -28,7 +28,9 @@ class SearchParamtersLayer
 		$QuickSearchBand = $request->getParameter("QuickSearchBand");
                 $verifiedMatches = $request->getParameter("verifiedMatches");
                 $ContactViewAttempts = $request->getParameter("contactViewAttempts");
-                
+		$matchofday = $request->getParameter("matchofday");
+        $lastSearchResults = $request->getParameter("lastSearchResults");
+
 		$uri = $request->getUri();
 		if($specialSearch=='AppSearch')
 			$AppSearch=1;
@@ -39,7 +41,7 @@ class SearchParamtersLayer
 		elseif($request->getParameter("appnotification")==1)
 			$appnotification=1;
 
-		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches || $ContactViewAttempts)
+		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches || $ContactViewAttempts || $lastSearchResults || $matchofday)
 		/**
 		* If predifined searches like save-search , dpp , reversedpp is run
 		*/
@@ -126,6 +128,17 @@ class SearchParamtersLayer
                                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
 				$SearchParamtersObj->getSearchCriteria();
                         }
+			elseif($matchofday && !$searchId)
+			{
+                                $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MatchOfDay',$loggedInProfileObj);
+                                $SearchParamtersObj->getSearchCriteria();
+			}
+            //last search results
+		        elseif($lastSearchResults && !$searchId)
+		        {
+				$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('lastSearchResults',$loggedInProfileObj);
+				$SearchParamtersObj->getLastSearchResultCriteria();
+		        }
 			elseif($searchId)
 			/* Search is performed based on search-id */
 			{
@@ -133,10 +146,12 @@ class SearchParamtersLayer
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
 				elseif($twowaymatch)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('TwoWayMatch',$loggedInProfileObj);
-                                elseif($verifiedMatches)
+        elseif($verifiedMatches)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
-                                elseif($ContactViewAttempts)
+			  elseif($ContactViewAttempts)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('ContactViewAttempts',$loggedInProfileObj);
+				elseif($kundlialerts)
+					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('KundliAlertsSearch',$loggedInProfileObj);
 				else
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('searchId',$loggedInProfileObj);
 				$SearchParamtersObj->getSearchCriteria($searchId);

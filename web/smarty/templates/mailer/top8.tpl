@@ -71,7 +71,7 @@
                                   </tr>
                                   <tr>
                                     <td valign="top"><strong>2.</strong></td>
-                                    <td style="font-size:12px; color:#000000; line-height:normal;">Visit the <a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Desired partner matches&#39;</a> page and the <a href="(LINK)MATCH_ALERT:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Match Alerts&#39;</a> listings under Matches to see profiles we recommend for you. You can also check People looking for me listing to see which profiles like your profile. Just click <strong style="color:#424242;">&#39;Send Interest&#39;</strong> to initiate contact.</td>
+                                    <td style="font-size:12px; color:#000000; line-height:normal;">Visit the <a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Desired partner matches&#39;</a> page and the <a href="(LINK)MATCH_ALERT:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d; text-decoration:none;">&#39;Daily Recommendations&#39;</a> listings under Matches to see profiles we recommend for you. You can also check members looking for me listing to see which profiles like your profile. Just click <strong style="color:#424242;">&#39;Send Interest&#39;</strong> to initiate contact.</td>
                                   </tr>
                                   <tr>
                                     <td colspan="2" height="15"></td>

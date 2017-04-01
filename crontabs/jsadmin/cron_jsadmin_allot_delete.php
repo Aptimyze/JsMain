@@ -1,8 +1,7 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
-
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 include(JsConstants::$cronDocRoot."/crontabs/connect.inc");
 
 $db=connect_db();
@@ -52,6 +51,7 @@ while($row=mysql_fetch_array($res))
 //$sql="SELECT PROFILEID,USERNAME,MOD_DT, SUBSCRIPTION, SCREENING FROM newjs.JPROFILE WHERE SCREENING<'1099511627775' AND ACTIVATED IN ('N','U') AND INCOMPLETE = 'N' AND MOD_DT<='$olddate'";
 $sql="SELECT PROFILEID,USERNAME,MOD_DT, SUBSCRIPTION, SCREENING,ENTRY_DT FROM newjs.JPROFILE WHERE ACTIVATED IN ('N','U') AND INCOMPLETE = 'N' AND ENTRY_DT<='$twodayback'";
 $res=mysql_query($sql) or logError($sql,$db);
+$objUpdate = JProfileUpdateLib::getInstance();
 while($row=mysql_fetch_array($res))
 {
 	$receivetime=$row['ENTRY_DT'];
@@ -60,10 +60,12 @@ while($row=mysql_fetch_array($res))
 
 	$sql_i="INSERT IGNORE INTO jsadmin.MAIN_ADMIN (PROFILEID, USERNAME, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, ALLOTED_TO, SCREENING_TYPE, SUBSCRIPTION_TYPE, SCREENING_VAL) values('".$row['PROFILEID']."','".addslashes($row['USERNAME'])."','$receivetime','$submittime',NOW(), 'mahesh','O', '".$row['SUBSCRIPTION']."','".$row['SCREENING']."')";
 	mysql_query($sql_i) or logError($sql_i,$db);
-	$sql_up="update newjs.JPROFILE set ACTIVATED='N',SCREENING=0 where ACTIVATED IN ('N','U') AND INCOMPLETE = 'N' AND PROFILEID=$row[PROFILEID]";
-	mysql_query($sql_up) or logError($sql,$db);
+	//$sql_up="update newjs.JPROFILE set ACTIVATED='N',SCREENING=0 where ACTIVATED IN ('N','U') AND INCOMPLETE = 'N' AND PROFILEID=$row[PROFILEID]";
+  //mysql_query($sql_up) or logError($sql,$db);
+  $arrFields = array('ACTIVATED'=>'N','SCREENING'=>0);
+  $objUpdate->editJPROFILE($arrFields,$row[PROFILEID],"PROFILEID","ACTIVATED IN ('N','U') AND INCOMPLETE = 'N'");
 }
-
+unset($objUpdate);
 ////	Code to allot unalloted profiles of over 7 days to mahesh ends here
 
 

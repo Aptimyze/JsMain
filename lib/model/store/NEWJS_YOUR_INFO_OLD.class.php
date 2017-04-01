@@ -50,6 +50,40 @@ class YOUR_INFO_OLD extends TABLE{
 				throw new jsException($e);
 			}
 		}
+
+	/**
+	 * @fn getAboutMeOld
+	 * @brief fetches results from newjs.YOUR_INFO_OLD
+	 * @param PROFILEID $loginProfileId 
+	 * @return YOUR_INFO_OLD
+	 * @exception jsException for blank criteria
+	 * @exception PDOException for database level error handling
+	 */	
+
+	public function getAboutMeOld($profileId)
+	{
+		try
+		{
+			if ( $profileId !== NULL )
+			{
+				$sql = "SELECT YOUR_INFO_OLD FROM newjs.YOUR_INFO_OLD WHERE PROFILEID = :PFID" ;
+				$prep=$this->db->prepare($sql);
+								
+				$prep->bindValue(":PFID", $profileId, PDO::PARAM_INT);			
+				$prep->execute();
+
+				$rowSelectDetail = $prep->fetch(PDO::FETCH_ASSOC);
+				return $rowSelectDetail['YOUR_INFO_OLD'];
+			}
+			return NULL;   
+			
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
 		
 	
 

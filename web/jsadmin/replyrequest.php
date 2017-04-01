@@ -490,9 +490,9 @@ if(authenticated($cid))
 			if ($modifyall)
 			{
 				$msgarr			= array();
-				$mod_profile_sql	= array();
+				//$mod_profile_sql	= array();
 				$mod_jsadmintbl_sql   	= "UPDATE jsadmin.PROFILE_CHANGE_REQUEST SET RESPONSE_DT=NOW()";
-				$edit_profile_sql	= "UPDATE newjs.JPROFILE SET ";
+				//$edit_profile_sql	= "UPDATE newjs.JPROFILE SET ";
 					
 				
 				if ($is_dob)
@@ -504,7 +504,9 @@ if(authenticated($cid))
 
 					$age = getAge($mod_dob);
 					$mod_jsadmintbl_sql.=" ,NEW_DTOFBIRTH 	= '$mod_dob'";
-					$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
+					//$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
+					$arrFields['DTOFBIRTH'] = $mod_dob;
+					$arrFields['AGE'] = $age;
 					$msgarr[] = " Date of Birth  updated successfully. ";
 					$dup_value=Flag::setFlag('dtofbirth',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -514,7 +516,8 @@ if(authenticated($cid))
 				if($is_ms)
 				{
 					$mod_jsadmintbl_sql.=" ,NEW_MSTATUS 	= '$Marital_Status'";
-					$mod_profile_sql[]=" MSTATUS  = '$Marital_Status' ";
+					//$mod_profile_sql[]=" MSTATUS  = '$Marital_Status' ";
+					$arrFields['MSTATUS'] = $Marital_Status;
 					$msgarr[] = " Marital Status  updated successfully. ";
 					
 					if($Marital_Status=='A')
@@ -530,13 +533,15 @@ if(authenticated($cid))
 				if ($is_user)
 				{
 					$mod_jsadmintbl_sql.=" ,NEW_USERNAME  	= '".addslashes(stripslashes($mod_username))."'";
-					$mod_profile_sql[]=" USERNAME    = '".addslashes(stripslashes($mod_username))."'";
+					//$mod_profile_sql[]=" USERNAME    = '".addslashes(stripslashes($mod_username))."'";
+					$arrFields['USERNAME'] = addslashes(stripslashes($mod_username));
 					$msgarr[] = " Username updated successfully. ";
 				}
                                 if ($is_religion)
 				{
 					$mod_jsadmintbl_sql.=" ,NEW_RELIGION  	= '".addslashes(stripslashes($mod_religion))."'";
-					$mod_profile_sql[]=" RELIGION    = '".addslashes(stripslashes($mod_religion))."'";
+					//$mod_profile_sql[]=" RELIGION    = '".addslashes(stripslashes($mod_religion))."'";
+					$arrFields['RELIGION'] = addslashes(stripslashes($mod_religion));
 					$msgarr[] = " Religion updated successfully. ";
                                         switch ($mod_religion)
                                         {
@@ -549,7 +554,8 @@ if(authenticated($cid))
                                             case '10': $mod_caste = "496";
                                         }
                                         $mod_jsadmintbl_sql.=" ,NEW_CASTE  	= '".addslashes(stripslashes($mod_caste))."'";
-					$mod_profile_sql[]=" CASTE    = '".addslashes(stripslashes($mod_caste))."'";
+					//$mod_profile_sql[]=" CASTE    = '".addslashes(stripslashes($mod_caste))."'";
+					$arrFields['CASTE'] = addslashes(stripslashes($mod_caste));
 					$msgarr[] = " Caste updated successfully. ";
                                         if($mod_religion!=$orig_religion)
                                             delete_record($pid);
@@ -564,13 +570,15 @@ if(authenticated($cid))
                 		        	$subscription = implode(',',$memberarr);
 		                 	}
 					$mod_jsadmintbl_sql.=" , NEW_SUBSCRIPTION = '$subscription'";
-					$mod_profile_sql[]=" SUBSCRIPTION = '$subscription'";
+					//$mod_profile_sql[]=" SUBSCRIPTION = '$subscription'";
+					$arrFields['SUBSCRIPTION'] = $subscription;
 					$msgarr[] = " Subscription status  updated successfully. ";
 				}
 				if ($is_gender)
 				{
 					$mod_jsadmintbl_sql.=" ,NEW_GENDER	= '$mod_gender'";
-					$mod_profile_sql[] =" GENDER = '$mod_gender'";
+					//$mod_profile_sql[] =" GENDER = '$mod_gender'";
+					$arrFields['GENDER'] = $mod_gender;
 					$msgarr[] = " Gender updated successfully. ";
 					$dup_value=Flag::setFlag('gender',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -583,17 +591,21 @@ if(authenticated($cid))
                                 {
                                         $mod_jsadmintbl_sql.=" , NEW_COUNTRY      = '$mod_country'";
                                         $mod_jsadmintbl_sql.=" , NEW_CITY      = '$City_Res`'";
-                                        $mod_profile_sql[]=" COUNTRY_RES = '$mod_country'";
-                                        $mod_profile_sql[]=" CITY_RES = '$City_Res'";
+                                        //$mod_profile_sql[]=" COUNTRY_RES = '$mod_country'";
+                                        $arrFields['COUNTRY_RES'] = $mod_country;
+                                        $arrFields['CITY_RES'] = $City_Res;
+                                        //$mod_profile_sql[]=" CITY_RES = '$City_Res'";
                                         $msgarr[] = " Country and city updated successfully. ";
 
                                 }
 				$mod_jsadmintbl_sql.= ", ADMIN_COMMENTS = '".addslashes(stripslashes($admin_comments))."' ,  CHANGE_STATUS='Y' where ID='$id'";
-				if (count($mod_profile_sql))
+				if (count($arrFields))
 				{
-					$sql1 = implode(",",$mod_profile_sql);
-					$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
-					mysql_query_decide($sql) or die(mysql_error_js());
+					//$sql1 = implode(",",$mod_profile_sql);
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance();
+					$jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");
+					//$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
+					//mysql_query_decide($sql) or die(mysql_error_js());
 				}
 
 				mysql_query_decide($mod_jsadmintbl_sql) or die("$mod_jsadmintbl_sql".mysql_error_js());
@@ -603,9 +615,9 @@ if(authenticated($cid))
 			else
 			{
 				$msgarr			= array();
-				$mod_profile_sql	= array();
+				//$mod_profile_sql	= array();
 				$mod_jsadmintbl_sql     = "UPDATE jsadmin.PROFILE_CHANGE_REQUEST SET RESPONSE_DT=NOW()";
-				$edit_profile_sql       = "UPDATE newjs.JPROFILE SET ";
+				//$edit_profile_sql       = "UPDATE newjs.JPROFILE SET ";
 																     
 				if ($dob)
 				{
@@ -615,7 +627,9 @@ if(authenticated($cid))
 
 					$age = getAge($mod_dob);
 					$mod_jsadmintbl_sql.=" , NEW_DTOFBIRTH   = '$mod_dob'";
-					$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
+					//$mod_profile_sql[]=" DTOFBIRTH  = '$mod_dob' , AGE = '$age'";
+					$arrFields['DTOFBIRTH'] = $mod_dob;
+					$arrFields['AGE'] = $age;
 					$msgarr[] = " Date of Birth  updated successfully. ";
 					$dup_value=Flag::setFlag('dtofbirth',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -626,7 +640,8 @@ if(authenticated($cid))
 				{
 			
 					$mod_jsadmintbl_sql.=" ,NEW_MSTATUS 	= '$Marital_Status'";
-					$mod_profile_sql[]=" MSTATUS  = '$Marital_Status' ";
+					//$mod_profile_sql[]=" MSTATUS  = '$Marital_Status' ";
+					$arrFields['MSTATUS'] = $Marital_Status;
 					$msgarr[] = " Marital Status  updated successfully. ";
 					if($Marital_Status=='A')
 					{	
@@ -640,7 +655,8 @@ if(authenticated($cid))
 				if ($religion)
 				{
 					$mod_jsadmintbl_sql.=" , NEW_RELIGION    = '".addslashes(stripslashes($mod_religion))."'";
-					$mod_profile_sql[]="  RELIGION    = '".addslashes(stripslashes($mod_religion))."'";
+					//$mod_profile_sql[]="  RELIGION    = '".addslashes(stripslashes($mod_religion))."'";
+					$arrFields['RELIGION'] = addslashes(stripslashes($mod_religion));
 					$msgarr[] = " Religion  updated successfully. ";
                                         switch ($mod_religion)
                                         {
@@ -653,7 +669,8 @@ if(authenticated($cid))
                                             case '10': $mod_caste = "496";
                                         }
                                         $mod_jsadmintbl_sql.=" , NEW_CASTE    = '".addslashes(stripslashes($mod_caste))."'";
-					$mod_profile_sql[]="  CASTE    = '".addslashes(stripslashes($mod_caste))."'";
+					//$mod_profile_sql[]="  CASTE    = '".addslashes(stripslashes($mod_caste))."'";
+					$arrFields['CASTE'] = addslashes(stripslashes($mod_caste));
 					$msgarr[] = " Caste  updated successfully. ";
                                         if($mod_religion!=$orig_religion)
                                             delete_record($pid);
@@ -661,7 +678,8 @@ if(authenticated($cid))
 				if ($username)
 				{
 					$mod_jsadmintbl_sql.=" , NEW_USERNAME    = '".addslashes(stripslashes($mod_username))."'";
-					$mod_profile_sql[]="  USERNAME    = '".addslashes(stripslashes($mod_username))."'";
+					//$mod_profile_sql[]="  USERNAME    = '".addslashes(stripslashes($mod_username))."'";
+					$arrFields['USERNAME'] = addslashes(stripslashes($mod_username));
 					$msgarr[] = " Username  updated successfully. ";
 				}
 				if ($sub)
@@ -674,13 +692,15 @@ if(authenticated($cid))
                                         }
 
 					$mod_jsadmintbl_sql.=" , NEW_SUBSCRIPTION = '$subscription'";
-					$mod_profile_sql[]=" SUBSCRIPTION = '$subscription'";
+					//$mod_profile_sql[]=" SUBSCRIPTION = '$subscription'";
+					$arrFields['SUBSCRIPTION'] = $subscription;
 					$msgarr[] = " Subscription status  updated successfully. ";
 				}
 				if ($gender)
 				{
 					$mod_jsadmintbl_sql.=" , NEW_GENDER      = '$mod_gender'";
-					$mod_profile_sql[]=" GENDER = '$mod_gender'";
+					//$mod_profile_sql[]=" GENDER = '$mod_gender'";
+					$arrFields['GENDER'] = $mod_gender;
 					$msgarr[] = " Gender  updated successfully. ";
 					$dup_value=Flag::setFlag('gender',$dup_value,'duplicationFieldsVal');
 					$update_dup=true;
@@ -693,17 +713,21 @@ if(authenticated($cid))
                                 {
                                         $mod_jsadmintbl_sql.=" , NEW_COUNTRY      = '$mod_country'";
 					$mod_jsadmintbl_sql.=" , NEW_CITY      = '$City_Res`'";
-                                        $mod_profile_sql[]=" COUNTRY_RES = '$mod_country'";
-					$mod_profile_sql[]=" CITY_RES = '$City_Res'";
+     //                                    $mod_profile_sql[]=" COUNTRY_RES = '$mod_country'";
+					// $mod_profile_sql[]=" CITY_RES = '$City_Res'";
+					$arrFields['COUNTRY_RES'] = $mod_country;
+					$arrFields['CITY_RES'] = $City_Res;
                                         $msgarr[] = " Country and city updated successfully. ";
 
                                 }
 				$mod_jsadmintbl_sql.= ", ADMIN_COMMENTS = '".addslashes(stripslashes($admin_comments))."' ,CHANGE_STATUS='Y' where ID='$id'";
-				if (count($mod_profile_sql))
+				if (count($arrFields))
 				{
-					$sql1 = implode(",",$mod_profile_sql);
-					$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
-					mysql_query_decide($sql) or die(mysql_error_js());
+					$jprofileUpdateObj = JProfileUpdateLib::getInstance();
+					$jprofileUpdateObj->editJPROFILE($arrFields,$pid,"PROFILEID");	
+					//$sql1 = implode(",",$mod_profile_sql);
+					//$sql= $edit_profile_sql.$sql1." where PROFILEID='$pid'";
+					//mysql_query_decide($sql) or die(mysql_error_js());
 				}                                                                                                    
 				mysql_query_decide($mod_jsadmintbl_sql) or die("$mod_jsadmintbl_sql".mysql_error_js());
 				if(!$not_to_update_dup_value && $update_dup)

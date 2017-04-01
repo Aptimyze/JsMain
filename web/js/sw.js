@@ -73,7 +73,8 @@ self.addEventListener('push', function(event) {
                        body: message,
                        icon: icon,
                        tag: tag,
-                       data: url
+                       data: url,
+                       requireInteraction: true
                     });
                 }
             })

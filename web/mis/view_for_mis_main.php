@@ -8,7 +8,6 @@ Male Female Paid Not paid With Photo Without Photo Communities Caste
 view_for_mis_main.php
 */
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {

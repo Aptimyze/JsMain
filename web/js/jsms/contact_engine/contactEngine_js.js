@@ -1,20 +1,8 @@
 //var commonUrl="/contacts";
 
-var dim='';
-var postParams;
-var photo={};
-var disablePrimary={};
-var disableOthers={};
-var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
-var actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"};
-var actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"}
-var current_index ='';
-var params = {};
-var iButton = {};
-var profile_index = {};
-var writeMessageAction = false;
-var cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
-var mainHeight;
+var dim='',postParams,photo={},disablePrimary={},disableOthers={},actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"}, actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"},actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"},current_index ='', params = {},iButton = {},profile_index = {}, writeMessageAction = false,cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
+var hideOverlay = 0;
+var mainHeight, msgWindowMSGID='',msgWindowCHATID='',msgWindowPageIndex=1,paramsForMsgWindow,indexForMsgWindow,msgWindowOn=0,MsgWindowLoading=0;
 function bgSetting() 
 {
   dim = getDim();
@@ -63,8 +51,8 @@ function hideReportAbuse(){
 
 function reportAbuse(index) {
 $("#photoReportAbuse").attr("src", buttonSt.photo.url);
-$('.RAcorrectImg').hide();
-$("#commonOverlayTop").hide();
+$('.RAcorrectImg,#commonOverlayTop').hide();
+//$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
 mainEle.show();
 
@@ -129,14 +117,15 @@ if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
+reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:\n'+reason;
-ajaxData={'feed':feed,'CMDSubmit':'1'};
+feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
-$("#contactLoader").show();
-$("#loaderOverlay").show();
+$("#contactLoader,#loaderOverlay").show();
+//$("#loaderOverlay").show();
 
 //performAction('REPORT_ABUSE',ajaxData,index)
 $.ajax({
@@ -145,12 +134,12 @@ $.ajax({
 		type: "POST",
 		data: ajaxData,
 		//crossDomain: true,
-		success: function(result){
-					$("#contactLoader").hide();
-					$("#loaderOverlay").hide();
-					$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
+		success: function(result){  
+					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+					//$("#loaderOverlay").hide();
+					//$("#reportAbuseContainer").hide();
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
+                    {  
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();
                     }	
@@ -194,8 +183,8 @@ function hideForHide()
 }
 function layerClose()
 {
-        $("#ce_photo").attr("src",'');
-  $("#imageId").attr('src','');
+        $("#ce_photo,#imageId").attr("src",'');
+  //$("#imageId").attr('src','');
   $("#contactLoader").hide();
         var current_index       =$("#selIndexId").val();
   setTimeout(function(){$("#primeButton_"+current_index).attr("tabindex",-1).css('outline',0).focus();}, 0);
@@ -243,17 +232,13 @@ function setWindowParams(username, imageUrl, index){
           $("#imageId").attr('src',imageUrl);
   else
     $("#imageId").attr("src", photo[index]);
-  var vhgt = $(window).height();
-        var com_headHgt =$('#comm_headerMsg').outerHeight();
-        var send_hgt =$('#parentFootId').outerHeight();
-        var com_total = com_headHgt + send_hgt;
+  var vhgt = $(window).height(), com_headHgt =$('#comm_headerMsg').outerHeight(), send_hgt =$('#parentFootId').outerHeight(), com_total = com_headHgt + send_hgt;
         com_msgHgt1 = vhgt - com_total;
-        $('.message_con').css({'height':com_msgHgt1,'overflow':'auto'});
+        $('.message_con').css({'height':com_msgHgt1,'overflow-y':'auto','overflow-x':'hidden'});
 
         var tabIdExist= $("#tabHeader").length;
         if(tabIdExist){
-    $("#tabHeader").css('visibility','hidden');
-                $("#tabHeader").removeClass('posFixTop');
+    $("#tabHeader").css('visibility','hidden').removeClass('posFixTop');
     $(picContent).css('margin-top','0px');
   }
         var srchIdExist= $("#searchHeader").length;
@@ -269,28 +254,60 @@ function setTextAreaHgt(){
 }
 
 function bindSlider(){
-    
+ /*   var child=$(".detailedProfileRedirect");
+    child.unbind("click");
+    child.bind("click",function(){
+    var countKey=$(this).attr('countkey');
+    var params=$(this).attr('params');
+    var index= parseInt($(this).attr('index'))+1;
+    window.location.href='/profile/viewprofile.php?'+'&total_rec='+countArray[countKey]+'&actual_offset='+index+'&'+params;
+    });
+   */ 
     var child=$(".eoiAcceptBtn");
     child.unbind("click");
     child.bind("click",function(){
         $(".eoiAcceptBtn").attr("disabled",true);
         $(".eoiDeclineBtn").attr("disabled",true);
         
-        var input=$(this).children("input");
-params["profilechecksum"] =input.val();
+        var input=$(this).children(".inputProChecksum");
+        params["profilechecksum"] =input.val();
         params["actionName"] ="ACCEPT_MYJS";
-                                performAction(params["actionName"], params, $(this).attr("index"),false);
+        performAction(params["actionName"], params, $(this).attr("index"),false);
     
     });
     
     child=$(".eoiDeclineBtn");
     child.unbind("click");
     child.bind("click",function(){
-        $(".eoiAcceptBtn").attr("disabled",true);
-        $(".eoiDeclineBtn").attr("disabled",true);
-        var input=$(this).children("input");
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+        params["profilechecksum"] =input.val();
+        params["actionName"] ="DECLINE_MYJS";        
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
+    
+    child=$(".matchAlertBtn");
+    child.unbind("click");
+    child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
 params["profilechecksum"] =input.val();
-        params["actionName"] ="DECLINE_MYJS";
+        params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
+    
+    child=$(".matchOfDayBtn");
+    child.unbind("click");
+    child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+params["profilechecksum"] =input.val();
+        params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
+        params['fromJSMS_MOD'] = "1";
         performAction(params["actionName"], params,  $(this).attr("index"),false);
     
     });
@@ -304,12 +321,14 @@ function bindPrimeButtonClick(index)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
+          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
-				performAction(params["actionName"], params, index,true);
+				performAction(params["actionName"], params, index,true,1);
+                                
 			}
 		});
     $( "#Prime_"+index+"_1").bind( "click", function(){
@@ -320,7 +339,7 @@ function bindPrimeButtonClick(index)
       else{
         params["profilechecksum"] =$("#buttonInput"+index+"_1").val();
         //$("#Prime_"+index).unbind( "click");
-        performAction(params["actionName"], params, index,true);
+        performAction(params["actionName"], params, index,true,1);
       }
       
     });
@@ -351,7 +370,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 					params["profilechecksum"] =$("#buttonInput"+index).val();
 					params["actionName"] = actionDetail[action];
 					$('#'+action+"_"+index).unbind( "click");
-					performAction(action, params, index,false);
+					performAction(action, params, index,false,1);
 					return false;
 				});
 		}
@@ -381,8 +400,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 						var paramstr = buttonDetailsOthers[iButton['IGNORE']].params;
 						profile_index[index]['IGNORE'] = paramstr.split('=')[1];
 					}
-					else 
-						profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+					 
 
           var paramsArr = {
             blockArr: {
@@ -402,11 +420,11 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
   } 
 }
 
-function performAction(action, params, index,isPrime)
+function performAction(action, tempParams, index,isPrime,fromButton)
 {
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
-		params['actionName']            ="MessageHandle";
+		tempParams['actionName']            ="MessageHandle";
 	}
 	else{
 		aUrl = actionUrl[action];
@@ -426,16 +444,44 @@ function performAction(action, params, index,isPrime)
         aUrl +="&pageSource="+contactEngineChannel;
   postParams='';
      dim='';
+     if(action=='WRITE_MESSAGE'){
+         paramsForMsgWindow=tempParams;
+         indexForMsgWindow=index;
+         tempParams['pagination']=1;
+         if((typeof fromButton !='undefined')  && fromButton==1) 
+         {
+             msgWindowMSGID='';
+             msgWindowCHATID='';
+             msgWindowOn=0;
+             
+         }
+         else msgWindowOn=1; 
+         tempParams['MSGID']=msgWindowMSGID;tempParams['CHATID']=msgWindowCHATID;}
      if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) {
-         params["responseTracking"]=responseTrackingno;
+         tempParams["responseTracking"]=responseTrackingno;
          
     $("#eoituple_"+index+" .contactLoader").css("display","block");
     
 }
+    else if(action=="INITIATE_MYJS")
+    {
+                tempParams["fromJSMS_MYJS"]='1';
+                tempParams["stype"]='WMM';
+        if(tempParams["fromJSMS_MOD"] == 1)
+        { 
+          tempParams["stype"]='WMOD';
+          $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
+        }
+        else
+        {
+          $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
+        }
+        
+    }
       else
 	{
 		loaderTop();
-		if(isPrime && action!="MESSAGE")
+		if(isPrime && action!="MESSAGE" && action!="WRITE_MESSAGE" )
 		{
 			dim = getDim();
 			//scrollOff();
@@ -450,11 +496,15 @@ function performAction(action, params, index,isPrime)
             
     url: aUrl,
     type: "POST",
-    data: params,
+    data: tempParams,
     //crossDomain: true,
     success: function(result){
-                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS"))
-                        $("#eoituple_"+index+" .contactLoader").hide();
+                    if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
+                    {
+                    var tempSection = (action=="INITIATE_MYJS") ? (tempParams["fromJSMS_MOD"] ? 'matchOfDay' : 'matchAlert') : 'eoi';
+                    $("#"+tempSection+"tuple_"+index+" .contactLoader").hide();
+                    
+                    }
 		else
 		{
 			if(isPrime && action!="MESSAGE")
@@ -467,33 +517,45 @@ function performAction(action, params, index,isPrime)
 			startTouchEvents();
 		}
                     if(CommonErrorHandling(result,'?regMsg=Y')) //CE means contact engine
-      {
-                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) afterActionMyjs(index); 
+      {                     
+                            
+                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
                             else afterAction(result,action,index);
       }
     }
   });
-params = {};
+//params = {};
 }
 
 
 
 
-function afterActionMyjs(index){
-    $("#eoituple_"+index+" #contactLoader").hide();
-        $("#eoituple_"+index).fadeOut(1500);
-                
-    var x=parseInt($("#eoi_count").html());
-                x--;
-          $("#eoi_count").html(x);
-    setTimeout(function(){
-        $("#eoituple_"+index).remove();
-                if ($("#eoi_count").html()=='0') $("#eoiAbsent").show();
-                      $(".eoiAcceptBtn").attr("disabled",false);
+function afterActionMyjs(index,action,Params){
+    
+    var section= (action=='INITIATE_MYJS') ? (Params["fromJSMS_MOD"] ? 'matchOfDay' : 'matchAlert') : 'eoi';
+        $("#"+section+"tuple_"+index+" #contactLoader").hide();
+        $("#"+section+"tuple_"+index).fadeOut(1500);
+        var x=parseInt($("#"+section+"_count").html());
+        x--;
+        $("#"+section+"_count").html(x);
+        setTimeout(function(){
+        $("#"+section+"tuple_"+index).remove();
+        if ($("#"+section+"_count").html()=='0')
+        { 
+            $("#"+section+"Absent").show();
+            if(section=='matchAlert')$("#matchAlertAbsentText").text('No more profiles for today');
+            if(section=='matchOfDay')
+            {
+              $("#matchOfDayPresent").hide();
+            }
+
+        }
+        $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
-    tupleObject._tupleIndex--;
-        tupleObject.indexFix();
-        tupleObject._goTo(tupleObject._index);          
+        tempTupleObject = (section=='matchOfDay') ? tupleObject3 : (section=='matchAlert' ? tupleObject2 : tupleObject);
+        tempTupleObject._tupleIndex--;
+        tempTupleObject.indexFix();
+        tempTupleObject._goTo(tempTupleObject._index);          
     },1500);
                 
 }
@@ -514,28 +576,56 @@ function afterAction(result,action, index){
 		if(result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
-			showCommonOverlay();
-			$("#errorMsgOverlay").show();
-			$("#errorMsgHead").html(result.actiondetails.errmsglabel);
-			var headerLabel = result.actiondetails.headerlabel;
-			var underscreen = headerLabel.match(/Underscreen/g);
-			if(underscreen!=''&& underscreen!=null)
-			{
-				disablePrimeButton(action,index);
-				$("#primeButton_"+index).html("Interest sent");
-			}
-			if(result.actiondetails.footerbutton!=null)
-			{
-				bindFooterButtons(result);
-			}
-			else {
-			    $("#closeLayer").show();
-			}
+      var headerLabel = result.actiondetails.headerlabel;
+      var underscreen = headerLabel.match(/Under Screen/g);
+      if(!hideOverlay)
+      {
+       showCommonOverlay();
+        $("#errorMsgOverlay").show();
+      $("#errorMsgHead").html(result.actiondetails.errmsglabel);
+      if(underscreen!=''&& underscreen!=null)
+      {
+        disablePrimeButton(action,index);
+        $("#primeButton_"+index).html(result.buttondetails.button.label);
+        if(result.buttondetails.button.label == "Interest Saved")
+        {
+          $("#"+index+'_3Dots').hide();
+          hideOverlay = 1;
+        }
+      }
+      if(result.actiondetails.footerbutton!=null)
+      {
+        bindFooterButtons(result);
+      }
+      else {
+          $("#closeLayer").show();
+      }
+      }
+      else
+      {
+        //showCommonOverlay();
+        //$("#errorMsgOverlay").show();
+        if(underscreen!=''&& underscreen!=null)
+        {
+          disablePrimeButton(action,index);
+          $("#primeButton_"+index).html(result.buttondetails.button.label);
+          if(result.buttondetails.button.label == "Interest Saved")
+          {
+            $("#"+index+'_3Dots').hide();
+          }
+         // $("#closeLayer").show();
+        }
+        $("#contactLoader").hide();
+        var current_index       =$("#selIndexId").val();
+    setTimeout(function(){$("#primeButton_"+current_index).attr("tabindex",-1).css('outline',0).focus();}, 0);
+  scrollOn();
+
+      }
 			return;
 		}
 		else{
-			$("#topMsg2").hide();
-			$("#topMsg").hide();
+			$("#topMsg2,#topMsg").hide();
+			//$("#topMsg").hide();
 			$( "#"+index+"_3Dots" ).unbind( "click");
 			bind3DotClick(index,result.button_after_action);
 			$( "#commonOverlay").hide();
@@ -550,8 +640,7 @@ function afterAction(result,action, index){
           if($("#PrimeColor_"+index).hasClass("wid50p"))
         {
            $("#PrimeColor_"+index).remove();
-          $("#PrimeColor_"+index+"_1").removeClass("wid50p");
-          $("#PrimeColor_"+index+"_1").addClass("wid100p");
+          $("#PrimeColor_"+index+"_1").removeClass("wid50p").addClass("wid100p");
           $("#primeButton_"+index+"_1").css('color', '');
           $("#buttonInput"+index+"_1").attr('id',"buttonInput"+index);
           $("#primeButton_"+index+"_1").attr('id',"primeButton_"+index);
@@ -573,8 +662,7 @@ function afterAction(result,action, index){
         if($("#PrimeColor_"+index).hasClass("wid50p"))
         {
           $("#PrimeColor_"+index+"_1").remove();
-          $("#PrimeColor_"+index).removeClass("wid50p");
-          $("#PrimeColor_"+index).addClass("wid100p");
+          $("#PrimeColor_"+index).removeClass("wid50p").addClass("wid100p");
           $( "#primeWid_"+index ).after( '<div class="posabs srp_pos2"><a tupleNo="id'+index+'" href="#" id="'+index+'_3Dots"><i class="mainsp threedot1"></i></a></div>' );
           $( "#"+index+"_3Dots" ).unbind( "click");
           bind3DotClick(index,result.button_after_action);
@@ -625,9 +713,7 @@ function afterAction(result,action, index){
 }
 
 function bindFooterButtons(result){
-	$("#footerButton").html(result.actiondetails.footerbutton.label);
-	$("#footerButton").show();
-	$( "#footerButton" ).bind( "click", {
+	$("#footerButton").html(result.actiondetails.footerbutton.label).show().bind( "click", {
 	  action: result.actiondetails.footerbutton.action
 	}, function( event ) {
 	historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
@@ -671,16 +757,15 @@ function acceptInterest(result,action,index)
 
 function cancelInterest(result,action, index){
   hideForHide();
-        var confirmLabelHead    =result.buttondetails.confirmLabelHead;
-        var confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
-  showCommonOverlay();
+        var confirmLabelHead    =result.buttondetails.confirmLabelHead,confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
+        showCommonOverlay();
 
     $("#closeLayer").show();
         if(confirmLabelHead){
                 var confirmOverlayId =actionTemplate[action];
     $("#"+confirmOverlayId).show();
-    $("#confirmMessage0").show();
-    $("#confirmMessage1").show();   
+    $("#confirmMessage0,#confirmMessage1").show();
+    //$("#confirmMessage1").show();   
                 $("#confirmMessage0").html(confirmLabelHead);
                 $("#confirmMessage1").html(confirmLabelMsg);
         }
@@ -693,8 +778,7 @@ function cancelInterest(result,action, index){
 }
 
 function declineInterest(result,action, index){
-        var confirmLabelHead    =result.buttondetails.confirmLabelHead;
-        var confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
+        var confirmLabelHead    =result.buttondetails.confirmLabelHead,confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
   hideForHide();
   showCommonOverlay();
   scrollOff();
@@ -702,8 +786,8 @@ function declineInterest(result,action, index){
         if(confirmLabelHead){
                 var confirmOverlayId =actionTemplate[action];
     $("#"+confirmOverlayId).show();
-    $("#confirmMessage0").show();
-    $("#confirmMessage1").show();
+    $("#confirmMessage0,#confirmMessage1").show();
+    //$("#confirmMessage1").show();
                 $("#confirmMessage0").html(confirmLabelHead);
                 $("#confirmMessage1").html(confirmLabelMsg);
         }/*else{
@@ -713,58 +797,94 @@ function declineInterest(result,action, index){
                 $("#errorMsgHead").html(errorMsgLabel);
   }*/
     $("#closeLayer").show();
+   
+   
+    var address_url=window.location.href;
+   if(address_url.indexOf("?") >= 0){
+		var hash,pageSource='', hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			if(hash[0]=="contact_id")
+				pageSource=hash[1];
+		}
+		if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0))
+				handleSwipe('swipeleft','left','','','');
+	}
 }
+
+
 function writeMessage(result, action, index){
-               if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');
+    var msgWindowHeight;
+    msgWindowMSGID=typeof result['MSGID'] !='undefined' ? result['MSGID'] : '' ;
+    msgWindowCHATID=typeof result['CHATID'] !='undefined' ? result['CHATID'] : '' ;
+    $("#msgId").unbind('scroll');
+    if(result.hasNext==true)
+    {
+        $("#msgId").scroll(function()
+        {
+            
+
+            if($(this).scrollTop()==0)
+            {
+            if(MsgWindowLoading)return;
+            MsgWindowLoading=1;
+            var tempParams=paramsForMsgWindow, tempIndex=indexForMsgWindow;
+                performAction("WRITE_MESSAGE", tempParams, tempIndex,false,0);
+            }
+        });
+    }
+  if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');
   $("#writeMessageTxtId").val('');
   $("#writeMsgDisplayId").html("");
   $("#updateMsgId").val(index);
   bgSetting();
   $("#commonOverlay").hide();
-  var actionSel;
-        var writeMessageOverlayId =actionTemplate[action];
+  var actionSel,writeMessageOverlayId =actionTemplate[action];
   if(result.button)
      actionSel =result.button['action'];
 
   $("#"+writeMessageOverlayId).show();
   if(result.cansend=='true'){
-    var toggleSet;
-    var toggleChk;
+      
+    var toggleSet,toggleChk;
     $("#presetMessageId").show();
-    var messageObjArr   =result.messages; 
-    var htmlArr   =new Array();
-          $("#comm_footerMem").hide();
+    var messageObjArr   =result.messages, htmlArr   =new Array(), msgLoopStr ="<div class='fontlig f16 white com_pad1' id='presetMessageDispId'><span id='presetMessageTxtId'></span><span class='dispbl f12 color1 pt5 white' id='presetMessageStatusId'></span></div>";
+        $("#comm_footerMem").hide();
           $("#comm_footerMsg").show();
+    
+ //   $("#presetMessageId").html(msgLoopStr);
     setTextAreaHgt();
-    var msgLoopStr ="<div class='fontlig f16 white com_pad1' id='presetMessageDispId'><span id='presetMessageTxtId'></span><span class='dispbl f12 color1 pt5 white' id='presetMessageStatusId'></span></div>";
-    $("#presetMessageId").html(msgLoopStr);
-
     if(messageObjArr){
       $.each(messageObjArr, function(objVal,objLabel){ 
+         var tempDiv=$('<div>').append(msgLoopStr);
         var message   =nl2br(objLabel.message);
         var timeTxt =objLabel.timeTxt;      
         var myMsg =objLabel.mymessage;  
         if(myMsg=='true'){
-          $("#presetMessageDispId").addClass('txtr com_pad_l').removeClass('txtl_10p'); 
-          $("#presetMessageStatusId").addClass('txtr com_pad_l');
+          tempDiv.find("#presetMessageDispId").addClass('txtr com_pad_l').removeClass('txtl_10p'); 
+          tempDiv.find("#presetMessageStatusId").addClass('txtr com_pad_l');
           toggleSet =true;
         }
         else{
-          $("#presetMessageDispId").removeClass('txtr com_pad_l').addClass('txtl_10p');
-          $("#presetMessageStatusId").removeClass('txtr com_pad_l');
+          tempDiv.find("#presetMessageDispId").removeClass('txtr com_pad_l').addClass('txtl_10p');
+          tempDiv.find("#presetMessageStatusId").removeClass('txtr com_pad_l');
           toggleSet =false;
         }
         if((toggleChk!=toggleSet) && tempStr)
-          $("#presetMessageDispId").addClass('brdr4');
+          tempDiv.find("#presetMessageDispId").addClass('brdr4');
         toggleChk =toggleSet;
 
-        $("#presetMessageTxtId").html(message);
-        $("#presetMessageStatusId").html(timeTxt);
-        var tempStr =$("#presetMessageId").html();
+        tempDiv.find("#presetMessageTxtId").html(message);
+        tempDiv.find("#presetMessageStatusId").html(timeTxt);
+        var tempStr =tempDiv.html(); 
         htmlArr.push(tempStr);
       });
-      var messageStr=htmlArr.join("");
-      $("#presetMessageId").html(messageStr);
+      var messageStr=htmlArr.join(""),JObject=$("#presetMessageId").eq(0),JObject2=$("#msgId").eq(0);
+      if(msgWindowOn==0)JObject.html('');
+      msgWindowHeight=JObject2.prop('scrollHeight');
+      JObject.prepend(messageStr);
+      JObject2.scrollTop(JObject2.prop('scrollHeight')-msgWindowHeight);
       $('#setMsgHght').css('height','45px');
     }
     else{
@@ -784,13 +904,12 @@ function writeMessage(result, action, index){
       $("#CEmembershipMessage2").hide(); 
     $("#freeMsgId").css('top',$(window).height()/2+'px').show();
     $("#comm_footerMem").show();
-    $("#memTxtId").show();
-    $("#memTxtId").html(result.button.label);
+    $("#memTxtId").show().html(result.button.label);
     setWindowParams(result.label, result.viewed, index);
         }
   setTimeout(function(){$("#setMsgHght").attr("tabindex",-1).css('outline',0).focus();}, 0);
   //$("#writeMessageTxtId").focus();
-
+MsgWindowLoading=0;
 }
 function sendReminder(result, action, index){
   bgSetting();
@@ -803,14 +922,15 @@ function sendReminder(result, action, index){
     // paid profile condition
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
-    $("#writeMsgDisplayId").show();
-    $("#writeMsgDisplayId").html('');
+    $("#writeMsgDisplayId").show().html('');
     $("#presetMessageTxtId").html('Reminder sent. You may send a personalized message with the reminder');
     $("#comm_footerMem").hide();
     $("#comm_footerMsg").show();
     setWindowParams(result.actiondetails.headerlabel, result.actiondetails.headerthumbnailurl.url, index);
-    postParams +=result.actiondetails.writemsgbutton.params
+    postParams +=result.actiondetails.writemsgbutton.params;
         }
         /*else if(result.actiondetails.errmsglabel){
     // condition for error message
@@ -838,8 +958,8 @@ function sendMessage(result, action, index){
   //$("#comm_footerMsg").removeClass('posfix btmo');
         if(result.responseMessage=='Successful'){
                 var msgContent  =nl2br($("#writeMessageTxtId").val());
-    $("#presetMessageId").show();
-            $("#writeMsgDisplayId").show();
+    $("#presetMessageId,#writeMsgDisplayId").show();
+           // $("#writeMsgDisplayId").show();
     $("#writeMessageTxtId").val('');
 
     var htmlStr =$("<div class='txtr com_pad_l fontlig f16 white com_pad1'><div class='com_pad2 clearfix fl dispibl writeMsgDisplayTxtId' style='width:100%' ></div><div class='dispbl f12 color1 pt5 white txtr msgStatusTxt'  id='msgStatusTxt'></div></div><div style='height:1px'></div>");
@@ -860,14 +980,14 @@ function sendMessage(result, action, index){
     //    $("#writeMsgDisplayId").html(oldHtml+newHtml);
 
       if(writeMessageAction=='REMINDER' || writeMessageAction=='INITIATE'){
-        $("#parentFootId").show();
+        $("#parentFootId,#crossButId").show();
         $("#comm_footerMsg").hide();
-        $("#crossButId").show();
+        //$("#crossButId").show();
         
       }
       else{
-                                $("#parentFootId").show();
-        $("#comm_footerMsg").show();  
+                                $("#parentFootId,#comm_footerMsg").show();
+        //$("#comm_footerMsg").show();  
                                 $("#crossButId").hide();
       }
                }
@@ -951,11 +1071,13 @@ function initiateContact(result,action, index){
     writeMessageAction = "INITIATE";
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
-    $("#presetMessageId").show();
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
+    $("#presetMessageId,#comm_footerMsg").show();
     $("#presetMessageTxtId").html('Interest sent. You may send a personalized message with the interest.');
     $("#writeMsgDisplayId").html('');
     $("#comm_footerMem").hide();
-    $("#comm_footerMsg").show();
+    //$("#comm_footerMsg").show();
     setWindowParams(result.actiondetails.headerlabel,result.actiondetails.headerthumbnailurl.url,index);
   }
   else
@@ -970,7 +1092,6 @@ function initiateContact(result,action, index){
 
 function contactDetailMessage(result,action,index)
 {
-  
  $("#mobile").hide();
   aUrl = actionUrl[action];
   aUrl+="?r=1&stype=WQ"+result.actiondetails.footerbutton.params;
@@ -982,11 +1103,11 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader").hide();
-      $("#footerButton").hide();
-      $("#ViewContactPreLayer").hide();
-      $("#ViewContactPreLayerNoNumber").hide();
-      $("#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      //$("#footerButton").hide();
+      //$("#ViewContactPreLayer").hide();
+      //$("#ViewContactPreLayerNoNumber").hide();
+     // $("#neverMindLayer").hide();
       $("#closeLayer").show();
       popBrowserStack();
       contactDetail(response,action, index);
@@ -996,24 +1117,20 @@ function contactDetailMessage(result,action,index)
 
 function contactDetail(result,action, index){
 
-    $("#topMsg2").hide();
-  $("#topMsg").hide();
+    $("#topMsg2,topMsg").hide();
+  //$("#topMsg").hide();
   $("#"+actionTemplate[action]).show();
   /*if(result.footerbutton)
   {
     contactDetailMessage(result,action, index);
     return;
-  }*/
+  }*/var proCheck = params.profilechecksum;
     if(result.actiondetails.errmsglabel)
     {
     showCommonOverlay();
     $("#buttonsOverlay").hide();
-    $("#topMsg2").show();
     $("#topMsg2").html(result.actiondetails.errmsglabel);
-    $("#mobile").show();
-    $("#mobileValBlur").show();
-    $("#landline").show();
-    $("#landlineValBlur").show();
+    $("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
     if(result.actiondetails.footerbutton && result.actiondetails.footerbutton.text)$("#membershipMessageCE").text(result.actiondetails.footerbutton.text).show();else $("#membershipMessageCE").hide(); 
     }
 else
@@ -1021,16 +1138,14 @@ else
 
     if(result.actiondetails.membershipOfferMsg)$("#membershipMessageCE").text(result.actiondetails.membershipOfferMsg).show();else $("#membershipMessageCE").hide(); 
     if(result.actiondetails.contactdetailmsg){
-    $("#topMsg2").html(result.actiondetails.contactdetailmsg);
-    $("#topMsg2").show();
+    $("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
     $("#topMsg2").hide();
     
   if(result.actiondetails.topmsg)
   {
-    $("#topMsg2").html(result.actiondetails.contactdetailmsg);
-    $("#topMsg2").show();
+    $("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
     $("#topMsg").hide();
@@ -1046,37 +1161,45 @@ else
 
 
 if(result.actiondetails.bottommsg2){
-    $("#bottomMsg2").html(result.actiondetails.bottommsg2);
-    $("#bottomMsg2").css('display', 'inline-block');
+    $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
   }
-  
+
   if(result.actiondetails.contact1){
-    $("#mobileVal").hide();
-    $("#mobileValBlur").hide();
+    $("#mobileVal,#mobileValBlur").hide();
+    //$("#mobileValBlur").hide();
     $("#mobile").show();
     if(result.actiondetails.contact1.value=="blur"){ $("#mobileValBlur").show(); $("#neverMindLayer").show(); }
     else $("#mobileVal").show();
-                $("#mobileVal").html(result.actiondetails.contact1.value);
+                $("#mobileVal").html(result.actiondetails.contact1.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (result.actiondetails.contact1.iconid){ 
                    $("#mobileIcon > a").attr('href','tel:'+result.actiondetails.contact1.value.toString());
             $("#mobileIcon").show();
         }
   }
-        
+      else if(result.actiondetails.contact1_message)
+      {
+        $("#mobileVal,#mobile").show();
+        $("#mobileVal").html(result.actiondetails.contact1_message);
+      }  
         if(result.actiondetails.contact2){
-    $("#landlineValBlur").hide();
-                $("#landlineVal").hide();
+    $("#landlineValBlur,#landlineVal").hide();
+            // $("#landlineVal").hide();
                 $("#landline").show();
                 if(result.actiondetails.contact2.value=="blur") { $("#landlineValBlur").show(); $("#neverMindLayer").show();}
-                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value);
+                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value+'<span onclick="reportInvalid(\'L\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c">Report Invalid </span>');
                 if (result.actiondetails.contact2.iconid){ 
                    $("#landlineIcon > a").attr('href','tel:'+result.actiondetails.contact2.value.toString());
             $("#landlineIcon").show();
         }
     }
+      else if(result.actiondetails.contact2_message)
+      {
+        $("#landline,#landlineVal").show();
+        $("#landlineVal").html(result.actiondetails.contact2_message);
+      }  
         if(result.actiondetails.contact3){
-    $("#alternateValBlur").hide();
-                $("#alternateVal").hide();
+    $("#alternateValBlur,#alternateVal").hide();
+               // $("#alternateVal").hide();
                 $("#alternate").show();
                 if(result.actiondetails.contact3.value=="blur"){ $("#alternateValBlur").show(); $("#neverMindLayer").show(); }
                     else $("#alternateVal").show();$("#alternateVal").html(result.actiondetails.contact3.value);
@@ -1087,9 +1210,14 @@ if(result.actiondetails.bottommsg2){
     
     
     }
+      else if(result.actiondetails.contact3_message)
+      {
+        $("#alternate,#alternateVal").show();
+        $("#alternateVal").html(result.actiondetails.contact3_message);
+      }  
         if(result.actiondetails.contact4){
-                $("#emailVal").hide();
-    $("#emailValBlur").hide();
+                $("#emailVal,#emailValBlur").hide();
+    //$("#emailValBlur").hide();
                 $("#email").show();
                 if(result.actiondetails.contact4.value=="blur") { $("#emailValBlur").show(); $("#neverMindLayer").show();}
                 else $("#emailVal").show();$("#emailVal").html(result.actiondetails.contact4.value);
@@ -1107,14 +1235,14 @@ if(result.actiondetails.bottommsg2){
 		$("#footerButton").show();
     $("#mobile").hide();
     if(result.actiondetails.infomsglabel)
-    {
+    {  
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
     if(result.actiondetails.errmsglabel)
     {
-      $("#topMsg2").hide();
-      $("#landline").hide();
+      $("#topMsg2,#landline").hide();
+      //$("#landline").hide();
       //$("#ViewContactPreLayerTextNoNumber").html("You will be able to see the Email Id of "+result.actiondetails.headerlabel+ "but not the phone number. This is because "+result.actiondetails.headerlabel+"'s has chosen to hide phone number.");
      $("#ViewContactPreLayerTextNoNumber").html(result.actiondetails.errmsglabel);
       $("#ViewContactPreLayerNoNumber").show();
@@ -1156,9 +1284,9 @@ function shortlist(result,action,index){
 
 function ignore(result,action,index){
         if(profile_index[index]['IGNORE'] == 1) {       // block request
-                $("#buttonsOverlay").hide();
-    $("#topMsg2").hide();
-    $("#topMsg").hide();
+                $("#buttonsOverlay,#topMsg2,#topMsg").hide();
+    //$("#topMsg2").hide();
+   // $("#topMsg").hide();
                 $("#confirmationOverlay").show();
                 $("#confirmMessage0").show().text("This profile has been moved to your Blocked Members & will no longer appear in your search results");
                 //
@@ -1174,8 +1302,8 @@ function ignore(result,action,index){
         }
       };
                         performAction("IGNORE", params, index,false);
-                        $("#confirmMessage0").hide();
-                        $("#footerButton").hide();
+                        $("#confirmMessage0,#footerButton").hide();
+                        //$("#footerButton").hide();
                 });
                 $("#footerButton").show().text("Close").click(function(){
       $("#commonOverlay").hide();
@@ -1190,6 +1318,9 @@ function ignore(result,action,index){
     hideForHide();
     layerClose();
         }
+    profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+        
+        
 }
 function showCommonOverlay()
 {
@@ -1208,8 +1339,7 @@ function open3DotLayer(buttonDetails,index)
   current_index  = index;
   getButtonIndex(buttonDetails);
   showCommonOverlay();
-  $("#topMsg").show();
-  $("#topMsg").html(buttonDetails.topmsg);
+  $("#topMsg").show().html(buttonDetails.topmsg);
   //$("#topMsg2").show();
   $("#topMsg2").html(buttonDetails.topmsg2);
   var child=$("#buttonsOverlay > .forHide");
@@ -1224,7 +1354,7 @@ function open3DotLayer(buttonDetails,index)
   			child.eq(i).children("i").attr("class",cssMap[iconidd]);
   		}
           	else if(profile_index[index] && profile_index[index]['IGNORE'] && buttonDetails.buttons[buttonId].action == 'IGNORE') {
-  			var labell = (profile_index[index]['IGNORE'] == 1) ? 'Unblock':'Block';
+  			var labell = (profile_index[index]['IGNORE'] == 0) ? 'Unblock':'Block';
   			child.eq(i).children("#otherlabel"+i).html(labell);
   			child.eq(i).children("i").attr("class",cssMap[buttonDetails.buttons[buttonId].iconid]);
   		}
@@ -1248,14 +1378,10 @@ function open3DotLayer(buttonDetails,index)
 
 function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 {
-	var primeButtonLabel = {};
-	var primeButtonAction = {};
-	var primeButtonEnable = {};	
-  var primeButtonParams = {};
+	var primeButtonLabel = {}, primeButtonAction = {}, primeButtonEnable = {}, buttonCount=jsmsButtons.buttons.length, primeButtonParams = {},buttonNumber=0;
 	if(page==null)
 		page="search";
-  var buttonCount=jsmsButtons.buttons.length;
-  var buttonNumber=0;
+  
   for (var i = 0; i < buttonCount; i++) {
     if(jsmsButtons.buttons[i].primary=="true"){
     primeButtonLabel[buttonNumber] = jsmsButtons.buttons[i].label;
@@ -1281,8 +1407,9 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		var button ='<div class="fullwid ';
 		if(page=="viewSimilar"){
 			 button+='brdrsp1 ';
+                         var tempButtonParams = primeButtonParams[0] ? primeButtonParams[0] :""; 
 		 	 if(typeof stypeKey!='undefined')
-				primeButtonParams="&stype="+stypeKey;
+				primeButtonParams[0]=tempButtonParams + "&stype="+stypeKey;
 		
 		}
     if(buttonNumber==1)
@@ -1327,8 +1454,9 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		var button ='<div class="fullwid ';
 		if(page=="viewSimilar"){
 			 button+='brdrsp1 ';
+                         var tempButtonParams = primeButtonParams[0] ? primeButtonParams[0] :""; 
 			 if(typeof stypeKey!='undefined')
-				primeButtonParams[0]="&stype="+stypeKey;
+				primeButtonParams[0]=tempButtonParams+"&stype="+stypeKey;
 		}
 		 button+='srp_bg1" id="PrimeColor_'+profileNoId+'"  style="display:block; position:relative;"><div class="txtc ';
 		if(page=="viewSimilar"){
@@ -1419,4 +1547,137 @@ function browserBackCommonOverlay() {
 function nl2br(str)
 {
     return str.replace(/\n/g, "<br />");
+}
+
+function hideReportInvalid(){
+  var mainEle=$("#reportInvalidContainer");
+  if(mainEle.css('display')!='none'){
+    $("#commonOverlayTop").show();
+    mainEle.hide();
+  return true;  
+  }
+  
+  return false;
+
+}
+
+function reportInvalid(phoneType,Obj,profileCheckSum) {
+var imgURL;
+if(typeof(buttonSt) != "undefined" && buttonSt.photo.url){
+imgURL = buttonSt.photo.url;
+}
+else{
+ var topDiv = $(Obj).closest('#commonOverlayTop');  
+ var nextLevel = topDiv.find("#3DotProPic");
+ var lastLevel = nextLevel.find("#photoIDDiv");
+     imgURL = lastLevel.find("#ce_photo").attr('src');
+
+}
+$("#photoReportInvalid").attr("src",imgURL);
+$('.RAcorrectImg,#commonOverlayTop').hide();
+var mainEle=$("#reportInvalidContainer");
+mainEle.show();
+
+var el=$("#reportInvalidMidDiv");
+el.height($(window).height()-$("#reportInvalidSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+
+var div = document.createElement('div');
+            // css transition properties
+            var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
+            // test for each property
+            for (var i in props) {
+                if (div.style[props[i]] !== undefined) {
+                    
+                    cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+                    animProp = '-' + cssPrefix + '-transform';
+                }
+            }
+
+
+el.css(animProp, 'translate(50%,0px)');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(0px,0px)');
+
+selectedReportInvalid="";
+RAOtherReasons=0;
+var rCode ;
+
+$(".reportInvalidOption").unbind().bind('click',function () {
+
+if($(this).attr('id')=='js-otherInvalidReasons')
+{
+el.scrollTop('0px');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(-50%,0px)');
+RAOtherReasons=1;selectedReportInvalid="";
+rCode = '5';
+}
+else 
+{
+  selectedReportInvalid=$(this).text();RAOtherReasons=0;
+  rCode = $(this).val();
+}
+ 
+;
+
+$('.RAcorrectImg').hide();
+$(this).find('.RAcorrectImg').show();
+});
+
+
+$("#reportInvalidSubmit").unbind().bind('click',function() {
+
+var reason="";
+
+if(RAOtherReasons)
+{ 
+  reason=$("#js-otherInvalidReasonsLayer").val();
+  if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+}
+else {
+  reason=selectedReportInvalid;
+if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+}
+
+
+
+reason=$.trim(reason);
+//Phone type for phone api
+if (phoneType=='L') {var mobile='N';var phone='Y';}
+if (phoneType=='M') {var mobile='Y';var phone='N';}
+
+var otherReason = '';
+if(rCode == '5')
+{
+  otherReason = reason;
+}
+
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileCheckSum,'reasonCode':rCode,'otherReasonValue':otherReason};
+var url='/phone/reportInvalid';
+loaderTop();
+$("#contactLoader,#loaderOverlay").show();
+$("#loaderOverlay").show();
+//ajax data for phone api
+$.ajax({
+                
+    url: url,
+    type: "POST",
+    data: ajaxData,
+    //crossDomain: true,
+    success: function(result){
+         $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
+         $("#js-otherInvalidReasonsLayer").val('');
+                    if(CommonErrorHandling(result,'?regMsg=Y')) 
+                    {
+          ShowTopDownError([result.message],10000);
+          $("#commonOverlayTop").show();
+                    }
+}
+
+});
+});
+
+historyStoreObj.push(hideReportInvalid,"#reportInvalid");
+
+
 }

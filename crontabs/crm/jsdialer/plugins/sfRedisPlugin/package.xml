@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.9.1" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>sfRedisPlugin</name>
+ <channel>plugins.symfony-project.org</channel>
+ <summary>Redis for symfony</summary>
+ <description>The sfRedis plugin provides redis support to symfony (through Predis).</description>
+ <lead>
+  <name>Benjamin VIELLARD</name>
+  <user>bicou</user>
+  <email>symfony@bicou.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2010-08-06</date>
+ <time>08:35:41</time>
+ <version>
+  <release>1.0.2</release>
+  <api>1.0.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.symfony-project.org/license">MIT license</license>
+ <notes>
+-
+ </notes>
+ <contents>
+  <dir name="/">
+   <file md5sum="8c1276760ca20b0c4fae1d6363248ab9" name="config/factories.yml.sample" role="data"/>
+   <file md5sum="ccb1578b43db87062956f7b9482b3c8e" name="config/sfRedisPluginConfiguration.class.php" role="data"/>
+   <file md5sum="7a76dae3ac9b43d7eae381a725765b2e" name="config/redis.yml" role="data"/>
+   <file md5sum="9d8f2b95bb5d0a4d6f61d25ea3cfd862" name="lib/task/redisInfoTask.class.php" role="data"/>
+   <file md5sum="22249b215ca61b77d1e78c32333e6a1e" name="lib/cache/sfRedisCache.class.php" role="data"/>
+   <file md5sum="4a134af9b28dc123d0618a7af7d09f19" name="lib/config/sfRedisConfigHandler.class.php" role="data"/>
+   <file md5sum="acf7a3e22e6fd24994998dcf77a2d357" name="lib/predis/LICENSE" role="data"/>
+   <file md5sum="d12a4f1853dacfd104d172b3fb1b1e02" name="lib/predis/Predis.php" role="data"/>
+   <file md5sum="6468bfd3624ff5ab1b9dc397be4d52a4" name="lib/Doctrine/Cache/Redis.php" role="data"/>
+   <file md5sum="ba69b31bc56af0f5d73be7c1b9468251" name="lib/pager/sfRedisZsetPager.class.php" role="data"/>
+   <file md5sum="1310572d62742eb56decf2e172ef070d" name="lib/pager/sfRedisListPager.class.php" role="data"/>
+   <file md5sum="7d17022263d4471fd8f74ed3843bcd31" name="lib/pager/sfRedisZsetDoctrinePager.class.php" role="data"/>
+   <file md5sum="ccb9fdd9a87102c35aafbee2eee96080" name="lib/sfRedis.class.php" role="data"/>
+   <file md5sum="caee4460edcd122dfdf033f3f224b133" name="LICENSE" role="data"/>
+   <file md5sum="c3e150c61848e25145d7fcb7dde1fac4" name="README" role="data"/>
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.4</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.1</min>
+   </pearinstaller>
+   
+  </required>
+ </dependencies>
+ <phprelease/>
+ <changelog>
+  <release>
+   <version>
+    <release>1.0.2</release>
+    <api>1.0.2</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.org/license">MIT license</license>
+   <date>2010-08-06</date>
+   <notes>
+* sfRedisListPager: sfPager implementation for redis lists
+* sfRedisZsetPager: sfPager implementation for redis sorted sets (with min/max filter support)
+* sfRedisZsetDoctrinePager: sfPager + Doctrine + Sorted sets
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.org/license">MIT license</license>
+   <date>2010-07-21</date>
+   <notes>
+* Upgrade to latest Predis version
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.org/license">MIT license</license>
+   <date>2010-05-21</date>
+   <notes>
+* First stable release
+* Correct Doctrine_Cache_Driver return values
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.1</release>
+    <api>0.9.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.org/license">MIT license</license>
+   <date>2010-04-09</date>
+   <notes>
+* Implement Doctrine_Cache_Driver::_getCacheKeys()
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.0</release>
+    <api>0.9.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.org/license">MIT license</license>
+   <date>2010-03-28</date>
+   <notes>
+* First public release
+   </notes>
+  </release>
+ </changelog>
+</package>

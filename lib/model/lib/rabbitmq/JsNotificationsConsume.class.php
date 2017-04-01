@@ -119,6 +119,7 @@ class JsNotificationsConsume
    */
   public function processMessage(AMQPMessage $msg)
   {
+
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
@@ -132,7 +133,26 @@ class JsNotificationsConsume
       if(in_array($type, BrowserNotificationEnums::$notificationChannelType))
       { 
         $handlerObj->sendGcmNotification($type,$body);  
-      }     
+      }
+      else if($type == 'APP_NOTIFICATION')
+      {
+	$notificationSenderObj = new NotificationSender;	
+	$profileid =$body['PROFILEID'];
+	$dataSet[$profileid] =$body;
+
+	//filter profiles based on notification count
+        /*if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
+        	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($dataSet,$body["NOTIFICATION_KEY"]);
+        else
+        	$filteredProfileDetails = $dataSet;*/
+	//Send Notification
+	/*$notificationSenderObj->sendNotifications($filteredProfileDetails);
+	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+        $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);*/
+      }
+      else if($type == "MA_NOTIFICATION"){
+          $handlerObj->processMatchAlertNotification($type,$body);
+      }
     }
     catch (Exception $exception) 
     {

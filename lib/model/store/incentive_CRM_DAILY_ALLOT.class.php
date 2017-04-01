@@ -211,20 +211,25 @@ class CRM_DAILY_ALLOT extends TABLE
 		}
 		return $result;
 	}
-	public function getProfilesAllottedInDateRange($stDt,$endDt,$agents)
+	public function getProfilesAllottedInDateRange($stDt,$endDt,$agents,$forRCBMis=false)
 	{
 		try
 		{
 			$count = count($agents);
 			$in_params = trim(str_repeat('?, ', $count), ', ');
-			$sql="SELECT PROFILEID,ALLOT_TIME FROM incentive.CRM_DAILY_ALLOT WHERE ALLOT_TIME >'$stDt' AND ALLOT_TIME < '$endDt' AND ALLOTED_TO IN({$in_params})";
+			$sql="SELECT PROFILEID,ALLOT_TIME,ALLOTED_TO FROM incentive.CRM_DAILY_ALLOT WHERE ALLOT_TIME >'$stDt' AND ALLOT_TIME < '$endDt' AND ALLOTED_TO IN({$in_params})";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":AGENTS",$agents);
 			$prep->execute($agents);
 			while($result=$prep->fetch(PDO::FETCH_ASSOC))
 			{
-				$allotDate=date("Y-m-d",JSstrToTime($result['ALLOT_TIME']));
-				$profiles[$allotDate][]=$result['PROFILEID'];
+				if($forRCBMis == true){
+					$profiles[$result['ALLOTED_TO']][] = array("PROFILEID"=>$result['PROFILEID'],"ALLOT_TIME"=>$result['ALLOT_TIME']);
+				}
+				else{
+					$allotDate=date("Y-m-d",JSstrToTime($result['ALLOT_TIME']));
+					$profiles[$allotDate][]=$result['PROFILEID'];
+				}
 			}
 		}
 		catch(Exception $e)

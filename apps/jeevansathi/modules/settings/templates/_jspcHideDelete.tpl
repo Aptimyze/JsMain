@@ -3,7 +3,7 @@
         <div class="clearfix"> 
           <!--start:left-->
           <div id="hidePartID" class="fl setwid9">
-            <div class="bg-white setp3 color11" style="height:429px">
+            <div class="bg-white setp3 color11" style="height:429px;">
 		~if $UNHIDE eq 0`
               <p id="headingID" class="f16 fontreg txtc">Hide your Profile</p>
 		
@@ -45,12 +45,13 @@
           <!--end:left--> 
           <!--start:right-->
           <div id="deletePartID" class="fr setwid9">
-            <div class="bg-white setp3 color11" style="height:429px;">
+            <div class="bg-white setp3 color11" style="height:429px;overflow: auto;">
               <p class="f16 fontreg txtc">Delete your Profile</p>
               <p class="f15 txtc fontlig pt20 color2">Please use this feature when you are engaged or have found your life partner. This feature deletes your profile 
                 permanently from the site. We would appreciate your feedback on Jeevansathi.com.</p>
               <p class="pt35 f15 txtc fontreg color2">Reason to Delete Profile</p>
               <div class="setwid10 mauto pt20"> 
+
                 <!--start:field 1-->
                 <p id="deleteReasonPrompt" class="color5 f12 txtc sethgt1 fontlig disp-none">Please select a reason</p>
                 <div id="deleteReasonBox" class="setbdr1">
@@ -72,6 +73,7 @@
                         </div>
                       </div>
                     </div>
+
                     <!--end:drop down--> 
                   </div>
                 </div>
@@ -96,8 +98,9 @@
                 </div>
                 
                 <!--end:field 3--> 
-
-
+          ~if $showOTP eq 'Y'`
+   <a  id ="otpProfileDeletion"  class="setwid10 mauto pt20 pos-rel disp_b txtc color5 cursp">Delete Using OTP</a>
+          ~/if`
 
               </div>
     <div id="offerCheckBox" class="disp-none" style="margin-left: 36px;">              
@@ -114,6 +117,20 @@
           <!--end:right--> 
         </div>
       </div>
+      <div id='deleteConfirmation-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
+        <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+            <div class="disp-cell vmid fontlig color11">
+                <div class="wid470 mauto">
+                    <p class="f28">Delete Profile Permanently</p>
+                    <p class="f14 pt25 lh22">This will completely delete your profile information, contact history and active paid membership(s), if any. Are you sure about deleting your profile?</p>
+                </div>            
+            </div>
+        </div>
+        <div class="clearfix">
+            <button id='deleteYesConfirmation'  onclick="deleteConfirmation('Y');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">Yes, Delete Profile Permanently</button>
+            <button id='deleteYesConfirmation' onclick="deleteConfirmation('N');" class="cursp bg6 f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">Dismiss</button>
+        </div>
+    </div>
 <script type="text/javascript">
 var hideUnhide = '~$UNHIDE`';
 </script>

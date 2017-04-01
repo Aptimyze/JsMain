@@ -35,7 +35,7 @@ class photoScreeningAverageTimeAction extends sfActions
 					$this->monthArr = array_keys(crmParams::$monthOrder);
 					$this->mon=$mon;
 					$this->yearArr = range(date('Y'),2004);
-					$db= new PICTURE_PHOTOSCREEN_MASTER_TRACKING;
+					$db= new PICTURE_PHOTOSCREEN_MASTER_TRACKING('newjs_slave');
 					// if any queue is selected
 					 if(isset($_POST['submit']))
 						{

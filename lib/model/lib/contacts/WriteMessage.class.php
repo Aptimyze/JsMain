@@ -13,6 +13,8 @@
  * @extends ContactEvent {@link ContactEvent}
  * @author Esha Jain <esha.jain@jeevansathi.com>
  */
+use MessageQueues as MQ;     //MessageQueues-having values defined for constants used in this class.
+
 class WriteMessage extends ContactEvent{
   /**
    * 
@@ -118,6 +120,15 @@ class WriteMessage extends ContactEvent{
   
  
 	$profileMemcacheServiceViewedObj->updateMemcache();
+
+    //update redisc memcache for new notifications
+      $message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
+
+      $syncRecords[$this->contactHandler->getViewer()->getPROFILEID()]=round(microtime(true) * 1000);
+      JsMemcache::getInstance()->setHashObject($this->contactHandler->getViewed()->getPROFILEID()."_lastCommunicationId",$syncRecords,24*60*60);
+
+      $chatNotification[$this->contactHandler->getViewer()->getPROFILEID()."_".$this->contactHandler->getViewed()->getPROFILEID()]=json_encode(array("msg"=>$message,"ip"=>FetchClientIP(),"from"=>$this->contactHandler->getViewer()->getPROFILEID(),"id"=>"","to"=>$this->contactHandler->getViewed()->getPROFILEID()));
+      JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
     }
     catch (Exception $e) {
       throw new jsException($e);
@@ -155,15 +166,17 @@ class WriteMessage extends ContactEvent{
 	$message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
 	if($message)
 	{
+    // redis key for conversation
+    $key = $this->processMessage($sender, $receiver, $message);
     $producerObj=new Producer();
     if($producerObj->getRabbitMQServerConnected())
     {
         $sender = $this->contactHandler->getViewer();
         $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
+        $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key'=>$key) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'MESSAGE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($gcmData);
+        //$producerObj->sendMessage($gcmData); //Commenting due to notifications being sent through service
         try
         {
           //send instant JSPC/JSMS notification
@@ -187,13 +200,53 @@ class WriteMessage extends ContactEvent{
       $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
       $senderProfileid = $this->contactHandler->getViewer()->getPROFILEID();
       $receiverProfileid = $this->contactHandler->getViewed()->getPROFILEID();
-      $instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message);
+      //$instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message); //Commenting due to notifications being sent through service
       // send instant app notification - end
     }
 	}
   else{
     return true;
   }
+  }
+
+  public function processMessage($sender, $receiver, $message)
+  {
+    $key = "_d_mg_";
+    if($sender->getPROFILEID() < $receiver->getPROFILEID())
+    {
+      $key .= $sender->getPROFILEID().'-'.$receiver->getPROFILEID();
+    }
+    else
+    {
+      $key .= $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
+    }
+
+    $orgTZ = date_default_timezone_get();
+    date_default_timezone_set("Asia/Calcutta");
+    $time = time();   
+
+    $msgTime = date("g:i a",$time);
+    $formattedMsg = '<strong><TAG>'.$sender->getUSERNAME()."</TAG>, $msgTime: ".'</strong>'.$message;
+    $arrValue = array("time"=>time(),"message"=>$formattedMsg,"Receivers"=>$receiver->getPROFILEID(), "sendToBoth" => 0);
+    // Key doesnt exists in Memcache
+    $data = JsMemcache::getInstance()->getHashAllValue($key);
+    if($data)
+    {
+      $arrValue['message'] = $data['message'].'<br>'.$arrValue['message'];
+      if($receiver->getPROFILEID() != $data['Receivers'] && !$data['sendToBoth'])
+      {
+        $arrValue['sendToBoth'] = 1;
+      }
+      elseif ($data['sendToBoth'])
+      {
+        $arrValue['sendToBoth'] = 1;  
+      }
+    }
+    
+    JsMemcache::getInstance()->setHashObject($key,$arrValue,3600*6);
+
+    date_default_timezone_set($orgTZ);
+    return $key;
   }
 
 }

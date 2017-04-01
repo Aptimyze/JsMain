@@ -26,7 +26,7 @@ class incentive_NAME_OF_USER extends TABLE{
                 {
                     $whereStr = "PROFILEID = :PROFILEID";
                 }
-                $sql="SELECT PROFILEID,NAME from incentive.NAME_OF_USER WHERE ".$whereStr;
+                $sql="SELECT SQL_CACHE PROFILEID,NAME from incentive.NAME_OF_USER WHERE ".$whereStr;
                 $resSelectDetail = $this->db->prepare($sql);
                 if(!is_array($profileid))
                     $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
@@ -185,6 +185,82 @@ d in the result
 	{
 		return $this->getName($profileid);
 	}
-		
+
+                /* This function inserts entry into NAME_OF_USER table
+                 * */
+        public function insertNameInfo($profileid,$name,$display)
+        {
+                try
+                {
+				if(!$profileid || (!$name && !$display))
+					throw new jsException("","data missing in insertNameInfo function profileid:".$profileid.",name:".$name.",display:".$display);
+					
+                                        $sqlUpdateName="Update incentive.NAME_OF_USER SET ";
+					if($name)
+						$sqlUpdateName.= " NAME=:NAME ";
+					if($name && $display)
+						$sqlUpdateName.=" , ";
+					if($display)
+						$sqlUpdateName.= " DISPLAY=:DISPLAY ";
+					$sqlUpdateName.=" where PROFILEID=:PROFILEID";
+                                        $resUpdateName = $this->db->prepare($sqlUpdateName);
+                                        $resUpdateName->bindValue(":PROFILEID", $profileid);
+					if($name)
+						$resUpdateName->bindValue(":NAME", $name);
+					if($display)
+						$resUpdateName->bindValue(":DISPLAY", $display);
+                                        $resUpdateName->execute();
+
+                                        if(!$resUpdateName->rowCount() && $name!='')
+                                        {
+                                                        $sql="REPLACE INTO incentive.NAME_OF_USER(PROFILEID,NAME,DISPLAY) VALUES(:PROFILEID,:NAME,:DISPLAY)";
+                                                        $resSelectDetail = $this->db->prepare($sql);
+                                                        $resSelectDetail->bindValue(":PROFILEID", $profileid);
+                                                        $resSelectDetail->bindValue(":NAME", $name);
+							$resSelectDetail->bindValue(":DISPLAY", $display);
+                                                        $resSelectDetail->execute();
+                                        }
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }
+        public function updateNameInfo($profileid,$arr)
+        {
+                try
+                {
+                                if(!$profileid)
+                                        throw new jsException("","data missing in insertNameInfo function profileid:".$profileid.",name:".$name.",display:".$display);
+                                        foreach($arr as $k=>$v)
+                                        {
+                                                if($k=="NAME")
+                                                        $changeName = true;
+                                                if($k=="DISPLAY" && $v!="")
+                                                        $changeDisplay = true;
+                                        }
+                                        if(!$changeName &&!$changeDisplay)
+                                                return true;
+                                        $sqlUpdateName="Update incentive.NAME_OF_USER SET ";
+                                        if($changeName)
+                                                $sqlUpdateName.= " NAME=:NAME ";
+                                        if($changeName && $changeDisplay)
+                                                $sqlUpdateName.=" , ";
+                                        if($changeDisplay)
+                                                $sqlUpdateName.= " DISPLAY=:DISPLAY ";
+                                        $sqlUpdateName.=" where PROFILEID=:PROFILEID";
+                                        $resUpdateName = $this->db->prepare($sqlUpdateName);
+                                        $resUpdateName->bindValue(":PROFILEID", $profileid);
+                                        if($changeName)
+                                                $resUpdateName->bindValue(":NAME", $arr['NAME']);
+                                        if($changeDisplay)
+                                                $resUpdateName->bindValue(":DISPLAY", $arr['DISPLAY']);
+                                        $resUpdateName->execute();
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }		
 }
 ?>

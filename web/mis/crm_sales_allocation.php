@@ -5,11 +5,9 @@ include_once("user_hierarchy.php");
 ini_set("memory_limit","16M");
 ini_set("max_execution_time","0");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {
-	mysql_close($db2);	
 	$name =getname($cid);
 	$privilege=explode("+",getprivilage($cid));
 	if(in_array("TRNG",$privilege) || in_array("P",$privilege) || in_array("MG",$privilege))
@@ -294,9 +292,12 @@ if(authenticated($cid))
                 {
                         $mmarr[$i]=$i+1;
                 }
-                for($i=0;$i<13;$i++)
+		$yy =date("Y");
+		$j=0;
+                for($i=2004;$i<=$yy;$i++)
                 {
-                        $yyarr[$i]=$i+2004;
+                        $yyarr[$j]=$i;
+			$j++;
                 }
 		$smarty->assign("flag","0");
                 $smarty->assign("mmarr",$mmarr);

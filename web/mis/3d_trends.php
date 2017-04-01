@@ -5,7 +5,6 @@
 
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 //if(authenticated($cid))
 if(1)
 {
@@ -118,7 +117,7 @@ if(1)
 
 			$sql2="select RECEIVER,TYPE from  newjs.CONTACTS where SENDER='" . $row1["PROFILEID"] . "' and (TYPE='A' OR TYPE='I') ";
 			$sql2="select RECEIVER,TYPE from  newjs.CONTACTS where SENDER='" . $row1["PROFILEID"] . "'";
-			$myDbName=getProfileDatabaseConnectionName($row1["PROFILEID"],'',$mysqlObj);
+			$myDbName=getProfileDatabaseConnectionName($row1["PROFILEID"],'slave',$mysqlObj);
 			$myDb=$mysqlObj->connect($myDbName) or die("error in connection $myDbName");
 			$res2=mysql_query_decide($sql2,$myDb) or die("$sql2".mysql_error_js($myDb));
 			while($row2=mysql_fetch_array($res2))

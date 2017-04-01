@@ -73,7 +73,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="CR-4">
+                                                    <!-- <li id="CR-4">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -99,7 +99,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </li>
+                                                    </li> -->
                                                 </ul>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                             <div class="fullwid acc_list_box">
                                                 <p class="txtc fontlig f12 pt15">Top Debit Cards</p>
                                                 <ul class="memul clearfix memnp1 txtc">
-                                                    <li id="DR-1">
+                                                    <!-- <li id="DR-1">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -117,8 +117,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </li>
-                                                    <li id="DR-2">
+                                                    </li> -->
+                                                    <li id="DR-1">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -127,7 +127,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-3">
+                                                    <li id="DR-2">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -136,7 +136,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-4">
+                                                    <li id="DR-3">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -145,7 +145,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-5">
+                                                    <li id="DR-4">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -470,10 +470,12 @@
                 ~/if`
                 ~if $data.cart_items.vas_memberships`
                 ~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+                ~if $v.service_name neq "Profile Boost"`
                 <div class="disp-tbl fullwid">
                     <div class="disp-cell wid80p pos-rel">~$v.service_name`</div>
                     <div class="disp-cell txtr wid20p cart_prices">~if $v.orig_price_formatted`~$v.orig_price_formatted`~else`0.00~/if`</div>
                 </div>
+                ~/if`
                 ~/foreach`
                 ~/if`
             </div>
@@ -558,7 +560,9 @@
             createCookie('mainMemDur', '~$data.subscription_duration`', 0);
             ~/if`
             ~if $data.paymentOptionsData.tracking_params.vasImpression`
-            createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~if $data.subscription_id neq 'ESP' and $data.subscription_id neq 'NCP'`
+                    createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~/if`
             ~/if`
             if(window.top.location.href != window.location.href){
                 window.top.location.href = window.location.href;
@@ -680,6 +684,8 @@
         });
         
         $("#payNowBtn").click(function(e){
+            var upgradeMem = "~$data.upgradeMem`";
+    
             if($("#cashPickUp").hasClass("active")){
                 var isValid=validateCashPickupForm();
                 if(isValid){
@@ -696,7 +702,7 @@
                     //var match = date.match(/^(\d+)-(\d+)-(\d+) (\d+)\:(\d+)\:(\d+)$/);
                     //date = new Date(match[1], match[2] - 1, match[3], match[4], match[5], match[6]);
                     //date = date.getTime() / 1000;
-                    var paramStr = 'pickupRequest=1' + '&name=' + name + '&landline=' + landline + '&mobile=' + mobile + '&address=' + address + '&comment=' + comment + '&city=' + city + '&date=' + date + "&device=desktop" + "&mainMembership=" + mainMembership + "&vasImpression=" + vasImpression + "&couponID=" + readCookie('couponID');
+                    var paramStr = 'pickupRequest=1' + '&name=' + name + '&landline=' + landline + '&mobile=' + mobile + '&address=' + address + '&comment=' + comment + '&city=' + city + '&date=' + date + "&device=desktop" + "&mainMembership=" + mainMembership + "&vasImpression=" + vasImpression + "&couponID=" + readCookie('couponID') + "&upgradeMem="+upgradeMem;
                     paramStr = paramStr.replace(/amp;/g, '');
                     url = "/api/v3/membership/membershipDetails?" + paramStr;
                     $.myObj.ajax({
@@ -705,7 +711,7 @@
                         success: function(data) {
                             response = data;
                             if (data.status == 1) {
-                                $.redirectPost('/membership/jspc', {'displayPage':7, 'mainMembership':mainMembership, 'vasImpression':readCookie('selectedVas'), 'profileid':"~$profileid`", 'device':'desktop'});
+                                $.redirectPost('/membership/jspc', {'displayPage':7, 'mainMembership':mainMembership, 'vasImpression':readCookie('selectedVas'), 'profileid':"~$profileid`", 'device':'desktop','upgradeMem':upgradeMem});
                             }
                         }
                     });
@@ -715,39 +721,39 @@
                 ~if $data.paymentOptionsData.backendLink.fromBackend eq '1'`
                     if (checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))) {
                         if (checkEmptyOrNull(readCookie('selectedVas'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`"});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`",'userProfile':"~$data.paymentOptionsData.userProfile`"});
                         } else {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`"});    
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`",'userProfile':"~$data.paymentOptionsData.userProfile`"});    
                         }
                     } else if (checkEmptyOrNull(readCookie('selectedVas'))) {
-                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`"});
+                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'), 'backendRedirect':1, 'fromBackend':1, 'checksum':"~$data.paymentOptionsData.backendLink.checksum`", 'profilechecksum':"~$data.paymentOptionsData.backendLink.profilechecksum`", 'reqid':"~$data.paymentOptionsData.backendLink.reqid`",'userProfile':"~$data.paymentOptionsData.userProfile`"});
                     }
                 ~else`
                 if (checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))) {
                     if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1) {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }
                     } else if (checkEmptyOrNull(readCookie('selectedVas'))) {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }
                     } else {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }
                     }
                 } else if (checkEmptyOrNull(readCookie('selectedVas'))) {
                     if (checkEmptyOrNull(readCookie('couponID'))) {
-                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
                     } else {
-                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType')});
+                        $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':'', 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
                     }
                 }
                 ~/if`

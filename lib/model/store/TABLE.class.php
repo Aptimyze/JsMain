@@ -20,6 +20,7 @@ abstract class TABLE{
          */
 	protected function __construct($dbName) {
 		$this->dbName=$dbName?$dbName:"newjs_master"; // Set default connection to newjs_master
+		$this->dbName = HandlingCommonReqDatabaseId::mapIdToServer($this->dbName);
 		$this->db = jsDatabaseManager::getInstance()->getDatabase($this->dbName)->getConnection();//Get connection
 		if($this->db)
 			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//Set attribute
