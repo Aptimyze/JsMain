@@ -2389,7 +2389,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
-        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID();
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_masterDDL');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
             $result = $autoIncReceiptidObj->getLastInsertedRow();
