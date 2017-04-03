@@ -274,7 +274,7 @@
 <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
 </div>
 <div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
-    <img src="http://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
+    <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
     <div class="fullheight fullwid layerOpa">
         <div class="memOverlay app_clrw">
             <div class="txtc">
