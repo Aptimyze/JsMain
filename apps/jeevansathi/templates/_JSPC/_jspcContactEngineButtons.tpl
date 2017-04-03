@@ -145,7 +145,7 @@
             </ul>
             <div id="noMembershipOffer" class="color5 mt20 f13 {{LowestOfferDisp}}">{{LowestOffer}}</div>
             <div id="MembershipOfferExists" class="color5 mt20 f13 {{MembershipOfferDisp}}">
-              {{MembershipOffer}}, starts @ <del id="oldPrice">{{oldPrice}}</del>&nbsp;<span id="newPrice">{{newPrice}}</span>
+              {{MembershipOffer}} starts @ <del id="oldPrice" class="{{strikedPriceDisp}}">{{oldPrice}}</del>&nbsp;<span id="Currency">{{currency}}</span>&nbsp;<span id="newPrice">{{newPrice}}</span>
             </div>
             <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt10 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
               <div class="colr5 pt10 "></div>

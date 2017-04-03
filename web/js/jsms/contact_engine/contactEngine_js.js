@@ -1269,13 +1269,20 @@ if(result.actiondetails.bottommsg2){
         $("#MembershipOfferExists").show();
         $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
         $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
-        $("#oldPrice").html(result.actiondetails.offer.strikedPrice);
-        $("#newPrice").html(result.actiondetails.offer.discountedPrice);
+        if(typeof(result.actiondetails.strikedprice) != undefined && result.actiondetails.strikedprice != null)
+        {
+          $("#oldPrice").html(result.actiondetails.strikedprice);
+          $("#oldPrice").show();
+        }
+        $("#currency").html(result.actiondetails.membershipoffercurrency);
+        $("#newPrice").html(result.actiondetails.discountedprice);
+        $("#LowestOffer").show();
       }
-      else
+      else if(typeof(result.actiondetails.lowestoffer) != undefined && result.actiondetails.lowestoffer != null)
       {
         $("#LowestOffer").html(result.actiondetails.lowestoffer);
         $("#LowestOffer").addClass("mt60");
+        $("#LowestOffer").show();
       }
 
       bindFooterButtonswithId(result,'footerButtonNew');

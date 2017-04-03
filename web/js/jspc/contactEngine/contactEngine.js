@@ -558,16 +558,32 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 		if(typeof(Obj.actiondetails.offer) != undefined && Obj.actiondetails.offer != null)
 		{
 			FinalHtml = FinalHtml.replace(/\{\{MembershipOffer\}\}/g,Obj.actiondetails.offer.membershipOfferMsg1 + " " + Obj.actiondetails.offer.membershipOfferMsg2);
-			FinalHtml = FinalHtml.replace(/\{\{oldPrice\}\}/g,Obj.actiondetails.offer.strikedPrice);
-			FinalHtml = FinalHtml.replace(/\{\{newPrice\}\}/g,Obj.actiondetails.offer.discountedPrice);
+			FinalHtml = FinalHtml.replace(/\{\{currency\}\}/g,Obj.actiondetails.membershipoffercurrency);
+
+			if(typeof(Obj.actiondetails.strikedprice) != undefined && Obj.actiondetails.strikedprice != null)
+			{
+				FinalHtml = FinalHtml.replace(/\{\{oldPrice\}\}/g,Obj.actiondetails.strikedprice);
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'');
+			}
+			else
+			{
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'disp-none');
+			}
+
+			FinalHtml = FinalHtml.replace(/\{\{newPrice\}\}/g,Obj.actiondetails.discountedprice);
 			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'');
 			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
 		}
-		else
+		else if(typeof(Obj.actiondetails.lowestoffer) != undefined && Obj.actiondetails.lowestoffer != null)
 		{
 			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
 			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
 			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'');
+		}
+		else
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
 		}
 		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.action+"-"+profileChecksum+"-"+this.name);
 		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);

@@ -282,19 +282,19 @@
 
                 <img id="profilePhoto" class="srp_box2 mr6" src="http://mediacdn.jeevansathi.com/1255/13/25113359-1411734648.jpeg">
                 </div>
-                <div class="pad2 f16 fontlig" id="newErrMsg">As a Free Member you can only send an interest for free</div>
-                <div class="pad20 f16 fontlig mt15" id="membershipheading">BUY PAID MEMBERSHIP TO</div>
+                <div class="pad2 f16 fontlig" id="newErrMsg"></div>
+                <div class="pad20 f16 fontlig mt15" id="membershipheading"></div>
                 <ul class=" memList f13 fontlig">
-                    <li class="tick pad21" id="subheading1">View contact details of the member</li>
-                    <li class="tick pad21" id="subheading2">Send personalized message to members you like</li>
-                    <li class="tick pad21" id="subheading3">Show your contact details to other members</li>
+                    <li class="tick pad21" id="subheading1"></li>
+                    <li class="tick pad21" id="subheading2"></li>
+                    <li class="tick pad21" id="subheading3"></li>
                 </ul>
                 <div id="MembershipOfferExists" style="display: none">
-                    <div class="pad45_0 f16 fontlig" id="membershipOfferMsg1">SPECIAL OFFER FOR YOU</div>
+                    <div class="pad45_0 f16 fontlig" id="membershipOfferMsg1"></div>
                     <div class="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
                 </div>
 
-            <div class="f16 fontlig" id="LowestOffer">Lowest Membership starts @<del class="oldPrice">3500</del> Rs.<span id="newPrice">2800</span></div>
+            <div class="f16 fontlig" id="LowestOffer" style="display: none">Lowest Membership starts @<del id="oldPrice" style="display: none"></del>&nbsp;<span id="currency"></span>&nbsp;<span id="newPrice"></span></div>
             </div>
  
         </div>

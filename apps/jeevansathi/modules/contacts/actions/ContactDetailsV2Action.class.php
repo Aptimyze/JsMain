@@ -90,6 +90,7 @@ class ContactDetailsV2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+					$dataPlan = $data2["startingPlan"];
 					unset($responseArray);
 					$responseArray["errmsglabel"] 			= "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 					$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -111,18 +112,31 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
 
 					$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+					if($dataPlan)
+					{
+						$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+						if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+						{
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+						else
+						{
+							$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+					}
+
 					if($MembershipMessage)
 					{
 						$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
 						$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
-						$responseArray["offer"]["strikedPrice"] = "3500";
-						$responseArray["offer"]["discountedPrice"] = "2000";
 					}
-					else
+					else if($dataPlan)
 					{
 						// in case of no offer
-						$responseArray["lowestOffer"] = "Lowest Membership plan starts @ Rs.2800";
+						$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
 					}
+
 					VCDTracking::insertTracking($this->contactHandlerObj);
 				}
 				else
@@ -414,6 +428,7 @@ class ContactDetailsV2Action extends sfAction
 			else {
 				$memHandlerObj = new MembershipHandler();
 				$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+				$dataPlan = $data2["startingPlan"];
 				$MembershipMessage = $data2['hamburger_message']['top'];
 				$responseArray["errmsglabel"]     = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -438,17 +453,29 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
 
 				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+				if($dataPlan)
+				{
+					$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+					if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+					{
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+					else
+					{
+						$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+				}
+
 				if($MembershipMessage)
 				{
 					$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
 					$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
-					$responseArray["offer"]["strikedPrice"] = "3500";
-					$responseArray["offer"]["discountedPrice"] = "2000";
 				}
-				else
+				else if($dataPlan)
 				{
 					// in case of no offer
-					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ Rs.2800";
+					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
 				}
 
 				VCDTracking::insertTracking($this->contactHandlerObj);
