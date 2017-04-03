@@ -23,4 +23,21 @@
 </div>
   <script>
     var webView = '~$webView`';
+    if(webView) {
+      function onHideDurationBack() {
+        if(location.href.indexOf("/static/hideDuration?") !== -1) {
+          location.href = "/static/settings";
+          return true;
+        }
+        return false;
+      }
+
+      $(document).ready(function(){
+        console.log("1");
+        if(typeof historyStoreObj != 'undefined'){
+          console.log("history push");
+          historyStoreObj.push(onHideDurationBack,"#hideSuccess");
+        }
+      });  
+    }   
 </script>

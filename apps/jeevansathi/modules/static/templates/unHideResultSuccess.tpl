@@ -25,4 +25,20 @@
 </div>
 <script>
     var webView = '~$webView`';
+    if(webView) {
+      function onUnHideResultBack() {
+        if(location.href.indexOf("static/unHideResult") !== -1) {
+          location.href = "/static/settings";
+          return true;
+        }
+        return false;
+      }
+
+      $(document).ready(function(){
+        if(typeof historyStoreObj != 'undefined'){
+          historyStoreObj.push(onUnHideResultBack,"#unHideSuccess");
+        }
+      });  
+    }
+    
 </script>
