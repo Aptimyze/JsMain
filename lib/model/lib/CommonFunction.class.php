@@ -757,6 +757,12 @@ class CommonFunction
     		}	
     	}
     	$occupationGroupString = rtrim($occupationGroupString,",");
+
+    	if($isSingleQuote)
+		{
+			$occupationGroupString = "'".$occupationGroupString."'";
+			$occupationGroupString = str_replace(",", "','", $occupationGroupString);
+		}
     	return $occupationGroupString;
     }
 
@@ -769,7 +775,14 @@ class CommonFunction
     public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
     {
         $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
-		$occupationGroupsArray = array_map('intval',explode(',',$occupationGroups));
+		if($isSingleQuote)
+        {
+        	$occupationGroupsArray = explode (",", str_replace("'", "", $occupationGroups));
+        }
+        else
+        {
+        	$occupationGroupsArray = explode (",", $occupationGroups);
+        }
 
 		$occupationValuesString = "";
 
