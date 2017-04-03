@@ -2,7 +2,7 @@
 /*
  * Class gunaScore 
  * This class verifies conditions and calls the third party api to fetch guna scores 
- * and accordingly returns the gunaScoreArr with key as profilechecksum and value as * guna score
+ * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
 
 class gunaScore
@@ -11,8 +11,9 @@ class gunaScore
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
 
-        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='')
-        {	$parentValueArr = gunaScoreConstants::$parentValues;
+        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='',$shutDownConnections='')
+        {	
+		$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
         	//To convert profilechecksum to profileId array
@@ -28,7 +29,7 @@ class gunaScore
         	$parent = $this->getParent($caste);
         	if(in_array($parent, $parentValueArr))
         	{
-        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr);
+        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections);
         			//uses $artroDetails data to compile $logged_astro_details and compstring[]
         			if(is_array($astroDetails))
         			{
@@ -72,12 +73,12 @@ class gunaScore
                                         if(sizeof($compstring)>=gunaScoreConstants::BATCH_NO)
                                         {
                                                $compstringAlteredArr = array_chunk($compstring, gunaScoreConstants::BATCH_NO);
-                                        }
+                                        }                                        
                                         if(!empty($compstringAlteredArr))
                                         {
                                                 $gunaData_1 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[0]);
                                                 $gunaData_2 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[1]);
-                                                $gunaData = array_merge($gunaData_1,$gunaData_2);
+                                                $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                            
                                                 return $gunaData;
                                         }
                                         else
@@ -108,11 +109,11 @@ class gunaScore
         }
 
         //This function uses loggedin user profileId and $searchIdArr to call NEWJS_ASTRO to fetch astroDetails
-        public function getAstroDetailsForIds($profileId,$searchIdArr)
+        public function getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections='')
         {
         	$searchIdArr[]=$profileId;
-        	$newjsAstroObj = ProfileAstro::getInstance(SearchConfig::getSearchDb());
-			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1);
+        	$newjsAstroObj = ProfileAstro::getInstance();
+			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1,$shutDownConnections);
 			unset($newjsAstroObj);
 			return $astroData;
         }
@@ -128,6 +129,7 @@ class gunaScore
 		{
 	        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
 		}
+
 		if(is_array($fresult))
 		{
 			foreach($fresult as $key=>$val)
@@ -139,7 +141,7 @@ class gunaScore
 				$matches[1][0]=intval($matches[1][0]);
 				foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
 				{
-					if($guna_pid == $pid)
+					if($guna_pid == $pid && $matches[1][0] != "0")
 					{
 						$gunaData[$key][$profchecksum]=$matches[1][0];
 					}

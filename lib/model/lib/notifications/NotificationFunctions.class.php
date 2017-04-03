@@ -142,7 +142,7 @@ class NotificationFunctions
                     }
                     else{  
                         //echo "without rabbitmq";                        //flow without rabbitmq
-                        NotificationFunctions::logNotificationOpened($dataSet);
+                        //NotificationFunctions::logNotificationOpened($dataSet);
                     }
 	            }
 	        }
@@ -150,14 +150,14 @@ class NotificationFunctions
 	        }
     	}
 	}
-        public function notificationCheck($request)
+        public function notificationCheck($request,$pollReq='')
         {
                 $notificationStop =JsConstants::$notificationStop;
-                if((date("H")>='02' && date("H")<='09') && !$notificationStop)
+                if((date("H")>='03' && date("H")<='10') && !$notificationStop)
                         $notificationStop=0;
                 else
                         $notificationStop=1;
-                if($notificationStop)
+                if($notificationStop || $pollReq)
                 {
                         $notificationData['notifications'] = array();
 			$newTime ='2020-01-01 00:00:00';
@@ -178,11 +178,11 @@ class NotificationFunctions
 			$producerObj->sendMessage($msgdata);
 			return true;
 		}
-		else{
+		/*else{
                         $registationIdObj = new MOBILE_API_REGISTRATION_ID();
                         $registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 			return true;
-		}
+		}*/
 		return false;
         }
 

@@ -13,6 +13,13 @@ class myjsActions extends sfActions
   
   private $arrProfiler = array();
   private $bEnableProfiler = false;
+  
+  /**
+   * This variable will be use to invalidate the Membership cache
+   * @var type 
+   */
+  private $bInvalidateMemberShipCache = false;
+  
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
@@ -188,12 +195,21 @@ class myjsActions extends sfActions
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+        
+        //MyJS is Not Cached
         if (!$appV1DisplayJson) {
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
+        
+        //If we want to get fresh data for membership 
+        //use it wisely
+        if($this->bInvalidateMemberShipCache) {
+          $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
+        }
+        
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -253,7 +269,9 @@ class myjsActions extends sfActions
   }
 
   public function executeJsmsPerform(sfWebRequest $request)
-	{			//myjs jsms action hit for logging  
+	{			//myjs jsms action hit for logging
+        $this->pageMyJs = 1; 
+        
 				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
                 $this->loginData=$request->getAttribute("loginData");
@@ -262,7 +280,7 @@ class myjsActions extends sfActions
                 $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
-                $this->showExpiring = 0;
+        $this->showExpiring = 0;
 				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 				{
 					$this->showExpiring = 1;

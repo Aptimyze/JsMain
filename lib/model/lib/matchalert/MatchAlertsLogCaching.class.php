@@ -27,7 +27,7 @@ class MatchAlertsLogCaching
                                         $profileIdDate = explode("_",$key);
                                         if($profileIdDate[0] != "0"){
                                                 if((($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == "") && ($profileIdDate[1] >= $lastpartitionedOn)){
-                                                        $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
+                                                        $profileArray[$profileIdDate[0]]   = round($profileIdDate[1],0);
                                                 }
                                         }
                                 }
@@ -37,6 +37,7 @@ class MatchAlertsLogCaching
                         $keyArr = array();
                         if($profileArray){
                                 foreach($profileArray as $mProfileId=>$intDate){
+                                        $intDate = round($intDate,0);
                                         $keyArr[] = $mProfileId."_".$intDate;
                                 }
                         }else{

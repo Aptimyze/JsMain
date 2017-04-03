@@ -65,11 +65,17 @@ EOF;
 		              "lt"=> "now"
 		            ]
 		          ]
+		        ],
+		        [
+		        	"exists" => 
+		        	[
+                    	"field" => "LogMessage"
+                	]
 		        ]
 		      ],
 		      "must_not" => [
 		      	"regexp" =>[
-		      		"LogMessage" => ".*Too many connections.*"
+		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|^.{0,0}$"
 		      	]
 		      ]
 		    ]
