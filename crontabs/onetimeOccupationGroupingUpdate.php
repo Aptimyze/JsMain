@@ -75,7 +75,7 @@ function updateOccupationGrouping($tableName,$occupationValueField,$occupationGr
 {
     global $mysqlObjS , $mysqlObjM;
 
-    $selectSql = "SELECT $primaryKey,$occupationValueField from $tableName where ".$occupationValueField." != ''";
+    $selectSql = "SELECT $primaryKey,$occupationValueField from $tableName where ".$occupationValueField." != '' and ".$occupationValueField." != '0'";
 
     $result = $mysqlObjS->executeQuery($selectSql,$slaveConn) or $mysqlObjS->logError($selectSql);
     while($row = $mysqlObjS->fetchAssoc($result))
