@@ -19,13 +19,18 @@ for($i=0;$i<=23;$i++){
      $hr = str_pad($i, 2, "0", STR_PAD_LEFT);
      $key= $javaPrefixKey.$dtZero."_".$hr;
      foreach($javaKeys as $jKeys){
-             $counter = $memcache->get($key.$jKeys,NULL,0,0);
-             $javacount += $counter;
+             	$counter = $memcache->get($key.$jKeys,NULL,0,0);
+             	$javacount += $counter;
+            	$xyz[$jKeys]+= $counter;
      }
+}
+foreach($xyz as $k=>$v){
+        $ll = round($v/$javacount,4) * 100;
+        $finalStr.= $k."(".$ll.")"." *** ";;
 }
 $counterSearch = $memcache->get("TOTAL_SEARCH_COUNT_".$dt,NULL,0,0);
 if($counterSearch != 0 && $counterSearch != ''){
-        $sql = "REPLACE INTO search.DAILY_SEARCH_COUNT VALUES ('".date("Y-m-d",strtotime("-1 day"))."',$counterSearch,$javacount,NULL)";
+        $sql = "REPLACE INTO search.DAILY_SEARCH_COUNT VALUES ('".date("Y-m-d",strtotime("-1 day"))."',$counterSearch,$javacount,'$finalStr')";
         mysql_query($sql,$db) or die("DAILY_SEARCH_COUNT".mysql_error1($db));
 }
 $memcache->delete("TOTAL_SEARCH_COUNT_".date("d",strtotime("-20 day")));
