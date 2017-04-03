@@ -70,8 +70,8 @@ fwrite($fhobby,"public static function getVariable(\$Name){
 ");
 fwrite($fhobby,"public static function getLinkArray(){
         return MailerArray::\$linkNameArray;}\n
-}");
+");
 fwrite($fhobby,"public static function getMailerSubject(\$Id){
 	return MailerArray::\$subjectArray[\$Id];}\n
-");
+}");
 	mysql_free_result($result);
