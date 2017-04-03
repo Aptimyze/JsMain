@@ -47,6 +47,16 @@ mysql_data_seek($result,0);
 		fwrite($fhobby,"'".$myrow["VARIABLE_NAME"]."'=>array('VARIABLE_PROCESSING_CLASS'=>'".$myrow["VARIABLE_PROCESSING_CLASS"]."','MAX_LENGTH'=>'".$myrow["MAX_LENGTH"]."','MAX_LENGTH_SMS'=>'".$myrow["MAX_LENGTH_SMS"]."','DEFAULT_VALUE'=>'".$myrow["DEFAULT_VALUE"]."','DESCRIPTION'=>'".$myrow['DESCRIPTION']."'),\n");
 	}
 
+	fwrite($fhobby,");\nprivate static \$subjectArray=array(\n");
+	$sql = "select * from jeevansathi_mailer.MAILER_SUBJECT";
+	mysql_free_result($result);
+	$result=mysql_query_decide($sql);
+
+	while($myrow=mysql_fetch_array($result))
+	{
+		fwrite($fhobby,"'".$myrow["MAIL_ID"]."'=>array('MAIL_ID'=>'".$myrow["MAIL_ID"]."','SUBJECT_TYPE'=>'".$myrow["SUBJECT_TYPE"]."','SUBJECT_CODE'=>'".$myrow["SUBJECT_CODE"]."','DESCRIPTION'=>'".$myrow['DESCRIPTION']."'),\n");
+	}
+
 fwrite($fhobby,");\npublic static function getLink(\$Id){
 
 return MailerArray::\$linkarray[\$Id];}\n
@@ -61,4 +71,7 @@ fwrite($fhobby,"public static function getVariable(\$Name){
 fwrite($fhobby,"public static function getLinkArray(){
         return MailerArray::\$linkNameArray;}\n
 }");
+fwrite($fhobby,"public static function getMailerSubject(\$Id){
+	return MailerArray::\$subjectArray[\$Id];}\n
+");
 	mysql_free_result($result);
