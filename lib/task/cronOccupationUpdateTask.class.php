@@ -64,7 +64,7 @@ EOF;
       //occupation grouping table update part
       $occGroupingObj = new NEWJS_OCCUPATION_GROUPING();
       $occGroupingObj->createNewTable();
-      
+      $count = 0;
       $occGroupingArr = FieldMap::getFieldLabel('occupation_grouping', '',1);
       foreach($occGroupingArr as $key=>$val)
       {
