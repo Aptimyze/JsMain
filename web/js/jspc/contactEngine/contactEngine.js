@@ -89,7 +89,7 @@ switch(this.name)
 		}
             $(toBeUpdatedContainerId).attr("data",buttonArray[0].params);
             $(toBeUpdatedLabelId).html(buttonArray[0].label);
-            if(buttonArray[0].enable!="undefined" && buttonArray[0].enable!=null)
+            if(buttonArray[0].enable!=undefined && buttonArray[0].enable!=null)
 			{
 				if(!buttonArray[0].enable)
 					$(toBeUpdatedContainerId).removeClass('contactEngineIcon').addClass('prfbg8CC');
@@ -102,7 +102,7 @@ switch(this.name)
             $(toBeUpdatedContainerId).attr("data",buttonArray[0].params);
             $(toBeUpdatedContainerId).html(buttonArray[0].label).removeClass("mt16").addClass("mt8");
             $(toBeUpdatedMessageId).html("");
-            if(buttonArray[0].enable!="undefined" && buttonArray[0].enable!=null)
+            if(buttonArray[0].enable!=undefined && buttonArray[0].enable!=null)
 			{
 				if(!buttonArray[0].enable){
 					$(toBeUpdatedContainerId).removeClass('contactEngineIcon cursp').addClass('prfbg8CC');
@@ -205,7 +205,7 @@ else if(info.profilechecksum)
 						htmlResp=htmlResp.replace(/\{\{className\}\}/g,"clearfix");
 					
 					htmlResp=htmlResp.replace(/\{\{iconName\}\}/g,temp[i].label);
-					if(temp[i].params!="undefined")
+					if(temp[i].params!=undefined)
 						htmlResp=htmlResp.replace(/\{\{params\}\}/g,temp[i].params);
 					else
 						htmlResp=htmlResp.replace(/\{\{params\}\}/g,'');
@@ -257,7 +257,7 @@ else if(info.profilechecksum)
 				var temp=buttonArray;
 				for (var i = 0; i < temp.length; i++) {
 				  htmlResp=ulElement.html();
-				  if(temp[i].params!="undefined")
+				  if(temp[i].params!=undefined)
 						htmlResp=htmlResp.replace(/\{\{params\}\}/g,temp[i].params);
 					else
 						htmlResp=htmlResp.replace(/\{\{params\}\}/g,'');
@@ -297,7 +297,7 @@ else if(info.profilechecksum)
            }
            else 
 				FinalHtml=FinalHtml.replace(/\{\{icon\}\}/g,DetailbuttonsActionMap[temp[0].id]['icon']);
-				if(temp[0].params!="undefined")
+				if(temp[0].params!=undefined)
 					FinalHtml=FinalHtml.replace(/\{\{params\}\}/g,temp[0].params);
 				else
 					FinalHtml=FinalHtml.replace(/\{\{params\}\}/g,'');
@@ -339,7 +339,7 @@ else if(info.profilechecksum)
             var temp=buttonArray;
 				          
 				preCCOneBtn.find('.buttonLabel1').html(temp[0].label);
-					if(temp[0].params!="undefined")
+					if(temp[0].params!=undefined)
 						preCCOneBtn.find('.buttonId1').attr('data',temp[0].params);
 					if(temp[0].id)
 					preCCOneBtn.find('.buttonId1').attr('id',temp[0].id+'-'+this.profileChecksum+"-"+this.name);
@@ -347,7 +347,7 @@ else if(info.profilechecksum)
 					preCCOneBtn.find('.buttonId1').removeClass("cursp contactEngineIcon").addClass("prfbg8CC");				
 					
 					preCCOneBtn.find('.buttonLabel2').html(temp[1].label);
-					if(temp[1].params!="undefined")
+					if(temp[1].params!=undefined)
 						preCCOneBtn.find('.buttonId2').attr('data',temp[1].params);
 					if(temp[1].id)
 					preCCOneBtn.find('.buttonId2').attr('id',temp[1].id+'-'+this.profileChecksum+"-"+this.name);
@@ -362,7 +362,7 @@ else if(info.profilechecksum)
             preCCOneBtn=$("#PreContactCenterOneButton").clone();
             var temp=buttonArray;				          
 				preCCOneBtn.find('.buttonLabel').html(temp[0].label);
-					if(temp[0].params!="undefined")
+					if(temp[0].params!=undefined)
 						preCCOneBtn.find('.buttonLabel').attr('data',temp[0].params);
 					if(temp[0].id)
 					preCCOneBtn.find('.buttonLabel').attr('id',temp[0].id+'-'+this.profileChecksum+"-"+this.name);
@@ -406,7 +406,7 @@ ContactEngineCard.prototype.postDisplay = function(Obj,profileChecksum,isError){
 					else return this.postViewContactLayer(Obj,profileChecksum);
 				}
 			}
-			else if(Obj.actiondetails.writemsgbutton!="undefined")
+			else if(Obj.actiondetails.writemsgbutton!=undefined)
 			{
 			  currentActionLayer="Message";
 			  return postCommonMessageLayer(Obj,profileChecksum,this.name);
@@ -442,11 +442,11 @@ function postCommonMessageLayer(Obj,profileChecksum,pageSource)
 	else
 		var FinalHtml=$("#postCommonMessageLayer").html();
 	FinalHtml=FinalHtml.replace(/\{\{ACTION_ID\}\}/g,Obj.actiondetails.writemsgbutton.id+"-"+profileChecksum+"-"+pageSource);
-	if(Obj.actiondetails.writemsgbutton.params!="undefined")
+	if(Obj.actiondetails.writemsgbutton.params!=undefined)
 		FinalHtml=FinalHtml.replace(/\{\{params\}\}/g,Obj.actiondetails.writemsgbutton.params);
 	else
 		FinalHtml=FinalHtml.replace(/\{\{params\}\}/g,'');
-	if(Obj.actiondetails.draftmessage!="undefined")
+	if(Obj.actiondetails.draftmessage!=undefined)
 		FinalHtml=FinalHtml.replace(/\{\{MESSAGE_TEXT\}\}/g,Obj.actiondetails.draftmessage);
 	else
 		FinalHtml=FinalHtml.replace(/\{\{MESSAGE_TEXT\}\}/g,"Write a personalized message");
@@ -462,13 +462,13 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 	}
 	else
 		var FinalHtml=$("#postCommonDisplayLayer").html();
-	if(typeof(Obj.actiondetails.headerlabel_viewSimilar)!="undefined" && Obj.actiondetails.headerlabel_viewSimilar!=null){
-		if(typeof(Obj.actiondetails.headerlabel_viewSimilar)!="undefined" && Obj.actiondetails.headerlabel_viewSimilar!=null){
+	if(typeof(Obj.actiondetails.headerlabel_viewSimilar)!=undefined && Obj.actiondetails.headerlabel_viewSimilar!=null){
+		if(typeof(Obj.actiondetails.headerlabel_viewSimilar)!=undefined && Obj.actiondetails.headerlabel_viewSimilar!=null){
 			FinalHtml=FinalHtml.replace(/\{\{header\}\}/g,Obj.actiondetails.headerlabel_viewSimilar);
 			FinalHtml=FinalHtml.replace(/\{\{VisibilityClass_header\}\}/g,'pt25');
 		}
 		
-		if(typeof(Obj.actiondetails.viewSimilarUsername)!="undefined" && Obj.actiondetails.viewSimilarUsername!=null)
+		if(typeof(Obj.actiondetails.viewSimilarUsername)!=undefined && Obj.actiondetails.viewSimilarUsername!=null)
 		{	
 			FinalHtml=FinalHtml.replace(/\{\{ViewSimiarProfile\}\}/g,"<a href='/search/viewSimilarProfile?profilechecksum="+profileChecksum+"&stype=VSI&contactedProfileDetails=hide&SIM_USERNAME="+Obj.actiondetails.viewSimilarUsername+"' class='color5 fontreg'>  View Similar Profiles</a>");	
 		}
@@ -730,7 +730,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	{
 		FinalHtml=FinalHtml.replace(/\{\{DETAILED_PROFILE_INFO\}\}/g,Obj.actiondetails.topmsg);
 		viewContactElement.html(FinalHtml);
-		if(Obj.actiondetails.membership && Obj.actiondetails.membership!="undefined")
+		if(Obj.actiondetails.membership && Obj.actiondetails.membership!=undefined)
 			viewContactElement.find("#cEMembershipEvalue").removeClass("disp-none");
 	}
 	if(Obj.actiondetails.contact6!=null )
@@ -884,7 +884,7 @@ function updateChatRosterList(elementObj,arrID){
 	if(arrID[0] == "IGNORE"){
 		//console.log("ignore from cEButtonActionCalling");
 		var chatData = elementObj.attr("data-chat");
-		if(chatData != "undefined"){
+		if(chatData != undefined){
 			var chatSplitData = chatData.split(",");
 			if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
 				updateNonRosterListOnCEAction({
@@ -897,7 +897,7 @@ function updateChatRosterList(elementObj,arrID){
 	else{
 		//non roster actions(shortlist,remove shortlist) other than ignore and chat
 		if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
-			if(arrID[1] != "undefined"){
+			if(arrID[1] != undefined){
 				var profileSplitData = arrID[1].split("i");
 				var chatStatus = "offline";
 				if(elementObj.parent().find(".OnlineChat").length == 1){

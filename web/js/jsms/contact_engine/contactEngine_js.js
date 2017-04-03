@@ -64,7 +64,7 @@ var div = document.createElement('div');
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
             // test for each property
             for (var i in props) {
-                if (div.style[props[i]] !== "undefined") {
+                if (div.style[props[i]] !== undefined) {
                     
                     cssPrefix = props[i].replace('Perspective', '').toLowerCase();
                     animProp = '-' + cssPrefix + '-transform';
@@ -1636,7 +1636,7 @@ var div = document.createElement('div');
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
             // test for each property
             for (var i in props) {
-                if (div.style[props[i]] !== "undefined") {
+                if (div.style[props[i]] !== undefined) {
                     
                     cssPrefix = props[i].replace('Perspective', '').toLowerCase();
                     animProp = '-' + cssPrefix + '-transform';
