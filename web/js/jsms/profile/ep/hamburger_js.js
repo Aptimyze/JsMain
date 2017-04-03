@@ -414,6 +414,7 @@ var hamHtml="",slider1,slider2;
 				var index=parseInt($(id).parent().attr("index"));
 				
 				$("#HAM_OPTION_"+(i+1)).trigger("gotoSlide",[index,1]);
+				showCalDppSugg(index);
 			}
 			
 		}
