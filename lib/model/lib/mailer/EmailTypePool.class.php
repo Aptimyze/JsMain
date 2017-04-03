@@ -7,7 +7,7 @@ class EmailTypePool{
 		self::$type_pool = array();
 		//Moving the function to file based caching
 		$this->email_pdo=new jeevansathi_mailer_EMAIL_TYPE();
-		$mailFromCaching = new MailerType();
+		
 	}
 	public static function getInstance(){
 		if (!self::$instance){ 
@@ -21,6 +21,7 @@ class EmailTypePool{
 		else{		
 					//Moving this function to file based caching
 			       // $result=$this->email_pdo->getEmailType($mail_id);
+					$mailFromCaching = new MailerType();
 					$result=$mailFromCaching->getLinkArray($mail_id);
 					$email_tpl=$this->setAllParamsInEmailType($result);
 					 self::$type_pool[$mail_id]=$email_tpl;
