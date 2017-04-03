@@ -1882,6 +1882,10 @@ class MembershipAPIResponseHandler {
                 'hamburger_message' => NULL
             );
         }
+
+        $startingPlanData = $this->generateMembershipPlansStartingRange();
+        $output['startingPlan'] = $startingPlanData['startingPlan'];
+        unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_HAMB_MESSAGE', serialize($output) , 1800);
@@ -1894,7 +1898,6 @@ class MembershipAPIResponseHandler {
     public function generateMembershipPlansStartingRange(){
         $origStartingPrice = 9999999;  //max integer value
         $discountedStartingPrice = 9999999;  //max integer value
-
         if(is_array($this->minPriceArr) && $this->profileid){
             foreach($this->minPriceArr as $service => $val){
                 if($val['PRICE_INR']>=0 && $origStartingPrice > $val['PRICE_INR']){
