@@ -18,7 +18,7 @@ class InstantAppNotification
 
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
 	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT');
-	$this->instantNotificationForMQ =array('PROFILE_VISITOR','PHOTO_UPLOAD');
+	$this->instantNotificationForMQ =array('PROFILE_VISITOR','PHOTO_UPLOAD','PHOTO_REQUEST');
   }
 
   // Push Notification to MQ
