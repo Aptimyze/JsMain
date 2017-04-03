@@ -414,6 +414,7 @@ class negativeTreatment
         $arrDeleteLogs = array(
             'END_TIME' => date('Y-m-d H:i:s'),
             'COMPLETE_STATUS' => 'Y',
+            'INTERFACE' =>'B'
         );
         $profileDeleteObj->updateRecord($profileid, $startTime, $arrDeleteLogs);
         //End:JSC-2551: Mark Completion in logs
