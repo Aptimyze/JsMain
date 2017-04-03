@@ -64,7 +64,7 @@ var div = document.createElement('div');
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
             // test for each property
             for (var i in props) {
-                if (div.style[props[i]] !== undefined) {
+                if (div.style[props[i]] !== "undefined") {
                     
                     cssPrefix = props[i].replace('Perspective', '').toLowerCase();
                     animProp = '-' + cssPrefix + '-transform';
@@ -1264,12 +1264,12 @@ if(result.actiondetails.bottommsg2){
       $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
       $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
       
-      if(typeof(result.actiondetails.offer) != undefined && result.actiondetails.offer != null)
+      if(typeof(result.actiondetails.offer) != "undefined" && result.actiondetails.offer != null)
       {
         $("#MembershipOfferExists").show();
         $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
         $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
-        if(typeof(result.actiondetails.strikedprice) != undefined && result.actiondetails.strikedprice != null)
+        if(typeof(result.actiondetails.strikedprice) != "undefined" && result.actiondetails.strikedprice != null)
         {
           $("#oldPrice").html(result.actiondetails.strikedprice);
           $("#oldPrice").show();
@@ -1278,7 +1278,7 @@ if(result.actiondetails.bottommsg2){
         $("#newPrice").html(result.actiondetails.discountedprice);
         $("#LowestOffer").show();
       }
-      else if(typeof(result.actiondetails.lowestoffer) != undefined && result.actiondetails.lowestoffer != null)
+      else if(typeof(result.actiondetails.lowestoffer) != "undefined" && result.actiondetails.lowestoffer != null)
       {
         $("#LowestOffer").html(result.actiondetails.lowestoffer);
         $("#LowestOffer").addClass("mt60");
@@ -1636,7 +1636,7 @@ var div = document.createElement('div');
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
             // test for each property
             for (var i in props) {
-                if (div.style[props[i]] !== undefined) {
+                if (div.style[props[i]] !== "undefined") {
                     
                     cssPrefix = props[i].replace('Perspective', '').toLowerCase();
                     animProp = '-' + cssPrefix + '-transform';
