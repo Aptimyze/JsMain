@@ -311,6 +311,8 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$time_to_call_label="";
 			$time_to_call_value="";
 		}
+		
+		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
                 
                 //Mobile Privacy Settings
                 $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
@@ -324,7 +326,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
                 $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
                 // }
     
-		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
 		
 		return $contactArr;
 	}
