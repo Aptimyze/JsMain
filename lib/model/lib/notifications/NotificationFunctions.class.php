@@ -186,6 +186,25 @@ class NotificationFunctions
 		return false;
         }
 
+	// Caching
+  	public function appNotificationCountCachng($notificationKey, $rabbitMq=''){
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $key ="APP_INST#".$notificationKey;
+                $mqParam ="#MQ";
 
+                if(!$rabbitMq){
+                        $keyExist =$JsMemcacheObj->keyExist($key);
+                        if(!$keyExist){
+                                $JsMemcacheObj->set($key,0,86400,'','X');
+                                $key1 =$key.$mqParam;
+                                $JsMemcacheObj->set($key1,0,86400,'','X');
+                        }
+                }
+                elseif($rabbitMq)
+                        $key =$key.$mqParam;
+                $JsMemcacheObj->incrCount($key);
 
+                //$val =$JsMemcacheObj->get($key,'','',0);
+		//echo $key."=".$val."\n";
+  	}
 }
