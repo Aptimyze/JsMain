@@ -2421,7 +2421,7 @@ class MembershipHandler
     }
 
     /*function to compute starting price of membership plans with and without discount
-    * @inputs:$profileid
+    * @inputs:$request
     * @return:$output
     */
     public function fetchMembershipPlansStartingRange($request){
