@@ -67,14 +67,13 @@ editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P
     }
     if(bxslider && index) {
       bxslider.gotoSlide(index);
-	showCalDppSugg(index);
+	//showCalDppSugg(index);
     }
    },200);
 });
-function showCalDppSugg(index)
+function showCalDppSugg()
 {
-mutualMatchCount = parseInt((pageJson.Dpp.BasicDetails.OnClick[6]['value']).toLocaleString());
-	if(index==8 && mutualMatchCount<100 && dppSuggestionsData['dppData'].length>1)
+	if(mutualMatchCount<100 && dppSuggestionsData['dppData'].length>1)
 	{
 		$("#ed_slider").addClass("dn");
 		$("#commonOverlay").removeClass("dn");
@@ -269,6 +268,8 @@ var mobEditPage=(function(){
 					$("#mutualMatchCountMobile").css("padding","2px");
 					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
 					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
+					if(mutualMatchCount<100)
+						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='showCalDppSugg();'>Increase Match</a></p>");
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
                     {
@@ -376,11 +377,13 @@ var mobEditPage=(function(){
                         $("#"+key+"RightTab").click(function()
                         {
                             bxslider.NextSlide();
+/*
 				var hashVal=document.location.hash.replace(",historyCall","");
 				var actualHash=hashVal.replace("#","");
 				if(!sliderCurrentPage)
 					sliderCurrentPage=$("#"+actualHash+"slidername").attr("index");
 				showCalDppSugg(sliderCurrentPage);
+*/
                         });
 			i=2;
 			var topbarh=$("#topbar").height();
