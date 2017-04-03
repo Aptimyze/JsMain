@@ -7,7 +7,7 @@
   </div>
   <!--end:top--> 
   <!--start:error-->
-  <div class="fullwid f14 pad19 content_t color11" style="font-family:Roboto Light;">
+  <div class="fullwid f14 pad19 content_t color11 fontlig">
   	~include_partial($innerTemplate)`
   </div>
   <!--end:error-->
