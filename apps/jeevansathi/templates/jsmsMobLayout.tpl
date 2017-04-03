@@ -31,7 +31,10 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
-
+        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
+        ~if $ampurl|strstr:"amp"`
+            <link rel="amphtml" href="~$ampurl`">
+        ~/if`
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
     ~include_canurl`

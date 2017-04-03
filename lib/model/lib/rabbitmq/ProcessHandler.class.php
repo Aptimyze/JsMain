@@ -72,10 +72,13 @@ class ProcessHandler
    */
   public function sendGCM($type,$body)
   {
-    $senderid=$body['senderid'];   
-    $receiverid=$body['receiverid'];
-    $message = $body['message'];
-    switch($type)
+    $senderid		=$body['senderid'];   
+    $receiverid		=$body['receiverid'];
+    $message 		=$body['message'];
+    $exUrl		=$body['exUrl'];
+    $extraParams 	=$body['extraParams'];		    
+
+    /*switch($type)
     {
       case 'ACCEPTANCE' :  $instantNotificationObj = new InstantAppNotification("ACCEPTANCE");
                            $instantNotificationObj->sendNotification($receiverid, $senderid);
@@ -83,12 +86,19 @@ class ProcessHandler
       case 'MESSAGE'    :  $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
                            $instantNotificationObj->sendNotification($receiverid, $senderid, $message);  
                            break;
-    }
+    }*/
+
+    // Handle All Instant App Notification	
+    $notificationKey =$type;	
+    $rabbitMq =1;	
+    $instantNotificationObj = new InstantAppNotification($notificationKey);
+    $instantNotificationObj->sendNotification($receiverid, $senderid, $message, $exUrl, $extraParams, $rabbitMq);		
+
   } 
 
   /**
    * 
-   * Function for sending gcm notifications(fso app/browser).
+   * Function for sending gcm notifications(fso app/Browser Scheduled Notification).
    * 
    * @access public
    * @param $type,$body
@@ -106,11 +116,12 @@ class ProcessHandler
       }
     }    
   }
-  
+ 
+  // Instant Browser Notification	 
   public function sendInstantNotification($type, $body)
   {
     if($body){
-        $notificationType = "INSTANT"; //INSTANT/SCHEDULED
+        $notificationType = "INSTANT"; //INSTANT
         $notificationKey = $body["notificationKey"];
         $selfUserId = $body["selfUserId"];    //profileid/agentid to whom notification is to be sent
         $otherUserId = $body["otherUserId"]; //comma separated list of other profileids(whose data is used in notification)
@@ -200,6 +211,15 @@ class ProcessHandler
 			break;
 	}
         
+ }
+ public function updateSeenProfile($typeInfo,$body)
+ {
+	$fromSym=$body['fromSym'];
+	$type = $body['type'];
+	$mypid = $body['mypid'];
+	$updatecontact = $body['updatecontact'];
+	$profileid = $body['profileid']; 
+	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
  }
  public function updateFeaturedProfile($type,$body)
  {
@@ -291,6 +311,28 @@ public function logDiscount($body,$type){
         }
     }
 }
+
+    public function processMatchAlertNotification($type,$body){
+        $instantNotificationObj =new InstantAppNotification("MATCHALERT");
+        $notificationParams["RECEIVER"] = $body["PROFILEID"];
+        $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
+        $seperator = "#";
+        $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+        if($preSetCache){
+            $explodedVal = explode($seperator,$preSetCache);
+            $notificationParams["COUNT"] = $explodedVal[0];
+            $notificationParams["OTHER_PROFILE"] = $explodedVal[1];
+            $notificationParams["OTHER_PROFILE_URL"] = $explodedVal[2];
+            $lastLoginDt = $explodedVal[3];
+            $notificationKey = "MATCHALERT";
+            $condition = $instantNotificationObj->notificationObj->checkNotificationOnLastLogin($notificationKey,$lastLoginDt);
+            if($condition){
+                $instantNotificationObj->sendMatchAlertNotification($notificationParams);
+            }
+            unset($notificationParams,$instantNotificationObj);
+            JsMemcache::getInstance()->remove($cacheKey);
+        }        
+    }
 
  }
 ?>

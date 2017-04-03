@@ -143,7 +143,7 @@ EOF;
                                     
                                     //profiles registered 7 days before
                                      $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate);
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate,'','',$source='AP');
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
                                 }
@@ -197,6 +197,7 @@ EOF;
 								$this->setExceptionError($ex);
 							}
 						}
+                                                ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
 							break;
@@ -207,6 +208,7 @@ EOF;
 			{
 				$this->setExceptionError($ex);
 			}
+			ProfileMemcache::unsetInstance($senderId);
                         $tempProfileRecords->insert($senderId);
 		
 		}
@@ -245,7 +247,6 @@ EOF;
 			$contactObj = new Contacts($profileObj, $receiverObj);
 			if($contactObj->getTYPE() == 'N')
 			{
-				
 				$contactHandlerObj = new ContactHandler($profileObj,$receiverObj,"EOI",$contactObj,'I',ContactHandler::POST);
 				$contactHandlerObj->setPageSource("AP");
 /*				 STOPPING THIS MESSAGE AS CHAT REQUIRED FOR RB

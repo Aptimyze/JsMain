@@ -13,6 +13,13 @@ class myjsActions extends sfActions
   
   private $arrProfiler = array();
   private $bEnableProfiler = false;
+  
+  /**
+   * This variable will be use to invalidate the Membership cache
+   * @var type 
+   */
+  private $bInvalidateMemberShipCache = false;
+  
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
@@ -188,12 +195,21 @@ class myjsActions extends sfActions
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+        
+        //MyJS is Not Cached
         if (!$appV1DisplayJson) {
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
+        
+        //If we want to get fresh data for membership 
+        //use it wisely
+        if($this->bInvalidateMemberShipCache) {
+          $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
+        }
+        
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -269,7 +285,7 @@ class myjsActions extends sfActions
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
 
-				$this->showMatchOfTheDay = 0;
+				$this->showMatchOfTheDay = 1;
 				if($this->loginProfile->getACTIVATED() == 'U')
 				{
 					$this->showMatchOfTheDay = 0;
@@ -410,7 +426,7 @@ class myjsActions extends sfActions
 		}
 
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$this->showMatchOfTheDay = 0;
+		$this->showMatchOfTheDay = 1;
 		if($loggedInProfileObj->getACTIVATED() == 'U')
 		{
 			$this->showMatchOfTheDay = 0;
@@ -601,8 +617,7 @@ return $staticCardArr;
 		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
 		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
 		$matchObj->updateMatchProfile($profileId, $matchProfileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$profileId);
+		JsMemcache::getInstance()->set("cachedMM24$profileId","");
 		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();

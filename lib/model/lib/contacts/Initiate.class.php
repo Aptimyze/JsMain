@@ -226,8 +226,18 @@ class Initiate extends ContactEvent{
   
         try
         {
+            $msg = $this->contactHandler->getElements("MESSAGE");
+            $splitArr = explode("--",$msg);
+            $correctedSplit = CommonUtility::correctSplitOnBasisDate($splitArr,1);
+            if($msg && $correctedSplit){
+                $id = $splitArr[3];
+                $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
+            }
+            else{
                 $instantNotificationObj = new InstantAppNotification("EOI");
                 $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+            }
         }
         catch(Exception $e)
         {
@@ -347,10 +357,9 @@ class Initiate extends ContactEvent{
     catch (Exception $e) {
       throw new jsException($e);
     }
-
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
-
+    // delete data of Match of the day
+    JsMemcache::getInstance()->set("cachedMM24".$this->viewed->getPROFILEID(),"");
+    JsMemcache::getInstance()->set("cachedMM24".$this->viewer->getPROFILEID(),"");
   }
 
   public function sendMail() {

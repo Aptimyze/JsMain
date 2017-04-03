@@ -22,11 +22,13 @@ class pageAction extends sfAction
 	*
 	* @param sfRequest $request A request object
 	*/
+    
 	private $allowed=array("disclaimer"=>1,"privacypolicy"=>2,"thirdparty"=>3,"privacyfeatures"=>4,"fraudalert"=>5);
 	private $inner=array(1=>"terms",2=>"policy",3=>"thirdpar",4=>"features",5=>"fraud");
 	private $staticPageArray=array("fraudalert"=>"Fraud Alert","disclaimer"=>"Terms & Conditions","thirdparty"=>"Third Party T&C","privacypolicy"=>"Privacy Policy","privacyfeatures"=>"Privacy Features");
 	public function execute($request)
 	{
+            
 		$type=$request->getParameter("type");
 		$this->pageName=$type;
 		$this->legalPageTabs=$this->staticPageArray;
@@ -34,14 +36,22 @@ class pageAction extends sfAction
 		$this->viewThisPage="jspc".$type;
 		$type_index=$this->allowed[$request->getParameter("type")]?$this->allowed[$request->getParameter("type")]:"disclaimer";
 		$this->innerTemplate=$this->inner[$type_index];
-		//print_r($type_index);die;
+                //print_r($type_index);die;
 		$this->loginData = $request->getAttribute('loginData');
-		
-		$this->rightPanelStory = IndividualStories::showSuccessPoolStory();
+                if(strpos($request->getUri(), 'privacypolicy') != false){
+                    $request->setAttribute("ampurl", $request->getUri() . "?amp=1");
+                }
+                $this->rightPanelStory = IndividualStories::showSuccessPoolStory();
 		if(!$type_index)
 			$type="disclaimer";
-                if(MobileCommon::isNewMobileSite())
-                        $type="jsms".$type;
+                if(MobileCommon::isNewMobileSite()){
+                    $type="jsms".$type;
+                    if($request->getParameter('amp')=="1" && (strpos($request->getUri(), 'privacypolicy') != false)){
+                        $type = $type . "amp";
+                        $v = explode("?",$request->getUri());
+                        $request->setAttribute("ampurl", $v[0]);
+                    }
+                }
 		else if(MobileCommon::isMobile())
 			$type="mob".$type;
 		$this->setTemplate($type);

@@ -3331,7 +3331,8 @@ EditApp = function(){
       $.myObj.ajax({
         url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
-        datatype: 'json',       
+        datatype: 'json',
+        headers: { 'X-Requested-By': 'jeevansathi' },       
         cache: false,
         async: true,
         contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",

@@ -68,9 +68,7 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			if($request->getParameter("setFirstEoiMsgFlag") == true){
-            	$responseArray["eoi_sent"] = true;
-            }
+           
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -124,6 +122,7 @@ class postEOIv2Action extends sfAction
 		{
 			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		}
+		
 
 		if($this->contactEngineObj->messageId)
 		{ 
@@ -165,6 +164,7 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
+			
 		}
 		else
 		{
@@ -295,8 +295,22 @@ class postEOIv2Action extends sfAction
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 		}
+
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
+		if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
+        {
+        	if($this->contactEngineObj->messageId){
+				$finalresponseArray["eoi_sent"] = true;
+				$finalresponseArray["cansend"] = true;
+            	$finalresponseArray["sent"] = true;
+			}
+			else{
+				$finalresponseArray["eoi_sent"] = false;
+				$finalresponseArray["cansend"] = false;
+            	$finalresponseArray["sent"] = false;    
+        	}	
+		}
 		if(MobileCommon::isNewMobileSite())
 		{
 			

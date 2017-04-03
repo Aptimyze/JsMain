@@ -324,12 +324,17 @@ die;
         /**
         * General Utility function to send 'get' curl request.
         */
-        public static function sendCurlGetRequest($urlToHit,$timeout='')
+        public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
-                $ch = curl_init($urlToHit);
+		     $ch = curl_init($urlToHit);
+		    if($headerArr)
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+			else
                 curl_setopt($ch, CURLOPT_HEADER, 0);
+               
+                
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
@@ -787,7 +792,7 @@ die;
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
 		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
-        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
 		$showChat = 1;
 		if(!$loggedIn){
 			$showChat = 0;
@@ -952,11 +957,7 @@ die;
 		$redirectUrl = "";
 		$loginData = $request->getAttribute("loginData");
         $authchecksum = $request->getcookie('AUTHCHECKSUM');
-        if($loginData["PROFILEID"] == 13766629 || $loginData["PROFILEID"] == 11238186){
-        	error_log("ankita jeevansathi_hindi_site_new= ".$request->getcookie("jeevansathi_hindi_site_new"));
-        	error_log("ankita redirected_hindi_new= ".$request->getcookie("redirected_hindi_new"));
-        	//error_log("ankita redirect= ".$request->getParameter('newRedirect'));
-        }
+       
 		if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
 			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
 				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
@@ -1001,6 +1002,24 @@ die;
 			}
 		}
 		return $redirectUrl;
+	}
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
+  public static function runFeatureAtNonPeak(){
+		
+		if(in_array(date('H'),array("17","18","19","20","21")))
+		{
+			return 1;
+		}
+		return 0;
+
 	}
 }
 ?>
