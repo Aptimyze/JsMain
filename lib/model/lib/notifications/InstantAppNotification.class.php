@@ -18,17 +18,21 @@ class InstantAppNotification
 
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
 	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT');
+	$this->instantNotificationForMQ =array('PROFILE_VISITOR','PHOTO_UPLOAD');
   }
 
   // Push Notification to MQ
   public function pushInstantAppNotificationToMq($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array()){
-
-    	$producerObj=new Producer();
-    	if($producerObj->getRabbitMQServerConnected())
-    	{
-	        $gcmData=array('process'=>'GCM','data'=>array('type'=>$this->notificationKey,'body'=>array('receiverid'=>$selfProfile,'senderid'=>$otherProfile,'message'=>$message,'exUrl'=>$exUrl,'extraParams'=>$extraParams)), 'redeliveryCount'=>0 );
-		//print_r($gcmData);
-        	$producerObj->sendMessage($gcmData);
+	try{
+    		$producerObj=new Producer();
+    		if($producerObj->getRabbitMQServerConnected())
+    		{
+	        	$gcmData=array('process'=>'GCM','data'=>array('type'=>$this->notificationKey,'body'=>array('receiverid'=>$selfProfile,'senderid'=>$otherProfile,'message'=>$message,'exUrl'=>$exUrl,'extraParams'=>$extraParams)), 'redeliveryCount'=>0 );
+			//print_r($gcmData);
+        		$producerObj->sendMessage($gcmData);
+		}
+	}
+	catch(Exception $e){
 	}
   }
 
@@ -39,13 +43,15 @@ class InstantAppNotification
         return;
     }
 
-    // Push Instant Notification To Queue Logic
-    $notificationFunction =new NotificationFunctions();
-    $notificationFunction->appNotificationCountCachng($this->notificationKey, $rabbitMq);
-
-    if(!$rabbitMq){	 
-    	$this->pushInstantAppNotificationToMq($selfProfile,$otherProfile,$message,$exUrl,$extraParams);
-	return;
+    // Push Instant Notification To Queue Logic Start
+    if(in_array("$this->notificationKey", $this->instantNotificationForMQ))
+    {		
+    	$notificationFunction =new NotificationFunctions();
+    	$notificationFunction->appNotificationCountCachng($this->notificationKey, $rabbitMq);
+    	if(!$rabbitMq){	 
+    		$this->pushInstantAppNotificationToMq($selfProfile,$otherProfile,$message,$exUrl,$extraParams);
+		return;
+	    }
     }
     // Push Instant Notification To Queue Logic	End
 

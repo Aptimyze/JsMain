@@ -40,7 +40,7 @@ EOF;
       sfContext::createInstance($this->configuration);
     	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-	$notificationArr =array('ACCEPTANCE'=>'500','MESSAGE_RECEIVED'=>'500', 'PROFILE_VISITOR'=>'500','PHOTO_UPLOAD'=>'500','INCOMPLETE_SCREENING'=>'500','CHAT_MSG'=>'500','CHAT_EOI_MSG'=>'500');
+	$notificationArr =array('EOI'=>'300','ACCEPTANCE'=>'300','PHOTO_REQUEST'=>'300','MESSAGE_RECEIVED'=>'300','EOI_REMINDER'=>'300','BUY_MEMB'=>'300','PROFILE_VISITOR'=>'300','PHOTO_UPLOAD'=>'300','INCOMPLETE_SCREENING'=>'300','CHAT_MSG'=>'300','CHAT_EOI_MSG'=>'300');
 
     	$JsMemcacheObj =JsMemcache::getInstance();
 	$keyParam ='APP_INST#';
