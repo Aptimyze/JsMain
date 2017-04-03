@@ -323,6 +323,9 @@ class staticActions extends sfActions
         {
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+            }
         }
 
         public function executeHideDuration(sfWebRequest $request)
