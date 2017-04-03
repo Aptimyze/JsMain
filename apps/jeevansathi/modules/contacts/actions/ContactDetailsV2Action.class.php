@@ -104,7 +104,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["contact4"]["value"]      = "blur";
 					$responseArray["contact4"]["label"]      = "Email";
 					$responseArray["contact4"]["action"]     = null;
-					$responseArray["newerrmsglabel"] = "As a Free Member you can only send an interest for free";
+					$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
 					$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
 					$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
 					$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
@@ -445,7 +445,7 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["headerThumbnailURL"]     = $thumbNail;
 				$responseArray["headerLabel"]            = $this->contactHandlerObj->getViewed()->getUSERNAME();
 
-				$responseArray["newerrmsglabel"] = "As a Free Member you can only send an interest for free";
+				$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
 				$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
 				$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
 				$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
