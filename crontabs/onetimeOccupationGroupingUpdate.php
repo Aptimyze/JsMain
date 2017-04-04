@@ -2,6 +2,7 @@
 /**
  * This file updates the occupation grouping for new and changed occupation values
  */
+ini_set('memory_limit',"256M");
 $flag_using_php5 = 1;
 include_once("/usr/local/scripts/DocRoot.php");
 include("config.php");
