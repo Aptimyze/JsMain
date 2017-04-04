@@ -39,8 +39,8 @@ function disableEnablePlugin($flag){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     $store = curl_exec($ch);
-
-    $POST = "presenceenabled=".$flag."&presenceapi=http%3A%2F%2F10.10.18.67%3A8290%2Fprofile%2Fv1%2Fpresence&save=Save+settings";
+	
+    $POST = "presenceenabled=".$flag."&presenceapi=http%3A%2F%2Fpresence.js.jsb9.net%3A8590%2Fjspresence%2Fv1%2Fpresence&save=Save+settings";
     $page_ = $domain."plugins/jspresencemanager/jspresencemanager-props-edit-form.jsp";
     curl_setopt($ch, CURLOPT_URL, $page_);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $POST);

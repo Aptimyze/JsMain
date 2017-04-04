@@ -121,6 +121,9 @@ class RequestHandlerConfig
 			"helpQuery" => array("v1" => "SubmitQueryV1"),
 			"publicQuestions" => array("v1" => "GetPublicQuestionsV1")
 		),
+		"testautomation" => array(
+			"clearMatchAlertLog" => array("v1"=>"flushMatchAlertLogV1"),					
+		),
 		"chat" => array(
 			"authenticateChatSession" => array("v1" => "authenticateChatSessionV1"),
 			"chatUserAuthentication" => array("v1" => "chatUserAuthenticationV1"),
@@ -133,6 +136,7 @@ class RequestHandlerConfig
 			"selfName" => array("v1" => "SelfNameV1"),
 			"pushChat" => array("v1" => "pushChat"),
 			"popChat" => array("v1" => "popChat"),
+			"communicationSync" => array("v1" => "communicationSync"),
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
 		)
 	);

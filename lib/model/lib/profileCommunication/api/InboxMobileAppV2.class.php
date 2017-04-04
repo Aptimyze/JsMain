@@ -39,7 +39,8 @@ class InboxMobileAppV2
 	const CONTACTS_VIEWED_PAID = "Contacts viewed by you would be shown here";
 	const CONTACTS_VIEWED_UNPAID_V2 = "<span style='color:#666'> Upgrade membership to view contact details and connect to your match instantly.</span>";
 	const CONTACTS_VIEWED_UNPAID_V2_IOS = "Upgrade membership to view contact details and connect to your match instantly.";
-	const INTEREST_ARCHIVED = "Interests received more than 90 days earlier will appear here.";
+	// todo: need to be changed 
+	const INTEREST_ARCHIVED = "Interests received more than 45 days earlier will appear here.";
 
 	static public function init()
 	{
@@ -784,7 +785,8 @@ class InboxMobileAppV2
 			/**
 			 * Bookmark query commented as not specified in any listing in any channel by Reshu
 			 */
-			if(MobileCommon::isNewMobileSite() && ($infoKey == "MATCH_ALERT" || $infoKey == "ACCEPTANCES_RECEIVED" || $infoKey == "ACCEPTANCES_SENT" || $infoKey == "INTEREST_SENT" || $infokey == "PEOPLE_WHO_VIEWED_MY_CONTACTS" || $infokey == "CONTACTS_VIEWED"))
+			$arrShortlistAllowedInfoKey = array("MATCH_ALERT","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","VISITORS");
+			if((MobileCommon::isNewMobileSite() && in_array($infoKey, $arrShortlistAllowedInfoKey))|| ( MobileCommon::isDesktop() && $infoKey == 'VISITORS'))
 			{
 				foreach ($displayObj[$infoKey]["TUPLES"] as $key => $value) {
 					$value->setIS_BOOKMARKED(0);

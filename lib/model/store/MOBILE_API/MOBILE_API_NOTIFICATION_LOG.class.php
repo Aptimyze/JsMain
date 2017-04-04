@@ -314,5 +314,22 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                 }
                 return NULL;
         }
+        
+    public function getDataForDuration($notificationKey, $stTime, $endTime){
+        try{
+            $sql = "SELECT count(*) as CNT from MOBILE_API.NOTIFICATION_LOG WHERE NOTIFICATION_KEY = :NOTIFICATION_KEY AND SEND_DATE > :START_DATE AND SEND_DATE <:END_DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":NOTIFICATION_KEY",$notificationKey,PDO::PARAM_STR);
+            $res->bindValue(":START_DATE",$stTime,PDO::PARAM_STR);
+            $res->bindValue(":END_DATE",$endTime,PDO::PARAM_STR);
+            $res->execute();
+            if($row = $res->fetch(PDO::FETCH_ASSOC)){
+                	return $row["CNT"];
+            }
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+        
+    }
 }
 ?>

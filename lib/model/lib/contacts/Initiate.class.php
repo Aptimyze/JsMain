@@ -243,15 +243,30 @@ class Initiate extends ContactEvent{
   
         try
         {
-					if(!$this->sendDataOfQueue(
-							MQ::INSTANT_EOI_PROCESS,
-							'INSTANT_EOI',
-							array("otherUserId" => $this->viewed->getPROFILEID(),"selfUserId" => $this->viewer->getPROFILEID()))
-					)
-					{
-						$instantNotificationObj = new InstantAppNotification("EOI");
-						$instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
-					}
+            $msg = $this->contactHandler->getElements("MESSAGE");
+            $splitArr = explode("--",$msg);
+            $correctedSplit = CommonUtility::correctSplitOnBasisDate($splitArr,1);
+            if($msg && $correctedSplit){
+                $id = $splitArr[3];
+                $body = array($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
+                if(!$this->sendDataOfQueue(MQ::INSTANT_EOI_PROCESS, 'INSTANT_EOI', $body))
+                {  
+                  $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+                  $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
+                }
+                unset($body);
+            }
+            else
+            {
+                if(!$this->sendDataOfQueue(
+                  MQ::INSTANT_EOI_PROCESS,
+                  'INSTANT_EOI',
+                  array("otherUserId" => $this->viewed->getPROFILEID(),"selfUserId" => $this->viewer->getPROFILEID())))
+                {
+                  $instantNotificationObj = new InstantAppNotification("EOI");
+                  $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
+                }
+            }
         }
         catch(Exception $e)
         {

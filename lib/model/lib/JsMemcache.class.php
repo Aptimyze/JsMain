@@ -714,7 +714,7 @@ class JsMemcache extends sfMemcacheCache{
 
   //This function uses pipeline to save all values in arr corresponding to the given key in the redis
   //Pipleline was removed since we could add data in an array directly using a single sadd
-  public function storeDataInCacheByPipeline($key,$arr,$expiryTime=3600)
+  public function storeDataInCacheByPipeline($key,$arr,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{
@@ -733,7 +733,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function deleteSpecificDataFromCache($key,$value,$expiryTime=3600)
+  public function deleteSpecificDataFromCache($key,$value,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{
@@ -753,7 +753,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function addDataToCache($key,$value,$expiryTime=3600)
+  public function addDataToCache($key,$value,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{

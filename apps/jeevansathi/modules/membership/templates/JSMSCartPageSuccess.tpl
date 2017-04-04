@@ -110,7 +110,7 @@
 								<span id="membershipRemoveButton" class="dispibl cursp removeCall">~$v.remove_text`</span>
 								<span class="dispibl rv2_pad11">|</span>
 								~/if`
-								~if $v.change_text`
+								~if $v.change_text && $data.upgradeMem neq "MAIN"`
 								<span id="memnbershipChangeButton" class="dispibl cursp changeCall">~$v.change_text`</span>
 								~/if`
 							</div>
@@ -193,7 +193,7 @@
 				</div>
 				<div class="disptbl fullwid rv2_brdrbtm3 pb10">
 					<div id="couponPriceText" class="dispcell f16 color7 wid60p">~$data.coupon_discount_text`</div>
-					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~$data.cart_discount`</div>
+					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~if $data.upgradeMem &&  $data.upgradeMem neq 'NA'`  ~$data.coupon_discount` ~else` ~$data.cart_discount` ~/if`</div>
 				</div>
 				~/if`
 				<div class="disptbl fullwid rv2_brdrbtm3 pt10 pb10">
@@ -238,6 +238,7 @@
 		~/if`
 	~/if`
 	$(document).ready(function(){
+		var upgradeMem = "~$data.upgradeMem`";
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
 		~if $data.coupon_success`
@@ -394,13 +395,18 @@
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "couponVas") {
-				url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
+				if(upgradeMem == 'MAIN'){
+					url = "/membership/jsms?displayPage=1";
+				}
+				else{
+					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
+				}
 				if(checkEmptyOrNull(readCookie('device'))){
 					url += '&device=' + readCookie('device');
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
-				if(checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
+				if(upgradeMem != "MAIN" && checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
 				{
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				} else {
@@ -422,9 +428,9 @@
 			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
 				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas');  
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem;  
 			    } else {
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression=";
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem;
 			    }	
 			} else {
 				if(checkEmptyOrNull(readCookie('selectedVas'))){
@@ -445,9 +451,13 @@
 		    window.location.href = url;
 		});
 		$("#enterCouponBtn").click(function(e){
+			var upgradeMem = "~$data.upgradeMem`";
 			url = "/membership/jsms?displayPage=4";
 			if(checkEmptyOrNull(readCookie('device'))){
 				url += '&device=' + readCookie('device');
+			}
+			if(checkEmptyOrNull(upgradeMem)){
+				url += "&upgradeMem="+upgradeMem;
 			}
 		    ShowNextPage(url,0,0);
 		});

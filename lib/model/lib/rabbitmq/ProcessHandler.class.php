@@ -72,10 +72,13 @@ class ProcessHandler
    */
   public function sendGCM($type,$body)
   {
-    $senderid=$body['senderid'];   
-    $receiverid=$body['receiverid'];
-    $message = $body['message'];
-    switch($type)
+    $senderid		=$body['senderid'];   
+    $receiverid		=$body['receiverid'];
+    $message 		=$body['message'];
+    $exUrl		=$body['exUrl'];
+    $extraParams 	=$body['extraParams'];		    
+
+    /*switch($type)
     {
       case 'ACCEPTANCE' :  $instantNotificationObj = new InstantAppNotification("ACCEPTANCE");
                            $instantNotificationObj->sendNotification($receiverid, $senderid);
@@ -83,12 +86,19 @@ class ProcessHandler
       case 'MESSAGE'    :  $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
                            $instantNotificationObj->sendNotification($receiverid, $senderid, $message);  
                            break;
-    }
+    }*/
+
+    // Handle All Instant App Notification	
+    $notificationKey =$type;	
+    $rabbitMq =1;	
+    $instantNotificationObj = new InstantAppNotification($notificationKey);
+    $instantNotificationObj->sendNotification($receiverid, $senderid, $message, $exUrl, $extraParams, $rabbitMq);		
+
   } 
 
   /**
    * 
-   * Function for sending gcm notifications(fso app/browser).
+   * Function for sending gcm notifications(fso app/Browser Scheduled Notification).
    * 
    * @access public
    * @param $type,$body
@@ -106,11 +116,12 @@ class ProcessHandler
       }
     }    
   }
-  
+ 
+  // Instant Browser Notification	 
   public function sendInstantNotification($type, $body)
   {
     if($body){
-        $notificationType = "INSTANT"; //INSTANT/SCHEDULED
+        $notificationType = "INSTANT"; //INSTANT
         $notificationKey = $body["notificationKey"];
         $selfUserId = $body["selfUserId"];    //profileid/agentid to whom notification is to be sent
         $otherUserId = $body["otherUserId"]; //comma separated list of other profileids(whose data is used in notification)
