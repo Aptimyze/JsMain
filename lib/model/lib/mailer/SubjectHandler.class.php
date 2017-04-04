@@ -51,9 +51,9 @@ Class SubjectHandler
 	{	
 		//Moving this function to file based caching.
 		//$dbMailerSubject2= new jeevansathi_mailer_MAILER_SUBJECT();
-		$dbMailerSubject = new MailerArray();
+		//$dbMailerSubject = new MailerArray();
 		//$subjectCodeArr2=$dbMailerSubject2->getSubjectCode($this->emailTemplate->getEmailType()->getEmailID());
-		$subjectCodeArr=$dbMailerSubject->getMailerSubject($this->emailTemplate->getEmailType()->getEmailID());
+		$subjectCodeArr=MailerArray::getMailerSubject($this->emailTemplate->getEmailType()->getEmailID());
 		
 		$smarty=$this->emailTemplate->getSmarty();
 		$count=count($subjectCodeArr);

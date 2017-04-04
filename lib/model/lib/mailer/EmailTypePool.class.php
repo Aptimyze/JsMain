@@ -21,8 +21,7 @@ class EmailTypePool{
 		else{		
 					//Moving this function to file based caching
 			       // $result=$this->email_pdo->getEmailType($mail_id);
-					$mailFromCaching = new MailerType();
-					$result=$mailFromCaching->getemailTypeArray($mail_id);
+					$result=MailerType::getemailTypeArray($mail_id);
 					$email_tpl=$this->setAllParamsInEmailType($result);
 					 self::$type_pool[$mail_id]=$email_tpl;
 					return $email_tpl;
