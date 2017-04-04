@@ -473,18 +473,14 @@ class JsMemcache extends sfMemcacheCache{
         }
     }
 
-	public function incrCount($key,$expiryTime="")
+	public function incrCount($key)
 	{
 		if(self::isRedis())
 		{
 			if($this->client)
 			{
 				try
-				{
-					if($expiryTime !="")
-					{
-						$this->client->expire($key, $expiryTime);					
-					}
+				{					
 					return $this->client->incr($key);
 				}
 				catch (Exception $e)
@@ -949,6 +945,30 @@ class JsMemcache extends sfMemcacheCache{
  				try
  				{
  					return $this->client->ttl($key);
+ 				}
+ 				catch (Exception $e)
+ 				{
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 				}
+ 			}
+ 		}
+
+	}
+
+	/**
+    * This function is used to set an expiry time on a key
+    * @param type $key
+    * @return type
+    */
+   public function setExpiryTime($key,$expiryTime)
+ 	{
+ 		if(self::isRedis())
+ 		{
+ 			if($this->client)
+ 			{
+ 				try
+ 				{
+ 					return $this->client->expire($key,$expiryTime);
  				}
  				catch (Exception $e)
  				{

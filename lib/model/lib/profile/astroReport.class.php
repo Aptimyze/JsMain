@@ -30,8 +30,8 @@ class astroReport
 	public function getSampleAstroFlag($loggedInProfileId)
 	{
 		$key = $loggedInProfileId."_sampleAstro";
-		$value = JsMemcache::getInstance()->getSetsAllValue($key);		
-		if($value[0] != "")
+		$value = JsMemcache::getInstance()->getSetsAllValue($key);				
+		if(isset($value[0]))
 		{
 			return 1;
 		}
@@ -53,7 +53,7 @@ class astroReport
 	{
 		$key = $loggedInProfileId."_pog_".$otherProfileId."_actualAstro";
 		$value = JsMemcache::getInstance()->getSetsAllValue($key);		
-		if($value[0] != "")
+		if(isset($value[0]))
 		{
 			return 1;
 		}
@@ -67,7 +67,9 @@ class astroReport
 	public function getNumberOfActualReportSent($loggedInProfileId)
 	{
 		$key = $loggedInProfileId."_actualAstro";
-		$value = JsMemcache::getInstance()->get($key,"",'',0);			
+		$value = JsMemcache::getInstance()->get($key,"",'',0);
+		if($value == NULL)
+			$value="0";
 		return $value;
 	}
 
@@ -82,7 +84,13 @@ class astroReport
 	public function addDataForActualReport($loggedInProfileId)
 	{
 		$key = $loggedInProfileId."_actualAstro";
-		JsMemcache::getInstance()->incrCount($key,86400);
+		JsMemcache::getInstance()->incrCount($key);
+	}
+
+	public function setExpiryTime($loggedInProfileId)
+	{
+		$key = $loggedInProfileId."_actualAstro";
+		JsMemcache::getInstance()->setExpiryTime($key,86400);
 	}
 }
 ?>

@@ -99,8 +99,8 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				else
 				{
-					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
-					if($count && $count >= "100")
+					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);									
+					if($count >= "100")
 					{
 						$successArr["MESSAGE"] = "Actual Report Sent";
 					}
@@ -121,6 +121,10 @@ class astroCompatibilityV1Action extends sfActions
 						$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
 						$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
 						$astroObj->addDataForActualReport($loggedInProfileId);
+						if($count == "0")
+						{
+							$astroObj->setExpiryTime($loggedInProfileId);
+						}
 					}
 				}
 				
