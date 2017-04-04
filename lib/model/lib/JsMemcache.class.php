@@ -175,8 +175,8 @@ class JsMemcache extends sfMemcacheCache{
 						return $arr["item"]["data"][$key];
 					}
 					return false;
-					*/
-					$key = (string)$key;
+					*/		
+					$key = (string)$key;					
 					$value = $this->client->get($key);
                                         if($unserialize === 0){
                                                 return $value;
@@ -473,7 +473,7 @@ class JsMemcache extends sfMemcacheCache{
         }
     }
 
-	public function incrCount($key)
+	public function incrCount($key,$expiryTime="")
 	{
 		if(self::isRedis())
 		{
@@ -481,6 +481,10 @@ class JsMemcache extends sfMemcacheCache{
 			{
 				try
 				{
+					if($expiryTime !="")
+					{
+						$this->client->expire($key, $expiryTime);					
+					}
 					return $this->client->incr($key);
 				}
 				catch (Exception $e)

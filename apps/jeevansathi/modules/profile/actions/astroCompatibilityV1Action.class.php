@@ -27,6 +27,7 @@ class astroCompatibilityV1Action extends sfActions
 		$sampleReport = $request->getParameter("sampleReport");
 		$otherUsername = $request->getParameter("username");
 		$gender = $request->getParameter("gender");
+		$loggedInProfileId = $this->loginData["PROFILEID"];
 
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		if(!$this->loginData['PROFILEID'])
@@ -49,30 +50,36 @@ class astroCompatibilityV1Action extends sfActions
 		//if sample astro Report is to be sent
 		if($sampleReport && $sendMail)
 		{				
-			$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
-			$file = file_get_contents($url);
-			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1848); //1848 is the  mail id
-			$emailTpl = $email_sender->setProfileId($this->loginData['PROFILEID']);
-			$smartyObj = $emailTpl->getSmarty();
-			$smartyObj->assign('otherUsername',$otherUsername);
-			$smartyObj->assign('otherProfile',$otherProfileId);
-			$email_sender->setAttachment($file);
-			$email_sender->setAttachmentName("SampleAstroReport.pdf");
-			$email_sender->setAttachmentType('application/pdf');
-			$email_sender->send();			
+			$astroObj = new astroReport();
+
+			//to check if the key already exists (i.e. the person has already been sent a sample mail inside the last 6 hours)
+			$flag = $astroObj->getSampleAstroFlag($loggedInProfileId);
+			
+			//if the mail has been sent
+			if($flag)
+			{
+				$successArr["MESSAGE"] = "Sample Mail Sent";
+			}
+			else //if the mail has not been sent
+			{
+				$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
+				$file = file_get_contents($url);
+				$successArr = $astroObj->sendAstroMail(1848,$otherUsername,$otherProfileId,$file,"sample",$loggedInProfileId);
+				$astroObj->setSampleReportFlag($loggedInProfileId);				
+			}
+			unset($astroObj);
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$successArr["MESSAGE"]  = "Sample Mail Sent";
 			$apiResponseHandlerObj->setResponseBody($successArr);
 			$apiResponseHandlerObj->generateResponse();
 			die;
 		}
 
-		$profileIdArr = array("0"=>$this->loginData["PROFILEID"],"1"=>$otherProfileId);
+		$profileIdArr = array("0"=>$loggedInProfileId,"1"=>$otherProfileId);
 
 		$astroObj = ProfileAstro::getInstance();
 		$astroData = $astroObj->getAstroDetails($profileIdArr,'',"Y");
 		
-		if(!is_array($astroData[$this->loginData["PROFILEID"]]))
+		if(!is_array($astroData[$loggedInProfileId]))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$successArr["MESSAGE"]  = "No Astro Details Found";
@@ -84,30 +91,41 @@ class astroCompatibilityV1Action extends sfActions
 		{
 			if($sendMail)
 			{
-				$astroDataSelf = $astroData[$this->loginData['PROFILEID']];
-				$astroDataOther = $astroData[$otherProfileId];
-
-				if($this->loginData['GENDER']=='M')
+				$astroObj = new astroReport();
+				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);											
+				if($flag)
 				{
-					$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$this->loginData['USERNAME'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
+					$successArr["MESSAGE"] = "Actual Report Sent";
 				}
 				else
 				{
-					$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$this->loginData['USERNAME'];
+					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
+					if($count && $count >= "100")
+					{
+						$successArr["MESSAGE"] = "Actual Report Sent";
+					}
+					else
+					{
+						$astroDataSelf = $astroData[$this->loginData['PROFILEID']];
+						$astroDataOther = $astroData[$otherProfileId];
+
+						if($this->loginData['GENDER']=='M')
+						{
+							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$this->loginData['USERNAME'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
+						}
+						else
+						{
+							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$this->loginData['USERNAME'];
+						}
+						$file=PdfCreation::PdfFile($urlToVedic);	
+						$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
+						$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
+						$astroObj->addDataForActualReport($loggedInProfileId);
+					}
 				}
-				$file=PdfCreation::PdfFile($urlToVedic);
 				
-				$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
-				$emailTpl = $email_sender->setProfileId($this->loginData['PROFILEID']);
-				$smartyObj = $emailTpl->getSmarty();
-				$smartyObj->assign('otherUsername',$otherUsername);
-				$smartyObj->assign('otherProfile',$otherProfileId);
-				$email_sender->setAttachment($file);
-				$email_sender->setAttachmentName("astroCompatibility-".$otherUsername.".pdf");
-				$email_sender->setAttachmentType('application/pdf');
-				$email_sender->send();
+				unset($astroObj);
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-				$successArr["MESSAGE"]  = "Astro Report Sent";
 				$apiResponseHandlerObj->setResponseBody($successArr);
 				$apiResponseHandlerObj->generateResponse();
 				die;
