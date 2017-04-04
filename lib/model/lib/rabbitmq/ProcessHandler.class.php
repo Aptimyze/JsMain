@@ -322,6 +322,11 @@ public function logDiscount($body,$type){
       $instantNotificationObj = new InstantAppNotification("EOI");
       $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId']);
     }
+    elseif($type == "INSTANT_CHAT_EOI_MSG")
+    {
+      $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+      $instantNotificationObj->sendNotification($body["otherUserId"], $body["selfUserId"], $body["message"], $body["exUrl"], $body["extraParams"]);
+    }
   }
 
     public function processMatchAlertNotification($type,$body){
