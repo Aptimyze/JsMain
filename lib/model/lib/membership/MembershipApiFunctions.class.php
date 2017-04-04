@@ -819,25 +819,6 @@ class MembershipApiFunctions
         }
         return $additionalBenefits;
     }
-
-    public function getOCBUpgradeBenefits($upgradeMem=""){
-        $upgradeText = "";
-        if($upgradeMem!=""){
-            switch($upgradeMem){
-                case "C":
-                    $upgradeText = "Let even free members contact you";
-                    break;
-                case "NCP":
-                    $upgradeText = "Increase your responses through JS Boost";
-                    break;
-                case "X":
-                    $upgradeText = "Get a dedicated relationship adviser";
-                    break;
-            }
-        }
-        return $upgradeText;
-    }
-
     public function getCurrentlyActiveVasNames($apiObj) {
         $memHandlerObj = new MembershipHandler();
         $serviceArr = $apiObj->rawSubStatusArray;
