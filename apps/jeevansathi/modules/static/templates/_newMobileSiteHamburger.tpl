@@ -123,7 +123,7 @@
                     <li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li>
                    
                     
-                    <li><a href="/inbox/5/1?matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITORS_ALL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITORS_ALL')`</span> ~/if`</a></li>
+                    <li><a href="/search/visitors?matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITORS_ALL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITORS_ALL')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Kundli Matches</a></li>-->
                     
@@ -151,7 +151,7 @@
                     
 
 
-                    <li><a href="/inbox/8/1" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
+                    <li><a href="/search/shortlisted" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
                     
                     <li><a href="/inbox/4/1" bind-slide=1 class="white">Messages</a></li>
                     <!--~if $profileMemcacheObj->get('MESSAGE_NEW')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MESSAGE_NEW')`</span> ~/if`</a></li>-->

@@ -21,7 +21,7 @@ var noResultMessagesArray={
 	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
 };
 
-var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/inbox/5/1?matchedOrAll=A","SHORTLIST":"/inbox/8/1","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/inbox/9/1",
+var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/search/visitors?matchedOrAll=A","SHORTLIST":"/search/shortlisted","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/inbox/9/1",
 "VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults","EXPIRINGINTEREST":"/inbox/23/1"};
 
 

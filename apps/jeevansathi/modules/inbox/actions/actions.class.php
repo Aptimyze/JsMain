@@ -751,13 +751,13 @@ public function executePerformV2(sfWebRequest $request)
                                         elseif($infoTypenav["matchedOrAll"]=="A"){
                                             $response2["subtitle"]='All Visitors '.$response2['total'];
                                             $response2["title2"]="Matching"; 
-                                            $response2["url"]="/inbox/5/1?matchedOrAll=M";
+                                            $response2["url"]="/search/visitors?matchedOrAll=M";
                                             $response2["visitorAllOrMatching"]='A';
                                         }
                                         else{
                                             $response2["title2"]='All Visitors';
                                             $response2["subtitle"]="Matching ".$response2['total']; 
-                                            $response2["url"]="/inbox/5/1?matchedOrAll=A";
+                                            $response2["url"]="/search/visitors?matchedOrAll=A";
                                             $response2["visitorAllOrMatching"]='M';
                                         }
 					break;
