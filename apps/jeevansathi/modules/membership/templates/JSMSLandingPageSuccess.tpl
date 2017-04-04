@@ -76,7 +76,7 @@
 	<!--end:overlay2-->
 	<!--end:header-->
 	<div class="rv2_bg1" id="jsmsLandingContent">
-		~if $data.dividerText`
+		~if $data.dividerText && !$data.upgradeMembershipContent`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
 			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
