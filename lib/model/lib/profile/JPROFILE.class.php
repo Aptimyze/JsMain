@@ -26,6 +26,13 @@ class JPROFILE
      */
     private static $objProfileMysql = null;
 
+    /**
+     * getArray uses this flag for returning data from cache for some profile ids
+     * and rest from store.
+     * @var static
+     */
+    const ENABLE_GETFORPARTIALKEYS = false;
+
     var $activatedKey; //archiving
 
     /**
@@ -214,22 +221,61 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-        if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID'])
+        if(
+            JPROFILE::ENABLE_GETFORPARTIALKEYS &&
+            !ProfileCacheLib::getInstance()->isCommandLineScript() &&
+            is_array($valueArray) &&
+            count($valueArray) == 1 &&
+            $valueArray['PROFILEID'] &&
+            $excludeArray == "" &&
+            $greaterThanArray == "" &&
+            $lessThanArray == "" &&
+            $orderby == "" &&
+            $limit == "" &&
+            $greaterThanEqualArrayWithoutQuote == "" &&
+            $lessThanEqualArrayWithoutQuote == "" &&
+            $like == "" &&
+            $nolike == "" &&
+            $addWhereText == ""
+        )
         {
+            $loggingArr = array();
+            $loggingArr['originalValueArr'] = $valueArray;
             $arrPid = explode(',', $valueArray['PROFILEID']);
-            if(count($arrPid) < 50)
+            // check limit of profile ids
+            if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
             {
-                $countPid = 'lt50';
+               return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
             }
-            elseif (count($arrPid) < 100)
+            $fields = $this->getRelevantFields($fields);
+            $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
+
+            $loggingArr['getForPartialKeysResult'] = $result;
+
+            if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
             {
-                $countPid = 'lt100';
+                // case - partial data served from cache for some  profile ids
+                $tempValueArray['PROFILEID'] = $result['notCachedPids'];
+                $result = $result['cachedResult'];
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                
+                if(strlen($tempValueArray['PROFILEID']) !== 0)
+                {
+                    // get result from store for remaining pids
+                    $storeResult = self::$objProfileMysql->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    // merge the cache result and the store result if there exists data in cache
+                    $result = array_merge($result, $storeResult);
+                }
+                if($result === "" || empty($result) || $result === null || $result === false)
+                {
+                    LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
+                }
+
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                  $this->logCacheConsumption();
+                  return $result;
+                }
             }
-            else
-            {
-                $countPid = 'gt100';
-            }
-            JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
         }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }

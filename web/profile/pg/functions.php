@@ -70,8 +70,7 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
                 $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                 if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                     $memHandlerObj = new MembershipHandler(false);
-                    //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
-                    $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                    $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),true);
                     unset($memHandlerObj);
                 }
             }
@@ -320,12 +319,12 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
                 //set upgrade case in memcache for 1 hr for this user 
                 if($insertedRowId){
                     $memCacheObject = JsMemcache::getInstance();
-                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);
+                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,10800);
                 }
             }
             else{
                 $memCacheObject = JsMemcache::getInstance();
-                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",3600);
+                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",10800);
             }
         	return $data;
         }

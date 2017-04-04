@@ -134,7 +134,7 @@ class JsNotificationsConsume
       { 
         $handlerObj->sendGcmNotification($type,$body);  
       }
-      if($type == 'APP_NOTIFICATION')
+      else if($type == 'APP_NOTIFICATION')
       {
 	$notificationSenderObj = new NotificationSender;	
 	$profileid =$body['PROFILEID'];
@@ -149,7 +149,10 @@ class JsNotificationsConsume
 	/*$notificationSenderObj->sendNotifications($filteredProfileDetails);
 	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
         $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);*/
-      }     
+      }
+      else if($type == "MA_NOTIFICATION"){
+          $handlerObj->processMatchAlertNotification($type,$body);
+      }
     }
     catch (Exception $exception) 
     {

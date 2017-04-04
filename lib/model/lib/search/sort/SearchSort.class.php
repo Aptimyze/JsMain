@@ -334,7 +334,10 @@ class SearchSort
         
         public function isJsBoostSorting($loggedInProfileObj){
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
-                        $this->jsBoostSortStr = "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
+                        foreach(SearchConfig::$jsBoostSubscription as $subscription){
+                                $this->jsBoostSortStr .=  "if(tf(SUBSCRIPTION,".$subscription."),1,";
+                        }
+                        $this->jsBoostSortStr .= "0))";
                 }
         }
         public function getJsBoostSorting(){
