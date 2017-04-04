@@ -13,7 +13,7 @@ $dt = date("d",strtotime("-1 day"));
 $memcache = new UserMemcache;
 $counter = $memcache->get("TOTAL_SEARCH_COUNT_".$dt,NULL,0,0);
 if($counter != 0 && $counter != ''){
-        $sql = "REPLACE INTO search.DAILY_SEARCH_COUNT VALUES ('".date("Y-m-d")."',$counter,NULL)";
+        $sql = "REPLACE INTO search.DAILY_SEARCH_COUNT VALUES ('".date("Y-m-d",strtotime("-1 day"))."',$counter,NULL)";
         mysql_query($sql,$db) or die("DAILY_SEARCH_COUNT".mysql_error1($db));
 }
 $memcache->delete("TOTAL_SEARCH_COUNT_".date("d",strtotime("-20 day")));

@@ -557,12 +557,15 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getProfilesForReconsiliationAfter($time)
+    public function getProfilesForReconsiliationAfter($time,$limit="1")
     {
         try
         {
             if ($time) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC";
+                if($limit != ""){
+                    $sql .= " LIMIT ".$limit;
+                }
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
                 $prep->execute();
