@@ -6,7 +6,7 @@
 	<span class="opa50 f14" id="eoi_count">~$eoiData.view_all_count`</span> 
     </div>
      
-  <div class="fr pt5"> <a href="~$SITE_URL`/inbox/1" class="f14 color7 opa50 icons1 myjs_arow1">View all</a> </div>
+  <div class="fr pt5"> <a href="~$SITE_URL`/inbox/1/1" class="f14 color7 opa50 icons1 myjs_arow1">View all</a> </div>
     <div class="clr"></div>
   </div>
 
