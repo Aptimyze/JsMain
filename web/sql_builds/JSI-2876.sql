@@ -445,7 +445,7 @@ CREATE TABLE `LINK_MAILERS_NEW` (
   `LINKID` int(11) NOT NULL AUTO_INCREMENT,
   `APP_SCREEN_ID` varchar(4) DEFAULT NULL,
   `LINK_NAME` varchar(100) DEFAULT NULL,
-  `LINK_URL` varchar(100) DEFAULT NULL,
+  `LINK_URL` varchar(200) DEFAULT NULL,
   `OTHER_GET_PARAMS` varchar(100) DEFAULT NULL,
   `REQUIRED_AUTOLOGIN` varchar(100) DEFAULT NULL,
   `OUTER_LINK` char(1) NOT NULL DEFAULT 'N',
@@ -504,7 +504,7 @@ INSERT INTO `LINK_MAILERS_NEW` VALUES (45, '', 'MEMBERSHIP_DETAIL', 'profile/mem
 INSERT INTO `LINK_MAILERS_NEW` VALUES (46, 'a11', 'ALLCENTRESLOCATIONS_N', 'profile/contact.php', '', 'N', 'N');
 INSERT INTO `LINK_MAILERS_NEW` VALUES (47, 'a12', 'MY_OCCUPATION', 'profile/viewprofile.php', 'ownview=1&EditWhatNew=EduOcc&editSec=Occ', 'Y', 'N');
 INSERT INTO `LINK_MAILERS_NEW` VALUES (48, 'a12', 'MY_EDUCATION', 'profile/viewprofile.php', 'ownview=1&EditWhatNew=EduOcc&editSec=Edu', 'Y', 'N');
-INSERT INTO `LINK_MAILERS_NEW` VALUES (49, '', 'I_TUNES_APP', 'https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%', '', '', 'Y');
+INSERT INTO `LINK_MAILERS_NEW` VALUES (49, '', 'I_TUNES_APP', 'https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=% {idfa}&cs=organic&cm=mailer&cn=JSIA', '', '', 'Y');
 INSERT INTO `LINK_MAILERS_NEW` VALUES (50, 'a10', 'PROFILE_SHARE_LINK', 'profile/viewprofile.php', '', 'N', 'N');
 INSERT INTO `LINK_MAILERS_NEW` VALUES (51, 'a15', 'EOI_FILTER', 'profile/contacts_made_received.php', 'page=filtered_eoi&filter=R', 'Y', 'N');
 INSERT INTO `LINK_MAILERS_NEW` VALUES (54, '', 'VIEW_SIMILAR', 'search/viewSimilarProfile', '', 'Y', 'N');
@@ -528,12 +528,12 @@ INSERT INTO `LINK_MAILERS_NEW` VALUES (68, '', 'ALTERNATE_EMAIL_VER_SUCCESS', 's
 INSERT INTO `LINK_MAILERS_NEW` VALUES (70, '', 'REQUEST_USER_TO_DELETE', '/settings/jspcSettings?hideDelete=1', NULL, 'Y', 'N');
 
 
-RENAME TABLE EMAIL_TYPE TO EMAIL_TYPE_OLD;
-RENAME TABLE MAILER_SUBJECT TO MAILER_SUBJECT_OLD;
-RENAME TABLE MAILER_TEMPLATE_VARIABLES_MAP TO MAILER_TEMPLATE_VARIABLES_MAP_OLD;
-RENAME TABLE LINK_MAILERS TO LINK_MAILERS_OLD;
+RENAME TABLE jeevansathi_mailer.EMAIL_TYPE TO jeevansathi_mailer.EMAIL_TYPE_OLD;
+RENAME TABLE jeevansathi_mailer.MAILER_SUBJECT TO jeevansathi_mailer.MAILER_SUBJECT_OLD;
+RENAME TABLE jeevansathi_mailer.MAILER_TEMPLATE_VARIABLES_MAP TO jeevansathi_mailer.MAILER_TEMPLATE_VARIABLES_MAP_OLD;
+RENAME TABLE jeevansathi_mailer.LINK_MAILERS TO jeevansathi_mailer.LINK_MAILERS_OLD;
 
-RENAME TABLE EMAIL_TYPE_NEW TO EMAIL_TYPE;
-RENAME TABLE MAILER_SUBJECT_NEW TO MAILER_SUBJECT;
-RENAME TABLE MAILER_TEMPLATE_VARIABLES_MAP_NEW TO MAILER_TEMPLATE_VARIABLES_MAP;
-RENAME TABLE LINK_MAILERS_NEW TO LINK_MAILERS;
+RENAME TABLE jeevansathi_mailer.EMAIL_TYPE_NEW TO jeevansathi_mailer.EMAIL_TYPE;
+RENAME TABLE jeevansathi_mailer.MAILER_SUBJECT_NEW TO jeevansathi_mailer.MAILER_SUBJECT;
+RENAME TABLE jeevansathi_mailer.MAILER_TEMPLATE_VARIABLES_MAP_NEW TO jeevansathi_mailer.MAILER_TEMPLATE_VARIABLES_MAP;
+RENAME TABLE jeevansathi_mailer.LINK_MAILERS_NEW TO jeevansathi_mailer.LINK_MAILERS;
