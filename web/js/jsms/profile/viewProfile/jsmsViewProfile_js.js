@@ -442,14 +442,19 @@ handleBackButton = function()
     if(typeof getProfileBackLink != "function")
         return;
 	var backBtnHtml = getProfileBackLink();
-    
+   
 	var backLocation = "";
 	if(backBtnHtml && backBtnHtml.length && backBtnHtml.indexOf('href') !=-1)		
 	{
 		var dummy = document.createElement('div');
 		dummy.innerHTML = backBtnHtml;
 		backBtnAnchor = dummy.children[0];
-		if(backBtnAnchor.href.indexOf('search')!=-1)
+		if(backBtnAnchor.href.indexOf('inbox')!=-1 && backBtnAnchor.href.indexOf('page=idd')!=-1 ){
+			pattern = /idd\d+/;
+			backLocation = backBtnAnchor.href.replace(pattern,'idd'+getProfileOffset());
+			
+		}
+		else if(backBtnAnchor.href.indexOf('search')!=-1)
 			backLocation = backBtnAnchor.href + '&page=idd' + getProfileOffset();
 		else
 			backLocation = backBtnAnchor.href ;

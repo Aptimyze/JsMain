@@ -2663,6 +2663,7 @@ function develop_url()
                         if($key=='nextViewSim')
                                 $link.='nextViewSim1__1@';
                 }
+               
 	return $link;
 }
 function navigation($type,$param,$username='',$symfony='')
@@ -3054,6 +3055,8 @@ function navigation($type,$param,$username='',$symfony='')
                         //$link_developed="$first;$second;$third";
                 }
                 $link_developed="$first;$second;$third";
+				if($isMobile)
+					$link_developed="$second";
         }
 //echo $link_developed;
 	
@@ -3074,6 +3077,7 @@ function show_navigation($navigator,$show_all,$navig_id)
         $isMobile = MobileCommon::isMobile();
         $isPc = MobileCommon::isDesktop();
 	$type_arr=explode(";",$navigator);
+	
 	$TYPE['SR']="/search/perform";
 	$TYPE['VS']="/profile/simprofile_search.php";
 	$TYPE['DP']="/profile/viewprofile.php";
@@ -3143,6 +3147,19 @@ function show_navigation($navigator,$show_all,$navig_id)
     $TYPE["MA"] = "/search/matchalerts";//Match Alerts
     $TYPE["KM"] = "/search/kundlialerts";//Kundli Alerts
     $TYPE["JVS"] = "/search/MobSimilarProfiles";//Jsms View Similar
+    
+     if($isMobile)
+    {
+		
+		foreach($TYPE as $k=>$v)
+		{
+			if($v=="/profile/contacts_made_received.php")
+			{
+				$TYPE[$k]="/inbox/jsmsPerform";
+				
+			}
+		}
+	}
     
 	$minus=0;
 	if($type_arr[1]=="")
@@ -3241,6 +3258,7 @@ function show_navigation($navigator,$show_all,$navig_id)
 		}
 
 	}
+	
 	return $navigation;
 }
 

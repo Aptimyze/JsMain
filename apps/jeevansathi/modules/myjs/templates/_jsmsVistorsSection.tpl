@@ -21,7 +21,7 @@
 	~/foreach`
 	~if $visitorData.new_count>3`
 	       <div class="fl pl_a">
-                   <a href="~$SITE_URL`/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A">
+                   <a href="~$SITE_URL`/inbox/5/1?matchedOrAll=A">
 			<div class="bg7 txtc disptbl" style="width:60px; height:60px;">
 				<div class="dispcell fontlig f18 white lh0 vertmid">+~math equation="x-y" x=$visitorData.new_count y=3`</div>
 			</div>

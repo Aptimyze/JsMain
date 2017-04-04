@@ -60,7 +60,7 @@
 		<div class="clr"></div>
 	</div>
     </a>
-<a href="~$SITE_URL`/profile/contacts_made_received.php?page=messages">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+<a href="~$SITE_URL`/inbox/4/1">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
 			<div class="fullwid txtc">Messages</div>
 		</div>
@@ -72,7 +72,7 @@
 		<div class="clr"></div>
 	</div>
 </a>
-<a href="~$SITE_URL`/profile/contacts_made_received.php?page=photo&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+<a href="~$SITE_URL`/inbox/9/1">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
 			<div class="fullwid txtc">Photo Requests</div>
 		</div>
@@ -85,7 +85,7 @@
 	</div>
 </a>
                 
-                <a href="~$SITE_URL`/profile/contacts_made_received.php?page=eoi&filter=R">
+                <a href="~$SITE_URL`/inbox/1/1">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
 			<div class="fullwid txtc">Interests Received</div>
@@ -98,7 +98,7 @@
 		<div class="clr"></div>
 	</div>
                 </a>
-                <a href="~$SITE_URL`/profile/contacts_made_received.php?page=accept&filter=R">
+                <a href="~$SITE_URL`/inbox/2/1">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
 			<div class="fullwid txtc">Members who Accepted me</div>
@@ -111,7 +111,7 @@
 		<div class="clr"></div>
 	</div>
                 </a>
-                  <a href="~$SITE_URL`/profile/contacts_made_received.php?page=decline&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+                  <a href="~$SITE_URL`/inbox/10/1">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
 			<div class="fullwid txtc">Declined/Cancelled</div>
 		</div>
@@ -219,7 +219,7 @@
 <!--MembershipMessageEnds-->
 <div class="bg4 pad1" id="acceptanceCountSection">
 	<div class="fullwid pad2">
-	<a href="~$SITE_URL`/profile/contacts_made_received.php?page=accept&filter=R">	
+	<a href="~$SITE_URL`/inbox/2/1">	
             <div class="fl wid49p txtc">
 			~if $apiData.all_acceptance.view_all_count neq 0`
 				

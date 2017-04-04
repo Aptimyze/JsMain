@@ -406,7 +406,12 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	var data = this.data;
 	viewerImage = data.viewer;
 	var innerHtml = $("#messageDisplaytuple").html();
+	
 	var profile = data.profile;
+	
+	if(profile.profilepic120url!=null || profile.profilepic120url !='')
+				var ccTupleImage = "src='"+profile.profilepic120url+"'";
+	
 	innerHtml=innerHtml.replace(/\{age\}/g,profile.age);
 	innerHtml=innerHtml.replace(/\{height\}/g,profile.height);
 	innerHtml=innerHtml.replace(/\{mstatus\}/g,profile.mstatus);
@@ -418,7 +423,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	innerHtml=innerHtml.replace(/\{profilechecksum\}/g,removeNull(profile.profilechecksum));
 	innerHtml=innerHtml.replace(/\{userloginstatus\}/g,removeNull(profile.userloginstatus));
 	innerHtml=innerHtml.replace(/\{subscription_icon\}/g,removeNull(profile.subscription_icon));
-	innerHtml=innerHtml.replace(/\{ccTupleImage\}/g,removeNull(profile.profilepic120url));
+	innerHtml=innerHtml.replace(/\{ccTupleImage\}/g,removeNull(ccTupleImage));
 	var messages = data.messages;
 	var mytuple = $('#mymessagetuple').html();
 	var othertuple = $('#othermessagetuple').html();
@@ -428,8 +433,10 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 		if(val.mymessage == "true")
 		{
 			var mymessage = '';
+			if(data.viewer!=null || data.viewer !='')
+				var myimage = "src='"+data.viewer+"'";
 			mymessage = mytuple.replace(/\{time\}/g,removeNull(val.timeTxt));
-			mymessage = mymessage.replace(/\{myimage\}/g,removeNull(data.viewer));
+			mymessage = mymessage.replace(/\{myimage\}/g,removeNull(myimage));
 			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>")));
 			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
@@ -437,8 +444,10 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 		else
 		{
 			var mymessage = '';
+			if(data.viewed!=null || data.viewed !='')
+				var otherimage = "src='"+data.viewed+"'";
 			mymessage = othertuple.replace(/\{time\}/g,removeNull(val.timeTxt));
-			mymessage = mymessage.replace(/\{otherimage\}/g,removeNull(data.viewed));
+			mymessage = mymessage.replace(/\{otherimage\}/g,removeNull(otherimage));
 			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/(<([^>]+)>)/ig,"")));
 			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
