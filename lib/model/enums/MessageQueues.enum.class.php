@@ -3,7 +3,7 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 5;  //Number of instances of Consumer class run at a time.  
+  CONST CONSUMERCOUNT = 8;  //Number of instances of Consumer class run at a time.  
   CONST BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT = 3; //Number of instances of BufferInstantNotificationConsumer class run at a time.  
   CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
