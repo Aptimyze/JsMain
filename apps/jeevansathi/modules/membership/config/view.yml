@@ -136,7 +136,7 @@ JSMSLandingPageSuccess:
   metas:
     title:  Membership Plans - Jeevansathi.com
   stylesheets: [-*,jsms/membership/new_revamp_membership_css]
-  javascripts: [-*,jsms/membership/new_revamp_mobile_membership,jsms/membership/new_revamp_mobile_payment]
+  javascripts: [-*,jsms/membership/new_revamp_mobile_membership,jsms/membership/new_revamp_mobile_payment,jsms/membership/jsms_upgrade_js@bottom]
   layout: jsmsMobLayout
 
 JSMSVasPageSuccess:

@@ -269,7 +269,9 @@ class myjsActions extends sfActions
   }
 
   public function executeJsmsPerform(sfWebRequest $request)
-	{			//myjs jsms action hit for logging  
+	{			//myjs jsms action hit for logging
+        $this->pageMyJs = 1; 
+        
 				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
                 $this->loginData=$request->getAttribute("loginData");
@@ -278,7 +280,7 @@ class myjsActions extends sfActions
                 $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
-                $this->showExpiring = 0;
+        $this->showExpiring = 0;
 				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 				{
 					$this->showExpiring = 1;
