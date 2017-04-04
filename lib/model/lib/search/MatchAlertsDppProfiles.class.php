@@ -60,6 +60,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                     if($relaxedOccupation['notOcc']!='')
                         $this->setOCCUPATION_IGNORE($relaxedOccupation['notOcc']);
                 }
+
                 
                 if($this->getLINCOME() || $this->getLINCOME_DOL()){
                     if($this->getLINCOME()){
@@ -89,6 +90,28 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                     $relaxedCity = $this->getRelaxedCity($city);
                     $this->setCITY_RES($relaxedCity);
                     $this->setCITY_INDIA($relaxedCity);
+                }
+
+                $smoking = $this->getSMOKE();
+
+                if($smoking!=''){
+                    $relaxedSmoking = $this->getRelaxedSmoking($smoking);
+                    $this->setSMOKE($relaxedSmoking);
+                }
+
+                $drinking = $this->getDRINK();
+
+                if($drinking!=''){
+                    $relaxedDrinking = $this->getRelaxedDrinking($drinking);
+                    $this->setDRINK($relaxedDrinking);
+                }
+
+                $Hheight = $this->getHHEIGHT();
+
+                if ( $Hheight )
+                {
+                    $relaxedHheight = $this->getRelaxedHHeight($Hheight);
+                    $this->setHHEIGHT($relaxedHheight);   
                 }
         }
         /**
@@ -201,7 +224,46 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $finalMtongue.= ','.implode(',',$allHindiMtongues);
             return trim($finalMtongue,',');
         }
+        /**
+         * returns relaxed smoking
+         * @param  string $smoking array which contains comma seprated values.
+         * @return empty string or original smoking string
+         */
+        public function getRelaxedSmoking($smoking)
+        {
+            $smokingArray = explode(',',$smoking);
+            if ( in_array('N',$smokingArray) && in_array('NS',$smokingArray) && count($smokingArray) == 2 )
+            {
+                return $smoking;
+            }
+            return '';
+        }
 
+        /**
+         * returns relaxed drinking
+         * @param  string $drinking array which contains comma seprated values.
+         * @return string empty string or original smoking string
+         */
+        public function getRelaxedDrinking($drinking)
+        {
+            $drinkingArray = explode(',',$drinking);
+            if ( in_array('N',$drinkingArray) && in_array('NS',$drinkingArray) && count($drinkingArray) == 2 )
+            {
+                return $drinking;
+            }
+            return '';
+        }
+
+        /**
+         * returns height depending on max of desired partner or own height
+         * @param  int $hheight 
+         * @return int          height
+         */
+        public function getRelaxedHHeight($hheight)
+        {
+            $registerationHeight = $this->loggedInProfileObj->getHEIGHT();
+            return $registerationHeight>$hheight?$registerationHeight:$hheight;
+        }
 }
 ?>
 
