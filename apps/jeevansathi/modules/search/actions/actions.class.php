@@ -1487,7 +1487,10 @@ class searchActions extends sfActions
 			$searchResultsCountForAutoRelaxation = SearchConfig::$searchResultsCountForAutoRelaxation;
                         
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-			
+                        $this->premiumDummyUser = 0;
+			if($loggedInProfileObj->getPROFILEID()!='' && PremiumMember::isDummyProfile($loggedInProfileObj->getPROFILEID()))
+				$this->premiumDummyUser = 1;
+                        
 			if($loggedInProfileObj->getPROFILEID()!='')
 			{
 				if($loggedInProfileObj->getAGE()=="")
