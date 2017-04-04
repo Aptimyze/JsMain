@@ -27,6 +27,6 @@ $sql="select * from jeevansathi_mailer.EMAIL_TYPE order by ID";
 
 fwrite($subMailer,');');
 fwrite($subMailer,"\n \n \n public static function getemailTypeArray(\$mailId){
-        return MailerSubject::\$emailTypeArray[\$mailId];}\n
+        return MailerType::\$emailTypeArray[\$mailId];}\n
 }");
 	mysql_free_result($result);
