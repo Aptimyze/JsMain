@@ -43,20 +43,24 @@ class pageAction extends sfAction
                 }
                 $this->rightPanelStory = IndividualStories::showSuccessPoolStory();
 		if(!$type_index)
-			$type="disclaimer";
+                    $type="disclaimer";
                 if(MobileCommon::isNewMobileSite()){
                     $type="jsms".$type;
-                    if($request->getParameter('amp')=="1" && (strpos($request->getUri(), 'privacypolicy') != false)){
-                        $type = $type . "amp";
-                        $v = explode("?",$request->getUri());
-                        $request->setAttribute("ampurl", $v[0]);
-                    }
                 }
-		else if(MobileCommon::isMobile())
-			$type="mob".$type;
+		else if(MobileCommon::isMobile()){
+                    $type="mob".$type;
+                }
 		$this->setTemplate($type);
-		if(MobileCommon::isDesktop())
-			$this->setTemplate("_jspcStatic/jspcStaticPage");
+                
+		if(MobileCommon::isDesktop()){
+                    $this->setTemplate("_jspcStatic/jspcStaticPage");
+                }
+                if($request->getParameter('amp')=="1" && (strpos($request->getUri(), 'privacypolicy') != false)){
+                    $type = "jsmsprivacypolicyamp";
+                    $v = explode("?",$request->getUri());
+                    $request->setAttribute("ampurl", $v[0]);
+                    $this->setTemplate($type);
+                }
 			
 	}
 }
