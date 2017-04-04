@@ -8,7 +8,7 @@ $subMailer=fopen($socialRoot."/lib/model/lib/MailerType.class.php","w");
 $now=date("Y-m-d");
 include_once($socialRoot."/web/profile/connect.inc");
 fwrite($subMailer,"<?php\n /*
-	This is auto-generated class by running lib/utils/MailerSubjectCreater.php
+	This is auto-generated class by running lib/utils/EmailTypeCreater.php
 	This class should not be updated manually.
 	Created on $now
 	 */
