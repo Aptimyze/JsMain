@@ -248,8 +248,8 @@ class Initiate extends ContactEvent{
             $correctedSplit = CommonUtility::correctSplitOnBasisDate($splitArr,1);
             if($msg && $correctedSplit){
                 $id = $splitArr[3];
-                $body = array($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
-                if(!$this->sendDataOfQueue(MQ::INSTANT_EOI_PROCESS, 'INSTANT_EOI', $body))
+                $body = array("otherUserId" => $this->viewed->getPROFILEID(), "selfUserId" => $this->viewer->getPROFILEID(), "message" => $splitArr[0],"exUrl" => '',"extraParams" => array('CHAT_ID'=>$id));
+                if(!$this->sendDataOfQueue(MQ::INSTANT_EOI_PROCESS, 'INSTANT_CHAT_EOI_MSG', $body))
                 {  
                   $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
                   $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
