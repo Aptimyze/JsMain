@@ -462,7 +462,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                  
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                    => "41");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"              => "17");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                              => "73");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                          => "23");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                           => "24");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                      => "41");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
