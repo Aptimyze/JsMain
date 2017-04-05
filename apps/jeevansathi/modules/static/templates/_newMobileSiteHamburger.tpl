@@ -200,7 +200,7 @@
 				<div id ="hamProfile" class="dn posfix ham_pos3">
 					<a bind-slide=1 href="/profile/viewprofile.php?ownview=1" class="dispbl fontlig f12 ham_color2">
 						<i class="icons1 posabs ham_icon3 ham_pos4"></i> 
-						<div class="pt10 txtc"><img src=~$ProfilePicUrl` style="height:50px; width:50px;" class="ham_imgbrdr brdr18"/></div>
+						<div class="pt10 txtc"><img src="~$ProfilePicUrl`" style="height:50px; width:50px;" class="ham_imgbrdr brdr18"/></div>
 						<div class="lh25">Edit Profile</div>
 					</a>
 				</div>        

@@ -8,6 +8,7 @@
 class ChatLibrary
 {
         private $dbname;
+        
         public function __construct($dbname='')
         {
                 $this->dbname = $dbname;
@@ -35,7 +36,7 @@ class ChatLibrary
 	*/	
 	public static function getPresenceOfIds($profileIdStr="")
 	{
-		$url = JsConstants::$presenceServiceUrl."/profile/v1/presence"; 
+		$url = JsConstants::$presenceServiceUrl2."/jspresence/v1/presence"; 
 		if($profileIdStr)
 			$url.= "?pfids=$profileIdStr"; 
 		$out = CommonUtility::sendCurlPostRequest($url,'',5);

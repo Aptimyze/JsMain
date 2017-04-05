@@ -8,6 +8,11 @@ if($fromSym==1)
  global $CALL_NOW,$force_query;
 
 }
+if($force_query)
+{
+	file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterForce.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
+}
+
 $message_upd=1;
 $updateDb=$mysqlObj->connect("master");
 

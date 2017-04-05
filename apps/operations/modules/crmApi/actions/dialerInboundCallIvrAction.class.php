@@ -46,7 +46,6 @@ class dialerInboundCallIvrAction extends sfActions
 			if($this->registered && $this->multipleProfile=='N'){
 				$this->dataArr = $dialerObj->formatResponseData($dataArr);
 				$this->memData 	= $dialerObj->getMembershipResponseData($profileid);	
-				$response	= $this->generateResponse();
 
 				// Caching
 				$this->cachProfileInfo($profileid,$phone);
@@ -54,6 +53,7 @@ class dialerInboundCallIvrAction extends sfActions
 			$status =$dialerObj->getAbusiveStatus($phone);
 			if(!$status)
 				$this->abusiveStatus ='N';
+			$response = $this->generateResponse();
 		}
 		echo $response;
 		//return sfView::NONE;
