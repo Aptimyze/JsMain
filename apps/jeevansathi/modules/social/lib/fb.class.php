@@ -1,6 +1,6 @@
 <?php
-include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-php-sdk-master/src/facebook.php');
-
+//include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-php-sdk-master/src/facebook.php');
+include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-sdk-v5/autoload.php');
 class fb extends BaseImportPhoto
 {
 	private $fbsession;
@@ -8,23 +8,34 @@ class fb extends BaseImportPhoto
 	
 	public function __construct()
 	{
-		$this->facebook=new Facebook(array(
-                            'appId' => JsConstants::$fbId,
-                            'secret' => JsConstants::$fbSecret,
-                            'cookie' => true
+		@session_start();
+		$this->facebook=new Facebook\Facebook(array(
+                            'app_id' => JsConstants::$fbId,
+                            'app_secret' => JsConstants::$fbSecret,
+                            'default_graph_version' => 'v2.5'
                         ));
+	$this->helper = $this->facebook->getRedirectLoginHelper();
 
 	}
-
+	public function getToken()
+	{
+		  $this->accessToken = $this->helper->getAccessToken()->getValue();
+	}
 	/**
 	This function is used to authenticate a logged-in facebook user.
 	Its sets access_token(with some more info) which maintains user session.
 	**/
         private function authenticateUser()
         {
-                if(is_null($this->facebook->getUser()) || $this->facebook->getUser()==0)
+//                if(is_null($this->facebook->getUser()) || $this->facebook->getUser()==0)
+		$this->accessToken = $this->helper->getAccessToken();
+		$_SESSION['fb_access_token'] = (string) $this->accessToken;
+		if(!$this->accessToken)
+		{
                         $this->askForLogin();
-		$this->accessToken = $this->facebook->getAccessToken();
+		}
+		else
+			echo $this->accessToken;die;
         }
 
 	
@@ -64,55 +75,33 @@ list of album URLs, album names and cover image URLs.
 public function getAlbumList()
 {
 	$this->authenticateUser();
-	$feedURL = "https://graph.facebook.com/".$this->facebook->getUser()."/albums?access_token=".$this->accessToken;
-	$this->userIdentity = $this->facebook->getUser();
-	$albumData = CommonUtility::sendCurlGetRequest($feedURL);
 
-	$albumD = json_decode($albumData);
-
-	if(!$albumD->error)
+	$response = $this->facebook->get('/me?fields=albums{photos{picture},type,name}',$this->accessToken);
+$albumData = $response->getGraphAlbum();
+$albumData = json_decode($albumData,true);
+	if(1)
 	{
-		$jsonIterator = new RecursiveIteratorIterator(
-		new RecursiveArrayIterator(json_decode($albumData, TRUE)),
-		RecursiveIteratorIterator::SELF_FIRST);
-		foreach($jsonIterator as $albumData1)
+		$k=0;
+                foreach($albumData[albums] as $albumData1)
 		{
-			$nextUrl = $albumD->paging->next;
-
-			while($nextUrl != '')
+			if($albumData1['type'] != 'friends_walls')
 			{
-				$nextData = CommonUtility::sendCurlGetRequest($nextUrl);
-
-				$jsonIteratorNext = new RecursiveIteratorIterator(
-				new RecursiveArrayIterator(json_decode($nextData, TRUE)),
-				RecursiveIteratorIterator::SELF_FIRST);
-				foreach($jsonIteratorNext as $albumDataNext)
+				$this->final['albumId'][]=$albumData1['id'];
+				$albumName = $albumData1['name'];
+				if(strlen($albumName)>15)
+					$albumName=substr($albumName,0,15)."...";
+				$this->final['albumName'][]=$albumName;
+				$this->final['photosCountInAlbum'][]= count($albumData1['photos']);
+				$this->final['coverImageArr'][]=$albumData1['cover_photo']['picture'];
+				foreach($albumData1['photos'] as $albumPhotos)
 				{
-					$albumData1 = array_merge($albumData1,$albumDataNext);
-					$nextUrl = $nextData->paging->next;
-					if($nextUrl == '')
-						break;
+					$this->final['allPhotos'][$k][]=$albumPhotos['picture'];
 				}
+				$k++;
 			}
-			foreach($albumData1 as $albumData2)
-			{
-				if($albumData2['count'] != 0 && $albumData2['type'] != 'app' && $albumData2['type'] != 'friends_walls')
-				{
-					$this->albumIdArr[]=$albumData2['id'];
-					$albumName = $albumData2['name'];
-					if(strlen($albumName)>15)
-						$albumName=substr($albumName,0,15)."...";
-					$this->albumNameArr[]=$albumName;
-					//?type= thumbnail small album
-					$this->photosCountInAlbum[]=$albumData2['count'];
-					$photosCountData[$albumData2['id']] = $albumData2['count'];
-					$this->coverImageArr[]="https://graph.facebook.com/".$albumData2['id']."/picture?type=album&access_token=".$this->accessToken;
-				}
-			}
-			break;
 		}
-		$albumObj = new FacebookAlbumsData();
-		$albumObj->insertAlbumsData($photosCountData);
+//		$albumObj = new FacebookAlbumsData();
+//		$albumObj->insertAlbumsData($photosCountData);
 	}
 	else
 	{
@@ -199,9 +188,12 @@ This function is called whenever a user signs out while a request is in process.
 **/
 private function askForLogin()
 {
+$permissions = array('user_photos');
+$loginUrl = $this->helper->getLoginUrl('http://trunk.jeevansathi.com/social/import1?importSite=facebook&import=1&popup=1', $permissions);;
+
+        header("Location:{$loginUrl}");
+        exit;
 //echo "<script> window.open(".$this->getLoginUrl(array('req_perms' => 'user_status,publish_stream,user_photos')).",\"login page\",\"location=1,status=1,scrollbars=1, width=100,height=100\") </script>";
-	header("Location:{$this->facebook->getLoginUrl(array('scope' => 'user_photos'))}");
-	exit;
 }
 }
 ?>
