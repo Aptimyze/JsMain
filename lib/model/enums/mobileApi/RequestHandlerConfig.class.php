@@ -138,6 +138,7 @@ class RequestHandlerConfig
 			"selfName" => array("v1" => "SelfNameV1"),
 			"pushChat" => array("v1" => "pushChat"),
 			"popChat" => array("v1" => "popChat"),
+			"communicationSync" => array("v1" => "communicationSync"),
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
 		)
 	);

@@ -528,6 +528,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//mstatus
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
 		
+                $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		
@@ -794,7 +795,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//Occupation
 		$szOcc = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_OCC());
 		$p_occlevel=trim($jpartnerObj->getDecoratedPARTNER_OCC());
-		if($szEdu=="DM")
+		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);

@@ -271,7 +271,7 @@ class JPROFILE
                     LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
                 }
 
-                if(0 && ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
                   $this->logCacheConsumption();
                   return $result;
                 }

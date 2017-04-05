@@ -94,6 +94,9 @@ class inboxActions extends sfActions
 
 			$profileCommunication = new ProfileCommunication();
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
+			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
+			     $this->forward("static","logoutPage");
+			}
 			$pid=$profileObj->getPROFILEID();
 			$response = array();
 			if(!$profileObj->getAGE())
@@ -373,6 +376,9 @@ public function executePerformV2(sfWebRequest $request)
 
 				$profileCommunication = new ProfileCommunication();
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
+				if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
+			     $this->forward("static","logoutPage");
+				}
 				$pid=$profileObj->getPROFILEID();
 				$response = array();
 				if(!$profileObj->getAGE())
@@ -892,6 +898,9 @@ public function executePerformV2(sfWebRequest $request)
 			$request->setParameter('useSfViewNone','1');
 
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
+			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
+			     $this->forward("static","logoutPage");
+			}
 			if(!$profileObj->getUSERNAME())
 				$profileObj->getDetail($profileObj->getPROFILEID(),"PROFILEID","*");
 			if($request->getParameter("searchId")==16 && !CommonFunction::isPaid($profileObj->getSUBSCRIPTION()))
