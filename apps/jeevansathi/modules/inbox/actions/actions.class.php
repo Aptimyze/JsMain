@@ -95,7 +95,7 @@ class inboxActions extends sfActions
 			$profileCommunication = new ProfileCommunication();
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     $this->forward("static","logoutPage");
+			     sfContext::getInstance()->getController()->forward("static","logoutPage");
 			}
 			$pid=$profileObj->getPROFILEID();
 			$response = array();
@@ -377,7 +377,7 @@ public function executePerformV2(sfWebRequest $request)
 				$profileCommunication = new ProfileCommunication();
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     $this->forward("static","logoutPage");
+			     sfContext::getInstance()->getController()->forward("static","logoutPage");
 				}
 				$pid=$profileObj->getPROFILEID();
 				$response = array();
@@ -899,7 +899,7 @@ public function executePerformV2(sfWebRequest $request)
 
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     $this->forward("static","logoutPage");
+			     MobileCommon::gotoModuleUrl("static","logoutPage");
 			}
 			if(!$profileObj->getUSERNAME())
 				$profileObj->getDetail($profileObj->getPROFILEID(),"PROFILEID","*");
