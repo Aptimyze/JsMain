@@ -300,7 +300,7 @@
         </div>
         <div id="footerDiv" class="posfix fullwid btmo" style="background: black;z-index: 110;">
             <a href="#" id="skipLayer" class="f16 fontmed app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
-            <div class="bg7">
+            <div class="bg7" style="z-index:119">
 
             <a href="#" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white"></a>
             </div>
