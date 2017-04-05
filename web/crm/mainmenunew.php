@@ -362,7 +362,7 @@ function profileview($profileid,$checksum='',$priv='',$cid='')
 
 		// *********************** CONTACTS RECEIVED BY YOU SECTION START *******************	
 
-		$contactResult_recdsum = getResultSet("COUNT(*) AS CNT","","","$profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(), INTERVAL 90 DAY) AND NOW()","","","","","","","$table_name","","","","'Y'");
+		$contactResult_recdsum = getResultSet("COUNT(*) AS CNT","","","$profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","","","","","","$table_name","","","","'Y'");
 		$smarty->assign("RECEIVED_I",$contactResult_recdsum[0]["CNT"]);
 		$RECEIVEDSUM=$contactResult_recdsum[0]["CNT"];
 		$RECEIVEDSUM_O=$contactResult_recdsum[0]["CNT"];
@@ -385,7 +385,7 @@ function profileview($profileid,$checksum='',$priv='',$cid='')
 		
 			
 		// New Filtered EOI Received
-	       	$contactResult_recdsum=getResultSet("COUNT(*) AS CNT","","",$profileid,"","'I'",'',"TIME BETWEEN DATE_SUB(NOW(), INTERVAL 90 DAY) AND NOW()","","","","","","","$table_name","","","'Y'","");
+	       	$contactResult_recdsum=getResultSet("COUNT(*) AS CNT","","",$profileid,"","'I'",'',"TIME BETWEEN DATE_SUB(NOW(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","","","","","","$table_name","","","'Y'","");
 		$RECEIVEDSUM+=$contactResult_recdsum[0]["CNT"];
 		$RECEIVEDSUM_O+=$contactResult_recdsum[0]["CNT"];
 	       	$RECEIVED_II_FF= $contactResult_recdsum[0]["CNT"];

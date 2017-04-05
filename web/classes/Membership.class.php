@@ -203,8 +203,7 @@ class Membership
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                     if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);
-                        //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
-                        $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                        $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),true);
                         unset($memHandlerObj);
                     }
                 }
@@ -217,7 +216,7 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid, $skipBill = false) {
+    function startServiceOrder($orderid, $skipBill = false,$doneUpto="") {
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -323,7 +322,7 @@ class Membership
                 $memUpgrade = "NA";
             }
         }
-        $this->makePaid($skipBill,$memUpgrade,$orderid);
+        $this->makePaid($skipBill,$memUpgrade,$orderid,$doneUpto);
 
         include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
@@ -658,16 +657,22 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
+    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
         $userObjTemp = $this->getTempUserObj();
-        if($skipBill == true){
+        if($skipBill == true || in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateBillParams();
         } else {
             $this->generateBill($memUpgrade);
         }
-        $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
-        $this->generateReceipt();
-        if($memUpgrade != "NA"){
+        
+        if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
+            $this->setGenerateReceiptParams();
+        }
+        else{
+            $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
+            $this->generateReceipt();
+        }
+        if($memUpgrade != "NA" && $doneUpto!="MEM_DEACTIVATION"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
         $this->setServiceActivation();
@@ -676,9 +681,13 @@ class Membership
         $this->checkIfDiscountExceeds($userObjTemp);
         if($memUpgrade != "NA"){
             $memHandlerObj = new MembershipHandler(false);
-            //$memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid),false);
             $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
+        }
+
+        //flush myjs cache after success payment
+        if($this->profileid && !empty($this->profileid)){
+            MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
         }
     }
 
@@ -718,6 +727,14 @@ class Membership
         $userObj->setCurrency($currency1);
         $userObj->setMemStatus();
         return $userObj;
+    }
+
+    function setGenerateReceiptParams(){
+        $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
+        $paymentDetailArr = $billingPaymentDetObj->getDetails($this->billid);
+        if(is_array($paymentDetailArr)){
+            $this->receiptid = $paymentDetailArr["RECEIPTID"];
+        }
     }
 
     function setGenerateBillParams(){
@@ -2389,7 +2406,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
-        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID();
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_masterDDL');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
             $result = $autoIncReceiptidObj->getLastInsertedRow();
