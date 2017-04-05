@@ -309,10 +309,9 @@ class NEWJS_CHAT_LOG extends TABLE{
         throw new jsException("", "PROFILEID OR LISTOFACTIVEPROFILE IS BLANK IN selectActiveDeletedData() of NEWJS_CHAT_LOG.class.php");
       }
       
-      $sql = "INSERT IGNORE INTO newjs.CHAT_LOG SELECT * FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET WHERE (SENDER = :PID AND RECEIVER IN (:ACTIVE_USERS) ) OR (RECEIVER = :PID AND SENDER IN (:ACTIVE_USERS) )";
+      $sql = "INSERT IGNORE INTO newjs.CHAT_LOG SELECT * FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET WHERE (SENDER = :PID AND RECEIVER IN ({$listOfActiveProfiles}) ) OR (RECEIVER = :PID AND SENDER IN ({$listOfActiveProfiles}) )";
       $prep = $this->db->prepare($sql);
       $prep->bindValue(":PID", $iProfileID, PDO::PARAM_INT);
-      $prep->bindValue(":ACTIVE_USERS", $listOfActiveProfiles, PDO::PARAM_STR);
       $prep->execute();
     } catch (Exception $ex) {
       throw new jsException($ex);

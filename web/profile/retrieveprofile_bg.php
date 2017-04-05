@@ -654,7 +654,7 @@ function retreiveChatData($dbName, $iProfileID, $listOfActiveProfileIds)
       unset($chatLogStoreObj);
 
       //Delete Data From Delete Chat Log Table
-      $deletedChatLogStoreObj->removeRecords($iProfileID,$listOfActiveProfileIds);
+      $deletedChatLogStoreObj->deleteRecords($iProfileID,$listOfActiveProfileIds);
     }
     unset($deletedChatLogStoreObj);
   } catch (Exception $ex) {
