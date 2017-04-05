@@ -642,7 +642,7 @@ astroCompatibility = function()
 	$(".js-astroCompMem,.js-freeAstroComp").click(function(){		
 		$.ajax({
 			method: "POST",
-			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1&username="+username,
+			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1&username="+username,			
 			async:true,
 			timeout:20000,
 			success:function(response){
@@ -665,7 +665,7 @@ astroCompatibility = function()
 	$(".js-astroMem").click(function(){
 		$.ajax({
 			method: "POST",
-			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1",
+			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username,
 			async:true,
 			timeout:20000,
 			success:function(response){

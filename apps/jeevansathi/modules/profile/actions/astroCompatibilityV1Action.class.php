@@ -17,8 +17,7 @@ class astroCompatibilityV1Action extends sfActions
 	public function execute($request)
 	{
 		//get login data
-		$this->loginData = $request->getAttribute("loginData");
-
+		$this->loginData = $request->getAttribute("loginData");		
 		//parameters obtained from api
 		$otherProfilechecksum = $request->getParameter("otherProfilechecksum");
 		$profilechecksumArr = explode("i",$otherProfilechecksum);
