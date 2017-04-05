@@ -298,7 +298,7 @@
             </div>
  
         </div>
-        <div id="footerDiv" class="posfix fullwid btmo" style="background: black;z-index: 110;">
+        <div id="footerDiv" class="posfix fullwid btmo" style="z-index: 110;">
             <a href="#" id="skipLayer" class="f16 fontmed app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
             <div class="bg7" style="z-index:119">
 
