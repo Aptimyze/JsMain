@@ -15,7 +15,10 @@
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
     ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-    ~if $pageType =="privacypolicy"`
+  <!--  ~if $pageType =="privacypolicy"`
+        <link rel="amphtml" href="~$ampurl`">
+    ~/if`-->
+    ~if $ampurl`
         <link rel="amphtml" href="~$ampurl`">
     ~/if`
     ~include_http_metas`

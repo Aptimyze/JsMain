@@ -1021,5 +1021,9 @@ die;
 		return 0;
 
 	}
+
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
+	}
 }
 ?>
