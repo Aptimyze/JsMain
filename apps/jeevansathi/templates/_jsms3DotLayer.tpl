@@ -275,7 +275,7 @@
 </div>
 <div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
     <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
-    <div class="fullheight fullwid layerOpa posrel" style="overflow:auto">
+    <div class="fullwid layerOpa posrel" style="overflow:auto;height:95%">
         <div class="memOverlay app_clrw" style="margin-bottom:50px">
             <div class="txtc">
                 <div id="photoIDDiv" class="photoDiv">
