@@ -275,8 +275,8 @@
 </div>
 <div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
     <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
-    <div class="fullheight fullwid layerOpa">
-        <div class="memOverlay app_clrw">
+    <div class="fullheight fullwid layerOpa posrel" style="overflow:auto">
+        <div class="memOverlay app_clrw" style="margin-bottom:50px">
             <div class="txtc">
                 <div id="photoIDDiv" class="photoDiv">
 
@@ -298,7 +298,7 @@
             </div>
  
         </div>
-        <div id="footerDiv" class="posfix fullwid btmo">
+        <div id="footerDiv" class="posfix fullwid btmo" style="background: black;z-index: 110;">
             <a href="#" id="skipLayer" class="f16 fontmed app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
             <div class="bg7">
 
