@@ -931,6 +931,7 @@ class detailedAction extends sfAction
 	 */
 	private function alterSeenTable()
 	{
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterdetailActionUncalledFunc.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$this->getRequest();

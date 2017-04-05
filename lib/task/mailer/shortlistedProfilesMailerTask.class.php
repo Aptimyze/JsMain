@@ -80,7 +80,7 @@ public function skipProfiles($arranged)
 {
 	foreach ($arranged as $key => $value) 
 	{
-		$skipProfileObj     = SkipProfile::getInstance($key);
+		$skipProfileObj     = new SkipProfile($key);
 		$skipConditionArray = SkipArrayCondition::$SkippedAll;			
                 $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 		if(is_array($skipProfiles))
@@ -89,7 +89,6 @@ public function skipProfiles($arranged)
 			$temp=$value;
 		if(count($temp)>0)
 			$result[$key]=$temp;
-		$skipProfileObj::unsetInstance($key);
 		
 	}
 	return $result;

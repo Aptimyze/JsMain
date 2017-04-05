@@ -51,6 +51,10 @@ class ImageManipulator
         unset($pictureFunobj);
         if(!$this->image)
         {
+		$trace = debug_backtrace();
+		$szType = getimagesize($file);
+		file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/img.txt","file:".$file."formattype:".var_export($szType,true)."trace:".var_export($trace,true)."\n\n\n",FILE_APPEND);
+
             throw new RuntimeException('Cannot create image from data in ImageManipulator');
         }
         return $this;

@@ -51,7 +51,8 @@ $(document).ready(function() {
     $("#cashChequePickup").click(function() {
         var mainMembership = $('[name=mainMembership]').val();
         var vasImpression = $('[name=vasImpression]').val();
-        var paramStr = 'displayPage=6' + '&mainMembership=' + mainMembership + '&vasImpression=' + vasImpression;
+        var upgradeMem = $('[name=upgradeMem]').val();
+        var paramStr = 'displayPage=6' + '&mainMembership=' + mainMembership + '&vasImpression=' + vasImpression+'&upgradeMem='+upgradeMem;
         if(checkEmptyOrNull(readCookie('device'))){
           paramStr += '&device=' + readCookie('device');
         }

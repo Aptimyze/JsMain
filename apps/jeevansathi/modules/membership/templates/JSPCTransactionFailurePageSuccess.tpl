@@ -131,11 +131,12 @@
                 if(checkEmptyOrNull(readCookie('selectedVas'))){
                     $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
                 } else {
-                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                    var upgradeMem = "~$data.checkMemUpgrade`";
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop','upgradeMem':upgradeMem});
                 }
             } else {
                 if(checkEmptyOrNull(readCookie('selectedVas'))){
-                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'', 'mainMemDur':'', 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'', 'mainMemDur':'', 'selectedVas':readCookie('selectedVas'), 'device':'desktop','upgradeMem':upgradeMem});
                 }
             }
         })

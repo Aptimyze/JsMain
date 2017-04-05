@@ -68,7 +68,7 @@ class VariableParams
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
                                             "mainMemUpgradeLimit"=>7,
                                             "upgradeMainMemAdditionalPercent"=>0.05,
-                                            "channelsAllowed"=>array("desktop"),
+                                            "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
                                             "excludeMainMembershipUpgrade"=>array("X","ESP")
                                             );
     

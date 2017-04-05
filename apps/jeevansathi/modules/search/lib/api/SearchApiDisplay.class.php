@@ -363,6 +363,12 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
+					
+				$this->finalResultsArray[$pid]['availforchat']= false;
+				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
+				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
+					$this->finalResultsArray[$pid]['availforchat']= true;
+
 //				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::statName($pid,$this->searchResultsData[$key]['USERNAME']);
 				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::CanonicalProfile($this->profileObjArr[$key]);
 				$this->finalResultsArray[$pid]['PROFILECHECKSUM']=JsAuthentication::jsEncryptProfilechecksum($pid);
@@ -694,6 +700,8 @@ class SearchApiDisplay
 					{
 						eval('$temp =$photoObj->get'.$this->photoType.'();');
 						$this->finalResultsArray[$profileId]['PHOTO'] = $temp;
+                                                if(MobileCommon::isAndroidApp())
+                                                    $this->finalResultsArray[$profileId]['THUMBNAIL_PIC'] = $photoObj->getThumbailUrl();
 						if(!MobileCommon::isDesktop())
 							$this->finalResultsArray[$profileId]['SIZE']=$this->getpictureSizeToShow($profileId,$pictureSize[$profileId]);
 						unset($temp);

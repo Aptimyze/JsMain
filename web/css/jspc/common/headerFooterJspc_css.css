@@ -48,7 +48,7 @@
 }
 
 .headfootsprtie {
-    background-image: url(IMG_URL/images/jspc/commonimg/header-footer2.png);
+    background-image: url(IMG_URL/images/jspc/commonimg/header-footer3.png);
     background-repeat: no-repeat;
 }
 
@@ -882,6 +882,13 @@ ul.foot li, ul.foot li a {
 .newLogoWidthLoggedOut {
     width: 163px;
 }
+.ambitionbox {
+   background-position: -272px 6px;
+   width: 130px;
+   height: 28px;
+   margin-top: 10px;
+}
+
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     .newLogoWidth {

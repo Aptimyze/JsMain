@@ -1667,9 +1667,9 @@ $.ajax({
     success: function(result){
          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
          $("#js-otherInvalidReasonsLayer").val('');
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
-          ShowTopDownError([result.message],10000);
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y')) 
+                    { 
+          ShowTopDownError([result.message],5000);
           $("#commonOverlayTop").show();
                     }
 }

@@ -143,6 +143,7 @@ class SearchTypesEnums
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
+        const ANDROID_CHAT_NEW = 'ACN';
         const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 	const AndroidMatchOfDay = "AMD";
