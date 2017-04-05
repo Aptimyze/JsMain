@@ -514,6 +514,7 @@ function updateContactsSeen($sender_profileid, $receiver_profileid, $who, $conta
 		}
 		$profileid = $receiver_profileid;
                 $mypid = $sender_profileid;
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterContactFunctions.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
                 include_once("alter_seen_table.php");
 }
 

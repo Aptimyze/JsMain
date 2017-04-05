@@ -41,6 +41,7 @@ class AlterSeenV1Action extends sfAction
 						$updatecontact=1;
 					if($mypid!=$profileid && $this->loginProfile->getGENDER()!=$this->Profile->getGENDER())
 					{
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterAction.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
 						include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
 					}
 				}

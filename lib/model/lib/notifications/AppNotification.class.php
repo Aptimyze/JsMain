@@ -188,6 +188,8 @@ public function microtime_float()
 		  case "EOI":
 		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
+          case "CHAT_MSG":
+          case "CHAT_EOI_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
@@ -262,6 +264,7 @@ public function microtime_float()
                         $applicableProfiles=array();
 			$applicableProfilesNonNri =array();
 			$applicableProfilesNri =array();
+			$poolObj = new NotificationDataPool();
                         $applicableProfilesNonNri = $this->getVDProfilesApplicableForNotification($appProfiles);
                         if(count($applicableProfilesNonNri)>0){
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
@@ -271,6 +274,7 @@ public function microtime_float()
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
+			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
 			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
@@ -495,7 +499,8 @@ public function microtime_float()
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
-	  if($notificationKey =='VD'){	
+        //For variable Title
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
@@ -506,7 +511,7 @@ public function microtime_float()
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD'){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else
@@ -518,6 +523,12 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+          if($dataPerNotification['OTHER_PROFILEID']){
+            $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
+          }
+          if($dataPerNotification['OTHER_USERNAME']){
+            $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
+          }
 		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
