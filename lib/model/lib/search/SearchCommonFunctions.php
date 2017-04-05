@@ -256,22 +256,29 @@ class SearchCommonFunctions
         * This section will give count for justJoinedMatches and top10 results
 		* @return array containing count and ids info.
         */
-        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly")
+        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly",$havePhotoCriteria="")
         {
                 $searchEngine = 'solr';
 				$noAwaitingContacts=1;
+				
 				$sort = SearchSortTypesEnums::justJoinedSortFlag;
                 if(!$loggedInProfileObj)
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('JustJoinedMatches',$loggedInProfileObj);
                 $SearchParamtersObj->getSearchCriteria($searchCriteria);
+                if($havePhotoCriteria!="")
+                {
+                	$SearchParamtersObj->setHAVEPHOTO("Y");
+                }
                 $SearchServiceObj = new SearchService($searchEngine);
                 $SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
                 $SearchUtilityObj =  new SearchUtility;
                 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
+
+                $resultsArr = $responseObj->getResultsArr();
                 $arr['PIDS'] = $responseObj->getsearchResultsPidArr();
-                $arr['CNT']  = $responseObj->getTotalResults();
+                $arr['CNT']  = $responseObj->getTotalResults();                            
                 return $arr;
         }
 
