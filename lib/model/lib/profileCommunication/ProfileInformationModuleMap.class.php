@@ -6,8 +6,8 @@
  */
 class ProfileInformationModuleMap
 {
+	CONST _defaultList = "INTEREST_RECEIVED";
         /*This declares array of  all the configurations of all the given modules*/
-
 	public static $MYJSAPP_ANDROID_1;
 	public static $MYJSAPP_IOS_1;
 	public static $ContactCenterAPP;
@@ -26,7 +26,8 @@ class ProfileInformationModuleMap
 		}
 		else
 			$arrayName = self::$defaultArray[$module];
-		        if(isset(self::${$arrayName}))
+		       
+		if(isset(self::${$arrayName}))
                 {
                         if($infoType=='')
                                 return self::${$arrayName};
@@ -57,7 +58,8 @@ class ProfileInformationModuleMap
                                    return $k;
                         }
                 }
-                throw new JsException("","Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		jsException::nonCriticalError("Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		return self::_defaultList;
         }
         
 	static public function init()
@@ -505,7 +507,7 @@ class ProfileInformationModuleMap
 		"INTEREST_RECEIVED"=>Array( 
 			"ID"=> "1",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_EOI_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -522,7 +524,7 @@ class ProfileInformationModuleMap
 		"INTEREST_EXPIRING"=>Array( 
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -539,7 +541,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_RECEIVED"=>Array( 
 			"ID"=> "2",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -555,7 +557,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_SENT"=>Array( 
 			"ID"=> "3",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -571,7 +573,7 @@ class ProfileInformationModuleMap
 		"MY_MESSAGE"=>Array( 
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "MYJS_MESSAGE_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -587,7 +589,7 @@ class ProfileInformationModuleMap
 		"VISITORS"=>Array( 
 			"ID"=> "5",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -603,7 +605,7 @@ class ProfileInformationModuleMap
 		"INTEREST_SENT"=>Array( 
 			"ID"=> "6",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_VIEWED_DATE_NO_MESSAGE",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -619,7 +621,7 @@ class ProfileInformationModuleMap
 		"MATCH_ALERT"=>Array( 
 			"ID"=> "7",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -635,7 +637,7 @@ class ProfileInformationModuleMap
 		"SHORTLIST"=>Array( 
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "SHORTLIST_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -667,7 +669,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_ALL"=>Array( 
 			"ID"=> "13",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -683,7 +685,7 @@ class ProfileInformationModuleMap
 		"NOT_INTERESTED"=>Array(
 			"ID" => "10",
                         "SORT_ORDER"=> "",
-                        "COUNT"=> "20",
+                        "COUNT"=> "10",
                         "TUPLE"=> "SHORTLIST_APP",
                         "TUPLE_ORDER"=> "",
                         "ACTIVE_FLAG"=> "Y",
@@ -699,7 +701,7 @@ class ProfileInformationModuleMap
                 "NOT_INTERESTED_BY_ME"=>Array(
                         "ID" => "11",
                         "SORT_ORDER"=> "",
-                        "COUNT"=> "20",
+                        "COUNT"=> "10",
                         "TUPLE"=> "SHORTLIST_APP",
                         "TUPLE_ORDER"=> "",
                         "ACTIVE_FLAG"=> "Y",
@@ -715,7 +717,7 @@ class ProfileInformationModuleMap
                 "FILTERED_INTEREST"=>Array( 
 			"ID"=> "12",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "20",
+			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_EOI_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -732,7 +734,7 @@ class ProfileInformationModuleMap
                 "CONTACTS_VIEWED"=>Array( 
                        "ID"=> "16",
                        "SORT_ORDER"=> "",
-                       "COUNT"=> "20",
+                       "COUNT"=> "10",
                        "TUPLE"=> "INBOX_EOI_APP",
                        "TUPLE_ORDER"=> "",
                        "ACTIVE_FLAG"=> "Y",
@@ -766,7 +768,7 @@ class ProfileInformationModuleMap
             "IGNORED_PROFILES"=>Array( 
                        "ID"=> "20",
                        "SORT_ORDER"=> "",
-                       "COUNT"=> "20",
+                       "COUNT"=> "10",
                        "TUPLE"=> "INBOX_EOI_APP",
                        "TUPLE_ORDER"=> "",
                        "ACTIVE_FLAG"=> "Y",
@@ -782,7 +784,7 @@ class ProfileInformationModuleMap
              "INTEREST_ARCHIVED"=>Array( 
 				"ID"=> "22",
 				"SORT_ORDER"=> "",
-				"COUNT"=> "20",
+				"COUNT"=> "10",
 				"TUPLE"=> "INBOX_APP",
 				"TUPLE_ORDER"=> "TIME",
 				"ACTIVE_FLAG"=> "Y",

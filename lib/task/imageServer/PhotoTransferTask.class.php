@@ -210,6 +210,8 @@ EOF;
 			$status = $modObj->edit($paramArr,$dataArr["MODULE_ID"],$dataArr["PROFILEID"]);
 			unset($modObj);
 		}
+		if($module == "PICTURE")
+			   PictureNewCacheLib::getInstance()->removeCache($dataArr['PROFILEID']);
 		return $status;
 	}
 

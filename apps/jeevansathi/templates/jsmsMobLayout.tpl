@@ -3,7 +3,6 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
@@ -14,7 +13,11 @@
 	</script>
 	~include_http_metas`
 	~include_metas`
-  ~include_partial('global/jsmsCommonHeader')`
+        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
+        ~if $ampurl|strstr:"amp"`
+            <link rel="amphtml" href="~$ampurl`">
+        ~/if`
+        ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
@@ -27,6 +30,7 @@
 	<meta name="theme-color" content="#415765">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+       
         <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
 	<link rel="apple-touch-icon" href="/apple-touch-icon_new.png">

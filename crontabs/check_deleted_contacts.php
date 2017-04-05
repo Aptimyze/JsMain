@@ -12,15 +12,15 @@ $flag_using_php5=1;
 include("connect.inc");
 include($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 
-$TABLES_SHARDED=array(array("TABLE_NAME"=>"newjs.CONTACTS","DEL_TABLE_NAME"=>"newjs.DELETED_PROFILE_CONTACTS","COLUMNS"=>array("SENDER","RECEIVER")),
-		array("TABLE_NAME"=>"newjs.HOROSCOPE_REQUEST","DEL_TABLE_NAME"=>"newjs.DELETED_HOROSCOPE_REQUEST","COLUMNS"=>array("PROFILEID","PROFILEID_REQUEST_BY")),
-		array("TABLE_NAME"=>"newjs.PHOTO_REQUEST","DEL_TABLE_NAME"=>"newjs.DELETED_PHOTO_REQUEST","COLUMNS"=>array("PROFILEID","PROFILEID_REQ_BY")),
-		array("TABLE_NAME"=>"newjs.MESSAGE_LOG","DEL_TABLE_NAME"=>"newjs.DELETED_MESSAGE_LOG","COLUMNS"=>array("SENDER","RECEIVER")));
+$TABLES_SHARDED=array(array("TABLE_NAME"=>"newjs.CONTACTS","DEL_TABLE_NAME"=>"newjs.DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET","COLUMNS"=>array("SENDER","RECEIVER")),
+		array("TABLE_NAME"=>"newjs.HOROSCOPE_REQUEST","DEL_TABLE_NAME"=>"newjs.DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET","COLUMNS"=>array("PROFILEID","PROFILEID_REQUEST_BY")),
+		array("TABLE_NAME"=>"newjs.PHOTO_REQUEST","DEL_TABLE_NAME"=>"newjs.DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET","COLUMNS"=>array("PROFILEID","PROFILEID_REQ_BY")),
+		array("TABLE_NAME"=>"newjs.MESSAGE_LOG","DEL_TABLE_NAME"=>"newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET","COLUMNS"=>array("SENDER","RECEIVER")));
 
 
-$TABLES=array(array("TABLE_NAME"=>"newjs.BOOKMARKS","DEL_TABLE_NAME"=>"newjs.DELETED_BOOKMARKS","COLUMNS"=>array("BOOKMARKER","BOOKMARKEE")),
-	array("TABLE_NAME"=>"newjs.IGNORE_PROFILE","DEL_TABLE_NAME"=>"newjs.DELETED_IGNORE_PROFILE","COLUMNS"=>array("PROFILEID","IGNORED_PROFILEID")),
-	array("TABLE_NAME"=>"jsadmin.VIEW_CONTACTS_LOG","DEL_TABLE_NAME"=>"jsadmin.DELETED_VIEW_CONTACTS_LOG","COLUMNS"=>array("VIEWER","VIEWED")));
+$TABLES=array(array("TABLE_NAME"=>"newjs.BOOKMARKS","DEL_TABLE_NAME"=>"newjs.DELETED_BOOKMARKS_ELIGIBLE_FOR_RET","COLUMNS"=>array("BOOKMARKER","BOOKMARKEE")),
+	array("TABLE_NAME"=>"newjs.IGNORE_PROFILE","DEL_TABLE_NAME"=>"newjs.DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET","COLUMNS"=>array("PROFILEID","IGNORED_PROFILEID")),
+	array("TABLE_NAME"=>"jsadmin.VIEW_CONTACTS_LOG","DEL_TABLE_NAME"=>"jsadmin.DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET","COLUMNS"=>array("VIEWER","VIEWED")));
 
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
@@ -73,7 +73,7 @@ if(mysql_num_rows($res))
 			
 			$messageShard=$serverId+1;
 			$dbMessageLogObj=new NEWJS_MESSAGE_LOG("shard".$messageShard."_master");
-			$dbDeletedMessageLogObj=new NEWJS_DELETED_MESSAGE_LOG("shard".$messageShard."_master");
+			$dbDeletedMessageLogObj=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard".$messageShard."_master");
 			
 			foreach($TABLES_SHARDED as $table)
 			{

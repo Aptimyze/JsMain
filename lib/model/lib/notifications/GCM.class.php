@@ -73,8 +73,12 @@ class GCM {
 				elseif($v['error']){
 					$logArray[$count]['STATUS_MESSAGE']=$v['error'];
 					$statusArr[] =$invalidStatus;
-					if($oldRegistrationId && ($v['error']=='InvalidRegistration' || $v['error']=='NotRegistered'))
+					if($oldRegistrationId && ($v['error']=='InvalidRegistration' || $v['error']=='NotRegistered')){
 						$registrationIdObj->deleteRegId($oldRegistrationId);
+                                                //Changed below to insert entry in APP_UNINSTALL to send mailer 
+                                                $appUninstallObj = new NOTIFICATION_APP_UNINSTALL();
+                                                $appUninstallObj->insertUninstalledProfiles($profileid,$oldRegistrationId);
+                                        }
 				}
 				elseif($v['message_id']){
 					$logArray[$count]['STATUS_MESSAGE']="SUCCESS";
