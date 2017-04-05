@@ -54,7 +54,7 @@ class astroCompatibilityV1Action extends sfActions
 
 			//to check if the key already exists (i.e. the person has already been sent a sample mail inside the last 6 hours)
 			$flag = $astroObj->getSampleAstroFlag($loggedInProfileId);
-			
+
 			//if the mail has been sent
 			if($flag)
 			{
@@ -92,14 +92,15 @@ class astroCompatibilityV1Action extends sfActions
 			if($sendMail)
 			{
 				$astroObj = new astroReport();
-				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);											
+				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);				
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
 				}
 				else
 				{
-					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);									
+					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
+					
 					if($count >= "100")
 					{
 						$successArr["MESSAGE"] = "Actual Report Sent";
@@ -111,11 +112,11 @@ class astroCompatibilityV1Action extends sfActions
 
 						if($this->loginData['GENDER']=='M')
 						{
-							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$this->loginData['USERNAME'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
+							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$this->loginData['USERNAME'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$otherUsername;
 						}
 						else
 						{
-							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$this->loginData['USERNAME'];
+							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$otherUsername.":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$this->loginData['USERNAME'];
 						}
 						$file=PdfCreation::PdfFile($urlToVedic);	
 						$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
