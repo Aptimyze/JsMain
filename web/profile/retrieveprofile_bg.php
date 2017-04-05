@@ -633,28 +633,33 @@ function mysql_error_with_mail($msg)
  */
 function retreiveChatData($dbName, $iProfileID, $listOfActiveProfileIds)
 {
-  $deletedChatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
-  $arrChatIds = $deletedChatLogStoreObj->selectActiveProfileData($iProfileID,$listOfActiveProfileIds);
-  
-  if(count($arrChatIds)) {
-    //Insert Data in Chat
-    $chatStoreObj = new NEWJS_CHATS($dbName);
-    $chatStoreObj->insertFromEligibleForRet($arrChatIds);
-    unset($chatStoreObj);
-    
-    //Delete Data from Delete Chat Tables
-    $deleteChatStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
-    $deleteChatStoreObj->removeRecords($arrChatIds);
-    unset($deleteChatStoreObj);
-    
-    //Insert Data to chat_logs
-    $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
-    $chatLogStoreObj->insertRecordsIntoChatLogFromRetreieve($iProfileID, $listOfActiveProfileIds);
-    unset($chatLogStoreObj);
-    
-    //Delete Data From Delete Chat Log Table
-    $deletedChatLogStoreObj->removeRecords($iProfileID,$listOfActiveProfileIds);
+  try{
+    $deletedChatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
+    $arrChatIds = $deletedChatLogStoreObj->selectActiveProfileData($iProfileID,$listOfActiveProfileIds);
+
+    if(count($arrChatIds)) {
+      //Insert Data in Chat
+      $chatStoreObj = new NEWJS_CHATS($dbName);
+      $chatStoreObj->insertFromEligibleForRet($arrChatIds);
+      unset($chatStoreObj);
+
+      //Delete Data from Delete Chat Tables
+      $deleteChatStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
+      $deleteChatStoreObj->removeRecords($arrChatIds);
+      unset($deleteChatStoreObj);
+
+      //Insert Data to chat_logs
+      $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
+      $chatLogStoreObj->insertRecordsIntoChatLogFromRetreieve($iProfileID, $listOfActiveProfileIds);
+      unset($chatLogStoreObj);
+
+      //Delete Data From Delete Chat Log Table
+      $deletedChatLogStoreObj->removeRecords($iProfileID,$listOfActiveProfileIds);
+    }
+    unset($deletedChatLogStoreObj);
+  } catch (Exception $ex) {
+    mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data {$iProfileID} on {$dbName}", print_r($ex->getTrace(),true));
+    die("Issue while retreiving data for chat tables");
   }
-  unset($deletedChatLogStoreObj);
 }
 ?>
