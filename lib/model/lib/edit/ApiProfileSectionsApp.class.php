@@ -129,6 +129,8 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
                 $horoscope = new Horoscope();
 		$horoExists = $horoscope->isHoroscopeExist($this->profile);	
+		
+		//segregated key for android and ios. added ios key in the end as per their request and kept the android key as it is
 		if($horoExists=="Y")
 		{
 			$horoLabel = "Update Horoscope";			
@@ -141,11 +143,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		if(MobileCommon::isApp() == "A" && $horoLabel)
 		{
 			$astro[0][HORO_BUTTON_LABEL] = $horoLabel;
-		}
-		elseif(MobileCommon::isApp() == "I" && $horoLabel)
-		{
-			$astro[]=$this->getApiFormatArray("HORO_BUTTON_LABEL",$horoLabel , $horoLabel);
-		}
+		}		
 
     $this->addSunSign($astro,$AstroKundali);
     
@@ -173,6 +171,12 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("ASTRO_COUNTRY_BIRTH","Country" , $this->profile->getDecoratedBirthCountry(),"",$this->getApiScreeningField(""));
 		
 		$astro[]=$this->getApiFormatArray("ASTRO_PLACE_BIRTH","City/Town" , $this->profile->getDecoratedBirthCity(),"",$this->getApiScreeningField(""));
+		
+		//create horoscope key for ios
+		if(MobileCommon::isApp() == "I" && $horoLabel)
+		{
+			$astro[]=$this->getApiFormatArray("HORO_BUTTON_LABEL",$horoLabel , $horoLabel);
+		}
 		return $astro;
 	}
 	
