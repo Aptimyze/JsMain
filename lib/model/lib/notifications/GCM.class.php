@@ -47,7 +47,7 @@ class GCM {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 4);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-		$start = microtime();
+		//$start = microtime();
         $result = curl_exec($ch);
 	$httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	$response = json_decode($result, true);
@@ -118,10 +118,10 @@ class GCM {
 		fwrite($f,curl_error($ch));
 		fclose($f);
         }
-        $end = microtime();
+        /*$end = microtime();
         $errorLogPath=JsConstants::$cronDocRoot.'/log/rabbitError.log';
     	$diff = $end-$start;
-    	error_log("start:".$start." and end: ".$end.", single curl-".$diff."\n",3,$errorLogPath);
+    	error_log("start:".$start." and end: ".$end.", single curl-".$diff."\n",3,$errorLogPath);*/
         curl_close($ch);
         return $result;
     }
@@ -167,7 +167,7 @@ class GCM {
     public function executeMultiCurlRequest($executeAllRequests=false){
     	if($this->pendingCurlRequestCount > 0 && ($this->pendingCurlRequestCount >= $this->multiCurlThreshold || $executeAllRequests == true)){
     		
-			$start = microtime();
+			//$start = microtime();
 			do {
 				curl_multi_exec($this->multiCurlObj,$running);
 			}while($running > 0);
@@ -248,10 +248,10 @@ class GCM {
 					fclose($f);
 				}
 			}
-			$end = microtime();
+			/*$end = microtime();
 	        $errorLogPath=JsConstants::$cronDocRoot.'/log/rabbitError.log';
 	    	$diff = $end-$start;
-	    	error_log("start: ".$start." and end: ".$end.", multi curl for curls ".$this->pendingCurlRequestCount." is ".$diff."\n",3,$errorLogPath);
+	    	error_log("start: ".$start." and end: ".$end.", multi curl for curls ".$this->pendingCurlRequestCount." is ".$diff."\n",3,$errorLogPath);*/
 			$this->pendingCurlRequestCount = 0;
 			$this->profileDetailsPool = array();
 			$this->curlArr = array();
