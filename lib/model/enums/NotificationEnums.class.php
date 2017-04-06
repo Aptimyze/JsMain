@@ -61,4 +61,7 @@ class NotificationEnums
       public static $channelArr = array("A_I"=>"Android - Ios","D"=>"Desktop","M"=>"Mobile");	
       public static $enableNotificationLogging = false;
 
+      //config for sending multiple curl requests for GCM notification in parallel
+      public static $multiCurlReqConfig = array("threshold"=>10,"sendMultipleParallelNotification"=>false,"notificationKey"=>array("CONTACTS_VIEWED_BY"));
+
 }
