@@ -239,9 +239,9 @@ class SearchSort
                 $cityStateArr = $this->setCityStateToBeMatched($loggedInProfileObj);
 
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
-                        if ($loggedInProfileObj->getCASTE()) {
-                                $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
-                        }
+//                        if ($loggedInProfileObj->getCASTE()) {
+//                                $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
+//                        }
                         if ($loggedInProfileObj->getMANGLIK()) {
                                 if(strstr($loggedInProfileObj->getMANGLIK(),"N")){
                                         $sortArray[] = "or(tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . "),tf(PARTNER_MANGLIK," . $doesntMatterValue . "))";
@@ -294,7 +294,7 @@ class SearchSort
                                 $strCondition .= "if(" . $arr . ",";
                                 $brace .= ",0)";
                         }
-                        $strCondition .= "10" . $brace;
+                        $strCondition .= "1" . $brace;
                         if($sortLastLogin == 1)
                                 $strCondition = "sum(" . $sortLogin . "," . $strCondition .",". $sortCasteCondition .")";
                         else
