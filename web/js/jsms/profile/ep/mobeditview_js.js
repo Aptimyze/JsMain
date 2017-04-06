@@ -71,21 +71,13 @@ editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P
     }
    },200);
 });
-function showCalDppSugg()
-{
-	if(mutualMatchCount<100 && dppSuggestionsData['dppData'].length>1)
-	{
-		$("#ed_slider").addClass("dn");
-		$("#commonOverlay").removeClass("dn");
-	}
-}
 function appendDppCal()
 {
 	$("#mainContent").append('<div id="commonOverlay" class="jsmsOverlay overlayZ11 dn"><div id="overlayHead" class="bg1"> <div class="txtc pad15"> <div class="posrel"> <div class="fontthin f19 white">Desired Partner Profile</div> <i id="closeFromDesiredPartnerProfile" class=" posabs mainsp srch_id_cross " style="right:0; top:0px;" onclick="closeDppCal();"></i> </div> </div> </div> <div id="overlayMid" class="bg4 pad3 flowauto fullheight"> <div id="mainHeading" class="color8 fontreg f18 txtc pb10">Relax Your Criteria</div> <div id="dppDescription" class="txtc color8 fontlig f17"></div> <div id="dppSuggestions" class="mb60"></div> </div> <div id="foot" class="posfix fullwid bg7 btmo"> <div class="scrollhid posrel"> <input type="submit" id="upgradeSuggestion" class="fullwid dispbl lh50 txtc f16 pinkRipple white" value="Upgrade Desired Partner Profile"> </div> </div></div>');
-setDppDataSuggestions();
 }
 function setDppDataSuggestions()
 {
+                        showLoader();
                         $.ajax({
                         url:"/api/v1/profile/dppSuggestionsCAL",
                         datatype:'json',
@@ -100,6 +92,12 @@ function setDppDataSuggestions()
                                 if(dppSuggestionsData['dppData'].length>1)
                                 {
                                         appendData(dppSuggestionsData);
+					hideLoader();
+					if(mutualMatchCount<100)
+					{             
+						$("#ed_slider").addClass("dn");
+				                $("#commonOverlay").removeClass("dn");
+					}
                                 }
                             }
                         }
@@ -107,11 +105,13 @@ function setDppDataSuggestions()
 }
 function appendData(obj) {
     if (obj.Description != null || obj.Description != undefined) {
+	$("#dppDescription").empty();
         $("#dppDescription").append(obj.Description);
     }
     $.each(obj.dppData, function(index, elem) {
         if (elem) {
             if (elem.heading && elem.data) {
+		$('#suggest_' + elem.type).remove();
                 $("#dppSuggestions").append('<div class="brdr1 pad2 dispnone" id="suggest_' + elem.type + '"><div id="heading_' + elem.type + '" class="txtc fontreg pb10 color8 f16">' + elem.heading + '</div></div>');
                 if (elem.range == 0) {
                     $.each(elem.data, function(index2, elem2) {
@@ -119,13 +119,16 @@ function appendData(obj) {
                     });
                 } else if (elem.type == "AGE") {
                     if (elem.data.HAGE != undefined && elem.data.LAGE != undefined) {
+			$("#LAGE_HAGE").remove();
                         $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LAGE_HAGE" class="suggestOption suggestOptionRange brdr18 fontreg color8 f16 txtc" value="' + elem.data.LAGE + '_' + elem.data.HAGE + '">' + elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years  </div>');
                     }
                 } else if (elem.type == "INCOME") {
                     if (elem.data.LDS != undefined && elem.data.LDS != null && elem.data.HDS != undefined && elem.data.HDS != null) {
+			$("#LDS_HDS").remove();
                         $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LDS_HDS" class="suggestOption suggestOptionRange2 brdr18 fontreg color8 f16 txtc" value="' + elem.data.LDS + '_' + elem.data.HDS + '">' + elem.data.LDS + ' - ' + elem.data.HDS + '</div>');
                     }
                     if (elem.data.LRS != undefined && elem.data.LRS != null && elem.data.HRS != undefined && elem.data.HRS != null) {
+			$("#LRS_HRS").remove();
                         $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LRS_HRS" class="suggestOption suggestOptionRange2 brdr18 fontreg color8 f16 txtc" value="' + elem.data.LRS + '_' + elem.data.HRS + '">' + elem.data.LRS + ' - ' + elem.data.HRS + '</div>');
                     };
                     if (elem.data.LRS == "No Income" && elem.data.LDS == "No Income" && elem.data.HRS == "and above" && elem.data.HDS == "and above") {
@@ -142,7 +145,7 @@ function appendData(obj) {
                 $(this).toggleClass("suggestSelected");
             });
         });
-        $("#upgradeSuggestion").on("click", function() {
+        $("#upgradeSuggestion").off("click").on("click", function() {
             if ($(".suggestSelected").length == 0) {
                 ShowTopDownError(["Please select at least one suggestion."]);
             } else {
@@ -212,16 +215,21 @@ function appendData(obj) {
                     }
                 });
                 var url = JSON.stringify(sendObj).split('"').join("%22");
-	      $("#newLoader").show();
+			closeDppCal();
+	      showLoader();
                 $.ajax({
                     url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData=' + url,
                     type: 'POST',
                     success: function(response) {
-	      $("#newLoader").hide();
-			closeDppCal();
-			window.location.reload();
+			      showLoader();
+			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
+				hideLoader();
                     },
-                    error: function(response) {}
+                    error: function(response) {
+			      showLoader();
+				window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
+				hideLoader();
+			}
                 });
             }
         });
@@ -269,7 +277,10 @@ var mobEditPage=(function(){
 					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
 					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
 					if(mutualMatchCount<100)
-						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='showCalDppSugg();'>Increase Match</a></p>");
+					{
+						$("#increaseMatch").remove();
+						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='setDppDataSuggestions();'>Increase Matches</a></p>");
+					}
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
                     {
