@@ -24,7 +24,7 @@ class mobHoroscopeAction extends sfAction
     $this->BIRTH_YR = $BIRTH_YR;
     $this->BIRTH_DAY = $BIRTH_DAY;
     $this->BIRTH_MON = $BIRTH_MON;
-    if(MobileCommon::isApp()=="I")
+    if($request->getParameter("KEY")=="ios")
     {
       $this->backButton = 1;
     }
