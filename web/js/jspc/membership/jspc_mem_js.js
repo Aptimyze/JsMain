@@ -918,7 +918,7 @@ function checkLogoutCase(profileid) {
 }
 
 function evaluateVasToBeClicked(){
-    //console.log("II");
+    //console.log("evaluateVasToBeClicked");
     preSelectedVasId = readCookie('selectedVas');
     var duration;
     if(typeof preSelectLandingVas != "undefined"){
@@ -956,18 +956,30 @@ function evaluateVasToBeClicked(){
 }
 
 function manageAstroForDiscount(addonDuration){
-    
-    var memebership = readCookie('mainMem'),
-        time = readCookie('mainMemDur');
-    var sP = $("#" + memebership + d + "_price_strike").text().trim().replace(',', ''),
-        aP = $("#" + memebership + d + "_price").text().trim().replace(',', '');
-    if(sP.length != 0){
-        disc = ((sP-aP)*100)/sP;
-        //console.log("Discount",disc);
+    if(alreadyVasDiscount == "0"){
+        var memebership = readCookie('mainMemTab'),
+            time = readCookie('mainMemDur');
+        var sP = $("#" + memebership + time + "_price_strike").text().trim().replace(',', ''),
+            aP = $("#" + memebership + time + "_price").text().trim().replace(',', '');
+        if(sP.length != 0){
+            var disc = ((sP-aP)*100)/sP;
+            //console.log("Discount",disc);
+        }
+        for (var key in vasPrice) {
+            var originalVasPrice = vasPrice[key];
+            if(typeof disc != "undefined"){
+                var discountedVasPrice = (originalVasPrice*(100-disc))/100;
+                discountedVasPrice = discountedVasPrice.toFixed(2);
+                $("#" + memebership + key + "_price_strike").removeClass("disp-none");
+                $("#" + memebership + key + "_price_strike").text(removeZeroInDecimal(commaSeparateNumber(originalVasPrice)));
+                $("#" + memebership + key + "_price").text(removeZeroInDecimal(commaSeparateNumber(discountedVasPrice))+" ");
+            }
+            else{
+                $("#" + memebership + key + "_price_strike").addClass("disp-none");
+                $("#" + memebership + key + "_price").text(removeZeroInDecimal(commaSeparateNumber(originalVasPrice)));
+            }
+        }
     }
-    $("#" + memebership + "A" + addonDuration + "_price").text("200");
-    $("#" + memebership + "A" + addonDuration + "_price_strike").text("500");
-    //console.log("nitish",typeof sP,typeof aP);
 }
 
 function selectClosestAddonDuration(num,arr){

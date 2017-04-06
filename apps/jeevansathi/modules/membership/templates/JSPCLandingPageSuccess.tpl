@@ -55,9 +55,13 @@
         var pageType = 'ConditionsBasedHeader';    
     ~/if`
     ~if $data.pageOneVas`
+    var alreadyVasDiscount = "0";
         ~foreach from=$data.pageOneVas key=k item=v name=pageOneVasLoop`
             ~foreach from=$v.vas_options key=kk item=vv name=vasOptionsLoop`
-                vasPrice["~$vv.id`"] = "~$vv.vas_price`";
+                vasPrice["~$vv.id`"] = "~$vv.vas_price`".trim().replace(',', '');
+                ~if $vv.vas_price_strike neq NULL`
+                    alreadyVasDiscount = "1";
+                    ~/if`
             ~/foreach`
         ~/foreach`
     ~/if`
@@ -394,14 +398,14 @@
                                             </div>
                                         </i>
                                     </div>
-                                    <ul class="addOnAstro fontlig pt5">
+                                    <ul class="addOnAstro fontlig pt5" id="~$v.subscription_id`Astroblock">
                                         ~foreach from=$benefitsV.vas_options key=vasOpK item=vasOpV name=vasOp`
                                             <li class="clearfix pt5">
                                                 <div class="fl">
                                                     <input type="checkbox" value="~$vasOpV.duration`MASTRO" name="MONTHASTRO~$v.subscription_id`[]" astroAddon="~$vasOpV.id`" dur="~$vasOpV.duration`" class="astroAddon" id="~$v.subscription_id`~$vasOpV.id`">
                                                 </div>
                                                 <div class="fl f14 mt1 grey5 pl5">
-                                                    ~$vasOpV.duration` months for ~$data.currency` <span id="~$v.subscription_id`~$vasOpV.id`_price">~$vasOpV.vas_price`</span>  ~if $vasOpV.vas_price_strike`<span class="txtstr upcolr1 f13" id="~$v.subscription_id`~$vasOpV.id`_price_strike">~$vasOpV.vas_price_strike`</span>~/if`
+                                                    ~$vasOpV.duration` months for ~$data.currency` <span id="~$v.subscription_id`~$vasOpV.id`_price">~$vasOpV.vas_price`&nbsp;</span><span class="txtstr upcolr1 f13" id="~$v.subscription_id`~$vasOpV.id`_price_strike"></span>
                                                 </div>
                                             </li>
                                         ~/foreach`
