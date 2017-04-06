@@ -35,7 +35,7 @@ all:
   PROFILE_PHOTO_SCREEN: "Photo is currently under screening. Please check later"    
   max_photo_size: 6
   max_no_of_photos: 20
-  photo_formats: 'Jpeg, Gif, Jpg'
+  photo_formats: 'Jpeg, Gif, Jpg, Png'
   photo_email: 'photos@jeevansathi.com'
   SCREENED_PHOTO_URL: "<?php echo JsConstants::$screenedPhotosUrl?>"
   screened_dir_path: "<?php echo JsConstants::$screenedPhotoDir?>"

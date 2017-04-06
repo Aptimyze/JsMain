@@ -57,15 +57,14 @@ $(document).ready(function()
 	$("#nowUpload").show();
             for (var i = 0; (i < canBeUploaded) ; i++)
             {
-                var file = files[i];
-
-                var fileType = file.type;
+                var file = files[i];                
+                var fileType = file.type;                
                 if(!fileType) 
 		{
                         fileType="image/"+file.name.split(".")[1];
                         var fileTypeNull=1;
-                }
-                if (imageFormat.indexOf(fileType) == -1) // image type check
+                }                
+                /*if (imageFormat.indexOf(fileType) == -1) // image type check
                 {
 		lastAction="UPLOAD";
                     ajaxRequestToTrack(profileId,"fileTypeError","File Type-"+fileType);
@@ -75,7 +74,7 @@ $(document).ready(function()
                     displayConfirmationMessage(message,1);
 		    completedPerTime++;
                     continue;
-                }
+                }*/
                 if (maxPhotosPresent()) // image type check
                 {
 		    removePreviewText();
@@ -84,7 +83,7 @@ $(document).ready(function()
 		    completedPerTime++;
                     continue;
                 }
-                if (((file.size) > (appMaxPhotoSize*1048576))||((file.fileSize) > (appMaxPhotoSize*1048576))) // image size check
+                /*if (((file.size) > (appMaxPhotoSize*1048576))||((file.fileSize) > (appMaxPhotoSize*1048576))) // image size check
                 {
 		lastAction="UPLOAD";
                     ajaxRequestToTrack(profileId,"sizeError","File Size"+file.size / 1048576);
@@ -94,7 +93,7 @@ $(document).ready(function()
                     displayConfirmationMessage(message,1);
 		    completedPerTime++;
                     continue;
-                }
+                }*/
                 var picReader = new FileReader();
                 picReader.onload = (function (file){
 		return function(event) 

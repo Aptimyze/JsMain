@@ -11,7 +11,7 @@ class UploadPhoto extends PictureService
  * Class For deleting photo 
  */
 
-	public static $allowedImageType = array(IMAGETYPE_GIF,IMAGETYPE_JPEG); 
+	public static $allowedImageType = array(IMAGETYPE_GIF,IMAGETYPE_JPEG,IMAGETYPE_PNG); 
 
 	public static $channelUpload = array("computer_noFlash","appPicsCamera","iOSPicsCamera","iOSPicsGallery","mobPicsGallery","appPicsGallery","appPicsUpload","mobileUpload");
 
@@ -34,7 +34,7 @@ class UploadPhoto extends PictureService
                 $havePhotoBeforeUpload = $this->profileObj->getHAVEPHOTO();
 
 		$uploadType = $this->checkSourceValue();
-
+		
 		$return  = call_user_func_array(array($this, $uploadType), array($files,$havePhotoBeforeUpload, $fileData,$importSite,$nonScreenedPicObj));
 
 		return $return;
@@ -92,7 +92,7 @@ class UploadPhoto extends PictureService
 					$this->mobileUploadOrientation($v);
 
 				$picInfo = $this->copyPic($v,$nonScreenedPicObj);
-
+				
 				if($picInfo['ErrorCounter']==1)
 				{
 					$uploadCounts  = $this->updateErrorCounts($picInfo,$uploadCounts);
@@ -100,11 +100,11 @@ class UploadPhoto extends PictureService
 				else
 				{
 					chmod($picInfo['SRC'], 0777);
-
+					
 					$this->generateImages("thumbnail96",$picInfo['SRC'],$picInfo['DEST'],$v['type']);
 
 					$pictureArray = $this->generatePictureArray($nonScreenedPicObj,$picInfo);
-
+					
 					$nonScreenedPicObj->setDetail($pictureArray);
 
 					$insertStatus=$this->addPhotos($nonScreenedPicObj);
@@ -287,6 +287,8 @@ class UploadPhoto extends PictureService
 			$actualType = "jpg";
 		elseif ($imageType == "image/gif")
 			$actualType = "gif";
+		elseif ($imageType == "image/png")
+			$actualType = "png";
 		return $actualType;
 	}
 
@@ -338,12 +340,18 @@ class UploadPhoto extends PictureService
 	public function copyPic($image,$nonScreenedPicObj)
 	{
 		$actualType = $this->getActualType($image['type']);
-                $picInfoArr = $this->getPicCopyData($nonScreenedPicObj,$actualType);
+                $picInfoArr = $this->getPicCopyData($nonScreenedPicObj,$actualType);                
                 if(!move_uploaded_file($image['tmp_name'], $picInfoArr['SRC']))
                 {
                         $error['ErrorCounter']=1;
                         return $error;
                 }
+                elseif($actualType == "png")
+                {
+                	$srcPath = $this->convertPngToJpeg($picInfoArr['SRC']);
+                	$picInfoArr["SRC"] = $srcPath;
+                	$picInfoArr["ACTUAL_TYPE"] = "jpeg";
+                }                
 		return $picInfoArr;
 	}
 
@@ -403,5 +411,14 @@ class UploadPhoto extends PictureService
 			return false;
 		}
 		return true;
+	}
+
+	public static function convertPngToJpeg($filename)
+	{		
+		$destFilename = str_replace(".png",".jpeg",$filename);
+		$image = imagecreatefrompng($filename);		
+    	imagejpeg($image,$destFilename);
+    	imagedestroy($image);
+    	return $destFilename;
 	}
 }
