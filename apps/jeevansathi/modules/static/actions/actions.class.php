@@ -1008,7 +1008,7 @@ public function executeAppredirect(sfWebRequest $request)
       $forDpp = 1; //This has been added so as to remove Select from the output where not required
     }
 		$output = "";
-		if($k=="relationship")
+		if($k=="relationship" || $k=="relation")
 		{
 			$output=$this->getField("relationship_edit");
 		}

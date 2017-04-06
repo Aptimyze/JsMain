@@ -528,6 +528,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//mstatus
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
 		
+                $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		

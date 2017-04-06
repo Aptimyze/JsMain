@@ -254,6 +254,8 @@ EOF;
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
+                                  MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,

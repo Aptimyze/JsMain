@@ -10,7 +10,7 @@ class NW_INSTITUTELIST extends TABLE implements AutoSuggestor {
 	public function viewRecords ($like,$limit)
 	{
         try {
-            $sql = "Select SQL_CACHE DISTINCT(Institute) from newjs.NW_INSTITUTELIST where INSTITUTE like :LIKE or ABBR like :LIKE order by INSTITUTEID DESC LIMIT :RANGE ";
+            $sql = "Select SQL_CACHE DISTINCT(Institute) from newjs.NW_INSTITUTELIST where INSTITUTE like :LIKE or ABBR like :LIKE LIMIT :RANGE ";
                 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LIKE",$like, PDO::PARAM_STR);
