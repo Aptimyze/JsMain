@@ -405,7 +405,7 @@
                                                     <input type="checkbox" value="~$vasOpV.duration`MASTRO" name="MONTHASTRO~$v.subscription_id`[]" astroAddon="~$vasOpV.id`" dur="~$vasOpV.duration`" class="astroAddon" id="~$v.subscription_id`~$vasOpV.id`">
                                                 </div>
                                                 <div class="fl f14 mt1 grey5 pl5">
-                                                    ~$vasOpV.duration` months for ~$data.currency` <span id="~$v.subscription_id`~$vasOpV.id`_price">~$vasOpV.vas_price`&nbsp;</span><span class="txtstr upcolr1 f13" id="~$v.subscription_id`~$vasOpV.id`_price_strike"></span>
+                                                    ~$vasOpV.duration` months for ~$data.currency` <span id="~$v.subscription_id`~$vasOpV.id`_price">~$vasOpV.vas_price`&nbsp;</span><span class="txtstr upcolr1 f13" id="~$v.subscription_id`~$vasOpV.id`_price_strike">~if $vasOpV.vas_price_strike` ~$vasOpV.vas_price_strike`~/if`</span>
                                                 </div>
                                             </li>
                                         ~/foreach`

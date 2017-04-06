@@ -918,7 +918,6 @@ function checkLogoutCase(profileid) {
 }
 
 function evaluateVasToBeClicked(){
-    //console.log("evaluateVasToBeClicked");
     preSelectedVasId = readCookie('selectedVas');
     var duration;
     if(typeof preSelectLandingVas != "undefined"){
@@ -951,6 +950,27 @@ function evaluateVasToBeClicked(){
                 dd = readCookie('mainMemDur');
                 managePriceStrike(m, dd);
             }
+        }
+        else{
+            mainMemTabSel = readCookie('mainMemTab');
+            if(!checkEmptyOrNull(mainMemTabSel) || mainMemTabSel == "X"){
+                        currentMainMemSel = $(".planlist li.active").attr('mainMemTab'),
+                mainMemTabSel = currentMainMemSel,
+                d = $('#tab_'+currentMainMemSel+' .durSel.plansel').attr("mainMemDur");
+                createCookie('mainMemTab',mainMemTabSel);
+                createCookie('mainMemDur',d);
+                duration= d=='L'?'12':d;
+            }
+            else{
+                if(!checkEmptyOrNull(readCookie('mainMemDur'))){
+                    d = $('#tab_'+readCookie('mainMemTab')+' .durSel.plansel').attr("mainMemDur");
+                    createCookie('mainMemDur',d);
+                }
+                d = readCookie('mainMemDur');
+                duration= d=='L'?'12':d;
+            }
+            duration= selectClosestAddonDuration(duration,astroDurations);
+            manageAstroForDiscount(duration);
         }
     }
 }
