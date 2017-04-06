@@ -353,6 +353,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//mstatus
 		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+                
+                //HaveChild
+                if($this->profile->getMSTATUS() != 'N'){
+                    $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
+                }
+                
+                //Posted By
+                $szRelation = $this->profile->getDecoratedRELATION();
+                $basicArr[] =$this->getApiFormatArray("RELATION","Profile Managed by" ,$szRelation,$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"));
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
@@ -558,6 +567,18 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getLINCOME_DOL());
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME_DOL());
 		$arrOut[] = $this->getApiFormatArray("P_INCOME","Income",trim($jpartnerObj->getDecoratedPARTNER_INCOME()),$szIncome,$this->getApiScreeningField("PARTNER_INCOME"));
+		//Occupation Grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$arrOut[] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"));		
 		return $arrOut;		
 	}
 

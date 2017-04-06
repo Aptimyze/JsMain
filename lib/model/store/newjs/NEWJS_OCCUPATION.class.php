@@ -31,5 +31,74 @@ class NEWJS_OCCUPATION extends TABLE
                 }
                 return $output;	
 	}
+
+    /**
+     * insert into newjs_occupation
+     * @param  associative array $arrayData contains key as sorting number and data
+     * @return true            on success
+     */
+    public function insert($arrayData)
+    {
+        try 
+        {
+            $sql = "INSERT INTO `OCCUPATION_NEW` (LABEL,VALUE,SORTBY,GROUPING) VALUES ";
+            $insertString = "";
+            foreach ($arrayData as $key => $value) {
+                $insertString.= "('".$value['occupationValue']."',".$value['occupationNumber'].",".($key+1).",".$value['groupNumber']."),";
+            }
+            $insertString = rtrim($insertString,",");
+
+            $sql = $sql.$insertString;
+            $res = $this->db->prepare($sql);
+            $res->execute();
+        } 
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+        return true;
+    }
+
+    public function RenameTable()
+    {
+        try 
+        {
+            $sql = "RENAME TABLE newjs.OCCUPATION to newjs.OCCUPATION_BACKUP,newjs.OCCUPATION_NEW to newjs.OCCUPATION";
+            $res = $this->db->prepare($sql);
+            $res->execute();
+        }    
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function createNewTable()
+    {
+      try
+      {
+        $sql = "CREATE TABLE newjs.OCCUPATION_NEW LIKE newjs.OCCUPATION";
+        $res = $this->db->prepare($sql);
+        $res->execute();
+      }
+      catch(PDOException $e)
+      {
+        throw new jsException($e);
+      }
+    }
+
+    public function dropTable()
+    {
+       try 
+       {
+        $sql = "DROP TABLE newjs.OCCUPATION";
+          $res = $this->db->prepare($sql);
+          $res->execute();
+      } 
+      catch(PDOException $e)
+      {
+          throw new jsException($e);
+      }
+    }
 }
 ?>

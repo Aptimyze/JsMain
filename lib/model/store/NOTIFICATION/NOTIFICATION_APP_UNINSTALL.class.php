@@ -50,8 +50,7 @@ class NOTIFICATION_APP_UNINSTALL extends TABLE {
 
     public function insertUninstalledProfiles($profileid, $oldRegistrationId) {
         try {
-            $sql = "INSERT INTO NOTIFICATION.APP_UNINSTALL (PROFILEID,REGISTRATION_ID,ENTRY_DT,MAILER_SENT)"
-                    . " VALUES ($profileid, $oldRegistrationId, now(),'N');";
+            $sql = "INSERT INTO NOTIFICATION.APP_UNINSTALL (PROFILEID,REGISTRATION_ID,ENTRY_DT,MAILER_SENT) VALUES ('$profileid','$oldRegistrationId', now(),'N')";
             $res = $this->db->prepare($sql);
             $res->execute();
         } catch (Exception $ex) {

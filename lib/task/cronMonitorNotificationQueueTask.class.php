@@ -40,7 +40,7 @@ EOF;
       sfContext::createInstance($this->configuration);
     	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-	$notificationArr =array('EOI'=>'1000','ACCEPTANCE'=>'1000','PHOTO_REQUEST'=>'1000','MESSAGE_RECEIVED'=>'1000','EOI_REMINDER'=>'1000','BUY_MEMB'=>'1000','PROFILE_VISITOR'=>'1000','PHOTO_UPLOAD'=>'1000','INCOMPLETE_SCREENING'=>'1000','CHAT_MSG'=>'1000','CHAT_EOI_MSG'=>'1000');
+	$notificationArr =array('EOI'=>'10000','ACCEPTANCE'=>'1000','MESSAGE_RECEIVED'=>'2000','PHOTO_REQUEST'=>'2000','EOI_REMINDER'=>'2000','BUY_MEMB'=>'500','PROFILE_VISITOR'=>'10000','PHOTO_UPLOAD'=>'2000','INCOMPLETE_SCREENING'=>'500','CHAT_MSG'=>'1000','CHAT_EOI_MSG'=>'1000');
 
     	$JsMemcacheObj =JsMemcache::getInstance();
 	$keyParam ='APP_INST#';
@@ -53,19 +53,29 @@ EOF;
 		$valWithourMq 	=$JsMemcacheObj->get($keyWithourMq);
 		$valWithMq 	=$JsMemcacheObj->get($keyWithMq);
 
-		$netCount =abs($valWithourMq-$valWithMq);
-		if($netCount>$thresholdVal){
-			$this->consumerHandling();	
+		// Handling for ACCEPTANCE
+		if($notificationKey=='ACCEPTANCE'){
+			if($valWithMq<10)		
+				$this->consumerHandling($notificationKey,$valWithMq);
+			continue;
 		}
-		unset($thresholdVal);	
+		// end
+		$netcount =abs($valwithourmq-$valwithmq);
+		if($netCount>$thresholdVal){
+			$this->consumerHandling($notificationKey,$netCount);	
+		}
+		unset($valWithourMq);
+		unset($valWithMq);
+		unset($netcount);	
 	}
   }
-	public function consumerHandling()
+	public function consumerHandling($notificationKey,$netCount=0)
 	{ 
      		$rmqObj = new RabbitmqHelper();
         	$rmqObj->killConsumerForCommand(MessageQueues::CRONCONSUMER_STARTCOMMAND);
         	$to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com";
-        	$subject = $msgBody = "Instant Notification Queue Consumer killed";
+        	$msgBody = "[Instant] Notification Queue(SmsGcmQueue) Consumer(cronConsumeQueueMessage) killed";
+		$subject = "Notification Key: $notificationKey \n Difference: $netCount";
         	SendMail::send_email($to, $msgBody, $subject);
         	$this->sendAlertSMS();
 	}
@@ -77,7 +87,7 @@ EOF;
   	}
   	public function sms($mobile){
         	$t = time();
-        	$message        = "Mysql Error Count have reached App InstantNotificationConsumer killed at $t";
+        	$message        = "Mysql Error Count have reached InstantNotificationConsumer for Queue-SmsGcmQueue killed at $t";
         	$from           = "JSSRVR";
         	$profileid      = "144111";
         	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');

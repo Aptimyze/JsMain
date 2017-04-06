@@ -86,6 +86,13 @@ function loadContactCenterTuples(response)
 	if(tuplesHtml){
 		$("#ccTuplesMainDiv").append(tuplesHtml);
 		tuplesHtml = '';
+		
+		var typeArray = ["ccTupleImage","otherImage","myImage"];
+		$('img[dsrc]').each(function() {
+			var src = $(this).attr("dsrc");
+			if($.inArray(src,typeArray)== -1)
+				$(this).attr("src",src);
+	});
 		cECommonBinding();
 	}
 	
@@ -436,7 +443,7 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
                 
 		if(val.name_of_user!='' && val.name_of_user!=null)
 			val.username = val.name_of_user;
-                
+        
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 
@@ -463,6 +470,7 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 				'{personalizedmessageClass}': removeNull(personalizedmessageClass),
 				'{personalizedmessage}': removeNull(personalizedmessage)
 			 };
+			
 	return mapping;
 }
 
