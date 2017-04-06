@@ -798,7 +798,20 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
+		//Occupation grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"),$this->dropdown,'',1);				
+		//commented the occupation array because it is not needed on JSMS
+		//$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
 		//Income
 		$szIncomeRs = $this->getDecorateDPP_Response($jpartnerObj->getLINCOME());
 		$szIncomeRs .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME());
@@ -812,7 +825,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_RS","Income Rs",trim($incLab[0]),$szIncomeRs,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);			
 		return $DppBasicArr;		
 	}
 

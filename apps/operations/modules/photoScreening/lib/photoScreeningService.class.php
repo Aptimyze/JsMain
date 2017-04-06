@@ -12,7 +12,7 @@ class photoScreeningService
 	private $associateUploadedPhotoWithScreenedPictureId;
 	const SCREENING_TYPE= "P";
 	const PROCESS_INTERFACE_STATUS = "E";	
-        
+        const AUTO_REMINDER_MAIL_MAX_COUNT = 2;
         public function __construct($profileObj='')
         {
                 if($profileObj)
@@ -1884,6 +1884,7 @@ class photoScreeningService
 	{
 		$picture_new = new ScreenedPicture;
                 $countScreened = $picture_new->getMaxOrdering($paramArr["profileId"]);		//Get count of already existing screened pics
+                $this->screenedCount = $countScreened;
                 $countApproved = count($paramArr["APPROVE"]);
                 if(($countScreened-$paramArr["SCREENED_DELETED"])+$countApproved>(PictureStaticVariablesEnum::MAX_PICTURE_COUNT+1))
                         return 0;
@@ -2009,9 +2010,16 @@ class photoScreeningService
                                 }
                         }
                 }
-
                 //Transaction   
                 if ($dbEntryPicId) {
+                        if(!isset($this->screenedCount))
+                        {
+                                $picture_new = new ScreenedPicture;
+                                $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
+                                $this->screenedCount = $countScreened;
+                        }
+                        $this->countBeforeScreening =  ($this->screenedCount===NULL) ? 0 : ($this->screenedCount + 1);
+
                         $pictureNew = new ScreenedPicture;
                         $pictureNew->startTransaction();
                         $dbActionOutput = $this->performDbAction($this->profileObj->getPROFILEID(), $dbEntryPicId, $dbEntryTitle, $dbEntryKeywords, $pictureNew, $MainPicUrl, $ProfilePicUrl, $ThumbailUrl, $Thumbail96Url, $MobileAppPicUrl, $ProfilePic120Url, $ProfilePic235Url, $ProfilePic450Url, $OriginalPicUrl, $PicFormat, $SearchPicUrl);  //Perform insert queries on PICTURE_NEW
@@ -2040,13 +2048,33 @@ class photoScreeningService
                 //Deleting Pics from PICTURE_NEW
                 $this->deleteScreenedPhotoEntries($paramArr['PICTUREID']);
                 $this->updateScreenedPhotosOrdering($paramArr["PROFILEID"]);
-
+                if($dbEntryPicId)
+                    $this->triggerAutoReminderMail($paramArr);
+                
                 // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
 				$memCacheObject->remove($this->profileObj->getPROFILEID() . "_THUMBNAIL_PHOTO");                  
 		PictureNewCacheLib::getInstance()->removeCache($this->profileObj->getPROFILEID());
         }
 
+        
+        public function triggerAutoReminderMail($paramArr){
+        if($this->countBeforeScreening > self::AUTO_REMINDER_MAIL_MAX_COUNT) return false;
+        $picture_new = new ScreenedPicture;
+        $countScreenedTemp = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);
+        $countScreened = ($countScreenedTemp===NULL) ? 0 : ($countScreenedTemp + 1)  ;		//Get count of already existing screened pics
+
+        if($countScreened <= $this->countBeforeScreening)return false;    
+        $producerObj=new Producer();
+        if($producerObj->getRabbitMQServerConnected())
+        {
+            $sender = $paramArr["PROFILEID"];
+            $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'PHOTO_SCREENED','body'=>array('senderid'=>$sender ), 'redeliveryCount'=>0 ));
+            $producerObj->sendMessage($sendMailData);
+            return true;
+        }
+            
+        }
         /*This function is used upload pictures from Process Interface
 	*@param formArr : form array
 	*@return output : either error message or array of count and success message
