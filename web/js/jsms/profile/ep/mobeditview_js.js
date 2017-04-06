@@ -43,7 +43,7 @@ editValArr["Favourite"]=new Array("HOBBIES_MUSIC","HOBBIES_BOOK","HOBBIES_DRESS"
 editValArr["SPOUSE"]=new Array("SPOUSE");
 editValArr["BasicDetails"]=new Array("P_HEIGHT","P_AGE","P_MSTATUS","P_HAVECHILD","P_COUNTRY","P_CITY","P_MATCHCOUNT");
 editValArr["Religion"]=new Array("P_RELIGION","P_CASTE","P_SECT","P_MTONGUE","P_MANGLIK");
-editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION","P_INCOME_RS","P_INCOME_DOL");
+editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION_GROUPING","P_INCOME_RS","P_INCOME_DOL");
 editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P_BTYPE","P_CHALLENGED","P_NCHALLENGED");
  $("document").ready(function() {
 

@@ -558,6 +558,18 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getLINCOME_DOL());
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME_DOL());
 		$arrOut[] = $this->getApiFormatArray("P_INCOME","Income",trim($jpartnerObj->getDecoratedPARTNER_INCOME()),$szIncome,$this->getApiScreeningField("PARTNER_INCOME"));
+		//Occupation Grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$arrOut[] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"));		
 		return $arrOut;		
 	}
 
