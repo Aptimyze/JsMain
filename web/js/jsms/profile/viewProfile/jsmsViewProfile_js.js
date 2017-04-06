@@ -652,13 +652,15 @@ astroCompatibility = function()
 			$(".js-buttonAstro").html("Buy Astro Compatibility");
 			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
 			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
-			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");				
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();				
 		}
 		else{
 			$(".js-buttonAstro").html("Upgrade Membership");
 			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
 			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
-			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");		
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();		
 		}
 		
 	});
@@ -676,19 +678,25 @@ astroCompatibility = function()
 			$(".js-buttonAstro").click(function(){
 				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");
 			});
-			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");		
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();
+
 	});
 }
 
-$(document).on('click touchstart',function(event){    closeAstroLayer(event) });
-
-closeAstroLayer = function(event)
+function closeAstroLayer()
 {
-	var target = $(event.target).first();
-	if(target.attr('id') == "astroReportLayer")
-	{
-		$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");		
-	}
+	$('#astroReportLayer').on('touchstart', function(e) {   
+			e.stopPropagation(); //stops propagation
+			if(e.target.id == "astroReportLayer")
+			{
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");	
+			}
+			e.stopPropagation(); 
+			e.preventDefault();
+			return false;
+		});
 }
+
 setTimeout(enableLoader,50);
 
