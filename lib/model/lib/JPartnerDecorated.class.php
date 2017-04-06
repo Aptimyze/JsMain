@@ -168,6 +168,9 @@ include_once(JsConstants::$docRoot."/commonFiles/incomeCommonFunctions.inc");
 					$partnerCountry = $this->getPARTNER_COUNTRYRES();
 					$partnerReligion = $this->getPARTNER_RELIGION();
 					$partnerOccupation = $this->getPARTNER_OCC();
+                                        
+                                        if($partnerCity && substr($partnerCity, 0, 1) != "'")
+                                            $partnerCity = $this->addQuotesToCity($partnerCity);
 					
 					$partnerLinkArr = $dbObj->getLink($partnerCaste, $partnerOccupation, $partnerReligion, $partnerMtongue, $partnerCity, $partnerCountry,$this->page_source);
 					
@@ -204,4 +207,10 @@ include_once(JsConstants::$docRoot."/commonFiles/incomeCommonFunctions.inc");
 					$this->partnerLink=$partnerLink;
 			}
 		}
+                private function addQuotesToCity($cityWithoutQuotes){
+                    $cityArr = explode(',', $cityWithoutQuotes);
+                    $cityWithQuotes = implode("','", $cityArr);
+                    $cityWithQuotes = "'".$cityWithQuotes."'";
+                    return $cityWithQuotes;
+                }
 }
