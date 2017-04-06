@@ -4,7 +4,7 @@ class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
 	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
-	{				
+	{				//print_R($trendsArr);print_R($type);print_R($valArr);die;
 		$loggedInProfileObj = LoggedInProfile::getInstance();
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
@@ -43,7 +43,7 @@ class dppSuggestions
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
-			if ($type == "EDUCATION" || $type == "OCCUPATION")
+			if ($type == "EDUCATION") // || $type == "OCCUPATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
@@ -407,10 +407,10 @@ class dppSuggestions
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$eduGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$eduGrouping,'',1);
 		}
-		if($type == "OCCUPATION")
+		/*if($type == "OCCUPATION")
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$occupationGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$occupationGrouping,'',1);
-		}
+		}*/
 		foreach($GroupingArr as $groupingKey => $stringVal)
 		{
 			$GroupingArr[$groupingKey] = explode(",",$stringVal);

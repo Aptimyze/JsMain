@@ -330,6 +330,9 @@ $className = get_class($this);
       if ($valArr['pageId']) {
         $memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
       }
+      if($valArr['extra']){
+      	$memMessage['membership_message'][myjsCachingEnums::EXTRA_PART] = $valArr['extra'];
+      }
     }
     else {
       $memHandlerObj = new MembershipHandler();
@@ -340,6 +343,7 @@ $className = get_class($this);
         $arr[myjsCachingEnums::TOP_PART] = '';
         $arr[myjsCachingEnums::BOTTOM_PART] = '';
         $arr[myjsCachingEnums::PAGEID] = '';
+        $arr[myjsCachingEnums::EXTRA_PART] = '';
 
         if ($memMessage['membership_message'] == NULL) {
           $arr[myjsCachingEnums::IS_NULL] = 1;

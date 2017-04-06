@@ -18,11 +18,20 @@ class ProcessHandler
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
-    $senderObj = new Profile('',$senderid);   
-    $senderObj->getDetail("","","*");
-    $receiverObj = new Profile('',$receiverid);
-    $receiverObj->getDetail("","","*");
-
+    if($type!='INITIATECONTACT')
+    {
+        if($senderid)
+        {
+          $senderObj = new Profile('',$senderid);   
+          $senderObj->getDetail("","","*");
+        }
+         
+        if($receiverid)
+        {
+          $receiverObj = new Profile('',$receiverid);
+          $receiverObj->getDetail("","","*");
+        }
+    }    
     switch($type)
     {
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
@@ -35,6 +44,20 @@ class ProcessHandler
                               ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+                              break;
+      case 'PHOTO_SCREENED':  
+                              $memObj = new ProfileMemcacheService($senderid);
+                              $receiverArray =   unserialize($memObj->get('CONTACTED_BY_ME'));
+                              if(is_array($receiverArray['I'])){
+                                  foreach ($receiverArray['I'] as $key => $value) {
+                                $receiverObj = new Profile();
+                                $receiverObj->getDetail($value, "PROFILEID");
+   
+                                ContactMailer::sendAutoReminderMailer($receiverObj,$senderObj);
+                               //   $this->sendAutoReminder($value,$senderid);
+                                  }    
+                              
+                              }
                               break;
     }
 	}
@@ -62,7 +85,29 @@ class ProcessHandler
                                  break; 
     }
   }
+public function sendAutoReminder($receiver,$sender){
 
+try{            
+            $receiverObj = new Profile();
+            $receiverObj->getDetail($receiver, "PROFILEID");
+
+            $senderObj = new Profile();
+            $senderObj->getDetail($sender, "PROFILEID");
+            $contactObj = new Contacts($senderObj, $receiverObj);
+            $contactHandlerObj = new ContactHandler($senderObj,$receiverObj,"EOI",$contactObj,'R',ContactHandler::POST);
+            $contactHandlerObj->setElement("MESSAGE","");
+            $contactHandlerObj->setElement("DRAFT_NAME","preset");
+            $contactHandlerObj->setElement("STATUS","R");
+            $contactHandlerObj->setElement("MAIL_AND_NOT","N");
+            $contactEngineObj=ContactFactory::event($contactHandlerObj);
+    }
+    catch(jsException $e){
+        
+        return;
+    }          
+
+
+}
   /**
    * 
    * Function for sending notifications.
@@ -72,10 +117,13 @@ class ProcessHandler
    */
   public function sendGCM($type,$body)
   {
-    $senderid=$body['senderid'];   
-    $receiverid=$body['receiverid'];
-    $message = $body['message'];
-    switch($type)
+    $senderid		=$body['senderid'];   
+    $receiverid		=$body['receiverid'];
+    $message 		=$body['message'];
+    $exUrl		=$body['exUrl'];
+    $extraParams 	=$body['extraParams'];		    
+
+    /*switch($type)
     {
       case 'ACCEPTANCE' :  $instantNotificationObj = new InstantAppNotification("ACCEPTANCE");
                            $instantNotificationObj->sendNotification($receiverid, $senderid);
@@ -83,12 +131,19 @@ class ProcessHandler
       case 'MESSAGE'    :  $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
                            $instantNotificationObj->sendNotification($receiverid, $senderid, $message);  
                            break;
-    }
+    }*/
+
+    // Handle All Instant App Notification	
+    $notificationKey =$type;	
+    $rabbitMq =1;	
+    $instantNotificationObj = new InstantAppNotification($notificationKey);
+    $instantNotificationObj->sendNotification($receiverid, $senderid, $message, $exUrl, $extraParams, $rabbitMq);		
+
   } 
 
   /**
    * 
-   * Function for sending gcm notifications(fso app/browser).
+   * Function for sending gcm notifications(fso app/Browser Scheduled Notification).
    * 
    * @access public
    * @param $type,$body
@@ -106,11 +161,12 @@ class ProcessHandler
       }
     }    
   }
-  
+ 
+  // Instant Browser Notification	 
   public function sendInstantNotification($type, $body)
   {
     if($body){
-        $notificationType = "INSTANT"; //INSTANT/SCHEDULED
+        $notificationType = "INSTANT"; //INSTANT
         $notificationKey = $body["notificationKey"];
         $selfUserId = $body["selfUserId"];    //profileid/agentid to whom notification is to be sent
         $otherUserId = $body["otherUserId"]; //comma separated list of other profileids(whose data is used in notification)
@@ -209,6 +265,21 @@ class ProcessHandler
 	$updatecontact = $body['updatecontact'];
 	$profileid = $body['profileid']; 
 	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+ }
+ public function updateMatchAlertsLaseSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
+ }
+ 
+ public function updateJustJoinedLastSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
  }
  public function updateFeaturedProfile($type,$body)
  {

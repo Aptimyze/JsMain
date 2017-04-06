@@ -5,6 +5,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
         * @private LAST_LOGGEDIN [No. of days in which we consider for last logged in matches]
         */
 	private $LAST_LOGGEDIN = 15; 
+	private $VERIFIED_CHECK = 2; 
 	private $LAST_LOGGEDIN_STARTFROM = "1960-01-01 00:00:00"; 
         private $getFromCache = 1;
         /**
@@ -34,6 +35,12 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                         $this->setLLAST_LOGIN_DT($this->LAST_LOGGEDIN_STARTFROM);
                         $this->setHLAST_LOGIN_DT($endDate);
                 }
+                
+                //just joined 2 day check
+                $endDate = date("Y-m-d H:i:s", strtotime("now") - $this->VERIFIED_CHECK*24*3600);
+                $this->setLVERIFY_ACTIVATED_DT($this->LAST_LOGGEDIN_STARTFROM);
+                $this->setHVERIFY_ACTIVATED_DT($endDate);
+                
                 $this->setShowFilteredProfiles('N');
         }
         public function getRelaxedSearchCriteria($limit,$sort) {

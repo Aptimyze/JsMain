@@ -305,13 +305,14 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'partner_nchallenged':
 		case 'partner_education':
 		case 'partner_occupation':
+		case 'partner_occupation_grouping':
 		case 'partner_state':
 		case 'partner_city_india':
 			{
 				$szName = $field->getName();
 				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
 				$InputValues = $form_values[$field->getName()];
-
+				
 				return new jsValidatorWhiteList(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName,'isHobby'=>0));
 				break;
 			}

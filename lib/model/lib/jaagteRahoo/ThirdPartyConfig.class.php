@@ -32,9 +32,9 @@ class ThirdPartyConfig
                 self::$PRESENCE["IP"]["PRESENCE_75"]= "http://10.10.18.75:8590";
                 self::$PRESENCE["IP"]["PRESENCE_104"]= "http://10.10.18.104:8590";
                 self::$PRESENCE["URL"]="/jspresence/v1/presence";
-                self::$PROFILE["IP"]["PROFILE_67"]= "http://10.10.18.67:8290";
-                self::$PROFILE["IP"]["PROFILE_72"]= "http://10.10.18.72:8290";
-                self::$PROFILE["URL"]="/profile/v1/profile?view=shortview&pfids=7902447";
+                self::$PROFILE["IP"]["PROFILE_75"]= "http://10.10.18.75:8290";
+                self::$PROFILE["IP"]["PROFILE_104"]= "http://10.10.18.104:8290";
+                self::$PROFILE["URL"]="/profile/v1/profile?view=shortview&pfids=9061321";
                 self::$LISTINGS["IP"]["LISTINGS_104"]= "http://10.10.18.104:8190";
                 self::$LISTINGS["IP"]["LISTINGS_72"]= "http://10.10.18.72:8190";
                 self::$LISTINGS["URL"]="/listings/v1/discover?type=CHATDPP";

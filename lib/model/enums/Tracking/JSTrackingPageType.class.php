@@ -67,11 +67,11 @@ class JSTrackingPageType
 	const INTEREST_ARCHIVED_IOS = 66;
 	const INTEREST_ARCHIVED_ANDROID = 65;
 	const ANDROID_CHAT_NEW = 70;
-        const PENDING_EOI_ANDROID ='70';
+        const PENDING_EOI_ANDROID ='75';
         const PENDING_EOI_IOS ='71';
         const FILTERED_EOI_ANDROID ='72';
         const FILTERED_EOI_IOS ='73';
-
+        const AUTO_REMINDER_PHOTO_UPLOAD_MAILER =   '74';  
 
 }
 
