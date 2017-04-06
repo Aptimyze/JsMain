@@ -61,20 +61,18 @@ class DialerInbound
 		$mainMemArr =array("allMainMem"=>$allMainMem,"expiry_date"=>$expiry_date,"renewalActive"=>$renewalActive,"mostPopular"=>$mostPopular);
 		return $mainMemArr;
 	}
-	public function getDiscountDetails($allMainMem)
+	public function getDiscountDetails($memPriceArr)
 	{
         	if(is_array($memPriceArr)){
-        	    $nonZero = false;
         	    foreach($memPriceArr as $service => $val){
-        	        $servDisc[$service] = 0;
+        	        //$servDisc[$service] = 0;
         	        foreach($val as $servDur => $details){
         	            $disc = $details["PRICE"] - $details["OFFER_PRICE"];
         	            if($disc > 0){
-        	                $nonZero = true;
         	                $per = ($disc/$details["PRICE"])*100;
-        	                if($per>$servDisc[$service]){
+        	                //if($per>$servDisc[$service]){
         	                    $servDisc[$servDur] = intval($per);
-        	                }
+        	                //}
         	            }
         	        }
         	    }
@@ -112,7 +110,7 @@ class DialerInbound
                 $mainMemArr 	=$this->getMembershipDetails($profileid);
 		$allMainMem	=$mainMemArr['allMainMem'];
 		$expiryDate	=$mainMemArr['expiry_date'];
-		$renewalActive	=$mainMemArr['renewalActive,'];
+		$renewalActive	=$mainMemArr['renewalActive'];
 		$mostPopular	=$mainMemArr['mostPopular'];
                 if(is_array($allMainMem))
                         $planDetails =$this->formatPlanDetails($allMainMem,$mostPopular);
@@ -141,7 +139,7 @@ class DialerInbound
 			$curTime	=time();
 			$expiryTime	=strtotime($expiryDate);
 			if($expiryTime>=$curTime){
-				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24));
+				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24))+1;
 			}
 			$renewalActive ='Y';
 		}
@@ -150,6 +148,7 @@ class DialerInbound
 		$memData['RENEWAL_DAYS'] =$daysDiff;
 		$memData['RENEWAL_ACTIVE'] =$renewalActive;			
 		$memData['MEMBERSHIP'] =$planDetails;	
+
                 return $memData;
         }
         public function getCommunityMapping($mtongue)
