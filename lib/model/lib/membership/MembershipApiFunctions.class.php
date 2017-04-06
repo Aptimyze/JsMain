@@ -1002,6 +1002,10 @@ class MembershipApiFunctions
                 $apiObj->mainServices['service_duration'] = $monthsPrependVal . ' Months';
             }
         }
+       
+        if($apiObj->upgradeMem && $apiObj->upgradeMem == 'MAIN'){
+            $apiObj->mainServices['actual_upgrade_price'] = $apiObj->allMainMem[$id][$subId]['OFFER_PRICE']; 
+        }
         $apiObj->mainServices['service_contacts'] = $apiObj->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
         $apiObj->mainServices['standard_price'] = $apiObj->allMainMem[$id][$subId]['PRICE'];
         $apiObj->mainServices['orig_price_formatted'] = number_format($apiObj->mainServices['standard_price'], 2, '.', ',');

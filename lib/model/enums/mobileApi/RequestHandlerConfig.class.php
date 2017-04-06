@@ -121,6 +121,9 @@ class RequestHandlerConfig
 			"helpQuery" => array("v1" => "SubmitQueryV1"),
 			"publicQuestions" => array("v1" => "GetPublicQuestionsV1")
 		),
+		"testautomation" => array(
+			"clearMatchAlertLog" => array("v1"=>"flushMatchAlertLogV1"),					
+		),
 		"chat" => array(
 			"authenticateChatSession" => array("v1" => "authenticateChatSessionV1"),
 			"chatUserAuthentication" => array("v1" => "chatUserAuthenticationV1"),
