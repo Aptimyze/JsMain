@@ -19,8 +19,8 @@ class RabbitmqHelper
 			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
                           "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
                           "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
-                          "screening" => "nitesh.s@jeevansathi.com,nikmittal4994@gmail.com",
-                          "instantEoi" => "nikmittal4994@gmail.com",
+                          "screening" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
+                          "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
