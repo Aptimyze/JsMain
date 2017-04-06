@@ -365,20 +365,16 @@ class negativeTreatment
     {
         //Start:JSC-2551:Log before pushing to RabbitMQ for deletion 
         $profileDeleteObj = new PROFILE_DELETE_LOGS();
-        if(is_null($startTimeForLogs)) {
-            $startTime = date('Y-m-d H:i:s');
-            $arrDeleteLogs = array(
-                'PROFILEID' => $profileid,
-                'DELETE_REASON' => $delete_reason,
-                'SPECIFY_REASON' => $specify_reason,
-                'USERNAME'  => $username,
-                'CHANNEL' => CommonFunction::getChannel(),
-                'START_TIME' => $startTime,
-            );
+        $startTime = date('Y-m-d H:i:s');
+        $arrDeleteLogs = array(
+            'PROFILEID' => $profileid,
+            'DELETE_REASON' => $delete_reason,
+            'SPECIFY_REASON' => $specify_reason,
+            'USERNAME'  => $username,
+            'CHANNEL' => CommonFunction::getChannel(),
+            'START_TIME' => $startTime,
+        );
         $profileDeleteObj->insertRecord($arrDeleteLogs);
-        } else {
-            $startTime = $startTimeForLogs;
-        }
         //End:JSC-2551:Log before pushing to RabbitMQ for deletion 
         $jprofileObj         = new JPROFILE;
         $markDelObj          = new JSADMIN_MARK_DELETE;
@@ -414,7 +410,7 @@ class negativeTreatment
         $arrDeleteLogs = array(
             'END_TIME' => date('Y-m-d H:i:s'),
             'COMPLETE_STATUS' => 'Y',
-            'INTERFACE' =>'B'
+            'INTERFACE' =>'B',
         );
         $profileDeleteObj->updateRecord($profileid, $startTime, $arrDeleteLogs);
         //End:JSC-2551: Mark Completion in logs
