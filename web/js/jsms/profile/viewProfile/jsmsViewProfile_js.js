@@ -680,7 +680,7 @@ astroCompatibility = function()
 	});
 }
 
-$(document).on('click',function(event){    closeAstroLayer(event) });
+$(document).on('click touchstart',function(event){    closeAstroLayer(event) });
 
 closeAstroLayer = function(event)
 {
