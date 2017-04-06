@@ -353,6 +353,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//mstatus
 		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+                
+                //HaveChild
+                if($this->profile->getMSTATUS() != 'N'){
+                    $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
+                }
+                
+                //Posted By
+                $szRelation = $this->profile->getDecoratedRELATION();
+                $basicArr[] =$this->getApiFormatArray("RELATION","Profile Managed by" ,$szRelation,$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"));
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
