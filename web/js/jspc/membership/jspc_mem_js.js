@@ -396,15 +396,9 @@ function managePriceStrike(m, d) {
         vasStrikePrice = $("#" + m + vas + "_price_strike").text().trim().replace(',', '');
     var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),
         actualPrice = $("#" + m + d + "_price").text().trim().replace(',', '');
-/*
-        console.log("vasActualPrice",vasActualPrice);
-        console.log("vasStrikePrice",vasStrikePrice);
-        console.log("strikePrice",strikePrice);
-        console.log("actualPrice",actualPrice);
-        */
+
     var vasDifference = (vasStrikePrice - vasActualPrice);
     var difference = (strikePrice - actualPrice);
-    console.log("Difference",difference,typeof difference);
     if(vasDifference > 0)
         difference = difference + vasDifference;
     
@@ -983,7 +977,6 @@ function manageAstroForDiscount(addonDuration){
             aP = $("#" + memebership + time + "_price").text().trim().replace(',', '');
         if(sP.length != 0){
             var disc = ((sP-aP)*100)/sP;
-            //console.log("Discount",disc);
         }
         for (var key in vasPrice) {
             var originalVasPrice = vasPrice[key];
