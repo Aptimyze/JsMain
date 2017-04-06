@@ -391,9 +391,18 @@ function checkEmptyOrNull(item) {
 }
 
 function managePriceStrike(m, d) {
+    vas = readCookie('selectedVas');
+    var vasActualPrice = $("#" + m + vas + "_price").text().trim().replace(',', ''),
+        vasStrikePrice = $("#" + m + vas + "_price_strike").text().trim().replace(',', '');
     var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),
-        actualPrice = $("#" + m + d + "_price").text().trim().replace(',', ''),
-        difference = (strikePrice - actualPrice);
+        actualPrice = $("#" + m + d + "_price").text().trim().replace(',', '');
+    if(typeof vasActualPrice != undefined)
+        actualPrice=+vasActualPrice + +actualPrice;
+    if(typeof vasStrikePrice != undefined)
+        strikePrice=+vasStrikePrice+ +strikePrice;
+    var difference = (strikePrice - actualPrice);
+    if(strikePrice<=0)
+        strikePrice = '';
     if (strikePrice.length != 0) {
         $('.overflowPinkRipple').css('margin-top', '0px');
         $('#' + m + "_savings_container").show();
@@ -414,6 +423,8 @@ function managePriceStrike(m, d) {
             $(".list-main_" + m + " #finalMemPrice_" + m).html($("#tab_" + m + "_startingPrice").html());
         }
     }
+    actualPrice = actualPrice.toFixed(2);
+    actualPrice = actualPrice.toString();
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
 }
 
@@ -893,6 +904,92 @@ function checkLogoutCase(profileid) {
     } else {
         createCookie('vasppid', computedVasppid);
     }
+}
+
+function evaluateVasToBeClicked(){
+    preSelectedVasId = readCookie('selectedVas');
+    var duration;
+    if(typeof preSelectLandingVas != "undefined"){
+        if(checkEmptyOrNull(preSelectLandingVas) || checkEmptyOrNull(readCookie('selectedVas'))){
+	    mainMemTabSel = readCookie('mainMemTab');
+	    if(!checkEmptyOrNull(mainMemTabSel) || mainMemTabSel == "X"){
+                    currentMainMemSel = $(".planlist li.active").attr('mainMemTab'),
+		    mainMemTabSel = currentMainMemSel,
+		    d = $('#tab_'+currentMainMemSel+' .durSel.plansel').attr("mainMemDur");
+		    createCookie('mainMemTab',mainMemTabSel);
+		    createCookie('mainMemDur',d);
+		    duration= d=='L'?'12':d;
+	    }
+	    else{
+            if(!checkEmptyOrNull(readCookie('mainMemDur'))){
+                d = $('#tab_'+readCookie('mainMemTab')+' .durSel.plansel').attr("mainMemDur");
+                createCookie('mainMemDur',d);
+            }
+            d = readCookie('mainMemDur');
+            duration= d=='L'?'12':d;
+	    }
+        duration= selectClosestAddonDuration(duration,astroDurations);
+            if(!$("#"+mainMemTabSel+"A"+duration).is(':checked')){
+                $("#"+mainMemTabSel+"A"+duration).trigger('click');
+            }
+            else{
+                createCookie('selectedVas',$("#"+mainMemTabSel+"A"+duration).attr("astroAddon"));
+            }
+        }
+    }
+}
+
+function selectClosestAddonDuration(num,arr){
+    var curr = arr[0];
+    var diff = Math.abs (num - curr);
+    for (var val = 0; val < arr.length; val++) {
+        var newdiff = Math.abs (num - arr[val]);
+        if (newdiff < diff) {
+            diff = newdiff;
+            curr = arr[val];
+        }
+    }
+    return curr;
+}
+
+function clickCheckbox(checkBox){
+    $(checkBox).click(function() { 
+        if( $(this).is(':checked'))
+        {
+            $(checkBox).each(function() {     
+
+                $(this).parent().removeClass("selected");  
+                $(this).prop('checked', false);             
+            });
+             $(this).parent().addClass("selected");
+             $(this).prop('checked', true);  
+            createCookie('selectedVas',$(this).attr("astroAddon"));
+        }
+        else
+        {
+             $(this).parent().removeClass("selected");   
+             eraseCookie('selectedVas');
+        }
+
+        var m = readCookie('mainMemTab'),
+            d = readCookie('mainMemDur');
+        managePriceStrike(m, d);
+    })
+}
+
+function customCheckboxAstro(checkboxName) {
+
+    var checkBox = $('input[name="' + checkboxName + '"]');
+
+    $(checkBox).each(function() {         
+          $(this).wrap("<span class='customMem-checkbox'></span>");
+          if ($(this).is(':checked')) {
+              $(this).parent().addClass("selected");
+          }
+      });
+
+    clickCheckbox(checkBox);
+         
 }
 $.extend({
     redirectPost: function (location, args) {

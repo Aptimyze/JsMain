@@ -44,7 +44,7 @@ for($r=0;$r<count($pro_array);$r++)
 
 //Compute users who tried to pay in last one hour
 $pro_array2 = array();
-$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PAGE=2";
+$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PAGE=3";
 $res2=mysql_query($sql2,$db_js) or die($sql2.mysql_error($db_js));
 while($myrow2 = mysql_fetch_array($res2))
 {

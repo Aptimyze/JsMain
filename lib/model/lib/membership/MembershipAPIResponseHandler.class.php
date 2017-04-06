@@ -466,7 +466,19 @@ class MembershipAPIResponseHandler {
             $userId = $this->profileid;
         }
         $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
-
+        if($this->device == "desktop" && $this->custVAS == NULL){
+            $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
+            //filter out vas services from vas content based on main membership
+            $this->memApiFuncs->filterMainMemBasedVASData($this->custVAS,$this,"NCP");
+            $this->memApiFuncs->removeExtraParamsFromVAS($this->custVAS, $this);
+            $this->pageOneVas = $this->custVAS;
+            $preSelectVasGlobal = array();
+            if($this->horoscopeSetting == "Y"){
+                $preSelectVasGlobal[] = "A";
+            }
+            $preSelectVasGlobal = implode(",",$preSelectVasGlobal);
+            $this->custVAS = NULL;
+        }
         $output = array(
             'title' => $title,
             'topBlockMessage' => $this->topBlockMessage,
@@ -488,7 +500,9 @@ class MembershipAPIResponseHandler {
             'taxRate' => billingVariables::TAX_RATE,
             'tracking_params' => $tracking_params,
             'filteredVasServices'=>$vasFiltering,
-            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'pageOneVas'=>$this->pageOneVas,
+            'preSelectLandingVas'=>$preSelectVasGlobal
         );
         
         //fetch the upgrade membership content based on eligibilty and channel
@@ -634,11 +648,11 @@ class MembershipAPIResponseHandler {
         }
         $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
         $output = array(
-            'title' => 'Value Added Services',
+            'title' => 'Add Astro',
             'topBlockMessage' => NULL,
             'currency' => $this->currency,
             'dividerText' => NULL,
-            'backgroundText' => 'Plan Selected. You may now also choose some value added services from below.',
+            'backgroundText' => NULL,
             'serviceContent' => $this->service_data,
             'selectedMainServKey' => $this->mainMem,
             'selectedMainServDur' => $this->mainMemDur,
@@ -1590,6 +1604,7 @@ class MembershipAPIResponseHandler {
         unset($profileObj);
         
         $order_content = $this->memApiFuncs->getOrderContent($this);
+        //$checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),true);
         
         if ($this->currency == 'RS') {
             $number_label = '1800-419-6299';
