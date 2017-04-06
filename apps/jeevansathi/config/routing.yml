@@ -25,6 +25,10 @@ inbox_rule2:
 inbox_rule1:
  url:  /inbox/:infoTypeId/:pageNo
  param:  { module: inbox, action: index }
+ 
+inbox_ruleNoPage:
+ url:  /inbox/:infoTypeId/
+ param:  { module: inbox, action: index }
 
 search_rule:
   url:  /profile/search.php/*

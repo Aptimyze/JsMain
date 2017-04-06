@@ -1133,7 +1133,7 @@ function handleBack() {
   
 };
 
-var _dppType = ["city", "caste", "mtongue", "education", "occupation"];
+var _dppType = ["city", "caste", "mtongue", "education"];
 var _parentCatogary = [{
   "parent": "basic",
   "sub": ["city","age"]
@@ -1142,7 +1142,7 @@ var _parentCatogary = [{
   "sub": ["caste", "mtongue"]
 }, {
   "parent": "education",
-  "sub": ["education", "occupation","income"]
+  "sub": ["education","income"]
 }],queryInput = [];
 
     //change suggestion on adding or deleting chosen option
