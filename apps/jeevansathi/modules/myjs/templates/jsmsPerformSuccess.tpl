@@ -4,7 +4,8 @@
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
     var showExpiring=~$showExpiring`;
-    var showMatchOfTheDay=~$showMatchOfTheDay`;   
+    var showMatchOfTheDay=~$showMatchOfTheDay`;
+    var pageMyJs=~$pageMyJs`;   
     var myJsCacheTime = 60000;//in microseconds
 </script>
 <!--start:div-->

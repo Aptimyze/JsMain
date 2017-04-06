@@ -3,7 +3,6 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
@@ -12,7 +11,11 @@
 	</script>
 	~include_http_metas`
 	~include_metas`
-  ~include_partial('global/jsmsCommonHeader')`
+        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
+        ~if $ampurl|strstr:"amp"`
+            <link rel="amphtml" href="~$ampurl`">
+        ~/if`
+        ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
@@ -31,10 +34,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
-        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-        ~if $ampurl|strstr:"amp"`
-            <link rel="amphtml" href="~$ampurl`">
-        ~/if`
+
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
     ~include_canurl`

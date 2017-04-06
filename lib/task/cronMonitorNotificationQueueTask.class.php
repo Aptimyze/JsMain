@@ -40,7 +40,7 @@ EOF;
       sfContext::createInstance($this->configuration);
     	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-	$notificationArr =array('EOI'=>'300','ACCEPTANCE'=>'300','PHOTO_REQUEST'=>'300','MESSAGE_RECEIVED'=>'300','EOI_REMINDER'=>'300','BUY_MEMB'=>'300','PROFILE_VISITOR'=>'300','PHOTO_UPLOAD'=>'300','INCOMPLETE_SCREENING'=>'300','CHAT_MSG'=>'300','CHAT_EOI_MSG'=>'300');
+	$notificationArr =array('EOI'=>'10000','ACCEPTANCE'=>'1000','MESSAGE_RECEIVED'=>'2000','PHOTO_REQUEST'=>'2000','EOI_REMINDER'=>'2000','BUY_MEMB'=>'500','PROFILE_VISITOR'=>'5000','PHOTO_UPLOAD'=>'2000','INCOMPLETE_SCREENING'=>'500','CHAT_MSG'=>'1000','CHAT_EOI_MSG'=>'1000');
 
     	$JsMemcacheObj =JsMemcache::getInstance();
 	$keyParam ='APP_INST#';
@@ -50,34 +50,45 @@ EOF;
 		$keyWithourMq   =$keyParam.$notificationKey;
 		$keyWithMq      =$keyWithourMq.$mqParam;
 
-		$valWithourMq 	=$JsMemcacheObj->get($keyWithourMq);
-		$valWithMq 	=$JsMemcacheObj->get($keyWithMq);
+		$valWithourMq 	=$JsMemcacheObj->get($keyWithourMq,'','',0);
+		$valWithMq 	=$JsMemcacheObj->get($keyWithMq,'','',0);
 
-		$netCount =abs($valWithourMq-$valWithMq);
-		if($netCount>$thresholdVal){
-			$this->consumerHandling();	
+		// Handling for ACCEPTANCE
+		if($notificationKey=='ACCEPTANCE'){
+			if($valWithMq<100)		
+				$this->consumerHandling($notificationKey,$valWithMq);
 		}
-		unset($thresholdVal);	
+		// end
+
+		$netcount =abs($valwithourmq-$valwithmq);
+		if($netCount>$thresholdVal){
+			$this->consumerHandling($notificationKey,$netCount);	
+		}
+		unset($valWithourMq);
+		unset($valWithMq);
+		unset($netcount);	
 	}
   }
-	public function consumerHandling()
+	public function consumerHandling($notificationKey,$netCount=0)
 	{ 
      		$rmqObj = new RabbitmqHelper();
         	$rmqObj->killConsumerForCommand(MessageQueues::CRONCONSUMER_STARTCOMMAND);
-        	$to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com";
-        	$subject = $msgBody = "Instant Notification Queue Consumer killed";
+        	$to = "manoj.rana@naukri.com";
+        	$msgBody = "[Instant] Notification Queue(SmsGcmQueue) Consumer(cronConsumeQueueMessage) killed";
+		$subject = "[Instant] Notification Key: $notificationKey \n Difference Count: $netCount";
         	SendMail::send_email($to, $msgBody, $subject);
         	$this->sendAlertSMS();
+		die();
 	}
   	public function sendAlertSMS(){
-  	  	$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104","ankita"=>"9650879575");
+  	  	$mobileNumberArr = array("manoj"=>"9999216910");
   	  	foreach($mobileNumberArr as $k=>$v){
   	  	    $this->sms($v);
   	  	}
   	}
   	public function sms($mobile){
         	$t = time();
-        	$message        = "Mysql Error Count have reached App InstantNotificationConsumer killed at $t";
+        	$message        = "Mysql Error Count have reached InstantNotificationConsumer for Queue-SmsGcmQueue killed at $t";
         	$from           = "JSSRVR";
         	$profileid      = "144111";
         	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');

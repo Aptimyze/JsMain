@@ -333,10 +333,12 @@ class SearchSort
         }
         
         public function isJsBoostSorting($loggedInProfileObj){
-                $this->jsBoostSortStr = '';
-                /*if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
-                        $this->jsBoostSortStr = "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
-                }*/
+                if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
+                        foreach(SearchConfig::$jsBoostSubscription as $subscription){
+                                $this->jsBoostSortStr .=  "if(tf(SUBSCRIPTION,".$subscription."),1,";
+                        }
+                        $this->jsBoostSortStr .= "0))";
+                }
         }
         public function getJsBoostSorting(){
                 return $this->jsBoostSortStr;
