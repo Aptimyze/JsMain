@@ -31,38 +31,43 @@ EOF;
         
         $memcacheObj = JsMemcache::getInstance();
         $lengthOfQueue = $memcacheObj->getLengthOfQueue($val);
-        
-        //use pipeline  for multiple pops
-        $pipeline = $memcacheObj->pipeline();
-        echo $lengthOfQueue;
-        for($i=0;$i<$lengthOfQueue;$i++)
-            $pipeline->RPOP($val);
-        //execute pipeline
-        $usersList = $pipeline->execute();
-        
-        //get individual count for every profile
-        $countArr = $this->countViewsForProfiles($usersList);
-        $jpNtimesObj = new NEWJS_JP_NTIMES();
-        $greaterThanOne = 0;
-        $count = 0;
-        if(sizeof($countArr)>0){
-            //update table rows for every profile
-            foreach($countArr as $key1=>$val1){
-              if($this->measurePerformance){
-                $stringToWrite = "$key1,$val1";  
-                fwrite($file,$stringToWrite."\n");
-              }
-              $jpNtimesObj->updateProfileViews($key1,$val1);
+        do{
+            //use pipeline  for multiple pops
+            $pipeline = $memcacheObj->pipeline();
+            if($lengthOfQueue > 120000){
+                echo $lengthOfQueue."------";
+                $lengthOfQueue = 120000;
             }
-        }
-        $prevQueries = $lengthOfQueue;
-        $currQueries = sizeof($countArr);
+            for($i=0;$i<$lengthOfQueue;$i++)
+                $pipeline->RPOP($val);
+            //execute pipeline
+            $usersList = $pipeline->execute();
+
+            //get individual count for every profile
+            $countArr = $this->countViewsForProfiles($usersList);
+            $jpNtimesObj = new NEWJS_JP_NTIMES();
+            $greaterThanOne = 0;
+            $count = 0;
+            if(sizeof($countArr)>0){
+                //update table rows for every profile
+                foreach($countArr as $key1=>$val1){
+                  if($this->measurePerformance){
+                    $stringToWrite = "$key1,$val1";  
+                    fwrite($file,$stringToWrite."\n");
+                  }
+                  $jpNtimesObj->updateProfileViews($key1,$val1);
+                }
+            }
+            $prevQueries = $lengthOfQueue;
+            $currQueries = sizeof($countArr);
+
+            //log perfirmance in file
+            if($this->measurePerformance){
+                $stringToWrite = "$val -: \n previousQueries  $prevQueries \n currentQueries  $currQueries";  
+                fwrite($file,$stringToWrite."\n");
+            }
+        }while(($lengthOfQueue = $memcacheObj->getLengthOfQueue($val)) > 0);
         
-        //log perfirmance in file
-        if($this->measurePerformance){
-            $stringToWrite = "$val -: \n previousQueries  $prevQueries \n currentQueries  $currQueries";  
-            fwrite($file,$stringToWrite."\n");
-        }
     }
     if($this->measurePerformance)
         fclose($file);

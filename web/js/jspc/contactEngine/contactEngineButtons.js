@@ -413,7 +413,9 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	var data = this.data;
 	viewerImage = data.viewer;
 	var innerHtml = $("#messageDisplaytuple").html();
+	
 	var profile = data.profile;
+	
 	innerHtml=innerHtml.replace(/\{age\}/g,profile.age);
 	innerHtml=innerHtml.replace(/\{height\}/g,profile.height);
 	innerHtml=innerHtml.replace(/\{mstatus\}/g,profile.mstatus);
@@ -469,6 +471,12 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	
         $("#messageWindow").html(innerHtml);
     }
+    var typeArray = ["ccTupleImage","otherImage","myImage"];
+		$('img[dsrc]').each(function() {
+			var src = $(this).attr("dsrc");
+			if($.inArray(src,typeArray)== -1)
+				$(this).attr("src",src);
+	});
         
         if(data.hasNext!=true)this.allMessageLoaded=true;
         this.MSGID=data.MSGID;        
