@@ -17,6 +17,7 @@
     var preFilledMobNo = "~$data.userDetails.PHONE_MOB`";
     var vasNames = new Array();
     var paidBenefits = new Array();
+    var vasPrice = new Array();
     var openedCount = "~$data.openedCount`";
     var filteredVasServices = "~$data.filteredVasServices`";
     var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
@@ -52,6 +53,13 @@
     ~else if $data.topBlockMessage.contactsLeftNumber eq '0'`
         var message = "Benefits of your membership; you have reached the limit of quota to view contact details, to view more contact details Renew your membership";
         var pageType = 'ConditionsBasedHeader';    
+    ~/if`
+    ~if $data.pageOneVas`
+        ~foreach from=$data.pageOneVas key=k item=v name=pageOneVasLoop`
+            ~foreach from=$v.vas_options key=kk item=vv name=vasOptionsLoop`
+                vasPrice["~$vv.id`"] = "~$vv.vas_price`";
+            ~/foreach`
+        ~/foreach`
     ~/if`
 </script>
 ~include_partial('global/JSPC/_jspcCommonMemRegHeader',[pageName=>'membership'])`

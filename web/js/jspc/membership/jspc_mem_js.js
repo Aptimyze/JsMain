@@ -396,14 +396,25 @@ function managePriceStrike(m, d) {
         vasStrikePrice = $("#" + m + vas + "_price_strike").text().trim().replace(',', '');
     var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),
         actualPrice = $("#" + m + d + "_price").text().trim().replace(',', '');
+/*
+        console.log("vasActualPrice",vasActualPrice);
+        console.log("vasStrikePrice",vasStrikePrice);
+        console.log("strikePrice",strikePrice);
+        console.log("actualPrice",actualPrice);
+        */
+    var vasDifference = (vasStrikePrice - vasActualPrice);
+    var difference = (strikePrice - actualPrice);
+    console.log("Difference",difference,typeof difference);
+    if(vasDifference > 0)
+        difference = difference + vasDifference;
+    
     if(typeof vasActualPrice != undefined)
         actualPrice=+vasActualPrice + +actualPrice;
     if(typeof vasStrikePrice != undefined)
         strikePrice=+vasStrikePrice+ +strikePrice;
-    var difference = (strikePrice - actualPrice);
     if(strikePrice<=0)
         strikePrice = '';
-    if (strikePrice.length != 0) {
+    if (difference > 0) {
         $('.overflowPinkRipple').css('margin-top', '0px');
         $('#' + m + "_savings_container").show();
         $('#' + m + "_savings").html(removeZeroInDecimal(difference.toFixed(2)));
@@ -907,6 +918,7 @@ function checkLogoutCase(profileid) {
 }
 
 function evaluateVasToBeClicked(){
+    //console.log("II");
     preSelectedVasId = readCookie('selectedVas');
     var duration;
     if(typeof preSelectLandingVas != "undefined"){
@@ -929,14 +941,33 @@ function evaluateVasToBeClicked(){
             duration= d=='L'?'12':d;
 	    }
         duration= selectClosestAddonDuration(duration,astroDurations);
+        manageAstroForDiscount(duration);
             if(!$("#"+mainMemTabSel+"A"+duration).is(':checked')){
                 $("#"+mainMemTabSel+"A"+duration).trigger('click');
             }
             else{
                 createCookie('selectedVas',$("#"+mainMemTabSel+"A"+duration).attr("astroAddon"));
+                var m = readCookie('mainMemTab'),
+                dd = readCookie('mainMemDur');
+                managePriceStrike(m, dd);
             }
         }
     }
+}
+
+function manageAstroForDiscount(addonDuration){
+    
+    var memebership = readCookie('mainMem'),
+        time = readCookie('mainMemDur');
+    var sP = $("#" + memebership + d + "_price_strike").text().trim().replace(',', ''),
+        aP = $("#" + memebership + d + "_price").text().trim().replace(',', '');
+    if(sP.length != 0){
+        disc = ((sP-aP)*100)/sP;
+        //console.log("Discount",disc);
+    }
+    $("#" + memebership + "A" + addonDuration + "_price").text("200");
+    $("#" + memebership + "A" + addonDuration + "_price_strike").text("500");
+    //console.log("nitish",typeof sP,typeof aP);
 }
 
 function selectClosestAddonDuration(num,arr){
