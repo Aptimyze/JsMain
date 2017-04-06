@@ -279,7 +279,7 @@ var mobEditPage=(function(){
 					if(mutualMatchCount<100)
 					{
 						$("#increaseMatch").remove();
-						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='setDppDataSuggestions();'>Increase Matches</a></p>");
+						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='setDppDataSuggestions();' class='color2'>Increase Matches</a></p>");
 					}
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
