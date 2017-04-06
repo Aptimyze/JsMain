@@ -203,6 +203,7 @@ ajaxConfig.data =
 
 ajaxConfig.dataType='json';
 ajaxConfig.type="POST";
+ajaxConfig.headers = { 'X-Requested-By': 'jeevansathi' };
 ajaxConfig.success=function(result) {
 									hideCommonLoader();
                                 	if(result.responseStatusCode=='0'){
