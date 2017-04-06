@@ -74,7 +74,7 @@
 
 <br>
 <div>=== Ha Proxy Health === </div>
-~if $marGayServers.length > 0`
+~if $marGayServers eq ''`
 ~foreach from=$marGayeServers item=v key=k`
 	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
 ~/foreach`
