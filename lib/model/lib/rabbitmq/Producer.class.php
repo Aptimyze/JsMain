@@ -134,6 +134,7 @@ class Producer
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::INSTANT_EOI_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
@@ -269,6 +270,9 @@ class Producer
         case MQ::SCRIPT_PROFILER_PROCESS:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCRIPT_PROFILER_Q,MQ::MANDATORY,MQ::IMMEDIATE);
           break;
+				case MQ::INSTANT_EOI_PROCESS:
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::INSTANT_EOI_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
 
 			}
 		} catch (Exception $exception) {
