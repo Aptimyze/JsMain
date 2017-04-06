@@ -298,16 +298,34 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
-        public function executeHideOption(sfWebRequest $request) {}
+        public function executeHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
-        public function executeUnHideOption(sfWebRequest $request) {}
+        public function executeUnHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
-        public function executeUnHideResult(sfWebRequest $request) {}
+        public function executeUnHideResult(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
         public function executeHideCheckPassword(sfWebRequest $request)
         {
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+            }
         }
 
         public function executeHideDuration(sfWebRequest $request)
@@ -325,6 +343,10 @@ class staticActions extends sfActions
             elseif ($this->hideOption=="3")
             {
               $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
+            }
+            
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
             }
         }
 
