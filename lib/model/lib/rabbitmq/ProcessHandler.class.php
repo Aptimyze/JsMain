@@ -317,15 +317,16 @@ public function logDiscount($body,$type){
    */
   public function sendInstantEOINotification($body, $type)
   {
+    $rabbitMq = 1;
     if($type == "INSTANT_EOI")
     {
       $instantNotificationObj = new InstantAppNotification("EOI");
-      $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId']);
+      $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId'], '', '', '', $rabbitMq);
     }
     elseif($type == "INSTANT_CHAT_EOI_MSG")
     {
       $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
-      $instantNotificationObj->sendNotification($body["otherUserId"], $body["selfUserId"], $body["message"], $body["exUrl"], $body["extraParams"]);
+      $instantNotificationObj->sendNotification($body["otherUserId"], $body["selfUserId"], $body["message"], $body["exUrl"], $body["extraParams"], $rabbitMq);
     }
   }
 
