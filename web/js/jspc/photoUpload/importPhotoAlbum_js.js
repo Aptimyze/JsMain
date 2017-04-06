@@ -90,4 +90,5 @@ $(document).ready(function() {
 		//enable arrow after certain time to prevent subsequent clicks
 		enableShiftArrowsAfterInterval();
 	});
+	showMessageZeroMorePhoto();
 });
