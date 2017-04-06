@@ -1591,7 +1591,13 @@ class ScheduleSms
             	}*/
             	// End condition
             	if($noOfTimes > 1 && $frequency < $noOfTimes){
-			$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE AND PROFILEID%$noOfTimes=$frequency AND SENT!='Y'";            		
+                    $sql1 = "SELECT count(1) AS CNT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE";
+                    $numberOfRowsObj = mysql_query($sql1, $this->dbSlave) or $this->SMSLib->errormail($sql1, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key: " . $key . " in processData() function");
+                    $rowObj = mysql_fetch_array($numberOfRowsObj);
+                    $totalCount  = $rowObj['CNT'];
+                    $numberOfRows = ceil($totalCount / $noOfTimes);
+
+                    $sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE AND SENT!='Y' LIMIT $numberOfRows";
             	} else {
             		$sql ="SELECT PROFILEID,DISCOUNT,SDATE,EDATE,SENT FROM billing.VARIABLE_DISCOUNT WHERE '$entry_dt' BETWEEN SDATE AND EDATE AND SENT!='Y'";
             	}
