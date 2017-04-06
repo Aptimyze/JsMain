@@ -1,10 +1,15 @@
 <?php
 class NotificationEngineFactory{
+        private $gcmObj;
 
-	public static function geNotificationEngineObject($type){
+        public function __construct($sendMultipleParallelNotification=false){
+                $this->gcmObj = new GCM($sendMultipleParallelNotification);
+        }
+
+	public function geNotificationEngineObject($type){
                 switch($type){
                 	case GCM:
-                	        return new GCM();
+                	        return $this->gcmObj;
                 	        break;
                 	case IOS:
                 	        return new IOS();
