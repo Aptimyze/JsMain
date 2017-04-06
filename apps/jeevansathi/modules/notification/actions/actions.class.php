@@ -116,7 +116,7 @@ class notificationActions extends sfActions
         if($profileid)
         {
 		// New code
-	        if(($apiappVersion>=90 && $registrationid) || $deviceUpgrade==true){
+	        if(($apiappVersion>=90 || $deviceUpgrade==true) && $registrationid){
 	                $upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 	        }
                 $producerObj = new JsNotificationProduce();
