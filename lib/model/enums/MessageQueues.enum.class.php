@@ -128,6 +128,12 @@ class MessageQueues
   //Profiler Log Queue
   const SCRIPT_PROFILER_Q = "JsProfilerQueue";
   const SCRIPT_PROFILER_PROCESS = "JS_PROFILER_PROCESS";
+
+  // Instant EOI notification
+  const INSTANT_EOI_PROCESS = "instantEOINotification";
+  const INSTANT_EOI_QUEUE = "instantEOINotificationQueue";
+  const INSTANTEOICONSUMERCOUNT = 1;  //Number of instances of instant EOI Notify consumer class run at a time.
+  CONST CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND = "symfony cronConsumeInstantEOIQueue"; //Command to start cron:cronConsumeScreeningQueueTask
 }
 
 ?>
