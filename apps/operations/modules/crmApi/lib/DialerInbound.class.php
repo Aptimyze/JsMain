@@ -32,7 +32,7 @@ class DialerInbound
 		$gender 	= FieldMap::getFieldLabel('gender',$dataArr['GENDER']);
 		$mstatus 	= FieldMap::getFieldLabel('mstatus',$dataArr['MSTATUS']);
 		$religion 	= FieldMap::getFieldLabel('religion',$dataArr['RELIGION']);
-		$community 	=$this->getCommunityMapping($dataArr['RELIGION']);
+		$community 	=$this->getCommunityMapping($dataArr['MTONGUE']);
 		$dataArr['GENDER'] 	= $gender;
 		$dataArr['MSTATUS'] 	= $mstatus;
 		$dataArr['RELIGION'] 	= $religion;
