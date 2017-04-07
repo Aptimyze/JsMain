@@ -481,7 +481,7 @@ class MembershipAPIResponseHandler {
             
         }
         if($this->discountTypeInfo["TYPE"] == discountType::OFFER_DISCOUNT)
-            $alreadyVasDiscount = "1";
+            $disableVasDiscount = "1";
         $output = array(
             'title' => $title,
             'topBlockMessage' => $this->topBlockMessage,
@@ -506,7 +506,7 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
             'pageOneVas'=>$this->pageOneVas,
             'preSelectLandingVas'=>$preSelectVasGlobal,
-            'alreadyVasDiscount'=>$alreadyVasDiscount 
+            'disableVasDiscount'=>$disableVasDiscount 
         );
         
         //fetch the upgrade membership content based on eligibilty and channel
