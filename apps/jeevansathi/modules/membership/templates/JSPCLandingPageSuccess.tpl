@@ -57,6 +57,9 @@
     ~if $data.pageOneVas`
     var alreadyVasDiscount = "0";
         ~foreach from=$data.pageOneVas key=k item=v name=pageOneVasLoop`
+            ~if $v.disableVasDiscount eq "1"`
+                alreadyVasDiscount = "1";
+            ~/if`
             ~foreach from=$v.vas_options key=kk item=vv name=vasOptionsLoop`
                 vasPrice["~$vv.id`"] = "~$vv.vas_price`".trim().replace(',', '');
                 ~if $vv.vas_price_strike neq NULL`
