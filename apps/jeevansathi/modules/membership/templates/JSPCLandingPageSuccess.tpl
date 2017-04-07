@@ -976,6 +976,7 @@
                     d = $(this).attr('mainMemDur');
                 managePriceStrike(m, d);
             });
+            evaluateVasToBeClicked();
         })
         $(".continueBtn").click(function(){
             if ($(this).attr('id') == 'mainServContinueBtn') 
