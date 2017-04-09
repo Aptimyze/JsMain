@@ -29,7 +29,7 @@ class InboxMobileAppV1
 	const FILTERED_INTEREST ="People who have expressed interest in you but don't meet your filter criteria will appear here";
 	const PEOPLE_WHO_VIEWED_MY_CONTACTS="People who viewed your contacts will appear here";
 	// todo: need to be changed 
-	const INTEREST_ARCHIVED = "Interests received more than 45 days earlier will appear here.";
+	const INTEREST_ARCHIVED = "Interests received more than 90 days earlier will appear here.";
 	static public function init()
 	{
 		self::$informationTupleFields    = Array(
