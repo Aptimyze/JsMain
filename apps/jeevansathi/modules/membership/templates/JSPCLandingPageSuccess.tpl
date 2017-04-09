@@ -970,10 +970,12 @@
             $('.overlay1').delay(1250).remove();
             $('#cmpplan').addClass('disp-none');
             createCookie('mainMemTab', $(this).attr('viewDurLink'));
+            createCookie('mainMem', $(this).attr('viewDurLink'));
             $("ul.tabs li.active").removeClass('active');
             $("ul.tabs li[mainMemTab="+readCookie('mainMemTab')+"]").addClass('active');
             var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
             changeTabContent(getTabId,tabNum, 200);
+            createCookie("mainMemDur",$('#tab_'+$(this).attr('viewDurLink')+' .durSel.plansel').attr("mainMemDur"));
             $('#sliderContainer div').find('.plansel').each(function () {
                 var m = $(this).attr('mainMem'),
                     d = $(this).attr('mainMemDur');
