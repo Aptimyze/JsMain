@@ -114,5 +114,8 @@ $loginUrl = $this->helper->getLoginUrl('http://t.j.com/social/import1?importSite
         exit;
 //echo "<script> window.open(".$this->getLoginUrl(array('req_perms' => 'user_status,publish_stream,user_photos')).",\"login page\",\"location=1,status=1,scrollbars=1, width=100,height=100\") </script>";
 }
+public function getPhotos($id,$limit='',$skip='')
+{
+}
 }
 ?>
