@@ -34,8 +34,6 @@ class fb extends BaseImportPhoto
 		{
                         $this->askForLogin();
 		}
-		else
-			echo $this->accessToken;die;
         }
 
 	
@@ -76,28 +74,27 @@ public function getAlbumList()
 {
 	$this->authenticateUser();
 
-	$response = $this->facebook->get('/me?fields=albums{photos{picture},type,name}',$this->accessToken);
+	$response = $this->facebook->get('/me?fields=albums{photos{picture,source},type,name,cover_photo{picture}}',$this->accessToken);
 $albumData = $response->getGraphAlbum();
 $albumData = json_decode($albumData,true);
 	if(1)
 	{
-		$k=0;
-                foreach($albumData[albums] as $albumData1)
+                foreach($albumData[albums] as $k=>$albumData1)
 		{
 			if($albumData1['type'] != 'friends_walls')
 			{
-				$this->final['albumId'][]=$albumData1['id'];
+				$this->final[$k]['albumId']=$albumData1['id'];
 				$albumName = $albumData1['name'];
 				if(strlen($albumName)>15)
 					$albumName=substr($albumName,0,15)."...";
-				$this->final['albumName'][]=$albumName;
-				$this->final['photosCountInAlbum'][]= count($albumData1['photos']);
-				$this->final['coverImageArr'][]=$albumData1['cover_photo']['picture'];
+				$this->final[$k]['albumName']=$albumName;
+				$this->final[$k]['photosCountInAlbum']= count($albumData1['photos']);
+				$this->final[$k]['coverImageArr']=$albumData1['cover_photo']['picture'];
 				foreach($albumData1['photos'] as $albumPhotos)
 				{
-					$this->final['allPhotos'][$k][]=$albumPhotos['picture'];
+					$this->final[$k]['allPhotos'][]=$albumPhotos['picture'];
+					$this->final[$k]['allPhotosToSave'][]=$albumPhotos['source'];
 				}
-				$k++;
 			}
 		}
 //		$albumObj = new FacebookAlbumsData();
@@ -189,7 +186,7 @@ This function is called whenever a user signs out while a request is in process.
 private function askForLogin()
 {
 $permissions = array('user_photos');
-$loginUrl = $this->helper->getLoginUrl('http://trunk.jeevansathi.com/social/import1?importSite=facebook&import=1&popup=1', $permissions);;
+$loginUrl = $this->helper->getLoginUrl('http://t.j.com/social/import1?importSite=facebook&import=1&popup=1', $permissions);;
 
         header("Location:{$loginUrl}");
         exit;

@@ -1137,15 +1137,10 @@ class socialActions extends sfActions
 
 	$this->limit=sfConfig::get("app_max_no_of_photos") - $this->importLimit;  //no of photos that can be uploaded/imported by the user
 	$picObj=ImportPhotoFactory::getPhotoAgent($request->getParameter('importSite'));
-	echo '<script type="text/javascript">
-function CloseMySelf(sender) {
-    window.opener.afterValidateFbAuth();
-    window.close();
-    return false;
-}
-CloseMySelf(this);</script>';
-	//echo '<script type="text/javascript">window.close();</script>';
-	die;
+	$picObj->getAlbumList();
+	$this->picData =json_encode($picObj->final);
+	$this->importPhotosBarHeightPerShift = PictureStaticVariablesEnum::$importPhotosBarHeightPerShift;
+$this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosBarCountPerShift;
   }
 
 

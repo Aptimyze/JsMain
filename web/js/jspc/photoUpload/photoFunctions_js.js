@@ -1,4 +1,5 @@
 var fbPhotosArr={};
+var albumData;
 function displayConfirmationMessage(message,showErrorBox,pictureid)
 {
 	if(showErrorBox==1)
@@ -537,4 +538,88 @@ function uploadFb()
 function getMessageWithFileName(filename,message)
 {
 	return "<div class='textTru' style='max-width:140px;display:inline-block;'>"+filename+"</div> <div>"+message+"</div>";
+}
+function loadPhotos(key)
+{
+        $("#js-addImportPhotos").html('');
+        $(".js-ImportLoader2").show();
+        $(".js-addImportPhotos").hide();
+        $("#js-addImportAlbum").addClass("js-disabled");
+        $("#js-addImportAlbum").removeClass("js-disabled");
+        var albumStructure = $("#js-addImportPhotosInd").html();
+
+        $("#js-addImportPhotos").html('');
+        var cnt = 0;
+        $.each(albumData[key]['allPhotos'], function(key1, val1)
+        {
+                
+                var mapObj = {
+                        '{photo_number}':removeNull(key1),
+                        '{saveUrl}': removeNull(albumData[key]['allPhotosToSave'][key1]),
+                };
+                var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
+                $("#js-addImportPhotos").append(albumTuple);
+                var htm = "<img src="+removeNull(val1)+" class='pudim5 brdr-1'/>";
+                if (key1 == 0)
+                {
+                        $(".photonumber").append(htm);
+                }
+                else
+                {
+                        $(".photonumber"+key1).append(htm);
+                }
+                cnt++;
+        });
+        $(".js-ImportLoader2").hide();
+        $(".js-addImportPhotos").show()
+}
+function loadAlbums()
+{
+        var albumStructure = $("#js-addImportAlbumInd").html();
+        var albumOffset = 0;
+        if(albumsCount!=0)
+        {
+        $.each(albumData,function(key,val){
+                var mapObj = {
+                        '{importAlbumName}': removeNull(val.albumName),
+                        '{importAlbumCount}': removeNull(val.photosCountInAlbum),
+                        '{importAlbumId}': removeNull(val.albumId),
+                        '{importAlbumOffset}': key
+                };
+                var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
+                $("#js-addImportAlbum").append(albumTuple);
+                var htm = "<img src="+removeNull(val.allPhotos[0])+" class='pudim3 vtop'/>";
+                $("#album"+val.albumId).append(htm);
+                ++albumOffset;
+        });
+                $(".js-ImportLoader").hide();
+                $(".js-ImportLoaderHide").show();
+                $(".js-fbImport").show();
+        }
+        else
+        {
+                $("#albumImportLoader").html('<div>You have no albums in your facebook account. To add photos from another source <a href="/social/addPhotos?uploadType=F">Click here</a></div>');
+        }
+        $(".js-importAlbum").addClass('cursp');
+}
+function createFbPage()
+{
+	hideLayers();
+	$(".js-fbImport").show();
+        $("#js-addImportAlbum").html('');
+        $("#js-addImportPhotos").html('');
+        $("#selectedAlbumPointer").css('top', '30px');
+        albumsCount = albumData.length;
+        loadImportedPhotosSlider(albumsCount);
+        loadAlbums();
+        setActiveAlbumPointer(0);
+        loadPhotos(0);
+        $("body").on("click",'.js-importAlbum',function(){
+                var offset = $(this).data("id");
+                if($(this).hasClass('cursp'))
+                {
+                        setActiveAlbumPointer(offset);
+                        loadPhotos(offset);
+                }
+        });
 }
