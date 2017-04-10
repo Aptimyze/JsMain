@@ -248,7 +248,8 @@ EOF;
                                   MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
-                                  MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT
+                                  MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
+                                  MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
                                     );
     }
     elseif($arguments["server"] == "63"){
@@ -270,7 +271,6 @@ EOF;
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
-                                  MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
                                     );
     }
     $this->callRabbitmqServerApi("FIRST_SERVER");
