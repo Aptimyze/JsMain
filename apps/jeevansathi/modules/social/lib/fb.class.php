@@ -108,7 +108,7 @@ This function is called whenever a user signs out while a request is in process.
 private function askForLogin()
 {
 $permissions = array('user_photos');
-$loginUrl = $this->helper->getLoginUrl('http://t.j.com/social/import1?importSite=facebook&import=1&popup=1', $permissions);;
+$loginUrl = $this->helper->getLoginUrl(JsConstants::$siteUrl.'/social/import1?importSite=facebook&import=1&popup=1', $permissions);;
 
         header("Location:{$loginUrl}");
         exit;
