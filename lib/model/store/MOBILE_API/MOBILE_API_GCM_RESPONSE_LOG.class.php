@@ -152,7 +152,7 @@ class MOBILE_API_GCM_RESPONSE_LOG extends TABLE{
         public function getDataCountForRange($startDate, $endDate)
         {
                 try{
-                        $sql = "SELECT count(distinct PROFILEID) count, NOTIFICATION_KEY, STATUS_MESSAGE MESSAGE FROM MOBILE_API.`GCM_RESPONSE_LOG` WHERE DATE >=:START_DATE AND DATE <=:END_DATE GROUP BY NOTIFICATION_KEY, STATUS_MESSAGE";
+                        $sql = "SELECT count(PROFILEID) count, NOTIFICATION_KEY, STATUS_MESSAGE MESSAGE FROM MOBILE_API.`GCM_RESPONSE_LOG` WHERE DATE >=:START_DATE AND DATE <=:END_DATE GROUP BY NOTIFICATION_KEY, STATUS_MESSAGE";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
