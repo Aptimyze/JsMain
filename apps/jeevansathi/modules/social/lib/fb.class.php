@@ -38,32 +38,6 @@ class fb extends BaseImportPhoto
 
 	
 /************************************************/
-	public function getAllAlbumPhotos($id)
-	{
-                $albumObj = new FacebookAlbumsData();
-                $photoCount = $albumObj->getAlbumData($id);
-                $this->authenticateUser();
-                $feedURL = "https://graph.facebook.com/".$id."/photos?access_token=".$this->accessToken;
-		$feedURL.="&limit=100";
-                $photoData = CommonUtility::sendCurlGetRequest($feedURL);
-                $photoDataFull = json_decode($photoData);
-		$photoData = $photoDataFull->data;
-		$nextUrl = $photoDataFull->paging->next;
-		if($nextUrl)
-		{
-                        $nextData = CommonUtility::sendCurlGetRequest($nextUrl);
-                        $nextData = json_decode($nextData);
-                        $photoData = array_merge($photoData,$nextData->data);
-		}
-		$k=0;
-		foreach($photoData as $photoData2)
-		{
-			$arr[$k]["display"] = $photoData2->picture;
-			$arr[$k]["save"] = $photoData2->source;
-			$k++;
-		}
-		return $arr;
-	}
 /************************************************/
 
 /**
@@ -73,30 +47,48 @@ list of album URLs, album names and cover image URLs.
 public function getAlbumList()
 {
 	$this->authenticateUser();
-
-	$response = $this->facebook->get('/me?fields=albums{photos{picture,source},type,name,cover_photo{picture}}',$this->accessToken);
-$albumData = $response->getGraphAlbum();
-$albumData = json_decode($albumData,true);
-	if(1)
+	try {
+		$response = $this->facebook->get('/me?fields=albums{photos{picture,source},type,name,cover_photo{picture}}',$this->accessToken);
+	}
+	  // When Graph returns an error
+	catch(Facebook\Exceptions\FacebookResponseException $e) {
+		unset($this->final);
+		file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbUpload",var_export($_SERVER,true)."Graph returned an error:".$e->getMessage()."\n\n\n",FILE_APPEND);
+		return;
+	}
+	  // When validation fails or other local issues
+	catch(Facebook\Exceptions\FacebookSDKException $e) {
+		unset($this->final);
+		file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbUpload",var_export($_SERVER,true)."Facebook SDK returned an error:".$e->getMessage()."\n\n\n",FILE_APPEND);
+		return;
+	}
+	$albumData = $response->getGraphAlbum();
+	$albumData = json_decode($albumData,true);
+	if($this->accessToken)
 	{
-                foreach($albumData[albums] as $k=>$albumData1)
+		if(array_key_exists("albums",$albumData))
 		{
-			if($albumData1['type'] != 'friends_walls')
+			foreach($albumData[albums] as $k=>$albumData1)
 			{
-				$this->final[$k]['albumId']=$albumData1['id'];
-				$albumName = $albumData1['name'];
-				if(strlen($albumName)>15)
-					$albumName=substr($albumName,0,15)."...";
-				$this->final[$k]['albumName']=$albumName;
-				$this->final[$k]['photosCountInAlbum']= count($albumData1['photos']);
-				$this->final[$k]['coverImageArr']=$albumData1['cover_photo']['picture'];
-				foreach($albumData1['photos'] as $albumPhotos)
+				if($albumData1['type'] != 'friends_walls')
 				{
-					$this->final[$k]['allPhotos'][]=$albumPhotos['picture'];
-					$this->final[$k]['allPhotosToSave'][]=$albumPhotos['source'];
+					$this->final[$k]['albumId']=$albumData1['id'];
+					$albumName = $albumData1['name'];
+					if(strlen($albumName)>15)
+						$albumName=substr($albumName,0,15)."...";
+					$this->final[$k]['albumName']=$albumName;
+					$this->final[$k]['photosCountInAlbum']= count($albumData1['photos']);
+					$this->final[$k]['coverImageArr']=$albumData1['cover_photo']['picture'];
+					foreach($albumData1['photos'] as $albumPhotos)
+					{
+						$this->final[$k]['allPhotos'][]=$albumPhotos['picture'];
+						$this->final[$k]['allPhotosToSave'][]=$albumPhotos['source'];
+					}
 				}
 			}
 		}
+		else
+			$this->final[0]='';
 //		$albumObj = new FacebookAlbumsData();
 //		$albumObj->insertAlbumsData($photosCountData);
 	}

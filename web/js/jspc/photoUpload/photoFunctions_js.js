@@ -616,6 +616,26 @@ function createFbPage()
 {
 	hideLayers();
 	$(".js-fbImport").show();
+	if(!albumData.hasOwnProperty("0"))
+	{
+		var msg = '<div>Something went wrong, please try again</div>';
+		$("#albumImportLoader").html(msg);
+		$(".js-importAlbum").addClass('cursp');
+		$(".js-ImportLoaderHide").hide();
+		$(".js-ImportLoader").show();
+		$("#uploadFb").hide();
+	}
+	else if(!albumData['0'].hasOwnProperty("albumId"))
+	{
+		var msg = '<div>No albums present in loggedin facebook profile</div>';
+		$("#albumImportLoader").html(msg);
+		$(".js-importAlbum").addClass('cursp');
+		$(".js-ImportLoaderHide").hide();
+		$(".js-ImportLoader").show();
+		$("#uploadFb").hide();
+	}
+	else
+	{
         $("#js-addImportAlbum").html('');
         $("#js-addImportPhotos").html('');
         $("#selectedAlbumPointer").css('top', '30px');
@@ -632,4 +652,5 @@ function createFbPage()
                         loadPhotos(offset);
                 }
         });
+	}
 }
