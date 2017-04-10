@@ -15,7 +15,7 @@
 <meta name="format-detection" content="telephone=no">
 <div class="fullwid">
 	<!--start:header-->
-	<div class="bg1">
+	<div class="bg1" id="vasHeader">
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="fontthin f19">~$data.title`</div>
@@ -25,7 +25,7 @@
 		</div>
 	</div>
 	<!--end:header-->
-	<div class="rv2_bg1">
+	<div class="rv2_bg1" id="vasTupple">
 		<div class="rv2_pad5" style="padding-bottom:50px;">
 			~if $data.topBlockMessage`
 			<!--start:expire info-->
@@ -191,6 +191,10 @@
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
 		eraseCookie('couponID');
+        var windowHt = $(window).height();
+        var headerHt = $("#vasHeader").height();
+        var vasCardHt = windowHt - headerHt;
+        $("#vasTupple").height(vasCardHt);
 		$("#continueBtn").show();
 		var preSelectedESathiVas = "~$data.preSelectedESathiVas`";
 		if(checkEmptyOrNull(preSelectedESathiVas)){
