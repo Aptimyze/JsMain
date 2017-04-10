@@ -44,8 +44,14 @@ class myjsActions extends sfActions
 		$module= "MYJS";
 		$profileCommunication = new ProfileCommunication();
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-        	$pid=$loggedInProfileObj->getPROFILEID();
-        //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
+    $pid=$loggedInProfileObj->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
+    //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
 		$infoTypeId = $request->getParameter("infoTypeId");
 		$pageNo = $request->getParameter("pageNo");
 		if($infoTypeId)
@@ -122,6 +128,16 @@ class myjsActions extends sfActions
     $inputValidateObj->validateRequestMyJsData($request);
     $output = $inputValidateObj->getResponse();
     
+    $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+    $pid = $loggedInProfileObj->getPROFILEID();
+
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+			$respObj->generateResponse();
+			die;
+    }
+    
     if($this->bEnableProfiler) {
       //Validation Time taken
       $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSecondTime, 'Request Validation Time Taken : ', $moduleName);
@@ -132,8 +148,7 @@ class myjsActions extends sfActions
       $stThirdTime = microtime(TRUE);
       
       $profileCommunication = new ProfileCommunication();
-      $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-      $pid = $loggedInProfileObj->getPROFILEID();
+      
       //  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
       $infoTypeId = $request->getParameter("infoTypeId");
       $pageNo = $request->getParameter("pageNo");
@@ -272,12 +287,19 @@ class myjsActions extends sfActions
 	{			//myjs jsms action hit for logging
         $this->pageMyJs = 1; 
         
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
-            	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
-                $this->loginData=$request->getAttribute("loginData");
-                $this->profile=Profile::getInstance();
-                $this->loginProfile=LoggedInProfile::getInstance();
-                $entryDate = $this->loginProfile->getENTRY_DT();
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
+        $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
+        $this->loginData=$request->getAttribute("loginData");
+        $this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance('newjs_master');
+                
+        $pid = $this->loginProfile->getPROFILEID();
+        //Handle Logout Case
+        if(is_null($this->loginProfile) || is_null($pid)) {
+          $this->forward("static", "logoutPage");
+        }
+        
+        $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
         $this->showExpiring = 0;
@@ -345,6 +367,12 @@ class myjsActions extends sfActions
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcMYJSUrl);
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$this->profileid=$this->loginProfile->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($this->loginProfile) || is_null($this->profileid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();

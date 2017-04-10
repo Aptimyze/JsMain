@@ -930,6 +930,9 @@ class ProfileCacheLib
         else if (false !== stristr($storeName, "YOUR_INFO_OLD") ){
             $arrFields = ProfileCacheConstants::$arrOldYourInfo;
         }
+        else if(false !== stristr($storeName, "ProfileAUTO_EXPIRY")) {
+           $arrFields = ProfileCacheConstants::$arrAutoExpiry;
+        }
         return $arrFields;
     }
     

@@ -39,5 +39,14 @@ class ReportInvalid
 		}
 		return false;
 	}
+
+	public function sendExtraNotification($selfProfileId,$profileId,$reasonMap)
+	{	
+		if($reasonMap == 1|| $reasonMap ==4 ){
+		include_once(sfConfig::get("sf_web_dir")."/profile/InstantSMS.php");
+		$sendSMS = new InstantSMS('REPORT_INVALID',$profileId,array(),$selfProfileId);
+		$sendSMS->send();
+			}
+	}
 	 
 }

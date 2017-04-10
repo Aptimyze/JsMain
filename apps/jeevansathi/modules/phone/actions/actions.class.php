@@ -271,6 +271,9 @@ class phoneActions extends sfActions
 				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
                 $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
 			}
+
+			$ReportInvalidLibObj->sendExtraNotification($selfProfileID,$profileid,$reasonNumber);
+			
 	if($increaseQuotaImmediate == true)
 	{
 		$result['message']='Thanks for helping us make Jeevansathi better matchmaking platform. We have credited one contact to your quota, and will investigate this further';

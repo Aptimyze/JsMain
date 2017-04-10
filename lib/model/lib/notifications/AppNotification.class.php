@@ -101,20 +101,12 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            //$xx2 = count($applicableProfiles);
-            		$applicableProfilesArr = array_keys($applicableProfiles);
-            		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
-            //$xx3 = count($applicableProfilesData);
-			unset($applicableProfilesArr);
-            
+            		//$applicableProfilesArr = array_keys($applicableProfiles);
+            		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
             		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
-            //$xx4 = count($dataAccumulated);
-            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
-            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
-            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
             		unset($poolObj);
 			break;
 

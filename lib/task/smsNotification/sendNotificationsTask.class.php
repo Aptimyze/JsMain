@@ -31,6 +31,8 @@ $this->addOptions(array(
 
   protected function execute($arguments = array(), $options = array())
   {
+  	ini_set('max_execution_time',0);
+    ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 	$notificationStop =JsConstants::$notificationStop;
@@ -42,7 +44,7 @@ $this->addOptions(array(
 	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 	$maxIdData = $this->scheduledAppNotificationObj->getArray("","","","max(ID) as maxId");
 	$this->maxId = $maxIdData[0][maxId];
-	$this->notificationSenderObj = new NotificationSender;
+	$this->notificationSenderObj = new NotificationSender($this->notificationKey);
 	$this->doneTillId = 1;
         while($this->doneTillId<=$this->maxId)
         {
@@ -76,7 +78,7 @@ $this->addOptions(array(
   private function sendPushNotifications($profileDetails,$idArr)
   {
 	$status =0;//CommonUtility::hideFeaturesForUptime();
-	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 9)
 		successfullDie();
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
