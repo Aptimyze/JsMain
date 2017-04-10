@@ -25,21 +25,7 @@ if($virtualno && $phoneno)
 
 			$verificationObj=new MissedCallVerification($phoneno,$virtualno);
 			$verified = $verificationObj->phoneUpdateProcess("KNW");
-      $szMsg = $verificationObj->getTempText();
-      
-      if (strlen($szMsg) && !$verified) {
-          $ob =  new Profile();
-          $ob->getDetail(substr($phoneno,-10),'PHONE_MOB','MOB_STATUS,PROFILEID');
-          if(!$ob->getPROFILEID()){
-                    $contactArray= (new ProfileContact())->getArray(array('ALT_MOBILE'=>substr($phoneno,-10)),'','',"ALT_MOB_STATUS");
-                    if($contactArray['0'])
-                        $status=$contactArray['0']['ALT_MOB_STATUS']=='Y'?'Y':'N';
-                    else $status ='Not found';
-          }
-          else $status = $ob->getMOB_STATUS()=='Y' ? 'Y' : 'N';
-        mail("kunal.test02@gmail.com,palashc2011@gmail.com", "PhoneVerfication Issue ", $szMsg."mob st: ".$status);
-      }
-  }
+        }
 $xmlStr= phoneKnowlarity::genrate_xml();
 echo $xmlStr;
 }
