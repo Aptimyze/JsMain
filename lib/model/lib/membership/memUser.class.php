@@ -21,12 +21,14 @@ class memUser
     public $memObj;
     public $festFlag;
     public $memUpgradeEligible = false;
+    public $mtongue;
 
     function __construct($profileid) {
         if ($profileid != '') {
             $this->setProfileid($profileid);
             $this->ipAddress = $this->getIpAddress();
             $this->currency = $this->getCurrency();
+            $this->setMtongue($profileid);
             $this->memObj = new JMembership();
         } 
         else {
@@ -34,6 +36,18 @@ class memUser
             $this->userType = "1";
             $this->currency = $this->getCurrency();
             $this->ipAddress = $this->getIpAddress();
+            $this->mtongue = "-1";
+        }
+    }
+
+    public function setMtongue($profileid=""){
+        
+        if($profileid != ""){
+            $profileObj = LoggedInProfile::getInstance('newjs_master');
+
+            if($profileObj != null){
+                $this->mtongue = $profileObj->getMTONGUE();
+            }
         }
     }
 

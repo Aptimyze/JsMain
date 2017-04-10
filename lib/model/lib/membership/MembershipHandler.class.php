@@ -33,10 +33,14 @@ class MembershipHandler
         $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
+            $mtongue = "";
+            if(!empty($userObj)){
+                $mtongue = $userObj->mtongue;
+            }
             $key_main = $device . "_".$membership."_MEMBERSHIP";
-            $key_main .= "_" . $userObj->getCurrency();
+            $key_main .= "_" . $userObj->getCurrency()."_".$mtongue;
             $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
-            $key_main_hidden .= "_" . $userObj->getCurrency();
+            $key_main_hidden .= "_" . $userObj->getCurrency()."_".$mtongue;
             $fetchOnline = true;
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
@@ -281,8 +285,13 @@ class MembershipHandler
     {
         $memArray = VariableParams::$mainMembershipsArr;
         $userType = $userObj->userType;
-
-        $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device);
+        if(!empty($userObj) && $userObj!=""){
+            $mtongue = $userObj->mtongue;
+        }
+        else{
+            $mtongue = "-1";
+        }
+        $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device,$mtongue);
         foreach ($memArray as $key => $value) {
             foreach ($minPriceInfoAggregateData as $kk => $vv) {
                 if ($value == substr($kk, 0, strlen($value))) {
@@ -1112,12 +1121,13 @@ class MembershipHandler
     public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$apiObj="",$upgradeMem="NA")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
-       
-        if ($displayPage == 1) {
+        
+        //error_log("ankita confirm");
+        /*if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
             }
-        }
+        }*/
 
         if (strpos(discountType::SPECIAL_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
             $discountArr = $this->getSpecialDiscountForAllDurations($userObj->getProfileid());

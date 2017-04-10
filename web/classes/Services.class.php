@@ -318,6 +318,7 @@ class Services
 
         global $user_disc;
         $search_id = "";
+
         if(is_array($id)){
         	foreach($id as $key=>$val){
         		if($key == 0){
@@ -338,9 +339,26 @@ class Services
         } else {
         	$price_str = $device."_RS";
         }
-        
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
+        $mtongue = "-1";
+        if(!empty($userObj) && $userObj!=""){
+            $mtongue = $userObj->mtongue;
+        }
+        else if($profileid != ""){
+            error_log("ankita check why in this case");
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+            $profileObj->getDetail();
+            if($profileObj != null){
+                $mtongue = $profileObj->getMTONGUE();
+            }
+            if($mtongue == null){
+                $mtongue = "-1";
+            }
+            unset($profileObj);
+        }
+        
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline,$mtongue);
+        
         $i = 0;
         
         if (!empty($userObj)){
