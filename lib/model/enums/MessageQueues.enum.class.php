@@ -24,6 +24,8 @@ class MessageQueues
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
   CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 3; //count of discount tracking consumer count
+  CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
+  CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
@@ -66,10 +68,14 @@ class MessageQueues
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST UPDATE_SEEN_PROFILE_QUEUE = "updateSeenProfileQueue";
+  CONST UPDATE_MATCHALERTS_LAST_SEEN_QUEUE = "updateMatchAlertsLastSeenQueue";
+  CONST UPDATE_JUSTJOINED_LAST_SEEN_QUEUE = "updateJustJoinedLastSeenQueue";
   CONST LOGGING_QUEUE = "loginTrackingQueue";
   CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST CRONMATCHALERTSLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeMatchAlertsLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
+  CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEENPROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenProfileQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATE_FEATURED_PROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateFeaturedProfileQueue"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -132,7 +138,7 @@ class MessageQueues
   // Instant EOI notification
   const INSTANT_EOI_PROCESS = "instantEOINotification";
   const INSTANT_EOI_QUEUE = "instantEOINotificationQueue";
-  const INSTANTEOICONSUMERCOUNT = 1;  //Number of instances of instant EOI Notify consumer class run at a time.
+  const INSTANTEOICONSUMERCOUNT = 2;  //Number of instances of instant EOI Notify consumer class run at a time.
   CONST CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND = "symfony cronConsumeInstantEOIQueue"; //Command to start cron:cronConsumeScreeningQueueTask
 }
 

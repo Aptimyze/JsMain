@@ -48,45 +48,7 @@ class desktopView extends DetailedViewApi
     $mydateArr = explode("-", $mod_date);
     $this->m_arrOut['last_mod'] = my_format_date($mydateArr[2], $mydateArr[1], $mydateArr[0], 1);
     if($this->m_objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
-        $this->m_arrOut['sameGender']=1;
-    $bHoroScope = $this->m_objProfile->getSHOW_HOROSCOPE();
-    if($bHoroScope === 'D'){
-      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
-    }
-    else{
-        $astroArr = (array)$this->m_arrAstro;
-        $this->m_arrOut['astro_date'] = $astroArr['dateOfBirth'];
-        $this->m_arrOut['astro_time'] = $astroArr['birthTimeHour']." hrs:".$astroArr['birthTimeMin']." mins";
-        $this->m_arrOut['astro_sunsign'] = $astroArr['sunsign'];
-        $this->m_arrOut['astro_time_check'] = $astroArr['birthTimeHour'];
-        $this->m_arrOut['rashi'] = $astroArr['rashi'];
-        $cManglik = CommonFunction::setManglikWithoutDontKnow($this->m_objProfile->getMANGLIK());
-        $szManglik = ApiViewConstants::getManglikLabel($cManglik);
-        $this->m_arrOut['astro_manglik'] = $szManglik;
-        $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
-        $horoscope = new Horoscope;
-        if($viewerProfile){
-          $this->m_arrOut['myHoroscope'] = $horoscope->ifHoroscopePresent($viewerProfile);
-          $this->m_arrOut['requestedHoroscope'] = $horoscope->ifHoroscopeRequested((array)$viewerProfile,$viewedProfile,1)[$viewerProfile];
-        }
-        $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
-    }
-        $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
-        if(!strstr($subscriptionData,'A'))
-            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
-        else
-            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
-        
-        if($subscriptionData)
-            $this->m_arrOut['paidMem']='Y';
-        else
-            $this->m_arrOut['paidMem']='N';
-        
-        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
-                $this->m_arrOut['NO_ASTRO']=0;
-            else
-                $this->m_arrOut['NO_ASTRO']=1;
-            
+        $this->m_arrOut['sameGender']=1;            
     $havePhoto=$this->m_objProfile->getHAVEPHOTO();
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {

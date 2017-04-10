@@ -271,7 +271,44 @@
 		<!--Footer section ends here-->
 
 	</div>
-	<img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
+<img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
+</div>
+<div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
+    <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
+    <div class="fullheight fullwid layerOpa posrel" style="overflow:auto;">
+        <div class="memOverlay app_clrw" style="padding-bottom:50px">
+            <div class="txtc">
+                <div id="photoIDDiv" class="photoDiv">
+
+                <img id="profilePhoto" class="srp_box2 mr6" src="http://mediacdn.jeevansathi.com/1255/13/25113359-1411734648.jpeg">
+                </div>
+                <div class="pad2 f16 fontlig" id="newErrMsg"></div>
+                <div class="pad20 f16 fontlig mt15" id="membershipheading"></div>
+                <ul class=" memList f13 fontlig">
+                    <li class="tick pad21" id="subheading1"></li>
+                    <li class="tick pad21" id="subheading2"></li>
+                    <li class="tick pad21" id="subheading3"></li>
+                </ul>
+                <div id="MembershipOfferExists" style="display: none">
+                    <div class="pad45_0 f16 fontlig" id="membershipOfferMsg1"></div>
+                    <div class="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
+                </div>
+
+            <div class="f16 fontlig" id="LowestOffer" style="display: none">Lowest Membership starts @<del id="oldPrice" style="display: none"></del>&nbsp;<span id="currency"></span>&nbsp;<span id="newPrice"></span></div>
+            </div>
+ 
+        </div>
+        
+    </div>
+    <div id="footerDiv" class="posfix fullwid btmo" style="background:black">
+            <a href="#" id="skipLayer" class="f16 fontmed app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
+            <div class="bg7">
+
+            <a href="#" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white"></a>
+            </div>
+    </div> 
+
+
 </div>
 
 <!-- start :Write Message Overlay -->

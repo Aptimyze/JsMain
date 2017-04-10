@@ -366,7 +366,7 @@ class SearchCommonFunctions
         public static function getOccupationMappingData($occupationArray = array()){
                 $mappingOccupationData = array();
                 if(!empty($occupationArray)){
-                        $mappedArr = FieldMap::getFieldLabel("newoccupation_mapping_for_dpp",1,1);
+                        $mappedArr = FieldMap::getFieldLabel("occupation_grouping_mapping_to_occupation",1,1);
                         $map = array();
                         foreach($mappedArr as $key=>$mappedOcc){
                                 $map[$key] = explode(",", $mappedOcc);
