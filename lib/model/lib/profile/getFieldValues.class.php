@@ -365,7 +365,7 @@ private function orderFamilyCity($addUsa='')
 		{
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
-                if($addUsa)
+                //if($addUsa)
                     $returnArr[$k][0][] = array('0'=>'Others');
 	}
         if($addUsa){

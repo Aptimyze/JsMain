@@ -18,11 +18,14 @@ class seach_MATCH_ALERT_LAST_VISIT extends TABLE {
    * Store last time just joined search is run for a user.
    */
 
-  public function ins($pid) {
+  public function ins($pid,$date = NULL) {
     try {
       if (!$pid)
         throw new jsException("", "PROFILEID IS BLANK IN ins() of search.MATCH_ALERT_LAST_VISIT");
       $dt = date("Y-m-d h:i:s");
+      if($date != NULL){
+              $dt = $date;
+      }
       $sql = "REPLACE INTO search.MATCH_ALERT_LAST_VISIT(PROFILEID,LAST_VISITED_DT) VALUES (:PID,:DT)";
       $res = $this->db->prepare($sql);
       $res->bindParam(":PID", $pid, PDO::PARAM_INT);

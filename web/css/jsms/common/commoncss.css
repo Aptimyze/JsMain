@@ -1174,3 +1174,62 @@ border-radius: 32px;
 {
 	margin: 0;
 }
+.srp_box2 {
+    width: 76px;
+    height: 76px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px
+}
+.memOverlay {
+    top: 18%;
+    width: 85%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    position: absolute;
+    z-index: 109;
+}
+.photoDiv {
+    border: 1px solid rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    width: 90px;
+    height: 90px;
+    border-radius: 45px;
+}
+.overlayPos {
+    z-index: 110;
+    outline: 0px;
+        position: fixed;
+    top: -50px;
+}
+.layerOpa {
+    background: #000;
+    opacity: 0.8
+}
+.memList li.tick:before {
+    content: "\2713";
+    color: white;
+}
+.memList li:before {
+    position: absolute;
+    margin-left: -1.5em;
+}
+.memList {
+    list-style: none;
+}
+.tick {
+    margin-left: -28px
+}
+.pad45_0 {
+    padding: 45px 0px 0px 0px
+}
+.mb20 {
+    margin-bottom: 20px
+}
+.posSkip {position: relative;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 15px;}
