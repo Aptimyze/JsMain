@@ -1,5 +1,4 @@
 <?php
-//include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-php-sdk-master/src/facebook.php');
 include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-sdk-v5/autoload.php');
 class fb extends BaseImportPhoto
 {
@@ -101,75 +100,6 @@ public function getAlbumList()
 	$this->actionFile    = $_SERVER["PHP_SELF"];
 	$this->authVariables = "access_token=".$this->accessToken;
 	//-------------- MORE -----------------
-}
-
-/**
-This function is used to get links to all the pics from a specific album.
- * @param  integer           $limit   no of photos to be displayed on a page
- * @param  integer           $skip    no of photos to be skipped
- * @param  integer           $albumId The album's id
-**/
-public function getPhotos($id,$limit='',$skip='')
-{
-	$albumObj = new FacebookAlbumsData();
-	$photoCount = $albumObj->getAlbumData($id);
-
-	$this->authenticateUser();
-
-	$feedURL = "https://graph.facebook.com/".$id."/photos?access_token=".$this->accessToken;
-	$photoData = CommonUtility::sendCurlGetRequest($feedURL);
-//		$photoData = file_get_contents($feedURL);
-	$count=0;
-	$photoDataFull = json_decode($photoData);
-	$errorVal = $photoDataFull->error;
-	if($errorVal)
-		$this->askForLogin();
-	else
-	{
-		$photoData = $photoDataFull->data;
-		$pagingLink = $photoDataFull->paging->next;
-		$noOfPhotosFetched = sizeof($photoData);
-
-		while(($noOfPhotosFetched < $skip+$limit) && ($noOfPhotosFetched < $photoCount))
-		{
-			$nextUrl = $pagingLink;
-			$nextData = CommonUtility::sendCurlGetRequest($nextUrl);
-//			$nextData = file_get_contents($nextUrl);
-			$nextData = json_decode($nextData);
-			$photoData = array_merge($photoData,$nextData->data);
-			$pagingLink = $nextData->paging->next;
-			$noOfPhotosFetched = sizeof($photoData);
-			if($noOfPhotosFetched == $photoCount)
-				break;
-		}
-
-		foreach($photoData as $photoData2)
-		{
-			if($skip>0)
-				$skip--;
-			else
-			{
-				$this->thumbnail[]=$photoData2->picture;
-
-				$width=intval($photoData2->width);
-				$height=intval($photoData2->height);
-
-				$photo_size = $this->photo_resize($width,$height);
-
-				$this->width[]=$photo_size[2];
-				$this->height[]=$photo_size[3];
-
-				$stylePadding="padding:$photo_size[1] $photo_size[0] $photo_size[1] $photo_size[0];border:1px #dddddd solid";
-
-				$this->stylePadding[]=$stylePadding;
-				
-				$this->saveImage[]=$photoData2->source;
-				$count++;
-			}
-			if($limit && $count==$limit)
-				break;
-		}
-	}
 }
 
 /**
