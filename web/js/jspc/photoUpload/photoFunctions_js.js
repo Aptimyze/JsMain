@@ -570,8 +570,18 @@ function loadPhotos(key)
                 }
                 cnt++;
         });
+        if(fbImportData["'"+key+"'"])
+        {
+                $.each(fbImportData["'"+key+"'"], function(k,v)
+                {
+                        var pos=parseInt(k.replace(/'/g,""))+1;
+                        $("#js-addImportPhotos li:nth-child("+pos+")").children("i").addClass("phsel");
+                });
+        }
         $(".js-ImportLoader2").hide();
         $(".js-addImportPhotos").show()
+	$(".js-importAlbum").addClass('cursp');
+	$("#album"+albumData[key]['albumId']).removeClass('cursp');
 }
 function loadAlbums()
 {
