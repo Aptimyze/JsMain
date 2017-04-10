@@ -292,7 +292,7 @@ class billing_SERVICES extends TABLE
         return $previous_expiry_date;
     }
 
-    public function getLowestActiveMainMembership($serviceArr, $device='desktop'){
+    public function getLowestActiveMainMembership($serviceArr, $device='desktop',$mtongue="-1"){
         if(empty($serviceArr)){
             throw new jsException("Empty serviceArr passed in getLowestActiveMainMembership, billing_SERVICES.class.php");
         } else if(is_array($serviceArr)){
@@ -309,7 +309,7 @@ class billing_SERVICES extends TABLE
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         try{
-            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE='Y' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
+            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE_NEW LIKE ',$mtongue,' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
@@ -367,46 +367,51 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false) {
+    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false,$mtongue="-1") {
+        $showOnlineStr = "";
+        if(empty($mtongue) || $mtongue==""){
+            $mtongue = "-1";
+        }
         try {
             if($fetchOnline == true || $fetchOffline == true){
-                $SHOW_ONLINE_OFFER = "(";
-                $SHOW_ONLINE = "(";
-                if($fetchOnline == true && $fetchOffline == true){
-                    $SHOW_ONLINE_OFFER .= "'Y','S','N'";
-                    $SHOW_ONLINE .= "'Y','N'";
+                if($fetchOffline == true && $fetchOnline == false){
+                    if(strlen($search_id) > 0){
+                        $showOnlineStr .= " AND ";
+                    }
+                    $showOnlineStr .= "(SHOW_ONLINE_NEW NOT LIKE '%,$mtongue,%')";
                 }
-                else if($fetchOffline == true){
-                    $SHOW_ONLINE_OFFER .= "'N'";
-                    $SHOW_ONLINE .= "'N'";
+                else if($fetchOnline == true && $fetchOffline == false){
+                    if(strlen($search_id) > 0){
+                        $showOnlineStr .= " AND ";
+                    }
+                    $showOnlineStr .= "(SHOW_ONLINE_NEW LIKE '%,$mtongue,%')";
                 }
-                else if($fetchOnline == true){
-                    $SHOW_ONLINE_OFFER .= "'Y','S'";
-                    $SHOW_ONLINE .= "'Y'";
-                }
-                $SHOW_ONLINE_OFFER .= ")";
-                $SHOW_ONLINE .= ")";
                 //var_dump($SHOW_ONLINE);
             	if(is_array($id)){
     		        if ($offer) {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}){$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        } else {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}){$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        }
     	        } else {
     	        	if ($id == 'M') {
-    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
+    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
     	        	} elseif ($offer) {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id'{$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        } else {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id'{$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        }
     	        }
                 //var_dump($sql);
                 $resSelectDetail = $this->db->prepare($sql);
                 $resSelectDetail->execute();
                 while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
-                	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>$rowSelectDetail["SHOW_ONLINE"]);
+                    if(strpos($rowSelectDetail["SHOW_ONLINE_NEW"],",".$mtongue.",") !== false){
+                	   $row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>'Y');
+                    }
+                    else{
+                       $row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>'N');
+                    }
                 }
             }
             else{
