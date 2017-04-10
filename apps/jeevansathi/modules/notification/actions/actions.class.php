@@ -360,7 +360,7 @@ class notificationActions extends sfActions
         $respObj = ApiResponseHandler::getInstance();
         $notificationKey = $request->getParameter('notificationKey');
         if ($notificationKey) {
-            $mobApiNotMsgLogObj = new MOBILE_API_NOTIFICATION_MESSAGE_LOG('newjs_slave');
+            $mobApiNotMsgLogObj = new MOBILE_API_NOTIFICATION_MESSAGE_LOG('notification_local111');
             $output = $mobApiNotMsgLogObj->fetchNotificationKeyLatestEntry($notificationKey);
         } else {
             $output = array('error'=>"Please pass param 'notificationKey'");
