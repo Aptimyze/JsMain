@@ -56,6 +56,7 @@ EOF;
         );
     */
     $notificationData = $data["data"]["items"];
+    print_r($notificationData);
     $notificationDataPoolObj->sendChatNotification($notificationData);
     
     unset($notificationDataPoolObj,$notificationData);

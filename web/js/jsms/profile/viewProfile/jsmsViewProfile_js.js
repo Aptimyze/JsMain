@@ -538,8 +538,9 @@ $(document).ready(function()
 	
     handleBackButton();
     handlePreviousNext();	
-    initGunnaScore();    
-    
+    initGunnaScore();
+	
+	astroCompatibility();    
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
 	if($(errorContent).length)
 	{
@@ -575,8 +576,8 @@ initGunnaScore = function()
     {
         if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
-        //Show Guna Score String
-        if(data.responseStatusCode==0 && data.SCORE != 0)
+        //Show Guna Score String        
+        if(data.responseStatusCode==0 && (data.SCORE != 0 || data.SCORE !=null))
         {
             var col = "green";
             if(parseInt(data.SCORE)<18)
@@ -636,4 +637,66 @@ getViewProfileBackLocation = function()
     return viewBackLocation;
 }
 
+astroCompatibility = function()
+{
+	$(".js-astroCompMem,.js-freeAstroComp").click(function(){		
+		$.ajax({
+			method: "POST",
+			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1&username="+username,			
+			async:true,
+			timeout:20000,
+			success:function(response){
+			}
+		});
+		if($(this).hasClass('js-astroCompMem')){
+			$(".js-buttonAstro").html("Buy Astro Compatibility");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();				
+		}
+		else{
+			$(".js-buttonAstro").html("Upgrade Membership");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();		
+		}
+		
+	});
+	$(".js-astroMem").click(function(){
+		$.ajax({
+			method: "POST",
+			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username,
+			async:true,
+			timeout:20000,
+			success:function(response){
+			}
+		});
+		$(".js-buttonAstro").html("OK");
+			$(".js-textAstro").html("Astro compatibility report with this member has been sent to your registered Email ID");
+			$(".js-buttonAstro").click(function(){
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");
+			});
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();
+
+	});
+}
+
+function closeAstroLayer()
+{
+	$('#astroReportLayer').on('touchstart', function(e) {   
+			e.stopPropagation(); //stops propagation
+			if(e.target.id == "astroReportLayer")
+			{
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");	
+			}
+			e.stopPropagation(); 
+			e.preventDefault();
+			return false;
+		});
+}
+
 setTimeout(enableLoader,50);
+

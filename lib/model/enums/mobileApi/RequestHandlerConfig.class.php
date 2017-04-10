@@ -39,6 +39,7 @@ class RequestHandlerConfig
                 ),
     "profile"=>array(
         "editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
+       	"downloadHoroscope" => array("v1" => "downloadHoroscopeV1", "v2" => "", "v3" => "downloadHoroscopeV1"),
         "editsubmit"=>array("v1"=>"ApiEditSubmitV1","v2"=>"","v3"=>"ApiEditSubmitV1"),
          "editsubmitDocuments"=>array("v1"=>"ApiEditSubmitDocumentsV1","v2"=>"","v3"=>"ApiEditSubmitDocumentsV1"),
         "filter"=>array("v1"=>"ApiEditFilterV1","v2"=>"","v3"=>"ApiEditFilterV1"),
@@ -50,6 +51,7 @@ class RequestHandlerConfig
         "vsploadcheck"=>array("v1"=>"VSPLoadCheckV1","v2"=>"","v3"=>"VSPLoadCheckV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
+        "astroCompatibility"=>array("v1"=>"astroCompatibilityV1","v2"=>"astroCompatibilityV1","v3"=>"astroCompatibilityV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
         "dppSuggestions"=>array("v1"=>"dppSuggestionsV1","v2"=>"dppSuggestionsV1","v3"=>"dppSuggestionsV1"),
@@ -61,6 +63,7 @@ class RequestHandlerConfig
 			"alertManager" => array("v1" => "AlertManagerV1", "v2" => "", "v3" => "AlertManagerV1"),
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
 			"hideUnhideProfile" => array("v1" => "HideUnhideProfileV1"),
+      "options" => array("v1" => "AvailableOptionV1","v2" => "AvailableOptionV1","v3" => "AvailableOptionV1"),
 			),
 		"api" => array(
 			"appReg" => array("v1" => "AppRegV1", "v2" => "AppRegV1", "v3" => "AppRegV1"),

@@ -65,6 +65,7 @@ class ObjectiveEditFieldMap
         'P_HHEIGHT'=>'height',
         'P_LHEIGHT'=>'height',
         'P_STATE'=>'state_india',
+        'P_OCCUPATION_GROUPING'=>'occupation_grouping',
 			);
 		if($from_whr=="MR")
 			$objectiveFieldMap["RELATIONSHIP"]="relationship_minireg";

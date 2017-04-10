@@ -56,7 +56,7 @@ class CONTACT_ELEMENTS
 	//new constant for shoing contacts Alloted Message
 	const MIN_CONTACT_ALLOTED=10000;
 	const PAGINATION_LIMIT=21;
-	
+	const MAIL_AND_NOT = 'MAIL_AND_NOT';
   /**
    * 
    * Get variable existence.
