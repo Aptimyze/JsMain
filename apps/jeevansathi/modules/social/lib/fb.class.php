@@ -63,13 +63,14 @@ public function getAlbumList()
 	}
 	$albumData = $response->getGraphAlbum();
 	$albumData = json_decode($albumData,true);
+	$k=0;
 	if($this->accessToken)
 	{
 		if(array_key_exists("albums",$albumData))
 		{
-			foreach($albumData[albums] as $k=>$albumData1)
+			foreach($albumData[albums] as $k1=>$albumData1)
 			{
-				if($albumData1['type'] != 'friends_walls')
+				if($albumData1['type'] != 'friends_walls' && array_key_exists('photos',$albumData1))
 				{
 					$this->final[$k]['albumId']=$albumData1['id'];
 					$albumName = $albumData1['name'];
@@ -83,6 +84,7 @@ public function getAlbumList()
 						$this->final[$k]['allPhotos'][]=$albumPhotos['picture'];
 						$this->final[$k]['allPhotosToSave'][]=$albumPhotos['source'];
 					}
+					$k++;
 				}
 			}
 		}
