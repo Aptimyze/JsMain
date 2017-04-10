@@ -3,9 +3,8 @@ class MOBILE_API_NOTIFICATION_MESSAGE_LOG extends TABLE
 {
     public function __construct($dbname = "")
     {
-        $dbname ='crm_slave';
+        $dbname ='notification_master';
         $this->databaseName ='NOTIFICATION_NEW';
-
         parent::__construct($dbname);
         $this->NOTIFICATION_KEY_BIND_TYPE = "STR";
         $this->MESSAGE_BIND_TYPE          = "STR";

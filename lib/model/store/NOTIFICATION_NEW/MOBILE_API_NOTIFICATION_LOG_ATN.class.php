@@ -2,7 +2,7 @@
 class MOBILE_API_NOTIFICATION_LOG_ATN extends TABLE{
         public function __construct($dbname="")
         {
-			$dbname ='crm_slave';
+			$dbname ='notification_master';
 			$this->databaseName ='NOTIFICATION_NEW';
                         parent::__construct($dbname);
 			$this->PROFILEID_BIND_TYPE = "INT";

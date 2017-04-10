@@ -42,6 +42,7 @@ class DialerInbound
 			$dataArr['SUBSCRIPTION'] ='Y';
 		else
 			$dataArr['SUBSCRIPTION'] ='N';
+		$this->profileDetails =$dataArr;
 		return $dataArr;
 	}
 	public function getMembershipDetails($profileid)
@@ -135,11 +136,22 @@ class DialerInbound
 		$memData['DISCOUNT_PERCENT'] 	=$discountVal;
 
 		// Renewal Info 
+		$subscription =$this->profileDetails['SUBSCRIPTION'];
 		if($renewalActive){
-			$curTime	=time();
+			$curDay	=date("Y-m-d");;
+			$curTime =strtotime($curDay);
+
+			if($subscription=='N'){
+				$expiryDate .=" ".date("Y");
+				$expiryDate =date("Y-m-d",strtotime("$expiryDate -10 days"));	
+			}
 			$expiryTime	=strtotime($expiryDate);
 			if($expiryTime>=$curTime){
 				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24))+1;
+			}
+			elseif($subscription=='N'){
+				$daysDiff =floor(($curTime-$expiryTime)/(60*60*24));
+				$daysDiff ="-".$daysDiff;
 			}
 			$renewalActive ='Y';
 		}

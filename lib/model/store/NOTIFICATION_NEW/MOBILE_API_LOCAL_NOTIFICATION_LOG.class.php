@@ -2,7 +2,7 @@
 class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
         public function __construct($dbname="")
         {
-			$dbname ='crm_slave';
+			$dbname ='notification_master';
 			$this->databaseName ='NOTIFICATION_NEW';
                         parent::__construct($dbname);
 			$this->REGISTRATION_ID_BIND_TYPE = "STR";
