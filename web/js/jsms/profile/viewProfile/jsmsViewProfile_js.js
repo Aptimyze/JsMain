@@ -449,16 +449,19 @@ handleBackButton = function()
 		var dummy = document.createElement('div');
 		dummy.innerHTML = backBtnHtml;
 		backBtnAnchor = dummy.children[0];
-		if(backBtnAnchor.href.indexOf('inbox')!=-1 && backBtnAnchor.href.indexOf('page=idd')!=-1 ){
-			pattern = /idd\d+/;
-			backLocation = backBtnAnchor.href.replace(pattern,'idd'+getProfileOffset());
-			
-		}
-		else if(backBtnAnchor.href.indexOf('search')!=-1)
+		if(backBtnAnchor.href.indexOf('search')!=-1 && backBtnAnchor.href.indexOf('page=idd')<0 && getProfileOffset()!='')
+		{
 			backLocation = backBtnAnchor.href + '&page=idd' + getProfileOffset();
+		}
+		else if(backBtnAnchor.href.indexOf('page=idd')!=-1 && getProfileOffset()!=''){
+			pattern = /idd\d*/;
+			backLocation = backBtnAnchor.href.replace(pattern,'idd'+getProfileOffset());
+		}
 		else
 			backLocation = backBtnAnchor.href ;
+		
 	}
+	
 	
 	if(backLocation.length)
 	{

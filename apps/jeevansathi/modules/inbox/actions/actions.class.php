@@ -921,9 +921,8 @@ public function executePerformV2(sfWebRequest $request)
 			else
 			{		
 				ob_start();
-				if($request->getParameter("navigation_type"))
-					$navigation_type = $request->getParameter("navigation_type");
-				elseif($request->getParameter("searchId")!=""){
+				
+				if($request->getParameter("searchId")!=""){
 					
 					$navigation_type = InboxEnums::getViewProfilePageParams($request->getParameter("searchId"))["navigation_type"];
 				}
@@ -931,7 +930,7 @@ public function executePerformV2(sfWebRequest $request)
 				$navigatorObj=new Navigator();
 				$durl=$navigatorObj->develop_url();
 				
-				$navigatorObj->navigation($navigation_type,$durl);
+				$navigatorObj->navigation($navigation_type,$durl,'','Symfony');
 				$this->BREADCRUMB=$navigatorObj->onlyBackBreadCrumb;
 				$this->NAVIGATOR=$navigatorObj->NAVIGATOR;
 				$this->nav_type=$navigation_type;

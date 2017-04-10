@@ -2846,7 +2846,7 @@ function navigation($type,$param,$username='',$symfony='')
 		$link=develop_url();
 
                 //Overwrite the link that to be developed ..
-                if($coming_from_dp==1)
+                if($coming_from_dp==1)	
                         $link=$param;
 
                 if($link)
@@ -3055,8 +3055,7 @@ function navigation($type,$param,$username='',$symfony='')
                         //$link_developed="$first;$second;$third";
                 }
                 $link_developed="$first;$second;$third";
-				if($isMobile)
-					$link_developed="$second";
+			
         }
 //echo $link_developed;
 	
