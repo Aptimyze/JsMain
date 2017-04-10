@@ -262,11 +262,12 @@ class dppAction extends sfAction {
 		 */
 	private function getDropDowns($request){
 		$this->fetchingData = array();
-		$request->setParameter("l",'height_json,p_mstatus,dpp_country,p_religion,p_mtongue,p_mtongue,p_manglik,p_education,p_occupation,p_diet,p_smoke,p_drink,p_complexion,p_btype,p_challenged,p_nchallenged,dpp_city');
+		$request->setParameter("l",'height_json,p_mstatus,dpp_country,p_religion,p_mtongue,p_mtongue,p_manglik,p_education,p_occupation_grouping,p_diet,p_smoke,p_drink,p_complexion,p_btype,p_challenged,p_nchallenged,dpp_city');
 		$request->setParameter("actionCall","1");
 		ob_start();
 		$fieldValues = sfContext::getInstance()->getController()->getPresentationFor("static","getFieldData");
-		$this->staticFields = json_decode(ob_get_contents(),true);
+		
+		$this->staticFields = json_decode(ob_get_contents(),true);		
 		ob_end_clean();
 		foreach(DPPConstants::$alterFeildDataStructureArray as $key=>$val){
 			$this->fetchingData=FieldMap::getFieldLabel($val,'',1);
@@ -332,8 +333,7 @@ class dppAction extends sfAction {
           $request->setParameter("internal",1);
           $fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
           $this->dppData = json_decode(ob_get_contents(),true);
-          ob_end_clean();
-          //print_r($this->dppData); die;
+          ob_end_clean();          
           return $this->dppData;
         }
         /*
