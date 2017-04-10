@@ -564,7 +564,7 @@ $js_arr[]=array("jspc/photoUpload/cropper"    => "1");
 $js_arr[]=array("jspc/photoUpload/main"        => "8");
 $js_arr[]=array("jspc/photoUpload/bootstrap"    => "1");
 $js_arr[]=array("jspc/photoUpload/tooltip"    => "1");
-$js_arr[]=array("jspc/photoUpload/photoFunctions_js"        => "6");
+$js_arr[]=array("jspc/photoUpload/photoFunctions_js"         => "7");
 $js_arr[]=array("jspc/common/urlHandling"              => "13");
 $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
