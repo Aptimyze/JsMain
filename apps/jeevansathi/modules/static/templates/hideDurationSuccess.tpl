@@ -14,6 +14,30 @@
     </div>
 
     <div class="txtc set_btmlink pt15">
-      <div><a href="/">Go To Home</a></div>
+      ~if $webView eq 1`  
+        <div><a href="/myhome">Go To Home</a></div>
+      ~else`
+        <div><a href="/">Go To Home</a></div>
+       ~/if`
     </div>
 </div>
+  <script>
+    var webView = '~$webView`';
+    if(webView) {
+      function onHideDurationBack() {
+        if(location.href.indexOf("/static/hideDuration?") !== -1) {
+          location.href = "/static/settings";
+          return true;
+        }
+        return false;
+      }
+
+      $(document).ready(function(){
+        console.log("1");
+        if(typeof historyStoreObj != 'undefined'){
+          console.log("history push");
+          historyStoreObj.push(onHideDurationBack,"#hideSuccess");
+        }
+      });  
+    }   
+</script>

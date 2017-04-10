@@ -44,10 +44,17 @@ if (!this.profileChecksum) return;
 if(this.name=="MEMBERSHIP" || this.name=="EDITPROFILE")
 {
 	if(this.name=="MEMBERSHIP")
-		location.href="/profile/mem_comparison.php";
+		{
+			location.href="/profile/mem_comparison.php";
+			return;
+		}
+
 	else
-		location.href="/profile/viewprofile.php?ownview=1";
-	
+		{
+			location.href="/profile/viewprofile.php?ownview=1";
+			return;
+		}
+
 }
 ajaxData=this.makePostDataForAjax(this.profileChecksum);
          $.myObj.ajax({

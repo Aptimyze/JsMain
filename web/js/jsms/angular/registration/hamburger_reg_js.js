@@ -50,6 +50,12 @@ var errorMsg = "Something went wrong!! Please try again later";
                 this.originalHtml=hamHtml=$("#HAM_OPTION_1").html();            
 			
 			this.alreadyUpdated=false;
+                        this.type = $(element).attr('dshow').toLowerCase();
+
+                        var preFetchArray = ["height","country_res","state_res","reg_city_jspc","edu_level_new","occupation","income","reg_mstatus","reg_mtongue","religion"];
+                        if(preFetchArray.indexOf(this.type) != -1) {
+                            staticTables.getData(this.type);
+                        }
 
 			if(this.whenHide=="multiple")
 				this.optionHeight=220;
@@ -71,9 +77,9 @@ var errorMsg = "Something went wrong!! Please try again later";
 				searchHamburger(ele.type,ele.ulOption,ele.tapid);	
 				(function(elem)
 				{
-					setTimeout(function(){
+					//setTimeout(function(){
 						elem.ShowHamburger();
-					},5);
+					//},5);
 				})(ele);
 				
 			});
@@ -351,7 +357,9 @@ var errorMsg = "Something went wrong!! Please try again later";
                 });
             });
             //Add Elements in DOM
-            setTimeout(function(){ele.AddElement(0,resultArr,selArr,alreadySelectedValue,50)},1)
+            //setTimeout(function(){
+                ele.AddElement(0,resultArr,selArr,alreadySelectedValue,50);
+            //},1)
         }
         
         Hamburger.prototype.AddElement=function(index,resultArr,selArr,alreadySelectedValue,chunkValue)
@@ -370,6 +378,9 @@ var errorMsg = "Something went wrong!! Please try again later";
             
             for(var i=0;i<chunkValue;i++)
 			{
+                                if(actualIndex == 0 && i == 15) {
+                                    this.showLoader(false);
+                                }
 				
 				try{
 					var value=resultArr[index]["value"];	
@@ -442,9 +453,9 @@ var errorMsg = "Something went wrong!! Please try again later";
                     }
                     else
                     {
-                        setTimeout(function(){
+                       // setTimeout(function(){
                             ele.AddElement(index,resultArr,selArr,alreadySelectedValue,chunkValue);
-                        },40);
+                       // },40);
                     }
                 }
                     

@@ -90,10 +90,10 @@ class Reminder extends ContactEvent {
     $this->contactHandler->getContactObj()->updateContact();
     $this->contactHandler->setElement("STATUS","I");
     $this->handleMessage();
-
+    $sendMailNot = $this->contactHandler->getElements('MAIL_AND_NOT') == 'N' ? false : true;
     //send eoi reminder notification with default reminder message
     $filteredState =$this->contactHandler->getContactObj()->getFILTERED();	
-    if($filteredState!='Y')
+    if($filteredState!='Y' && $sendMailNot)
     {	
       $receiverId = $this->contactHandler->getViewed()->getPROFILEID();
       $senderId = $this->contactHandler->getViewer()->getPROFILEID();
@@ -123,11 +123,11 @@ class Reminder extends ContactEvent {
       }
     } 
 
-    $viewedEntryDate = $this->contactHandler->getViewed()->getENTRY_DT();
-    $now = date("Y-m-d");
-    $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
-
+//    $viewedEntryDate = $this->contactHandler->getViewed()->getENTRY_DT();
+//    $now = date("Y-m-d");
+//    $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
  // Instant mailer
+    if($sendMailNot)
       $this->sendMail();
     
   }
