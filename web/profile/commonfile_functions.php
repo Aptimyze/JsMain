@@ -629,6 +629,7 @@ $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
 $js_arr[]=array("operations_validate2"       => "5");
 $js_arr[]=array("jsms/settings/mobHideProfile_js"                     => "17");
+$js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 return $js_arr;
 }
 function getJavascript(){
