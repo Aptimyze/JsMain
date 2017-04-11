@@ -1,3 +1,4 @@
+use MIS;
 CREATE TABLE `EOI_DENIED_LOG` (
   `ID` mediumint(11) unsigned NOT NULL AUTO_INCREMENT,
   `VIEWER_PFID` int(11) unsigned NOT NULL,
