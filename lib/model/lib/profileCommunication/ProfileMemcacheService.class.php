@@ -642,13 +642,13 @@ public function unsett()
             foreach ($contactArr as $key => $val) {
                 $contactDate = $contactDates[$key];
                 $contactLimitDates = CommonFunction::getContactLimitDates($contactDate);
-                if ($val == 1)
+                if ($val == 0)
                     $TODAY_INI_BY_ME++;
                 // insert logic for week's count
-                if ($contactLimitDates['weekStartDate']  >= $contactDate)
+                if (strtotime($contactLimitDates['weekStartDate'])  <= strtotime($contactDate))
                     $WEEK_INI_BY_ME++;
                 // insert logic for month's count
-                if ($contactLimitDates['monthStartDate']  >= $contactDate)
+                if (strtotime($contactLimitDates['monthStartDate'])  <= strtotime($contactDate))
                     $MONTH_INI_BY_ME++;
                 if ($datediff >= $val)
                 {
