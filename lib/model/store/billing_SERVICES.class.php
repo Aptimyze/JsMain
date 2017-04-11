@@ -501,7 +501,7 @@ class billing_SERVICES extends TABLE
     }
     public function getOnlineActiveDurations($mtongue="-1") {
         try {
-            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' AND ADDON!='Y'/* AND SERVICEID!='P1'*/";
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
