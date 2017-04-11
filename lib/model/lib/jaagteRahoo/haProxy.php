@@ -8,7 +8,7 @@ class HaProxy{
 	private $password;
 
 	public function __construct(){
-		$this->url ="172.10.11.25:8082/js/";
+               $this->url ="172.10.11.25:8082/js/";
 		$this->username = "readjs";
 		$this->password = "password@234";
 	}

@@ -107,7 +107,6 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
-
 			else if(CommonFunction::isEverPaid())
 			{
 				$day_limit=100;
@@ -132,30 +131,6 @@ class CommonFunction
 		$limit['NOT_VALIDNUMBER_LIMIT']=$notValidNumber_limit;
 		return $limit;		
 	}
-
-	public static function getContactLimitDates($contactDate)
-	{
-		$verifyDate = "2017-03-16 17:03:42";
-
-		$x = date('Y-m-d',strtotime($verifyDate));
-		$y = date('Y-m-d',strtotime($contactDate));
-
-		$t1 = strtotime($x);
-		$t2 = strtotime($y);
-
-		$daysDiff = ($t2 - $t1)/(24*60*60);
-
-		$weeks = floor($daysDiff/7) * 7;
-
-		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
-
-		$months = floor($daysDiff/30) * 30;
-
-		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
-
-		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
-	}
-
 	public static function isPaid($subscription)
 	{
 		$paid = 0;

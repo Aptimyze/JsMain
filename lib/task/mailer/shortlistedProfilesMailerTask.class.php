@@ -33,7 +33,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		ini_set('memory_limit','1900M');
+		ini_set('memory_limit','-1');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
@@ -94,6 +94,7 @@ public function skipProfiles(&$arranged)
                 else unset($arranged[$key]);
                 unset($skipProfiles);
                 unset($temp);
+                ProfileMemcache::clearInstance($key);
 	}
 }
 
