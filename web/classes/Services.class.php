@@ -22,16 +22,23 @@ class Services
     private $offer_discount = 10;
     
     public function getAllServices($online = "",$profileid="") {
-        if(!$empty($online)){
-            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
-            $profileObj->getDetail();
-            if($profileObj != null){
-                $online = $profileObj->getMTONGUE();
-            }
-            if(empty($online)){
+        if(!empty($online)){
+
+            if(empty($profileid)){
                 $online = "-1";
             }
-            unset($profileObj);
+            else{
+                $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+                $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
+                if($profileObj != null){
+                    $online = $profileObj->getMTONGUE();
+                }
+                if(empty($online)){
+                    $online = "-1";
+                }
+                unset($profileObj);
+                var_dump($profileObj);die;
+            }
         }
     	$billingServicesObj = new billing_SERVICES();
         $services = $billingServicesObj->getAllServiceDataForActiveServices($online);
@@ -358,7 +365,7 @@ class Services
         else if($profileid != ""){
             error_log("ankita check why in this case");
             $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
-            $profileObj->getDetail();
+            $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
             if($profileObj != null){
                 $mtongue = $profileObj->getMTONGUE();
             }

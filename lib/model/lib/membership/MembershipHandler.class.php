@@ -1125,7 +1125,6 @@ class MembershipHandler
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
         
-        //error_log("ankita confirm");
         if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);

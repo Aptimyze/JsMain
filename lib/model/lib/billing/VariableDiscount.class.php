@@ -560,7 +560,7 @@ class VariableDiscount
         	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
             if(!empty($profileid)){
                 $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
-                $profileObj->getDetail();
+                $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
                 if($profileObj != null){
                     $mtongue = $profileObj->getMTONGUE();
                 }
