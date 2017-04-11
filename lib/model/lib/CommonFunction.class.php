@@ -844,6 +844,10 @@ class CommonFunction
 	{
 		$loginProfile = LoggedInProfile::getInstance();
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
 
 		$x = date('Y-m-d',strtotime($verifyDate));
 		$y = date('Y-m-d',strtotime($contactDate));
