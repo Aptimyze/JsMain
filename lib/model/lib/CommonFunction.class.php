@@ -113,7 +113,7 @@ class CommonFunction
 				$weekly_limit=100;
 				$month_limit=400;
 				$overall_limit=800000;
-				$notValidNumber_limit=100000;
+				$notValidNumber_limit=100;
 			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
