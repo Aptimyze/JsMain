@@ -147,7 +147,6 @@ class CommonFunction
 		$billing = new BILLING_PURCHASES();
 		$loginProfile = LoggedInProfile::getInstance();
 		$pid = $loginProfile->getPROFILEID();
-		$pid = '99409603';
 		$payment = $billing->isPaidEver($pid);
 		if(is_array($payment) && $payment[$pid])
 		{
@@ -840,5 +839,30 @@ class CommonFunction
     	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
     	return $decoratedOccGroups;
     }
+
+    public static function getContactLimitDates($contactDate)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d',strtotime($contactDate));
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		$weeks = floor($daysDiff/7) * 7;
+
+		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		$months = floor($daysDiff/30) * 30;
+
+		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
+
+		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
 }
 ?>
