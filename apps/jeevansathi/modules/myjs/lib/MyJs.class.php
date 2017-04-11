@@ -12,6 +12,8 @@ class MyJs implements Module
         private $configurations;
         private $completeProfilesInfo;
         private static $getTotal = "T";
+		private $arrProfiler = array();
+  		private $bEnableProfiler = false;        
         
         //Constructor need profile object for myjs page 
         function __construct($module,Profile $profileObj)
@@ -198,6 +200,7 @@ class MyJs implements Module
                 $profiles     = Array();
                 $tupleService = new TupleService();
 		$tupleService->setLoginProfileObj($this->profileObj);
+		$start = microtime(TRUE);
                 foreach ($this->configurations as $infoType => $config)
 		{
                         // Handles both the ajax and non ajax display call only if count is greater than 0,  new declined are not shown in tuples in myjs modul
@@ -243,6 +246,11 @@ class MyJs implements Module
 									$skipArray = $pids;
 							}
 						}
+					}
+					if($this->bEnableProfiler)
+ 					{
+ 						$logString = $infoType.' SkipArray count -> '.count($skipArray).' ';
+ 						$this->arrProfiler[$infoType][] = CommonFunction::logResourceUtilization($start,$logString);
 					}
                                         $conditionArray         = $this->getCondition($infoType, $nav);
                                         if($infoType == "MATCH_ALERT")
@@ -304,6 +312,10 @@ class MyJs implements Module
 					}
                                 }
                         }
+                }
+                if($this->bEnableProfiler)
+                {
+ 					CommonFunction::logIntoProfiler('InfoType', $this->arrProfiler);
                 }
                 unset($conditionArray);
                 unset($skipArray);
@@ -484,7 +496,7 @@ class MyJs implements Module
                         if ($infoType == "INTEREST_RECEIVED")
 			{
                                 $condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-                                $yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+                                $yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
                                 $back_90_days                                     = date("Y-m-d", $yday);
                                 $condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
                                 
@@ -497,8 +509,8 @@ class MyJs implements Module
                         if ($infoType == "INTEREST_EXPIRING")
                         {
 							$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-							$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
-							$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+							$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT, date("Y"));
+							$bday                                             = mktime(0, 0, 0, date("m"), date("d") - (CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT - 1), date("Y"));
 							$back_90_days                                     = date("Y-m-d", $yday);
 							$back_83_days                                     = date("Y-m-d", $bday);
 							$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";

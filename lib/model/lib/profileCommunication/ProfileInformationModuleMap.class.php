@@ -6,8 +6,8 @@
  */
 class ProfileInformationModuleMap
 {
+	CONST _defaultList = "INTEREST_RECEIVED";
         /*This declares array of  all the configurations of all the given modules*/
-
 	public static $MYJSAPP_ANDROID_1;
 	public static $MYJSAPP_IOS_1;
 	public static $ContactCenterAPP;
@@ -26,7 +26,8 @@ class ProfileInformationModuleMap
 		}
 		else
 			$arrayName = self::$defaultArray[$module];
-		        if(isset(self::${$arrayName}))
+		       
+		if(isset(self::${$arrayName}))
                 {
                         if($infoType=='')
                                 return self::${$arrayName};
@@ -57,7 +58,8 @@ class ProfileInformationModuleMap
                                    return $k;
                         }
                 }
-                throw new JsException("","Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		jsException::nonCriticalError("Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		return self::_defaultList;
         }
         
 	static public function init()
@@ -300,7 +302,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "stype=AMD",
+			"TRACKING"=> "stype=AMOD",
             "CONTACT_ID"=>""
                 ),
 		);

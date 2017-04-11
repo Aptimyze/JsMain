@@ -1132,92 +1132,161 @@ case"photo_display_logic":
 case "occupation":
 
 	$arr=array(
-"44"=>"Looking for a job",
-"36"=>"Not working",
-"5"=>"Actor/Model",
-"63"=>"Admin",
-"2"=>"Advertising Professional",
-"3"=>"Agent",
-"32"=>"Agriculture/Dairy",
-"46"=>"Air Hostess",
-"64"=>"Analyst",
-"6"=>"Architect",
-"7"=>"Banking Professional",
-"40"=>"Beautician",
-"8"=>"BPO/Customer service",
-"13"=>"Businessperson",
-"65"=>"Chartered accountant",
-"33"=>"Civil Services (IAS/ IFS/ IPS/ IRS)",
-"50"=>"Consultant",
-"10"=>"Corporate Communication",
-"11"=>"Corporate Planning Professional",
-"12"=>"Customer Services",
-"34"=>"Defence",
-"57"=>"Doctor",
-"60"=>"Education Professional",
-"27"=>"Engineer - Non IT",
-"15"=>"Fashion Designer",
-"1"=>"Financial Services/Accounting",
-"35"=>"Govt. Services",
-"21"=>"Hardware/Telecom",
-"24"=>"Healthcare Professional",
-"47"=>"Hotels/Hospitality Professional",
-"19"=>"HR Professional",
-"51"=>"Interior Designer",
-"9"=>"Journalist",
-"22"=>"Lawyer/Legal Professional",
-"23"=>"Logistics/SCM Professional",
-"66"=>"Manager",
-"49"=>"Marketing Professional",
-"54"=>"Media Professional",
-"42"=>"Merchant Navy",
-"38"=>"NGO/Social Services",
-"53"=>"Nurse",
-"67"=>"Operator/Technician",
-"45"=>"Pilot",
-"56"=>"Police",
-"68"=>"Product manager",
-"58"=>"Professor/Lecturer",
-"69"=>"Program Manager",
-"70"=>"Psychologist",
-"30"=>"Project Manager - IT",
-"59"=>"Project Manager - Non IT",
-"61"=>"Research Professional",
-"28"=>"Sales Professional",
-"62"=>"Scientist",
-"16"=>"Secretary/Front Office",
-"29"=>"Security Professional",
-"52"=>"Self Employed",
-"20"=>"Software Professional",
-"55"=>"Sportsperson",
-"41"=>"Student",
-"31"=>"Teacher",
-"48"=>"Top Management (CXO, M.D. etc.)",
-"71"=>"UI/UX designer",
-"17"=>"Web/Graphic Design",
-"43"=>"Others",
+"44" => "Looking for a job",
+"36" => "Not working",
+"5" => "Actor/Model",
+"2" => "Advertising Professional",
+"3" => "Agent",
+"46" => "Air Hostess",
+"64" => "Analyst",
+"6" => "Architect",
+"8" => "BPO/ITeS",
+"7" => "Banking Professional",
+"40" => "Beautician",
+"13" => "Businessperson",
+"65" => "Chartered accountant",
+"33" => "Civil Services (IAS/ IFS/ IPS/ IRS)",
+"50" => "Consultant",
+"10" => "Corporate Communication",
+"11" => "Corporate Planning Professional",
+"12" => "Customer Services",
+"75" => "Cyber / Network Security",
+"34" => "Defence",
+"57" => "Doctor",
+"60" => "Education Professional",
+"27" => "Engineer - Non IT",
+"32" => "Farming",
+"15" => "Fashion Designer",
+"76" => "Film Professional",
+"1" => "Financial Services/Accounting",
+"72" => "Fitness Professional",
+"35" => "Govt. Services",
+"19" => "HR Professional",
+"21" => "Hardware/Telecom",
+"24" => "Healthcare Professional",
+"47" => "Hotels/Hospitality Professional",
+"51" => "Interior Designer",
+"9" => "Journalist",
+"22" => "Lawyer/Legal Professional",
+"23" => "Logistics/SCM Professional",
+"66" => "Manager",
+"49" => "Marketing Professional",
+"54" => "Media Professional",
+"42" => "Merchant Navy",
+"38" => "NGO/Social Services",
+"53" => "Nurse",
+"63" => "Office Admin",
+"67" => "Operator/Technician",
+"74" => "Physiotherapist",
+"45" => "Pilot",
+"56" => "Police",
+"73" => "Private Security",
+"68" => "Product manager",
+"58" => "Professor/Lecturer",
+"69" => "Program Manager",
+"30" => "Project Manager - IT",
+"59" => "Project Manager - Non IT",
+"70" => "Psychologist",
+"61" => "Research Professional",
+"28" => "Sales Professional",
+"62" => "Scientist",
+"16" => "Secretary/Front Office",
+"29" => "Security Professional",
+"52" => "Self Employed",
+"20" => "Software Professional",
+"55" => "Sportsperson",
+"41" => "Student",
+"31" => "Teacher",
+"48" => "Top Management (CXO, M.D. etc.)",
+"71" => "UI/UX designer",
+"17" => "Web/Graphic Design",
+"43" => "Others",
 );
 
 	break;
 
 case "occupation_grouping_mapping_to_occupation":
 
+// 	$arr=array(
+// "11"=>"44,36,63,32,46,6,40,47,51,42,38,67,45,55,41,48,43",
+// "5"=>"5,2,8,50,10,11,15,9,49,54,68,28",
+// "8"=>"3,12,19,22,23,66,56,16,29",
+// "7"=>"7,65,1",
+// "1"=>"13,52",
+// "10"=>"33,35",
+// "4"=>"34",
+// "3"=>"57,24,53,70",
+// "6"=>"60,58,31",
+// "9"=>"27,61,62",
+// "2"=>"64,21,69,30,59,20,71,17",          
+// );
+
+//         $arr=array(
+// "8"=>"Administration",
+// "1"=>"Businessmen",
+// "4"=>"Defence",
+// "7"=>"Finance (CA, CS)",
+// "10"=>"Government",
+// "5"=>"Marketing/Sales/Adv",
+// "3"=>"Medical Professional",
+// "9"=>"Production/Maintenance",
+// "2"=>"Software",
+// "6"=>"Teaching",
+// "11"=>"Others",
+// );
 	$arr=array(
-"11"=>"44,36,63,32,46,6,40,47,51,42,38,67,45,55,41,48,43",
-"5"=>"5,2,8,50,10,11,15,9,49,54,68,28",
-"8"=>"3,12,19,22,23,66,56,16,29",
-"7"=>"7,65,1",
-"1"=>"13,52",
-"10"=>"33,35",
-"4"=>"34",
-"3"=>"57,24,53,70",
-"6"=>"60,58,31",
-"9"=>"27,61,62",
-"2"=>"64,21,69,30,59,20,71,17",          
-);
-
+                "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
+                "2"=>"54,9",//Media Professionals
+                "3"=>"13,52,3",//Businessperson
+                "4"=>"7,1,65",//Finance Professionals
+                "5"=>"60,58,31",//Teachers/Lecturers
+                "6"=>"24,70,53,74",//Healthcare Professionals
+                "7"=>"34",//Defence
+                "8"=>"30,20,75,21",//Software/IT Professionals
+                "9"=>"61,62",//Research Professionals
+                "10"=>"44,36,41",//Not working
+                "11"=>"22",//Lawyer/Legal Professionals
+                "12"=>"17,15,51,6,71",//Architecture/ Design
+                "13"=>"57",//Doctor
+                "14"=>"27",//Engineering
+                "15"=>"12,8",//BPO/Customer Services
+                "16"=>"45",//Pilot
+                "17"=>"35,56",//Govt. Services
+                "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
+                "19"=>"29,43",//Other Occupations
+                "20" => "46",//Air Hostess
+                "21" => "32",//farming
+                "22" => "42",//Merchant Navy
+                "23" => "55",//Sportsperson
+                "24" => "5,76",//Actor/Film Professional
+                "25" => "40,72",//Beautician/Fitness Professional
+                "26" => "63,67,16,73",//Admin/Technician
+        );
 	break;
+// case "newoccupation_mapping_for_dpp":
 
+//         $arr=array(
+//                 "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
+//                 "2"=>"54,9",//Media Professionals
+//                 "3"=>"13,52,18",//Businessperson
+//                 "4"=>"7,1,65",//Finance Professionals
+//                 "5"=>"60,58,31",//Teachers/Lecturers
+//                 "6"=>"24,70",//Healthcare Professionals
+//                 "7"=>"34",//Defence
+//                 "8"=>"30,20,26",//Software/IT Professionals
+//                 "9"=>"61,62",//Research Professionals
+//                 "10"=>"44,36,41,37",//Not working
+//                 "11"=>"22",//Lawyer/Legal Professionals
+//                 "12"=>"17,15,51,6",//Architecture/ Design
+//                 "13"=>"57",//Doctor
+//                 "14"=>"27",//Engineering
+//                 "15"=>"12,8",//BPO/Customer Services
+//                 "16"=>"45",//Pilot
+//                 "17"=>"35,56",//Govt
+//                 "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
+//                 "19"=>"39,5,16,67,32,4,63,29,3,55,40,14,46,25",//Other Occupations
+//         );
+//         break;
 case "height":
 
 	$arr=array(
@@ -8258,19 +8327,47 @@ case "education_grouping":
 
 case "occupation_grouping":
 
-        $arr=array(
-"8"=>"Administration",
-"1"=>"Businessmen",
-"4"=>"Defence",
-"7"=>"Finance (CA, CS)",
-"10"=>"Government",
-"5"=>"Marketing/Sales/Adv",
-"3"=>"Medical Professional",
-"9"=>"Production/Maintenance",
-"2"=>"Software",
-"6"=>"Teaching",
-"11"=>"Others",
-);
+//         $arr=array(
+// "8"=>"Administration",
+// "1"=>"Businessmen",
+// "4"=>"Defence",
+// "7"=>"Finance (CA, CS)",
+// "10"=>"Government",
+// "5"=>"Marketing/Sales/Adv",
+// "3"=>"Medical Professional",
+// "9"=>"Production/Maintenance",
+// "2"=>"Software",
+// "6"=>"Teaching",
+// "11"=>"Others",
+// );
+		$arr=array(
+				"24"=>"Actor/Film Professional",
+				"26"=>"Admin/Technician",
+				"20"=>"Air Hostess",
+				"12"=>"Architecture/ Design",
+				"25"=>"Beautician/Fitness Professional",
+				"15"=>"BPO/Customer Services",
+				"3"=>"Businessperson",
+				"18"=>"Civil Services ( IAS,IFS,IPS,IRS )",
+                "7"=>"Defence",
+                "13"=>"Doctor",
+                "14"=>"Engineering",
+                "21"=>"Farming",
+                "4"=>"Finance Professionals",
+                "17"=>"Govt. Services",
+                "6"=>"Healthcare Professionals",
+                "11"=>"Lawyer/Legal Professionals",
+                "1"=>"Management Professionals",
+                "2"=>"Media Professionals",              
+                "22"=>"Merchant Navy",
+                "10"=>"Not working",                
+                "16"=>"Pilot",
+                "9"=>"Research Professionals",
+                "8"=>"Software/IT Professionals",
+                "23"=>"Sportsperson",
+                "5"=>"Teachers/Lecturers",
+                "19"=>"Other Occupations",              
+        );
 
         break;
 
@@ -9038,6 +9135,7 @@ case "children_ascii_array":
 	case "manglik":
 
 		$arr=array(
+"S0"=>"Select",
 "D" => "Don't know",
 "M" => "Yes",
 "A" => "Angshik (partial manglik)",
@@ -9049,6 +9147,7 @@ case "children_ascii_array":
 	case "manglik_label":
 
 		$arr=array(
+"S0"=>"Select",		
 "M" => "Manglik",
 "N" => "Non Manglik",
 "D" => "Don't know",

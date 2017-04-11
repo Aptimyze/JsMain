@@ -13,6 +13,13 @@ class myjsActions extends sfActions
   
   private $arrProfiler = array();
   private $bEnableProfiler = false;
+  
+  /**
+   * This variable will be use to invalidate the Membership cache
+   * @var type 
+   */
+  private $bInvalidateMemberShipCache = false;
+  
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
@@ -37,8 +44,14 @@ class myjsActions extends sfActions
 		$module= "MYJS";
 		$profileCommunication = new ProfileCommunication();
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-        	$pid=$loggedInProfileObj->getPROFILEID();
-        //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
+    $pid=$loggedInProfileObj->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
+    //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
 		$infoTypeId = $request->getParameter("infoTypeId");
 		$pageNo = $request->getParameter("pageNo");
 		if($infoTypeId)
@@ -98,9 +111,9 @@ class myjsActions extends sfActions
 	}
 
 
-	/**
-   * Mobile Api version 1.0 action class
-   */
+ /**
+  * Mobile Api version 1.0 action class
+  */
   public function executePerformV1(sfWebRequest $request) {    
     //for logging       
     //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
@@ -115,6 +128,16 @@ class myjsActions extends sfActions
     $inputValidateObj->validateRequestMyJsData($request);
     $output = $inputValidateObj->getResponse();
     
+    $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+    $pid = $loggedInProfileObj->getPROFILEID();
+
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+			$respObj->generateResponse();
+			die;
+    }
+    
     if($this->bEnableProfiler) {
       //Validation Time taken
       $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSecondTime, 'Request Validation Time Taken : ', $moduleName);
@@ -125,8 +148,7 @@ class myjsActions extends sfActions
       $stThirdTime = microtime(TRUE);
       
       $profileCommunication = new ProfileCommunication();
-      $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-      $pid = $loggedInProfileObj->getPROFILEID();
+      
       //  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
       $infoTypeId = $request->getParameter("infoTypeId");
       $pageNo = $request->getParameter("pageNo");
@@ -175,25 +197,34 @@ class myjsActions extends sfActions
         $profileInfo["COMPLETION"] = $completionObj->getProfileCompletionScore();
         $profileInfo["INCOMPLETE"] = $completionObj->GetAPIResponse("MYJS");
         
-        $profileInfo["PHOTO"] = NULL;
         if($this->bEnableProfiler) {
           //Pic & PCS Call
           $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFifthTime, 'Pic & PCS Call Time Taken : ', $moduleName);
         }
-        
+ 
+        $selfPhoto = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
+        $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
+
         $stSixthTime = microtime(TRUE);
-        if (MobileCommon::isApp() != "I" || $loggedInProfileObj->getHAVEPHOTO() != "U")
-          $profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
         $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+        
+        //MyJS is Not Cached
         if (!$appV1DisplayJson) {
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
+        
+        //If we want to get fresh data for membership 
+        //use it wisely
+        if($this->bInvalidateMemberShipCache) {
+          $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
+        }
+        
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -253,23 +284,32 @@ class myjsActions extends sfActions
   }
 
   public function executeJsmsPerform(sfWebRequest $request)
-	{			//myjs jsms action hit for logging  
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
-            	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
-                $this->loginData=$request->getAttribute("loginData");
-                $this->profile=Profile::getInstance();
-                $this->loginProfile=LoggedInProfile::getInstance();
-                $entryDate = $this->loginProfile->getENTRY_DT();
+	{			//myjs jsms action hit for logging
+        $this->pageMyJs = 1; 
+        
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
+        $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
+        $this->loginData=$request->getAttribute("loginData");
+        $this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance('newjs_master');
+                
+        $pid = $this->loginProfile->getPROFILEID();
+        //Handle Logout Case
+        if(is_null($this->loginProfile) || is_null($pid)) {
+          $this->forward("static", "logoutPage");
+        }
+        
+        $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
-                $this->showExpiring = 0;
+        $this->showExpiring = 0;
 				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 				{
 					$this->showExpiring = 1;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
 
-				$this->showMatchOfTheDay = 0;
+				$this->showMatchOfTheDay = 1;
 				if($this->loginProfile->getACTIVATED() == 'U')
 				{
 					$this->showMatchOfTheDay = 0;
@@ -327,6 +367,12 @@ class myjsActions extends sfActions
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcMYJSUrl);
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$this->profileid=$this->loginProfile->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($this->loginProfile) || is_null($this->profileid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
@@ -347,8 +393,11 @@ class myjsActions extends sfActions
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj){
-
-			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+			if($this->profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
+			else
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$this->gender);
             if($photoArray[label] != '')
                    $this->photoUrl = PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
             else
@@ -407,7 +456,7 @@ class myjsActions extends sfActions
 		}
 
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$this->showMatchOfTheDay = 0;
+		$this->showMatchOfTheDay = 1;
 		if($loggedInProfileObj->getACTIVATED() == 'U')
 		{
 			$this->showMatchOfTheDay = 0;
@@ -598,8 +647,7 @@ return $staticCardArr;
 		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
 		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
 		$matchObj->updateMatchProfile($profileId, $matchProfileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$profileId);
+		JsMemcache::getInstance()->set("cachedMM24$profileId","");
 		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();

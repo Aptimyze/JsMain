@@ -324,7 +324,7 @@ function UpdateOverlayLayer(attr)
 		var labelval=key[i]["label_val"];
 		
 		
-		if(!labelval || labelval===null || labelval===undefined || labelval==="-")
+		if(!labelval || labelval===null || labelval===undefined || labelval==="-" || labelval==="Select")
 		{
 			
 			key[i]["label_val"]=labelval="";
@@ -1024,6 +1024,7 @@ function hideLoader(noAjax)
 		if(sliderCurrentPage){
 		//setSliderLocation(sliderCurrentPage);
 		bxslider.gotoSlide(sliderCurrentPage);
+		//showCalDppSugg(sliderCurrentPage);
 		}
 		//else
 		//setSliderLocation(0);
@@ -1148,7 +1149,10 @@ function ToggleMore(keyName)
 		$("#topbar").css("position","").css("z-index","");
 		
 		if(typeof(index)!='undefined' && index!=-1)
+		{
 			bxslider.gotoSlide(parseInt(index));
+			//showCalDppSugg(index);
+		}
 		ev.preventDefault();
 		ev.stopPropagation();
 	//}
@@ -1246,6 +1250,7 @@ function SlideToCurrentPage()
 			if(typeof(sliderCurrentPage)!='undefined'){
 				//setSliderLocation(sliderCurrentPage);
 				bxslider.gotoSlide(parseInt(sliderCurrentPage),-1);
+				//showCalDppSugg(parseInt(sliderCurrentPage));
 			}
 }
 

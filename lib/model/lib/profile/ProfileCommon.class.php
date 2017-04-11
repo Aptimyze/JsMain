@@ -596,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                
 				$ALBUM_CNT=count($album);
 			}		
 		}
@@ -1240,6 +1242,19 @@ public static function getAnnulled($profileid,$mstatus)
             }
         }
         return $result;
+    }
+    
+    
+    //performs actions as received from mailer and outputs the button array.
+    public static function performContactEngineAction($request,$pageSource=''){
+        
+        $request->setParameter("actionName","postAccept");
+        $request->setParameter("moduleName",'contacts');
+        $request->setParameter("pageSource",$pageSource);
+        ob_start();
+        sfContext::getInstance()->getController()->getPresentationFor("contacts", "postAcceptv2");
+        ob_end_clean();
+       
     }
 }
 ?>

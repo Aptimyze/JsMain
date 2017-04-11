@@ -372,10 +372,15 @@ class ProfileMemcache
      */
     private function _setMemcacheData($data_variables)
     {
-        
-        $ret_val = JsMemcache::getInstance()->set($this->_getProfileId(), $data_variables);
+        // Get TTL of Key
+        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileId());
+        if($lifetime < 0)
+        {
+            // key doesnot exist or expire time is not defined
+            $lifetime = 1800;
+        }
+        $ret_val = JsMemcache::getInstance()->set($this->_getProfileId(), $data_variables, $lifetime);
         return $ret_val;
-        
     }
     
     /**
@@ -1759,6 +1764,10 @@ class ProfileMemcache
     public function setMESSAGE_ALL($current = 0)
     {
         $this->MESSAGE_ALL = $current;
+    }
+    public static function unsetInstance($profileid)
+    {
+            unset(self::$_instance[$profileid]);
     }
     
    

@@ -30,7 +30,7 @@ function loaderTop()
 function getDim()
 {
   var hgt = $(window).height();
-  hgt = hgt+"px";
+  hgt = (hgt+50)+"px";
   var wid = $(window).width();
   wid = wid+"px";
   var dim={hgt:hgt,wid:wid};
@@ -469,7 +469,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
                 tempParams["stype"]='WMM';
         if(tempParams["fromJSMS_MOD"] == 1)
         { 
-          tempParams["stype"]='MODJSMS';
+          tempParams["stype"]='WMOD';
           $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
         }
         else
@@ -568,7 +568,7 @@ function afterAction(result,action, index){
 			scrollOff();
 	}
         $("#ce_photo").attr("src", photo[index]);
-        
+        $("#profilePhoto").attr("src", photo[index]);
     if(window.location.hash.length===0)
         historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
 	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
@@ -733,6 +733,22 @@ function bindFooterButtons(result){
 	else
 	    $("#closeLayer").show();
 }
+
+function bindFooterButtonswithId(result, id){
+  $("#"+id).html(result.actiondetails.footerbutton.newlabel).show().bind( "click", {
+    action: result.actiondetails.footerbutton.action
+  }, function( event ) {
+  historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
+    window.location=actionUrl[event.data.action];
+    return false;
+  });
+  // if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  {
+      $("#skipLayer").show();
+  }
+}
+
 
 function acceptInterest(result,action,index)
 {
@@ -1103,7 +1119,7 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer,#footerButtonNew,#skipLayer").hide();
       //$("#footerButton").hide();
       //$("#ViewContactPreLayer").hide();
       //$("#ViewContactPreLayerNoNumber").hide();
@@ -1239,7 +1255,41 @@ if(result.actiondetails.bottommsg2){
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
-    if(result.actiondetails.errmsglabel)
+    if(result.actiondetails.newerrmsglabel)
+    {
+      $("#commonOverlay").hide();
+      $("#newErrMsg").html(result.actiondetails.newerrmsglabel);
+      $("#membershipheading").html(result.actiondetails.membershipmsgheading);
+      $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
+      $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
+      $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
+      
+      if(typeof(result.actiondetails.offer) != "undefined" && result.actiondetails.offer != null)
+      {
+        $("#MembershipOfferExists").show();
+        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
+        $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
+        if(typeof(result.actiondetails.strikedprice) != "undefined" && result.actiondetails.strikedprice != null)
+        {
+          $("#oldPrice").html(result.actiondetails.strikedprice);
+          $("#oldPrice").show();
+        }
+        $("#currency").html(result.actiondetails.membershipoffercurrency);
+        $("#newPrice").html(result.actiondetails.discountedprice);
+        $("#LowestOffer").show();
+      }
+      else if(typeof(result.actiondetails.lowestoffer) != "undefined" && result.actiondetails.lowestoffer != null)
+      {
+        $("#LowestOffer").html(result.actiondetails.lowestoffer);
+        $("#LowestOffer").addClass("mt60");
+        $("#LowestOffer").show();
+      }
+
+      bindFooterButtonswithId(result,'footerButtonNew');
+      $("#membershipOverlay").show();
+
+    }
+    else if(result.actiondetails.errmsglabel)
     {
       $("#topMsg2,#landline").hide();
       //$("#landline").hide();
@@ -1536,7 +1586,7 @@ function resetLayerButtons()
 }
   
 function browserBackCommonOverlay() {
-  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible')) {
+  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible') || $("#membershipOverlay").is(':visible')) {
     hideForHide();
     layerClose();
     return true;
@@ -1667,9 +1717,9 @@ $.ajax({
     success: function(result){
          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
          $("#js-otherInvalidReasonsLayer").val('');
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
-          ShowTopDownError([result.message],10000);
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y')) 
+                    { 
+          ShowTopDownError([result.message],5000);
           $("#commonOverlayTop").show();
                     }
 }

@@ -351,9 +351,10 @@ chatConfig.Params = {
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000,  //time in ms(5 min)
         nameTrimmLength:14,
-        logChatTimeout:true,
+        logChatTimeout:false,
         autoDisplayLoginPanel: 30000, //time in ms
         audioChatFilesLocation:'/audio/jspc/chat/',
+        enableLoadTestingStanza:true,
         rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };

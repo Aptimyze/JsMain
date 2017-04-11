@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID','THUMBNAIL_PIC','availforchat');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -107,7 +107,7 @@ class SearchApiStrategyV1
 		elseif($request->getParameter("contactViewAttempts")==1)
                         $this->searchCat = 'contactViewAttempts';
 
-                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj);
+                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request);
                 if($this->noResults!=1)
 		{
 			if($this->results_orAnd_cluster!='onlyClusters')
@@ -145,7 +145,7 @@ class SearchApiStrategyV1
         * @param string $casteMappingCastes list of caste suggested
         * @param array $relaxCriteria array to be relaxed
 	*/ 
-	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj)
+	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request)
 	{
 		$cnt = $this->responseObj->getTotalResults();
 		$this->output["dppLinkAtEnd"] = null;
@@ -211,6 +211,10 @@ class SearchApiStrategyV1
 		else
 			$this->output["sortType"]= 'Relevance';
 		$this->output["stype"]= $SearchParamtersObj->getSEARCH_TYPE();
+                if($request->getParameter("retainSearchType"))
+                {
+                        $this->output["stype"]= $request->getParameter("retainSearchType");
+                }
 		$this->output["defaultImage"]= PictureFunctions::getNoPhotoJSMS($SearchParamtersObj->getGENDER(),$this->photoType);
 		if($noOfPages>$currentPage)
 			$this->output["next_avail"]= "true";
@@ -223,7 +227,12 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
-		
+		$this->output["checkonline"]=false;
+		if (JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
+		{
+			//$this->output["checkonline"]=true;
+		}
+
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{
 			$this->output["relaxation_text1"] = self::search_relaxation_text1;
@@ -375,8 +384,9 @@ class SearchApiStrategyV1
                                 {
                                 	    foreach($this->profileTupleInfoArr as $kk=>$vv)
                                         { 
-																					
+																			
                                                 $fieldName = $this->customizedFieldName($vv);
+
                                                 if(!$searchResultArray)
                                                 {
                                                         $value = $this->handlingSpecialCasesForSearch($fieldName,$v[$vv],$profileVal[$k]['PHOTO_REQUESTED'],$SearchParamtersObj->getGENDER(),$SearchParamtersObj,$profileVal[$k]);                
@@ -401,6 +411,9 @@ class SearchApiStrategyV1
 
 
                                                 }
+                                                elseif($fieldName=='availforchat'){
+                                                        $this->output[$profileKey][$i][$fieldName] = $value;
+						}
                                                 elseif($fieldName=='photo')
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 elseif($fieldName=='size'){
@@ -543,6 +556,8 @@ class SearchApiStrategyV1
                 //echo $key."\n\n";
 		switch($key) 
 		{
+			case "availforchat":
+				return $value;
 			 case "gender":
                                 $value = $SearchParamtersObj->getGENDER();
                                 break;
@@ -604,6 +619,9 @@ class SearchApiStrategyV1
 				break;
 			case "photo":
 				$value = PictureFunctions::mapUrlToMessageInfoArr($value,$this->photoType,$isPhotoRequested,$gender);
+				break;
+                        case "THUMBNAIL_PIC":
+				$value = PictureFunctions::mapUrlToMessageInfoArr($value,'ThumbailUrl',$isPhotoRequested,$gender);
 				break;
 			case "album_count":
 				$value =  ButtonResponseApi::getAlbumButton($value,$gender);

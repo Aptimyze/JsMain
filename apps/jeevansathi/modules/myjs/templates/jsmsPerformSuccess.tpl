@@ -4,7 +4,8 @@
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
     var showExpiring=~$showExpiring`;
-    var showMatchOfTheDay=~$showMatchOfTheDay`;   
+    var showMatchOfTheDay=~$showMatchOfTheDay`;
+    var pageMyJs=~$pageMyJs`;   
     var myJsCacheTime = 60000;//in microseconds
 </script>
 <!--start:div-->
@@ -204,6 +205,9 @@
     	<div class="clearfix" style="padding:0 30px 0;">
         	<div class="fl fontlig wid88p">
             	<div class="f24 white">~$apiData.membership_message.top|decodevar`</div>
+            	~if $apiData.membership_message.extra && $apiData.membership_message.extra neq ""`
+                	<div class="f14 white">~$apiData.membership_message.extra|decodevar`</div>
+                ~/if`
                 <div class="f14 white">~$apiData.membership_message.bottom|decodevar`</div>
             </div>
             <div class="fr wid10p">

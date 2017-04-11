@@ -79,11 +79,14 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
+    var selfSub = getMembershipStatus();
+    //console.log("ankita",selfSub);
+    //console.log("ankita1",chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]);
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId]){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]){
             valid = false;
         }
     }
@@ -108,7 +111,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         type = "dpp";
     }
     var selfAuth = readCookie("AUTHCHECKSUM");
-    if(selfAuth != undefined && selfAuth != ""){
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
         //console.log("selfAuth",selfAuth);
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
@@ -1188,58 +1191,68 @@ function checkAuthentication(timer,loginType) {
     var d = new Date();
     var n = d.getTime();
     //console.log("timestamp",n);
-    $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication?p="+n,
-        async: false,
-        success: function (data) {
-            if (data.responseStatusCode == "0") {
-                if(typeof data.hash !== 'undefined'){
-                    auth = 'true';
-                    pass = data.hash;
-                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                        objJsChat.manageLoginLoader();
-                    }
-                    if(loginType == "first"){
-                        initiateChatConnection();
-                        objJsChat._loginStatus = 'Y';
-                        objJsChat._startLoginHTML();
-                    }
-                }
-                else{
-                    if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
-                        setTimeout(function(){
-                            checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
-                        },timer);
-                    }
-                    else{
-                        auth = 'false';
-                        invokePluginLoginHandler("failure");
+    var loggedInUserAuth = readCookie("AUTHCHECKSUM");
+        var chatParams = {
+            "authchecksum":loggedInUserAuth
+        };
+    if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
+        $.ajax({
+            url: listingWebServiceUrl["chatAuth"]+"?p="+n,
+            async: false,
+            timeout: 60000,
+            cache: false,
+            type: 'POST',
+            data: chatParams,
+            success: function (authResponse) {
+                if (authResponse.data) {
+                    if(typeof authResponse.data.hash !== 'undefined'){
+                        auth = 'true';
+                        pass = authResponse.data.hash;
                         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                             objJsChat.manageLoginLoader();
                         }
+                        if(loginType == "first"){
+                            initiateChatConnection();
+                            objJsChat._loginStatus = 'Y';
+                            objJsChat._startLoginHTML();
+                        }
                     }
+                    else{
+                        if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
+                            setTimeout(function(){
+                                checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
+                            },timer);
+                        }
+                        else{
+                            auth = 'false';
+                            invokePluginLoginHandler("failure");
+                            if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                                objJsChat.manageLoginLoader();
+                            }
+                        }
+                    }
+                    localStorage.removeItem("cout");
+
+                    /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
+                        format: CryptoJSAesJson
+                    }).toString(CryptoJS.enc.Utf8));
+                    */
+                } else {
+                    auth = 'false';
+                    checkForSiteLoggedOutMode(data);
+                    invokePluginLoginHandler("failure");
                 }
-                localStorage.removeItem("cout");
-                
-                /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
-                    format: CryptoJSAesJson
-                }).toString(CryptoJS.enc.Utf8));
-                */
-            } else {
-                auth = 'false';
-                checkForSiteLoggedOutMode(data);
-                invokePluginLoginHandler("failure");
+            },
+            error: function (xhr) {
+                    auth = 'false';
+                    invokePluginLoginHandler("failure");
+                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                        objJsChat.manageLoginLoader();
+                    }
+                    //return "error";
             }
-        },
-        error: function (xhr) {
-                auth = 'false';
-                invokePluginLoginHandler("failure");
-                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                    objJsChat.manageLoginLoader();
-                }
-                //return "error";
-        }
-    });
+        });
+    }
     return auth;
 }
 
@@ -1261,6 +1274,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
+            //send Message receieved stanza
+            strophieWrapper.sendReceivedReadEvent(msgObj["to"]+"@"+openfireServerName, msgObj["from"]+"@"+openfireServerName, msgObj["msg_id"], strophieWrapper.msgStates["MESSAGE_RECEIVED"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
@@ -1456,18 +1471,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                 if (response["responseStatusCode"] == "0") {
                    // console.log(response);
                     if (response["actiondetails"]) {
-                        if (response["actiondetails"]["errmsglabel"]) {
-                            outputData["cansend"] = outputData["cansend"] || false;
-                            outputData["sent"] = false;
-                            outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                            outputData["errorMsg"] = (response["errorMsg"] == undefined ? response["actiondetails"]["errmsglabel"] : response["errorMsg"]);
+                            outputData["cansend"] = (response["cansend"] != undefined ? response["cansend"] : true);
+                            outputData["sent"] = (response["sent"] != undefined ? response["sent"] : false);
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                        } else {
-                            outputData["cansend"] = true;
-                            outputData["sent"] = true;
-                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                            outputData['eoi_sent'] = response['eoi_sent'];
-                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
-                        }
+                            outputData['eoi_sent'] = (response["eoi_sent"] != undefined ? response["eoi_sent"] : false);
+                            if(outputData["sent"] == true){
+                                strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
+                            }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
@@ -1980,7 +1991,7 @@ $(document).ready(function () {
                 
 		 
 		        if(response.header.status == 200) { 
-			         for(var i=0;i<response.data.items.length;i++) {
+                                for(var i=0;i<response.data.items.length;i++) {
     				    var data = response.data.items[i];
     		
     				    data.jid = data.profileid;
@@ -2003,7 +2014,11 @@ $(document).ready(function () {
     	
         	                }); 
         			}
-		        } else {
+                    //send the contact engine buttons check stanza
+                    if(chatConfig.Params[device].enableLoadTestingStanza == true){
+                        strophieWrapper.sendContactStatusRequest(username+"@"+openfireServerName,"check");
+                    }
+                } else {
 			         checkForSiteLoggedOutMode({"responseStatusCode":9});
 		        }
             }

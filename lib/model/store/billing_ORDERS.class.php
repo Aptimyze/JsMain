@@ -271,6 +271,27 @@ class BILLING_ORDERS extends TABLE{
         }       
     }
 
+    public function getOrderDetailsForOrderIdOnly($orderid){
+        try     
+        {       
+            $sql="SELECT * FROM billing.ORDERS WHERE ORDERID=:ORDERID";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":ORDERID", $orderid, PDO::PARAM_STR);
+            $prep->execute();
+            if($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {       
+                $res = $result;
+            }       
+            return $res;
+
+        }       
+        catch(PDOException $e)
+        {       
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }       
+    }
+
     public function updateOrderForReconsiliation($id)
     {
         try

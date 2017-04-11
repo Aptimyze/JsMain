@@ -8,6 +8,7 @@ class memUserType
     const PAID_BEYOND_RENEW = "5";
     const PAID_WITHIN_RENEW = "6";
     const ONLY_VAS = "7";
+    const UPGRADE_ELIGIBLE = "8";
 }
 class userDiscounts
 {
@@ -43,7 +44,8 @@ class memDiscountTypes
         10 => 'Backend Discount Link',
         11 => 'Cash Discount',
         12 => 'No Discount',
-        14 => 'Coupon Code Discount'
+        14 => 'Coupon Code Discount',
+        15 => 'Main Membership Upgrade Discount'
     );
 }
 
@@ -59,6 +61,17 @@ class VariableParams
 		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
 		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
+        
+        //config for membership upgrade
+        public static $memUpgradeConfig = array(
+                                            "deactivationCurlTimeout"=>120000,
+                                            "allowedUpgradeMembershipAllowed"=>array("MAIN"),
+                                            "mainMemUpgradeLimit"=>7,
+                                            "upgradeMainMemAdditionalPercent"=>0.05,
+                                            "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
+                                            "excludeMainMembershipUpgrade"=>array("X","ESP")
+                                            );
+    
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
         "P",
@@ -158,8 +171,10 @@ class VariableParams
         'I',
         'A',
         'B',
-        'M'
+        'M',
+        'J'
     );
+
     public static $serviceFeatues = array(
         "Send/Receive Interests",
         "Instantly see Phone/Email",
@@ -270,6 +285,12 @@ class VariableParams
             "description" => "Get our experts to create comprehensive & well-written profile for you",
             "visibility" => 0,
             "vas_id" => 6
+        ),
+        "J" => array(
+            "name" => "Profile Boost",
+            "description" => "Get more response through Profile Boost. 1.Get featured on top of search results. 2.Be shown in profile of the day section. 3.Your profile will be sent daily in app notifs. 4.Appear on top of Daily Recommendations",
+            "visibility" => 0,
+            "vas_id" => 7
         )
     );
     public static $vasPerService = array(
@@ -483,6 +504,7 @@ class VariableParams
         "View contacts of members you like",
         "Priority Customer service",
         "Make your contacts visible to others",
+        "Profile Boost",
         "Response Booster",
         "Featured Profile",
         "Astro Compatibility",
@@ -497,6 +519,7 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "C" => array(
@@ -507,9 +530,11 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "ESP" => array(
+            1,
             1,
             1,
             1,
@@ -525,11 +550,13 @@ class VariableParams
             1,
             1,
             1,
-            1,
+            0,
+            0,
             0,
             0
         ) ,
         "D" => array(
+            1,
             1,
             1,
             1,
@@ -544,6 +571,7 @@ class VariableParams
             1,
             0,
             1,
+            1,
             0,
             0,
             0,
@@ -551,6 +579,12 @@ class VariableParams
         )
 
     );
+
+    public static $newApiPageOneBenefitsBoost = array("Get featured on top of search results.",
+                                                    "Be shown in profile of the day section.",
+                                                    "Your profile will be sent daily in app notifs.",
+                                                    "Appear on top of Daily Recommendations");
+
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",
@@ -612,13 +646,18 @@ class VariableParams
     );
 
     //remove specified vas services from vas content based on main membership 
-    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T'));
+    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T','J'));
 
     //skip vas page for below main memberships
     public static $skipVasPageMembershipBased = array('X','ESP');
+    
+    public static $jsExclusiveComboAddon = array('J');
+    
+    public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
 }
 class discountType
 {
+    const UPGRADE_DISCOUNT = "UPGRADE";
     const RENEWAL_DISCOUNT = "RENEWAL";
     const SPECIAL_DISCOUNT = "SPECIAL";
     const FESTIVE_DISCOUNT = "FESTIVE";

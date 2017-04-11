@@ -1397,7 +1397,8 @@ class NEWJS_JPROFILE extends TABLE
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
-            $this->logSelectCount();
+            //$this->logSelectCount();
+     	    JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);
@@ -1724,6 +1725,77 @@ SQL;
             throw new jsException($e);
         }
     }
+
+    public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
+    {
+        try{
+            $sql =  <<<SQL
+        
+            SELECT P.PROFILEID
+            FROM  newjs.`JPROFILE` P
+            LEFT JOIN newjs.`NEW_DELETED_PROFILE_LOG` D
+            ON P.PROFILEID=D.PROFILEID
+            WHERE  
+            P.ACTIVATED = 'D'
+            AND P.activatedKey = 0
+            AND P.MOD_DT > :GT_DATE
+            AND D.PROFILEID IS NULL
+SQL;
+        
+            if($ltDate) {
+                $sql .= " AND P.MOD_DT < :LT_DATE";  
+            }
+
+            if($limit) {
+                $sql .= " LIMIT :LIMIT";      
+            }
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":GT_DATE", $gtDate, PDO::PARAM_STR);
+            
+            if($ltDate) {
+                $prep->bindValue(":LT_DATE", $ltDate, PDO::PARAM_STR);
+            }
+
+            if($limit) {
+                $prep->bindValue(":LIMIT", $limit, PDO::PARAM_INT);   
+            }
+
+            $prep->execute();
+            return $prep->fetchAll(PDO::FETCH_ASSOC);
+        }catch(Exception $ex) {
+            throw new jsException($e);   
+        }
+    }
+   public function getDetailsForPhone($phoneArray, $fields)
+    {
+        try {
+                $i=0;
+                foreach($phoneArray as $key=>$val){
+                        $arr[] =":PHONE".$i;
+                        $i++;
+                }
+                $fields.=", ACTIVATED";
+                $phoneStr =implode(",", $arr);
+                $sql = "SELECT SQL_CACHE $fields FROM newjs.JPROFILE WHERE PHONE_MOB IN($phoneStr) OR PHONE_WITH_STD IN($phoneStr)";
+                $prep = $this->db->prepare($sql);
+                $i=0; 
+                foreach($phoneArray as $key=>$val){
+                        $prep->bindValue(":PHONE$i", $val, PDO::PARAM_STR);
+                        $i++;
+                }
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {          
+                    if($row['ACTIVATED'] != 'D')
+                            $dataArr[] =$row;
+                }
+                return $dataArr;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        } 
+    }
+
 }
 
 ?>

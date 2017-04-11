@@ -5,6 +5,9 @@ include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/billing/refund_paypart.php in USE",$msg);
+
 $ip=FetchClientIP();
 if(strstr($ip, ","))
 {

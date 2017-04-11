@@ -570,7 +570,11 @@ EditApp = function(){
       //Privacy Type Field 
       if(fieldObject.type === PRIVACY_TYPE && fieldObject.value.length){ 
         var fieldIdParent = '#'+fieldObject.key.toLowerCase()+'Parent';
-        fieldDOM.find(fieldIdParent).find(' ul li[value="'+ fieldObject.value +'"]').addClass('activeopt');
+        //Added this check to remove show no to all option in mobile case.
+        if ( !(fieldObject.value == "N"))
+        {
+          fieldDOM.find(fieldIdParent).find(' ul li[value="'+ fieldObject.value +'"]').addClass('activeopt');
+        }
       }
       
       //Range Type Field
@@ -1254,7 +1258,8 @@ EditApp = function(){
       
       var privacyParentAttr   = {class:"fl mt8 pos-rel showset cursp",id:'show'+fieldObject.key.toLowerCase()+'Parent'};
       var privacyImgAttr      = {class:"vicons edpic9 ",id:'show'+fieldObject.key.toLowerCase()};
-      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li><li value="N">Don\'t show to anybody</li> </ul> </div></div>';
+      // this string doesn't contain don't show to anybody
+      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li></ul> </div></div>';
       
       if(typeof configObject != "undefined"){
         /*Loop and replace in default One*/
@@ -3331,7 +3336,8 @@ EditApp = function(){
       $.myObj.ajax({
         url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
-        datatype: 'json',       
+        datatype: 'json',
+        headers: { 'X-Requested-By': 'jeevansathi' },       
         cache: false,
         async: true,
         contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",
@@ -6074,7 +6080,7 @@ function onViewHoroscope(){
     $(".js-viewHoro").on('click',function(){
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1",
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1&showDownload=1",
           async:true,
           timeout:20000,
           beforeSend: function(){
@@ -6082,9 +6088,9 @@ function onViewHoroscope(){
           },
           success:function(response){
           		hideCommonLoader();
-              $("#putHoroscope").html(response);
+              $("#putHoroscope").html(response);              
               $(".js-hideThisDiv").hide();
-              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
+              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});            
           }
         }); 
     });

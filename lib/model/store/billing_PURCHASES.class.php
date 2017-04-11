@@ -206,18 +206,33 @@ class BILLING_PURCHASES extends TABLE
         return $res;
     }
 
-    public function getCurrentlyActiveService($profileid)
+    public function getCurrentlyActiveService($profileid,$extraFields="")
     {
         try {
-            $sql  = "SELECT PU.SERVICEID FROM billing.PURCHASES PU LEFT JOIN billing.SERVICE_STATUS SS USING(BILLID) WHERE SS.PROFILEID=:PROFILEID AND SS.SERVEFOR LIKE '%F%' AND SS.ACTIVE='Y' ORDER BY SS.EXPIRY_DT ASC LIMIT 1";
+            $sql  = "SELECT PU.SERVICEID";
+            if($extraFields != ""){
+                $sql = $sql.",".$extraFields;
+            }
+            $sql = $sql." FROM billing.PURCHASES PU LEFT JOIN billing.SERVICE_STATUS SS USING(BILLID) WHERE SS.PROFILEID=:PROFILEID AND SS.SERVEFOR LIKE '%F%' AND SS.ACTIVE='Y' ORDER BY SS.EXPIRY_DT ASC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->execute();
             if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res = $row['SERVICEID'];
+                if($extraFields == ""){
+                    $res = $row['SERVICEID'];
+                }
+                else{
+                    $res = $row;
+                }
                 if (!empty($res)) {
-                    $temp = explode(",", $res);
-                    $res  = $temp[0];
+                    if($extraFields == ""){
+                        $temp = explode(",", $res);
+                        $res  = $temp[0];
+                    }
+                    else{
+                        $temp = explode(",", $res['SERVICEID']);
+                        $res['SERVICEID']  = $temp[0];
+                    }
                 } else {
                     $res = "FREE";
                 }
@@ -459,7 +474,13 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
+            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,"
+                    . "PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT,"
+                    . " ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY,"
+                    . " PUR.MEM_UPGRADE"
+                    . " FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD"
+                    . " WHERE PD.BILLID=PUR.BILLID"
+                    . " AND PUR.BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();
@@ -542,12 +563,15 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getProfilesForReconsiliationAfter($time)
+    public function getProfilesForReconsiliationAfter($time,$limit="1")
     {
         try
         {
             if ($time) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC";
+                if($limit != ""){
+                    $sql .= " LIMIT ".$limit;
+                }
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
                 $prep->execute();

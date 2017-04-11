@@ -107,7 +107,7 @@ class newJsmsPage1Action extends sfAction
 			RegistrationMisc::updateAlertData($id,$alertArr,'M');
 			
 			$jpartnerFields=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","CITY_RES","AGE","RELIGION","OCCUPATION","HEIGHT","INCOME","EDU_LEVEL_NEW");
-			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields);
+			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields,$reg_params[casteNoBar]);
 			RegistrationMisc::contactArchiveUpdate($this->loginProfile,$this->ip);
 			RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
                         $partnerField = new PartnerField();

@@ -128,7 +128,14 @@ class detailedAction extends sfAction
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
     }
-	 $this->showContactEngine();
+    
+        $ceAction = $request->getParameter('performAction');
+        if($ceAction=='accept')
+        {
+         $request->setParameter("internal", 1);   
+         ProfileCommon::performContactEngineAction($request,'VDP');
+        }
+         $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
@@ -356,6 +363,7 @@ class detailedAction extends sfAction
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
+		//print_R($this->arrOutDisplay);die;
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
@@ -924,6 +932,7 @@ class detailedAction extends sfAction
 	 */
 	private function alterSeenTable()
 	{
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterdetailActionUncalledFunc.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$this->getRequest();
@@ -1055,11 +1064,11 @@ class detailedAction extends sfAction
 	 */
 	public function onlineStatus()
 	{
-		$this->gtalkOnline();
+		//$this->gtalkOnline();
 		$this->userOnline();
 	}
 	/**
-	 * Whether user online on gtalk or not.
+	 * Whether user online on gtalk or not. //NOT BEING USED ANYMORE. Therefore, commented the call above
 	 */
 	public function gtalkOnline()
 	{
@@ -1329,7 +1338,7 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);
+        //print_r($this->arrOutDisplay);die;
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }
