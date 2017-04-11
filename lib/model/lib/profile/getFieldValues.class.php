@@ -39,7 +39,9 @@ class getFieldValues {
       break;
       case "mtongue" : $fieldArr = $this->getMtongueValues();
       break;
-      case "religion" : $fieldArr = $this->staticFields["religion"];
+      case "religion" : 
+      $fieldArr = $this->staticFields["religion"];
+      unset($fieldArr[0][9]); //removing "others" from  religion on registration
       break;
       case "caste" : $fieldArr[0] = $this->religionBasedCaste();
       break;
