@@ -978,11 +978,11 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 			$viewerPfid = $viewerLogObj->getPROFILEID();
 			$viewedPfid = $viewedLogObj->getPROFILEID();
 			$typeBreached = $this->errorTypeArr['LIMIT'];
-			$check = $viewerLogObj->isPAID();
-			if($check === true)
+			$subscription = $viewerLogObj->getSUBSCRIPTION();
+			$check = CommonFunction::isPaid($subscription);
+			if($check == true)
 			{
 				$typeOfUser = "PAID";
-				$subscription = $viewerLogObj->getSUBSCRIPTION();
 				if(CommonFunction::isOfflineMember($subscription))
 				{
 					$typeOfUser = "RB";
