@@ -132,7 +132,6 @@ class CommonFunction
 		return $paid;
 	}
 
-
 	public static function isEvalueMember($subscription)
 	{
 		return (mainMem::EVALUE === self::getMainMembership($subscription));
