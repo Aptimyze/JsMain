@@ -171,7 +171,7 @@ $css_arr[]=array("jspc/logout/homecss"            => "9");
 $css_arr[]=array("jspc/phone/phoneVerification_css"     => "2");
 $css_arr[]=array("jspc/common/colorbox_css" => "1");
 $css_arr[]=array("jspc/common/NProgress"   => "3");
-$css_arr[]=array("jspc/membership/jspc_mem_css"                   => "17");
+$css_arr[]=array("jspc/membership/jspc_mem_css"                    => "21");
 $css_arr[]=array("jspc/membership/upgrade_mem_css"                           => "10");
 $css_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $css_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
@@ -548,7 +548,7 @@ $js_arr[]=array("jspc/common/colorbox"    => "1");
 $js_arr[]=array("jspc/common/phoneVeriLayers_js"                => "14");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_slider"    => "1");
-$js_arr[]=array("jspc/membership/jspc_mem_js"                      => "19");
+$js_arr[]=array("jspc/membership/jspc_mem_js"                           => "34");
 $js_arr[]=array("jspc/membership/upgrade_mem_js"                            => "14");
 $js_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_scrollpane"    => "1");
@@ -629,6 +629,7 @@ $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
 $js_arr[]=array("operations_validate2"       => "5");
 $js_arr[]=array("jsms/settings/mobHideProfile_js"                     => "17");
+$js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 return $js_arr;
 }
 function getJavascript(){

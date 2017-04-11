@@ -1178,6 +1178,17 @@ class MembershipApiFunctions
                     }
                 }
             }
+            if($apiObj->mainMem=="NCP" && in_array($vasID[0], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))
+            {
+                $v['discount_given'] = NULL;
+                $price = "0";
+                $v['vas_price'] = "0";
+                $v['orig_price'] = "0";
+                $v['orig_price_formatted'] = "0.00";
+                $v['vas_price_strike'] = "0";
+                $v['remove_text'] = NULL;
+                $v['change_text'] = NULL;
+            }
             if(empty($v['vas_price_strike'])){
             	$v['vas_price_strike'] = 0;
 
