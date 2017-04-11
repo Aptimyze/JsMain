@@ -109,11 +109,11 @@ class CommonFunction
 			}
 			else if(CommonFunction::isEverPaid())
 			{
-				$day_limit=200;
-				$weekly_limit=400;
-				$month_limit=800;
+				$day_limit=100;
+				$weekly_limit=100;
+				$month_limit=400;
 				$overall_limit=800000;
-				$notValidNumber_limit=100;	
+				$notValidNumber_limit=100000;
 			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
