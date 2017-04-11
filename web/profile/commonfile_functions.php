@@ -462,7 +462,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                  
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                        => "45");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                  => "25");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                       => "86");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                             => "34");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                              => "35");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                      => "41");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
@@ -629,6 +629,7 @@ $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
 $js_arr[]=array("operations_validate2"       => "5");
 $js_arr[]=array("jsms/settings/mobHideProfile_js"                     => "17");
+$js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 return $js_arr;
 }
 function getJavascript(){
