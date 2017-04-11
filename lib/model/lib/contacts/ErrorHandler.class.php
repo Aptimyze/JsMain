@@ -263,6 +263,7 @@ class ErrorHandler
 		{
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::EOI_CONTACT_LIMIT,ErrorHandler::ERROR_FOUND);
+			$this->logEOIBreach();
 			return false;
 		}
 		
@@ -967,6 +968,32 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 		
 		}
 		return $error;
+	}
+
+	private function logEOIBreach()
+	{
+			$viewerLogObj = $this->contactHandlerObj->getViewer();
+			$viewedLogObj = $this->contactHandlerObj->getViewed();
+			$viewerGender = $viewerLogObj->getGENDER();
+			$viewerPfid = $viewerLogObj->getPROFILEID();
+			$viewedPfid = $viewedLogObj->getPROFILEID();
+			$typeBreached = $this->errorTypeArr['LIMIT'];
+			$check = $viewerLogObj->isPAID();
+			if($check === true)
+			{
+				$typeOfUser = "PAID";
+				$subscription = $viewerLogObj->getSUBSCRIPTION();
+				if(CommonFunction::isOfflineMember($subscription))
+				{
+					$typeOfUser = "RB";
+				}	
+			}
+			else
+			{
+				$typeOfUser = "FREE";
+			}
+			$loggingObj = new MIS_EOI_DENIED_LOG();
+			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser);
 	}
 
 
