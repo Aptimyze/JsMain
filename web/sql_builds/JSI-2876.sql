@@ -158,121 +158,119 @@ CREATE TABLE `MAILER_SUBJECT_NEW` (
 -- Dumping data for table `MAILER_SUBJECT_NEW`
 -- 
 
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1703, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1706, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1707, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1708, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1710, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1716, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1717, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1718, 'D', '"Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-"', '"upload photo reminder 2"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1720, 'D', '"Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-"', '"verify phone reminder 2"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1723, 'D', '"Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-"', '"upload photo and verify phone reminder 2"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1704, 'D', '"See phone/email of members you like"', '"Verify Photo and Phone"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1705, 'D', '"See phone/email of members you like"', '"Verify Photo and Phone"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1749, 'D', '"How to see phone/email of members? Details inside."', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1712, 'D', '"Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift"', '"Upload Photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1713, 'D', '"Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift"', '"Upload Photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1714, 'D', '"Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. "', '"Verify Phone"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1715, 'D', '"Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. "', '"Verify Phone"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1709, 'D', '"Welcome to Jeevansathi.com. See details of Trial Pack inside"', '"welcome mailer default subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1739, 'D', '"Trial pack ends today', ' but there\\''s lot more!"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1725, 'D', '"Photo uploaded successfully. Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>"', '"Photo uploaded now verify phone for state C3"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1740, 'D', '"Photo uploaded successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated"', '"Photo uploaded and screened now fto active"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1741, 'D', '"Your photos are live on Jeevansathi.com"', '"When photos are uploaded except for C3 and D states"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1743, 'D', '"We could not make your photo live because of the mentioned reason"', '"Subject for the mail when none photo is approved"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1744, 'D', '"Your photos are live on Jeevansathi.com"', '"When more than 20 photos uploaded but max of only 20 photos get uploaded"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1746, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1747, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1750, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1751, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1752, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers "');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1753, 'D', '"<var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo"', '"Subject for photo request mailers "');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1754, 'D', '"<var>{{USERNAME:profileid=~$otherProfileId`}}</var> has Expressed Interest in you"', '"For EOI Mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1756, 'D', '"Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a reminder."', '"Reminder subject"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1742, 'D', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Accepted your interest"', '"Acceptance Mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1790, 'D', '"Update regarding your request to call ~$pog_id` as a part of your intro call service."', '"AP Intro calls comments"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1748, 'P', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var>  declined your interest"', '"Decline with photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1748, 'N', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var>  declined your interest"', '"Decline with out photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1758, 'P', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you."', '"Cancel mailer with photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1758, 'N', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. Add a photo to make your profile better "', '"Cancel mailer without photo"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1755, 'D', '"Your Phone is Verified. Upload Photo and get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-"', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1757, 'D', '"Phone verified successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated"', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1759, 'D', '"Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you personal messages"', '"Subject for mail on receiving a message"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1761, 'D', '"A Jeevansathi member has shown interest in you by viewing your contact details"', '"call directly subject line "');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1760, 'D', '"Enrich your profile', ' get more response on Jeevansathi!"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1701, 'D', '"Photo upload Test ~$profileid` and something ~$profileid`"', '"Test subject for photo upload ~$profileid` and something ~$profileid`"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1762, 'D', '"See Phone/Email of members. Just take Trial Pack. No payment required"', '"For incomplete mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1763, 'D', '"One small step can get you 7 times more Response!"', '"For incomplete horoscope mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1764, 'D', '"Member <var>{{USERNAME:profileid=~$profileid1`}}</var> may be interested in you as <var>{{HE_SHE:profileid=~$profileid`}}</var> saw your profile"', '"visitor alert subject"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1765, 'D', '"Welcome to Jeevansathi"', '"Underscreening mailer subject"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1766, 'D', '"Welcome to Jeevansathi"', '"Underscreening mailer subject"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1767, 'D', '" ~$count` Members Expressed interest in you"', '"Multiple EOI"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1768, 'D', '"Your success story needs a photo!"', '"Photo request mailer for success story"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1769, 'D', '"Congratulations from Jeevansathi !"', '"profile delete mailer after uploading success story"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1774, 'D', '"Complete your profile & contact profiles you like for free"', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1771, 'D', '"Thank you for registering with jeevansathi.com"', '"registration page1 mailer subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1773, 'D', '"Welcome to Jeevansathi.com"', '"Screening mailer  subject line Page2"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1775, 'D', '"Verify your number immediately to activate your profile"', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1776, 'D', '"Your Relationship Executive will meet you soon"', '"screening mailer kyc "');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1778, 'D', '"Your Jeevansathi.com Password information"', '"Your Jeevansathi.com Password information"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1779, 'D', '"Welcome to Jeevansathi.com"', '"Screening mailer revamp subject line Page2"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1780, 'D', '"Your Profile is active now!"', '"Revamp Welcome mailer subject line."');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1782, 'D', '"Using Jeevansathi.com is really simple. Let us show you how"', '"top 8 mailer to be sent after welcome screening"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1784, 'D', '"Introducing JS EXCLUSIVE | Your Partner Search made more personalized"', '"Mailers to free and paid members informing them about the Exclusive plan"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1783, 'D', '"The changes made by you in your profile are live now"', '"edit screening profiles mail subject line"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1785, 'D', '"More Value. Less price. Contact the Profiles you like"', '"Paid membership mailers on 7th day after registration"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1786, 'D', '"Contact the Profiles you like. Know our Membership plans"', '"Paid membership mailers on 21st day after registration"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1788, 'D', '"Important Information for you"', '"Fraud Alert"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1791, 'D', '"Your profile has been marked duplicate and will not appear in search results"', '"Duplicate profiles mail"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1792, 'D', '"Your membership expires today"', '"Membership expiry mail"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1793, 'D', '"Your membership expires in ten days"', '"Membership expiry mail"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1795, 'D', '"Get more from your Jeevansathi paid membership!"', '"Get more from your Jeevansathi paid membership!"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1794, 'D', '"Get 5 times more responses. Add important details about yourself and your family.."', '"Improve Profile Score"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1797, 'D', '"Jeevansathi Exclusive Service Feedback"', '"Jeevansathi Exclusive Service Feedback"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1798, 'D', '"New profile allocation"', '"Field Sales User Info"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1796, 'D', '"Respond to members who are waiting for your response. "', '"yes no mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1800, 'D', '"Special offer: Try Jeevansathi 1 month paid membership"', '"Jeevansathi 1 month paid membership offer plan"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1801, 'D', '"Search Safe: 6 tips to have a secure experience on Jeevansathi"', '"Fraud Alert for Females"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1802, 'D', '"Did you see the interests received in your filtered folder?"', '"eoi mailer filter"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1804, 'D', '"Congratulations! You are selected for a special discount by Jeevansathi.com"', '"Jeevansathi VD Mailer"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1803, 'D', '"Details about your ""We Talk for You"" service"', '"Jeevansathi We Talk For You usage description"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1806, 'D', '"Feedback request from Jeevansathi.com"', '"Jeevansathi Sales Service Feedback"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1803, 'D', '"Details about your ""We Talk for You"" service"', '"Jeevansathi We Talk For You usage description"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1807, 'D', '" Details about your Response Booster service"', '"Jeevansathi RB Activation"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1808, 'D', '"Welcome to Jeevansathi Exclusive Membership!"', '"Jeevansathi Exclusive Service"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1819, 'D', '"We will soon make your profile inactive', ' login to continue to receive recommendations"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1820, 'D', '"Request for visit has been submitted"', '"Jeevansathi Field Visit Request Submission"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1822, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1822, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1823, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1824, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1825, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1826, 'D', '"Login at least once a week to continue to receive relevant interests', NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1827, 'D', '"We will soon make your profile inactive', ' login to continue to receive recommendations');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1828, 'D', '"We will soon make your profile inactive', ' login to continue to receive recommendations');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1829, 'D', '"We will soon make your profile inactive', ' login to continue to receive recommendations');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'Inactive_S', NULL, NULL);
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1821, 'D', '"Hi ~$username` ', ' Please review your desired partner profile"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (NULL, 'D', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> wants to see your horoscope. Create horoscope"', '"Subject for horoscope request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1833, 'D', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> wants to see your horoscope. Create horoscope"', '"Subject for horoscope request mailers"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1835, 'D', '~$membershipName`', '"Mailer for new membership payments made on Jeevansathi.com"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1836, 'D', '"Contact details viewed by you in your last membership"', '"Membership Expiry mail for Viewed Contacts"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1837, 'D', '"I have shortlisted some profiles for you', ' please go through them | ~$CURR_MAIL_DATE`"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1839, 'D', '"Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> "', '"astro compatibility report"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1841, 'D', '"Your profile on Jeevansathi.com has been marked incomplete"', '"Email is sent when profile is marked incomplete on junk characters removal."');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1842, 'D', '"Profile deleted because of terms of use violation"', '"Deleting a profile"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1758, 'A', '"<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. Please make your photo visible"', '"Cancel mailer with photo visible on accept"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1844, 'D', '"Because', ' We decide as a family !"');
-INSERT INTO `MAILER_SUBJECT_NEW` VALUES (1848, 'D', '"Sample astro compatibility report"', '"sample astro compatibility report"');
+
+INSERT INTO `MAILER_SUBJECT_NEW` (`MAIL_ID`, `SUBJECT_TYPE`, `SUBJECT_CODE`, `DESCRIPTION`) VALUES
+(1703, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1706, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1707, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1708, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1710, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1716, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1717, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1718, 'D', 'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-', 'upload photo reminder 2'),
+(1720, 'D', 'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-', 'verify phone reminder 2'),
+(1723, 'D', 'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-', 'upload photo and verify phone reminder 2'),
+(1704, 'D', 'See phone/email of members you like', 'Verify Photo and Phone'),
+(1705, 'D', 'See phone/email of members you like', 'Verify Photo and Phone'),
+(1749, 'D', 'How to see phone/email of members? Details inside.', NULL),
+(1712, 'D', 'Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift', 'Upload Photo'),
+(1713, 'D', 'Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift', 'Upload Photo'),
+(1714, 'D', 'Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. ', 'Verify Phone'),
+(1715, 'D', 'Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. ', 'Verify Phone'),
+(1709, 'D', 'Welcome to Jeevansathi.com. See details of Trial Pack inside', 'welcome mailer default subject line'),
+(1739, 'D', 'Trial pack ends today, but there\\\'s lot more!', 'When FTO pack has expired for FTO user.'),
+(1725, 'D', 'Photo uploaded successfully. Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>', 'Photo uploaded now verify phone for state C3'),
+(1740, 'D', 'Photo uploaded successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated', 'Photo uploaded and screened now fto active'),
+(1741, 'D', 'Your photos are live on Jeevansathi.com', 'When photos are uploaded except for C3 and D states'),
+(1743, 'D', 'We could not make your photo live because of the mentioned reason', 'Subject for the mail when none photo is approved'),
+(1744, 'D', 'Your photos are live on Jeevansathi.com', 'When more than 20 photos uploaded but max of only 20 photos get uploaded'),
+(1746, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers'),
+(1747, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers'),
+(1750, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers'),
+(1751, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers'),
+(1752, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers '),
+(1753, 'D', 'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo', 'Subject for photo request mailers '),
+(1754, 'D', '<var>{{USERNAME:profileid=~$otherProfileId`}}</var> has Expressed Interest in you', 'For EOI Mailer'),
+(1756, 'D', 'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a reminder.', 'Reminder subject'),
+(1742, 'D', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Accepted your interest', 'Acceptance Mailer'),
+(1748, 'P', '<var>{{USERNAME:profileid=~$otherProfile`}}</var>  declined your interest', 'Decline with photo'),
+(1748, 'N', '<var>{{USERNAME:profileid=~$otherProfile`}}</var>  declined your interest', 'Decline with out photo'),
+(1784, 'D', 'More Value. Less price. Contact the Profiles you like', 'Paid membership mailers on 7th day after registration'),
+(1758, 'P', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you.', 'Cancel mailer with photo'),
+(1758, 'N', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. Add a photo to make your profile better ', 'Cancel mailer without photo'),
+(1755, 'D', 'Your Phone is Verified. Upload Photo and get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-', NULL),
+(1757, 'D', 'Phone verified successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated', NULL),
+(1759, 'D', 'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a personal message', 'Subject for mail on receiving a message'),
+(1761, 'D', 'A Jeevansathi member has shown interest in you by viewing your contact details', 'call directly subject line '),
+(1760, 'D', 'Enrich your profile, get more response on Jeevansathi!', 'incomplete lifestyle '),
+(1701, 'D', 'Photo upload Test ~$profileid` and something ~$profileid`', 'Test subject for photo upload ~$profileid` and something ~$profileid`'),
+(1762, 'D', 'See Phone/Email of members. Just take Trial Pack. No payment required', 'For incomplete mailer'),
+(1763, 'D', 'One small step can get you 7 times more Response!', 'For incomplete horoscope mailer'),
+(1764, 'D', 'Member <var>{{USERNAME:profileid=~$profileid1`}}</var> may be interested in you as <var>{{HE_SHE:profileid=~$profileid`}}</var> saw your profile', 'visitor alert subject'),
+(1765, 'D', 'Welcome to Jeevansathi', 'Underscreening mailer subject'),
+(1766, 'D', 'Welcome to Jeevansathi', 'Underscreening mailer subject'),
+(1767, 'D', ' ~$count` Members Expressed interest in you', 'Multiple EOI'),
+(1768, 'D', 'Your success story needs a photo!', 'Photo request mailer for success story'),
+(1769, 'D', 'Congratulations from Jeevansathi !', 'profile delete mailer after uploading success story'),
+(1774, 'D', 'Complete your profile & contact profiles you like for free', NULL),
+(1771, 'D', 'Thank you for registering with jeevansathi.com', 'registration page1 mailer subject line'),
+(1773, 'D', 'Welcome to Jeevansathi.com', 'Screening mailer  subject line Page2'),
+(1775, 'D', 'Verify your number immediately to activate your profile', NULL),
+(1776, 'D', 'Your Relationship Executive will meet you soon', 'screening mailer kyc '),
+(1778, 'D', 'Your Jeevansathi.com Password information', 'Your Jeevansathi.com Password information'),
+(1779, 'D', 'Welcome to Jeevansathi.com', 'Screening mailer revamp subject line Page2'),
+(1779, 'D', 'Welcome to Jeevansathi.com', 'Screening mailer revamp subject line Page2'),
+(1780, 'D', 'Your Profile is active now!', 'Revamp Welcome mailer subject line.'),
+(1782, 'D', 'Get Started with Jeevansathi.com', 'top 8 mailer to be sent after welcome screening'),
+(1783, 'D', 'The changes made by you in your profile are active now', 'edit screening profiles mail subject line'),
+(1785, 'D', 'Contact the Profiles you like. Know our Membership plans', 'Paid membership mailers on 21st day after registration'),
+(1788, 'D', 'Important Information for you', 'Fraud Alert'),
+(1788, 'D', 'Important Information for you', 'Fraud Alert'),
+(1786, 'D', 'Introducing JS EXCLUSIVE | Your Partner Search made more personalized', 'Mailers to free and paid members informing them about the Exclusive plan'),
+(1791, 'D', 'Here is some information regarding your account visibility', 'Duplicate profiles mail'),
+(1791, 'D', ' ~$user_name`, Your profile is not visible to others.', 'Duplicate profiles mail'),
+(1790, 'D', 'Update regarding your request to call ~$pog_id` as a part of your intro call service.', 'AP Intro calls comments'),
+(1791, 'D', ' ~$user_name`, Your profile is not visible to others.', 'Duplicate profiles mail'),
+(1792, 'D', 'Your membership expires today', 'Membership expiry mail'),
+(1793, 'D', 'Your membership expires in ten days', 'Membership expiry mail'),
+(1795, 'D', 'Get more from your Jeevansathi paid membership!', 'Get more from your Jeevansathi paid membership!'),
+(1795, 'D', 'Get more from your Jeevansathi paid membership!', 'Get more from your Jeevansathi paid membership!'),
+(1794, 'D', 'Get 5 times more responses. Add important details about yourself and your family..', 'Improve Profile Score'),
+(1797, 'D', 'Jeevansathi Exclusive Service Feedback', 'Jeevansathi Exclusive Service Feedback'),
+(1796, 'D', 'Respond to members who are waiting for your response. ', 'yes no mailer'),
+(1798, 'D', 'New profile allocation', 'Field Sales User Info'),
+(1800, 'D', 'Special offer: Try Jeevansathi 1 month paid membership', 'Jeevansathi 1 month paid membership offer plan'),
+(1801, 'D', 'Search Safe: 6 tips to have a secure experience on Jeevansathi', 'Fraud Alert for Females'),
+(1802, 'D', 'Did you see the interests received in your filtered folder?', 'eoi mailer filter'),
+(1802, 'D', 'Did you see the interests received in your filtered folder?', 'eoi mailer filter'),
+(1804, 'D', 'Congratulations! You are selected for a special discount by Jeevansathi.com', 'Jeevansathi VD Mailer'),
+(1803, 'D', 'Details about your "We Talk for You" service', 'Jeevansathi We Talk For You usage description'),
+(1805, 'D', 'Feedback request from Jeevansathi.com', 'Jeevansathi Sales Service Feedback'),
+(1807, 'D', ' Details about your Response Booster service', 'Jeevansathi RB Activation'),
+(1808, 'D', 'Welcome to Jeevansathi Exclusive Membership!', 'Jeevansathi Exclusive Service'),
+(1823, 'D', 'Login at least once a week to continue to receive relevant interests\r\n', 'Inactive_SECOND'),
+(1820, 'D', 'Request for visit has been submitted', 'Jeevansathi Field Visit Request Submission'),
+(1822, 'D', 'Login at least once a week to continue to receive relevant interests\r\n', 'Inactive_SECOND'),
+(1819, 'D', 'We will soon make your profile inactive, login to continue to receive recommendations', 'Inactive'),
+(1824, 'D', 'Login at least once a week to continue to receive relevant interests\r\n', 'Inactive_SECOND'),
+(1825, 'D', 'Login at least once a week to continue to receive relevant interests\r\n', 'Inactive_SECOND'),
+(1826, 'D', 'Login at least once a week to continue to receive relevant interests\r\n', 'Inactive_SECOND'),
+(1827, 'D', 'We will soon make your profile inactive, login to continue to receive recommendations\r\n', 'Inactive_SECOND'),
+(1828, 'D', 'We will soon make your profile inactive, login to continue to receive recommendations\r\n', 'Inactive_SECOND'),
+(1829, 'D', 'We will soon make your profile inactive, login to continue to receive recommendations\r\n', 'Inactive_SECOND'),
+(1821, 'D', 'Hi ~$username` , Please review your desired partner profile', 'review your desired partner profile'),
+(1833, 'D', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> wants to see your horoscope. Create horoscope', 'Subject for horoscope request mailers'),
+(1835, 'D', '~$membershipName`', 'Mailer for new membership payments made on Jeevansathi.com'),
+(1836, 'D', 'Contact details viewed by you in your last membership', 'Membership Expiry mail for Viewed Contacts'),
+(1837, 'D', 'I have shortlisted some profiles for you, please go through them | ~$CURR_MAIL_DATE`', 'Jeevansathi Exclusive Service II'),
+(1839, 'D', 'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> ', 'astro compatibility report'),
+(1841, 'D', 'Your profile on Jeevansathi.com has been marked incomplete', 'Email is sent when profile is marked incomplete on junk characters removal.'),
+(1842, 'D', 'Profile deleted because of terms of use violation', 'Deleting a profile'),
+(1842, 'D', 'Profile deleted because of terms of use violation', 'Deleting a profile'),
+(1842, 'D', 'Profile deleted because of terms of use violation', 'Deleting a profile'),
+(1758, 'A', '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. Please make your photo visible', 'Cancel mailer with photo visible on accept'),
+(1844, 'D', 'Because, We decide as a family !', 'Promotional Alternate Email'),
+(1848, 'D', 'Sample Astro compatibility report', 'Sample Astro compatibility report');
 
 
 CREATE TABLE `MAILER_TEMPLATE_VARIABLES_MAP_NEW` (
