@@ -44,10 +44,17 @@ if (!this.profileChecksum) return;
 if(this.name=="MEMBERSHIP" || this.name=="EDITPROFILE")
 {
 	if(this.name=="MEMBERSHIP")
-		location.href="/profile/mem_comparison.php";
+		{
+			location.href="/profile/mem_comparison.php";
+			return;
+		}
+
 	else
-		location.href="/profile/viewprofile.php?ownview=1";
-	
+		{
+			location.href="/profile/viewprofile.php?ownview=1";
+			return;
+		}
+
 }
 ajaxData=this.makePostDataForAjax(this.profileChecksum);
          $.myObj.ajax({
@@ -464,12 +471,15 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	
         $("#messageWindow").html(innerHtml);
     }
-    var typeArray = ["ccTupleImage","otherImage","myImage"];
+		var typeArray = new Array("{ccTupleImage}","{otherimage}","{myimage}");
 		$('img[dsrc]').each(function() {
 			var src = $(this).attr("dsrc");
-			if($.inArray(src,typeArray)== -1)
+			if($.inArray(src,typeArray)<0)
+			{
 				$(this).attr("src",src);
-	});
+			}
+		});
+
         
         if(data.hasNext!=true)this.allMessageLoaded=true;
         this.MSGID=data.MSGID;        

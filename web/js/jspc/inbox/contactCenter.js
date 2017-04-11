@@ -87,12 +87,16 @@ function loadContactCenterTuples(response)
 		$("#ccTuplesMainDiv").append(tuplesHtml);
 		tuplesHtml = '';
 		
-		var typeArray = ["ccTupleImage","otherImage","myImage"];
+		var typeArray = new Array("{ccTupleImage}","{otherimage}","{myimage}");
 		$('img[dsrc]').each(function() {
 			var src = $(this).attr("dsrc");
-			if($.inArray(src,typeArray)== -1)
+			if($.inArray(src,typeArray)<0)
+			{
 				$(this).attr("src",src);
-	});
+			}
+		});
+        
+
 		cECommonBinding();
 	}
 	

@@ -837,7 +837,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	else{
 		if ( response.archivedInterestLinkAtEnd )
 		{
-			bottomErrorMsg('<a href="/profile/contacts_made_received.php?page=aeoi&filter=R" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+			bottomErrorMsg('<a href="/inbox/jsmsPerform?searchId=22" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
 		}
 		noScrollingAction=1;
 		reachedEnd=1;
@@ -1069,7 +1069,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				 */
 				if ( contactCenter == 1 )
 				{
-					var newAction = "/profile/contacts_made_received.php?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+					var newAction = "/inbox/jsmsPerform?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
 				}
 				else
 				{
