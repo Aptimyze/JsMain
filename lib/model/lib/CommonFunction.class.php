@@ -107,14 +107,6 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
-			else if(CommonFunction::isEverPaid())
-			{
-				$day_limit=200;
-				$weekly_limit=400;
-				$month_limit=800;
-				$overall_limit=800000;
-				$notValidNumber_limit=100;	
-			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -131,30 +123,6 @@ class CommonFunction
 		$limit['NOT_VALIDNUMBER_LIMIT']=$notValidNumber_limit;
 		return $limit;		
 	}
-
-	public static function getContactLimitDates($contactDate)
-	{
-		$verifyDate = "2017-03-16 17:03:42";
-
-		$x = date('Y-m-d',strtotime($verifyDate));
-		$y = date('Y-m-d',strtotime($contactDate));
-
-		$t1 = strtotime($x);
-		$t2 = strtotime($y);
-
-		$daysDiff = ($t2 - $t1)/(24*60*60);
-
-		$weeks = floor($daysDiff/7) * 7;
-
-		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
-
-		$months = floor($daysDiff/30) * 30;
-
-		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
-
-		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
-	}
-
 	public static function isPaid($subscription)
 	{
 		$paid = 0;
@@ -164,20 +132,6 @@ class CommonFunction
 		return $paid;
 	}
 
-	public static function isEverPaid()
-	{
-		$everPaid = false;
-		$billing = new BILLING_PURCHASES();
-		$loginProfile = LoggedInProfile::getInstance();
-		$pid = $loginProfile->getPROFILEID();
-		$pid = '99409603';
-		$payment = $billing->isPaidEver($pid);
-		if(is_array($payment) && $payment[$pid])
-		{
-			$everPaid = true;
-		}
-		return $everPaid;
-	}
 
 	public static function isEvalueMember($subscription)
 	{
