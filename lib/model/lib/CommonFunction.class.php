@@ -107,6 +107,7 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
+
 			else if(CommonFunction::isEverPaid())
 			{
 				$day_limit=100;
@@ -166,6 +167,7 @@ class CommonFunction
 
 	public static function isEverPaid()
 	{
+		
 		$everPaid = false;
 		$billing = new BILLING_PURCHASES();
 		$loginProfile = LoggedInProfile::getInstance();
