@@ -1002,6 +1002,8 @@ class crmInterfaceActions extends sfActions
     {
         $this->cid        = $request->getParameter('cid');
         $this->name       = $request->getParameter('name');
+        $this->mtongueFilter = $request->getParameter('mtongueFilter');
+        
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
