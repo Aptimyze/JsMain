@@ -99,6 +99,7 @@ class membershipActions extends sfActions
                 $template  = 'JSPCLandingPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
+                
 
                 if ($data['dividerExpiry'] != null) {
                     list($this->days, $this->showCountdown, $this->countdown) = $memActFunc->setTickerData($data['dividerExpiry']);

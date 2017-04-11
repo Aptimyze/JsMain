@@ -285,13 +285,16 @@ class MembershipHandler
     {
         $memArray = VariableParams::$mainMembershipsArr;
         $userType = $userObj->userType;
+
         if(!empty($userObj) && $userObj!=""){
             $mtongue = $userObj->mtongue;
         }
         else{
             $mtongue = "-1";
         }
+
         $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device,$mtongue);
+        //print_r($minPriceInfoAggregateData);die;
         foreach ($memArray as $key => $value) {
             foreach ($minPriceInfoAggregateData as $kk => $vv) {
                 if ($value == substr($kk, 0, strlen($value))) {

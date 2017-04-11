@@ -21,7 +21,18 @@ class Services
     
     private $offer_discount = 10;
     
-    public function getAllServices($online = "") {
+    public function getAllServices($online = "",$profileid="") {
+        if(!$empty($online)){
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+            $profileObj->getDetail();
+            if($profileObj != null){
+                $online = $profileObj->getMTONGUE();
+            }
+            if(empty($online)){
+                $online = "-1";
+            }
+            unset($profileObj);
+        }
     	$billingServicesObj = new billing_SERVICES();
         $services = $billingServicesObj->getAllServiceDataForActiveServices($online);
         return $services;
@@ -351,7 +362,7 @@ class Services
             if($profileObj != null){
                 $mtongue = $profileObj->getMTONGUE();
             }
-            if($mtongue == null){
+            if($mtongue == null || $mtongue == ""){
                 $mtongue = "-1";
             }
             unset($profileObj);
@@ -595,9 +606,9 @@ class Services
             return $serviceid;
         }
     }
-    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop') {
+    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop',$mtongue="-1") {
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device);
+        $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device,$mtongue);
         return $output;
     }
     

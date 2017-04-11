@@ -48,6 +48,15 @@ class memUser
             if($profileObj != null){
                 $this->mtongue = $profileObj->getMTONGUE();
             }
+            if(!empty($this->mtongue)){
+
+                $serviceObj = new billing_SERVICES("newjs_slave");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($this->mtongue);
+                unset($serviceObj);
+                if(!is_array($activeOnlineServices) || count($activeOnlineServices)==0){
+                    $this->mtongue = "-1";
+                }
+            }
         }
     }
 

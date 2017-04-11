@@ -233,7 +233,7 @@ class billing_SERVICES extends TABLE
         try {
             $sql = "SELECT SQL_CACHE * FROM billing.SERVICES WHERE ACTIVE='Y'";
             if(!empty($showOnline)){
-                $sql .= " AND SHOW_ONLINE='Y'";
+                $sql .= " AND SHOW_ONLINE_NEW LIKE '%,$showOnline,%'";
             }
             $sql .= " ORDER BY SERVICEID ASC";
             $resSelectDetail = $this->db->prepare($sql);
@@ -262,7 +262,12 @@ class billing_SERVICES extends TABLE
                 $output[$i]['PACKID'] = $rowSelectDetail['PACKID'];
                 $output[$i]['ADDON'] = $rowSelectDetail['ADDON'];
                 $output[$i]['SORTBY'] = $rowSelectDetail['SORTBY'];
-                $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE'];
+                if(!empty($showOnline)){
+                    $output[$i]['SHOW_ONLINE'] = 'Y';
+                }
+                else{
+                    $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE_NEW'];
+                }
                 $output[$i]['ACTIVE'] = $rowSelectDetail['ACTIVE'];
                 $output[$i]['ENABLE'] = $rowSelectDetail['ENABLE'];
                 $output[$i]['FREEBIES'] = $rowSelectDetail['FREEBIES'];
@@ -293,6 +298,7 @@ class billing_SERVICES extends TABLE
     }
 
     public function getLowestActiveMainMembership($serviceArr, $device='desktop',$mtongue="-1"){
+
         if(empty($serviceArr)){
             throw new jsException("Empty serviceArr passed in getLowestActiveMainMembership, billing_SERVICES.class.php");
         } else if(is_array($serviceArr)){
@@ -306,10 +312,13 @@ class billing_SERVICES extends TABLE
         } else {
             $search_id = "SERVICEID LIKE '{$serviceArr}%'";
         }
+        if(empty($mtongue)){
+            $mtongue = "-1";
+        }
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         try{
-            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE_NEW LIKE ',$mtongue,' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
+            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
@@ -490,9 +499,9 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
-    public function getOnlineActiveDurations() {
+    public function getOnlineActiveDurations($mtongue="-1") {
         try {
-            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' AND ADDON!='Y'/* AND SERVICEID!='P1'*/";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){

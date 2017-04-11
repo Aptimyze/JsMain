@@ -68,7 +68,7 @@ if (authenticated($cid)) {
         }
 
         if ($is_error >= 1) {
-            $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
+            $service_main = $serviceObj->getAllServices('SHOW_ONLINE',$profileid);
             $smarty->assign("SERVICE_MAIN", $service_main);
             $smarty->assign("USERNAME", stripslashes($USERNAME));
             $smarty->assign("PROFILEID", $profileid);
