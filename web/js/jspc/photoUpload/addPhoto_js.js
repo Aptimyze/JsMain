@@ -204,6 +204,11 @@ $(function()
 	});
 	$("#uploadFb").click(function()
 	{
+		if($.isEmptyObject(fbImportUrls))
+		{
+			$(".js-fbCancel").click();
+			return;
+		}
 		uploadFb();
 		hideLayers();	
 	});
