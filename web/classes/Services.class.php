@@ -639,7 +639,7 @@ class Services
         return $serviceTabs;
     }
 
-    public function getAddOnInfo($cur_type = 'RS', $offer = 0, $device='desktop') {
+    public function getAddOnInfo($cur_type = 'RS', $offer = 0, $device='desktop',$mtongue="-1") {
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
         } else {
@@ -647,7 +647,7 @@ class Services
         }
 
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $addon = $billingServicesObj->getAddOnInfo($price_str,$offer);
+        $addon = $billingServicesObj->getAddOnInfo($price_str,$offer,$mtongue);
         
         return $addon;
     }
