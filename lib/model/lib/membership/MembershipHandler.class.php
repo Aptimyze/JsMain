@@ -420,7 +420,7 @@ class MembershipHandler
         $memCacheObject     = JsMemcache::getInstance();
         $membershipKeyArray = VariableParams::$membershipKeyArray;
         foreach ($membershipKeyArray as $key => $keyVal) {
-            $memCacheObject->remove($keyVal);
+            $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
         }
     }
 

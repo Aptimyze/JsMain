@@ -7,7 +7,7 @@ foreach ($membershipKeyArray as $key => $keyVal) {
 	//echo "\n";
 	//echo ($keyVal."--");
 	//print_r(unserialize($memCacheObject->get($keyVal)));
-    $memCacheObject->remove($keyVal);
+    $output1 = $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
     $keys_removed .= $keyVal.",\n"; 
 }
 //flush membership subscription if this extra param is set

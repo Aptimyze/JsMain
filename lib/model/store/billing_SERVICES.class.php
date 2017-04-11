@@ -570,6 +570,7 @@ class billing_SERVICES extends TABLE
 
     public function changeServiceActivations($servStr, $status) {
         try {
+          
             if($status == 'Y'){
                 $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
             } else {

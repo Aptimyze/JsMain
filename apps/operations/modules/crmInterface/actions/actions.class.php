@@ -225,7 +225,7 @@ class crmInterfaceActions extends sfActions
                 $membershipKeyArray    = VariableParams::$membershipKeyArray;
                 $keys_removed          = "";
                 foreach ($membershipKeyArray as $key => $keyVal) {
-                    $memCacheObject->remove($keyVal);
+                    $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
                     $keys_removed .= $keyVal . ",\n";
                 }
             } else {
@@ -299,7 +299,7 @@ class crmInterfaceActions extends sfActions
             $membershipKeyArray = VariableParams::$membershipKeyArray;
             $keys_removed       = "";
             foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
+                $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
                 $keys_removed .= $keyVal . ",\n";
             }
         }
@@ -349,7 +349,7 @@ class crmInterfaceActions extends sfActions
             $membershipKeyArray = VariableParams::$membershipKeyArray;
             $keys_removed       = "";
             foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
+                $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
                 $keys_removed .= $keyVal . ",\n";
             }
             // get the updated values from database for display

@@ -57,7 +57,7 @@ if(authenticated($cid))
 		$membershipKeyArray = VariableParams::$membershipKeyArray;
 		$keys_removed = "";
 		foreach ($membershipKeyArray as $key => $keyVal) {
-		    $memCacheObject->remove($keyVal);
+		    $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
 		    $keys_removed .= $keyVal.",\n"; 
 		}
 	}
