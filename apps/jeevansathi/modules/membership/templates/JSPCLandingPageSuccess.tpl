@@ -981,6 +981,7 @@
                 $(this).html(str);
             }
         });
+	eraseCookie('mainMem');
     ~/if`
     ~if $data.upgradeMembershipContent`
         //initilize upgrade page
