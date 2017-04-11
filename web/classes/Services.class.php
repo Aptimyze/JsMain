@@ -37,7 +37,15 @@ class Services
                     $online = "-1";
                 }
                 unset($profileObj);
-                var_dump($profileObj);die;
+            }
+
+            if($online != "-1"){
+                $serviceObj = new billing_SERVICES("newjs_slave");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($online);
+                unset($serviceObj);
+                if(!is_array($activeOnlineServices) || count($activeOnlineServices)==0){
+                    $online = "-1";
+                }
             }
         }
     	$billingServicesObj = new billing_SERVICES();

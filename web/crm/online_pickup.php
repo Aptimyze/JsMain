@@ -7,14 +7,17 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php";
 include_once(JsConstants::$docRoot."/classes/ShortURL.class.php");
 
 if (authenticated($cid)) {
+
     $name = getname($cid);
     $center = get_centre($cid);
+
     $smarty->assign("name", $name);
     $serviceObj = new Services;
+
     $max_limit = '80';
     $mainServiceArr = array("P", "C", "D", "ESP", "X", "NCP");
-
     if ($submit) {
+
         $is_error = 0;
 
         if ($discount == "") {
@@ -129,7 +132,7 @@ if (authenticated($cid)) {
             }
 
             $URL = "$SITE_URL/profile/membership_redirect.php?id=$req_id1";
-            
+            //var_dump($URL);die;
             CommonUtility::sendPlusTrackInstantSMS('MEM_BACK_DISC_SMS', $profileid, array("SHORT_DISC_LINK_URL"=>$URL));
 
             $msg .= "A mail has been sent to the user for payment using following URL :- $URL .<br>";
@@ -158,8 +161,7 @@ if (authenticated($cid)) {
             die();
         }
 
-        $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
-
+        $service_main = $serviceObj->getAllServices('SHOW_ONLINE',$pid);
         $smarty->assign("SERVICE_MAIN", $service_main);
         $smarty->assign("USERNAME", stripslashes($username));
         $smarty->assign("PROFILEID", $pid);

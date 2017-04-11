@@ -433,13 +433,17 @@ class billing_SERVICES extends TABLE
         return $row_services;
     }
 
-    public function getAddonInfo($price_str,$offer) {
+    public function getAddonInfo($price_str,$offer,$mtongue="-1") {
+        if(empty($mtongue)){
+            $mtongue = "-1";
+        }
         try {
-        	if ($offer) {
+        	/*if ($offer) {
         		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE IN('Y','S') order by DURATION DESC";
         	} else {
         		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE='Y' order by DURATION DESC";
-        	}
+        	}*/
+            $sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE_NEW LIKE '%,$mtongue,%' order by DURATION DESC";
         	$resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){

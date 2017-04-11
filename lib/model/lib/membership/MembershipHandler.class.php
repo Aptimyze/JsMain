@@ -33,7 +33,7 @@ class MembershipHandler
         $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
-            $mtongue = "";
+            $mtongue = "-1";
             if(!empty($userObj)){
                 $mtongue = $userObj->mtongue;
             }
@@ -105,8 +105,12 @@ class MembershipHandler
             }
             return $allMainMemCombined;
         } elseif ($membership == "ADDON") {
+            $mtongue = "-1";
+            if(!empty($userObj)){
+                $mtongue = $userObj->mtongue;
+            }
             $key = $device . "_ADDON_MEMBERSHIP";
-            $key .= "_" . $userObj->getCurrency();
+            $key .= "_" . $userObj->getCurrency()."_".$mtongue;
 
             if ($memCacheObject->get($key)) {
                 $addonMem = unserialize($memCacheObject->get($key));
@@ -114,7 +118,7 @@ class MembershipHandler
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device);
+                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device,$mtongue);
                 $memCacheObject->set($key, serialize($addonMem), 3600);
             }
             return $addonMem;
