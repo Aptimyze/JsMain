@@ -27,6 +27,8 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+    if(!sfContext::hasInstance())
+      sfContext::createInstance($this->configuration);
     $instancesNum = MessageQueues::INSTANTEOICONSUMERCOUNT;
     for($i=1;$i<=$instancesNum;$i++)
     {

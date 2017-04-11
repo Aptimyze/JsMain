@@ -16,3 +16,6 @@
 		<input type="submit" id="unHidePasswordCheck" class="fullwid dispbl lh50 txtc f16 white" value="Unhide Profile">
 	</div>
 </div>
+<script>
+    var webView = '~$webView`';
+</script>

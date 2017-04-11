@@ -25,12 +25,7 @@ if($virtualno && $phoneno)
 
 			$verificationObj=new MissedCallVerification($phoneno,$virtualno);
 			$verified = $verificationObj->phoneUpdateProcess("KNW");
-      $szMsg = $verificationObj->getTempText();
-      
-      if (strlen($szMsg) && !$verified) {
-        mail("kunal.test02@gmail.com,palashc2011@gmail.com", "PhoneVerfication Issue ", $szMsg);
-      }
-  }
+        }
 $xmlStr= phoneKnowlarity::genrate_xml();
 echo $xmlStr;
 }

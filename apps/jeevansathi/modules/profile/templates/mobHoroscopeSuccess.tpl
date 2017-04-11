@@ -1,7 +1,9 @@
 <div class="bg1 txtc pad15">
 <div class="posrel">
 <div class="fontthin f20 white">~$title`</div>
+~if $backButton neq 1`
 <a href="/profile/viewprofile.php?ownview=1#Kundli"><i class="mainsp posabs arow1 pos1"></i></a>
+~/if`
 </div>
 </div>
 

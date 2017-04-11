@@ -318,6 +318,39 @@ class ApiCommon
 					$output[$k]["data"] = null;
                                 }
 			}
+			//occupation grouping being added 
+			elseif($k=="occupation_grouping")
+			{
+				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]) || strtotime($v)<strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
+                                {
+                                        $output[$k]["result"] = "yes";
+                                        if(strtotime($tableInfo[$tableMapping[$k]]) < strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
+                                                $output[$k]["uptime"] = $tableInfo[$tableMapping["occupation_grouping"]];
+                                        else
+                                                $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+                                        $noObj = new NEWJS_OCCUPATION_GROUPING;
+                                        $occArr = $noObj->getFullTable();
+                                        
+                                        unset($noObj);
+                                        $i=0;
+                                        foreach($occArr as $kk=>$vv)
+                                        {                                                
+                                                $tempArr[$i]["label"] = trim($vv["LABEL"]);
+                                                $tempArr[$i]["value"] = $vv["VALUE"];                                                
+                                                $i++;
+                                        }
+                                        $output[$k]["data"] = $tempArr;                                        
+                                        unset($occArr);
+                                        unset($tempArr);
+                                }
+                                else
+                                {
+                                	$output[$k]["result"] = "no";
+                                	$output[$k]["uptime"] = $v;
+                                	$output[$k]["data"] = null;
+                                }
+			}
+			//occupation grouping code ends here
 			elseif($k=="height")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))

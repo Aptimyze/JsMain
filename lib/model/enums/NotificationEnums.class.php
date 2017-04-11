@@ -62,6 +62,6 @@ class NotificationEnums
       public static $enableNotificationLogging = false;
 
       //config for sending multiple curl requests for GCM notification in parallel
-      public static $multiCurlReqConfig = array("threshold"=>10,"sendMultipleParallelNotification"=>false,"notificationKey"=>array("CONTACTS_VIEWED_BY"));
+      public static $multiCurlReqConfig = array("threshold"=>40,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY"));
 
 }

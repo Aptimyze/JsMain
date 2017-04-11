@@ -233,6 +233,7 @@ function validatePhone()
 		$('#mydiv').show(); 
 		var request = $.ajax
                         ({
+        						headers: { 'X-Requested-By': 'jeevansathi' },       
                                 url:url,
                                 dataType: 'json',
                                 data: postData,

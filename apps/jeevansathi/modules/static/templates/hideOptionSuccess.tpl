@@ -36,3 +36,6 @@
       
     </div>
   </div>
+<script>
+    var webView = '~$webView`';
+</script>
