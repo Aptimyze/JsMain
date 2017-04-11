@@ -128,16 +128,23 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
                 $horoscope = new Horoscope();
-		$horoExists = $horoscope->isHoroscopeExist($this->profile);
+		$horoExists = $horoscope->isHoroscopeExist($this->profile);	
+		
+		//segregated key for android and ios. added ios key in the end as per their request and kept the android key as it is
 		if($horoExists=="Y")
 		{
-			$astro[0][HORO_BUTTON_LABEL] ="Update Horoscope"; 
+			$horoLabel = "Update Horoscope";			
 		}
 		elseif($horoExists=="N")
-		{
-			$astro[0][HORO_BUTTON_LABEL] ="Create Horoscope"; 
+		{			
+			$horoLabel = "Create Horoscope";			
 		}
-		
+
+		if(MobileCommon::isApp() == "A" && $horoLabel)
+		{
+			$astro[0][HORO_BUTTON_LABEL] = $horoLabel;
+		}		
+
     $this->addSunSign($astro,$AstroKundali);
     
 		$astro[]=$this->getApiFormatArray("RASHI","Rashi/Moon Sign" , $AstroKundali->rashi,$this->profile->getRASHI(),$this->getApiScreeningField("RASHI"));
@@ -164,6 +171,12 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("ASTRO_COUNTRY_BIRTH","Country" , $this->profile->getDecoratedBirthCountry(),"",$this->getApiScreeningField(""));
 		
 		$astro[]=$this->getApiFormatArray("ASTRO_PLACE_BIRTH","City/Town" , $this->profile->getDecoratedBirthCity(),"",$this->getApiScreeningField(""));
+		
+		//create horoscope key for ios
+		if(MobileCommon::isApp() == "I" && $horoLabel)
+		{
+			$astro[]=$this->getApiFormatArray("HORO_BUTTON_LABEL",$horoLabel , $horoLabel);
+		}
 		return $astro;
 	}
 	
@@ -353,6 +366,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//mstatus
 		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+                
+                //HaveChild
+                if($this->profile->getMSTATUS() != 'N'){
+                    $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
+                }
+                
+                //Posted By
+                $szRelation = $this->profile->getDecoratedRELATION();
+                $basicArr[] =$this->getApiFormatArray("RELATION","Profile Managed by" ,$szRelation,$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"));
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
@@ -558,6 +580,18 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getLINCOME_DOL());
 		$szIncome .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME_DOL());
 		$arrOut[] = $this->getApiFormatArray("P_INCOME","Income",trim($jpartnerObj->getDecoratedPARTNER_INCOME()),$szIncome,$this->getApiScreeningField("PARTNER_INCOME"));
+		//Occupation Grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$arrOut[] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"));		
 		return $arrOut;		
 	}
 
