@@ -992,6 +992,12 @@ class crmInterfaceActions extends sfActions
         }
     }
 
+    public function executeFilterChangeActiveServicesInterface(sfWebRequest $request){
+        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
+        $this->cid        = $request->getParameter('cid');
+        $this->name       = $request->getParameter('name');    
+    }
+
     public function executeChangeActiveServicesInterface(sfWebRequest $request)
     {
         $this->cid        = $request->getParameter('cid');

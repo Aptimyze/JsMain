@@ -86,9 +86,10 @@ if (isset($data)) //successful login
             //billing entry operator
             $linkarr[] = "<a href=\"$SITE_URL/billing/billing.php?user=$name&cid=$cid\">Billing</a>";
         }
-        if (in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv)) 
+        {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/filterChangeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
         if (in_array("CRMTEC", $priv) || in_array("DA", $priv) || in_array("MG", $priv) || in_array("SLHDO", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/manageVdOffer\">Manage Variable Discount Offer </a>";
