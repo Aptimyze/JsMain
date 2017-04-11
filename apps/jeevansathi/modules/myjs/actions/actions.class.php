@@ -119,7 +119,12 @@ class myjsActions extends sfActions
     //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
-
+    $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
+    $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+    if($appVersion>92)
+      $oldMyjsApi=false;
+    else
+      $oldMyjsApi=true;
     $module = "MYJSAPP";
     $stSecondTime = microtime(TRUE);
     
@@ -206,17 +211,19 @@ class myjsActions extends sfActions
         $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
 
         $stSixthTime = microtime(TRUE);
-        $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
-        $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
-        $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
-        $bIsCached = true;
         
-        //MyJS is Not Cached
-        if (!$appV1DisplayJson) {
-          $bIsCached = false;
-          $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
-          $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+        if($oldMyjsApi){
+          $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
+          $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+          $bIsCached = true;
+        
+          //MyJS is Not Cached
+          if (!$appV1DisplayJson) {
+            $bIsCached = false;
+            $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
+            $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
+            JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+          }
         }
         
         //If we want to get fresh data for membership 
