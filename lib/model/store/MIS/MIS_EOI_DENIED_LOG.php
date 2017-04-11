@@ -14,7 +14,7 @@ class MIS_EOI_DENIED_LOG extends TABLE
 		
 		try
 		{
-			if(!$reporter || !$gender  || !$reason)
+			if(!$viewerpfid || !$viewerGender  || !$typeBreached || !$viewedpfid || !$typeOfUser)
 				return;
 			$timeNow=(new DateTime)->format('Y-m-j');
 			$sql="INSERT IGNORE INTO MIS.EOI_DENIED_LOG(VIEWER_PFID,VIEWED_PFID,DATE,GENDER,TYPE_BREACHED,TYPE_OF_USER) VALUES(:VIEWER_PFID,:VIEWED_PFID,:DATE,:GENDER,:TYPE_BREACHED,:TYPE_OF_USER)";
@@ -25,9 +25,9 @@ class MIS_EOI_DENIED_LOG extends TABLE
 			$pdoStatement->bindValue(":VIEWER_PFID",$viewerpfid,PDO::PARAM_INT);
 			$pdoStatement->bindValue(":VIEWED_PFID",$viewedpfid,PDO::PARAM_INT);
 			$pdoStatement->bindValue(":DATE",$timeNow,PDO::PARAM_STR);
-			$pdoStatement->bindValue(":GENDER",$viewerGender,PDO::PARAM_INT);
-			$pdoStatement->bindValue(":TYPE_BREACHED",$typeBreached,PDO::PARAM_INT);
-			$pdoStatement->bindValue(":TYPE_OF_USER",$typeOfUser,PDO::PARAM_INT);
+			$pdoStatement->bindValue(":GENDER",$viewerGender,PDO::PARAM_STR);
+			$pdoStatement->bindValue(":TYPE_BREACHED",$typeBreached,PDO::PARAM_STR);
+			$pdoStatement->bindValue(":TYPE_OF_USER",$typeOfUser,PDO::PARAM_STR);
 
 			$pdoStatement->execute();
 			
