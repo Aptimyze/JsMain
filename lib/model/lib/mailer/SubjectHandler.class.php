@@ -48,9 +48,13 @@ Class SubjectHandler
 	 * @access private
 	 */
 	private function setSubjectCode()
-	{
-		$dbMailerSubject= new jeevansathi_mailer_MAILER_SUBJECT();
-		$subjectCodeArr=$dbMailerSubject->getSubjectCode($this->emailTemplate->getEmailType()->getEmailID());
+	{	
+		//Moving this function to file based caching.
+		//$dbMailerSubject2= new jeevansathi_mailer_MAILER_SUBJECT();
+		//$dbMailerSubject = new MailerArray();
+		//$subjectCodeArr2=$dbMailerSubject2->getSubjectCode($this->emailTemplate->getEmailType()->getEmailID());
+		$subjectCodeArr=MailerArray::getMailerSubject($this->emailTemplate->getEmailType()->getEmailID());
+		
 		$smarty=$this->emailTemplate->getSmarty();
 		$count=count($subjectCodeArr);
 		if($count>1)
@@ -85,7 +89,7 @@ Class SubjectHandler
 	 * @access public
 	 */
 	public function getSubjectCode()
-	{
+	{	
 		return $this->subjectCode;
 	}
 	

@@ -45,7 +45,7 @@ EOF;
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
     print_r(array("curTime"=>$curTime,"stTime"=>$stTime,"curHr"=>$hr,"count"=>$count));
-    if($count==0 && !($hr == 09 || $hr == 10 || $hr == 11)){
+    if($count==0 && !($hr == "09" || $hr == 10 || $hr == 11)){
         $rmqObj = new RabbitmqHelper();
         $rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
         $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com";

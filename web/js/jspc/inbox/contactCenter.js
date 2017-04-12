@@ -96,6 +96,7 @@ function loadContactCenterTuples(response)
 			}
 		});
         
+
 		cECommonBinding();
 	}
 	

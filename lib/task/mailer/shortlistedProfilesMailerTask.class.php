@@ -94,6 +94,7 @@ public function skipProfiles(&$arranged)
                 else unset($arranged[$key]);
                 unset($skipProfiles);
                 unset($temp);
+                ProfileMemcache::unsetInstance($key);
 	}
 }
 
