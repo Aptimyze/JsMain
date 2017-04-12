@@ -1008,11 +1008,13 @@ class crmInterfaceActions extends sfActions
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
         $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
         //var_dump($this->mtongueFilter);
+        //var_dump($submit);
         if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
             $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
-
+            //echo "ankita origServDet...."."\n";
+            //print_r($origServDet);
             foreach ($params as $key => $val) {
                 if ($val == 'Y' && $origServDet[$key]['SHOW_ONLINE'] != 'Y'){
                     if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
@@ -1029,11 +1031,13 @@ class crmInterfaceActions extends sfActions
                     }
                 }
             }
-            //print_r($updateShowOnlineNew);die;
+            echo "ankita updateShowOnlineNew...."."\n";
+            print_r($updateShowOnlineNew);
             $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
         $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+
         //print_r($this->servDet);die;
         $newServDet    = array();
         $skipArr       = array('C1', 'C1W', 'C2W', 'P1', 'P1W', 'P2W', 'NCP1', 'T1', 'A1', 'I10', 'R1', 'X1');

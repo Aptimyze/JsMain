@@ -80,7 +80,7 @@
 			</table>
 			<br><br>
 			<div style="margin:0 auto;text-align:center;">
-				<input type="submit" name="submit" value="Apply Visibilty Changes" id="visibiltyApplyFilter" onclick="return confirmSubmit();"">
+				<input type="submit" name="submit" value="Apply Visibilty Changes" class="visibiltyApplyFilter" onclick="return confirmSubmit();"">
 				<input type="hidden" name="name" value="~$name`">
 				<input type="hidden" name="cid" value="~$cid`">
 			</div>

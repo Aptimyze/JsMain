@@ -508,7 +508,13 @@ class billing_SERVICES extends TABLE
     }
     public function getOnlineActiveDurations($mtongue="-1",$addon="N") {
         try {
-            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%'";
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE ";
+            if($mtongue == "A"){
+                $sql .= "SHOW_ONLINE_NEW NOT LIKE ''";
+            }
+            else{
+                $sql .="SHOW_ONLINE_NEW LIKE '%,$mtongue,%'";
+            }
             if($addon == "N"){
                 $sql .= " AND ADDON!='Y'";
             }

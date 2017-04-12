@@ -1,5 +1,5 @@
 function confirmSubmit(){
-	$("#visibiltyApplyFilter").val("visiblityChange");
+	$(".visibiltyApplyFilter").val("visiblityChange");
 }
 
 $(document).ready(function(){

@@ -559,21 +559,7 @@ class VariableDiscount
         }
 	 else{
         	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
-            /*if(!empty($profileid)){
-                $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
-                $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
-                if($profileObj != null){
-                    $mtongue = $profileObj->getMTONGUE();
-                }
-                if(empty($online)){
-                    $mtongue = "-1";
-                }
-                unset($profileObj);
-            }
-            else{
-                $mtongue = "-1";
-            }*/
-            $mtongue = "-1";
+            $mtongue = "A";
 		$durationsArr =$serviceObj->getOnlineActiveDurations($mtongue);
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){
