@@ -561,7 +561,7 @@ class billing_SERVICES extends TABLE
 
     public function getServicesForActivationInterface($servArr) {
         try {
-            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE_NEW FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
             foreach ($servArr as $key=>$val) {
                 $sqlArr[] = "SERVICEID LIKE '{$val}%'";
             }
