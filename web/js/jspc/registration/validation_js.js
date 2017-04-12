@@ -812,7 +812,30 @@ return pincodeValidator;
    })();
    this.casteValidator=casteValidator;
  }).call(this);
-
+// inherted class from validator for caste
+(function() {
+    var casteMuslimValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(casteMuslimValidator,validator);
+      //constructor
+      function casteMuslimValidator(fieldElement) {
+      casteMuslimValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      casteMuslimValidator.prototype.validate = function()
+      {
+        var casteMuslim = this.getValue("casteMuslim");
+        casteMuslimValidator.prototype.parent.validate.call(this,casteMuslim);
+        if(this.error){
+            if((inputData["religion"] =="2"))
+	      this.error=arrErors["MUSLIM_CASTE_REQUIRED"];
+                return false;
+        }
+        return true;
+      }
+   return casteMuslimValidator;
+   })();
+   this.casteMuslimValidator=casteMuslimValidator;
+ }).call(this);
 // inherted class from validator for hdegree
 (function() {
     var hdegreeValidator = (function () {

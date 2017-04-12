@@ -1566,6 +1566,31 @@ var padding = 31;
               $("#subcaste-inputBox_set").val("");
               inputData["subcaste"] = "";
             }
+            if(ele1.selected == "Muslim"){
+                if (ele1.depMusShown) {
+                        ele1.muslimDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                        $("#casteMuslim-gridDropdown_set").hide();
+                        $("#casteMuslim-inputBox_set").val("");
+                        ele1.muslimDependentObj.fieldElement.val("");
+                }
+                else{
+                    var arr = {elementId: $("#casteMuslim_value").attr('id'), name: $("#casteMuslim_value").attr('id').split("_")[0], columnNo: $("#casteMuslim_value").attr("data-columns")};
+
+                    r1 = new gridDropdownType($("#casteMuslim_value"), arr);
+                    regField[r1.fieldType] = r1;
+                    regField[r1.fieldType].changeFieldCss();
+                    ele1.depMusShown = 1;
+                    ele1.muslimDependentObj = regField[r1.fieldType];
+                    ele1.muslimDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                    ele1.muslimDependentObj.fieldElement.addClass("js-tBox");
+                }
+            }
+            else if(ele1.depMusShown){
+                    ele1.muslimDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+                    $("#casteMuslim-inputBox_set").val("");
+                    ele1.muslimDependentObj.fieldElement.val("");
+                    inputData["castemuslim"] = "";
+            }
             $("#manglik_value").val("");
             $("#manglik-inputBox_set").html("");
             $("#manglik-list_set").find(".activeopt").removeClass("activeopt");
@@ -1766,7 +1791,9 @@ var padding = 31;
       this.selectedId = "";
       this.fromIndia = 0;
       this.depShown = 1;
+      this.depMusShown = 0;
       this.dependentObj = "";
+      this.muslimDependentObj = "";
       this.searchAndType = this.fieldElement.attr("data-search");
       this.fromSubList = 0;
       if (this.name == "city")

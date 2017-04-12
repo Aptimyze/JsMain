@@ -232,6 +232,7 @@ class RegistrationFunctions
             if($pageId == "JSPCR2"){
                 $completeFields["religion"] = $loginProfileObj->getRELIGION();
                 $completeFields["caste"] = $loginProfileObj->getCASTE();
+                $completeFields["casteMuslim"] = $loginProfileObj->getSECT();
                 $completeFields["mtongue"] = $loginProfileObj->getMTONGUE();
                 $completeFields["mstatus"] = $loginProfileObj->getMSTATUS();
                 $completeFields["height"] = $loginProfileObj->getHEIGHT();
