@@ -640,8 +640,7 @@ public function unsett()
         if (is_array($contactArr)) {
             $datediff = floor(abs(JSstrToTime(date("Y-m-d")) - JSstrToTime(ErrorHandler::DUP_LIVE_DATE)) / (60 * 60 * 24));
             foreach ($contactArr as $key => $val) {
-                $contactDate = $contactDates[$key];                
-                $contactLimitDates = CommonFunction::getContactLimitDates($contactDate);
+                $contactLimitDates = CommonFunction::getContactLimitDates();
                 if ($val == 0)
                     $TODAY_INI_BY_ME++;
                 // insert logic for week's count

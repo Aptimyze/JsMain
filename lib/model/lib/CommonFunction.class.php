@@ -840,7 +840,7 @@ class CommonFunction
     	return $decoratedOccGroups;
     }
 
-    public static function getContactLimitDates($contactDate)
+    public static function getContactLimitDates()
 	{
 		$loginProfile = LoggedInProfile::getInstance();
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
@@ -850,7 +850,7 @@ class CommonFunction
 		}
 
 		$x = date('Y-m-d',strtotime($verifyDate));
-		$y = date('Y-m-d',strtotime($contactDate));
+		$y = date('Y-m-d');
 
 		$t1 = strtotime($x);
 		$t2 = strtotime($y);
@@ -866,6 +866,37 @@ class CommonFunction
 		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
 
 		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
+	public static function getLimitEndingDate($errlimit)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		if($errlimit == "WEEK")
+		{
+			$weeks = ceil($daysDiff/7) * 7 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		}
+		elseif($errlimit == "MONTH")
+		{
+			$months = ceil($daysDiff/30) * 30 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
+		}
+
+		return $endDate;
 	}
 
 }

@@ -201,9 +201,11 @@ class postEOIv1Action extends sfAction
 						    $satDiff = 6-$dayNR;        //for monday we need to add 5 days -> 6 - 1
 						    $sunDiff = $satDiff+1;      //sunday is one day more
 						    $strdate = date('F j,Y', JsStrtotime(" +".$sunDiff." days"));
+						    $strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 						    break;
 						case "MONTH":
 							$strdate = date('F t,Y');
+							$strdate = date('F t,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
 					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for this '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
