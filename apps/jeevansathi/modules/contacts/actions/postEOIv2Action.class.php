@@ -238,7 +238,7 @@ class postEOIv2Action extends sfAction
 							$strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
-					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for this '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
+					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for the '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
 					if(!$this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
 					{
 						$responseArray["errmsglabel"]= $responseArray["errmsglabel"].$membershipText;
