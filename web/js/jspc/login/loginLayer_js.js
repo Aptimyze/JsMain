@@ -415,6 +415,7 @@ function customCheckboxLogin(checkboxName,flag) {
 }
 
 $(document).ready(function(){
+	logSiteUrl();
 	commonLoginBinding();
 	if(typeof(LoggedoutPage)!="undefined")
 	{ 	
@@ -610,4 +611,11 @@ function removeCaptcha()
 {
   $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
+}
+
+function logSiteUrl()
+{
+	alert("helo");
+	console.log(window.location.href);
+	console.log(document.URL);
 }
