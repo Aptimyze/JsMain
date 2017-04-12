@@ -393,7 +393,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
-if(idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
+if(AppLoggedInUser && idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
         if(getAndroidVersion() || getIosVersion()){
                 var mbtext = "";
                 if(getAndroidVersion()){
