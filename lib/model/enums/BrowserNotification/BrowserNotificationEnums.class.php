@@ -44,8 +44,8 @@ class BrowserNotificationEnums
     public static $landingIdToUrl = array(
             "1" => "/search/perform?justJoinedMatches=1",
             "2"=>"2",
-            "3" => "/profile/contacts_made_received.php?page=eoi&filter=R",
-            "4" => "/profile/contacts_made_received.php?page=visitors&filter=R",
+            "3" => "/inbox/1/1",
+            "4" => "/search/visitors",
             "5" => "/profile/mem_comparison.php",
             "6" => "/profile/viewprofile.php",
             "7" => "/inbox/4/1"

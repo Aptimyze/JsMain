@@ -79,7 +79,7 @@ $(function(){
             setTimeout(function(){ 
                 $("#mainContent").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
                 loadCSS("IMG_URL/min/?f="+logoutCssFiles);
-                loadCSS("http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700");
+                loadCSS("https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700");
             }, 5000);
             $("#hamburgerIcon").bind("click", function() {
                 if($("#hamburger").length == 0){
@@ -291,7 +291,7 @@ $(window).load(function()
 
 
 function createCaptcha(){
-        var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
+        var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
         if($(".g-recaptcha").length !=0){
             removeCaptcha();
         }

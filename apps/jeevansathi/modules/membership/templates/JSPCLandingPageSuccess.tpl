@@ -1049,6 +1049,9 @@
                 $(this).html(str);
             }
         });
+
+	eraseCookie('mainMem');
+
         
         $(".astroAddon").each(function(k,v){
             dur = $(v).attr("dur");
@@ -1065,6 +1068,7 @@
         $(".evalVas").click(function(){
             evaluateVasToBeClicked();
         });
+
     ~/if`
     ~if $data.upgradeMembershipContent`
         //initilize upgrade page
