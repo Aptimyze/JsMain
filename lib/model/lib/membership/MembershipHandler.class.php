@@ -41,7 +41,8 @@ class MembershipHandler
                     $runSqlQuery = false;
                 }
                 else{
-                    $runSqlQuery = true;
+                    $count = 1;
+                    $runSqlQuery = false;
                 }
             }
             else{
@@ -84,7 +85,8 @@ class MembershipHandler
                     $runSqlQuery = false;
                 }
                 else{
-                    $runSqlQuery = true;
+                    $count = 1;
+                    $runSqlQuery = false;
                 }
             }
             else{

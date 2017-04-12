@@ -88,4 +88,7 @@
 			~/foreach`
 		</form>
 	</body>
+	<script type="text/javascript">
+		var currentMtongueFilter = "~$mtongueFilter`";
+	</script>
 </html>

@@ -981,23 +981,35 @@ class crmInterfaceActions extends sfActions
         }
     }
 
-    public function executeFilterChangeActiveServicesInterface(sfWebRequest $request){
-        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
-        $this->cid        = $request->getParameter('cid');
-        $this->name       = $request->getParameter('name');    
-    }
-
     public function executeChangeActiveServicesInterface(sfWebRequest $request)
     {
+        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
         $this->cid        = $request->getParameter('cid');
         $this->name       = $request->getParameter('name');
         $this->mtongueFilter = $request->getParameter('mtongueFilter');
+        $this->mappedMtongueFilter = $this->mtongueFilter;
+        $submit = $request->getParameter('submit');
+        if(empty($this->mtongueFilter)){
+            $this->mtongueFilter = "-1";
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $memHandlerObj = new MembershipHandler(false);
+            $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+            unset($memHandlerObj);
+      
+            if($count == 0){
+                $this->mappedMtongueFilter = "-1";
+            }
+        }
+        var_dump($this->mtongueFilter);
         
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
         $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive', 'T' => 'Response Booster', 'R' => 'Featured Profile', 'A' => 'Astro Compatibility', 'I' => 'We Talk For You');
-        if ($request->getParameter('submit')) {
+
+        if ($submit == "Apply Visibilty Changes") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
             foreach ($params as $key => $val) {
@@ -1013,7 +1025,8 @@ class crmInterfaceActions extends sfActions
             $billingServObj->changeServiceActivations($deactivate, 'N');
             $memHandlerObject->flushMemcacheForMembership();
         }
-        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+        //print_r($this->servDet);die;
         $newServDet    = array();
         $skipArr       = array('C1', 'C1W', 'C2W', 'P1', 'P1W', 'P2W', 'NCP1', 'T1', 'A1', 'I10', 'R1', 'X1');
         foreach ($this->servDet as $sid => $arr) {

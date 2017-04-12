@@ -559,9 +559,9 @@ class billing_SERVICES extends TABLE
         return $previous_expiry;
     }
 
-    public function getServicesForActivationInterface($servArr) {
+    public function getServicesForActivationInterface($servArr,$mtongue="-1") {
         try {
-            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE_NEW FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            $sql = "SELECT SERVICEID, NAME, CASE WHEN SHOW_ONLINE_NEW LIKE '%,$mtongue,%' THEN 'Y' ELSE 'N' END AS SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
             foreach ($servArr as $key=>$val) {
                 $sqlArr[] = "SERVICEID LIKE '{$val}%'";
             }
