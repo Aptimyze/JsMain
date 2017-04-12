@@ -26,6 +26,49 @@ class MembershipHandler
         }
     }
 
+    public function getOnlineActiveMainMemDurationsWrapper($mtongue=""){
+        if(empty($mtongue)){
+            return 0;
+        }
+        else{
+            $runSqlQuery = true;
+            
+            $memCacheObject = JsMemcache::getInstance();
+            $noFilterMontongueList = $memCacheObject->get("NO_MEM_FILTER_MTONGUE");
+            
+            if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
+                if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
+                    $count = 0;
+                    $runSqlQuery = false;
+                }
+                else{
+                    $runSqlQuery = true;
+                }
+            }
+            else{
+                $noFilterMontongueList = ",";
+                $runSqlQuery = true;
+            }
+            if($runSqlQuery == true){
+                error_log("ankita hit in table for getting getOnlineActiveDurations");
+                $serviceObj = new billing_SERVICES("newjs_masterRep");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue);
+                unset($serviceObj);
+                if(is_array($activeOnlineServices)){
+                    $count = count($activeOnlineServices);
+                }
+                else{
+                    $count = 0;
+                }
+                $noFilterMontongueList .= $mtongue.",";
+                if($count == 0){
+                    $memCacheObject->set("NO_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+            }
+            return $count;
+        }
+    }
+
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
         $memCacheObject = JsMemcache::getInstance();
@@ -422,6 +465,7 @@ class MembershipHandler
         foreach ($membershipKeyArray as $key => $keyVal) {
             $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
         }
+        $memCacheObject->remove('NO_MEM_FILTER_MTONGUE');
     }
 
     public function memCallbackTracking($profileid, $phoneNo, $email, $device = null, $channel = null, $callbackSource = null, $date, $startTime, $endTime)

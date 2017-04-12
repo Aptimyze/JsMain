@@ -10,6 +10,7 @@ foreach ($membershipKeyArray as $key => $keyVal) {
     $output1 = $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
     $keys_removed .= $keyVal.",\n"; 
 }
+
 //flush membership subscription if this extra param is set
 if($_GET["memSub@nkit@"] == '1'){
     $output = $memCacheObject->deleteKeysWithMatchedSuffix("_MEM_SUBSTATUS_ARRAY","suffix");
@@ -23,7 +24,8 @@ if($_GET["memOcb@nkit@"] == '1'){
 }
 if($_GET["memVisible"] == '1'){
 	$memCacheObject->remove("MAIN_MEM_DURATION");
-	$keys_removed .= "\n".",MAIN_MEM_DURATION";
+	$memCacheObject->remove('NO_MEM_FILTER_MTONGUE');
+	$keys_removed .= "\n".",MAIN_MEM_DURATION,NO_MEM_FILTER_MTONGUE";
 }
 echo $keys_removed;
 ?>

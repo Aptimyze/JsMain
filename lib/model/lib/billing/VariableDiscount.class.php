@@ -551,6 +551,7 @@ class VariableDiscount
     }
     public function getActiveDurations($profileid="")
     {
+        error_log("ankita check whether to reset mtongue based on count and make MAIN_MEM_DURATION profile specific");
 	$keyMain='MAIN_MEM_DURATION';
 	$memCacheObject = JsMemcache::getInstance();
         if($memCacheObject->get($keyMain)){
@@ -558,7 +559,7 @@ class VariableDiscount
         }
 	 else{
         	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
-            if(!empty($profileid)){
+            /*if(!empty($profileid)){
                 $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
                 $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
                 if($profileObj != null){
@@ -571,7 +572,8 @@ class VariableDiscount
             }
             else{
                 $mtongue = "-1";
-            }
+            }*/
+            $mtongue = "-1";
 		$durationsArr =$serviceObj->getOnlineActiveDurations($mtongue);
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){

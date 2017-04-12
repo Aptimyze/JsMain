@@ -221,13 +221,9 @@ class crmInterfaceActions extends sfActions
                 $this->startDate       = date("d M Y", strtotime($startDate));
                 $this->endDate         = date("d M Y", strtotime($endDate));
                 $this->discountSuccess = true;
-                $memCacheObject        = JsMemcache::getInstance();
-                $membershipKeyArray    = VariableParams::$membershipKeyArray;
-                $keys_removed          = "";
-                foreach ($membershipKeyArray as $key => $keyVal) {
-                    $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
-                    $keys_removed .= $keyVal . ",\n";
-                }
+                $memHandlerObj = new MembershipHandler(false);
+                $memHandlerObj->flushMemcacheForMembership();
+                unset($memHandlerObj);
             } else {
                 $this->discountError = true;
             }
@@ -295,13 +291,10 @@ class crmInterfaceActions extends sfActions
             $memHandlerObject = new MembershipHandler();
             $memHandlerObject->flushMemcacheForMembership();
             $this->successMsg   = "Discount Values Successfully Applied";
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
-                $keys_removed .= $keyVal . ",\n";
-            }
+          
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
         }
     }
 
@@ -345,13 +338,9 @@ class crmInterfaceActions extends sfActions
             }
             $this->successMsg = "Discount/Duration Values Successfully Applied";
             unset($this->errorMsg);
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
-                $keys_removed .= $keyVal . ",\n";
-            }
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
             // get the updated values from database for display
             $this->offerArr = $commCrmFuncObj->getFestiveOfferMappingDetails();
         }

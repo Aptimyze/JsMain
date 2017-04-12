@@ -22,8 +22,8 @@ class Services
     private $offer_discount = 10;
     
     public function getAllServices($online = "",$profileid="") {
-        if(!empty($online)){
-
+        
+        if(!empty($online) && $online != "SHOW_ONLINE_ALL"){
             if(empty($profileid)){
                 $online = "-1";
             }
@@ -40,13 +40,17 @@ class Services
             }
 
             if($online != "-1"){
-                $serviceObj = new billing_SERVICES("newjs_slave");
-                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($online);
-                unset($serviceObj);
-                if(!is_array($activeOnlineServices) || count($activeOnlineServices)==0){
+                $memHandlerObj = new MembershipHandler(false);
+                $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($online);
+                unset($memHandlerObj);
+          
+                if($count == 0){
                     $online = "-1";
                 }
             }
+        }
+        else if($online == "SHOW_ONLINE_ALL"){
+            $online = "A";
         }
     	$billingServicesObj = new billing_SERVICES();
         $services = $billingServicesObj->getAllServiceDataForActiveServices($online);

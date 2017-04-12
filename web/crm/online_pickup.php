@@ -71,7 +71,7 @@ if (authenticated($cid)) {
         }
 
         if ($is_error >= 1) {
-            $service_main = $serviceObj->getAllServices('SHOW_ONLINE',$profileid);
+            $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$profileid);
             $smarty->assign("SERVICE_MAIN", $service_main);
             $smarty->assign("USERNAME", stripslashes($USERNAME));
             $smarty->assign("PROFILEID", $profileid);
@@ -132,7 +132,7 @@ if (authenticated($cid)) {
             }
 
             $URL = "$SITE_URL/profile/membership_redirect.php?id=$req_id1";
-            //var_dump($URL);die;
+            
             CommonUtility::sendPlusTrackInstantSMS('MEM_BACK_DISC_SMS', $profileid, array("SHORT_DISC_LINK_URL"=>$URL));
 
             $msg .= "A mail has been sent to the user for payment using following URL :- $URL .<br>";
@@ -161,7 +161,7 @@ if (authenticated($cid)) {
             die();
         }
 
-        $service_main = $serviceObj->getAllServices('SHOW_ONLINE',$pid);
+        $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$pid);
         $smarty->assign("SERVICE_MAIN", $service_main);
         $smarty->assign("USERNAME", stripslashes($username));
         $smarty->assign("PROFILEID", $pid);

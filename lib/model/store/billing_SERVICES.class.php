@@ -232,8 +232,11 @@ class billing_SERVICES extends TABLE
     public function getAllServiceDataForActiveServices($showOnline=NULL) {
         try {
             $sql = "SELECT SQL_CACHE * FROM billing.SERVICES WHERE ACTIVE='Y'";
-            if(!empty($showOnline)){
+            if(!empty($showOnline) && $showOnline != "A"){
                 $sql .= " AND SHOW_ONLINE_NEW LIKE '%,$showOnline,%'";
+            }
+            else if($showOnline == "A"){
+                $sql .= " AND SHOW_ONLINE_NEW NOT LIKE ''";
             }
             $sql .= " ORDER BY SERVICEID ASC";
             $resSelectDetail = $this->db->prepare($sql);
@@ -266,7 +269,7 @@ class billing_SERVICES extends TABLE
                     $output[$i]['SHOW_ONLINE'] = 'Y';
                 }
                 else{
-                    $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE_NEW'];
+                    $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE'];
                 }
                 $output[$i]['ACTIVE'] = $rowSelectDetail['ACTIVE'];
                 $output[$i]['ENABLE'] = $rowSelectDetail['ENABLE'];
@@ -570,7 +573,7 @@ class billing_SERVICES extends TABLE
 
     public function changeServiceActivations($servStr, $status) {
         try {
-          
+            
             if($status == 'Y'){
                 $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
             } else {
