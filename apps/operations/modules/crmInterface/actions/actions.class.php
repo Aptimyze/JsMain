@@ -1002,27 +1002,35 @@ class crmInterfaceActions extends sfActions
                 $this->mappedMtongueFilter = "-1";
             }
         }
-        var_dump($this->mtongueFilter);
         
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
-        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive', 'T' => 'Response Booster', 'R' => 'Featured Profile', 'A' => 'Astro Compatibility', 'I' => 'We Talk For You');
-
-        if ($submit == "Apply Visibilty Changes") {
+        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
+        //var_dump($this->mtongueFilter);
+        if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
+            $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+
             foreach ($params as $key => $val) {
-                if ($val == 'Y') {
-                    $activate[] = $key;
-                } else {
-                    $deactivate[] = $key;
+                if ($val == 'Y' && $origServDet[$key]['SHOW_ONLINE'] != 'Y'){
+                    if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
+                        $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
+                    }
+                    else{
+                        $updateShowOnlineNew[$key] .= "$this->mtongueFilter,";
+                    }
+                } 
+                else if($val == 'N' && $origServDet[$key]['SHOW_ONLINE'] != 'N') {
+                    $updateShowOnlineNew[$key] = str_replace(",$this->mtongueFilter,",",",$origServDet[$key]['SHOW_ONLINE_NEW']);
+                    if($updateShowOnlineNew[$key] == ","){
+                        $updateShowOnlineNew[$key] = "";
+                    }
                 }
             }
-            $activate   = "'" . implode("','", $activate) . "'";
-            $deactivate = "'" . implode("','", $deactivate) . "'";
-            $billingServObj->changeServiceActivations($activate, 'Y');
-            $billingServObj->changeServiceActivations($deactivate, 'N');
+            //print_r($updateShowOnlineNew);die;
+            $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
         $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);

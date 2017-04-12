@@ -21,7 +21,7 @@
 						<a href="~sfConfig::get('app_site_url')`/jsadmin/logout.php?cid=~$cid`">Logout</a>
 					</td>
 				</tr>
-				<form name="applyMtongueFilter" action="~sfConfig::get('app_site_url')`/operations.php/crmInterface/changeActiveServicesInterface" id="applyMtongueFilter" method="POST">
+				
 					<table border="0" align="center" width="50%" cellpadding="4" cellspacing="4" border="0">
 						<tr align="left">
 						<td class="label"><font size=2>
@@ -42,7 +42,7 @@
 						</td>
 						</tr>
 					</table>
-				</form>
+				
 			</table>
 			<br>
 			~if $successMsg`
@@ -80,7 +80,7 @@
 			</table>
 			<br><br>
 			<div style="margin:0 auto;text-align:center;">
-				<input type="submit" name="submit" value="Apply Visibilty Changes">
+				<input type="submit" name="submit" value="Apply Visibilty Changes" id="visibiltyApplyFilter" onclick="return confirmSubmit();"">
 				<input type="hidden" name="name" value="~$name`">
 				<input type="hidden" name="cid" value="~$cid`">
 			</div>

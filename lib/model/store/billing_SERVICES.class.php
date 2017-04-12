@@ -561,7 +561,7 @@ class billing_SERVICES extends TABLE
 
     public function getServicesForActivationInterface($servArr,$mtongue="-1") {
         try {
-            $sql = "SELECT SERVICEID, NAME, CASE WHEN SHOW_ONLINE_NEW LIKE '%,$mtongue,%' THEN 'Y' ELSE 'N' END AS SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            $sql = "SELECT SERVICEID, NAME, CASE WHEN SHOW_ONLINE_NEW LIKE '%,$mtongue,%' THEN 'Y' ELSE 'N' END AS SHOW_ONLINE,SHOW_ONLINE_NEW FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
             foreach ($servArr as $key=>$val) {
                 $sqlArr[] = "SERVICEID LIKE '{$val}%'";
             }
@@ -578,16 +578,17 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function changeServiceActivations($servStr, $status) {
+    public function changeServiceActivations($updateShowOnlineNew=null) {
         try {
-            
-            if($status == 'Y'){
-                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
-            } else {
-                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='N' WHERE SERVICEID IN ($servStr)";
+            if(is_array($updateShowOnlineNew) && count($updateShowOnlineNew) > 0){
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE_NEW = CASE";
+                foreach ($updateShowOnlineNew as $key => $value) {
+                    $sql .= " WHEN SERVICEID LIKE '$key' THEN '$value'";
+                }
+                $sql .= " ELSE SHOW_ONLINE_NEW END";
+                $resSelectDetail = $this->db->prepare($sql);
+                $resSelectDetail->execute();
             }
-            $resSelectDetail = $this->db->prepare($sql);
-            $resSelectDetail->execute();
         } catch (Exception $e) {
             throw new jsException($e);
         }
