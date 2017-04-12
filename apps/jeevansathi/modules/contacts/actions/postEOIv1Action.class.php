@@ -197,14 +197,9 @@ class postEOIv1Action extends sfAction
 							$strdate = date( 'F j, Y');
 							break;
 						case "WEEK":
-							$dayNR = date('N');         //monday = 1, tuesday = 2, etc.
-						    $satDiff = 6-$dayNR;        //for monday we need to add 5 days -> 6 - 1
-						    $sunDiff = $satDiff+1;      //sunday is one day more
-						    $strdate = date('F j,Y', JsStrtotime(" +".$sunDiff." days"));
 						    $strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 						    break;
 						case "MONTH":
-							$strdate = date('F t,Y');
 							$strdate = date('F t,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
