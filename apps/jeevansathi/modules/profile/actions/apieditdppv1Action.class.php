@@ -40,7 +40,8 @@ class apieditdppv1Action extends sfAction
 		$this->PreprocessInput();
 		
 		//Get symfony form object related to Edit Fields coming.
-		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
+		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");		
+		
 		if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 		{
 			$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
@@ -57,6 +58,8 @@ class apieditdppv1Action extends sfAction
 					$this->form->updateData();
 				}	
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
+				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
                                 if($request->getParameter("getData")=="dpp"){
                                     ob_start();
                                     $request->setParameter("sectionFlag","dpp");
@@ -65,8 +68,7 @@ class apieditdppv1Action extends sfAction
                                     $this->dppData = ob_get_contents();
                                     ob_end_clean();
                                     $apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-				    JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
-				    JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
+				    
                                 }
 			}
 			else
@@ -100,7 +102,7 @@ class apieditdppv1Action extends sfAction
 	{
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		//
+		
 		//Update Partner Income Also if Income is updated
 		//if(stristr($scase,"LINCOME") || stristr($scase,"HINCOME") || stristr($scase,"LINCOME_DOL") ||stristr($scase,"HINCOME_DOL"))
 		if(array_key_exists("P_LRS",$arrEditDppFieldIDs) || array_key_exists("P_HRS",$arrEditDppFieldIDs) || array_key_exists("P_LDS",$arrEditDppFieldIDs) ||array_key_exists("P_HDS",$arrEditDppFieldIDs) )
@@ -143,7 +145,7 @@ class apieditdppv1Action extends sfAction
 		}
 		
 		$szFinalQuery = implode(",",$arrUpdateQuery);
-		$this->m_szQuery = $szFinalQuery;
+		$this->m_szQuery = $szFinalQuery;		
 	}
 	
 	private function Update()
@@ -274,7 +276,7 @@ class apieditdppv1Action extends sfAction
 		$this->mysqlObj=new Mysql;
 		$this->myDbName=getProfileDatabaseConnectionName($this->profileId,'',$this->mysqlObj);
 		$this->myDb=$this->mysqlObj->connect($this->myDbName);
-		$this->partnerObj->setPartnerDetails($this->profileId,$this->myDb,$this->mysqlObj);
+		$this->partnerObj->setPartnerDetails($this->profileId,$this->myDb,$this->mysqlObj);    	
     $this->m_objLoginProfile->setJpartner($this->partnerObj);
 	}
 	
@@ -284,6 +286,7 @@ class apieditdppv1Action extends sfAction
 		//Get symfony form object related to Edit Fields coming.
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppField = $request->getParameter("editFieldArr");
+
 		$arrOut = array();
 		//arrMapNullValue contains all those value which used to mark as a null value or Doesnot matter value
 		//as in case of API we are sending DM in view to map those values as doesnot matter in app
@@ -369,12 +372,25 @@ class apieditdppv1Action extends sfAction
 				}
 				$arrOut["P_COUNTRY"] = $val;
 			}
+			elseif($key == "P_OCCUPATION")
+			{
+				$this->m_bDppUpdate = true;
+				$arrOut["P_OCCUPATION"] = $val;
+				$arrOut["P_OCCUPATION_GROUPING"] = CommonFunction::getOccupationGroups($val); //this function was created to find occupation groups for values selected
+			}
+			elseif($key == "P_OCCUPATION_GROUPING")
+			{
+				$this->m_bDppUpdate = true;				
+				$arrOut["P_OCCUPATION_GROUPING"] = $val;
+				$arrOut["P_OCCUPATION"] = CommonFunction::getOccupationValues($val);	//this function was created to find occupation values for groups selected			
+			}
 			else
 			{
 				$arrOut[$key] = ($val == -1)? "" : $val ;
 				$this->m_bDppUpdate = true;
 			}
 		}//End of For loop
+		
 		$request->setParameter("editFieldArr",$arrOut);
 	}
 }

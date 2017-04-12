@@ -111,12 +111,10 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				throw new jsException($e);
 		}
 	}
-		public function getViewedProfiles($date)
+		public function getViewedProfiles($start_date,$end_date)
 		{
 			try
 			{
-				$start_date = $date." 00:00:00";
-				$end_date = $date." 23:59:59";
 				$sql = "Select DISTINCT(VIEWED) from newjs.VIEW_LOG_TRIGGER where DATE between :start_date and :end_date";
 				$prep = $this->db->prepare($sql);
 				$prep->bindValue(":start_date",$start_date,PDO::PARAM_STR);

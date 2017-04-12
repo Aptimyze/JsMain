@@ -155,8 +155,8 @@ class MultipleUserFilter
 							$minRupee=$v["MIN_VALUE"];
 							$i++;
 						}
-						if($val<$minRupee)
-							$minRupee=$v["MIN_VALUE"];
+						if($income_data[$val]["MIN_VALUE"]<$minRupee)
+                                                        $minRupee=$v["MIN_VALUE"];
 					}
 					else
 					{
@@ -164,13 +164,18 @@ class MultipleUserFilter
 							$minDollar=$v["MIN_VALUE"];
 							$j++;
 						}
-						if($val<$minDollar)
+						if($income_data[$val]["MIN_VALUE"]<$minDollar)
 							$minDollar=$v["MIN_VALUE"];
 					}
 				}
 			}
 		}
-			if($minRupee)
+                        if($minRupee && $minDollar){
+                                $rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
+                                $doArray=array('minID'=>$minDollar,'maxID'=>19);
+				$incomeMapping= new IncomeMapping($rsArray,$doArray);
+                        }
+			else if($minRupee)
 			{
 				$rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
 				$incomeMapping= new IncomeMapping($rsArray);

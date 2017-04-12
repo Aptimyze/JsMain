@@ -219,59 +219,62 @@ $className = get_class($this);
 		return $displayV1;
         }
 
+        
+ /**
+  * 
+  * @param type $profileInfo
+  * @param type $bforceFullyDBCall
+  * @return string
+  */
+  public function getBannerMessage($profileInfo, $bforceFullyDBCall=false)
+  {
 
+    $MESSAGE = NULL;
+    $profileObj = LoggedInProfile::getInstance('newjs_master');
+    $request = sfContext::getInstance()->getRequest();
+    $apiAppVersion = $request->getParameter('API_APP_VERSION');
+      
+    if (!empty($apiAppVersion) && is_numeric($apiAppVersion)) {
+      $memMessage = $this->setAndGetOCBCache($request, $apiAppVersion, $profileObj,$bforceFullyDBCall);
+      if ($apiAppVersion < 21)
+        return $memMessage['membership_message']; // for backward compatibility of Android App
+    } else {
+      $memMessage = $this->setAndGetOCBCache($request, 17, $profileObj,$bforceFullyDBCall);
+    }
 
-private function getBannerMessage($profileInfo) {    
-				$MESSAGE=NULL;
-				$request = sfContext::getInstance()->getRequest();
-				$memHandlerObj = new MembershipHandler();
-        	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
-        			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$apiAppVersion);
-        				if ($apiAppVersion<21) return $memMessage['membership_message']; // for backward compatibility of Android App
-        			} else {
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request);
-        			}
-			
-	$profileObj=LoggedInProfile::getInstance('newjs_master');
+    switch (true) {
 
-	switch(true){
+      case ($profileInfo["COMPLETION"] > 50):
+        $MESSAGE = $memMessage['membership_message'];
+        break;
 
-			case ($profileInfo["COMPLETION"]>50):
-        	  $MESSAGE=$memMessage['membership_message'];
-        	break;
+      case (!$profileObj->getFAMILYINFO()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Family';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '4';
+        break;
 
-        	case (!$profileObj->getFAMILYINFO()):
-        	  $MESSAGE['top']='Add About Family';
-          	  $MESSAGE['bottom']='Get more interests & responses';
-          	  $MESSAGE['pageId'] = '4';
-        	break;
+      case ($memMessage['membership_message']):
+        $MESSAGE = $memMessage['membership_message'];
+        break;
 
-        	case ($memMessage['membership_message']):
-        	 $MESSAGE=$memMessage['membership_message'];
-        	break;
+      case (!$profileObj->getEDUCATION()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Education';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '2';
+        break;
 
-        	case (!$profileObj->getEDUCATION()):
-        		$MESSAGE['top']='Add About Education';
-          		$MESSAGE['bottom']='Get more interests & responses';
-          		$MESSAGE['pageId'] = '2';
-        	break;
+      case (!$profileObj->getJOB_INFO()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Work';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '3';
+        break;
+    }
 
-        	case (!$profileObj->getJOB_INFO()):
-        		$MESSAGE['top']='Add About Work';	
-				$MESSAGE['bottom']='Get more interests & responses';
-				$MESSAGE['pageId'] = '3';
-        	 break;
-						}
-	return $MESSAGE;					
+    return $MESSAGE;
+  }
 
-
-        		}         
-
-
-
-
-   public function getPhotoTypeFromId($key){
+  public function getPhotoTypeFromId($key){
      		$mapArray=Array('INTEREST_RECEIVED'=>'ProfilePic120Url','MATCH_ALERT'=>'ProfilePic120Url','VISITORS'=>'ThumbailUrl');
      		return $mapArray[$key];
 
@@ -291,54 +294,74 @@ private function getBannerMessage($profileInfo) {
 		}
 		return $showExpiring;
     }
+    
+  /**
+   * 
+   * @param type $request
+   * @param type $appVersion
+   * @param type $profileObj
+   * @return type
+   */
+  private function setAndGetOCBCache($request, $appVersion = 17, $profileObj,$bForceFullyDB=false)
+  {
 
-    public function setAndGetOCBCache($request,$appVersion='',$profileObj)
-    {
-				
-    	$memCacheObject = JsMemcache::getInstance();
-        				$profileId = $profileObj->getPROFILEID();
-        				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
+    $memCacheObject = JsMemcache::getInstance();
+    $profileId = $profileObj->getPROFILEID();
+    $valArr = NULL;
+    $bEnableCache = (myjsCachingEnums::FLAG || $bForceFullyDB) ? false : true;
+    
+    if ($bEnableCache) {
+      $valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
+    }
+    if ($valArr != NULL && is_array($valArr)) {
 
-        				if( 0 && $valArr != NULL && is_array($valArr))
-        				{  	
+      $memMessage = '';
 
-        					$memMessage = '';
+      if ($valArr['is_null'] == 1) {
+        return NULL;
+      }
 
-        					if($valArr['top']){
-        					$memMessage['membership_message'][myjsCachingEnums::TOP_PART] = $valArr['top'];
-        					}
-        					if($valArr['bottom'])
-        					{	
-        					$memMessage['membership_message'][myjsCachingEnums::BOTTOM_PART] = $valArr['bottom'];
-        					}
-        					if($valArr['pageId'])
-        					{	
-        					$memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
-        					}
-        				}
-        				else
-        				{
-        				$memHandlerObj = new MembershipHandler();  
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$appVersion);
+      if ($valArr['top']) {
+        $memMessage['membership_message'][myjsCachingEnums::TOP_PART] = $valArr['top'];
+      }
+      if ($valArr['bottom']) {
+        $memMessage['membership_message'][myjsCachingEnums::BOTTOM_PART] = $valArr['bottom'];
+      }
+      if ($valArr['pageId']) {
+        $memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
+      }
+      if($valArr['extra']){
+      	$memMessage['membership_message'][myjsCachingEnums::EXTRA_PART] = $valArr['extra'];
+      }
+    }
+    else {
+      $memHandlerObj = new MembershipHandler();
+      $memMessage = $memHandlerObj->fetchMembershipMessage($request, $appVersion);
+      
+      if ($bEnableCache) {
+        $arr[myjsCachingEnums::IS_NULL] = 0;
+        $arr[myjsCachingEnums::TOP_PART] = '';
+        $arr[myjsCachingEnums::BOTTOM_PART] = '';
+        $arr[myjsCachingEnums::PAGEID] = '';
+        $arr[myjsCachingEnums::EXTRA_PART] = '';
 
-        					$arr[myjsCachingEnums::TOP_PART] = '';
-        					$arr[myjsCachingEnums::BOTTOM_PART] = '';
-        					$arr[myjsCachingEnums::PAGEID] = '';
-
-        				if(is_array($memMessage['membership_message'])){
-        					foreach ($memMessage['membership_message'] as $key => $value) {
-        						$arr[$key] = $value;
-        					}
-        				}
-
-        				$timeForCache = myjsCachingEnums::TIME;
-        				$memCacheObject->setHashObject(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER',$arr,$timeForCache);
-        				}
-
-
-        				return $memMessage;
+        if ($memMessage['membership_message'] == NULL) {
+          $arr[myjsCachingEnums::IS_NULL] = 1;
+        }
+        else {
+          if (is_array($memMessage['membership_message'])) {
+            foreach ($memMessage['membership_message'] as $key => $value) {
+              $arr[$key] = $value;
+            }
+          }
+        }
+        $timeForCache = myjsCachingEnums::TIME;
+        $memCacheObject->setHashObject(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER', $arr, $timeForCache);
+      }
 
     }
+    return $memMessage;
+  }
 
 }
 ?>

@@ -73,6 +73,8 @@
     var winHeight = $(window).height();
     $(".bg4").css('height',winHeight);
     var newHref = "~sfConfig::get('app_site_url')`/membership/jsms?displayPage=3";
+    var upgradeMem = "~$data.checkMemUpgrade`";
+    
     if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
       newHref += "&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
     }
@@ -84,6 +86,9 @@
     }
     if(checkEmptyOrNull(readCookie('device'))){
       newHref += "&device="+readCookie('device'); 
+    }
+    if(checkEmptyOrNull(upgradeMem)){
+      newHref += "&upgradeMem="+upgradeMem;
     }
     $("#redirectToCart").click(function(e){
       e.preventDefault();

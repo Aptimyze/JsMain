@@ -55,9 +55,21 @@ class JS_Communication
 		//$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
+		$lastChatSeenId=JsMemcache::getInstance()->getRedisKey($this->loginProfile."_".$this->otherProfile."_lastChatSeen");
+		if(!$lastChatSeenId)
+			$lastChatSeenId=0;
+		
 		if($this->communicationType=="C"){
 			$dbObj = new newjs_CHAT_LOG($dbName1);		
 			$result= $dbObj->getMessageHistory($this->loginProfile,$this->otherProfile,self::$RESULTS_PER_PAGE_CHAT,$msgIdNo);
+			foreach($result as $key=>$value)
+			{
+				$newChatSeenId=$value['ID'];
+			}
+			if(!$newChatSeenId)
+				$newChatSeenId=0;
+			if($newChatSeenId>$lastChatSeenId)
+				JsMemcache::getInstance()->setRedisKey($this->loginProfile."_".$this->otherProfile."_lastChatSeen",$newChatSeenId);
 			if(count($result)<20)
 			{
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
@@ -89,7 +101,7 @@ class JS_Communication
 			$chatLog=new ChatLog();
 			$messageLog=new MessageLog();
 			$messageLog->markMessageSeen($this->loginProfile,$this->otherProfile);
-			$chatLog->markChatSeen($this->loginProfile,$this->otherProfile);
+			$chatLog->markChatSeen($this->loginProfile,$this->otherProfile,$newChatSeenId);
 		}
 		else
 		{			

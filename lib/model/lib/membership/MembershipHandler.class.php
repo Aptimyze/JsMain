@@ -331,6 +331,7 @@ class MembershipHandler
                 }
 
             }
+
             $minPriceArr[$mainMem]['OFFER_PRICE'] = min($offerPrice);
         }
 
@@ -838,7 +839,7 @@ class MembershipHandler
         }
         return array(
             $ipAddress,
-            $currency,
+            $currency
         );
     }
 
@@ -1213,7 +1214,6 @@ class MembershipHandler
                
                 if($upgradeMemMRP > 0 && $upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP && JsConstants::$whichMachine == 'prod'){
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
-                    //$upgradeTotalDiscount = 0;
                 }
                 if($upsellMRP > 0){
                     $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
@@ -1671,7 +1671,8 @@ class MembershipHandler
                 $output = json_encode($output);
             }
         }
-        if (!$output) {
+        if (!$output) 
+        {
             ob_start();
             $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
             $output = ob_get_contents();
@@ -1744,7 +1745,7 @@ class MembershipHandler
             $profileObj      = LoggedInProfile::getInstance();
             $activatedStatus = $profileObj->getACTIVATED();
         }
-        if ($userType != 5 && $userType != memUserType::UPGRADE_ELIGIBLE && $activatedStatus == 'Y') {
+        if ($userType != 5 && $activatedStatus == 'Y') {
             return 1;
         } else {
             return 0;
@@ -2417,5 +2418,20 @@ class MembershipHandler
             $disHistObj->insertDiscountHistory($servDisc);
         }
         unset($nonZero);
+    }
+
+    /*function to compute starting price of membership plans with and without discount
+    * @inputs:$request
+    * @return:$output
+    */
+    public function fetchMembershipPlansStartingRange($request){
+        $request->setParameter('getMembershipPlansStartingRange', 1);
+        $request->setParameter('INTERNAL', 1);
+        ob_start();
+        $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
+        $output = ob_get_contents();
+        ob_end_clean();
+        $data = json_decode($output, true);
+        return $data;
     }
 }

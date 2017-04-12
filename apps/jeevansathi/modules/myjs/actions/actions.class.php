@@ -13,13 +13,20 @@ class myjsActions extends sfActions
   
   private $arrProfiler = array();
   private $bEnableProfiler = false;
+  
+  /**
+   * This variable will be use to invalidate the Membership cache
+   * @var type 
+   */
+  private $bInvalidateMemberShipCache = false;
+  
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
   	* 
   	*/
 	private function getMembershipLink($pageId){
-  	$arr=array('16'=>'/profile/contacts_made_received.php?page=phonebook_contacts_viewed&filter=M',
+  	$arr=array('16'=>'/inbox/16/1',
   		'6'=>'/profile/mem_comparison.php','4'=>'/profile/viewprofile.php?ownview=1#Family','2'=>'/profile/viewprofile.php?ownview=1#Education','3'=>'/profile/viewprofile.php?ownview=1#Career');
   	return $arr[$pageId];
   }
@@ -37,8 +44,14 @@ class myjsActions extends sfActions
 		$module= "MYJS";
 		$profileCommunication = new ProfileCommunication();
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-        	$pid=$loggedInProfileObj->getPROFILEID();
-        //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
+    $pid=$loggedInProfileObj->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
+    //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
 		$infoTypeId = $request->getParameter("infoTypeId");
 		$pageNo = $request->getParameter("pageNo");
 		if($infoTypeId)
@@ -115,6 +128,16 @@ class myjsActions extends sfActions
     $inputValidateObj->validateRequestMyJsData($request);
     $output = $inputValidateObj->getResponse();
     
+    $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+    $pid = $loggedInProfileObj->getPROFILEID();
+
+    //Handle Logout Case
+    if(is_null($loggedInProfileObj) || is_null($pid)) {
+      $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+			$respObj->generateResponse();
+			die;
+    }
+    
     if($this->bEnableProfiler) {
       //Validation Time taken
       $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSecondTime, 'Request Validation Time Taken : ', $moduleName);
@@ -125,8 +148,7 @@ class myjsActions extends sfActions
       $stThirdTime = microtime(TRUE);
       
       $profileCommunication = new ProfileCommunication();
-      $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-      $pid = $loggedInProfileObj->getPROFILEID();
+      
       //  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
       $infoTypeId = $request->getParameter("infoTypeId");
       $pageNo = $request->getParameter("pageNo");
@@ -188,12 +210,21 @@ class myjsActions extends sfActions
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+        
+        //MyJS is Not Cached
         if (!$appV1DisplayJson) {
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
           JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
+        
+        //If we want to get fresh data for membership 
+        //use it wisely
+        if($this->bInvalidateMemberShipCache) {
+          $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
+        }
+        
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -253,13 +284,22 @@ class myjsActions extends sfActions
   }
 
   public function executeJsmsPerform(sfWebRequest $request)
-	{			//myjs jsms action hit for logging  
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
-            	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
-                $this->loginData=$request->getAttribute("loginData");
-                $this->profile=Profile::getInstance();
-                $this->loginProfile=LoggedInProfile::getInstance();
-                $entryDate = $this->loginProfile->getENTRY_DT();
+	{			//myjs jsms action hit for logging
+        $this->pageMyJs = 1; 
+        
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
+        $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
+        $this->loginData=$request->getAttribute("loginData");
+        $this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance('newjs_master');
+                
+        $pid = $this->loginProfile->getPROFILEID();
+        //Handle Logout Case
+        if(is_null($this->loginProfile) || is_null($pid)) {
+          $this->forward("static", "logoutPage");
+        }
+        
+        $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
         $this->showExpiring = 0;
@@ -327,6 +367,12 @@ class myjsActions extends sfActions
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcMYJSUrl);
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$this->profileid=$this->loginProfile->getPROFILEID();
+    
+    //Handle Logout Case
+    if(is_null($this->loginProfile) || is_null($this->profileid)) {
+      $this->forward("static", "logoutPage");
+    }
+    
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();

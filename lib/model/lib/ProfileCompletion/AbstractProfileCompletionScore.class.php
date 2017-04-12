@@ -88,7 +88,7 @@ abstract class AbstractProfileCompletionScore {
 		}
 		else
         {
-            $this->m_objProfile->getDetail("","",self::LIST_FIELDS);
+            $this->m_objProfile->getDetail($this->m_objProfile->getPROFILEID(),"PROFILEID",self::LIST_FIELDS);
         }
         $this->m_objProfile->setNullValueMarker("");
         //If Activated is set to D then, profile is delete marked

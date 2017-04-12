@@ -30,6 +30,7 @@ $back_mob_days=date("Y-m-d",$days_mob1);
 
 
 //storing yesterday's data in SMS_TRIGGER_///////////////////////////////////////////////// 
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$slave);
 
 $dateYesterday=date("Y-m-d", time() - 60 * 60 * 24);
 $SQL2="SELECT SENT, COUNT( * ) AS CNT, SMS_KEY FROM  `SMS_DETAIL` WHERE DATE(  `ADD_DATE` ) =  '$dateYesterday' GROUP BY  `SENT` ,  `SMS_KEY`";

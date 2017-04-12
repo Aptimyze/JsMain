@@ -324,12 +324,17 @@ die;
         /**
         * General Utility function to send 'get' curl request.
         */
-        public static function sendCurlGetRequest($urlToHit,$timeout='')
+        public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
-                $ch = curl_init($urlToHit);
+		     $ch = curl_init($urlToHit);
+		    if($headerArr)
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+			else
                 curl_setopt($ch, CURLOPT_HEADER, 0);
+               
+                
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
@@ -998,7 +1003,15 @@ die;
 		}
 		return $redirectUrl;
 	}
-  
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
   public static function runFeatureAtNonPeak(){
 		
 		if(in_array(date('H'),array("17","18","19","20","21")))
@@ -1007,6 +1020,17 @@ die;
 		}
 		return 0;
 
+	}
+        public static function runFeatureInDaytime($after = 10,$before = 22){
+                $datetime = new DateTime; // current time = server time
+                $otherTZ  = new DateTimeZone('Asia/Kolkata');
+                $datetime->setTimezone($otherTZ); // Indian Time
+		$timeNow = $datetime->format('H');
+		if($timeNow>=$after && $timeNow<=$before)
+		{
+			return 1;
+		}
+		return 0;
 	}
 }
 ?>

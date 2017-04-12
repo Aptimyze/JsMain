@@ -1767,6 +1767,35 @@ SQL;
             throw new jsException($e);   
         }
     }
+   public function getDetailsForPhone($phoneArray, $fields)
+    {
+        try {
+                $i=0;
+                foreach($phoneArray as $key=>$val){
+                        $arr[] =":PHONE".$i;
+                        $i++;
+                }
+                $fields.=", ACTIVATED";
+                $phoneStr =implode(",", $arr);
+                $sql = "SELECT SQL_CACHE $fields FROM newjs.JPROFILE WHERE PHONE_MOB IN($phoneStr) OR PHONE_WITH_STD IN($phoneStr)";
+                $prep = $this->db->prepare($sql);
+                $i=0; 
+                foreach($phoneArray as $key=>$val){
+                        $prep->bindValue(":PHONE$i", $val, PDO::PARAM_STR);
+                        $i++;
+                }
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {          
+                    if($row['ACTIVATED'] != 'D')
+                            $dataArr[] =$row;
+                }
+                return $dataArr;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        } 
+    }
+
 }
 
 ?>

@@ -101,25 +101,18 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            //$xx2 = count($applicableProfiles);
-            		$applicableProfilesArr = array_keys($applicableProfiles);
-            		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
-            //$xx3 = count($applicableProfilesData);
-			unset($applicableProfilesArr);
-            
+            		//$applicableProfilesArr = array_keys($applicableProfiles);
+            		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
             		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
-            //$xx4 = count($dataAccumulated);
-            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
-            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
-            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
             		unset($poolObj);
 			break;
 
 
-
+        /*commented to move matchalert notification from scheduled concept to instant mailer triggered notification*/
+        /*
 		  case "MATCHALERT":
 			$applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -163,6 +156,7 @@ public function microtime_float()
 				unset($matchCount);
 			}
 			break;
+         */
 		  case "PENDING_EOI":
 		    $applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -170,11 +164,24 @@ public function microtime_float()
             		$dataAccumulated = $poolObj->getPendingInterestData($applicableProfiles);
             		unset($poolObj);
 			break;
+          case "MATCHALERT":
+ 				if($count > 0){
+ 					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+ 					$poolObj = new NotificationDataPool();
+ 					$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message,$count);
+ 					unset($poolObj);
+ 				}
+ 				else{
+ 					$dataAccumulated = null;
+ 				}
+ 				break;
 		  case "ACCEPTANCE":
 		  case "PHOTO_REQUEST":
 		  case "EOI":
 		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
+          case "CHAT_MSG":
+          case "CHAT_EOI_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
@@ -249,33 +256,19 @@ public function microtime_float()
                         $applicableProfiles=array();
 			$applicableProfilesNonNri =array();
 			$applicableProfilesNri =array();
+			$poolObj = new NotificationDataPool();
                         $applicableProfilesNonNri = $this->getVDProfilesApplicableForNotification($appProfiles);
                         if(count($applicableProfilesNonNri)>0){
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
                         }
                         $applicableProfiles =array_merge($applicableProfilesNonNri,$applicableProfilesNri);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
+			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
-			$counter =0;
-			if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;	
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
 		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
@@ -471,7 +464,7 @@ public function microtime_float()
 				  // print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
-				  	$completeNotificationInfo[$counter]["PHOTO_URL"] =$dataPerNotification['PHOTO_URL'];
+				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
 				  else
 			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
@@ -498,7 +491,8 @@ public function microtime_float()
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
-	  if($notificationKey =='VD'){	
+        //For variable Title
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
@@ -509,7 +503,7 @@ public function microtime_float()
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD'){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else
@@ -521,6 +515,12 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+          if($dataPerNotification['OTHER_PROFILEID']){
+            $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
+          }
+          if($dataPerNotification['OTHER_USERNAME']){
+            $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
+          }
 		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
@@ -914,6 +914,35 @@ public function microtime_float()
       unset($validPicArray);
       unset($validExtensionArr);
       unset($ext);
+  }
+  
+  public function checkNotificationOnLastLogin($notificationKey, $lastLoginDate){
+	  $notifications = $this->getNotifications();
+      $timeCriteria = $notifications["TIME_CRITERIA"][$notificationKey];
+	  unset($notifications);
+	  if($timeCriteria!='')
+	  {
+		  $timeCriteriaArr = explode("|",$timeCriteria);
+		  if($timeCriteriaArr[0]!='')
+		  {
+			  $dateformatGreaterThan = $this->getDate($timeCriteriaArr[0]);
+			  $greaterThan['LAST_LOGIN_DT']=$dateformatGreaterThan;
+		  }
+		  if($timeCriteriaArr[1]!='')
+		  {
+			  $dateformatLessThan = $this->getDate($timeCriteriaArr[1]);
+			  $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
+		  }
+	  }
+      if($greaterThan["LAST_LOGIN_DT"]){
+          if(strtotime($lastLoginDate) >= strtotime($greaterThan["LAST_LOGIN_DT"])){
+              return true;
+          }
+          else{
+              return false;
+          }
+      }
+	  return true;
   }
 }
 ?>

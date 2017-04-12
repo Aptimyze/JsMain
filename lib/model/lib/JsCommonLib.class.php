@@ -524,13 +524,15 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 			}
 			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $inc = IncomeCommonFunction::getIncomeDppFilterArray(implode(",",$ARR));
+                        /*
                         $incomeObj = new IncomeMapping;
-                        $ARR = $incomeObj->removeNoIncome($ARR);
-                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
-                        $result = array_intersect($ARR, $incomeArray);
-                        
-			if(is_array($ARR) && !empty($ARR)){
-                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+-                       $ARR = $incomeObj->removeNoIncome($ARR);
+-                       $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+-                       $result = array_intersect($ARR, $incomeArray);
+                         */
+			if(is_array($inc) && !empty($inc)){
+                                if(in_array($profile->getINCOME(),$inc))
                                 {
                                         $CODE['INCOME']='gnf';
                                         $CODE['Income']='gnf';
@@ -983,8 +985,7 @@ public static function insertConsentMessageFlag($profileid) {
 		$isPhoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
 		if(!$isPhoneVerified)
 		{
-			include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-			$isPhoneVerified = hidePhoneLayer($profileid);
+			$isPhoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$isPhoneVerified);
 		}
                 if($profileid && $isPhoneVerified!='Y'&& $moduleName!="register" && $moduleName!="static" && $moduleName!="phone")

@@ -49,7 +49,7 @@ class Visitors
 				$multipleProfileObj         = new ProfileArray;
 				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,OCCUPATION,EDU_LEVEL_NEW,CITY_RES";
 				$profileIdArr1["PROFILEID"] = implode(",", $profileIdArr);
-				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, '', '', $fieldList, "JPROFILE", "", "");
+				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, array("INCOMPLETE"=>"'Y'","ACTIVATED"=>"'D'"), '', $fieldList, "JPROFILE", "", "");
                             if($infoTypenav["matchedOrAll"]!="A")
                                 $this->passInVisitors();
                             

@@ -128,7 +128,9 @@ class ResponseHandlerConfig
 
 	// Report Abuse
 	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot report abuse against the same person more than twice.","statusCode"=>'1');
+	//Report Invalid
 
+	 public static $SAME_NUMBER_INVALID_TWICE = array("message"=>"You cannot report the same number Invalid again.","statusCode" => '1');
 }
 
 ?>

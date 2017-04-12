@@ -95,6 +95,17 @@ class notificationActions extends sfActions
 	$notificationType = $request->getParameter('notificationType');
 	$messageId = $request->getParameter('messageId');	
 
+	// New parameter
+        $currentOSversion       =$request->getParameter('CURRENT_VERSION');
+        $apiappVersion          =intval($request->getParameter('API_APP_VERSION'));
+        $deviceBrand            =$request->getParameter('DEVICE_BRAND');
+        $deviceModel            =$request->getParameter('DEVICE_MODEL');
+        $registrationid         =$request->getParameter('registrationid');
+	$deviceUpgrade          =$request->getParameter('deviceUpgrade');
+
+	/*if(is_null($deviceUpgrade) || empty($deviceUpgrade))
+		$upgradeFlagSet =false;*/
+
 	if($notificationType=="pull")
 		$status = NotificationEnums::$LOCAL;
 	else
@@ -104,18 +115,23 @@ class notificationActions extends sfActions
         $profileid =$loginData['PROFILEID'];
         if($profileid)
         {
+		// New code
+	        if(($apiappVersion>=90 || $deviceUpgrade==true) && $registrationid){
+	                $upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+	        }
                 $producerObj = new JsNotificationProduce();
                 if($producerObj->getRabbitMQServerConnected()){
                         $dataSet =array('profileid'=>$profileid,'notificationKey'=>$notificationKey,'messageId'=>$messageId,'status'=>$status,'osType'=>$osType);
                         $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
                         $producerObj->sendMessage($msgdata);
                 }
-        		else{
-        			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
-        		}
+       		/*else{
+       			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
+       		}*/
+
                 // temporary_logging    
-                //$fileName ="manoj_".$notificationKey.".txt";
-                //passthru("echo ' $profileid $status ' >>/tmp/$fileName");
+                //$fileName ="manoj_chat".$notificationKey.".txt";
+                //passthru("echo ' $registrationid $apiappVersion $currentOSversion $deviceBrand $deviceModel ' >>/tmp/$fileName");
 
                 //log the notification click event only for IOS app
                 if($osType == "I"){
@@ -123,6 +139,8 @@ class notificationActions extends sfActions
                 }
 	}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+	$output = array('deviceUpgradeFlag'=>$upStatus);
+	$respObj->setResponseBody($output);
         $respObj->generateResponse();
 	die;
   }
@@ -141,6 +159,9 @@ class notificationActions extends sfActions
 	$profileid 		=$loginData['PROFILEID'];
 	$deviceUpgrade		=$request->getParameter('deviceUpgrade');
 	$upStatus		=false;
+	
+        /*if(is_null($deviceUpgrade) || empty($deviceUpgrade))
+                $upgradeFlagSet =true;*/
 
 	if(!$profileid){
                 $respObj = ApiResponseHandler::getInstance();
@@ -148,7 +169,7 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
-	if($deviceUpgrade=='true'){
+	if($apiappVersion>=90 || $deviceUpgrade==true){
 		$upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 	}
 	$respObj = ApiResponseHandler::getInstance();
@@ -347,7 +368,7 @@ class notificationActions extends sfActions
         $respObj = ApiResponseHandler::getInstance();
         $notificationKey = $request->getParameter('notificationKey');
         if ($notificationKey) {
-            $mobApiNotMsgLogObj = new MOBILE_API_NOTIFICATION_MESSAGE_LOG('newjs_slave');
+            $mobApiNotMsgLogObj = new MOBILE_API_NOTIFICATION_MESSAGE_LOG('notification_local111');
             $output = $mobApiNotMsgLogObj->fetchNotificationKeyLatestEntry($notificationKey);
         } else {
             $output = array('error'=>"Please pass param 'notificationKey'");

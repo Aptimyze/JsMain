@@ -89,8 +89,20 @@ class JustJoinedMatches extends PartnerProfile
 		$this->newTagJustJoinDate = $this->lastUsedJustJoinedSearch();
                 if(!$this->newTagJustJoinDate)
                         $this->newTagJustJoinDate="0000:00:00";
-		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
-		$dt = $search_JUST_JOINED_LAST_USED->ins($this->loggedInProfileObj->getPROFILEID());
+                
+		$lastSeen = date("Y-m-d h:i:s");
+                $producerObj = new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $updateSeenProfileData = array("process"=>"JUSTJOINED_LAST_SEEN",'data'=>array('body'=>array('seen_date'=>$lastSeen,'profileid'=>$this->loggedInProfileObj->getPROFILEID())));
+                        $producerObj->sendMessage($updateSeenProfileData);
+                }else{
+                        $search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
+                        $dt = $search_JUST_JOINED_LAST_USED->ins($this->loggedInProfileObj->getPROFILEID());
+                }
+                $dt = $lastSeen;
+                JsMemcache::getInstance()->set($this->loggedInProfileObj->getPROFILEID()."_JUSTJOINED_LAST_VISITED",$lastSeen);
+                JsMemcache::getInstance()->incrCount("INSERT_COUNTER_JUSTJOINED_LAST_VISITED");
 	}
 
 
@@ -123,8 +135,15 @@ class JustJoinedMatches extends PartnerProfile
 	*/
 	public function lastUsedJustJoinedSearch()
 	{
-		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
-		$dt = $search_JUST_JOINED_LAST_USED->getDt($this->loggedInProfileObj->getPROFILEID());
+                $lastVisited = JsMemcache::getInstance()->get($this->loggedInProfileObj->getPROFILEID()."_JUSTJOINED_LAST_VISITED");
+                if(!$lastVisited){
+                    JsMemcache::getInstance()->incrCount("SELECT_COUNTER_JUSTJOINED_LAST_VISITED_BYDB");
+                    $search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
+                    $dt = $search_JUST_JOINED_LAST_USED->getDt($this->loggedInProfileObj->getPROFILEID());
+                }else{
+                    JsMemcache::getInstance()->incrCount("SELECT_COUNTER_JUSTJOINED_LAST_VISITED_BYCACHE");
+                    $dt = $lastVisited;
+                }
 		return $dt;
 	}
 }

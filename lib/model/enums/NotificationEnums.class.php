@@ -45,11 +45,13 @@ class NotificationEnums
       public static $CANCELLED = "C";
       public static $scheduledNotificationsLimit = 3;
       public static $scheduledNotificationPriorityArr = array('CONTACT_VIEWS','PENDING_EOI','CONTACTS_VIEWED_BY','PROFILE_VISITOR','JUST_JOIN','MATCHALERT','FILTERED_EOI');
-      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING");  //notifications with static content
+      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING","MATCHALERT");  //notifications with static content
       public static $appVersionCheck = array("DEFAULT"=>array('AND'=>23,'IOS'=>1),
                                           "FILTERED_EOI"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CONTACTS_VIEWED_BY"=>array('AND'=>32,'IOS'=>'2.2'),
-                                          "CONTACT_VIEWS"=>array('AND'=>32,'IOS'=>'2.2')
+                                          "CONTACT_VIEWS"=>array('AND'=>32,'IOS'=>'2.2'),
+                                          "CHAT_MSG"=>array('AND'=>90),
+                                          "CHAT_EOI_MSG"=>array('AND'=>90)
                                         ); //app version mapping for notifications
 
       //profile registration offset for notification schedule
@@ -58,5 +60,8 @@ class NotificationEnums
       public static $digestNotificationKeys = array("EOI"=>"EOI_DIGEST");
       public static $channelArr = array("A_I"=>"Android - Ios","D"=>"Desktop","M"=>"Mobile");	
       public static $enableNotificationLogging = false;
+
+      //config for sending multiple curl requests for GCM notification in parallel
+      public static $multiCurlReqConfig = array("threshold"=>40,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN"));
 
 }
