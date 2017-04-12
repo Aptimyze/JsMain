@@ -22,6 +22,7 @@ class memUser
     public $festFlag;
     public $memUpgradeEligible = false;
     public $mtongue;
+    public $addonMtongue;
 
     function __construct($profileid) {
         if ($profileid != '') {
@@ -37,6 +38,7 @@ class memUser
             $this->currency = $this->getCurrency();
             $this->ipAddress = $this->getIpAddress();
             $this->mtongue = "-1";
+            $this->addonMtongue = "-1";
         }
     }
 
@@ -47,18 +49,27 @@ class memUser
 
             if($profileObj != null){
                 $this->mtongue = $profileObj->getMTONGUE();
+                $this->addonMtongue = $this->mtongue;
             }
+
             if(!empty($this->mtongue)){
                 $memHandlerObj = new MembershipHandler(false);
-                $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongue);
+                $mainMemcount = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongue);
+                $addonMemcount = $memHandlerObj->getOnlineActiveAddonDurationsWrapper($this->mtongue);
+
                 unset($memHandlerObj);
-                if($count == 0){
+                if($mainMemcount == 0){
                     $this->mtongue = "-1";
+                }
+                if($addonMemcount == 0){
+                    $this->addonMtongue = "-1";
                 }
             }
             else{
                 $this->mtongue = "-1";
+                $this->addonMtongue = "-1";
             }
+
         }
     }
 

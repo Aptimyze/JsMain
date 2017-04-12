@@ -24,8 +24,9 @@ if($_GET["memOcb@nkit@"] == '1'){
 }
 if($_GET["memVisible"] == '1'){
 	$memCacheObject->remove("MAIN_MEM_DURATION");
-	$memCacheObject->remove('NO_MEM_FILTER_MTONGUE');
-	$keys_removed .= "\n".",MAIN_MEM_DURATION,NO_MEM_FILTER_MTONGUE";
+	$memCacheObject->remove('NO_MAIN_MEM_FILTER_MTONGUE');
+	$memCacheObject->remove('NO_ADDON_MEM_FILTER_MTONGUE');
+	$keys_removed .= "\n".",MAIN_MEM_DURATION,NO_MAIN_MEM_FILTER_MTONGUE,NO_ADDON_MEM_FILTER_MTONGUE";
 }
 echo $keys_removed;
 ?>

@@ -506,9 +506,16 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
-    public function getOnlineActiveDurations($mtongue="-1") {
+    public function getOnlineActiveDurations($mtongue="-1",$addon="N") {
         try {
-            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE_NEW LIKE '%,$mtongue,%'";
+            if($addon == "N"){
+                $sql .= " AND ADDON!='Y'";
+            }
+            else{
+                $sql .= " AND ADDON='Y'";
+            }
+            $sql .= " AND ACTIVE='Y' AND SERVICEID!='P1'";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){

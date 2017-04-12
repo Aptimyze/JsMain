@@ -34,8 +34,7 @@ class MembershipHandler
             $runSqlQuery = true;
             
             $memCacheObject = JsMemcache::getInstance();
-            $noFilterMontongueList = $memCacheObject->get("NO_MEM_FILTER_MTONGUE");
-            
+            $noFilterMontongueList = $memCacheObject->get("NO_MAIN_MEM_FILTER_MTONGUE");
             if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
                 if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
                     $count = 0;
@@ -60,15 +59,59 @@ class MembershipHandler
                 else{
                     $count = 0;
                 }
-                $noFilterMontongueList .= $mtongue.",";
                 if($count == 0){
-                    $memCacheObject->set("NO_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                    $noFilterMontongueList .= $mtongue.",";
                 }
+
+                $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+
             }
             return $count;
         }
     }
 
+     public function getOnlineActiveAddonDurationsWrapper($mtongue=""){
+        if(empty($mtongue)){
+            return 0;
+        }
+        else{
+            $runSqlQuery = true;
+            $memCacheObject = JsMemcache::getInstance();
+            $noFilterMontongueList = $memCacheObject->get("NO_ADDON_MEM_FILTER_MTONGUE");
+            if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
+                if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
+                    $count = 0;
+                    $runSqlQuery = false;
+                }
+                else{
+                    $runSqlQuery = true;
+                }
+            }
+            else{
+                $noFilterMontongueList = ",";
+                $runSqlQuery = true;
+            }
+            
+            if($runSqlQuery == true){
+                error_log("ankita hit in table for getting getOnlineActiveAddonDurationsWrapper");
+                $serviceObj = new billing_SERVICES("newjs_masterRep");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue,"Y");
+
+                unset($serviceObj);
+                if(is_array($activeOnlineServices)){
+                    $count = count($activeOnlineServices);
+                }
+                else{
+                    $count = 0;
+                }
+                if($count == 0){
+                    $noFilterMontongueList .= $mtongue.",";
+                }
+                $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+            }
+            return $count;
+        }
+    }
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
         $memCacheObject = JsMemcache::getInstance();
@@ -88,6 +131,7 @@ class MembershipHandler
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
+            
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
                 $fetchOffline = false;
@@ -96,6 +140,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
+
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {
@@ -150,10 +195,10 @@ class MembershipHandler
         } elseif ($membership == "ADDON") {
             $mtongue = "-1";
             if(!empty($userObj)){
-                $mtongue = $userObj->mtongue;
+                $addonMtongue = $userObj->addonMtongue;
             }
             $key = $device . "_ADDON_MEMBERSHIP";
-            $key .= "_" . $userObj->getCurrency()."_".$mtongue;
+            $key .= "_" . $userObj->getCurrency()."_".$addonMtongue;
 
             if ($memCacheObject->get($key)) {
                 $addonMem = unserialize($memCacheObject->get($key));
@@ -161,11 +206,12 @@ class MembershipHandler
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device,$mtongue);
+                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device,$addonMtongue);
                 $memCacheObject->set($key, serialize($addonMem), 3600);
             }
             return $addonMem;
         }
+
     }
 
     public function fetchPaymentOptions($ipAddress)
@@ -465,7 +511,8 @@ class MembershipHandler
         foreach ($membershipKeyArray as $key => $keyVal) {
             $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
         }
-        $memCacheObject->remove('NO_MEM_FILTER_MTONGUE');
+        $memCacheObject->remove('NO_MAIN_MEM_FILTER_MTONGUE');
+        $memCacheObject->remove('NO_ADDON_MEM_FILTER_MTONGUE');
     }
 
     public function memCallbackTracking($profileid, $phoneNo, $email, $device = null, $channel = null, $callbackSource = null, $date, $startTime, $endTime)

@@ -22,7 +22,7 @@ class Services
     private $offer_discount = 10;
     
     public function getAllServices($online = "",$profileid="") {
-        
+
         if(!empty($online) && $online != "SHOW_ONLINE_ALL"){
             if(empty($profileid)){
                 $online = "-1";
@@ -649,7 +649,6 @@ class Services
         } else {
         	$price_str = $device."_RS";
         }
-
         $billingServicesObj = new billing_SERVICES('newjs_slave');
         $addon = $billingServicesObj->getAddOnInfo($price_str,$offer,$mtongue);
         
