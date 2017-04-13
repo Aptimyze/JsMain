@@ -312,6 +312,8 @@ private function orderForLabelGrid($label)
                 else {
                   $newJson = $this->getAlphabeticalList($newJson["alpha"]);  
                 }
+                if($szKey == 'reg_caste_2_')
+                    unset($newJson['Others']);
                 return $newJson;
         }
   }
