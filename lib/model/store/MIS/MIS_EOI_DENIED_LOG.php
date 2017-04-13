@@ -36,7 +36,7 @@ class MIS_EOI_DENIED_LOG extends TABLE
 		}
 		catch(Exception $e)
 		{
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, "Exception while logging EOI Breach Limit");
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
 			return;
 		}
 	}
