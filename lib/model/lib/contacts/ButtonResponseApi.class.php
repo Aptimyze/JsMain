@@ -30,7 +30,7 @@ Class ButtonResponseApi
 	public function getButtonArray($params)
 	{
 		if($this->loginProfile->getPROFILEID())
-		{
+		{  
 			$gender         = $this->contactHandlerObj->getViewed()->getGENDER();
 			$hisher         = $gender == "F" ? "her" : "his";
 			$himher         = $gender == "F" ? "her" : "him";
@@ -288,9 +288,7 @@ Class ButtonResponseApi
 	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
 		{
-			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
-			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
-			$button["value"] = "INITIATE";
+			$button = self::getCancelInterestButton();
 			$responseArray["canChat"] = false;
 			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 			{
@@ -326,7 +324,7 @@ Class ButtonResponseApi
 		return array_merge($buttonArr, $button);
 	}
 	public function getAfterActionButton($actionType)
-	{
+	{  
 		$gender         = $this->contactHandlerObj->getViewed()->getGENDER();
 		$hisher         = $gender == "F" ? "her" : "his";
 		$himher         = $gender == "F" ? "her" : "him";
@@ -551,7 +549,7 @@ Class ButtonResponseApi
 	}
 	
 	public static function getContactsButton($contact,$gender,$page='')
-	{
+	{  
 		$button 		= Array(); 
 		$responseArray	= Array();
 		$hisher         = $gender == "F" ? "her" : "his";
