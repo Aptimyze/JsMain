@@ -211,7 +211,10 @@ class myjsActions extends sfActions
         $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
 
         $stSixthTime = microtime(TRUE);
+         //If we want to get fresh data for membership 
         
+        
+
         if($oldMyjsApi){
           $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
           $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
@@ -225,13 +228,19 @@ class myjsActions extends sfActions
             JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
           }
         }
-        
-        //If we want to get fresh data for membership 
+        else{
+            $profileArray=$appV1obj->getProfileInfo($profileInfo);
+            if($profileArray[strtolower("MY_PROFILE")])
+              $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
+    
+            $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
+        }
         //use it wisely
         if($this->bInvalidateMemberShipCache) {
           $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
         }
         
+       
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";

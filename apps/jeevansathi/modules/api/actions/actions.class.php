@@ -91,7 +91,14 @@ class apiActions extends sfActions
 	}
         public function executeHamburgerDetailsV1(sfWebRequest $request)
 	{
-		$respObj = ApiResponseHandler::getInstance();
+		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+		 $forwardingArray =ApiRequestHandler::getInstance($request)->getModuleAndActionName($request);
+		 $respObj = ApiResponseHandler::getInstance();
+		if($appVersion>=94){
+			$hamburgerDetails = HamburgerApp::getHamburgerDetails($request->getAttribute('profileid'),$request->getParameter("version"),$forwardingArray);
+			$respObj->setHamburgerDetails($hamburgerDetails);
+		}
+		
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();
 		die;

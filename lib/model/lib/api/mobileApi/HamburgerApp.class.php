@@ -5,6 +5,7 @@ class HamburgerApp
         {
 		$moduleName = $forwardingArray['moduleName'];
 		$actionName = $forwardingArray['actionName'];
+		$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
                         $isNewMobileSite = MobileCommon::isNewMobileSite();
@@ -97,6 +98,18 @@ class HamburgerApp
 					else
 						$hamburgerDetails['SAVE_SEARCH'] = 0;
 				}
+			if($appVersion>=94){
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+	         		$hamburgerDetails['PHOTO_REQUEST_NEW']=0;
+		     	else
+		     		$hamburgerDetails['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
+
+		     	$declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
+				 if($declinedMeNewMemcacheCount)
+					$hamburgerDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+				else
+					$hamburgerDetails['DEC_ME_NEW'] = 0;
+		     }
 				
 			return $hamburgerDetails;
 		}
