@@ -121,7 +121,7 @@ class myjsActions extends sfActions
     $stFirstTime = microtime(TRUE);
     $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
     $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-    if($appVersion>92)
+    if($appVersion>94)
       $oldMyjsApi=false;
     else
       $oldMyjsApi=true;
@@ -244,8 +244,10 @@ class myjsActions extends sfActions
       }
 
       //Bell Count
-      $stBELLTime = microtime(TRUE);
-      $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      if($oldMyjsApi){
+        $stBELLTime = microtime(TRUE);
+        $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      }
       
       if($this->bEnableProfiler) {
         //BELL Count Time taken
