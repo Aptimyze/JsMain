@@ -479,6 +479,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 				$(this).attr("src",src);
 			}
 		});
+
         
         if(data.hasNext!=true)this.allMessageLoaded=true;
         this.MSGID=data.MSGID;        
