@@ -56,7 +56,6 @@ class memUser
                 $memHandlerObj = new MembershipHandler(false);
                 $mainMemcount = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongue);
                 $addonMemcount = $memHandlerObj->getOnlineActiveAddonDurationsWrapper($this->mtongue);
-
                 unset($memHandlerObj);
                 if($mainMemcount == 0){
                     $this->mtongue = "-1";
@@ -69,6 +68,7 @@ class memUser
                 $this->mtongue = "-1";
                 $this->addonMtongue = "-1";
             }
+
         }
     }
 

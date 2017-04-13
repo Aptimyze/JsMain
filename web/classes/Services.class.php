@@ -375,7 +375,7 @@ class Services
             $mtongue = $userObj->mtongue;
         }
         else if($profileid != ""){
-            error_log("ankita check why in this case");
+            //error_log("ankita check why in this case");
             $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
             $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
             if($profileObj != null){
