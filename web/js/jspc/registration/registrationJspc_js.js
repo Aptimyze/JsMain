@@ -1570,8 +1570,6 @@ var padding = 31;
                 if (ele1.depMusShown) {
                         ele1.muslimDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
                         $("#casteMuslim-gridDropdown_set").hide();
-                        $("#casteMuslim-inputBox_set").val("");
-                        ele1.muslimDependentObj.fieldElement.val("");
                 }
                 else{
                     var arr = {elementId: $("#casteMuslim_value").attr('id'), name: $("#casteMuslim_value").attr('id').split("_")[0], columnNo: $("#casteMuslim_value").attr("data-columns")};
@@ -1590,6 +1588,7 @@ var padding = 31;
                     $("#casteMuslim-inputBox_set").val("");
                     ele1.muslimDependentObj.fieldElement.val("");
                     inputData["castemuslim"] = "";
+                    $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
             }
             $("#manglik_value").val("");
             $("#manglik-inputBox_set").html("");
