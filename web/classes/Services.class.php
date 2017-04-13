@@ -386,9 +386,8 @@ class Services
             }
             unset($profileObj);
         }
-        
+       
         $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline,$mtongue);
-        
         $i = 0;
         
         if (!empty($userObj)){

@@ -69,7 +69,6 @@ class memUser
                 $this->mtongue = "-1";
                 $this->addonMtongue = "-1";
             }
-
         }
     }
 

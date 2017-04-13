@@ -56,9 +56,10 @@
 			</div>
 			~/if`
 			<div width="100%" style="background-color:#ffffbd;font-size:12px;padding:10px 30px;text-align:center;">
-				1) Currently checked services are active<br>
-				2) Unchecked services will be de-activated on front-end only<br>
-				3) To add more services contact tech team
+				1) Click on "Change Mtongue" Button to update service list after applying mtongue<br>
+				2) Currently checked services are active<br>
+				3) Unchecked services will be de-activated on front-end only<br>
+				4) To add more services contact tech team
 			</div>
 			<br>
 			~foreach from=$servDet key=k item=v`

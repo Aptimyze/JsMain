@@ -125,7 +125,7 @@ function fetchFestivals()
 function getActiveServices()
 {
 	//$sql ="select SERVICEID from billing.SERVICES where SHOW_ONLINE='Y'";
-	$sql ="select SERVICEID from billing.SERVICES where SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON='N'";
+	$sql ="select SERVICEID from billing.SERVICES where SHOW_ONLINE_NEW NOT LIKE '' AND ACTIVE='Y' AND ADDON='N'";
 	$res=mysql_query_decide($sql) or die(mysql_error_js());
 	while($row=mysql_fetch_array($res)){
 		$serviceArr[] =$row['SERVICEID'];
@@ -137,10 +137,10 @@ function activateServices($serviceArr)
 	$serviceStr ="'".@implode("','",$serviceArr)."'";
 
 	//$sql ="update billing.SERVICES SET SHOW_ONLINE='N'";
-	$sql ="update billing.SERVICES SET SHOW_ONLINE='N' WHERE ADDON='N' AND ACTIVE='Y'";
-	mysql_query_decide($sql) or die(mysql_error_js());
+	/*$sql ="update billing.SERVICES SET SHOW_ONLINE='N' WHERE ADDON='N' AND ACTIVE='Y'";
+	mysql_query_decide($sql) or die(mysql_error_js());*/
 
-	$sql1 ="UPDATE billing.SERVICES SET SHOW_ONLINE='Y' where SERVICEID IN($serviceStr)";
+	$sql1 ="UPDATE billing.SERVICES SET SHOW_ONLINE_NEW=CASE WHEN SHOW_ONLINE_NEW = '' THEN ',-1,' ELSE SHOW_ONLINE_NEW = CONCAT(SHOW_ONLINE_NEW,'-1,') END where SERVICEID IN($serviceStr)";
 	mysql_query_decide($sql1) or die(mysql_error_js());
 }
 function getLastOfferDetails()

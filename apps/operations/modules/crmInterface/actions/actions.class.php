@@ -1014,25 +1014,26 @@ class crmInterfaceActions extends sfActions
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
             $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
             //echo "ankita origServDet...."."\n";
-            //print_r($origServDet);
+           
             foreach ($params as $key => $val) {
                 if ($val == 'Y' && $origServDet[$key]['SHOW_ONLINE'] != 'Y'){
                     if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
                         $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
                     }
                     else{
-                        $updateShowOnlineNew[$key] .= "$this->mtongueFilter,";
+                        $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
                     }
                 } 
                 else if($val == 'N' && $origServDet[$key]['SHOW_ONLINE'] != 'N') {
-                    $updateShowOnlineNew[$key] = str_replace(",$this->mtongueFilter,",",",$origServDet[$key]['SHOW_ONLINE_NEW']);
+                   
+                    $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
                     if($updateShowOnlineNew[$key] == ","){
                         $updateShowOnlineNew[$key] = "";
                     }
                 }
             }
-            echo "ankita updateShowOnlineNew...."."\n";
-            print_r($updateShowOnlineNew);
+            //echo "ankita updateShowOnlineNew...."."\n";
+            //print_r($updateShowOnlineNew);die;
             $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }

@@ -35,6 +35,7 @@ class MembershipHandler
             
             $memCacheObject = JsMemcache::getInstance();
             $noFilterMontongueList = $memCacheObject->get("NO_MAIN_MEM_FILTER_MTONGUE");
+            
             if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
                 if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
                     $count = 0;
@@ -46,7 +47,7 @@ class MembershipHandler
                 }
             }
             else{
-                $noFilterMontongueList = ",";
+                //$noFilterMontongueList = "";
                 $runSqlQuery = true;
             }
             if($runSqlQuery == true){
@@ -61,10 +62,12 @@ class MembershipHandler
                     $count = 0;
                 }
                 if($count == 0){
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList .= ",";
+                    }
                     $noFilterMontongueList .= $mtongue.",";
+                    $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
                 }
-
-                $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
 
             }
             return $count;
@@ -90,7 +93,7 @@ class MembershipHandler
                 }
             }
             else{
-                $noFilterMontongueList = ",";
+                //$noFilterMontongueList = ",";
                 $runSqlQuery = true;
             }
             
@@ -107,9 +110,12 @@ class MembershipHandler
                     $count = 0;
                 }
                 if($count == 0){
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList .= ",";
+                    }
                     $noFilterMontongueList .= $mtongue.",";
+                    $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
                 }
-                $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
             }
             return $count;
         }
@@ -133,7 +139,6 @@ class MembershipHandler
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
-            
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
                 $fetchOffline = false;
@@ -142,7 +147,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
-
+            error_log("ankita fetchOnline-".$fetchOnline."--fetchOffline-".$fetchOffline);
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {

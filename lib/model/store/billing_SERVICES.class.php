@@ -67,7 +67,7 @@ class billing_SERVICES extends TABLE
             foreach ($serviceIdArr as $key => $val) $str[] = ":SERVICEID$key";
             $newStr = @implode(",", $str);
             
-            $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' where SERVICEID IN($newStr)";
+            $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE_NEW=CASE WHEN SHOW_ONLINE_NEW = '' THEN ',-1,' ELSE CONCAT(SHOW_ONLINE_NEW,'-1,') END where SERVICEID IN($newStr)";
             $res = $this->db->prepare($sql);
             foreach ($serviceIdArr as $key => $val) $res->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
             $res->execute();
@@ -592,6 +592,7 @@ class billing_SERVICES extends TABLE
                     $sql .= " WHEN SERVICEID LIKE '$key' THEN '$value'";
                 }
                 $sql .= " ELSE SHOW_ONLINE_NEW END";
+                //var_dump($sql);
                 $resSelectDetail = $this->db->prepare($sql);
                 $resSelectDetail->execute();
             }
