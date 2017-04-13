@@ -121,7 +121,7 @@ class myjsActions extends sfActions
     $stFirstTime = microtime(TRUE);
     $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
     $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-    if($appVersion>94)
+    if($appVersion>93)
       $oldMyjsApi=false;
     else
       $oldMyjsApi=true;
