@@ -2,6 +2,8 @@
 class CommunicationHistory
 {
 	private static $RESULTS_PER_PAGE_APP=30;
+        private static $viewerKey = 'VR';
+        private static $viewedKey = 'VD';
 	private $loginProfile;
 	private $otherProfile;
 	private $nextPage;
@@ -63,21 +65,24 @@ class CommunicationHistory
 				if ($value["SENDER"] == $this->loginProfile->getPROFILEID()) {
 					$who  = "You";
 					$side = "S";
+                                        $currentLoop = self::$viewerKey;
 				} //$value["SENDER"] == $logged_pid
 				else {
 					$who  = "They";
 					$side = "R";
+                                        $currentLoop = self::$viewedKey;
+
 				}
 				$previousStatus                            = $value['TYPE'];
- 				if($message_log[$value['DATE']]){
+ 				if($message_log[$value['DATE']][$currentLoop]){
  					$dtObj = new DateTime($value['DATE']);
  					$dtObj->modify('+1 second');
  					$newDate = $dtObj->format("Y-m-j H:i:s");
  					$messagelog[$key]['DATE']=$newDate;
  					$value = $messagelog[$key];
  				}
-				$message_log[$value['DATE']]["type"]  = $type . $side;
-				$message_log[$value['DATE']]["who"]     = $who;
+				$message_log[$value['DATE']][$currentLoop]["type"]  = $type . $side;
+				$message_log[$value['DATE']][$currentLoop]["who"]     = $who;
 				if($value['MESSAGE']){
 					if(strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false)
 					{
@@ -102,10 +107,10 @@ class CommunicationHistory
 						else
 							$value['MESSAGE']="";
 					}
-					$message_log[$value['DATE']]["message"] = $value['MESSAGE'];
+					$message_log[$value['DATE']][$currentLoop]["message"] = $value['MESSAGE'];
 				}
 				else
-					$message_log[$value['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+					$message_log[$value['DATE']][$currentLoop]["message"] = ""; //inserting space to prevent null exception in various channels
 			} //$messagelog as $key => $value
 			
 		$senderDetails["INCOMPLETE"] = $this->loginProfile->getINCOMPLETE();
@@ -115,15 +120,16 @@ class CommunicationHistory
 			$contactObj  = new ContactsRecords();
 			$tempContact = $contactObj->getTempContact($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 			if (!empty($tempContact)) {
+                                $currentLoop = self::$viewerKey;
 				$ids                                            = $tempContact[0]['CONTACTID'];
-				$message_log[$tempContact[0]['DATE']]["header"] = "I Sent";
+				$message_log[$tempContact[0]['DATE']][$currentLoop]["header"] = "I Sent";
 				$profilechecksum                                = createchecksumforsearch($logged_pid);
 				if ($tempParam == 'incomplete')
-					$message_log[$tempContact[0]['DATE']]["message"] = "You had expressed interest in this profile and the same will be delivered once your profile is complete.";
+					$message_log[$tempContact[0]['DATE']][$currentLoop]["message"] = "You had expressed interest in this profile and the same will be delivered once your profile is complete.";
 				else
-					$message_log[$tempContact[0]['DATE']]["message"] = "You had expressed interest in this profile and the same will be delivered once your profile goes live";
-				$message_log[$tempContact[0]['DATE']]["who"] = "You";
-				$message_log[$tempContact[0]['DATE']]["type"] = "TIS";
+					$message_log[$tempContact[0]['DATE']][$currentLoop]["message"] = "You had expressed interest in this profile and the same will be delivered once your profile goes live";
+				$message_log[$tempContact[0]['DATE']][$currentLoop]["who"] = "You";
+				$message_log[$tempContact[0]['DATE']][$currentLoop]["type"] = "TIS";
 			} //!empty($tempContact)
 		} //$tempParam
 		$bookmarkObj = new Bookmarks();
@@ -131,29 +137,33 @@ class CommunicationHistory
 			$this->otherProfile->getPROFILEID()
 		));
 		if (!empty($bookmarks)) {
-			$message_log[$bookmarks[0]['BKDATE']]["who"]     = "You";
-			$message_log[$bookmarks[0]['BKDATE']]["type"]  = "S";
-			$message_log[$bookmarks[0]['BKDATE']]["message"] = $bookmarks[0]['BKNOTE'];
+                        $currentLoop = self::$viewerKey;
+			$message_log[$bookmarks[0]['BKDATE']][$currentLoop]["who"]     = "You";
+			$message_log[$bookmarks[0]['BKDATE']][$currentLoop]["type"]  = "S";
+			$message_log[$bookmarks[0]['BKDATE']][$currentLoop]["message"] = $bookmarks[0]['BKNOTE'];
 		}
 		$eoiViewedLogObj = new EoiViewLog();
 		$viewed          = $eoiViewedLogObj->getEoiViewed($this->otherProfile->getPROFILEID(), $this->loginProfile->getPROFILEID());
 		if ($viewed) {
-			$message_log[$viewed]["type"]  = "IV";
-			$message_log[$viewed]["who"]     = $heshe;
-			$message_log[$viewed]["message"] = $heshe . " viewed your Expression of Interest";
+                        $currentLoop = self::$viewedKey;
+			$message_log[$viewed][$currentLoop]["type"]  = "IV";
+			$message_log[$viewed][$currentLoop]["who"]     = $heshe;
+			$message_log[$viewed][$currentLoop]["message"] = $heshe . " viewed your Expression of Interest";
 		}
 		$horoscopeRequestObj = new Horoscope();
 		$output              = $horoscopeRequestObj->getHoroscopeCommunication($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($output))
 			foreach ($output as $key => $value) {
 				if ($value['PROFILEID_REQUEST_BY'] == $this->loginProfile->getPROFILEID()) {
-					$message_log[$value['DATE']]["type"]  = "HR";
-					$message_log[$value['DATE']]["who"]     = $heshe;
-					//$message_log[$value['DATE']]["message"] = $heshe . " requested you for your Horoscope"
+                                        $currentLoop = self::$viewedKey;
+					$message_log[$value['DATE']][$currentLoop]["type"]  = "HR";
+					$message_log[$value['DATE']][$currentLoop]["who"]     = $heshe;
+					//$message_log[$value['DATE']][$currentLoop]["message"] = $heshe . " requested you for your Horoscope"
 				} else {
-					$message_log[$value['DATE']]["type"]  = "HS";
-					$message_log[$value['DATE']]["who"]     = "You";
-					//$message_log[$value['DATE']]["message"] = "You requested " . $himher . " for Horoscope";
+                                        $currentLoop = self::$viewerKey;
+                                        $message_log[$value['DATE']][$currentLoop]["type"]  = "HS";
+					$message_log[$value['DATE']][$currentLoop]["who"]     = "You";
+					//$message_log[$value['DATE']][$currentLoop]["message"] = "You requested " . $himher . " for Horoscope";
 				}
 			}
 		$photoRequestObj = new PhotoRequest();
@@ -161,13 +171,15 @@ class CommunicationHistory
 		if (!empty($output))
 			foreach ($output as $key => $value) {
 				if ($value['PROFILEID_REQ_BY'] == $this->loginProfile->getPROFILEID()) {
-					$message_log[$value['DATE']]["type"]  = "PR";
-					$message_log[$value['DATE']]["who"]     = $heshe;
-					//$message_log[$value['DATE']]["message"] = $heshe . " requested you for your Photo";
+                                        $currentLoop = self::$viewedKey;
+					$message_log[$value['DATE']][$currentLoop]["type"]  = "PR";
+					$message_log[$value['DATE']][$currentLoop]["who"]     = $heshe;
+					//$message_log[$value['DATE']][$currentLoop]["message"] = $heshe . " requested you for your Photo";
 				} else {
-					$message_log[$value['DATE']]["type"]  = "PS";
-					$message_log[$value['DATE']]["who"]     = "You";
-					//$message_log[$value['DATE']]["message"] = "You requested " . $himher . " for Photo";
+                                        $currentLoop = self::$viewerKey;
+					$message_log[$value['DATE']][$currentLoop]["type"]  = "PS";
+					$message_log[$value['DATE']][$currentLoop]["who"]     = "You";
+					//$message_log[$value['DATE']][$currentLoop]["message"] = "You requested " . $himher . " for Photo";
 				}
 			}
 			
@@ -181,31 +193,33 @@ class CommunicationHistory
 				if ($val["SENDER"] == $this->loginProfile->getPROFILEID()) {
 						$who  = "You";
 						$side = "S";
+                                                $currentLoop = self::$viewerKey;
 					} //$value["SENDER"] == $logged_pid
 					else {
 						$who  = "They";
 						$side = "R";
+                                                $currentLoop = self::$viewedKey;
 					}
 				//	$previousStatus                            = 'A';
-				if(array_key_exists($val['DATE'],$message_log)){
+				if(array_key_exists($val['DATE'],$message_log) && $message_log[$val['DATE']][$currentLoop]){
 					if($val['MESSAGE']){
 						if(!MobileCommon::isApp())
-								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."</br> ".$val['MESSAGE'];
+								$message_log[$val['DATE']][$currentLoop]["message"] = $message_log[$val['DATE']][$currentLoop]["message"]."</br> ".$val['MESSAGE'];
 						else
-								$message_log[$val['DATE']]["message"] = $message_log[$val['DATE']]["message"]."\n".$val['MESSAGE'];
+								$message_log[$val['DATE']][$currentLoop]["message"] = $message_log[$val['DATE']][$currentLoop]["message"]."\n".$val['MESSAGE'];
 
 					}
 					else
-						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+						$message_log[$val['DATE']][$currentLoop]["message"] = ""; //inserting space to prevent null exception in various channels
 				}
 				else
 				{
-					$message_log[$val['DATE']]["type"]  = 'O'. $side;
-					$message_log[$val['DATE']]["who"]     = $who;
+					$message_log[$val['DATE']][$currentLoop]["type"]  = 'O'. $side;
+					$message_log[$val['DATE']][$currentLoop]["who"]     = $who;
 					if($val['MESSAGE'])
-						$message_log[$val['DATE']]["message"] = $val['MESSAGE'];
+						$message_log[$val['DATE']][$currentLoop]["message"] = $val['MESSAGE'];
 					else
-						$message_log[$val['DATE']]["message"] = ""; //inserting space to prevent null exception in various channels
+						$message_log[$val['DATE']][$currentLoop]["message"] = ""; //inserting space to prevent null exception in various channels
 				}
 					
 			}
@@ -216,14 +230,11 @@ class CommunicationHistory
 		$start = 0;
 		if (is_array($message_log))
 			foreach ($message_log as $key => $val) {
-				$date_time                   = explode(" ", $key);
-				$date                        = explode("-", $date_time[0]);
-				$time                        = explode(":", $date_time[1]);
-				$format_time                 = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
-				$time                        = date("D", $format_time) . ", " . date("d", $format_time) . " " . date("F", $format_time) . ", " . date("y", $format_time);
-				$CON_HISTORY[$start]         = $val;
+                                if($val[self::$viewerKey])
+        				$CON_HISTORY[$start++]         = $val[self::$viewerKey];
+                                if($val[self::$viewedKey])
+        				$CON_HISTORY[$start++]         = $val[self::$viewedKey];
 				$CON_HISTORY[$start]["time"] = $key;
-				$start++;
 			} else {
 			return false;
 		}
