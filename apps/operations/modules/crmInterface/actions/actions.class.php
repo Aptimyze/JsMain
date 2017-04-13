@@ -1007,8 +1007,7 @@ class crmInterfaceActions extends sfActions
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
         $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
-        //var_dump($this->mtongueFilter);
-        //var_dump($submit);
+        
         if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
@@ -1016,16 +1015,15 @@ class crmInterfaceActions extends sfActions
             //echo "ankita origServDet...."."\n";
            
             foreach ($params as $key => $val) {
-                if ($val == 'Y' && $origServDet[$key]['SHOW_ONLINE'] != 'Y'){
+                if ($val == 'Y'/* && $origServDet[$key]['SHOW_ONLINE'] != 'Y'*/){
                     if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
                         $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
                     }
-                    else{
+                    else if(strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") === false){
                         $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
                     }
                 } 
-                else if($val == 'N' && $origServDet[$key]['SHOW_ONLINE'] != 'N') {
-                   
+                else if($val == 'N'&& strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
                     $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
                     if($updateShowOnlineNew[$key] == ","){
                         $updateShowOnlineNew[$key] = "";
@@ -1048,7 +1046,8 @@ class crmInterfaceActions extends sfActions
         else{
             $this->mappedMtongueFilter = $this->mtongueFilter;
         }
-        
+        //var_dump($this->mtongueFilter);
+        //var_dump($this->mappedMtongueFilter);        
         $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
 
         //print_r($this->servDet);die;
