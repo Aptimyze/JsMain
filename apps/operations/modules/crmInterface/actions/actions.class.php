@@ -1037,6 +1037,18 @@ class crmInterfaceActions extends sfActions
             $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
+
+        $memHandlerObj = new MembershipHandler(false);
+        $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+        unset($memHandlerObj);
+  
+        if($count == 0){
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $this->mappedMtongueFilter = $this->mtongueFilter;
+        }
+        
         $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
 
         //print_r($this->servDet);die;
