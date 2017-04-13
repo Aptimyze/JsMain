@@ -615,7 +615,15 @@ function removeCaptcha()
 
 function logSiteUrl()
 {
-	alert("helo");
-	console.log(window.location.href);
-	console.log(document.URL);
+	var url = location.href;
+	if(url.indexOf("jeevansathi") == -1)
+	{
+		var dataObject = JSON.stringify({'url' : encodeURIComponent(url)});
+		$.ajax({
+			url : '/api/v1/common/logOtherUrl',
+			dataType: 'json',
+			data: 'data='+dataObject,
+			success: function(response) {}
+		});
+	}
 }
