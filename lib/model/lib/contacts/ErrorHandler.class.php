@@ -705,7 +705,7 @@ class ErrorHandler
 	 */	
 	function checkContactlimit()
 	{
-		$error ='';
+		$error['MSG'] ='';
 		
 		//Not to be checked for AP users.
 		if($this->contactHandlerObj->getPageSource()=='AP')
@@ -980,8 +980,8 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 		return $error;
 	}
 
-	private function logEOIBreach()
-	{
+	private function logEOIBreach($EOIDone)
+	{	
 			$viewerLogObj = $this->contactHandlerObj->getViewer();
 			$viewedLogObj = $this->contactHandlerObj->getViewed();
 			$viewerGender = $viewerLogObj->getGENDER();
@@ -989,6 +989,7 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 			$viewedPfid = $viewedLogObj->getPROFILEID();
 			$typeBreached = $this->errorTypeArr['LIMIT'];
 			$subscription = $viewerLogObj->getSUBSCRIPTION();
+
 			$check = CommonFunction::isPaid($subscription);
 			if($check == true)
 			{
@@ -1003,7 +1004,7 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 				$typeOfUser = "FREE";
 			}
 			$loggingObj = new MIS_EOI_DENIED_LOG();
-			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser);
+			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser,$EOIDone);
 	}
 
 
