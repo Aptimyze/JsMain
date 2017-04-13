@@ -231,10 +231,15 @@ class CommunicationHistory
 		if (is_array($message_log))
 			foreach ($message_log as $key => $val) {
                                 if($val[self::$viewerKey])
-        				$CON_HISTORY[$start++]         = $val[self::$viewerKey];
+                                {
+                                    $CON_HISTORY[$start]["time"] = $key;
+                    				$CON_HISTORY[$start++]         = $val[self::$viewerKey];
+                                }
                                 if($val[self::$viewedKey])
-        				$CON_HISTORY[$start++]         = $val[self::$viewedKey];
-				$CON_HISTORY[$start]["time"] = $key;
+                                {
+                                    $CON_HISTORY[$start]["time"] = $key;
+                    				$CON_HISTORY[$start++]         = $val[self::$viewedKey];
+                                }
 			} else {
 			return false;
 		}
