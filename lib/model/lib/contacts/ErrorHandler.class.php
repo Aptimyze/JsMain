@@ -756,6 +756,7 @@ class ErrorHandler
 			}
 			else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, "Contact Not Verified in Error Handler (checkContactlimit function)");
 				
 				if($this->contactHandlerObj->getPageSource()=='Search')
 				
