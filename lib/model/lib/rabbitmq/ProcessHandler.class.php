@@ -378,16 +378,24 @@ public function logDiscount($body,$type){
   public function sendInstantEOINotification($body, $type)
   {
     $rabbitMq = 1;
+    // consumption logging
+    $currdate = date('Y-m-d');
+    $file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/InstantEoiQConsume-$currdate", "a+");
     if($type == "INSTANT_EOI")
     {
+      $x = json_encode($body);
+      fwrite($file, "$type with $x\n");
       $instantNotificationObj = new InstantAppNotification("EOI");
       $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId'], '', '', '', $rabbitMq);
     }
     elseif($type == "INSTANT_CHAT_EOI_MSG")
     {
+      $x = json_encode($body);
+      fwrite($file, "$type with $x\n");
       $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
       $instantNotificationObj->sendNotification($body["otherUserId"], $body["selfUserId"], $body["message"], $body["exUrl"], $body["extraParams"], $rabbitMq);
     }
+    fclose($file);
   }
 
     public function processMatchAlertNotification($type,$body){
