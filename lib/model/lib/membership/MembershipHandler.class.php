@@ -35,7 +35,6 @@ class MembershipHandler
             
             $memCacheObject = JsMemcache::getInstance();
             $noFilterMontongueList = $memCacheObject->get("NO_MAIN_MEM_FILTER_MTONGUE");
-            
             if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
                 if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
                     $count = 0;
@@ -51,7 +50,6 @@ class MembershipHandler
                 $runSqlQuery = true;
             }
             if($runSqlQuery == true){
-                error_log("ankita hit in table for getting getOnlineActiveDurations");
                 $serviceObj = new billing_SERVICES("newjs_masterRep");
                 $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue);
                 unset($serviceObj);
@@ -63,13 +61,19 @@ class MembershipHandler
                 }
                 if($count == 0){
                     if(empty($noFilterMontongueList)){
-                        $noFilterMontongueList .= ",";
+                        $noFilterMontongueList = ",";
                     }
                     $noFilterMontongueList .= $mtongue.",";
                     $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
                 }
-
+                else{
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = "";
+                    }
+                    $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
             }
+
             return $count;
         }
     }
@@ -98,7 +102,6 @@ class MembershipHandler
             }
             
             if($runSqlQuery == true){
-                error_log("ankita hit in table for getting getOnlineActiveAddonDurationsWrapper");
                 $serviceObj = new billing_SERVICES("newjs_masterRep");
                 $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue,"Y");
 
@@ -111,9 +114,15 @@ class MembershipHandler
                 }
                 if($count == 0){
                     if(empty($noFilterMontongueList)){
-                        $noFilterMontongueList .= ",";
+                        $noFilterMontongueList = ",";
                     }
                     $noFilterMontongueList .= $mtongue.",";
+                    $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+                else{
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = "";
+                    }
                     $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
                 }
             }
@@ -147,7 +156,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
-            error_log("ankita fetchOnline-".$fetchOnline."--fetchOffline-".$fetchOffline);
+            
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {
