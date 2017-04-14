@@ -54,7 +54,7 @@ class MembershipActionFunctions
             $notificationKey = $request->getParameter("notificationKey");
             $loginData =$request->getAttribute("loginData");
             $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
-            //error_log("in api request membership ankita-".$msgId."---".$notificationKey);
+            
             //file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
             NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$msgId,"notificationKey"=>$notificationKey));
         }

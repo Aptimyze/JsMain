@@ -481,10 +481,10 @@ class membershipActions extends sfActions
 
             $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
 
-            // Code added to specifically remove 1 month membership from display
-            if (isset($allMainMem['P']['P1'])) {
+            // ankita :Code removed to specifically remove 1 month membership from display
+            /*if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
-            }
+            }*/
 
             $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
             $discountType       = $discountTypeArr['TYPE'];
@@ -634,11 +634,11 @@ class membershipActions extends sfActions
         $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
         $this->tabs = $memHandlerObj->getMobMembershipTabs($allMainMem, $this->memID);
 
-        // Code added to specifically remove 1 month membership from display
-        if (isset($allMainMem['P']['P1'])) {
+        // ankita Code removed to specifically remove 1 month membership from display
+        /*if (isset($allMainMem['P']['P1'])) {
             unset($allMainMem['P']['P1']);
             unset($this->tabs[1]);
-        }
+        }*/
 
         $this->mainSubMemId   = $request->getParameter('mainSubMemId');
         $this->allMemberships = $memHandlerObj->getMobSuggestedService($this->memID, $this->tabs);

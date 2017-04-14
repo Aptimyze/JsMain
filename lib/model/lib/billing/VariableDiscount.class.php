@@ -551,7 +551,7 @@ class VariableDiscount
     }
     public function getActiveDurations($profileid="")
     {
-        error_log("ankita check whether to reset mtongue based on count and make MAIN_MEM_DURATION profile specific");
+    
 	$keyMain='MAIN_MEM_DURATION';
 	$memCacheObject = JsMemcache::getInstance();
         if($memCacheObject->get($keyMain)){
