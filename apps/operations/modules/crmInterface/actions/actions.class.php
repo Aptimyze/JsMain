@@ -1023,7 +1023,7 @@ class crmInterfaceActions extends sfActions
                         $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
                     }
                 } 
-                else if($val == 'N'&& strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
+                else if($val == 'N' && strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
                     $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
                     if($updateShowOnlineNew[$key] == ","){
                         $updateShowOnlineNew[$key] = "";
