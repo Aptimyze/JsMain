@@ -12,6 +12,8 @@ class schedulePushNotificationsKey extends sfBaseTask
 $this->addArguments(array(new sfCommandArgument('notificationKey', sfCommandArgument::REQUIRED, 'My argument')));
 $this->addArguments(array(new sfCommandArgument('noOfScripts', sfCommandArgument::REQUIRED, 'My argument')));
 $this->addArguments(array(new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument')));
+$this->addArguments(array(new sfCommandArgument('androidMaxVersion', sfCommandArgument::OPTIONAL, 'My argument')));
+$this->addArguments(array(new sfCommandArgument('currentAndroidMaxVersion', sfCommandArgument::OPTIONAL, 'My argument')));
 
     $this->namespace        = 'notification';
     $this->name             = 'schedulePushNotificationsKey';
@@ -41,7 +43,22 @@ $this->addOptions(array(
 		$notificationKey = $arguments["notificationKey"];
 		$noOfScripts = $arguments["noOfScripts"];
 		$currentScript = $arguments["currentScript"];
-                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript);
+        $androidMaxVersion = $arguments["androidMaxVersion"];
+        $currentAndroidMaxVersion = $arguments["currentAndroidMaxVersion"];
+        $this->checkForUpdateApp($notificationKey, $androidMaxVersion, $currentAndroidMaxVersion);
+                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion,$currentAndroidMaxVersion);
                 $appNotificationSchedulerObj->scheduleNotificationsForKey();
+  }
+  
+  public function checkForUpdateApp($notificationKey,$androidMaxVersion,$currentAndroidMaxVersion){
+      if($notificationKey == "UPGRADE_APP"){
+          if(!($androidMaxVersion && $currentAndroidMaxVersion)){
+              die("Please provide android version till which notification needs to be send and current max android version");
+          }
+          else{
+              $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
+              $upgradeAppObj->insert($androidMaxVersion, $currentAndroidMaxVersion);
+          }
+      }
   }
 }
