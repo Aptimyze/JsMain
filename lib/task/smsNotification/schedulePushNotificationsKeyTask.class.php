@@ -52,7 +52,7 @@ $this->addOptions(array(
   
   public function checkForUpdateApp($notificationKey,$androidMaxVersion,$currentAndroidMaxVersion){
       if($notificationKey == "UPGRADE_APP"){
-          if(!($androidMaxVersion && $currentAndroidMaxVersion)){
+          if(!($androidMaxVersion && $currentAndroidMaxVersion && is_numeric($androidMaxVersion) && is_numeric($currentAndroidMaxVersion))){
               die("Please provide android version till which update app notification needs to be send and current max android version");
           }
           else{
