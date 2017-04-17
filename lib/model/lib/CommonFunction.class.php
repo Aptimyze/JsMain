@@ -886,12 +886,16 @@ class CommonFunction
 
 		if($errlimit == "WEEK")
 		{
+			if($daysDiff % 7 == 0)
+				$daysDiff += 1;
 			$weeks = ceil($daysDiff/7) * 7 - 1;
 			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
 
 		}
 		elseif($errlimit == "MONTH")
 		{
+			if($daysDiff % 30 == 0)
+				$daysDiff += 1;
 			$months = ceil($daysDiff/30) * 30 - 1;
 			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
 		}
