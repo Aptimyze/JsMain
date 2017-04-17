@@ -54,9 +54,8 @@ function handleImportedPhotoSlider(top)
 /*set pointer towards selected album
 @param : thisElement
 */
-function setActiveAlbumPointer(thisElement)
+function setActiveAlbumPointer(offset)
 {
-	var offset = parseInt($(thisElement).attr("data-id")); //album offset
 	var newtop = initialAlbumImportPointerTop + ((offset % importPhotosBarCountPerShift) * 138);
 	$("#selectedAlbumPointer").css('top',newtop + 'px');
 }

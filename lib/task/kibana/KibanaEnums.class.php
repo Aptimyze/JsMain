@@ -6,6 +6,7 @@
 	{
 		public static $FILEBEAT_INDEX = 'filebeat-';
 		public static $CONSUMER_INDEX = 'consumer-';
+		public static $OPENFIRE_INDEX = 'openfire-';
 
 
 		public static $ERROR_TREND_INDEX = 'errortrends';
