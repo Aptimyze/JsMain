@@ -191,7 +191,7 @@ public function microtime_float()
 			break;
 		   case "LOGIN_REGISTER":
 		   		$poolObj = new NotificationDataPool();
-				$dataAccumulated = $poolObj->getLOGIN_REGISTERNotificationData($appProfiles);
+				$dataAccumulated = $poolObj->getLoggedoutNotificationData($appProfiles);
 				//print_r($dataAccumulated);die;
 				unset($poolObj);
 		   		break;

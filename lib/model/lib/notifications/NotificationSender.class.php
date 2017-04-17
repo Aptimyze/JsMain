@@ -31,7 +31,7 @@ class NotificationSender
     		foreach($profileDetails as $identifier=>$details)
     		{
                 $osType = "";
-                if($profileDetails[$identifier]["NOTIFICATION_KEY"] != "LOGIN_REGISTER"){
+                if(!in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                     $profileid = $identifier;
                 }
                 else{
@@ -40,7 +40,7 @@ class NotificationSender
     			if(!isset($details))
     				continue;
                 if(!is_array($regIds)){       
-                    if($profileDetails[$identifier]['NOTIFICATION_KEY'] == 'LOGIN_REGISTER'){
+                    if(in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['NOTIFICATION_KEY'],$profileDetails[$identifier]['REG_ID']); 
                     }
                     else{

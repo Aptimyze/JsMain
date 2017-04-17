@@ -539,7 +539,7 @@ class NotificationDataPool
         }
     }
 
-    function getLOGIN_REGISTERNotificationData($applicableProfiles){
+    function getLoggedoutNotificationData($applicableProfiles){
         if(is_array($applicableProfiles)){
             $counter =0;
             foreach($applicableProfiles as $key=>$regId){

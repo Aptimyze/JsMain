@@ -53,7 +53,7 @@ $this->addOptions(array(
 
 			foreach($details as $k=>$v)
 			{
-				if($this->notificationKey == "LOGIN_REGISTER"){
+				if(in_array($this->notificationKey, NotificationEnums::$loggedOutNotifications)){
 					$profileDetails[$k]=$v;
 				}
 				else{

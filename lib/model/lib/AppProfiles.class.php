@@ -23,7 +23,7 @@ class AppProfilesHandler
 				$appVersionAnd =$appVersion['AND'];
 			if($osType=='IOS' || $osType=='ALL')
 				$appVersionIos =$appVersion['IOS'];
-			if($notificationKey == "LOGIN_REGISTER"){
+			if(in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
 				$separateWhereProfile = "(PROFILEID IS NULL OR PROFILEID = 0)";
 				$separateSelectColumns = "REG_ID";
 				$notificationStatus = 'Y';
@@ -39,7 +39,7 @@ class AppProfilesHandler
 		}
 		if(isset(self::$res[$notificationKey][$currentScript]))
 		{
-			if($notificationKey == "LOGIN_REGISTER"){
+			if(in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
 				$separateSelectColumns = "REG_ID";
 			}
 			else{
