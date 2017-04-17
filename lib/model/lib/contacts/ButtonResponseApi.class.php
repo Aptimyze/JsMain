@@ -285,10 +285,15 @@ Class ButtonResponseApi
 		return $button;
 	}
 	public function getInitiatedButton($androidText = false,$privilageArray="")
-	{
+	{  
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
-		{
-			$button = self::getCancelInterestButton();
+		{  
+			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
+			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
+			$button["value"] = "INITIATE";
+			$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile);
+			$button [] = self::getContactDetailsButton();
+			$button [] = $button[] = self::getIgnoreButton('','',1);
 			$responseArray["canChat"] = false;
 			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 			{
