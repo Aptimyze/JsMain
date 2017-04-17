@@ -68,4 +68,5 @@ class NotificationEnums
 
       public static $loggedOutNotifications = array("LOGIN_REGISTER");
 
+      public static $notEligibleForPolling = array("LOGIN_REGISTER");
 }
