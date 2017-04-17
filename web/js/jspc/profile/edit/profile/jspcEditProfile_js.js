@@ -6125,7 +6125,7 @@ function setViewHoroscopeDiv(){
 
 function resetCreateHoroscope(){
     $("#createHoroDiv").empty();
-    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
+    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
 }
 
 $(document).ready(function() {
