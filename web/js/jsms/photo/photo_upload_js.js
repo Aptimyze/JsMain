@@ -45,7 +45,7 @@ function showHideUploadMoreOption()
 	if ( storedDate !== null)
 	{
 		diff = new Date(currentDate-new Date(storedDate));
-		if ( Math.floor(diff/(1000*60*60*24)) < hoursLimit)
+		if ( Math.floor(diff/(1000*60*60)) < hoursLimit)
 		{
 			$("#updatetextover").hide();
 		}
