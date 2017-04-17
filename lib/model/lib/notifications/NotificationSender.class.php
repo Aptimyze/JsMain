@@ -86,9 +86,11 @@ class NotificationSender
                 $msgId          =$details['MSG_ID'];
                 $message        =$details['MESSAGE'];
                 $title          =$details['TITLE'];
+
                 $notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
                 $notificationMsgLog->insert($key,$msgId,$message,$title);
                 // end
+              
                 unset($regIds);
     		}
             if($this->sendMultipleParallelNotification == true){
