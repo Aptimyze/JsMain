@@ -236,6 +236,13 @@
             ~/if`
             ~/if`
             <br><br>
+            ~if $profileid && $isAlloted`
+            <table width=100% align="center">
+              <tr class=fieldsnew>
+                <td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/crmSmsFunctionalityInterface?cid=~$cid`&profileid=~$profileid`&username=~$username`" target="_blank">Send SMS to this profile user</a><br><br></td>
+              </tr>
+            </table>
+            ~/if`
             ~include_partial('global/footer')`
           </body>
           <script type="text/javascript">

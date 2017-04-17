@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporter'></td><td class='RADate'></td><td class='SUNumberMarked'><td class='RAcomments'></td></td><td class='SUCount'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporter'></td><td class='RADate'></td><td class='SUNumberMarked'><td class='RAcomments'></td></td><td class='SUCount'></td><td class='unverifiedCount'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
@@ -12,6 +12,7 @@
 		tempHtml.find('.RADate').text(rowJson.timestamp);
 		tempHtml.find('.SUCount').text(rowJson.count);
 		tempHtml.find('.SUNumberMarked').text(rowJson.phone_number);
+		tempHtml.find('.unverifiedCount').text(rowJson.unverifiedCount);
 		return tempHtml;
 
 	}
@@ -165,6 +166,7 @@
 <td>CONTACT_NUMBER_MARKED</td>
 <td style="width : 400px">COMMENTS</td>
 <td>COUNT IN LAST 90 DAYS</td>
+<td>OPS Unverified Count</td>
 </tr>
 
 </table>

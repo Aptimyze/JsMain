@@ -28,7 +28,7 @@
         
         <div class="fullwid bg1 posfixTop" id="searchHeader">
 ~if ($title2 neq null)`
-    ~if ( ($infotype eq 'ACCEPTANCES_RECEIVED')||($infotype eq 'INTEREST_RECEIVED')||($infotype eq 'NOT_INTERESTED_BY_ME'))||($visitorAllOrMatching eq 'A')` ~assign var=isReceived value=1`  ~else` ~assign var=isReceived value=0` ~/if`  
+    ~if ( ($infotype eq 'ACCEPTANCES_RECEIVED')||($infotype eq 'INTEREST_RECEIVED') ||($infotype eq 'NOT_INTERESTED_BY_ME'))||($visitorAllOrMatching eq 'A')` ~assign var=isReceived value=1`  ~else` ~assign var=isReceived value=0` ~/if`  
     
 
     <div class="padd22 txtc">
@@ -59,8 +59,8 @@
 			</div-->
 			<div class="clr"></div>
 		</div>
-	
-                        
+  
+      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig dispnone">These interests are expiring this week and will be removed from your Inbox. Please Accept/Decline</p></div>                  
       ~/if` 
       
   </div>
@@ -93,20 +93,7 @@
 </div>
 <script>
 /** list all global Variables here */
-var isLoading = false; // isLoading is a useful flag to make sure we don't send off more than one request at a time 
-var _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`;
-var minPage = 0;
-var $div = $("#searchHeader");
-var message;
-var ToshowOrNotRelaxCriteria = 0;
-var contactCenter = 1;
+var isLoading = false, _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`, minPage = 0, $div = $("#searchHeader"), message, ToshowOrNotRelaxCriteria = 0, contactCenter = 1;
 var firstResponse = ~$firstResponseArray`;
-var searchSort = firstResponse.sortType;
-var searchResultsPostParams = ''; // paramters need to perform pagination of search
-var SITE_URL = "~$SITE_URL`";
-var contactTracking = '~$tracking`';
-var NAVIGATOR = "~$NAVIGATOR`";
-var stypeKey = '';
-var contactEngineChannel = "CC";
-
+var searchSort = firstResponse.sortType, searchResultsPostParams = '', SITE_URL = "~$SITE_URL`", contactTracking = '~$tracking`', NAVIGATOR = "~$NAVIGATOR`", stypeKey = '', contactEngineChannel = "CC";
 </script>

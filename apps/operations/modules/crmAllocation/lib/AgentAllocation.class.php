@@ -35,7 +35,7 @@ class AgentAllocation
 		{
 			$mainAdminObj           	=new incentive_MAIN_ADMIN();
 			$historyObj			=new incentive_HISTORY();
-			$jprofileContactObj    		=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj    		= new ProfileContact();
 			$iProfileAlternateNumberObj	=new PROFILE_ALTERNATE_NUMBER();
 			$crmDailyAllotObj       	=new CRM_DAILY_ALLOT();
 			$serviceStatusObj		=new BILLING_SERVICE_STATUS();

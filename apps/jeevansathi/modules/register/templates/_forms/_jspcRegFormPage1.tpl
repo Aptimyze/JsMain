@@ -13,10 +13,10 @@
     <!--start:Your email-->
     <div>
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="email_error"></div>
       </div>
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5 visHid disp-none" id="email_autoC"></div>
       </div>
       <!--end:error div-->
@@ -31,7 +31,7 @@
     <!--start:Password-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="password_error"></div>
       </div>
       <!--end:error div-->
@@ -51,7 +51,7 @@
     <!--start:Create profile for-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="cpf_error"></div>
       </div>
       <!--end:error div-->
@@ -78,7 +78,7 @@
     <!--start:gender-->
     <div class="mt7 disp-none" id = "genderBox">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="gender_error"></div>
       </div>
       <!--end:error div-->
@@ -99,7 +99,7 @@
     <!--start:Full Name-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="name_error"></div>
       </div>
       <!--end:error div-->
@@ -123,7 +123,7 @@
     <!--start:Date of Birth-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="dob_error"></div>
       </div>
       <!--end:error div-->
@@ -165,7 +165,7 @@
     <!--start:phone number-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="phone_error"></div>
       </div>
       <!--end:error div-->

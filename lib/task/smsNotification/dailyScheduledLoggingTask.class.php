@@ -23,10 +23,10 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
-		$startDate 	=date('Y-m-d',time()-86400)." 19.30:00:00";
-		$endDate 	=date("Y-m-d")." 19.30:00:00";
+		$startDate 	=date('Y-m-d',time()-86400)." 00:00:00";
+		$endDate 	=date("Y-m-d",time()-86400)." 23:59:59";
 		$datePrev6day	=date("Y-m-d",time()-6*24*60*60)." 00:00:00";
-		$entryDate	=date("Y-m-d");
+		$entryDate	=date('Y-m-d',time()-86400);
 
 		// get data from Notification Log
                 $notificationsLogObj = new MOBILE_API_NOTIFICATION_LOG('newjs_slave'); 
@@ -71,9 +71,18 @@ $this->addOptions(array(
 		$browserNotificationObj =new MOBILE_API_BROWSER_NOTIFICATION('newjs_slave');
 		$browserNotificationData =$browserNotificationObj->getDataCountForRange($startDate, $endDate);
 
+		//data for channel wise and notification wise count of opened notifications
+		$startDate 	=date('Y-m-d',time()-1*86400)." 00:00:00";
+		$endDate 	=date("Y-m-d")." 00:00:00";
+		$slaveNotificationOpenedLog = new MOBILE_API_NOTIFICATION_OPENED_TRACKING("newjs_slave");
+		$notificationOpenedData = $slaveNotificationOpenedLog->getEntriesForNotificationKey('',$startDate,$endDate,array("NOTIFICATION_KEY","CHANNEL"));
+		unset($slaveNotificationOpenedLog);
+		//print_r($notificationOpenedData);
+
 		foreach($notificationArr as $key=>$notificationKeyArr){
 
 			$notificationKey	=$notificationKeyArr['NOTIFICATION_KEY'];
+			//var_dump($notificationKey);
 			$browserData		=$browserNotificationData[$notificationKey];
 
 			// PUSH
@@ -102,9 +111,18 @@ $this->addOptions(array(
 			
 			$active7DaysCount=$activeProfileCount7Day[$notificationKey];
 			$active1DaysCount=$activeProfileCountDay[$notificationKey];	
-	
+			
+			$channelWiseOpenedCountArr = array('A'=>'0','I'=>'0','D'=>'0','M'=>'0');
+			if(is_array($notificationOpenedData) && $notificationOpenedData[$notificationKey]){
+				foreach ($channelWiseOpenedCountArr as $key => $value) {
+					if($notificationOpenedData[$notificationKey][$key]){
+							$channelWiseOpenedCountArr[$key] = $notificationOpenedData[$notificationKey][$key];
+					}
+				}
+			}
+			
 			// Add record in daily log table	
-			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate,'A_I');
+			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate,'A_I',$channelWiseOpenedCountArr['A'],$channelWiseOpenedCountArr['I']);
 
                         // Browser Notification Records 
                         $desktopAcknowledged    =$browserData['D']['Y']['Y'];
@@ -113,12 +131,17 @@ $this->addOptions(array(
                         $mobileAcknowledged    	=$browserData['M']['Y']['Y'];
                         $mobilePushedTGcm      	=$mobileAcknowledged+$browserData['M']['N']['Y'];
 
-                        $dailyScheduledLog->insertData($notificationKey,$desktopPushedTGcm, $desktopPushedTGcm,'',$desktopAcknowledged ,'','','','','','', '', $entryDate,'D');
-                        $dailyScheduledLog->insertData($notificationKey,$mobilePushedTGcm, $mobilePushedTGcm,'',$mobileAcknowledged ,'','','','','','', '', $entryDate,'M');
+                        $dailyScheduledLog->insertData($notificationKey,$desktopPushedTGcm, $desktopPushedTGcm,'',$desktopAcknowledged ,'','','','','','', '', $entryDate,'D',$channelWiseOpenedCountArr['D']);
+                        $dailyScheduledLog->insertData($notificationKey,$mobilePushedTGcm, $mobilePushedTGcm,'',$mobileAcknowledged ,'','','','','','', '', $entryDate,'M',$channelWiseOpenedCountArr['M']);
+                        unset($channelWiseOpenedCountArr);
                         unset($gcmPush);
                         unset($gcmAccepted);
 			unset($gcmLogDataArr);
 			unset($recordCount);
 		}
+		unset($notificationOpenedData);
+		//$masterNotificationOpenedLog = new MOBILE_API_NOTIFICATION_OPENED_TRACKING();
+		//$masterNotificationOpenedLog->truncateTable();
+		//unset($masterNotificationOpenedLog);
   }
 }

@@ -1,6 +1,6 @@
  <!--start:Family Details-->
               <div class="prfbr3">
-              <div class="prfp6" id="section-family"> 
+              <div class="prfp6 noMultiSelect" id="section-family"> 
                 <div class="clearfix"> <i class="sprite2 fl prfic14"></i>
                   <div class="fl colr5 pl12 f17 pt2">Family Details</div>
                   ~if $bEditView`

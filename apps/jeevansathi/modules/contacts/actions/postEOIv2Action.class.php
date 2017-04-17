@@ -68,9 +68,7 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			if($request->getParameter("setFirstEoiMsgFlag") == true){
-            	$responseArray["eoi_sent"] = true;
-            }
+           
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -114,7 +112,17 @@ class postEOIv2Action extends sfAction
 		$ownthumbNail = $ownthumbNail['url'];
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		$onlyUnderScreenError = 0; // No errors
+		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
+		{
+			$onlyUnderScreenError = 1;
+		}
+		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
+		{
+			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		}
+		
 
 		if($this->contactEngineObj->messageId)
 		{ 
@@ -156,6 +164,7 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
+			
 		}
 		else
 		{
@@ -268,6 +277,7 @@ class postEOIv2Action extends sfAction
 				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
 				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["remove3Dots_UnderScreen"] = true;
 				$responseArray["headerlabel"] = "Profile Under Screening";
 				$responseArray["redirect"] = true;
 			}
@@ -285,10 +295,25 @@ class postEOIv2Action extends sfAction
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 		}
+
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
+		if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
+        {
+        	if($this->contactEngineObj->messageId){
+				$finalresponseArray["eoi_sent"] = true;
+				$finalresponseArray["cansend"] = true;
+            	$finalresponseArray["sent"] = true;
+			}
+			else{
+				$finalresponseArray["eoi_sent"] = false;
+				$finalresponseArray["cansend"] = false;
+            	$finalresponseArray["sent"] = false;    
+        	}	
+		}
 		if(MobileCommon::isNewMobileSite())
 		{
+			
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;

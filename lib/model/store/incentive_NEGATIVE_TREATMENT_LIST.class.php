@@ -358,6 +358,21 @@ public function isFtoDuplicate($profileId){
   }
 
 
+  public function removeProfile($negType, $negativeVal) 
+  {
+        try {
+            $sql = "DELETE FROM incentive.NEGATIVE_TREATMENT_LIST WHERE $negType=:VALUE_VAL";
+            $prep = $this->db->prepare($sql);
+	    $prep->bindValue(":VALUE_VAL", $negativeVal, PDO::PARAM_STR);
+            $prep->execute();
+	    $rows_affected =$prep->rowCount();
+	    return $rows_affected;
+        }
+        catch (Exception $e) {
+            throw new jsException($e);
+        }
+  }
+
     //Three function for innodb transactions
     public function startTransaction()
     {

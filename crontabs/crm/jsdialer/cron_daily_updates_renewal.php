@@ -17,6 +17,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer); 
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
+$todayDate =$dialerHandlerObj->getEST();
 
 foreach($campaign_nameArr as $key=>$campaign_name)
 {
@@ -33,7 +34,7 @@ foreach($campaign_nameArr as $key=>$campaign_name)
 		$ignore_array = $dialerHandlerObj->getRenewalInEligibleProfiles($i,$campaign_name);
 		$rd_array = $dialerHandlerObj->getRenewalDiscountArray($ignore_array);
 	        $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$rd_array);
-		$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+		$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $todayDate);
 		echo "DONE$i"."\n";
 	}
 
@@ -50,7 +51,7 @@ foreach($campaign_nameArr as $key=>$campaign_name)
 		$scoreArray = $dialerHandlerObj->getScoreArray($eligible_array);
 		$paidProfiles =$dialerHandlerObj->getPaidProfilesArray($eligible_array);
 	        $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$rd_array,$allotedArray,$scoreArray, $paidProfiles);
-		$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+		$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $todayDate);
 		echo "DONE$i"."\n";
 	}
 }

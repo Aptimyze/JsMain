@@ -10,8 +10,8 @@ class connectionThresholdTask extends sfBaseTask
   /**
     * @var const EMAIL_TO comma separated email ids
   */
-  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com";
-  private $SMS_TO = array('9650350387','9818424749');
+  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
+  private $SMS_TO = array('9650350387','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707','8826380350');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
   /**
@@ -28,7 +28,7 @@ class connectionThresholdTask extends sfBaseTask
   /*
    * @var array $thresholdValue having threshold value for each server   
    */
-  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300);
+  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300);
   
   protected function configure()
   {
@@ -46,7 +46,6 @@ EOF;
     {      
       // server configuration array with threshold value is indexed at 'threshold'
       $SERVER_ARR[]=array("master",MysqlDbConstants::$master["HOST"],MysqlDbConstants::$master["USER"],MysqlDbConstants::$master["PASS"],MysqlDbConstants::$master["PORT"],'threshold'=>self::$thresholdValue['master']);
-      $SERVER_ARR[]=array("masterRO",MysqlDbConstants::$masterRO["HOST"],MysqlDbConstants::$masterRO["USER"],MysqlDbConstants::$masterRO["PASS"],MysqlDbConstants::$masterRO["PORT"],'threshold'=>self::$thresholdValue['masterRO']);
       $SERVER_ARR[]=array("masterRep",MysqlDbConstants::$masterRep["HOST"],MysqlDbConstants::$masterRep["USER"],MysqlDbConstants::$masterRep["PASS"],MysqlDbConstants::$masterRep["PORT"],'threshold'=>self::$thresholdValue['masterRep']);
       $SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1["HOST"],MysqlDbConstants::$shard1["USER"],MysqlDbConstants::$shard1["PASS"],MysqlDbConstants::$shard1["PORT"],'threshold'=>self::$thresholdValue['shard1']);
       $SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2["HOST"],MysqlDbConstants::$shard2["USER"],MysqlDbConstants::$shard2["PASS"],MysqlDbConstants::$shard2["PORT"],'threshold'=>self::$thresholdValue['shard2']);
@@ -54,6 +53,11 @@ EOF;
      $SERVER_ARR[]=array("shard1Rep",MysqlDbConstants::$shard1Rep["HOST"],MysqlDbConstants::$shard1Rep["USER"],MysqlDbConstants::$shard1Rep["PASS"],MysqlDbConstants::$shard1Rep["PORT"],'threshold'=>self::$thresholdValue['shard1Rep']);
      $SERVER_ARR[]=array("shard2Rep",MysqlDbConstants::$shard2Rep["HOST"],MysqlDbConstants::$shard2Rep["USER"],MysqlDbConstants::$shard2Rep["PASS"],MysqlDbConstants::$shard2Rep["PORT"],'threshold'=>self::$thresholdValue['shard2Rep']);
      $SERVER_ARR[]=array("shard3Rep",MysqlDbConstants::$shard3Rep["HOST"],MysqlDbConstants::$shard3Rep["USER"],MysqlDbConstants::$shard3Rep["PASS"],MysqlDbConstants::$shard3Rep["PORT"],'threshold'=>self::$thresholdValue['shard3Rep']);
+     
+     $SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],MysqlDbConstants::$shard1Slave["USER"],MysqlDbConstants::$shard1Slave["PASS"],MysqlDbConstants::$shard1Slave["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
+     $SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],MysqlDbConstants::$shard2Slave["USER"],MysqlDbConstants::$shard2Slave["PASS"],MysqlDbConstants::$shard2Slave["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
+     $SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],MysqlDbConstants::$shard3Slave["USER"],MysqlDbConstants::$shard3Slave["PASS"],MysqlDbConstants::$shard3Slave["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
+     
       $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],MysqlDbConstants::$viewSimilar["USER"],MysqlDbConstants::$viewSimilar["PASS"],MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
       $SERVER_ARR[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],MysqlDbConstants::$bmsSlave["USER"],MysqlDbConstants::$bmsSlave["PASS"],MysqlDbConstants::$bmsSlave["PORT"],'threshold'=>self::$thresholdValue['bmsSlave']);
       $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],MysqlDbConstants::$alertsSlave["USER"],MysqlDbConstants::$alertsSlave["PASS"],MysqlDbConstants::$alertsSlave["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);

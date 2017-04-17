@@ -70,15 +70,26 @@ echo "\n".count($this->receiver);
 					$contactType    = $contactType + $contactTypeArr;
             }
 	    unset($contactTypeArr);
+           // print_r($this->contacts); die();
             //$senderArr = $this->getSenderStatus($receiverList);
             foreach ($this->contacts as $key => $val) {
-                if ($contactType[$val["CONTACTID"]] == 'I')
+                $toSend = 1;
+                if ($contactType[$val["CONTACTID"]]["TYP"] == 'I')
                     $this->contacts[$key]["SEND"] = 'Y';
                 elseif (in_array($val["RECEIVER"], $receiverList) ) {
                     unset($this->contacts[$key]);
                     $notSendContactsId[] = $val["CONTACTID"];
+                    $toSend = 0;
                 }
+
+               if($toSend && ($val["MESSAGE"] == "" || $val["MESSAGE"] == NULL) && $contactType[$val["CONTACTID"]]["MSG_DEL"] == "Y")
+               {
+                $jprofObj = NEWJS_JPROFILE::getInstance();
+                $userName = $jprofObj->getUsername($val['SENDER']);
+                $this->contacts[$key]["MESSAGE"] = Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$userName));
+               }
             }
+            //print_r($this->contacts); die('dead');
         }
         unset($contactType);
         unset($chunkifyReceiver);
@@ -219,7 +230,19 @@ $memcacheObj->set("cronSendEoi",$i);
         $partialObj->addPartial("eoi_profile", "eoi_profile", $draft);
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
-        $emailSender->send();
+        
+        if(CommonConstants::contactMailersCC)
+        {
+        $contactNumOb=new ProfileContact();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+        $emailSender->send('','',$ccEmail);
         $status = $emailSender->getEmailDeliveryStatus();
         unset($emailSender);
 

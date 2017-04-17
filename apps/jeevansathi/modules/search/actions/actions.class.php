@@ -186,8 +186,7 @@ class searchActions extends sfActions
 		else
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 			
-		$this->profileOrExpressButton = $this->getProfileOrExpressButtonValue();
-
+		$this->profileOrExpressButton = $this->getProfileOrExpressButtonValue();		
 		/* Fetching Details of logged-in profile */
 		if($loggedInProfileObj->getPROFILEID()!='')
 		{
@@ -414,11 +413,19 @@ class searchActions extends sfActions
 
 	                if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
         	        {
-				$this->relaxedResults = 1;
+                                $keyAuto = "autoRelaxedCount";
+                                if(JsMemcache::getInstance()->get($keyAuto))
+                                {
+                                    $countVal = JsMemcache::getInstance()->get($keyAuto) + 1;
+                                }else{
+                                        $countVal = 1;
+                                }
+                                JsMemcache::getInstance()->set($keyAuto,$countVal);
+				/*$this->relaxedResults = 1;
 				$AutoRelaxationObj = new AutoRelaxation($SearchParamtersObj);
 				$relaxCriteria = $AutoRelaxationObj->autoRelax($loggedInProfileObj);
 				unset($responseObj);
-                		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
+                		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);*/
 
 	                }
 
@@ -539,11 +546,13 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-						unset($featuredProfileObj);
+                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+						/*unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
 						$SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
 						$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
+                                                 */
 					}
 
 					if(count($respObj->getSearchResultsPidArr())>0)
@@ -1409,6 +1418,7 @@ class searchActions extends sfActions
 	*/
 	public function executePerformV1(sfWebRequest $request)
 	{
+		
 		//sleep(10);
 		$showAllClustersOptions=1;
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
@@ -1421,7 +1431,7 @@ class searchActions extends sfActions
 		/** Desktop loggedout case **/	
 		if(MobileCommon::isDesktop())
 		{       
-			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');			
         	        if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID()=='')
 			{
 				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("lastSearchResults")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','lastSearchResults','matchofday')) || $request->getParameter("dashboard")==1))
@@ -1477,6 +1487,10 @@ class searchActions extends sfActions
 			$searchResultsCountForAutoRelaxation = SearchConfig::$searchResultsCountForAutoRelaxation;
                         
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+                        $this->premiumDummyUser = 0;
+			if($loggedInProfileObj->getPROFILEID()!='' && PremiumMember::isDummyProfile($loggedInProfileObj->getPROFILEID()))
+				$this->premiumDummyUser = 1;
+                        
 			if($loggedInProfileObj->getPROFILEID()!='')
 			{
 				if($loggedInProfileObj->getAGE()=="")
@@ -1531,10 +1545,18 @@ class searchActions extends sfActions
 				}
 				else
 				{
-					/* remove profile*/ 
-					$noAwaitingContacts = 1;
 					$SearchUtilityObj =  new SearchUtility;
-					$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
+					if($loggedInProfileObj->getACTIVATED() == "N") //CHANGE THIS TO "N"
+					{
+						$tempContacts = 1;						
+					}
+					else
+					{
+						$tempContacts = 0;
+					}
+					/* remove profile*/ 
+					$noAwaitingContacts = 1;					
+					$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,"","","","",$tempContacts);
 					unset($SearchUtilityObj);
 
 					/** 
@@ -1583,18 +1605,30 @@ class searchActions extends sfActions
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
 					}
-					
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=5)
+					{
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
+					}
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
 					
 					if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
 					{ 
-						$this->relaxedResults = 1;
+                                                $keyAuto = "autoRelaxedCount";
+                                                if(JsMemcache::getInstance()->get($keyAuto))
+                                                {
+                                                    $countVal = JsMemcache::getInstance()->get($keyAuto) + 1;
+                                                }else{
+                                                        $countVal = 1;
+                                                }
+                                                JsMemcache::getInstance()->set($keyAuto,$countVal);
+						/*$this->relaxedResults = 1;
                                                 $AutoRelaxationObj = new AutoRelaxation($SearchParamtersObj);
 						$relaxCriteria = $AutoRelaxationObj->autoRelax($loggedInProfileObj);
 						unset($responseObj);
-						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
+						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);*/
 
 					}
 					
@@ -1635,8 +1669,14 @@ class searchActions extends sfActions
        
 				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','matchofday')))
 				;
-				else
-					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				else{
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=7)
+					{
+						$request->setParameter("showFeaturedProfiles",0);
+					}
+					else
+						$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				}
 				
 				if(!$cachedSearch && !$request->getParameter("myjs"))
 				{
@@ -1810,4 +1850,29 @@ class searchActions extends sfActions
     $this->searchList = $savedSearchesResponse;
     $this->setTemplate('JSPC/advancedSearch');
   }
+
+ public function executeStyleheight50px(sfWebRequest $request){
+		$app = MobileCommon::isApp();
+                if(!$app){
+                        if(MobileCommon::isDesktop()){
+                                $app = "D";
+                        }elseif(MobileCommon::isNewMobileSite()){
+                                $app = "J";
+                        }else{
+                                $app = "O";
+                        }
+                }
+                $searchKey .= $app."_";
+                if(php_sapi_name() === 'cli'){
+                        $searchKey .= "CLI_";
+                }
+
+         $http_msg=print_r($_SERVER,true);
+         mail("lavesh.rawat@gmail.com","Style Height called $searchKey","CALLED:$http_msg");
+	 die;
+   }
+
+
+
+
 }

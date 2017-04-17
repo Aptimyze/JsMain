@@ -314,7 +314,8 @@ class Services
         return $service_name;
     }
 
-    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj) {
+    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj,$fetchOnline=true,$fetchOffline=false) {
+
         global $user_disc;
         $search_id = "";
         if(is_array($id)){
@@ -338,7 +339,7 @@ class Services
         	$price_str = $device."_RS";
         }
         
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str);
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
         $i = 0;
         
@@ -388,6 +389,7 @@ class Services
             $services[$serviceid]['FESTIVE_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
             $services[$serviceid]['SPECIAL_DISCOUNT_PRICE'] = $row_services[$serviceid]["PRICE"];
+            $services[$serviceid]['SHOW_ONLINE'] = $row_services[$serviceid]["SHOW_ONLINE"];
             if (strpos($serviceid, "ESP") !== false || strpos($serviceid, "NCP") !== false) {
                 $durd = substr($serviceid, strlen($serviceid) - 1);
             } 
@@ -409,7 +411,6 @@ class Services
             unset($festiveDuration);
             unset($festiveDiscountPercent);
         }
-
         return $services;
     }
     

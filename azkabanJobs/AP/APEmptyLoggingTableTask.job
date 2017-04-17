@@ -1,0 +1,5 @@
+type=command
+dependencies=APSendEOITask_3_0,APSendEOITask_3_1,APSendEOITask_3_2
+command=${php5} ${docRoot}/symfony cron:APEmptyLoggingTable
+retries=3
+retry.backoff=60000

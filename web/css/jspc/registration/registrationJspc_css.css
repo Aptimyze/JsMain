@@ -159,7 +159,7 @@ input[type=password]::-ms-reveal {display: none;}
 }
 .visHid {
     visibility: hidden;
-    height: 13px;
+    height: 20px;
 }
 .fontspinp {
         color: #353e4f;

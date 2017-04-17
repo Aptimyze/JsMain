@@ -47,22 +47,22 @@ EOF;
         $this->coreCommunity = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13);
 
         $androidAppRequirements = array(
-                'access_token' => "EAAIUo67ZBFGEBAPW8o3LLSd2FCsSDhZBH87PZCKrQrQu22mFhhIT1pBFqQllWaNGRegQQ8dRyl0QWHFdCwZAOSZARTxZCKxMqeivC03CGLtMaweR0yffSMLB38nIhtDA1LNXdZBY8gUIcc74qoEeW4eZA1g48Smkb1o7eh4H0B8OAwZDZD",
-                'app_id' => "585643394866339",
+                'access_token' => "EAAIUo67ZBFGEBAC83iZCgHVBZCnVOrZBSbwJF4ME5YiqGlsOSaZBXtPUX2KtcuoOLikHcmBVIZBKVFWRelHdv7MPDWU4peOwW6ZCzD8OYYfQuYKghUwQ6elBZByCHCkvAfSSc0xuLMCyXyEaWlRxqJumsd4iDNWegdg2aZCfHGS1qpQZDZD",
+                'app_id' => "585643201533025",
                 'app_secret' => "775d11b4ebb8dc803ff439cb59fc292a",
                 'account_id' => "act_1383924095217677",
-                'includeCustomAudienceId' => "6052303237798",
-                'excludeCustomAudienceId' => "6052303264198",
+                'includeCustomAudienceId' => "6053066635398",
+                'excludeCustomAudienceId' => "6053066601998",
                  );
 
         
         $iosAppRequirements = array(
-                'access_token' => "EAALjaF5TfOcBAF2eu2QXga8nYeIZCGioDnBcUftzI7rIm5GaZAnufvnOyjexUHxjhA7jizopE56eCGfNSnZCEMOXdBFU7IxA7ljZCEIdSY3X00MPyVHUgQ6FtmveRMHZCrYKH9KLHlPbSMPts742o3oQbZB3PP5sBAA8BZCZCu2h2wZDZD",
+                'access_token' => "EAALjaF5TfOcBADYA2CSCZAaUdPepNW3ZAVT6ZAkQujZCzZBpmDrj7ZBsUZBvZCcZBJH6A38MK8tgvwwOVYUjtcRNux5gWfApCY87s2SDPoC5jk8hHHsWYb3y4twstJuBJM9szrP1V6HFvFsISY5n16J2xKl5IwXIZCPvUn31YWuwNZBZBQZDZD",
                 'app_id' => "812987352055015",
                 'app_secret' => "7047cf9aca2e61aa836dad6651998eb8",
                 'account_id' => "act_1380817025529770",
-                'includeCustomAudienceId' => "6064728917480",
-                'excludeCustomAudienceId' => "6064728923280",
+                'includeCustomAudienceId' => "6066220566480",
+                'excludeCustomAudienceId' => "6066220612480",
                  );
 
 
@@ -196,7 +196,7 @@ EOF;
 
             $valueArray['MOB_STATUS']="Y";
 
-            $lastLoginLimit = date('Y-m-d', strtotime("-365 days"));
+            $lastLoginLimit = CommonUtility::makeTime(date('Y-m-d', strtotime("-365 days")));
 
             $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
             

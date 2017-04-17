@@ -45,7 +45,7 @@ sfContext::getInstance()->getResponse()->setSlot("disableFbRemarketing", true);
 
   public function submit() {
     $now = date("Y-m-d G:i:s");
-    $today = date("Y-m-d");
+    $today = CommonUtility::makeTime(date("Y-m-d"));
     $values_that_are_not_in_form = array('MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
     $this->form->updateData($this->loginProfile->getPROFILEID(),$values_that_are_not_in_form);
   }

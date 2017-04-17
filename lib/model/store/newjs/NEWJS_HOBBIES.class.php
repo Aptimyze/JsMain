@@ -173,7 +173,7 @@ class NEWJS_HOBBIES extends TABLE{
 	}
 	
 	
-	 public function getUserHobbiesApi($pid)
+	 public function getUserHobbiesApi($pid,$callFromCache)
         {
 			try 
 			{
@@ -186,7 +186,9 @@ class NEWJS_HOBBIES extends TABLE{
           $this->logFunctionCalling(__FUNCTION__);
 					$hobbies = array();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
-					{
+					{		
+						  if($callFromCache)
+						  	return $result;
 							$hobby=$result[HOBBY];
 							if($result){
 								if($hobby)

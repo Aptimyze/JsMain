@@ -2,7 +2,7 @@
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 //$db = connect_db();
-$db = connect_db2();
+$db = connect_crmSlave();
 
 $general_message_filename_val="general_info_1";
 $profile_specific_filename_val="transfer_agent";
@@ -67,6 +67,7 @@ else
 		while($row_on = mysql_fetch_array($res_db))
 		{
 			$subscription =$row_on["SUBSCRIPTION"];
+			$profileid =$row_on['PROFILEID'];
 			if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!="")){
 				$paidCampaign ='yes';
 				break;
@@ -85,7 +86,9 @@ else
 		if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 			$paidCampaign ='yes';
 	        $online_profile_val='yes';
+		$profileid =$row_get['PROFILEID'];
 	}
+	cachProfileInfo($profileid,$phone);
 	$str = "call_forward_to_center=".$call_forward_to_center_val.",abusive=".$abusive_val.",call_divert_to_online_sales_team=".$call_divert_to_online_sales_team_val.",present_in_db=".$present_in_db_val.",online_profile=".$online_profile_val.",general_message_filename=".$general_message_filename_val.",profile_specific_filename=".$profile_specific_filename_val.",fto_state=".$fto_state.",paid_campaign=".$paidCampaign;
 	echo $str;
 	exit;
@@ -94,13 +97,13 @@ else
 function getProfileDetails($db,$phone='',$profileidStr='',$default_str,$table='')
 {
 	if($phone && $table=='JPROFILE'){
-	        $sql_db = "SELECT PROFILEID,ACTIVATED,SUBSCRIPTION FROM newjs.JPROFILE WHERE `PHONE_WITH_STD`='$phone' OR `PHONE_MOB` IN('0$phone','+91$phone','91$phone','$phone')";
+	        $sql_db = "SELECT PROFILEID,ACTIVATED,SUBSCRIPTION FROM newjs.JPROFILE WHERE `PHONE_WITH_STD`='$phone' OR `PHONE_MOB` IN('0$phone','+91$phone','91$phone','$phone') AND ACTIVATED!='D'";
 	}
         elseif($phone && $table=='JPROFILE_CONTACT'){
                 $sql_db = "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE `ALT_MOBILE` IN('0$phone','+91$phone','91$phone','$phone')";
         }
 	elseif($profileidStr){
-		$sql_db = "SELECT PROFILEID,ACTIVATED,SUBSCRIPTION FROM newjs.JPROFILE WHERE PROFILEID IN($profileidStr)";
+		$sql_db = "SELECT PROFILEID,ACTIVATED,SUBSCRIPTION FROM newjs.JPROFILE WHERE PROFILEID IN($profileidStr) AND ACTIVATED!='D'";
 	}	
         $res_db = mysql_query($sql_db,$db) or die($default_str);
 	return $res_db;
@@ -124,6 +127,12 @@ function getCallDeiverStatus($db)
 	else
 	        $call_divert_to_online_sales_team_val='no';
 	return $call_divert_to_online_sales_team_val;
+}
+function cachProfileInfo($profileid,$phone){
+        $JsMemcacheObj =JsMemcache::getInstance();
+        $key ='sales_campaign_'.$phone;
+        $profileid = $JsMemcacheObj->set($key,$profileid,86400);
+	//$profileid1 = $JsMemcacheObj->get($key);
 }
 
 ?>

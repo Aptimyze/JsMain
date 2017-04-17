@@ -13,6 +13,8 @@ class TrendsPartnerProfiles extends SearchParamters {
   private $filterArray = array();
   // Jpartner data
   private $jpartnerData = array();
+  private $VERIFIED_CHECK = 2;
+  private $LAST_LOGGEDIN_STARTFROM = "1960-01-01 00:00:00";
   /**
    * 
    * @param type $loggedInProfileObj
@@ -32,7 +34,6 @@ class TrendsPartnerProfiles extends SearchParamters {
         $this->setNoOfResults($limit);
         $this->rangeParams .= ",LAST_LOGIN_DT";
         $this->setRangeParams($this->rangeParams);
-        
         // Set login Date condition
         if($sort == SearchSortTypesEnums::SortByTrendsScore){
                 $endDate = date("Y-m-d H:i:s", strtotime("now"));
@@ -44,6 +45,11 @@ class TrendsPartnerProfiles extends SearchParamters {
                 $this->setLLAST_LOGIN_DT("1960-01-01 00:00:00");
                 $this->setHLAST_LOGIN_DT($endDate);
         }
+        
+        //just joined 2 day check
+        $endDate = date("Y-m-d H:i:s", strtotime("now") - $this->VERIFIED_CHECK*24*3600);
+        $this->setLVERIFY_ACTIVATED_DT($this->LAST_LOGGEDIN_STARTFROM);
+        $this->setHVERIFY_ACTIVATED_DT($endDate);
   }
   /**
    * This function returns table store object
@@ -77,11 +83,16 @@ class TrendsPartnerProfiles extends SearchParamters {
     return $MSTATUS;
   }
 
-  public function isManglik($MANGLIK_M_P, $MANGLIK_N_P) {
-    if ($MANGLIK_M_P>90)
-      return true;
-    elseif ($MANGLIK_N_P>90)
-      return false;
+  public function isManglik() {
+          if($this->jpartnerData[0]["MANGLIK"]=="" || $this->jpartnerData[0]["MANGLIK"]=="N"){
+                  return false;
+          }else{
+                  $manglikValues = trim(str_replace("','",' ',$this->jpartnerData[0]["MANGLIK"]),"'");
+                  if(strstr($manglikValues,"N")){
+                          $manglikValues .= " D";
+                  }
+                  return $manglikValues;
+          }
   }
 
   public function setCountry($NRI_N_P, $NRI_M_P) {
@@ -107,7 +118,8 @@ class TrendsPartnerProfiles extends SearchParamters {
     $this->setSortParam($sort,$limit);
     $mtObj = $this->getTableObj();
     $this->filterArray = $this->getFilterData();
-    if(!empty($this->filterArray)){ // if filter set get jpartner data
+    //if(!empty($this->filterArray)){} // if filter set get jpartner data
+    // Get jpartner in each condition
         $memObject=JsMemcache::getInstance();
         $jpartnerData = $memObject->get('SEARCH_JPARTNER_'.$this->loggedInProfileObj->getPROFILEID());
 
@@ -120,7 +132,7 @@ class TrendsPartnerProfiles extends SearchParamters {
         }else{
               $this->jpartnerData = unserialize($jpartnerData);
         }
-    }
+        
     $myrow = $mtObj->getData($this->loggedInProfileObj->getPROFILEID());
     $this->setTRENDS_DATA(serialize($myrow));
     if ($myrow) {
@@ -139,10 +151,10 @@ class TrendsPartnerProfiles extends SearchParamters {
         } elseif ($k == 'MSTATUS') {
           $this->MSTATUS = $this->setMaritalStatus();
         } elseif ($k == 'MANGLIK') {
-          $isManglik = $this->isManglik($myrow["MANGLIK_M_P"], $myrow["MANGLIK_N_P"]);
-          if ($isManglik)
-            $this->MANGLIK = "M A";
-          elseif($isManglik === false)
+          $isManglik = $this->isManglik();
+          if ($isManglik){
+            $this->MANGLIK = $isManglik;
+          }elseif($isManglik === false)
             $this->MANGLIK_IGNORE = "M A";
         } elseif ($k == 'COUNTRYRES') {
           $isNRI = $this->setCountry($myrow["NRI_N_P"], $myrow["NRI_M_P"]);

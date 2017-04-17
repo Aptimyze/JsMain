@@ -1,6 +1,6 @@
 <!--start:Lifestyle-->
                <div class="prfbr3">
-              <div class="prfp6" id="section-lifestyle"> 
+              <div class="prfp6 noMultiSelect" id="section-lifestyle"> 
                 <div class="clearfix"> <i class="sprite2 fl prfic37"></i>
                   <div class="fl colr5 pl12 f17 pt2">Lifestyle</div>
                   ~if $bEditView`

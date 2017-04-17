@@ -77,7 +77,7 @@
         	~assign var = "tabIndex" value = 1`
         	<tr class="formhead topDetails" style="background:#EFEFD3;">
 			<td colspan="2">Username : <span tabIndex="~$tabIndex++`" selected="selected">~$profileData['USERNAME']`</span></td>
-			<td colspan="2">Gender : <font class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
+			<td colspan="2">Gender : <font style="font-size:16px;" class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
 		</tr>  
         
 		<tr><td colspan="4" align="center" style="font-size: 12px; font-weight:bold;"><br><a id="goBackInterface" href="~JsConstants::$siteUrl`/operations.php/photoScreening/screen?name=~$name`&cid=~$cid`&source=~$source`&switchProfile=~$profileData['PROFILEID']`">Go Back To Accept / Reject Interface</a></br></td></tr>   

@@ -31,7 +31,9 @@ EOF;
         //setting memory_limit and max_execution_time
         ini_set('max_execution_time',-1);
         ini_set('memory_limit','-1');
-
+        ini_set('error_reporting',1);
+        ini_set("mysql.connect_timeout",-1);
+        
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
         if($arguments){
@@ -70,19 +72,53 @@ EOF;
             $browserNotificationObj = new BrowserNotification($notificationType,$processObj);
             //Block for scheduled notification
             $processObj->setmethod("SCHEDULED");
-            //Add notification key for any new notification and call 
+            //Add notification key for any new notification and call
+            
+            //Added in a new cron browserNotificationJUST_JOINTask
+            /*
+            echo "before JUST_JOIN \n";
             $processObj->setnotificationKey("JUST_JOIN");
 			$browserNotificationObj->addNotification($processObj);
+            echo "After JUST_JOIN \n";
+            */
             
+            echo "before PENDING_EOI \n";
             $processObj->setnotificationKey("PENDING_EOI");
             $browserNotificationObj->addNotification($processObj);
+            echo "After PENDING_EOI \n";
             
+            echo "before MEM_EXPIRE \n";
+            $processObj->setnotificationKey("MEM_EXPIRE");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE \n";
+            
+            /*echo "before MEM_EXPIRE_A10 \n";
+            $processObj->setnotificationKey("MEM_EXPIRE_A10");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE_A10 \n";
+            
+            echo "before MEM_EXPIRE_A15 \n";
+            $processObj->setnotificationKey("MEM_EXPIRE_A15");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE_A15 \n";
+            
+            echo "before MEM_EXPIRE_B1 \n";
+            $processObj->setnotificationKey("MEM_EXPIRE_B1");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE_B1 \n";
+            
+            echo "before MEM_EXPIRE_B5 \n";
+            $processObj->setnotificationKey("MEM_EXPIRE_B5");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE_B5 \n";*/
+            /*
             //Notification for Renewal Reminder
             foreach (BrowserNotificationEnums::$renewalReminderNotification as $key => $val)
             {
                 $processObj->setnotificationKey($val);
                 $browserNotificationObj->addNotification($processObj);
             }
+            */
         }
         else
         {

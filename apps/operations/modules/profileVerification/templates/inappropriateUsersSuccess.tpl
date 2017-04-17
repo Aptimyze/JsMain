@@ -1,15 +1,17 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='IUUsername'></td><td class='IUReligion'></td><td class='IUMarriage'></td><td class='IUAge'></td><td class='IUTotalScore'>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='IUUsername'></td><td class='IUReligion'></td><td class='IUMarriage'></td><td class='IUAge'></td><td class='IUTotalScore'></td><td class='abuseReported'></td><td class='invalidReported'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
 		tempHtml.find('.IUUsername').text(rowJson.USERNAME);
-		tempHtml.find('.IUReligion').text(rowJson.RCOUNT);
-		tempHtml.find('.IUMarriage').text(rowJson.MCOUNT);
-		tempHtml.find('.IUAge').text(rowJson.ACOUNT);
-		tempHtml.find('.IUTotalScore').text(rowJson.TCOUNT);
+		tempHtml.find('.IUReligion').text(rowJson.RELIGION_COUNT);
+		tempHtml.find('.IUMarriage').text(rowJson.MSTATUS_COUNT);
+		tempHtml.find('.IUAge').text(rowJson.AGE_COUNT);
+		tempHtml.find('.IUTotalScore').text(rowJson.TOTAL_SCORE);
+		tempHtml.find('.abuseReported').text(rowJson.REPORT_ABUSE_COUNT);
+		tempHtml.find('.invalidReported').text(rowJson.REPORT_INVALID_COUNT);
 		return tempHtml;
 
 	}
@@ -174,6 +176,8 @@
 <td>Outside Marital Status Contact</td>
 <td>Outside Age Bracket Contact</td>
 <td>Overall negative score</td>
+<td>Abused Reported</td>
+<td>Invalid Reported</td>
 </tr>
 
 </table>

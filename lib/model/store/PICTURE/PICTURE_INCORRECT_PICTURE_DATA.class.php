@@ -48,6 +48,30 @@ class PICTURE_INCORRECT_PICTURE_DATA extends TABLE
                          throw new jsException($e);
                 }
         }
+        public function deleteIncorrectPicDetail($pictureIdArr)
+        {
+                try
+                {
+                        foreach($pictureIdArr as $k=>$v)
+                        {
+                                $queryArr[]= ":PICTUREID".$k;
+                        }
+                        $queryStr="(".implode(",",$queryArr).")";
+                    echo    $sql = "DELETE from PICTURE.INCORRECT_PICTURE_DATA where PICTUREID IN ".$queryStr;die;
+                        $prep=$this->db->prepare($sql);
+                        foreach($pictureIdArr as $k=>$v)
+                        {
+                                $prep->bindParam(":PICTUREID".$k, $v, PDO::PARAM_INT);
+                        }
+                        $prep->execute();
+                }       
+        catch(PDOException $e)
+                {
+                        /** echo the sql statement and error message **/
+                         throw new jsException($e);
+                }
+        }
+
 
 }
 ?>

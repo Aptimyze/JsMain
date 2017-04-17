@@ -140,7 +140,7 @@ transform-origin: 50% 50%;
 }
 	.newocbbg1{background-color:#fff}
 	.newocbbg2{background-color:#d9475c}
-	.ocbnewimg{background-image:url(IMG_URL/images/jsms/interstital/mob-newocb.png); background-repeat:no-repeat}
+	.ocbnewimg{background-image:url(IMG_URL/images/jsms/interstital/mob-newocb.svg); background-repeat:no-repeat}
 	.logoocb{background-position:1px 1px; width:60px; height:58px}
 	.ocbclose{background-position: -61px -27px;width: 16px;height: 16px;}
 	.ocbstar{background-position: -62px -4px;width: 69px;height: 16px;}
@@ -167,4 +167,19 @@ transform-origin: 50% 50%;
 }
 .padAppPromo{
 padding:10px 15px;
+}
+
+
+/* new css added for app propmi layer on myjs */
+.ham_b20_n{
+position: fixed;
+overflow: hidden;
+width: 100%;
+height: 78px;
+cursor: pointer;
+-webkit-transition: -webkit-transform 2s;
+transition: transform 2s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 50% 50%;
+z-index:9;
 }

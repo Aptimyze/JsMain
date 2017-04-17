@@ -1,6 +1,6 @@
 <?php
 class ErrorHelp{
-	    public static $ERR_EMAIL=array(1=>array('id'=>'err_email_del',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),2=>array('id'=>'err_email_duplicate',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_email_revoke','msg'=>"This Email is banned due to terms of use violation"),
+	    public static $ERR_EMAIL=array(1=>array('id'=>'err_email_del',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),2=>array('id'=>'err_email_duplicate',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_email_revoke','msg'=>"This Email is banned due to terms of use violation"),5=>array('id'=>'err_email_same','msg'=>"Both Emails are same"),
 				);
 	    public static $ERR_NAME_OF_USER=array(1=>array('id'=>'err_name_str',"msg"=>"Please enter characters only"),2=>array('id'=>'err_e',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_invalid_name',"msg"=>"Please provide a valid name"),
 				);

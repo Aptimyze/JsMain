@@ -185,7 +185,7 @@
 		</tr>
 		~elseif $bill_item.CANCELLED eq '1'`
 		<tr>
-			<td class="fieldsnew" colspan="4" align="center">This Transaction has been Cancelled
+			<td class="fieldsnew" colspan="4" align="center">This Transaction has been Cancelled~if $bill_item.CANCELLED_ON` on ~$bill_item.CANCELLED_ON` ~/if`
 			</td>
 		</tr>
 		~/if`

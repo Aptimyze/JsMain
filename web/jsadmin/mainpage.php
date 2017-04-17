@@ -3,7 +3,7 @@ include_once "connect.inc";
 include_once "ap_common.php";
 $data = authenticated($cid);
 if (isset($data)) //successful login
-{
+{ 
     $privilage = getprivilage($cid);
     $priv      = explode("+", $privilage);
     if ($data['name']) {
@@ -89,6 +89,9 @@ if (isset($data)) //successful login
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
+        }
+        if (in_array("CRMTEC", $priv) || in_array("DA", $priv) || in_array("MG", $priv) || in_array("SLHDO", $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/manageVdOffer\">Manage Variable Discount Offer </a>";
         }
         if (in_array('MBU', $priv) || in_array('BU', $priv) || in_array('BA', $priv)) //Misc-Revenue billing entry operator
         {
@@ -260,9 +263,10 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/userview.php?name=$user&cid=$cid\">View assigned profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=new\">Screen New Profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=edit\">Screen Edit Profiles</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";
-
         }
+	if(in_array('DP', $priv) || in_array('MG', $priv) || in_array('P', $priv) || in_array('SLHDO', $priv)) {
+		$linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";
+	}
         if (in_array('NU1', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/userview_1min.php?name=$user&cid=$cid\">View assigned profiles - 1 Min</a>";
         }
@@ -338,7 +342,6 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/stats_for_allUsers.php?name=$user&cid=$cid\">Search stats - for all Users</a>";
             $linkarr[] = "<a href=\"$SITE_URL/billing/search_ivr_users.php?name=$user&cid=$cid\">Search for IVR Users</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/discount_new_entry.php?user=$name&cid=$cid\">Enter Discount Details</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/retrievepage.php?user=$name&cid=$cid\">Retrieve Profile</a>";
         }
         if (in_array('OR', $priv)) // 'OR' privilage for top admin viewing order records
@@ -419,7 +422,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/outboundProcessList\">Outbound Calls User</a>";
         }
 
-        if (in_array("ExcSl", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLMGR", $priv) || in_array("SLSMGR", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("TRNG", $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
+        if (in_array("ExcSl", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLMGR", $priv) || in_array("SLSMGR", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("TRNG", $priv) || in_array("P", $priv) || in_array("MG", $priv) || in_array("FNC", $priv)) {
             $linkarr[] = "<a href=\"/operations.php/crmMis/crmHandledRevenueMis\">CRM Handled Revenue MIS</a>";
         }
 
@@ -689,6 +692,10 @@ if (isset($data)) //successful login
         }
         if(in_array('NEGLST',$priv))
 	        $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeTreatment?cid=$cid\">Delete and Mark profiles in Negative List</a>";
+	if(in_array('NEGLST',$priv))
+		$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=D\">Remove from Negative List</a>";
+	$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=F\">Fetch Negative Profile</a>";
+
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";
@@ -789,6 +796,16 @@ if (isset($data)) //successful login
         if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
         }
+        if (in_array('CSSUP', $priv) || in_array('MG', $priv) || in_array('P', $priv) ) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportInvalidContactsQC\">Invalid reported Contacts QC</a>";
+        }
+        if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/reportAbuseForUser\">Report Abuse For User</a>";
+          if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/fetchAbuseInvalidData\">Fetch Abuse and Invalid Report</a>";
+
+        if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request user to delete profile</a>";
     }
 
     $smarty->assign("linkarr", $linkarr);

@@ -127,9 +127,9 @@
 
                   <span class="disp_ib ignoreParent pos-rel pl15">
                   ~if $apiData['page_info']['is_ignored']`
-                                <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" cEIgnoreDetailProfile" data="&ignore=0">
+                                <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" cEIgnoreDetailProfile" data="&ignore=0" data-chat="~$apiData['other_profileid']`,UNBLOCK">
                 ~else`
-                  <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" ~if $loginProfileId`cEIgnoreDetailProfile~/if`" data="&ignore=1">
+                  <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" ~if $loginProfileId`cEIgnoreDetailProfile~/if`" data="&ignore=1" data-chat="~$apiData['other_profileid']`,BLOCK">
                 ~/if`
                   ~if !$loginProfileId`
                     <span class="disp_ib spriteIgnoreReport prfic51 cursp loginLayerJspc"></span>
@@ -169,11 +169,15 @@
                   </div>
               </div>
             </div>
-            
+            ~if $apiData['about']['gender'] eq "Male"`
+              ~assign var=userGender value="M"`
+            ~else`
+              ~assign var=userGender value="F"`
+            ~/if`
             <!--end:description--> 
             <!--start:link-->
             <div class="fr prfwid12 colrw fontlig f20"> 
-              <div id="cEButtonsContainer-~$apiData['page_info']['profilechecksum']`-VDP" class="bg5">
+              <div id="cEButtonsContainer-~$apiData['page_info']['profilechecksum']`-VDP" class="bg5 pcChatHelpData" data-pcChat="~$apiData['about']['username']`,~$apiData['page_info']['profilechecksum']`,~$userGender`">
                    
               </div>          
             </div>

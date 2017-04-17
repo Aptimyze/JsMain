@@ -18,7 +18,10 @@ class SearchLogger extends SearchParamters
                 $this->possibleSearchParamters = SearchConfig::$possibleSearchParamters;
                 $this->dbname = searchConfig::getSearchDb();
                 if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
+                {
                         $this->pid =  $loggedInProfileObj->getPROFILEID();
+                        $this->gender = $loggedInProfileObj->getGENDER();
+                }
         }
 
 	/*
@@ -88,12 +91,11 @@ class SearchLogger extends SearchParamters
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
                         
-                        if(array_key_exists("GENDER",$updateArr) && $updateArr["GENDER"]!='')
-						{
-						
+                        if(array_key_exists("GENDER",$updateArr) && $updateArr["GENDER"]!='' && $this->gender != trim($updateArr["GENDER"],"'"))
+						{                            
 							$search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
 					
-						}
+						}                        
                         
                         
                        

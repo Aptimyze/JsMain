@@ -1,4 +1,5 @@
 <?php
+die('obselete file');
 echo $msg = "Start time #".@date('H:i:s');echo "\n";
 /*********************************************************************************************
 * FILE NAME   	: cron_daily_updates_ncr.php

@@ -1,5 +1,5 @@
 type=command
 dependencies=KundliAlertsReplacePartitionTask
-command=${php5} ${docRoot}/symfony kundliMatchAlerts:kundliAlertsCalculation 4 0
+command=${php5} ${docRoot}/symfony kundliMatchAlerts:kundliAlertsCalculation 1 0
 retries=3
 retry.backoff=60000

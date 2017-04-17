@@ -47,9 +47,9 @@
 					*`
 					<div class="img-container">
 						<script>
-						/*var startTime = new Date().getTime();
+						var startTime = new Date().getTime();
 						function doneLoading() {
-						    var loadtime = new Date().getTime() - startTime;
+						   /* var loadtime = new Date().getTime() - startTime;
 						    var src = $("#cropperPic").attr("src");
 						    var url = '/operations.php/photoScreening/trackProcessPicUpload?loadtime='+loadtime+'&url='+src;
 						    $.ajax(
@@ -66,11 +66,12 @@
 												
 											}
 										})
-								    
+							*/
+								$("#submit1").attr("style","display:block");    
 							};
-						*/    
+						    
 						</script>
-						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic">
+						<img src="~$uploadUrl`~$photoArr['profilePic']['MainPicUrl']`" alt="Picture" id="cropperPic" onload="doneLoading();">
 					</div>
 					<!--lavesh-->
 				</div>                
@@ -86,7 +87,7 @@
 				<!--start:div-->
 				<div class="fr puwid7">
 					<div class="pup11">
-						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`</p>
+						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`   <font style="font-size:16px;" class="red"> Gender: ~$profileData['GENDER']`</font></p>
 						<!--start:crop pictures-->
 						<div class="clearfix pt10">
 							<div class="fl">
@@ -159,7 +160,7 @@
 		<!--start:bottom-->
 		<div class="pubdr3 pup8 clearfix fontlig">
 			<span class="fl wid190 txtc lh40 cursp pos_rel scrollhid" id="ops-cropperSave">
-<input type="submit" id="submit1" name="Save" value="Save" tabIndex="~$tabIndex++`" >
+<input type="submit" id="submit1" name="Save" value="Save" tabIndex="~$tabIndex++`" style = "display:none">
 			</span>
 			<span class="fl pl30">
 				<a href="#" id="js-cropperOpsClose" class="f20">Cancel</a>

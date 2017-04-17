@@ -69,7 +69,7 @@ if(isset($data))
 		if($row_e=mysql_fetch_array($res_e))
 			$eemail=$row_e['EMAIL'];
 
-		$sql="SELECT CD_NUM,CD_DT,BANK,CD_CITY FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
+		$sql="SELECT CD_NUM,CD_DT,BANK,CD_CITY,TYPE FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
 		$res=mysql_query_decide($sql) or die(mysql_error_js());
 		if($row=mysql_fetch_array($res))
 		{
@@ -77,6 +77,7 @@ if(isset($data))
 			$cd_dt=$row['CD_DT'];
 			$cd_city=$row['CD_CITY'];
 			$bank=$row['BANK'];
+            $type = $row['TYPE'];
 		}
 
 		// function called to get the template to be sent
@@ -169,6 +170,12 @@ if(isset($data))
 		$sql ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID ,BOUNCE_DT  , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY ) VALUES ('', '$receiptid', '$profileid', '$billid', NOW(),DATE_ADD( CURDATE() , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
 		mysql_query_decide($sql) or die(mysql_error_js());
 
+        //**START - Entry for negative transactions
+        $memHandlerObject = new MembershipHandler();
+        $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)));
+        unset($memHandlerObject);
+        //**END - Entry for negative transactions
+        
 		bounced_mail($profileid,"C");
 
 		$msg=$smarty->fetch("bounced_mail.htm");

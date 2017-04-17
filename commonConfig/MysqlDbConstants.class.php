@@ -25,6 +25,11 @@ class MysqlDbConstants
 
 	/*dnc*/
 	public static $dnc         = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+        public static $crmSlave    = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+
+	public static $notificationMaster = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'NOTIFICATION_NEW');
+
+	public static $productSlaveNotification    = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3307' , 'DEFAULT_DB'=>'NOTIFICATION_NEW');
 
 	/* view log */
 	public static $viewLog     = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3308' , 'DEFAULT_DB'=>'newjs');
@@ -78,4 +83,6 @@ class MysqlDbConstants
         public static $shard2SlaveDDL=array('HOST'=>'172.16.3.185','USER'=>'localuser','PASS'=>'Km7Iv80l','PORT'=>'3306','DEFAULT_DB'=>'newjs');
         public static $shard3SlaveDDL=array('HOST'=>'172.16.3.185','USER'=>'localuser','PASS'=>'Km7Iv80l','PORT'=>'3307','DEFAULT_DB'=>'newjs');
 	/*end*/
+        public static $matchalertsSlave = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+
 }

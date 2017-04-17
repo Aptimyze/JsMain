@@ -142,9 +142,16 @@ shard3_slaveDDL:
 matchalerts_slave:
   factory:        jsPdoDatabase
   param:
-    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$alertsSlave['HOST'].';dbname='.MysqlDbConstants::$alertsSlave['DEFAULT_DB']?>"
-    username:     "<?php echo MysqlDbConstants::$alertsSlave['USER']?>"
-    password:     "<?php echo MysqlDbConstants::$alertsSlave['PASS']?>"
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$matchalertsSlave['HOST'].';dbname='.MysqlDbConstants::$matchalertsSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$matchalertsSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$matchalertsSlave['PASS']?>"
+
+crm_slave:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$crmSlave['HOST'].';dbname='.MysqlDbConstants::$crmSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$crmSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$crmSlave['PASS']?>"
 
 dnc_con:
   factory:        jsPdoDatabase
@@ -152,6 +159,13 @@ dnc_con:
     dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$dnc['HOST'].';port='.MysqlDbConstants::$dnc['PORT'].';dbname='.MysqlDbConstants::$dnc['DEFAULT_DB']?>"
     username:     "<?php echo MysqlDbConstants::$dnc['USER']?>"
     password:     "<?php echo MysqlDbConstants::$dnc['PASS']?>"
+
+notification_master:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$notificationMaster['HOST'].';port='.MysqlDbConstants::$notificationMaster['PORT'].';dbname='.MysqlDbConstants::$notificationMaster['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$notificationMaster['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$notificationMaster['PASS']?>"
 
 matchalerts_slave_localhost:
   factory:        jsPdoDatabase
@@ -180,6 +194,13 @@ newjs_local111:
     dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$productSlave['HOST'].';port='.MysqlDbConstants::$productSlave['PORT'].';dbname='.MysqlDbConstants::$productSlave['DEFAULT_DB']?>"
     username:     "<?php echo MysqlDbConstants::$productSlave['USER']?>"
     password:     "<?php echo MysqlDbConstants::$productSlave['PASS']?>"
+
+notification_local111:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$productSlaveNotification['HOST'].';port='.MysqlDbConstants::$productSlaveNotification['PORT'].';dbname='.MysqlDbConstants::$productSlaveNotification['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$productSlaveNotification['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$productSlaveNotification['PASS']?>"
 
 shard1Slave112:
   factory:        jsPdoDatabase

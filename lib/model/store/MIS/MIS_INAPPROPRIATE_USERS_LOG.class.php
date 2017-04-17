@@ -25,12 +25,14 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
                         return '';
     }
   }
-  public function getDataForADate($startDate,$date)
+  public function getDataForLast7Days($startDate,$date,$divisor,$remainder)
   {
     try {  
-      $sql= "SELECT USERNAME,SUM(RELIGION_COUNT) AS RCOUNT,SUM(AGE_COUNT) AS ACOUNT,SUM(MSTATUS_COUNT) AS MCOUNT,SUM(TOTAL_SCORE) AS TCOUNT FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :EDATE AND DATE>=:SDATE GROUP BY USERNAME";
+      $sql= "SELECT PROFILEID,USERNAME,SUM(RELIGION_COUNT) AS RCOUNT,SUM(AGE_COUNT) AS ACOUNT,SUM(MSTATUS_COUNT) AS MCOUNT,SUM(TOTAL_SCORE) AS TCOUNT, `DATE` FROM MIS.INAPPROPRIATE_USERS_LOG WHERE PROFILEID  % :DIVISOR = :REMAINDER AND DATE <= :EDATE AND DATE>=:SDATE GROUP BY USERNAME, `DATE`";
       $prep=$this->db->prepare($sql);
       $prep->bindValue(":SDATE",$startDate,PDO::PARAM_STR);
+      $prep->bindValue(":REMAINDER",$remainder,PDO::PARAM_INT);
+      $prep->bindValue(":DIVISOR",$divisor,PDO::PARAM_INT);
       $prep->bindValue(":EDATE",$date,PDO::PARAM_STR);
       $prep->execute();
       while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
@@ -43,6 +45,29 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
                         return '';
     }
   }
+
+  public function getDataForADate($startDate,$date,$divisor,$remainder)
+  {
+    try {  
+      $sql= "SELECT PROFILEID,USERNAME,SUM(RELIGION_COUNT) AS RCOUNT,SUM(AGE_COUNT) AS ACOUNT,SUM(MSTATUS_COUNT) AS MCOUNT,SUM(TOTAL_SCORE) AS TCOUNT, `DATE` FROM MIS.INAPPROPRIATE_USERS_LOG WHERE PROFILEID IN (SELECT PROFILEID FROM MIS.INAPPROPRIATE_USERS_LOG WHERE PROFILEID % :DIVISOR = :REMAINDER AND DATE=:EDATE) AND DATE <= :EDATE AND DATE>=:SDATE GROUP BY USERNAME, `DATE`";
+      $prep=$this->db->prepare($sql);
+      $prep->bindValue(":SDATE",$startDate,PDO::PARAM_STR);
+      $prep->bindValue(":REMAINDER",$remainder,PDO::PARAM_INT);
+      $prep->bindValue(":DIVISOR",$divisor,PDO::PARAM_INT);
+      $prep->bindValue(":EDATE",$date,PDO::PARAM_STR);
+      $prep->execute();
+      while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+        $records[] = $result;
+      }
+      return $records;
+    }
+    catch(PDOException $e){
+		jsException::nonCriticalError("lib/model/store/MIS/MIS_INAPPROPRIATE_USERS_LOG.class.php-->.$sql".$e);
+                        return '';
+    }
+  }
+
+
   public function truncateTable($startDate)
   {
     try {  

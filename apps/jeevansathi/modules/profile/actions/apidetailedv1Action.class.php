@@ -122,7 +122,7 @@ class apidetailedv1Action extends sfAction
                 
                 // VA Whitelisting
                 //whiteListing of parameters
-                //DetailActionLib::whiteListParams($request);
+                DetailActionLib::whiteListParams($request);
 		
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
@@ -278,9 +278,23 @@ class apidetailedv1Action extends sfAction
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 
 		}
+                if(MobileCommon::isAndroidApp()){
+                    $out["checkonline"] = false;
+                    if(!in_array($out["buttonDetails"]["contactType"],array('C','D')) && !$this->IGNORED && !$this->filter_prof ){
+                    	if ( JsConstants::$chatOnlineFlag['profile'] )
+						{
+                            $out["checkonline"] = true;
+						}
+                    }
+                }
+
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
-		if (JsConstants::$hideUnimportantFeatureAtPeakLoad == 1) {
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
 			$out['show_gunascore'] = "n";
+		}
+                $out['show_vsp'] = true;
+                if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
+			$out['show_vsp'] = false;
 		}
 		return $out;
 	}

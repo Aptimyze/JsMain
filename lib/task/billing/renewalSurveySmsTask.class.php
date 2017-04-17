@@ -43,7 +43,7 @@ EOF;
         $SMS_MESSAGE = "How has your experience been as a paid member on Jeevansathi? Please answer this simple question https://goo.gl/vByKzj";
 
         $billingServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
-        $jprofileAlertObj = new newjs_JPROFILE_ALERTS('newjs_slave');
+        $jprofileAlertObj = new JprofileAlertsCache('newjs_slave');
         $jprofileObj = new JPROFILE('newjs_slave');
 
         // Fetch profiles expiring on curDate +15 days

@@ -7,6 +7,7 @@ class SearchIndexingTask extends sfBaseTask
 {
 	private $searchEngine = 'solr';
 	private $outputFormat = 'array';
+        private $isPost = 0;
 
  	protected function configure()
   	{
@@ -40,45 +41,44 @@ EOF;
 		$type = $arguments["TYPE"];
 		$pid  = $arguments["pid"];
 
-		if($type=='EXPORT')
-		{
-			/* solr full indexing */	
-			$url = JsConstants::$solrServerUrl."/dataimport?command=full-import";
-			CommonUtility::sendCurlGetRequest($url);
-                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl1){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=full-import";
-                                CommonUtility::sendCurlGetRequest($url);   
+                if($type=='EXPORT' || $type == 'DELTA')
+                {
+                        $php5 = JsConstants::$php5path;
+                        $cronDocRoot = JsConstants::$cronDocRoot;
+                        if($type=='EXPORT'){
+                                $import = "full-import";
+                                if($this->isPost == 1){
+                                        passthru("$php5 $cronDocRoot/crontabs/solrIndexing.php FULL");
+                                }
+                        }else if($type=='DELTA'){
+                                $import = "delta-import";
+                                if($this->isPost == 1){
+                                        passthru("$php5 $cronDocRoot/crontabs/solrIndexing.php DELTA");
+                                }
                         }
-                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl2){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=full-import";
-                                CommonUtility::sendCurlGetRequest($url);   
+                        
+                        if($this->isPost != 1){
+                                foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
+                                        $index = array_search($solrUrl, JsConstants::$solrServerUrls);
+                                        if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
+                                                $url = $solrUrl."dataimport?command=".$import;
+                                                CommonUtility::sendCurlGetRequest($url);
+                                        }
+                                }
+                                if($type == "DELTA"){
+                                        $deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
+                                        $profilesArr = $deletedHiddenProfilesObj->getProfiles();
+                                        if($profilesArr)
+                                        {
+                                                $strProfilesArr = implode(" ",$profilesArr);
+                                                $SearchServiceObj = new SearchService($this->searchEngine,$this->outputFormat);
+                                                $SearchServiceObj->deleteIdsFromSearch($strProfilesArr);
+                                                $deletedHiddenProfilesObj->truncateTable(date('Y-m-d h:i:s',strtotime('-4 Hours')));
+                                        }
+                                }
                         }
-		}
-                else if($type=='DELTA')
-		{
-                        /* solr delta indexing */	
-			$url = JsConstants::$solrServerUrl."/dataimport?command=delta-import";
-			CommonUtility::sendCurlGetRequest($url);
-                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl1){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=delta-import";
-                                CommonUtility::sendCurlGetRequest($url);   
-                        }
-                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl2){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=delta-import";
-                                CommonUtility::sendCurlGetRequest($url);   
-                        }
-                            
-			$deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
-                        $profilesArr = $deletedHiddenProfilesObj->getProfiles();
-                        if($profilesArr)
-			{
-				$strProfilesArr = implode(" ",$profilesArr);
-                                $SearchServiceObj = new SearchService($this->searchEngine,$this->outputFormat);
-                                $SearchServiceObj->deleteIdsFromSearch($strProfilesArr);
-                                $deletedHiddenProfilesObj->truncateTable(date('Y-m-d h:i:s',strtotime('-4 Hours')));
-                        }
-		}
-		elseif($type == 'PROFILEID')
+                }
+                elseif($type == 'PROFILEID')
 		{	
 			if($pid)
 			{

@@ -112,7 +112,19 @@ class ShowProfileStats
 	{
 		// Renewal Discount
 		$memHandlerObj = new MembershipHandler();
-		$renewalDiscount = $memHandlerObj->getVariableRenewalDiscount($this->profileid,1);
+		// Start - Conditions to display renewal discount only if profile applicable		
+		$userObj = new memUser($this->profileid);
+		list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency($this->profileid);
+        $userObj->setIpAddress($ipAddress);
+        $userObj->setCurrency($currency);
+        if (!empty($this->profileid)) {
+            $userObj->setMemStatus();
+            $userType = $userObj->userType;
+        }
+        if($userType == 4 || $userType == 6) {
+        	$renewalDiscount = $memHandlerObj->getVariableRenewalDiscount($this->profileid,1);
+        }
+        // End - Conditions to display renewal discount only if profile applicable
 
 		// Vd discount
 		$vdObj = new VariableDiscount();
@@ -542,7 +554,7 @@ class ShowProfileStats
 	private function getMobileUsage()
 	{
 		$lastMonth = date('Y-m-d', strtotime('-30 days'));
-		$loginTrackingobj = new MIS_LOGIN_TRACKING('newjs_slave');
+		$loginTrackingobj = new MIS_LOGIN_TRACKING('crm_slave');
 			$data = $loginTrackingobj->getLoginChannel($this->profileid,$lastMonth);
 		if(is_array($data) && (in_array('A',$data) || in_array('I',$data)))
 			$mobile_usage = "Uses Mobile App";
@@ -561,7 +573,7 @@ class ShowProfileStats
 	}
 
 	private function getMobileVerificaionStatus(){
-		$altContact = new NEWJS_JPROFILE_CONTACT();
+		$altContact = new ProfileContact();
 		$data = $altContact->getProfileContacts($this->profileid);
 		$altMobileStatus = $data["ALT_MOB_STATUS"];
 		$mobStatus = $this->profileObj->getMOB_STATUS();

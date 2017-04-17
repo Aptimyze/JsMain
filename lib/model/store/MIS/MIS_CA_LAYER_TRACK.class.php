@@ -38,6 +38,7 @@ class MIS_CA_LAYER_TRACK extends TABLE
       $res1->bindValue(":BUTTON",$button,PDO::PARAM_STR);
       $res1->bindValue(":DATE",$date,PDO::PARAM_STR);
       $res1->execute();
+      return true;
     } 
     catch(PDOException $e){
 		jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);

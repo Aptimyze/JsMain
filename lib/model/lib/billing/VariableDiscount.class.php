@@ -300,7 +300,7 @@ class VariableDiscount
     
     public function generateVDImpactReport()
     {
-        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
+        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
         $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
         //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)
@@ -444,7 +444,7 @@ class VariableDiscount
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
-        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterRep');
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
@@ -604,6 +604,10 @@ class VariableDiscount
 
                 if(is_array($clusterDetails)){
                 foreach($clusterDetails as $clusterName=>$fieldArr){
+			unset($greaterArray);unset($valueArray);unset($lessArray);
+			unset($expiryDt);unset($analyticScore);
+			unset($everPaid);unset($neverPaid);unset($discount);
+
 			//loop start
 			foreach($fieldArr as $key=>$data){
 				$val1 =$data['VALUE1'];
@@ -703,8 +707,9 @@ class VariableDiscount
 			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
 
 			// Delete Cluster
-			$vdClusterObj->deleteCluster($clusterName);
-			unset($profileArr);	
+			//$vdClusterObj->deleteCluster($clusterName);
+			unset($profileArr);
+			unset($everPaidArr);unset($jprofileData);unset($expiryProfiles);
 		}
 		foreach($countArr as $key=>$dataArr){
 			$cluster 	=$dataArr['cluster'];

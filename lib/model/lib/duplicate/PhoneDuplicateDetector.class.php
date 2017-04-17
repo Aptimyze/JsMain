@@ -409,7 +409,7 @@ private function checkProfile()
 private function checkProfileContacts()
 {
         $profileArr = array();
-        $profileContactsObj = new NEWJS_JPROFILE_CONTACT;
+        $profileContactsObj = new ProfileContact();
         if($this->validArray)
         {
                 $profileArr = $profileContactsObj->checkPhone($this->validArray,$this->isd);

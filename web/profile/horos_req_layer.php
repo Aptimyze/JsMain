@@ -30,15 +30,13 @@ if($Submit)
 				$samegender=1;
 			$filtered=check_privacy_filtered1($profileid,$chkprofilechecksum[1]);
         }
-	           
 		if($filtered)
 		{
 			$error='F';
 		}
 		elseif($samegender)
-		{
-			  
-                        $error='G';
+		{			  
+         	$error='G';
 		}
 		else
 		{

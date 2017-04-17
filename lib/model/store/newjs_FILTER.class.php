@@ -21,6 +21,7 @@ class NEWJS_FILTER extends TABLE{
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 				$prep->execute();
+        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 				{
 					$res=$result;
@@ -62,6 +63,7 @@ class NEWJS_FILTER extends TABLE{
 				$res->bindValue(":PROFILEID$key", $pid, PDO::PARAM_INT);
 			}
 			$res->execute();
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
 				$result[$row['PROFILEID']] = $row;
@@ -108,6 +110,7 @@ class NEWJS_FILTER extends TABLE{
 				$prep->bindValue(":profileId",$profileId,PDO::PARAM_INT);
 				
 				$prep->execute();
+        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 				{
 					$res=$result;
@@ -144,6 +147,7 @@ class NEWJS_FILTER extends TABLE{
       $prep->bindValue(":COUNT", 1, PDO::PARAM_INT);
       $prep->bindValue(":HARDSOFT", "Y", PDO::PARAM_STR);
       $prep->execute();
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
       return true;
     }
     catch (PDOException $e) {
@@ -201,7 +205,7 @@ class NEWJS_FILTER extends TABLE{
 			++$count;
 			$pdoStatement->bindValue($count,$iProfileID);
       $pdoStatement->execute();
-      
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
       if($pdoStatement->rowCount()){
         return true;
       }
@@ -257,6 +261,7 @@ class NEWJS_FILTER extends TABLE{
 				$pdoStatement->bindValue(($count), $value,$paramType);
 			}
 			$pdoStatement->execute();
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return $pdoStatement->rowCount();
 		} catch(PDOException $e) {
 			/*** echo the sql statement and error message ***/
@@ -281,5 +286,76 @@ class NEWJS_FILTER extends TABLE{
     }
     return $arrOut;
   }
+
+
+  public function fetchField($field,$limit='',$offset='')
+  {
+  	try
+  	{
+  		
+  		$sql="SELECT PROFILEID FROM FILTERS WHERE ".$field." =  ''";
+
+  		if($limit && $offset==""){
+  			$sql = $sql." LIMIT :LIMIT";
+  		}
+  		else if($limit && $offset!=""){
+  			$sql = $sql." LIMIT :OFFSET,:LIMIT";
+  		}
+
+  		$prep=$this->db->prepare($sql);
+
+		if($limit && $offset==""){
+            $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+		}
+        else if($limit && $offset!=""){
+            $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+            $prep->bindValue(":OFFSET",$offset,PDO::PARAM_INT);
+        }
+
+  		$prep->execute();
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+  		if($result = $prep->fetchAll(PDO::FETCH_ASSOC))
+  		{
+  			return $result;
+  		}
+  		return false;
+  	}
+  	catch(PDOException $e)
+  	{
+  		throw new jsException($e);
+  	}
+  }
+
+  public function updateField($field,$profileIdArr)
+  {
+  	try
+  	{
+  		foreach($profileIdArr as $key=>$pid)
+		{
+			if($key == 0)
+				$str = ":PROFILEID".$key;
+			else
+				$str .= ",:PROFILEID".$key;
+		}
+
+  		$sql="UPDATE FILTERS SET ".$field." = 'Y' WHERE profileid in ($str) AND ".$field." = ''";
+
+  		$prep=$this->db->prepare($sql);
+
+  		foreach($profileIdArr as $key=>$pid)
+  		{
+  			$prep->bindValue(":PROFILEID".$key, $pid['PROFILEID'], PDO::PARAM_INT);
+  		}
+  		$prep->execute();
+      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+  	}
+  	catch(PDOException $e)
+  	{
+  		throw new jsException($e);
+  	}
+  }
+
+
+
 }
 ?>

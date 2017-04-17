@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# if setting up the server for the first time
+# copy html_public (entire folder from any of existing servers)
+# create 3 new files as follows ::
+# 1) /home/developer/tempupload/crmSyncDiff.txt
+# 2) /home/developer/tempupload/crmSyncOld.txt
+# 3) /home/developer/tempupload/crmSyncNew.txt
+# run bash /var/www/html_public/crmSync.sh
+# run Deployment
+
 # Get new file list in current release
 cd /var/www/html/ && find -type f ! -path "./crmSync.sh" ! -path "./commonConfig/*" ! -path "./.svn/*" ! -path "./cache/*" ! -path "./log/*" ! -path "./web/smarty/templates_c/*" ! -path "./web/robots.txt" -print > /home/developer/tempupload/crmSyncNew.txt
 # Diff positive of previous vs new release files list and store in crmSyncDiff.txt

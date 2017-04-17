@@ -1,4 +1,4 @@
-var hamHtml="";
+var hamHtml="",slider1,slider2;
 
 (function() {
 	var eHamburger=(function(){
@@ -170,6 +170,8 @@ var hamHtml="";
 		eHamburger.prototype.hideHamburger=function()
 		{
                         $("#2dView").addClass("dn");
+                        $("#clearBtn").remove();
+                        $("#suggestBox").remove();
 			$(this.pcontid).removeClass("ham"+this.formation).removeClass("tcenter"+this.formation).removeClass("twodview"+this.formation);
 			var ele=this;
 					
@@ -374,11 +376,29 @@ var hamHtml="";
 			this.topPos=topPos=indh*up;
 			var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px'></div>";
 			$(id).parent().prepend(di);
-			
-			$(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			if($(id).attr("id").split("_")[2] == 1) {
+				slider1 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			} else {
+				slider2 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			}
 				})(ham_i,type);
 			}
-			
+			if(type == "p_age") {
+				setTimeout(function(){
+					typeDataArray = [$("#HAM_OPTION_1 li input:checked").val(),$("#HAM_OPTION_2 li input:checked").val()];
+					changeSuggestion("AGE", typeDataArray);
+				},100);	
+			} else if (type == "p_income_rs") {
+				setTimeout(function(){
+					typeDataArray = [$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html(),"No Income","and above"];
+					changeSuggestion("INCOME",typeDataArray);
+				},100);	
+			} else if(type == "p_income_dol") {
+				setTimeout(function(){
+					typeDataArray = ["No Income","and above",$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html()];
+					changeSuggestion("INCOME",typeDataArray);
+				},100);	
+			}
 			BindHamWindow(this);
 			
 				
@@ -423,14 +443,28 @@ var hamHtml="";
 			var html=this.originalHtml;
 			
 
-				
+			//State Living in
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
+			
 			
 			
 					
 			//selected value
 			var selArr=new Array();
 			var curJson=this.json.OnClick[this.indexPos];
+			
+		if(curJson.callBack == "updateLifestyle" || curJson.key.indexOf("P_") != -1) {
+			setTimeout(function(){
+				$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
+					$("#clearBtn").off("click").on("click",function(){
+						$("#HAM_OPTION_1 li input:checked").each(function(){
+							$(this).parent().click()
+					});
+				});	
+			},1000);
+					
+		}
+		
 		//	console.log(curJson);
 			if(curJson.value)
 			{
@@ -484,59 +518,61 @@ var hamHtml="";
 		eHamburger.prototype.HamElementClick=function(ev,ele)
 		{
 			ev.stopPropagation();
-			var value=this.UpdateOutput(ele);
-      if(this.type == "native_state" && value== "NI"){
-        this.type="native_country";
-        this.UpdateHamburgerHTML();
-        return;
-      }
+			if(ele.hasClass("suggestTitle") == false && ele.attr("id") != "suggestBox") {
+				var value=this.UpdateOutput(ele);
+		        if(this.type == "native_state" && value== "NI"){
+			        this.type="native_country";
+			        this.UpdateHamburgerHTML();
+			        return;
+		        }
       
-      if(this.type == "native_country" && value== "FI"){
-        this.type="native_country";
-        this.type="native_state";
-        this.UpdateHamburgerHTML();
-        return;
-      }
+		        if(this.type == "native_country" && value== "FI"){
+			        this.type="native_country";
+			        this.type="native_state";
+			        this.UpdateHamburgerHTML();
+			        return;
+		        }
       
-			var thisObj=this;
-			if(value===false && (this.whenHide=="multiple" && this.type==this.dependant))
-				return;
-			
-			if(this.whenHide=="multiple")
-			{
+				var thisObj=this;
+				if(value===false && (this.whenHide=="multiple" && this.type==this.dependant))
+					return;
 				
-			}
-			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
-			{
-				stopTouchEvents(1);
-				this.type=this.dependant;
-				$(this.hamoverid).html(this.ham_htm);
-				this.ulOption=this.ulOption_second;
-				this.tapid=2;
-				$("#search_ham_"+this.tapid).parent().parent().addClass('dn');
-				var height=$(window).height();
-                                this.AppendLoader();
-				$("#hamoverlay").removeClass("ltransform").addClass("rham").addClass("show");
-				
-				setTimeout(function(){thisObj.UpdateHamburgerHTML();startTouchEvents(animationtimer);},animationtimer);
-				
-				
-				//this.type=dependant;
-				
+				if(this.whenHide=="multiple")
+				{
 					
+				}
+				else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
+				{
+					stopTouchEvents(1);
+					this.type=this.dependant;
+					$(this.hamoverid).html(this.ham_htm);
+					this.ulOption=this.ulOption_second;
+					this.tapid=2;
+					$("#search_ham_"+this.tapid).parent().parent().addClass('dn');
+					var height=$(window).height();
+	                                this.AppendLoader();
+					$("#hamoverlay").removeClass("ltransform").addClass("rham").addClass("show");
+					
+					setTimeout(function(){thisObj.UpdateHamburgerHTML();startTouchEvents(animationtimer);},animationtimer);
+					
+					
+					//this.type=dependant;
+					
+						
+				}
+				else
+				{
+					stopTouchEvents(1);
+					popBrowserStack();
+					this.callBack.call(this.calledElement,this.output,this.json,this.indexPos);
+					//console.log(this.output);
+				}
 			}
-			else
-			{
-				stopTouchEvents(1);
-				popBrowserStack();
-				this.callBack.call(this.calledElement,this.output,this.json,this.indexPos);
-				//console.log(this.output);
-			}
+			
 			
 		};
 		eHamburger.prototype.UpdateOutput=function(target,add,remove)
 		{
-			
 			
 			var label=$(target).text();
 			
@@ -576,14 +612,14 @@ var hamHtml="";
 					remove=1;
 					$(target).parent().removeClass("checked").removeClass("multiple");
 			}
-			else	
-			{
-					
+			else {	
+				if($(target).hasClass("suggestTitle") == false && $(target).hasClass("suggestBox") == false) {	
 					$(target).next().prop("checked","checked");
 					$(target).next().attr("checked","checked");
 					$(target).parent().addClass("checked");
 					if(this.whenHide=="multiple")
 						$(target).parent().addClass("multiple");
+				}
 			}		
 			
 			if(remove)
@@ -595,6 +631,27 @@ var hamHtml="";
 			{
 				this.OutputUpdate(this.type,label,value);	
 			}
+			if($("#suggestBox").length == 0 || $("#suggestBox").attr("suggest-click") == 1) {
+				$("#suggestBox").removeAttr("suggest-click");
+				var typeDataArray = [],type = "";
+				if($(target).next().attr("name").indexOf("p_") != -1) {
+					type = $(target).next().attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				}
+				
+				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION") {
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						typeDataArray.push($(this).val());
+					});
+					changeSuggestion(type,typeDataArray);
+				}
+			} else {
+				if(remove == 0) {
+					$(".suggestOption[value='"+value+"']").addClass("bg7");	
+				} else {
+					$(".suggestOption[value='"+value+"']").removeClass("bg7");	
+				}
+			}
+
 			return value;
 		};
 		eHamburger.prototype.FilterData=function(json)
@@ -889,6 +946,10 @@ var hamHtml="";
       }
 	if(keyName=="city_res")
 		keyName="reg_city_jspc";
+	if(keyName=="p_caste")
+		keyName="p_caste_jsms";
+	if(keyName=="p_sect")
+		keyName="p_sect_jsms";
 			staticTables.getData(keyName,function(data){ele.UpdateUlOption(selArr,data)});
 			
 			
@@ -1080,6 +1141,18 @@ var hamHtml="";
 				}
 			}
 			searchHamburger(this.type,this.ulOption,this.tapid);
+			if($("#HAM_OPTION_1 li input:checked").length !=0) {
+				var typeDataArray = [],type = "";
+				if($($("#HAM_OPTION_1").find("input")[0]).attr("name").indexOf("p_") != -1) {
+					type = $($("#HAM_OPTION_1").find("input")[0]).attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				}
+				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						typeDataArray.push($(this).val());
+					});
+					changeSuggestion(type,typeDataArray);
+				} 
+			}
 		}
                 eHamburger.prototype.AppendLoader=function()
                 {
@@ -1172,4 +1245,125 @@ function ExtendData(empty,json1,json2)
         i++;
     });
     return result;
+}
+function changeSuggestion(type, param1) {
+	var obj = {
+                "type": type,
+                "data": param1      
+             },response, str = JSON.stringify(obj).split('"').join('%22'), url = "/api/v1/profile/dppSuggestions?Param=["+str+"]";
+    //alert("url: "+url);
+    $.ajax({
+        type: "POST",
+        url: url,
+        cache: false,
+        timeout: 5000,
+        success: function(result) {
+            if(result && result != "" && JSON.parse(result)[0] && JSON.parse(result).responseMessage == "Successful") {
+                response = JSON.parse(JSON.parse(result)[0]);
+                appendSuggestionList(response);
+            } else {
+                ShowTopDownError(["Something went wrong. Please try again after some time."]);
+            }             
+        },
+        error:function(result){
+            ShowTopDownError(["Something went wrong. Please try again after some time."]);
+        }
+     });
+}
+function appendSuggestionList(response) {
+	var obj = response[0];
+    if(obj.type == "AGE") {
+      	$("#suggestBox").remove();
+      	if(obj.data) {
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			$("#suggestBox").append("<div id='suggest_"+obj.data.LAGE+"_"+obj.data.HAGE+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+obj.data.LAGE+"'] div")[0]).html()+"&nbsp;-&nbsp;"+$($("#HAM_OPTION_2 li[value='"+obj.data.HAGE+"'] div")[0]).html()+"</div>"); 			
+	      	$("#suggest_"+obj.data.LAGE+"_"+obj.data.HAGE).off("click").on("click",function(){
+	      		var lage = $(this).attr("id").split("suggest_")[1].split("_")[0],hage = $(this).attr("id").split("_")[2],valLage = $("#HAM_OPTION_1 li[value='"+lage+"']").attr("index"),valHage = $("#HAM_OPTION_2 li[value='"+hage+"']").attr("index"),nTop = $("#HAM_OPTION_1 li[fake=1]").length/2;
+				slider1.gotoSlide(valLage,nTop);
+				slider2.gotoSlide(valHage,nTop);
+				$("#suggestBox").remove();
+      		});	
+      	}
+		
+    } else if(obj.type == "INCOME") {
+    	var lVal = 0,hVal = 0;
+    	$("#suggestBox").remove();
+    	if(obj.data) {
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			if ($("#TAPNAME_1").html() == "Income Rs") {
+				
+				$(".hpad5").each(function(){
+					if($($(this).children()[0]).html() == obj.data.LRS) {
+						lVal = $(this).attr("value");
+					} else if($($(this).children()[0]).html() == obj.data.HRS) {
+						hVal = $(this).attr("value");
+					}
+				});
+				$("#suggestBox").append("<div id='suggest_"+lVal+"_"+hVal+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+obj.data.LRS+"&nbsp;-&nbsp;"+obj.data.HRS+"</div>"); 			
+			} else if ($("#TAPNAME_1").html() == "Income $") {
+				$(".hpad5").each(function(){
+					if($($(this).children()[0]).html() == obj.data.LDS) {
+						lVal = $(this).attr("value");
+					} else if($($(this).children()[0]).html() == obj.data.HDS) {
+						hVal = $(this).attr("value");
+					}
+				});
+				$("#suggestBox").append("<div id='suggest_"+lVal+"_"+hVal+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+obj.data.LDS+"&nbsp;-&nbsp;"+obj.data.HDS+"</div>"); 			
+			}
+			$("#suggest_"+lVal+"_"+hVal).off("click").on("click",function(){
+				var lValue = $(this).attr("id").split("suggest_")[1].split("_")[0],hValue = $(this).attr("id").split("_")[2],indexLVal = $("#HAM_OPTION_1 li[value='"+lValue+"']").attr("index"),indexHVal = $("#HAM_OPTION_2 li[value='"+hValue+"']").attr("index"),nTop = $("#HAM_OPTION_1 li[fake=1]").length/2;
+				slider1.gotoSlide(indexLVal,nTop);
+				slider2.gotoSlide(indexHVal,nTop);
+				$("#suggestBox").remove();
+			});
+		}
+    } else{
+    	if($(".suggestOption").length == 0)  {
+    		$("#suggestBox").remove();
+    	}
+		var dataPresent,clickVal;
+		if(obj.data && Object.keys(obj.data).length != 0) {
+			$.each(Object.keys(obj.data), function(index, elem) {
+			 	dataPresent = false;
+			 	if($("#HAM_OPTION_1 li[value='"+elem+"']")){
+			 		if($("#HAM_OPTION_1 li[value='"+elem+"'] input").is(":checked")) {
+			 			dataPresent = true;
+			 		}
+			 		$(".suggestOption").each(function(){
+			 			if($(this).attr("value") == elem) {
+			 				dataPresent = true;
+			 			}
+			 		});
+			 		if(dataPresent == false) {
+			 			if($("#suggestBox").length == 0)
+			 				$("<div class='pad10p0p brdr13 suggestBox dispnone' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
+			 			if($("#HAM_OPTION_1 li[value='"+elem+"']").length != 0) {
+				 			$("#suggestBox").append("<div style='width: 100px;overflow: hidden;height: 27px;text-overflow: ellipsis;position: relative;white-space: nowrap;' value='"+elem+"' class='suggestOption pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+elem+"'] div")[0]).html()+"</div>");
+				 			if($("#suggestBox").hasClass("dispnone")) {
+				 				$("#suggestBox").removeClass("dispnone");
+				 			}
+				 			$(".suggestOption[value='"+elem+"']").off("click").on("click", function(){
+				 				if($(this).hasClass("bg7")) {
+				 					var count = 0;
+				 					$(".suggestOption").each(function(){
+				 						if($(this).hasClass("bg7") == false) {
+				 							count++;
+				 						}
+				 					});
+				 					if(count < 7) {
+				 						$("#suggestBox").attr("suggest-click",1);
+				 					}
+				 				} else {
+				 					$("#suggestBox").attr("suggest-click",1);
+				 				}
+				 				clickVal = $(this).attr("value");
+				 				$(this).toggleClass("bg7");
+				 				$(".hpad5[value='"+clickVal+"']").click();
+				 			});
+			 			}
+			 		}
+			 	}
+			 });
+		}
+	}
 }

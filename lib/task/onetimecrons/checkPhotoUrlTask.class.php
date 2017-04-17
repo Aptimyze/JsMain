@@ -11,6 +11,7 @@ class checkPhotoUrlTask extends sfBaseTask
 		$this->addArguments(array(
 		new sfCommandArgument('tableName', sfCommandArgument::REQUIRED, 'tableName'),
         new sfCommandArgument('maxCount', sfCommandArgument::REQUIRED, 'maxCount'),
+        new sfCommandArgument('curInst', sfCommandArgument::REQUIRED, 'curInst'),
 		));
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -31,17 +32,21 @@ EOF;
         //     sfContext::createInstance($this->configuration);
         $tableName = $arguments["tableName"];
         $maxCount = $arguments["maxCount"];  //The max count provided should ideally be greater than the limit
-        $limit = 10000;
-        $offset  = 0;
-        $incrementValue = 10000;
-        $pictureFieldsArr = ProfilePicturesTypeEnum::$PICTURE_SIZES_FIELDS;
-        $pictureFieldsArrAlbumPic = ProfilePicturesTypeEnum::$PICTURE_FIELD_FOR_ALBUM_PICS;
-        
+        $curInst = $arguments['curInst'];
+        $limit = 100;
+        $offset  = 0+(($curInst-1)*20000);
+        $incrementValue = 100;
+        $pictureFieldsArr = array("MainPicUrl", "ProfilePic120Url","ProfilePic235Url","ProfilePicUrl","ProfilePic450Url","MobileAppPicUrl","Thumbail96Url","ThumbailUrl","SearchPicUrl");
+        $pictureFieldsArrAlbumPic = array("MainPicUrl","Thumbail96Url");
+        if(file_exists(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$curInst.$tableName.".txt"))
+                $offset = file_get_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$curInst.$tableName.".txt");
+
         //PICTURE_NEW object
         $picObj = new PICTURE_NEW("newjs_slave");
         
         for($i=0;$i<$maxCount;$i+= $incrementValue)
         {
+            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$curInst.$tableName.".txt",$offset);
             if($lowerLimit < $maxCount) //change logic depending on maxCount logic
             {
                 $picUrlArr = $picObj->getPicUrlArr($tableName,$offset,$limit);  

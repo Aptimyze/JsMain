@@ -27,10 +27,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
   public function getApiBasicInfo(){
     $basicArr = parent::getApiBasicInfo();
     
-    //Posted By
-    $szRelation = $this->profile->getDecoratedRELATION();
-    $basicArr[] =$this->getApiFormatArray("RELATION","Profile Managed by" ,$szRelation,$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"));
-    
     //Native Place
 		$nativePlaceObj = new JProfile_NativePlace($this->profile);
 		$nativePlaceObj->getInfo();
@@ -72,11 +68,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     
     //Cover Photo
     $basicArr[]= $this->getApiFormatArray("COVER","Cover Photo",$this->getCoverPhotoFromLib($this->profile->getPROFILEID()),$this->getCoverPhotoFromLib($this->profile->getPROFILEID()));
-    
-    //HaveChild
-    if($this->profile->getMSTATUS() != 'N'){
-      $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
-    }
 
     return $basicArr;
   }
@@ -128,6 +119,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $extendedContactObj   = $this->profile->getExtendedContacts();
     //Mobile Number Owner Name
     $contactArr[]=$this->getApiFormatArray("MOBILE_OWNER_NAME","Name of owner" ,$this->profile->getMOBILE_OWNER_NAME(),$this->profile->getMOBILE_OWNER_NAME(),$this->getApiScreeningField("MOBILE_OWNER_NAME"));
+
     
     //Landline Number Owner Name
     $contactArr[]=$this->getApiFormatArray("PHONE_OWNER_NAME","Name of owner" ,$this->profile->getPHONE_OWNER_NAME(),$this->profile->getPHONE_OWNER_NAME(),$this->getApiScreeningField("PHONE_OWNER_NAME"));

@@ -1,4 +1,4 @@
-~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
 ~if isset($fromReg)`
 <!--start:overlay-->
   <div class="hpoverlay z2 js-regOverlay disp-none"></div>
@@ -62,7 +62,7 @@ Moreover, Filters determine whose Interests/Calls you want to receive.</div>
             </label>
         </div>
         <div class="fl fontlig">
-          <p class="dppnc1 f18 fontreg">I also want to recieve matches based on the history of my interests and acceptances</p>
+          <p class="dppnc1 f18 fontreg">I also want to receive matches based on the history of my interests and acceptances</p>
             <p class="dppnc2 f15 pt7">These matches may not fully fulfil your Desired Partner Preference.</p>
         </div>
       </div>

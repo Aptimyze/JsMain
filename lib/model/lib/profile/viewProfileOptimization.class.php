@@ -52,7 +52,7 @@ class viewProfileOptimization{
         }
             $fsoObj = ProfileFSO::getInstance("newjs_masterRep");
             $this->statusArr["fsoStatus"] = $fsoObj->check(self::$receiver);
-            $hobbyObj=new NEWJS_HOBBIES("newjs_masterRep");
+            $hobbyObj=new JHOBBYCacheLib("newjs_masterRep");
             $this->statusArr["hobbies"] = $hobbyObj->getUserHobbies(self::$receiver);
     }
     

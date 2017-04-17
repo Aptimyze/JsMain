@@ -2,7 +2,9 @@
 <header>
     <script>
         var iPCS = ~$iPCS`;
-		var showFTU=~$showFtu`;
+        var showFTU=~$showFtu`;
+        var showExpiring=~$showExpiring`;
+        var showMatchOfTheDay=~$showMatchOfTheDay`;
         var profileid = '~$profileid`';
         var profilePic = '~$profilePic`';
         var PageSource = "MyjsPc";
@@ -27,10 +29,14 @@
             <a id="videoCloseID" class="pos-abs disp_b" style="width: 26px;height: 26px;right:24px; top:18px; background:url(/images/jspc/myjsImg/videocross.png) no-repeat"></a>
         </div>
     </div>
-    ~/if`
+    ~/if` 
     <div class="cover1">
         <div class="container mainwid pt35"> ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1])`
-            <div class="pt30">
+            <div class="mt56 pos-rel">
+            <!-- start: match of the day --> 
+                ~if $showMatchOfTheDay eq 1`
+                    ~include_partial("global/JSPC/_jspcMatchOfTheDayBar")`
+                ~/if`
                 <div class="fullwid color-blockfour">
                     <div class="padall-15 clearfix">
                         <div class="fl" style="height:91px;width:91px;">
@@ -101,6 +107,10 @@
                     </div>
                     <div class="colrw fontmed pt20 pl30 pb20"> ~if $MembershipMessage['top'] neq ''`
                         <a href='/profile/mem_comparison.php' onclick="trackJsEventGA('My JS JSPC', 'Offer Text',loggedInJspcGender,'')" class='colrw'> <span class="f26">~$MembershipMessage['top']`</span> <span id='memExpiryDiv' style='display:none;'><span class="disp_ib pl5 f15">|</span> <span id='memExpiryHrs' class="disp_ib f15 pl10"></span><small>H</small> <span id='memExpiryMnts' class="disp_ib pl10 f15"></span><small>M</small><span id='memExpirySec' class="disp_ib pl10 f15"></span><small>S</small></span>
+                        ~if $MembershipMessage['extra'] &&  $MembershipMessage['extra'] neq "" && $MembershipMessage['bottom'] && $MembershipMessage['bottom'] neq ""`
+                            <br>
+                            <span id="memExtraDiv" class="f16 fontlig">~$MembershipMessage['bottom']`</span>
+                        ~/if`
                         </a> ~/if` </div>
                 </div>
             </div>
@@ -118,7 +128,7 @@
                         </div>
                     </div>
                 </li>
-
+                ~if $showExpiring eq 0`
                 <li id="filteredInterestHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
@@ -128,6 +138,19 @@
                         </div>
                     </div>
                 </li>
+                ~else`
+                <li id="expiringInterestHead">
+                    <div class="myjs-bdr3 fullwid">
+                        <div class="disp-tbl mauto">
+                            <div id="engage_expiringInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Expiring Interests',loggedInJspcGender,'')" >Interests Expiring
+                            <div id="totalExpiringInterestReceived" style="padding-left: 5px;" class="myjs-fsize2 dispib vmid myjs_p_new disp-none myjs-fw"></div>
+                            <div style="color:#D9475C;padding-left: 5px;" class="fontreg f14 vmid disp-none" id="ExpiringAction">Take Action</div>
+                            </div>
+                            <div id="expiringInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
+                        </div>
+                    </div>
+                </li>
+                ~/if`
                 <li id="acceptanceEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
@@ -319,7 +342,12 @@
                     </div><i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp" id="prv-slide2"></i> <i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-slide2"></i> </div>
             </div>
         </article>
+      ~if $loadLevel >= 3`
+        <article id="VERIFIEDMATCHES_HIDE" class="disp-none">
+      ~else`
         <article id="VERIFIEDMATCHES">
+      ~/if`
+        
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Verified Matches <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
@@ -372,8 +400,13 @@
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - +x',loggedInJspcGender,'')"></li>
                 </ul>
             </div>
+          ~if $loadLevel >=3`
+            <div id="SHORTLIST_HIDE" class="myjs-wid11 fr disp-none">
+          ~else`
             <div id="SHORTLIST" class="myjs-wid11 fr">
-                <p class="fontlig f22 color11">~$profileid` Shortlisted Profiles</p>
+          ~/if`
+            
+                <p class="fontlig f22 color11">Shortlisted Profiles</p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>

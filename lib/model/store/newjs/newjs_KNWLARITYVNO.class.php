@@ -80,7 +80,7 @@ class newjs_KNWLARITYVNO extends TABLE{
 		
 		try
 		{
-			$sql = "SELECT VIRTUALNO,PHONENO FROM newjs.KNWLARITYVNO WHERE PROFILEID=:PROFILEID";
+			$sql = "SELECT VIRTUALNO,PHONENO FROM newjs.KNWLARITYVNO WHERE PROFILEID=:PROFILEID ORDER BY ID DESC LIMIT 1";
 			$prep=$this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->execute();

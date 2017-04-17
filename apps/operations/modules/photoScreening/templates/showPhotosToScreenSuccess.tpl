@@ -52,7 +52,11 @@
    <input type=hidden name="screenedPictureIDs" value="~$photoArr['screenedPictureIDs']`">
    <input type=hidden name="username" value="~$name`">
    <input type = "hidden" name = "titlePicIdString" value = "~$titlePicIdStr`">
-   <input type = "hidden" name = "screenedProfilePicId" value = "~$screenedProfilePicId`">
+   ~if $photoArr['screenedProfilePicId'] neq ''`
+		<input type = "hidden" name = "screenedProfilePicId" value = "~$photoArr['screenedProfilePicId']`">
+   ~else`
+		<input type = "hidden" name = "screenedProfilePicId" value = "~$screenedProfilePicId`">
+   ~/if`
    <input type="hidden" name="havePhotoValue" value="~$profileData['HAVEPHOTO']`">
    
 
@@ -60,7 +64,7 @@
    <table width=760 align="CENTER" cellspacing="0px;">
         <tr class="formhead topDetails" style="background:#EFEFD3;">
 	<td>Username : ~$profileData['USERNAME']`</td>
-	<td>Gender : <font class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
+	<td>Gender : <font class="red" style="font-size:16px;" >~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
 	</tr>  
         
         <tr class="deleteReasonShow" id="deleteReasonsArea">
@@ -108,7 +112,12 @@
                 <input name="profilePic_~$photoArr['profilePic']['pictureId']`"  onclick="ProfileMainAction('delete');" class="profileMain delete" id="profilePicDelete" value='DELETE' type="radio" tabIndex="~$tabIndex`"> Delete<br/>
                 <input name="profilePic_~$photoArr['profilePic']['pictureId']`"  onclick="ProfileMainAction('mainEdit');" class="profileMain edit" onformchange="" id="profilePicEdit" value='EDIT' type="radio" tabIndex="~$tabIndex`"> Send this for Edit<br><br>
                 <input type="hidden" name="screenBit_~$photoArr['profilePic']['pictureId']`" value="~$photoArr['profilePic']['mainPicUrl']['bit']`">
-                <input type="radio" checked="true" value="~$photoArr['profilePic']['pictureId']`" id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br>
+                ~if $photoArr['OldProfilePicPresent'] neq '1'`
+					<input type="radio" checked="true" value="~$photoArr['profilePic']['pictureId']`" id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br>
+				~else`
+					<input type="radio" style="display:none" checked="true" value="~$photoArr['profilePic']['pictureId']`" id="profile~$incCounter`" name="set_profile_pic"><br>
+					<input type="radio" value="RETAIN" id="profilePicRetain" class="profileMain retain" name="profilePic_~$photoArr['profilePic']['pictureId']`"  tabIndex="~$tabIndex`" onclick="ProfileMainAction('retain');">Retain as Album Picture<br>
+				~/if`
                 <input type="hidden" name="rotate_~$photoArr['profilePic']['pictureId']`"  value="0">
                 ~if $photoArr['profilePic']['mainPicUrl']['localpath']`
                     <img src="~sfConfig::get('app_img_url')`/images/left-rotate.png" onclick=rotateImg('~$photoArr['profilePic']['pictureId']`','left') >
@@ -164,12 +173,18 @@
                                         <input name="albumPic_~$pictureID`" class="profileMain delete" id="profpic" value='DELETE' type="radio" tabIndex="~$tabIndex`"> Delete<br/>
                                         <input name="albumPic_~$pictureID`" class="profileMain edit" id="profpic" value='EDIT' type="radio" tabIndex="~$tabIndex`"> Send this for Edit<br/><br/>
                                         <input type="hidden" name="screenBit_~$pictureID`" value="~$picData['bit']`">
-					~if $photoArr['profilePic']['mainPicUrl'] || $source eq 'master'`
-                                            ~assign var = "isProfilePic" value=1`
-                                            <input type="radio" value='~$pictureID`' id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br><br>
-                                        ~else`
-                                            ~assign var = "isProfilePic" value=0`
-                                        ~/if`
+                                       
+											~if $photoArr['profilePic']['mainPicUrl'] || $source eq 'master'`
+						                                            ~assign var = "isProfilePic" value=1`
+						                                              ~if $photoArr['OldProfilePicPresent'] neq '1'`
+						                                                <input type="radio" value='~$pictureID`' id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br><br>
+						                                              ~else`
+																		<input type="radio" style= "display:none" value='~$pictureID`' id="profile~$incCounter`" name="set_profile_pic"><br><br>
+																	 ~/if`
+						                                        ~else`
+						                                            ~assign var = "isProfilePic" value=0`
+						                                        ~/if`
+						                 
                         ~assign var = "tabIndex" value = $tabIndex+1`		
 				<input type="hidden" name="rotate_~$pictureID`"  value="0">
                                 ~if $photoArr['nonScreened'][~$pictureID`]['localpath']`
@@ -187,6 +202,7 @@
 	~if $search neq 1 && ($photoArr['nonScreened'] || $photoArr['profilePic'])`
         <tr class = "fieldsnew" align = "CENTER">
             <td colspan="2"><input type="submit" tabIndex="~$tabIndex`" name="Submit" id="formSubmit" class="formSubmitButton" onsubmit="formSubmit()" value="Submit"><br/><br/>&nbsp;&nbsp;&nbsp;
+<font class="red" style="font-size:16px;" >~$profileData['GENDER']` (~$profileData['AGE']`)</font>
                 <input class="deleteReasonHide" id="skipSubmit" type="submit" name="Skip" value="Skip">
             </td>
         </tr>    	
@@ -208,14 +224,21 @@
 
 			<td align="left" id="photo~$picNumber`">
 				<span style="color:blue;font-size:15px"><b>Screened photo ~$picNumber`</b></span> <br><br>
-
+					~if $photoArr['OldProfilePicPresent'] neq '1'`
 					<input name="screenedPicDelete[]" class="profileMain" id="screenedPicDelete" value='~$pictureID`' type="checkbox" tabIndex="~$tabIndex`"> Delete<br/><br/><br/><br/>
+					~/if`		
                                         ~if $photoArr['profilePic']['mainPicUrl']  || $source eq 'master'`
                                             ~assign var = "isProfilePic" value=1`
-                                            <input type="radio" value='screened~$pictureID`' id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br><br>
+                                             ~if $photoArr['OldProfilePicPresent'] neq '1'`
+												<input type="radio" value='screened~$pictureID`' id="profile~$incCounter`" name="set_profile_pic">Set as Profile Picture<br><br>
+											 ~else`
+												<input type="radio" style="display:none" value='screened~$pictureID`' id="profile~$incCounter`" name="set_profile_pic"><br><br>
+											 
+											 ~/if`
                                         ~else`
                                             ~assign var = "isProfilePic" value=0`
                                         ~/if`
+                            
                         		
 				
 			</td>
@@ -248,7 +271,14 @@
 ~/if`
 <script>
     $(".formSubmitButton").click(function(event){
-        var count=~$tabIndex+$isProfilePic`;
+     var retainPic = $(":radio[value=RETAIN][id='profilePicRetain']:checked").size();
+     var count=~$tabIndex+$isProfilePic`;
+     if(retainPic==1)
+     {
+		var profilePicCount = $("td[id='profilephoto']").size();
+		count = count - profilePicCount; // no of different sizes of image
+	  }
+       
     if($(":radio:checked").size()<count) {
     alert("Some of the Photos are not marked");
     event.preventDefault();return false;}
@@ -268,9 +298,10 @@ $(":input").change(function(event){
     var approvePic = $(":radio[value=APPROVE][id='profpic']:checked").size();
     var editedProfilePic = $(":radio[value=EDIT][id='profilePicEdit']:checked").size();
     var editedPic = $(":radio[value=EDIT][id='profpic']:checked").size();
+    var retainPic = $(":radio[value=RETAIN][id='profilePicRetain']:checked").size();
     var deletedPics = $(":checkbox[class='profileMain']:checked").size();
     
-    var newCount=parseInt(count)+editedProfilePic+editedPic+approveProfilePic+approvePic-deletedPics;
+    var newCount=parseInt(count)+editedProfilePic+editedPic+approveProfilePic+approvePic+retainPic-deletedPics;
     $("#countDisplay").text(newCount);
     if(newCount<20)
         $(":input[type='submit']").show();

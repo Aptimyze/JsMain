@@ -288,7 +288,7 @@ class ProfileDataActions extends sfActions
 		$this->EMAIL=$deleteRemovedEmail;
 		//Getting partner details of viewer
 		$jpartnerObj=$profObj1->getDpp($this->profile->getPROFILEID());
-		$dbObj = new NEWJS_JPROFILE_CONTACT("newjs_slave");
+		$dbObj = new ProfileContact("newjs_slave");
 		$mobArr = $dbObj->getProfileContacts($this->profileid);
 		$this->AltMob = $mobArr['ALT_MOBILE'];
 		

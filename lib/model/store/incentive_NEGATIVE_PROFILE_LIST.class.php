@@ -61,6 +61,34 @@ class incentive_NEGATIVE_PROFILE_LIST extends TABLE
                 }
                 return $data;
         }
+    public function removeProfile($negType, $negativeVal)
+    {
+        try {
+            $sql = "DELETE FROM incentive.NEGATIVE_PROFILE_LIST WHERE $negType=:VALUE_VAL";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":VALUE_VAL", $negativeVal, PDO::PARAM_STR);
+            $prep->execute();
+            $rows_affected =$prep->rowCount();
+            return $rows_affected;
+        }
+        catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function removeProfileUsingPhone($negativeVal)
+    {
+        try {
+            $sql = "DELETE FROM incentive.NEGATIVE_PROFILE_LIST WHERE (MOBILE=:VALUE_VAL OR LANDLINE=:VALUE_VAL OR CONCAT(ISD,STD_CODE,LANDLINE)=:VALUE_VAL)";
+            $prep = $this->db->prepare($sql);
+       	    $prep->bindValue(":VALUE_VAL", $negativeVal, PDO::PARAM_STR);
+            $prep->execute();
+            $rows_affected =$prep->rowCount();
+            return $rows_affected;
+        }
+        catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 
 }
 ?>

@@ -297,6 +297,59 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
         }
+
+        public function executeHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
+
+        public function executeUnHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
+
+        public function executeUnHideResult(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
+
+        public function executeHideCheckPassword(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+            }
+        }
+
+        public function executeHideDuration(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+            if($this->hideOption=="1")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION1." days";
+            }
+            elseif ($this->hideOption=="2")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION2." days";
+            }
+            elseif ($this->hideOption=="3")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
+            }
+            
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+            }
+        }
+
         public function executeDeleteReason(sfWebRequest $request) {
         	//echo "string";die;
             $loginData = $request->getAttribute("loginData");
@@ -331,6 +384,12 @@ class staticActions extends sfActions
 			if($loginData['PROFILEID'])
 			{
 				$this->loggedIn=1;
+                // show hide profile
+                $this->hide = 1;
+                if($loginData['ACTIVATED'] == 'H')
+                {
+                    $this->hide = 0;
+                }
         $notificationObj = new NotificationConfigurationFunc();
         $toggleOutput = $notificationObj->showNotificationToggleLayer($loginData['PROFILEID']);
         $this->showNotificationBox = $toggleOutput["showToggleLayer"];
@@ -372,13 +431,20 @@ class staticActions extends sfActions
 
     }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+    
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
+    $this->contentTextNEW = $layerData[TEXTNEW];
+    $this->button1TextNEW = $layerData[BUTTON1NEW];
+    $this->button2TextNEW = $layerData[BUTTON2NEW];
     $this->action1 = $layerData[ACTION1];
     $this->action2 = $layerData[ACTION2];
+    $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+    $this->subtitle = $layerData[SUBTITLE];
+    $this->textUnderInput = $layerData[TEXTUNDERINPUT];
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -479,7 +545,22 @@ public function executeCALRedirection($request){
             'jsms/common/mediaquery',
             'jsms/common/jsmsApp_promo_css',
             'rippleEffectCommon_css'));
-
+          $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(
+              'modernizr_p_js',
+              'tracking_js',
+              'jsms/common/CommonFunctions',
+              'jsms/common/scrollTo',
+              'jsms/common/urlParamHandling',
+              'app_promo_js',
+              'commonMob',
+              'jsms/common/touchswipe_js',
+              'jsms/common/disableScroll_js',
+              'jsms/common/history_js',
+              'commonExpiration_js',
+              'rippleEffectCommon_js',
+              'common_comscore_js')));
+            $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js')));
+              
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
@@ -616,8 +697,12 @@ public function executeCALRedirection($request){
 	public function executeRedirectToOldJsms(sfWebRequest $request)
 	{
 		$this->getResponse()->setCookie('TO_OLD_JSMS',1,time()+60*60*24*150,"/");
-		$rUrl=$request->getParameter("rUrl");	
-		$this->redirect($rUrl);
+		$rUrl=$request->getParameter("rUrl");
+		if(!$rUrl){
+				$this->redirect(JsConstants::$siteUrl);
+			}
+		else
+			$this->redirect($rUrl);
 		die;
 	}
 public function executeAppredirect(sfWebRequest $request)
@@ -703,7 +788,12 @@ public function executeAppredirect(sfWebRequest $request)
 	{
 		$this->redirect("https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=%{idfa}&cs=organic&cm=JSMS&cn=JSIA&cc=hamburger");
 	}	
-	else{
+	elseif($playstore=="apppromotionSRPAndroid")
+	{
+                $this->redirect("https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3DSRP_M%26utm_campaign%3DJSAA");
+        }elseif($playstore=="apppromotionSRPIos"){
+                $this->redirect("https://itunes.apple.com/in/app/jeevansathi/id969994186?mt=8");
+        }else{
 
 		$ua = $_SERVER['HTTP_USER_AGENT']; 
         if(JsCommon::checkIOSPromoValid($ua)) 
@@ -763,6 +853,36 @@ public function executeAppredirect(sfWebRequest $request)
     }
   } 
 
+
+
+  public function executeVerifyAlternateEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_ALTERNATE_EMAIL_LOG();
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+
+  else if($row['STATUS']!='Y')
+    {   
+        $paramArr=array('ALT_EMAIL_STATUS'=>'Y');
+        $contactObj=new ProfileContact();
+        $contactObj->update($profileid,$paramArr);
+        $changeLog->markAsVerified($profileid);
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
 
 
 
@@ -904,9 +1024,13 @@ public function executeAppredirect(sfWebRequest $request)
   
 	private function getFieldMapData($szKey)
 	{
-		$k = $szKey;
+		$k = $szKey;    
+    if(strpos($k, 'p_') !== false)
+    {
+      $forDpp = 1; //This has been added so as to remove Select from the output where not required
+    }
 		$output = "";
-		if($k=="relationship")
+		if($k=="relationship" || $k=="relation")
 		{
 			$output=$this->getField("relationship_edit");
 		}
@@ -948,17 +1072,18 @@ public function executeAppredirect(sfWebRequest $request)
 
 		if($k=="p_occupation")
 		$k="occupation";
+    if($k=="p_occupation_grouping")
+      $k="occupation_grouping";
 		if($k=="p_religion")
 		$k="religion";
 		if($k=="p_manglik")
 		$k="manglik";
 		if($k=="manglik")
-                $output=  $this->removeDontKnowManglik();
+                $output=  $this->removeDontKnowManglik();              
 		if($k=="p_height" || $k=="height")
 		$k="height_without_meters";
 		if($k=="p_age")
 		$k="age";
-
 		if($k=="p_diet" || $k=="diet")
 		$output=$this->getField("diet");
 		if($k=="p_smoke" || $k=="smoke")
@@ -974,7 +1099,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
 
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);
@@ -1036,6 +1161,8 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getJspcSect();
 		if($k=="p_caste" || $k=="p_sect")
 		$output=$this->getCaste(1);
+		if($k=="p_caste_jsms" || $k=="p_sect_jsms")
+		$output=$this->getNonOtherCaste();
 
 		if($k=="mtongue")
 			$output=$this->getMtongue();
@@ -1118,6 +1245,12 @@ if($k=="state_res")
 		{
 			$output = $this->getJsmsNativeCountry();
 		}
+    if($forDpp) //To remove Select from fields where it is not required
+    {
+      if($output[0][0][0] == DPPConstants::$removeLabelFromDpp || $output[0][0][S0] == DPPConstants::$removeLabelFromDpp)
+        unset($output[0][0]);
+    }
+    
 		return $output;
 	}
   
@@ -1214,6 +1347,32 @@ if($k=="state_res")
 	  }
 	  
 		return $Arr;
+  }
+  private function getNonOtherCaste()
+  {
+          $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+          $casteArr=FieldMap::getFieldLabel("caste",'',1);
+	  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	  {
+		unset($casteArr[$v]);
+	  }
+          foreach($arr as $key=>$val)
+          {
+		$val = $this->unsetOtherCaste($val);
+		$Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
+
+          }
+	return $Arr;
+  }
+  private function unsetOtherCaste($val)
+  {
+	$valArr = explode(",",$val);
+	$flipArr = array_flip($valArr);
+	foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	{
+		unset($valArr[$flipArr[$v]]);
+	}
+	return implode(",",$valArr);
   }
   private function getCasteArr($needleArr,$searchArr)
   {
@@ -1688,12 +1847,16 @@ if($k=="state_res")
                 {
                         if(strlen($key)===2)
                         {
-				asort($arrFinalOut[$currentKey]);
-                                $currentKey = $key;
-                                $arrFinalOut[$currentKey] = array();
+				if(array_key_exists($currentKey, $arrFinalOut))
+				{
+					asort($arrFinalOut[$currentKey]);
+				}
+				else
+					$arrFinalOut[$currentKey] = array();
                         }
                         else
                         {
+				$currentKey = substr($key,0,2);
                                 $arrFinalOut[$currentKey][$key] = $val;
                         }
                 }

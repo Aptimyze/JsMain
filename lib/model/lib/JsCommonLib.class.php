@@ -121,7 +121,7 @@ public static function insertConsentMessageFlag($profileid) {
         		if (!CommonConstants::SHOW_CONSENT_MSG) return false; //check if the global constant flag is set to true
         
         //check whether it is subscribed to both offerCalls and membershipCalls
-        		$dbObj=new newjs_JPROFILE_ALERTS();	
+        		$dbObj=new JprofileAlertsCache();	
         		$res=$dbObj->fetchMembershipStatus($profileid);  
         		if (($res['MEMB_CALLS']!='S')||($res['OFFER_CALLS']!='S')) return false;
 
@@ -138,7 +138,7 @@ public static function insertConsentMessageFlag($profileid) {
                 	}
 
 
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb= new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
                 if($numArray['0']['ALT_MOBILE']){
                 	$resultArray=$dncOb->DncStatus(array($numArray['0']['ALT_MOBILE']));
@@ -407,7 +407,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 				$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MANGLIK()));
 			if(is_array($ARR))
-			if(in_array($profile->getMANGLIK(),$ARR))
+			if(in_array($profile->getMANGLIK(),$ARR) || ($profile->getMANGLIK() == '' && in_array('N',$ARR)))
 			{
 				$CODE["MANGLIK"]='gnf';
 				$CODE["Manglik/Chevvai Dosham"]='gnf';
@@ -524,13 +524,15 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 			}
 			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $inc = IncomeCommonFunction::getIncomeDppFilterArray(implode(",",$ARR));
+                        /*
                         $incomeObj = new IncomeMapping;
-                        $ARR = $incomeObj->removeNoIncome($ARR);
-                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
-                        $result = array_intersect($ARR, $incomeArray);
-                        
-			if(is_array($ARR) && !empty($ARR)){
-                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+-                       $ARR = $incomeObj->removeNoIncome($ARR);
+-                       $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+-                       $result = array_intersect($ARR, $incomeArray);
+                         */
+			if(is_array($inc) && !empty($inc)){
+                                if(in_array($profile->getINCOME(),$inc))
                                 {
                                         $CODE['INCOME']='gnf';
                                         $CODE['Income']='gnf';
@@ -666,22 +668,24 @@ public static function insertConsentMessageFlag($profileid) {
 	 * @throws jsException of profileid not present
 	 * @return true/false
 	 */
-	public static function gtalkOnline($profile)
-	{
-		if($profile)
-		{
-			$onlineObj=new USER_ONLINE();
-			if($onlineObj->isOnline($profile)==true)
-			{
-				return true;
-			}
+
+	// public static function gtalkOnline($profile)   //COMMENTING THIS CODE SINCE IT IS NO LONGER USED
+	// {
+	// 	if($profile)
+	// 	{
+	// 		$onlineObj=new USER_ONLINE();
+	// 		if($onlineObj->isOnline($profile)==true)
+	// 		{
+	// 			return true;
+	// 		}
 			
-		}
-		else
-			throw new jsException("online status of user gtalk: Profileid missing.");
+	// 	}
+	// 	else
+	// 		throw new jsException("online status of user gtalk: Profileid missing.");
 		
-		return false;
-	}
+	// 	return false;
+	// }
+	
 	/**
 	 * returns online status of user on jeevansathi
 	 * @param $profile int profileid of user
@@ -981,8 +985,7 @@ public static function insertConsentMessageFlag($profileid) {
 		$isPhoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
 		if(!$isPhoneVerified)
 		{
-			include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-			$isPhoneVerified = hidePhoneLayer($profileid);
+			$isPhoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$isPhoneVerified);
 		}
                 if($profileid && $isPhoneVerified!='Y'&& $moduleName!="register" && $moduleName!="static" && $moduleName!="phone")
@@ -1031,7 +1034,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
                  if(!strstr($ua,"iPhone"))
                         return false;
-                $av = explode(" ",explode("OS ",$ua)[1])[0];
+                $av = intval(explode(" ",explode("OS ",$ua)[1])[0]);
                 if($av>=7)
                 	return true;
                 return false;
@@ -1114,9 +1117,19 @@ public static function insertConsentMessageFlag($profileid) {
             $key = $className.'_'.date('Y-m-d');
             JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+            //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
-
-
+        public static function setAutoScreenFlag($screenVal,$editArr)
+        {
+                $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
+                foreach($editArr as $k=>$v)
+                {
+                        if(in_array($v,$autoScreenArr))
+                        {
+				$screenVal = Flag::setFlag(strtolower($v),$screenVal);
+                        }
+                }
+		return $screenVal;
+        }
 }
 ?>

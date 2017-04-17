@@ -7,12 +7,14 @@
 class SearchConfig
 {
 	const _nullValueAttributeLabel= "NS";
-	public static $maxSaveSearchesAllowed = 5;
+	const _noneValueHandicapped= "N";
+	const _doesntMatterValue= "0";
+        public static $maxSaveSearchesAllowed = 5;
 	public static $limitOfViewedFeatureProfile = 3;
 	public static $profilesPerPage = 25;
 	public static $matchMaxLimit = 5000;//overwriting limit set in matchalert
 	public static $profilesPerPageOnApp = 6;
-	public static $profilesPerPageOnWapSite = 10;
+	public static $profilesPerPageOnWapSite = 20;
 	public static $featuredProfilesCount = 5;
 	public static $suggestedAlgoCount = 15;
 	public static $ap_send_eoi_count = 100;
@@ -50,7 +52,6 @@ class SearchConfig
         public static $gtalkOnline = 45;//minutes
         public static $jsOnline = 60;//minutes
 
-
 	public static $searchWhereParameters = 'CASTE,SUBCASTE,MTONGUE,OCCUPATION,BTYPE,RELATION,COUNTRY_RES,RELIGION,EDU_LEVEL,EDU_LEVEL_NEW,HOROSCOPE,MATHTHAB,INCOME,MSTATUS,HAVEPHOTO,MANGLIK,HAVECHILD,DIET,SMOKE,DRINK,COMPLEXION,HANDICAPPED,HIV,HIJAB_MARRIAGE,SPEAK_URDU,SAMPRADAY,ZARATHUSHTRI,AMRITDHARI,CUT_HAIR,NATURE_HANDICAP,WEAR_TURBAN,LIVE_PARENTS,CITY_RES,LAST_ACTIVITY,EDUCATION_GROUPING,OCCUPATION_GROUPING,INDIA_NRI,STATE,CITY_INDIA,MARRIED_WORKING,GOING_ABROAD,CASTE_GROUP,WIFE_WORKING,WORK_STATUS,KEYWORD,KEYWORD_TYPE,PROFILE_ADDED,PHOTO_DISPLAY,PRIVACY,NATIVE_STATE,LAST_LOGIN_SCORE,SUBSCRIPTION,PHOTO_VISIBILITY_LOGGEDIN';
 	public static $searchRangeParameters = 'AGE,HEIGHT,ENTRY_DT,VERIFY_ACTIVATED_DT';
 	
@@ -79,6 +80,7 @@ class SearchConfig
          * Db to be called in all search requests
          */
         public static $searchDbName = "newjs_masterRep";
+        public static $jsBoostSubscription = array("N","X"); // JsBoost subscription value
         
 	/*
 	* List The Array name corresponding to SEARCH_MALE/FEMALE fields used in cluster

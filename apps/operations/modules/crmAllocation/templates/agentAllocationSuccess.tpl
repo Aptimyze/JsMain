@@ -93,6 +93,10 @@
 						<td class=label align="left" width=30%> Email</td>
 						<td class=fieldsnew width=70%> ~$details.EMAIL` </a></td>
 					</tr>
+                                        <tr>
+                                                <td class=label align="left" width=30%> ISD No.</td>
+                                                <td class=fieldsnew> ~$details.ISD` </td>
+                                        </tr>
 					<tr>
 						<td class=label align="left" width=30%> Phone No. (Residence)</td>
 						<td class=fieldsnew> ~$details.PHONE_WITH_STD` </td>
@@ -237,6 +241,9 @@
 							<td align=center><a href="~sfConfig::get('app_site_url')`/crm/online_pickup.php?cid=~$cid`&pid=~$profileid`&username=~$username`" target="_blank">Click here for online payment request </a><br><br></td>
 						</tr>
 						~/if`
+						<tr class=fieldsnew>
+							<td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/crmSmsFunctionalityInterface?cid=~$cid`&profileid=~$profileid`&username=~$username`" target="_blank">Send SMS to this profile user</a><br><br></td>
+						</tr>
 						<tr class=fieldsnew>
 							<td align=center><a href="~sfConfig::get('app_site_url')`/crm/phone_number_validation.php?cid=~$cid`&profileid=~$profileid`" target="_blank">Click here to verify Contact Number(s) </a></td>
 						</tr>

@@ -57,7 +57,7 @@
 
 		<!--start:pagination-->
 		<div class="clearfix ccp7">
-			~include_partial("inbox/JSPC/pagination")`
+			~include_partial("inbox/JSPC/pagination",[hidePaginationCount=>$hidePaginationCount])`
 			
 		</div>
 		<!--end:pagination-->
@@ -82,7 +82,7 @@
 						<li class="clearfix pos-rel" id="detailMessageTupleDiv" >
 							<a href="/profile/viewprofile.php?profilechecksum={profilechecksum}" onclick="return redirect('/profile/viewprofile.php?checksum={checksum}&profilechecksum={profilechecksum}')" class="js-colorParent">
 								<div class="fl">
-									<img src="{ccTupleImage}" class="ccdim1 vtop"/>
+									<img dsrc='{ccTupleImage}' class="ccdim1 vtop"/>
 								</div>
 								<div class="fl ccwid5 pos-rel">
 									<div class="fl f12 pl30">

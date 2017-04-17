@@ -14,6 +14,8 @@ class MailerConfigVariables
         public static $strategyReceiversTVsT = 1;
         public static $strategyReceiversTVsNT = 2;
         public static $strategyReceiversNT = 3;
+        public static $communityModelNT = 4;
+        public static $relaxedDpp = 5;
         
         
         public static $DppLoggedinWithReverseDppSort = 1; // DPP Loggedin in last 15days with reverse dpp sort

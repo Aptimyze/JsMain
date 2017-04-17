@@ -82,7 +82,7 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
 	}
 
         
-        public function insertMultiple($array)
+        public function insertMultiple($array,$time)
 	{
 		if(!$array || !is_array($array))
 			throw new jsException("","Problem in eoi viewed log in function insertMultiple");
@@ -90,7 +90,7 @@ class NEWJS_EOI_VIEWED_LOG extends TABLE
 		try
 		{
 			$valueStr="";
-                        $timeNow=(new DateTime)->format('Y-m-j H:i:s');
+                        $timeNow=$time ? $time : (new DateTime)->format('Y-m-j H:i:s');
 			foreach($array as $k=>$v)
                         {
                             $valueStr.="(:vR$k , :vS$k, '$timeNow' ),";

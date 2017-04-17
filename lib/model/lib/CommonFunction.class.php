@@ -563,7 +563,7 @@ class CommonFunction
                 $manglikArr = explode(",", $manglikVal);
                 $returnStr = "";
                 foreach ($manglikArr as $key=>$val){
-                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know" || $val == "'S0'" || $val == "S0" || $val == "Select")
                         continue;
                     else
                         $returnStr.=",".$val;
@@ -672,6 +672,149 @@ class CommonFunction
             "21:00:00"=>"9 PM",
         );
         return $dropDownTimeArr2;
+    }
+    
+    public static function removeCanChat($loginProfileId,$otherProfileId)
+    {
+		if(JsMemcache::getInstance()->get("can_chat_".$loginProfileId."_".$otherProfileId,1) || JsMemcache::getInstance()->get("can_chat_".$otherProfileId."_".$loginProfileId,1)){
+			JsMemcache::getInstance()->set("can_chat_".$loginProfileId."_".$otherProfileId,false,'','',1);
+			JsMemcache::getInstance()->set("can_chat_".$otherProfileId."_".$loginProfileId,false,'','',1);
+		}
+	}
+    
+    /*
+     * End script 
+     * To note statistic of memory and time usages
+     * @param : $st_Time [Start Time]
+     * @return void
+     */
+    public static function logResourceUtilization($st_Time, $msg, $moduleName=null)
+    {
+        $end_time = microtime(TRUE);
+        $var = memory_get_usage(true);
+
+//        if ($var < 1024)
+//            $mem =  $var." bytes";
+//        elseif ($var < 1048576)
+//            $mem =  round($var/1024,2)." kilobytes";
+//        else
+//            $mem = round($var/1048576,2)." megabytes"
+        
+        //In Mb only
+        $mem = round($var/1048576,2);
+        
+        $timeTaken = ($end_time - $st_Time);
+        $msg .= 'Memory usages : '.$mem;
+        $msg .= ' Time taken : '.$timeTaken;
+        //$arrData['requestId'] = LoggingManager::getInstance()->getUniqueId();
+        //LoggingManager::getInstance($moduleName)->logThis(LoggingEnums::LOG_INFO,$msg);    
+        return array('mem_usages'=>$mem,'time_elapse'=>$timeTaken,'msg'=>$msg,'requestId'=>LoggingManager::getInstance()->getUniqueId(),'channel'=>CommonFunction::getChannel(),'time_stamp'=>date('Y-m-d H:i:s'));
+    }
+    
+    public static function logIntoProfiler($szModuleName, $arrData) {
+      //Add into MQ
+      $producerObj = new Producer();
+      $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($queueData);
+    }
+    
+    public static function getCitiesForStates($stateArr){
+        $cityList = "";
+        foreach($stateArr as $key=>$val){
+            $cityList .= ",".FieldMap::getFieldLabel("state_CITY", $val);
+        }
+        $cityList=explode(",",trim($cityList,","));
+        return $cityList;
+    }
+
+    	
+    /**
+     * this function returns occupation groups
+     * @param  string  $occupationValues comma separated occuaptaion values
+     * @param  boolean $isSingleQuote    whether occupation values are stored as single quote sorrounded
+     * @return string                    returns comma separated string.
+     */		
+    public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+        if($isSingleQuote)
+        {
+        	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
+        }
+        else
+        {
+        	$occupationValuesArray = explode (",", $occupationValues);
+        }
+
+        $occupationGroupString = "";
+
+    	foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+    	{
+    		$occupationGroupingValuesArray = array_map('intval',explode(',',$occupationGroupingValues));
+    		if ( count(array_intersect($occupationValuesArray,$occupationGroupingValuesArray)) > 0)
+    		{
+    			$occupationGroupString .= $key.",";
+    		}	
+    	}
+    	$occupationGroupString = rtrim($occupationGroupString,",");
+
+    	if($isSingleQuote)
+		{
+			$occupationGroupString = "'".$occupationGroupString."'";
+			$occupationGroupString = str_replace(",", "','", $occupationGroupString);
+		}
+    	return $occupationGroupString;
+    }
+
+    /**
+     * returns occupation values, given occupation groups.
+     * @param  string  $occupationGroups comma separated groups
+     * @param  boolean $isSingleQuote    whether return values needs to be sorrounded by comma or not
+     * @return string                    occupation values, comma separated
+     */
+    public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+		if($isSingleQuote)
+        {
+        	$occupationGroupsArray = explode (",", str_replace("'", "", $occupationGroups));
+        }
+        else
+        {
+        	$occupationGroupsArray = explode (",", $occupationGroups);
+        }
+
+		$occupationValuesString = "";
+
+		foreach($occupationGrouping as $key => $occupationGroupingValues) 
+		{
+			if(in_array($key,$occupationGroupsArray))
+			{
+				$occupationValuesString .= $occupationGroupingValues.",";
+			}		
+		}
+
+		$occupationValuesString = rtrim($occupationValuesString,",");
+
+		if($isSingleQuote)
+		{
+			$occupationValuesString = "'".$occupationValuesString."'";
+			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
+		}
+		return $occupationValuesString;
+    }
+
+    public static function getOccupationGroupsLabelsFromValues($occupationGroups)
+    {
+    	$occupationGroupsArr = explode(",",$occupationGroups);
+    	$decoratedOccGroups = "";
+    	$occupationGroupingFieldMapLib = FieldMap::getFieldLabel('occupation_grouping', '',1);    	
+    	foreach($occupationGroupsArr as $key=>$value)
+    	{
+    		$decoratedOccGroups.= $occupationGroupingFieldMapLib[$value].", ";
+    	}
+    	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
+    	return $decoratedOccGroups;
     }
 }
 ?>

@@ -264,7 +264,7 @@ class MembershipMailer {
         else
         {
             $logindDtStart = date('Y-m-d',strtotime(date('Y-m-d') . $lastLoginOffset));
-            $loginDtEnd = date('Y-m-d');
+            $loginDtEnd = date('Y-m-d H:i:s');
             $profileDetailsArr = $jprofileObj->getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd);   
         }
         if($neverPaidFlag==true)
@@ -444,7 +444,7 @@ class MembershipMailer {
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
 
 		// jprofile Contact
-	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
+	        $jprofileContactObj    = new ProfileContact('newjs_local111');
         	$valueArr['PROFILEID']  =$profileStr;
         	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
 		if(is_array($result)){

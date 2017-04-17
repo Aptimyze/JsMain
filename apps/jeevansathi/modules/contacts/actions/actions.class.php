@@ -266,6 +266,12 @@ class contactsActions extends sfActions
 		if( !$this->getParameter($request,"draft"))
 		{
 			$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+            
+            //If Event is Decline then No Preset Msg
+            if(ContactHandler::DECLINE == $this->contactHandlerObj->getToBeType()) {
+                $this->contactHandlerObj->setElement("MESSAGE","");
+            }
+            
 			$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 		}
 		else
@@ -761,7 +767,7 @@ class contactsActions extends sfActions
 		{
 			$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID(),'');
 			$dbObj = new newjs_CONTACTS($dbName);
-			$b90=mktime(0,0,0,date("m"),date("d")-90,date("Y"));
+			$b90=mktime(0,0,0,date("m"),date("d")-CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT,date("Y"));
 				$back_90_days=date("Y-m-d",$b90);
 			
 			$respondArr = $dbObj->getRespondedCount($this->loginProfile->getPROFILEID(),"TIME > '$back_90_days 00:00:00'");

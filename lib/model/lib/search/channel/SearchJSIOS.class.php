@@ -152,5 +152,20 @@ class SearchJSIOS extends SearchJS
         {
                  return SearchTypesEnums::IOSMatchOfDay;
         }
+        
+        public function setRequestParameters($params){
+            $output = array();
+            $request = $params["request"];
+            if($params["searchCat"] == 'kundlialerts'){
+				
+				if($params['profileCount']==0 && $params["nextAvail"]=='false' && $params['noOfResults']!="")
+				{
+					$output['noresultmessage'] = SearchTitleAndTextEnums::$MESSAGE_0RESULT_MAPPING["V1"]["JSMS"]["kundlialerts"]["withHoro"];
+            	}
+               
+            }
+            return $output;
+       }
+        
 }
 ?>

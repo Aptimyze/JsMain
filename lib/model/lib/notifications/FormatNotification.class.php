@@ -23,7 +23,25 @@ class FormatNotification
 	if($details['NOTIFICATION_KEY']=='PHOTO_REQUEST')
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_ANDROID;
 	if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
-		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;	
+		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;
+    	if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+		$dataArray['STYPE'] =SearchTypesEnums::AndroidMatchOfDay;
+    if($details['NOTIFICATION_KEY']=='CHAT_MSG' || $details['NOTIFICATION_KEY'] == "CHAT_EOI_MSG" || $details['NOTIFICATION_KEY'] == "MESSAGE_RECEIVED"){
+		$dataArray['OTHER_PROFILEID'] =$details['OTHER_PROFILEID'];
+        $dataArray['CHAT_ID'] =$details['CHAT_ID'];
+        $dataArray['OTHER_USERNAME'] =$details['OTHER_USERNAME'];
+    }
+    
+
+        if($details['NOTIFICATION_KEY']=='MATCHALERT')
+                $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_ANDROID;
+        if($details['NOTIFICATION_KEY']=='JUST_JOIN')
+                $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_ANDROID;
+        if($details['NOTIFICATION_KEY']=='PENDING_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_ANDROID;
+        if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_ANDROID;
+
 	return $dataArray;
     }
     public static function formaterForIos($details)
@@ -33,6 +51,20 @@ class FormatNotification
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_IOS;
         if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_IOS;
+        if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+                $dataArray['STYPE'] =SearchTypesEnums::IOSMatchOfDay;
+
+	/*
+        if($details['NOTIFICATION_KEY']=='MATCHALERT')
+                $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_IOS;
+        if($details['NOTIFICATION_KEY']=='JUST_JOIN')
+                $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_IOS;
+        if($details['NOTIFICATION_KEY']=='PENDING_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_IOS;
+        if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_IOS;
+	*/
+
         return $dataArray;
     }
 
@@ -63,21 +95,24 @@ class FormatNotification
     public static function formatLogData($dataArray,$table='',$process='')
     {
         if($table =='REGISTRATION_ID'){
-            	$type = $table;
+            $type = $table;
         }
-	elseif($table=='LOCAL_NOTIFICATION_LOG'){
-		$type = $table;
-	}
-	elseif($process=='DELIVERY_TRACKING_API'){
-		$type = $process;
-	}
-	elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
-		$type = $process;
-	}
+        elseif($table=='LOCAL_NOTIFICATION_LOG'){
+            $type = $table;
+        }
+        elseif($process=='DELIVERY_TRACKING_API'){
+            $type = $process;
+        }
+        elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
+            $type = $process;
+        }
         elseif($process=='REGISTRATION_API'){
-                $type = $process;
+            $type = $process;
         }
-	$queueName ='JS_NOTIFICATION_LOG';
+        else if($process == 'NOTIFICATION_OPENED_TRACKING_API'){
+            $type = $process;
+        }
+        $queueName ='JS_NOTIFICATION_LOG';
         $msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
         return $msgdata;
     }

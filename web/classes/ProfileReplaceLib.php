@@ -49,6 +49,12 @@ class ProfileReplaceLib
     private $objProfileHoroscopeCompatibilityStore = null;
 
     /**
+     * AUTO_EXPIRY Store Object
+     * @var Object
+     */
+    private $objProfileAutoExpiry = null;
+
+    /**
      *
      * @var String
      */
@@ -64,6 +70,7 @@ class ProfileReplaceLib
         $this->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
         $this->objProfileHoroscopeStore = new newjs_HOROSCOPE($dbname);
         $this->objProfileHoroscopeCompatibilityStore = new NEWJS_HOROSCOPE_COMPATIBILITY($dbname);
+        $this->objProfileAutoExpiry = new ProfileAUTO_EXPIRY($dbname);
     }
     /**
      * __destruct
@@ -73,6 +80,7 @@ class ProfileReplaceLib
         unset($this->objProfileAstroDetailsStore);
         unset($this->objProfileHoroscopeStore);
         unset($this->objProfileHoroscopeCompatibilityStore);
+        unset($this->objProfileAutoExpiry);
         self::$instance = null;
     }
     /**
@@ -112,6 +120,9 @@ class ProfileReplaceLib
             self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
             self::$instance->objProfileHoroscopeStore->setConnection($dbname);
             self::$instance->objProfileHoroscopeCompatibilityStore->setConnection($dbname);
+            
+            unset($this->objProfileAutoExpiry);
+            self::$instance->objProfileAutoExpiry = new ProfileAUTO_EXPIRY($dbname);
         }
 
         return self::$instance;
@@ -133,6 +144,22 @@ class ProfileReplaceLib
         }
     }
 
+    /**
+     * replaceASTRO_DETAILS
+     * @param $iProfileID
+     * @param $arrParams
+     * @return bool
+     */
+    public function replaceAUTOEXPIRY($iProfileID,$type,$date)
+    {
+        try{
+            $this->objProfileAutoExpiry->replace($iProfileID,$type,$date);
+        } catch (Exception $ex) {
+            jsCacheWrapperException::logThis($ex);
+            return false;
+        }
+    }
+    
     /**
      * replaceHOROSCOPE_FOR_SCREEN
      * @param $iProfileID

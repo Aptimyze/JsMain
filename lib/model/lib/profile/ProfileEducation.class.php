@@ -118,6 +118,13 @@ class ProfileEducation
       ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
     }
     
+    if(false === $result && false === ProfileCacheLib::getInstance()->isCommandLineScript()) {
+      $dummyResult['PROFILEID'] = $pid;
+      $dummyResult['PG_COLLEGE'] = ProfileCacheConstants::NOT_FILLED;
+      
+      ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult);
+    }
+    
     if(is_array($pid)){
       ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
     }
@@ -173,7 +180,7 @@ class ProfileEducation
   }
   
   private function logCacheConsumeCount($funName)
-  {
+  {return;
     $key = 'cacheConsumption'.'_'.date('Y-m-d');
     JsMemcache::getInstance()->hIncrBy($key, $funName);
     

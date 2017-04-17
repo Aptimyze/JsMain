@@ -3,7 +3,7 @@ class EditAstroDetails extends EditProfileComponent {
 	public function submit() {
 		$request = $this->action->getRequest();
 		$now = date("Y-m-d H:i:s");
-		$today = date("Y-m-d");
+		$today = CommonUtility::makeTime(date("Y-m-d"));
 		$submit_layer = $request->getParameter('submit_layer');
 		if ($submit_layer == 1) {
 			$paramArr = array("HOROSCOPE_MATCH" => $request->getParameter("horo_match"), "MOD_DT" => $now, "RASHI" => $request->getParameter("rashi"), "MANGLIK" => $request->getParameter("manglik"), "NAKSHATRA" => $request->getParameter("nakshatra"), "SUNSIGN" => $request->getParameter("sunsign"), "LAST_LOGIN_DT" => $today,);

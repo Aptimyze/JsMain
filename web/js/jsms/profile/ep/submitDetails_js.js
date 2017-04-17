@@ -60,6 +60,7 @@ var saveDetail=(function(){
           url: "/api/v1/profile/editsubmit",
           type: 'POST',
           datatype: 'json',
+          headers: { 'X-Requested-By': 'jeevansathi' },       
           cache: true,
           async: true,
           data: {editFieldArr : editFieldArr},
@@ -91,11 +92,14 @@ var saveDetail=(function(){
 					//startTouchEvents();
 					
 					return true;
+
 				}
 				else
 				{
 			
 				}
+                                
+
 			},
 		  error: function() {
 			hideLoader();

@@ -292,9 +292,12 @@ if(authenticated($cid))
                 {
                         $mmarr[$i]=$i+1;
                 }
-                for($i=0;$i<13;$i++)
+		$yy =date("Y");
+		$j=0;
+                for($i=2004;$i<=$yy;$i++)
                 {
-                        $yyarr[$i]=$i+2004;
+                        $yyarr[$j]=$i;
+			$j++;
                 }
 		$smarty->assign("flag","0");
                 $smarty->assign("mmarr",$mmarr);

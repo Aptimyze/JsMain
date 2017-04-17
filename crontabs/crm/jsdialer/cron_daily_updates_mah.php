@@ -20,6 +20,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $campaign_name = 'MAH_JSNEW';
 $limit =10;
+$todayDate =$dialerHandlerObj->getEST();
 
 // get Status
 $statusArr =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name);
@@ -34,7 +35,7 @@ for($i=$status;$i<$limit;$i++)
 	$ignore_array 	= $dialerHandlerObj->getInDialerInEligibleProfiles($i,$campaign_name);
 	$vd_array 	= $dialerHandlerObj->getVDdiscount($ignore_array);
         $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$vd_array);
-	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $todayDate);
 	echo "DONE$i"."\n";
 }
 
@@ -51,7 +52,7 @@ for($i=$status;$i<$limit;$i++)
 	$allotedArray 		= $dialerHandlerObj->getAllotedProfiles($eligible_array);
 	$scoreArray 		= $dialerHandlerObj->getScoreArray($eligible_array);
         $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$vd_array,$allotedArray,$scoreArray,'',$loggedinWithin15days);
-	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $todayDate);
 	echo "DONE$i"."\n";
 }
 

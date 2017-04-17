@@ -16,6 +16,9 @@ class versionupgrade_v1Action extends sfActions
 	* @param sfRequest $request A request object
 	*/
 	
+	private static $updateArray = array(
+			"Fixes & performance improvements"            
+        );
 	public function execute($request)
 	{	
 		$responseData = array();
@@ -28,9 +31,19 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["titleButtonB"]="Skip";
 		$this->defaultArray["RATE_US_AUTO"]="true";
 		$this->defaultArray["RATE_US_MANUAL"]="true";
+		$this->defaultArray["RATE_US_BEHAVIORAL"]="true";
+		$this->defaultArray["updateInfo"]['updateInfoFlag']="true";
+		$this->defaultArray["updateInfo"]['playStoreVersion']=  ApiRequestHandler::$ANDROID_PLAYSTORE_APP_VERSION;
+		$this->defaultArray["updateInfo"]['optionalUpgradeVersion']=  ApiRequestHandler::$ANDROID_OPTIONAL_UPGRADE_VERSION;
+		$this->defaultArray["updateInfo"]['forceUpgradeVersion']=  ApiRequestHandler::$ANDROID_FORCE_UPGRADE_VERSION;
+		$this->defaultArray["updateInfo"]['updateFeatures']=self::$updateArray;
+                
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiObj->setResponseBody($this->defaultArray);
 		$apiObj->generateResponse();
+
+
+
 		die;
 	}
 }

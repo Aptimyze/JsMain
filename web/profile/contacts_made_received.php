@@ -35,7 +35,14 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
         }
         elseif(($page=='visitors' && $filter=='R')&& MobileCommon::isDesktop())
         {
-                header("Location:".$SITE_URL."/search/visitors");die;
+			if ($matchedOrAll== 'A')
+			{
+				header("Location:".$SITE_URL."/search/visitors?matchedOrAll=A");die;
+			}
+			else
+			{
+				header("Location:".$SITE_URL."/search/visitors");die;
+			}
         }
         elseif(($page=='favorite' && $filter=='M')&& MobileCommon::isDesktop())
         {
@@ -73,7 +80,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			$filter = "R";
 			$resetPage = true;
 		}
-
 
 		$self_details=authenticated($checksum); 
 // the next 4 lines update seen status of all photorequests received by the loggedin user as 'Y' if the page is photo_request ... JSI-443
@@ -140,8 +146,15 @@ if ($photoRCurrentCount!='0'){
 			if($filter=="M")
 				$searchId  = 16;
 			break;
+		case "aeoi":
+				$searchId  = 22;
+			break;
 		case "contact_viewers":
 				$searchId  = 17;
+			break;
+		case "eeoi":
+			if($filter=="R")
+				$searchId=23;
 			break;
 		
 		}
@@ -153,9 +166,17 @@ if ($photoRCurrentCount!='0'){
 						$page = "accept";
 						$filter="R";//or A
 						break;
+					case 22:
+						$page = "aeoi";
+						$filter="R";//or A
+						break;
 					case 3:
 						$page = "accept";
 						$filter = "M";
+						break;
+					case 23:
+						$page = "eeoi";
+						$filter = "R";	
 						break;
 					case 1:
 						$page = "eoi";

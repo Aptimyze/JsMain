@@ -16,14 +16,14 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 
 $campaignName	='OB_JS_PAID';
 $action		='STOP';
-$date7DayBefore =date("Y-m-d",time()-7*24*60*60);
+$date7DayBefore =date("Y-m-d",time()-8*24*60*60);
 
 $profilesArr    =fetchProfiles($db_js);
 $profileStr     =implode(",",$profilesArr);
 
 if($profileStr!=''){
 	// Set dial status=0 for paid campaign
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE PROFILEID IN ($profileStr) AND CSV_ENTRY_DATE<'$date7DayBefore'";
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status='1' AND CSV_ENTRY_DATE<'$date7DayBefore'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
 	//deleteProfiles($db_master,$profileStr);
 

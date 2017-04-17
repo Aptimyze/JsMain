@@ -52,5 +52,21 @@ class dnc_DNC_LIST extends TABLE
                 }
                 return $return;
         }
+        public function fetchDncCount()
+        {
+                try{
+                        $sql = "SELECT count(1) as cnt FROM DNC.DNC_LIST";
+                        $prep = $this->db->prepare($sql);
+			$prep->execute();
+                        while($result=$prep->fetch(PDO::FETCH_ASSOC))
+                        {
+                               $tot=$result['cnt'];
+                        }
+                }
+                catch(Exception $e){
+                        throw new jsException($e);
+                }
+                return $tot;
+        }
 }
 ?>

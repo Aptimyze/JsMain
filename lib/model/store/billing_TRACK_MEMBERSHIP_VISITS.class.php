@@ -11,7 +11,7 @@ class billing_TRACK_MEMBERSHIP_VISITS extends TABLE{
 	{
 		try
 		{
-			$sql = "INSERT INTO billing.TRACK_MEMBERSHIP_VISITS(PROFILEID,COUNT) VALUES (:PROFILEID,:COUNT)" ;
+			$sql = "INSERT IGNORE INTO billing.TRACK_MEMBERSHIP_VISITS(PROFILEID,COUNT) VALUES (:PROFILEID,:COUNT)" ;
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
 			$res->bindValue(":COUNT", $count, PDO::PARAM_INT);

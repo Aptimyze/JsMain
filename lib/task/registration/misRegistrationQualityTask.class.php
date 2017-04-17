@@ -34,11 +34,17 @@ EOF;
       }
       sleep(60);
     }
-      $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day')) . " 00:00:00";
-    $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate);
+    $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day'));
+    $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate," 00:00:00");
+   
+    $profile_ids = array();
 
     foreach ($profiles as $profile) {
-
+      $profiles_entry_date = date("Y-m-d",strtotime($profile["ENTRY_DT"]));
+      if ( $registerDate == $profiles_entry_date) 
+      {
+        $profile_ids[] = $profile["PROFILEID"];
+      }  
       $is_other_community = true;
       $regKey = date('d', strtotime($profile['ENTRY_DT']));
       if (!$profile['SOURCE']) {
@@ -89,6 +95,11 @@ EOF;
       //print_r($this->registrationArray);die;
     $regQualityObj = new REGISTRATION_QUALITY();
     $regQualityObj->insertQualityRegistration($this->registrationArray);
+
+    $regQualityActivated = new REGISTER_REG_QUALITY_ACTIVATED();
+   
+    $regQualityActivated->insert($profile_ids,$registerDate); 
+
     $this->logSection('data inserted');
   }
   function verifyMobile($MV) {

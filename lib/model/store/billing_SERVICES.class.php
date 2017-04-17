@@ -367,27 +367,50 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getServiceInfo($search_id,$id,$offer,$price_str) {
+    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false) {
         try {
-        	if(is_array($id)){
-		        if ($offer) {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN('Y','S') order by PRICE ASC";
-		        } else {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE = 'Y' order by PRICE ASC";
-		        }
-	        } else {
-	        	if ($id == 'M') {
-	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
-	        	} elseif ($offer) {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN('Y','S') order by PRICE ASC";
-		        } else {
-		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE = 'Y' order by PRICE ASC";
-		        }
-	        }
-            $resSelectDetail = $this->db->prepare($sql);
-            $resSelectDetail->execute();
-            while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
-            	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"]);
+            if($fetchOnline == true || $fetchOffline == true){
+                $SHOW_ONLINE_OFFER = "(";
+                $SHOW_ONLINE = "(";
+                if($fetchOnline == true && $fetchOffline == true){
+                    $SHOW_ONLINE_OFFER .= "'Y','S','N'";
+                    $SHOW_ONLINE .= "'Y','N'";
+                }
+                else if($fetchOffline == true){
+                    $SHOW_ONLINE_OFFER .= "'N'";
+                    $SHOW_ONLINE .= "'N'";
+                }
+                else if($fetchOnline == true){
+                    $SHOW_ONLINE_OFFER .= "'Y','S'";
+                    $SHOW_ONLINE .= "'Y'";
+                }
+                $SHOW_ONLINE_OFFER .= ")";
+                $SHOW_ONLINE .= ")";
+                //var_dump($SHOW_ONLINE);
+            	if(is_array($id)){
+    		        if ($offer) {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        } else {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE." order by PRICE ASC";
+    		        }
+    	        } else {
+    	        	if ($id == 'M') {
+    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
+    	        	} elseif ($offer) {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        } else {
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        }
+    	        }
+                //var_dump($sql);
+                $resSelectDetail = $this->db->prepare($sql);
+                $resSelectDetail->execute();
+                while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>$rowSelectDetail["SHOW_ONLINE"]);
+                }
+            }
+            else{
+                $row_services = null;
             }
         }
         catch(Exception $e) {

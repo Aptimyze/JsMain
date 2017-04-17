@@ -286,6 +286,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $paramArr["HAVEPHOTO"] = 'Y';
                                 $paramArr["MANGLIK"] = '';
                                 $paramArr["MSTATUS"] = $result['MSTATUS'];
+                                $paramArr["IS_VSP"] = 1;
 
                                 $results = $this->suggestedAlgoSearch($paramArr, $viewer);
                         if ($results)

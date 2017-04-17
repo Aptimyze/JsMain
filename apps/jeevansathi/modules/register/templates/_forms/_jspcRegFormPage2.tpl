@@ -14,7 +14,7 @@
       <!--start:Mother tongue-->
       <div>
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="mtongue_error"></div>
         </div>
         <!--end:error div-->
@@ -32,7 +32,7 @@
       <!--start:Religion-->
       <div class="mt7">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="religion_error"></div>
         </div>
         <!--end:error div-->
@@ -50,7 +50,7 @@
       <!--start:Caste-->
       <div class="mt7 disp-none" id="caste-selector">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="caste_error"></div>
         </div>
         <!--end:error div-->
@@ -63,12 +63,26 @@
             </div>
           </div>
         </div>
+        <!-- Start: Caste No Bar -->
+     
+      <div class="mt10 clearfix f14 fontlig" id="casteNoBarDiv">
+        <div class="reg-wid3 fr">
+          <div class="disp_ib">
+            <input type="checkbox" id="caste_no_bar"/>
+          </div>
+          <div class="disp_ib colr4 opa80 fontreg">
+            I am open to marry people of all castes(Caste no bar)
+          </div>
+        </div>
+      </div>
+      <!-- End: Caste No Bar -->
       </div>
       <!--end:Caste--> 
+      
       <!--start:subCaste-->
       <div class="mt7 disp-none" id="subcaste_selector">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="subcaste_error"></div>
         </div>
         <!--end:error div-->
@@ -86,7 +100,7 @@
     <!--start:subCaste-->
     <div class="mt7 disp-none" id="manglik_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="manglik_error"></div>
       </div>
       <!--end:error div-->
@@ -105,7 +119,7 @@
     <!--start:horoscopeMatch-->
     <div class="mt7 disp-none" id="horoscopeMatch_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="horoscopeMatch_error"></div>
       </div>
       <!--end:error div-->
@@ -125,7 +139,7 @@
     <!--start:Marital status-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="mstatus_error"></div>
       </div>
       <!--end:error div-->
@@ -143,7 +157,7 @@
     <!--start:Have Children?-->
     <div id="haveChildren_selector" class="mt7 disp-none">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="haveChildren_error"></div>
       </div>
       <!--end:error div-->
@@ -162,7 +176,7 @@
     <!--start:height-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="height_error"></div>
       </div>
       <!--end:error div-->
@@ -180,7 +194,7 @@
     <!--start:countryReg-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="countryReg_error"></div>
       </div>
       <!--end:error div-->
@@ -198,7 +212,7 @@
     <!--start:state-->
     <div class="mt7 disp-none" id="stateReg_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="stateReg_error"></div>
       </div>
       <!--end:error div-->
@@ -216,7 +230,7 @@
     <!--start:city-->
     <div class="mt7 disp-none" id="cityReg_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="cityReg_error"></div>
       </div>
       <!--end:error div-->
@@ -236,7 +250,7 @@
     <!--start:Pincode-->
     <div class="mt7 disp-none" id="pincode_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="pincode_error"></div>
       </div>
       <!--end:error div-->

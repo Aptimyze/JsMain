@@ -2,7 +2,7 @@
 class ValidatorsFactory{
 public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA");
 	
-	public static function getValidator($field,$form_values="",$page=""){
+	public static function getValidator($field,$form_values="",$page=""){		
 		$const_cl=$field->getConstraintClass();
 		$field_map_name=ObjectiveFieldMap::getFieldMapKey($field->getName(),$page);
 		//get all dropdown values from Fieldmaplib
@@ -161,7 +161,10 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			return new sfValidatorString(array('required'=>false,'nameField'=>1));
 			break;
 		case 'email':
-			return new jsValidatorMail(array(),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			return new jsValidatorMail(array('altEmail'=>$form_values["ALT_EMAIL"]),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			break;
+		case 'alt_email':
+			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
 			break;
 		case 'pin':
 		{
@@ -302,13 +305,14 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'partner_nchallenged':
 		case 'partner_education':
 		case 'partner_occupation':
+		case 'partner_occupation_grouping':
 		case 'partner_state':
 		case 'partner_city_india':
 			{
 				$szName = $field->getName();
 				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
 				$InputValues = $form_values[$field->getName()];
-
+				
 				return new jsValidatorWhiteList(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName,'isHobby'=>0));
 				break;
 			}

@@ -167,6 +167,9 @@ class JsNotificationsLogConsume
 	$deviceModel	=$body['deviceModel'];
 	NotificationFunctions::registrationIdInsert($profileid,$registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
       }
+      else if($type == "NOTIFICATION_OPENED_TRACKING_API" && is_array($body)){
+          NotificationFunctions::logNotificationOpened($body);
+      }
 
     }
     catch (Exception $exception) 

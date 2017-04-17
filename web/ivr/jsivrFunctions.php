@@ -435,7 +435,7 @@ return $returnArray;
 			$PHONE_STATUS 	='MOB_STATUS';
 			$phone 		=trim(substr($phone_num,-10,10));
 			if($phone){
-				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 		}
@@ -455,7 +455,7 @@ return $returnArray;
 			}
 			$cnt_no =strlen($landline_std);
 			if($cnt_no >5){
-				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT  from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 				
@@ -660,7 +660,7 @@ return $returnArray;
 			}
 			// Check app login in last 7 days:
 			if($appRegProfile){
-		                $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		                $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
                 		$profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			if($appRegProfile && count($profileArr)>0){
@@ -1121,7 +1121,85 @@ function getIsdInFormat($isd)
 	return false;
 }
 
+function UnverifyNum($profileId, $phoneType, $number)
+{
+	// Profile Id of Submittee, its phone type and the reported number
+	$interval = 10;
+	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
+	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
+	// array of profile ids of Submitters
+	$arrSubmitter = array();
+	$ReportedDate = array();
+	$arrUpdatedProfiles = array();
+	if($result)
+	{
+		foreach ($result as $row)
+		{
+			if($phoneType == 'L' && $row['PHONE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+			elseif ($phoneType == 'M' && $row['MOBILE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+		}
+		if(count($arrSubmitter) == 0)
+		{
+			return ;
+		}
+		$arrSubmitter = array_unique($arrSubmitter);
+		$jobj = new Jprofile;
+		$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+		$jsCommonObj =new JsCommon();
+		$ProfileIds = array('PROFILEID' => implode(",", $arrSubmitter));
+		$arrSubscription = $jobj->getArray($ProfileIds,"","",'PROFILEID, SUBSCRIPTION');
+    	foreach ($arrSubscription as $key => $value)
+		{
+			if($jsCommonObj->isPaid($value['SUBSCRIPTION']))
+			{
+				// Paid User
+				if($contactAllotedObj->updateAllotedContacts($value['PROFILEID'],1))
+				{
+					// contacts allocated increased
+					array_push($arrUpdatedProfiles, $value['PROFILEID']);
+				}
+			}
+		}
+
+		if(count($arrUpdatedProfiles) == 0)
+		{
+			return ;
+		}
+		//Todo: get allocated contacts quota for all profiles
+		$arrContactQuota = $contactAllotedObj->getAllotedContactsForProfiles($arrUpdatedProfiles);
+
+		foreach ($arrUpdatedProfiles as $value)
+		{
+			// send mail to user about increase in contact quota
+			$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
+			
+			$tpl = $top8Mailer->setProfileId($value);
+			$date = date('d-m-Y');
+			$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value]));
+			$subject = "A contact has been added to your quota of contacts | $date";
+			$quota = $arrContactQuota[$value];
+			$tpl->setSubject($subject);
+			// PogId is profile id of submittee
+			$tpl->getSmarty()->assign("otherProfile", $profileId);
+			$tpl->getSmarty()->assign("number", $number);
+			$tpl->getSmarty()->assign("date", $reportedDate);
+			$tpl->getSmarty()->assign("quota", $quota);
+			$top8Mailer->send();
+		}		
+	}
+	
+}
+
 function deleteCachedJprofile_Contact($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

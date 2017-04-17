@@ -7,12 +7,13 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG extends TABLE{
         parent::__construct($dbname);
     }
     // Maintain records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts in VARIABLE_DISCOUNT_OFFER_DURATION_LOG
-    public function maintainExpiredDiscounts($todaysDate)
+    public function maintainExpiredDiscounts($profileid,$eDate)
     {
         try{
-            $sql ="INSERT INTO billing.VARIABLE_DISCOUNT_OFFER_DURATION_LOG SELECT a.*, b.EDATE FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION a, billing.VARIABLE_DISCOUNT_BACKUP_1DAY b where a.PROFILEID=b.PROFILEID AND b.EDATE<:EDATE";
+            $sql ="INSERT INTO billing.VARIABLE_DISCOUNT_OFFER_DURATION_LOG SELECT a.*,:EDATE FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION a where a.PROFILEID=:PROFILEID";
             $res = $this->db->prepare($sql);
-            $res->bindValue(":EDATE", $todaysDate, PDO::PARAM_STR);
+            $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+	    $res->bindValue(":EDATE", $eDate, PDO::PARAM_STR);	
             $res->execute();
         } catch (Exception $ex) {
             throw new jsException($ex);

@@ -10,7 +10,7 @@ if(authenticated($cid))
 		if($clear_prev_list)
 		{
 			$sql="UPDATE newjs.JPROFILE set PHOTOGRADE='B' where PHOTOGRADE = 'A' and GENDER = '$gender'
-                              and LAST_LOGIN_DT <='$last_date'";
+                              and DATE(LAST_LOGIN_DT) <='$last_date'";
 
 			mysql_query_decide($sql) or die("Can not reset previous list because of : ".mysql_error_js());
 			$msg .= mysql_affected_rows_js()." photographs for $gender have been removed from homepage<br>";

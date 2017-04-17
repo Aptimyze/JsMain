@@ -18,6 +18,9 @@
         
 		$scope.MaxHeight = Constants.getWindowHeight();
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getHeaderHeight() - /*Top Header Height*/72;
+
+		localStorage.setItem($scope.screenName,new Date().getTime());
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myNext = function()
 		{
@@ -140,6 +143,15 @@
 		$scope.dob	  = $scope.fields[1];
         
 		$scope.hamOn = false;
+
+		var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -303,7 +315,6 @@
 			var countryField = $scope.fields[3];
 			var stateField = $scope.fields[4];
 			var cityField = $scope.fields[5];
-console.log(stateField.userDecision);
                         if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
                         {
                                 cityField.show=true;
@@ -396,6 +407,14 @@ console.log(stateField.userDecision);
 		
     $scope.degreeGroupMap = {};
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -586,6 +605,14 @@ console.log(stateField.userDecision);
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getNextBtnHeight() - Constants.getHeaderHeight();
 		
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -633,9 +660,10 @@ console.log(stateField.userDecision);
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
       
-      if($scope.screenName=='s4' && indexPos==2)
+			if($scope.screenName=='s4' && indexPos==2)
 			{
-        $scope.initHoroscope();
+				$scope.initHoroscope();
+				$scope.initCasteNoBar();
 			}
 			$scope.hamOn = false;
 			$scope.enableNextBtn();
@@ -662,7 +690,7 @@ console.log(stateField.userDecision);
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 3;
+      var horoscopeFieldIndex = 4;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -671,8 +699,25 @@ console.log(stateField.userDecision);
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
-    $scope.initHoroscope();
-		$scope.enableNextBtn();
+	$scope.initCasteNoBar = function()    
+	{
+	        var allowedReligion = ['1','4','9'];
+		var religionFieldIndex= 2;
+		var casteNoBarFieldIndex = 3;
+
+	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = true;
+		} 
+		else 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = false;
+		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
+		}     
+	 }
+	$scope.initHoroscope();
+	$scope.initCasteNoBar();
+	$scope.enableNextBtn();
         //TrackParams.trackClientInfo($scope.screenName);
 	});
 
@@ -703,6 +748,13 @@ console.log(stateField.userDecision);
 		$scope.field_phone = $scope.fields[3];
     $scope.field_name = $scope.fields[0];
 		
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myBack = function()
 		{
@@ -945,6 +997,7 @@ console.log(stateField.userDecision);
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1425,6 +1478,8 @@ console.log(stateField.userDecision);
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&AUTHCHECKSUM=&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },       
+
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1508,7 +1563,16 @@ console.log(stateField.userDecision);
 				Gui.showModalWindow($scope);
 				//$scope.showServerError("provide a valid date of birth");
 			}
-			
+                        if(indexPos == '3')/*Country*/
+			{
+				var countryField = $scope.fields2[3];
+				$scope.initIncompleteStateWidget();
+				$scope.initIncompleteCityWidget();
+			}
+                        if(indexPos=='4')
+			{
+				$scope.initIncompleteCityWidget();
+			}
 			if(checkValid)
 			{
 				$scope.validation();
@@ -1542,11 +1606,40 @@ console.log(stateField.userDecision);
 				setTimeout(function(){$(".errClass").remove();},300);
 			},2000);
 		}
+                $scope.initIncompleteStateWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=false;
+			}
+			else
+			{
+				stateField.show=true;
+			}
+		}
+		$scope.initIncompleteCityWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			var cityField = $scope.fields2[5];
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=false;
+                        }
+                        else
+                        {
+                                cityField.show=true;
+                        }
+		}
 		 $scope.showHamMsg = function(szMsg)
         {
             Gui.toastMsg($scope,szMsg);
         }
 		$scope.enableNextBtn();
+                $scope.initIncompleteStateWidget();
+               $scope.initIncompleteCityWidget();
 	});
     
     //Splash Controller

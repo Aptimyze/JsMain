@@ -20,7 +20,18 @@ if (isset($data) || $JSIndicator) {
     }
     
     $smarty->assign('viewmode', $viewmode);
-
+    
+    if (($vtype == 'Q' && $qyear >= '2017') || 
+        ($vtype == 'M' && $myear >= '2017') || 
+        ($vtype == 'D' && ($dyear > '2017'||( $dyear == '2017' && $dmonth >= '04') ))) {
+        $tableName = "PAYMENT_DETAIL_NEW";
+        $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+    }
+    else{
+        $tableName = "PAYMENT_DETAIL";
+        $condition = "='DONE'";
+    }
+    
     if ($CMDGo && $viewmode == 'O') {
         $flag = 1;
         $mmarr = array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
@@ -43,7 +54,7 @@ if (isset($data) || $JSIndicator) {
             $mnth1 = $mnth2 = $dmonth;
         }
         
-        $sql_min = "SELECT MIN(BILLID) AS MIN,MAX(BILLID) AS MAX FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT BETWEEN '$yr1-$mnth1-01 00:00:00' AND '$yr2-$mnth2-31 23:59:59'";
+        $sql_min = "SELECT MIN(BILLID) AS MIN,MAX(BILLID) AS MAX FROM billing.$tableName WHERE ENTRY_DT BETWEEN '$yr1-$mnth1-01 00:00:00' AND '$yr2-$mnth2-31 23:59:59'";
         $res_min = mysql_query_decide($sql_min, $db) or die("$sql_min" . mysql_error_js($db));
         $row_min = mysql_fetch_assoc($res_min);
         $min = $row_min['MIN'];
@@ -73,9 +84,9 @@ if (isset($data) || $JSIndicator) {
                 unset($totb);
                 $qflag = 1;
                 $qyearp1 = $qyear + 1;
-                $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,QUARTER(billing.PAYMENT_DETAIL.ENTRY_DT) as qtr,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,QUARTER(billing.$tableName.ENTRY_DT) as qtr,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                 if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                $sql.= " GROUP BY QUARTER(billing.PAYMENT_DETAIL.ENTRY_DT),eb";
+                $sql.= " GROUP BY QUARTER(billing.$tableName.ENTRY_DT),eb";
                 
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                 while ($row = mysql_fetch_array($res)) {
@@ -147,9 +158,9 @@ if (isset($data) || $JSIndicator) {
                 $mflag = 1;
                 $myearp1 = $myear + 1;
                 if ($pay_exec == "Selected") {
-                    $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,month(billing.PAYMENT_DETAIL.ENTRY_DT) as mm,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                    $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,month(billing.$tableName.ENTRY_DT) as mm,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                     if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                    $sql.= " GROUP BY month(billing.PAYMENT_DETAIL.ENTRY_DT),eb";
+                    $sql.= " GROUP BY month(billing.$tableName.ENTRY_DT),eb";
                     
                     $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                     while ($row = mysql_fetch_array($res)) {
@@ -222,7 +233,7 @@ if (isset($data) || $JSIndicator) {
                         
                         //				$sql="SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*$DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,billing.PAYMENT_DETAIL.MODE as mode FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$year-04-01' AND '$yearp1-03-31' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID GROUP BY billing.PAYMENT_DETAIL.MODE";
                         
-                        $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,month(billing.PAYMENT_DETAIL.ENTRY_DT) as mm,billing.PAYMENT_DETAIL.MODE as mode FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$year-04-01 00:00:00' AND '$yearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                        $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,month(billing.$tableName.ENTRY_DT) as mm,billing.$tableName.MODE as mode FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$year-04-01 00:00:00' AND '$yearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                         if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
                         $sql.= " GROUP BY mm,mode ORDER BY mode";
                         
@@ -267,7 +278,7 @@ if (isset($data) || $JSIndicator) {
                         
                         //				$sql="SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*$DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,billing.PURCHASES.WALKIN as walkin FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$year-04-01' AND '$yearp1-03-31' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID GROUP BY billing.PURCHASES.WALKIN";
                         
-                        $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,month(billing.PAYMENT_DETAIL.ENTRY_DT) as mm,billing.PURCHASES.WALKIN as walkin FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$year-04-01 00:00:00' AND '$yearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                        $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,month(billing.$tableName.ENTRY_DT) as mm,billing.PURCHASES.WALKIN as walkin FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$year-04-01 00:00:00' AND '$yearp1-03-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                         if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
                         $sql.= " GROUP BY mm,walkin";
                         
@@ -303,9 +314,9 @@ if (isset($data) || $JSIndicator) {
                     $ddarr[$i] = $i + 1;
                 }
                 
-                $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,DAYOFMONTH(billing.PAYMENT_DETAIL.ENTRY_DT) as dd,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,DAYOFMONTH(billing.$tableName.ENTRY_DT) as dd,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND billing.PURCHASES.CENTER='$branch' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                 if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                $sql.= " GROUP BY DAYOFMONTH(billing.PAYMENT_DETAIL.ENTRY_DT),eb";
+                $sql.= " GROUP BY DAYOFMONTH(billing.$tableName.ENTRY_DT),eb";
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                 while ($row = mysql_fetch_array($res)) {
                     $dd = $row['dd'] - 1;
@@ -381,9 +392,9 @@ if (isset($data) || $JSIndicator) {
                 unset($totb);
                 $qflag = 1;
                 $qyearp1 = $qyear + 1;
-                $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,QUARTER(billing.PAYMENT_DETAIL.ENTRY_DT) as qtr,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,QUARTER(billing.$tableName.ENTRY_DT) as qtr,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                 if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                $sql.= " GROUP BY QUARTER(billing.PAYMENT_DETAIL.ENTRY_DT),center,eb ORDER BY center,eb";
+                $sql.= " GROUP BY QUARTER(billing.$tableName.ENTRY_DT),center,eb ORDER BY center,eb";
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                 if ($row = mysql_fetch_array($res)) {
                     do {
@@ -462,7 +473,7 @@ if (isset($data) || $JSIndicator) {
                 if ($offline_str != '') {
                     $center = "OFFLINE-REVENUE-WITHOUT-TAX";
                     $k = array_search($center, $brancharr);
-                    $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT )) AS amt_net,QUARTER(a.ENTRY_DT) as qtr FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS = 'DONE' and a.BILLID IN ($offline_str) group by qtr";
+                    $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT )) AS amt_net,QUARTER(a.ENTRY_DT) as qtr FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS $condition and a.BILLID IN ($offline_str) group by qtr";
                     $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                     while ($row = mysql_fetch_array($res)) {
                         $qtr = $row['qtr'] - 1;
@@ -488,7 +499,7 @@ if (isset($data) || $JSIndicator) {
                 
                 $center = "REVENUE-WITHOUT-TAX";
                 $k = array_search($center, $brancharr);
-                $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, QUARTER(a.ENTRY_DT) as qtr FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS = 'DONE' ";
+                $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, QUARTER(a.ENTRY_DT) as qtr FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS $condition ";
                 if ($offline_str != '') $sql.= "and b.BILLID NOT IN ($offline_str) ";
                 $sql.= " group by qtr";
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
@@ -539,9 +550,9 @@ if (isset($data) || $JSIndicator) {
                 unset($totb);
                 $mflag = 1;
                 $myearp1 = $myear + 1;
-                $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,month(billing.PAYMENT_DETAIL.ENTRY_DT) as mm,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,month(billing.$tableName.ENTRY_DT) as mm,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                 if ($offline_str != '') $sql.= "and billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                $sql.= " group by  month(billing.PAYMENT_DETAIL.ENTRY_DT),center,eb ORDER BY center,eb";
+                $sql.= " group by  month(billing.$tableName.ENTRY_DT),center,eb ORDER BY center,eb";
                 
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                 while ($row = mysql_fetch_array($res)) {
@@ -621,7 +632,7 @@ if (isset($data) || $JSIndicator) {
                 if ($offline_str != '') {
                     $center = "OFFLINE-REVENUE-WITHOUT-TAX";
                     $k = array_search($center, $brancharr);
-                    $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT )) AS amt_net, MONTH(a.ENTRY_DT) as qtr FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS = 'DONE' and b.BILLID IN ($offline_str) group by qtr";
+                    $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT )) AS amt_net, MONTH(a.ENTRY_DT) as qtr FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS $condition and b.BILLID IN ($offline_str) group by qtr";
                     $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                     while ($row = mysql_fetch_array($res)) {
                         $qtr = $row['qtr'];
@@ -647,7 +658,7 @@ if (isset($data) || $JSIndicator) {
                 }
                 $center = "REVENUE-WITHOUT-TAX";
                 $k = array_search($center, $brancharr);
-                $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, MONTH(a.ENTRY_DT) as qtr FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS = 'DONE'";
+                $sql = "SELECT sum(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, MONTH(a.ENTRY_DT) as qtr FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS $condition";
                 if ($offline_str != '') $sql.= " and b.BILLID NOT IN ($offline_str) ";
                 $sql.= " group by qtr";
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
@@ -702,9 +713,9 @@ if (isset($data) || $JSIndicator) {
                     $ddarr[$i] = $i + 1;
                 }
                 
-                $sql = "SELECT sum(if(billing.PAYMENT_DETAIL.TYPE='DOL',billing.PAYMENT_DETAIL.AMOUNT*billing.PAYMENT_DETAIL.DOL_CONV_RATE,billing.PAYMENT_DETAIL.AMOUNT)) as amt,DAYOFMONTH(billing.PAYMENT_DETAIL.ENTRY_DT) as dd,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.PAYMENT_DETAIL,billing.PURCHASES WHERE billing.PAYMENT_DETAIL.STATUS='DONE' AND billing.PAYMENT_DETAIL.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND billing.PURCHASES.BILLID=billing.PAYMENT_DETAIL.BILLID ";
+                $sql = "SELECT sum(if(billing.$tableName.TYPE='DOL',billing.$tableName.AMOUNT*billing.$tableName.DOL_CONV_RATE,billing.$tableName.AMOUNT)) as amt,DAYOFMONTH(billing.$tableName.ENTRY_DT) as dd,billing.PURCHASES.CENTER as center,billing.PURCHASES.WALKIN as eb FROM billing.$tableName,billing.PURCHASES WHERE billing.$tableName.STATUS $condition AND billing.$tableName.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND billing.PURCHASES.BILLID=billing.$tableName.BILLID ";
                 if ($offline_str != '') $sql.= "AND billing.PURCHASES.BILLID NOT IN ($offline_str) ";
-                $sql.= " GROUP BY DAYOFMONTH(billing.PAYMENT_DETAIL.ENTRY_DT),center,eb ORDER BY center,eb";
+                $sql.= " GROUP BY DAYOFMONTH(billing.$tableName.ENTRY_DT),center,eb ORDER BY center,eb";
                 
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                 while ($row = mysql_fetch_array($res)) {
@@ -776,7 +787,7 @@ if (isset($data) || $JSIndicator) {
                     $center = "OFFLINE-REVENUE-WITHOUT-TAX";
                     $k = array_search($center, $brancharr);
                     
-                    $sql = "SELECT SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT)) AS amt_net, DAYOFMONTH(a.ENTRY_DT) as dd FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS = 'DONE' and b.BILLID IN ($offline_str) group by dd";
+                    $sql = "SELECT SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE, AMOUNT)) AS amt_net, DAYOFMONTH(a.ENTRY_DT) as dd FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS $condition and b.BILLID IN ($offline_str) group by dd";
                     $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
                     while ($row = mysql_fetch_array($res)) {
                         $dd = $row['dd'] - 1;
@@ -796,7 +807,7 @@ if (isset($data) || $JSIndicator) {
                 //Code Added by sriram on 6th June 2007 to show Revenue and Misc-revenue without tax daywise.
                 $center = "REVENUE-WITHOUT-TAX";
                 $k = array_search($center, $brancharr);
-                $sql = "SELECT SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, DAYOFMONTH(a.ENTRY_DT) as dd FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS = 'DONE' ";
+                $sql = "SELECT SUM(IF (TYPE = 'DOL', AMOUNT *DOL_CONV_RATE / ( 1+ TAX_RATE /100 ), AMOUNT / ( 1+ TAX_RATE /100 ) )) AS amt, DAYOFMONTH(a.ENTRY_DT) as dd FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS $condition ";
                 if ($offline_str != '') $sql.= "and b.BILLID NOT IN ($offline_str) ";
                 $sql.= " group by dd";
                 $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
@@ -888,7 +899,7 @@ if (isset($data) || $JSIndicator) {
             $mnth1 = $mnth2 = $dmonth;
         }
         
-        $sql_min = "SELECT MIN(BILLID) AS MIN,MAX(BILLID) AS MAX FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT BETWEEN '$yr1-$mnth1-01 00:00:00' AND '$yr2-$mnth2-31 23:59:59'";
+        $sql_min = "SELECT MIN(BILLID) AS MIN,MAX(BILLID) AS MAX FROM billing.$tableName WHERE ENTRY_DT BETWEEN '$yr1-$mnth1-01 00:00:00' AND '$yr2-$mnth2-31 23:59:59'";
         $res_min = mysql_query_decide($sql_min, $db) or die("$sql_min" . mysql_error_js($db));
         $row_min = mysql_fetch_assoc($res_min);
         $min = $row_min['MIN'];
@@ -913,7 +924,22 @@ if (isset($data) || $JSIndicator) {
             $qyearp1 = $qyear + 1;
 
             // All Sales
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, QUARTER(a.ENTRY_DT) AS qtr, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS = 'DONE' GROUP BY qtr";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " QUARTER(a.ENTRY_DT) AS qtr,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00'"
+                    . " AND '$qyearp1-03-31 23:59:59'"
+                    . " AND a.STATUS $condition"
+                    . " AND AMOUNT != '0'"      //condition added to remove 100% discount cases 
+                    . " GROUP BY qtr";
+            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $qtr = $row['qtr'] - 1;
@@ -996,7 +1022,22 @@ if (isset($data) || $JSIndicator) {
             $mflag = 1;
             $myearp1 = $myear + 1;
 
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, MONTH(a.ENTRY_DT) AS month, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS = 'DONE' GROUP BY month";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " MONTH(a.ENTRY_DT) AS month,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00'"
+                    . " AND '$myearp1-03-31 23:59:59'"
+                    . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                    . " AND a.STATUS $condition"
+                    . " GROUP BY month";
+            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $mm = $row['month'];
@@ -1080,7 +1121,21 @@ if (isset($data) || $JSIndicator) {
                 $ddarr[$i] = $i + 1;
             }
             
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, DAYOFMONTH(a.ENTRY_DT) AS day, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS = 'DONE' GROUP BY day";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " DAYOFMONTH(a.ENTRY_DT) AS day,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00'"
+                    . " AND '$dyear-$dmonth-31 23:59:59'"
+                    . " AND a.STATUS $condition"
+                    . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                    . " GROUP BY day";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $dd = $row['day'] - 1;

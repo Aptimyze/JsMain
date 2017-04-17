@@ -15,6 +15,10 @@ $db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$
 $db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_master);
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
+
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer,$db_master);
 
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
@@ -61,15 +65,13 @@ if(count($eligibleArrNew>0)){
 		
 		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
 		mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
-
-		$deleteArr[] =$profileid;
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
-	if(is_array($deleteArr)){
+	/*if(is_array($deleteArr)){
 		$profileStr     =implode(",",$deleteArr);
 		deleteProfiles($db_master,$profileStr);
 		unset($deleteArr);	
-	}
+	}*/
 }
 
 // Stop profiles which are 12 hours old
@@ -117,7 +119,7 @@ function fetchProfiles($db_js)
 function deleteProfiles($db_master,$profiles)
 {
 	$sql= "delete FROM incentive.SALES_CSV_DATA_FAILED_PAYMENT WHERE PROFILEID IN ($profiles)";
-        $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_js));
+        $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_master));
 }
 
 // Fetch allocated profiles

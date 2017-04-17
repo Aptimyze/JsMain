@@ -15,7 +15,7 @@ function startAutoApply($profileid,$operator='',$status='BILLED')
         $status = 'LIVE';
 	$operator=getSEBilling($profileid,$operator);
 
-	$sql="REPLACE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS,SEND) VALUES('$profileid','$operator','$status','Y')";
+	$sql="REPLACE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS,SEND,ENTRY_DT) VALUES('$profileid','$operator','$status','Y',now())";
 	mysql_query_decide($sql) or die("Error while inserting info in AP_PROFILE_INFO  ".mysql_error_js());
 
 /*	$sql="INSERT INTO Assisted_Product.AP_ASSIGN_LOG(PROFILEID,USER,DATE) VALUES('$profileid','$operator',NOW())";
@@ -101,6 +101,12 @@ function startAutoApply($profileid,$operator='',$status='BILLED')
 	include_once($_SERVER['DOCUMENT_ROOT']."/jsadmin/ap_dpp_common.php");
 	createDPP($parameters,$profileid,$operator,'SE',$status);*/
 
+}
+function addAutoApplyLog($profileid,$type,$v='')
+{
+	$str =$type."-".$v;
+        $sql="INSERT INTO Assisted_Product.AP_PROFILE_INFO_DEBUG(PROFILEID,TYPE,ENTRY_DT) VALUES('$profileid','$str',now())";
+        mysql_query_decide($sql) or die("Error while inserting info in AP_PROFILE_INFO_DEBUG  ".mysql_error_js());
 }
 
 function startHomeDelivery($profileid,$city)

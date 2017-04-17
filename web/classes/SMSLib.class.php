@@ -123,6 +123,10 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "PHOTO_REJECTION_REASON":                    
+                    $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
+                    return $rejectReasonArr[0];
+                        break;
             case "SALES_ADDRESS_NOIDA":
                 return "B-8,Sector 132,Noida-201301";
 
@@ -334,7 +338,7 @@ class SMSLib
                 $longURL           = $this->SITE_URL . "/common/resetPassword?" . $forgotPasswordStr;
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"], $withoutLogin = 1);
             case "APP_STORE_URL":
-                $appStoreUrl = "https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dsms%26utm_content%3Dverify_sms%26utm_campaign%3DJSAA";
+                $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
                 return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
             case "MEMB_PAGE_URL":
                 $longURL = $this->SITE_URL . "/profile/mem_comparison.php?from_source=memSms";
@@ -596,6 +600,56 @@ class SMSLib
                 $memHandlerObj = new MembershipHandler();
                 $servName = $memHandlerObj->getRenewCronSMSServiceName($tokenValue['PROFILEID']);
                 return $servName;
+            case "MEM_AUTO_LOGIN": 
+                $longURL = $this->SITE_URL . "/membership/jspc?from_source=CRM_SMS_OFFER";
+                return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
+            case "DISCOUNT_TEXT": 
+                return $tokenValue['DISCOUNT_TEXT'];
+            case "BRANCH_ADDRESS": 
+                return $tokenValue['BRANCH_ADDRESS'];
+            case "CRM_AGENT": 
+                return $tokenValue['CRM_AGENT'];
+            case "CRM_SMS_APP_URL":
+                $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
+                return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
+            case "LINK_DEL":
+               $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
+                return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
+
+            case "REPORT_INVALID_PHONE_ISD_COMMA":
+
+                $toSendForPrivacy = 0;
+
+                if($messageValue["SHOWPHONE_MOB"] == 'C')
+                { 
+                    include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+                   $contactDetails = Contacts::getContactsTypeCache($messageValue["RECEIVER"]["PROFILEID"],$messageValue["PROFILEID"]);
+                   $contactArr = explode('_',$contactDetails);
+                   $smaller = $messageValue["RECEIVER"]["PROFILEID"] > $messageValue["PROFILEID"] ? $messageValue["PROFILEID"] :
+                   $messageValue["RECEIVER"]["PROFILEID"]; 
+                   $type = $contactArr[0];
+                   $senderReceiver = $contactArr[1];
+
+                   if($type == 'A' || $smaller == $messageValue["PROFILEID"] && $senderReceiver == 'S' && $type == 'I')
+                   {
+                        $toSendForPrivacy = 1;
+                   }
+                   else
+                   {
+                        $toSendForPrivacy = 0;
+                   }
+                }
+                if ($toSendForPrivacy || (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"]))) { 
+                    $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
+                    $mob_len = $this->getVariables("PHONE_ISD_COMMA");
+                    $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
+                    $mob     = '+' . $mob . ' , ';
+                } 
+                else {
+                    $mob = '';
+                }
+                return $mob;
+
             default:
                 return "";
         }

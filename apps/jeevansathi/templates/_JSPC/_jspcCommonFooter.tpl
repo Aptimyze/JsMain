@@ -47,8 +47,8 @@
             </div>
             <div class="fr socialicons">
                 <ul class="mt8">
-                    <li><a itemprop="sameAs" href="http://www.facebook.com/jeevansathi" target="_blank" class="disp_b headfootsprtie facebooksmall"></a></li>
-                    <li><a itemprop="sameAs" href="http://www.twitter.com/jeevansathi_com" target="_blank" class="disp_b headfootsprtie twittersmall"></a></li>
+                    <li><a itemprop="sameAs" href="https://www.facebook.com/jeevansathi" target="_blank" class="disp_b headfootsprtie facebooksmall"></a></li>
+                    <li><a itemprop="sameAs" href="https://www.twitter.com/jeevansathi_com" target="_blank" class="disp_b headfootsprtie twittersmall"></a></li>
                     <li><a itemprop="sameAs" href="https://www.linkedin.com/company/info-edge-india-ltd" target="_blank" class="disp_b headfootsprtie linkedinsmall"></a></li>
                     <li><a itemprop="sameAs" href="https://plus.google.com/117800057348280296221" target="_blank" class="disp_b headfootsprtie gplussmall"></a></li>
                 </ul>
@@ -123,8 +123,8 @@
                 <!--start:follow us-->
                 <div class="fl wid265">
                     <div class="f16 fontreg pb10">Follow us </div>
-                    <a itemprop="sameAs" href="http://www.facebook.com/jeevansathi" target="_blank" class="footericon"><i class="headfootsprtie facebooksmall"></i></a>
-                    <a itemprop="sameAs" href="http://www.twitter.com/jeevansathi_com" target="_blank" class="footericon"><i class="headfootsprtie twittersmall"></i></a>
+                    <a itemprop="sameAs" href="https://www.facebook.com/jeevansathi" target="_blank" class="footericon"><i class="headfootsprtie facebooksmall"></i></a>
+                    <a itemprop="sameAs" href="https://www.twitter.com/jeevansathi_com" target="_blank" class="footericon"><i class="headfootsprtie twittersmall"></i></a>
                     <a itemprop="sameAs" href="https://www.linkedin.com/company/info-edge-india-ltd" target="_blank" class="footericon"><i class="headfootsprtie linkedinsmall"></i></a>
                     <a itemprop="sameAs" href="https://plus.google.com/117800057348280296221" target="_blank" class="footericon"><i class="headfootsprtie gplussmall"></i></a>
                 </div>
@@ -151,24 +151,35 @@
                         <div id="images">
                             <div class="basic">
                                 <ul>
-                                    <li class="pl17"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
-                                    <li class="pl17"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
-                                    <li class="pl17"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
-                                    <li class="pl30"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
+                                    <li class="pl40"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
+                                    <li class="pl40"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
+                                    <li class="pl40"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
+            
                                 </ul>
                             </div>
                             <div class="basic">
-                                <div>
-                                    <ul>
-                                        <li class="pl17"><a href="http://www.mydala.com" target="_blank" title="mydala"><i class="headfootsprtie mydala"></i></a></li>
-                                        <li class="pl30"><a href="http://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
-                                        <li class="pl40"><a href="http://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
-                                        <li class="pl20"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
-                                    </ul>
-                                </div>
+                                <ul>
+                                    <li class="pl55"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
+                                    <li class="pl55"><a href="http://www.mydala.com" target="_blank" title="mydala"><i class="headfootsprtie mydala"></i></a></li>
+                                    <li class="pl55"><a href="https://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
+                
+                                </ul>
+                            </div>
+                            <div class="basic">
+                                <ul>
+                                    <li class="pl55"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
+                                    <li class="pl55"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
+                                    <li class="pl30"><a href="http://ambitionbox.com" target="_blank" title="AmbitionBox – Interview Prep & Company Reviews"><i class="headfootsprtie ambitionbox"></i></a></li>
+                                </ul>
                             </div>
                         </div>
-                    <a id="prev" href="javascript:void(0);"> <i class="headfootsprtie leftslide"></i> </a> <a id="next" href="javascript:void(0);"> <i class="headfootsprtie rightsmall"></i> </a> </div>
+                        <a id="prev" href="javascript:void(0);"> 
+                            <i class="headfootsprtie leftslide"></i> 
+                        </a>
+                        <a id="next" href="javascript:void(0);">
+                            <i class="headfootsprtie rightsmall"></i> 
+                        </a> 
+                    </div>
                 </div>
                 <!--endt:slider-->
             </div>

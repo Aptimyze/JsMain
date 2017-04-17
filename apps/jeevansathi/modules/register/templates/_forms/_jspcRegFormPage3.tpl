@@ -14,7 +14,7 @@
             <!--start:Highest degree-->
             <div>
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="hdegree_error"></div>
               </div>
               <!--end:error div-->
@@ -36,7 +36,7 @@
              <!--start:PG degree-->
       <div class="mt7 disp-none" id="degree_pg">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="pgDegree_error"></div>
         </div>
         <!--end:error div-->
@@ -56,7 +56,7 @@
       <div id="pg_college" class="disp-none">
       <div class="mt7" id="pgCollege_selector">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="pgCollege_error"></div>
         </div>
         <!--end:error div-->
@@ -75,7 +75,7 @@
     <!--start:UG degree-->
       <div class="mt7 disp-none" id="degree_ug">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="ugDegree_error"></div>
         </div>
         <!--end:error div-->
@@ -95,7 +95,7 @@
       <div id="college" class="disp-none">
       <div class="mt7" id="ugCollege_selector">
         <!--start:error div-->
-        <div class="clearfix f11 fontlig">
+        <div class="clearfix f14 fontlig">
           <div class="reg-wid3 fr colr5  visHid" id="ugCollege_error"></div>
         </div>
         <!--end:error div-->
@@ -114,7 +114,7 @@
     <!--start:Other PG degree-->
     <div class="mt7 disp-none" id="otherPgDegreeInput">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="otherPgDegree_error"></div>
       </div>
       <!--end:error div-->
@@ -129,7 +129,7 @@
     <!--start:Other Ug degree-->
     <div class="mt7 disp-none" id="otherUgDegreeInput">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="otherUgDegree_error"></div>
       </div>
       <!--end:error div-->
@@ -144,7 +144,7 @@
             <!--start:Occupation-->
              <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="occupation_error"></div>
               </div>
               <!--end:error div-->
@@ -162,7 +162,7 @@
             <!--start:Occupation-->
              <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="income_error"></div>
               </div>
               <!--end:error div-->
@@ -193,7 +193,7 @@
             <!--start:Highest degree-->
             <div>
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="aboutme_error"></div>
               </div>
               <!--end:error div-->
@@ -208,8 +208,8 @@
             <div class="fullwid clearfix disp-none jsdd-aboutme" id="aboutmeHelp">
                <div class="fullwid bg-white reg-wid3 fr">
                         <div class="padall-10 fontreg f14 colr4 lh20">
-                          <div>Introduce yourself. Write about your values, beliefs/goals and aspirations.</div>
-                          <div>How do you describe yourself? Your interests and hobbies.</div>
+                          <div>Introduce yourself (Don't mention your name). Write about your values, beliefs/goals and aspirations.                    How do you describe yourself? Your interests and hobbies.</div>
+                          <div><br>This text will be screened by our team.</div>
                         </div>
                       </div>
               </div>

@@ -1,4 +1,6 @@
-.vpro_sprite{background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite.png); background-repeat:no-repeat}
+.vpro_sprite{background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png); background-repeat:no-repeat}
+.vpro_correct{background-position: -195px -202px;width: 28px;height: 27px;}
+
 .vpro_comHisIcon{background-position: -5px -4px;width: 28px;height: 27px;}
 .vpro_pos1{right:0; top:0}
 .vpro_pos2{bottom:3px}
@@ -205,3 +207,9 @@ padding: 10px 15px ;
 .wspace{
     white-space: normal !important;
 }
+.astroBtn1{background:none;border:1px solid #d9475c;color:#d9475c;font-size:85%}
+
+.overlayAstro{background:rgb(0,0,0);opacity: .8;filter:alpha(opacity=80);-moz-opacity: .80;z-index:102;position:fixed;width:100%;height:100%;}
+.setcenter{ transform:translate(-50%,-50%); -webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);top:50%; left:50%; width:90%; background-color:#fff; z-index:104; position:fixed}
+.astrob1{padding:30px; line-height:30px; border-bottom:1px solid #dbdbdb}
+.astrob2{width:100%; border:0; background:none; line-height:60px;color:#d9475c}

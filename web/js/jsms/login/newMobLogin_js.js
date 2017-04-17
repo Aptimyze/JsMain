@@ -4,14 +4,14 @@ function getIosVersionOne(ua) {
     var match= ua.match(/(iPhone);/i);
     //console.log(match);
     var OsVersion=ua.match(/OS\s[0-9.]*/i);
-    //console.log(OsVersion);
+    //console.log(OsVersion);    
     if(match==null)
         return false;
     else if(OsVersion==null)
     {
         return false
     }
-    else if(OsVersion[0].substring(3,4)>=7)
+    else if(OsVersion[0].substring(3,5) >= 7)
         return true;
     else
         return false;
@@ -79,16 +79,25 @@ $(function(){
             setTimeout(function(){ 
                 $("#mainContent").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
                 loadCSS("IMG_URL/min/?f="+logoutCssFiles);
+                loadCSS("http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700");
             }, 5000);
-            $("#hamburgerIcon").on("click", function() {
+            $("#hamburgerIcon").bind("click", function() {
                 if($("#hamburger").length == 0){
-                    $(".loaderSmallIcon").attr("src","IMG_URL/images/jsms/commonImg/loader.gif").removeClass("dn");
+                    $(".loaderSmallIcon").addClass("loaderimg").removeClass("dn");
                     $("#hamIc").hide();
                     loadCSS('IMG_URL/min/?f=/'+hamCss);
-                    $("#hamburgerIcon").off("click");
-                    $("#perspective").append('<div id="hamburger" class="hamburgerCommon fullhgt fullwid dn"><div><div id="outerHamDiv" class="fullwid outerdiv"><div class="wid76p hamlist fl" id="mainHamDiv"><div class="clearfix fontlig padHamburger"></div><div class=" pt20  hampad1"><ul class="fontlig"><li><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li><li><a id="abc" href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li> <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="hampad1"><ul class=" brdr9_ham fontlig"><li class="pt20"><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div><div class="hampad1" id="appDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger\';" bind-slide=1 class="white">Download  Android App </a></li></ul></div><div class="hampad1" id="appleAppDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></li></ul></div></div><div class="posfix ham_pos1 fullwid js-loginBtn"><div class="pad1"><div class="ham_bdr1"><div id="loggedOutHamFoot" class="pt10 fontlig f17"><div class="fl wid49p txtc ham_bdr2"><a bind-slide=1 href="/static/LogoutPage" class="white lh30">Login</a></div><div class="fl wid49p txtc"><a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a></div></div></div></div></div></div></div></div>');
+                  //  $("#hamburgerIcon").off("click");
+                    $("#perspective").append('<div id="hamburger" class="hamburgerCommon fullhgt fullwid dn"><div><div id="outerHamDiv" class="fullwid outerdiv"><div class="wid76p hamlist fl" id="mainHamDiv"><div class="clearfix fontlig padHamburger"></div><div class=" pt20  hampad1"><ul class="fontlig"><li><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li><li><div id=\'appDownloadLink2\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger\';" bind-slide=1 class="white">Download  App | 3MB only</a></div><!--end:listing6--><!--start:listing7--><div id=\'appleAppDownloadLink2\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></div><!--end:listing6--></li><li><a id="abc" href="/" bind-slide=1 class="white" style="font-size: 17px">Home</a></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li> <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="hampad1"><ul class=" brdr9_ham fontlig"><li class="pt20"><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free<div class="posfix ham_pos1 fullwid js-loginBtn"><div class="pad1"><div class="ham_bdr1"><div id="loggedOutHamFoot" class="pt10 fontlig f17"><div class="fl wid49p txtc ham_bdr2"><a bind-slide=1 href="/static/LogoutPage" class="white lh30">Login</a></div><div class="fl wid49p txtc"><a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a></div></div></div></div></div></div></div></div>');
                     var imported = document.createElement('script');
                     imported.src = 'IMG_URL/min/?f=/'+hamJs;
+                    imported.onerror = function() {
+                       ShowTopDownError(['Something went wrong']); 
+                       $("#hamburger").remove(); 
+                       setTimeout(function(){
+                           $(".loaderSmallIcon").addClass("dn");
+                           $("#hamIc").show();
+                       }, 100);   
+                   };
                     imported.onload = function() {
                         BindNextPage();
                         $("#hamburgerIcon").click();
@@ -320,4 +329,42 @@ function loadCSS(href) {
        type: "text/css",
        href: href
      });
+}
+
+function convertIntoHomePage(translateURL){
+  newHref = translateURL+"?AUTHCHECKSUM="+readCookieHomePage("AUTHCHECKSUM");
+  if(translateURL.indexOf('hindi')!=-1){
+    createCookieHomePage("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
+  } else {
+    createCookieHomePage("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
+  }
+  window.location.href = newHref;
+}
+
+function readCookieHomePage(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function createCookieHomePage(name, value, days,specificDomain) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    if(specificDomain == undefined || specificDomain == ""){
+      document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+    else{
+      document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path=/";
+    }
 }

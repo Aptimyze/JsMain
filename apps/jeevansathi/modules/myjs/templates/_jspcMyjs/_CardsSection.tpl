@@ -102,7 +102,7 @@ oncontextmenu="return false;" onmousedown="return false;" /> </li>
 		<div class="pos-rel myjs-dim9">
 			<div class="pos-abs z4">
 				<div class="disp-tbl myjs-dim9 txtc">
-					<div class="disp-cell vmid"><a href="{{LISTING_LINK}}" class="f30 fontreg colrw">View All</a></div>
+					<div class="disp-cell vmid"><a id ="idForViewAllCard" href="{{LISTING_LINK}}" class="f30 fontreg colrw">View All</a></div>
 				</div>
 			</div>
 			~if $gender eq 'M'`
@@ -262,9 +262,9 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 <div id="noEngagementCard" class="disp-none">
 <div class="myjs-bg2 fullwid pt45">
       <div class="myjs-p9">
-                <div class=" disp-tbl mauto">
+                <div class=" disp-tbl mauto wid70p">
 					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric"></i></div>
-					<div class="disp-cell vmid pl10  f24 fontlig color15">{{NO_PROFILE_TEXT}}</div>
+					<div class="disp-cell vmid pl10  f24 fontlig color15 txtc">{{NO_PROFILE_TEXT}}</div>
 				</div>
       </div>
     </div>
@@ -277,13 +277,13 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
                 <a href=""  class="filteredAnchor vishid"> <li><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class=" myjs-dim7 filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></li></a>
                 <a href=""  class="filteredAnchor vishid"> <li><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class=" myjs-dim7 filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></li></a>
                   <li class="pos-rel" style='margin-right:0px;'>
-                   <a href='/profile/contacts_made_received.php?page=filtered_eoi&filter=R'> <div id='filteredMoreCount' class="disp-none myjs-ovrlay2 pos-abs myjs-dim7 txtc">
+                   <a href='/inbox/12/1'> <div id='filteredMoreCount' class="disp-none myjs-ovrlay2 pos-abs myjs-dim7 txtc">
                       <div class="disp-cell vmid colrw fontreg f30">+<span></span></div>
                     </div></a>
                   <a href='' class="filteredAnchor vishid"><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class="myjs-dim7  filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></a>
                   </li>
                 </ul>
-                <a href="/profile/contacts_made_received.php?page=filtered_eoi&filter=R" >
+                <a href="/inbox/12/1" >
                 <div class="txtc pt13 pr5 pl5">
                   <p class="f15 fontreg colr5">Filtered Interests</p>
                   <p class="f13 fontlig color11 pt10">These profiles have sent you interest</p>

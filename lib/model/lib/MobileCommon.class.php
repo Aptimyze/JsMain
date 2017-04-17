@@ -319,4 +319,10 @@ class MobileCommon{
   		return 1;
   	}
   }
+  public static function getHttpsUrl()
+  {
+	if(MobileCommon::isApp()=="I")
+		return true;
+	return false;
+  }
 }

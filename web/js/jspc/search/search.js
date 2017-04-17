@@ -523,7 +523,7 @@ function sorting(sort,listType){
 /**Remove profile binding */
 $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', function() {
 	var srpTuple = $(this).attr("id").replace("idRemove","").replace("undoRemove","");
-	 var profileCheckSum = $(this).attr("data");
+	 var profileCheckSum = $(this).attr("data"),chatData = $(this).attr("data-chat");
 	 var usernameOfProfile = $("#idd"+srpTuple+" .usernameOfTuple").text();
 	var url = '/api/v1/common/ignoreprofile';
 	if($("#idd"+srpTuple+"removed:visible").length>0){
@@ -552,6 +552,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 			callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
+				//console.log("ignore from search module");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					if(chatData != undefined){
+						var details = chatData.split(",");
+						updateNonRosterListOnCEAction({"user_id":details[0],"action":details[1]});
+					}
+				}
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
 			}
 			else if(response.status==0 && blockOrUnblock==0){
@@ -691,6 +698,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 	var titleOfFilter = typeof infoArr["titleOfFilter"] !== 'undefined' ? infoArr["titleOfFilter"] : '';
         var pageOfResult = typeof infoArr["pageOfResult"] !== 'undefined' ? infoArr["pageOfResult"] : '1';
         var listType = typeof infoArr["listType"] !== 'undefined' ? infoArr["listType"] : '';
+
 	/**
 	* Params to be used for calling pagination
 	*/
@@ -725,6 +733,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
                 cache: true,
 		data: postParams,
 		timeout: 60000,
+		updateChatList:(infoArr["action"] == "pagination") ? true : false,
 		beforeSend: function( xhr ) {
 			//if(action=="moreCluster")
 			if(action=='pagination' || action =='stayOnPage')
@@ -1102,6 +1111,7 @@ function getGunaScore(response)
 	}
 	else
 	{	
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
 		$.myObj.ajax({
 			showError: false, 
 			method: "POST",
@@ -1115,6 +1125,7 @@ function getGunaScore(response)
 				setGunaScoreOnListing(gunaScoreArr);
 			}
 		});
+            }
 	}
 }
 

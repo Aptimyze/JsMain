@@ -25,6 +25,13 @@ include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/incomeCommonFunctions.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/SymfonyPictureFunctions.inc");
+include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod')
+	successfullDie();
+	
+
+
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();
@@ -67,7 +74,7 @@ mysql_query($sql_del,$db) or die("e3".mysql_error1($db));
 }
 */
 
-												
+							
 // lock table SWAP_JPROFILE so that the JPROFILE trigger does not insert new records untill the lock is released
 $sql="lock tables SWAP_JPROFILE WRITE, SWAP_JPROFILE1 WRITE";
 mysql_query($sql,$db) or die("01".mysql_error1($db));
@@ -158,8 +165,18 @@ while($row=mysql_fetch_row($res))
 		if(substr($cityRes,2)=="OT")
 			$cityRes = substr($cityRes,0,2)."000";
         }
+
+        //Photo first check. Verify Date to be updated accordingly in SWAP
+        $sqlPhoto = "SELECT MIN(ENTRY_DT) as PHOTO_SCREENED_DT from newjs.PHOTO_FIRST where PROFILEID='".$profileid."'";        
+        $resPhoto = mysql_query($sqlPhoto,$db) or die("3 ".mysql_error1($db));
+        $rowPhoto = mysql_fetch_row($resPhoto);  
+        if($rowPhoto["0"] !="")
+            $firstPhotoScreenedDate = $rowPhoto["0"];
+        else
+            $firstPhotoScreenedDate = '0000-00-00 00:00:00';
+
         if($row[0]){
-                $sql_insert="INSERT INTO SWAP ( `PROFILEID` , `CASTE` , `MANGLIK` , `MTONGUE` , `MSTATUS` , `OCCUPATION` , `COUNTRY_RES` , `CITY_RES` , `HEIGHT` , `EDU_LEVEL` , `DRINK` , `SMOKE` , `HAVECHILD` , `BTYPE` , `COMPLEXION` , `DIET` , `HANDICAPPED` , `AGE` , `HAVEPHOTO` , `LAST_LOGIN_DT` , `ENTRY_DT` , `INCOME` , `PRIVACY` , `SORT_DT` , `SUBSCRIPTION` , `EDU_LEVEL_NEW` , `RELATION` , `GENDER` , `ACTIVATED` , `SCORE_POINTS` , `FRESHNESS_POINTS` , `TOTAL_POINTS` , `PROFILE_SCORE` , `PHOTODATE` , `PHOTO_DISPLAY` , `NTIMES` , `RELIGION` , `INCOME_SORTBY` , `USERNAME` , `GOTHRA` , `SUBCASTE` , `YOURINFO` , `FAMILYINFO` , `EDUCATION` , `JOB_INFO` , `HOROSCOPE` , `SPEAK_URDU` , `HIJAB_MARRIAGE` , `SAMPRADAY` , `ZARATHUSHTRI` , `AMRITDHARI` , `CUT_HAIR` , `WEAR_TURBAN` , `MATHTHAB` , `WORK_STATUS` , `HIV` , `NATURE_HANDICAP` , `LIVE_PARENTS` , `FEATURE_PROFILE` , `POPULAR` , `EDUCATION_GROUPING` , `OCCUPATION_GROUPING` , `GOING_ABROAD` , `MARRIED_WORKING` , `CASTE_GROUP` , `STATE` , `LINKEDIN` , `ASTRO_DETAILS` , `PHOTOSCREEN` , `FEATURE_PROFILE_SCORE` , `WIFE_WORKING` , `UG_DEGREE` , `PG_DEGREE` , `OTHER_UG_DEGREE`, `OTHER_PG_DEGREE` , `COMPANY_NAME` , `COLLEGE` , `PG_COLLEGE`, `ANCESTRAL_ORIGIN` , `SCHOOL` , `KEYWORDS` , `NAKSHATRA` , `CHECK_PHONE` , `MOD_DT`,VERIFY_ACTIVATED_DT) SELECT J.PROFILEID , CASTE , MANGLIK , MTONGUE , MSTATUS , OCCUPATION , COUNTRY_RES ,'$cityRes' , HEIGHT , EDU_LEVEL, DRINK , SMOKE , HAVECHILD , BTYPE , COMPLEXION , DIET , HANDICAPPED , AGE , HAVEPHOTO, LAST_LOGIN_DT, J.ENTRY_DT, INCOME, PRIVACY, SORT_DT, SUBSCRIPTION, EDU_LEVEL_NEW,RELATION,J.GENDER,ACTIVATED,'','','','',PHOTODATE,PHOTO_DISPLAY,'',RELIGION,'',USERNAME,GOTHRA,SUBCASTE,YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,IF(A.PROFILEID IS NOT NULL OR H.PROFILEID IS NOT NULL,IF(J.SHOW_HOROSCOPE='Y','Y','N'),'N'),SPEAK_URDU,'','','','','','','',WORK_STATUS,HIV,NATURE_HANDICAP,if(J.GENDER='M', PARENT_CITY_SAME,''),IF(SUBSCRIPTION LIKE '%R%',1,0),'$popular',IF(E.GROUPING,E.GROUPING,10),IF(O.GROUPING,O.GROUPING,11),GOING_ABROAD,MARRIED_WORKING,'',IF(COUNTRY_RES=51,SUBSTR(CITY_RES,1,2),''),IF(JC.SHOWLINKEDIN='Y' AND JC.LINKEDIN_URL IS NOT NULL AND JC.LINKEDIN_URL!='','Y','N'),IF(A.PROFILEID IS NULL,'N',CONCAT(A.LAGNA_DEGREES_FULL,':',A.SUN_DEGREES_FULL,':',A.MOON_DEGREES_FULL,':',A.MARS_DEGREES_FULL,':',A.MERCURY_DEGREES_FULL,':',A.JUPITER_DEGREES_FULL,':',A.VENUS_DEGREES_FULL,':',A.SATURN_DEGREES_FULL)),J.PHOTOSCREEN,IF(F.SCORE,F.SCORE,0),IF(J.GENDER='M',J.WIFE_WORKING,''),IF(JE.UG_DEGREE,JE.UG_DEGREE,0),IF(JE.PG_DEGREE,JE.PG_DEGREE,0),";
+                $sql_insert="INSERT INTO SWAP ( `PROFILEID` , `CASTE` , `MANGLIK` , `MTONGUE` , `MSTATUS` , `OCCUPATION` , `COUNTRY_RES` , `CITY_RES` , `HEIGHT` , `EDU_LEVEL` , `DRINK` , `SMOKE` , `HAVECHILD` , `BTYPE` , `COMPLEXION` , `DIET` , `HANDICAPPED` , `AGE` , `HAVEPHOTO` , `LAST_LOGIN_DT` , `ENTRY_DT` , `INCOME` , `PRIVACY` , `SORT_DT` , `SUBSCRIPTION` , `EDU_LEVEL_NEW` , `RELATION` , `GENDER` , `ACTIVATED` , `SCORE_POINTS` , `FRESHNESS_POINTS` , `TOTAL_POINTS` , `PROFILE_SCORE` , `PHOTODATE` , `PHOTO_DISPLAY` , `NTIMES` , `RELIGION` , `INCOME_SORTBY` , `USERNAME` , `GOTHRA` , `SUBCASTE` , `YOURINFO` , `FAMILYINFO` , `EDUCATION` , `JOB_INFO` , `HOROSCOPE` , `SPEAK_URDU` , `HIJAB_MARRIAGE` , `SAMPRADAY` , `ZARATHUSHTRI` , `AMRITDHARI` , `CUT_HAIR` , `WEAR_TURBAN` , `MATHTHAB` , `WORK_STATUS` , `HIV` , `NATURE_HANDICAP` , `LIVE_PARENTS` , `FEATURE_PROFILE` , `POPULAR` , `EDUCATION_GROUPING` , `OCCUPATION_GROUPING` , `GOING_ABROAD` , `MARRIED_WORKING` , `CASTE_GROUP` , `STATE` , `LINKEDIN` , `ASTRO_DETAILS` , `PHOTOSCREEN` , `FEATURE_PROFILE_SCORE` , `WIFE_WORKING` , `UG_DEGREE` , `PG_DEGREE` , `OTHER_UG_DEGREE`, `OTHER_PG_DEGREE` , `COMPANY_NAME` , `COLLEGE` , `PG_COLLEGE`, `ANCESTRAL_ORIGIN` , `SCHOOL` , `KEYWORDS` , `NAKSHATRA` , `CHECK_PHONE` , `MOD_DT`,VERIFY_ACTIVATED_DT) SELECT J.PROFILEID , CASTE , MANGLIK , MTONGUE , MSTATUS , OCCUPATION , COUNTRY_RES ,'$cityRes' , HEIGHT , EDU_LEVEL, DRINK , SMOKE , HAVECHILD , BTYPE , COMPLEXION , DIET , HANDICAPPED , AGE , HAVEPHOTO, LAST_LOGIN_DT, J.ENTRY_DT, INCOME, PRIVACY, SORT_DT, SUBSCRIPTION, EDU_LEVEL_NEW,RELATION,J.GENDER,ACTIVATED,'','','','',PHOTODATE,PHOTO_DISPLAY,'',RELIGION,'',USERNAME,GOTHRA,SUBCASTE,YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,IF(A.PROFILEID IS NOT NULL OR H.PROFILEID IS NOT NULL,IF(J.SHOW_HOROSCOPE='Y','Y','N'),'N'),SPEAK_URDU,'','','','','','','',WORK_STATUS,HIV,NATURE_HANDICAP,if(J.GENDER='M', PARENT_CITY_SAME,''),IF(SUBSCRIPTION LIKE '%R%' OR SUBSCRIPTION LIKE '%J%',1,0),'$popular',IF(E.GROUPING,E.GROUPING,10),IF(O.GROUPING,O.GROUPING,11),GOING_ABROAD,MARRIED_WORKING,'',IF(COUNTRY_RES=51,SUBSTR(CITY_RES,1,2),''),IF(JC.SHOWLINKEDIN='Y' AND JC.LINKEDIN_URL IS NOT NULL AND JC.LINKEDIN_URL!='','Y','N'),IF(A.PROFILEID IS NULL,'N',CONCAT(A.LAGNA_DEGREES_FULL,':',A.SUN_DEGREES_FULL,':',A.MOON_DEGREES_FULL,':',A.MARS_DEGREES_FULL,':',A.MERCURY_DEGREES_FULL,':',A.JUPITER_DEGREES_FULL,':',A.VENUS_DEGREES_FULL,':',A.SATURN_DEGREES_FULL)),J.PHOTOSCREEN,IF(F.SCORE,F.SCORE,0),IF(J.GENDER='M',J.WIFE_WORKING,''),IF(JE.UG_DEGREE,JE.UG_DEGREE,0),IF(JE.PG_DEGREE,JE.PG_DEGREE,0),";
                 if(Flag::isFlagSet("other_ug_degree", $row[1]))
                         $sql_insert.="SUBSTRING(JE.OTHER_UG_DEGREE,1,30),";
                 else
@@ -189,10 +206,9 @@ while($row=mysql_fetch_row($res))
                 else
                         $sql_insert.="'',";
                 
-                $sql_insert.="JE.SCHOOL,J.KEYWORDS,J.NAKSHATRA,'',J.MOD_DT,IF(J.VERIFY_ACTIVATED_DT!= '0000-00-00 00:00:00',J.VERIFY_ACTIVATED_DT,J.ENTRY_DT) AS VERIFY_ACTIVATED_DT FROM (((((((JPROFILE J LEFT JOIN EDUCATION_LEVEL_NEW E ON J.EDU_LEVEL_NEW=E.VALUE) LEFT JOIN OCCUPATION O ON J.OCCUPATION = O.VALUE) LEFT JOIN JPROFILE_CONTACT JC ON JC.PROFILEID = J.PROFILEID) LEFT JOIN ASTRO_DETAILS A ON J.PROFILEID = A.PROFILEID) LEFT JOIN HOROSCOPE H ON J.PROFILEID = H.PROFILEID) LEFT JOIN FEATURED_PROFILE_LIST F ON J.PROFILEID = F.PROFILEID) LEFT JOIN JPROFILE_EDUCATION JE ON J.PROFILEID=JE.PROFILEID) WHERE J.PROFILEID=$profileid";
+                $sql_insert.="JE.SCHOOL,J.KEYWORDS,J.NAKSHATRA,'',J.MOD_DT,GREATEST(IF(J.VERIFY_ACTIVATED_DT!= '0000-00-00 00:00:00',J.VERIFY_ACTIVATED_DT,J.ENTRY_DT),'".$firstPhotoScreenedDate."') AS VERIFY_ACTIVATED_DT FROM (((((((JPROFILE J LEFT JOIN EDUCATION_LEVEL_NEW E ON J.EDU_LEVEL_NEW=E.VALUE) LEFT JOIN OCCUPATION O ON J.OCCUPATION = O.VALUE) LEFT JOIN JPROFILE_CONTACT JC ON JC.PROFILEID = J.PROFILEID) LEFT JOIN ASTRO_DETAILS A ON J.PROFILEID = A.PROFILEID) LEFT JOIN HOROSCOPE H ON J.PROFILEID = H.PROFILEID) LEFT JOIN FEATURED_PROFILE_LIST F ON J.PROFILEID = F.PROFILEID) LEFT JOIN JPROFILE_EDUCATION JE ON J.PROFILEID=JE.PROFILEID) WHERE J.PROFILEID=$profileid";                                
                 mysql_query($sql_insert,$db) or die("3 1".mysql_error1($db));
                 $sqlEduGrouping = "SELECT group_concat(DISTINCT(GROUPING)) AS GROUPING FROM SWAP J JOIN EDUCATION_LEVEL_NEW E WHERE J.PROFILEID =".$profileid." AND (J.EDU_LEVEL_NEW = E.VALUE OR J.PG_DEGREE = E.VALUE OR J.UG_DEGREE = E.VALUE ) ";
-								
                 $eduGrouping = mysql_query($sqlEduGrouping, $db) or die("edu query".mysql_error1($db));
                  
                 while($roweduGroup=mysql_fetch_row($eduGrouping)){
@@ -622,8 +638,18 @@ function mysql_error1($db)
 {
 	global $sql_update,$sql,$sql_total_points;
 	$msg=$sql_update .":".$sql.":".$sql_total_points;
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com","Jeevansathi Error in swapping",$msg);
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
+	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+        $date = date("Y-m-d h");
+        $message        = "Mysql Error Count have reached swap jpartner $date within 5 minutes";
+        $from           = "JSSRVR";
+        $profileid      = "144111";
+        $mobile         = "9650350387";
+        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $mobile         = "9818424749";
+        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $mobile         = "9873639543";
+	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 }
 
 function DayDiff($StartDate, $StopDate)

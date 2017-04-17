@@ -94,8 +94,12 @@ class EditDetails{
 					//Screening Array
 					//$myProfileArr["ScreeningFields"]=$apiProfileSectionObj->getApiScreeningFields();
 			}	
-			
-			$myProfileArr["Dpp"] = $this->getDppValuesArr($apiProfileSectionObj);
+			$casteGrouping = 0;
+                        if(MobileCommon::isApp() && $request->getParameter("newdpplist") && $request->getParameter("newdpplist") == 1){
+                                $casteGrouping = 1;
+                        }
+			$myProfileArr["Dpp"] = $this->getDppValuesArr($apiProfileSectionObj,$casteGrouping);
+                        
 			if(MobileCommon::isApp()){
 				$myProfileArr["ScreeningMessage"]="under screening";
 				$myProfileArr["c_care"]="18004196299";

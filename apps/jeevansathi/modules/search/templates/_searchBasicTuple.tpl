@@ -71,14 +71,14 @@
           <!--end:description--> 
           
            <!--start:option-->
-          <div class="srpwid8 fr tupleic contactEngineBar">
+          <div class="srpwid8 fr tupleic contactEngineBar pcChatHelpData" data-pcChat="{orig_username},{profilechecksum},{gender}">
          {{contactEngineBar}}
           </div>
           <!--end:option--> 
         </div>
         <div id="idR{profileNoId}" class="clearfix pt7  cursp" data="{profilechecksum}">
                     <div class="f11 fontlig colr2 fl {showFilterReason} reasonForFilter">Reason for filtering you out : {filterReason}</div>
-                    <div id="idRemove{profileNoId}" class="f11 fontlig color11 {removeThisProfile} txtr cursp fr ~if !$loggedIn` loginLayerJspc~else`js-removeProfile~/if`" data="{profilechecksum}">Ignore This Profile</div>
+                    <div id="idRemove{profileNoId}" class="f11 fontlig color11 {removeThisProfile} txtr cursp fr ~if !$loggedIn` loginLayerJspc~else`js-removeProfile~/if`" data="{profilechecksum}" data-chat="{userId},BLOCK">Ignore This Profile</div>
                     <div id="idRemove{profileNoId}" class="f11 fontlig color11 js-removeProfile txtr cursp fr" data="{profilechecksum}">{joinedOnMsg}</div>
             </div>
     </div>

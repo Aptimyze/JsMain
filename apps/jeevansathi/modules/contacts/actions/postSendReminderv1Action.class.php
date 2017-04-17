@@ -92,18 +92,21 @@ class postSendReminderv1Action extends sfAction
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
 		{	
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+                        if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
-				
+                                if($request->getParameter('API_APP_VERSION')>=80)
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray["headerthumbnailurl"] = $thumbNail;;
+		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                 		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+
 
 			}
+
 		}
 		else
 		{
@@ -191,6 +194,25 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 			}
+
+			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
+			{
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+				$responseArray["headerthumbnailurl"] = $thumbNail;
+				//$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
+			{
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				//$responseArray["headerlabel"] = "Profile is Underscreening";
+				//$responseArray["redirect"] = true;
+				 $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                                $responseArray["headerthumbnailurl"] = $thumbNail;
+			}
+
 			else
 			{
 				$responseArray["errmsglabel"]= "You cannot perform this action";

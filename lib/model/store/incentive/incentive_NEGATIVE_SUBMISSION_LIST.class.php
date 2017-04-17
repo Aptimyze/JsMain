@@ -23,6 +23,23 @@ class incentive_NEGATIVE_SUBMISSION_LIST extends TABLE
             throw new jsException($e);
         }
     }
+    public function getData($ID)
+    {
+        try {
+            $sql = "SELECT * FROM incentive.NEGATIVE_SUBMISSION_LIST WHERE ID=:ID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ID", $ID, PDO::PARAM_INT);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                return $result;
+            }
+            return;
+        }
+        catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
 
 
 }

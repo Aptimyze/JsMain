@@ -232,6 +232,19 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$pid =$rowSelectDetail['PROFILEID'];
                 return $pid;
         }
+
+        public function getValidRegisteredProfiles($osType="AND")
+        {
+            $sqlSel = "SELECT PROFILEID,REG_ID FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID IS NOT NULL && PROFILEID <> 0 AND NOTIFICATION_STATUS=:NOTIFICATION_STATUS AND OS_TYPE=:OS_TYPE";
+            $resSel = $this->db->prepare($sqlSel);
+            $resSel->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
+            $resSel->bindValue(":NOTIFICATION_STATUS","Y",constant('PDO::PARAM_'.$this->{'NOTIFICATION_STATUS_BIND_TYPE'}));
+            $resSel->execute();
+            $output = array();
+			while($rowSelectDetail = $resSel->fetch(PDO::FETCH_ASSOC))
+				$output[] =$rowSelectDetail;
+	        return $output;
+	    }
         
         public function checkNotificationSubscriptionStatus($profileid){
         	try{

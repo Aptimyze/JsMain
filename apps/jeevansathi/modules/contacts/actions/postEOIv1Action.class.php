@@ -39,7 +39,10 @@ class postEOIv1Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE","");
+					if($request->getParameter('chatMessage'))
+                        $this->contactHandlerObj->setElement("MESSAGE",$request->getParameter('chatMessage'));
+                    else
+						$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));
@@ -95,21 +98,30 @@ class postEOIv1Action extends sfAction
 		
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
+		{
+			$androidText = true;
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["cansend"] = true;
+			$responseButtonArray["sent"] = true;
+		}
+		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		if($this->contactEngineObj->messageId)
 		{
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+        	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+                                if($request->getParameter('API_APP_VERSION')>=80 && $this->getParameter($request,"page_source") != "chat")
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+		                        $responseArray["headerthumbnailurl"] = $thumbNail;
+                        		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        		$responseArray["selfthumbnailurl"] = $ownthumbNail;
 			}
-			if($this->getParameter($request,"page_source") == "VDP")
+
+                        if($this->getParameter($request,"page_source") == "VDP")
 			{
 				$redirection = "true";
 			}

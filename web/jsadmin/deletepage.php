@@ -68,10 +68,11 @@ if(authenticated($cid))
 
 				$sql="DELETE FROM newjs.CONNECT WHERE PROFILEID='$pid'";
 				mysql_query_decide($sql) or die("$sql".mysql_error_js());
-				$sql="SELECT RECEIVE_TIME FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$pid' and SCREENING_TYPE='O'"; 
+				$sql="SELECT RECEIVE_TIME,SCREENING_VAL FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$pid' and SCREENING_TYPE='O'"; 
 				$res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 				$resf=mysql_fetch_array($res);
 				$rec_time=$resf['RECEIVE_TIME'];
+				$screeningValMainAdmin = $resf['SCREENING_VAL'];
 				$date_time=explode(" ",$rec_time);
 				$date_y_m_d=explode("-",$date_time[0]);
 				$time_h_m_s=explode(":",$date_time[1]);
@@ -80,8 +81,10 @@ if(authenticated($cid))
 				$timezone=date("T",$timestamp);
 				if($timezone=="EDT")
 					$timezone="EST5EDT";
-
-				$sql= "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME,           SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL,TIME_ZONE,SUBMITED_TIME_IST) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, 'DELETED', SUBSCRIPTION_TYPE, SCREENING_VAL,'$timezone', CONVERT_TZ(NOW(),'$timezone','IST') from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";
+				if($activated=="N" || $activated=="U")
+					$screeningValMainAdmin = 0;
+	
+				$sql= "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME,           SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL,TIME_ZONE,SUBMITED_TIME_IST) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, 'DELETED', SUBSCRIPTION_TYPE,'$screeningValMainAdmin','$timezone', CONVERT_TZ(NOW(),'$timezone','IST') from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";
 				mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
 				$sql= "DELETE from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";

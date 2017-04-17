@@ -11,6 +11,303 @@ var listingInputData = [],
     listingPhotoRequestCompleted = ",",
     localStorageExists = isStorageExist();
 
+/*clearNonRosterPollingInterval
+function to stop polling for non roster webservice api 
+* @inputs:type(optional)
+*/
+function clearNonRosterPollingInterval(type){
+    //console.log("in clearNonRosterPollingInterval");
+    if(type == undefined){
+        if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
+            $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
+                //console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+            });
+        }
+    }
+    else{
+        if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+        }
+    }
+}
+
+/*reActivateNonRosterPolling
+function to reactivate poll for non roster list 
+* @inputs:source,updateChatImmediate(optional),nonRosterGroups(optional)
+*/
+function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
+    //kills interval polling for non roster list
+    //clearNonRosterPollingInterval();
+    //console.log("dppLiveForAll",dppLiveForAll);
+    //console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
+    nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
+    //console.log("reActivateNonRosterPolling",nonRosterGroups);
+    if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
+        var profileEligible = true;
+        
+        if(dppLiveForAll != "1" && betaDppExpression != undefined && betaDppExpression != ""){
+            var splitArr = JSON.parse("[" + betaDppExpression + "]"),specialProfiles="";
+          
+            if(specialDppProfiles != undefined){
+                specialProfiles = specialDppProfiles;
+            }
+       
+            if(splitArr != undefined && (specialProfiles.indexOf(loggedInJspcUser) == -1) && (loggedInJspcUser % splitArr[0] >= splitArr[1])){
+                profileEligible = false;
+            }
+        }
+        //console.log("profileEligible",profileEligible);
+        if(profileEligible == true){
+            //console.log("in reActivateNonRosterPolling",source);
+            $.each(nonRosterGroups,function(key,groupId){
+                    //pollForNonRosterListing(groupId);
+                    clearNonRosterPollingInterval(groupId);
+                    var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
+                    strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
+                                                                        pollForNonRosterListing(groupId,updateChatListImmediate);
+                                                                    },100);
+                    
+            });
+        }
+    }
+}
+
+/*checkForValidNonRosterRequest
+function to check whether request to non roster webservice is valid or not 
+* @inputs:groupId
+*/
+function checkForValidNonRosterRequest(groupId){
+    //return true;
+    var selfSub = getMembershipStatus();
+    //console.log("ankita",selfSub);
+    //console.log("ankita1",chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]);
+    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
+    var data = strophieWrapper.getRosterStorage("non-roster");
+    if(lastUpdated && lastUpdated[groupId]){
+        var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]){
+            valid = false;
+        }
+    }
+    if(data && valid == false){
+        //data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
+        processNonRosterData(data,groupId,"localstorage");
+    }
+    else{
+        valid = true;
+    }
+    //console.log("checkForValidNonRosterRequest",valid,groupId,chatConfig.Params[device].nonRosterListingRefreshCap);
+    return valid;
+}
+
+/*pollForNonRosterListing
+function to poll for non roster webservice api 
+* @inputs:type
+*/
+function pollForNonRosterListing(type,updateChatListImmediate){
+    //console.log("pollForNonRosterListing",type,updateChatListImmediate);
+    if(type == undefined || type == ""){
+        type = "dpp";
+    }
+    var selfAuth = readCookie("AUTHCHECKSUM");
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
+        //console.log("selfAuth",selfAuth);
+        var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
+        if(updateChatListImmediate != undefined && updateChatListImmediate == true){
+            if(showChat == "1"){
+                validRe = true;
+            }
+            else{
+                validRe = false;
+                var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                if(nonRosterCLUpdated != undefined && nonRosterCLUpdated[type] != undefined){
+                    nonRosterCLUpdated[type] = 0;
+                    localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
+                }
+                //localStorage.removeItem("nonRosterCLUpdated");
+                //localStorage.removeItem("nonRosterChatListing"+loggedInJspcUser);
+            }
+            //headerData['Cache-Control'] = 'no-cache,no-store';
+        }
+        else{
+            validRe = checkForValidNonRosterRequest(type);
+            //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
+        }
+        //console.log("validRe",type,validRe);
+        if(validRe == true){
+            var getInputData = "";
+            if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
+                $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
+                    if(getInputData == ""){
+                        getInputData = "?"+k+"="+v;
+                    }
+                    else{
+                        getInputData = getInputData+"&"+k+"="+v;
+                    }
+                });
+            }
+            //getInputData = getInputData+"&timestamp="+(new Date()).getTime();
+            $.myObj.ajax({
+                url: (listingWebServiceUrl[type]+getInputData),
+                dataType: 'json',
+                //data: postData,
+                type: 'GET',
+                cache:false,
+                async: true,
+                timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
+                headers:headerData,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    /*response = {
+                    "data":{
+        
+                    "items":[
+                        {
+                        "profileid": "2865000",
+                        "username": "WYZ6824",
+                        "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
+                        },
+                        {
+                        "profileid": "8925000",
+                        "username": "ZZYV2509",
+                        "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
+                        },
+                        {
+                        "profileid": "7415000",
+                        "username": "RTW1253",
+                        "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
+                        },
+                        {
+                        "profileid": "8874000",
+                        "username": "ZZYA1475",
+                        "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
+                        },
+                        {
+                        "profileid": "1764127",
+                        "username": "YAS8573",
+                        "profileChecksum": "1764127lr"
+                        },
+                        {
+                        "profileid": "3599124",
+                        "username": "nokumarriage",
+                        "profileChecksum": "3599124lr"
+                        }
+                    ],
+                    "pollTime":20000
+                },
+                "header": {
+                    "status": 200,
+                    "errorMsg": ""
+                },
+                "debugInfo": null
+                };*/
+            
+                    if(response["header"]["status"] == 200){
+                        //console.log("fetchNonRosterListing success",response);
+                        if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
+                            //chatConfig.Params[device].nonRosterListingRefreshCap[type] = response["data"]["pollTime"];
+                            //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
+                        }
+                        var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                        if(nonRosterCLUpdated == undefined){
+                            nonRosterCLUpdated = {};
+                        }
+                        nonRosterCLUpdated[type] = (new Date()).getTime();
+                        localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
+                        //add in listing, after non roster list has been fetched
+                        processNonRosterData(response["data"]["items"],type,"api");
+                    }
+                },
+                error: function (xhr) {
+                    //console.log("fetchNonRosterListing error",xhr);
+                    //return "error";
+                }
+            });
+        }
+    }
+}
+
+/*processNonRosterData
+function to process the non roster data 
+* @inputs:response,type
+*/
+function processNonRosterData(response,type,source){
+    var operation = "create_list",reCreateList = true;
+    //console.log("in processNonRosterData",source); 
+    var newNonRoster = {},oldNonRoster = {},offlineNonRoster = {};
+    if((Object.keys(strophieWrapper.NonRoster)).length>0){
+        $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+            if (nodeObj[strophieWrapper.rosterDetailsKey]["groups"].indexOf(type) != -1) {
+                oldNonRoster[profileid] = nodeObj;
+            }
+        });
+    }
+    /*if((Object.keys(oldNonRoster)).length == 0){
+        oldNonRoster = strophieWrapper.getRosterStorage("non-roster");
+    }*/
+    if((Object.keys(response)).length > 0){
+        if(source != "localstorage"){
+            $.each(response,function(key,nodeObj){
+                nodeObj["groupid"] = type;
+                nodeObj["addIndex"] = key;
+                var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
+                if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[nodeObj["profileid"]] == undefined || strophieWrapper.Roster[nodeObj["profileid"]][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[nodeObj["profileid"]][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
+                    newNonRoster[nodeObj["profileid"]] = listObj;
+                }
+            });
+        }
+        else{
+            newNonRoster = response;
+        }
+    }
+    else{
+        newNonRoster = {};
+    }
+    //console.log("oldNonRoster",oldNonRoster);
+    //console.log("newNonRoster",newNonRoster);
+    isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
+    if(isResponseSame == false){
+        if((Object.keys(oldNonRoster)).length > 0){
+            if(/*chatConfig.Params.nonRosterPollingGroups.length == 1 && */chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+                //only dpp is non roster group case
+                offlineNonRoster = oldNonRoster;
+            }
+            //mark old list as offline
+            strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
+        }
+        //add new list
+        strophieWrapper.onNonRosterListFetched(newNonRoster,type,operation);
+    }
+    else if((Object.keys(newNonRoster)).length == 0){
+        //console.log("here",newNonRoster,oldNonRoster);
+        //strophieWrapper.setRosterStorage({},"non-roster");
+        
+        var data = strophieWrapper.getRosterStorage("non-roster");
+        if(data == undefined || (Object.keys(data)).length == 0){
+            strophieWrapper.setRosterStorage({},"non-roster");
+        }
+    }
+}
+
+/*checkForObjectsEquality
+function to check whether two objects are equal or not 
+* @inputs:obj1,obj2
+*/
+function checkForObjectsEquality(obj1,obj2){
+    if((Object.keys(obj1)).length == 0 && (Object.keys(obj2)).length == 0){
+        //console.log("checkForObjectsEquality",true);
+        return true;
+    }
+    if((Object.keys(obj1)).length == 0 || (Object.keys(obj2)).length == 0){
+        //console.log("checkForObjectsEquality",false);
+        return false;
+    }
+    else{
+        //console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
+        return (JSON.stringify(obj1) === JSON.stringify(obj2));
+    }
+}
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 
@@ -468,6 +765,7 @@ function getSelfName(){
 function checkForSiteLoggedOutMode(response){
     if(typeof response != "undefined" && response["responseStatusCode"] == "9"){
         window.location.href = "/";
+        //location.reload();
     }
 }
 
@@ -572,30 +870,44 @@ function requestListingPhoto(apiParams) {
         }
     }
 }
+
+/* requestListingPhoto
+ * request listing photo through api
+ * @inputs: apiParams
+ * @return: response
+ */
+function logChatListingFetchTimeout() {
+    var postData = {"username":loggedInJspcUser};
+    $.myObj.ajax({
+        url: "/api/v1/chat/logChatListingFetchTimeout",
+        dataType: 'json',
+        type: 'POST',
+        data: postData,
+        timeout: 60000,
+        cache: false,
+        beforeSend: function (xhr) {},
+        success: function (response) {
+        },
+        error: function (xhr) {
+            //return "error";
+        }
+    });
+}
+
 /*function initiateChatConnection
  * request sent to openfire to initiate chat and maintain session
  * @params:none
  */
 function initiateChatConnection() {
-    username = loggedInJspcUser + '@' + openfireServerName;
-    /*if(readCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
-    else if(readCookie("CHATUSERNAME")=="bassi")
-        username = '1@localhost';
-    else if(readCookie("CHATUSERNAME")=="VWZ4557")
-        username = 'a9@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
-    else if(readCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a13@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZVV2929")
-        username = 'a14@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZRR5723")
-        username = 'a11@localhost';
-    pass = '123';*/
-    
+    username = loggedInJspcUser + '@' + openfireServerName;    
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
- 
+
+    /*
+    updatePresenceIntervalId = setInterval(function(){
+        updatePresenceAfterInterval();
+    },chatConfig.Params[device].listingRefreshTimeout);
+    */
+    //console.log(updatePresenceIntervalId);
 }
 /*getConnectedUserJID
  * get jid of connected user
@@ -663,13 +975,29 @@ function invokePluginLoginHandler(state, loader) {
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat._appendLoggedHTML();
         }
-    } else if (state == "failure") {
-        eraseCookie("chatAuth");
-        setLogoutClickLocalStorage("set");
+    } else if (state == "failure" || state == "failurePlusLog") {
+        //eraseCookie("chatAuth");
+        //setLogoutClickLocalStorage("set");
+        if(state == "failure"){
+            eraseCookie("chatAuth");
+            setLogoutClickLocalStorage("set");
+        }
+        else{
+            setLogoutClickLocalStorage("unset");
+        }
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-            objJsChat.addLoginHTML(true);
+            //objJsChat.addLoginHTML(true);
+            if(state == "failure"){
+                objJsChat.addLoginHTML(true);
+            }
+            else{
+                objJsChat.addLoginHTML(true,true);
+            }
             if(loader != false) {
                 objJsChat.manageLoginLoader();
+            }
+            if(state == "failurePlusLog" && chatConfig.Params[device].logChatTimeout == true){
+                logChatListingFetchTimeout();
             }
         }
     } else if (state == "session_sync") {
@@ -688,11 +1016,66 @@ function invokePluginLoginHandler(state, loader) {
         if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
             //console.log("yes");
             if($(objJsChat._loginbtnID).length != 0){
+                //console.log("click button");
                 $(objJsChat._loginbtnID).click();
             }
         }
     }
 }
+
+/*updateNonRosterListOnCEAction
+function to update non roster item in listing
+* @inputs:actionParams
+*/
+function updateNonRosterListOnCEAction(actionParams){
+    //console.log("updateNonRosterListOnCEAction",actionParams);
+    var action = actionParams["action"],
+    user_id = actionParams["user_id"],
+    groupId = actionParams["groupId"];
+    if(user_id != undefined && showChat == "1"){        
+        switch(action){
+            case "REMOVE":
+            case "BLOCK":
+                //remove from non roster list
+                var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
+                //console.log("updateNonRosterListOnCEAction",checkIfExists);
+                if(checkIfExists && checkIfExists["exists"] == true && checkIfExists["groupID"] != undefined && chatConfig.Params.nonRosterPollingGroups.indexOf(checkIfExists["groupID"]) != -1){
+                    var deleteIdArr = [];
+                    deleteIdArr.push(user_id);
+                    strophieWrapper.onNonRosterListDeletion(deleteIdArr);
+                }
+                break;
+            case "ADD":
+                var otherGender = actionParams["otherGender"];
+                //opposite gender check
+                if(loggedInJspcGender != undefined && otherGender != undefined && loggedInJspcGender != otherGender){
+                    //remove this node from existing non roster list first if node is not a roster
+                    updateNonRosterListOnCEAction({
+                        "user_id":user_id,
+                        "action":"REMOVE"
+                    });
+                    //now add this node in new non roster group
+                    var chatStatus = actionParams["chatStatus"],
+                    username = actionParams["username"],
+                    profilechecksum = actionParams["profilechecksum"];
+                    if(groupId != undefined && groupId != "" && chatConfig.Params.nonRosterPollingGroups.indexOf(groupId) != -1){
+                        var nodeObj = {};
+                        nodeObj[user_id] = strophieWrapper.formatNonRosterObj({
+                                                            "chatStatus":chatStatus,
+                                                            "profileid":user_id,
+                                                            "username":username,
+                                                            "profileChecksum":profilechecksum,
+                                                            "groupid":groupId,
+                                                            "addIndex":0
+                                                        });
+                        strophieWrapper.onNonRosterListFetched(nodeObj,groupId,"add_node");
+                    }
+                }
+                break;
+        }
+    }
+}
+
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
@@ -703,16 +1086,21 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //console.log("create_list",listObject);
             objJsChat.manageChatLoader("hide");
         }
+        if(key == "add_node" && user_id != undefined && strophieWrapper.checkForGroups(listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true && listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0] != undefined && listObject[user_id][strophieWrapper.rosterDetailsKey]["nodeType"] != "non-roster"){
+            //before adding new roster openfire node in list,check presence in nonroster list to remove it first
+            updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
+        }
         objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
             //console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
-            
         }
         if (key == "create_list") {
-            objJsChat.noResultError();
+            setTimeout(function(){
+                objJsChat.noResultError();
+            },500);
         }
     } else if (key == "update_status") {
         //update existing user status in listing
@@ -790,6 +1178,7 @@ function checkNewLogin(profileid) {
             localStorage.removeItem('tabState');
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
+            localStorage.setItem('isCurrentJeevansathiTab',1);
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
@@ -802,58 +1191,68 @@ function checkAuthentication(timer,loginType) {
     var d = new Date();
     var n = d.getTime();
     //console.log("timestamp",n);
-    $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication?p="+n,
-        async: false,
-        success: function (data) {
-            if (data.responseStatusCode == "0") {
-                if(typeof data.hash !== 'undefined'){
-                    auth = 'true';
-                    pass = data.hash;
-                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                        objJsChat.manageLoginLoader();
-                    }
-                    if(loginType == "first"){
-                        initiateChatConnection();
-                        objJsChat._loginStatus = 'Y';
-                        objJsChat._startLoginHTML();
-                    }
-                }
-                else{
-                    if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
-                        setTimeout(function(){
-                            checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
-                        },timer);
-                    }
-                    else{
-                        auth = 'false';
-                        invokePluginLoginHandler("failure");
+    var loggedInUserAuth = readCookie("AUTHCHECKSUM");
+        var chatParams = {
+            "authchecksum":loggedInUserAuth
+        };
+    if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
+        $.ajax({
+            url: listingWebServiceUrl["chatAuth"]+"?p="+n,
+            async: false,
+            timeout: 60000,
+            cache: false,
+            type: 'POST',
+            data: chatParams,
+            success: function (authResponse) {
+                if (authResponse.data) {
+                    if(typeof authResponse.data.hash !== 'undefined'){
+                        auth = 'true';
+                        pass = authResponse.data.hash;
                         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                             objJsChat.manageLoginLoader();
                         }
+                        if(loginType == "first"){
+                            initiateChatConnection();
+                            objJsChat._loginStatus = 'Y';
+                            objJsChat._startLoginHTML();
+                        }
                     }
+                    else{
+                        if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
+                            setTimeout(function(){
+                                checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
+                            },timer);
+                        }
+                        else{
+                            auth = 'false';
+                            invokePluginLoginHandler("failure");
+                            if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                                objJsChat.manageLoginLoader();
+                            }
+                        }
+                    }
+                    localStorage.removeItem("cout");
+
+                    /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
+                        format: CryptoJSAesJson
+                    }).toString(CryptoJS.enc.Utf8));
+                    */
+                } else {
+                    auth = 'false';
+                    checkForSiteLoggedOutMode(data);
+                    invokePluginLoginHandler("failure");
                 }
-                localStorage.removeItem("cout");
-                
-                /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
-                    format: CryptoJSAesJson
-                }).toString(CryptoJS.enc.Utf8));
-                */
-            } else {
-                auth = 'false';
-                checkForSiteLoggedOutMode(data);
-                invokePluginLoginHandler("failure");
+            },
+            error: function (xhr) {
+                    auth = 'false';
+                    invokePluginLoginHandler("failure");
+                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                        objJsChat.manageLoginLoader();
+                    }
+                    //return "error";
             }
-        },
-        error: function (xhr) {
-                auth = 'false';
-                invokePluginLoginHandler("failure");
-                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                    objJsChat.manageLoginLoader();
-                }
-                //return "error";
-        }
-    });
+        });
+    }
     return auth;
 }
 
@@ -875,6 +1274,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
+            //send Message receieved stanza
+            strophieWrapper.sendReceivedReadEvent(msgObj["to"]+"@"+openfireServerName, msgObj["from"]+"@"+openfireServerName, msgObj["msg_id"], strophieWrapper.msgStates["MESSAGE_RECEIVED"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
@@ -903,6 +1304,20 @@ function invokePluginReceivedMsgHandler(msgObj) {
                 objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
             }*/
         }
+    }
+}
+
+/*play sound on receiving the chat message
+ * @params:none
+ */
+function playChatNotificationSound(){
+    //if current url is not jeevansathi tab and jspc chat is on
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
+    //console.log("playChatNotificationSound",isCurrentJeevansathiTab);
+    if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
+        //console.log("here playChatNotificationSound");
+        var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
+        audio.play();
     }
 }
 
@@ -1008,8 +1423,11 @@ function getProfileImage() {
 function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
+    //var patt3 = new RegExp("chatListing");
+    //var patt4 = new RegExp("presence_");
+    var patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime");
     for(var key in localStorage){
-        if(patt1.test(key) || patt2.test(key)){
+        if(patt1.test(key) || patt2.test(key) || /*patt3.test(key) || patt4.test(key) || */patt5.test(key) || patt6.test(key)){
             localStorage.removeItem(key);
         }
     }
@@ -1018,7 +1436,8 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name'];
+    //var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name','nonRosterCLUpdated','isCurrentJeevansathiTab'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1052,18 +1471,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                 if (response["responseStatusCode"] == "0") {
                    // console.log(response);
                     if (response["actiondetails"]) {
-                        if (response["actiondetails"]["errmsglabel"]) {
-                            outputData["cansend"] = outputData["cansend"] || false;
-                            outputData["sent"] = false;
-                            outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                            outputData["errorMsg"] = (response["errorMsg"] == undefined ? response["actiondetails"]["errmsglabel"] : response["errorMsg"]);
+                            outputData["cansend"] = (response["cansend"] != undefined ? response["cansend"] : true);
+                            outputData["sent"] = (response["sent"] != undefined ? response["sent"] : false);
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                        } else {
-                            outputData["cansend"] = true;
-                            outputData["sent"] = true;
-                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                            outputData['eoi_sent'] = response['eoi_sent'];
-                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
-                        }
+                            outputData['eoi_sent'] = (response["eoi_sent"] != undefined ? response["eoi_sent"] : false);
+                            if(outputData["sent"] == true){
+                                strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
+                            }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
@@ -1117,7 +1532,8 @@ function contactActionCall(contactParams) {
             checkSum = contactParams["checkSum"],
             trackingParams = contactParams["trackingParams"],
             extraParams = contactParams["extraParams"],
-            nickName = contactParams["nickName"];
+            nickName = contactParams["nickName"],
+            userId = (receiverJID.split("@"))[0];
         var url = chatConfig.Params["actionUrl"][action],
             channel = device;
         
@@ -1148,6 +1564,8 @@ function contactActionCall(contactParams) {
                 response = data;
                 
                 if (response["responseStatusCode"] == "0") {
+                    //console.log("success of chat block");
+                    updateNonRosterListOnCEAction({"user_id":userId,"action":action});
                     /*updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
@@ -1262,8 +1680,38 @@ function setLogoutClickLocalStorage(key){
     }
 }
 
+function getFromLocalStorage(key){
+    return localStorage.getItem(key);
+}
+
+function setInLocalStorage(key, value){
+    localStorage.setItem(key, value);
+}
+
+/*
+function updatePresenceAfterInterval(){
+    //console.log("In updatePresenceAfterInterval");
+    var presenceData = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
+    if(presenceData) {
+        var rosterDetails = JSON.parse(getFromLocalStorage('chatListing'+loggedInJspcUser));
+        $.each(presenceData, function (uid, chatStatus) {
+            strophieWrapper.updatePresence(uid, chatStatus);
+            if(rosterDetails[uid]) {
+                rosterDetails[uid]["rosterDetails"]["chat_status"] = chatStatus;
+            }
+        });
+        setInLocalStorage('chatListing'+loggedInJspcUser,JSON.stringify(rosterDetails));
+    }
+}
+*/
+
 $(document).ready(function () {
     //console.log("Doc ready");
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
+    if(isCurrentJeevansathiTab == undefined && showChat == "1"){
+        localStorage.setItem("isCurrentJeevansathiTab",1);
+    }
+  
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
@@ -1284,12 +1732,32 @@ $(document).ready(function () {
             //setLogoutClickLocalStorage("unset");  
         });
         
+        //event to detect focus on page
         $(window).focus(function() {
+            //console.log("Doc focus");
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus in",time);*/
+            localStorage.setItem("isCurrentJeevansathiTab",1);
         });
+
+        //event to detect focus out of page
+        $(window).on("blur",function() {
+            //console.log("Doc blur");
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus out",time);*/
+            //console.log("blur");
+            localStorage.setItem("isCurrentJeevansathiTab",0);
+        });
+
+        
+
+        
         $(window).on("offline", function () {
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
@@ -1444,10 +1912,16 @@ $(document).ready(function () {
                 //console.log("in onLogoutPreClick",fromSiteLogout);
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
+                //clearInterval(updatePresenceIntervalId);
                 strophieWrapper.initialRosterFetched = false;
+                strophieWrapper.initialNonRosterFetched = false;
+                //clear polling of non roster groups listing
+                clearNonRosterPollingInterval();
                 strophieWrapper.disconnect();
+                //strophieWrapper.Roster = {};
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");
+                ifChatListingIsCreated = 0;
                 if(fromSiteLogout == "true"){
                     setLogoutClickLocalStorage("unset");
                 }
@@ -1490,7 +1964,6 @@ $(document).ready(function () {
                     output["cansend"] = false;
                     output["sent"] = false;
                 }
-              
                 return output;
             }
             /*objJsChat.onPostBlockCallback = function (param) {
@@ -1498,47 +1971,60 @@ $(document).ready(function () {
                 //the function goes here which will send user id to the backend
             }*/
         objJsChat.onPreHoverCallback = function (pCheckSum, username, hoverNewTop, shiftright) {
-           
-            jid = [];
-            jid[0] = "'" + pCheckSum + "'";
-            url = "/api/v1/chat/getProfileData";
+          
+           url = profileServiceUrl + '/profile/v1/profile';
+           var authchecksum = readCookie("AUTHCHECKSUM");
+	   		
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 async: false,
                 data: {
-                    jid: jid,
-                    username: username,
-                    profilechecksum: pCheckSum
+                    view : "vcard",
+                    pfids : pCheckSum,
                 },
+		        headers:{
+			    "JB-Profile-Identifier" : authchecksum,
+			    "JB-Raw-Data" : false
+		        },
                 url: url,
-                success: function (data) {
-                    ////console.log("Nitishvcard");
-                   
-                    if(data["responseStatusCode"] == "0"){
-                        if (data.photo == '' && loggedInJspcGender) {
+                success: function (response) {
+                
+		 
+		        if(response.header.status == 200) { 
+                                for(var i=0;i<response.data.items.length;i++) {
+    				    var data = response.data.items[i];
+    		
+    				    data.jid = data.profileid;
+    				    data.education = data.eduLevelNew;
+    				    data.location = (typeof data.cityRes == "string" &&  data.cityRes.length) ? data.cityRes : data.countryRes;
+    				    if (data.photo == '' && loggedInJspcGender) {
                             if (loggedInJspcGender == "F") {
-                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
-                            } else if (loggedInJspcGender == "M") {
-                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
-                            }
-                        }
-                        objJsChat.updateVCard(data, pCheckSum, function () {
-                            $('#' + username + '_hover').css({
-                                'top': hoverNewTop,
-                                'visibility': 'visible',
-                                'right': shiftright
-                            });
-                            
-                        });
+                	                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
+        	                    } else if (loggedInJspcGender == "M") {
+                        	        data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                        	    }
+                            } 
+    			
+        	                objJsChat.updateVCard(data, pCheckSum, function () {
+                	            $('#' + username + '_hover').css({
+                        	        'top': hoverNewTop,
+                                    'visibility': 'visible',
+        	                        'right': shiftright
+                                });
+    	
+        	                }); 
+        			}
+                    //send the contact engine buttons check stanza
+                    if(chatConfig.Params[device].enableLoadTestingStanza == true){
+                        strophieWrapper.sendContactStatusRequest(username+"@"+openfireServerName,"check");
                     }
-                    else {
-                        checkForSiteLoggedOutMode(data);
-                    }
-                }
-            });
-        }
+                } else {
+			         checkForSiteLoggedOutMode({"responseStatusCode":9});
+		        }
+            }
+        });
+       }
         objJsChat.start();
-        
     }
 
 });

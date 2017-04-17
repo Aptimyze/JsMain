@@ -55,4 +55,30 @@ class profileDisplay{
 		$profileid = $key;
 		return JsCommon::createChecksumForProfile($profileid);
 	}
+	
+	/*
+	* 	This function is used to handle next previous for myjs page
+	*	listing type denotes the list type and offset denotes the current profile number.
+	*/
+
+	public function getNextPreviousProfileForMyjs($iListingType,$iOffset)
+	{	
+
+
+		$profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+
+		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
+	
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
+
+
+		return JsCommon::createChecksumForProfile($profileIdToReturn);
+		
+	}
+
+
+
 }

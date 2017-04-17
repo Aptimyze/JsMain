@@ -36,7 +36,7 @@ class GetRosterData
 		$skipArray = $this->getSkipProfiles($type);
 
 		$newLimit = $limit+$limit;//ForOptimization
-		$conditions = $this->getConditions($type,$newLimit);
+		$conditions = $this->getConditions($type);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
 		if(is_array($profilelists))
 		{
@@ -52,9 +52,11 @@ class GetRosterData
 			*code added to condiser profile who are logged in in LOGIN_MONTHS_GAP time
 			*/
 			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
-			$dateAfterMonthGap = date("Y-m-d",$monthGap);
+			$dateAfterMonthGap = CommonUtility::makeTime(date("Y-m-d",$monthGap));
 			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
-			$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
+			$orderBy = "LAST_LOGIN_DT DESC";
+			
+			//$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
 
 			$profArrObj                = new ProfileArray();
 			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($whereArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave","",$greaterThanEqualArrayWithoutQuote,$orderBy,$limit);
@@ -95,7 +97,7 @@ class GetRosterData
 	{
 		if ($type == "INTEREST_RECEIVED") {
 			$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-			$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+			$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 			$back_90_days                                     = date("Y-m-d", $yday);
 			$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 		}

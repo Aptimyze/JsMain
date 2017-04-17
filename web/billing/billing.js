@@ -170,6 +170,7 @@ function define_source_val_array()
 	source_arr_value[6] = "IVR";
 	source_arr_value[7] = "CASH";
 	source_arr_value[8] = "GHAR_PAY_CASH";
+	source_arr_value[9] = "PayTM_ON_DELIVERY";
 
 	return source_arr_value;
 }
@@ -188,7 +189,7 @@ function define_source_label_array()
 	source_arr_label[6] = "IVR Code";
 	source_arr_label[7] = "Cash Receipt Number";
 	source_arr_label[8] = "Ghar Pay Cash Receipt Number";
-
+	source_arr_label[9] = "Paytm Receipt Number";
 	return source_arr_label;
 }
 
@@ -204,6 +205,7 @@ function define_disable_array()
 	disable_arr[4] = "TT";
 	disable_arr[5] = "IVR";
 	disable_arr[6] = "GHAR_PAY_CASH";
+	disable_arr[7] = "PayTM_ON_DELIVERY";
 
 	return disable_arr;
 }

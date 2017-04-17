@@ -1,7 +1,9 @@
 <?php
 Abstract class ApiAuthentication
 {
-	private $request;
+	public static $loginTracking="LOGIN_TRACKING";	
+        public static $logTrackingThroughQueue=true;
+    private $request;
 	protected $encryptSeprator="______";
 	protected $_KEY = "Radhe Shaam";
     protected $_SUBKEY = "muhaafiz Khudi ke";
@@ -30,7 +32,17 @@ Abstract class ApiAuthentication
 	private $dateTime2 ='22';
 	private $expiryTime = 2592000;
 	public $mailerProfileId;
-	
+
+	protected $logLoginHistoryTracking=false;
+	protected $recentUserTracking=false;
+	protected $misLoginTracking=false;
+	protected $appLoginProfileTracking=false;
+	protected $logLogoutTracking=false;
+	protected $recentLogTracking=false;
+	protected $channel='R';
+	protected $loc="";
+	protected $loggedInPId;
+
 	public function __construct($request)
 	{
 		$this->request=$request;
@@ -57,12 +69,7 @@ Abstract class ApiAuthentication
 					
 					//What about archived users.
 					//What about tracking
-					
-					if($loginData[ACTIVATED]<>'D' && $this->trackLogin)
-					{
-						$this->insert_into_login_history($loginData["PROFILEID"]);
-					}
-				
+					$this->channel='D';
 					$this->loginData=$loginData;
 					if($this->isNotApp && $this->loginData[PROFILEID] && $this->loginData["GENDER"]=="")
 						return $this->loginData;
@@ -91,15 +98,13 @@ Abstract class ApiAuthentication
 						$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
 						if($this->trackLogin)
 						{
-							$this->RecentUserEntry();
-							$this->loginTracking($this->loginData[PROFILEID],"D",MobileCommon::isApp());
+							$this->logLoginHistoryTracking=true;
+							$this->recentUserTracking=true;
+							$this->misLoginTracking=true;
 						}
 						//appPromotion off for already installed users
 						if(!$this->isNotApp)
-						{
-							$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-							$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($this->loginData[PROFILEID]);
-						}
+							$this->appLoginProfileTracking=true;
 					}
 			
 					if($this->loginData)
@@ -110,7 +115,7 @@ Abstract class ApiAuthentication
 							$this->rememberMe=0;
 						$this->setcookies($this->loginData,$email,$password);
 					}
-					CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
+					$this->CommonLoginTracking();
 					return $this->loginData;
 				}
 			}
@@ -125,10 +130,13 @@ Abstract class ApiAuthentication
 	*/
 	public function logout($profileId)	//to be changed in connect_auth.inc
 	{
-		$this->removeRecentLog($profileId);
+                $this->loggedInPId=$profileId;
+		$this->recentLogTracking=true;
 		$this->removeLoginCookies();
-		$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($profileId));
-		$dbObj->insert($profileId,CommonFunction::getIP());
+		$this->logLogoutTracking=true;
+                if(MobileCommon::isMobile())
+                    $this->browserNotificationLogout= true;
+		$this->CommonLoginTracking();
 	}
 
 	
@@ -167,13 +175,19 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-                    	$this->loginData=$this->IsAlive($loginData,$gcm);
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification") || strstr($_SERVER["REQUEST_URI"],"api/v3/notification")){
+				$this->loginData =$loginData;
+				$this->loginData[AUTHCHECKSUM]=$authChecksum;
+				return $this->loginData;
+			}
+			else
+                $this->loginData=$this->IsAlive($loginData,$gcm);
+
 			if($this->loginData)
 			{
 				if($this->trackLogin)
 				{
 					$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
-					$this->RecentUserEntry();
 				}
 				else
 					$this->loginData[AUTHCHECKSUM]=$authChecksum;
@@ -188,9 +202,10 @@ Abstract class ApiAuthentication
 				if($this->isNotApp)
 				{
 					$this->removeLoginCookies();
-					$this->removeRecentLog($loginData[PROFILEID]);
+					$this->recentLogTracking=true;
 				}
 			}
+			$this->CommonLoginTracking();
 			return $this->loginData;
 		}
 		return false;
@@ -206,9 +221,9 @@ Abstract class ApiAuthentication
 		//need to check the DOB,GENDER,ACTIVATION,INCOMPLETE fields
 		//Get the Login Data from JProfile -->call Store
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_masterRep");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		else
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
 		//If any changes Found then logout user
 		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
@@ -232,9 +247,9 @@ Abstract class ApiAuthentication
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		else
-			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		
 		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
@@ -242,14 +257,15 @@ Abstract class ApiAuthentication
 			$loginData[TIME]=time();
 			if($time>$this->inActive && $this->trackLogin)
 			{
-				CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
+				//CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
 				if($this->rememberMe)
 				{
-					$this->insert_into_login_history($loginData["PROFILEID"]);
+					$this->logLoginHistoryTracking=true;
+					$this->misLoginTracking=true;
 					if($gcm)
-						$this->loginTracking($loginData[PROFILEID],"G",MobileCommon::isApp());
+						$this->channel='G';
 					else
-						$this->loginTracking($loginData[PROFILEID],"R",MobileCommon::isApp());
+						$this->channel='R';
 				}
 				else
 				{
@@ -259,78 +275,127 @@ Abstract class ApiAuthentication
 				}
 			}
 			else if($gcm){
-
-				$this->loginTracking($this->loginData[PROFILEID],"G",MobileCommon::isApp());
+				$this->misLoginTracking=true;
+				 $this->channel='G';
 			}
-
+			if($this->trackLogin)
+				$this->recentUserTracking=true;
 			$loginData["EMAIL"]=$loggedInProfileObj->getEMAIL();
 			$loginData["PHONE_MOB"]=$loggedInProfileObj->getPHONE_MOB();
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
             $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
             $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
+            $loginData["LAST_LOGIN_DT"]=$loggedInProfileObj->getLAST_LOGIN_DT();
 			return $loginData;
 		}
                 
 		return null;
 	}
      
-     
-	/*
-	* @function: loginTracking
-	* track all logins in login_tracking table
-	* @param int profileid,char channel,char website version
-	*/
-	public function loginTracking($profileId,$channel,$websiteVersion,$location="")
+    public function CommonLoginTracking()
 	{
-		if(!$websiteVersion)
-		{
-			if($this->isNotApp){
-				if($this->isNewMobileSite){
-					$websiteVersion="N";
-					if(MobileCommon::isAppWebView()){
-						$websiteVersion="A";
+                if($this->loginData['ACTIVATED']=='D') return ;
+		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
+		$profileId=$this->loginData["PROFILEID"];
+		$ip=CommonFunction::getIP();
+		$queueArr['ip']=$ip;
+		$queueArr['currentTime'] = date("Y-m-d H:i:s");
+		if($this->misLoginTracking){
+			$websiteVersion=MobileCommon::isApp();
+	        if(!$websiteVersion)
+			{
+				if($this->isNotApp){
+					if(MobileCommon::isNewMobileSite()){
+						$websiteVersion="N";
+						if(MobileCommon::isAppWebView()){
+							$websiteVersion="A";
+						}
 					}
+					elseif(MobileCommon::isDesktop())
+						$websiteVersion="D";				
 				}
-				elseif(MobileCommon::isDesktop())
-					$websiteVersion="D";				
 			}
-		}
-		include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
-		$loginTracking= LoginTracking::getInstance($profileId);
-		$loginTracking->setChannel($channel);
-		$loginTracking->setWebisteVersion($websiteVersion);
-		
-		if(!$location)
-		{
-			if(sfContext::getInstance()->getRequest()->getParameter('link_id') && strpos($_SERVER[REQUEST_URI],"/e/")!==false){
-				$link=LinkFactory::getLink(sfContext::getInstance()->getRequest()->getParameter('link_id'));
-				$request_uri=$link->getLinkAddress();
+			$location=$this->loc;
+			if(!$location)
+			{
+				if(sfContext::getInstance()->getRequest()->getParameter('link_id') && strpos($_SERVER[REQUEST_URI],"/e/")!==false){
+					$link=LinkFactory::getLink(sfContext::getInstance()->getRequest()->getParameter('link_id'));
+					$request_uri=$link->getLinkAddress();
+				}
+				else
+					$request_uri=$_SERVER[REQUEST_URI];
+				$page=explode('?',$request_uri);
+				$page=$page[0];
+				$page=explode('/',$page);
+				$no=count($page);
+				$page=$page[$no-1];
 			}
 			else
-				$request_uri=$_SERVER[REQUEST_URI];
-			$page=explode('?',$request_uri);
-			$page=$page[0];
-			$page=explode('/',$page);
-			$no=count($page);
-			$page=$page[$no-1];
+			{
+				if($location)
+					$request_uri=$location;			
+				$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
+				$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
+				$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
+				$request_uri=str_replace("&checksum=","&chksum=",$request_uri);
+				$request_uri=str_replace("?checksum=","?ckhsum=",$request_uri);
+				$request_uri=str_replace(urlencode($echecksum),"",$request_uri);
+				$request_uri=str_replace($echecksum,"",$request_uri);
+				$request_uri=ltrim($request_uri,"/");
+				$page=$request_uri;
+			}
+			//$this->loginTracking($this->loginData["PROFILEID"],$websiteVersion,$this->channel,$page);
+			
+			$queueArr['websiteVersion']=$websiteVersion;
+			$queueArr['channel']=$this->channel;
+			$queueArr['page']=$page;
+			$queueArr['misLoginTracking']=true;
 		}
-		else
+		
+		if($this->logLoginHistoryTracking){	
+			$queueArr['logLoginHistoryTracking']=true;
+		}
+
+        if($this->appLoginProfileTracking)
 		{
-			if($location)
-				$request_uri=$location;			
-			$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
-			$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
-			$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
-			$request_uri=str_replace("&checksum=","&chksum=",$request_uri);
-			$request_uri=str_replace("?checksum=","?ckhsum=",$request_uri);
-			$request_uri=str_replace(urlencode($echecksum),"",$request_uri);
-			$request_uri=str_replace($echecksum,"",$request_uri);
-			$request_uri=ltrim($request_uri,"/");
-			$page=$request_uri;
+			$queueArr['appLoginProfileTracking']=true;
+			
 		}
-			$loginTracking->setRequestURI($page);
-		$loginTracking->loginTracking();
+		if($this->logLogoutTracking){
+			$queueArr['logLogoutTracking']=true;
+		}
+		if($this->browserNotificationLogout){
+			$queueArr['browserNotificationLogout']=true;
+		}
+                
+                if($this->recentUserTracking)
+			$this->RecentUserEntry();
+		
+		if($this->recentLogTracking)
+			$this->removeRecentLog();
+                
+        if($queueArr['logLoginHistoryTracking'] || $queueArr['misLoginTracking'] || $queueArr['appLoginProfileTracking'] || $queueArr['logLogoutTracking'])
+        {
+        if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
+        	self::completeLoginTracking($queueArr);
+        }
+        $curDat = date('Y-m-d');
+        if($queueArr['profileId'] && JsMemcache::getInstance()->get("DISC_HIST_".$curDat."_".$queueArr['profileId']) != "Y"){
+            $prodObj=new Producer();
+            if($prodObj->getRabbitMQServerConnected())
+            {
+                $body = array("PROFILEID"=>$queueArr['profileId'],"DATE"=>$curDat);
+                $type = "DISCOUNT_LOG";
+                $queueData = array('process' =>'DISCOUNT_HISTORY',
+                                    'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                                  );
+                $prodObj->sendMessage($queueData);
+                JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
+            }
+            unset($prodObj,$queueData,$body);
+        }
 	}
+	
 	
 	/*
 	* @function: getAuthChecksumFromAuth
@@ -456,8 +521,8 @@ Abstract class ApiAuthentication
 		if(is_numeric($pid))
 		{
 			if(!$this->isMobile){
-				$dbObj=new userplane_recentusers;
-				$dbObj->DeleteRecord($pid);
+				//$dbObj=new userplane_recentusers;
+				//$dbObj->DeleteRecord($pid);
 			}
 			
 			// Remove Online-User
@@ -471,49 +536,12 @@ Abstract class ApiAuthentication
 			}
 		}
 	}	
-    /*
-	* @function: insert_into_login_history
-	* Inert data into Login History tables for tracking login info
-	* @param int profileID
-	*/        
-	public function insert_into_login_history($profileID)
-	{	
-		
-		$ip=CommonFunction::getIP();
-		$dbName = JsDbSharding::getShardNo($profileID);
-		//Insert Into LOG_LOGIN_HISTORY
-		$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
-		$dbLogLoginHistory->insertIntoLogLoginHistory($profileID,$ip);
-		
-		//Insert Ignore Into LOGIN_HISTORY 
-		$dbLoginHistory= new NEWJS_LOGIN_HISTORY($dbName);
-		$insert=$dbLoginHistory->insertIntoLoginHistory($profileID);
-		//if exist then update
-		if(!$insert)
-		{
-			//if exist then update  newjs.LOGIN_HISTORY_COUNT
-			$dbLoginHistoryCount= new NEWJS_LOGIN_HISTORY_COUNT($dbName);
-			$update=$dbLoginHistoryCount->updateLoginHistoryCount($profileID);
-            
-            //If No Update then replace
-            if(!$update)
-			$dbLoginHistoryCount->replaceLoginHistoryCount($profileID);
-		}
-		//update Jprofile LAST_LOGIN_DT
-		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-				$dbJprofile=new JPROFILE("newjs_masterRep");
-			else
-				$dbJprofile=new JPROFILE("newjs_master");
-		$dbJprofile->updateLoginSortDate($profileID);
-
-	}
+    
 
 	/** Update recent users entry, required to trap in online users
 	*/
 	public function RecentUserEntry()
 	{
-		$allow=1;
-		$pid=intval($this->loginData[PROFILEID]);
 		if(!$this->isMobile)
 		{
 			$allow=0;
@@ -532,14 +560,13 @@ Abstract class ApiAuthentication
 			if($allow)
 			@setcookie("LOGUSERENTRY",time(),0,"/",$this->domain);
 		}
+
+		$allow=1;
+		$pid=intval($this->loginData[PROFILEID]);
 		if($allow && $pid && !$this->isMobile)
 		{
-			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-				$dbObj=new userplane_recentusers("newjs_masterRep");
-			else
-				$dbObj=new userplane_recentusers("newjs_master");
-			$dbObj->replacedata($pid);
-
+			//$dbObj=new userplane_recentusers("newjs_master");
+			//$dbObj->replacedata($pid);
 		}
 
 		// Add Online-User
@@ -593,9 +620,9 @@ Abstract class ApiAuthentication
 					$timediff = $curTime-$arr[1];
 					$mailedtime = date("Y-m-d H:i:s",$arr[1]);
 					if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+						$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
 					else
-						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+						$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
 					if($timediff > $this->expiryTime || !$dbObj->IsAlive($profileid,$mailedtime))
 					{
 						
@@ -746,5 +773,85 @@ Abstract class ApiAuthentication
 
 		}
 	}
+
+	public function sendLoggingDataQueue($type,$body){
+
+			
+        if(self::$logTrackingThroughQueue)
+        {
+            $producerObj=new Producer();
+            if($producerObj->getRabbitMQServerConnected())
+            {
+                    $trackingData = array('process' =>'LOGGING_TRACKING',
+                                            'data'=>
+                                            array(
+                                            'body'=>$body,
+                                             'type'=>$type, 
+                                            'redeliveryCount'=>0 )
+                                            );
+                    $producerObj->sendMessage($trackingData);
+                    return true;
+            }
+
+	}
+
+        return false;
+}
+
+	public static function completeLoginTracking($trackingData)
+	{
+		$profileId = $trackingData["profileId"];
+		if(!$profileId)return ;
+		$ip = $trackingData['ip'];
+		$currentTime = $trackingData['currentTime'];
+		if($trackingData[misLoginTracking])
+		{
+			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
+			$loginTracking= LoginTracking::getInstance($profileId);
+			$loginTracking->setChannel($trackingData["channel"]);
+			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
+			$loginTracking->setRequestURI($trackingData["page"]);
+			$loginTracking->loginTracking('',$currentTime);
+		}
+		if($trackingData[logLoginHistoryTracking])
+		{
+			$dbName = JsDbSharding::getShardNo($profileId);
+			//Insert Into LOG_LOGIN_HISTORY
+			$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
+			$dbLogLoginHistory->insertIntoLogLoginHistory($profileId,$ip,$currentTime);
+			
+			//Insert Ignore Into LOGIN_HISTORY 
+			$dbLoginHistory= new NEWJS_LOGIN_HISTORY($dbName);
+			$insert=$dbLoginHistory->insertIntoLoginHistory($profileId,$currentTime);
+			//if exist then update
+			if(!$insert)
+			{
+				//if exist then update  newjs.LOGIN_HISTORY_COUNT
+				$dbLoginHistoryCount= new NEWJS_LOGIN_HISTORY_COUNT($dbName);
+				$update=$dbLoginHistoryCount->updateLoginHistoryCount($profileId);
+	            if(!$update)
+				$dbLoginHistoryCount->replaceLoginHistoryCount($profileId);
+			}
+			$dbJprofile=new JPROFILE("newjs_master");
+			$dbJprofile->updateLoginSortDate($profileId,$currentTime);
+		}
+		if($trackingData["appLoginProfileTracking"])
+		{
+			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+		}
+		if($trackingData["logLogoutTracking"])
+		{
+			$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($profileId));
+			$dbObj->insert($profileId,$ip,$currentTime);
+		}
+		if($trackingData["browserNotificationLogout"])
+		{
+			    $registrationIdObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION();
+			    $registrationIdObj->updateNotificationDisableStatus($profileId,'M','Y'); 
+		}
+
+	}
+
 }
 ?>

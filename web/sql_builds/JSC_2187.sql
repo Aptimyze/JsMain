@@ -1,0 +1,2 @@
+use billing;
+ALTER TABLE billing.PURCHASES ADD COLUMN COUNTRY varchar(60) NOT NULL DEFAULT '';

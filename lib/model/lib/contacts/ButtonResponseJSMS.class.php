@@ -787,6 +787,12 @@ Class ButtonResponseJSMS
 			$button["label"]  = "Interest Sent";
 			$button["enable"]  = false;
 		}
+		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+		{
+			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
+			$button["label"]  = "Interest Saved";
+			$button["enable"]  = false;
+		}
 		else
 		{
 			$button = $this->getInitiateButton($this->page);

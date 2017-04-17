@@ -722,7 +722,7 @@ if(isset($_COOKIE["JS_GENDER"]))
 $smarty->assign("CONTACT_OPTION",'M');
 
 $now = date("Y-m-d G:i:s");
-$today=date("Y-m-d");
+$today= CommonUtility::makeTime(date("Y-m-d"));
 if($submit_pg2) // for the IE
 {
 	/*Code to check spammer, checking for request from same ip. Block registration if request > 5 within 1 minute*/

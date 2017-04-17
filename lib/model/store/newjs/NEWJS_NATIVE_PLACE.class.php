@@ -168,7 +168,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 	}
    }
    private function logFunctionCalling($funName)
-    {
+    {return;
       $key = __CLASS__.'_'.date('Y-m-d');
       JsMemcache::getInstance()->hIncrBy($key, $funName);
       

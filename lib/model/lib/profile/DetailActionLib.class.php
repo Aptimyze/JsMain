@@ -198,7 +198,7 @@ class DetailActionLib
 		$bOwnProfile = false;
 		if($actionObject->loginProfile->getPROFILEID() ===  $actionObject->profile->getPROFILEID())
 			$bOwnProfile = true;
-			
+
 		$bPhotoReq = $actionObject->PHOTO_REQUESTED ? 'Y' : 'N';
 		//contact_status will be initalzed by call to IsNoProfile
 		$return=ProfileCommon::getprofilePicForApi($actionObject->profile,$actionObject->contact_status,$login,$bPhotoReq);
@@ -454,7 +454,24 @@ class DetailActionLib
 		if($actionObject->loginProfile->getPROFILEID() && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
+			$randomNumber = rand(0,100);
+			if($randomNumber>=100)
+			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+			}
+			else
+			{
+				$producerObj = new Producer();
+				if($producerObj->getRabbitMQServerConnected())
+				{
+					$updateSeenProfileData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>array('fromSym'=>$fromSym,'type'=>$type,'mypid'=>$mypid,'updatecontact'=>$updatecontact,'profileid'=>$profileid)));
+					$producerObj->sendMessage($updateSeenProfileData);
+				}
+				else
+				{
+//					$this->sendMail();
+				}
+			}
 		}
 	}
 	
@@ -578,20 +595,20 @@ class DetailActionLib
 	}
     
     public static function GetNextPreviousForContact($request,$actionObj)
-    {
+    {	
         $szContactID = $request->getParameter("contact_id");
         $iTotalRecord = $request->getParameter('total_rec');
         $iOffset = $request->getParameter('actual_offset');//Offset Range from 1 to TotalRecords
 
         if((strlen($szContactID)!=0 && $actionObj->loginProfile->getPROFILEID() && ($iOffset)>0 && ($iOffset)<=$iTotalRecord))
-        {
+        {	
             $actionObj->prevLink = null;
             $actionObj->nextLink = null;
             $actionObj->SHOW_PREV = false;
             $actionObj->SHOW_NEXT = false;
             $actionObj->SHOW_NEXT_PREV = 1;
             if($iOffset>1)
-            {
+            {	
                 $actionObj->SHOW_PREV = true;
                 $actionObj->prevLink = "contact_id=".$szContactID."&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1);
             }
@@ -627,6 +644,7 @@ class DetailActionLib
                 if($actionObj->next_prev_prof)
                     $actionObj->setViewed($actionObj->next_prev_prof);
             }
+
             return true;
         }
         return false;
@@ -705,13 +723,21 @@ class DetailActionLib
      * Common Function to handle Next Previous Logic
      */
     public static function handleNextPreviousLogic($request,$actObj)
-    {
+    {	
+    	//Hit is coming from Myjs Page
+    	$bHitFromMyjsPage = strlen($request->getParameter("hitFromMyjs"))!=0?true:false;
+
         //For Contact Listing Page
         $bIsContactListingPage = strlen($request->getParameter("contact_id"))!=0?true:false;
         
         //For Ecp Listing Page
         $bIsJsmsEcpListingPage = strlen($request->getParameter("similarOf"))!=0?true:false;
         
+        //For MyjsPage Next Previous will be handled differently 
+        if($bHitFromMyjsPage){
+            return self::GetNextPreviousForMyjs($request,$actObj);
+        }
+
         //Logic for Contact Listing Page
         if($bIsContactListingPage){
             return self::GetNextPreviousForContact($request,$actObj);
@@ -737,35 +763,146 @@ class DetailActionLib
         $totalRec  = $request->getParameter("total_rec");
         $username  = $request->getParameter("username");
         
-        if(strlen($stype)>6)
+        if(strlen($stype)>6 && $stype!="{{stypeInfo}}")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","Stype whitelisting 3","STYPE :$stype:$http_msg");
         }
         
-        if(strlen($sort)>3)
+        if(strlen($sort)>3 && $sort!="null")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","Sort whitelisting 3","SORT :$sort:$http_msg");
         }
         
-        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId')
+        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId' && $contactId!='contactId' && $contactId!='{contact_id}')
         {
             $http_msg=print_r($_SERVER,true);
-            mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :contactId:$http_msg");
+            mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :$contactId:$http_msg");
         }
         
-        if($totalRec && !is_numeric($totalRec))
+        if($totalRec && !is_numeric($totalRec) && $totalRec != "{total_rec}")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
         }
         
-        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>10)
-        {
-            $http_msg=print_r($_SERVER,true);
-            mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
+//        if(strlen($username)>15)
+//        {
+//            $http_msg=print_r($_SERVER,true);
+//            mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
+//        }
+    }
+
+   /*	This function is used to handle next previous from myjs page
+   *	
+   */
+
+    public static function GetNextPreviousForMyjs($request,$actionObj)
+    {	
+    	$maxProfilesOnMyjs = 20;
+        $iTotalRecord = $request->getParameter('total_rec');
+        //Offset Range from 1 to TotalRecords
+        $iOffset = $request->getParameter('actual_offset');
+        $iListingType = $request->getParameter('listingName');
+        $iListingType = strtoupper($iListingType);
+        $profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+
+        if($iOffset%$maxProfilesOnMyjs == 1 && $iOffset > 1)
+        {	
+        	$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+        	$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
+
+        	$request->setParameter('caching',0);
+        	$request->setParameter('hitFromMyjs',1);
+
+        	if($iListingType == 'VERIFIEDMATCHES')
+        	{
+        		$request->setParameter('verifiedMatches',1);
+        	}
+
+        	if($iListingType == 'JUSTJOINED')
+        	{
+        		$request->setParameter('searchBasedParam','justJoinedMatches');
+        		$request->setParameter('justJoinedMatches',1);
+        	}
+
+        	if($iListingType == 'DESIREDPARTNERMATCHES')
+        	{
+        		$request->setParameter('partnermatches',1);
+        	}
+        	if($iListingType == 'LASTSEARCH')
+        	{
+        		$request->setParameter('lastsearch',1);
+        	}
+        	if($iListingType == 'DAILYMATCHES')
+        	{
+        		$request->setParameter('matchalerts',1);
+        	}
+        	ob_start();
+        	$request->setParameter("useSfViewNone",1);
+        	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');
+        	$output = (array)(json_decode(ob_get_contents(),true));
+
+        	ob_end_clean();
+        	$iterate = $iOffset-1;
+        	if(is_array($output) && array_key_exists("profiles",$output)){
+        	foreach ($output['profiles'] as $key => $value) {
+        		array_push($cachedResultsPoolArray, $value['profileid']);
+        	}
+        	}
+
+        	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
+							        	
         }
+
+        if($actionObj->loginProfile->getPROFILEID() && ($iOffset)>0 && ($iOffset)<=$iTotalRecord)
+        {	
+            $actionObj->prevLink = null;
+            $actionObj->nextLink = null;
+            $actionObj->SHOW_PREV = false;
+            $actionObj->SHOW_NEXT = false;
+            $actionObj->SHOW_NEXT_PREV = 1;
+            if($iOffset>1)
+            {	
+                $actionObj->SHOW_PREV = true;
+                $actionObj->prevLink = "&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1)."&listingName=".strtolower($iListingType)."&hitFromMyjs=1";
+            }
+            if($iOffset < $iTotalRecord && $iOffset!=$iTotalRecord)
+            {
+                $actionObj->SHOW_NEXT = true;
+                $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1)."&listingName=".strtolower($iListingType)."&hitFromMyjs=1";
+            }
+            $actionObj->fromPage = 'myjs';
+            $actionObj->SHOW_NEXT_PREV = 1;
+            
+            $pchkSum = $request->getParameter('profilechecksum');
+            if(!$pchkSum || strlen($pchkSum)==0)
+            { 
+                $objProfileDisplay = new profileDisplay;
+                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfileForMyjs($iListingType,$iOffset);
+                // Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
+                // offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset
+                $actionObj->actual_offset = $iOffset - 1 ;
+
+                $actionObj->stype=$request->getParameter("stype");
+                $actionObj->Sort=$request->getParameter("Sort");
+                $actionObj->actual_offset_real=$actionObj->actual_offset;
+                $actionObj->total_rec=$request->getParameter("total_rec");
+
+                //ProfileID
+                $iProfileID = JsCommon::getProfileFromChecksum($actionObj->profilechecksum);
+                $actionObj->next_prev_prof=$iProfileID;
+
+                //Seting profile class for this profileid.
+                if($actionObj->next_prev_prof)
+                    $actionObj->setViewed($actionObj->next_prev_prof);
+            }
+
+            return true;
+        }	
+        return false;
     }
     
     

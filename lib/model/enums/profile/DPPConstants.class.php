@@ -35,8 +35,9 @@
 										'P_GENDER'=>'GENDER',
                                         'P_HAVECHILD'=>'CHILDREN',
                                         'P_STATE'=>'STATE',
-                                        'CITY_INDIA'=>'CITY_INDIA'
-										);
+                                        'CITY_INDIA'=>'CITY_INDIA',
+										'P_OCCUPATION_GROUPING'=>'OCCUPATION_GROUPING', //added this. Check if key or value needs to be changed
+ 										);
 	public static $FormatColums = array(
 									'P_RELIGION',
 									'P_CASTE',
@@ -56,7 +57,8 @@
 									'P_CITY',
                                     'P_HAVECHILD',
                                     'P_STATE',
-                                    'CITY_INDIA'
+                                    'CITY_INDIA',
+                                    'P_OCCUPATION_GROUPING',
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(
 										'GENDER',
@@ -206,7 +208,7 @@
 	  		"MANGLIK" => "Manglik",),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "Highest Education",
-	  		"OCCUPATION" => "Occupation",
+	  		"OCCUPATION" => "Occupation", 
 	  		"INCOME" =>"Income",
 	  		),
 	  	"LIFESTYLE" => array(
@@ -272,7 +274,7 @@
 	  		),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "p_education",
-	  		"OCCUPATION" => "p_occupation",
+	  		"OCCUPATION" => "p_occupation_grouping",
 	  		"INCOME" =>array(
 	  			"minIncomeRs"=>"lincome",
 	  			"maxIncomeRs"=>"hincome",
@@ -309,7 +311,7 @@
 	  		),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => 'P_EDUCATION',
-	  		"OCCUPATION" => 'P_OCCUPATION',
+	  		"OCCUPATION" => 'P_OCCUPATION_GROUPING',  //recheck
 	  		"INCOME" =>'P_INCOME'
 	  		),
 	  	"LIFESTYLE" => array(
@@ -444,7 +446,7 @@
 	  		"MANGLIK" => "manglik",),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "highestEducation",
-	  		"OCCUPATION" => "occupation",
+	  		"OCCUPATION" => "occupationGrouping",
 	  		"INCOME" =>"income",
 	  		),
 	  	"LIFESTYLE" => array(
@@ -474,7 +476,8 @@
 	const VALUE_NO = "N";
 
   const AP_SCREEN_MSG = 'Your desired partner profile will be vetted by our matchmaking expert before it is updated on your profile';
- 
+  public static $removeCasteFromDppArr = array("242","243","244","245","246");
+  public static $removeLabelFromDpp = "Select";
  }
  
 ?>

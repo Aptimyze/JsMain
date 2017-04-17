@@ -1120,7 +1120,7 @@ class Profile{
                         if(isset($hobbies) && $onlyValues == '')
                             $userHobbies = $hobbies;
                         else{
-                            $hobbyObj=new NEWJS_HOBBIES();
+                            $hobbyObj=new JHOBBYCacheLib();
                             $userHobbies = $hobbyObj->getUserHobbies($this->PROFILEID,$onlyValues);
                         }
 			if($onlyValues)
@@ -1286,20 +1286,34 @@ class Profile{
          * Returns profile information
          */
 	public function getDecoratedYourInfo(){
+
+                
                 if(Flag::isFlagSet("yourinfo",$this->SCREENING))
-                        return nl2br($this->YOURINFO);
-                if($this->YOURINFO=="")
                 {
-					if(!in_array("YOURINFO",$this->fieldsArray))
-					ProfileFieldsLogging::callFieldStack(1);
-				}
-	}
+                    return nl2br($this->YOURINFO);
+                }
+                else
+                {
+                    $profileYourInfoOld = new ProfileYourInfoOld();
+                    $oldYourInfo = $profileYourInfoOld->getAboutMeOld($this->PROFILEID)['YOUR_INFO_OLD'];
+                    if($this->YOURINFO=="")
+                    {
+                        if(!in_array("YOURINFO",$this->fieldsArray))
+                        ProfileFieldsLogging::callFieldStack(1);
+                    }
+
+                    if ( $oldYourInfo !== NULL )
+                    {
+                        return $oldYourInfo;
+                    }
+                }
+    }
         /**
          * getDecoratedFamilyInfo()
          *
          * Returns family information
          */
-	public function getDecoratedFamilyInfo(){
+    public function getDecoratedFamilyInfo(){
                 if(Flag::isFlagSet("familyinfo",$this->SCREENING))
                         return nl2br($this->FAMILYINFO);
                 if($this->FAMILYINFO=="")
@@ -1480,7 +1494,7 @@ class Profile{
         public function getExtendedContacts($onlyValues="")
 		{
 			if($this->HAVE_JCONTACT=="Y"){
-				$pc=new NEWJS_JPROFILE_CONTACT();
+				$pc= new ProfileContact();
 				$contacts_arr=$pc->getProfileContacts($this->PROFILEID);
 				if($onlyValues)
 					return $contacts_arr;

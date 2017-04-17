@@ -49,7 +49,7 @@
 							~if !$searchFeilds[$value]["attr"]`
 								
 										~if in_array($value,$minArray)`
-											<li class="clearfix pt30">
+											<li class="clearfix pt38">
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 												<div class="advbdr3 advbr1">
 					                <div id="~$value`" class="fl js-frmfld wid50p advp4 pos_rel cursp advbdr1 js-fielddd" data='~$dataArray["selectedValues"][$value]`'>
@@ -107,11 +107,17 @@
 					             </li>
 			              ~/if`
 		          ~else`
-								<li id="~$value`Parent" class="clearfix pt30" ~if $searchFeilds[$value]["isDependant"]` style="display: none;" ~/if`>
+								<li id="~$value`Parent" class="clearfix pt20" ~if $searchFeilds[$value]["isDependant"]` style="display: none;" ~/if`>
+
+									<div class="clearfix advremall">
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
+
+									</div>
+									
 									<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 									<div class="advbdr3 advbr1">
 									  <div id="~$value`Div" class="advp3">
-		                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width" data='~$dataArray["selectedValues"][$value]`' >
+		                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width js-torem" data='~$dataArray["selectedValues"][$value]`' >
 		                    <option class="textTru chosenDropWid" value=""></option>
 													~assign var="doItOnce" value="false"`
 													~foreach from=$dataArray[$searchFeilds[$value]["feild"]] key=id item=v` 
@@ -133,7 +139,7 @@
 	              
             ~/foreach`
             
-            <li class="js-frmfld js-toggle clearfix pt30" id="HAVEPHOTO" data='~$dataArray["selectedValues"]["HAVEPHOTO"]`'>
+            <li class="js-frmfld js-toggle clearfix pt38" id="HAVEPHOTO" data='~$dataArray["selectedValues"]["HAVEPHOTO"]`'>
               <label class="pt14">Photo</label>
               <div class="advbdr3 advbr1">
                 <ul class="hor_list clearfix">
@@ -158,11 +164,15 @@
               <div class="advp8">
                 <ul class="listnone formbox fontreg f15">
 									 ~foreach from=$searchSection["ASTRO"] name=a item=value key=kk`
-										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.a.first` pt30 ~/if`">
+										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.a.first` pt20 ~/if`">
+										<div class="clearfix advremall">
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
+
+									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 												<div class="advbdr3 advbr1">
 												  <div id="~$value`Div" class="advp3">
-					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width" data='~$dataArray["selectedValues"][$value]`'>
+					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width js-torem" data='~$dataArray["selectedValues"][$value]`'>
 					                    <option class="textTru chosenDropWid" value=""></option>
 																~assign var="doItOnce" value="false"`
 						                    ~foreach from=$dataArray[$searchFeilds[$value]["feild"]] key=id item=v` 
@@ -180,7 +190,7 @@
 											  </div>
 											</li>
 									 ~/foreach`
-									 <li class="js-frmfld js-toggle clearfix pt30" id="Horoscope" data='~$dataArray["selectedValues"]["Horoscope"]`'>
+									 <li class="js-frmfld js-toggle clearfix pt38" id="Horoscope" data='~$dataArray["selectedValues"]["Horoscope"]`'>
 			              <label class="pt14">Horoscope Available?</label>
 			              <div class="advbdr3 advbr1">
 			                <ul class="hor_list clearfix">
@@ -209,11 +219,15 @@
                 <ul class="listnone formbox fontreg f15">
                 
                   ~foreach from=$searchSection["EDUCATION_CAREER"] name=e item=value key=kk`
-										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.e.first` pt30 ~/if`">
+										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.e.first` pt20 ~/if`">
+										<div class="clearfix advremall">
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
+
+									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 												<div class="advbdr3 advbr1">
 												  <div id="~$value`Div" class="advp3">
-					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width" data='~$dataArray["selectedValues"][$value]`'>
+					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width js-torem" data='~$dataArray["selectedValues"][$value]`'>
 					                    <option class="textTru chosenDropWid" value=""></option>
 																~assign var="doItOnce" value="false"`
 						                    ~foreach from=$dataArray[$searchFeilds[$value]["feild"]] key=id item=v` 
@@ -250,11 +264,15 @@
                 <ul class="listnone formbox fontreg f15">
                 
                   ~foreach from=$searchSection["LIFESTYLE"] name=l item=value key=kk`
-										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.l.first` pt30 ~/if`">
+										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.l.first` pt20 ~/if`">
+										<div class="clearfix advremall">
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
+
+									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 												<div class="advbdr3 advbr1">
 												  <div id="~$value`Div" class="advp3">
-					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width" data='~$dataArray["selectedValues"][$value]`'>
+					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width js-torem" data='~$dataArray["selectedValues"][$value]`'>
 					                    <option class="textTru chosenDropWid" value=""></option>
 																~assign var="doItOnce" value="false"`
 						                    ~foreach from=$dataArray[$searchFeilds[$value]["feild"]] key=id item=v` 
@@ -292,11 +310,15 @@
                 <ul class="listnone formbox fontreg f15">
                 
                    ~foreach from=$searchSection["MORE"] name=m item=value key=kk`
-										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.m.first` pt30 ~/if`">
+										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.m.first` pt20 ~/if`">
+										<div class="clearfix advremall">
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
+
+									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
 												<div class="advbdr3 advbr1">
 												  <div id="~$value`Div" class="advp3">
-					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width" data='~$dataArray["selectedValues"][$value]`'>
+					                  <select id="~$value`" data-placeholder="Doesn't Matter" multiple class="js-frmfld chosen-select-width js-torem" data='~$dataArray["selectedValues"][$value]`'>
 					                    <option class="textTru chosenDropWid" value=""></option>
 																~assign var="doItOnce" value="false"`
 																~foreach from=$dataArray[$searchFeilds[$value]["feild"]] key=id item=v` 
@@ -315,7 +337,7 @@
 											  </div>
 											</li>
 									 ~/foreach`
-									 <li class="clearfix pt30">
+									 <li class="clearfix pt38">
                     <label class="pt14">Search by keyword</label>
                     <div class="advbdr3 advbr1">
                           <div class="clearfix">
@@ -358,7 +380,7 @@
           <!--end:form section--> 
         </div>
         <!--end:form 5--> 
-        <div class="avdgr1 advsti advwid5 txtc" id="srchscroll">
+        <div class="avdgr1 advwid5 txtc" id="srchscroll">
 						<div style="position: relative; overflow: hidden; left: 50%; transform: translate(-50%, 0px); width: 181px; height: 44px;" class="mt15">
 							<button id="Submit" class="cursp bg_pink pinkRipple hoverPink colrw f20 fontreg brdr-0 lh44 advp9 ">Search</button>
 						</div>
@@ -386,7 +408,7 @@
                             </div>
                          </div>
                     </li>
-                    <li class="clearfix pt30 txtc">    
+                    <li class="clearfix pt38 txtc">    
                         <div class="scrollhid pos_rel wid114 mar-aut0">
 													<button class="bg_pink colrw f20 fontreg brdr-0 lh44 advp10 cursp pinkRipple hoverPink" id="advsearchByIdBtn" onClick="return false;">Search</button>  
                         </div>

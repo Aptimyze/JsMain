@@ -4,9 +4,10 @@ include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking
+$date =date("Y-m-d");
 $msg="\nPopulate Score # Start Time=".date("Y-m-d H:i:s");
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
-$sub="Scoring Algorithm Score Computation";
+$sub="Scoring Algorithm Score Computation Shard-3";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
 ini_set('memory_limit', '300M');
@@ -16,7 +17,7 @@ ini_set('memory_limit', '300M');
 //$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 //$shDb3 = mysql_connect("productshard2slave.js.jsb9.net:3307","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 $maDb = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$master1['USER'],MysqlDbConstants::$master1['PASS']) or die("Unable to connect to js server".$start);
-$myDb = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to js server".$start);
+$myDb = mysql_connect(MysqlDbConstants::$slave111_sel['HOST'],MysqlDbConstants::$slave111_sel['USER'],MysqlDbConstants::$slave111_sel['PASS']) or die("Unable to connect to js server".$start);
 $shDb3 = mysql_connect(MysqlDbConstants::$shard3Slave112['HOST'],MysqlDbConstants::$shard3Slave112['USER'],MysqlDbConstants::$shard3Slave112['PASS']) or die("Unable to connect to js server".$start);
 
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
@@ -26,12 +27,12 @@ mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
 //Pool set of today model wise
-$modelType_arr = array("P","R","E","N");
+$modelType_arr = array("N","R","E","P");
 for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
         $modelType = $modelType_arr[$t];
-	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%3=2";
+	$sql = "SELECT DISTINCT(PROFILEID) FROM test.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=2";
 	$res = mysql_query($sql,$myDb) or die($sql.mysql_error($myDb));
 	while($row = mysql_fetch_array($res))
         	$modelArr[] = $row['PROFILEID'];
@@ -74,17 +75,17 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid."#".$newmodelJson;
-                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
-                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
+                                                /*$hit_log1 =$profileid."#".$newmodelJson;
+                                                $fileName1 ="score_hit_log_for_nullResponse_".$date.".txt";
+                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");*/
                                         }
                                         else{
                                                 $score1 =round($score1,0);
                                         }
 					// temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
-                                        $fileName ="score_hit_log".$date.".txt";
-                                        passthru("echo '$hit_log' >>/tmp/$fileName");
+                                        /*$hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
+                                        $fileName ="score_hit_log_".$date.".txt";
+                                        passthru("echo '$hit_log' >>/tmp/$fileName");*/
                                 }
                                 if(isset($score))
                                 {
@@ -123,7 +124,7 @@ function updateScoreLog($profileid, $score, $modelType) {
 	mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
 
 	global $myDb;
-	$sql_up = "UPDATE js_crm.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
+	$sql_up = "UPDATE test.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
         mysql_query($sql_up,$myDb) or die($sql_up.mysql_error($myDb));
 }
 

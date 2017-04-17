@@ -21,6 +21,53 @@ class membershipActions extends sfActions
         $this->redirect('/membership/jspc');
     }
 
+    /*api to deactivate current membership of user
+    * @inputs: $request
+    * @return: api response
+    */
+    public function executeDeactivateCurrentMembershipV1(sfWebRequest $request){
+        //parse request inputs and format
+        if($request->getParameter("PROFILECHECKSUM")){
+            $profileid = JsAuthentication::jsDecryptProfilechecksum($request->getParameter("PROFILECHECKSUM"));
+            if($profileid){
+                $membership = "MAIN";
+                if($request->getParameter("MEMBERSHIP")){
+                    $membership = $request->getParameter("MEMBERSHIP");
+                }
+                if(!$request->getParameter("USERNAME")){
+                    $profileObj      = new PROFILE();
+                    $detail       = $profileObj->getDetail($profileid, 'PROFILEID', "USERNAME");
+                    unset($profileObj);
+                    if(is_array($detail)){
+                        $username = $detail["USERNAME"];
+                    }
+                }
+                else{
+                    $username = $request->getParameter("USERNAME");
+                }
+               
+                //deactivate current membership based on inputs
+                $memHandlerObj = new MembershipHandler();
+                $deactivationStatus = $memHandlerObj->deactivateCurrentMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username,"MEMBERSHIP"=>$membership,"NEW_ORDERID"=>$request->getParameter("NEW_ORDERID")));
+                unset($memHandlerObj);
+            }
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        if(isset($deactivationStatus)){
+            if($deactivationStatus == true){
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            }
+            else{
+                $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+            }
+        }
+        else{
+            $respObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_MISSING);
+        }
+        $respObj->generateResponse();
+        die;
+    }
+
     // JSPC
     public function executeJspc(sfWebRequest $request)
     {
@@ -45,9 +92,7 @@ class membershipActions extends sfActions
         $request->setParameter('device', 'desktop');
 
         $memActFunc = new MembershipActionFunctions();
-
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
-
         switch ($displayPage) {
             case '1':
                 $apiParams = $pageURL . $authChecksum . "&device=" . $device;
@@ -144,7 +189,7 @@ class membershipActions extends sfActions
         $memActFunc = new MembershipActionFunctions();
 
         //parse request params for module
-        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
+        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum,$upgradeMem) = $memActFunc->getReqParamsForRevMobMem($request);
         if ($device == "Android_app") {
 
             $_SERVER[HTTP_USER_AGENT] = "Chrome/39 JsAndWeb";
@@ -183,6 +228,7 @@ class membershipActions extends sfActions
 
             case '4':
                 $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
+                $this->upgradeMem = $upgradeMem;
                 $template                         = 'JSMSCouponPage';
 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);

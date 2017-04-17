@@ -557,5 +557,7 @@ public static function setAllCaste(){
 	JsMemcache::getInstance()->set("AllCasteArray",self::$arrAllCaste,180000,0,"1");
 	JsMemcache::getInstance()->set("CasteGroupByParentArray",self::$arrAllCaste_GroupByParent,180000,0,"1");
 	JsMemcache::getInstance()->set("CasteGroupMappingArray",self::$arrAllCaste_GroupMapping,180000,0,"1");
+	JsMemcache::getInstance()->set("CityIndiaArray",FieldMap::getFieldLabel("city_india","",1),180000,0,"1");
+	JsMemcache::getInstance()->set("StateCityArray",FieldMap::getFieldLabel("state_CITY","",1),180000,0,"1");
 }
 }?>

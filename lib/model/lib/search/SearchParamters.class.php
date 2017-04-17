@@ -116,6 +116,7 @@ class SearchParamters
         protected $SHOW_RESULT_FOR_SELF;
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
+        protected $IS_VSP; // check for VSP Search
         
         public function __construct()
 	{
@@ -286,29 +287,46 @@ class SearchParamters
 	public function setDIET($DIET) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DIET",$DIET);
-                if($validInput)
-			$this->DIET = $DIET; 
+                if($validInput){
+                        if($DIET && !strstr($DIET,SearchConfig::_doesntMatterValue) && !strstr($DIET,SearchConfig::_nullValueAttributeLabel) && !strstr($DIET,SearchTypesEnums::APPLY_ONLY_CLUSTER))   
+                                $this->DIET = $DIET.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DIET = $DIET;
+                }
 	}
 	public function getDIET() { return $this->DIET; }
 	public function setSMOKE($SMOKE) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("SMOKE",$SMOKE);
-                if($validInput)
-			$this->SMOKE = $SMOKE; 
+                if($validInput){
+                        if($SMOKE && !strstr($SMOKE,SearchConfig::_doesntMatterValue) && !strstr($SMOKE,SearchConfig::_nullValueAttributeLabel))   
+                                $this->SMOKE = $SMOKE.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->SMOKE = $SMOKE;
+                }
 	}
 	public function getSMOKE() { return $this->SMOKE; }
 	public function setDRINK($DRINK) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DRINK",$DRINK);
-                if($validInput)
-			$this->DRINK = $DRINK; 
+                if($validInput){
+                        if($DRINK && !strstr($DRINK,SearchConfig::_doesntMatterValue) && !strstr($DRINK,SearchConfig::_nullValueAttributeLabel))   
+                                $this->DRINK = $DRINK.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DRINK = $DRINK; 
+                }
 	}
 	public function getDRINK() { return $this->DRINK; }
 	public function setHANDICAPPED($HANDICAPPED) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("HANDICAPPED",$HANDICAPPED);
-                if($validInput)
-			$this->HANDICAPPED = $HANDICAPPED; 
+                if($validInput){
+                    if(strstr($HANDICAPPED,SearchConfig::_noneValueHandicapped) && !strstr($HANDICAPPED,SearchConfig::_nullValueAttributeLabel))   
+			$this->HANDICAPPED = $HANDICAPPED.",".SearchConfig::_nullValueAttributeLabel;
+                    else  
+			$this->HANDICAPPED = $HANDICAPPED;
+                    
+                }
 	}
 	public function getHANDICAPPED() { return $this->HANDICAPPED; }
 	public function setOCCUPATION($OCCUPATION) 
@@ -318,6 +336,13 @@ class SearchParamters
 			$this->OCCUPATION = $OCCUPATION; 
 	}
 	public function getOCCUPATION() { return $this->OCCUPATION; }
+        public function setOCCUPATION_IGNORE($OCCUPATION_IGNORE) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("OCCUPATION_IGNORE",$OCCUPATION_IGNORE);
+                if($validInput)
+                    $this->OCCUPATION_IGNORE = $OCCUPATION_IGNORE;
+	}
+	public function getOCCUPATION_IGNORE() {   return $this->OCCUPATION_IGNORE; }
 	public function setCOUNTRY_RES($COUNTRY_RES) 
 	{
 		$validInput = SearchInputValidation::validateInput("COUNTRY_RES",$COUNTRY_RES);
@@ -1113,6 +1138,11 @@ class SearchParamters
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
+        public function getVisitorsDateConditionArr(){return $this->visitorsDateConditionArr;}
+	public function setVisitorsDateConditionArr($x){$this->visitorsDateConditionArr = $x;}
+        
+        public function getToSortByPhotoVisitors(){return $this->sortByPhotoVisitors;}
+	public function setToSortByPhotoVisitors($x){$this->sortByPhotoVisitors = $x;}
 
         public function getDisplayCity(){return $this->displayCity;}
         public function getDisplayState(){return $this->displayState;}
@@ -1196,4 +1226,6 @@ class SearchParamters
                 $this->TRENDS_DATA = $TRENDS_DATA; 
         }
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
+        public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
+        public function getIS_VSP() { return $this->IS_VSP; }
 }

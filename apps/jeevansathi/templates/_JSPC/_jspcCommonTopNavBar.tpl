@@ -223,7 +223,22 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>                                
+                                </li>
+
+                                     <li>
+                                    <a href="/inbox/10/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl"> Declined/Cancelled</div>
+                                        <div class="fr">
+                                            <div id="membersDeclinedMeCountParent" class="disp-tbl txtc" style="display:none">
+                                                <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+
+
                                 <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
@@ -249,6 +264,8 @@ window.onload=function(){
                                     </div>
                                     </a>
                                 </li>
+
+                           
 
                             </ul>
                             <!--end:submenu-->

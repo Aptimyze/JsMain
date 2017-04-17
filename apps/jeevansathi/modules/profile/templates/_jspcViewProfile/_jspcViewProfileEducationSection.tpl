@@ -1,6 +1,6 @@
 <!--start:Education-->
               <div class="prfbr3">
-              <div class="prfp5" id="section-career">
+              <div class="prfp5 noMultiSelect" id="section-career">
                 <div class="clearfix"> <i class="sprite2 fl prfic12"></i>
                   <div class="fl colr5 pl8 f17 pt2" >Education & Career</div>
                    <!--unclock div-->              

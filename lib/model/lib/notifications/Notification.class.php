@@ -150,8 +150,14 @@ abstract class Notification
 			$casteValue = $html;
 		return strlen($casteValue)<=$maxlength ? $casteValue : substr($casteValue,0,$maxlength-2)."..";
 	  case "CITY_RES_OTHER_1":
-		if($details['OTHER'][0]["COUNTRY_RES"]=="51")
-			$CITY_RES= $this->cityDetail[$details['OTHER'][0]["CITY_RES"]];		
+		if($details['OTHER'][0]["COUNTRY_RES"]=="51"){
+            if(substr($details['OTHER'][0]["CITY_RES"], -2) == "OT"){
+                $CITY_RES= $this->cityDetail[substr($details['OTHER'][0]["CITY_RES"],0,2)];
+            }
+            else{
+                $CITY_RES= $this->cityDetail[$details['OTHER'][0]["CITY_RES"]];		
+            }
+        }
 		else
 			$CITY_RES= $this->countryDetail[$details['OTHER'][0]["COUNTRY_RES"]];
 		return strlen($CITY_RES)<=$maxlength ? $CITY_RES : substr($CITY_RES,0,$maxlength-2)."..";

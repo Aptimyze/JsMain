@@ -28,6 +28,8 @@ class LoggingEnums
     const COMMONLOG = 'common';
     const EX500 = '500';
     const EX404 = '404';
+    // status code for SQL syntax error
+    const ERR_STATUS_CODE = '42000';
     // name of channels returned
     const P = 'P';
     const A = 'A';
@@ -74,4 +76,108 @@ class LoggingEnums
     const REFERER = 'Referer';
     const LOG_REFERER = 'Log_Referer';
     const LOG_VA_MODULE = 'VA_Info';
+    const JPC = 'Jprofile_Contact';
+    const MAPPING = 'Parent';
+    const SCRIPT = 'Script';
+    const LOG_DELETION = 1;
+    const TRACE_STRING = 'traceString';
+
+    public static $MappingNames = array(
+        // JSC module names
+        0 => 'Chat',
+        1 => 'Notification',
+        2 => 'SEO',
+        3 => 'CRM',
+        4 => 'Membership',
+        5 => 'SuccessStory',
+        6 => 'ContactUs',
+        // JSI module names
+        7 => 'Api',
+        8 => 'Sms',
+        9 => 'Homepage',
+        10 => 'Myjs',
+        11 => 'Profile',
+        12 => 'Contact Engine',
+        13 => 'Login',
+        // JSM module names
+        14 => 'Listing',
+        15 => 'Search',
+        16 => 'Registration',
+        17 => 'Picture',
+        18 => 'Screening',
+        // others
+        19 => 'Static',
+        20 => '404',
+        21 => 'Others',
+        22 => 'Javascript',
+        23 => 'Feedback',
+        );
+
+    public static $ModuleMapping = array(
+
+        "inbox" => 14,
+        "404_uploads" => 17,
+        "chat_api" => 0,
+        "404" => 20,
+        "profile" => 11,
+        "profile_api" => 11,
+        "404_profile" => 11,
+        "api" => 7,
+        "ShortURL" => 8,
+        "homepage" => 9,
+        "myjs_api" => 10,
+        "notification_api" => 1,
+        "search_api" => 15,
+        "ProfileCache" => 11,
+        "api_api" => 7,
+        "inbox_api" => 14,
+        "register_api" => 16,
+        "contacts_api" => 12,
+        "social_api" => 17,
+        "404_search" => 15,
+        "search" => 15,
+        "static" => 19,
+        "social" => 17,
+        "common_api" => 7,
+        "404_min" => 22,
+        "AutoLogin" => 13,
+        "404_myjs" => 10,
+        "404_static" => 19,
+        "404_e" => 13,
+        "404_api" => 7,
+        "404_social" => 17,
+        "register" => 16,
+        "404_matrimonials" => 2,
+        "404_browserconfig.xml" => 2,
+        "404_inbox" => 14,
+        "404_images" => 17,
+        "myjs" => 10,
+        "404_autodiscover" => 2,
+        "404_register" => 16,
+        "404_js" => 22,
+        "contacts" => 12,
+        "e" => 13,
+        "crmAllocation" => 3,
+        "membership_api" => 4,
+        "membership" => 4,
+        "autologin" => 13,
+        "404_jsadmin" => 3,
+        "photoScreening" => 18,
+        "seo" => 2,
+        "404_P" => 11,
+        "404_membership" => 4,
+        "404_Most%20trusted%20Indian%20matrimonials%20website.%20Lakhs%20of%20verified%20matrimony%20profiles.%20Search%20by%20caste%20and%20community.%20Register%20now%20for%20FREE%20at%20Jeevansathi.com" => 2,
+        "crm" => 3,
+        "404_successStory" => 5,
+        "404_crm" => 3,
+        "404_jshelp" => 3,
+        "commoninterface" => 21,
+        "404_wan_redirect_status?www.jeevansathi.com" => 20,
+        "404_successstory" => 5,
+        "404_contactus" => 6,
+        "404_faq" => 23,
+        "successStory" => 5,
+        "myjs_api" => 10,
+        "common" => 21,
+        );
 }

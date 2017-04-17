@@ -10,6 +10,14 @@
         ~foreach from=$fieldArray key=fieldName item=fieldData`
           ~assign var="fieldID" value=$fieldData.fieldId`
             <div class="clearfix pt20" id="dpp-~$fieldID|lower`Parent">
+
+            ~if $fieldData.type eq "M"` 
+             <div class="clearfix wid83p">
+               <div class="js-resetall prehide f12 color5 cursp disp_ib vishid fr remwid60" 
+               id="~$fieldID|lower`-rem">Remove all</div>
+             </div>
+             ~/if`
+
               <label>~$fieldData.label`</label>
                ~if $fieldData.type eq "R_AGE"`
               <div id="ageRange" class="edwid2 fl"> 
@@ -204,7 +212,7 @@
                 <!--start:edit on-->
                 <div class="bg-white dpp-sel clearfix prehide">
                   <div class="padalli">
-                    <select data-placeholder="" id="dpp-~$fieldID|lower`" multiple class="chosen-select-width">
+                    <select data-placeholder="" id="dpp-~$fieldID|lower`" multiple class="chosen-select-width js-torem">
                     <option value=""></option>
                     ~assign var="doItOnce" value="false"`
                     ~foreach from=$dropDownData[$fieldData.dropDownMap][0] key=id item=dropDownVal` 

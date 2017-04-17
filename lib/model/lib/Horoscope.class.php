@@ -150,9 +150,9 @@ class Horoscope
     
     if (in_array($iReligion, $arrAllowedReligion)) {
 			$horoExist = $this->ifHoroscopePresent($iProfileID);
-			if ($checkForScreened && 'N' == $horoExist) {
+			/*if ($checkForScreened && 'N' == $horoExist) {
 				$horoExist = $this->isHoroscopeUnderScreen($iProfileID);
-			}
+			}*/
 	
 		}
 	

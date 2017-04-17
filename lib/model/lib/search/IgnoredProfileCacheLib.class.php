@@ -139,9 +139,8 @@ class IgnoredProfileCacheLib
             $arr = trim($arr," ");
             $valArr  = explode(" ",$arr);
         }
-    	$resultArr = JsMemcache::getInstance()->storeDataInCacheByPipeline($key,$valArr);    	
-    	$count = count($resultArr);
-    	return $count;
+    	$resultVal = JsMemcache::getInstance()->storeDataInCacheByPipeline($key,$valArr);    	
+    	return $resultVal;
     }
 
     //This function removes an ignoredProfileId from three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)

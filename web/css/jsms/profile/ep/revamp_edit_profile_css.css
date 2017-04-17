@@ -68,3 +68,27 @@ input[type=number] {
 { background-image: url(IMG_URL/images/jsms/commonImg/on-off.png); background-repeat: no-repeat}
   .dpbg1{background-color:#e3e1e2}
   .dpbg2{padding:20px 15px}
+  
+  .otplh60{line-height:60px}
+.otpp1{padding:0 21px}
+.otpp2{padding:20px 20px 0 20px}
+.otpp3{padding:10px 16px;}
+.optp4{padding-bottom:70px}
+.optp5{padding-top:15%}
+.otpp6{padding:20px 20px}
+.otpp7{padding:10px 20px 0 20px}
+.otpma{margin:0 auto}
+.otpwid1{width:220px;}
+.otpwid2{width:82px;}
+.otpwid3{width:130px;}
+.otpbr1{border-top:1px solid #e7e7e7}
+.otpbr2{border-top:1px solid #dbdbdb}
+.otpbg1{background-color:#f8f8f8}
+.otpcolr1{color:#4c4151}
+.otpcolr2{color:#d03e43}
+.otplh60{ line-height:60px}
+.otpic1{background-position: -144px -124px;width: 35px;height: 47px;}
+.otplayer {position: fixed;top: 0;right: 0;bottom: 0;left: 0;height: 100%;width: 100%;margin: 0;padding: 0;background-color:rgba(0, 0, 0, 0.85);z-index: 101;overflow-x:none;}
+.otpcenter {position: absolute;left: 50%;top: 50%;width: 90%;}
+.otppos1{    right: 0;
+    top: 19px;}

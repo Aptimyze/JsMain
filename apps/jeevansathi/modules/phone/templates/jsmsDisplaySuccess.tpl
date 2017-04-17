@@ -161,7 +161,7 @@ function onPhoneVerifyBack(){
                 <img src="/images/jsms/commonImg/loader.gif" class="ajax-loader"/>
             </div>
 ~if $sourcename && $groupname`
-~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
 ~/if`
 ~if $pixelcode`
 ~$pixelcode|decodevar`

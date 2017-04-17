@@ -66,22 +66,30 @@ class IgnoredProfiles
 
         public function ignoreProfile($profileid, $ignoredProfileid)
         {
+        	// delete data of Match of the day
+		    JsMemcache::getInstance()->set("cachedMM24".$profileid,"");
+    		JsMemcache::getInstance()->set("cachedMM24".$ignoredProfileid,"");
         	$this->addDataToFile("old");
         	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
         	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
         	$this->addDataToFile("new");
         	$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
         	IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$ignoredProfileid);
+                Contacts::setContactsTypeCache($profileid, $ignoredProfileid, 'B');
         }
 
 	public function undoIgnoreProfile($profileid, $ignoredProfileid)
 	{
+		// delete data of Match of the day
+		JsMemcache::getInstance()->set("cachedMM24".$profileid,"");
+    	JsMemcache::getInstance()->set("cachedMM24".$ignoredProfileid,"");
 		$this->addDataToFile("old");
 		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 		$ignObj->undoIgnoreProfile($profileid,$ignoredProfileid);
 		$this->addDataToFile("new");
 		$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
 		IgnoredProfileCacheLib::getInstance()->deleteDataFromCache($profileid,$ignoredProfileid);
+                Contacts::unSetContactsTypeCache($profileid, $ignoredProfileid);
 	}
 
 	public function ifProfilesIgnored($profileIdStr, $viewer, $key='')

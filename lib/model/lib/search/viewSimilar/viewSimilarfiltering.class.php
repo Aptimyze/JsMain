@@ -40,7 +40,7 @@ class viewSimilarfiltering extends SearchParamters
 	/**
 	* Constructor.
 	*/
-        public function __construct($loggedInProfileObj,$profileObj)
+        public function __construct($loggedInProfileObj,$profileObj,$removeFilters=0)
         {
 		    parent::__construct();
                     if($loggedInProfileObj->getPROFILEID()){
@@ -58,8 +58,10 @@ class viewSimilarfiltering extends SearchParamters
 				$this->setGENDER(self::maleProfile);
 			else
 				$this->setGENDER(self::femaleProfile);
-                        $this->setFilterForAge();
-			$this->setShowFilteredProfiles(self::removeFilteredForAllPrivacy);
+                        if(!$removeFilters){
+                            $this->setFilterForAge();
+                            $this->setShowFilteredProfiles(self::removeFilteredForAllPrivacy);
+                        }
                     }
                     else{
                         $this->ProfileObj=$profileObj;
@@ -93,6 +95,9 @@ class viewSimilarfiltering extends SearchParamters
 
 		$this->setWhereParams(SearchConfig::$searchWhereParameters.",".SearchConfig::$membersLookingForMeWhereParameters);
 		$this->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters);
+                
+                //Call VSP from different URL
+                $this->setIS_VSP(1);
 	   return $this;	
 	}
         

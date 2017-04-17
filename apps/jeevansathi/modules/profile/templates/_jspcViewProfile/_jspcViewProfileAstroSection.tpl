@@ -1,6 +1,6 @@
 ~assign var="rel_val" value=$apiData['lifestyle']['religion_value']`
 ~if $rel_val eq '1' || $rel_val eq '4' || $rel_val eq '7' || $rel_val eq '9'`
-<div class="bg-white ~if $bEditView` fullwid fontlig mt15~else` mb15 prfwid12 fontlig ~/if`" id="section-horoscope">
+<div class="bg-white noMultiSelect ~if $bEditView` fullwid fontlig mt15~else` mb15 prfwid12 fontlig ~/if`" id="section-horoscope">
                 	~if $bEditView`
                     <div class="edpp3 prfbr2">
                         <ul class="hor_list clearfix  fullwid">
@@ -146,11 +146,14 @@
                                 <div>
                                     <div id="kundli-layer" class="disp-none">
                                         <i id="cls-view-horo" class="sprite2 close pos_fix closepos cursp layersZ"></i>
-                                        <div class="pos_fix layersZ setshare">
-                                            <div class="content mCustomScrollbar">
+                                        <div class="pos_fix layersZ setshare" style="height:400px">
+                                        <div class="">
+                                        <div>
+                                            
                                                 <div id="putHoroscope">
                                                 </div>  
-                                            </div>
+                                            
+                                        </div>
                                         </div>
                                     </div> 
                                 </div>

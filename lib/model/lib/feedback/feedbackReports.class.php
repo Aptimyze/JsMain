@@ -35,12 +35,15 @@ public static function getReportInvalidLog($startDate,$endDate){
 
       }
      
- 
 
     if(is_array($profileArray))
     { 
+        $todayDate = new DateTime();
+        $todayDate->sub(new DateInterval('P180D')); //get the date which was 180 days ago
+        $back180Days = $todayDate->format('Y-m-d H:i:s');
+      $jsadminOpsObj = new jsadmin_OPS_PHONE_VERIFIED_LOG();
+      $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME,PHONE_MOB,PHONE_WITH_STD");
 
-     $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME,PHONE_MOB,PHONE_WITH_STD");
      //var_dump($profileDetails);die;
       foreach ($reportArray as $key => $value) 
       { 
@@ -58,6 +61,8 @@ public static function getReportInvalidLog($startDate,$endDate){
 
       $tempArray['submiter_email']=$profileDetails[$value['SUBMITTER']]['EMAIL'];
       $tempArray['submitee_email']=$profileDetails[$value['SUBMITTEE']]['EMAIL'];
+      $unVerifiedCount = $jsadminOpsObj->getProfilesUnVerifiedCount($value['SUBMITTEE'],$back180Days) ;
+      $tempArray['unverifiedCount'] = $unVerifiedCount;
       $resultArr[]=$tempArray;      
       unset($tempArray);
       # code...

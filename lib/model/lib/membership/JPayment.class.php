@@ -50,8 +50,9 @@ class JPayment extends Membership
      */
     public function getCityRes($profileid)
     {
-        $profileObj = LoggedInProfile::getInstance('newjs_slave', $profileid);
-        $cityRes    = $profileObj->getCITY_RES();
+        $jprofileObj = new JPROFILE();
+        $profileDet = $jprofileObj->get($profileid,'PROFILEID','CITY_RES');
+        $cityRes    = $profileDet['CITY_RES'];
         return $cityRes;
     }
 

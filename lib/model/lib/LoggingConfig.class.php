@@ -23,6 +23,13 @@
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
+			LoggingEnums::JPC => array(
+				LoggingEnums::LOGGING => false,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
+				LoggingEnums::DIRECTORY => true,
+				LoggingEnums::STACKTRACE => false,
+				LoggingEnums::SERVER_PARAM => false
+				),
 			// LoggingEnums::HOMEPAGE => array(
 			// 	LoggingEnums::LOGGING => true,
 			// 	LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,

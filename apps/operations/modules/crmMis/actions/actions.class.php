@@ -79,7 +79,7 @@ class crmMisActions extends sfActions
 			}
 			if(!JSstrToTime($dataArr[$i]['PHONE_VERIFY_DT']))
 			{
-				$jprofileContactObj=new NEWJS_JPROFILE_CONTACT();
+				$jprofileContactObj=new ProfileContact();
 				$valueArr['PROFILEID']=$dataArr[$i]['PROFILEID'];
 				$result=$jprofileContactObj->getArray($valueArr,"","","ALT_MOB_STATUS");
 				if($user['MOB_STATUS']=='Y'||$user['LANDL_STATUS']=='Y'||$result[0]['ALT_MOB_STATUS']=='Y')
@@ -747,7 +747,7 @@ class crmMisActions extends sfActions
             $this->ddarr = range($stFortDate,$endFortDate);
 			$ddarr_cnt = count($this->ddarr);
 			$this->empDetailArr = $jsadminPswrdsObj->fetchAllUsernamesAndEmpID();
-			if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName))
+			if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName,'Y'))
 			{
 				$hierarchyObj = new hierarchy($misGenerationhandlerObj->get_SLHDO());
 			}
@@ -923,7 +923,7 @@ class crmMisActions extends sfActions
 						$this->setTemplate('crmHandledRevenueTeamWise');
 						return;
 					}
-					if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName))
+					if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName,'Y'))
 						$hierarchyObj = new hierarchy($names['BOSS'][0]);
 					$this->hierarchy = $hierarchyObj->getHierarchyData($users);
 					foreach($this->hierarchy as $v)
@@ -2061,7 +2061,11 @@ class crmMisActions extends sfActions
 		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_masterRep');
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
 		 $scheduledNotificaionStr ="'".implode("','", $scheduledNotificaionArr)."'";
-	
+		
+		//var_dump($start_date);
+		//var_dump($end_date);
+		//var_dump($notificationKey);
+		//var_dump($this->channelKey);
 		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey,'',$this->channelKey);
 		 if($notificationKey)
 			$dataArrForScheduled =$dataArr;
@@ -2102,19 +2106,27 @@ class crmMisActions extends sfActions
 	                                $overallSuccess    			=($overallAcknowledged/$total)*100;
         	                        $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
 				}
+				if($this->channelKey=='A_I'){
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT_ANDROID'] = $val['OPENED_COUNT1'];
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT_IOS'] = $val['OPENED_COUNT2'];
+				}
+				else{
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT'] = $val['OPENED_COUNT1'];
+				}
 				$newData[$val['DAY']] =$dataArr[$key];					
 			}
 			unset($countTypeArr);
 			if($this->channelKey=='A_I')	
-	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY','NOTIFICATION_OPENED_COUNT_ANDROID','NOTIFICATION_OPENED_COUNT_IOS');
 			else
-				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE');
+				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','NOTIFICATION_OPENED_COUNT');
 
 			if(!$notificationKey)
 				$this->notificationType ='All Notification';
 			$this->newData =$newData;
 			$this->countTypeArr=$countTypeArr;
 			$this->notifExist =1;
+			//var_dump($this->notifExist);die("done");
 		 }
                  $this->setTemplate('notificationMisResultScreen');
             }
@@ -2487,11 +2499,35 @@ class crmMisActions extends sfActions
                 } else {
                 	$agents = null;
                 }
+                //print_r($agents);die;
+                //var_dump($start_date);
+                //var_dump($end_date);
+
                 if (!empty($agents)) {
+                	//fetch dialer allocated profiles
+                	$dailyAllotObj = new CRM_DAILY_ALLOT("newjs_slave");
+	                $dailyAllocationProfiles = $dailyAllotObj->getProfilesAllottedInDateRange($start_date,$end_date,$agents,true);
+	                unset($dailyAllotObj);
+	                //print_r($dailyAllocationProfiles);
+
+	                //fetch manually allotted profiles
 	                foreach ($agents as $key=>$agent) {
 	                    $profiles[$agent] = $manualAllotObj->getAgentAllotedProfileArrayforRCBCallSource($agent,$start_date,$end_date);
+	                  	//print_r($profiles[$agent]);
+	                    //print_r($dailyAllocationProfiles[$agent]);
+
+	                    if(is_array($dailyAllocationProfiles) && is_array($dailyAllocationProfiles[$agent])){
+	                    	if(!is_array($profiles[$agent])){
+	                    		$profiles[$agent] = array();
+	                    	}
+	                    	$profiles[$agent] = array_merge($profiles[$agent],$dailyAllocationProfiles[$agent]);
+	                    }
+	               		//print_r($profiles[$agent]);
 	                }
+	                //print_r($profiles);
+	                unset($dailyAllocationProfiles);
 	            }
+	            //print_r($profiles);
                 $this->misData = array();
                 $profilesVisited = array();
                 if (is_array($profiles) && !empty($profiles)) {
@@ -2508,6 +2544,7 @@ class crmMisActions extends sfActions
                             		$profilesVisited[$key][$vv['PROFILEID']] = array();
                             	}
                                 if ($billidArr = $billPurObj->checkIfProfilePaidWithin15Days($vv['PROFILEID'], $vv['ALLOT_TIME'])) {
+                          
                                 	$profilesVisited[$key][$vv['PROFILEID']] = array_unique(array_merge($billidArr,$profilesVisited[$key][$vv['PROFILEID']]));
                                 }
                             }

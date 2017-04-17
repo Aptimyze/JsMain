@@ -543,17 +543,28 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 	 * 
 	 */	
 	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='')
-	{
+	{								
 		$ALBUM_CNT=0;
 		$PHOTO="";
-		$pictureServiceObj=new PictureService($profileObj);
+		$loggedInProfileObj = LoggedInProfile::getInstance();	
+		if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
+		{				
+			$pictureServiceObj=new PictureService($loggedInProfileObj);				
+		}			
+		else
+		{
+			$pictureServiceObj=new PictureService($profileObj);
+		}
+		
 		$pictureObj=new ScreenedPicture;
 		$stopAlbumView=0;
                 if($contact_status == 'I')
                     $contact_status = 'RI';
                 else if($contact_status == 'RI')
                     $contact_status = 'I';
+       
         $album=$pictureServiceObj->getAlbum($contact_status);
+       	//print_R($album);die;
         $mobile="";
 		$request=sfContext::getInstance()->getRequest();	
         
@@ -585,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                
 				$ALBUM_CNT=count($album);
 			}		
 		}
@@ -1229,6 +1242,19 @@ public static function getAnnulled($profileid,$mstatus)
             }
         }
         return $result;
+    }
+    
+    
+    //performs actions as received from mailer and outputs the button array.
+    public static function performContactEngineAction($request,$pageSource=''){
+        
+        $request->setParameter("actionName","postAccept");
+        $request->setParameter("moduleName",'contacts');
+        $request->setParameter("pageSource",$pageSource);
+        ob_start();
+        sfContext::getInstance()->getController()->getPresentationFor("contacts", "postAcceptv2");
+        ob_end_clean();
+       
     }
 }
 ?>

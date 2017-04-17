@@ -33,11 +33,11 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{  
-		ini_set('memory_limit','512M');
+		ini_set('memory_limit','912M');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_UNRESPONDED_CONTACTS("newjs_master");
+	            $mailerYNObj = new MAIL_UNRESPONDED_CONTACTS("newjs_masterDDL");
 	            $mailerYNObj->EmptyMailer();
 	            echo "Truncated Mailer Table\n\n";
 	            $chunk=$arguments["chunks"];
@@ -110,27 +110,24 @@ EOF;
 	}
 
 public function skipProfiles($arranged)
-{
-	foreach ($arranged as $key => $value) 
 	{
-                if(!$value)
-                {      
-                    unset($arranged[$key]);
-                    continue;
-                    
-                }
-		$skipProfileObj     = SkipProfile::getInstance($key);
-                $skipConditionArray = SkipArrayCondition::$default;
-		$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
-		if(is_array($skipProfiles))
-			$temp=array_diff($value,$skipProfiles); 
-		else
-			$temp=$value;
-		if(count($temp)>0)
-			$result[$key]=$temp;
+            $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
+
+		foreach ($arranged as $key => $value) 
+		{
+        	        $skipProfiles       = $skipProfileObj->listIgnoredProfile($key);
+			if(is_array($skipProfiles))
+				$temp=array_diff($value,$skipProfiles); 
+			else
+				$temp=$value;
+			if(count($temp)>0)
+				$result[$key]=$temp;
+                        $arranged[$key] = null;
+                        $skipProfiles = null;
+		}
+
+		return $result;
 	}
-	return $result;
-}
 
 public function makeEntryInMailerTable($arranged,$mailerEntryObject)
 {

@@ -9,7 +9,7 @@ class EoiViewLog{
 
 	public function getEoiViewed($viewer,$viewed)
 	{
-		$dbName = JsDbSharding::getShardNo($viewer);
+		$dbName = JsDbSharding::getShardNo($viewed);
 		$eoiViewedLogObj = new NEWJS_EOI_VIEWED_LOG($dbName);
 		$ifViewed = $eoiViewedLogObj->getEoiViewed($viewer,$viewed);
 		return $ifViewed;
@@ -24,7 +24,7 @@ class EoiViewLog{
 		return $viewedData;
 	}
         
-        public function setEoiViewedForAReceiver($receiver,$filtered='')
+        public function setEoiViewedForAReceiver($receiver,$filtered='',$time)
         {
             
             $receiverShard=JsDbSharding::getShardNo($receiver);
@@ -53,7 +53,7 @@ class EoiViewLog{
             $tempShard =  JsDbSharding::getShardNo($i);    
             if(!count($shardArray[$tempShard])) continue;
             $eoiViewLogStore = new NEWJS_EOI_VIEWED_LOG($tempShard);
-            $eoiViewLogStore->insertMultiple($shardArray[$tempShard]);
+            $eoiViewLogStore->insertMultiple($shardArray[$tempShard],$time);
             unset($eoiViewLogStore);
             }
         }

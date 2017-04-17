@@ -165,8 +165,12 @@ if(isset($data))
 			if($row_check_edit[0]>0)
 				$user_details[$billid]['EDITED'] = 1;
 				
-			if($row_purchases["STATUS"] == "CANCEL")
+			if($row_purchases["STATUS"] == "CANCEL"){
 				$user_details[$billid]["CANCELLED"] = 1;
+                $memHandlerObject = new MembershipHandler();
+                $user_details[$billid]["CANCELLED_ON"] = $memHandlerObject->getCancelledDate($billid);
+                unset($memHandlerObject);
+            }
 			else
 				$partpay_arr[] = $billid;
 					
@@ -213,14 +217,18 @@ if(isset($data))
                                 $service_details[$serviceid]["EXPIRY_DT"] = $row_service["END_DATE"];
                                 $service_details[$serviceid]["PRICE"]=$row_service["PRICE"];
                                 $service_details[$serviceid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_service["END_DATE"]);
+
+				// Current Time
                                 list($yy,$mm,$dd) = @explode("-",$today);
                                 $ts = mktime(0,0,0,$mm,$dd,$yy);
+				// Expiry Time
                                 list($eyy,$emm,$edd) = @explode("-",$service_details[$serviceid]["EXPIRY_DT"]);
                                 $ets = mktime(0,0,0,$emm,$edd,$eyy);
-				if($eyy > $yy)
+
+				/*if($eyy > $yy)
                                         $refund_arr[] = $billid;
-                                elseif($ets > $ts)
-                                        $refund_arr[] = $billid;
+                                elseif($ets > $ts)*/
+                                $refund_arr[] = $billid;
 				$price_tax += $row_service["PRICE"];
                         }
                         $user_details[$billid]["SERVICE_DETAILS"] = $service_details;

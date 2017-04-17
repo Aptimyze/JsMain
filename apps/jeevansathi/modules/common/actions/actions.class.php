@@ -151,6 +151,9 @@ class commonActions extends sfActions
         if (JsCommon::checkAppPromoValid($ua)) {
             header("Location: https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3Dsms%26utm_campaign%3DJSAA");
             die;
+        } if (JsCommon::checkIosPromoValid($ua)) {
+            header("Location: https://itunes.apple.com/in/app/jeevansathi/id969994186");
+            die;
         } else {
             $this->setTemplate('appNotCompatible');
         }
@@ -242,7 +245,7 @@ class commonActions extends sfActions
                 if ($password && $this->validatePassword($password, $emailStr) == true) {
                     $this->done = PasswordUpdate::change($profileid, $password);
                     $marked     = ResetPasswordAuthentication::disableProfileidLinks($profileid);
-                    $dbObj      = new jsadmin_AUTO_EXPIRY;
+                    $dbObj      = new ProfileAUTO_EXPIRY;
                     $expireDt   = date("Y-m-d H:i:s");
                     $dbObj->replace($profileid, "P", $expireDt);
                 } else {
@@ -370,7 +373,9 @@ class commonActions extends sfActions
                 $finalresponseArray["actiondetails"] = null;
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 $this->contactObj                    = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                
+                //commented as shortlist list is through webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     //Entry in Chat Roster
                     try {
                         $producerObj = new Producer();
@@ -383,7 +388,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             } else {
                 $bookmarkObj->addBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", 1);
@@ -398,7 +403,8 @@ class commonActions extends sfActions
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 //Entry in Chat Roster
                 $this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                //commented as shortlist rosters are now via webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     try {
                         $producerObj = new Producer();
                         if ($producerObj->getRabbitMQServerConnected()) {
@@ -410,7 +416,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             }
 
             $bookmarkerMemcacheObject->updateMemcache();
@@ -638,6 +644,7 @@ class commonActions extends sfActions
         
         if($layerToShow==9 && $button=='B1'){
             
+            
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
             
@@ -674,13 +681,29 @@ class commonActions extends sfActions
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
                     
             }
             
         }
- 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
-}
+        
+        if($layerToShow==15)
+        {
+            $namePrivacy = $button=='B1' ? 'Y' : 'N';
+            
+            
+            $nameArr=array('DISPLAY'=>$namePrivacy);
+            $name_pdo = new incentive_NAME_OF_USER();
+            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            
+        }        
+                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+                {
+ 		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
+                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                }
+                
+        }
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -695,6 +718,7 @@ class commonActions extends sfActions
         $calObject=$request->getAttribute('calObject');
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
+        $this->dppSuggestions = json_encode($calObject['dppSuggObject']);
         $this->gender=$request->getAttribute('gender');
         if($calObject['LAYERID']==9)
         {
@@ -708,6 +732,8 @@ class commonActions extends sfActions
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
+
+        $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
         $this->setTemplate('CALJSMS');
 
     }
@@ -912,4 +938,22 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
 
 
         }
+    public function executeCheckPasswordV1(sfWebRequest $request)
+    {
+        $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+        $password =  rawurldecode( json_decode($request->getParameter('data') , true)['pswrd'] );
+        if(PasswordHashFunctions::validatePassword($password, $loggedInProfileObj->getPassword()))
+        {
+            $response = array('success' => 1);
+        }
+        else
+        {
+            $response = array('success' => 0);
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
 }

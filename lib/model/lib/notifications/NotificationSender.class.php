@@ -7,70 +7,98 @@
 
 class NotificationSender
 {
-    function __construct() 
+    function __construct($notificationKey="") 
     {
+        if(NotificationEnums::$multiCurlReqConfig["sendMultipleParallelNotification"] == true && in_array($notificationKey, NotificationEnums::$multiCurlReqConfig["notificationKey"])){
+            $this->sendMultipleParallelNotification = true;
+        }
+        else{
+            $this->sendMultipleParallelNotification = false;
+        }
+        $this->notificationEngineFactoryObj = new NotificationEngineFactory($this->sendMultipleParallelNotification);
     }
 
     /**
      * Sending Push Notification
      */
-    public function sendNotifications($profileDetails) 
+    public function sendNotifications($profileDetails,$regIds='') 
     {
-	if(is_array($profileDetails))
-	{
-		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
-		foreach($profileDetails as $identifier=>$details)
-		{
-            if($profileDetails[$identifier]["NOTIFICATION_KEY"] != "LOGIN_REGISTER"){
-                $profileid = $identifier;
+    	if(is_array($profileDetails))
+    	{
+    		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
+            $notificationLogAtnObj = new MOBILE_API_NOTIFICATION_LOG_ATN;
+            $notificationLogEtnObj = new MOBILE_API_NOTIFICATION_LOG_ETN;
+    		foreach($profileDetails as $identifier=>$details)
+    		{
+                $osType = "";
+                if($profileDetails[$identifier]["NOTIFICATION_KEY"] != "LOGIN_REGISTER"){
+                    $profileid = $identifier;
+                }
+                else{
+                    $profileid = $profileDetails[$identifier]["PROFILEID"];
+                }
+    			if(!isset($details))
+    				continue;
+                if(!is_array($regIds)){       
+                    if($profileDetails[$identifier]['NOTIFICATION_KEY'] == 'LOGIN_REGISTER'){
+                       $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['NOTIFICATION_KEY'],$profileDetails[$identifier]['REG_ID']); 
+                    }
+                    else{
+                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
+                    }
+                }
+    			if(is_array($regIds))
+    			{
+    				if(is_array($regIds[$identifier]["AND"]))
+    				{
+    					$osType = "AND";
+                        if($details['NOTIFICATION_KEY']=='ATN')
+                            $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+                        if($details['NOTIFICATION_KEY']=='ETN')
+                            $notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+                        
+    					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+    					$engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
+                        
+                        $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
+                        if($this->sendMultipleParallelNotification == false){
+                           $result = $engineObject->sendNotification($regIds[$identifier]["AND"], $details,$profileid);
+                        }
+                        else{
+                            $engineObject->sendMultipleParallelNotification($regIds[$identifier]["AND"], $details,$profileid);
+                        }
+    				}
+    				if(is_array($regIds[$identifier]["IOS"]))
+                    {
+    					$osType = "IOS";
+                        $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
+    					if($details['NOTIFICATION_KEY']=='ATN')
+                            $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+                        if($details['NOTIFICATION_KEY']=='ETN')
+                            $notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+                        $notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+                        $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject($osType);
+                        $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
+                    }
+    			}
+    			// logging of Notification Messages 
+                $key            =$details['NOTIFICATION_KEY'];
+                $msgId          =$details['MSG_ID'];
+                $message        =$details['MESSAGE'];
+                $title          =$details['TITLE'];
+                $notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
+                $notificationMsgLog->insert($key,$msgId,$message,$title);
+                // end
+                unset($regIds);
+    		}
+            if($this->sendMultipleParallelNotification == true){
+                $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
+                $engineObject->executeMultiCurlRequest(true);
             }
-            else{
-                $profileid = $profileDetails[$identifier]["PROFILEID"];
-            }
-			$osType = "";
-			if(!isset($details))
-				continue;
-            //echo "send data...";
-            //print_r($profileDetails);
-            if($profileDetails[$identifier]['NOTIFICATION_KEY'] == 'LOGIN_REGISTER'){
-               $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['REG_ID']); 
-            }
-            else{
-			 $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
-            }
-			if(is_array($regIds))
-			{
-                //print_r($profileDetails);
-                //echo "log---------";
-				if(is_array($regIds[$identifier]["AND"]))
-				{
-					$osType = "AND";
-					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
-					$engineObject =NotificationEngineFactory::geNotificationEngineObject('GCM');
-					$result = $engineObject->sendNotification($regIds[$identifier]["AND"], $details,$profileid);
-				}
-				if(is_array($regIds[$identifier]["IOS"]))
-                                {
-					$osType = "IOS";
-                    $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
-					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
-					$engineObject =NotificationEngineFactory::geNotificationEngineObject($osType);
-					$engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
-                                }
-			}
-			// logging of Notification Messages 
-			$key            =$details['NOTIFICATION_KEY'];
-			$msgId          =$details['MSG_ID'];
-			$message        =$details['MESSAGE'];
-			$title          =$details['TITLE'];
-			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
-			$notificationMsgLog->insert($key,$msgId,$message,$title);
-			// end
-		}
-	}
-
+    	}
     }
-    public function getRegistrationIds($profileid,$osType,$regId="")
+
+    public function getRegistrationIds($profileid,$osType,$notificationKey='',$regId="")
     {
 	$valArr['PROFILEID']=$profileid;
 	if($osType != "ALL")
@@ -81,9 +109,16 @@ class NotificationSender
         return $regIdArr;
     }
     else{
-        $appVersion = NotificationEnums::$appVersionCheck["DEFAULT"];
-       	$appVersionAnd =$appVersion['AND'];
-       	$appVersionIos =$appVersion['IOS'];
+        if(array_key_exists($notificationKey, NotificationEnums::$appVersionCheck)){
+            $appVersion = NotificationEnums::$appVersionCheck[$notificationKey];
+        }
+        else{
+            $appVersion = NotificationEnums::$appVersionCheck["DEFAULT"];
+        }
+       	if($osType=='AND' || $osType=='ALL')
+            $appVersionAnd =$appVersion['AND'];
+        if($osType=='IOS' || $osType=='ALL')
+            $appVersionIos =$appVersion['IOS'];
 
     	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
     	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');

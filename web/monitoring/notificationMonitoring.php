@@ -1,6 +1,6 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104");
+$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104","ankita"=>"9650879575");
 //$mobileNumberArr = array("nitish"=>"8989931104");
 $authChecksum = sendLoginRequest();
 $urlArray = array(JsConstants::$siteUrl."/api/v1/notification/poll?".$authChecksum);
@@ -10,17 +10,11 @@ while(1){
     sleep(180);
     foreach($urlArray as $kk => $vv){
         $status1 = sendPresenceRequest($vv);
-        if(!array_key_exists("notifications", $status1))
-        {
-            $status2 = sendPresenceRequest($vv);
-            if(!array_key_exists("notifications", $status2))
-            {
-                foreach($mobileNumberArr as $k=>$v)
-                {
-		    sms($v);
-                    mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
-		    //mail ("nitishpost@gmail.com","Error in notification api","Please check");
-                }
+        if(!array_key_exists("notifications", $status1)){
+            foreach($mobileNumberArr as $k=>$v){
+                sms($v);
+                mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
+                //mail ("nitishpost@gmail.com","Error in notification api","Please check");
             }
         }
     }
@@ -28,7 +22,7 @@ while(1){
 
 function sendPresenceRequest($url)
 {
-//    $url = JsConstants::$communicationServiceUrl."/profile/v1/presence?pfids=9061321";
+//    $url = JsConstants::$presenceServiceUrl."/profile/v1/presence?pfids=9061321";
 //    $res = CommonUtility::sendCurlPostRequest($url,'');
     $res = sendCurlPostRequest($url,'',5000,true);
     $res = (array) json_decode($res);
@@ -37,7 +31,7 @@ function sendPresenceRequest($url)
 
 function sendLoginRequest()
 {
-    $url = JsConstants::$siteUrl."/api/v1/api/login?&captcha=0&fromPc=1&rememberme=1&email=nitishpost@gmail.com&password=qwerty*123&remember=1";
+    $url = JsConstants::$siteUrl."/api/v1/api/login?&captcha=0&fromPc=1&rememberme=1&email=vibhor_grg@yahoo.com&password=vibhor1234&remember=1";
     $res = sendCurlPostRequest($url,'','');
     $result = preg_split("/\n/",$res);
     foreach($result as $val) {
@@ -74,7 +68,8 @@ function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
 
 function sms($mobile)
 {
-        $message        = "Mysql Error Count have reached jscommunicationPresence NotificationAPI!!";
+        $t = time();
+        $message        = "Mysql Error Count have reached NotificationAPI aftr 3 attempts $t";
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');

@@ -2663,6 +2663,7 @@ function develop_url()
                         if($key=='nextViewSim')
                                 $link.='nextViewSim1__1@';
                 }
+               
 	return $link;
 }
 function navigation($type,$param,$username='',$symfony='')
@@ -2845,7 +2846,7 @@ function navigation($type,$param,$username='',$symfony='')
 		$link=develop_url();
 
                 //Overwrite the link that to be developed ..
-                if($coming_from_dp==1)
+                if($coming_from_dp==1)	
                         $link=$param;
 
                 if($link)
@@ -3054,6 +3055,7 @@ function navigation($type,$param,$username='',$symfony='')
                         //$link_developed="$first;$second;$third";
                 }
                 $link_developed="$first;$second;$third";
+			
         }
 //echo $link_developed;
 	
@@ -3074,6 +3076,7 @@ function show_navigation($navigator,$show_all,$navig_id)
         $isMobile = MobileCommon::isMobile();
         $isPc = MobileCommon::isDesktop();
 	$type_arr=explode(";",$navigator);
+	
 	$TYPE['SR']="/search/perform";
 	$TYPE['VS']="/profile/simprofile_search.php";
 	$TYPE['DP']="/profile/viewprofile.php";
@@ -3112,12 +3115,15 @@ function show_navigation($navigator,$show_all,$navig_id)
 		$TYPE["IGN"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_R"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_S"]="/profile/contacts_made_received.php";
+		$TYPE["EEOI"]="/profile/contacts_made_received.php";
 		$TYPE["EOI"]="/profile/contacts_made_received.php";
 		$TYPE["REM"]="/profile/contacts_made_received.php";
 		$TYPE["MES"]="/profile/contacts_made_received.php";
 		$TYPE["FIL"]="/profile/contacts_made_received.php";
 		$TYPE["VCB"]="/profile/contacts_made_received.php";
 		$TYPE["HOR_M"]="/profile/contacts_made_received.php";
+		$TYPE["AEOI"]="/profile/contacts_made_received.php";
+
 	}
 	$TYPE["FAV"]="/profile/contacts_made_received.php";
 	$TYPE["PHO"]="/profile/contacts_made_received.php";
@@ -3140,6 +3146,19 @@ function show_navigation($navigator,$show_all,$navig_id)
     $TYPE["MA"] = "/search/matchalerts";//Match Alerts
     $TYPE["KM"] = "/search/kundlialerts";//Kundli Alerts
     $TYPE["JVS"] = "/search/MobSimilarProfiles";//Jsms View Similar
+    
+     if($isMobile)
+    {
+		
+		foreach($TYPE as $k=>$v)
+		{
+			if($v=="/profile/contacts_made_received.php")
+			{
+				$TYPE[$k]="/inbox/jsmsPerform";
+				
+			}
+		}
+	}
     
 	$minus=0;
 	if($type_arr[1]=="")
@@ -3238,6 +3257,7 @@ function show_navigation($navigator,$show_all,$navig_id)
 		}
 
 	}
+	
 	return $navigation;
 }
 
@@ -9297,7 +9317,7 @@ function helpWidget($loginData){
                 $phoneNumber = $loggedInProfileObj->getPHONE_WITH_STD();
             }
             else{//Check Alternate Phone numbmer
-                $objAlternate = new NEWJS_JPROFILE_CONTACT;
+                $objAlternate = new ProfileContact();
                 $arrResult = $objAlternate->getProfileContacts($iProfileId);
                 if($arrResult["ALT_MOB_STATUS"] == "Y"){
                     if(trim($arrResult["ALT_MOBILE_ISD"]))

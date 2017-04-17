@@ -77,3 +77,9 @@ changeActiveServicesInterfaceSuccess:
     title:        Change Active Service Interface
   stylesheets:    []
   javascripts:    [] 
+
+crmSmsFunctionalityInterfaceSuccess:
+  metas:
+    title:        CRM SMS Interface
+  stylesheets:    []
+  javascripts:    []

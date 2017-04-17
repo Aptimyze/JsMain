@@ -117,10 +117,12 @@ function get_months()
  */
 function get_years()
 {
-    for ($i = 0; $i < 11; $i++) {
-        $yyarr[$i] = $i + 2006;
+    $yy =date("Y");
+    $j=0;
+    for ($i = 2006; $i <= $yy; $i++) {
+        $yyarr[$j] =$i;
+        $j++;
     }
-
     return $yyarr;
 }
 
@@ -420,6 +422,7 @@ else
         array('name' => 'IVR', 'value' => 'IVR'),
         array('name' => 'Ghar Pay Cheque', 'value' => 'GHAR_PAY_CHEQUE'),
         array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH'),
+        array('name' => 'PayTM on delivery','value'=>'PayTM_ON_DELIVERY')
     );
 //    }
     return $pay_mode;
@@ -686,6 +689,7 @@ else
         array('name' => 'BLUEDART COD', 'value' => 'BLUEDART_COD'),
         array('name' => 'Ghar Pay Cheque', 'value' => 'GHAR_PAY_CHEQUE'),
         array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH'),
+        array('name'=>'PayTM on delivery','value'=>'PayTM_ON_DELIVERY')
     );
 //    }
     return $from_source;

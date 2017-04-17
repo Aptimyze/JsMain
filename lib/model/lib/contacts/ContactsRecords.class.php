@@ -239,7 +239,7 @@ class ContactsRecords
 	* @param - while condition, group by condition
 	* @return - array of count with given condition
 	*/
-	public function getContactsCount( $where, $group='',$time='',$skipProfile='')
+	public function getContactsCount( $where, $group='',$time='',$skipProfile='',$isProfileMemCacheService = '')
 	{
 		if(!$where["RECEIVER"]&&!$where["SENDER"])
 		{
@@ -277,7 +277,56 @@ class ContactsRecords
 			$contactsCount = $contactsObj->getContactsCount($where,$group,$time,$skipProfile);
 		}
 
+		$newArrayTime2 = array();
+		if ( is_array($contactsCount))
+		{
+			foreach ($contactsCount as $key => $value) {
+				if ( $value['TIME1'] == 2 )
+				{
+					$newArray = array('FILTERED' => $value['FILTERED'], 'TYPE' => $value['TYPE'],'SEEN'=>$value['SEEN'],'COUNT'=>$value['COUNT'] );
+					array_push($newArrayTime2, $newArray);
+				}
 
+			}
+		}
+
+		$finalArray = array();
+		foreach ($newArrayTime2 as $keyTime2 => $valueTime2) {
+			$isPresent = 0;
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
+				if ( $value['TIME1'] == 0 )
+				{
+					if ( $valueTime2['FILTERED'] == $value['FILTERED'] && $valueTime2['TYPE'] == $value['TYPE'] && $valueTime2['SEEN'] == $value['SEEN'])
+					{
+						$contactsCount[$key]['COUNT'] += $valueTime2['COUNT'];
+						$isPresent = 1;
+						break;
+					}
+				}
+			}
+
+			}
+			if ( !$isPresent )
+			{
+				array_push($contactsCount,array('FILTERED' => $valueTime2['FILTERED'], 'TYPE' => $valueTime2['TYPE'],'SEEN'=>$valueTime2['SEEN'],'COUNT'=>$valueTime2['COUNT'] ));
+			}
+			
+		}
+	
+		if ( $isProfileMemCacheService == '')
+		{
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
+					if ( $value['TIME1'] == 2 )
+					{
+						unset($contactsCount[$key]);
+					}
+				}
+			}	
+		}
 		return $contactsCount;
 
 	}
@@ -326,6 +375,7 @@ class ContactsRecords
 	}
 	public function getContactedProfileArray($profileid,$condition,$skipArray)
 	{
+
 		$result = false;
 		if(JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') {
 			$result = true;
@@ -447,20 +497,34 @@ class ContactsRecords
 				$params["VIEWEDTYPE"] = "RECEIVER";
 			elseif ($type == ContactHandler::ACCEPT)
 				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::DECLINE)
+				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::CANCEL_ALL)
+				$params["VIEWEDTYPE"] = "SENDER";
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["updateseen"];
 			$result = CommonUtility::webServiceRequestHandler($url, $params, "POST",$timeout);
 		}
 		if($result === false)
 		{
+			if($type == ContactHandler::CANCEL_ALL)
+			{
+				$dbName = JsDbSharding::getShardNo($profileid);
+			$contactResultSetObj = new newjs_CONTACTS($dbName);
+			$result = $contactResultSetObj->updateCancelSeen($profileid);
+			}
+			else
+			{	
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactResultSetObj = new newjs_CONTACTS($dbName);
 			$result = $contactResultSetObj->updateContactSeen($profileid,$type);
+			}
 		}
 		return $result;
 	}
 
 	public function getContactRecords($profileId1,$profileId2,$checkdb=0)
 	{
+
 		$result = false;
 		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
 			$result = true;

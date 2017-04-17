@@ -29,10 +29,10 @@ class LOG_LOGOUT_HISTORY extends TABLE{
 				throw new jsException($e);
 			}
 		}
-	public function insert($pid,$ip)
+	public function insert($pid,$ip,$currentTime='')
 	{
 		try{
-			$logTime=date("Y-m-d H:i:s");
+			$logTime=$currentTime ? $currentTime :  date("Y-m-d H:i:s");
                         $sql="insert into LOG_LOGOUT_HISTORY(PROFILEID,IPADDR,`TIME`) values (:PID,:IP,:TIME)";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":PID",$pid,PDO::PARAM_INT);

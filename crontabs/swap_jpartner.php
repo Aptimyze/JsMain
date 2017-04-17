@@ -22,6 +22,9 @@ include_once(JsConstants::$docRoot."/commonFiles/RevampJsDbFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod')
+	successfullDie();
+
 
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
@@ -157,14 +160,19 @@ while($myrow=mysql_fetch_array($result))
                     $stateArr = explode(",",$row_jp['STATE']);
                     $cityWithQuotes = "";
                     foreach($stateArr as $key => $value){
-                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
-                        $cityWithQuotes.= str_replace(",","','",$cityString);
+						$cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotesArr[]= str_replace(",","','",$cityString);
                     }
-                    if($row_jp['PARTNER_CITYRES'])
-                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
-                    else
-                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
-                } 
+                    if(is_array($cityWithQuotesArr))
+                    {
+						$cityWithQuotes = implode("','",$cityWithQuotesArr);
+	                    if($row_jp['PARTNER_CITYRES'])
+	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+	                    else
+	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
+	                }
+                }
 
 		$filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);
 
@@ -202,13 +210,18 @@ while($myrow=mysql_fetch_array($result))
                     $stateArr = explode(",",$row_jp['STATE']);
                     $cityWithQuotes = "";
                     foreach($stateArr as $key => $value){
-                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
-                        $cityWithQuotes.= str_replace(",","','",$cityString);
+						$cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotesArr[]= str_replace(",","','",$cityString);
                     }
-                    if($row_jp['PARTNER_CITYRES'])
-                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
-                    else
-                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+                    if(is_array($cityWithQuotesArr))
+                    {
+						$cityWithQuotes = implode("','",$cityWithQuotesArr);
+	                    if($row_jp['PARTNER_CITYRES'])
+	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+	                    else
+	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
+	                }
                 } 
 
                 $filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);
@@ -233,12 +246,17 @@ $sql="truncate table SWAP_JPARTNER1";
 mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
+$currentDay = date("D");
 
-if(in_array($currentTime,array(1,2,9,10,18,19)))
-        callDeleteCronBasedOnId('EXPORT','N');
-else
-        callDeleteCronBasedOnId('DELTA','N');
+if(!in_array($currentTime,array("10","11","12","13")) || JsConstants::$whichMachine != 'prod'){
+	$lastTimeSolrRun = date("YmdHis");
+	JsMemcache::getInstance()->set('lastTimeSolrRun',$lastTimeSolrRun,1800000,'','X'); 
 
+        if(in_array($currentTime,array(1,2,9,10,18,19)))
+                callDeleteCronBasedOnId('EXPORT','N');
+        else
+                callDeleteCronBasedOnId('DELTA','N');
+}
 
 function mysql_error1($db)
 {

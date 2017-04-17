@@ -8,6 +8,7 @@ class MOBILE_API_GCM_RESPONSE_LOG extends TABLE{
 			$this->HTTP_STATUS_CODE_BIND_TYPE = "INT";
 			$this->STATUS_MESSAGE_BIND_TYPE = "STR";
 			$this->NOTIFICATION_KEY_BIND_TYPE = "STR";
+            $this->DATE_BIND_TYPE = "STR";
 
         }
 
@@ -17,9 +18,10 @@ class MOBILE_API_GCM_RESPONSE_LOG extends TABLE{
 			return;
 		try
 		{
+        $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
 		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.GCM_RESPONSE_LOG (PROFILEID, REGISTRATION_ID,HTTP_STATUS_CODE,STATUS_MESSAGE,NOTIFICATION_KEY,DATE) VALUES ";
 		foreach($logArray as $i=>$x)
-			$sqlArr[]="(:PROFILEID".$i.",:REGISTRATION_ID".$i.",:HTTP_STATUS_CODE".$i.",:STATUS_MESSAGE".$i.",:NOTIFICATION_KEY".$i.",now())";
+			$sqlArr[]="(:PROFILEID".$i.",:REGISTRATION_ID".$i.",:HTTP_STATUS_CODE".$i.",:STATUS_MESSAGE".$i.",:NOTIFICATION_KEY".$i.",:DATE)";
 		if(is_array($sqlArr))
 		{
 			$sqlStr = implode(",",$sqlArr);
@@ -32,6 +34,7 @@ class MOBILE_API_GCM_RESPONSE_LOG extends TABLE{
 				$resInsert->bindValue(":HTTP_STATUS_CODE".$k,$v['HTTP_STATUS_CODE'],constant('PDO::PARAM_'.$this->{'HTTP_STATUS_CODE_BIND_TYPE'}));
 				$resInsert->bindValue(":STATUS_MESSAGE".$k,$v['STATUS_MESSAGE'],constant('PDO::PARAM_'.$this->{'STATUS_MESSAGE_BIND_TYPE'}));
 				$resInsert->bindValue(":NOTIFICATION_KEY".$k,$v['NOTIFICATION_KEY'],constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
+                $resInsert->bindValue(":DATE",$istTime,constant('PDO::PARAM_'.$this->{'DATE_BIND_TYPE'}));
 			}
 			$resInsert->execute();
 		}
@@ -163,6 +166,19 @@ class MOBILE_API_GCM_RESPONSE_LOG extends TABLE{
                         throw new jsException($e);
                 }
         }
-
+	public function deleteRecordDateWise($sdate,$edate)
+        {
+                try{
+                        $sql = "delete FROM MOBILE_API.GCM_RESPONSE_LOG WHERE DATE>:ST_DATE AND DATE<:END_DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+                        $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                        $res->execute();
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+                return NULL;
+        }
 }
 ?>

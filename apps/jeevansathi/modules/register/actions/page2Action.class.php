@@ -57,7 +57,7 @@ class page2Action extends sfAction {
 				/* Instantiate loggedin profile object */
 				
 				$now = date("Y-m-d G:i:s");
-				$today = date("Y-m-d");
+				$today = CommonUtility::makeTime(date("Y-m-d"));
 				$values_that_are_not_in_form = array('INCOMPLETE' => 'N','ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
                 $this->form->updateData($profileid,$values_that_are_not_in_form);
                 

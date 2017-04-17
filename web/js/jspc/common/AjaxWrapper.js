@@ -16,6 +16,7 @@
       if(typeof _rID == "undefined"){
           _rID = '';
       }
+      var oldUrl = window.location.href;
       $.ajax({
         type: objConfig.type, 
         url: objConfig.url,
@@ -29,6 +30,9 @@
         contentType: (objConfig.contentType != undefined)?objConfig.contentType:'application/x-www-form-urlencoded',
         timeout: (objConfig.timeout != undefined)?objConfig.timeout:'30000',
         showError: (objConfig.showError != undefined)?objConfig.showError:true,
+        updateChatList: (objConfig.updateChatList != undefined)?objConfig.updateChatList:false,
+        updateChatListImmediate: (objConfig.updateChatListImmediate != undefined)?objConfig.updateChatListImmediate:false,
+        updateNonRosterChatGroups: (objConfig.updateNonRosterChatGroups != undefined)?objConfig.updateNonRosterChatGroups:null,
         beforeSend: function() {
          /** add common code **/
          if ( $.isFunction(objConfig.beforeSend) ) {
@@ -40,11 +44,15 @@
 
           objConfig.complete(data, objConfig);
         }
+        //console.log("before complete",objConfig.updateChatListImmediate,oldUrl,window.location.href);
+        //update non roster chat list
+        if($.isFunction(reActivateNonRosterPolling) && ((window.location.href != oldUrl) || objConfig.updateChatList == true || objConfig.updateChatListImmediate == true)){
+          reActivateNonRosterPolling("ajax",objConfig.updateChatListImmediate,objConfig.updateNonRosterChatGroups);
+        }
       },
 
       success: function(data, textStatus, xhr) {
        /** add common code **/
-       
        if(data.responseStatusCode == 9)
        {
         var url = "";

@@ -24,7 +24,7 @@ foreach($campaignArr as $key=>$campaignName)
 {
 	$dateTime ='';
 	if($campaignName=='FP_JS')
-		$dateTime =date("Y-m-d H:i:s",time()-26*60*60);
+		$dateTime =date("Y-m-d H:i:s",time()-22.5*60*60);
 	elseif($campaignName=='UPSELL_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
 

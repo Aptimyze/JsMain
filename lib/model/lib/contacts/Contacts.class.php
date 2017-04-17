@@ -133,7 +133,10 @@ class Contacts {
 	const PROFILE_ERROR = "Object is not profile obj";
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
-
+	const CONTACT_TYPE_CACHE_EXPIRY = 86400; //seconds
+	const EXPIRING_INTEREST_UPPER_LIMIT = 90;
+	const EXPIRING_INTEREST_LOWER_LIMIT = 84;
+	const INTEREST_RECEIVED_UPPER_LIMIT = 90;
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class
@@ -417,9 +420,12 @@ class Contacts {
 			else
 				$this->setSEEN(Contacts::NOTSEEN);
 		}
-		else
+		else    
 			$this->setTYPE(Contacts::TYPEDEFAULT);
+                        
+                self::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());
 
+                        
 	}
 
 	/****************************************************************************************************/
@@ -469,6 +475,8 @@ class Contacts {
 				$success=$this->dbObjSender->update($this);
 			if($this->dbSender!=$this->dbReceiver && $success)
 				$this->dbObjReceiver->update($this);
+                        if($success)
+                            Contacts::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());
 		}
 	}
 	/**
@@ -509,13 +517,17 @@ class Contacts {
 				$success=$this->dbObjSender->insert($this);
 			if($this->dbSender!=$this->dbReceiver && $success)
 			{
-				if(!$this->dbObjReceiver->insert($this))
+                                $success = $this->dbObjReceiver->insert($this);
+				if(!$success)
 				{
-					if(!$this->dbObjReceiver->insert($this))
+                                    $success = $this->dbObjReceiver->insert($this); 
+					if(!$success)
 						$this->dbObjSender->delete($this);
 				}
 
 			}
+                        if($success)
+                                Contacts::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());                            
 		}
 
 	}
@@ -697,5 +709,75 @@ class Contacts {
 		else
 			return '';
 	}
+        // profileId1 is sender and profileid2 receiver of interest
+        public static function setContactsTypeCache($profileId1,$profileId2,$type){
+            if(!$profileId1 || !$profileId2 || !$type)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            $smallIsWho = $sortedArray[0] == $profileId1 ? 'S' : 'R';
+            $result = $type."_".$smallIsWho;
+            JsMemcache::getInstance()->setRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
+            return $result;
+            
+        }
+        public static function unSetContactsTypeCache($profileId1,$profileId2){
+            if(!$profileId1 || !$profileId2)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            JsMemcache::getInstance()->delete($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            return true;
+            
+        }
+        public static function getContactsTypeCache($profileId1,$profileId2)
+        {
+            if(!$profileId1 || !$profileId2)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            $result = JsMemcache::getInstance()->getRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            
+            if(!$result)
+                {
+				$ignoreObj = new IgnoredProfiles();
+                                $whoignored = $ignoreObj->ifIgnored($profileId1,$profileId2)? 1 :($ignoreObj->ifIgnored($profileId2,$profileId1) ? 2 : 0);
+				if($whoignored)
+                                {
+                                       $type='B';
+                                       $result = ($whoIgnored == 1) ? self::setContactsTypeCache($profileId1, $profileId2, $type) : self::setContactsTypeCache($profileId1, $profileId2, $type);
+                                }
+				else
+				{	 
+                                $shardNo = JsDbSharding::getShardNo($profileId1);
+                                $dbObj = new newjs_CONTACTS($shardNo);
+                                $resArray = $dbObj->getContactRecord($profileId1, $profileId2);
+                                $type = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
+                                if($resArray)
+                                    $result = self::setContactsTypeCache($resArray['SENDER'], $resArray['RECEIVER'], $type);
+                                else
+                                    $result = self::setContactsTypeCache($profileId1, $profileId2, $type);
+
+                                }
+            
+                }
+     return $result;
+        
+    }
+
+    /**
+	 * checks if message is obscene
+	 * @return boolean
+	 */
+	public function isObscene($message)
+	{
+		$dbObj = new newjs_OBSCENE_WORDS();
+		$obscene = $dbObj->getObsceneWord();
+		$messageArr = explode(" ",$message);
+		foreach($obscene as $index=>$value)
+		{
+			foreach($messageArr as $k=>$messWord){
+				$messWord = preg_replace('/\s+/', '', $messWord);
+				if(strtolower($messWord) == strtolower($value))
+				{
+					return true;
+				}
+			}
+		}
+    }
 }
 ?>

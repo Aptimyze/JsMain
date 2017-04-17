@@ -205,6 +205,9 @@ class crmAllocationActions extends sfActions
 			$entryDt = date("Y-m-d H:i:s");
 			$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
 			$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+            if($discountNegVal <= 10){
+                $agentAllocDetailsObj->mailForLowDiscount($this->username,$this->agentName,$discountNegVal);
+            }
 		}
 
 		// Disposition value parsing  
@@ -326,6 +329,9 @@ class crmAllocationActions extends sfActions
 					$entryDt = date("Y-m-d H:i:s");
 					$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
 					$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+                    if($discountNegVal <= 10){
+                        $agentAllocDetailsObj->mailForLowDiscount($this->username,$this->agentName,$discountNegVal);
+                    }
 				}
 
 	                // Disposition value parsing  
@@ -384,6 +390,12 @@ class crmAllocationActions extends sfActions
 	$this->callSource   =$crmUtilityObj->populateCallSource();
         $this->queryType    =$crmUtilityObj->populateQueryType();
 	$this->willPay      =$crmUtilityObj->populateDisposition($this->willPayVal);
+		if ($this->profileid) {
+			$curAllotAgent = $agentAllocDetailsObj->getAllotedAgent($this->profileid);
+			if ($curAllotAgent == $this->agentName) {
+				$this->isAlloted = 1;
+			}
+		}
        	$this->setTemplate('inboundAllocation');
   }
   public function executeManualAllocation(sfWebRequest $request)

@@ -108,7 +108,7 @@ class JsMemcache extends sfMemcacheCache{
 		/* removed the function defination as file locking does not make any sense here */
 	}
 	public function set($key,$value,$lifetime = NULL,$retryCount=0,$jsonEncode='')
-	{
+	{  
 		if(self::isRedis())
 		{
 			if($this->client)
@@ -132,7 +132,9 @@ class JsMemcache extends sfMemcacheCache{
 					if(!$lifetime)
 						$lifetime= 3600;
 					$key = (string)$key;
-					if($jsonEncode=='1')
+					if($jsonEncode=='X')
+						;
+					elseif($jsonEncode=='1')
 						$value = json_encode($value);
 					else
 						$value = serialize($value);
@@ -156,7 +158,7 @@ class JsMemcache extends sfMemcacheCache{
 		}
 	}
 
-	public function get($key,$default = NULL,$retryCount=0)
+	public function get($key,$default = NULL,$retryCount=0,$unserialize=1)
 	{
 		if(self::isRedis())
 		{
@@ -173,9 +175,12 @@ class JsMemcache extends sfMemcacheCache{
 						return $arr["item"]["data"][$key];
 					}
 					return false;
-					*/
-					$key = (string)$key;
+					*/		
+					$key = (string)$key;					
 					$value = $this->client->get($key);
+                                        if($unserialize === 0){
+                                                return $value;
+                                        }
 					$value = unserialize($value);
 					return $value;
 				}
@@ -243,6 +248,42 @@ class JsMemcache extends sfMemcacheCache{
 			parent::remove($key);
 		}
 	}
+
+	/*function to delete keys with matched suffix
+	* @params:$key,$patternType="suffix",$throwException=false
+	*/
+	public function deleteKeysWithMatchedSuffix($key,$patternType="suffix",$throwException=false){
+		if(self::isRedis() && $key!="")
+		{
+			if($this->client)
+			{
+				try
+				{
+					$key = (string)$key;
+					if($patternType == "suffix"){
+						$key = "*".$key;
+					}
+					else{
+						$key = $key."*";
+					}
+					$value = $this->client->keys($key);
+					if(is_array($value)){
+						foreach ($value as $k => $v) {
+							$this->client->del($k);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+					if($throwException) {
+						throw $e;
+					}
+					jsException::log("D-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
 	public function zAdd($key,$test1,$test2)
 	{
 		if(self::isRedis())
@@ -439,7 +480,7 @@ class JsMemcache extends sfMemcacheCache{
 			if($this->client)
 			{
 				try
-				{
+				{					
 					return $this->client->incr($key);
 				}
 				catch (Exception $e)
@@ -672,21 +713,17 @@ class JsMemcache extends sfMemcacheCache{
   }
 
   //This function uses pipeline to save all values in arr corresponding to the given key in the redis
-  public function storeDataInCacheByPipeline($key,$arr)
+  //Pipleline was removed since we could add data in an array directly using a single sadd
+  public function storeDataInCacheByPipeline($key,$arr,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{
   		if($this->client)
   		{
   			try
-  			{
-  				$pipe = $this->client->pipeline();
-
-  				foreach($arr as $k=>$value) {
-  					$pipe->sadd($key,$value); //adds $value to $key
-  				}
-  				$resultArr = $pipe->execute();
-  				return $resultArr;
+  			{ 	$returnVal = $this->client->sadd($key,$arr);  				
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;
   			}
   			catch (Exception $e)
   			{
@@ -696,7 +733,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function deleteSpecificDataFromCache($key,$value)
+  public function deleteSpecificDataFromCache($key,$value,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{
@@ -704,7 +741,9 @@ class JsMemcache extends sfMemcacheCache{
   		{
   			try
   			{
-  				return $this->client->srem($key,$value);
+  				$returnVal = $this->client->srem($key,$value);
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;		
   			}
   			catch (Exception $e)
   			{
@@ -714,7 +753,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function addDataToCache($key,$value)
+  public function addDataToCache($key,$value,$expiryTime=7200)
   {
   	if(self::isRedis())
   	{
@@ -722,7 +761,9 @@ class JsMemcache extends sfMemcacheCache{
   		{
   			try
   			{
-  				return $this->client->sadd($key,$value);
+  				$returnVal = $this->client->sadd($key,$value);
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;
   			}
   			catch (Exception $e)
   			{
@@ -816,5 +857,127 @@ class JsMemcache extends sfMemcacheCache{
   		}
   	}
   }
+  public function addKeyToSet($setName,$key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				$pipe = $this->client->pipeline();
+                                $pipe->sAdd($setName,$key);
+                                $pipe->execute();	
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+
+
+  	/**
+	 * @param $key
+	 * @param $value
+	 * @param int $expiryTime
+	 * @param bool $throwException
+	 * @return value
+	 * @throws Exception
+	 */
+    public function setRedisKey($key,$value,$expiryTime=3600,$throwException = false)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {  
+                    $result = $this->client->set($key, $value);
+                    $this->client->expire($key, $expiryTime);
+					return true;
+                }
+                catch (Exception $e)
+                {
+					if ($throwException) {
+						throw $e;
+					}
+                    jsException::log("Redis Set Key".$e->getMessage());
+                }
+            }
+        }
+    }
+
+
+    public function getRedisKey($key,$default = NULL,$retryCount=0)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					$value = $this->client->get($key);
+					return $value;
+				}
+				catch (Exception $e)
+				{
+					jsException::log("G-redisKey".$e->getMessage());
+				}
+			}
+		}
+	}
+
+ 
+   /**
+    * 
+    * @param type $key
+    * @return type
+    */
+   public function ttl($key)
+ 	{
+ 		if(self::isRedis())
+ 		{
+ 			if($this->client)
+ 			{
+ 				try
+ 				{
+ 					return $this->client->ttl($key);
+ 				}
+ 				catch (Exception $e)
+ 				{
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 				}
+ 			}
+ 		}
+
+	}
+
+	/**
+    * This function is used to set an expiry time on a key
+    * @param type $key
+    * @return type
+    */
+   public function setExpiryTime($key,$expiryTime)
+ 	{
+ 		if(self::isRedis())
+ 		{
+ 			if($this->client)
+ 			{
+ 				try
+ 				{
+ 					return $this->client->expire($key,$expiryTime);
+ 				}
+ 				catch (Exception $e)
+ 				{
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 				}
+ 			}
+ 		}
+
+	}
+  
 }
 ?>

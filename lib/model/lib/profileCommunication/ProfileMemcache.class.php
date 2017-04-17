@@ -89,6 +89,7 @@ class ProfileMemcache
     private $MATCHALERT;
     private $MATCHALERT_TOTAL;
     private $VISITOR_ALERT;
+    private $VISITORS_ALL;
     private $CHAT_REQUEST;
     private $BOOKMARK;
     private $SAVED_SEARCH;
@@ -204,7 +205,7 @@ class ProfileMemcache
     private $HOROSCOPE_REQUEST_BY_ME;
     //private $HOROSCOPE_NEW;
     private $contactedProfile;
-    
+    private $INTEREST_EXPIRING;
     
     
     /**
@@ -320,6 +321,7 @@ class ProfileMemcache
         $this->MATCHALERT              = $this->_memcache["MATCHALERT"] ? $this->_memcache["MATCHALERT"] : 0;
         $this->MATCHALERT_TOTAL              = $this->_memcache["MATCHALERT_TOTAL"] ? $this->_memcache["MATCHALERT_TOTAL"] : 0;
         $this->VISITOR_ALERT           = $this->_memcache["VISITOR_ALERT"] ? $this->_memcache["VISITOR_ALERT"] : 0;
+        $this->VISITORS_ALL           = $this->_memcache["VISITORS_ALL"] ? $this->_memcache["VISITORS_ALL"] : 0;
         $this->CHAT_REQUEST            = $this->_memcache["CHAT_REQUEST"] ? $this->_memcache["CHAT_REQUEST"] : 0;
         $this->BOOKMARK                = $this->_memcache["BOOKMARK"] ? $this->_memcache["BOOKMARK"] : 0;
         $this->SAVED_SEARCH                = $this->_memcache["SAVED_SEARCH"] ? $this->_memcache["SAVED_SEARCH"] : 0;
@@ -330,7 +332,9 @@ class ProfileMemcache
         $this->PEOPLE_WHO_VIEWED_MY_CONTACTS            = $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] ? $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] : 0;
          $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
         $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
+        $this->INTEREST_ARCHIVED           = $this->_memcache["INTEREST_ARCHIVED"] ? $this->_memcache["INTEREST_ARCHIVED"] : "";
         $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
+        $this->INTEREST_EXPIRING                = $this->_memcache["INTEREST_EXPIRING"] ? $this->_memcache["INTEREST_EXPIRING"] : 0;
     
     
     }
@@ -368,10 +372,15 @@ class ProfileMemcache
      */
     private function _setMemcacheData($data_variables)
     {
-        
-        $ret_val = JsMemcache::getInstance()->set($this->_getProfileId(), $data_variables);
+        // Get TTL of Key
+        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileId());
+        if($lifetime < 0)
+        {
+            // key doesnot exist or expire time is not defined
+            $lifetime = 1800;
+        }
+        $ret_val = JsMemcache::getInstance()->set($this->_getProfileId(), $data_variables, $lifetime);
         return $ret_val;
-        
     }
     
     /**
@@ -725,6 +734,16 @@ class ProfileMemcache
         
     }
 
+    public function getINTEREST_ARCHIVED()
+    {
+        return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
+    }
+    public function setINTEREST_ARCHIVED($current = 0)
+    {
+        $this->INTEREST_ARCHIVED = $current;
+    }
+
+
     public function getPHOTO_REQUEST_BY_ME()
     {
         
@@ -791,6 +810,16 @@ class ProfileMemcache
     public function setVISITOR_ALERT($current = 0)
     {
         $this->VISITOR_ALERT = $current;
+    }
+    
+    public function getVISITORS_ALL()
+    {
+        return $this->VISITORS_ALL ? $this->VISITORS_ALL : 0;
+        
+    }
+    public function setVISITORS_ALL($current = 0)
+    {
+        $this->VISITORS_ALL = $current;
     }
     
     /**
@@ -1221,8 +1250,7 @@ class ProfileMemcache
      * @return integer
      */
     public function getNOT_REP()
-    {
-        
+    { 
         return $this->NOT_REP ? $this->NOT_REP : 0;
         
     }
@@ -1276,6 +1304,23 @@ class ProfileMemcache
     public function setOPEN_CONTACTS($current = 0)
     {
         $this->OPEN_CONTACTS = $current;
+        
+    }
+
+    /**
+     * 
+     * Set count of INTEREST EXPIRING 
+     * 
+     * <p>
+     * This function sets the number of interest expiring values.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setINTEREST_EXPIRING($current = 0)
+    {
+        $this->INTEREST_EXPIRING = $current;
         
     }
     
@@ -1475,6 +1520,10 @@ class ProfileMemcache
                 $this,
                 getVISITOR_ALERT
             )),
+            "VISITORS_ALL" => call_user_func(array(
+                $this,
+                getVISITORS_ALL
+            )),
             "CHAT_REQUEST" => call_user_func(array(
                 $this,
                 getCHAT_REQUEST
@@ -1514,7 +1563,15 @@ class ProfileMemcache
             "IGNORED" => call_user_func(array(
                 $this,
                 getIGNORED
-            ))
+            )),
+             "INTEREST_ARCHIVED" => call_user_func(array(
+                $this,
+                getINTEREST_ARCHIVED
+	    )),
+            "INTEREST_EXPIRING" => call_user_func(array(
+                $this,
+                getINTEREST_EXPIRING
+            )),
         );
         
         $this->_updateMemcacheVariables(serialize($data_variables));
@@ -1671,6 +1728,22 @@ class ProfileMemcache
         return $this->IGNORED;
         
     }
+
+    /**
+     * 
+     * Get interest expiring profiles count.
+     * 
+     * <p>
+     * This function returns the interest expiring profiles count.
+     * </p>
+     * 
+     * @access public
+     * @return count
+     */
+    public function getINTEREST_EXPIRING()
+    {
+        return $this->INTEREST_EXPIRING;
+    }
     
     
     /**
@@ -1691,6 +1764,10 @@ class ProfileMemcache
     public function setMESSAGE_ALL($current = 0)
     {
         $this->MESSAGE_ALL = $current;
+    }
+    public static function unsetInstance($profileid)
+    {
+            unset(self::$_instance[$profileid]);
     }
     
    

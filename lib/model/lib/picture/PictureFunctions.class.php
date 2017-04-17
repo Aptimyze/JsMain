@@ -368,9 +368,17 @@ class PictureFunctions
 		$remaining=substr($value,2);
 		switch($flag)
 		{
-			case IMAGE_SERVER_ENUM::$appPicUrl : $setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
+			case IMAGE_SERVER_ENUM::$appPicUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$httpsApplicationPhotoUrl;
+							else
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
 							     break;
-			case IMAGE_SERVER_ENUM::$cloudUrl : $setServer=JsConstants::$cloudUrl;
+			case IMAGE_SERVER_ENUM::$cloudUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=JsConstants::$httpsCloudUrl;
+							else
+								$setServer=JsConstants::$cloudUrl;
 							    break;
 			 case IMAGE_SERVER_ENUM::$cloudArchiveUrl : $setServer=JsConstants::$cloudArchiveUrl;
                                                             break;
@@ -420,7 +428,7 @@ class PictureFunctions
 	* @param url : url of the photo to be displayed.
 	* @return arr aray containg photo message and action on message;
 	*/
-	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="")
+	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="", $noStaticImage=false)
 	{
 		$clickAction = null;
 		$msg = null;
@@ -472,7 +480,7 @@ class PictureFunctions
 		$arr["label"] = $msg;
 		if($msg!=null)
 		{
-			if(MobileCommon::isApp())
+			if(MobileCommon::isApp() || $noStaticImage)
 				$arr["url"] = null;
 			else
 				$arr["url"] =self::getNoPhotoJSMS($gender,$photoType);
@@ -554,7 +562,12 @@ class PictureFunctions
 					$pictureServiceObj = new PictureService($loginProfile);
 					$profilePicObj = $pictureServiceObj->getProfilePic();
 				   	if($profilePicObj){
-					   	$photoArray = self::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$gender);
+				   		if($profilePic=='U')	
+							$picUrl = $profilePicObj->getThumbail96Url();
+						else
+							$picUrl = $profilePicObj->getProfilePic120Url();
+
+					   	$photoArray = self::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$gender);
 					   	if($photoArray[label] != ''){
 	                    	$thumbnailUrl = self::getNoPhotoJSMS($gender,'ProfilePic120Url');
 					   	} else {

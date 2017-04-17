@@ -15,6 +15,11 @@ class LoggingManager
 	 * @var Object
 	 */
 	private static $instance = null;
+	
+	/**
+	 * @var boolean
+	 */
+	private $logged = false;
 
 	private $baseLogPath = null;
 	/**
@@ -123,6 +128,16 @@ class LoggingManager
 		}
 		self::$instance->szLogPath = $basePath;
 		return self::$instance;
+	}
+
+	public function getLogged()
+	{
+		return $this->logged;
+	}
+
+	public function setLogged()
+	{
+		$this->logged = true;
 	}
 
 	 /**
@@ -238,6 +253,8 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
+		$mappingName = $this->getlogMappingName($moduleName);
+		$scriptName = $this->getlogScriptName();
 		//$headers = getallheaders();
 		$logData = array();
 
@@ -294,6 +311,16 @@ class LoggingManager
 			$logData[LoggingEnums::MESSAGE] = $message;
 		} 
 
+		if($mappingName != "")
+		{
+			$logData[LoggingEnums::MAPPING] = $mappingName;
+		}
+
+		if($scriptName != "")
+		{
+			$logData[LoggingEnums::SCRIPT] = $scriptName;
+		}
+
 		if($this->canWriteTrace($this->moduleName))
 		{
 			if ( $exception instanceof Exception)
@@ -312,6 +339,15 @@ class LoggingManager
 			}
 
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
+		}
+		else
+		{
+			$logData[LoggingEnums::REFERER] = $_SERVER['HTTP_REFERER'];
+		}
+
+		if($exception instanceof Exception)
+		{
+			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
 		}
 		return $logData;
 	}
@@ -463,34 +499,33 @@ class LoggingManager
 	private function getLogModuleName($isSymfony = true,$exception = null,$logArray = array())
 	{
 		$moduleName = "";
-		if ( !isset($logArray[LoggingEnums::MODULE_NAME]))
+		if (!isset($logArray[LoggingEnums::MODULE_NAME]))
 		{
-			if ( $isSymfony )
+			$request = sfContext::getInstance()->getRequest();
+			$moduleName = $request->getParameter("module");
+			if(isset($moduleName))
 			{
-				$request = sfContext::getInstance()->getRequest();
-				$moduleName = $request->getParameter("module");
 				if($moduleName == "api")
 				{
 					$apiWebHandler = ApiRequestHandler::getInstance($request);
 					$details = $apiWebHandler->getModuleAndActionName($request);
 					$moduleName = $details['moduleName'].'_'.$moduleName;
-				} elseif($moduleName == "e") {
+				} 
+				elseif($moduleName == "e")
+				{
 					$moduleName = "AutoLogin";
 				}
 			}
 			else
 			{
-				if ( $exception instanceof Exception)
+				// In case when we don't get module name from Symfony
+				if($exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
 					$arrExplodedPath = explode('/', $exceptionLiesIn);
 					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
 				}
-				if($moduleName == "profile")
-				{
-					$moduleName = "inbox";
-				}
-			}
+			}	
 		}
 		else
 		{
@@ -510,10 +545,10 @@ class LoggingManager
 		$actionName = "";
 		if ( !isset($logArray[LoggingEnums::ACTION_NAME]))
 		{
-			if ( $isSymfony )
+			$request = sfContext::getInstance()->getRequest();
+			$actionName = $request->getParameter("action");
+			if(isset($actionName))
 			{
-				$request = sfContext::getInstance()->getRequest();
-				$actionName = $request->getParameter("action");
 				if($actionName == "apiRequest")
 				{
 					$apiWebHandler = ApiRequestHandler::getInstance($request);
@@ -523,7 +558,8 @@ class LoggingManager
 			}
 			else
 			{
-				if ( $exception instanceof Exception)
+				// In case when we don't get action name from Symfony
+				if($exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
 					$arrExplodedPath = explode('/', $exceptionLiesIn);
@@ -568,6 +604,10 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
+		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+		{
+			$this->setLogged();
+		}
 	}
 
 	/**
@@ -599,16 +639,22 @@ class LoggingManager
 	 */
 	private function canLog($enLogType,$Var,$isSymfony,$logArray)
 	{
+		// A request should be logged only once.
+		if($enLogType == LoggingEnums::LOG_ERROR && $this->getLogged())
+		{
+			return false;
+		}
 		// set module name
 		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
+		// check Log Level
+		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName) || ($this->szLogPath != null));
+
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);
-		// check Log Level
-		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName));
 		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
@@ -643,5 +689,37 @@ class LoggingManager
 	private function canWriteTrace($moduleName)
 	{
 		return LoggingConfig::getInstance()->traceStatus($moduleName);
+	}
+
+	/**
+	 * @param $moduleName
+	 * @return Mapping name of a module
+	 */
+	private function getlogMappingName($moduleName)
+	{
+		if(in_array($moduleName, array_keys(LoggingEnums::$ModuleMapping)))
+		{
+			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
+		}
+		else if(strpos($moduleName, '404') !== false)
+		{
+			$mappingName = LoggingEnums::$MappingNames[20];
+		}
+		else
+		{
+			$mappingName = LoggingEnums::$MappingNames[21];
+		}
+		return $mappingName;
+	}
+
+	// Get script name for failed cli scripts like RabbitMQ consumer crons.
+	private function getlogScriptName()
+	{
+		$scriptName = '';
+		if(php_sapi_name() === 'cli')
+		{
+			$scriptName = json_encode($_SERVER['argv']) . $_SERVER['SCRIPT_FILENAME'];
+		}
+		return $scriptName;
 	}
 }

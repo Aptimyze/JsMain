@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/symfony cron:cronPromotionalAlternateEmail 1 0 0
+retries=3
+retry.backoff=50000

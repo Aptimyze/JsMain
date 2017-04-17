@@ -73,6 +73,7 @@ class WriteMessagev2Action extends sfAction
 						}
 						else
 							$nextPaginationCall=false;
+						$countChat = $chatLogObj->markChatSeen($this->loginProfile->getPROFILEID(),$profileid);
 					}
 					else{
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);

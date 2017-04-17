@@ -33,7 +33,10 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-        
+    if ( firstResponse.searchid == 23 && firstResponse.total != "0")
+    {
+    	$("#interestExpiringMessage").removeClass('dispnone');
+    }
         
 //        onBackBtnSRP = function()
 //        { 
@@ -107,7 +110,6 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 	var triggerPoint = $(document).height() - ($(window).scrollTop() + $(window).height());
 	if(!isLoading)
 	{
-		
 		if(loadPageToLoadId)
 		{			
 			loadsNextResult(loadPageToLoadId,idToLoad);
@@ -228,6 +230,8 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 { 
         if(typeof contactTracking == 'undefined')
 		contactTracking="&stype="+stypeKey;
+
+		
 		
         var tupleStructure = 
 	'<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}">\
@@ -272,7 +276,16 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
+    if ( firstResponse.infotype == "INTEREST_ARCHIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
 			
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
+
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{
@@ -380,6 +393,21 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
+if(idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
+        if(getAndroidVersion() || getIosVersion()){
+                var mbtext = "";
+                if(getAndroidVersion()){
+                        var type = "apppromotionSRPAndroid";
+                        var lableText = "Android";
+                        var mbtext = "<div class='txtc fontlig f14 pt5'>(3 MB only)</div>";
+                }
+                if(getIosVersion()){
+                        var type = "apppromotionSRPIos";
+                        var lableText = "iOS";
+                }                
+                tupleStructure += '<div class="srp_bgmsg dispnone padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=\"trackJsEventGA(\'Download App\',\'SRP\', \''+lableText+'\');\" href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
+        }
+}
 	return tupleStructure;
 }
 
@@ -788,6 +816,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	}
 	else
   $("#iddf1").css("margin-top",$("#searchHeader").height()+"px");
+ 	
   if(nextAvail!='false')
 	{ 	
 		
@@ -806,6 +835,10 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 		}
 	}
 	else{
+		if ( response.archivedInterestLinkAtEnd )
+		{
+			bottomErrorMsg('<a href="/inbox/jsmsPerform?searchId=22" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+		}
 		noScrollingAction=1;
 		reachedEnd=1;
 		$("div.loaderBottomDiv").remove();
@@ -1031,7 +1064,17 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				var pageAct = parseInt($("div.tupleOuterDiv").last().attr("id").replace(/[^-\d\.]/g, ''))+1;
 				pageAct = "idd"+pageAct;
 				var sbPar = removeNull(firstResponse.searchBasedParam);
-				var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				/*
+					Added this check for contacts section more listing.
+				 */
+				if ( contactCenter == 1 )
+				{
+					var newAction = "/inbox/jsmsPerform?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
+				else
+				{
+					var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
 				bottomErrorMsg('<a href="'+newAction+'" class="color2 txtc">Load More Profiles.</a>','','');
 			}
 		}
@@ -1060,6 +1103,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 			}
 		},timedOut);
 		BindNextPage();
+		$('.srp_bgmsg').css('display','block');
 	},timedOut);
 		BindNextPage();
 }
@@ -1076,7 +1120,11 @@ function forceJumpToPage(idToJump){
 				var top = $('#idd'+idToJump).offset().top;
 			else
 				var top = $('#iddf1').offset().top;
-			$("html, body").scrollTop(top);		
+
+			if ( idToJump != 1 )
+			{
+				$("html, body").scrollTop(top);		
+			}
 			loadNextImages();
 		},timedOut);
 	}

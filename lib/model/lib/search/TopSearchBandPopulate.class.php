@@ -248,8 +248,8 @@ class TopSearchBandPopulate
                                         $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
                                 else
                                         $this->selectedCity_Country = $param["COUNTRY_RES"];
-                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+//                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+//                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }
                 }
@@ -377,7 +377,7 @@ class TopSearchBandPopulate
 	public function generateDataArrayApp()
 	{
 		
-		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"))
+		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP")  && MobileCommon::isApp() != 'I')
                 {
                         $this->dataArray = unserialize(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"));
                 }
@@ -1203,14 +1203,16 @@ class TopSearchBandPopulate
                 }
 	}
         public function populateManglik(){
-                $i=0;
+                $i=0;               
 		foreach(FieldMap::getFieldLabel("manglik_label",'',1) as $k=>$v)
                 {
-                        if($k !== 'D'){
-                                $output[$i]["VALUE"] = $k;
+                        if($k == "D" || $k == "S0"){} // Do not add Don't Know and Select in the dropdown
+                        	else
+                        	{
+                        		$output[$i]["VALUE"] = $k;
                                 $output[$i]["LABEL"] = $v;
                                 $i++;
-                        }
+                        	}
 		}
                 return $output;
         }
@@ -2291,8 +2293,8 @@ class TopSearchBandPopulate
                                                 $output["mtongue"][] = $mt;
                                                 $output["mtongue_label"][] =FieldMap::getFieldLabel("community_small",$mt); 
                                         }
-                                        $output["mtongue"] = implode(',',$output["mtongue"]);
-                                        $output["mtongue_label"] =implode(',',$output["mtongue_label"]); 
+                                        $output["mtongue"] = trim(implode(',',$output["mtongue"]),",");
+                                        $output["mtongue_label"] =trim(implode(',',$output["mtongue_label"]),","); 
                                 }else{
                                         $output["mtongue"] = $output["mtongue"][0];
                                         $output["mtongue_label"] = $output["mtongue_label"][0];

@@ -17,7 +17,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	private $textArea=4;
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
-		$dbHobbies = new NEWJS_HOBBIES();
+		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
 		$this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
@@ -337,9 +337,12 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * */
 	public function getApiContactInfo() {
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Name of the Profile Creator" , $this->profile->getDecoratedPersonHandlingProfile(),"",$this->getApiScreeningField("PROFILE_HANDLER_NAME"),$this->text,'','','',true);
-		
-		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text);
 
+		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
+		
+		//Alternate Email
+		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"","0",$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
+		
 		//mobile number
 		if($this->profile->getPHONE_MOB())
 		{
@@ -424,6 +427,12 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$contactArrFinal[EMAIL][outerSectionValue]=$this->profile->getEMAIL();
 		$contactArrFinal[EMAIL][singleKey]=1;
 		$contactArrFinal[EMAIL][OnClick]=$contactArr;
+
+		$contactArrFinal[ALT_EMAIL][outerSectionName]="Alternate Email Id";
+		$contactArrFinal[ALT_EMAIL][outerSectionKey]="AlternateEmailId";
+		$contactArrFinal[ALT_EMAIL][outerSectionValue]=$this->profile->getExtendedContacts()->ALT_EMAIL; 
+		$contactArrFinal[ALT_EMAIL][singleKey]=1;
+		$contactArrFinal[ALT_EMAIL][OnClick]=$contactArr;
 		
 		$contactArrFinal[PHONE_MOB][outerSectionName]="Mobile No.";
 		$contactArrFinal[PHONE_MOB][outerSectionKey]="MobileNo";
@@ -519,6 +528,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//mstatus
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
 		
+                $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		
@@ -756,17 +766,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	    {
 	      $count_matches = 0;
 	    }
-		
-		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"","Y");
-
-
-
 		//City
 		if(strpos($szCountry,"51")!==false || strpos($szCountry,"128")!==false)
 			$showCity=1;
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$DppBasicArr["BasicDetails"][OnClick][]= $this->handleStateCityData($szState,$szCity,$showCity);
+                $DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"","Y");
 		return $DppBasicArr;
 	}
 
@@ -789,10 +795,23 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//Occupation
 		$szOcc = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_OCC());
 		$p_occlevel=trim($jpartnerObj->getDecoratedPARTNER_OCC());
-		if($szEdu=="DM")
+		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
+		//Occupation grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"),$this->dropdown,'',1);				
+		//commented the occupation array because it is not needed on JSMS
+		//$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
 		//Income
 		$szIncomeRs = $this->getDecorateDPP_Response($jpartnerObj->getLINCOME());
 		$szIncomeRs .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME());
@@ -806,7 +825,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_RS","Income Rs",trim($incLab[0]),$szIncomeRs,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);			
 		return $DppBasicArr;		
 	}
 
@@ -1036,6 +1055,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if((!$COUNTRY_RES) ||($COUNTRY_RES==51 && (!$CITY_RES)))
 		{
 			$incompleteArr[]=$this->getApiIncompleteFormatArray("COUNTRY_RES","Country living in",$COUNTRY_RES,"Y");
+                        $stateValue = substr($this->profile->getCITY_RES(),0,2);
+                        $incompleteArr[] =$this->getApiIncompleteFormatArray("STATE_RES","State Living in" ,$stateValue,"Y");
 			$incompleteArr[]=$this->getApiIncompleteFormatArray("CITY_RES","City living in",$CITY_RES,"Y");
 		}		
 		//---Mstatus and Have Child Section Religion Caste			
@@ -1103,7 +1124,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array()) {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="") {
 	//	$arr["sectionName"]=$sectionName;
 	//	$arr["sectionValue"]=$sectionValue;
 		$arr["key"]=$key;
@@ -1118,6 +1139,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$arr["hidden"]=$hidden;
 		$arr["showSettings"]=$showSettings;
 		$arr["settingData"]=$settingData;
+		$arr["verifyStatus"]=$verifyStatus;
 		return $arr;
 
 	}
@@ -1172,6 +1194,14 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     	}
     	$stateCityArr = $this->getApiFormatArray("P_CITY","State/City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"),$this->dropdown,'',1,'',!$showCity);
     	return($stateCityArr);
+    }
+
+    public function getVerificationStatusForAltEmailAndMail($EmailStatus)
+    {    
+    	if($EmailStatus == "Y")
+    		return 1;
+    	else
+    		return 0;
     }
 }
 ?>

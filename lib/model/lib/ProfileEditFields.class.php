@@ -184,6 +184,12 @@ case 'EMAIL':
 					$field->setConstraintClass("email");
 					$field->setTableName("JPROFILE:EMAIL");
 				break;
+case 'ALT_EMAIL':
+					$field=new Field('','ALT_EMAIL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("alt_email");
+					$field->setTableName("JPROFILE_CONTACT:ALT_EMAIL");
+				break;
 
 case 'FAMILYINFO':
 					$field=new Field('','FAMILYINFO');
@@ -1197,6 +1203,12 @@ case "DISPLAYNAME":
 					$field->setFieldType("dropdown");
                                         $field->setConstraintClass("dropdown_not_req");
                                         $field->setTableName("NAME_OF_USER:DISPLAY");
+				break;
+case 'P_OCCUPATION_GROUPING':
+					$field=new Field('','P_OCCUPATION_GROUPING');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_occupation_grouping");
+					$field->setTableName("JPARTNER:OCCUPATION_GROUPING");
 				break;
 }
 

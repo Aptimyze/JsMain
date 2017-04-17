@@ -445,6 +445,10 @@ if(authenticated($cid))
 				$is_error++;
 				$smarty->assign("CHECK_BANK","Y");
 			}
+			if(trim($address) == "") {
+				$is_error++;
+				$smarty->assign("CHECK_ADDRESS","Y");	
+			}
 
 			/*check for cheque date -- post dated cheques and cheque dates older than 4 months not accepted*/
                         $entered_timestamp = mktime(0,0,0,$cd_month,$cd_day,$cd_year);

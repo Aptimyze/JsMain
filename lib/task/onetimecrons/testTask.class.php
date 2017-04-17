@@ -10,6 +10,8 @@ class testTask extends sfBaseTask
 {
 	protected function configure()
 	{
+    $this->addArguments(array(new sfCommandArgument('user', sfCommandArgument::OPTIONAL, 'My argument')));
+
 		$this->addOptions(array(
 			new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'Application Name','operations'),
 		));
@@ -27,7 +29,29 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 	    // SET BASIC CONFIGURATION
-	    	
+	   
+    $user = $arguments["user"];
+    if($user){
+      //$memHandlerObj = new MembershipHandler(false);
+      //$output = $memHandlerObj->computeMembershipPlanStartingRange($user);
+      //print_r($output);
+    }
+    die;
+
+    /*$instantNotificationObj = new InstantAppNotification("BUY_MEMB");
+    $instantNotificationObj->sendNotification(939764339,'',"upgrade");*/
+        $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(939764339,7194662);
+        die;
+
+          $producerObj = new Producer();
+          if($producerObj->getRabbitMQServerConnected())
+          {
+            $notificationData = array("notificationKey"=>"EOI","selfUserId" => 99401121,"otherUserId" => 1); 
+            $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+          }
+          unset($producerObj);
+          die; 	
 		if(!sfContext::hasInstance())
 		{
 			sfContext::createInstance($this->configuration);

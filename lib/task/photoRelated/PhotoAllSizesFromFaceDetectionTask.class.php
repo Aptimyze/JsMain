@@ -51,6 +51,10 @@ EOF;
                         sfContext::createInstance($this->configuration);
 		$totalScripts = $arguments["totalScripts"]; // total no of scripts
 	        $currentScript = $arguments["currentScript"]; // current script number
+	        
+	    if(CommonUtility::hideFeaturesForUptime())
+			successfullDie();
+
 
 /*
 		if($currentScript!=11)		

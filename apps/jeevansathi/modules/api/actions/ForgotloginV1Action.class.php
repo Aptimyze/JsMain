@@ -44,7 +44,7 @@ class ForgotloginV1Action extends sfActions
 				{ 
 				
 					$phone_mob= substr($this->finalString, -$i);
-					$arr=array('PHONE_MOB'=>"'$phone_mob'");
+					$arr=array('PHONE_MOB'=>"'$phone_mob'", 'MOB_STATUS'=>'Y');
 					$excludeArr=array('ACTIVATED'=>"'D'");
 					$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID,MOB_STATUS");
 					if(count($data) == 1)

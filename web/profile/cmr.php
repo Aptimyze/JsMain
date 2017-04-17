@@ -200,6 +200,19 @@ function getItemDetail($page, $filter)
                 "contactFlag" => "'I'"
             )
         ),
+        "eeoi" => array(
+            "R" => array(
+                "self" => "RECEIVER",
+                "contact" => "SENDER",
+                "type" => "R",
+                "flag" => "I",
+                "navigation_type" => "EEOI",
+                "SHOW_CATEGORY_SEARCH" => 1,
+                "CHECKBOX" => 1,
+                "contactFlag" => "'I'",
+                "filteredNotIn" => "'Y'"
+            ),
+        ),
         /*"archive_eoi"=>array(
         "R"=>array(
         "self"=>"RECEIVER",
@@ -213,6 +226,19 @@ function getItemDetail($page, $filter)
         "contactFlag"=>"'I'",
         ),
         ),*/
+        "aeoi" => array(
+            "R" => array(
+                "self" => "RECEIVER",
+                "contact" => "SENDER",
+                "type" => "R",
+                "flag" => "I",
+                "navigation_type" => "EOI",
+                "SHOW_CATEGORY_SEARCH" => 1,
+                "CHECKBOX" => 1,
+                "contactFlag" => "'I'",
+                "filteredNotIn" => "'Y'"
+            ),
+        ),
         "messages" => array(
             "R" => array(
                 "self" => "RECEIVER",

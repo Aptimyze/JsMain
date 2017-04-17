@@ -13,6 +13,8 @@ class jsValidatorMobile extends sfValidatorBase
   
   protected function doClean($value)
   {
+    $mobileNumberExceptionArr = array("9643102628");
+    
     $source = $_SERVER['HTTP_REFERER'];
     if(strpos($source,"viewprofile") !== false)
     {
@@ -95,9 +97,8 @@ class jsValidatorMobile extends sfValidatorBase
 		}
 
 		//adding check to ensure that more than 2 primary numbers are not present
-
 		//the check is not to be implied if it is a test machine and they are using the '9999999999' number
-		if(!(JsConstants::$whichMachine =="test" && ($value['mobile']==9999999999 || $value['mobile']==9999999991)))
+		if((!(JsConstants::$whichMachine =="test" && ($value['mobile']==9999999999 || $value['mobile']==9999999991))) && !in_array($value["mobile"],$mobileNumberExceptionArr))
 		{
 			//check not to be implied for alternate mobile number
 			if($this->getOption('altMobile')!=1)
@@ -128,7 +129,7 @@ class jsValidatorMobile extends sfValidatorBase
   public function getDetailArr($mobile,$isd)
   {
   	$jprofileObj = JPROFILE::getInstance('newjs_master');
-  	$lastLoginDate = date('Y-m-d', strtotime("-1 year"));
+  	$lastLoginDate = CommonUtility::makeTime(date('Y-m-d', strtotime("-1 year")));
   	$valueArray = array("activatedKey"=>1,"MOB_STATUS"=>"Y","INCOMPLETE"=>"N","PHONE_MOB"=>$mobile,"ISD"=>$isd);
   	$greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
   	if($this->profileId)

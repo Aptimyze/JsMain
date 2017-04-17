@@ -24,14 +24,14 @@ class CriticalActionLayerTracking
    *@param- profile id
    */
   
-  public static function satisfiesDateCondition($profileId)
+  public static function satisfiesDateCondition($profileId,$mod)
   {
-     $now = time(); // or your date as well
-     $your_date = strtotime(self::RCB_LAYER_REF_DATE);
-     $datediff = $now - $your_date;
-     $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%5;
-     if($remainder==$profileId%5)return true;
+     $now = new DateTime(); // or your date as well
+     $your_date = new DateTime(self::RCB_LAYER_REF_DATE);
+     $days = $now->diff($your_date);
+     $dayDiff=$days->days;
+     $remainder=$dayDiff%$mod;
+     if($remainder==$profileId%$mod)return true;
      else return false;
   }
 
@@ -56,7 +56,7 @@ class CriticalActionLayerTracking
   public static function insertLayerType($profileId,$layerId,$button)
   {
     $layerButtonTrack= new MIS_CA_LAYER_TRACK();
-    $layerButtonTrack->insert($profileId, $layerId,$button);
+    return $layerButtonTrack->insert($profileId, $layerId,$button);
   }
   /* this function will update button type entry on a 
    * particular profile id
@@ -75,6 +75,9 @@ class CriticalActionLayerTracking
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
     $profileId = $profileObj->getPROFILEID();
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
+              return 0;
+
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
@@ -112,7 +115,10 @@ class CriticalActionLayerTracking
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
       if (!$layer) 
-          return 0;
+        { 
+            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,86400);
+            return 0;
+        }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
           return $layer;
 
@@ -128,7 +134,8 @@ return 0;
    * @return- layerid to display layer 
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
-  {
+  { 
+
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -177,7 +184,7 @@ return 0;
                       if(!($gender == 'M' && $age >= 24) && !($gender == 'F' && $age >=22) )break;
 
                       $loggedInUser=LoggedInProfile::getInstance();
-                      if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
+                      if(self::satisfiesDateCondition($profileid,5) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
                       {
 
   
@@ -249,14 +256,30 @@ return 0;
 
                       case '11':                      
                       
-                      if(!$isApp)
-                      {
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                                  $show=0;
-                            
-                      }
-                    
+                          {        
+                            $show=1;
+                            if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
+                            {    
+                            ob_start();
+                            sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                            $layerData = ob_get_contents();
+                            ob_end_clean();
+                            $dppSugg=json_decode($layerData,true);
+                            if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                            {
+                              foreach ($dppSugg['dppData'] as $key => $value) 
+                              {
+                                if(is_array($value['data']))                                  
+                                {      
+                                  $show = 0;
+                                  break;
+                                }
+                              }
+                            }
+                            }
+                          } 
                     break;
 
                       case '12':               
@@ -269,6 +292,88 @@ return 0;
                     
                     break;  
 
+                    case '13':               
+                      if(!$isApp)
+                      { 
+                        $profileObject = LoggedInProfile::getInstance('newjs_master');
+                        $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL");
+                        if(!$numArray['0']['ALT_EMAIL'] || $numArray['0']['ALT_EMAIL'] == NULL)
+                        {
+                           $show = 1;
+                        }  
+                         
+                      }
+                    
+                    break; 
+
+                    case '14':               
+                      if(!$isApp)
+                      { 
+                        $profileObject = LoggedInProfile::getInstance('newjs_master');
+                        $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+                        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL'] != NULL && $numArray['0']['ALT_EMAIL_STATUS'] != 'Y')
+                          $show = 1; 
+                      }
+                    
+                    break; 
+                    case '15': 
+                      $screening=$profileObj->getSCREENING();
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
+                          $show=1;
+                    break;  
+
+                    case '16':                      
+                          $memObject=  JsMemcache::getInstance();
+                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          {
+                            
+                              ob_start();
+                              sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                              $layerData = ob_get_contents();
+                              ob_end_clean();
+                              $dppSugg=json_decode($layerData,true);
+                              if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                              {
+                                foreach ($dppSugg['dppData'] as $key => $value) 
+                                {
+                                  if(is_array($value['data']))                                  
+                                  {      
+                                    $show = 1;
+                                    $request->setParameter('dppSugg',$dppSugg);
+                                    break;
+                                  }
+                                }
+                              }
+                                                     
+                          } 
+                    break;
+
+                    case '17': 
+                       
+                     // $profileId=$profileObj->getPROFILEID();
+                        $picture_new = new ScreenedPicture;
+                        $ordering = $picture_new->getMaxOrdering($profileid);
+                        $oneTwoPhotos;
+                        if($ordering == null)
+                        {
+                          $oneTwoPhotos = 0;
+                        }
+                        else if ($ordering === "0" || $ordering === "1")
+                        {
+                          $oneTwoPhotos = 1;
+                        }
+                      $entryDate = $profileObj->getENTRY_DT();
+                      if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ) && $oneTwoPhotos)
+                      {
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -323,5 +428,26 @@ break;
 
 
 
+  }
+  
+  
+  public static function CALAppVersionCheck($calID,$appVersion){
+      
+      $isApp = MobileCommon::isApp();
+      if(!$isApp)return true;
+      $versionArray = array(
+          
+                '16' => array(
+                    
+                    'A' => '84',
+                    'I' => '4.5'
+                    
+                        )
+          );
+      if($appVersion >= $versionArray[$calID][$isApp])
+          return true;
+       return false;
+      
+      
   }
 }

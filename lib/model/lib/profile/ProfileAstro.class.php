@@ -159,7 +159,7 @@ class ProfileAstro
      * @param type $setWithProfileId
      * @return type
      */
-    public function getAstroDetails($profileidArray, $fields, $setWithProfileId='')
+    public function getAstroDetails($profileidArray, $fields, $setWithProfileId='',$shutDownConnections='')
     {
         if ($fields == '') $fields = "*";
         
@@ -200,7 +200,7 @@ class ProfileAstro
         }
         
         //Get Records from Mysql
-        $result = self::$objAstroDetailMysql->getAstroDetails($profileidArray, $fields,$setWithProfileId);
+        $result = self::$objAstroDetailMysql->getAstroDetails($profileidArray, $fields,$setWithProfileId,$shutDownConnections);
         
         if(is_null($result) || (is_array($result) && count($result) !== count($profileidArray))) {
             $arrDataNotExist = array();
@@ -342,7 +342,7 @@ class ProfileAstro
      * @param type $funName
      */
     private function logCacheConsumeCount($funName)
-    {
+    {return;
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
