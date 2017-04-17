@@ -521,7 +521,7 @@ class billing_SERVICES extends TABLE
             else{
                 $sql .= " AND ADDON='Y'";
             }
-            $sql .= " AND ACTIVE='Y' AND SERVICEID!='P1'";
+            $sql .= " AND ACTIVE='Y'";/* AND SERVICEID!='P1'*/;
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
