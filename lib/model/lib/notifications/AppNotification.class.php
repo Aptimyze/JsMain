@@ -457,9 +457,6 @@ public function microtime_float()
                   $dataAccumulated[$counter]['COUNT']="SINGLE";
                   $counter++;
               }
-              //$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
-              //$poolObj = new NotificationDataPool();
-              //$dataAccumulated = $poolObj->getNotificationFormatData($applicableProfiles);
               break;
 	  }
 	  $completeNotificationInfo = array();

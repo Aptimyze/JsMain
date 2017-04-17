@@ -9,13 +9,12 @@ class AppNotificationScheduler extends NotificationScheduler
   public $notificationKey;
   public $noOfScripts;
   public $currentScript;
-  public function __construct($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion='',$currentAndroidMaxVersion='')
+  public function __construct($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion='')
   {
 		$this->notificationKey = $notificationKey;
 		$this->noOfScripts = $noOfScripts;
 		$this->currentScript = $currentScript;
         $this->androidMaxVersion = $androidMaxVersion;
-        $this->currentAndroidMaxVersion = $currentAndroidMaxVersion;
                 $this->notificationObj = new AppNotification;
                 $valueArray['STATUS']="Y";
                 $valueArray['NOTIFICATION_KEY']=$this->notificationKey;

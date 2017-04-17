@@ -46,14 +46,14 @@ $this->addOptions(array(
         $androidMaxVersion = $arguments["androidMaxVersion"];
         $currentAndroidMaxVersion = $arguments["currentAndroidMaxVersion"];
         $this->checkForUpdateApp($notificationKey, $androidMaxVersion, $currentAndroidMaxVersion);
-                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion,$currentAndroidMaxVersion);
+                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion);
                 $appNotificationSchedulerObj->scheduleNotificationsForKey();
   }
   
   public function checkForUpdateApp($notificationKey,$androidMaxVersion,$currentAndroidMaxVersion){
       if($notificationKey == "UPGRADE_APP"){
           if(!($androidMaxVersion && $currentAndroidMaxVersion)){
-              die("Please provide android version till which notification needs to be send and current max android version");
+              die("Please provide android version till which update app notification needs to be send and current max android version");
           }
           else{
               $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
