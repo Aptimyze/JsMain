@@ -521,6 +521,7 @@ class billing_SERVICES extends TABLE
             else{
                 $sql .= " AND ADDON='Y'";
             }
+            //ankita code removed to hide P1
             $sql .= " AND ACTIVE='Y'";/* AND SERVICEID!='P1'*/;
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
