@@ -16,7 +16,7 @@ class PictureArray
 	private $photoVisibleToAll = PhotoProfilePrivacy::photoVisibleToAll;
 	private $viewedProfilesRequiredDetails = array("PROFILEID","PHOTO_DISPLAY","PRIVACY","HAVEPHOTO","GENDER");
 	private $viewerProfilesRequiredDetails = "PHOTO_DISPLAY,PRIVACY,HAVEPHOTO,PHOTOSCREEN,AGE,INCOME,MSTATUS,COUNTRY_RES,RELIGION,CASTE,MTONGUE,CITY_RES,GENDER";
-	private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID";
+	private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID,STATE";
 
 	public function __construct($viewedObjArr='')
 	{
@@ -584,8 +584,9 @@ class PictureArray
 
 		if($profilesWithScreenedPhoto)	
 		{
-			$PICTURE_NEW = new PICTURE_NEW("newjs_masterRep");
-			$arr = $PICTURE_NEW->getScreendPictureCountByPid($profilesWithScreenedPhoto);
+			$pictureNew = new ScreenedPicture;
+			$qArr = array("PROFILEID"=>$profilesWithScreenedPhoto);
+			$arr = $pictureNew->getMultipleUserPicsCount($qArr);
 		}
 		return $arr;
 	}	

@@ -25,6 +25,7 @@ class ProfileCacheConstants
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     const NOT_FILLED = "-NF-";
     const DUPLICATE_FIELD_DELIMITER = "-d-";
+    const GETARRAY_PROFILEID_LIMIT = 50;
     
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
@@ -556,6 +557,10 @@ class ProfileCacheConstants
     public static $arrOldYourInfo = array(
                                    'PROFILEID',
                                    "YOUR_INFO_OLD",
+                                   );
+    public static $arrAutoExpiry = array(
+                                   'PROFILEID',
+                                   "AUTO_EXPIRY_DATE",
                                    );
 }
 ?>

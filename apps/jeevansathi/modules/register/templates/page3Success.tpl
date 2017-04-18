@@ -88,11 +88,11 @@
 						<input type="radio" name="horo" value="H" ~if $horo eq 'H'` checked ~/if`  onClick="change(1);"/> Let Jeevansathi create your Horoscope<br />
 					  <div id="create" style="display:none; padding:10px ">
 						<div id="frame_show" style="display:block;width:95%">
-							<iframe vspace="0" hspace="0" marginheight="0" marginwidth="0" width="401" height="245" frameborder="0" scrolling="no" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?JS_UniqueID=~$PROFILEID`&JS_Year=~$YEAR_OF_BIRTH`&JS_Month=~$MONTH_OF_BIRTH`&JS_Day=~$DAY_OF_BIRTH`">
+							<iframe vspace="0" hspace="0" marginheight="0" marginwidth="0" width="401" height="245" frameborder="0" scrolling="no" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?JS_UniqueID=~$PROFILEID`&JS_Year=~$YEAR_OF_BIRTH`&JS_Month=~$MONTH_OF_BIRTH`&JS_Day=~$DAY_OF_BIRTH`">
 							</iframe>
 						</div>
 						<div id="frame_show_edit" style="display:none">
-							<iframe vspace="0" hspace="0" marginheight="0" marginwidth="0" width="570" height="250" frameborder="0" scrolling="no" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$PROFILEID`&js_year=~$YEAR_OF_BIRTH`&js_month=~$MONTH_OF_BIRTH`&js_day=~$DAY_OF_BIRTH`">
+							<iframe vspace="0" hspace="0" marginheight="0" marginwidth="0" width="570" height="250" frameborder="0" scrolling="no" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$PROFILEID`&js_year=~$YEAR_OF_BIRTH`&js_month=~$MONTH_OF_BIRTH`&js_day=~$DAY_OF_BIRTH`">
 							</iframe>
 						</div>
 					  </div>
@@ -250,10 +250,10 @@ var countryDefault=~$countryDefault`;
 })();
 ~/if`
 </script>
-<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
 </script>
 <noscript>
 <div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
+<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>

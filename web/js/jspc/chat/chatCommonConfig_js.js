@@ -107,7 +107,7 @@ chatConfig.Params = {
     },
     pc: {
         updateRosterFromFrontend: true,
-        bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
+        bosh_service_url: 'wss://' + openfireUrl + '/ws/', //connection manager for openfire
         hide_offline_users: false, //hide offline users from list
         //tab id to tab names mapping
         listingTabs: {
@@ -351,7 +351,7 @@ chatConfig.Params = {
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000,  //time in ms(5 min)
         nameTrimmLength:14,
-        logChatTimeout:true,
+        logChatTimeout:false,
         autoDisplayLoginPanel: 30000, //time in ms
         audioChatFilesLocation:'/audio/jspc/chat/',
         enableLoadTestingStanza:true,

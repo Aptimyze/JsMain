@@ -292,9 +292,9 @@ static public function hidePhoneVerLayer($profileObj)
 	return 'Y';
 
 	$contactNumOb= new ProfileContact();
-	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"*");
-    if($numArray['0']['ALT_MOB_STATUS']=='Y')
-    return 'Y';
+	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"ALT_MOB_STATUS");
+        if($numArray['0']['ALT_MOB_STATUS']=='Y')
+        return 'Y';
 
 	return 'N';
  

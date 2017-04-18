@@ -207,7 +207,7 @@ class UserMemcache extends Memcache
 			parent::set($key,$value,$flag,$lifetime);
 		}
 	}
-	public function get($key,$default = NULL)
+	public function get($key,$default = NULL,$serialize=1)
 	{
 	    	if(self::isRedis())
 		{
@@ -217,6 +217,9 @@ class UserMemcache extends Memcache
 				{
 					$key = (string)$key;
 					$value = $this->client->get($key);
+                                        if($serialize == 0){
+                                                return $value;
+                                        }
 					$value = unserialize($value);
 					return $value;
 				}

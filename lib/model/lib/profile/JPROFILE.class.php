@@ -26,6 +26,13 @@ class JPROFILE
      */
     private static $objProfileMysql = null;
 
+    /**
+     * getArray uses this flag for returning data from cache for some profile ids
+     * and rest from store.
+     * @var static
+     */
+    const ENABLE_GETFORPARTIALKEYS = true;
+
     var $activatedKey; //archiving
 
     /**
@@ -107,7 +114,8 @@ class JPROFILE
     {
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
-        $this->totalQueryCount();
+	// $this->totalQueryCount();
+
         if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields, __CLASS__)) {
             $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, __CLASS__, $extraWhereClause);
             //When processing extraWhereClause results could be false,
@@ -120,7 +128,8 @@ class JPROFILE
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
-            $this->logCacheConsumption();
+            //$this->logCacheConsumption();
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
 
@@ -212,9 +221,62 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-      if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID']) {      
-       // $this->logProfileIDs($valueArray['PROFILEID']);
-      }
+        if(
+            JPROFILE::ENABLE_GETFORPARTIALKEYS &&
+            !ProfileCacheLib::getInstance()->isCommandLineScript() &&
+            is_array($valueArray) &&
+            count($valueArray) == 1 &&
+            $valueArray['PROFILEID'] &&
+            $excludeArray == "" &&
+            $greaterThanArray == "" &&
+            $lessThanArray == "" &&
+            $orderby == "" &&
+            $limit == "" &&
+            $greaterThanEqualArrayWithoutQuote == "" &&
+            $lessThanEqualArrayWithoutQuote == "" &&
+            $like == "" &&
+            $nolike == "" &&
+            $addWhereText == ""
+        )
+        {
+            $loggingArr = array();
+            $loggingArr['originalValueArr'] = $valueArray;
+            $arrPid = explode(',', $valueArray['PROFILEID']);
+            // check limit of profile ids
+            if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
+            {
+               return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+            }
+            $fields = $this->getRelevantFields($fields);
+            $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
+
+            $loggingArr['getForPartialKeysResult'] = $result;
+
+            if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
+            {
+                // case - partial data served from cache for some  profile ids
+                $tempValueArray['PROFILEID'] = $result['notCachedPids'];
+                $result = $result['cachedResult'];
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                
+                if(strlen($tempValueArray['PROFILEID']) !== 0)
+                {
+                    // get result from store for remaining pids
+                    $storeResult = self::$objProfileMysql->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    // merge the cache result and the store result if there exists data in cache
+                    $result = array_merge($result, $storeResult);
+                }
+                if($result === "" || empty($result) || $result === null || $result === false)
+                {
+                    LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
+                }
+
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                  $this->logCacheConsumption();
+                  return $result;
+                }
+            }
+        }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }
 
@@ -701,6 +763,14 @@ class JPROFILE
     public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
     {
         return self::$objProfileMysql->getZombieProfiles($gtDate,$limit,$ltDate);
+    }
+
+    private function logCacheConsumeCount($funName)
+    {
+        $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
 }
 

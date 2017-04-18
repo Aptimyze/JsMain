@@ -143,6 +143,7 @@ class SearchTypesEnums
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
+        const ANDROID_CHAT_NEW = 'ACN';
         const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 	const AndroidMatchOfDay = "AMD";
@@ -155,7 +156,7 @@ class SearchTypesEnums
 	const CANCELLED_LISTING_MS = CLMS;
 	const CANCELLED_LISTING_IOS = CLIOS;
 	const CANCELLED_LISTING_APP = CLAA;
-    const MATCH_OF_THE_DAY_MYJS_IOS = "IMD";
-
+    const MATCH_OF_THE_DAY_MYJS_IOS = "IMOD";
+    const ANDROID_MATCHOFDAY = "AMOD";
 }
 ?>
