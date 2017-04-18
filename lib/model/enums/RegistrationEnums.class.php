@@ -103,6 +103,7 @@ class RegistrationEnums {
 		"JSPCR4"=>array("COUNTRY_RES","AGE")
 	);
   public static $emailModification = "_deleted";
+  public static $otherText = "Other";
   public static $marathiValue = "'20'";
 }
 ?>
