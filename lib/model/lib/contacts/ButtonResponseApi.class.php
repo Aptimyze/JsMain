@@ -285,13 +285,10 @@ Class ButtonResponseApi
 		return $button;
 	}
 	public function getInitiatedButton($androidText = false,$privilageArray="")
-	{  
+	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
-		{  
-			$button[] = self::getInitiatedContactButton($androidText);
-			$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile);
-			$button [] = self::getContactDetailsButton();
-			$button [] = $button[] = self::getIgnoreButton('','',1);
+		{
+			$button = self::getCancelInterestButton();
 			$responseArray["canChat"] = false;
 			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 			{
@@ -303,9 +300,6 @@ Class ButtonResponseApi
 			else{
 				$responseArray["canChat"] = true;
 			}
-
-		$finalResponse = self::buttonDetailsMerge($responseArray);
-		return $finalResponse;
 		}
 		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
