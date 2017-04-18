@@ -64,5 +64,8 @@ class NotificationEnums
 
       //config for sending multiple curl requests for GCM notification in parallel
       public static $multiCurlReqConfig = array("threshold"=>40,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY"));
+      public static $mailScheduleComplete = array("UPGRADE_APP");
+      
+      public static $jscDevMail = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,smarth.katyal@jeevansathi.com";
 
 }
