@@ -279,7 +279,11 @@ class DetailedViewApi
 
 		//This is the part which was done to make Location on PD summary same as that on Search
 		$city = $objProfile->getCITY_RES();
-		$state = substr($city,0,2);
+		$state = "";
+		if($city != "")
+		{
+			$state = substr($city,0,2);	
+		}		
 		$nativePlaceObj = new JProfile_NativePlace($objProfile);
 		$nativeArr = $nativePlaceObj->getInfo();		
 		if(is_array($nativeArr))
