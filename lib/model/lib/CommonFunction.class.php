@@ -826,6 +826,7 @@ class CommonFunction
          * @param type $decoredVal : this is set to "city" 
          * @return string
          */
+
      public static function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
      {        
      	$label = '';
@@ -837,8 +838,16 @@ class CommonFunction
         }
         else
         {
-        	$label = FieldMap::getFieldLabel($decoredVal,$city[0]);
-        }                
+        	if(substr($city[0],2)=="OT")
+        	{
+        		$stateLabel = FieldMap::getFieldLabel("state_india",substr($city[0],0,2));
+        		$label = $stateLabel."-"."Others";
+        	}
+        	else
+        	{
+        		$label = FieldMap::getFieldLabel($decoredVal,$city[0]);	
+        	}        	
+        }     
         if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
         	$nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
         }
@@ -851,12 +860,11 @@ class CommonFunction
         		if($nativeCityOpenText != '' && $nativeState != '')
         			$nativePlace = $nativeCityOpenText.', ';
 
-        		$nativePlace .= $nativeState;                        
+        		$nativePlace .= $nativeState;        		
         	}
         }
         if($nativePlace != '' && $nativePlace != $label)
         	$label .= ' & '.$nativePlace;
-
         return $label;
     }
 }
