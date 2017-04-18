@@ -826,7 +826,7 @@ class CommonFunction
          * @param type $decoredVal : this is set to "city" 
          * @return string
          */
-     public function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
+     public static function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
      {        
      	$label = '';
      	$city = explode(',',$cityVal);
