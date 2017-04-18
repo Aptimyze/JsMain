@@ -16,8 +16,7 @@ class RabbitmqHelper
     $exception = new Exception($message);
     if($exception->getTrace())
     {
-      $explodedPath = explode("/", $exception->getTrace()[0]['file']);
-      $consumerName = $explodedPath[count($explodedPath) - 1];
+      $consumerName = $exception->getTrace()[0]['file'];
     }
     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName));
     $emailAlertArray=array("queueMail"=>"",
