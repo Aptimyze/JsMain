@@ -38,7 +38,8 @@ var arrErors = {
 	"OCCUPATION_REQUIRED":"Please provide an occupation",
 	"INCOME_REQUIRED":"Please provide an income range",
 	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
-	"NAME_ERROR":"Name should have alphabets only"
+	"NAME_ERROR":"Name should have alphabets only",
+        "CASTEMUSLIM_REQUIRED":"Please provide a Caste"
 };
 //regular expressions for validations
 var name_regex = /^[a-zA-Z\s\.\']*$/;
@@ -827,7 +828,7 @@ return pincodeValidator;
         casteMuslimValidator.prototype.parent.validate.call(this,casteMuslim);
         if(this.error){
             if((inputData["religion"] =="2"))
-	      this.error=arrErors["MUSLIM_CASTE_REQUIRED"];
+	      this.error=arrErors["CASTEMUSLIM_REQUIRED"];
                 return false;
         }
         return true;

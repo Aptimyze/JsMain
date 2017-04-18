@@ -1589,6 +1589,7 @@ var padding = 31;
                     ele1.muslimDependentObj.fieldElement.val("");
                     inputData["castemuslim"] = "";
                     $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
+                    ele1.muslimDependentObj.selected='';
             }
             $("#manglik_value").val("");
             $("#manglik-inputBox_set").html("");
