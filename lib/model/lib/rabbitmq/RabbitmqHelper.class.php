@@ -13,6 +13,7 @@ class RabbitmqHelper
 **/
   public static function sendAlert($message,$to="default")
   {
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception($message));
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
