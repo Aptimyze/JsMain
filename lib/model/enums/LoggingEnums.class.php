@@ -81,6 +81,7 @@ class LoggingEnums
     const SCRIPT = 'Script';
     const LOG_DELETION = 1;
     const TRACE_STRING = 'traceString';
+    const CONSUMER_NAME = 'Rabbitmq-Consumer';
     const PHISHING_URL = 'phishingUrl';
 
     public static $MappingNames = array(
