@@ -108,7 +108,9 @@ class postEOIv1Action extends sfAction
 		else if ($this->getParameter($request,"stype") == "AQ")
 		{   
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
-			$responseButtonArray["buttons"][] = $buttonObj->getAllButtonsOnSearch();
+			$restButtons= $buttonObj->getAllButtonsOnSearch();
+			$responseButtonArray["buttons"][] = $restButtons;
+			//print_r($responseButtonArray["buttons"]); die;
 		}
 		else
 		{	
