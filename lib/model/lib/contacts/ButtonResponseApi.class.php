@@ -288,7 +288,10 @@ Class ButtonResponseApi
 	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
 		{
-			$button = self::getCancelInterestButton();
+			
+ 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
+ 			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
+			$button["value"] = "INITIATE";
 			$responseArray["canChat"] = false;
 			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 			{
@@ -631,13 +634,11 @@ Class ButtonResponseApi
 		return $responseArray;
 	}
 
-	public static function getAllButtonsOnSearch($androidText,$privilegeArray)
+	public static function getAllButtonsOnSearch()
 	{
-
-		$button[] = $this->getInitiatedButton($androidText,$privilegeArray);
-		$button[] = $this->getShortListButton();
-		$button[] = $this->getCancelInterestButton();
-		$button[] = $this->getContactDetailsButton();
+		$button[] = self::getShortListButton();
+		$button[] = self::getCancelInterestButton();
+		$button[] = self::getContactDetailsButton();
 
 		return $button;
 	}
