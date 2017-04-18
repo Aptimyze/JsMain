@@ -288,9 +288,7 @@ Class ButtonResponseApi
 	{  
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
 		{  
-			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
-			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
-			$button["value"] = "INITIATE";
+			$button[] = self::getInitiatedContactButton($androidText);
 			$button[] = self::getShortListButton($this->loginProfile, $this->otherProfile);
 			$button [] = self::getContactDetailsButton();
 			$button [] = $button[] = self::getIgnoreButton('','',1);
@@ -305,6 +303,9 @@ Class ButtonResponseApi
 			else{
 				$responseArray["canChat"] = true;
 			}
+
+		$finalResponse = self::buttonDetailsMerge($responseArray);
+		return $finalResponse;
 		}
 		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
@@ -634,6 +635,17 @@ Class ButtonResponseApi
 		}
 
 		return $responseArray;
+	}
+
+	public static function getAllButtonsOnSearch($androidText,$privilegeArray)
+	{
+
+		$button[] = $this->getInitiatedButton($androidText,$privilegeArray);
+		$button[] = $this->getShortListButton();
+		$button[] = $this->getCancelInterestButton();
+		$button[] = $this->getContactDetailsButton();
+
+		return $button;
 	}
 				
 	 
