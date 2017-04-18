@@ -41,7 +41,18 @@ class getFieldValues {
       break;
       case "religion" : 
       $fieldArr = $this->staticFields["religion"];
-      unset($fieldArr[0][9]); //removing "others" from  religion on registration
+       //removing "others" from  religion on registration
+      foreach($fieldArr as $key=>$value)
+      {
+        foreach($value as $k1=>$v1)
+        {
+          if($v1[8] == RegistrationEnums::$otherText)
+          {            
+            unset($fieldArr[$key][$k1]);
+          }
+        }
+      }
+      
       break;
       case "caste" : $fieldArr[0] = $this->religionBasedCaste();
       break;
