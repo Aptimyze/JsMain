@@ -34,3 +34,5 @@ all:
    enable_login:  off
   CheckPasswordV1:
     enable_login: on
+  logOtherUrlV1:
+    enable_login: off

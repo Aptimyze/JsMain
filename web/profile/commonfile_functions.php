@@ -465,7 +465,7 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                    
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                         => "88");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                => "37");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                                      => "41");
+$js_arr[]=array("jsms/login/newMobLogin_js"                                       => "42");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
 $js_arr[]=array("jsms/hamburger/ham_js"                        => "49");
@@ -556,7 +556,7 @@ $js_arr[]=array("jspc/membership/jspc_mem_scrollpane"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_mousewheel"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_select_box"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_md5"    => "1");
-$js_arr[]=array("jspc/login/loginLayer_js"                                               => "45");
+$js_arr[]=array("jspc/login/loginLayer_js"                                                 => "47");
 $js_arr[]=array("jspc/photoUpload/photoUpload_js"    => "1");
 $js_arr[]=array("jspc/photoUpload/addPhoto_js"                          => "24");
 $js_arr[]=array("jspc/photoUpload/importPhotoAlbum_js"      => "3");
