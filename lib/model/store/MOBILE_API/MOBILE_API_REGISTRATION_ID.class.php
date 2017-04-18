@@ -176,7 +176,7 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 		$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT AND (";
         //To pick profiles having maximum app versions.
         if($androidMaxVersion)
-            $sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND APP_VERSION<=:MAX_AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
+            $sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND APP_VERSION<:MAX_AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
 		elseif($andAppVersion)
 			$sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
 		//else

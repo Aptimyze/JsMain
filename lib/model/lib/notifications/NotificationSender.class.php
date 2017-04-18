@@ -118,7 +118,7 @@ class NotificationSender
 			$os_type 	=$v['OS_TYPE'];
 			$appVersion 	=$v['APP_VERSION'];
             if($notificationKey == "UPGRADE_APP"){
-                if($os_type=='AND' && $appVersion>=$appVersionAnd && $appVersion<=$params["andUpdateVersion"])
+                if($os_type=='AND' && $appVersion>=$appVersionAnd && $appVersion<$params["andUpdateVersion"])
                     $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
             }
 			elseif(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos)){
