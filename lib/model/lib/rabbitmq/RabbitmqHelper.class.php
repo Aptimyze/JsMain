@@ -24,7 +24,7 @@ class RabbitmqHelper
                           );            
     
     $emailTo=$emailAlertArray[$to];
-    $subject="Rabbitmq Error @".JsConstants::$whichMachine;
+    $subject = $to." Rabbitmq Error @".JsConstants::$whichMachine;
     if($to == "browserNotification")
         $subject = "Notification RMQ Error";
     $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
