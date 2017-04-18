@@ -202,7 +202,7 @@ class RegistrationFunctions
      * @param type $partnerField
      */
     public static function UpdateFilter($partnerField) 
-    {
+    {      
       $arrFilter = array();
       if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {
         $arrFilter["MSTATUS"] = 'Y';
@@ -213,6 +213,11 @@ class RegistrationFunctions
       if ($partnerField->partnerObj->getPARTNER_CASTE()) {
         $arrFilter["CASTE"] = 'Y';
       } 
+      //for marathi profiles, we have to auto set the filter
+      if($partnerField->partnerObj->getPARTNER_MTONGUE() == RegistrationEnums::$marathiValue)
+      {
+        $arrFilter["MTONGUE"] = 'Y';
+      }
 
       if(count($arrFilter)) {
         $hardSoft="Y";
