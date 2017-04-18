@@ -176,10 +176,12 @@ if(count($myDbarr))
 		retreiveFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr,'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj,$bInHouseKeeping);
 		retreiveFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',"SENDER","RECEIVER",$myDb,$profileid,$contactsStr,"newjs","","","","",$bInHouseKeeping);
 		retreiveFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr,"newjs","","","","",$bInHouseKeeping);
+      //Retreive Chat Data
+      if(strlen($contactsStr)) {
+        retreiveChatData($dbName, $profileid, $contactsStr);
+      }
+      
     }
-    
-    //Retreive Chat Data
-    retreiveChatData($dbName, $profileid, $contactsStr);
     }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
 
