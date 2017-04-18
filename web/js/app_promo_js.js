@@ -279,8 +279,6 @@ function ReturnBrowMes()
 	return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
 return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
 }
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 
 function getIosVersion(ua) {
 	//return false;
