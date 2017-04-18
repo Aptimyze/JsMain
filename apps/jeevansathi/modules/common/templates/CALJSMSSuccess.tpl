@@ -165,20 +165,19 @@
             <div class="pad2040 txtc fontlig f16">~$calObject.TEXT`</div>
             <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
                 <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select</div>
-                <div class="wid8p dispibl"><img class="fr" src="images/arrow.png" /></div>
+                <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
             </div>
             <div id="contText" class="fontlig f15 mt10 txtc">Select to continue</div>
             <div id="inputDiv" class="mt30 txtc dn">
-                <div class="fontlig f15 white">Enter your occupation</div>
+                <div class="fontlig f15 white">Enter your occupation to continue</div>
                 <div id="occInputDiv" class="wid90p mar15auto bg4 hgt75 pad25">
                     <input type="text" class="fullwid fl fontlig f18" placeholder="Enter Occupation" id="occuText" />
                 </div>
-                <div class="fontlig f14 white mt15">Input required to continue</div>
             </div>
         </div>
     </div>
     <div id="listDiv" class="listDivInner bg4 scrollhid dn">
-        <div id="listLoader" class="centerDiv"><img src="http://www.jeevansathi.com/images/jsms/commonImg/loader.gif" /></div>
+        <div id="listLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
         <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
         <ul id="occList" class="occList color11 fontlig f18 dn">
         </ul>

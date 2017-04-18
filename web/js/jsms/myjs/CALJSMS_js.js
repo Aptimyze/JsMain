@@ -153,6 +153,7 @@ else {
                         else{
 
                                 showError("Please select/enter occupation");
+                                CALButtonClicked=0;
                                 return;
 
 
