@@ -54,10 +54,9 @@
 
     .midDiv {
         display: block;
-        top: 50%;
-        transform: translate(0%, -50%);
-        -webkit-transform: translate(0%, -50%);
-        -ms-transform: translate(0%, -50%);
+        padding-top: 20px;
+        margin-bottom: 50px;
+        overflow: auto;
     }
 
     .pad2040 {

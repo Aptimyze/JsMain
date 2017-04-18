@@ -12,7 +12,7 @@ if($("#CriticalActionlayerId").val()=='18'){
             event.preventDefault(); 
         }
     });
-
+    $("#occMidDiv").css("height",window.innerHeight - 50)
    $("#occClickDiv").on("click", function() {
                 $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
@@ -38,7 +38,7 @@ if($("#CriticalActionlayerId").val()=='18'){
                     $("#occList").append('<li occCode = "'+index1+'">' + elem1 + '</li>');
             });
         });
-        $("#occList").append('<li id="notFound">I did\'nt find my occupation</li>');
+        $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I did\'nt find my occupation</li>');
         $("#occList li").each(function(index, element) {
             $(this).bind("click", function() {
 

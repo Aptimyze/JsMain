@@ -160,7 +160,7 @@
 ~elseif $calObject.LAYERID eq '18'`
         <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
         <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
-        <div class="hgt70p posrel midDiv white">
+        <div id="occMidDiv" class="posrel midDiv white">
             <div class="fontlig f19 txtc">~$calObject.TITLE`</div>
             <div class="pad2040 txtc fontlig f16">~$calObject.TEXT`</div>
             <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
