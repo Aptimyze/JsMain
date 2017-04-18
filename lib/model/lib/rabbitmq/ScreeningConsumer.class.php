@@ -44,7 +44,7 @@ class ScreeningConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"screening");
     }
     try
     {
@@ -54,7 +54,7 @@ class ScreeningConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"screening");
       return;
     }
   }
@@ -75,7 +75,7 @@ class ScreeningConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"screening");
       return;
     }  
     try
@@ -86,7 +86,7 @@ class ScreeningConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"screening");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')
@@ -151,7 +151,7 @@ class ScreeningConsumer
       }
       else
       {
-        RabbitmqHelper::sendAlert("\nDropping message as redelivery attempts exceeded the limit"."\n");
+        RabbitmqHelper::sendAlert("\nDropping message as redelivery attempts exceeded the limit"."\n","screening");
       }
     }
     try 
@@ -161,7 +161,7 @@ class ScreeningConsumer
     catch(Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str);
+      RabbitmqHelper::sendAlert($str,"screening");
     }
   }
 }
