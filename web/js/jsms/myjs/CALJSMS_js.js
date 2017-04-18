@@ -5,7 +5,7 @@ $(document).ready(function() {
 if($("#CriticalActionlayerId").val()=='18'){
     occuSelected= 0;
 
-    $("#occInputDiv input").keypress(function(event){console.log(event.which);
+    $("#occInputDiv input").keypress(function(event){
         var inputValue = event.which;
         // allow letters and whitespaces only.
         if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0)) { 
@@ -144,7 +144,7 @@ else {
                             });
                         }
                         else if ($("#occInputDiv input").val()!='')
-                        {console.log('jnput');
+                        {
                             var occupText = $("#occInputDiv input").val();
                             window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
                             CALButtonClicked=0;
