@@ -278,7 +278,7 @@ function getServices($type,$ser_main)
 											 
 //	$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' and SERVICEID like '".$ser_main."%' AND SERVICEID not in ('P1','D1','C1') order by ID DESC";
 	//$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' order by ID DESC";
-	$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' and SERVICEID like '".$ser_main."%' and SHOW_ONLINE='Y' order by ID DESC";
+	$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' and SERVICEID like '".$ser_main."%' and SHOW_ONLINE_NEW LIKE '%,-1,%' order by ID DESC";
 	$result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	while($myrow=mysql_fetch_array($result))
 	{
