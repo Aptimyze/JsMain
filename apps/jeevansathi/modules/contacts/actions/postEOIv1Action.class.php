@@ -105,7 +105,7 @@ class postEOIv1Action extends sfAction
 			$responseButtonArray["cansend"] = true;
 			$responseButtonArray["sent"] = true;
 		}
-		else if ($this->getParameter($request,"stype") == "AQ")
+		else if ($this->getParameter($request,"stype") == "AQ" && $this->getParameter($request,"page_source") != "VDP")
 		{   
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
