@@ -6080,7 +6080,7 @@ function onViewHoroscope(){
     $(".js-viewHoro").on('click',function(){
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1",
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1&showDownload=1",
           async:true,
           timeout:20000,
           beforeSend: function(){
@@ -6088,9 +6088,9 @@ function onViewHoroscope(){
           },
           success:function(response){
           		hideCommonLoader();
-              $("#putHoroscope").html(response);
+              $("#putHoroscope").html(response);              
               $(".js-hideThisDiv").hide();
-              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
+              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});            
           }
         }); 
     });
@@ -6125,7 +6125,7 @@ function setViewHoroscopeDiv(){
 
 function resetCreateHoroscope(){
     $("#createHoroDiv").empty();
-    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
+    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
 }
 
 $(document).ready(function() {

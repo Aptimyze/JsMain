@@ -19,11 +19,12 @@ class RabbitmqHelper
 			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
                           "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
                           "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
-                          "screening" => "nitesh.s@jeevansathi.com,nikmittal4994@gmail.com",
+                          "screening" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
+                          "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
-    $subject="Rabbitmq Error @".JsConstants::$whichMachine;
+    $subject = $to." Rabbitmq Error @".JsConstants::$whichMachine;
     if($to == "browserNotification")
         $subject = "Notification RMQ Error";
     $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
@@ -31,7 +32,7 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    if($to == "screening")
+    if($to == "screening" || $to == "instantEoi")
     {
       SendMail::send_email($emailTo,$message,$subject);
     }

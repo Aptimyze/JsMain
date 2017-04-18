@@ -18,11 +18,20 @@ class ProcessHandler
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
-    $senderObj = new Profile('',$senderid);   
-    $senderObj->getDetail("","","*");
-    $receiverObj = new Profile('',$receiverid);
-    $receiverObj->getDetail("","","*");
-
+    if($type!='INITIATECONTACT')
+    {
+        if($senderid)
+        {
+          $senderObj = new Profile('',$senderid);   
+          $senderObj->getDetail("","","*");
+        }
+         
+        if($receiverid)
+        {
+          $receiverObj = new Profile('',$receiverid);
+          $receiverObj->getDetail("","","*");
+        }
+    }    
     switch($type)
     {
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
@@ -35,6 +44,20 @@ class ProcessHandler
                               ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+                              break;
+      case 'PHOTO_SCREENED':  
+                              $memObj = new ProfileMemcacheService($senderid);
+                              $receiverArray =   unserialize($memObj->get('CONTACTED_BY_ME'));
+                              if(is_array($receiverArray['I'])){
+                                  foreach ($receiverArray['I'] as $key => $value) {
+                                $receiverObj = new Profile();
+                                $receiverObj->getDetail($value, "PROFILEID");
+   
+                                ContactMailer::sendAutoReminderMailer($receiverObj,$senderObj);
+                               //   $this->sendAutoReminder($value,$senderid);
+                                  }    
+                              
+                              }
                               break;
     }
 	}
@@ -62,7 +85,29 @@ class ProcessHandler
                                  break; 
     }
   }
+public function sendAutoReminder($receiver,$sender){
 
+try{            
+            $receiverObj = new Profile();
+            $receiverObj->getDetail($receiver, "PROFILEID");
+
+            $senderObj = new Profile();
+            $senderObj->getDetail($sender, "PROFILEID");
+            $contactObj = new Contacts($senderObj, $receiverObj);
+            $contactHandlerObj = new ContactHandler($senderObj,$receiverObj,"EOI",$contactObj,'R',ContactHandler::POST);
+            $contactHandlerObj->setElement("MESSAGE","");
+            $contactHandlerObj->setElement("DRAFT_NAME","preset");
+            $contactHandlerObj->setElement("STATUS","R");
+            $contactHandlerObj->setElement("MAIL_AND_NOT","N");
+            $contactEngineObj=ContactFactory::event($contactHandlerObj);
+    }
+    catch(jsException $e){
+        
+        return;
+    }          
+
+
+}
   /**
    * 
    * Function for sending notifications.
@@ -221,6 +266,21 @@ class ProcessHandler
 	$profileid = $body['profileid']; 
 	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
  }
+ public function updateMatchAlertsLaseSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
+ }
+ 
+ public function updateJustJoinedLastSeen($body)
+ {
+	$seenOn = $body['seen_date'];
+	$profileid = $body['profileid']; 
+        $obj = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
+        $obj->ins($profileid,$seenOn);
+ }
  public function updateFeaturedProfile($type,$body)
  {
 	if($body['profileid']!=null|| $body['profileid']!='')
@@ -311,6 +371,32 @@ public function logDiscount($body,$type){
         }
     }
 }
+
+  /*
+   * Send instant eoi notification
+   */
+  public function sendInstantEOINotification($body, $type)
+  {
+    $rabbitMq = 1;
+    // consumption logging
+    $currdate = date('Y-m-d');
+    $file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/InstantEoiQConsume-$currdate", "a+");
+    if($type == "INSTANT_EOI")
+    {
+      $x = json_encode($body);
+      fwrite($file, "$type with $x\n");
+      $instantNotificationObj = new InstantAppNotification("EOI");
+      $instantNotificationObj->sendNotification($body['otherUserId'], $body['selfUserId'], '', '', '', $rabbitMq);
+    }
+    elseif($type == "INSTANT_CHAT_EOI_MSG")
+    {
+      $x = json_encode($body);
+      fwrite($file, "$type with $x\n");
+      $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+      $instantNotificationObj->sendNotification($body["otherUserId"], $body["selfUserId"], $body["message"], $body["exUrl"], $body["extraParams"], $rabbitMq);
+    }
+    fclose($file);
+  }
 
     public function processMatchAlertNotification($type,$body){
         $instantNotificationObj =new InstantAppNotification("MATCHALERT");

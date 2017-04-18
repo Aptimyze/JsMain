@@ -36,7 +36,7 @@ $this->addOptions(array(
                 }
                 $msg.="</table>";
 		include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-		$to='vijay.bhaskar@jeevansathi.com,manoj.rana@naukri.com';
+		$to='manoj.rana@naukri.com';
 		$subject="Notifications sent till now";
 		$msg.="<br/>Warm Regards";
 		send_email($to,$msg,$subject,"",$cc);

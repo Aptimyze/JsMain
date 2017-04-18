@@ -223,7 +223,7 @@ function closeWeTalkForYou(){
       	showCommonLoader();
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&GENDERSAME="+sameGender,
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&showDownload=1&GENDERSAME="+sameGender, //added an extra parameter here which shows the Download part
           async:true,
           timeout:20000,
           success:function(response){

@@ -19,4 +19,5 @@
 
 <script>
 var hideOption = '~$hideOption`';
+var webView = '~$webView`';
 </script>

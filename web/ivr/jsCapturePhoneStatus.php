@@ -25,7 +25,7 @@ if($virtualno && $phoneno)
 
 			$verificationObj=new MissedCallVerification($phoneno,$virtualno);
 			$verified = $verificationObj->phoneUpdateProcess("KNW");
-	}
+        }
 $xmlStr= phoneKnowlarity::genrate_xml();
 echo $xmlStr;
 }

@@ -39,7 +39,20 @@ class getFieldValues {
       break;
       case "mtongue" : $fieldArr = $this->getMtongueValues();
       break;
-      case "religion" : $fieldArr = $this->staticFields["religion"];
+      case "religion" : 
+      $fieldArr = $this->staticFields["religion"];
+       //removing "others" from  religion on registration
+      foreach($fieldArr as $key=>$value)
+      {
+        foreach($value as $k1=>$v1)
+        {
+          if($v1[8] == RegistrationEnums::$otherText)
+          {            
+            unset($fieldArr[$key][$k1]);
+          }
+        }
+      }
+      
       break;
       case "caste" : $fieldArr[0] = $this->religionBasedCaste();
       break;
@@ -365,7 +378,7 @@ private function orderFamilyCity($addUsa='')
 		{
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
-                if($addUsa)
+                //if($addUsa)
                     $returnArr[$k][0][] = array('0'=>'Others');
 	}
         if($addUsa){

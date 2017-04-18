@@ -819,6 +819,25 @@ class MembershipApiFunctions
         }
         return $additionalBenefits;
     }
+
+    public function getOCBUpgradeBenefits($upgradeMem=""){
+        $upgradeText = "";
+        if($upgradeMem!=""){
+            switch($upgradeMem){
+                case "C":
+                    $upgradeText = "Let even free members contact you";
+                    break;
+                case "NCP":
+                    $upgradeText = "Increase your responses through JS Boost";
+                    break;
+                case "X":
+                    $upgradeText = "Get a dedicated relationship adviser";
+                    break;
+            }
+        }
+        return $upgradeText;
+    }
+
     public function getCurrentlyActiveVasNames($apiObj) {
         $memHandlerObj = new MembershipHandler();
         $serviceArr = $apiObj->rawSubStatusArray;
@@ -1158,6 +1177,17 @@ class MembershipApiFunctions
                         }
                     }
                 }
+            }
+            if($apiObj->mainMem=="NCP" && in_array($vasID[0], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))
+            {
+                $v['discount_given'] = NULL;
+                $price = "0";
+                $v['vas_price'] = "0";
+                $v['orig_price'] = "0";
+                $v['orig_price_formatted'] = "0.00";
+                $v['vas_price_strike'] = "0";
+                $v['remove_text'] = NULL;
+                $v['change_text'] = NULL;
             }
             if(empty($v['vas_price_strike'])){
             	$v['vas_price_strike'] = 0;

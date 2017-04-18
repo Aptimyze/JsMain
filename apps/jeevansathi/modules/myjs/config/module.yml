@@ -1,3 +1,9 @@
 all:
   perform:
-    enable_login:  on
+    enable_login: on
+  performV1:
+    enable_login: on
+  jsmsPerform:
+    enable_login: on
+  jspcPerform:
+    enable_login: on
