@@ -62,7 +62,7 @@ showUploadOption();
 	$("#addPhotoMobile").click(function(){
 		showUploadOption();
 	});
-	if(selectFile == 1) 
+	if( typeof selectFile !== "undefined" && selectFile == 1) 
 		$("#addPhotoMobile").trigger("click");
 
 	$("#FadedRegion").click(function(){
