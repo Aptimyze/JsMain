@@ -44,7 +44,7 @@ EOF;
   */
   protected function execute($arguments = array(), $options = array())
   {
-      if(CommonUtility::hideFeaturesForUptime())
+      if(!CommonUtility::runFeatureInDaytime() || CommonUtility::hideFeaturesForUptime())
         successfullDie();
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number

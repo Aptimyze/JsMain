@@ -104,5 +104,6 @@ class RegistrationEnums {
 	);
   public static $emailModification = "_deleted";
   public static $otherText = "Other";
+  public static $marathiValue = "'20'";
 }
 ?>

@@ -85,7 +85,7 @@ window.onload=function(){
     if (prev_handler) {
         prev_handler();
     }
-    setTimeout(function(){loadScript('http://xp1.zedo.com/client/xp1/fmos.js',renderBanners);},100); 
+    setTimeout(function(){loadScript('https://saxp.zedo.com/sclient/tt3/fmos.js',renderBanners);},100); 
     var zedoLoad = 1;
 }
 </script>
@@ -341,7 +341,7 @@ window.onload=function(){
                                                 <div class="fullwidth clearfix pl10">
                                                     <div class="contentHeader mCustomScrollbar" style="height:360px;padding-bottom:25px;">
                                                         <ul class="clearfix hor_list">
-                                                            <li><a title="Hindi Delhi Matrimony" href="/hindi-delhi-matrimony-matrimonials"> Hindi-Delhi </a></li>
+                                                            <li><a title="Hindi Delhi Matrimony" href="/matrimonials/hindi-matrimonial/"> Hindi-Delhi </a></li>
                                                             <li><a title="Marathi Matrimony" href="/matrimonials/marathi-matrimonial/"> Marathi </a></li>
                                                             <li><a title="Hindi UP Matrimony" href="/hindi-up-matrimony-matrimonials"> Hindi-UP </a></li>
                                                             <li><a title="Punjabi Matrimony" href="/matrimonials/punjabi-matrimonial/"> Punjabi </a></li>

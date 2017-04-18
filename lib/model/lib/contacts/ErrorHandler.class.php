@@ -259,10 +259,13 @@ class ErrorHandler
 				
 		//4. Contact limit		
 		$error = $this->checkContactlimit();
-		if($error)
+		if($error['MSG'])
 		{
-			$this->setErrorMessage($error);
+			$this->setErrorMessage($error['MSG']);
 			$this->setErrorType(ErrorHandler::EOI_CONTACT_LIMIT,ErrorHandler::ERROR_FOUND);
+			if(array_key_exists('E_COUNT', $error)){
+			$this->logEOIBreach($error['E_COUNT']);
+		}
 			return false;
 		}
 		
@@ -702,16 +705,17 @@ class ErrorHandler
 	 */	
 	function checkContactlimit()
 	{
-		$error ='';
+		$error['MSG'] ='';
 		
 		//Not to be checked for AP users.
 		if($this->contactHandlerObj->getPageSource()=='AP')
 					return $error;
-					
-		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
 		
     	if($this->errorTypeArr[ErrorHandler::EOI_CONTACT_LIMIT] && $this->contactHandlerObj->getAction()==ContactHandler::POST)
 		{
+
+		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
+
 			$limitArr = CommonFunction::getContactLimits($this->contactHandlerObj->getViewer()->getSUBSCRIPTION(),$this->contactHandlerObj->getViewer()->getPROFILEID());
 			
 			$today_initiated = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
@@ -722,39 +726,46 @@ class ErrorHandler
 			
 			if(($limitArr['DAY_LIMIT']-$today_initiated) <= 0)
 			{
-				$error = Messages::DAY_LIMIT;
+				$error['MSG'] = Messages::DAY_LIMIT;
 				$this->setErrorType('LIMIT','DAY');
+				$error['E_COUNT'] = $today_initiated;
 			}
 			else if($limitArr['WEEKLY_LIMIT']-$weekly_initiated<=0)
 			{
-				$error = Messages::WEEK_LIMIT;
+				$error['MSG'] = Messages::WEEK_LIMIT;
 				$this->setErrorType('LIMIT','WEEK');
+				$error['E_COUNT'] = $weekly_initiated;
 			}
 			else if($limitArr['MONTH_LIMIT']-$monthly_initiated<=0)
 			{	
-				$error = Messages::MON_LIMIT;
+				$error['MSG'] = Messages::MON_LIMIT;
 				$this->setErrorType('LIMIT','MONTH');
+				$error['E_COUNT'] = $monthly_initiated;
 			}
 			else if($limitArr['OVERALL_LIMIT']-$total_contacts<=0)
 			{ 
-				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID())
-					$error = Messages::PAID_OVERALL_LIMIT;
-			    else
-					$error = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
+				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID()){
+					$error['MSG'] = Messages::PAID_OVERALL_LIMIT;
+					$error['E_COUNT'] = $total_contacts;
+				}
+			    else{
+					$error['MSG'] = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
+					$error['E_COUNT'] = $total_contacts;
+			    }
 				$this->setErrorType('LIMIT','TOTAL');
 			}
 			else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
-				
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));
 				if($this->contactHandlerObj->getPageSource()=='Search')
 				
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
 					
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::EOI)				
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
 				
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
 			}
 		}
 		return $error;		
@@ -967,6 +978,33 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 		
 		}
 		return $error;
+	}
+
+	private function logEOIBreach($EOIDone)
+	{	
+			$viewerLogObj = $this->contactHandlerObj->getViewer();
+			$viewedLogObj = $this->contactHandlerObj->getViewed();
+			$viewerGender = $viewerLogObj->getGENDER();
+			$viewerPfid = $viewerLogObj->getPROFILEID();
+			$viewedPfid = $viewedLogObj->getPROFILEID();
+			$typeBreached = $this->errorTypeArr['LIMIT'];
+			$subscription = $viewerLogObj->getSUBSCRIPTION();
+
+			$check = CommonFunction::isPaid($subscription);
+			if($check == true)
+			{
+				$typeOfUser = "PAID";
+				if(CommonFunction::isOfflineMember($subscription))
+				{
+					$typeOfUser = "RB";
+				}	
+			}
+			else
+			{
+				$typeOfUser = "FREE";
+			}
+			$loggingObj = new MIS_EOI_DENIED_LOG();
+			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser,$EOIDone);
 	}
 
 
