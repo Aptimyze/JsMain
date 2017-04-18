@@ -60,7 +60,6 @@ class NotificationSender
     					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
     					$engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
                         
-                        $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
                         if($this->sendMultipleParallelNotification == false){
                            $result = $engineObject->sendNotification($regIds[$identifier]["AND"], $details,$profileid);
                         }
