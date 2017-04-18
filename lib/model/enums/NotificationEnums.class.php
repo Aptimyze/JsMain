@@ -53,7 +53,7 @@ class NotificationEnums
                                           "CONTACT_VIEWS"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CHAT_MSG"=>array('AND'=>90),
                                           "CHAT_EOI_MSG"=>array('AND'=>90),
-                                          "LOGIN_REGISTER"=>array('AND'=>91)
+                                          "LOGIN_REGISTER"=>array('AND'=>93)
                                         ); //app version mapping for notifications
 
       //profile registration offset for notification schedule
@@ -64,7 +64,7 @@ class NotificationEnums
       public static $enableNotificationLogging = false;
 
       //config for sending multiple curl requests for GCM notification in parallel
-      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN"));
+      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","FILTERED_EOI"));
 
       //config for logged out notifications
       public static $loggedOutNotifications = array("LOGIN_REGISTER");
