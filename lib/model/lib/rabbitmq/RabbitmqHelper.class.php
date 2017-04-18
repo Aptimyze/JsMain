@@ -13,7 +13,13 @@ class RabbitmqHelper
 **/
   public static function sendAlert($message,$to="default")
   {
-    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception($message));
+    $exception = new Exception($message);
+    if($exception->getTrace())
+    {
+      $explodedPath = explode("/", $exception->getTrace()[0]['file']);
+      $consumerName = $explodedPath[count($explodedPath) - 1];
+    }
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName));
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
