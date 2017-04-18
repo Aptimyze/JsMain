@@ -33,15 +33,19 @@ class FormatNotification
     }
     
 
-        if($details['NOTIFICATION_KEY']=='MATCHALERT')
-                $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_ANDROID;
-        if($details['NOTIFICATION_KEY']=='JUST_JOIN')
-                $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_ANDROID;
-        if($details['NOTIFICATION_KEY']=='PENDING_EOI')
-                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_ANDROID;
-        if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
-                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_ANDROID;
-
+    if($details['NOTIFICATION_KEY']=='MATCHALERT')
+            $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_ANDROID;
+    if($details['NOTIFICATION_KEY']=='JUST_JOIN')
+            $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_ANDROID;
+    if($details['NOTIFICATION_KEY']=='PENDING_EOI')
+            $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_ANDROID;
+    if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
+            $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_ANDROID;
+        
+    if(in_array($details['NOTIFICATION_KEY'], NotificationEnums::$loggedOutNotifications)){
+        unset($dataArray['USERNAME']);
+        unset($dataArray['PROFILE_CHECKSUM']);
+    }
 	return $dataArray;
     }
     public static function formaterForIos($details)
