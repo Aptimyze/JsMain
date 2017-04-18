@@ -21,6 +21,7 @@ class RabbitmqHelper
                           "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
                           "screening" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
+                          "writeMsg" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -32,7 +33,7 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    if($to == "screening" || $to == "instantEoi")
+    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg")
     {
       SendMail::send_email($emailTo,$message,$subject);
     }
