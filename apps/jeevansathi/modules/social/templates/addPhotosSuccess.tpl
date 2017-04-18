@@ -66,7 +66,7 @@
 
               </div>
               <div class="fr  pt10 pr10">
-                <button class="f14 fontreg cursp skipbtn1 color11" id="continue">
+                <button class="f14 fontreg cursp skipbtn1 color11" id="skip_continue">
                   Skip & Continue
                 </button>
               </div>

@@ -194,6 +194,11 @@ $(function()
 	{
 		continueToNext();
 	});
+
+	$("#skip_continue").click(function()
+	{
+		continueToNext();
+	});
 	$("#select").click(function()
 	{
 		if ($('span.phsel').length) 
