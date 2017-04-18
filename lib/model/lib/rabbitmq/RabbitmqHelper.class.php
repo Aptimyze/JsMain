@@ -18,7 +18,7 @@ class RabbitmqHelper
     {
       $consumerName = $exception->getTrace()[0]['file'];
     }
-    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName));
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName, LoggingEnums::MODULE_NAME => "RabbitmqConsumers"));
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
