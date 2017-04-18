@@ -48,6 +48,7 @@ $this->addOptions(array(
         $this->checkForUpdateApp($notificationKey, $androidMaxVersion, $currentAndroidMaxVersion);
                 $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion);
                 $appNotificationSchedulerObj->scheduleNotificationsForKey();
+                $this->mailScheduleComplete($notificationKey,$noOfScripts,$currentScript);
   }
   
   public function checkForUpdateApp($notificationKey,$androidMaxVersion,$currentAndroidMaxVersion){
@@ -59,6 +60,13 @@ $this->addOptions(array(
               $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
               $upgradeAppObj->insert($androidMaxVersion, $currentAndroidMaxVersion);
           }
+      }
+  }
+  
+  public function mailScheduleComplete($notificationKey,$noOfScripts,$currentScript){
+      if(in_array($notificationKey, NotificationEnums::$mailScheduleComplete)){
+          $msg = "$notificationKey notification current script $currentScript, Total script: $noOfScripts  scheduling complete";
+          SendMail::send_email(NotificationEnums::$jscDevMail, $msg, $msg);
       }
   }
 }
