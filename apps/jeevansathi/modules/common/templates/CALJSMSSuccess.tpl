@@ -157,6 +157,42 @@
 </div>
 
 
+~elseif $calObject.LAYERID eq '18'`
+        <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
+        <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
+        <div class="hgt70p posrel midDiv white">
+            <div class="fontlig f19 txtc">~$calObject.TITLE`</div>
+            <div class="pad2040 txtc fontlig f16">~$calObject.TEXT`</div>
+            <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
+                <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select</div>
+                <div class="wid8p dispibl"><img class="fr" src="images/arrow.png" /></div>
+            </div>
+            <div id="contText" class="fontlig f15 mt10 txtc">Select to continue</div>
+            <div id="inputDiv" class="mt30 txtc dn">
+                <div class="fontlig f15 white">Enter your occupation</div>
+                <div id="occInputDiv" class="wid90p mar15auto bg4 hgt75 pad25">
+                    <input type="text" class="fullwid fl fontlig f18" placeholder="Enter Occupation" id="occuText" />
+                </div>
+                <div class="fontlig f14 white mt15">Input required to continue</div>
+            </div>
+        </div>
+    </div>
+    <div id="listDiv" class="listDivInner bg4 scrollhid dn">
+        <div id="listLoader" class="centerDiv"><img src="http://www.jeevansathi.com/images/jsms/commonImg/loader.gif" /></div>
+        <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
+        <ul id="occList" class="occList color11 fontlig f18 dn">
+        </ul>
+    </div>
+    <div id="foot" class="posfix fullwid bg7 btmo">
+        <div class="scrollhid posrel">
+            <input type="submit" id="occupationSubmit" class="fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="OK">
+        </div>
+    </div>
+
+
+
+
+
 ~elseif $calObject.LAYERID eq '16'`
 
         <div id="overlayHead" class="bg1">

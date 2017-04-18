@@ -687,6 +687,16 @@ class commonActions extends sfActions
             
         }
         
+        if($layerToShow==18)
+        {
+            $occupText = $request->getParameter("occupText");
+            if($occupText)
+            {
+                (new MIS_CAL_OCCUPATION_TRACK())->insert($loginData['PROFILEID'],$occupText);
+            }
+
+        }        
+
         if($layerToShow==15)
         {
             $namePrivacy = $button=='B1' ? 'Y' : 'N';

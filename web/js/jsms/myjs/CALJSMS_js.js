@@ -2,8 +2,70 @@
 $(document).ready(function() {
 	
 
-          
-        if($("#CriticalActionlayerId").val()=='16'){
+if($("#CriticalActionlayerId").val()=='18'){
+    occuSelected= 0;
+
+    $("#occInputDiv input").keypress(function(event){console.log(event.which);
+        var inputValue = event.which;
+        // allow letters and whitespaces only.
+        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0)) { 
+            event.preventDefault(); 
+        }
+    });
+
+   $("#occClickDiv").on("click", function() {
+                $.ajax({
+                    url: "/static/getFieldData?k=occupation&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        var listArray = res[0];
+                        appendOccupationData(listArray);
+                    },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+            $("#listDiv").removeClass("dn");
+        });
+
+     appendOccupationData = function(res) {
+        $("#occList").html('');
+        occuSelected = 0;
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+                if(index1!=43) //  omitting 'others' option
+                    $("#occList").append('<li occCode = "'+index1+'">' + elem1 + '</li>');
+            });
+        });
+        $("#occList").append('<li id="notFound">I did\'nt find my occupation</li>');
+        $("#occList li").each(function(index, element) {
+            $(this).bind("click", function() {
+
+                $("#occSelect").html($(this).html());
+                $("#occSelect").attr('occCode',$(this).attr('occCode'));
+                $("#listDiv").addClass("dn");
+                $('#searchOcc').val("");
+                $("#occList").html("");
+                if ($(this).attr("id") == "notFound") {
+                    occuSelected = 0;
+                    $("#contText").hide();
+                    $("#inputDiv").removeClass("dn");
+                    $("#occuText").focus();
+                } else {
+                    occuSelected = 1;
+                    $("#inputDiv").addClass("dn");
+                    $("#contText").show();
+                    $(this)
+                }
+            });
+        });
+        $("#listLoader").addClass("dn");
+        $("#occList").removeClass("dn");
+        }
+
+        }  
+else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
         }  
@@ -58,6 +120,44 @@ else {
                             return;
                         }
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
+                    }
+        if(layerId==18)
+                    {   
+
+                        if (occuSelected==1)
+                        {
+                            var occuCode = $("#occSelect").attr('occCode');
+                            dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+                        }
+                        else if ($("#occInputDiv input").val()!='')
+                        {console.log('jnput');
+                            var occupText = $("#occInputDiv input").val();
+                            window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
+                            CALButtonClicked=0;
+                            return;
+                        }
+                        else{
+
+                                showError("Please select/enter occupation");
+                                return;
+
+
+                        }
+
                     }
 
 
