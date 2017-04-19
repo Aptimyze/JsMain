@@ -21,12 +21,15 @@ class memUser
     public $memObj;
     public $festFlag;
     public $memUpgradeEligible = false;
+    public $mtongue;
+    public $addonMtongue;
 
     function __construct($profileid) {
         if ($profileid != '') {
             $this->setProfileid($profileid);
             $this->ipAddress = $this->getIpAddress();
             $this->currency = $this->getCurrency();
+            $this->setMtongue($profileid);
             $this->memObj = new JMembership();
         } 
         else {
@@ -34,6 +37,38 @@ class memUser
             $this->userType = "1";
             $this->currency = $this->getCurrency();
             $this->ipAddress = $this->getIpAddress();
+            $this->mtongue = "-1";
+            $this->addonMtongue = "-1";
+        }
+    }
+
+    public function setMtongue($profileid=""){
+        
+        if($profileid != ""){
+            $profileObj = LoggedInProfile::getInstance('newjs_master');
+
+            if($profileObj != null){
+                $this->mtongue = $profileObj->getMTONGUE();
+                $this->addonMtongue = $this->mtongue;
+            }
+
+            if(!empty($this->mtongue)){
+                $memHandlerObj = new MembershipHandler(false);
+                $mainMemcount = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongue);
+                $addonMemcount = $memHandlerObj->getOnlineActiveAddonDurationsWrapper($this->mtongue);
+                unset($memHandlerObj);
+                if($mainMemcount == 0){
+                    $this->mtongue = "-1";
+                }
+                if($addonMemcount == 0){
+                    $this->addonMtongue = "-1";
+                }
+            }
+            else{
+                $this->mtongue = "-1";
+                $this->addonMtongue = "-1";
+            }
+
         }
     }
 

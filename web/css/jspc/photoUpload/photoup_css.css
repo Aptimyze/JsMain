@@ -163,3 +163,5 @@ ul.piclist li:nth-child(7n+1){margin-left:0}
 	background-image: url(IMG_URL/images/jspc/registration/reg-spirite.png);
 	background-repeat: no-repeat;
 }
+
+.skipbtn1{background: none; border: 0}
