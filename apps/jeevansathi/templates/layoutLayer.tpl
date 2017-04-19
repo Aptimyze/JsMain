@@ -5,8 +5,8 @@
     ~include_metas`
     ~include_title`
     <!--link rel="shortcut icon" href="/favicon.ico" /-->
-    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.2/scriptaculous.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.2/scriptaculous.js" type="text/javascript"></script>
 
     ~use helper = SfMinify`
     ~minify_include_module_javascripts('top')`

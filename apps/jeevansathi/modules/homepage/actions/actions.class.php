@@ -153,7 +153,7 @@ class homepageActions extends sfActions
 	$this->getResponse()->addMeta('copyright', date('Y').' jeevansathi.com');
 	/***************Ends here*************/
 	$end_time=microtime(true)-$start_tm;
-	$this->TRACK_FOOT = BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif");
+	$this->TRACK_FOOT = BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif");
 	
 	
 	sfContext::getInstance()->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsHomePageUrl);

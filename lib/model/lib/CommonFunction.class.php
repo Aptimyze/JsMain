@@ -107,6 +107,14 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
+			else if(CommonFunction::isEverPaid())
+			{
+				$day_limit=100;
+				$weekly_limit=100;
+				$month_limit=400;
+				$overall_limit=800000;
+				$notValidNumber_limit=100;
+			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -130,6 +138,21 @@ class CommonFunction
             $paid=1;
         }
 		return $paid;
+	}
+
+	public static function isEverPaid()
+	{
+		
+		$everPaid = false;
+		$billing = new BILLING_PURCHASES();
+		$loginProfile = LoggedInProfile::getInstance();
+		$pid = $loginProfile->getPROFILEID();
+		$payment = $billing->isPaidEver($pid);
+		if(is_array($payment) && $payment[$pid])
+		{
+			$everPaid = true;
+		}
+		return $everPaid;
 	}
 
 	public static function isEvalueMember($subscription)
@@ -726,5 +749,159 @@ class CommonFunction
         $cityList=explode(",",trim($cityList,","));
         return $cityList;
     }
+
+    	
+    /**
+     * this function returns occupation groups
+     * @param  string  $occupationValues comma separated occuaptaion values
+     * @param  boolean $isSingleQuote    whether occupation values are stored as single quote sorrounded
+     * @return string                    returns comma separated string.
+     */		
+    public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+        if($isSingleQuote)
+        {
+        	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
+        }
+        else
+        {
+        	$occupationValuesArray = explode (",", $occupationValues);
+        }
+
+        $occupationGroupString = "";
+
+    	foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+    	{
+    		$occupationGroupingValuesArray = array_map('intval',explode(',',$occupationGroupingValues));
+    		if ( count(array_intersect($occupationValuesArray,$occupationGroupingValuesArray)) > 0)
+    		{
+    			$occupationGroupString .= $key.",";
+    		}	
+    	}
+    	$occupationGroupString = rtrim($occupationGroupString,",");
+
+    	if($isSingleQuote)
+		{
+			$occupationGroupString = "'".$occupationGroupString."'";
+			$occupationGroupString = str_replace(",", "','", $occupationGroupString);
+		}
+    	return $occupationGroupString;
+    }
+
+    /**
+     * returns occupation values, given occupation groups.
+     * @param  string  $occupationGroups comma separated groups
+     * @param  boolean $isSingleQuote    whether return values needs to be sorrounded by comma or not
+     * @return string                    occupation values, comma separated
+     */
+    public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+		if($isSingleQuote)
+        {
+        	$occupationGroupsArray = explode (",", str_replace("'", "", $occupationGroups));
+        }
+        else
+        {
+        	$occupationGroupsArray = explode (",", $occupationGroups);
+        }
+
+		$occupationValuesString = "";
+
+		foreach($occupationGrouping as $key => $occupationGroupingValues) 
+		{
+			if(in_array($key,$occupationGroupsArray))
+			{
+				$occupationValuesString .= $occupationGroupingValues.",";
+			}		
+		}
+
+		$occupationValuesString = rtrim($occupationValuesString,",");
+
+		if($isSingleQuote)
+		{
+			$occupationValuesString = "'".$occupationValuesString."'";
+			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
+		}
+		return $occupationValuesString;
+    }
+
+    public static function getOccupationGroupsLabelsFromValues($occupationGroups)
+    {
+    	$occupationGroupsArr = explode(",",$occupationGroups);
+    	$decoratedOccGroups = "";
+    	$occupationGroupingFieldMapLib = FieldMap::getFieldLabel('occupation_grouping', '',1);    	
+    	foreach($occupationGroupsArr as $key=>$value)
+    	{
+    		$decoratedOccGroups.= $occupationGroupingFieldMapLib[$value].", ";
+    	}
+    	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
+    	return $decoratedOccGroups;
+    }
+
+    public static function getContactLimitDates()
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		$weeks = floor($daysDiff/7) * 7;
+
+		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		$months = floor($daysDiff/30) * 30;
+
+		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
+
+		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
+	public static function getLimitEndingDate($errlimit)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		if($errlimit == "WEEK")
+		{
+			if($daysDiff % 7 == 0)
+				$daysDiff += 1;
+			$weeks = ceil($daysDiff/7) * 7 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		}
+		elseif($errlimit == "MONTH")
+		{
+			if($daysDiff % 30 == 0)
+				$daysDiff += 1;
+			$months = ceil($daysDiff/30) * 30 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
+		}
+
+		return $endDate;
+	}
+
 }
 ?>

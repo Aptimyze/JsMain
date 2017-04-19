@@ -558,5 +558,9 @@ class ProfileCacheConstants
                                    'PROFILEID',
                                    "YOUR_INFO_OLD",
                                    );
+    public static $arrAutoExpiry = array(
+                                   'PROFILEID',
+                                   "AUTO_EXPIRY_DATE",
+                                   );
 }
 ?>

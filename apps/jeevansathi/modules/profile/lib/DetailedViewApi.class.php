@@ -239,7 +239,8 @@ class DetailedViewApi
 	protected function getDecorated_PrimaryInfo()
 	{
 		$objProfile = $this->m_objProfile;
-		
+		$viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
+		$viewedProfile = $this->m_objProfile->getPROFILEID();
 		$this->m_arrOut['username'] = $objProfile->getUSERNAME();
 		$this->m_arrOut['age'] = $objProfile->getAGE();
 		$this->m_arrOut['height'] = html_entity_decode($objProfile->getDecoratedHeight());
@@ -256,7 +257,8 @@ class DetailedViewApi
                         $this->m_arrOut['name_of_user'] = null;
                 }
                 unset($nameOfUserObj);
-                
+        if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
+        	$this->m_arrOut['sameGender']=1;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
@@ -299,16 +301,59 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
-            if(MobileCommon::isAndroidApp()){ 
-                $this->m_arrOut['thumbnailPic'] = null;
-                $havePhoto=$this->m_objProfile->getHAVEPHOTO();
-                if($havePhoto=='Y'){
-                    if($this->m_actionObject->THUMB_URL) {
-                        $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
-                        $this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
-                    }
-                }
+
+		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
+    if($bHoroScope === 'D'){
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+    }
+    else{
+        $astroArr = (array)$this->m_arrAstro;
+        $this->m_arrOut['astro_date'] = $astroArr['dateOfBirth'];
+        $this->m_arrOut['astro_time'] = $astroArr['birthTimeHour']." hrs:".$astroArr['birthTimeMin']." mins";
+        $this->m_arrOut['astro_sunsign'] = $astroArr['sunsign'];
+        $this->m_arrOut['astro_time_check'] = $astroArr['birthTimeHour'];
+        $this->m_arrOut['rashi'] = $astroArr['rashi'];
+        $cManglik = CommonFunction::setManglikWithoutDontKnow($this->m_objProfile->getMANGLIK());
+        $szManglik = ApiViewConstants::getManglikLabel($cManglik);
+        $this->m_arrOut['astro_manglik'] = $szManglik;
+        $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+        $horoscope = new Horoscope;
+        if($viewerProfile){
+          $this->m_arrOut['myHoroscope'] = $horoscope->ifHoroscopePresent($viewerProfile);
+          $this->m_arrOut['requestedHoroscope'] = $horoscope->ifHoroscopeRequested((array)$viewerProfile,$viewedProfile,1)[$viewerProfile];
+        }
+        $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
+    }
+     $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
+
+        if(MobileCommon::isAndroidApp())
+        { 
+            $this->m_arrOut['thumbnailPic'] = null;
+            $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+            if($havePhoto=='Y')
+            {
+            	if($this->m_actionObject->THUMB_URL)
+            	{
+            		$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+            		$this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
+            	}
             }
+        }
+
 	}
 	
 	/**
@@ -1339,7 +1384,7 @@ class DetailedViewApi
 		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
 		{
-		    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+		    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
 		}
 	}
 	}

@@ -154,6 +154,12 @@ jsmsprivacypolicySuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [-*]
    layout: jsmsMobLayout
+jsmsprivacypolicyampSuccess:
+   metas:
+    title: Jeevansathi Matrimonials- Privacy Policy
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [-*]
+   layout: jsmsMobAmpLayout
 jsmsfraudalertSuccess:
    metas:
     title: Jeevansathi Matrimonials- Fraud Alert

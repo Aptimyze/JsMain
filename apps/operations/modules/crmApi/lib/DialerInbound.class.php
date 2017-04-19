@@ -32,7 +32,7 @@ class DialerInbound
 		$gender 	= FieldMap::getFieldLabel('gender',$dataArr['GENDER']);
 		$mstatus 	= FieldMap::getFieldLabel('mstatus',$dataArr['MSTATUS']);
 		$religion 	= FieldMap::getFieldLabel('religion',$dataArr['RELIGION']);
-		$community 	=$this->getCommunityMapping($dataArr['RELIGION']);
+		$community 	=$this->getCommunityMapping($dataArr['MTONGUE']);
 		$dataArr['GENDER'] 	= $gender;
 		$dataArr['MSTATUS'] 	= $mstatus;
 		$dataArr['RELIGION'] 	= $religion;
@@ -42,6 +42,7 @@ class DialerInbound
 			$dataArr['SUBSCRIPTION'] ='Y';
 		else
 			$dataArr['SUBSCRIPTION'] ='N';
+		$this->profileDetails =$dataArr;
 		return $dataArr;
 	}
 	public function getMembershipDetails($profileid)
@@ -61,20 +62,18 @@ class DialerInbound
 		$mainMemArr =array("allMainMem"=>$allMainMem,"expiry_date"=>$expiry_date,"renewalActive"=>$renewalActive,"mostPopular"=>$mostPopular);
 		return $mainMemArr;
 	}
-	public function getDiscountDetails($allMainMem)
+	public function getDiscountDetails($memPriceArr)
 	{
         	if(is_array($memPriceArr)){
-        	    $nonZero = false;
         	    foreach($memPriceArr as $service => $val){
-        	        $servDisc[$service] = 0;
+        	        //$servDisc[$service] = 0;
         	        foreach($val as $servDur => $details){
         	            $disc = $details["PRICE"] - $details["OFFER_PRICE"];
         	            if($disc > 0){
-        	                $nonZero = true;
         	                $per = ($disc/$details["PRICE"])*100;
-        	                if($per>$servDisc[$service]){
+        	                //if($per>$servDisc[$service]){
         	                    $servDisc[$servDur] = intval($per);
-        	                }
+        	                //}
         	            }
         	        }
         	    }
@@ -112,7 +111,7 @@ class DialerInbound
                 $mainMemArr 	=$this->getMembershipDetails($profileid);
 		$allMainMem	=$mainMemArr['allMainMem'];
 		$expiryDate	=$mainMemArr['expiry_date'];
-		$renewalActive	=$mainMemArr['renewalActive,'];
+		$renewalActive	=$mainMemArr['renewalActive'];
 		$mostPopular	=$mainMemArr['mostPopular'];
                 if(is_array($allMainMem))
                         $planDetails =$this->formatPlanDetails($allMainMem,$mostPopular);
@@ -137,11 +136,22 @@ class DialerInbound
 		$memData['DISCOUNT_PERCENT'] 	=$discountVal;
 
 		// Renewal Info 
+		$subscription =$this->profileDetails['SUBSCRIPTION'];
 		if($renewalActive){
-			$curTime	=time();
+			$curDay	=date("Y-m-d");;
+			$curTime =strtotime($curDay);
+
+			if($subscription=='N'){
+				$expiryDate .=" ".date("Y");
+				$expiryDate =date("Y-m-d",strtotime("$expiryDate -10 days"));	
+			}
 			$expiryTime	=strtotime($expiryDate);
 			if($expiryTime>=$curTime){
-				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24));
+				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24))+1;
+			}
+			elseif($subscription=='N'){
+				$daysDiff =floor(($curTime-$expiryTime)/(60*60*24));
+				$daysDiff ="-".$daysDiff;
 			}
 			$renewalActive ='Y';
 		}
@@ -150,6 +160,7 @@ class DialerInbound
 		$memData['RENEWAL_DAYS'] =$daysDiff;
 		$memData['RENEWAL_ACTIVE'] =$renewalActive;			
 		$memData['MEMBERSHIP'] =$planDetails;	
+
                 return $memData;
         }
         public function getCommunityMapping($mtongue)

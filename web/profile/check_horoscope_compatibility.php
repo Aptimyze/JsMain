@@ -44,13 +44,30 @@
 
 		login_relogin_auth($data);
 		$smarty->assign("CHECKSUM",$checksum);
-
+		
 		$chkprofilechecksum=explode("i",$profilechecksum);
 		//Added by Vibhor for Astro Service of Offline Module
                 if(!$via_ofm)
 			$profileid=$data['PROFILEID'];
 		//end
 		$profileid_other=$chkprofilechecksum[1]; //profileid of other person with whom logged in person is checking compatibility
+		
+		//if sample report is to be sent
+		if($sampleReport)
+		{			
+			$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
+			$file = file_get_contents($url);
+			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1848); //1848 is the  mail id
+			$emailTpl = $email_sender->setProfileId($data['PROFILEID']);
+			$smartyObj = $emailTpl->getSmarty();
+			$smartyObj->assign('otherUsername',$username);
+			$smartyObj->assign('otherProfile',$profileid_other);
+			$email_sender->setAttachment($file);
+			$email_sender->setAttachmentName("SampleAstroReport.pdf");
+			$email_sender->setAttachmentType('application/pdf');
+			$email_sender->send();			
+			return;
+		}
 		if(strstr($data['SUBSCRIPTION'],'A'))
 			$sample="";
 		
@@ -140,10 +157,10 @@
                                     $astrodata = $detailArr['astrodata'];
                                     $astrodata_other = $detailArr['astrodata_other'];
                                     if($data['GENDER']=='M'){
-                                        $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$data['USERNAME'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
+                                        $urlToVedic="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$data['USERNAME'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$row['USERNAME'];
                                     }
                                     else{
-                                        $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$data['USERNAME'];
+                                        $urlToVedic="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$data['USERNAME'];
                                     }
 				    $file=PdfCreation::PdfFile($urlToVedic);
                                     

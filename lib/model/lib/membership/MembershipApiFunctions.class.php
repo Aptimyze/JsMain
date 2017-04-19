@@ -819,6 +819,25 @@ class MembershipApiFunctions
         }
         return $additionalBenefits;
     }
+
+    public function getOCBUpgradeBenefits($upgradeMem=""){
+        $upgradeText = "";
+        if($upgradeMem!=""){
+            switch($upgradeMem){
+                case "C":
+                    $upgradeText = "Let even free members contact you";
+                    break;
+                case "NCP":
+                    $upgradeText = "Increase your responses through JS Boost";
+                    break;
+                case "X":
+                    $upgradeText = "Get a dedicated relationship adviser";
+                    break;
+            }
+        }
+        return $upgradeText;
+    }
+
     public function getCurrentlyActiveVasNames($apiObj) {
         $memHandlerObj = new MembershipHandler();
         $serviceArr = $apiObj->rawSubStatusArray;
@@ -1002,6 +1021,10 @@ class MembershipApiFunctions
                 $apiObj->mainServices['service_duration'] = $monthsPrependVal . ' Months';
             }
         }
+       
+        if($apiObj->upgradeMem && $apiObj->upgradeMem == 'MAIN'){
+            $apiObj->mainServices['actual_upgrade_price'] = $apiObj->allMainMem[$id][$subId]['OFFER_PRICE']; 
+        }
         $apiObj->mainServices['service_contacts'] = $apiObj->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
         $apiObj->mainServices['standard_price'] = $apiObj->allMainMem[$id][$subId]['PRICE'];
         $apiObj->mainServices['orig_price_formatted'] = number_format($apiObj->mainServices['standard_price'], 2, '.', ',');
@@ -1154,6 +1177,17 @@ class MembershipApiFunctions
                         }
                     }
                 }
+            }
+            if($apiObj->mainMem=="NCP" && in_array($vasID[0], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))
+            {
+                $v['discount_given'] = NULL;
+                $price = "0";
+                $v['vas_price'] = "0";
+                $v['orig_price'] = "0";
+                $v['orig_price_formatted'] = "0.00";
+                $v['vas_price_strike'] = "0";
+                $v['remove_text'] = NULL;
+                $v['change_text'] = NULL;
             }
             if(empty($v['vas_price_strike'])){
             	$v['vas_price_strike'] = 0;

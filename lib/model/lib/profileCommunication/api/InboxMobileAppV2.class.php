@@ -39,6 +39,7 @@ class InboxMobileAppV2
 	const CONTACTS_VIEWED_PAID = "Contacts viewed by you would be shown here";
 	const CONTACTS_VIEWED_UNPAID_V2 = "<span style='color:#666'> Upgrade membership to view contact details and connect to your match instantly.</span>";
 	const CONTACTS_VIEWED_UNPAID_V2_IOS = "Upgrade membership to view contact details and connect to your match instantly.";
+	// todo: need to be changed 
 	const INTEREST_ARCHIVED = "Interests received more than 90 days earlier will appear here.";
 
 	static public function init()
