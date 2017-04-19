@@ -49,9 +49,10 @@ EOF;
 	$instantKeyParam 	='APP_INSTANT#';
 	$scheduledKeyParam	='APP_NOTIFICATION#';	
 	$mqParam                ='#MQ';
+	$acceptanceValCheck	=1000;
 
 	// Notification handling with Message Queue
-	foreach($notificationArr as $notificationKey=>$keyType){
+	foreach($notificationArr as $key=>$notificationKey){
 
 		if(in_array("$notificationKey", $this->instantNotificationArr))
 			$keyWithourMq =$instantKeyParam.$notificationKey;
@@ -71,13 +72,13 @@ EOF;
 
 		// Handling for ACCEPTANCE
 		if($notificationKey=='ACCEPTANCE'){
-			if($valWithMq<500)		
+			if($valWithMq<$acceptanceValCheck)		
 				$this->consumerHandling($notificationKey,$valWithMq);
 		}
 		// end
 
 		// Others
-		if($diffPercent>10){
+		if($diffPercent>20){
 			$this->consumerHandling($notificationKey,$diffPercent);	
 		}
 		unset($valWithoutMq);
@@ -93,10 +94,16 @@ EOF;
                 $keyWithourMq =$scheduledKeyParam.$notificationKey;
 		$keyToCheck =$keyWithourMq.$mqParam;
 		list($start,$end) =explode("-",$time);
-		
+
 		if($curHour>=$start && $curHour<=$end){
 	                $valWithoutMq   =$JsMemcacheObj->get($keyWithourMq,'','',0);
 			$valToCheck	=$JsMemcacheObj->get($keyToCheck,'','',0);
+
+			/*		
+			echo $keyWithourMq."=".$keyToCheck."-----------";
+			echo $valWithoutMq."=".$valToCheck."\n";
+			*/	
+
 			if($valWithoutMq>$valToCheck){
 				$JsMemcacheObj->set($keyToCheck,$valWithoutMq,'','','X');
 			}
@@ -111,7 +118,6 @@ EOF;
 	public function consumerHandling($notificationKey,$diffPercent=0)
 	{ 
      		$rmqObj = new RabbitmqHelper();
-
                 if(in_array("$notificationKey", $this->instantNotificationArr)){
 			$this->type	="Instant";
                         $queue		=MessageQueues::CRONCONSUMER_STARTCOMMAND;
@@ -126,7 +132,7 @@ EOF;
 			$msgBody        ="[Delivery] Notification Queue(NOTIFICATION_LOG_QUEUE) Consumer($queue) killed";
 			$rmqObj->killConsumerForCommand($queue);
 		}
-                elseif(in_array("$notificationKey", $this->scheduledKeyArr)){
+                elseif(array_key_exists("$notificationKey", $this->scheduledKeyArr)){
 			$this->type     ="Scheduled";
 			$subject 	="[Scheduled] Notification Key: $notificationKey";
 			$msgBody        ="[Scheduled] Hanged";
