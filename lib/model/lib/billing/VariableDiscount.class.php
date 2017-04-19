@@ -129,7 +129,7 @@ class VariableDiscount
     public function getAllDiscountForProfile($profileid, $durationArr='')
     {
 	if(!is_array($durationArr)){
-		$durationArr =$this->getActiveDurations();
+		$durationArr =$this->getActiveDurations($profileid);
 	}
         $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
@@ -549,8 +549,9 @@ class VariableDiscount
 	unset($jprofileObj);
 	return $paid;	
     }
-    public function getActiveDurations()
+    public function getActiveDurations($profileid="")
     {
+    
 	$keyMain='MAIN_MEM_DURATION';
 	$memCacheObject = JsMemcache::getInstance();
         if($memCacheObject->get($keyMain)){
@@ -558,7 +559,8 @@ class VariableDiscount
         }
 	 else{
         	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
-		$durationsArr =$serviceObj->getOnlineActiveDurations();
+            $mtongue = "A";
+		$durationsArr =$serviceObj->getOnlineActiveDurations($mtongue);
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){
 				unset($durationsArr[$val]);
@@ -574,7 +576,7 @@ class VariableDiscount
     public function getDiscountArrFromPoolTech($profileid, $durationArr='')
     {
         if(!is_array($durationArr)){
-                $durationArr =$this->getActiveDurations();
+                $durationArr =$this->getActiveDurations($profileid);
         }
         $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountArr($profileid);
