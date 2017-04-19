@@ -85,6 +85,8 @@ class HamburgerApp
 			}
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
+				$hamburgerDetails['ACC_ME'] = $profileMemcacheObj->get('ACC_ME');
+				$hamburgerDetails['ACC_BY_ME'] = $profileMemcacheObj->get('ACC_BY_ME');
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
@@ -109,6 +111,7 @@ class HamburgerApp
 					$hamburgerDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
 				else
 					$hamburgerDetails['DEC_ME_NEW'] = 0;
+			$hamburgerDetails['TOTAL_NEW']=JsCommon::convert99($hamburgerDetails['AWAITING_RESPONSE_NEW'] + $hamburgerDetails['ACC_ME_NEW'] + $$hamburgerDetails['MESSAGE_NEW'] + $hamburgerDetails['PHOTO_REQUEST_NEW'] + $hamburgerDetails['JUST_JOINED_NEW'] + $hamburgerDetails["FILTERED_NEW"] + $hamburgerDetails['DEC_ME_NEW']);
 		     }
 				
 			return $hamburgerDetails;
