@@ -1143,13 +1143,24 @@ class Membership
             list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DT"]);
             if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
                 if ($duration == '35640') { // current is also unlimited duration
-                    $actual_start_date = date("Y-m-d", time());
-                    $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                    $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                    $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
+
+                    //$actual_start_date = date("Y-m-d", time());
+                    //$actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
                 } 
                 else // current is not unlimited duration 
                 {
-                    $actual_start_date = date("Y-m-d", time()); 
-                    $actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
+                    $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                    $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+
+                    //$actual_start_date = date("Y-m-d", time()); 
+                    //$actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
                 }
             } 
             else if ($yy >= '2099')  // Case when another membership is already bought after unlimited plan
@@ -1192,7 +1203,11 @@ class Membership
             if ($actual_start_date == '0000-00-00') {
                 $actual_start_date = $row['ACTIVATE_ON'];
             }
-            $actual_end_date = $row['EXPIRY_DT'];
+            if ($duration == '35640') {     //if current membership is unlimited then actual end date is constant + start
+                $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));;
+            }else{
+                $actual_end_date = $row['EXPIRY_DT'];   //if current mem is NOT unlimited, actual date is as per service
+            }
         }
         // ASSD / ASED logic end
         return array($actual_start_date, $actual_end_date);
