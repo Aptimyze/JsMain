@@ -169,7 +169,7 @@ else {
                         }
                         else{
 
-                                showError("Please select/enter occupation");
+                                showError("Please enter occupation");
                                 CALButtonClicked=0;
                                 return;
 
