@@ -23,10 +23,18 @@ Call it with:
 
   [php symfony cronConsumeInstantEOIQueue|INFO]
 EOF;
+
+  $this->addOptions(array(
+        new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
+    ));
+
   }
 
   protected function execute($arguments = array(), $options = array())
   {
+    if (!sfContext::hasInstance())
+      sfContext::createInstance($this->configuration);
+
     $consumerObj = new InstantEoiNotifyConsumer('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
     $consumerObj->receiveMessage(); 
   }

@@ -17,11 +17,18 @@
     var preFilledMobNo = "~$data.userDetails.PHONE_MOB`";
     var vasNames = new Array();
     var paidBenefits = new Array();
+    var vasPrice = new Array();
     var openedCount = "~$data.openedCount`";
     var filteredVasServices = "~$data.filteredVasServices`";
     var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
     ~if $data.serviceContent` 
-            var pageType = 'membershipPage';
+            var pageType = 'membershipPage';  
+            ~if $data.preSelectLandingVas` 
+                var preSelectLandingVas = "~$data.preSelectLandingVas`"
+            ~else`
+                var preSelectLandingVas = ""
+            ~/if`
+            var astroDurations = [];
     ~/if`
     ~if $data.vasContent`              
         var pageType = 'ConditionsBasedDivVasPaid';
@@ -46,6 +53,20 @@
     ~else if $data.topBlockMessage.contactsLeftNumber eq '0'`
         var message = "Benefits of your membership; you have reached the limit of quota to view contact details, to view more contact details Renew your membership";
         var pageType = 'ConditionsBasedHeader';    
+    ~/if`
+    ~if $data.pageOneVas`
+    var alreadyVasDiscount = "0";
+    ~if $data.disableVasDiscount eq "1"`
+        alreadyVasDiscount = "1";
+    ~/if`
+        ~foreach from=$data.pageOneVas key=k item=v name=pageOneVasLoop`
+            ~foreach from=$v.vas_options key=kk item=vv name=vasOptionsLoop`
+                vasPrice["~$vv.id`"] = "~$vv.vas_price`".trim().replace(',', '');
+                ~if $vv.vas_price_strike neq NULL`
+                    alreadyVasDiscount = "1";
+                    ~/if`
+            ~/foreach`
+        ~/foreach`
     ~/if`
 </script>
 ~include_partial('global/JSPC/_jspcCommonMemRegHeader',[pageName=>'membership'])`
@@ -236,7 +257,7 @@
                 <ul class="tabs">
                     ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
                     ~if $v.subscription_id neq 'X'`
-                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if` trackJsEventGA"><span></span><span class="trackJsEventGAName">~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
+                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if` trackJsEventGA evalVas"><span></span><span class="trackJsEventGAName">~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
                     ~/if`
                     ~/foreach`
                 </ul>
@@ -270,7 +291,7 @@
                                 ~foreach from=$v.durations key=kd item=vd name=servDurationsLoop`
                                 <!--start:row-->
                                 <div style="position: relative;overflow: hidden;">
-                                <div id="~$v.subscription_id`~$vd.duration_id`" mainMem="~$v.subscription_id`" mainMemDur="~$vd.duration_id`" mainMemContact="~$vd.contacts`" class="durSel cursp disp-tbl opt padallb mb5 ~if $vd.mostPopular eq 'Y'`plansel~/if` blueRipple">
+                                <div id="~$v.subscription_id`~$vd.duration_id`" mainMem="~$v.subscription_id`" mainMemDur="~$vd.duration_id`" mainMemContact="~$vd.contacts`" class="durSel cursp disp-tbl opt padallb mb5 evalVas ~if $vd.mostPopular eq 'Y'`plansel~/if` blueRipple">
                                     <div class="disp-cell vmid txtr pr30 mem-wid5">
                                         <div class="f13 newclr1"></div>
                                         <div id="~$v.subscription_id`~$vd.duration_id`_duration" class="durationTextPlaceholder f20 pl5">~$vd.duration` ~$vd.duration_text`</div>
@@ -367,9 +388,47 @@
                                 ~/if`
                             ~/foreach`
                         </ul>
-                        <div class="mt24 mem_pad10_new2 wid90p txtc brdrTop colrgrey f15 fontreg">
-                            <span id="finalMemTab_~$v.subscription_id`"></span><span id="finalMemDuration_~$v.subscription_id`"></span>~$data.currency`<span id="finalMemPrice_~$v.subscription_id`"></span>
+						~if $data.userId neq '0'`
+                        <!--start:add astro-->
+                        ~foreach from=$data.pageOneVas key=benefitsK item=benefitsV name=pageOneVas`
+                            <div class="addOnBrd1 mt24">
+                                <div class="addOnp1">
+                                    <div class="fontmed f16">
+                                        Add ~$benefitsV.vas_name`
+                                        <i class="newSprt cursp newSprt_6 pl10 pos_rel">
+                                            <div class="bg-white pos-abs  hoverDiv color11 f14 fontlig lh20" style="width:178px; top:-82px; right:-93px">
+                                                ~$benefitsV.vas_description`
+                                            </div>
+                                        </i>
+                                    </div>
+                                    <ul class="addOnAstro fontlig pt5" id="~$v.subscription_id`Astroblock">
+                                        ~foreach from=$benefitsV.vas_options key=vasOpK item=vasOpV name=vasOp`
+                                            <li class="clearfix pt5">
+                                                <div class="fl">
+                                                    <input type="checkbox" value="~$vasOpV.duration`MASTRO" name="MONTHASTRO~$v.subscription_id`[]" astroAddon="~$vasOpV.id`" dur="~$vasOpV.duration`" class="astroAddon" id="~$v.subscription_id`~$vasOpV.id`">
+                                                </div>
+                                                <div class="fl f14 mt1 grey5 pl5">
+                                                    ~$vasOpV.duration` months for ~$data.currency` <span id="~$v.subscription_id`~$vasOpV.id`_price">~$vasOpV.vas_price`&nbsp;</span><span class="txtstr upcolr1 f13" id="~$v.subscription_id`~$vasOpV.id`_price_strike">~if $vasOpV.vas_price_strike` ~$vasOpV.vas_price_strike`~/if`</span>
+                                                </div>
+                                            </li>
+                                        ~/foreach`
+                                    </ul>
+                                </div>
+                            </div>   
+                        ~/foreach`
+                        <!--end:add astro-->
+                        
+                        <div class="mem_pad10_new2 txtc brdrTop colrgrey f15 fontreg">
+                            
                         </div>
+                        ~else`
+
+                        <div class="mt24 mem_pad10_new2 wid90p txtc brdrTop colrgrey f15 fontreg">
+                            <span id="finalMemTab_~$v.subscription_id`">
+							</span>
+							<span id="finalMemDuration_~$v.subscription_id`"></span>~$data.currency`<span id="finalMemPrice_~$v.subscription_id`"></span>
+                        </div>
+						~/if`
                         <!--start:total-->
                         ~if $data.userId eq '0'`
                         <!-- <div style="overflow:hidden;position: relative;" class="mt30"> -->
@@ -378,7 +437,7 @@
                         ~else`
                         <div id="~$v.subscription_id`_savings_container" class="txtc f13 lh41 colr5 fontreg"> Your Savings ~$data.currency`&nbsp;<span id="~$v.subscription_id`_savings"></span></div>
                         <div class="overflowPinkRipple fontreg" style="overflow:hidden;position: relative;height: 55px;">
-                        <div id="mainServContinueBtn" class="cursp bg_pink txtc mem_pad7 colrw f17 continueBtn pinkRipple hoverPink fontreg" selectedTab="~$v.subscription_id`"> <span class="disp_ib">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="~$v.subscription_id`_final_price"></span> | <span class="disp_ib pl10">Continue</span></div>
+                        <div id="mainServContinueBtn" class="cursp bg_pink txtc mem_pad7 colrw f17 continueBtn pinkRipple hoverPink fontreg" selectedTab="~$v.subscription_id`"> <span class="disp_ib">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="~$v.subscription_id`_final_price"></span> | <span class="disp_ib pl10">Pay Now</span></div>
                         </div>
                         ~/if`
                         <!--end:total-->
@@ -911,15 +970,18 @@
             $('.overlay1').delay(1250).remove();
             $('#cmpplan').addClass('disp-none');
             createCookie('mainMemTab', $(this).attr('viewDurLink'));
+            createCookie('mainMem', $(this).attr('viewDurLink'));
             $("ul.tabs li.active").removeClass('active');
             $("ul.tabs li[mainMemTab="+readCookie('mainMemTab')+"]").addClass('active');
             var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
             changeTabContent(getTabId,tabNum, 200);
+            createCookie("mainMemDur",$('#tab_'+$(this).attr('viewDurLink')+' .durSel.plansel').attr("mainMemDur"));
             $('#sliderContainer div').find('.plansel').each(function () {
                 var m = $(this).attr('mainMem'),
                     d = $(this).attr('mainMemDur');
                 managePriceStrike(m, d);
             });
+            evaluateVasToBeClicked();
         })
         $(".continueBtn").click(function(){
             if ($(this).attr('id') == 'mainServContinueBtn') 
@@ -959,7 +1021,13 @@
                 }
                 mainMemCookie = readCookie('mainMem');
                 if (checkEmptyOrNull(readCookie('mainMem')) && readCookie('mainMem') != "ESP" ) {
-                    $.redirectPost('/membership/jspc', {'displayPage':2, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                    selectedVasCookie = readCookie('selectedVas');
+                    if(checkEmptyOrNull(selectedVasCookie)){
+                        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'selectedVas':selectedVasCookie, 'device':'desktop'});
+                    }
+                    else{
+                        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                    }
                 } else {
                     $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMemCookie, 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
                 }
@@ -981,7 +1049,26 @@
                 $(this).html(str);
             }
         });
+
 	eraseCookie('mainMem');
+
+        
+        $(".astroAddon").each(function(k,v){
+            dur = $(v).attr("dur");
+            if($.inArray(dur, astroDurations) === -1){
+                astroDurations.push(dur);
+            }
+        });
+        
+        $(".planlist .tabs li").each(function(k,v){
+            tab = $(v).attr("mainmemtab");
+            customCheckboxAstro("MONTHASTRO"+tab+"[]");
+        });
+        evaluateVasToBeClicked();
+        $(".evalVas").click(function(){
+            evaluateVasToBeClicked();
+        });
+
     ~/if`
     ~if $data.upgradeMembershipContent`
         //initilize upgrade page

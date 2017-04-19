@@ -112,7 +112,7 @@ class MembershipApiFunctions
             else {
                 $mainMemDur = $tempMem[1];
             }
-            //error_log("ankita upgradeMem in calculateCartPrice-".$apiObj->upgradeMem);
+         
             
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
 
@@ -305,10 +305,7 @@ class MembershipApiFunctions
             //$temp = $totalCartPrice;
             $totalCartPrice = $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
             $discountCartPrice+= $upgradePercentArr[$mainMembership]["actualUpsellMRP"] - $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
-            /*if(is_array($apiObj->purchaseDetArr) && $apiObj->purchaseDetArr['NET_AMOUNT']){
-                error_log("purchaseDetArr in calculateCartPrice-".$apiObj->purchaseDetArr['NET_AMOUNT']);
-                $discountCartPrice = $discountCartPrice - $apiObj->purchaseDetArr['NET_AMOUNT'];
-            }*/
+            
         }
         
         if (!empty($apiObj->couponCode)) {
@@ -1177,6 +1174,17 @@ class MembershipApiFunctions
                         }
                     }
                 }
+            }
+            if($apiObj->mainMem=="NCP" && in_array($vasID[0], VariableParams::$mainMemBasedVasFiltering[$apiObj->mainMem]))
+            {
+                $v['discount_given'] = NULL;
+                $price = "0";
+                $v['vas_price'] = "0";
+                $v['orig_price'] = "0";
+                $v['orig_price_formatted'] = "0.00";
+                $v['vas_price_strike'] = "0";
+                $v['remove_text'] = NULL;
+                $v['change_text'] = NULL;
             }
             if(empty($v['vas_price_strike'])){
             	$v['vas_price_strike'] = 0;

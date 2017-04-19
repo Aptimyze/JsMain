@@ -31,7 +31,7 @@
                    ~if isset($arrData.action)`
                     href="javascript:requestphototag(getProfileCheckSum(),1);" 
                    ~/if`
-                   class="white fontthin f18 lh30 dispbl txtc trans1 srp_pad1">
+                   class="white fontthin f18 lh30 dispbl txtc bgTransGrey srp_pad1">
                     ~$arrData.label`
                 </a>
             </div>
