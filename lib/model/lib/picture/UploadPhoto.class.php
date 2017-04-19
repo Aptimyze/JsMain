@@ -81,7 +81,7 @@ class UploadPhoto extends PictureService
 			$uploadCounts['ActualFiles']++;
 
 			$canUpload = $this->canUpload($v,$nonScreenedPicObj);
-
+			
 			if($canUpload['ErrorCounter']==1)
 			{
 				$uploadCounts  = $this->updateErrorCounts($canUpload,$uploadCounts);
@@ -102,7 +102,7 @@ class UploadPhoto extends PictureService
 					chmod($picInfo['SRC'], 0777);
 					
 					$this->generateImages("thumbnail96",$picInfo['SRC'],$picInfo['DEST'],$v['type']);
-
+					
 					$pictureArray = $this->generatePictureArray($nonScreenedPicObj,$picInfo);
 					
 					$nonScreenedPicObj->setDetail($pictureArray);
@@ -339,8 +339,8 @@ class UploadPhoto extends PictureService
 	}
 	public function copyPic($image,$nonScreenedPicObj)
 	{
-		$actualType = $this->getActualType($image['type']);
-                $picInfoArr = $this->getPicCopyData($nonScreenedPicObj,$actualType);                
+		$actualType = $this->getActualType($image['type']);		
+                $picInfoArr = $this->getPicCopyData($nonScreenedPicObj,$actualType);                                
                 if(!move_uploaded_file($image['tmp_name'], $picInfoArr['SRC']))
                 {
                         $error['ErrorCounter']=1;
@@ -351,7 +351,12 @@ class UploadPhoto extends PictureService
                 	$srcPath = $this->convertPngToJpeg($picInfoArr['SRC']);
                 	$picInfoArr["SRC"] = $srcPath;
                 	$picInfoArr["ACTUAL_TYPE"] = "jpeg";
-                }                
+                	$todayDate = date("Y-m-d");
+                	$pngTrackingObj = new PICTURE_PNG_PHOTO_TRACKING("newjs_masterRep");
+                	$pngTrackingObj->insertPngTracking($todayDate,$picInfoArr["PIC_ID"]);
+                	unset($pngTrackingObj);
+                }
+
 		return $picInfoArr;
 	}
 

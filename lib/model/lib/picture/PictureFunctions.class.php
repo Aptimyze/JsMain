@@ -67,18 +67,14 @@ class PictureFunctions
 	{
 		$filename = $pic_name;		
 		if($type_of_image == "image/png")
-			$new_filename = str_replace(".png",".jpeg",$final_pic_name);
+			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
 		else
 			$new_filename = $final_pic_name;
 
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			$image = imagecreatefromgif($filename);
-		// elseif($type_of_image == "image/png")
-		// {
-		// 	$image = imagecreatefrompng($filename);						
-		// }
+			$image = imagecreatefromgif($filename);		
 		else
-			$image = imagecreatefromjpeg($filename);
+			$image = imagecreatefromjpeg($filename); //since we have already converted the png under the $filename, we can now use the jpeg function instead of the png
 					
 		$width_orig = imagesx($image);
 		$height_orig = imagesy($image);
@@ -125,12 +121,7 @@ class PictureFunctions
 
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			imagegif($image_p, $new_filename);
-		// elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
-		// {
-		// 	imagejpeg($image_p, $new_filename);
-  //  			imagedestroy($image);
-		// }
+			imagegif($image_p, $new_filename);		
 		else
 			imagejpeg($image_p, $new_filename);
 		//$command = "chmod -R 777 ".$new_filename;
@@ -142,16 +133,16 @@ class PictureFunctions
 	{
 		$filename = $pic_name;
 		if($type_of_image == "image/png")
-			$new_filename = str_replace(".png",".jpeg",$final_pic_name);
+			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
 		else
 			$new_filename = $final_pic_name;
 
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			$image = imagecreatefromgif($filename);
-		elseif($type_of_image == "image/png")
+		/*elseif($type_of_image == "image/png")
 		{
-			$image = imagecreatefrompng($filename);		
-		}
+			$image = imagecreatefrompng($filename);		 //Note required since we have already converted the pic to jpeg hence jpeg function can be used
+		}*/
 		else
 			$image = imagecreatefromjpeg($filename);
 			
@@ -168,11 +159,11 @@ class PictureFunctions
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			imagegif($image_p1, $new_filename);
-		elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
+		/*elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
 		{
 			imagejpeg($image_p1, $new_filename);
    			imagedestroy($image);
-		}
+		}*/
 		else
 			imagejpeg($image_p1, $new_filename);
 
