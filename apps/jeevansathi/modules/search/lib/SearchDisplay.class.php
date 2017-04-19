@@ -319,7 +319,7 @@ class SearchDisplay
 						}
 						else if($fieldName == 'CITY_RES')
 						{
-                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = CommonFunction::getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
@@ -891,7 +891,7 @@ class SearchDisplay
          * @param type $decoredVal
          * @return string
          */
-	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+	/*protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
                 $label = '';
                 $city = explode(',',$cityVal);
                 $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
@@ -919,5 +919,5 @@ class SearchDisplay
                         $label .= ' & '.$nativePlace;
                 
                 return $label;
-        }
+        }*/
 }
