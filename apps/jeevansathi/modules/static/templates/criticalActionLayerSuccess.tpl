@@ -148,7 +148,167 @@ function validateAndSend(){
         <!--end:layer 1-->
         </div> 
 </div>
+~elseif $layerId == '18'`
+ 
+ <link href="~sfConfig::get('app_img_url')`/min/?f=/css/jspc/utility/chosen/chosen_css_1.css" rel="stylesheet" type="text/css"/>
+ 
+ 
+     
+     <style type='text/css' >
+             .chosenDropWid {width: 148px; padding:10px 6px !important; }
+       .occL-wid{width:560px;}
+       .occL-p1{padding: 25px 30px}
+       .occL-p2{padding: 13px 9px}
+       .occ-bdr1{border-bottom: 1px solid #e2e2e2}
+       .occ-bdr2{border: 1px solid #d9475c}
+       .chosen-container-single .chosen-search input[type="text"]{display: none}
+       .chosen-container{border: 1px solid #e2e2e2;padding:10px 0;}
+       .occ-pos1{right:0;top:0}
+       .dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
+       .dpp-pos5 {top: -14px;left: 40px;}
+ 
+       /* add this  below class dynamically once you recived the error on .chosen-container */
+       .chosen-container-err{border:1px solid #d9475c;}
+       .chosen-container-single .chosen-default{color:#34495e;}
+ 
+     </style> 
+ 
+ <div id='criticalAction-layer' class="occL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
+   <div class="f17 fontreg color11">
+     <!-- start:header -->
+     <div class="occ-bdr1 occL-p1">
+       ~$titleText`
+     </div>
+     <!-- end:header -->
+     <div class="occL-p1">
+       <p class="opa80">~$contentText`</p>
+       <!-- start:div for chosen -->
+       <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
+         <p class="f12 color5 pos-abs disp-none occ-pos1 js-req1">Required</p>    
+         <select id="occList" data-placeholder="" class="chosen-select-width">
+                     </select>
+ 
+         <!-- start: in case no occupation found -->
+         <div class="pt25 vishid js-otheroccInp">
+           <p class="f12 color5 txtr pb5">Required</p>      
+           <input  class="wid96p occ-bdr2 fontlig color11 occL-p2 f16" value="Enter your occupation" type="text"/>
+ 
+         </div>
+         <!-- end: in case no occupation found -->
+       </div>
+       <button id="occ-sub"  class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">Submit</button>
+       <!-- end:div for chosen -->
+ 
+     </div>
+   </div>
+ 
+ 
+ 
+ 
+   </div>
+   <script type="text/javascript">
+       
+            function callOccupation(){
+                    $.ajax({
+                    url: "/static/getFieldData?k=occupation&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        var listArray = res[0];
+                        appendOccupationData(listArray);
+                        loadChosen(); occfunc();
+                    },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+     }
 
+        appendOccupationData = function(res) {
+        $("#occList").html('');
+        occuSelected = 0;
+        var occIndex=1;
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+                if(index1!=43) //  omitting 'others' option
+                    $("#occList").append('<option class="textTru chosenDropWid" value="'+(occIndex++)+'" occCode = "'+index1+'">' + elem1 +'</option>');
+            });
+        });
+        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex++)+'">I did\'nt find my occupation</option>');
+        }
+   function loadChosen(){
+     var config = {
+       '.chosen-select'           : {},
+       '.chosen-select-deselect'  : {allow_single_deselect:true},
+       '.chosen-select-no-single' : {disable_search_threshold:10},
+       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+       '.chosen-select-width'     : {width:"100%"},
+       '.chosen-select-no-search' : {disable_search:true,width:"100%"},
+       '.chosen-select-width-right':{width:"100%"}
+     }
+     
+     
+     
+
+     for (var selector in config) {
+       $(selector).chosen(config[selector]);
+     }
+   }
+   function showOccSelErr(param){
+     if(param=='showErr')
+     {
+       $('.js-req1').removeClass('disp-none');
+       $('.chosen-container').addClass('chosen-container-err');
+     }
+     else
+     {
+ 
+       if( $('.js-req1').css('display')=='block')
+       {
+         $('.js-req1').addClass('disp-none');
+         $('.chosen-container').removeClass('chosen-container-err');
+       }
+       if( $('.js-otheroccInp').css('visibility')=='visible')
+       {
+           $('.js-otheroccInp').removeClass('visb');
+       }
+     }
+      
+   }
+ 
+   function occfunc(){
+      $('#occList').on("change",function(){
+ 
+         var indexV = $('#occList option:selected').val();
+ 
+         if(  $(this).val() == 1  ){
+             showOccSelErr('showErr');            
+         } 
+         else if( $(this).val() == 7){
+           showOccSelErr('hideErr');
+             $('.js-otheroccInp').addClass('visb');
+             
+         }
+         else
+         {
+             showOccSelErr('hideErr');
+         }
+     });
+     $('#occ-sub').click(function(){ 
+         if( $('.chosen-single span').html() == 'Select')
+         {
+           showOccSelErr('showErr');
+         }
+     });
+   }
+ 
+ var setscript=document.createElement('script');
+ setscript.type='text/javascript';
+ setscript.src="~sfConfig::get('app_img_url')`/min/?f=/js/jspc/utility/chosen/chosen_jquery_23.js,/js/jspc/utility/chosen/docsupport/prism_1.js";
+ setscript.onload = function(){callOccupation();}
+ document.head.appendChild(setscript);
+ 
+   </script>
 ~elseif $layerId != '9'`
 <div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
         <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
