@@ -6,4 +6,6 @@ all:
   dialerInboundCallIvr:
     enable_login: off    
   dialerIvrUpdate:
-    enable_login: off       
+    enable_login: off
+  SmsNearestBranchDetailsV1:
+    enable_login: off
