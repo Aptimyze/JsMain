@@ -12,8 +12,8 @@ $today=date("Y-m-d",$ts);
 //$today ="2014-04-15";
 $st_date=$today." 00:00:00";
 $end_date=$today." 23:59:59";
-$st_date="2017-04-12 00:00:00";
-$end_date="2017-04-17 23:59:59";
+//$st_date="2017-04-12 00:00:00";
+//$end_date="2017-04-17 23:59:59";
 /* Section for newly purchased services */
 $sql ="SELECT COUNT(*) cnt,A.SERVICEID,B.CENTER, MEM_UPGRADE AS UPGRADE FROM billing.SERVICE_STATUS AS A JOIN billing.PURCHASES AS B ON A.BILLID=B.BILLID WHERE B.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND B.STATUS='DONE' GROUP BY A.SERVICEID,CENTER";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
