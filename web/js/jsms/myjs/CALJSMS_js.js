@@ -55,9 +55,10 @@ if($("#CriticalActionlayerId").val()=='18'){
                 } else {
                     occuSelected = 1;
                     $("#inputDiv").addClass("dn");
-                    $("#contText").show();
+                    $("#contText").hide();
                     $(this)
                 }
+                $("#occupationSubmit").show();
             });
         });
         $("#listLoader").addClass("dn");

@@ -172,4 +172,7 @@
     #occuText:-ms-input-placeholder {
         color: #d3d3d3 !important;
     }
-
+    
+    .pad0840{
+        padding : 4px 40px;
+    }

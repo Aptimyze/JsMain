@@ -162,7 +162,7 @@
         <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
         <div id="occMidDiv" class="posrel midDiv white">
             <div class="fontlig f19 txtc">~$calObject.TITLE`</div>
-            <div class="pad2040 txtc fontlig f16">~$calObject.TEXT`</div>
+            <div class="pad0840 txtc fontlig f16">~$calObject.TEXT`</div>
             <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
                 <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select</div>
                 <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
@@ -184,7 +184,7 @@
     </div>
     <div id="foot" class="posfix fullwid bg7 btmo">
         <div class="scrollhid posrel">
-            <input type="submit" id="occupationSubmit" class="fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="OK">
+            <input type="submit" id="occupationSubmit" class="dispnone fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="OK">
         </div>
     </div>
 
