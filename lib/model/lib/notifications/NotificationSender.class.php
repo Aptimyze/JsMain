@@ -75,6 +75,11 @@ class NotificationSender
     			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
     			$notificationMsgLog->insert($key,$msgId,$message,$title);
     			// end
+		
+			// Redis Tracking for Notification sending
+        		$notificationFunction =new NotificationFunctions();
+        		$notificationFunction->appNotificationCountCachng($key,'','APP_NOTIFICATION');
+		
     			unset($regIds);
     		}
             if($this->sendMultipleParallelNotification == true){

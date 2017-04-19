@@ -40,42 +40,99 @@ EOF;
       sfContext::createInstance($this->configuration);
     	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-	$notificationArr =array('EOI'=>'10000','ACCEPTANCE'=>'1000','MESSAGE_RECEIVED'=>'2000','PHOTO_REQUEST'=>'2000','EOI_REMINDER'=>'2000','BUY_MEMB'=>'500','PROFILE_VISITOR'=>'5000','PHOTO_UPLOAD'=>'2000','INCOMPLETE_SCREENING'=>'500','CHAT_MSG'=>'1000','CHAT_EOI_MSG'=>'1000');
+	$this->instantNotificationArr 	=NotificationEnums::$monitorInstantKeyArr;
+	$this->deliveryKeyArr 		=array('DELIVERY_TRACKING_API');
+	$this->scheduledKeyArr		=NotificationEnums::$monitorScheduledKeyArr;	
+	$notificationArr		=array_merge($this->instantNotificationArr,$this->deliveryKeyArr);	
 
-    	$JsMemcacheObj =JsMemcache::getInstance();
-	$keyParam ='APP_INST#';
-    	$mqParam ='#MQ';
+    	$JsMemcacheObj 		=JsMemcache::getInstance();
+	$instantKeyParam 	='APP_INSTANT#';
+	$scheduledKeyParam	='APP_NOTIFICATION#';	
+	$mqParam                ='#MQ';
 
-	foreach($notificationArr as $notificationKey=>$thresholdVal){
-		$keyWithourMq   =$keyParam.$notificationKey;
+	// Notification handling with Message Queue
+	foreach($notificationArr as $notificationKey=>$keyType){
+
+		if(in_array("$notificationKey", $this->instantNotificationArr))
+			$keyWithourMq =$instantKeyParam.$notificationKey;
+		elseif(in_array("$notificationKey", $this->deliveryKeyArr))	
+			$keyWithourMq =$notificationKey;
+	
+		// Key with rabbitMq
 		$keyWithMq      =$keyWithourMq.$mqParam;
 
-		$valWithourMq 	=$JsMemcacheObj->get($keyWithourMq,'','',0);
+		$valWithoutMq 	=$JsMemcacheObj->get($keyWithourMq,'','',0);
 		$valWithMq 	=$JsMemcacheObj->get($keyWithMq,'','',0);
+
+		$maxVal		=max($valWithoutMq,$valWithMq);
+		$minVal		=min($valWithoutMq,$valWithMq);
+		$netCount 	=$maxVal-$minVal;
+		$diffPercent	=abs(($netCount/$maxVal)*100);
 
 		// Handling for ACCEPTANCE
 		if($notificationKey=='ACCEPTANCE'){
-			if($valWithMq<100)		
+			if($valWithMq<500)		
 				$this->consumerHandling($notificationKey,$valWithMq);
 		}
 		// end
 
-		$netcount =abs($valwithourmq-$valwithmq);
-		if($netCount>$thresholdVal){
-			$this->consumerHandling($notificationKey,$netCount);	
+		// Others
+		if($diffPercent>10){
+			$this->consumerHandling($notificationKey,$diffPercent);	
 		}
-		unset($valWithourMq);
+		unset($valWithoutMq);
 		unset($valWithMq);
-		unset($netcount);	
+		unset($netCount);	
 	}
+	// Ends
+
+	// Scheduled App Notification Handling Without Message Queue
+	$curHour =date("H");
+        foreach($this->scheduledKeyArr as $notificationKey=>$time){
+
+                $keyWithourMq =$scheduledKeyParam.$notificationKey;
+		$keyToCheck =$keyWithourMq.$mqParam;
+		list($start,$end) =explode("-",$time);
+		
+		if($curHour>=$start && $curHour<=$end){
+	                $valWithoutMq   =$JsMemcacheObj->get($keyWithourMq,'','',0);
+			$valToCheck	=$JsMemcacheObj->get($keyToCheck,'','',0);
+			if($valWithoutMq>$valToCheck){
+				$JsMemcacheObj->set($keyToCheck,$valWithoutMq,'','','X');
+			}
+			else{
+				$this->consumerHandling($notificationKey);	
+			}
+		}
+	}	
+	// Ends
   }
-	public function consumerHandling($notificationKey,$netCount=0)
+
+	public function consumerHandling($notificationKey,$diffPercent=0)
 	{ 
      		$rmqObj = new RabbitmqHelper();
-        	$rmqObj->killConsumerForCommand(MessageQueues::CRONCONSUMER_STARTCOMMAND);
+
+                if(in_array("$notificationKey", $this->instantNotificationArr)){
+			$this->type	="Instant";
+                        $queue		=MessageQueues::CRONCONSUMER_STARTCOMMAND;
+			$subject 	="[Instant] Notification Key: $notificationKey, Difference: $diffPercentc%";
+			$msgBody	="[Instant] Notification Queue(SmsGcmQueue) Consumer($queue) killed";	
+			$rmqObj->killConsumerForCommand($queue);
+		}
+                elseif(in_array("$notificationKey", $this->deliveryKeyArr)){
+			$this->type     ="Delivery";
+			$queue  	=MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND;
+			$subject 	="[Delivery] Notification Key: $notificationKey, Difference: $diffPercentc%";
+			$msgBody        ="[Delivery] Notification Queue(NOTIFICATION_LOG_QUEUE) Consumer($queue) killed";
+			$rmqObj->killConsumerForCommand($queue);
+		}
+                elseif(in_array("$notificationKey", $this->scheduledKeyArr)){
+			$this->type     ="Scheduled";
+			$subject 	="[Scheduled] Notification Key: $notificationKey";
+			$msgBody        ="[Scheduled] Hanged";
+		}
+
         	$to = "manoj.rana@naukri.com";
-        	$msgBody = "[Instant] Notification Queue(SmsGcmQueue) Consumer(cronConsumeQueueMessage) killed";
-		$subject = "[Instant] Notification Key: $notificationKey \n Difference Count: $netCount";
         	SendMail::send_email($to, $msgBody, $subject);
         	$this->sendAlertSMS();
 		die();
@@ -88,7 +145,7 @@ EOF;
   	}
   	public function sms($mobile){
         	$t = time();
-        	$message        = "Mysql Error Count have reached InstantNotificationConsumer for Queue-SmsGcmQueue killed at $t";
+        	$message        = "Mysql Error Count have reached for Notification($this->type) killed at $t";
         	$from           = "JSSRVR";
         	$profileid      = "144111";
         	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
