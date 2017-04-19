@@ -435,6 +435,7 @@ class staticActions extends sfActions
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
+    $this->subText = $layerData[SUBTEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
     $this->contentTextNEW = $layerData[TEXTNEW];

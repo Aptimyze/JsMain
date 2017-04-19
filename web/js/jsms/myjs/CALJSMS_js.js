@@ -1,24 +1,38 @@
 
 $(document).ready(function() {
-	
 
 if($("#CriticalActionlayerId").val()=='18'){
+    $(window).resize(function()
+    {
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+    });	
+
     occuSelected= 0;
 
-    $("#occInputDiv input").keypress(function(event){
-        var inputValue = event.which;
-        // allow letters and whitespaces only.
-        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0)) { 
-            event.preventDefault(); 
-        }
-    });
-    $("#occMidDiv").css("height",window.innerHeight - 50)
-   $("#occClickDiv").on("click", function() {
-                $.ajax({
+    $("#occInputDiv input").on('keydown',function(event){
+        var self = $(this);
+        setTimeout(function(){
+          var regex = /[^a-zA-Z. 0-9]+/g; 
+            
+         var value = self.val();
+         value = value.trim().replace(regex,"");
+         if(value != self.val().trim())
+           self.val(value);
+        },1);
+        
+//        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0) && inputValue != 8 && (inputValue != 32 && inputValue != 0) ) { 
+//            event.preventDefault(); 
+//        }
+    } );
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occClickDiv").on("click", function() {
+        if(typeof listArray == 'undefined')
+        {      $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
                     type: "GET",
                     success: function(res) {
-                        var listArray = res[0];
+                        listArray = res[0];
                         appendOccupationData(listArray);
                     },
                     error: function(res) {
@@ -26,7 +40,9 @@ if($("#CriticalActionlayerId").val()=='18'){
                         ShowTopDownError(["Something went wrong"]);
                     }
                 });
-            $("#listDiv").removeClass("dn");
+            }
+            else appendOccupationData(listArray);
+                $("#listDiv").removeClass("dn");
         });
 
      appendOccupationData = function(res) {
