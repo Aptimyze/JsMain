@@ -160,8 +160,9 @@ else {
                                 }
                             });
                         }
-                        else if ($("#occInputDiv input").val()!='')
+                        else if ($("#occInputDiv input").val().trim()!='')
                         {
+                            
                             var occupText = $("#occInputDiv input").val();
                             window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
                             CALButtonClicked=0;

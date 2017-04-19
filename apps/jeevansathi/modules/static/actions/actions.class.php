@@ -446,6 +446,12 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
+    if($this->layerId==18)
+    {
+          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+          $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
+          $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
+   }
     $this->setTemplate("criticalActionLayer");
   }
 

@@ -150,7 +150,7 @@ function validateAndSend(){
 </div>
 ~elseif $layerId == '18'`
  
- <link href="~sfConfig::get('app_img_url')`/min/?f=/css/jspc/utility/chosen/chosen_css_1.css" rel="stylesheet" type="text/css"/>
+ <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
  
  
      
@@ -182,6 +182,8 @@ function validateAndSend(){
      <!-- end:header -->
      <div class="occL-p1">
        <p class="opa80">~$contentText`</p>
+       <br />
+       <p class="opa80">~$subText`</p>
        <!-- start:div for chosen -->
        <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
          <p class="f12 color5 pos-abs disp-none occ-pos1 js-req1">Required</p>    
@@ -190,8 +192,8 @@ function validateAndSend(){
  
          <!-- start: in case no occupation found -->
          <div class="pt25 vishid js-otheroccInp">
-           <p class="f12 color5 txtr pb5">Required</p>      
-           <input  class="wid96p occ-bdr2 fontlig color11 occL-p2 f16" value="Enter your occupation" type="text"/>
+           <p id = 'secondReq' class="f12 disp-none color5 txtr pb5">Required</p>      
+           <input  class="wid96p fontlig color11 occL-p2 f16" placeholder="Enter your occupation" type="text"/>
  
          </div>
          <!-- end: in case no occupation found -->
@@ -207,7 +209,18 @@ function validateAndSend(){
  
    </div>
    <script type="text/javascript">
-       
+           $(".js-otheroccInp input").on('keydown',function(event){
+            var self = $(this);
+            setTimeout(function(){
+              var regex = /[^a-zA-Z. 0-9]+/g; 
+
+             var value = self.val();
+             value = value.trim().replace(regex,"");
+             if(value != self.val().trim())
+               self.val(value);
+        },1);
+           });
+
             function callOccupation(){
                     $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
@@ -227,14 +240,20 @@ function validateAndSend(){
         appendOccupationData = function(res) {
         $("#occList").html('');
         occuSelected = 0;
+        occMap = {};
+        
         var occIndex=1;
+        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex++)+'"></option>');
+
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
                 if(index1!=43) //  omitting 'others' option
-                    $("#occList").append('<option class="textTru chosenDropWid" value="'+(occIndex++)+'" occCode = "'+index1+'">' + elem1 +'</option>');
-            });
+                    $("#occList").append('<option class="textTru chosenDropWid" value="'+(occIndex)+'" occCode = "'+index1+'">' + elem1 +'</option>');
+                occMap[occIndex++] = index1;
+                });
         });
-        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex++)+'">I did\'nt find my occupation</option>');
+        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex)+'">I did\'nt find my occupation</option>');
+        occLastIndex = occIndex;
         }
    function loadChosen(){
      var config = {
@@ -284,8 +303,8 @@ function validateAndSend(){
          if(  $(this).val() == 1  ){
              showOccSelErr('showErr');            
          } 
-         else if( $(this).val() == 7){
-           showOccSelErr('hideErr');
+         else if( $(this).val() == occLastIndex){
+             showOccSelErr('hideErr');
              $('.js-otheroccInp').addClass('visb');
              
          }
@@ -295,16 +314,52 @@ function validateAndSend(){
          }
      });
      $('#occ-sub').click(function(){ 
-         if( $('.chosen-single span').html() == 'Select')
+         if( $('#occList').val() == 1)
          {
            showOccSelErr('showErr');
+           return;
          }
+         else if( $('#occList').val() == occLastIndex)
+         {
+           if($(".js-otheroccInp input").val().trim()=='')                   
+           { 
+           $("#secondReq").show();
+           $(".js-otheroccInp input").addClass('occ-bdr2');
+           return;
+           }
+       }
+       else {
+
+                            var occuCode = occMap[$("#occList").val()];
+                            dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                 criticalLayerButtonsAction('~$action1`','B1');
+
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+                        
+
+           
+           return;
+       }
+
+        
+        criticalLayerButtonsAction('~$action1`','B1');
      });
    }
  
  var setscript=document.createElement('script');
  setscript.type='text/javascript';
- setscript.src="~sfConfig::get('app_img_url')`/min/?f=/js/jspc/utility/chosen/chosen_jquery_23.js,/js/jspc/utility/chosen/docsupport/prism_1.js";
+ setscript.src="~sfConfig::get('app_img_url')`/min/?f=~$chosenJs`";
  setscript.onload = function(){callOccupation();}
  document.head.appendChild(setscript);
  
