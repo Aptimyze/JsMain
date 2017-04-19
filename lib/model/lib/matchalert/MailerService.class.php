@@ -969,5 +969,31 @@ return $edu;
 		unset($userList);
 		return $matchesDataFinal;
 	}
+
+	/* This function is used to get receivers for sending paid members mail
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getpaidMembersMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+		$recievers = $paidMembersMailerObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This function is used update the sent flag(Y for sent and F for fail) for each paidMember mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForPaidMembersMailerReceivers($sno,$flag,$profileId)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForPaidMembersMailerReceivers() in savedSearchesMailerTask.class.php");
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+                $paidMembersMailerObj->updatePaidMembersReceiverFlag($sno,$flag,$profileId);
+
+	}
 }
 ?>
