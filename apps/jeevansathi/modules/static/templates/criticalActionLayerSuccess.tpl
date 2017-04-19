@@ -155,7 +155,7 @@ function validateAndSend(){
  
      
      <style type='text/css' >
-             .chosenDropWid {width: 148px; padding:10px 6px !important; }
+             .chosenDropWid {width: 230px; padding:10px 6px !important; }
        .occL-wid{width:560px;}
        .occL-p1{padding: 25px 30px}
        .occL-p2{padding: 13px 9px}
@@ -329,7 +329,7 @@ function validateAndSend(){
            }
        }
        else {
-
+                            $(".js-otheroccInp input").val('');
                             var occuCode = occMap[$("#occList").val()];
                             dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
                             $.ajax({
