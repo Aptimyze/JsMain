@@ -80,7 +80,7 @@ class inboxActions extends sfActions
 			$module= "ContactCenterAPP";
 			$infoTypeId = $request->getParameter("infoTypeId");
 			$pageNo = $request->getParameter("pageNo");
-			if($request->getParameter("myjs") == 1)
+			if($request->getParameter("myjs") == 1 && !$request->getParameter("androidMyjsNew"))
 				$module = "ContactCenterMYJS";
 			$profileList = $request->getParameter("profilelist");
 			
