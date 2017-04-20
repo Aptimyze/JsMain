@@ -63,7 +63,7 @@ class search_PAIDMEMBERS_TO_BE_SENT extends TABLE
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
                         $prep->bindValue(":SCRIPT",$currentScript,PDO::PARAM_INT);
-                        $prep->bindValue(":STATUS",'Y',PDO::PARAM_STR);
+                        $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
                         if($limit)
                                   $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
                         $prep->execute();
