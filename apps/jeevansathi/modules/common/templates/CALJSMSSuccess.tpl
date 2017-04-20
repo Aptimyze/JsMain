@@ -2,7 +2,7 @@
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
-
+    var isIphone = '~$isIphone`';
     function validateAndSend()
     {
             var altEmailUser = ($("#altEmailInpCAL").val()).trim();

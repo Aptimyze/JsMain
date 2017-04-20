@@ -2,12 +2,15 @@
 $(document).ready(function() {
 
 if($("#CriticalActionlayerId").val()=='18'){
-    $(window).resize(function()
-    {
-    $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
-    });	
 
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#occMidDiv").css("height",window.innerHeight - 50);
+        $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        });	
+    }
     occuSelected= 0;
 
     $("#occInputDiv input").on('keydown',function(event){
@@ -54,7 +57,7 @@ if($("#CriticalActionlayerId").val()=='18'){
                     $("#occList").append('<li occCode = "'+index1+'">' + elem1 + '</li>');
             });
         });
-        $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I did\'nt find my occupation</li>');
+        $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
         $("#occList li").each(function(index, element) {
             $(this).bind("click", function() {
 

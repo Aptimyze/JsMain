@@ -252,7 +252,7 @@ function validateAndSend(){
                 occMap[occIndex++] = index1;
                 });
         });
-        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex)+'">I did\'nt find my occupation</option>');
+        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex)+'">I didn\'t find my occupation</option>');
         occLastIndex = occIndex;
         }
    function loadChosen(){
