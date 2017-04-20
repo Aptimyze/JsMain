@@ -16,7 +16,7 @@ class ApiResponseHandler
 	private $cache_flag=true;
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
-	private $userActionState=1;
+	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
 	private $androidChat;
 	private $membershipSubscription;

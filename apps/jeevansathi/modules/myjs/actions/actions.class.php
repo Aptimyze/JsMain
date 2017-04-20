@@ -281,7 +281,7 @@ class myjsActions extends sfActions
 //////////////////////////////////
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-
+      $respObj->setUserActionState(1);
       $respObj->setResponseBody($appV1DisplayJson);
     } else {
       $respObj->setHttpArray($output);
