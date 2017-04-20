@@ -221,13 +221,9 @@ class crmInterfaceActions extends sfActions
                 $this->startDate       = date("d M Y", strtotime($startDate));
                 $this->endDate         = date("d M Y", strtotime($endDate));
                 $this->discountSuccess = true;
-                $memCacheObject        = JsMemcache::getInstance();
-                $membershipKeyArray    = VariableParams::$membershipKeyArray;
-                $keys_removed          = "";
-                foreach ($membershipKeyArray as $key => $keyVal) {
-                    $memCacheObject->remove($keyVal);
-                    $keys_removed .= $keyVal . ",\n";
-                }
+                $memHandlerObj = new MembershipHandler(false);
+                $memHandlerObj->flushMemcacheForMembership();
+                unset($memHandlerObj);
             } else {
                 $this->discountError = true;
             }
@@ -295,13 +291,10 @@ class crmInterfaceActions extends sfActions
             $memHandlerObject = new MembershipHandler();
             $memHandlerObject->flushMemcacheForMembership();
             $this->successMsg   = "Discount Values Successfully Applied";
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+          
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
         }
     }
 
@@ -345,13 +338,9 @@ class crmInterfaceActions extends sfActions
             }
             $this->successMsg = "Discount/Duration Values Successfully Applied";
             unset($this->errorMsg);
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
             // get the updated values from database for display
             $this->offerArr = $commCrmFuncObj->getFestiveOfferMappingDetails();
         }
@@ -995,29 +984,74 @@ class crmInterfaceActions extends sfActions
 
     public function executeChangeActiveServicesInterface(sfWebRequest $request)
     {
+        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
         $this->cid        = $request->getParameter('cid');
         $this->name       = $request->getParameter('name');
+        $this->mtongueFilter = $request->getParameter('mtongueFilter');
+        $this->mappedMtongueFilter = $this->mtongueFilter;
+        $submit = $request->getParameter('submit');
+        if(empty($this->mtongueFilter)){
+            $this->mtongueFilter = "-1";
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $memHandlerObj = new MembershipHandler(false);
+            $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+            unset($memHandlerObj);
+      
+            if($count == 0){
+                $this->mappedMtongueFilter = "-1";
+            }
+        }
+        
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
-        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive', 'T' => 'Response Booster', 'R' => 'Featured Profile', 'A' => 'Astro Compatibility', 'I' => 'We Talk For You');
-        if ($request->getParameter('submit')) {
+        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
+        
+        if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
+            $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+            //echo "ankita origServDet...."."\n";
+           
             foreach ($params as $key => $val) {
-                if ($val == 'Y') {
-                    $activate[] = $key;
-                } else {
-                    $deactivate[] = $key;
+                if ($val == 'Y'/* && $origServDet[$key]['SHOW_ONLINE'] != 'Y'*/){
+                    if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
+                        $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
+                    }
+                    else if(strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") === false){
+                        $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
+                    }
+                } 
+                else if($val == 'N' && strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
+                    $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
+                    if($updateShowOnlineNew[$key] == ","){
+                        $updateShowOnlineNew[$key] = "";
+                    }
                 }
             }
-            $activate   = "'" . implode("','", $activate) . "'";
-            $deactivate = "'" . implode("','", $deactivate) . "'";
-            $billingServObj->changeServiceActivations($activate, 'Y');
-            $billingServObj->changeServiceActivations($deactivate, 'N');
+            //echo "ankita updateShowOnlineNew...."."\n";
+            //print_r($updateShowOnlineNew);die;
+            $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
-        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+
+        $memHandlerObj = new MembershipHandler(false);
+        $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+        unset($memHandlerObj);
+  
+        if($count == 0){
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $this->mappedMtongueFilter = $this->mtongueFilter;
+        }
+        //var_dump($this->mtongueFilter);
+        //var_dump($this->mappedMtongueFilter);        
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+
+        //print_r($this->servDet);die;
         $newServDet    = array();
         $skipArr       = array('C1', 'C1W', 'C2W', 'P1', 'P1W', 'P2W', 'NCP1', 'T1', 'A1', 'I10', 'R1', 'X1');
         foreach ($this->servDet as $sid => $arr) {
