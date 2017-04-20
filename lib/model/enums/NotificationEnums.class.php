@@ -62,10 +62,11 @@ class NotificationEnums
       public static $channelArr = array("A_I"=>"Android - Ios","D"=>"Desktop","M"=>"Mobile");	
       public static $enableNotificationLogging = false;
 
-      //config for sending multiple curl requests for GCM notification in parallel
-      public static $multiCurlReqConfig = array("threshold"=>40,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY"));
       public static $mailScheduleComplete = array("UPGRADE_APP");
       
       public static $jscDevMail = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,smarth.katyal@jeevansathi.com";
+
+      //config for sending multiple curl requests for GCM notification in parallel
+      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN"));
 
 }
