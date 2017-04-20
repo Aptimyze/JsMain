@@ -44,7 +44,7 @@ EOF;
 		/** 
 		* truncate tables 
 		*/
-		$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT;
+		$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT("newjs_master");
 		$search_PAIDMEMBERS_TO_BE_SENT->truncateTable();
 
 		$search_PAID_MEMBERS_MAILER->truncateTable();
