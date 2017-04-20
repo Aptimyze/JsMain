@@ -452,10 +452,12 @@ public function microtime_float()
               $applicableProfiles=array();
               $counter = 0;
               foreach($appProfiles as $key => $pid){
-                  $applicableProfiles[$pid] = array();
-                  $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
-                  $dataAccumulated[$counter]['COUNT']="SINGLE";
-                  $counter++;
+                  if($pid != 0){
+                    $applicableProfiles[$pid] = array();
+                    $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
+                    $dataAccumulated[$counter]['COUNT']="SINGLE";
+                    $counter++;
+                  }
               }
               break;
 	  }
