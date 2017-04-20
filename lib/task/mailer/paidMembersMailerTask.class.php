@@ -45,19 +45,20 @@ $this->addOptions(array(
         	successfullDie();
         $receivers = $mailerServiceObj->getpaidMembersMailerReceivers($totalScript,$currentScript,$this->limit);
         $stypeMatch = SearchTypesEnums::PAID_MEMBERS_MAILER;
+
         $this->smarty = $mailerServiceObj->getMailerSmarty();
        
         if(is_array($receivers))
         {
-        	$mailerLinks = $mailerServiceObj->getLinks();
+        	$mailerLinks = $mailerServiceObj->getLinks();            
     		$this->smarty->assign('mailerLinks',$mailerLinks);
     		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
 
-    		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+    		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true);
     		foreach($receivers as $sno => $values)
     		{
-    			$pid = $values["RECEIVER"];    			
-                $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);                
+    			$pid = $values["RECEIVER"];                
+                $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);                                
                 if(is_array($data))
 				{
 					$data["stypeMatch"] =$stypeMatch;
@@ -66,8 +67,9 @@ $this->addOptions(array(
                     $subject = $subjectAndBody["subject"];
 					$this->smarty->assign('data',$data);
                     $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-                    // $file = fopen("sampleMailer.html","w");
-                    // fwrite($file,$msg);
+                    /*$file = fopen("samplePaidMemberMailer.html","w");
+                    fwrite($file,$msg);
+                    die("die");*/
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
 				}
@@ -82,24 +84,23 @@ $this->addOptions(array(
 	}
 
 	/**
-  This function is to get subject of the mail depending on the search name and count of the profiles
-  *@param $searchName : name of the saved search
+  This function is to get subject of the mail depending on the count of the profiles 
   *@param $count : number of users sent in mail
   *@return $subject : subject of the mail
   */
 
   protected function getSubjectAndBody($count)
   {
-        if($count>1)
+        if($count<1)
         {
-        	$subject["subject"] = "Your ".$count." matches have become a paid member last week ";
-            $subject["body"] = "Below is the profile which has converted to paid membership. Check this profile and send interest to connect with them.";        	
+        	$subject["subject"] = "Your ".$count." match has become a paid member last week ";
+            $subject["body"] = "Below is the profile which has recently converted to paid membership. Check this profile and send interest to connect with them.";        	
         }
         else
         {
-        	$subject["subject"] = $count." new member matching saved search '".$searchName."' has joined last week";
+        	$subject["subject"] = "Your ".$count." matches have become a paid member last week ";
 
-            $subject["body"] = "Below are the profiles which have converted to paid membership. Check their profile and send interest to connect with them.";        	
+            $subject["body"] = "Below are the profiles which have recently converted to paid membership. Check their profile and send interest to connect with them.";        	
         }
         return $subject;
   }

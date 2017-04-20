@@ -979,13 +979,14 @@ return $edu;
 	public function getpaidMembersMailerReceivers($totalScript="",$script="",$limit='')
 	{
 		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
-		$recievers = $paidMembersMailerObj->getMailerProfiles($totalScript,$script,$limit);
+		$recievers = $paidMembersMailerObj->getMailerProfiles("",$totalScript,$script,$limit);
 		return $recievers;
 	}
 
 	/* This function is used update the sent flag(Y for sent and F for fail) for each paidMember mail receiver
 	*@param sno : serial number of mail
 	*@param flag : sent status of the mail
+	*@param profileId : profileId of the user
 	*/
 	public function updateSentForPaidMembersMailerReceivers($sno,$flag,$profileId)
 	{

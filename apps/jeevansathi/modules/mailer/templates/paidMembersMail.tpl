@@ -42,11 +42,11 @@
                                             </tr>
                                         </table>
                                         <table width="60" align="left" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
-                                            <tr>
+                                            <!-- <tr>
                         ~if $data.COUNT gt 1`
                                                     <td><a href="~$mailerLinks['SAVED_SEARCH']`~$data.commonParamaters`?From_Mail=Y&stype=~$data.stypeMatch`&mySaveSearchId=~$data.SEARCHID`" target="_blank" style="color:#14428e; text-decoration:none;">View All</a></td>
                         ~/if`
-                                            </tr>
+                                            </tr> -->
                                         </table>
                                     </td>
                                 </tr>
@@ -95,6 +95,12 @@
                                                 </table>
                                             </td>
                                     </tr>
+                                    ~if $data.GifFlag eq 1`
+                            <tr>
+                                <td>~include_partial("global/primaryMailGif")`</td>
+                            </tr><br>
+                            ~else`
+
                             ~if $data.MEMBERSHIP.membership eq 0 || ( $data.MEMBERSHIP.membership eq 1 && $data.MEMBERSHIP.renew.RENEW eq 1)`
                                     <tr>
                                             <td style="padding-left:10px;">
@@ -110,6 +116,7 @@
                                             </table>
                                             </td>
                                     </tr>
+                                ~/if`
                                 ~/if`
                                 </table>
                         </td>

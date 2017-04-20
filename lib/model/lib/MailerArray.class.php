@@ -77,6 +77,7 @@
 '69'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EOI_EXPIRING','URL'=>'/inbox/23/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '70'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'REQUEST_USER_TO_DELETE','URL'=>'/settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'search/perform','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -149,6 +150,7 @@ private static $linkNameArray=array(
 'EOI_EXPIRING'=>'69',
 'REQUEST_USER_TO_DELETE'=>'70',
 'ALTERNATE_EMAIL_PROMOTION'=>'71',
+'PAID_MEMBERS_MAILER'=>'72',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
