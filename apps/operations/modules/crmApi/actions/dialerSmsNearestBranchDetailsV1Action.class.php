@@ -15,7 +15,7 @@ class dialerSmsNearestBranchDetailsV1Action extends sfActions {
     
     function execute($request){
         $profileid = $request->getParameter('profileid');
-        if($profileid){
+        if(is_numeric($profileid)){
             $jprofileObj = new JPROFILE('newjs_slave');
             $profileDetails = $jprofileObj->get($profileid, "PROFILEID","USERNAME,CITY_RES");
             $username = $profileDetails['USERNAME'];
