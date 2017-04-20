@@ -13,13 +13,16 @@ if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod
         successfullDie();
 
 
-$monthDiff = 30;
+$monthDiff = 12;
 $timeDiff = $monthDiff + 6 ;
 $timestamp=mktime(0, 0, 0, date("m") - $monthDiff , date("d"), date("Y"));
 $inactivityDate=date("Y-m-d",$timestamp);
 
 $timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
 $inactivityDate_plus_onemonth=date("Y-m-d",$timestamp);
+
+$timestamp=mktime(0, 0, 0, date("m") - $timeDiff , date("d"), date("Y"));
+$oldActivityOneYear=date("Y-m-d",$timestamp);
 
 $delArchivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
 $delArchiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
@@ -39,11 +42,13 @@ $sql="TRUNCATE TABLE test.$inactiveRecordTable";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 
-$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'  ";
+$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate' ";
 //$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT < '$inactivityDate'";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 //Store list of profile which are not logged in b/w 6-7 months
+$orgNoOfActiveServers = $noOfActiveServers ;
+//$noOfActiveServers =2;
 
 //dumping INACTIVE_RECORDS_6_MONTHS_FOR_CRON to all slaves as they are needed for joins
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
@@ -259,7 +264,7 @@ if($laveshHoro++%1000==0)
 	//HOROSCOPE REQUEST
 echo "\n\n\n";
 	//CONTACTS -- EOI -- MESSAGE_LOG -- MESSAGES
-	for($i=0;$i<3;$i++)
+	for($i=0;$i<1;$i++)
 	{
 		$dbNameS=getActiveServerName($activeServerId,"slave");
 		$dbS=$mysqlObj->connect($dbNameS);
@@ -268,64 +273,70 @@ echo "\n\n\n";
                 $dbNameM=getActiveServerName($activeServerId,"master");
 				$dbmaster=$myDbArr[$dbNameM];
                 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbmaster);
+//if($i==0)
+//			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' ";
+//		elseif($i==1)
+//			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.SENDER=B.PROFILEID";
+//		elseif($i==2)
+//			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
+//    
+echo "Contacts :\n";
+			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE A.SENDER=B.PROFILEID OR A.RECEIVER=B.PROFILEID";
 
-
-		if($i==0)
-			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' ";
-		elseif($i==1)
-			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.SENDER=B.PROFILEID";
-		elseif($i==2)
-			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
+			//$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
 echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
+    echo mysql_num_rows($res),"\n\n";
+    $icount = 0;
 		while($row=mysql_fetch_array($res))
 		{
-checkForEndTime();
-if($laveshC++%1000==0)
-	echo $laveshC." - ";
-			$col1=$row["SENDER"];
-			$col2=$row["RECEIVER"];
+      ++$icount;  
+      checkForEndTime();
+      if($laveshC++%1000==0)
+        echo $laveshC." - ";
+      $col1=$row["SENDER"];
+      $col2=$row["RECEIVER"];
 
 			unset($col_id);
 			unset($col_str);
 
-                        $sqlAdded="SELECT COUNT(*) as CNT FROM newjs.CONTACTS  WHERE SENDER='$col1' and RECEIVER='$col2' AND TIME<'$inactivityDate'";
-                        $resAdded=mysql_query($sqlAdded,$dbmaster) or die(mysql_error($dbmaster).$sqlAdded);
-                        $rowAdded=mysql_fetch_array($resAdded);
-                        $cntAdded=$rowAdded["CNT"];
+//                        $sqlAdded="SELECT COUNT(*) as CNT FROM newjs.CONTACTS  WHERE SENDER='$col1' and RECEIVER='$col2' AND TIME<'$inactivityDate'";
+//                        $resAdded=mysql_query($sqlAdded,$dbmaster) or die(mysql_error($dbmaster).$sqlAdded);
+//                        $rowAdded=mysql_fetch_array($resAdded);
+//                        $cntAdded=$rowAdded["CNT"];
 
-                        if($cntAdded>0)
+      if(1 || $cntAdded>0)
 			{
 				
-				$res=$dbMessageLogObj->getMessageLogHousekeeping($col1,$col2);
+				$resMsgLog=$dbMessageLogObj->getMessageLogHousekeeping($col1,$col2);
 				//$sql_1="SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
 				//$res_1=mysql_query($sql_1,$dbS) or die(mysql_error($dbS).$sql_1);
 				//while($row_1=mysql_fetch_array($res_1))
-				foreach($res as $k=>$row_1)
+				foreach($resMsgLog as $k=>$row_1)
 				{
 					$col_id[]=$row_1["ID"];
 				}
 
-                                unset($affectedDb);
-                                $myDbName=getProfileDatabaseConnectionName($col1,'',$mysqlObj);
-				$myDb=$myDbArr[$myDbName];
-                                $affectedDb[0]=$myDb;
+        unset($affectedDb);
+        $myDbName = getProfileDatabaseConnectionName($col1, '', $mysqlObj);
+        $myDb = $myDbArr[$myDbName];
+        $affectedDb[0] = $myDb;
 
-                                $myDbName=getProfileDatabaseConnectionName($col2,'',$mysqlObj);
-				$viewedDb=$myDbArr[$myDbName];
-                                if(!in_array($viewedDb,$affectedDb))
-                                        $affectedDb[1]=$viewedDb;
-                                        
-$ProfileId1shard=JsDbSharding::getShardNo($col1);
-$ProfileId2shard=JsDbSharding::getShardNo($col2);
-$dbMessageLogObj1=new NEWJS_MESSAGE_LOG($ProfileId1shard);
-$dbMessageLogObj2=new NEWJS_MESSAGE_LOG($ProfileId2shard);
-$dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES($ProfileId1shard);
-$dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES($ProfileId2shard);
-$dbMessageObj1=new NEWJS_MESSAGES($ProfileId1shard);
-$dbMessageObj2=new NEWJS_MESSAGES($ProfileId2shard);
-$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG($ProfileId1shard);
-$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
+        $myDbName = getProfileDatabaseConnectionName($col2, '', $mysqlObj);
+        $viewedDb = $myDbArr[$myDbName];
+        if (!in_array($viewedDb, $affectedDb))
+          $affectedDb[1] = $viewedDb;
+
+        $ProfileId1shard=JsDbSharding::getShardNo($col1);
+        $ProfileId2shard=JsDbSharding::getShardNo($col2);
+        $dbMessageLogObj1=new NEWJS_MESSAGE_LOG($ProfileId1shard);
+        $dbMessageLogObj2=new NEWJS_MESSAGE_LOG($ProfileId2shard);
+        $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES($ProfileId1shard);
+        $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES($ProfileId2shard);
+        $dbMessageObj1=new NEWJS_MESSAGES($ProfileId1shard);
+        $dbMessageObj2=new NEWJS_MESSAGES($ProfileId2shard);
+        $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG($ProfileId1shard);
+        $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 
 				for($ll=0;$ll<count($affectedDb);$ll++)
 				{$shard=$ll+1;
@@ -395,11 +406,12 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					checkForEndTime();
                                 }
 			}
-		}	
+		}
+    echo "Total loop run is :",$icount,"\n\n\n";
 	}
 	//CONTACTS -- EOI -- MESSAGE_LOG -- MESSAGES
 }
-$timestamp=mktime(0, 0, 0, date("m")-3  , date("d"), date("Y"));
+$timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
 $inactivityDateViewLog=date("Y-m-d",$timestamp);
 //VIEW LOG
 $db_211=$mysqlObj->connect("viewLogRep");
