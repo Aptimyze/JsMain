@@ -18,6 +18,20 @@ class ViewSimilarProfilesV1Action extends sfActions {
                 $pid = $loggedInProfileObj->getPROFILEID();
                 $vspPage = $request->getParameter('vspPage');
                 if($pid){
+                    if(MobileCommon::isIOSApp() && $vspPage='PD' && in_array($pid%4, array(2,3))){
+                        $paramArray["profiles"] = null;
+                        $paramArray[noresultmessage] = '';
+                        $paramArray["no_of_results"] = 0;
+                        $paramArray["result_count"] = "Similar Profiles 0";
+
+                        $outputMsg = $paramArray;
+                        $respObj = ApiResponseHandler::getInstance();
+                        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                        $respObj->setResponseBody($outputMsg);
+                        $respObj->generateResponse();
+                        return sfView::NONE;
+                        die;
+                    }
                 $loggedInProfileObj->getDetail("", "", "USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,MTONGUE,ENTRY_DT,HAVEPHOTO,SHOW_HOROSCOPE,COUNTRY_RES,BTYPE,COMPLEXION,EDU_LEVEL_NEW,OCCUPATION,MSTATUS,CITY_RES,DRINK,SMOKE,DIET,HANDICAPPED,MANGLIK,RELATION,HANDICAPPED,HIV,SUBSCRIPTION,BTIME,MOB_STATUS,LANDL_STATUS,ACTIVATED,INCOMPLETE");
                 $viewerGender = $loggedInProfileObj->getGENDER();
                 }
