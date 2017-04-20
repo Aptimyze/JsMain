@@ -177,7 +177,7 @@
             </div>
         </div>
     </div>
-    <div id="listDiv" class="listDivInner bg4 scrollhid dn">
+    <div id="listDiv" class="listDivInner bg4 scrollhid dn" style= '-webkit-overflow-scrolling: touch;'>
         <div id="listLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
         <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
         <ul id="occList" class="occList color11 fontlig f18 dn">
