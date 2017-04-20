@@ -159,5 +159,6 @@ class SearchTypesEnums
     const MATCH_OF_THE_DAY_MYJS_IOS = "IMOD";
     const ANDROID_MATCHOFDAY = "AMOD";
     const PAID_MEMBERS_MAILER = "PMM";
+    const PAID_MEMBERS = "PM";
 }
 ?>

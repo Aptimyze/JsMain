@@ -56,7 +56,7 @@ class search_PAID_MEMBERS_MAILER extends TABLE
     {
     	try
 		{
-			$sql = "UPDATE mailer.FEATURED_PROFILE_MAILER SET SENT=:FLAG WHERE PROFILEID=:PROFILEID AND SNO=:SNO";
+			$sql = "UPDATE search.PAID_MEMBERS_MAILER SET SENT=:FLAG WHERE PROFILEID=:PROFILEID AND SNO=:SNO";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":FLAG",$flag,PDO::PARAM_STR);
 			$prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
@@ -68,4 +68,55 @@ class search_PAID_MEMBERS_MAILER extends TABLE
 			throw new jsException($e);
 		}
     }
+    public function truncateTable()
+        {
+                try
+                {
+                        $sql="TRUNCATE TABLE search.PAID_MEMBERS_MAILER";
+                        $res = $this->db->prepare($sql);
+                        $res->execute();
+                }
+                catch (PDOException $e)
+                {
+                        //add mail/sms
+                        throw new jsException($e);
+                }
+        }
+     public function insertLogRecords($receiverId, $profileIds){
+          $sql="INSERT INTO search.PAID_MEMBERS_MAILER (RECEIVER";
+          $n=count($profileIds);
+          $userValues = '';
+          for($i=1;$i<=$n;$i++)
+          {
+            $sql.=",USER$i";
+            $userValues .= ",:USER_ID".$i;
+          }
+          $sql.=",DATE) VALUES (:RECEIVER_ID".$userValues.",:DATE)";
+          
+          $res = $this->db->prepare($sql);
+          $res->bindValue(":RECEIVER_ID", $receiverId, PDO::PARAM_INT);
+          $res->bindValue(":DATE",date('Y-m-d'),PDO::PARAM_INT);
+          
+          $userCounter = 1;
+          foreach($profileIds as $userId){
+            $res->bindValue(":USER_ID".$userCounter,$userId,PDO::PARAM_INT);
+            $userCounter++;
+          }
+          $res->execute();
+        }
+        public function countMails()
+        {
+                try{
+                        $sql = "SELECT count(*) as CNT FROM search.PAID_MEMBERS_MAILER";
+                        $res = $this->db->prepare($sql);
+                        $res->execute();
+                        $row = $res->fetch(PDO::FETCH_ASSOC);
+                        return $row['CNT'];
+                }
+                catch(PDOException $e)
+                {
+                   throw new jsException($e);
+                }
+                return $output;
+        }
 }
