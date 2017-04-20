@@ -458,8 +458,11 @@ class SearchApiStrategyV1
                                         }
                                         $button[3] = ButtonResponseApi::getContactDetailsButton();
                                         ksort($button);
-                                        if($fromVspAndroid)
+                                        if($fromVspAndroid){
+                                     $request    = sfContext::getInstance()->getRequest();
+                                     $request->setParameter('page_source','search');   	
                                             $buttonDetails = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton())));
+                                        }
                                         else
                                             $buttonDetails = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>$button));
                                         $this->output[$profileKey][$i]['buttonDetails'] = $buttonDetails;
