@@ -7,5 +7,5 @@ all:
     enable_login: off    
   dialerIvrUpdate:
     enable_login: off
-  SmsNearestBranchDetailsV1:
+  dialerSmsNearestBranchDetailsV1:
     enable_login: off
