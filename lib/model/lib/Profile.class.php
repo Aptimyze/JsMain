@@ -147,6 +147,7 @@ class Profile{
 	private $HAVE_JEDUCATION;
 	private $ID_PROOF_NO;
 	private $ID_PROOF_TYP;
+    private $VERIFY_ACTIVATED_DT;
 	protected $nullValueMarker = "";
 	public $JPROFILE; //JPROFILE Object
 	private static $instance; //Instance of the class
@@ -1657,6 +1658,21 @@ class Profile{
 					ProfileFieldsLogging::callFieldStack(1);
 			}
 		return $this->PROFILEID; }
+
+    function setVERIFY_ACTIVATED_DT($VERIFY_ACTIVATED_DT)
+    {
+        $this->VERIFY_ACTIVATED_DT = $VERIFY_ACTIVATED_DT;
+    }
+
+    function getVERIFY_ACTIVATED_DT()
+    {
+        if(!$this->VERIFY_ACTIVATED_DT)
+        {
+            if(!in_array("VERIFY_ACTIVATED_DT",$this->fieldsArray))
+                ProfileFieldsLogging::callFieldStack(1);
+        }
+        return $this->VERIFY_ACTIVATED_DT;
+    }
 	function setUSERNAME($USERNAME) { $this->USERNAME = $USERNAME; }
 	function getUSERNAME() {
 		if(!$this->USERNAME)

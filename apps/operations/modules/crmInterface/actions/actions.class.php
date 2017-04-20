@@ -4,7 +4,7 @@
 // @package    jeevansathi
 // @subpackage crmInterface
 // @author     Avneet Singh Bindra
-
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 class crmInterfaceActions extends sfActions
 {
     public function executeIndex(sfWebRequest $request)
@@ -97,6 +97,9 @@ class crmInterfaceActions extends sfActions
     // Start VD Offer
     public function executeStartVdOffer(sfWebRequest $request)
     {
+        $emailId ='manoj.rana@naukri.com';
+        mail($emailId,"Step0 VD Started", date("Y-m-d H:i:s"));
+
         $this->cid      = $request->getParameter('cid');
         $commCrmFuncObj = new CommonCrmInterfaceFunctions();
         $curDate        = date("Y-m-d");
@@ -221,13 +224,9 @@ class crmInterfaceActions extends sfActions
                 $this->startDate       = date("d M Y", strtotime($startDate));
                 $this->endDate         = date("d M Y", strtotime($endDate));
                 $this->discountSuccess = true;
-                $memCacheObject        = JsMemcache::getInstance();
-                $membershipKeyArray    = VariableParams::$membershipKeyArray;
-                $keys_removed          = "";
-                foreach ($membershipKeyArray as $key => $keyVal) {
-                    $memCacheObject->remove($keyVal);
-                    $keys_removed .= $keyVal . ",\n";
-                }
+                $memHandlerObj = new MembershipHandler(false);
+                $memHandlerObj->flushMemcacheForMembership();
+                unset($memHandlerObj);
             } else {
                 $this->discountError = true;
             }
@@ -295,13 +294,10 @@ class crmInterfaceActions extends sfActions
             $memHandlerObject = new MembershipHandler();
             $memHandlerObject->flushMemcacheForMembership();
             $this->successMsg   = "Discount Values Successfully Applied";
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+          
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
         }
     }
 
@@ -345,13 +341,9 @@ class crmInterfaceActions extends sfActions
             }
             $this->successMsg = "Discount/Duration Values Successfully Applied";
             unset($this->errorMsg);
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
             // get the updated values from database for display
             $this->offerArr = $commCrmFuncObj->getFestiveOfferMappingDetails();
         }
@@ -830,6 +822,7 @@ class crmInterfaceActions extends sfActions
                 $billServObj        = new billing_SERVICES('newjs_slave');
                 $this->device       = $formArr["device"];
                 $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
+                $this->rawData      = $this->filterData($this->rawData);
                 $this->serviceData  = $billServObj->getFinanceDataServiceNames();
                 if ($formArr["report_format"] == "XLS") {
                     $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
@@ -994,29 +987,74 @@ class crmInterfaceActions extends sfActions
 
     public function executeChangeActiveServicesInterface(sfWebRequest $request)
     {
+        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
         $this->cid        = $request->getParameter('cid');
         $this->name       = $request->getParameter('name');
+        $this->mtongueFilter = $request->getParameter('mtongueFilter');
+        $this->mappedMtongueFilter = $this->mtongueFilter;
+        $submit = $request->getParameter('submit');
+        if(empty($this->mtongueFilter)){
+            $this->mtongueFilter = "-1";
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $memHandlerObj = new MembershipHandler(false);
+            $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+            unset($memHandlerObj);
+      
+            if($count == 0){
+                $this->mappedMtongueFilter = "-1";
+            }
+        }
+        
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
-        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive', 'T' => 'Response Booster', 'R' => 'Featured Profile', 'A' => 'Astro Compatibility', 'I' => 'We Talk For You');
-        if ($request->getParameter('submit')) {
+        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
+        
+        if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
+            $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+            //echo "ankita origServDet...."."\n";
+           
             foreach ($params as $key => $val) {
-                if ($val == 'Y') {
-                    $activate[] = $key;
-                } else {
-                    $deactivate[] = $key;
+                if ($val == 'Y'/* && $origServDet[$key]['SHOW_ONLINE'] != 'Y'*/){
+                    if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
+                        $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
+                    }
+                    else if(strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") === false){
+                        $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
+                    }
+                } 
+                else if($val == 'N' && strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
+                    $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
+                    if($updateShowOnlineNew[$key] == ","){
+                        $updateShowOnlineNew[$key] = "";
+                    }
                 }
             }
-            $activate   = "'" . implode("','", $activate) . "'";
-            $deactivate = "'" . implode("','", $deactivate) . "'";
-            $billingServObj->changeServiceActivations($activate, 'Y');
-            $billingServObj->changeServiceActivations($deactivate, 'N');
+            //echo "ankita updateShowOnlineNew...."."\n";
+            //print_r($updateShowOnlineNew);die;
+            $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
-        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+
+        $memHandlerObj = new MembershipHandler(false);
+        $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+        unset($memHandlerObj);
+  
+        if($count == 0){
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $this->mappedMtongueFilter = $this->mtongueFilter;
+        }
+        //var_dump($this->mtongueFilter);
+        //var_dump($this->mappedMtongueFilter);        
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+
+        //print_r($this->servDet);die;
         $newServDet    = array();
         $skipArr       = array('C1', 'C1W', 'C2W', 'P1', 'P1W', 'P2W', 'NCP1', 'T1', 'A1', 'I10', 'R1', 'X1');
         foreach ($this->servDet as $sid => $arr) {
@@ -1126,4 +1164,59 @@ class crmInterfaceActions extends sfActions
             }
         }
     }
+    public function filterData($profiles) {
+        $k=0;
+        $index = 0;
+        $constantYears = 1;
+        $serviceObj2 = new Services;
+        //Start: JSC-2667: Fix for legacy data where start and end date is incorrect\
+        foreach ($profiles as $key => $value){
+         // print_r($profiles[$index]['ASED']);
+            if (strstr($profiles[$index]['ASED'], '2099') && strstr($profiles[$index]['SERVICEID'],'L')) {
+                //print_r("In first if");
+                $invalidArray[$k]['PROFILEID'] = $profiles[$index]['PROFILEID']; /* storing all profiles where end date is invalid. */
+                $invalidArray[$k]['ENTRY_DT'] = $profiles[$index]['ENTRY_DT'];   /* for fixing end dates of next record for same profileID  */
+                $invalidArray[$k]['SERVICEID'] = $profiles[$index]['SERVICEID'];
+                $invalidArray[$k]['ASSD'] = $profiles[$index]['ASSD'];
+                $invalidArray[$k]['INDEX'] = $index;
+                $invalidArray[$k]['BILLID'] = $profiles[$index]['BILLID'];
+
+                $actual_start_date = $profiles[$index]['ASSD'];
+                $actual_end_date = date("Y-m-d", strtotime($actual_start_date) + ($constantYears * (365 * 24 * 60 * 60)));
+                $profiles[$index]['ASED'] = $actual_end_date;
+                $invalidArray[$k]['ASED']= $profiles[$index]['ASED'];
+                $k++;
+                
+            }
+            $index++;
+        }
+        $k=0;
+        $key=0;
+        foreach ($profiles as $key => $value) {
+            foreach ($invalidArray as $key2 => $value2) {
+                if($profiles[$key]['PROFILEID'] == $invalidArray[$key2]['PROFILEID'] 
+                        && !strstr($profiles[$key]['SERVICEID'],'L')
+                        && (strstr($profiles[$key]['SERVICEID'],'C')
+                        || strstr($profiles[$key]['SERVICEID'],'P')
+                        || strstr($profiles[$key]['SERVICEID'],'NCP'))) {
+                    $profiles[$key]['ASSD'] = $invalidArray[$key2]['ASED'];
+                    //get duration
+                    $duration = $serviceObj2->getDuration($profiles[$key]['SERVICEID']);
+                    
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($duration* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+                if(strstr($profiles[$key]['SERVICEID'],'L')){
+                    $profiles[$key]['ASSD'] = $profiles[$key]['START_DATE'];
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($constantYears* 365* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+            }
+        }
+        return $profiles;
+    }
+
 }
+

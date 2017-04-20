@@ -966,4 +966,21 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         $respObj->generateResponse();
         die;
     }
+
+    public function executeLogOtherUrlV1(sfWebRequest $request)
+    {
+        $data = json_decode($request->getParameter('data'), true);
+        if(isset($data['url']))
+        {
+            $url = $data['url'];
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(
+                LoggingEnums::PHISHING_URL => $url,
+                LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
 }

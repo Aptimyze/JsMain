@@ -1187,6 +1187,9 @@ public function executeAppredirect(sfWebRequest $request)
 				{
 					$key = $k.$arrAllowedCaste[$i].'_';
 					$output[$key] = $this->getRegCaste($key);
+                                        if($i==1){
+                                            unset($output[$key][2]);
+                                        }
 					++$i;
 				}
 			}
@@ -1352,7 +1355,7 @@ if($k=="state_res")
 		  $Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
 		 
 	  }
-	  
+	  unset($Arr[2][0][2]);
 		return $Arr;
   }
   private function getNonOtherCaste()
@@ -1929,6 +1932,7 @@ if($k=="state_res")
     }
     
     $arrCaste[1][0] = $arrOut;
+    unset($arrCaste[2][0][2]);
     return $arrCaste;
   }
   

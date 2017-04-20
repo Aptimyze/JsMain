@@ -140,7 +140,7 @@ component.prototype.request = function() {
 				jsLoadFlag = 1;
 				timeE = new Date().getTime();
 				timeD = (timeE - timeI)/3600;
-				jsb9init_fourth(timeD,true,2,'http://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
+				jsb9init_fourth(timeD,true,2,'https://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
 			}
           },
           beforeSend : function(data){
@@ -1114,7 +1114,18 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             
             jObject.find('.sendInterest').attr('onClick', postAction);
 
-            jObject.find('.profileName').html(profiles[i].username);
+            var username = '';
+            if(typeof profiles[i].name_of_user != 'undefined' && profiles[i].name_of_user != '')
+            {
+              username = profiles[i].name_of_user;
+            }
+            else
+            {
+              username = profiles[i].username;
+            }
+
+            jObject.find('.profileName').html(username);
+
             jObject.find('.profileName').attr('profileChecksum',profileChecksum);
             jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);
             jObject.find('.gunascore').html(profiles[i].gunascore);

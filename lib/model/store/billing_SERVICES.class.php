@@ -67,7 +67,7 @@ class billing_SERVICES extends TABLE
             foreach ($serviceIdArr as $key => $val) $str[] = ":SERVICEID$key";
             $newStr = @implode(",", $str);
             
-            $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' where SERVICEID IN($newStr)";
+            $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE_NEW=CASE WHEN SHOW_ONLINE_NEW = '' THEN ',-1,' ELSE CONCAT(SHOW_ONLINE_NEW,'-1,') END where SERVICEID IN($newStr)";
             $res = $this->db->prepare($sql);
             foreach ($serviceIdArr as $key => $val) $res->bindValue(":SERVICEID$key", $val, PDO::PARAM_STR);
             $res->execute();
@@ -232,8 +232,11 @@ class billing_SERVICES extends TABLE
     public function getAllServiceDataForActiveServices($showOnline=NULL) {
         try {
             $sql = "SELECT SQL_CACHE * FROM billing.SERVICES WHERE ACTIVE='Y'";
-            if(!empty($showOnline)){
-                $sql .= " AND SHOW_ONLINE='Y'";
+            if(!empty($showOnline) && $showOnline != "A"){
+                $sql .= " AND SHOW_ONLINE_NEW LIKE '%,$showOnline,%'";
+            }
+            else if($showOnline == "A"){
+                $sql .= " AND SHOW_ONLINE_NEW NOT LIKE ''";
             }
             $sql .= " ORDER BY SERVICEID ASC";
             $resSelectDetail = $this->db->prepare($sql);
@@ -262,7 +265,12 @@ class billing_SERVICES extends TABLE
                 $output[$i]['PACKID'] = $rowSelectDetail['PACKID'];
                 $output[$i]['ADDON'] = $rowSelectDetail['ADDON'];
                 $output[$i]['SORTBY'] = $rowSelectDetail['SORTBY'];
-                $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE'];
+                if(!empty($showOnline)){
+                    $output[$i]['SHOW_ONLINE'] = 'Y';
+                }
+                else{
+                    $output[$i]['SHOW_ONLINE'] = $rowSelectDetail['SHOW_ONLINE'];
+                }
                 $output[$i]['ACTIVE'] = $rowSelectDetail['ACTIVE'];
                 $output[$i]['ENABLE'] = $rowSelectDetail['ENABLE'];
                 $output[$i]['FREEBIES'] = $rowSelectDetail['FREEBIES'];
@@ -292,7 +300,8 @@ class billing_SERVICES extends TABLE
         return $previous_expiry_date;
     }
 
-    public function getLowestActiveMainMembership($serviceArr, $device='desktop'){
+    public function getLowestActiveMainMembership($serviceArr, $device='desktop',$mtongue="-1"){
+
         if(empty($serviceArr)){
             throw new jsException("Empty serviceArr passed in getLowestActiveMainMembership, billing_SERVICES.class.php");
         } else if(is_array($serviceArr)){
@@ -306,10 +315,13 @@ class billing_SERVICES extends TABLE
         } else {
             $search_id = "SERVICEID LIKE '{$serviceArr}%'";
         }
+        if(empty($mtongue)){
+            $mtongue = "-1";
+        }
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         try{
-            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE='Y' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
+            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
@@ -367,46 +379,51 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false) {
+    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false,$mtongue="-1") {
+        $showOnlineStr = "";
+        if(empty($mtongue) || $mtongue==""){
+            $mtongue = "-1";
+        }
         try {
             if($fetchOnline == true || $fetchOffline == true){
-                $SHOW_ONLINE_OFFER = "(";
-                $SHOW_ONLINE = "(";
-                if($fetchOnline == true && $fetchOffline == true){
-                    $SHOW_ONLINE_OFFER .= "'Y','S','N'";
-                    $SHOW_ONLINE .= "'Y','N'";
+                if($fetchOffline == true && $fetchOnline == false){
+                    if(strlen($search_id) > 0){
+                        $showOnlineStr .= " AND ";
+                    }
+                    $showOnlineStr .= "(SHOW_ONLINE_NEW NOT LIKE '%,$mtongue,%')";
                 }
-                else if($fetchOffline == true){
-                    $SHOW_ONLINE_OFFER .= "'N'";
-                    $SHOW_ONLINE .= "'N'";
+                else if($fetchOnline == true && $fetchOffline == false){
+                    if(strlen($search_id) > 0){
+                        $showOnlineStr .= " AND ";
+                    }
+                    $showOnlineStr .= "(SHOW_ONLINE_NEW LIKE '%,$mtongue,%')";
                 }
-                else if($fetchOnline == true){
-                    $SHOW_ONLINE_OFFER .= "'Y','S'";
-                    $SHOW_ONLINE .= "'Y'";
-                }
-                $SHOW_ONLINE_OFFER .= ")";
-                $SHOW_ONLINE .= ")";
                 //var_dump($SHOW_ONLINE);
             	if(is_array($id)){
     		        if ($offer) {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}){$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        } else {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}){$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        }
     	        } else {
     	        	if ($id == 'M') {
-    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
+    	        		$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' order by PRICE ASC";
     	        	} elseif ($offer) {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id'{$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        } else {
-    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
+    		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE_NEW, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id'{$showOnlineStr} AND ACTIVE='Y' order by PRICE ASC";
     		        }
     	        }
                 //var_dump($sql);
                 $resSelectDetail = $this->db->prepare($sql);
                 $resSelectDetail->execute();
                 while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
-                	$row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>$rowSelectDetail["SHOW_ONLINE"]);
+                    if(strpos($rowSelectDetail["SHOW_ONLINE_NEW"],",".$mtongue.",") !== false){
+                	   $row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>'Y');
+                    }
+                    else{
+                       $row_services[$rowSelectDetail["SERVICEID"]] = array('NAME'=>$rowSelectDetail["NAME"],'PRICE'=>$rowSelectDetail["PRICE"],'SHOW_ONLINE'=>'N');
+                    }
                 }
             }
             else{
@@ -419,13 +436,17 @@ class billing_SERVICES extends TABLE
         return $row_services;
     }
 
-    public function getAddonInfo($price_str,$offer) {
+    public function getAddonInfo($price_str,$offer,$mtongue="-1") {
+        if(empty($mtongue)){
+            $mtongue = "-1";
+        }
         try {
-        	if ($offer) {
+        	/*if ($offer) {
         		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE IN('Y','S') order by DURATION DESC";
         	} else {
         		$sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE='Y' order by DURATION DESC";
-        	}
+        	}*/
+            $sql = "SELECT SQL_CACHE SERVICEID, NAME, $price_str as PRICE,DURATION FROM billing.SERVICES WHERE ACTIVE='Y' AND ADDON='Y' AND SHOW_ONLINE_NEW LIKE '%,$mtongue,%' order by DURATION DESC";
         	$resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
@@ -485,9 +506,23 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
-    public function getOnlineActiveDurations() {
+    public function getOnlineActiveDurations($mtongue="-1",$addon="N") {
         try {
-            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE ";
+            if($mtongue == "A"){
+                $sql .= "SHOW_ONLINE_NEW NOT LIKE ''";
+            }
+            else{
+                $sql .="SHOW_ONLINE_NEW LIKE '%,$mtongue,%'";
+            }
+            if($addon == "N"){
+                $sql .= " AND ADDON!='Y'";
+            }
+            else{
+                $sql .= " AND ADDON='Y'";
+            }
+            //ankita code removed to hide P1
+            $sql .= " AND ACTIVE='Y'";/* AND SERVICEID!='P1'*/;
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
@@ -531,9 +566,9 @@ class billing_SERVICES extends TABLE
         return $previous_expiry;
     }
 
-    public function getServicesForActivationInterface($servArr) {
+    public function getServicesForActivationInterface($servArr,$mtongue="-1") {
         try {
-            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            $sql = "SELECT SERVICEID, NAME, CASE WHEN SHOW_ONLINE_NEW LIKE '%,$mtongue,%' THEN 'Y' ELSE 'N' END AS SHOW_ONLINE,SHOW_ONLINE_NEW FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
             foreach ($servArr as $key=>$val) {
                 $sqlArr[] = "SERVICEID LIKE '{$val}%'";
             }
@@ -550,15 +585,18 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function changeServiceActivations($servStr, $status) {
+    public function changeServiceActivations($updateShowOnlineNew=null) {
         try {
-            if($status == 'Y'){
-                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
-            } else {
-                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='N' WHERE SERVICEID IN ($servStr)";
+            if(is_array($updateShowOnlineNew) && count($updateShowOnlineNew) > 0){
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE_NEW = CASE";
+                foreach ($updateShowOnlineNew as $key => $value) {
+                    $sql .= " WHEN SERVICEID LIKE '$key' THEN '$value'";
+                }
+                $sql .= " ELSE SHOW_ONLINE_NEW END";
+                //var_dump($sql);
+                $resSelectDetail = $this->db->prepare($sql);
+                $resSelectDetail->execute();
             }
-            $resSelectDetail = $this->db->prepare($sql);
-            $resSelectDetail->execute();
         } catch (Exception $e) {
             throw new jsException($e);
         }

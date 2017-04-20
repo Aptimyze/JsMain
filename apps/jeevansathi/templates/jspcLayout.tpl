@@ -13,11 +13,8 @@
     <meta http-equiv="content-language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
-    <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+    <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
     ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-    ~if $pageType =="privacypolicy"`
-        <link rel="amphtml" href="~$ampurl`">
-    ~/if`
     ~include_http_metas`
     ~include_canurl`
     ~include_title`
@@ -161,11 +158,9 @@
     <!--Google Analytics Code-->
 </div>
 </body>
-~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->
