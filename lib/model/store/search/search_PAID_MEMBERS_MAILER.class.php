@@ -19,10 +19,10 @@ class search_PAID_MEMBERS_MAILER extends TABLE
             $defaultFields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,USER11,USER12,USER13,USER14,USER15,USER16";
 
             $selectfields = $fields?$fields:$defaultFields;
-            $sql = "SELECT $selectfields FROM search.PAID_MEMBERS_MAILER where SENT IN ('U','F') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
+            $sql = "SELECT $selectfields FROM search.PAID_MEMBERS_MAILER where SENT IN ('N','F') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
             if($limit)
                 $sql.= " limit 0,:LIMIT";
-            
+
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
             $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
@@ -56,7 +56,7 @@ class search_PAID_MEMBERS_MAILER extends TABLE
     {
     	try
 		{
-			$sql = "UPDATE mailer.FEATURED_PROFILE_MAILER SET SENT=:FLAG WHERE PROFILEID=:PROFILEID AND SNO=:SNO";
+			$sql = "UPDATE search.PAID_MEMBERS_MAILER SET SENT=:FLAG WHERE RECEIVER=:PROFILEID AND SNO=:SNO";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":FLAG",$flag,PDO::PARAM_STR);
 			$prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
