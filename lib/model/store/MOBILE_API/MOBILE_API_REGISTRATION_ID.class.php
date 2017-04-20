@@ -170,11 +170,14 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$return.=" ".$param." ".$relation." (".$str.") ";
 		return $return;
 	}
-        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='')
+        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='',$androidMaxVersion='')
         {
                 //$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT";
 		$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT AND (";
-		if($andAppVersion)
+        //To pick profiles having maximum app versions.
+        if($androidMaxVersion)
+            $sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND APP_VERSION<:MAX_AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
+		elseif($andAppVersion)
 			$sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
 		//else
 		//	$sqlUpdate = $sqlUpdate."(OS_TYPE=:AND_OS_TYPE)";
@@ -190,6 +193,9 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$resUpdate->bindValue(":AND_APP_VERSION",$andAppVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
 			$resUpdate->bindValue(":AND_OS_TYPE",'AND',constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
 		}
+        if($androidMaxVersion){
+            $resUpdate->bindValue(":MAX_AND_APP_VERSION",$androidMaxVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
+        }
 		if($iosAppVersion){
 			$resUpdate->bindValue(":IOS_APP_VERSION",$iosAppVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
 			$resUpdate->bindValue(":IOS_OS_TYPE",'IOS',constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));

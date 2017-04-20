@@ -9,11 +9,12 @@ class AppNotificationScheduler extends NotificationScheduler
   public $notificationKey;
   public $noOfScripts;
   public $currentScript;
-  public function __construct($notificationKey,$noOfScripts,$currentScript)
+  public function __construct($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion='')
   {
 		$this->notificationKey = $notificationKey;
 		$this->noOfScripts = $noOfScripts;
 		$this->currentScript = $currentScript;
+        $this->androidMaxVersion = $androidMaxVersion;
                 $this->notificationObj = new AppNotification;
                 $valueArray['STATUS']="Y";
                 $valueArray['NOTIFICATION_KEY']=$this->notificationKey;
@@ -34,7 +35,7 @@ class AppNotificationScheduler extends NotificationScheduler
 		  $restartLooper = false;
 		  if($numberOfLoopsExecuted==0)
 			$restartLooper = true;
-		  $appProfiles = $appProfilesHandlerObj->getProfiles($this->notificationKey,$numberOfProfilesPerLoop=100,$restartLooper,$this->noOfScripts,$this->currentScript,$this->osType);
+		  $appProfiles = $appProfilesHandlerObj->getProfiles($this->notificationKey,$numberOfProfilesPerLoop=100,$restartLooper,$this->noOfScripts,$this->currentScript,$this->osType,$this->androidMaxVersion);
 		  if(is_array($appProfiles))
 		  {
 			  $notificationData = $this->notificationObj->getNotificationData($appProfiles,$this->notificationKey);

@@ -4,7 +4,7 @@ class AppProfilesHandler
 	public static $res=array();
 	public static $startPointer=array();
 	public static $allProfilesDone=array();
-	public static function getProfiles($notificationKey,$count, $restart = false,$noOfScripts,$currentScript,$osType='ALL')
+	public static function getProfiles($notificationKey,$count, $restart = false,$noOfScripts,$currentScript,$osType='ALL',$androidMaxVersion='')
 	{
 		if(self::$allProfilesDone[$notificationKey][$currentScript] && !$restart)
 			return;
@@ -22,9 +22,9 @@ class AppProfilesHandler
 			if($osType=='AND' || $osType=='ALL')
 				$appVersionAnd =$appVersion['AND'];
 			if($osType=='IOS' || $osType=='ALL')
-				$appVersionIos =$appVersion['IOS'];
+				$appVersionIos =$appVersion['IOS'];                
 
-			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos);
+			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos,$androidMaxVersion);
 			self::$startPointer[$notificationKey][$currentScript] = 0;
 			self::$allProfilesDone[$notificationKey][$currentScript] = false;
 		}

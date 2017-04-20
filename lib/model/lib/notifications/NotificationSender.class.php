@@ -34,7 +34,11 @@ class NotificationSender
     			if(!isset($details))
     				continue;
     			if(!is_array($regIds)){
-    				$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+                    if($details["NOTIFICATION_KEY"] == "UPGRADE_APP"){
+                        $regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE'],$details["NOTIFICATION_KEY"],array("andUpdateVersion"=>$details["ANDROID_UPDATE_VERSION"],"curAndMaxVersion"=>$details["CURRENT_ANDROID_MAX_VERSION"]));
+                    }else{
+                        $regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+                    }
     			}
     			if(is_array($regIds))
     			{
@@ -84,7 +88,7 @@ class NotificationSender
     	}
 
     }
-    public function getRegistrationIds($profileid,$osType,$notificationKey='')
+    public function getRegistrationIds($profileid,$osType,$notificationKey='',$params=array())
     {
 	$valArr['PROFILEID']=$profileid;
 	if($osType != "ALL")
@@ -113,8 +117,13 @@ class NotificationSender
 		foreach($registrationIdData as $k=>$v){
 			$os_type 	=$v['OS_TYPE'];
 			$appVersion 	=$v['APP_VERSION'];
-			if(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos))
+            if($notificationKey == "UPGRADE_APP"){
+                if($os_type=='AND' && $appVersion>=$appVersionAnd && $appVersion<$params["andUpdateVersion"])
+                    $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+            }
+			elseif(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos)){
 				$regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+            }
 		}
 		return $regIdArr;
 	}
