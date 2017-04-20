@@ -58,10 +58,18 @@ class incentive_NEGATIVE_LIST extends TABLE
             throw new jsException($e);
         }
     }
-    public function getProfileData($negType, $negativeVal)
+    public function getProfileData($negType, $negativeVal,$inVal=false)
     {
         try {
-            $sql = "SELECT * FROM incentive.NEGATIVE_LIST WHERE $negType=:VALUE_VAL ORDER BY ID DESC LIMIT 1";
+            $sql = "SELECT * FROM incentive.NEGATIVE_LIST WHERE ";
+            if($inVal == true){
+                $sql .= "$negType IN(:VALUE_VAL)";
+            }
+            else{
+                $sql .= "$negType=:VALUE_VAL";
+            }
+            $sql .= " ORDER BY ID DESC LIMIT 1";
+         
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":VALUE_VAL", $negativeVal, PDO::PARAM_STR);
             $prep->execute();
