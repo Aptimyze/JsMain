@@ -362,7 +362,7 @@ class Services
         }
         
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_slave');
+        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_masterRep');
         
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
@@ -591,7 +591,7 @@ class Services
     }
     
     public function getFestive() {
-        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_slave');
+        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_masterRep');
         $isFestive = $billingFestObj->getFestiveFlag();
         return $isFestive;
     }
