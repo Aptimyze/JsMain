@@ -214,7 +214,7 @@ Class ButtonResponseApi
 		if (isset($page["page_source"]))
 			$button["params"] = "&page_source=" . $page["page_source"];
 		if(isset($page["comingFromPage"]))
-			$button["params"] = "&coming_from=" .$page["comingFromPage"];
+			$button["params"] = $button["params"]."&coming_from=" .$page["comingFromPage"];
 
 		$button = self::buttonMerge($button);
 		return $button;
@@ -290,9 +290,8 @@ Class ButtonResponseApi
 	public function getInitiatedButton($androidText = false,$privilageArray="")
 	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
-		{
-			
- 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
+		{	
+			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
  			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
 			$button["value"] = "INITIATE";
 			$responseArray["canChat"] = false;
@@ -330,7 +329,7 @@ Class ButtonResponseApi
 		return array_merge($buttonArr, $button);
 	}
 	public function getAfterActionButton($actionType)
-	{  
+	{
 		$gender         = $this->contactHandlerObj->getViewed()->getGENDER();
 		$hisher         = $gender == "F" ? "her" : "his";
 		$himher         = $gender == "F" ? "her" : "him";
@@ -555,7 +554,7 @@ Class ButtonResponseApi
 	}
 	
 	public static function getContactsButton($contact,$gender,$page='')
-	{  
+	{
 		$button 		= Array(); 
 		$responseArray	= Array();
 		$hisher         = $gender == "F" ? "her" : "his";
@@ -635,14 +634,6 @@ Class ButtonResponseApi
 		}
 
 		return $responseArray;
-	}
-
-	public static function getAllButtonsOnSearch()
-	{
-		$button[] = self::getShortListButton();
-		$button[] = self::getCancelInterestButton();
-		$button[] = self::getContactDetailsButton();
-		return $button;
 	}
 				
 	 
