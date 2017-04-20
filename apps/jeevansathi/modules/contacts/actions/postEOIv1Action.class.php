@@ -105,7 +105,7 @@ class postEOIv1Action extends sfAction
 			$responseButtonArray["cansend"] = true;
 			$responseButtonArray["sent"] = true;
 		}
-		else if ($this->getParameter($request,"page_source") == "search")
+		else if ($this->getParameter($request,"comingFromPage") == "search")
 		{   
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();

@@ -213,6 +213,9 @@ Class ButtonResponseApi
 			$button["params"] = "&stype=" . $page["stype"];
 		if (isset($page["page_source"]))
 			$button["params"] = "&page_source=" . $page["page_source"];
+		if(isset($page["comingFromPage"]))
+			$button["params"] = "&coming_from=" .$page["comingFromPage"];
+
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -639,7 +642,6 @@ Class ButtonResponseApi
 		$button[] = self::getShortListButton();
 		$button[] = self::getCancelInterestButton();
 		$button[] = self::getContactDetailsButton();
-
 		return $button;
 	}
 				

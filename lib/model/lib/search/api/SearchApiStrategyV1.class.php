@@ -458,11 +458,8 @@ class SearchApiStrategyV1
                                         }
                                         $button[3] = ButtonResponseApi::getContactDetailsButton();
                                         ksort($button);
-                                        if($fromVspAndroid){
-                                     $request    = sfContext::getInstance()->getRequest();
-                                     $request->setParameter('page_source','search');   	
+                                        if($fromVspAndroid)
                                             $buttonDetails = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton())));
-                                        }
                                         else
                                             $buttonDetails = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>$button));
                                         $this->output[$profileKey][$i]['buttonDetails'] = $buttonDetails;
@@ -732,7 +729,8 @@ class SearchApiStrategyV1
 			if($value==self::contactNoLabel)		
 			{
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
-				$value = ButtonResponseApi::getInitiateButton('');
+				$page['comingFromPage'] = 'search';
+				$value = ButtonResponseApi::getInitiateButton($page);
 			}
 			else
 				$value = ButtonResponseApi::getCustomButton($value,"","","",$value==self::contactSentLabel?IdToAppImagesMapping::TICK_CONTACT:IdToAppImagesMapping::DISABLE_CONTACT);
