@@ -105,7 +105,7 @@ padding:0 0 0 8px;
 </div>
 </div>
 <div style="clear:both;"></div>
-<div><img src="http://static.jeevansathi.com/img_revamp/bottom_tab_setting.gif"></div>
+<div><img src="https://static.jeevansathi.com/img_revamp/bottom_tab_setting.gif"></div>
 </div>
 
 </div>

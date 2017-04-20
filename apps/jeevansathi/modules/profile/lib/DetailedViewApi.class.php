@@ -261,18 +261,39 @@ class DetailedViewApi
         	$this->m_arrOut['sameGender']=1;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
-		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
+		
+		//COMMENTED THE PRVIOUS CODE AS A COMMON FUNCTION IS BEING USED NOW
+
+		// if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
+		// {
+		// 	if(substr($objProfile->getCITY_RES(),2)=="OT")
+		//         {
+		// 		$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
+		// 		$szLocation = $stateLabel."-"."Others";
+		// 	}
+		// 	else
+		// 		$szLocation=$objProfile->getDecoratedCity();
+		// }
+		// else
+		// 	$szLocation = $objProfile->getDecoratedCountry();
+
+		//This is the part which was done to make Location on PD summary same as that on Search
+		$city = $objProfile->getCITY_RES();
+		$state = "";
+		if($city != "")
 		{
-			if(substr($objProfile->getCITY_RES(),2)=="OT")
-		        {
-				$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
-				$szLocation = $stateLabel."-"."Others";
-			}
-			else
-				$szLocation=$objProfile->getDecoratedCity();
-		}
-		else
-			$szLocation = $objProfile->getDecoratedCountry();
+			$state = substr($city,0,2);	
+		}		
+		$nativePlaceObj = new JProfile_NativePlace($objProfile);
+		$nativeArr = $nativePlaceObj->getInfo();		
+		if(is_array($nativeArr))
+		{
+			if($nativeArr["NATIVE_STATE"] != "")
+				$state = $state.",".$nativeArr["NATIVE_STATE"];
+			if($nativeArr["NATIVE_CITY"] != "")
+				$city = $city.",".$nativeArr["NATIVE_CITY"];
+		}		
+		$szLocation = CommonFunction::getResLabel($objProfile->getCOUNTRY_RES(),$state,$city,$objProfile->getANCESTRAL_ORIGIN(),"city");	
 		$this->m_arrOut['location'] = $szLocation;
 		//Caste
 		if(stripos($objProfile->getDecoratedCaste(),": ")!=false)
@@ -1384,7 +1405,7 @@ class DetailedViewApi
 		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
 		{
-		    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+		    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
 		}
 	}
 	}
@@ -1507,5 +1528,5 @@ class DetailedViewApi
         $otherProfile = $this->m_objProfile;
         
         return ProfileCommon::getGunaApiParams($loginProfile, $otherProfile);
-    }
+    }       
 }

@@ -712,7 +712,10 @@ class Membership
         //if not deactivated then send alert mail
         if($finalOutput["responseStatusCode"] == "1"){
             $subject = "Curl hit to deactivate main membership failed";
-            $msg = "Details: new_orderid {$orderid} in deactivateMembership called by makepaid function for Username : {$this->username},curlResponse:$deactivationResponse";
+            $msg = "Details: new_orderid {$orderid} in deactivateMembership called by makepaid function for Username : {$this->username}";
+            foreach ($finalOutput as $key => $value) {
+              $msg .= "key:".$key."-".$value;
+            }
             SendMail::send_email("ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com",$msg,$subject);
         }
         unset($finalOutput);

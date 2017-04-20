@@ -494,7 +494,7 @@
                         <!--end:div-->
                         <!--start:div-->
                         <div id="createHoroDiv" class="edpwid19 mauto disp-none">
-                            <iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
+                            <iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
                         </div>            
                         <!--end:div--> 
                     </div>

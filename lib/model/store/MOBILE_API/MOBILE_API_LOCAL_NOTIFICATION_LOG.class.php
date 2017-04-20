@@ -96,7 +96,7 @@ class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
         public function getDataCountForRange($startDate, $endDate)
         {
             try{
-                $sql = "SELECT count(distinct PROFILEID) count, NOTIFICATION_KEY, SENT, OS_TYPE FROM MOBILE_API.`LOCAL_NOTIFICATION_LOG` WHERE ENTRY_DATE>=:START_DATE AND ENTRY_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY,SENT,OS_TYPE";
+                $sql = "SELECT count(PROFILEID) count, NOTIFICATION_KEY, SENT, OS_TYPE FROM MOBILE_API.`LOCAL_NOTIFICATION_LOG` WHERE ENTRY_DATE>=:START_DATE AND ENTRY_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY,SENT,OS_TYPE";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                 $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
