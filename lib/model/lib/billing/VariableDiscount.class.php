@@ -409,6 +409,7 @@ class VariableDiscount
                     $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
                     $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
                     if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+			$disc1 = min($disc1, $lastNegDet['DISCOUNT']);	
                         $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
                         $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
                         $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
@@ -417,14 +418,14 @@ class VariableDiscount
                     }
                     unset($discNegLogObj, $lastNegDet);
                     // End : Code to pick last discount capping by executive
-                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
+                    $discMax  =max($disc1,$disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
                     }
                     if($discMax>$profileArr[$pid]){
                         $profileArr[$pid] =$discMax;
                     }
-                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }
@@ -477,6 +478,7 @@ class VariableDiscount
                     $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
                     $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
                     if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+			$disc1 = min($disc1, $lastNegDet['DISCOUNT']);
                         $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
                         $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
                         $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
@@ -485,14 +487,14 @@ class VariableDiscount
                     }
                     unset($discNegLogObj, $lastNegDet);
                     // End : Code to pick last discount capping by executive
-                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
+                    $discMax  =max($disc1,$disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
                     }
                     if($discMax>$profileArr[$pid]){
                         $profileArr[$pid] =$discMax;
                     }
-                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }

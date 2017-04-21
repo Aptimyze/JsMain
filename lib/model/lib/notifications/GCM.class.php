@@ -37,6 +37,8 @@ class GCM {
 		$fields['time_to_live'] = intval($details['TTL']);
 		$fields['delay_while_idle'] = true;
 	}
+	//print_r("sending to gcm");
+	//print_r($fields);
         $headers = NotificationEnums::$GcmAppHeaders;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
