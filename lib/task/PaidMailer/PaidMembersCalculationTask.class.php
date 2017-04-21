@@ -39,7 +39,7 @@ EOF;
 		do{
 			$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT;
 			$arr = $search_PAIDMEMBERS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        //$arr[0]["PROFILEID"] = 144111;
+                        
 			if(is_array($arr))
 			{
 				foreach($arr as $v)
@@ -63,7 +63,6 @@ EOF;
                 
                 $search_PAID_MEMBERS_MAILER = new search_PAID_MEMBERS_MAILER();
                 $cnt = $search_PAID_MEMBERS_MAILER->countMails();
-                var_dump($cnt);die;
                 $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/PaidMembersLogging.txt";
                 file_put_contents($fileName, date("Y_m_d", strtotime("now")).':: M-'.$countM.'  :: F-'.$countF."\n", FILE_APPEND);
 	}

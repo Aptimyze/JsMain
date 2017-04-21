@@ -59,7 +59,7 @@ class MAILER_COMMON_ENUM
                 self::$membershipTracking["UPLOADED_PHOTO"] = array('vdGetDiscount'=>'VDUP1','vdPercent'=>'VDUP2','upgrade'=>'UP2','renew'=>'UP2R','renewPercent'=>'UP2RC');
                 self::$membershipTracking["SAVED_SEARCH"] = array('vdGetDiscount'=>'VDSS1','vdPercent'=>'VDSS2','upgrade'=>'SS2','renew'=>'SS2R','renewPercent'=>'SS2RC');
                 self::$membershipTracking["KUNDLI_ALERTS"] = array('vdGetDiscount'=>'VDKA1','vdPercent'=>'VDKA2','upgrade'=>'KA2','renew'=>'KA2R','renewPercent'=>'KA2RC');
-                self::$membershipTracking["PAID_MEMBERS_MAILER"] = array('vdGetDiscount'=>'VDSS1','vdPercent'=>'VDSS2','upgrade'=>'SS2','renew'=>'SS2R','renewPercent'=>'SS2RC');
+                self::$membershipTracking["PAID_MEMBERS_MAILER"] = array('vdGetDiscount'=>'VDPMM1','vdPercent'=>'VDPMM2','upgrade'=>'PMM2','renew'=>'PMM2R','renewPercent'=>'PMM2RC');
 		self::$userFieldLabel["MATCHALERT"] = "USER";
 		self::$userFieldLabel["NEW_MATCHES"] = "USER";
                 self::$userFieldLabel["VISITORALERT"] = "VISITOR";
