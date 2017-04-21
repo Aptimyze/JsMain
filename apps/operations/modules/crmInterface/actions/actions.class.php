@@ -830,7 +830,9 @@ class crmInterfaceActions extends sfActions
                 $billServObj        = new billing_SERVICES('newjs_slave');
                 $this->device       = $formArr["device"];
                 $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
-                $this->rawData      = $this->filterData($this->rawData);
+                //Start:JSC-2667: Commented as change in legacy data not required 
+                //$this->rawData      = $this->filterData($this->rawData);
+                //End:JSC-2667: Commented as change in legacy data not required 
                 $this->serviceData  = $billServObj->getFinanceDataServiceNames();
                 if ($formArr["report_format"] == "XLS") {
                     $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
@@ -1170,7 +1172,7 @@ class crmInterfaceActions extends sfActions
                     $profiles[$key]['ASED'] = $enddt;
                     $invalidArray[$key2]['ASED'] = $enddt;
                 }
-                if(strstr($profiles[$key]['SERVICEID'],'L')){
+                if(strstr($profiles[$key]['SERVICEID'],'L') && (strstr($profiles[$key]['ASSD'],'2099'))){
                     $profiles[$key]['ASSD'] = $profiles[$key]['START_DATE'];
                     $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($constantYears* 365* 24 * 60 * 60));
                     $profiles[$key]['ASED'] = $enddt;
