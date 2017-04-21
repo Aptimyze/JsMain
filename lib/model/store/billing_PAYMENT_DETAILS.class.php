@@ -163,7 +163,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
     
-    public function updateComissions($profileid, $billid, $apple, $franchisee,$appleFlag, $newAmount) {
+    public function updateComissions($profileid, $billid, $apple, $franchisee,$appleFlag=0, $newAmount) {
         
         try {
             if (empty($apple)) {
