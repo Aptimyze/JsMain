@@ -69,7 +69,7 @@ $(document).ready(function()
                 {
 		lastAction="UPLOAD";
                     ajaxRequestToTrack(profileId,"fileTypeError","File Type-"+fileType);
-		    var message = "Only jpg/jpeg images are supported";
+		    var message = "Only jpg/jpeg/png images are supported";
 		    if(file.name)
 			message = getMessageWithFileName(file.name,message);
                     displayConfirmationMessage(message,1);
