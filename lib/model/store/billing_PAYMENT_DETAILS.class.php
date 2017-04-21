@@ -178,6 +178,9 @@ class BILLING_PAYMENT_DETAIL extends TABLE
                  $sql.= ", AMOUNT=:AMT";
             }
             $sql.=" WHERE PROFILEID=:PROFILEID AND BILLID=:BILLID";
+            if($appleFlag==1){
+                 $sql.= " AND APPLE_COMMISSION IS NULL";
+            }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
