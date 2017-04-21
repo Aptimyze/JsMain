@@ -72,7 +72,7 @@ window.onload = function() {
 			setTransition_UploadToAlbum();
                     }
                     ajaxRequestToTrack(profileId,"fileTypeError","File Type-"+fileType);
-                    displayConfirmationMessage("Only jpg/jpeg images are supported.");
+                    displayConfirmationMessage("Only jpg/jpeg/png images are supported.");
                     $("#file").val("");
                     continue;
                 }

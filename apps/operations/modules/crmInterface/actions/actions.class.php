@@ -97,6 +97,9 @@ class crmInterfaceActions extends sfActions
     // Start VD Offer
     public function executeStartVdOffer(sfWebRequest $request)
     {
+        $emailId ='manoj.rana@naukri.com';
+        mail($emailId,"Step0 VD Started", date("Y-m-d H:i:s"));
+
         $this->cid      = $request->getParameter('cid');
         $commCrmFuncObj = new CommonCrmInterfaceFunctions();
         $curDate        = date("Y-m-d");

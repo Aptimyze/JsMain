@@ -970,7 +970,7 @@ function criticalLayerButtonsAction(clickAction,button) {
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
-                
+                var calTracking = '';
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -990,11 +990,16 @@ function criticalLayerButtonsAction(clickAction,button) {
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    if(layerId==18)
+                    {   
+                        calTracking  +=( '&occupText=' + $(".js-otheroccInp input").val().trim());
+                        
+                      }
 
 
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
-                    var URL="/common/criticalActionLayerTracking";
+                    var URL="/common/criticalActionLayerTracking?"+calTracking;
                     $.ajax({
                         url: URL,
                         type: "POST",
