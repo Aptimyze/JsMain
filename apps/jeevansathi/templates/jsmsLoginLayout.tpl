@@ -4,7 +4,6 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 	<head>
-        <script async='true' src="https://cdn.ampproject.org/v0.js"></script>
 	<link rel="canonical" href="http://www.jeevansathi.com/"/> 
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
