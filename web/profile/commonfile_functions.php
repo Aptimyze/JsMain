@@ -561,7 +561,7 @@ $js_arr[]=array("jspc/login/loginLayer_js"                                      
 $js_arr[]=array("jspc/photoUpload/photoUpload_js"    => "1");
 $js_arr[]=array("jspc/photoUpload/addPhoto_js"                             => "27");
 $js_arr[]=array("jspc/photoUpload/importPhotoAlbum_js"         => "6");
-$js_arr[]=array("jspc/photoUpload/compUpload_js"    => "3");
+$js_arr[]=array("jspc/photoUpload/compUpload_js"     => "4");
 $js_arr[]=array("jspc/photoUpload/cropper"    => "1");
 $js_arr[]=array("jspc/photoUpload/main"        => "8");
 $js_arr[]=array("jspc/photoUpload/bootstrap"    => "1");
