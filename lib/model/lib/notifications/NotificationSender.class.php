@@ -43,6 +43,9 @@ class NotificationSender
                     if(in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['NOTIFICATION_KEY'],$profileDetails[$identifier]['REG_ID']); 
                     }
+                    else if($details["NOTIFICATION_KEY"] == "UPGRADE_APP"){
+                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$details["NOTIFICATION_KEY"],'',array("andUpdateVersion"=>$details["ANDROID_UPDATE_VERSION"],"curAndMaxVersion"=>$details["CURRENT_ANDROID_MAX_VERSION"]));
+                    }
                     else{
                         $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
                     }
@@ -99,7 +102,7 @@ class NotificationSender
     	}
     }
 
-    public function getRegistrationIds($profileid,$osType,$notificationKey='',$regId="")
+    public function getRegistrationIds($profileid,$osType,$notificationKey='',$regId="",$params=array())
     {
 	$valArr['PROFILEID']=$profileid;
 	if($osType != "ALL")
@@ -128,8 +131,13 @@ class NotificationSender
     		foreach($registrationIdData as $k=>$v){
     			$os_type 	=$v['OS_TYPE'];
     			$appVersion 	=$v['APP_VERSION'];
-    			if(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos))
-    				$regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+                if($notificationKey == "UPGRADE_APP"){
+                    if($os_type=='AND' && $appVersion>=$appVersionAnd && $appVersion<$params["andUpdateVersion"])
+                        $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+                }
+    			elseif(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos)){
+                    $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+                }
     		}
     		return $regIdArr;
     	}

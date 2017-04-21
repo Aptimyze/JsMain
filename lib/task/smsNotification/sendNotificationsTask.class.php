@@ -46,6 +46,11 @@ $this->addOptions(array(
 	$this->maxId = $maxIdData[0][maxId];
 	$this->notificationSenderObj = new NotificationSender($this->notificationKey);
 	$this->doneTillId = 1;
+    if($this->notificationKey == "UPGRADE_APP"){
+        $result = $this->upgradeAppNotificationData();
+        $maxAndroidVersion = $result["ANDROID_UPDATE_VERSION"];
+        $andMaxVersion = $result["CURRENT_ANDROID_MAX_VERSION"];
+    }
         while($this->doneTillId<=$this->maxId)
         {
                 if(is_array($details = $this->getDetails()))
@@ -60,8 +65,11 @@ $this->addOptions(array(
 					$profileDetails[$v['PROFILEID']]=$v;
 				}
 				$idArr[] = $v['ID'];
+                if($this->notificationKey == "UPGRADE_APP"){
+                    $profileDetails[$v['PROFILEID']]["ANDROID_UPDATE_VERSION"] = $maxAndroidVersion;
+                    $profileDetails[$v['PROFILEID']]["CURRENT_ANDROID_MAX_VERSION"] = $andMaxVersion;
+                }
 			}
-			
 			//filter profiles based on notification count
 			if(in_array($this->notificationKey,NotificationEnums::$scheduledNotificationPriorityArr))
 				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCountNew($profileDetails,$this->notificationKey);
@@ -105,5 +113,11 @@ $this->addOptions(array(
 	if(is_array($details))
 		return $details;
 	return false;
+  }
+  
+  private function upgradeAppNotificationData(){
+      $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
+      $result = $upgradeAppObj->getLastInsertedData();
+      return $result;
   }
 }

@@ -455,8 +455,19 @@ public function microtime_float()
             
             unset($poolObj);
             break;
+          case "UPGRADE_APP":              
+              $applicableProfiles=array();
+              $counter = 0;
+              foreach($appProfiles as $key => $pid){
+                  if($pid != 0){
+                    $applicableProfiles[$pid] = array();
+                    $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
+                    $dataAccumulated[$counter]['COUNT']="SINGLE";
+                    $counter++;
+                  }
+              }
+              break;
 	  }
-
 	  $completeNotificationInfo = array();
 	  $counter = 0;
 
