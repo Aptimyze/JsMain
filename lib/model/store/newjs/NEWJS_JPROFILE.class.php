@@ -1795,6 +1795,24 @@ SQL;
             throw new jsException($e);
         } 
     }
+    
+    public function getLastLoggedInData($conditionNew,$limitStr = "0,2000")
+    {
+        try {
+                $result = NULL;
+                $sqlSelectDetail = "SELECT jp.PROFILEID FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew." ORDER BY jp.LAST_LOGIN_DT DESC LIMIT $limitStr";
+                $resSelectDetail = $this->db->prepare($sqlSelectDetail);
+                $resSelectDetail->execute();
+                while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
+                {
+                        $result[]= $row["PROFILEID"];
+                }
+                return $result;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+        return NULL;
+    }
 
 }
 

@@ -32,13 +32,28 @@ class search_PAIDMEMBERS_TO_BE_SENT extends TABLE
 	* Populate the table as per conditiob "conditionNew"
 	* @param conditionNew
 	*/
-        public function populateTables($conditionNew)
+        public function populateTables($profilesIds)
         {
                 try
                 {
-			$sql="INSERT IGNORE INTO search.PAIDMEMBERS_TO_BE_SENT(PROFILEID) SELECT jp.PROFILEID FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew." ORDER BY jp.LAST_LOGIN_DT DESC";
-			$res = $this->db->prepare($sql);
-                        $res->execute();
+			$sql="INSERT IGNORE INTO search.PAIDMEMBERS_TO_BE_SENT(PROFILEID) VALUES ";
+                        $sqlArr = array();
+                        foreach($profilesIds as $profileId){
+                                $sqlArr[]= "($profileId)";
+                                if(count($sqlArr) == 1000){
+                                        $sqlExe = $sql.implode(",",$sqlArr);
+                                        $res = $this->db->prepare($sqlExe);
+                                        $res->execute();
+                                        unset($res);
+                                        unset($sqlArr);
+                                }
+                        }
+                        if(count($sqlArr) >0){
+                                $sqlExe = $sql.implode(",",$sqlArr);
+                                $res = $this->db->prepare($sqlExe);
+                                $res->execute();
+                                unset($sqlArr);
+                        }
                 }
                 catch (PDOException $e)
                 {
