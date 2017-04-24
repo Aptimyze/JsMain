@@ -57,7 +57,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
-                                ),
+                                "ProfilePic120Url"),
 
 			"INTEREST_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -83,6 +83,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -239,6 +240,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -262,6 +264,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -486,7 +489,7 @@ class InboxMobileAppV1
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
-                                "NAME_OF_USER",
+                                "NAME_OF_USER"
 				)
 			);
 		self::$informationTypeFields     = Array(
@@ -576,7 +579,15 @@ class InboxMobileAppV1
 						$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED());
 					}
 					else
+					{
+						if(sfContext::getInstance()->getRequest()->getParameter('myjs')==1)
+							{
+								$gender=$tupleObj->getGENDER();
+								$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),"ProfilePic120Url","",$gender);
+							}
+						else 
 						$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+					}
 					if($infoKey!="SHORTLIST" && $infoKey!="PEOPLE_WHO_VIEWED_MY_CONTACTS")
 					{
 						$buttons = explode("|",$tupleObj->getBUTTONS());
