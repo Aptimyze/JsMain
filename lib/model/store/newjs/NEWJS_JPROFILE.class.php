@@ -291,11 +291,19 @@ class NEWJS_JPROFILE extends TABLE
                 $sql = $sql . " = " . $str;
             if (is_array($extraWhereClause)) {
                 foreach ($extraWhereClause as $key => $val) {
-                    if ($key == 'SUBSCRIPTION')
-                        $sql .= " AND $key LIKE :$key";
-                    else
+                    if ($key == 'SUBSCRIPTION'){
+                        if(empty($val)){
+                            $sql .= " AND ($key LIKE '' OR $key IS NULL)";
+                        }
+                        else{
+                            $sql .= " AND $key LIKE :$key";
+                            $extraBind[$key] = $val;
+                        }
+                    }
+                    else{
                         $sql .= " AND $key=:$key";
-                    $extraBind[$key] = $val;
+                        $extraBind[$key] = $val;
+                    }
                 }
             }
 
