@@ -1316,6 +1316,7 @@ class MembershipHandler
                
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
                 
+                $lastDiscountPercent = ($lastDiscountPercent <= 70)?$lastDiscountPercent:70;
                 //print_r($apiObj);
                 if($apiObj!=""){
                     if(!is_array($apiObj->allMainMem)){
