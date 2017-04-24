@@ -374,6 +374,17 @@ return 0;
                       
                       
                     break;
+                    case '18': 
+                      
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))) 
+                      if($profileObj->getOCCUPATION()==43)
+                      {
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -444,7 +455,7 @@ break;
                     
                         )
           );
-      if($appVersion >= $versionArray[$calID][$isApp])
+      if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
        return false;
       

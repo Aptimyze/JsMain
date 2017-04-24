@@ -50,21 +50,9 @@ if(InterestSentMessage==1)
 /** list all global Variables here */
 var isLoading = false; // isLoading is a useful flag to make sure we don't send off more than one request at a time 
 var _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`;
-var minPage = 0;
-var $div = $("#searchHeader");
-var message;
-var ToshowOrNotRelaxCriteria = 0;
-var viewSimilar = 1;
-var viewedProfilechecksum = '~$viewedProfilechecksum`';
+var minPage = 0, $div = $("#searchHeader"), message, ToshowOrNotRelaxCriteria = 0, viewSimilar = 1, viewedProfilechecksum = '~$viewedProfilechecksum`';
 var firstResponse = ~$firstResponse|decodevar`;
-var stypeKey = '~$stypeName`';
-var searchSort = firstResponse.sortType;
-var searchResultsPostParams = ''; // paramters need to perform pagination of search
-var SITE_URL = "~$SITE_URL`";
-var NAVIGATOR = "~$NAVIGATOR`";
-var ecpBackLocation = "~$BREADCRUMB|decodevar`";
-var showECPPage ="&toShowECP=1";
-var historyBackStop="~$historyBackStop`";
+var stypeKey = '~$stypeName`', searchSort = firstResponse.sortType, searchResultsPostParams = '', SITE_URL = "~$SITE_URL`", NAVIGATOR = "~$NAVIGATOR`", ecpBackLocation = "~$BREADCRUMB|decodevar`", showECPPage ="&toShowECP=1", historyBackStop="~$historyBackStop`";
 getEcpBackLocation = function()
 {
   return ecpBackLocation;

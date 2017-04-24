@@ -38,7 +38,8 @@ var arrErors = {
 	"OCCUPATION_REQUIRED":"Please provide an occupation",
 	"INCOME_REQUIRED":"Please provide an income range",
 	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
-	"NAME_ERROR":"Name should have alphabets only"
+	"NAME_ERROR":"Name should have alphabets only",
+        "CASTEMUSLIM_REQUIRED":"Please provide a Caste"
 };
 //regular expressions for validations
 var name_regex = /^[a-zA-Z\s\.\']*$/;
@@ -812,7 +813,30 @@ return pincodeValidator;
    })();
    this.casteValidator=casteValidator;
  }).call(this);
-
+// inherted class from validator for caste
+(function() {
+    var casteMuslimValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(casteMuslimValidator,validator);
+      //constructor
+      function casteMuslimValidator(fieldElement) {
+      casteMuslimValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      casteMuslimValidator.prototype.validate = function()
+      {
+        var casteMuslim = this.getValue("casteMuslim");
+        casteMuslimValidator.prototype.parent.validate.call(this,casteMuslim);
+        if(this.error){
+            if((inputData["religion"] =="2"))
+	      this.error=arrErors["CASTEMUSLIM_REQUIRED"];
+                return false;
+        }
+        return true;
+      }
+   return casteMuslimValidator;
+   })();
+   this.casteMuslimValidator=casteMuslimValidator;
+ }).call(this);
 // inherted class from validator for hdegree
 (function() {
     var hdegreeValidator = (function () {

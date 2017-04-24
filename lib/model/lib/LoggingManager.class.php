@@ -346,6 +346,17 @@ class LoggingManager
 		{
 			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
 		}
+
+		if(isset($logArray[LoggingEnums::CONSUMER_NAME]))
+		{
+			$logData[LoggingEnums::CONSUMER_NAME] = $logArray[LoggingEnums::CONSUMER_NAME];
+		}
+
+		if(isset($logArray[LoggingEnums::PHISHING_URL]))
+		{
+			$logData[LoggingEnums::PHISHING_URL] = $logArray[LoggingEnums::PHISHING_URL];	
+		}
+
 		return $logData;
 	}
 

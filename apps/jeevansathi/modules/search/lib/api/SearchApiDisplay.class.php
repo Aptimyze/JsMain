@@ -294,8 +294,8 @@ class SearchApiDisplay
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode($this->getEducationValue($fieldValue,$decoratedFieldName,$this->searchResultsData[$key]['UG_DEGREE'],$this->searchResultsData[$key]['PG_DEGREE'],$this->searchResultsData[$key]['OTHER_UG_DEGREE'],$this->searchResultsData[$key]['OTHER_PG_DEGREE']));
 						}
 						else if($fieldName == 'CITY_RES')
-						{
-                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+						{ 
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = CommonFunction::getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
 //							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
 //							{
 //								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
@@ -306,6 +306,7 @@ class SearchApiDisplay
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+					
 					}
 				}
 
@@ -890,7 +891,7 @@ class SearchApiDisplay
          * @param type $decoredVal
          * @return string
          */
-	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+	/*protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){                                
                 $label = '';
                 $city = explode(',',$cityVal);
                 $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
@@ -902,7 +903,7 @@ class SearchApiDisplay
                         $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
                 }
                 if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
-                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
                 }else{
                      $states = explode(',',$state);
                      if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
@@ -918,5 +919,5 @@ class SearchApiDisplay
                         $label .= ' & '.$nativePlace;
                 
                 return $label;
-        }
+        }*/
 }
