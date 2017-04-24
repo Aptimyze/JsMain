@@ -4,7 +4,7 @@
 // @package    jeevansathi
 // @subpackage crmInterface
 // @author     Avneet Singh Bindra
-
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 class crmInterfaceActions extends sfActions
 {
     public function executeIndex(sfWebRequest $request)
@@ -830,6 +830,9 @@ class crmInterfaceActions extends sfActions
                 $billServObj        = new billing_SERVICES('newjs_slave');
                 $this->device       = $formArr["device"];
                 $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
+                //Start:JSC-2667: Commented as change in legacy data not required 
+                //$this->rawData      = $this->filterData($this->rawData);
+                //End:JSC-2667: Commented as change in legacy data not required 
                 $this->serviceData  = $billServObj->getFinanceDataServiceNames();
                 if ($formArr["report_format"] == "XLS") {
                     $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
@@ -1126,4 +1129,59 @@ class crmInterfaceActions extends sfActions
             }
         }
     }
+    public function filterData($profiles) {
+        $k=0;
+        $index = 0;
+        $constantYears = 1;
+        $serviceObj2 = new Services;
+        //Start: JSC-2667: Fix for legacy data where start and end date is incorrect\
+        foreach ($profiles as $key => $value){
+         // print_r($profiles[$index]['ASED']);
+            if (strstr($profiles[$index]['ASED'], '2099') && strstr($profiles[$index]['SERVICEID'],'L')) {
+                //print_r("In first if");
+                $invalidArray[$k]['PROFILEID'] = $profiles[$index]['PROFILEID']; /* storing all profiles where end date is invalid. */
+                $invalidArray[$k]['ENTRY_DT'] = $profiles[$index]['ENTRY_DT'];   /* for fixing end dates of next record for same profileID  */
+                $invalidArray[$k]['SERVICEID'] = $profiles[$index]['SERVICEID'];
+                $invalidArray[$k]['ASSD'] = $profiles[$index]['ASSD'];
+                $invalidArray[$k]['INDEX'] = $index;
+                $invalidArray[$k]['BILLID'] = $profiles[$index]['BILLID'];
+
+                $actual_start_date = $profiles[$index]['ASSD'];
+                $actual_end_date = date("Y-m-d", strtotime($actual_start_date) + ($constantYears * (365 * 24 * 60 * 60)));
+                $profiles[$index]['ASED'] = $actual_end_date;
+                $invalidArray[$k]['ASED']= $profiles[$index]['ASED'];
+                $k++;
+                
+            }
+            $index++;
+        }
+        $k=0;
+        $key=0;
+        foreach ($profiles as $key => $value) {
+            foreach ($invalidArray as $key2 => $value2) {
+                if($profiles[$key]['PROFILEID'] == $invalidArray[$key2]['PROFILEID'] 
+                        && !strstr($profiles[$key]['SERVICEID'],'L')
+                        && (strstr($profiles[$key]['SERVICEID'],'C')
+                        || strstr($profiles[$key]['SERVICEID'],'P')
+                        || strstr($profiles[$key]['SERVICEID'],'NCP'))) {
+                    $profiles[$key]['ASSD'] = $invalidArray[$key2]['ASED'];
+                    //get duration
+                    $duration = $serviceObj2->getDuration($profiles[$key]['SERVICEID']);
+                    
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($duration* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+                if(strstr($profiles[$key]['SERVICEID'],'L') && (strstr($profiles[$key]['ASSD'],'2099'))){
+                    $profiles[$key]['ASSD'] = $profiles[$key]['START_DATE'];
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($constantYears* 365* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+            }
+        }
+        return $profiles;
+    }
+
 }
+
