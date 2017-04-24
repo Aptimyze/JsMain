@@ -952,6 +952,20 @@ public function executeAppredirect(sfWebRequest $request)
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+        //this part was added to remove religion "Others" from Registration in JSMS
+      if($val=="religion")
+      {
+        foreach($outData["religion"] as $k1=>$v1)
+        {
+          foreach($v1 as $k2=>$v2)
+          {
+            if(strpos($v2[8], RegistrationEnums::$otherText) !== false && MobileCommon::isMobile())
+            {
+              unset($outData["religion"][$k1][$k2]);
+            }
+          }
+        }        
+      }
 			if($val=="family_income")
 			{
 				$optionalArr[0] = array("0"=>array("0"=>"Select"));
