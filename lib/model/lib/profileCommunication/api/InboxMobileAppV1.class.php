@@ -33,6 +33,32 @@ class InboxMobileAppV1
 	static public function init()
 	{
 		self::$informationTupleFields    = Array(
+       "INTEREST_RECEIVED_FILTERED"=>Array(
+                                "PROFILECHECKSUM",
+                                "USERNAME",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "MESSAGE",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+                                ),
+
 			"INTEREST_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
