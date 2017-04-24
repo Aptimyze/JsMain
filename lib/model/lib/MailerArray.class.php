@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-04-11
+	Created on 2017-04-24
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -77,6 +77,7 @@
 '69'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EOI_EXPIRING','URL'=>'/inbox/23/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '70'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'REQUEST_USER_TO_DELETE','URL'=>'/settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -149,6 +150,7 @@ private static $linkNameArray=array(
 'EOI_EXPIRING'=>'69',
 'REQUEST_USER_TO_DELETE'=>'70',
 'ALTERNATE_EMAIL_PROMOTION'=>'71',
+'PAID_MEMBERS_MAILER'=>'72',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -422,6 +424,7 @@ private static $subjectArray=array(
 '1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'A','SUBJECT_CODE'=>'<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. Please make your photo visible'),
 '1844'=>array('MAIL_ID'=>'1844','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Because, We decide as a family !'),
 '1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
+'1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'"Feedback request from Jeevansathi.com"'),
 );
 public static function getLink($Id){
 
