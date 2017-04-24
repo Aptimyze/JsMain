@@ -172,22 +172,22 @@ class MatchAlertsDppProfiles extends PartnerProfile {
         
         public function getRelaxedOccupation($occupation){
             $occValues = explode(',',$occupation);
-            $occCheckArr = array(13,33,57,35,34,36);
-            $occNotArrCheck = array(13,36,44,37,41);
-            foreach($occValues as $key=>$value){
-                if(in_array($value,$occCheckArr)){
-                  $finalOccArr['occ']=$occupation;
-                  return $finalOccArr;
+            $occCheckArr = array(13,52,3,33,57,24,70,53,74,35,56,34,44,36,41,60,58,31);
+            $occNotArrCheck = array(13,52,3,44,36,41);
+            foreach($occValues as $key=>$occupationValue){
+                if(!in_array($occupationValue,$occCheckArr)){
+                    
+                    foreach($occNotArrCheck  as $key => $value){
+                    if(!in_array($value, $occValues))
+                        $finalOccArr['notOcc'].= ','.$value;
+                    }
+                    $finalOccArr['Occ']= '';      
+                    $finalOccArr['notOcc'] = trim($finalOccArr['notOcc'],',');
+                    return $finalOccArr;
                 }
             }
-            foreach($occNotArrCheck  as $key => $value){
-                if(!in_array($value, $occValues))
-                   $finalOccArr['notOcc'].= ','.$value;
-            }
-            $finalOccArr['Occ']= '';
-            $finalOccArr['notOcc'] = trim($finalOccArr['notOcc'],',');
-            return $finalOccArr;
-            
+            $finalOccArr['Occ']= $occupation;           
+            return $finalOccArr;            
         }
         
         public function getRelaxedCity($city){
