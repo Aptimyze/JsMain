@@ -44,9 +44,10 @@ class CommonLoginTracking {
 			$dbJprofile->updateLoginSortDate($profileId);
 		}
 		if($trackingData["appLoginProfileTracking"])
-		{
+		{  
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+			$appType = MobileCommon::isApp();
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType);
 		}
 		if($trackingData["logLogoutTracking"])
 		{
