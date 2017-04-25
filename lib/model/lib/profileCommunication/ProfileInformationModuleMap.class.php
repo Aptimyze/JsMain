@@ -634,11 +634,11 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Daily Recommendations",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "",
+			"BUTTONS"=> "INITIATE",
 			"TRACKING"=> "stype=A15",
       			"CONTACT_ID"=>"",
 		),
-"SHORTLIST"=>Array( 
+		"SHORTLIST"=>Array( 
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -815,8 +815,8 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Match of the day",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "",
-			"TRACKING"=> "",
+			"BUTTONS"=> "INITIATE",
+			"TRACKING"=> "stype=AMOD",
                         "CONTACT_ID"=>""
                 )
 
