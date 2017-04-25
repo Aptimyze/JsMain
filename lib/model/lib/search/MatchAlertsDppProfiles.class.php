@@ -132,42 +132,68 @@ class MatchAlertsDppProfiles extends PartnerProfile {
         }
         
         public function getRelaxedEducation($dppEducation){
-            $educationLevel = FieldMap::getFieldLabel("degree_grouping", '', 1);
+
+            // 0 : b-professional 1 : b-medical 2 : b-others 3 : m-professional 4 : m-medical 5 : m-others
+            // defining mapping here because these are function specific
+            $educationDegreesMapping = array('0'=>'35,3,4,34,6','1'=>'25,28,26,32,17','2'=>'1,2,5,33,38,39,40','3'=>'36,13,14,29,18,7,37,8,10,16,20,42,21','4'=>'19,30,43,31','5'=>'11,12,15,41');
+
+            $maleDppEducationMapping = array('0'=>'0,2','1'=>'1','2'=>'2','3'=>'3,5,0,2','4'=>'4,1','5'=>'5,2');
+
+            $femaleDppEducationMapping = array('0'=>'0,3','1'=>'1,4','2'=>'2,0,5,3','3'=>'3','4'=>'4','5'=>'5,3,0');
+
             $dppEduArr = explode(',',$dppEducation);
-            foreach($educationLevel as $level=>$degrees){
-                $levelDegrees = array_flip(explode(' , ',trim($degrees,' ')));
-                foreach($dppEduArr as $key=>$dppDegree){
-                    if(array_key_exists(trim($dppDegree,' '), $levelDegrees)){
-                        $minLevel = $level;
-                        break;
+
+            $notFoundinMapping ='';
+
+            $educationDegreesMappingArray = array();
+
+            if ( is_array($dppEduArr))
+            {
+                foreach ($dppEduArr as $key => $value) {
+                    $isDegreeFound = False;
+                    foreach ($educationDegreesMapping as $educationDegreesMappingKey => $educationDegreesMappingValue) 
+                    {
+                        if ( in_array($value,explode(',',$educationDegreesMappingValue)))
+                        {
+                            $isDegreeFound = True;
+                            $educationDegreesMappingArray[] = $educationDegreesMappingKey;
+                            break;
+                        }
+                    }
+
+                    if ( !$isDegreeFound )
+                    {
+                        $notFoundinMapping .= $value.',';
                     }
                 }
-                if($minLevel!='')
-                    break;
             }
-            $educationGroups = FieldMap::getFieldLabel("education_grouping_mapping_to_edu_level_new", '', 1);
-            $categoryArrAlreadyPut = array();
-            foreach($educationGroups as $category=>$degrees){
-                $categoryDegrees = array_flip(explode(',',$degrees));
-                foreach($dppEduArr as $key=>$dppDegree){
-                     if(array_key_exists(trim($dppDegree,' '), $categoryDegrees)){
-                         if($minLevel == 'PG'){
-                           if(!in_array($category, $categoryArrAlreadyPut))
-                             foreach($categoryDegrees as $key=>$value){
-                                 if(array_key_exists($key,array_flip(explode(' , ',trim($educationLevel['PG'],' '))))){
-                                     $finalString.=','.$key;
-                                     $categoryArrAlreadyPut[]=$category;
-                                 }
-                             }
-                         }
-                         else if(!in_array($category, $categoryArrAlreadyPut)){
-                             $finalString.=','.$degrees;
-                             $categoryArrAlreadyPut[] = $category;
-                         }
-                     }
+
+            $relaxedEducation = '';
+
+            if ( is_array($educationDegreesMappingArray) )
+            {
+                $educationDegreesMappingArrayUnique = array_unique($educationDegreesMappingArray);
+
+                foreach ( $educationDegreesMappingArrayUnique as $value) 
+                {
+                    $relaxedEducationDegreesMappingArray = array();
+                    if ( $this->loggedInProfileObj->getGENDER() == 'M' )
+                    {
+                        $relaxedEducationDegreesMappingArray = explode(',',$maleDppEducationMapping[$value]);
+                    }
+                    else
+                    {
+                        $relaxedEducationDegreesMappingArray = explode(',',$femaleDppEducationMapping[$value]);
+                    }
+
+                    foreach ($relaxedEducationDegreesMappingArray as $relaxedEducationDegreesMappingValue) 
+                    {
+                        $relaxedEducation .= $educationDegreesMapping[$relaxedEducationDegreesMappingValue].',';
+                    }
                 }
             }
-            return trim($finalString,',');
+            $finalRelaxedEducation = rtrim($relaxedEducation.$notFoundinMapping,',');
+            return $finalRelaxedEducation;
         }
         
         public function getRelaxedOccupation($occupation){
