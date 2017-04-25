@@ -23,18 +23,18 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
 		}
     }
 
-    public function filterDiscountActivatedProfiles($pid,$viewed='Y',$offsetDt="")
+    public function filterDiscountActivatedProfiles($pid="",$viewed='Y',$offsetDt="")
     {
         try {
             if (is_array($pid))
                 $str = "(" . implode(",", $pid) . ")";
-            else
+            else if($pid!="")
                 $str = $pid;
-            $sql = "SELECT DISTINCT PROFILEID FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE PROFILEID";
+            $sql = "SELECT DISTINCT PROFILEID FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE";
             if (is_array($pid))
-                $sql = $sql . " IN " . $str;
-            else
-                $sql = $sql . " = " . $str;
+                $sql = $sql . " PROFILEID IN " . $str;
+            else if($pid!="")
+                $sql = $sql . " PROFILEID = " . $str;
            	if(!empty($offsetDt)){
            		$sql .= " AND ENTRY_DT>=:ENTRY_DT";
            	}

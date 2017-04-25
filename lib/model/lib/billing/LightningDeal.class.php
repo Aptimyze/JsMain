@@ -70,6 +70,7 @@ class LightningDeal
 			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
 			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("newjs_slave");
 			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles($pool1Pids,'Y',$lastViewedDt);
+			unset($lightningDiscObj);
 
 			//filter out above pool from pool1 to get pool2
 			if(is_array($lastViewedPool)){
@@ -78,6 +79,8 @@ class LightningDeal
 			else{
 				$pool2 = $pool1Pids;
 			}
+			unset($lastViewedPool);
+			unset($pool1Pids);
 		}
 		if($this->debug == 1){
 	        echo "after last 30 days lightning discount activated and viewed filter,pool 2.."."\n";
@@ -115,6 +118,8 @@ class LightningDeal
 		if(is_array($pool2)){
 			$finalPool = $this->fetchDealFinalPool($pool1,$pool2);
 		}
+		unset($pool1);
+		unset($pool2);
 		return $finalPool;
 	}
 
