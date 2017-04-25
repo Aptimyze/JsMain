@@ -83,6 +83,20 @@ class ProcessHandler
       case 'ACCEPTANCE_VIEWED' : $smsViewer = new InstantSMS($type,$receiverid,'',$senderid);
                                  $smsViewer->send();  
                                  break; 
+      case 'CRITICAL_INFORMATION_CHANGE' : 
+                                $varArray["editedFields"] = array();
+                                $impFields = ProfileEnums::$sendInstantMessagesForFields;
+                                if(!empty($body["editedFields"])){
+                                        foreach($body["editedFields"] as $field){
+                                                if(array_key_exists($field, $impFields)){
+                                                       $varArray["editedFields"][] =  $impFields[$field];
+                                                }
+                                        }
+                                }
+                                $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
+                                $smsViewer->send();  
+                                JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
+                                 break; 
     }
   }
 public function sendAutoReminder($receiver,$sender){

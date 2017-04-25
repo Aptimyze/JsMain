@@ -23,6 +23,7 @@ class ProfileEnums
   const PROFILE_HIDDEN  = 'H';
   const PROFILE_UNDERSCREENING  = 'U';
         public static $saveBlankIfZeroForFields = array("DIET","DRINK","SMOKE","MOTHER_OCC","FAMILY_BACK","FAMILY_STATUS","FAMILY_TYPE","FAMILY_VALUES","COMPLEXION","BTYPE","FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA","NATIVE_STATE");
+        public static $sendInstantMessagesForFields = array("CASTE"=>"Caste","PHONE_MOB"=>"Phone","EMAIL"=>"email","CITY_RES"=>"City","MTONGUE"=>"Mother Tongue","INCOME"=>"Income","EDU_LEVEL_NEW"=>"Highest Education","OCCUPATION"=>"Occupation","MANGLIK"=>"Manglik");
 
 }
 ?>

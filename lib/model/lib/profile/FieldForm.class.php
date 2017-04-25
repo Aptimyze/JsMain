@@ -60,10 +60,17 @@ class FieldForm extends sfForm
 	public function updateData(){
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
+          $sendSMSToPhone = $this->loggedInObj->getPHONE_MOB();
+          $fieldsEdited = array();
+          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;
 	  foreach($this->formValues as $field_name=>$value){
 		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
 		{
 			$value = "";
+		}
+		if(array_key_exists($field_name,$sendSMS))
+		{
+			$fieldsEdited[] = $field_name;
 		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
@@ -166,6 +173,7 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
+          
           
 		//Native Place Update
     if(count($nativePlaceArr)){
@@ -674,13 +682,29 @@ class FieldForm extends sfForm
 				mapAutoSugSubcasteData($this->loggedInObj->getPROFILEID(), "SUBCASTE", $jprofileFieldArr['SUBCASTE']);
 			}
 			
+                        if(!empty($fieldsEdited) && JsMemcache::getInstance()->get($this->loggedInObj->getPROFILEID()."_5MINS") === false){
+                                $this->sendEditImportantFieldsSMS($this->loggedInObj->getPROFILEID(),$fieldsEdited,$sendSMSToPhone);
+                        }
 			//EDIT LOG
 			$this->editLog($editLogArr);
 		}
 
 	  return 1;
 	}
-	
+        /**
+         * This function will add profile to critical information change message queue
+         * @param type $profileId  Profile Id
+         * @param type $fieldsEdited Edited fields
+         * @param type $sendSMSToPhone (phone number before change in case of update in phone number) 
+         */
+	public function sendEditImportantFieldsSMS($profileId,$fieldsEdited,$sendSMSToPhone){
+                $producerObj = new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $senderSmsData=array('process'=>'SMS','data'=>array('type'=>'CRITICAL_INFORMATION_CHANGE','body'=>array('receiverid'=>$profileId, "PHONE"=>$sendSMSToPhone,"editedFields"=>$fieldsEdited) ), 'redeliveryCount'=>0 );
+                        $producerObj->sendMessage($senderSmsData);
+                }
+        }
 	public function editLog($logArr) {
 		if(count($logArr))
 		{

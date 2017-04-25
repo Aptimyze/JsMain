@@ -57,9 +57,25 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$this->varArray["SAPHONE"] = $row["PHONE"];
 			}
 		}
+                if($this->varArray["editedFields"] && $this->smsKey == "CRITICAL_INFORMATION"){
+                        $cnt = count($this->varArray["editedFields"]);
+                        $this->varArray["WAS_WERE"] = "was";
+                        if($cnt>1){
+                                $this->varArray["WAS_WERE"] = "were";
+                        }
+                        $msgStr = implode(",",$this->varArray["editedFields"]);
+                        $strLen = 34;
+                        $length = strlen($msgStr);
+                        while($length>$strLen){
+                                $this->varArray["editedFields"] = array_slice($this->varArray["editedFields"], 0, -1);
+                                $msgStr = implode(",", $this->varArray["editedFields"]);
+                                $length = strlen($msgStr);
+                        }
+                        $this->varArray["editedFields"] = $msgStr;
+                }
                 if($this->varArray) 
                     $this->profileDetails = array_merge($this->profileDetails,$this->varArray);
-//		print_r($this->profileDetails);
+		//print_r($this->profileDetails);
 		
 	}	
 	private function inDNC() {

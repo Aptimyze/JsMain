@@ -123,6 +123,14 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "FIELD_LIST":                    
+                    $fieldsList = $tokenValue['editedFields']; 
+                    return $fieldsList;
+                        break;
+            case "WAS_WERE":                    
+                    $wasWere = $tokenValue['WAS_WERE']; 
+                    return $wasWere;
+                        break;
             case "PHOTO_REJECTION_REASON":                    
                     $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
                     return $rejectReasonArr[0];
