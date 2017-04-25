@@ -55,7 +55,7 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             if(!empty($profileStr)){
                 $sql .= "PROFILEID IN($profileStr) AND ";
             }
-            $sql .= "DATE>=:DATE GROUP BY PROFILEID";
+            $sql .= "DATE>=:DATE GROUP BY PROFILEID ORDER BY DATE DESC";
             $res = $this->db->prepare($sql);
             $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();

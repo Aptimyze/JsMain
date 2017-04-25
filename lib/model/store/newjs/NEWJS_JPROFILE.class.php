@@ -277,7 +277,7 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
         try {
             if (is_array($pid))
@@ -305,6 +305,9 @@ class NEWJS_JPROFILE extends TABLE
                         $extraBind[$key] = $val;
                     }
                 }
+            }
+            if($orderby != ""){
+                $sql .= " ORDER BY $orderby";
             }
 
             $prep = $this->db->prepare($sql);

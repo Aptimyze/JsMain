@@ -296,9 +296,9 @@ class JPROFILE
         return self::$objProfileMysql->fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset);
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
-        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause);
+        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause,$orderby);
     }
 
     public function checkPhone($numberArray = '', $isd = '')
