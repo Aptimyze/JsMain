@@ -846,7 +846,8 @@ Abstract class ApiAuthentication
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 			$appType = MobileCommon::isApp();
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType);
+			$date = $trackingData["currentTime"];
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
 		}
 		if($trackingData["logLogoutTracking"])
 		{

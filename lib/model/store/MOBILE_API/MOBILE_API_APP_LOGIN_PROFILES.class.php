@@ -40,7 +40,7 @@ class MOBILE_API_APP_LOGIN_PROFILES extends TABLE
 		}
 	}
 	
-	public function insertAppLoginProfile($pid,$appType)
+	public function insertAppLoginProfile($pid,$appType,$date)
 	{
 		if(!$pid)
              throw new jsException("","VALUE OR TYPE IS BLANK IN getAppLoginProfile() of MOBILE_API_APP_LOGIN_PROFILES.class.php");
@@ -48,7 +48,6 @@ class MOBILE_API_APP_LOGIN_PROFILES extends TABLE
 		{
 
 			$sql = "INSERT IGNORE INTO MOBILE_API.APP_LOGIN_PROFILES (PROFILEID,DATE,APP_TYPE) VALUES(:PROFILEID,:DATE,:APP_TYPE)";
-			$date=date("Y-m-d G:i:s");
 			
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_STR);
