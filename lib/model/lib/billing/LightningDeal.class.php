@@ -12,7 +12,7 @@ class LightningDeal
 	public function __construct($debug=0){
 		$this->dealConfig = VariableParams::$lightningDealOfferConfig;
 		$this->debug = $debug;
-		$this->sqlSelectLimit = 50;
+		$this->sqlSelectLimit = 5000;
 	}
 
 	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
