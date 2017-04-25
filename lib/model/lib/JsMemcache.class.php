@@ -267,9 +267,10 @@ class JsMemcache extends sfMemcacheCache{
 						$key = $key."*";
 					}
 					$value = $this->client->keys($key);
+					
 					if(is_array($value)){
 						foreach ($value as $k => $v) {
-							$this->client->del($k);
+							$this->client->del($v);
 						}
 					}
 				}

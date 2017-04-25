@@ -107,6 +107,14 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
+			else if(CommonFunction::isEverPaid())
+			{
+				$day_limit=100;
+				$weekly_limit=100;
+				$month_limit=400;
+				$overall_limit=800000;
+				$notValidNumber_limit=100;
+			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -130,6 +138,21 @@ class CommonFunction
             $paid=1;
         }
 		return $paid;
+	}
+
+	public static function isEverPaid()
+	{
+		
+		$everPaid = false;
+		$billing = new BILLING_PURCHASES();
+		$loginProfile = LoggedInProfile::getInstance();
+		$pid = $loginProfile->getPROFILEID();
+		$payment = $billing->isPaidEver($pid);
+		if(is_array($payment) && $payment[$pid])
+		{
+			$everPaid = true;
+		}
+		return $everPaid;
 	}
 
 	public static function isEvalueMember($subscription)
@@ -815,6 +838,120 @@ class CommonFunction
     	}
     	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
     	return $decoratedOccGroups;
+    }
+
+    public static function getContactLimitDates()
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		$weeks = floor($daysDiff/7) * 7;
+
+		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		$months = floor($daysDiff/30) * 30;
+
+		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
+
+		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
+	public static function getLimitEndingDate($errlimit)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		if($errlimit == "WEEK")
+		{
+			if($daysDiff % 7 == 0)
+				$daysDiff += 1;
+			$weeks = ceil($daysDiff/7) * 7 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		}
+		elseif($errlimit == "MONTH")
+		{
+			if($daysDiff % 30 == 0)
+				$daysDiff += 1;
+			$months = ceil($daysDiff/30) * 30 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
+		}
+
+		return $endDate;
+	}
+
+     /**
+         * 
+         * @param type $country : country is the country that the person belongs to. eg: 51 for INDIA
+         * @param type $state :  it is a comma separated string of the form <state>,<native_state>
+         * @param type $cityVal : it is a comma separated string of the form <city>,<native_city>
+         * @param type $nativeCityOpenText : it is an open text value specifying the native place. eg:faizabad
+         * @param type $decoredVal : this is set to "city" 
+         * @return string
+         */
+
+     public static function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
+     {        
+     	$label = '';
+     	$city = explode(',',$cityVal);
+        $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
+        if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
+        {
+        	$label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
+        }
+        else
+        {
+        	if(substr($city[0],2)=="OT")
+        	{
+        		$stateLabel = FieldMap::getFieldLabel("state_india",substr($city[0],0,2));
+        		$label = $stateLabel."-"."Others";
+        	}
+        	else
+        	{
+        		$label = FieldMap::getFieldLabel($decoredVal,$city[0]);	
+        	}        	
+        }     
+        if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
+        	$nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
+        }
+        else
+        {
+        	$states = explode(',',$state);
+        	if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
+        		$nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
+
+        		if($nativeCityOpenText != '' && $nativeState != '')
+        			$nativePlace = $nativeCityOpenText.', ';
+
+        		$nativePlace .= $nativeState;        		
+        	}
+        }
+        if($nativePlace != '' && $nativePlace != $label)
+        	$label .= ' & '.$nativePlace;
+        return $label;
     }
 }
 ?>

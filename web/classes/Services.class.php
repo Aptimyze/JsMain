@@ -21,7 +21,37 @@ class Services
     
     private $offer_discount = 10;
     
-    public function getAllServices($online = "") {
+    public function getAllServices($online = "",$profileid="") {
+
+        if(!empty($online) && $online != "SHOW_ONLINE_ALL"){
+            if(empty($profileid)){
+                $online = "-1";
+            }
+            else{
+                $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+                $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
+                if($profileObj != null){
+                    $online = $profileObj->getMTONGUE();
+                }
+                if(empty($online)){
+                    $online = "-1";
+                }
+                unset($profileObj);
+            }
+
+            if($online != "-1"){
+                $memHandlerObj = new MembershipHandler(false);
+                $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($online);
+                unset($memHandlerObj);
+          
+                if($count == 0){
+                    $online = "-1";
+                }
+            }
+        }
+        else if($online == "SHOW_ONLINE_ALL"){
+            $online = "A";
+        }
     	$billingServicesObj = new billing_SERVICES();
         $services = $billingServicesObj->getAllServiceDataForActiveServices($online);
         return $services;
@@ -318,6 +348,7 @@ class Services
 
         global $user_disc;
         $search_id = "";
+
         if(is_array($id)){
         	foreach($id as $key=>$val){
         		if($key == 0){
@@ -331,16 +362,32 @@ class Services
         }
         
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_slave');
+        $discountOfferObj = new billing_DISCOUNT_OFFER('newjs_masterRep');
         
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
         } else {
         	$price_str = $device."_RS";
         }
-        
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
+        $mtongue = "-1";
+        if(!empty($userObj) && $userObj!=""){
+            $mtongue = $userObj->mtongue;
+        }
+        else if($profileid != ""){
+            //error_log("ankita check why in this case");
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+            $profileObj->getDetail($profileid, 'PROFILEID', 'MTONGUE');
+            if($profileObj != null){
+                $mtongue = $profileObj->getMTONGUE();
+            }
+            if($mtongue == null || $mtongue == ""){
+                $mtongue = "-1";
+            }
+            unset($profileObj);
+        }
+       
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline,$mtongue);
         $i = 0;
         
         if (!empty($userObj)){
@@ -544,7 +591,7 @@ class Services
     }
     
     public function getFestive() {
-        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_slave');
+        $billingFestObj = new billing_FESTIVE_LOG_REVAMP('newjs_masterRep');
         $isFestive = $billingFestObj->getFestiveFlag();
         return $isFestive;
     }
@@ -577,9 +624,9 @@ class Services
             return $serviceid;
         }
     }
-    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop') {
+    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop',$mtongue="-1") {
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device);
+        $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device,$mtongue);
         return $output;
     }
     
@@ -595,15 +642,14 @@ class Services
         return $serviceTabs;
     }
 
-    public function getAddOnInfo($cur_type = 'RS', $offer = 0, $device='desktop') {
+    public function getAddOnInfo($cur_type = 'RS', $offer = 0, $device='desktop',$mtongue="-1") {
         if ($cur_type == 'DOL') {
         	$price_str = $device."_DOL";
         } else {
         	$price_str = $device."_RS";
         }
-
         $billingServicesObj = new billing_SERVICES('newjs_slave');
-        $addon = $billingServicesObj->getAddOnInfo($price_str,$offer);
+        $addon = $billingServicesObj->getAddOnInfo($price_str,$offer,$mtongue);
         
         return $addon;
     }

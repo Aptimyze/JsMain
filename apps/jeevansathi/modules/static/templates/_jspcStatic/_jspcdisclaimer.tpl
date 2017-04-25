@@ -50,19 +50,19 @@
 
 <p class="pt20"> <table border="1">
 <tbody><tr>
-<td></td> <td>Free Member</td> <td>Paid Member</td> <td>Paid Member with Response Booster</td>
+<td></td> <td>Free Member</td> <td>Paid Member</td> <td>Ever Paid</td> <td>Paid Member with Response Booster</td>
 </tr>
 <tr>
-<td>Daily Limit</td> <td>100</td><td>200</td> <td>225</td>
+<td>Daily Limit</td> <td>100</td><td>200</td><td>100</td> <td>225</td>
 </tr>
 <tr>
-<td>Weekly Limit</td> <td>100</td><td>400</td> <td>575</td>
+<td>Weekly Limit</td> <td>100</td><td>400</td><td>100</td> <td>575</td>
 </tr>
 <tr>
-<td>Monthly Limit</td> <td>400</td><td>800</td> <td>1400</td>
+<td>Monthly Limit</td> <td>400</td><td>800</td><td>400</td> <td>1400</td>
 </tr>
 <tr>
-<td>Overall Limit</td> <td>400</td><td>Unlimited*</td> <td>Unlimited*</td>
+<td>Profile Lifetime Limit</td> <td>400</td><td>Unlimited*</td><td>Unlimited*</td> <td>Unlimited*</td>
 </tr>
 </tbody></table></p>
 <p class="pt20"> * Subject to monthly limits at the discretion of Jeevansathi.com</p>

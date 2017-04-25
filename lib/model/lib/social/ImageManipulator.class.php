@@ -48,6 +48,7 @@ class ImageManipulator
         list ($this->width, $this->height) = getimagesize($file);
         $pictureFunobj = new PictureFunctions();        
         $this->image = $pictureFunobj->createImage($file);
+
         unset($pictureFunobj);
         if(!$this->image)
         {

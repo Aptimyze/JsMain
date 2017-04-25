@@ -113,7 +113,7 @@ class notificationActions extends sfActions
 	$osType =MobileCommon::isApp();
         $loginData =$request->getAttribute("loginData");
         $profileid =$loginData['PROFILEID'];
-        if($profileid)
+        if($profileid || in_array($notificationKey, NotificationEnums::$loggedOutNotifications))
         {
 		// New code
 	        if(($apiappVersion>=90 || $deviceUpgrade==true) && $registrationid){

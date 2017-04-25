@@ -4,15 +4,14 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 	<head>
-        <script async='true' src="https://cdn.ampproject.org/v0.js"></script>
 	<link rel="canonical" href="http://www.jeevansathi.com/"/> 
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
 	}
-	if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+        if (window.location.protocol == "https:")
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 	</script>
 	~include_http_metas`
 	~include_metas`
@@ -63,14 +62,14 @@ function loadJS() {
          font-family: 'Roboto';
          font-style: normal;
          font-weight: 300;
-         src: local('Roboto Light'), local('Roboto-Light'), local('sans-serif-light'), url(http://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1SFdUfZBw1xU1rKptJj_0jans920.woff2) format('woff2');
+         src: local('Roboto Light'), local('Roboto-Light'), local('sans-serif-light'), url(https://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1SFdUfZBw1xU1rKptJj_0jans920.woff2) format('woff2');
          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
        }
        @font-face {
          font-family: 'Roboto';
          font-style: normal;
          font-weight: 500;
-         src: local('Roboto Medium'), local('Roboto-Medium'), local('sans-serif-medium'), url(http://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexge8UUZBw1xU1rKptJj_0jans920.woff2) format('woff2');
+         src: local('Roboto Medium'), local('Roboto-Medium'), local('sans-serif-medium'), url(https://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexge8UUZBw1xU1rKptJj_0jans920.woff2) format('woff2');
          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
        }
      </style>
