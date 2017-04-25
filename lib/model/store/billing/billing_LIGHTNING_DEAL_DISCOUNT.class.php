@@ -31,12 +31,20 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             else if($pid!="")
                 $str = $pid;
             $sql = "SELECT DISTINCT PROFILEID FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE";
-            if (is_array($pid))
+            $addAnd = false;
+            if (is_array($pid)){
                 $sql = $sql . " PROFILEID IN " . $str;
-            else if($pid!="")
+                $addAnd = true;
+            }
+            else if($pid!=""){
                 $sql = $sql . " PROFILEID = " . $str;
+                $addAnd = true;
+            }
+            if($addAnd == true){
+                $sql .= " AND";
+            }
            	if(!empty($offsetDt)){
-           		$sql .= " AND ENTRY_DT>=:ENTRY_DT";
+           		$sql .= " ENTRY_DT>=:ENTRY_DT";
            	}
            	$sql .= " AND VIEWED=:VIEWED";
             $prep = $this->db->prepare($sql);
