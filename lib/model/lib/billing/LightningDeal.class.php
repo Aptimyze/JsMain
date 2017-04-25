@@ -53,8 +53,12 @@ class LightningDeal
 			$lastViewedOffset = $this->dealConfig["lastLightningDiscountViewedOffset"] - 1;
 			$todayDate = date("Y-m-d");
 			$lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
+
+			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
 			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("newjs_slave");
 			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles($pool1,'Y',$lastViewedDt);
+
+			//filter out above pool from pool1 to get pool2
 			if(is_array($lastViewedPool)){
 				$pool2 = array_diff($pool1, $lastViewedPool);
 			}
