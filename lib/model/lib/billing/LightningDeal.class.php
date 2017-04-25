@@ -12,6 +12,7 @@ class LightningDeal
 	public function __construct($debug=0){
 		$this->dealConfig = VariableParams::$lightningDealOfferConfig;
 		$this->debug = $debug;
+		$this->sqlSelectLimit = 50;
 	}
 
 	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
@@ -19,52 +20,63 @@ class LightningDeal
         $lastLoggedInOffset = $this->dealConfig["lastLoggedInOffset"] - 1;
         $todayDate = date("Y-m-d");
 		$offsetDate = date("Y-m-d",strtotime("$todayDate -".$lastLoggedInOffset." days"));
+		$start = 0;
+		$pool1 = array();
 
 		//use billing.DISCOUNT_HISTORY to get last logged in pool within offset time
         $discTrackingObj = new billing_DISCOUNT_HISTORY("newjs_slave");
-        $lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate);
+        $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCount($offsetDate);
+        $serviceStObj = new billing_SERVICE_STATUS("newjs_slave");
+        while($start<$totalCount){
+        	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
+     		
+		    if(is_array($lastLoggedInArr) && count($lastLoggedInArr) > 0){
+		    	//use billing.SERVICE_STATUS to get currently paid pool from $lastLoggedInArr
+		    	$lastLoggedInProfiles = array_keys($lastLoggedInArr);
+			    $lastLoggedInPaidPool = $serviceStObj->getCurrentlyPaidProfiles($lastLoggedInProfiles);
+			    unset($lastLoggedInProfiles);
+
+			    //remove currently paid pool from $lastLoggedInArr
+			    if(is_array($lastLoggedInPaidPool)){
+				    foreach ($lastLoggedInPaidPool as $key => $profileid) {
+				    	if($lastLoggedInArr[$profileid]){
+				    		unset($lastLoggedInArr[$profileid]);
+				    	}
+				    }
+				}
+			    unset($lastLoggedInPaidPool);
+			    $pool1 = $pool1 + $lastLoggedInArr;
+			}
+			unset($lastLoggedInArr);
+			$start += $this->sqlSelectLimit;
+        }
+        unset($serviceStObj);
         unset($discTrackingObj);
         if($this->debug == 1){
-	        echo "last logged in pool.."."\n";
-	        print_r($lastLoggedInArr);
+	        echo "after last 30 days login and currently free filter,pool 1.."."\n";
+	        print_r($pool1);
 	    }
-
-	    //use newjs.JPROFILE to get currently free pool from $lastLoggedInArr
-	    if(is_array($lastLoggedInArr)){
-	    	$lastLoggedInProfiles = array_keys($lastLoggedInArr);
-		    $jprofileObj = new JPROFILE("newjs_slave");
-		    $profileIdStr = implode(",",$lastLoggedInProfiles);
-		    $orderBy = "FIELD(PROFILEID,$profileIdStr)";
-		    $lastLoggedInFreePool1 = $jprofileObj->getProfileSelectedDetails($lastLoggedInProfiles,"PROFILEID",array("activatedKey"=>1,"SUBSCRIPTION"=>''),$orderBy);
-		    unset($jprofileObj);
-		    if(is_array($lastLoggedInFreePool1)){
-		    	$pool1 = array_keys($lastLoggedInFreePool1);
-		    }
-		    if($this->debug == 1){
-		        echo "after last login and currently free filter,pool1.."."\n";
-		        print_r($pool1);
-		    }
-		}
 	    return $pool1;
 	}
 
 	/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
 	public function fetchDealPool2($pool1=null){
-		if(is_array($pool1)){
+		if(is_array($pool1) && count($pool1) > 0){
+			$pool1Pids = array_keys($pool1);
 			$lastViewedOffset = $this->dealConfig["lastLightningDiscountViewedOffset"] - 1;
 			$todayDate = date("Y-m-d");
 			$lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
 
 			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
 			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("newjs_slave");
-			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles($pool1,'Y',$lastViewedDt);
+			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles($pool1Pids,'Y',$lastViewedDt);
 
 			//filter out above pool from pool1 to get pool2
 			if(is_array($lastViewedPool)){
-				$pool2 = array_diff($pool1, $lastViewedPool);
+				$pool2 = array_diff($pool1Pids, $lastViewedPool);
 			}
 			else{
-				$pool2 = $pool1;
+				$pool2 = $pool1Pids;
 			}
 		}
 		if($this->debug == 1){

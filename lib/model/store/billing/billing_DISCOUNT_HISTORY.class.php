@@ -46,7 +46,25 @@ class billing_DISCOUNT_HISTORY extends TABLE{
         }
     }
 
-    public function getLastLoginProfilesAfterDate($profileStr="",$lastLoginDt){   
+    public function getLastLoginProfilesAfterDateCount($lastLoginDt){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select count(distinct PROFILEID) as cnt from billing.DISCOUNT_HISTORY where ";
+            $sql .= "DATE>=:DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            if($result = $res->fetch(PDO::FETCH_ASSOC))
+                return $result['cnt'];
+            return 0;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
+    public function getLastLoginProfilesAfterDate($profileStr="",$lastLoginDt,$limit="",$offset=""){   
         if(!$lastLoginDt)
                 throw new jsException("","date blank passed");
         try
@@ -56,6 +74,12 @@ class billing_DISCOUNT_HISTORY extends TABLE{
                 $sql .= "PROFILEID IN($profileStr) AND ";
             }
             $sql .= "DATE>=:DATE GROUP BY PROFILEID ORDER BY DATE DESC";
+            if($limit!=""){
+                if(empty($offset)){
+                    $offset = 0;
+                }
+                $sql .= " LIMIT $offset,$limit";
+            }
             $res = $this->db->prepare($sql);
             $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();
