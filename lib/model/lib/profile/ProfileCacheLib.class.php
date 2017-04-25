@@ -1065,7 +1065,10 @@ class ProfileCacheLib
       
       //Get Records from Cache
       $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
-      
+
+      if(!isset($arrResponse))
+        return false;
+
       // Get array of profile ids for which data doesnt exist in cache
       $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
 
