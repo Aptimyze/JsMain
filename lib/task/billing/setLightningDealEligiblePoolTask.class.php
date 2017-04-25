@@ -4,11 +4,11 @@
 	1. Pick all currently free users who have logged-in in the last 30 days (pool 1). 
 	2. Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed) (pool 2).
 	3. Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1.
+* @author : Ankita
 */
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
-	private $debug = 1;
 	protected function configure()
 	{
 		$this->addOptions(array(
@@ -32,29 +32,22 @@ EOF;
 		if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-        //start: Pool 1-all currently free users who have logged-in in the last 30 days
-        $lastLoggedInOffset = VariableParams::$lightningDealOfferConfig["lastLoggedInOffset"] - 1;
-        $todayDate = date("Y-m-d");
-		$offsetDate = date("Y-m-d",strtotime("$todayDate -".$lastLoggedInOffset." days"))." 00:00:00";
 
-		//use MIS.LOGIN_TRACKING to get last logged in pool within offset time
-        $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_local111");
-        $lastLoggedInArr = $loginTrackingObj->getLastLoginProfilesForDate("",$offsetDate,VariableParams::$lightningDealOfferConfig["channelsAllowed"]);
-        unset($loginTrackingObj);
-        if($this->debug == 1){
-	        echo "last logged in pool.."."\n";
-	        print_r($lastLoggedInArr);
-	    }
-	    //$lastLoggedInArr = array(1,9061321);
-	    
-	    //use newjs.JPROFILE to get currently free pool from $lastLoggedInArr
-	    $jprofileObj = new JPROFILE("newjs_slave");
-	    $lastLoggedInFreePool1 = $jprofileObj->getProfileSelectedDetails($lastLoggedInArr,"PROFILEID",array("activatedKey"=>1,"SUBSCRIPTION"=>''));
-	    unset($jprofileObj);
-	    if($this->debug == 1){
-	        echo "after membership filter,currently free last logged in pool.."."\n";
-	        print_r($lastLoggedInFreePool1);
-	    }
-	    die("done");
+        $dealObj = new LightningDeal();
+        //generate eligible pool
+        $eligiblePool = $dealObj->generateDealEligiblePool();
+
+        //store eligible pool
+        $dealObj->storeDealEligiblePool();
+        unset($dealObj);
+
+        //truncate billing.DISCOUNT_HISTORY table
+        $todayDate = date("Y-m-d");
+		$offsetDate = date("Y-m-d",strtotime("$todayDate -".VariableParams::$lightningDealOfferConfig["lastLoggedInOffset"]." days"));
+        $discHistObj = new billing_DISCOUNT_HISTORY();
+        //uncomment ankita later
+        $discHistObj->truncateTable($offsetDate);
+        unset($discHistObj);
 	}
 }
+?>

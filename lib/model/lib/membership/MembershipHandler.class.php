@@ -2537,10 +2537,14 @@ class MembershipHandler
             }
         }
         $servDisc["PROFILEID"] = $memPriceArr["PROFILEID"];
-        if($nonZero){
-            $disHistObj = new billing_DISCOUNT_HISTORY();
-            $disHistObj->insertDiscountHistory($servDisc);
+        if($nonZero == false){
+            $servDisc['P'] = 0;
+            $servDisc['C'] = 0;
+            $servDisc['NCP'] = 0;
+            $servDisc['X'] = 0;
         }
+        $disHistObj = new billing_DISCOUNT_HISTORY();
+        $disHistObj->insertDiscountHistory($servDisc);
         unset($nonZero);
     }
 

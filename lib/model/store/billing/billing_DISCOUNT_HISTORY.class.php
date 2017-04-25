@@ -27,4 +27,44 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             }
         }
     }
+
+    public function truncateTable($beforeDt=""){
+        try{
+            if($beforeDt == ""){
+                $sql = "TRUNCATE TABLE billing.DISCOUNT_HISTORY";
+            }
+            else{
+                $sql = "DELETE FROM billing.DISCOUNT_HISTORY WHERE DATE<:BEFORE_DT";
+            }
+            $prep = $this->db->prepare($sql);
+            if($beforeDt != ""){
+                $prep->bindValue(":BEFORE_DT",$beforeDt,PDO::PARAM_STR);
+            }
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
+    public function getLastLoginProfilesAfterDate($profileStr="",$lastLoginDt){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select distinct PROFILEID from billing.DISCOUNT_HISTORY where ";
+            if(!empty($profileStr)){
+                $sql .= "PROFILEID IN($profileStr) AND ";
+            }
+            $sql .= "DATE>=:DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC))
+                    $profilesArr[] =$result['PROFILEID'];
+            return $profilesArr;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
 }
