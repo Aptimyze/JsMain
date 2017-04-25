@@ -71,13 +71,11 @@ class LightningDeal
 	public function fetchDealFinalPool($pool1=null,$pool2=null){
 		if(is_array($pool1)){
 			$n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
-			if(is_array($pool2) && n>0){
+			if(is_array($pool2) && $n>0){
 				$finalPool = array_slice($pool2, 0,$n);
 			}
 		}
-		var_dump($n);
-		var_dump($pool2);
-		var_dump($finalPool);die;
+		
 		if($this->debug == 1){
 	        echo "final pool with n= ".$n." count..."."\n";
 	        print_r($finalPool);
