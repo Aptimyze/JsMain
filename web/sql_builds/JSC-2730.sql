@@ -1,0 +1,19 @@
+use billing;
+
+CREATE TABLE billing.`LIGHTNING_DEAL_DISCOUNT` (
+ `ID` int(11) NOT NULL AUTO_INCREMENT,
+ `PROFILEID` int(11) NOT NULL,
+ `DISCOUNT` tinyint(4) NOT NULL,
+ `SDATE` datetime NOT NULL,
+ `EDATE` datetime NOT NULL,
+ `ENTRY_DT` date NOT NULL,
+ `VIEWED` enum('Y','N') NOT NULL DEFAULT 'N',
+ `ACTIVATED` enum('Y','N') NOT NULL DEFAULT 'N',
+ PRIMARY KEY (`ID`),
+ UNIQUE KEY `PROFILEID` (`PROFILEID`,`ENTRY_DT`),
+ KEY `ENTRY_DT` (`ENTRY_DT`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+/*change date to live date of lightning deal*/
+DELETE FROM billing.DISCOUNT_HISTORY WHERE DATE < "2017-04-01";
