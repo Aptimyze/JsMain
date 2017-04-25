@@ -793,70 +793,138 @@ class crmInterfaceActions extends sfActions
         }
     }
 
-    public function executeFinanceDataInterface(sfWebRequest $request)
-    {
-        $this->cid         = $request->getParameter('cid');
-        $this->name        = $request->getParameter('name');
-        $this->rangeYear   = date("Y", time());
+    public function executeFinanceDataInterface(sfWebRequest $request) {
+        
+        //Start:Common Code for Excel View and HTML View
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+        $this->rangeYear = date("Y", time());
         $this->showInitial = 1;
-        if ($request->getParameter("submit")) {
+        if ($request->getParameter("submit") || $request->getParameter('date1')) {
             $formArr = $request->getParameterHolder()->getAll();
-            $formArr["date1_dateLists_month_list"]++;
-            $formArr["date2_dateLists_month_list"]++;
-            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
-            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
-            $start_date        = date("Y-m-d", strtotime($start_date));
-            $end_date          = date("Y-m-d", strtotime($end_date));
+            $formArr["date1_dateLists_month_list"] ++;
+            $formArr["date2_dateLists_month_list"] ++;
+            $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date = date("Y-m-d", strtotime($end_date));
             $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
             if ($start_date > $end_date) {
                 $this->errorMsg = "Invalid Date Selected";
             }
-            if (!$this->errorMsg) //If no error message then submit the page
-            {
+            if (!$this->errorMsg) { //If no error message then submit the page
+                $billServObj = new billing_SERVICES('newjs_slave');
+                $purchaseObj = new BILLING_PURCHASES('newjs_slave');
+                $this->serviceData = $billServObj->getFinanceDataServiceNames();
+                
+                //Code for Excel View Starts
+                if ($formArr["report_format"] == "XLS") {
+                    //print_r("hereee In excel");
+                    $this->start_date = $start_date . " 00:00:00";
+                    $this->end_date = $end_date . " 23:59:59";
+                    $this->device = $formArr["device"];
+                    //Logic To create excel sheet in CRON:
+                    $memcacheObj = JsMemcache::getInstance();
+                    $this->memcacheKey =$this->start_date . "_" . $this->end_date . "_" . $this->device;
+                    $memKeySet = $memcacheObj->get($this->memcacheKey);
+                    
+                    if (strstr($memKeySet, 'Computing')) {
+                        //Cron is running for the given key
+                        $this->computing = true;
+                        $this->setTemplate('computationFinanceDataInterface');
+                    }
+                    else if (strstr($memKeySet, 'Finished')) {
+                        //File is ready and CRON is finished,now get the filename  and echo
+                        $memcacheObj->delete("$this->memcacheKey");
+                        $memcacheObj->delete("MIS_FDI_PARAMS_KEY");
+                        $file=$filename = "FDI_$this->memcacheKey.xls";
+                        $file ='/usr/local/scripts/config/branch3/'.$file;
+                        if (file_exists($file)) {
+                            header('Content-Description: File Transfer');
+                            header('Content-Type: application/octet-stream');
+                            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+                            header('Expires: 0');
+                            header('Cache-Control: must-revalidate');
+                            header('Pragma: public');
+                            header('Content-Length: ' . filesize($file));
+                            readfile($file);
+                            unlink($file);
+                        }
+                    } else if ($memKeySet == '') {
+                        //CRON is not running, initiate the cron and wait
+                        $this->computing = true;
+                        $memcacheValue['Status']='Computing'; 
+                        $memcacheValue['STARTDATE']=$this->start_date;
+                        $memcacheValue['ENDDATE']=$this->end_date;
+                        $memcacheValue['DEVICE']=$this->device;
+                        $memcacheValue['MAINKEYNAME']=$this->memcacheKey;
+                        
+                        $memcacheObj->set("$this->memcacheKey", 'Computing');
+                        $memcacheObj->set("MIS_FDI_PARAMS_KEY", $memcacheValue);
+                        $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask > /dev/null &";
+                        //$filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask &";
+                        $command = JsConstants::$php5path . " " . $filePath;
+                        //echo $command;
+                        passthru($command);
+                        $this->setTemplate('computationFinanceDataInterface');
+                    }
+
+                 return;
+                }
+               
+                $crmUtilityObj = new crmUtility();
+                $this->device = $formArr["device"];
+                //End:Common Code for Excel View and HTML View
+                
+                //Start: Code for Pagination setting in HTML View
+                $pageLimit = 10;
+                $pageIndex = $request->getParameter('pageIndex');
+
+                if (!$pageIndex) {  //Checking if this is the first time submit has been pressed
+                    if ($request->getParameter('date1')) {      //Checking if user has explicitly navigated to page number one
+                        $this->start_date = $request->getParameter('date1');    //set date and device from previous request
+                        $this->end_date = $request->getParameter('date2');
+                        $this->device = $request->getParameter('flag');
+                    } else {        //Set dates and device from the form submit request
+                        $this->start_date = $start_date . " 00:00:00";
+                        $this->end_date = $end_date . " 23:59:59";
+                        $this->device = $formArr["device"];
+                    }
+                    $pageIndex = 0;
+                    $currentPage = 1;
+                    $offset = 0;
+                    $limit = $pageLimit;
+                } else {        //When user is on next page(any page other than the first page)
+                    $currentPage = ($pageIndex / $pageLimit) + 1;
+                    $offset = ($currentPage - 1) * $pageLimit;
+                    $limit = $pageLimit;
+                    $this->start_date = $request->getParameter('date1');
+                    $this->end_date = $request->getParameter('date2');
+                    $this->device = $request->getParameter('flag');
+                }
+                // End: Code for pagination setting in HTML View Ends
                 $this->range_format = $formArr["range_format"];
-                $this->start_date   = $start_date . " 00:00:00";
-                $this->end_date     = $end_date . " 23:59:59";
-                $this->showInitial  = 0;
-                $this->showData     = 1;
-                $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
-                $billServObj        = new billing_SERVICES('newjs_slave');
-                $this->device       = $formArr["device"];
-                $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
+                $this->showInitial = 0;
+                $this->showData = 1;
+               
+
+                //Get total number of records
+                $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device);
+                $this->totalRec=$totalRec;
+                //Get records within offset and limit as calculated above in pagination code
+                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit);
+
                 //Start:JSC-2667: Commented as change in legacy data not required 
                 //$this->rawData      = $this->filterData($this->rawData);
                 //End:JSC-2667: Commented as change in legacy data not required 
-                $this->serviceData  = $billServObj->getFinanceDataServiceNames();
-                if ($formArr["report_format"] == "XLS") {
-                    $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
-                    if ($this->rawData && is_array($this->rawData)) {
-                        foreach ($this->rawData as $k => $v) {
-                            $dataString = $dataString . $v["ENTRY_DT"] . "\t";
-                            $dataString = $dataString . $v["BILLID"] . "\t";
-                            $dataString = $dataString . $v["RECEIPTID"] . "\t";
-                            $dataString = $dataString . $v["PROFILEID"] . "\t";
-                            $dataString = $dataString . $v["USERNAME"] . "\t";
-                            $dataString = $dataString . $v["SERVICEID"] . "\t";
-                            $dataString = $dataString . $this->serviceData[$v["SERVICEID"]] . "\t";
-                            $dataString = $dataString . $v["START_DATE"] . "\t";
-                            $dataString = $dataString . $v["END_DATE"] . "\t";
-                            $dataString = $dataString . $v["CUR_TYPE"] . "\t";
-                            $dataString = $dataString . $v["PRICE"] . "\t";
-                            $dataString = $dataString . $v["AMOUNT"] . "\t";
-                            $dataString = $dataString . $v["DEFERRABLE"] . "\t";
-                            $dataString = $dataString . $v["ASSD"] . "\t";
-                            $dataString = $dataString . $v["ASED"] . "\t";
-                            $dataString = $dataString . $v["INVOICE_NO"] . "\r\n";
-                        }
-                    }
-                    $xlData = $headerString . $dataString;
-                    $string .= $start_date . "_to_" . $end_date;
-                    header("Content-Type: application/vnd.ms-excel");
-                    header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
-                    header("Pragma: no-cache");
-                    header("Expires: 0");
-                    echo $xlData;
-                    die;
-                }
+                
+                $linkUrl = sfConfig::get("app_site_url") . "/operations.php/crmInterface/financeDataInterface";
+                $this->pageLinkVar = $crmUtilityObj->pageLink($pageLimit, $totalRec, $currentPage, $this->cid, $linkUrl, '', $this->device, '', '', '', $this->start_date, $this->end_date);
+                $this->totalPages = ceil($totalRec / $pageLimit);
+                $this->currentPage = $currentPage;
+
+                //Code for HTML View ends
+
             }
         }
     }
