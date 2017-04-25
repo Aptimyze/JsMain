@@ -18,7 +18,7 @@ class LoggingEnums
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
     const CONFIG_ON = true;
-    // Info For VA, on for referer in logs
+    // Info For VA, on for referer or phishing urls in logs
     const CONFIG_INFO_VA = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
@@ -81,6 +81,8 @@ class LoggingEnums
     const SCRIPT = 'Script';
     const LOG_DELETION = 1;
     const TRACE_STRING = 'traceString';
+    const CONSUMER_NAME = 'Rabbitmq-Consumer';
+    const PHISHING_URL = 'phishingUrl';
 
     public static $MappingNames = array(
         // JSC module names

@@ -608,6 +608,11 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.FilterData=function(json)
 		{
+			if(this.type=="sect")
+			{
+				var religion = staticTables.getUserData('sectDepReligion');
+				return json[religion];
+			}
                         if(this.type=="family_income")
                         {
                             this.depValue = staticTables.getUserData('familyIncomeDep')

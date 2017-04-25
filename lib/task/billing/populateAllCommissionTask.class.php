@@ -61,12 +61,11 @@ EOF;
 		$billingOrdersDeviceObj = new billing_ORDERS_DEVICE('newjs_slave');
 
 		$comissionsArr = array();
-
 		if(!empty($profilesArr)){
 			
 			foreach($profilesArr as $key=>$details) {
                             //Start: JSC-2668: Apple Commission fix to calculate correct net amount
-				if($details['APPLE_COMMISSION'] == NULL){
+				if($details['APPLE_COMMISSION'] == NULL || $details['APPLE_COMMISSION'] == 0){
                                     $paymentSource = $billingOrdersDeviceObj->getPaymentSourceFromBillid($details['BILLID']);
                                     if($paymentSource == 'iOS_app') {
                                             $appleFlag = 1;
@@ -93,7 +92,6 @@ EOF;
                                         $franComm = round($franComm, 2);
                                 }
 
-				
 				$billingPaymentDetailObj->updateComissions($details['PROFILEID'],$details['BILLID'],$appleComm,$franComm,$appleFlag,$newAmt);
                                 unset($appleFlag);
                                 unset($newAmt);

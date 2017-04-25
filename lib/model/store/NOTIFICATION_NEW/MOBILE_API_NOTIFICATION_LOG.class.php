@@ -210,7 +210,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
         public function getDataCountForRange($startDate, $endDate)
         {
                 try{
-                        $sql = "SELECT count(distinct PROFILEID) count, NOTIFICATION_KEY, SENT,OS_TYPE FROM $this->databaseName.`NOTIFICATION_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY,SENT,OS_TYPE";
+                        $sql = "SELECT count(PROFILEID) count, NOTIFICATION_KEY, SENT,OS_TYPE FROM $this->databaseName.`NOTIFICATION_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY,SENT,OS_TYPE";
                         $res = $this->db->prepare($sql);
 			$res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
@@ -249,7 +249,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
         public function createTempTablePool($startDate, $endDate)
         {
                 try{
-                        $sql = "insert into test.TEMP_NOTIFICATION_LOG SELECT distinct PROFILEID,NOTIFICATION_KEY from $this->databaseName.NOTIFICATION_LOG WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE";
+                        $sql = "insert into test.TEMP_NOTIFICATION_LOG SELECT PROFILEID,NOTIFICATION_KEY from $this->databaseName.NOTIFICATION_LOG WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
@@ -262,7 +262,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
         public function getActiveProfileCount($startDate='', $endDate='')
         {
                 try{
-                        $sql = "select count(distinct nl.PROFILEID) count, nl.NOTIFICATION_KEY FROM test.TEMP_NOTIFICATION_LOG nl,test.TEMP_LOGIN_TRACKING lt WHERE nl.PROFILEID=lt.PROFILEID"; 
+                        $sql = "select count(nl.PROFILEID) count, nl.NOTIFICATION_KEY FROM test.TEMP_NOTIFICATION_LOG nl,test.TEMP_LOGIN_TRACKING lt WHERE nl.PROFILEID=lt.PROFILEID"; 
 			if($startDate && $endDate)
 				$sql .=" AND lt.DATE>=:START_DATE AND lt.DATE<=:END_DATE";
 			$sql .=" group by nl.NOTIFICATION_KEY";

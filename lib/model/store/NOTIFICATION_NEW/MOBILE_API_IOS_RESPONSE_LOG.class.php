@@ -36,7 +36,7 @@ class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
         public function getDataCountForRange($startDate, $endDate)
         {
                 try{
-                        $sql = "SELECT count(distinct PROFILEID) count, NOTIFICATION_KEY FROM $this->databaseName.`IOS_RESPONSE_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY";
+                        $sql = "SELECT count(PROFILEID) count, NOTIFICATION_KEY FROM $this->databaseName.`IOS_RESPONSE_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);

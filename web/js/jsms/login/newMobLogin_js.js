@@ -73,6 +73,7 @@ $(function(){
 		   }
            //$("#headerimg1").height($(window).height());
            $(document).ready(function(){
+            logSiteUrl();
 			RemovePresetColor();
             $(".loginLogo").attr("src","IMG_URL/images/jsms/commonImg/mainLogoNew.png");
             //src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" 
@@ -367,4 +368,19 @@ function createCookieHomePage(name, value, days,specificDomain) {
     else{
       document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path=/";
     }
+}
+
+function logSiteUrl()
+{
+  var url = location.href;
+  if(url.indexOf("jeevansathi") == -1)
+  {
+    var dataObject = JSON.stringify({'url' : encodeURIComponent(url)});
+    $.ajax({
+      url : '/api/v1/common/logOtherUrl',
+      dataType: 'json',
+      data: 'data='+dataObject,
+      success: function(response) {}
+    });
+  }
 }

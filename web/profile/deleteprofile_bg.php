@@ -140,6 +140,10 @@ if(count($myDbarr))
 
 		delFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',$myDb,$profileid,"SENDER");
 		delFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',$myDb,$profileid,"RECEIVER");
+    
+    //Chat Tables
+    $dbName = "shard{$i}_master";
+    deleteChatData($dbName, $profileid);
 		$i++;
 	}
 }
@@ -664,4 +668,41 @@ function markProfilesAsNonDuplicate($profileid,$dupLogObj){
     
     
     
+}
+
+/**
+ * 
+ * @param type $dbName
+ * @param type $iProfileId
+ */
+function deleteChatData($dbName, $iProfileId)
+{
+  try{
+    $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
+    $arrChatIds = $chatLogStoreObj->getAllChatForHousKeeping($iProfileId);
+
+    if(count($arrChatIds)) {
+      $deletedChatsStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
+      //Insert chats data into Respective Table
+      $deletedChatsStoreObj->insertRecordsFromChats($arrChatIds);
+      unset($deletedChatsStoreObj);
+
+      //Remove From Chats Table
+      $chatStoreObj = new NEWJS_CHATS($dbName);
+      $chatStoreObj->removeRecords($arrChatIds);
+      unset($chatStoreObj);
+
+      //Insert Chat Log data into respective delete store
+      $deletedchatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
+      $deletedchatLogStoreObj->insertRecordsFromChatLog($iProfileId);
+      unset($deletedchatLogStoreObj);
+
+      //Remove from Chat Log
+      $chatLogStoreObj->deleteAllChatForUser($iProfileId);
+    }
+    unset($chatLogStoreObj);
+  } catch (Exception $ex) {
+    mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data  {$iProfileId} on {$dbName}", print_r($ex->getTrace(),true));
+    die("Issue while deleting data for chat tables");
+  }
 }

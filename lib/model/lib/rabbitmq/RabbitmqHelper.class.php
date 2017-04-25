@@ -13,6 +13,12 @@ class RabbitmqHelper
 **/
   public static function sendAlert($message,$to="default")
   {
+    $exception = new Exception($message);
+    if($exception->getTrace())
+    {
+      $consumerName = $exception->getTrace()[0]['file'];
+    }
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName, LoggingEnums::MODULE_NAME => "RabbitmqConsumers"));
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
@@ -21,6 +27,7 @@ class RabbitmqHelper
                           "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
                           "screening" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
+                          "writeMsg" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -32,7 +39,7 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    if($to == "screening" || $to == "instantEoi")
+    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg" || $to == "loggingQueue")
     {
       SendMail::send_email($emailTo,$message,$subject);
     }
