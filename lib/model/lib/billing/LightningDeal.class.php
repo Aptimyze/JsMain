@@ -31,10 +31,11 @@ class LightningDeal
 
 	    //use newjs.JPROFILE to get currently free pool from $lastLoggedInArr
 	    if(is_array($lastLoggedInArr)){
+	    	$lastLoggedInProfiles = array_keys($lastLoggedInArr);
 		    $jprofileObj = new JPROFILE("newjs_slave");
-		    $profileIdStr = implode(",",$lastLoggedInArr);
+		    $profileIdStr = implode(",",$lastLoggedInProfiles);
 		    $orderBy = "FIELD(PROFILEID,$profileIdStr)";
-		    $lastLoggedInFreePool1 = $jprofileObj->getProfileSelectedDetails($lastLoggedInArr,"PROFILEID",array("activatedKey"=>1,"SUBSCRIPTION"=>''),$orderBy);
+		    $lastLoggedInFreePool1 = $jprofileObj->getProfileSelectedDetails($lastLoggedInProfiles,"PROFILEID",array("activatedKey"=>1,"SUBSCRIPTION"=>''),$orderBy);
 		    unset($jprofileObj);
 		    if(is_array($lastLoggedInFreePool1)){
 		    	$pool1 = array_keys($lastLoggedInFreePool1);

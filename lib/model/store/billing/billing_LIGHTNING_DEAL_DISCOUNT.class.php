@@ -36,12 +36,12 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             else
                 $sql = $sql . " = " . $str;
            	if(!empty($offsetDt)){
-           		$sql .= " AND SDATE>=:SDATE";
+           		$sql .= " AND ENTRY_DT>=:ENTRY_DT";
            	}
            	$sql .= " AND VIEWED=:VIEWED";
             $prep = $this->db->prepare($sql);
             if(!empty($offsetDt)){
-            	$prep->bindValue(":SDATE", $offsetDt,PDO::PARAM_STR);
+            	$prep->bindValue(":ENTRY_DT", $offsetDt,PDO::PARAM_STR);
             }
             $prep->bindValue(":VIEWED", $viewed,PDO::PARAM_STR);
             $prep->execute();
