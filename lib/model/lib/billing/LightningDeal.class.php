@@ -38,7 +38,7 @@ class LightningDeal
 		    	$pool1 = array_keys($lastLoggedInFreePool1);
 		    }
 		    if($this->debug == 1){
-		        echo "after membership filter,currently free last logged in pool.."."\n";
+		        echo "after last login and currently free filter,pool1.."."\n";
 		        print_r($pool1);
 		    }
 		}
@@ -68,8 +68,21 @@ class LightningDeal
 	}
 
 	/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
-	public function fetchDealFinalPool($pool2=null){
-
+	public function fetchDealFinalPool($pool1=null,$pool2=null){
+		if(is_array($pool1)){
+			$n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
+			if(is_array($pool2) && n>0){
+				$finalPool = array_slice($pool2, 0,$n);
+			}
+		}
+		var_dump($n);
+		var_dump($pool2);
+		var_dump($finalPool);die;
+		if($this->debug == 1){
+	        echo "final pool with n= ".$n." count..."."\n";
+	        print_r($finalPool);
+	    }
+		return $finalPool;
 	}
 
 	public function generateDealEligiblePool(){
@@ -83,7 +96,7 @@ class LightningDeal
 
 		/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
 		if(is_array($pool2)){
-			$finalPool = $this->fetchDealFinalPool($pool2);
+			$finalPool = $this->fetchDealFinalPool($pool1,$pool2);
 		}
 		return $finalPool;
 	}

@@ -75,7 +75,7 @@ class VariableParams
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 30,
-                                        "channelsAllowed"=>"'A','D','M','N'"
+                                        "pool2FilterPercent" => 10,
                                         );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
