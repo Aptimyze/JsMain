@@ -1,6 +1,6 @@
 <?php
 
-/*This class provides functionality for Lightning Deal offer
+/*This class provides functionality for Lightning Deal offer(fetching eligible pool, storing * pool)
 * @author: Ankita
 */
 
