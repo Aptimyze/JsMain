@@ -106,21 +106,28 @@ class LightningDeal
 	}
 
 	public function generateDealEligiblePool(){
-		/*Pool 1-all currently free users who have logged-in in the last 30 days*/
-		$pool1 = $this->fetchDealPool1();
+		try{
+			/*Pool 1-all currently free users who have logged-in in the last 30 days*/
+			$pool1 = $this->fetchDealPool1();
 
-		/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
-		if(is_array($pool1)){
-			$pool2 = $this->fetchDealPool2($pool1);
-		}
+			/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
+			if(is_array($pool1)){
+				$pool2 = $this->fetchDealPool2($pool1);
+			}
 
-		/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
-		if(is_array($pool2)){
-			$finalPool = $this->fetchDealFinalPool($pool1,$pool2);
+			/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
+			if(is_array($pool2)){
+				$finalPool = $this->fetchDealFinalPool($pool1,$pool2);
+			}
+			unset($pool1);
+			unset($pool2);
+			return $finalPool;
 		}
-		unset($pool1);
-		unset($pool2);
-		return $finalPool;
+		catch(Exception $e){
+			$message = "Error in generateDealEligiblePool in LightningDeal class-".$e->getMessage();
+            CRMAlertManager::sendMailAlert($message,"default");
+			return null;
+		}
 	}
 
 	public function storeDealEligiblePool($finalPool=null){
