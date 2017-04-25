@@ -9,6 +9,7 @@
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
+	private $debug = 1;
 	protected function configure()
 	{
 		$this->addOptions(array(
@@ -33,7 +34,7 @@ EOF;
             sfContext::createInstance($this->configuration);
         }
 
-        $dealObj = new LightningDeal();
+        $dealObj = new LightningDeal($this->debug);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
 
@@ -46,7 +47,7 @@ EOF;
 		$offsetDate = date("Y-m-d",strtotime("$todayDate -".VariableParams::$lightningDealOfferConfig["lastLoggedInOffset"]." days"));
         $discHistObj = new billing_DISCOUNT_HISTORY();
         //uncomment ankita later
-        $discHistObj->truncateTable($offsetDate);
+        //$discHistObj->truncateTable($offsetDate);
         unset($discHistObj);
 	}
 }

@@ -74,6 +74,7 @@ class VariableParams
 
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
+                                        "lastLightningDiscountViewedOffset" => 30,
                                         "channelsAllowed"=>"'A','D','M','N'"
                                         );
     
