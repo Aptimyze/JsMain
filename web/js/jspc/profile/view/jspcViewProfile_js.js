@@ -144,6 +144,7 @@ $(function(){
           $(".js-hobbySection").hide();
       	if(selfUsername)
       	{
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4)
         	gunaScore = getGunnaScore();
       	}
         if($(".js-checkMatch").length ==0)
@@ -187,7 +188,7 @@ function closeWeTalkForYou(){
           success:function(response){
             //hideCommonLoader();
             gunaScore = response.SCORE;
-            if(gunaScore != null){
+            if(gunaScore != null && gunaScore != 0){
               $(".js-showGuna").html(gunaScore);
               $(".js-hideGuna").show();
               $(".js-changeText").html("Guna Match");
@@ -203,6 +204,7 @@ function closeWeTalkForYou(){
           async:true,
           timeout:20000,
           success:function(response){
+            response = response.replace(/(\r\n|\n|\r)/,"");
           		hideCommonLoader();
               if(response == "true"){
               	$(".js-reqHoro").unbind("click");
@@ -221,7 +223,7 @@ function closeWeTalkForYou(){
       	showCommonLoader();
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&GENDERSAME="+sameGender,
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&showDownload=1&GENDERSAME="+sameGender, //added an extra parameter here which shows the Download part
           async:true,
           timeout:20000,
           success:function(response){
@@ -289,7 +291,7 @@ function OnScrollChange(event){
         }
       });
         if(scrollPos>vspScrollLevel && !alreadyShown){
-            if(hideUnimportantFeatureAtPeakLoad != '1')
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 3)
                displayViewSimilarProfiles();
         }
 	 
@@ -611,10 +613,17 @@ ajaxConfig.success=function(response){
 	          	hideCommonLoader();
 	          	
 		var jObject=$("#reportAbuseConfirmLayer");
+    if(response.responseStatusCode == '1'){
+      $('#hiphenForConfirm').html('');
+      $('#reportAbuseConfirmHeading').html('');
+    }
+      
 	jObject.find('.js-username').html(otherUser);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
-		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportAbuseConfirmLayer').fadeIn(300,"linear",function(){})}); 
+		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){
+      $('#messageForReportAbuse').html(response.message);
+      $('#reportAbuseConfirmLayer').fadeIn(300,"linear",function(){})}); 
 
 closeAbuseConfirmLayer=function() {
 

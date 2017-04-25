@@ -89,7 +89,7 @@ class SearchTypesEnums
         //const HOROSCOPE_REQUEST_SENT_IOS = "30";		
 		
         const PHONEBOOK_IOS = "PCI";
-	    const CONTACT_VIEWERS_IOS = "CVI";
+	const CONTACT_VIEWERS_IOS = "CVI";
         const VISITORS_MYJS_IOS = "IMV";
         const MATCHALERT_MYJS_IOS = "IMM";
         const MYJS_VISITOR_PC = "11";
@@ -115,6 +115,7 @@ class SearchTypesEnums
         const SHORTLIST_JSPC="7";
         const VIEW_SIMILAR_ANDROID = "ACO";
         const VIEW_SIMILAR_IOS = "ICO";
+        const VIEW_SIMILAR_IOS_ON_PD = "ICP";
         const VERIFIED_MATCHES_JSPC="VM";
 	const CONTACT_DETAIL_SMS='CDS';
         const VERIFIED_MATCHES_IOS="IVM";
@@ -126,6 +127,7 @@ class SearchTypesEnums
 	const MatchAlertMailer2 = "BN2";
 	const MatchAlertMailer3 = "BN3";
         const MatchAlertMailer4 = "BN4";
+        const MatchAlertMailer5 = "BN5";
 
         const contactViewerMailer="CVM";
 
@@ -133,9 +135,15 @@ class SearchTypesEnums
 	const PHOTO_UPLOAD_ANDROID ='PU';
         const PHOTO_REQUEST_IOS ='PRI';
         const PHOTO_UPLOAD_IOS ='PUI';
+        const MATCHALERT_ANDROID ='MAA';
+	const MATCHALERT_IOS ='MAI';
+        const JUST_JOIN_ANDROID ='JJA';
+	const JUST_JOIN_IOS ='JJI';
+
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
+        const ANDROID_CHAT_NEW = 'ACN';
         const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 	const AndroidMatchOfDay = "AMD";
@@ -144,5 +152,11 @@ class SearchTypesEnums
         const LAST_SEARCH_RESULTS = "LSR";
         const JSPC_LAST_SEARCH = "LSPC";
         const LAST_SEARCH_DESIRED_PARTNER_MATCHES = "DPMD";
+        const CANCELLED_LISTING_PC = CLPC;
+	const CANCELLED_LISTING_MS = CLMS;
+	const CANCELLED_LISTING_IOS = CLIOS;
+	const CANCELLED_LISTING_APP = CLAA;
+    const MATCH_OF_THE_DAY_MYJS_IOS = "IMOD";
+    const ANDROID_MATCHOFDAY = "AMOD";
 }
 ?>

@@ -1,4 +1,6 @@
 var originalEditData={};
+var mutualMatchCount;
+var dppSuggestionsData={};
 var changingEditData={};
 var jsonEntry="OnClick";
 var sliderCurrentPage="";
@@ -7,9 +9,47 @@ var filterJson="";
 var albumPresent=0;
 var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
+var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
+var editInArr = {};
+editInArr['Details'] = new Array("YOURINFO","basic","Ethnicity","Appearance","SpecialCases");
+editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editInArr['Education'] = new Array("EDUCATION","CollegeDetails");
+editInArr['Career']= new Array("JOB_INFO","CarrerDetails","FuturePlans");
+editInArr['Family']=new Array("FAMILYINFO","Family","Parents","Siblings");
+editInArr['Lifestyle']=new Array("Habits","Assets","Skills","hobbies","Interests","Favourite");
+editInArr['Contact']=new Array("PROFILE_HANDLER_NAME","EMAIL","ALT_EMAIL","PHONE_MOB","ALT_MOBILE","PHONE_RES","TIME_TO_CALL_START");
+editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifestyle");
+var editValArr={};
+editValArr["YOURINFO"]=new Array("YOURINFO");
+editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS","RELATION");
+editValArr["Ethnicity"]=new Array("RELIGION","CASTE","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
+editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
+editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
+editValArr["SpecialCases"]=new Array("HANDICAPPED","NATURE_HANDICAP","THALASSEMIA","HIV");
+editValArr["EDUCATION"]=new Array("EDUCATION");
+editValArr["CollegeDetails"]=new Array("EDU_LEVEL_NEW","DEGREE_PG","PG_COLLEGE","DEGREE_UG","COLLEGE","SCHOOL");
+//editValArr["Kundli"]=new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editValArr["JOB_INFO"]=new Array("JOB_INFO");
+editValArr["CarrerDetails"]=new Array("COMPANY_NAME","OCCUPATION","INCOME");
+editValArr["FuturePlans"]=new Array("MARRIED_WORKING","GOING_ABROAD");
+editValArr["FAMILYINFO"]=new Array("FAMILYINFO");
+editValArr["Family"]=new Array("FAMILY_VALUES","FAMILY_TYPE","FAMILY_STATUS","PARENT_CITY_SAME");
+editValArr["Parents"]=new Array("FAMILY_BACK","MOTHER_OCC","FAMILY_INCOME");
+editValArr["Siblings"]=new Array("T_BROTHER","T_SISTER");
+editValArr["Habits"]=new Array("DIET","SMOKE","DRINK","OPEN_TO_PET");
+editValArr["Assets"]=new Array("OWN_HOUSE","HAVE_CAR");
+editValArr["Skills"]=new Array("HOBBIES_LANGUAGE","FAV_FOOD");
+editValArr["hobbies"]=new Array("HOBBIES_HOBBY");
+editValArr["Interests"]=new Array("HOBBIES_INTEREST");
+editValArr["Favourite"]=new Array("HOBBIES_MUSIC","HOBBIES_BOOK","HOBBIES_DRESS","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_BOOK","FAV_TVSHOW","FAV_VAC_DEST");
+editValArr["SPOUSE"]=new Array("SPOUSE");
+editValArr["BasicDetails"]=new Array("P_HEIGHT","P_AGE","P_MSTATUS","P_HAVECHILD","P_COUNTRY","P_CITY","P_MATCHCOUNT");
+editValArr["Religion"]=new Array("P_RELIGION","P_CASTE","P_SECT","P_MTONGUE","P_MANGLIK");
+editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION_GROUPING","P_INCOME_RS","P_INCOME_DOL");
+editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P_BTYPE","P_CHALLENGED","P_NCHALLENGED");
  $("document").ready(function() {
 
-
+ 	getFieldsOnCal();
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -27,15 +67,188 @@ var bCallCreateHoroscope = false;
     }
     if(bxslider && index) {
       bxslider.gotoSlide(index);
+	//showCalDppSugg(index);
     }
    },200);
-   
 });
+function appendDppCal()
+{
+	$("#mainContent").append('<div id="commonOverlay" class="jsmsOverlay overlayZ11 dn"><div id="overlayHead" class="bg1"> <div class="txtc pad15"> <div class="posrel"> <div class="fontthin f19 white">Desired Partner Profile</div> <i id="closeFromDesiredPartnerProfile" class=" posabs mainsp srch_id_cross " style="right:0; top:0px;" onclick="closeDppCal();"></i> </div> </div> </div> <div id="overlayMid" class="bg4 pad3 flowauto fullheight"> <div id="mainHeading" class="color8 fontreg f18 txtc pb10">Relax Your Criteria</div> <div id="dppDescription" class="txtc color8 fontlig f17"></div> <div id="dppSuggestions" class="mb60"></div> </div> <div id="foot" class="posfix fullwid bg7 btmo"> <div class="scrollhid posrel"> <input type="submit" id="upgradeSuggestion" class="fullwid dispbl lh50 txtc f16 pinkRipple white" value="Upgrade Desired Partner Profile"> </div> </div></div>');
+}
+function setDppDataSuggestions()
+{
+                        showLoader();
+                        $.ajax({
+                        url:"/api/v1/profile/dppSuggestionsCAL",
+                        datatype:'json',
+                        cache: true,
+                        asyn:true,
+                        success: function(result){
+                            if(result)
+                            {
+                                result=JSON.parse(result);
+                                dppSuggestionsData=result;
+                                $('body').css('background-color', '#fff');
+                                if(dppSuggestionsData['dppData'].length>1)
+                                {
+                                        appendData(dppSuggestionsData);
+					hideLoader();
+					if(mutualMatchCount<100)
+					{             
+						$("#ed_slider").addClass("dn");
+				                $("#commonOverlay").removeClass("dn");
+					}
+                                }
+                            }
+                        }
+                        });
+}
+function appendData(obj) {
+    if (obj.Description != null || obj.Description != undefined) {
+	$("#dppDescription").empty();
+        $("#dppDescription").append(obj.Description);
+    }
+    $.each(obj.dppData, function(index, elem) {
+        if (elem) {
+            if (elem.heading && elem.data) {
+		$('#suggest_' + elem.type).remove();
+                $("#dppSuggestions").append('<div class="brdr1 pad2 dispnone" id="suggest_' + elem.type + '"><div id="heading_' + elem.type + '" class="txtc fontreg pb10 color8 f16">' + elem.heading + '</div></div>');
+                if (elem.range == 0) {
+                    $.each(elem.data, function(index2, elem2) {
+                        $("#suggest_" + elem.type).removeClass("dispnone").append('<div class="suggestOption brdr18 fontreg txtc color8 f16 dispibl" value="' + index2 + '">' + elem2 + '</div>');
+                    });
+                } else if (elem.type == "AGE") {
+                    if (elem.data.HAGE != undefined && elem.data.LAGE != undefined) {
+			$("#LAGE_HAGE").remove();
+                        $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LAGE_HAGE" class="suggestOption suggestOptionRange brdr18 fontreg color8 f16 txtc" value="' + elem.data.LAGE + '_' + elem.data.HAGE + '">' + elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years  </div>');
+                    }
+                } else if (elem.type == "INCOME") {
+                    if (elem.data.LDS != undefined && elem.data.LDS != null && elem.data.HDS != undefined && elem.data.HDS != null) {
+			$("#LDS_HDS").remove();
+                        $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LDS_HDS" class="suggestOption suggestOptionRange2 brdr18 fontreg color8 f16 txtc" value="' + elem.data.LDS + '_' + elem.data.HDS + '">' + elem.data.LDS + ' - ' + elem.data.HDS + '</div>');
+                    }
+                    if (elem.data.LRS != undefined && elem.data.LRS != null && elem.data.HRS != undefined && elem.data.HRS != null) {
+			$("#LRS_HRS").remove();
+                        $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LRS_HRS" class="suggestOption suggestOptionRange2 brdr18 fontreg color8 f16 txtc" value="' + elem.data.LRS + '_' + elem.data.HRS + '">' + elem.data.LRS + ' - ' + elem.data.HRS + '</div>');
+                    };
+                    if (elem.data.LRS == "No Income" && elem.data.LDS == "No Income" && elem.data.HRS == "and above" && elem.data.HDS == "and above") {
+                        $("#LDS_HDS").remove();
+                        $("#LRS_HRS").addClass("bothData");
+                    }
+                }
+            }
+        }
+    });
+    setTimeout(function() {
+        $(".suggestOption").each(function() {
+            $(this).off("click").on("click", function() {
+                $(this).toggleClass("suggestSelected");
+            });
+        });
+        $("#upgradeSuggestion").off("click").on("click", function() {
+            if ($(".suggestSelected").length == 0) {
+                ShowTopDownError(["Please select at least one suggestion."]);
+            } else {
+                var sendObj = [];
+                $("#dppSuggestions").children().each(function(index, element) {
+                    var type = $(this).attr("id").split("_")[1],
+                        objFinal, valueArr;
+                    if (type == "AGE" && $("#LAGE_HAGE").hasClass("suggestSelected")) {
+                        valueArr = $(this).find(".suggestOptionRange").attr("value");
+                        objFinal = {
+                            "type": type,
+                            "data": {
+                                "LAGE": valueArr.split("_")[0],
+                                "HAGE": valueArr.split("_")[1]
+                            }
+                        };
+                        sendObj.push(objFinal);
+                    } else if (type == "INCOME") {
+                        var LDS, HDS, LRS, HRS, dataArr;
+                        if ($("#LDS_HDS").hasClass("suggestSelected") && $("#LRS_HRS").hasClass("suggestSelected") == false) {
+                            LDS = $("#LDS_HDS").attr("value").split("_")[0], HDS = $("#LDS_HDS").attr("value").split("_")[1];
+                            dataArr = {
+                                "LDS": LDS,
+                                "HDS": HDS
+                            };
+                        } else if ($("#LRS_HRS").hasClass("suggestSelected") && $("#LDS_HDS").hasClass("suggestSelected") == false) {
+                            if ($("#LRS_HRS").hasClass("bothData")) {
+                                dataArr = {
+                                    "LRS": "No Income",
+                                    "HRS": "and above",
+                                    "LDS": "No Income",
+                                    "HDS": "and above"
+                                };
+                            } else {
+                                LRS = $("#LRS_HRS").attr("value").split("_")[0], HRS = $("#LRS_HRS").attr("value").split("_")[1];
+                                dataArr = {
+                                    "LRS": LRS,
+                                    "HRS": HRS
+                                };
+                            }
+                        } else if ($("#LRS_HRS").hasClass("suggestSelected") && $("#LDS_HDS").hasClass("suggestSelected")) {
+                            LDS = $("#LDS_HDS").attr("value").split("_")[0], HDS = $("#LDS_HDS").attr("value").split("_")[1], LRS = $("#LRS_HRS").attr("value").split("_")[0], HRS = $("#LRS_HRS").attr("value").split("_")[1];
+                            dataArr = {
+                                "LRS": LRS,
+                                "HRS": HRS,
+                                "LDS": LDS,
+                                "HDS": HDS
+                            };
+                        }
+                        objFinal = {
+                            "type": type,
+                            "data": dataArr
+                        };
+                        sendObj.push(objFinal);
+                    } else {
+                        valueArr = [];
+                        $(element).find(".suggestSelected").each(function(index2, element2) {
+                            valueArr.push($(this).attr("value"));
+                        });
+                        if (valueArr.length != 0) {
+                            objFinal = {
+                                "type": type,
+                                "data": valueArr
+                            };
+                            sendObj.push(objFinal);
+                        }
+                    }
+                });
+                var url = JSON.stringify(sendObj).split('"').join("%22");
+			closeDppCal();
+	      showLoader();
+                $.ajax({
+                    url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData=' + url,
+                    type: 'POST',
+                    success: function(response) {
+			      showLoader();
+			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
+				hideLoader();
+                    },
+                    error: function(response) {
+			      showLoader();
+				window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
+				hideLoader();
+			}
+                });
+            }
+        });
+        startTouchEvents(1)
+    }, 50);
+
+}
+
+function closeDppCal()
+{
+	$("#ed_slider").removeClass("dn");
+	$("#commonOverlay").addClass("dn");
+}
 var albumNoPhotoStr="";
 (function($){
 var mobEditPage=(function(){
 	
 	function mobEditPage(){
+	appendDppCal();
 	var ele=this;
 	var pageJson;
 	var sliderDiv;
@@ -54,15 +267,20 @@ var mobEditPage=(function(){
 			{
 				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
 				{
+					mutualMatchCount = parseInt((result.Dpp.BasicDetails.OnClick[6]['value'])).toLocaleString();
 					/*
 				   	variable to store threshold for mutual match count.
 				    */
 				   	var mutualMatchCountThreshold = 100;
 
 					$("#mutualMatchCountMobile").css("padding","2px");
-
 					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
 					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
+					if(mutualMatchCount<100)
+					{
+						$("#increaseMatch").remove();
+						$("#mutualMatchCountMobile").parent().append("<p id='increaseMatch'><a onClick='setDppDataSuggestions();' class='color2'>Increase Matches</a></p>");
+					}
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
                     {
@@ -81,7 +299,6 @@ var mobEditPage=(function(){
 
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
-			//console.log(changingEditData);
 			ele.sliderDiv=$( "#sw" ).html();
 			ele.ed_sliderDiv=$( "#ed_slider" ).html();
 			underScreenStr=$("#under_screening").html();
@@ -171,6 +388,13 @@ var mobEditPage=(function(){
                         $("#"+key+"RightTab").click(function()
                         {
                             bxslider.NextSlide();
+/*
+				var hashVal=document.location.hash.replace(",historyCall","");
+				var actualHash=hashVal.replace("#","");
+				if(!sliderCurrentPage)
+					sliderCurrentPage=$("#"+actualHash+"slidername").attr("index");
+				showCalDppSugg(sliderCurrentPage);
+*/
                         });
 			i=2;
 			var topbarh=$("#topbar").height();
@@ -199,6 +423,8 @@ var mobEditPage=(function(){
 		$("#albumPage").remove();
 		$.each(this.pageJson, function(key, value)
 		{
+			if($.inArray(key,editSectionArr)>-1)
+			{
 			st++;
 			var sliderDiv=$( "#"+key+"EditSection" ).html();
 			var originalDiv=sliderDiv;
@@ -260,6 +486,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if($.inArray(k,editInArr[key])>-1)
+					{
 					if(v.outerSectionKey!="NameoftheProfileCreator")
 					{
 					
@@ -349,6 +577,8 @@ var mobEditPage=(function(){
 						
 						$.each(v.OnClick, function(k1 ,v1)
 						{
+						if($.inArray(v1.key,editValArr[k])>-1)
+						{
 							var sectionArr={};
 							if(v1.label_val!="N_B")
 							{
@@ -395,6 +625,7 @@ var mobEditPage=(function(){
 									}
 								}
 							}
+						}
 						});
 							
 							sectionStr = sectionStr.replace(/,\ +$/, '');
@@ -412,11 +643,13 @@ var mobEditPage=(function(){
 					i=2;
 					sliderDiv=originalDiv;
   				  }
+				}
 				});
 				
 				if(st==1)
 					options.offsetTop=$("#"+key+"EditSection").offset().top;
 				$("#"+key+"EditSection").OnlyVertical(options);
+			}
 			}
 		});
 		
@@ -479,6 +712,14 @@ function formatJsonOutput(result)
         delete(result.cache_interval);
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
+	delete(result.xmppLoginOn);
+	$.each(result, function(key, value)
+	{
+		if($.inArray(key,editSectionArr)<=-1)
+		{
+			delete(result[key]);
+		}
+	});
 	return result;
 }
 
@@ -571,3 +812,100 @@ function bindEmailButtons(){
             });
     });
 }
+
+   /**
+    * function is called when a field needs to be opened
+    */
+  function getFieldsOnCal()
+  {
+    fieldIdMappingArray = {
+      "name" : { "type": "text","mobileDivFieldId":"BasicDetails_name","mobileFieldId":"NAME"},
+    	// contact section
+      "EMAIL" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
+      "ALT_EMAIL" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
+    };
+
+
+    mobileSectionArray = {"education":"Education","basic":"Details",
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp"
+    }
+
+    section = getUrlParameter('section');
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && mobileSectionArray.hasOwnProperty(section))
+    {
+      fieldType = '';
+      mobileDivFieldId = '';
+      mobileFieldId = '';
+      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
+      {
+        fieldType = fieldIdMappingArray[fieldName].type;
+        mobileDivFieldId = fieldIdMappingArray[fieldName].mobileDivFieldId;
+        mobileFieldId = fieldIdMappingArray[fieldName].mobileFieldId;
+      }
+      openFieldsOnCal(mobileSectionArray[section],fieldType,mobileFieldId,mobileDivFieldId);        
+    }
+    
+  }
+
+  /**
+   * opens a field
+   * @param  {String} section the section which must be clicked
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldDivId   the parent id
+   */
+  function openFieldsOnCal(section,fieldType,fieldId,fieldDivId) 
+  {
+  	var timeoutFieldCheck = 100;
+  	var timeoutDropdown = 100;
+    if ( fieldDivId === '')
+    {
+    	window.location.replace(window.location.href+"#"+section);
+  	}
+  	else
+  	{
+  		var checkExist = setInterval(function() 
+        {
+            if ($('#'+fieldDivId).length) 
+            {
+                $("#"+fieldDivId).click();
+                if ( fieldType == 'text' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).focus();
+					}, timeoutDropdown);
+                }
+                else if ( fieldType == 'dropdown' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).click();
+					}, timeoutDropdown);
+
+                }
+                clearInterval(checkExist);
+            }
+
+
+        }, timeoutFieldCheck);
+  	}
+  }
+
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
+	function getUrlParameter(sParam) {
+	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+	    sURLVariables = sPageURL.split('&'),
+	    sParameterName,
+	    i;
+
+	for (i = 0; i < sURLVariables.length; i++) {
+	    sParameterName = sURLVariables[i].split('=');
+
+	    if (sParameterName[0] === sParam) {
+	        return sParameterName[1] === undefined ? true : sParameterName[1];
+	    }
+	}
+};

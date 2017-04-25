@@ -94,7 +94,7 @@ class JProfileUpdateLib
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
     $this->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-    $this->objProfileAlertStore = new newjs_JPROFILE_ALERTS($dbname);
+    $this->objProfileAlertStore = new JprofileAlertsCache($dbname);
 
   }
   /**
@@ -153,7 +153,8 @@ class JProfileUpdateLib
       self::$instance->objProfileChristianStore->setConnection($dbname);
       self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
       self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-      self::$instance->objProfileAlertStore->setConnection($dbname);
+      unset(self::$instance->objProfileAlertStore);
+      self::$instance->objProfileAlertStore = new JprofileAlertsCache($dbname);
     }
     
     return self::$instance;

@@ -7,7 +7,7 @@
 class SIZE_120 extends Tuple {
     /* It defines all the fields and icons for a particular tuple */
     static public function init() {
-        self::$fields = Array("PROFILEID", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "SUBCASTE", "EDUCATION", "INCOME", "IS_ALBUM", "ACTIVATED","IS_ALBUM_TEXT","ProfilePic120Url");
+        self::$fields = Array("PROFILEID", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "SUBCASTE", "EDUCATION", "INCOME", "IS_ALBUM", "ACTIVATED","IS_ALBUM_TEXT","ProfilePic120Url","NAME_OF_USER");
 
     }
     /* This function returns fields and icons configurations of the tuple*/

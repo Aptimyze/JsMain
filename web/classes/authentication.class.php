@@ -274,7 +274,7 @@ class protect
 			{
 				$mysql= new Mysql;
 				$db=$mysql->connect();
-				$sql="select PROFILEID,PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where activatedKey=1 and PROFILEID='$temp[PR]'";
+				$sql="select PROFILEID,PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where activatedKey=1 and PROFILEID='$temp[PR]'";
 				$result=$mysql->executeQuery($sql,$db);
 				$myrow=mysql_fetch_array($result);
 				$data["PROFILEID"]=$myrow["PROFILEID"];
@@ -501,12 +501,12 @@ class protect
 		$mysql= new Mysql;
 		$db=$mysql->connect();
 
-		$sql="select PROFILEID, PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and USERNAME = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
+		$sql="select PROFILEID, PASSWORD, SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and USERNAME = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
 		$result=$mysql->executeQuery($sql,$db);
 
 		if(mysql_num_rows($result) <= 0)
 		{
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and EMAIL = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT from JPROFILE where  activatedKey=1 and EMAIL = '" .mysql_real_escape_string($username). "' and ACTIVATED<>'D'";
 			$result=$mysql->executeQuery($sql,$db);
 
 			if(mysql_num_rows($result) <= 0)
@@ -630,13 +630,13 @@ class protect
 		if(!$imp_email_check && !$this->allowUsernameLogin)
 			return null;
 
-		$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $first_check = '" .mysql_real_escape_string($username). "'";
+		$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $first_check = '" .mysql_real_escape_string($username). "'";
 		$result=$mysql->executeQuery($sql,$db);
 		$myrow=mysql_fetch_array($result);
 		$numRows = mysql_num_rows($result);
 		if(mysql_num_rows($result) <= 0 && $this->allowUsernameLogin)
 		{
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $second_check = '" .mysql_real_escape_string($username). "'";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES from JPROFILE where $second_check = '" .mysql_real_escape_string($username). "'";
 			$result=$mysql->executeQuery($sql,$db);
 			$myrow=mysql_fetch_array($result);
 			$numRows = mysql_num_rows($result);

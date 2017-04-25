@@ -90,6 +90,12 @@
 							</td>
 						</tr>
 						~/if`
+						<tr class="fieldsnew">
+							<td align="center">
+								<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface/dppMatchesShowStats?cid=~$cid`&pid=~$profileid`&username=~$username`" target="_blank"><font size='2'>Click here to View Dpp Matches</font></a><br>
+							</td>
+						</tr>
+
 					</div>
 				</td>
 			</tr>

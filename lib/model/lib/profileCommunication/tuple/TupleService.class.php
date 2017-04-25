@@ -30,6 +30,7 @@ class TupleService
 	private $CONTACTS_VIEWED = Array();
 	private $VISITORS = Array();
 	private $MATCH_ALERT = Array();
+	private $MATCH_OF_THE_DAY = Array();
 	private $VIEW_SIMILAR = Array();
 	private $MY_MESSAGE = Array();
 	private $MY_MESSAGE_RECEIVED = array();
@@ -151,9 +152,8 @@ class TupleService
 	 *@param profileObjArray : This is the array of all the profile ids for which fields will be retrieved
 	 *@param fields : array of fields need to be retrieved
 	 */
-	public function setProfileInfo($profileObjArray, $fields)
-	{
-	//print_r($profileObjArray); die;
+	public function setProfileInfo($profileObjArray, $fields,$profileArrayRB)
+	{  
 		if (is_null($profileObjArray) || is_null($fields))
 			throw new JsException("", "No profileObjArray or no fields array sent in Tuple.class.php");
 		self::initLogics();
@@ -184,13 +184,14 @@ class TupleService
 				if($logic == "MY_MESSAGE_LOGIC")
 					$profileInfoObjArray[$logic] = $this->$typeFunction($profileObjArray["MY_MESSAGE"]);
 				else
-					$profileInfoObjArray[$logic] = $this->$typeFunction($profileIds);
+					$profileInfoObjArray[$logic] = $this->$typeFunction($profileIds,$profileArrayRB);
 			}
 		}
                 //echo '<pre>';print_R($profileInfoObjArray);
 		       // print_r(this->$p)
               	/*This loop will retrieve all the information from the arrays of different logics and will assign to the tuple object
 		calling the setters of various fields*/
+
 		if (is_array($profileObjArray)){
                    	foreach ($profileObjArray as $infoType => $profilesInfoTypeBasedValues) {
                    		
@@ -303,6 +304,10 @@ class TupleService
 	{
 		return $this->MATCH_ALERT;
 	}
+	public function getMATCH_OF_THE_DAY()
+	{
+		return $this->MATCH_OF_THE_DAY;
+	}
 	public function getVIEW_SIMILAR()
 	{
 		return $this->VIEW_SIMILAR;
@@ -367,6 +372,7 @@ class TupleService
 	 */
 	public function getTupleObject($infoType, $profileId)
 	{
+                
 		eval('$tupleObject = $this->' . $infoType . '["' . $profileId . '"];');
 		return $tupleObject;
 	}
@@ -588,13 +594,13 @@ else {
 		return null;
 	}
 	
-	public function executeMESSAGE_LOGIC($profileIds)
+	public function executeMESSAGE_LOGIC($profileIds,$profilesArrayForRB)
 	{
 		if(!empty($profileIds))
 		{
 			$messageLogObj = new messageLog();
 		
-			$messages = $messageLogObj->getEOIMessages($this->getLoginProfile(),$profileIds);
+			$messages = $messageLogObj->getEOIMessages($this->getLoginProfile(),$profileIds,$profilesArrayForRB);
 			if(is_array($messages))
 			{
 				foreach($messages as $k=>$value)

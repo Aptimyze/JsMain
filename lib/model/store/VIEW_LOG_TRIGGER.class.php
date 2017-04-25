@@ -3,8 +3,10 @@ class VIEW_LOG_TRIGGER extends TABLE{
        
 
        
+    const MailerDaysCheck = 1;
+    const VisitorsDaysCheck = 15;
 
-        public function __construct($dbname="")
+    public function __construct($dbname="")
         {
 			if(!JsConstants::$communicationRep)
 				$dbname=$dbname?$dbname:"viewLogRep";
@@ -44,7 +46,7 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				throw new jsException($e);
 			}
 		}
-		public function getViewLogData($viewed,$skipProfile)
+		public function getViewLogData($viewed,$skipProfile,$days = '',$limit='')
         {
 			try 
 			{
@@ -63,10 +65,16 @@ class VIEW_LOG_TRIGGER extends TABLE{
 					$str = substr($str, 0, -1);
 					$str = $str.")";
 				}
-				$yday=mktime(0,0,0,date("m"),date("d")-15,date("Y"));    // To get the time for before 15 days to get visitors
+                                if($days)
+                                    $yday=mktime(0,0,0,date("m"),date("d")-$days,date("Y"));     //for mailers
+                                else
+                                    $yday=mktime(0,0,0,date("m"),date("d")-15,date("Y"));    // To get the time for before 15 days to get visitors
 				$date=date("Y-m-d",$yday)." 00:00:00";
+                $limitVisitors="";
+                if($limit)         
+                    $limitVisitors = "LIMIT ".$limit;
 				
-				$sql= "SELECT SQL_CACHE VIEWER,DATE AS TIME,SEEN FROM VIEW_LOG_TRIGGER WHERE VIEWED = :PROFILEID ".$str." AND VIEWER!= :PROFILEID AND DATE>=:DATE ORDER BY TIME DESC";
+				$sql= "SELECT SQL_CACHE VIEWER,DATE AS TIME,SEEN FROM VIEW_LOG_TRIGGER WHERE VIEWED = :PROFILEID ".$str." AND VIEWER!= :PROFILEID AND DATE>=:DATE ORDER BY TIME DESC $limitVisitors";
 				$res=$this->db->prepare($sql);
 				$res->bindValue(":PROFILEID",$viewed,PDO::PARAM_INT);
 				if(is_array($bindArr))
@@ -103,6 +111,26 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				throw new jsException($e);
 		}
 	}
+		public function getViewedProfiles($start_date,$end_date)
+		{
+			try
+			{
+				$sql = "Select DISTINCT(VIEWED) from newjs.VIEW_LOG_TRIGGER where DATE between :start_date and :end_date";
+				$prep = $this->db->prepare($sql);
+				$prep->bindValue(":start_date",$start_date,PDO::PARAM_STR);
+				$prep->bindValue(":end_date",$end_date,PDO::PARAM_STR);
+				$prep->execute();
+				while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[] = $row;
+                }
+            	return $result;
+			}
+			catch(PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
 			
 }
 ?>

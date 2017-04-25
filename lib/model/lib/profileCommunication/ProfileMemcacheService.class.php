@@ -617,7 +617,7 @@ public function unsett()
         
         $dbInstance = new BILLING_SERVICE_STATUS();
         list($expDate, $expDays) = $dbInstance->getLastExpiryDate($this->profileid);
-        $select           = "RECEIVER, DATEDIFF(now(),DATE) as TIME";
+        $select           = "RECEIVER, DATEDIFF(now(),DATE) as TIME,DATE(DATE) as DATE";
         $group            = '';
         $where            = array(
             "SENDER" => $this->profileid,
@@ -634,16 +634,21 @@ public function unsett()
                         unset($overAllLimitArr[$val["RECEIVER"]]);
                 }
                 $contactArr[$val["RECEIVER"]] = $val["TIME"];
+                $contactDates[$val["RECEIVER"]] = $val["DATE"];
             }
         }
         if (is_array($contactArr)) {
             $datediff = floor(abs(JSstrToTime(date("Y-m-d")) - JSstrToTime(ErrorHandler::DUP_LIVE_DATE)) / (60 * 60 * 24));
+            $contactLimitDates = CommonFunction::getContactLimitDates();
             foreach ($contactArr as $key => $val) {
+                $contactDate = $contactDates[$key];
                 if ($val == 0)
                     $TODAY_INI_BY_ME++;
-                if (date('w') >= $val)
+                // insert logic for week's count
+                if (strtotime($contactLimitDates['weekStartDate'])  <= strtotime($contactDate))
                     $WEEK_INI_BY_ME++;
-                if (date('d') >= $val)
+                // insert logic for month's count
+                if (strtotime($contactLimitDates['monthStartDate'])  <= strtotime($contactDate))
                     $MONTH_INI_BY_ME++;
                 if ($datediff >= $val)
                 {
@@ -750,8 +755,16 @@ public function unsett()
         $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+	if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+		unset($skipProfile);
+	}
        // print_r($skipProfile);
-        $msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile);
+	if(is_array($considerProfiles) && count($considerProfiles)>0)
+		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
 //        $configObj            = new ProfileInformationModuleMap();
 //        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
 //        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
@@ -856,11 +869,27 @@ public function unsett()
         $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+        if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+	}
        // print_r($skipProfile);
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
-        $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
+	if(InboxEnums::$messageLogInQuery)
+	{
+		if(is_array($considerProfiles) && count($considerProfiles)>0)
+		{
+			$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
+		}
+	}
+	else
+	{
+		$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
+	}
         if(is_array($profilesArray))
 		$MESSAGE_ALL = count($profilesArray);
         $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
@@ -878,7 +907,7 @@ public function unsett()
     {
 		$justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile,"countAll"); 
 		$justJoinedMatches=$justJoinMatchArr['CNT'];
-		$justJoinMatchArrNew = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile); 
+		$justJoinMatchArrNew = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile,"CountOnly","havePhoto"); 
 		$justJoinedMatchesNew=$justJoinMatchArrNew['CNT'];
 		$this->memcache->setJUST_JOINED_MATCHES($justJoinedMatches ? $justJoinedMatches : 0);
 	        $this->memcache->setJUST_JOINED_MATCHES_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);

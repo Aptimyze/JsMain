@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/symfony  cron:APSendEOI 3 1
+retries=3
+retry.backoff=10000

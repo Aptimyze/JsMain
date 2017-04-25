@@ -17,6 +17,7 @@ class uploadProcessScreeningAction extends sfActions {
          * @param sfRequest $request A request object
          */
         public function executeUploadProcessScreening(sfWebRequest $request) {
+			$startTime = time();
 		$formArr = $request->getParameterHolder()->getAll();
                 $this->cid = $request->getParameter("cid");
                 $this->profileid = $formArr['profileid'];
@@ -68,7 +69,10 @@ class uploadProcessScreeningAction extends sfActions {
 			}
 			else
 				$response = $output;
-		
+			$timeConsumed = time()-$startTime;
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/pictureUploadSubmitTime.txt",var_export($timeConsumed,true)."\n",FILE_APPEND);
+	
+			
 			if($response!="Success")
 			{
                         	$this->messageFlag = 0;

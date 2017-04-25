@@ -16,6 +16,7 @@ cherryPickLine = '\(cherry picked from commit '
 commitBranchLogA = []
 commitBranchLogB = []
 detailedLog = False
+ignoreArray = ['[CIRelease','Merge bran']
 
 # just a basic commit object
 class gitCommit:
@@ -158,7 +159,7 @@ class Branch:
                         not re.search(filterAuthor, commitAuthor):
                             continue # a different owner
                     comment = commitObj.getCommitSubject()
-                    if comment[:10] not in jira_ids:
+                    if comment[:10] not in jira_ids and comment[:10] not in ignoreArray:
                         print comment[:10]
                         jira_ids.append(comment[:10])
                     #print '  %s %s %s' % \

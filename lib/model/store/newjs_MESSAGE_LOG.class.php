@@ -120,31 +120,54 @@ class NEWJS_MESSAGE_LOG extends TABLE{
                                 throw new jsException($e);
                         }
 		}
-		 public function MessageLogAndDeletedLog($pid)
-		{
-                        try
-                        {
-                                if($pid)
-                                {
-                                        $sql="SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  ORDER by DATE ASC  ";
-                                        $prep=$this->db->prepare($sql);
-                                        $prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
-                                        $prep->execute();
-                                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                        {
-                                                $res[]= $result;
-                                        }
+  
+    /**
+     * 
+     * @param type $pid
+     * @return type
+     * @throws jsException
+     */
+    public function MessageLogAndDeletedLog($pid)
+    {
+      try {
+        if ($pid) {
+          
+          $archiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+          $archivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
+          
+          $archiveTableSql = " UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.{$archivePrefix}DELETED_MESSAGE_LOG{$archiveSuffix} WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+          
+          $sql =  <<<SQL
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID 
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID
+          {$archiveTableSql} 
+          ORDER by DATE ASC
+SQL;
+          $prep = $this->db->prepare($sql);
+          $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+          $prep->execute();
+          while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+            $res[] = $result;
+          }
 
-                                        return $res;
-                                }
-                        }
-                        catch(PDOException $e)
-                        {
-                                /*** echo the sql statement and error message ***/
-                                throw new jsException($e);
-                        }
-                }
-    public function getMessageLogProfile($condition,$skipArray)
+          return $res;
+        }
+      } catch (PDOException $e) {
+        /*       * * echo the sql statement and error message ** */
+        throw new jsException($e);
+      }
+    }
+
+  public function getMessageLogProfile($condition,$skipArray)
 		{
 			$string = array('TYPE','SEEN','IS_MSG','DATE');
 		try{
@@ -288,7 +311,7 @@ class NEWJS_MESSAGE_LOG extends TABLE{
         return $output;
 	}
 
-		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='')
+		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='',$considerProfile='')
 		{
 			try{
 				if(!$where)
@@ -345,7 +368,19 @@ class NEWJS_MESSAGE_LOG extends TABLE{
 				$str = $str.")";
 				$sql = $sql.$str;
 			}
-			
+			if($considerProfile)
+			{
+				$sql.=" AND SENDER IN (";
+				foreach($considerProfile as $key1=>$value1)
+                                {
+                                        $str = $str.":VALUE".$count.",";
+                                        $bindArr["VALUE".$count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                $str = $str.")";
+                                $sql = $sql.$str;
+			}
 			if($group)
 			{
 				$sql = $sql." GROUP BY ".$group;				
@@ -616,7 +651,7 @@ public function updateMessageLogDetails($msgCommObj)
 				$str = substr($str, 0, -1);
 				$str = $str.")";
 				$strS = " RECEIVER ".$str." AND SENDER ".$str;
-				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
+				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE,MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
 				$prep=$this->db->prepare($sql);
 				foreach($bindArr as $k=>$v)
 					$prep->bindValue($k,$v);
@@ -680,7 +715,7 @@ public function updateMessageLogDetails($msgCommObj)
 		return $output;
 	}
 		
-		public function getMessageListing($condition,$skipArray)
+		public function getMessageListing($condition,$skipArray='',$inArray='')
 		{
 			try{
 				if(!$condition["WHERE"]["IN"]["PROFILE"])
@@ -705,15 +740,57 @@ public function updateMessageLogDetails($msgCommObj)
 						}
 						$str = substr($str, 0, -1);
 						$str = $str.")";
-						$sender = " AND SENDER ".$str." ";
-						$receiver = "AND RECEIVER ".$str." ";
+						if($skipArray)
+						{
+							$sender = " AND SENDER ".$str." ";
+							$receiver = "AND RECEIVER ".$str." ";
+						}
 					}
-					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
+					if(count($inArray)<1000 && count($inArray)>0)
+						$inSql = 1;
+					else
+						$inSql = 0;
+					if($inSql)
+					{
+						
+                                                $str =  "  IN (";
+							$count = 0;
+                                                foreach($inArray as $key1=>$value1)
+                                                {
+                                                        $str = $str.":VALUE".$count.",";
+                                                        $bindInArr["VALUE".$count] = $value1;
+                                                        $count++;
+                                                }
+                                                $str = substr($str, 0, -1);
+                                                $str = $str.")";
+						if(is_array($inArray))
+						{
+							$sender1 = " AND SENDER ".$str." ";
+							$receiver1 = "AND RECEIVER ".$str." ";
+						}
+					}
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID";
+					if($sender)
+						$sql.= $sender;
+					if($sender1)
+						$sql.=$sender1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ";
+					if($receiver)
+						$sql.=$receiver;
+					if($receiver1)
+						$sql.=$receiver1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
 					if($skipSql){
 						foreach($bindArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
+					if($inSql){
+						foreach($bindInArr as $k=>$v)
 						{	
 							$res->bindValue($k,$v,PDO::PARAM_INT);
 						}
@@ -808,7 +885,7 @@ public function updateMessageLogDetails($msgCommObj)
 				}
 				else
 				{
-					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE,RECEIVER FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
@@ -1186,7 +1263,7 @@ return $result;
 			}
 			else
 			{
-				$sql="SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = :PROFILEID AND IS_MSG='Y' AND TYPE='R' AND `DATE`>=:LAST_LOGIN_DT";
+				$sql="SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = :PROFILEID AND IS_MSG='Y' AND TYPE='R' AND `DATE`>= :LAST_LOGIN_DT";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 				$prep->bindValue(":LAST_LOGIN_DT",$lastLoginDt,PDO::PARAM_STR);
@@ -1277,8 +1354,10 @@ return $result;
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
-                                                if(strpos($row['IP'],'.')===false)
-                                                        $row['IP']=long2ip($row['IP']);
+                        if(false === inet_pton($row['IP'])) {
+                            $row['IP']=long2ip($row['IP']);
+                        }
+                                                        
 						$output[] = $row;
 					}
 				
@@ -1302,7 +1381,7 @@ return $result;
 			{
 				if(!is_array($profileArray))
 				{
-					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
+					throw new jsException("","profile id is not specified in function deleteMultipleLogForSingleProfile of newjs_MESSAGE_LOG.class.php");
 				}
 				else
 				{
@@ -1671,5 +1750,33 @@ return $result;
 			}
 			return $output;
 		}
+        
+        /**
+         * 
+         * @param type $pid
+         * @param type $listOfActiveProfile
+         * @param type $whereStrLabel1
+         * @param type $whereStrLabel2
+         * @return boolean
+         * @throws jsException
+         */
+        public function insertMessageLogDataFromEligibleForRet($pid, $listOfActiveProfile, $whereStrLabel1 = 'RECEIVER', $whereStrLabel2 = 'SENDER')
+        {
+            if (!$pid || !$listOfActiveProfile)
+                throw new jsException("", "VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_MESSAGES.class.php");
+            try {
+                $sql = "INSERT IGNORE INTO newjs.MESSAGE_LOG SELECT * FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET WHERE (" . $whereStrLabel1 . "=:PROFILEID OR " . $whereStrLabel2 . "=:PROFILEID) AND (" . $whereStrLabel1 . " IN (" . $listOfActiveProfile . ") OR " . $whereStrLabel2 . " IN (" . $listOfActiveProfile . "))";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+                $prep->execute();
+                return true;
+            }
+            catch (PDOException $e) {
+                jsCacheWrapperException::logThis($e);
+                return false;
+                throw new jsException($e);
+            }
+        }
+
 }
 	?>

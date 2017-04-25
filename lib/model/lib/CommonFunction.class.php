@@ -107,6 +107,14 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
+			else if(CommonFunction::isEverPaid())
+			{
+				$day_limit=100;
+				$weekly_limit=100;
+				$month_limit=400;
+				$overall_limit=800000;
+				$notValidNumber_limit=100;
+			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -130,6 +138,21 @@ class CommonFunction
             $paid=1;
         }
 		return $paid;
+	}
+
+	public static function isEverPaid()
+	{
+		
+		$everPaid = false;
+		$billing = new BILLING_PURCHASES();
+		$loginProfile = LoggedInProfile::getInstance();
+		$pid = $loginProfile->getPROFILEID();
+		$payment = $billing->isPaidEver($pid);
+		if(is_array($payment) && $payment[$pid])
+		{
+			$everPaid = true;
+		}
+		return $everPaid;
 	}
 
 	public static function isEvalueMember($subscription)
@@ -563,7 +586,7 @@ class CommonFunction
                 $manglikArr = explode(",", $manglikVal);
                 $returnStr = "";
                 foreach ($manglikArr as $key=>$val){
-                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know" || $val == "'S0'" || $val == "S0" || $val == "Select")
                         continue;
                     else
                         $returnStr.=",".$val;
@@ -681,5 +704,254 @@ class CommonFunction
 			JsMemcache::getInstance()->set("can_chat_".$otherProfileId."_".$loginProfileId,false,'','',1);
 		}
 	}
+    
+    /*
+     * End script 
+     * To note statistic of memory and time usages
+     * @param : $st_Time [Start Time]
+     * @return void
+     */
+    public static function logResourceUtilization($st_Time, $msg, $moduleName=null)
+    {
+        $end_time = microtime(TRUE);
+        $var = memory_get_usage(true);
+
+//        if ($var < 1024)
+//            $mem =  $var." bytes";
+//        elseif ($var < 1048576)
+//            $mem =  round($var/1024,2)." kilobytes";
+//        else
+//            $mem = round($var/1048576,2)." megabytes"
+        
+        //In Mb only
+        $mem = round($var/1048576,2);
+        
+        $timeTaken = ($end_time - $st_Time);
+        $msg .= 'Memory usages : '.$mem;
+        $msg .= ' Time taken : '.$timeTaken;
+        //$arrData['requestId'] = LoggingManager::getInstance()->getUniqueId();
+        //LoggingManager::getInstance($moduleName)->logThis(LoggingEnums::LOG_INFO,$msg);    
+        return array('mem_usages'=>$mem,'time_elapse'=>$timeTaken,'msg'=>$msg,'requestId'=>LoggingManager::getInstance()->getUniqueId(),'channel'=>CommonFunction::getChannel(),'time_stamp'=>date('Y-m-d H:i:s'));
+    }
+    
+    public static function logIntoProfiler($szModuleName, $arrData) {
+      //Add into MQ
+      $producerObj = new Producer();
+      $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($queueData);
+    }
+    
+    public static function getCitiesForStates($stateArr){
+        $cityList = "";
+        foreach($stateArr as $key=>$val){
+            $cityList .= ",".FieldMap::getFieldLabel("state_CITY", $val);
+        }
+        $cityList=explode(",",trim($cityList,","));
+        return $cityList;
+    }
+
+    	
+    /**
+     * this function returns occupation groups
+     * @param  string  $occupationValues comma separated occuaptaion values
+     * @param  boolean $isSingleQuote    whether occupation values are stored as single quote sorrounded
+     * @return string                    returns comma separated string.
+     */		
+    public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+        if($isSingleQuote)
+        {
+        	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
+        }
+        else
+        {
+        	$occupationValuesArray = explode (",", $occupationValues);
+        }
+
+        $occupationGroupString = "";
+
+    	foreach ($occupationGrouping as $key => $occupationGroupingValues) 
+    	{
+    		$occupationGroupingValuesArray = array_map('intval',explode(',',$occupationGroupingValues));
+    		if ( count(array_intersect($occupationValuesArray,$occupationGroupingValuesArray)) > 0)
+    		{
+    			$occupationGroupString .= $key.",";
+    		}	
+    	}
+    	$occupationGroupString = rtrim($occupationGroupString,",");
+
+    	if($isSingleQuote)
+		{
+			$occupationGroupString = "'".$occupationGroupString."'";
+			$occupationGroupString = str_replace(",", "','", $occupationGroupString);
+		}
+    	return $occupationGroupString;
+    }
+
+    /**
+     * returns occupation values, given occupation groups.
+     * @param  string  $occupationGroups comma separated groups
+     * @param  boolean $isSingleQuote    whether return values needs to be sorrounded by comma or not
+     * @return string                    occupation values, comma separated
+     */
+    public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
+    {
+        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
+		if($isSingleQuote)
+        {
+        	$occupationGroupsArray = explode (",", str_replace("'", "", $occupationGroups));
+        }
+        else
+        {
+        	$occupationGroupsArray = explode (",", $occupationGroups);
+        }
+
+		$occupationValuesString = "";
+
+		foreach($occupationGrouping as $key => $occupationGroupingValues) 
+		{
+			if(in_array($key,$occupationGroupsArray))
+			{
+				$occupationValuesString .= $occupationGroupingValues.",";
+			}		
+		}
+
+		$occupationValuesString = rtrim($occupationValuesString,",");
+
+		if($isSingleQuote)
+		{
+			$occupationValuesString = "'".$occupationValuesString."'";
+			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
+		}
+		return $occupationValuesString;
+    }
+
+    public static function getOccupationGroupsLabelsFromValues($occupationGroups)
+    {
+    	$occupationGroupsArr = explode(",",$occupationGroups);
+    	$decoratedOccGroups = "";
+    	$occupationGroupingFieldMapLib = FieldMap::getFieldLabel('occupation_grouping', '',1);    	
+    	foreach($occupationGroupsArr as $key=>$value)
+    	{
+    		$decoratedOccGroups.= $occupationGroupingFieldMapLib[$value].", ";
+    	}
+    	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
+    	return $decoratedOccGroups;
+    }
+
+    public static function getContactLimitDates()
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		$weeks = floor($daysDiff/7) * 7;
+
+		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		$months = floor($daysDiff/30) * 30;
+
+		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
+
+		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
+	public static function getLimitEndingDate($errlimit)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$t1 = strtotime($x);
+		$t2 = strtotime($y);
+
+		$daysDiff = ($t2 - $t1)/(24*60*60);
+
+		if($errlimit == "WEEK")
+		{
+			if($daysDiff % 7 == 0)
+				$daysDiff += 1;
+			$weeks = ceil($daysDiff/7) * 7 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		}
+		elseif($errlimit == "MONTH")
+		{
+			if($daysDiff % 30 == 0)
+				$daysDiff += 1;
+			$months = ceil($daysDiff/30) * 30 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
+		}
+
+		return $endDate;
+	}
+
+     /**
+         * 
+         * @param type $country : country is the country that the person belongs to. eg: 51 for INDIA
+         * @param type $state :  it is a comma separated string of the form <state>,<native_state>
+         * @param type $cityVal : it is a comma separated string of the form <city>,<native_city>
+         * @param type $nativeCityOpenText : it is an open text value specifying the native place. eg:faizabad
+         * @param type $decoredVal : this is set to "city" 
+         * @return string
+         */
+
+     public static function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
+     {        
+     	$label = '';
+     	$city = explode(',',$cityVal);
+        $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
+        if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
+        {
+        	$label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
+        }
+        else
+        {
+        	if(substr($city[0],2)=="OT")
+        	{
+        		$stateLabel = FieldMap::getFieldLabel("state_india",substr($city[0],0,2));
+        		$label = $stateLabel."-"."Others";
+        	}
+        	else
+        	{
+        		$label = FieldMap::getFieldLabel($decoredVal,$city[0]);	
+        	}        	
+        }     
+        if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
+        	$nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
+        }
+        else
+        {
+        	$states = explode(',',$state);
+        	if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
+        		$nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
+
+        		if($nativeCityOpenText != '' && $nativeState != '')
+        			$nativePlace = $nativeCityOpenText.', ';
+
+        		$nativePlace .= $nativeState;        		
+        	}
+        }
+        if($nativePlace != '' && $nativePlace != $label)
+        	$label .= ' & '.$nativePlace;
+        return $label;
+    }
 }
 ?>

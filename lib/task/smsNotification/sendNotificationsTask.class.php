@@ -31,6 +31,8 @@ $this->addOptions(array(
 
   protected function execute($arguments = array(), $options = array())
   {
+  	ini_set('max_execution_time',0);
+    ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 	$notificationStop =JsConstants::$notificationStop;
@@ -42,8 +44,13 @@ $this->addOptions(array(
 	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 	$maxIdData = $this->scheduledAppNotificationObj->getArray("","","","max(ID) as maxId");
 	$this->maxId = $maxIdData[0][maxId];
-	$this->notificationSenderObj = new NotificationSender;
+	$this->notificationSenderObj = new NotificationSender($this->notificationKey);
 	$this->doneTillId = 1;
+    if($this->notificationKey == "UPGRADE_APP"){
+        $result = $this->upgradeAppNotificationData();
+        $maxAndroidVersion = $result["ANDROID_UPDATE_VERSION"];
+        $andMaxVersion = $result["CURRENT_ANDROID_MAX_VERSION"];
+    }
         while($this->doneTillId<=$this->maxId)
         {
                 if(is_array($details = $this->getDetails()))
@@ -51,16 +58,26 @@ $this->addOptions(array(
 
 			foreach($details as $k=>$v)
 			{
-				$profileDetails[$v['PROFILEID']]=$v;
+				if(in_array($this->notificationKey, NotificationEnums::$loggedOutNotifications)){
+					$profileDetails[$k]=$v;
+				}
+				else{
+					$profileDetails[$v['PROFILEID']]=$v;
+				}
 				$idArr[] = $v['ID'];
+                if($this->notificationKey == "UPGRADE_APP"){
+                    $profileDetails[$v['PROFILEID']]["ANDROID_UPDATE_VERSION"] = $maxAndroidVersion;
+                    $profileDetails[$v['PROFILEID']]["CURRENT_ANDROID_MAX_VERSION"] = $andMaxVersion;
+                }
 			}
-			
 			//filter profiles based on notification count
 			if(in_array($this->notificationKey,NotificationEnums::$scheduledNotificationPriorityArr))
 				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCountNew($profileDetails,$this->notificationKey);
 			else
 				$filteredProfileDetails = $profileDetails;
 			unset($profileDetails);
+			//echo "send to...........";
+			//print_r($filteredProfileDetails);
 			$this->sendPushNotifications($filteredProfileDetails,$idArr);
 			unset($details);
 			unset($filteredProfileDetails);
@@ -75,9 +92,13 @@ $this->addOptions(array(
   }
   private function sendPushNotifications($profileDetails,$idArr)
   {
+	$status =0;//CommonUtility::hideFeaturesForUptime();
+	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 9)
+		successfullDie();
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
 		$this->scheduledAppNotificationUpdateSentObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
+	unset($status);
   }
   
   private function getDetails()
@@ -92,5 +113,11 @@ $this->addOptions(array(
 	if(is_array($details))
 		return $details;
 	return false;
+  }
+  
+  private function upgradeAppNotificationData(){
+      $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
+      $result = $upgradeAppObj->getLastInsertedData();
+      return $result;
   }
 }

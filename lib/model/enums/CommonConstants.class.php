@@ -11,5 +11,5 @@ const AddLink = "https://www.youtube.com/embed/hhxFaXaidvA?rel=0";
 const ONLINE_USER_EXPIRY =900;
 const ONLINE_USER_LIST ='online_user';
 const ONLINE_USER_KEY ='online_';
-const contactMailersCC =  false;
+const contactMailersCC =  true;
 }

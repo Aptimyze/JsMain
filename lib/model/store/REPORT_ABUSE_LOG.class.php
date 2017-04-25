@@ -139,6 +139,40 @@ class REPORT_ABUSE_LOG extends TABLE
 	
 	}
 
+	   public function canReportAbuse($reporteeProfileID,$reporterProfileID)
+	{
+		try	 	
+		{	
+                        if(!($reporterProfileID) || !$reporteeProfileID )
+                            throw new jsException("","reporter or reportee not present");                
+                        $sql = 'SELECT count(*) AS CNT
+                        FROM feedback.REPORT_ABUSE_LOG
+                        WHERE REPORTER = :REPORTERPROFILEID
+                        AND REPORTEE = :REPORTEEPROFILEID';
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":REPORTERPROFILEID",$reporterProfileID,PDO::PARAM_INT);
+                        $prep->bindValue(":REPORTEEPROFILEID",$reporteeProfileID,PDO::PARAM_INT);
+                        $prep->execute();
+
+                          if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        if($output>=2)
+                        	return 0;
+                        return 1;
+
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	
+	}
+
+
+
+
+
+
 }
 
 ?>

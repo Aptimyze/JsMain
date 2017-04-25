@@ -1,7 +1,7 @@
 <?php
 	include_once("connect.inc");
-	//$SITE_URL ='http://crm.jeevansathi.com';
 	$SITE_URL =JsConstants::$crmUrl;
+	$content ='No Data exist';
 	if($from_dialer=='Y')
 	{
 		if(isset($_COOKIE["CRM_LOGIN"]))
@@ -13,7 +13,8 @@
 			{
 				$sql_trac="insert into incentive.DIALER_CONNECTIVITY_TRACKING (PROFILEID, AGENT, PHONE_NO, CALL_TIME,PRIORITY,SCORE,CAMPAIGN_NAME) values ('$profileid','$agent_name','$PHONE_NO1',now(),'$Priority','$score','$campaign_name')";
                                 $sql_trac = mysql_query_decide($sql_trac) or die($sql_trac." : ".mysql_error_js());
-				$content =getCurlDataReq($profileid,$name,$cid,$SITE_URL);
+				if($profileid)
+					$content =getCurlDataReq($profileid,$name,$cid,$SITE_URL);
 				echo $content;
 			}
 			else

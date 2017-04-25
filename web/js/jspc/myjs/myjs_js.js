@@ -254,7 +254,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
             		$("#"+div).find("div.sendintr").remove();
             	}
             	else{
-	            	if(type=="interest")
+	            	if(type=="interest" && !(div.indexOf("matchOfDay") >= 0))
 	            	{ 
 			//	callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
@@ -357,6 +357,11 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                             
                     }
 	       }
+
+         if(type == "interest" && div.indexOf("matchOfDay") >= 0)
+         {
+          setStackMOD();
+         }
             }
             catch(e){
               console.log('getting error '+e+' in function success of postActionMyjs')
@@ -1239,3 +1244,5 @@ function reArrangeDivsAfterDissapear(value,position,id)
         }
         return 0;
     }
+
+

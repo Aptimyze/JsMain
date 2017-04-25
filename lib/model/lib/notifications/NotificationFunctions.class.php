@@ -88,7 +88,7 @@ class NotificationFunctions
 		// code execute for Scheduled Notification      
 		if(in_array("$notificationKey", $scheduledNotificationKey)){
 			$schedduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
-			if(!$messageId)
+			if(!$messageId && !in_array($notificationKey, NotificationEnums::$loggedOutNotifications))
 				$schedduledAppNotificationObj->updateSent('',$notificationKey,$status,$profileid);
 			else if($messageId)
 				$schedduledAppNotificationObj->updateSuccessSent($status,$messageId);
@@ -101,7 +101,7 @@ class NotificationFunctions
 			$notificationObj =new MOBILE_API_NOTIFICATION_LOG;
 			$notificationDelLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG;
 		}
-		if(!$messageId){
+		if(!$messageId && !in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
 			$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
 		}
 		else if($messageId && $osType){
@@ -110,21 +110,27 @@ class NotificationFunctions
 		}
 	}
 
-	public static function handleNotificationClickEvent($params){
+	public static function handleNotificationClickEvent($params,$osType=""){
 		$notificationStop =JsConstants::$notificationStop;
         if(!$notificationStop && is_array($params)){
 	        $notificationKey = $params['notificationKey'];
 	        $messageId = $params['messageId'];
 	        $profileid = $params['profileid'];
-	        $osType = MobileCommon::isApp();
-	        if($osType == null){
-	        	$webOs = MobileCommon::isAppWebView();
-	        	if($webOs == "A"){
-	        		$osType = "A";
-	        	}
-	        }
+	        if($osType == ""){
+		        $osType = MobileCommon::isApp();
+		        if($osType == null){
+		        	$webOs = MobileCommon::isAppWebView();
+		        	if($webOs == "A"){
+		        		$osType = "A";
+		        	}
+		        }
+		        /*added to prevent double notification open rate tracking for ios as for ios is via delivery tracking*/
+		        if($osType == "I"){
+		        	$osType = "";
+		        }
+		    }
 	        try{
-	            if($osType && $messageId && $notificationKey && is_numeric($messageId)){ 
+	            if($osType && $osType != "" && $messageId && $notificationKey && is_numeric($messageId)){ 
                     $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
                     //print_r($dataSet);
                     $producerObj = new JsNotificationProduce();
@@ -136,7 +142,7 @@ class NotificationFunctions
                     }
                     else{  
                         //echo "without rabbitmq";                        //flow without rabbitmq
-                        NotificationFunctions::logNotificationOpened($dataSet);
+                        //NotificationFunctions::logNotificationOpened($dataSet);
                     }
 	            }
 	        }
@@ -144,22 +150,61 @@ class NotificationFunctions
 	        }
     	}
 	}
-        public function notificationCheck($request)
+        public function notificationCheck($request,$pollReq='')
         {
                 $notificationStop =JsConstants::$notificationStop;
-                if((date("H")>='02' && date("H")<='09') && !$notificationStop)
+                if((date("H")>='03' && date("H")<='10') && !$notificationStop)
                         $notificationStop=0;
                 else
                         $notificationStop=1;
-                if($notificationStop)
+                if($notificationStop || $pollReq)
                 {
-                        $notificationData['notifications'] = '';
-			$newTime =date('Y-m-d H:i:s',time()+86400);
+                        $notificationData['notifications'] = array();
+			$newTime ='2020-01-01 00:00:00';
                         $notificationData['alarmTime']= $newTime;
+			$notificationData['deviceUpgradeFlag']=false;
                         $data =json_encode($notificationData);
                         return $data;
                 }
                 else
                         return;
         }
+        public function deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel)
+        {
+		$producerObj = new JsNotificationProduce();
+		if($producerObj->getRabbitMQServerConnected()){
+			$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
+			$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+			$producerObj->sendMessage($msgdata);
+			return true;
+		}
+		/*else{
+                        $registationIdObj = new MOBILE_API_REGISTRATION_ID();
+                        $registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+			return true;
+		}*/
+		return false;
+        }
+
+	// Caching
+  	public function appNotificationCountCachng($notificationKey, $rabbitMq=''){
+                $JsMemcacheObj =JsMemcache::getInstance();
+                $key ="APP_INST#".$notificationKey;
+                $mqParam ="#MQ";
+
+                if(!$rabbitMq){
+                        $keyExist =$JsMemcacheObj->keyExist($key);
+                        if(!$keyExist){
+                                $JsMemcacheObj->set($key,0,86400,'','X');
+                                $key1 =$key.$mqParam;
+                                $JsMemcacheObj->set($key1,0,86400,'','X');
+                        }
+                }
+                elseif($rabbitMq)
+                        $key =$key.$mqParam;
+                $JsMemcacheObj->incrCount($key);
+
+                //$val =$JsMemcacheObj->get($key,'','',0);
+		//echo $key."=".$val."\n";
+  	}
 }

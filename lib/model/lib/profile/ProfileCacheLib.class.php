@@ -128,7 +128,6 @@ class ProfileCacheLib
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-
         //If Criteria is other then PROFILEID then return false
         if (false === $this->validateCriteria($szCriteria)) {
             return false;
@@ -151,6 +150,7 @@ class ProfileCacheLib
         if (false === $this->isCommandLineScript()) {
             $this->updateInLocalCache($key, $arrParams);
         }
+
         return true;
     }
 
@@ -299,6 +299,11 @@ class ProfileCacheLib
      */
     private function storeInLocalCache($key)
     {
+        if($this->isCommandLineScript()) {
+                unset($this->arrRecords);
+                $this->arrRecords = array();
+        }
+
         $stTime = $this->createNewTime();
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
@@ -336,7 +341,7 @@ class ProfileCacheLib
         $array = array_unique($array);
         
         if(count(array_diff(array_unique($arrFields),$array))){
-          $this->logThis(LoggingEnums::LOG_ERROR, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+          $this->logThis(LoggingEnums::LOG_INFO, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
           //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
         }
         
@@ -919,6 +924,15 @@ class ProfileCacheLib
         } else if(false !== stristr($storeName, "HOBBY")) {
             $arrFields = ProfileCacheConstants::$arrJHobbyColumns;
         }
+        else if(false !== stristr($storeName, "Alerts")) {
+            $arrFields = ProfileCacheConstants::$arrJProfileAlertsColumn;
+       }
+        else if (false !== stristr($storeName, "YOUR_INFO_OLD") ){
+            $arrFields = ProfileCacheConstants::$arrOldYourInfo;
+        }
+        else if(false !== stristr($storeName, "ProfileAUTO_EXPIRY")) {
+           $arrFields = ProfileCacheConstants::$arrAutoExpiry;
+        }
         return $arrFields;
     }
     
@@ -983,5 +997,133 @@ class ProfileCacheLib
         
         return $bSuccess;
     }
+
+    /**
+     * Returns an array of keys (profile ids) whose $arrFields(atleast one field) is 
+     * null.
+     * @param type $arrData
+     * @param type $arrFields
+     * @return array
+     */
+    private function getMulipleDataNotAvailabilityKeys(&$arrData, $arrFields)
+    { 
+      $arrPids = array();
+      foreach($arrData as $key=>$value)
+      {
+        if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
+            unset($arrData[$key]);
+            continue;
+        }
+        if(false === $this->isDataExistInCache($value)) {
+          $profileId = $this->getRawKey($key);
+          array_push($arrPids, $profileId);
+        }
+      }
+      return $arrPids;
+    }
+
+    /**
+     * @param $decoratedKey
+     * @return string profile id
+     */
+    private function getRawKey($decoratedKey)
+    {
+      $prefix = self::KEY_PREFIX;
+      if (substr($decoratedKey, 0, strlen($prefix)) == $prefix)
+      {
+        $profileId = substr($decoratedKey, strlen($prefix));
+      }
+      return $profileId;
+    }
+
+    /**
+     * getForPartialKeys
+     * @param type $criteria
+     * @param type $key
+     * @param type $fields
+     * @param type $storeName
+     */
+    
+    public function getForPartialKeys($criteria, $arrKey, $fields, $storeName="")
+    {
+      if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+        return false;
+      }
+      if(false === $this->validateCriteria($criteria)) {
+          return false;
+      }
+
+      if(false === $this->checkRelevantFields($fields, $storeName)){
+        return false;
+      }
+
+      //Get Relevant Fields
+      $arrFields = $this->getRelevantFields($fields, $storeName);
+      
+      //Get Decorated keys
+      $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
+      
+      //Get Records from Cache
+      $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+
+      if(!isset($arrResponse))
+        return false;
+
+      // Get array of profile ids for which data doesnt exist in cache
+      $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
+
+      // Array of profile ids which exist in cache
+      $cachedPids = array_diff($arrKey, $arrPids);
+
+      $cachedResult = False;
+      if(!empty($cachedPids))
+      {
+        $cachedResult = array();
+        foreach ($cachedPids as $key)
+        {
+          $val = $arrResponse[$this->getDecoratedKey($key)];
+          $cachedResult[] = $this->removeDuplicateSuffix($val, $storeName);
+        }
+      }
+
+      $result = array(
+        'cachedResult' => $cachedResult,
+        'notCachedPids' => implode(',', $arrPids),
+      );
+      return $result;
+    }
+
+    /**
+     * @param $arrFields
+     * @param $storeName
+     * @return bool
+     */
+    private function checkRelevantFields($arrFields, $storeName="")
+    {
+        $bStoreNameExist = strlen($storeName) ? true : false;
+        $storeSuffix = $this->getStoreSuffix($storeName);
+
+        if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
+          $arrFields = $this->getColumnArr($storeName);
+        } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = ProfileCacheConstants::$arrHashSubKeys;
+        } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = explode(',',$arrFields);
+            foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
+        }
+        //TODO: If $arrFields is not an array, handle this case
+        $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_unique($array);
+
+        if(count(array_diff(array_unique($arrFields),$array)))
+        {
+          return false;
+        }
+
+        // the fields are relevant
+        return true;
+    }
+
 }
 ?>

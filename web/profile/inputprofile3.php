@@ -213,7 +213,7 @@ if($Submit)
 				}
 				//code ends added by puneet on June 7 2006 ,if a user comes from google to check out the drop out ratios when user moves to different pages, page0 page1 page2 page3
 
-				$today=date("Y-m-d");
+				$today= CommonUtility::makeTime(date("Y-m-d"));
 
 				if((substr($tieup_source,0,2))=='af' || $hit_source=='O' || $email_validation=='Y')
 				{

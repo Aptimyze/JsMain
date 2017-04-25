@@ -13,15 +13,25 @@ class RabbitmqHelper
 **/
   public static function sendAlert($message,$to="default")
   {
+    $exception = new Exception($message);
+    if($exception->getTrace())
+    {
+      $consumerName = $exception->getTrace()[0]['file'];
+    }
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $exception, array(LoggingEnums::CONSUMER_NAME => $consumerName, LoggingEnums::MODULE_NAME => "RabbitmqConsumers"));
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
 			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
-                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com"
+                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
+                          "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com",
+                          "screening" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
+                          "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
+                          "writeMsg" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
-    $subject="Rabbitmq Error @".JsConstants::$whichMachine;
+    $subject = $to." Rabbitmq Error @".JsConstants::$whichMachine;
     if($to == "browserNotification")
         $subject = "Notification RMQ Error";
     $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
@@ -29,7 +39,10 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    //SendMail::send_email($emailTo,$message,$subject);           
+    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg" || $to == "loggingQueue")
+    {
+      SendMail::send_email($emailTo,$message,$subject);
+    }
   }
 
   public static function sendChatConsumerAlert($message)
@@ -94,7 +107,13 @@ class RabbitmqHelper
         $channel->queue_bind(MQ::${$key}, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],$value);
       }
       $channel->queue_bind(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
-
+      $channel->queue_declare(MQ::$MA_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array(
+						"x-dead-letter-exchange" => array("S", MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]),
+    "x-message-ttl" => array("I", MQ::$scheduledNotificationDelayMappingArr[MQ::$MA_NOTIFICATION_QUEUE]*MQ::$notificationDelayMultiplier*1000),
+                        "x-dead-letter-routing-key"=>array("S",MQ::$INSTANT_NOTIFICATION_QUEUE)
+					));
+      $channel->queue_bind(MQ::$MA_NOTIFICATION_QUEUE, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$MA_NOTIFICATION_QUEUE);
       return $channel;
     }
     elseif($key=='notificationLog'){
@@ -106,6 +125,22 @@ class RabbitmqHelper
     else
       return null;
     
+  }
+  
+  public function killConsumerForCommand($command){
+    exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
+    //echo "\n".$command."-";
+    //print_r($output);
+    if(!empty($output) && is_array($output))
+    {
+      foreach ($output as $key => $value) 
+      {
+        $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+        if($count1 >0)
+          exec("kill -9 ".$value);
+      }
+    }
+    unset($output);
   }
 }
 ?>

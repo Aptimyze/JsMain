@@ -108,6 +108,10 @@ EOF;
 	 */
 	public function execute($arguments = array(), $options = array())
 	{
+		
+		  if(CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
+
 		$LockingService = new LockingService;
 		ini_set('memory_limit','1024M');	
 		ini_set("gd.jpeg_ignore_warning", 1);

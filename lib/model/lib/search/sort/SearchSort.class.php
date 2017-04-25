@@ -42,6 +42,12 @@ class SearchSort
          * @var type string
          */
         private $paidSortStr;
+        
+        /**
+         * JsBoost Member Sorting
+         * @var type string
+         */
+        private $jsBoostSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -233,8 +239,15 @@ class SearchSort
                 $cityStateArr = $this->setCityStateToBeMatched($loggedInProfileObj);
 
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
-                        if ($loggedInProfileObj->getCASTE()) {
-                                $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
+//                        if ($loggedInProfileObj->getCASTE()) {
+//                                $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
+//                        }
+                        if ($loggedInProfileObj->getMANGLIK()) {
+                                if(strstr($loggedInProfileObj->getMANGLIK(),"N")){
+                                        $sortArray[] = "or(tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . "),tf(PARTNER_MANGLIK," . $doesntMatterValue . "))";
+                                }else{
+                                        $sortArray[] = "tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . ")"; 
+                                }
                         }
                         if ($loggedInProfileObj->getAGE()) {
                                 $sortArray[] = "and(if(abs(sub(min(PARTNER_LAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_LAGE)),0,1),if(abs(sub(max(PARTNER_HAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_HAGE)),0,1))";
@@ -263,17 +276,17 @@ class SearchSort
                         if ($loggedInProfileObj->getMTONGUE()) {
                                 $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
                         }
-                        if ($loggedInProfileObj->getGENDER() == 'F') {
-                                if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
+                        if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
                                         $sortArray[] = "or(tf(PARTNER_ELEVEL_NEW," . $loggedInProfileObj->getEDU_LEVEL_NEW() . "),tf(PARTNER_ELEVEL_NEW," . $doesntMatterValue . "))";
-                                }
-                        } else {
-                                if ($loggedInProfileObj->getINCOME()) {
+                        } 
+                        if ($loggedInProfileObj->getINCOME()) {
                                         $sortArray[] = "or(tf(PARTNER_INCOME_FILTER," . $loggedInProfileObj->getINCOME() . "),tf(PARTNER_INCOME_FILTER," . $doesntMatterValue . "))";
-                                }
                         }
                 }
-
+                //another bucket for caste
+                if ($loggedInProfileObj->getCASTE()) {
+                                $sortCasteCondition = "if(or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . ")),5,0)";
+                }
                 if (!empty($sortArray)) {
                         $brace = '';
                         $strCondition = '';
@@ -283,9 +296,9 @@ class SearchSort
                         }
                         $strCondition .= "1" . $brace;
                         if($sortLastLogin == 1)
-                                $strCondition = "sum(" . $sortLogin . "," . $strCondition . ")";
+                                $strCondition = "sum(" . $sortLogin . "," . $strCondition .",". $sortCasteCondition .")";
                         else
-                                $strCondition = "sum(". $strCondition . ")";
+                                $strCondition = "sum(". $strCondition . ",". $sortCasteCondition .")";
                 } else {
                         $strCondition = $sortLogin;
                 }
@@ -321,6 +334,18 @@ class SearchSort
         }
         public function getPaidSorting(){
                 return $this->paidSortStr;
+        }
+        
+        public function isJsBoostSorting($loggedInProfileObj){
+                if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
+                        foreach(SearchConfig::$jsBoostSubscription as $subscription){
+                                $this->jsBoostSortStr .=  "if(tf(SUBSCRIPTION,".$subscription."),1,";
+                        }
+                        $this->jsBoostSortStr .= "0))";
+                }
+        }
+        public function getJsBoostSorting(){
+                return $this->jsBoostSortStr;
         }
 }
 ?>

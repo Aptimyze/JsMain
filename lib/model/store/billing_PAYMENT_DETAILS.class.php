@@ -163,7 +163,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
     
-    public function updateComissions($profileid, $billid, $apple, $franchisee) {
+    public function updateComissions($profileid, $billid, $apple, $franchisee,$appleFlag=0, $newAmount) {
         
         try {
             if (empty($apple)) {
@@ -172,13 +172,21 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             if (empty($franchisee)) {
                 $franchisee = 0;
             }
-            
-            $sql = "UPDATE billing.PAYMENT_DETAIL SET APPLE_COMMISSION=:APPLE, FRANCHISEE_COMMISSION=:FRANCHISEE WHERE PROFILEID=:PROFILEID AND BILLID=:BILLID";
+            $sql = "UPDATE billing.PAYMENT_DETAIL SET APPLE_COMMISSION=:APPLE, FRANCHISEE_COMMISSION=:FRANCHISEE";
+            //Start: JSC-2668: Apple Commission fix to calculate correct net amount in case billing is from apple device
+            if($appleFlag==1){
+                 $sql.= ", AMOUNT=:AMT";
+            }
+            $sql.=" WHERE PROFILEID=:PROFILEID AND BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->bindValue(":APPLE", $apple, PDO::PARAM_INT);
             $prep->bindValue(":FRANCHISEE", $franchisee, PDO::PARAM_INT);
+            if($appleFlag==1){
+                $prep->bindValue(":AMT", $newAmount, PDO::PARAM_INT);
+            }
+            //End: JSC-2668: Apple Commission fix to calculate correct net amount in case billing is from apple device
             $prep->execute();
         }
         catch(PDOException $e) {
@@ -320,10 +328,16 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function getAllDetailsForBillidArr($billidArr) {
+    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="") {
         try {
         	$billidStr = implode(",", $billidArr);
             $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
+            if($orderBy != ""){
+                $sql .= " ORDER BY ".$orderBy." DESC";
+            }
+            if($limit != ""){
+                $sql .= " LIMIT ".$limit;
+            }
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {

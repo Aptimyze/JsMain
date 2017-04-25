@@ -17,7 +17,8 @@ var strophieWrapper = {
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
         "RECEIVER_RECEIVED_READ": 'receiver_received_read',
-        "FORWARDED": 'forwarded'
+        "FORWARDED": 'forwarded',
+        "MESSAGE_RECEIVED": 'message_received'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
@@ -496,19 +497,38 @@ strophieWrapper.sendPresence();
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation){
         //console.log("in onNonRosterListFetched",response);
+        var newNonRoster = {},profileAdded;
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
                     if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
-                        strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
+                        newNonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
+                        strophieWrapper.NonRoster[profileid] = newNonRoster[profileid];
+                        if(profileAdded == undefined){
+                            profileAdded = profileid;
+                        }
                     }
                 }
             });
             //console.log("adding",strophieWrapper.NonRoster);
-            if(operation == "create_list"){
+            if(operation == "create_list" || (operation == "add_node" && profileAdded != undefined)){
                 strophieWrapper.initialNonRosterFetched = true;
             }
-            invokePluginManagelisting(strophieWrapper.NonRoster, operation);
+            if(operation == "add_node" && profileAdded != undefined){
+                invokePluginManagelisting(newNonRoster,operation,profileAdded);
+            }
+            else if(operation == "create_list"){
+                invokePluginManagelisting(newNonRoster, operation);
+            }
+            if(operation == "add_node" && profileAdded != undefined){
+                //update addIndex for rest of nodes to keep them sorted with this new node
+                $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+                    if(profileid != profileAdded){
+                        var addIndex = nodeObj[strophieWrapper.rosterDetailsKey]["addIndex"];
+                        strophieWrapper.NonRoster[profileid][strophieWrapper.rosterDetailsKey]["addIndex"] = addIndex+1;
+                    }
+                });
+            }
             strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
@@ -819,7 +839,7 @@ strophieWrapper.sendPresence();
                     to: to,
                     type: 'chat',
                     id:messageId
-                    }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type,username:self_username},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 //console.log(reply);
@@ -864,6 +884,28 @@ strophieWrapper.sendPresence();
         }
         return outputObj;
     },
+
+    //send websocket stanza to check contact status between logged in user and viewed user
+    sendContactStatusRequest:function(to,msg_type){
+        try {
+            if (to && strophieWrapper.getCurrentConnStatus()) {
+                var checkStanza;
+                checkStanza = $msg({
+                    from: strophieWrapper.getSelfJID(),
+                    to: to,
+                    type: 'chat',
+                    id:strophieWrapper.getUniqueId()
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type},msg_type).c('active', {
+                        xmlns: "http://jabber.org/protocol/chatstates"
+                });
+                //console.log(checkStanza);
+                strophieWrapper.connectionObj.send(checkStanza);
+            }
+        } catch (e) {
+            console.log("exception-"+e);
+        }
+    },
+
     getUniqueId: function (suffix) {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0,

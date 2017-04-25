@@ -68,9 +68,7 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			if($request->getParameter("setFirstEoiMsgFlag") == true){
-            	$responseArray["eoi_sent"] = true;
-            }
+           
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -124,6 +122,7 @@ class postEOIv2Action extends sfAction
 		{
 			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		}
+		
 
 		if($this->contactEngineObj->messageId)
 		{ 
@@ -165,6 +164,7 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
+			
 		}
 		else
 		{
@@ -232,16 +232,13 @@ class postEOIv2Action extends sfAction
 							$strdate = date( 'F j, Y');
 							break;
 						case "WEEK":
-							$dayNR = date('N');         //monday = 1, tuesday = 2, etc.
-						    $satDiff = 6-$dayNR;        //for monday we need to add 5 days -> 6 - 1
-						    $sunDiff = $satDiff+1;      //sunday is one day more
-						    $strdate = date('F j,Y', JsStrtotime(" +".$sunDiff." days"));
+							$strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 						    break;
 						case "MONTH":
-							$strdate = date('F t,Y');
+							$strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
-					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for this '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
+					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for the '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
 					if(!$this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
 					{
 						$responseArray["errmsglabel"]= $responseArray["errmsglabel"].$membershipText;
@@ -295,8 +292,22 @@ class postEOIv2Action extends sfAction
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 		}
+
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
+		if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
+        {
+        	if($this->contactEngineObj->messageId){
+				$finalresponseArray["eoi_sent"] = true;
+				$finalresponseArray["cansend"] = true;
+            	$finalresponseArray["sent"] = true;
+			}
+			else{
+				$finalresponseArray["eoi_sent"] = false;
+				$finalresponseArray["cansend"] = false;
+            	$finalresponseArray["sent"] = false;    
+        	}	
+		}
 		if(MobileCommon::isNewMobileSite())
 		{
 			

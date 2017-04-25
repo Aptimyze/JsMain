@@ -17,8 +17,6 @@
             if (el.length == 0)
                 return;
             if (next){
-                if (ob._objId==7)
-            loadnew(2, ob);
     } else ob.page=-1;
                         CssFix();
             WrapParent();
@@ -253,7 +251,7 @@
         }
 
         
-        var ob = {_isRequested:0,_tupleCount: no_of_tuples, _tupleIndex:no_of_tuples, page: 2, _performFix: initOnNewTuples, _objId: ID, _defaultInit: init, indexFix: addIndex, _parent: el,_goTo:gotoSlide,_index:0,_maxindex:0,_lmHidden:1,_mapString:mapString};
+        var ob = {_isRequested:0,_tupleCount: no_of_tuples, _tupleIndex:no_of_tuples, page: 1, _performFix: initOnNewTuples, _objId: ID, _defaultInit: init, indexFix: addIndex, _parent: el,_goTo:gotoSlide,_index:0,_maxindex:0,_lmHidden:1,_mapString:mapString};
         var childElement = el.children();
         var thresholdWidth = 5;
         var transformX_corr = ((tuple_ratio * 3 - 100) * windowWidth) / 200 + 10+el.offset().left;

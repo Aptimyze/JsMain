@@ -454,7 +454,24 @@ class DetailActionLib
 		if($actionObject->loginProfile->getPROFILEID() && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
+			$randomNumber = rand(0,100);
+			if($randomNumber>=100)
+			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+			}
+			else
+			{
+				$producerObj = new Producer();
+				if($producerObj->getRabbitMQServerConnected())
+				{
+					$updateSeenProfileData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>array('fromSym'=>$fromSym,'type'=>$type,'mypid'=>$mypid,'updatecontact'=>$updatecontact,'profileid'=>$profileid)));
+					$producerObj->sendMessage($updateSeenProfileData);
+				}
+				else
+				{
+//					$this->sendMail();
+				}
+			}
 		}
 	}
 	
@@ -758,7 +775,7 @@ class DetailActionLib
             mail("ankitshukla125@gmail.com","Sort whitelisting 3","SORT :$sort:$http_msg");
         }
         
-        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId' && $contactId!='contactId')
+        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId' && $contactId!='contactId' && $contactId!='{contact_id}')
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :$contactId:$http_msg");
@@ -770,11 +787,11 @@ class DetailActionLib
             mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
         }
         
-        if(strlen($username)>15)
-        {
-            $http_msg=print_r($_SERVER,true);
-            mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
-        }
+//        if(strlen($username)>15)
+//        {
+//            $http_msg=print_r($_SERVER,true);
+//            mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
+//        }
     }
 
    /*	This function is used to handle next previous from myjs page

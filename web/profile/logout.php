@@ -89,7 +89,7 @@ foreach($mkeys as $k=>$v)
 
 unset($data);
 setcookie("oldbrowser", "", time()-3600,"/");
-logout();
+// logout(); case handled in apiAuthentication
 helpWidget();
 $smarty->assign("NOT_TO_SHOW",1);
 $smarty->assign("var_in","0");

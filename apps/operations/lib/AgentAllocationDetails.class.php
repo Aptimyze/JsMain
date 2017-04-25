@@ -448,8 +448,8 @@ public function fetchProfiles($processObj)
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
-					$processObj->setEndDate($screenedTimeEndSet);
+					//$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
+					$processObj->setEndDate($screenedTimeEnd);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
@@ -650,7 +650,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 	unset($noLoop);
 	if($method!='NEW_FAILED_PAYMENT' && $method!='FIELD_SALES' && $method!="WEBMASTER_LEADS"){
 		$mainAdminPoolObj	=new incentive_MAIN_ADMIN_POOL('newjs_slave');
-		$alertsObj		=new newjs_JPROFILE_ALERTS('newjs_slave');
+		$alertsObj		=new JprofileAlertsCache('newjs_slave');
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
@@ -758,7 +758,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 {
 	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
-	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
+	$jprofileAlertsObj	=new JprofileAlertsCache ('newjs_slave');		
 	$jprofileContactObj	= new ProfileContact('newjs_slave');
 	$vdObj 			=new billing_VARIABLE_DISCOUNT('newjs_slave');
 	$consentDncObj  	=new NEWJS_CONSENTMSG('newjs_slave');
@@ -813,7 +813,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 				continue;
 		}
 
-		$fields="LAST_LOGIN_DT,GENDER,DTOFBIRTH,SOURCE,SEC_SOURCE,PHONE_WITH_STD,PHONE_RES,PHONE_MOB,ISD,STD,COUNTRY_RES,HAVE_JCONTACT,MOB_STATUS,LANDL_STATUS,ENTRY_DT,INCOME,FAMILY_INCOME,MTONGUE,ACTIVATE_ON,SUBSCRIPTION,HAVEPHOTO,RELATION,INCOMPLETE";
+		$fields="DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,GENDER,DTOFBIRTH,SOURCE,SEC_SOURCE,PHONE_WITH_STD,PHONE_RES,PHONE_MOB,ISD,STD,COUNTRY_RES,HAVE_JCONTACT,MOB_STATUS,LANDL_STATUS,ENTRY_DT,INCOME,FAMILY_INCOME,MTONGUE,ACTIVATE_ON,SUBSCRIPTION,HAVEPHOTO,RELATION,INCOMPLETE";
 		$valueArray['ACTIVATED']="'Y'";
 		$valueArray['INCOMPLETE']="'N'";
 		$valueArray['PROFILEID']="$profileid";
@@ -821,7 +821,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 
 		if($level != -1 && $level !=-3 && $level!=-2){
 			if($level==0 || $level==-4 || $level==-5){
-				$lastLoginFiter =date('Y-m-d',time()-15*86400);
+				$lastLoginFiter = date('Y-m-d',time()-15*86400);
 				$greaterArray['LAST_LOGIN_DT'] ="$lastLoginFiter";
 			}
 		}
@@ -1244,7 +1244,7 @@ public function fetchOrderDetails($profileid)
 function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 {
 	if(!$fields)
-		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
+		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
 
 	$profileStr=implode(",",$profilesArr);
 	if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
@@ -1289,6 +1289,7 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 			$setProfileArr[$pid]["HAVEPHOTO"]       =$val['HAVEPHOTO'];
 			$setProfileArr[$pid]["ADDRESS"]       	=trim($val['CONTACT']);
 			$setProfileArr[$pid]["PINCODE"]       	=$val['PINCODE'];
+			$setProfileArr[$pid]["ISD"]         	=$isdNo;
 
 		        if($subMethod=='NEW_PROFILES' || $subMethod=='ONLINE_NEW_PROFILES' || $subMethod=='FOLLOWUP' || $subMethod=='FFOLLOWUP'){
         		        if($setProfileArr[$pid]["MOB_NO"] && $isdNo)
@@ -2039,7 +2040,7 @@ public function check_profile($profileid,$method='')
 
 	// Invalid phone check
 	if($method!='FIELD_SALES'){
-		$resDetails=$jprofileObj->get($profileid,"PROFILEID","PHONE_FLAG,ACTIVATED,LAST_LOGIN_DT,ISD");
+		$resDetails=$jprofileObj->get($profileid,"PROFILEID","PHONE_FLAG,ACTIVATED,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,ISD");
 		if($method=='RENEWAL'){
 			$lastLoginDt =$resDetails['LAST_LOGIN_DT'];
 			$checkDay =JSstrToTime(date("Y-m-d",time()-14*24*60*60));
@@ -2581,6 +2582,14 @@ public function fetchPincodesOfCities($cities)
 		return $profilesArr;
         }
 	
+    public function mailForLowDiscount($username,$agentName,$discountNegVal){
+        $to = "anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,amit.malhotra@jeevansathi.com,princy.gulati@jeevansathi.com,shubhda.sinha@jeevansathi.com";
+        //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
+        $from = "js-sums@jeevansathi.com";
+        $subject = "Low Capped Discount by executive";
+        $msgBody = "Username: $username<br>Discount Capped Value: $discountNegVal<br>CRM ID: $agentName";
+        SendMail::send_email($to, $msgBody, $subject, $from);
+    }
 
 }
 ?>

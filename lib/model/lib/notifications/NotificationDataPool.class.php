@@ -70,6 +70,7 @@ class NotificationDataPool
 
   public function getJustJoinData($applicableProfiles)
   {
+    //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
         foreach($applicableProfiles as $profileid=>$profiledetails)
@@ -78,8 +79,8 @@ class NotificationDataPool
             {
                 $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
-                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj);
-                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT'];
+                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
+                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
                 if($matchCount[$profileid]>0)
                     $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
             }
@@ -87,6 +88,7 @@ class NotificationDataPool
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
+        
         if(is_array($matchedProfiles))
         {
             foreach($matchedProfiles as $k1=>$v1)
@@ -133,6 +135,7 @@ class NotificationDataPool
         unset($matchedProfiles);
         unset($matchCount);
     }
+
     return $dataAccumulated;
   }
   
@@ -238,10 +241,10 @@ class NotificationDataPool
   }
 
     /*function to get notification data pool for instant JSPC/JSMS notifications
-    @inputs: $notificationKey,$profilesArr,$details,$message
+    @inputs: $notificationKey,$profilesArr,$details,$message,$count
     @output : $dataAccumulated
     */
-    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
+    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="",$count="")
     {
         foreach($profilesArr as $k=>$v)
         {
@@ -250,12 +253,24 @@ class NotificationDataPool
             else
                 $dataAccumulated[0][$k] = $details[$v]; 
         }
-        $dataAccumulated[0]['COUNT'] = "SINGLE";           
-        
+        if($count == "" || $count == 1){
+            $dataAccumulated[0]['COUNT'] = "SINGLE";  
+        }
+        else if($count > 1){
+            $dataAccumulated[0]['COUNT'] = "MUL";
+        }
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
+        
+        if($notificationKey == "MATCHALERT" && $count != "" && $count >1){
+            $dataAccumulated[0]['MATCHALERT_COUNT'] = $count;
+        }
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        if($notificationKey == 'CHAT_MSG' || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){
+            $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
+            $dataAccumulated[0]['OTHER_USERNAME']=$details[$profilesArr["OTHER"]]["USERNAME"];
+        }
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -301,7 +316,7 @@ class NotificationDataPool
         return $dataAccumulated;
   }
   
-  public function getMembershipProfilesForNotification($profiles, $notificationKey, $channelArr)
+  public function getMembershipProfilesForNotification($profiles, $channelArr=array())
   {
     unset($applicableProfiles);
     unset($profilesArr);
@@ -314,16 +329,16 @@ class NotificationDataPool
     {
         $tempSmsObj            = new newjs_TEMP_SMS_DETAIL();
         $valueArr['PROFILEID'] = @implode(",",$profiles);
-        $valueArr['SMS_KEY']   = $notificationKey;
+	$valueArr['SMS_KEY']   = "MEM_EXPIRE_A5,MEM_EXPIRE_A10,MEM_EXPIRE_A15,MEM_EXPIRE_B1,MEM_EXPIRE_B5";
         $profilesSmsArr        = $tempSmsObj->getArray($valueArr,'','','PROFILEID,MESSAGE');
         if(count($profilesSmsArr)>0)
         {
             foreach($profilesSmsArr as $key=>$val)
             {
-				$pid =$val['PROFILEID'];
+		$pid =$val['PROFILEID'];
                 $profilesNewArr[] =$pid;
-				$profileMsgArr[$pid] =$val['MESSAGE'];
-			}
+		$profileMsgArr[$pid] =$val['MESSAGE'];
+	    }
         }
     }
     if(!(in_array("M", $channelArr))){
@@ -351,7 +366,7 @@ class NotificationDataPool
             unset($dataArr);
         }
         //update sms send status
-        $tempSmsObj->updateSentForNotification($profilesStr, $notificationKey);
+        $tempSmsObj->updateSentForNotification($profilesStr, "'MEM_EXPIRE_A5','MEM_EXPIRE_A10','MEM_EXPIRE_A15','MEM_EXPIRE_B1','MEM_EXPIRE_B5'");
     }
     // return eligible profiles
     if($applicableProfiles)
@@ -514,12 +529,56 @@ class NotificationDataPool
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
+                    JsMemcache::getInstance()->set("cachedMM24$k1","");
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
             unset($matchOfDayMasterObj);
             unset($matchedProfiles);
             return $dataAccumulated;
+        }
+    }
+
+    function getLoggedoutNotificationData($applicableProfiles){
+        if(is_array($applicableProfiles)){
+            $counter =0;
+            foreach($applicableProfiles as $key=>$regId){
+                $dataAccumulated[$counter++]['SELF']=array('REG_ID'=>$regId,'PROFILEID'=>0);
+            }
+            $dataAccumulated[0]['COUNT'] = "SINGLE";
+            unset($applicableProfiles);
+            return $dataAccumulated;
+        }
+    }
+    
+    public function notificationLogging($logArr,$logPoint){
+        if (JsConstants::$whichMachine == 'test' && NotificationEnums::$enableNotificationLogging == true) {
+            print_r($logPoint);
+            print_r("\n");
+            foreach($logArr as $key => $val){
+                print_r($key);
+                print_r($val);
+                print_r("\n");
+            }
+        }
+    }
+    
+    public function getNotificationServiceData(){
+        $notificationServiceUrl = JsConstants::$chatNotificationService."/communication/v1/notification";
+        $headerArr[] = "JB-Internal: true";
+        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
+        $modifiedData = json_decode($response,true);
+        return $modifiedData;
+    }
+    
+    public function sendChatNotification($notificationData){
+        if(!empty($notificationData) && is_array($notificationData)){
+            $chatMsgInstantNotObj = new InstantAppNotification("MESSAGE_RECEIVED");
+            foreach($notificationData as $key => $valOld){
+                    $val = json_decode($valOld, true);
+                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
+            }
+            unset($chatMsgInstantNotObj);
         }
     }
 }

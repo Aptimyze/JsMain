@@ -294,8 +294,8 @@ class SearchApiDisplay
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode($this->getEducationValue($fieldValue,$decoratedFieldName,$this->searchResultsData[$key]['UG_DEGREE'],$this->searchResultsData[$key]['PG_DEGREE'],$this->searchResultsData[$key]['OTHER_UG_DEGREE'],$this->searchResultsData[$key]['OTHER_PG_DEGREE']));
 						}
 						else if($fieldName == 'CITY_RES')
-						{
-                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+						{ 
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = CommonFunction::getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
 //							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
 //							{
 //								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
@@ -306,6 +306,7 @@ class SearchApiDisplay
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
+					
 					}
 				}
 
@@ -363,6 +364,12 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
+					
+				$this->finalResultsArray[$pid]['availforchat']= false;
+				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
+				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
+					$this->finalResultsArray[$pid]['availforchat']= true;
+
 //				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::statName($pid,$this->searchResultsData[$key]['USERNAME']);
 				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::CanonicalProfile($this->profileObjArr[$key]);
 				$this->finalResultsArray[$pid]['PROFILECHECKSUM']=JsAuthentication::jsEncryptProfilechecksum($pid);
@@ -371,6 +378,7 @@ class SearchApiDisplay
 				$this->finalResultsArray[$pid]['HAVEPHOTO']=$this->searchResultsData[$key]['HAVEPHOTO'];
 				$this->finalResultsArray[$pid]['PRIVACY']=$this->searchResultsData[$key]['PRIVACY'];
 				$this->finalResultsArray[$pid]['PHOTO_DISPLAY']=$this->searchResultsData[$key]['PHOTO_DISPLAY'];
+				$this->finalResultsArray[$pid]['GENDER']=$this->searchResultsData[$key]['GENDER'];
 				$this->finalResultsArray[$pid]['MSTATUS']=FieldMap::getFieldLabel("mstatus",$this->searchResultsData[$key]['MSTATUS']);
 
 				if($ignProfArr[$pid] == 1)
@@ -693,6 +701,8 @@ class SearchApiDisplay
 					{
 						eval('$temp =$photoObj->get'.$this->photoType.'();');
 						$this->finalResultsArray[$profileId]['PHOTO'] = $temp;
+                                                if(MobileCommon::isAndroidApp())
+                                                    $this->finalResultsArray[$profileId]['THUMBNAIL_PIC'] = $photoObj->getThumbailUrl();
 						if(!MobileCommon::isDesktop())
 							$this->finalResultsArray[$profileId]['SIZE']=$this->getpictureSizeToShow($profileId,$pictureSize[$profileId]);
 						unset($temp);
@@ -881,7 +891,7 @@ class SearchApiDisplay
          * @param type $decoredVal
          * @return string
          */
-	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
+	/*protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){                                
                 $label = '';
                 $city = explode(',',$cityVal);
                 $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
@@ -893,7 +903,7 @@ class SearchApiDisplay
                         $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
                 }
                 if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
-                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
                 }else{
                      $states = explode(',',$state);
                      if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
@@ -909,5 +919,5 @@ class SearchApiDisplay
                         $label .= ' & '.$nativePlace;
                 
                 return $label;
-        }
+        }*/
 }

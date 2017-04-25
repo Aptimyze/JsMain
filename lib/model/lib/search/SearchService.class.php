@@ -20,6 +20,11 @@ class SearchService
 		$this->engineType = $engineType;
 		$this->showAllClustersOptions = $showAllClustersOptions;
 
+		//contains values of other fields.
+		$this->othersArray = array('Others','Other','other','others','Other Occupations','Security Professional');
+		//occupation values which has the same name as occupation grouping
+		$this->sameOccupationNameArray = array('Others','Defence','Pilot','Businessperson','Not working','Doctor','Farming','Sportsperson','Merchant Navy','Air Hostess','Govt. Services');
+
                 if($showAllClustersOptions)
 		{
                         //$this->clusterDisplaylimit = 10000;  //random choosen value
@@ -53,6 +58,7 @@ class SearchService
 		}
 		$SearchRequestObj = RequestHandleFactory::getRequestEngine($SearchResponseObj,$SearchParamtersObj);
 		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj);
+		
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES')
 		{
 			$SearchResponseObj = $SearchParamtersObj->getGunaMatches($SearchResponseObj);
@@ -510,7 +516,7 @@ class SearchService
 				unset($grpArr_1);
 				foreach($grpArr as $k=>$v)
 				{
-					if(in_array($v,array('Others','Other','other','others')))
+					if(in_array($v,$this->othersArray))
 					{
 						$grpArr_1[$k]=$v;
 						unset($grpArr[$k]);
@@ -1039,7 +1045,7 @@ class SearchService
 					unset($grpArr_1);
 					foreach($grpArr as $k=>$v)
 					{
-						if(in_array($v,array('Others','Other','other','others')))
+						if(in_array($v,$this->othersArray))
 						{
 							$grpArr_1[$k]=$v;
 							unset($grpArr[$k]);
@@ -1049,12 +1055,13 @@ class SearchService
 						foreach($grpArr_1 as $k=>$v)	
 							$grpArr[$k] = $v;
 					//Move Others option to the end
+					
 					foreach($grpArr as $k=>$v)
 					{
-						if($v=='Others')
-							$v = 'Others ';//differtiate between value 'other' and group Other
-						if($v=='Defence')
-							$v = 'Defence ';//differtiate between value 'Defence' and group Defence
+						if (in_array($v,$this->sameOccupationNameArray))
+						{
+							$v = $v." ";
+						}
 						$temp = $grpMappArr[$k];
 						$tempArr = explode(",",$temp);
 						$finalArr[$v][0] = 'Heading';
@@ -1098,7 +1105,7 @@ class SearchService
 						unset($removeOthersArr);
 						foreach($clusterValueArr as $clusterOpt=>$clusterOptVal)
 						{
-							if(in_array($clusterOpt,array('Others','Other','other','others')))
+							if(in_array($clusterOpt,$this->othersArray))
 							{
 								$removeOthersArr[$clusterOpt]=$clusterOptVal;
 								unset($this->clusterArr[$clusterName][$clusterOpt]);

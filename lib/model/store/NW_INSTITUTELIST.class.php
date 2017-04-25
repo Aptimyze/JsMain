@@ -26,6 +26,25 @@ class NW_INSTITUTELIST extends TABLE implements AutoSuggestor {
             throw new jsException($e);
 		}
 	}
+        public function match ($Institute)
+        {
+                try 
+                {
+
+                        $sql = "Select INSTITUTE from newjs.NW_INSTITUTELIST where INSTITUTE=:Institute or ABBR=:Institute";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":Institute",$Institute, PDO::PARAM_STR);
+                        $prep->execute();
+                        if($result = $prep->fetch(PDO::FETCH_NUM))
+                        {
+                                $records[]=$result[0];
+                        }
+                        return $records;
+                }
+                catch (Exception $e) {
+                        throw new jsException($e);
+                }
+        }
 } 	
 
 ?>

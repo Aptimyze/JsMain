@@ -61,6 +61,9 @@ class QuickSearchBand extends SearchParamters
                         $dArr = '';
                         $incomeType = "R";
                         $typeOfI='';
+                        /*if($formArr["partner_country_arr"]==51 && $jsonArr["LINCOME"] && $jsonArr["LINCOME"]!='0' && $jsonArr["LINCOME_DOL"]=='0'){
+                                        $jsonArr["LINCOME_DOL"] = 12;
+                        }*/
                         if(isset($jsonArr["LINCOME_DOL"]) && isset($jsonArr["HINCOME_DOL"]))
                         {
                                 $dArr["minID"] = $jsonArr["LINCOME_DOL"];
@@ -183,12 +186,18 @@ class QuickSearchBand extends SearchParamters
                         }
                 }
                 $searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
+                $doesntMAtterArray = array('DONT_MATTER');
 		if(!MobileCommon::isDesktop())
 		{
 			foreach($searchParamsSetter as $k=>$v)
 			{
-                        	if($v=='DONT_MATTER')
+                        	if($v=='DONT_MATTER'){
                                 	$searchParamsSetter[$k] = '';
+                                }else{
+                                        if(strstr($v,'DONT_MATTER')){
+                                                $searchParamsSetter[$k] = implode(',',array_diff(explode(",",$searchParamsSetter[$k]),$doesntMAtterArray));
+                                        }
+                                }
 			}
                 }
                

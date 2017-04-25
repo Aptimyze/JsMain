@@ -190,11 +190,11 @@ class DialerHandler
 
 			if(in_array($proid,$ignore_array)){
 				if($renewal){
-					if($dialStatus!='0' && $dialStatus!='9')
+					if($dialStatus!='9')
 						$updateArr[] ="Dial_Status=0";
 				}
 				else{
-					if($dialStatus!='0' && $dialStatus!='9' && $dialStatus!='3')
+					if($dialStatus!='9' && $dialStatus!='3')
 						$updateArr[] ="Dial_Status=0";
 				}
 				if(array_key_exists($proid,$discount_profiles))

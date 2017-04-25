@@ -22,6 +22,7 @@ class ShowProfileStatsAction extends sfActions
         $this->cid       = $request->getParameter('cid');
         $agentName       = $name       = $request->getParameter('name');
         $this->curlReq   = $request->getParameter('curlReq');
+	$this->actualUrl = $request->getParameter('actualUrl');
 
         if (!$this->curlReq) {
             $key  = 'SHOW_STAT_PAGE_' . $name;
@@ -80,6 +81,7 @@ class ShowProfileStatsAction extends sfActions
         $this->detailedProfileStatsData['an_show_score'] = $an_show_score;
 
         $this->mainProfileStatsData = $showCrmStatsObj->geMainProfileStats($this->profileDetailArr);
+	$this->mainProfileStatsData['actualUrl'] =$this->actualUrl;
 
         $this->detailedProfileStatsData["ALBUM_COUNT"] = $this->profilePicUrl["album_count"];
 

@@ -105,7 +105,7 @@ class testautomationActions extends sfActions
 
    public function executeDeleteTestingContacts(sfWebRequest $request)
    {
-	   $testingProfileIdsArray=array("11506347");
+	   $testingProfileIdsArray=array("11506347","16265585","16265529");
 	   $respObj = ApiResponseHandler::getInstance();
 	   if($request->getParameter("contactProfileId") && in_array($request->getParameter("contactProfileId"),$testingProfileIdsArray))
 	   {

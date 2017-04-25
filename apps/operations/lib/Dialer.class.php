@@ -80,7 +80,7 @@ class Dialer
 	public function filterProfiles($profileArr){
 
 		if($profileArr){
-			$alertsObj 	=new newjs_JPROFILE_ALERTS('newjs_slave');
+			$alertsObj 	=new JprofileAlertsCache('newjs_slave');
 			$historyObj 	=new incentive_HISTORY('newjs_slave');
 			$jprofileObj    =new JPROFILE('newjs_slave');
 	                $purchaseObj 	=new BILLING_PURCHASES('newjs_slave');

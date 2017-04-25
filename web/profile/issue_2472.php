@@ -89,7 +89,7 @@ if((($parent == 1)||($parent == 9)) && !$logged_astro_details)
 }
 if($logged_astro_details)
 {
-	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
+	$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
 	//$fp = @fsockopen("vendors.vedic-astrology.net", 80, &$errno, &$errstr);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);

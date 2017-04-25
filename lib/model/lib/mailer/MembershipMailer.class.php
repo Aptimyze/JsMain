@@ -264,7 +264,7 @@ class MembershipMailer {
         else
         {
             $logindDtStart = date('Y-m-d',strtotime(date('Y-m-d') . $lastLoginOffset));
-            $loginDtEnd = date('Y-m-d');
+            $loginDtEnd = date('Y-m-d H:i:s');
             $profileDetailsArr = $jprofileObj->getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd);   
         }
         if($neverPaidFlag==true)

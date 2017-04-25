@@ -393,6 +393,21 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
+if(AppLoggedInUser && idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
+        if(getAndroidVersion() || getIosVersion()){
+                var mbtext = "";
+                if(getAndroidVersion()){
+                        var type = "apppromotionSRPAndroid";
+                        var lableText = "Android";
+                        var mbtext = "<div class='txtc fontlig f14 pt5'>(3 MB only)</div>";
+                }
+                if(getIosVersion()){
+                        var type = "apppromotionSRPIos";
+                        var lableText = "iOS";
+                }                
+                tupleStructure += '<div class="srp_bgmsg dispnone padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=\"trackJsEventGA(\'Download App\',\'SRP\', \''+lableText+'\');\" href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
+        }
+}
 	return tupleStructure;
 }
 
@@ -822,7 +837,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	else{
 		if ( response.archivedInterestLinkAtEnd )
 		{
-			bottomErrorMsg('<a href="/profile/contacts_made_received.php?page=aeoi&filter=R" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+			bottomErrorMsg('<a href="/inbox/jsmsPerform?searchId=22" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
 		}
 		noScrollingAction=1;
 		reachedEnd=1;
@@ -1054,7 +1069,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				 */
 				if ( contactCenter == 1 )
 				{
-					var newAction = "/profile/contacts_made_received.php?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+					var newAction = "/inbox/jsmsPerform?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
 				}
 				else
 				{
@@ -1088,6 +1103,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 			}
 		},timedOut);
 		BindNextPage();
+		$('.srp_bgmsg').css('display','block');
 	},timedOut);
 		BindNextPage();
 }

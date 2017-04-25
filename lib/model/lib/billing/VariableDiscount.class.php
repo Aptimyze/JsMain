@@ -129,7 +129,7 @@ class VariableDiscount
     public function getAllDiscountForProfile($profileid, $durationArr='')
     {
 	if(!is_array($durationArr)){
-		$durationArr =$this->getActiveDurations();
+		$durationArr =$this->getActiveDurations($profileid);
 	}
         $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
@@ -300,7 +300,7 @@ class VariableDiscount
     
     public function generateVDImpactReport()
     {
-        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
+        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
         $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
         //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)
@@ -409,6 +409,7 @@ class VariableDiscount
                     $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
                     $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
                     if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+			$disc1 = min($disc1, $lastNegDet['DISCOUNT']);	
                         $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
                         $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
                         $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
@@ -417,14 +418,14 @@ class VariableDiscount
                     }
                     unset($discNegLogObj, $lastNegDet);
                     // End : Code to pick last discount capping by executive
-                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
+                    $discMax  =max($disc1,$disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
                     }
                     if($discMax>$profileArr[$pid]){
                         $profileArr[$pid] =$discMax;
                     }
-                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }
@@ -444,7 +445,7 @@ class VariableDiscount
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
-        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterRep');
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
@@ -477,6 +478,7 @@ class VariableDiscount
                     $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
                     $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
                     if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+			$disc1 = min($disc1, $lastNegDet['DISCOUNT']);
                         $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
                         $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
                         $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
@@ -485,14 +487,14 @@ class VariableDiscount
                     }
                     unset($discNegLogObj, $lastNegDet);
                     // End : Code to pick last discount capping by executive
-                    $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
+                    $discMax  =max($disc1,$disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
                     }
                     if($discMax>$profileArr[$pid]){
                         $profileArr[$pid] =$discMax;
                     }
-                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
+                    $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
                     $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
                 }
             }
@@ -549,8 +551,9 @@ class VariableDiscount
 	unset($jprofileObj);
 	return $paid;	
     }
-    public function getActiveDurations()
+    public function getActiveDurations($profileid="")
     {
+    
 	$keyMain='MAIN_MEM_DURATION';
 	$memCacheObject = JsMemcache::getInstance();
         if($memCacheObject->get($keyMain)){
@@ -558,7 +561,8 @@ class VariableDiscount
         }
 	 else{
         	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
-		$durationsArr =$serviceObj->getOnlineActiveDurations();
+            $mtongue = "A";
+		$durationsArr =$serviceObj->getOnlineActiveDurations($mtongue);
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){
 				unset($durationsArr[$val]);
@@ -574,7 +578,7 @@ class VariableDiscount
     public function getDiscountArrFromPoolTech($profileid, $durationArr='')
     {
         if(!is_array($durationArr)){
-                $durationArr =$this->getActiveDurations();
+                $durationArr =$this->getActiveDurations($profileid);
         }
         $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountArr($profileid);

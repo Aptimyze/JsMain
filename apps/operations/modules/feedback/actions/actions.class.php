@@ -184,5 +184,49 @@ public function executeReportAbuseForUser(sfWebRequest $request)
   $this->setTemplate('reportAbuseForUser');
 }
 
+public function executeDeleteRequestForUser(sfWebRequest $request)
+{ 
+  $this->setTemplate('deleteRequestForUser');
+}
+
+  public function executeSendDeleteRequestForUser(sfWebRequest $request)
+  {       
+          $this->linkToGoBackToDeleteRequest = JsConstants::$siteUrl."/operations.php/feedback/deleteRequestForUser";
+          $dataArray = $request->getParameter('feed');
+          $userName = $dataArray['username'];
+
+          $profileObj = NEWJS_JPROFILE::getInstance();
+          $userPFID = $profileObj->getProfileIdFromUsername($userName);
+          if(!$userPFID || $userPFID == NULL)
+          {
+            $error[message] = "username is not correct"; 
+            echo json_encode($error);
+            exit;
+          }
+
+          $sendingObject = new RequestUserToDelete();
+
+          if($dataArray['requestBySelf'] == '1')
+          {  
+            $sendingObject->deleteRequestedBySelf($userPFID);
+            $requestedBy = 'Self';
+          }
+          else
+          { 
+          $sendingObject->deleteRequestedByOther($userPFID);
+            $requestedBy = 'Other';  
+          }
+          $crmUserName = $this->user;
+
+          $loggingObj = new MIS_REQUEST_DELETIONS_LOG();
+          $loggingObj->logThis($crmUserName,$userPFID,$requestedBy);
+
+          $response[responseStatusCode] = '0';
+          $response[message] = "Successfully sent"; 
+            echo json_encode($response);
+            exit;
+
+  }
+
 }
 ?>

@@ -134,7 +134,7 @@
               <div class="f15 fontlig color11">        
                 <!--start:Basic Details-->
                 <div class="prfbr3">
-                  <div class="prfp5" id="section-basic">
+                  <div class="prfp5 noMultiSelect" id="section-basic">
                     <div class="clearfix"> <i class="sprite2 fl edpic6"></i>
                       <div class="fl colr5 pl8 f17 pt2" >Basic Details</div>
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
@@ -494,7 +494,7 @@
                         <!--end:div-->
                         <!--start:div-->
                         <div id="createHoroDiv" class="edpwid19 mauto disp-none">
-                            <iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
+                            <iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
                         </div>            
                         <!--end:div--> 
                     </div>

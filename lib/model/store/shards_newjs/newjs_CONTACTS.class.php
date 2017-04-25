@@ -76,7 +76,7 @@ public function getContactsPending($serverId)
 	{
 		try
 		{
-			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
+			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 			$res->execute();
@@ -100,7 +100,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) $chunkStr ORDER BY TIME DESC";
+        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) $chunkStr ORDER BY TIME DESC";
 			$res = $this->db->prepare($sql);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
@@ -123,7 +123,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-			$sql = "SELECT count(*) as count, RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM  `CONTACTS` WHERE ".$chunkStr." AND `FILTERED` =  'Y' AND `TYPE` =  'I' AND TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY  `RECEIVER`";
+			$sql = "SELECT count(*) as count, RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM  `CONTACTS` WHERE ".$chunkStr." AND `FILTERED` =  'Y' AND `TYPE` =  'I' AND TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) GROUP BY  `RECEIVER`";
 			$res = $this->db->prepare($sql);
 			//$res->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
 			$res->execute();
@@ -571,20 +571,22 @@ public function getSendersPending($chunkStr)
 			foreach($idArr as $k=>$v)
 				$idSqlArr[]=":v$k";
 			$idSql="(".(implode(",",$idSqlArr)).")";
-			$sql = "SELECT CONTACTID , TYPE FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
+			$sql = "SELECT CONTACTID , TYPE,MSG_DEL FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
 			$res=$this->db->prepare($sql);
 			foreach($idArr as $k=>$v)
 				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
-			{
-				$output[$row["CONTACTID"]] = $row["TYPE"];
+			{  // print_r($row); die;
+				$output[$row["CONTACTID"]]['TYP'] = $row["TYPE"];
+				$output[$row["CONTACTID"]]['MSG_DEL'] = $row["MSG_DEL"];
 			}
 		}
 		catch(PDOException $e)
         {
            throw new jsException($e);
         }
+        //print_r($output);
         return $output;
 	}
    /*
@@ -739,7 +741,7 @@ public function getSendersPending($chunkStr)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-		$string = array('TYPE','SEEN','FILTER','TIME');
+		$string = array('TYPE','SEEN','FILTER','TIME','MSG_DEL','SENDER','RECEIVER');
 		try{
 			if(!$condition)
 			{
@@ -903,7 +905,7 @@ public function getSendersPending($chunkStr)
 				else
 					$skipProfile = "AND ".$skipProfile;
 			}
-			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
+			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED,MSG_DEL,TYPE,SENDER,RECEIVER FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
 			$res=$this->db->prepare($sql);
 			if(is_array($bindArr))
 				foreach($bindArr as $k=>$v)
@@ -924,12 +926,17 @@ public function getSendersPending($chunkStr)
 				$output[$row["PROFILEID"]]["COUNT"] = $row["COUNT"];
 				$output[$row["PROFILEID"]]["SEEN"] = $row["SEEN"];
 				$output[$row["PROFILEID"]]["FILTERED"] = $row["FILTERED"];
+				$output[$row["PROFILEID"]]["MSG_DEL"] = $row["MSG_DEL"];
+				$output[$row["PROFILEID"]]["TYPE"] = $row["TYPE"];
+				$output[$row["PROFILEID"]]["SENDER"] = $row["SENDER"];
+				$output[$row["PROFILEID"]]["RECEIVER"] = $row["RECEIVER"];
 			}
 		}
 		catch(PDOException $e)
 		{
 			throw new jsException($e);
 		}
+
 		return $output;
 	}
 
@@ -1231,6 +1238,29 @@ public function getSendersPending($chunkStr)
     		{
     			throw new jsException($e);	
     		}
-    	}	
+    	}
+
+    public function isRBContact($sender,$receiver)
+	{
+                if(!$sender || !$receiver)
+                        throw new jsException("","PROFILEID IS BLANK IN newjs_CONTACTS.class.php");
+		try
+		{
+			$sql = "SELECT count(*) as CNT from newjs.CONTACTS WHERE SENDER =:SENDER AND RECEIVER = :RECEIVER and MSG_DEL =:MSG_DEL";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":RECEIVER",$receiver,PDO::PARAM_INT);
+			$res->bindValue(":SENDER",$sender,PDO::PARAM_INT);
+			$res->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
+			$res->execute();
+			$row = $res->fetch(PDO::FETCH_ASSOC);
+			$val = $row['CNT'];
+			return $val;
+		}
+		catch (PDOException $e)
+                {
+                        throw new jsException($e);
+                }
+
+	}	
 }
 ?>

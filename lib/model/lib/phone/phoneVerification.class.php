@@ -257,7 +257,7 @@ public function sendMembershipOffers(){
 				
 			if($appRegProfile)
 			{
-		    $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		    $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
             $profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			
@@ -292,9 +292,9 @@ static public function hidePhoneVerLayer($profileObj)
 	return 'Y';
 
 	$contactNumOb= new ProfileContact();
-	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"*");
-    if($numArray['0']['ALT_MOB_STATUS']=='Y')
-    return 'Y';
+	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"ALT_MOB_STATUS");
+        if($numArray['0']['ALT_MOB_STATUS']=='Y')
+        return 'Y';
 
 	return 'N';
  

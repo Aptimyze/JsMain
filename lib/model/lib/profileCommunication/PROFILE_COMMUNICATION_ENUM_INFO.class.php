@@ -43,6 +43,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["CONTACTS_VIEWED"]           = "VIEW_CONTACTS_LOG";
 		self::$informationTypeEnum["PEOPLE_WHO_VIEWED_MY_CONTACTS"]           = "VIEW_CONTACTS_LOG"; 
 		self::$informationTypeEnum["IGNORED_PROFILES"]           = "IgnoredProfiles"; 
+                self::$informationTypeEnum["MATCH_OF_THE_DAY"]           = "ContactsRecord";
 
 		self::$tuplesEnum["SMALL_ICON_TUPLE"]                    = "SmallIconTuple";
 		self::$tuplesEnum["BIG_ICON_TUPLE"]                      = "BigIconTuple";

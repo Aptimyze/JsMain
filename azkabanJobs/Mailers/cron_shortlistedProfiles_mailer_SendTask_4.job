@@ -1,3 +1,0 @@
-type=command
-dependencies=cron_shortlistedProfiles_mailer_populate
-command=${php5} ${docRoot}/symfony mailer:NEWJS_shortlistedProfileMailerSend 4 3

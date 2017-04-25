@@ -41,7 +41,6 @@ if (authenticated($cid)) {
 		$memcacheObj = new UserMemcache;
 		$key = "PROF_SCREEN_USER_" . $user;
 		if ($memcacheObj->getDataFromMem($key)) {
-			$memcacheObj->setDataToMem(5, $key, 5);
 			exit("Please refresh after 5 seconds.");
 		} else $memcacheObj->setDataToMem(5, $key, 5);
 		unset($memcacheObj);
@@ -439,7 +438,7 @@ if (authenticated($cid)) {
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
-
+	unsetMemcache5Sec($user);
 	    /*
 	    	check for whether your_info_original was set or not.
 	    */
@@ -535,7 +534,7 @@ if (authenticated($cid)) {
 					$sql_ne = "UPDATE MIS.NEW_EDIT_COUNT SET EDIT=EDIT+1 WHERE SCREEN_DATE='$now' AND SCREENED_BY='$user'";
 					mysql_query_decide($sql_ne) or die(mysql_error_js());
 				}
-				$sql = "SELECT RECEIVE_TIME FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$pid' and SCREENING_TYPE='O'";
+				$sql = "SELECT RECEIVE_TIME,SCREENING_VAL FROM jsadmin.MAIN_ADMIN WHERE PROFILEID='$pid' and SCREENING_TYPE='O'";
 				$res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				$resf = mysql_fetch_array($res);
 				$rec_time = $resf['RECEIVE_TIME'];
@@ -543,9 +542,23 @@ if (authenticated($cid)) {
 				$date_y_m_d = explode("-", $date_time[0]);
 				$time_h_m_s = explode(":", $date_time[1]);
 				$timestamp = mktime($time_h_m_s[0], $time_h_m_s[1], $time_h_m_s[2], $date_y_m_d[1], $date_y_m_d[2], $date_y_m_d[0]);
+				$screeningValMainAdmin = $resf[SCREENING_VAL];
 				$timezone = date("T", $timestamp);
 				if ($timezone == "EDT") $timezone = "EST5EDT";
-				$sql = "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL,TIME_ZONE, SUBMITED_TIME_IST) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, 'APPROVED', SUBSCRIPTION_TYPE, SCREENING_VAL,'$timezone', CONVERT_TZ(NOW(),'$timezone','IST') from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";
+if($arrProfileUpdateParams['ACTIVATED']=="N")
+{
+	$STATUS = "DELETED";
+}
+else
+{
+	$STATUS= "APPROVED";
+}
+
+if($activated=="U" || $activated=="N")
+{
+$screeningValMainAdmin = 0;
+}
+				$sql = "INSERT into jsadmin.MAIN_ADMIN_LOG (PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, SUBMITED_TIME, ALLOTED_TO, STATUS, SUBSCRIPTION_TYPE, SCREENING_VAL,TIME_ZONE, SUBMITED_TIME_IST) SELECT PROFILEID, USERNAME, SCREENING_TYPE, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, now(), ALLOTED_TO, '$STATUS', SUBSCRIPTION_TYPE, '$screeningValMainAdmin','$timezone', CONVERT_TZ(NOW(),'$timezone','IST') from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";
 				mysql_query_decide($sql) or die(mysql_error_js());
 				$sql = "DELETE from jsadmin.MAIN_ADMIN where PROFILEID='$pid' and SCREENING_TYPE='O'";
 				mysql_query_decide($sql) or die(mysql_error_js());
@@ -568,6 +581,21 @@ if (authenticated($cid)) {
 						$sms->send();
 						$sms=new InstantSMS("MTONGUE_CONFIRM",$pid);
 						$sms->send();
+						try
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+								// production logging
+								$currdate = date('Y-m-d');
+								$file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQProduce-$currdate", "a+");
+								fwrite($file, "$pid\n");
+								fclose($file);
+							}
+						}
+						catch(Exception $e) {}
 					//	$parameters = array("KEY" => "SI_APPROVE", "PROFILEID" => $pid, "DATA" => $pid);
 					//	sendSingleInstantSms($parameters);
 					}
@@ -720,12 +748,6 @@ if (authenticated($cid)) {
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-						$producerObj=new Producer();
-						if($producerObj->getRabbitMQServerConnected())
-						{
-							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
-							$producerObj->sendMessage($sendMailData);
-						}
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
@@ -759,6 +781,11 @@ if (authenticated($cid)) {
 		$smarty->assign("cid", $cid);
 		$smarty->assign("MSG", $msg);
 		$smarty->display("jsadmin_msg.tpl");
+/*
+		if ($medit != 1 && $from_skipped != 1) {
+			header('Location: screen_new.php?user='.$user.'&cid='.$cid.'&val='.$val);
+		}
+*/
 	} elseif ($Submit1) 
 	{
 		//Setting the value in memcache, that will be checked in authentication function while user is online.
@@ -1492,4 +1519,12 @@ function getAge($newDob) {
       die('Mysql error while marking profile under screening at line 1410');
     }
   }
+function unsetMemcache5Sec($user)
+{
+                include_once ("../classes/Memcache.class.php");
+                $memcacheObj = new UserMemcache;
+                $key = "PROF_SCREEN_USER_" . $user;
+		$memcacheObj->setDataToMem(0, $key, 0);
+                unset($memcacheObj);
+}
 ?>

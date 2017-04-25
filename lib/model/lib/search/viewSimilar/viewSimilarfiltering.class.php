@@ -95,6 +95,9 @@ class viewSimilarfiltering extends SearchParamters
 
 		$this->setWhereParams(SearchConfig::$searchWhereParameters.",".SearchConfig::$membersLookingForMeWhereParameters);
 		$this->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters);
+                
+                //Call VSP from different URL
+                $this->setIS_VSP(1);
 	   return $this;	
 	}
         

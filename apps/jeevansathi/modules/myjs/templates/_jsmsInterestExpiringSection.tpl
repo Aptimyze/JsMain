@@ -18,7 +18,7 @@
 			~/foreach`
 			~if $expiringData.view_all_count>3`
 				<div class="mar05 dispibl">
-				<a href="~$SITE_URL`/profile/contacts_made_received.php?page=eeoi&filter=R">
+				<a href="~$SITE_URL`/inbox/23/1">
 					<div class="row mar05 bg7 brdr50p posrel outerCircleDiv">
 	            	<div class="cell vmid white fullwid f23 fontlig txtc">+~math equation="x-y" x=$expiringData.view_all_count y=3`
 	            	</div>

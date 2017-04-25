@@ -10,6 +10,7 @@ class Inbox implements Module
 	private $configurations;
 	private $completeProfilesInfo;
 	private $skipProfiles;
+	private $considerProfiles;
 	private $totalCount;
 	private static $getTotal = "T";
 	public static $profileCount = 10;
@@ -173,6 +174,10 @@ class Inbox implements Module
 					case "INTEREST_EXPIRING":
 						$key = "INTEREST_EXPIRING";
 						break;
+					case "MATCH_OF_THE_DAY":
+						$key = "MATCH_OF_THE_DAY";
+                                                $memKeyNotExists=1;
+						break;
 
 				}
 
@@ -219,12 +224,12 @@ class Inbox implements Module
 	 *@return moduleDisplayObj : complete object of all the information requested by the module
 	 */
 	public function getDisplay($infoTypeNav = null,$params=null)
-	{
+	{  
 		$fields       = Array("profilechecksum");
 		$profiles     = Array();
 		$fromGetDisplayFunction=1;
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
-		$tupleService = new TupleService();
+		$tupleService = new TupleService(); 
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
 		$tupleService->setLoginProfileObj($this->profileObj);
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
@@ -293,16 +298,32 @@ class Inbox implements Module
 						{ 
 							$page = $nav;
 						}
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED"))
+						{
+							$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
+						}
 						$conditionArray = $this->getCondition($infoType, $page); 
-                                                if($infoType == "MY_MESSAGE")
+                                                if($infoType == "MY_MESSAGE"){
                                                     $conditionArray['LIMIT']++;
+                                                    $conditionArray["pageNo"]=$nav;
+                                                }
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
-						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED" ))
+						{
+							if(is_array($this->considerProfiles) && count($this->considerProfiles)>0)
+								$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION(),$this->considerProfiles);
+						}
+						else
+							$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+                                                if($infoType == "MATCH_OF_THE_DAY" && JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                                        $this->totalCount = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                                }
                                                 if($infoType == "MY_MESSAGE"){
                                                     	if(count($profilesArray)==$conditionArray['LIMIT'])
                                                         	array_pop($profilesArray);
                                                 }
+        
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray)){
 					//		print_r(count($data));
 							$data = $data+$profilesArray;
@@ -340,8 +361,8 @@ class Inbox implements Module
 		unset($skipArray);
 		//Creating Final object including infotype based all the information
 		if (is_array($infoTypeObj)) {
-			// Calling tuple service to retrieve complete information of all the profiles in one go
-			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
+			// Calling tuple service to retrieve complete information of all the profiles in one go  
+			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields),$profilesArray);
 
 			if ($config) {
 				unset($tuplesValues);
@@ -429,6 +450,11 @@ class Inbox implements Module
 				$skipConditionArray = SkipArrayCondition::$MESSAGE;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				if(InboxEnums::$messageLogInQuery)
+				{
+					$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+					$this->considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+				}
 				break;
 			case 'PHOTO_REQUEST_RECEIVED':
 				$skipConditionArray = SkipArrayCondition::$PHOTO_REQUEST;
@@ -475,6 +501,11 @@ class Inbox implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+			case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			case 'IGNORED_PROFILES': $this->skipProfiles = array();
 			  break;
 			default:
@@ -503,21 +534,21 @@ class Inbox implements Module
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			} //$infoType == "INTEREST_RECEIVED"
 
 			if ($infoType == "INTEREST_ARCHIVED") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["LESS_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			}
 
 			if($infoType == "INTEREST_RECEIVED_FILTER")
 			{
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 				if($this->totalCount>=20)
@@ -529,8 +560,8 @@ class Inbox implements Module
 			}
 			if ($infoType == "INTEREST_EXPIRING") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
-				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - (CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT - 1), date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$back_83_days                                     = date("Y-m-d", $bday);
 				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
@@ -539,7 +570,7 @@ class Inbox implements Module
 
 
 		if ($infoType == "FILTERED_INTEREST") {
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			}
@@ -566,6 +597,13 @@ class Inbox implements Module
 		if ($infoType == "MATCH_ALERT")
 		{
 			$condition["NEW"] = 0;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+                        $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+                        $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+                        $condition['IGNORED'] = 'N';
 		}
 		return $condition;
 	}

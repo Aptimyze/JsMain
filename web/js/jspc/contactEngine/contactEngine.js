@@ -542,10 +542,59 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 		FinalHtml=FinalHtml.replace(/\{\{paramData\}\}/g,null);
 		FinalHtml=FinalHtml.replace(/\{\{ACTION_ID\}\}/g,'ActionButton'+profileChecksum+"-"+this.name);
 	}
+
+	if(typeof(Obj.actiondetails.newerrmsglabel) != "undefined" && Obj.actiondetails.newerrmsglabel != null)
+	{
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'disp-none');
+		
+		FinalHtml = FinalHtml.replace(/\{\{ErrorMsglabel\}\}/g,Obj.actiondetails.newerrmsglabel);
+		FinalHtml = FinalHtml.replace(/\{\{MembershipMsgHeader\}\}/g,Obj.actiondetails.membershipmsgheading);
+
+		FinalHtml = FinalHtml.replace(/\{\{subheading1\}\}/g,Obj.actiondetails.membershipmsg.subheading1);
+		FinalHtml = FinalHtml.replace(/\{\{subheading2\}\}/g,Obj.actiondetails.membershipmsg.subheading2);
+		FinalHtml = FinalHtml.replace(/\{\{subheading3\}\}/g,Obj.actiondetails.membershipmsg.subheading3);
+
+		if(typeof(Obj.actiondetails.offer) != "undefined" && Obj.actiondetails.offer != null)
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOffer\}\}/g,Obj.actiondetails.offer.membershipOfferMsg1 + " " + Obj.actiondetails.offer.membershipOfferMsg2);
+			FinalHtml = FinalHtml.replace(/\{\{currency\}\}/g,Obj.actiondetails.membershipoffercurrency);
+
+			if(typeof(Obj.actiondetails.strikedprice) != "undefined" && Obj.actiondetails.strikedprice != null)
+			{
+				FinalHtml = FinalHtml.replace(/\{\{oldPrice\}\}/g,Obj.actiondetails.strikedprice);
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'');
+			}
+			else
+			{
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'disp-none');
+			}
+
+			FinalHtml = FinalHtml.replace(/\{\{newPrice\}\}/g,Obj.actiondetails.discountedprice);
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
+		}
+		else if(typeof(Obj.actiondetails.lowestoffer) != "undefined" && Obj.actiondetails.lowestoffer != null)
+		{
+			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'');
+		}
+		else
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
+		}
+		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.action+"-"+profileChecksum+"-"+this.name);
+		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);
+	}
+	else
+	{
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'disp-none');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'');
+	}
 	
-	
-	
-	
+
 	return FinalHtml;
 
 }
@@ -798,16 +847,8 @@ function cEButtonActionCalling(elementObj)
 	{
 		var buttonObj=new Button(elementObj);
 		buttonObj.request();
-		if(arrID[0] == "IGNORE"){
-			//console.log("ignore from view profile");
-			var chatData = elementObj.attr("data-chat");
-			if(chatData != undefined){
-				var chatSplitData = chatData.split(",");
-				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
-					updateNonRosterListOnCEAction({"user_id":chatSplitData[0],"action":chatSplitData[1]});
-				}
-			}
-		}
+		//update chat list on pc based on contact engine action type
+		updateChatRosterList(elementObj,arrID);
 	}
 	else
 	{
@@ -838,6 +879,62 @@ function cEButtonActionCalling(elementObj)
 		}
 	}
 }
+
+function updateChatRosterList(elementObj,arrID){
+	if(arrID[0] == "IGNORE"){
+		//console.log("ignore from cEButtonActionCalling");
+		var chatData = elementObj.attr("data-chat");
+		if(chatData != undefined){
+			var chatSplitData = chatData.split(",");
+			if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+				updateNonRosterListOnCEAction({
+										"user_id":chatSplitData[0],
+										"action":chatSplitData[1]
+									});
+			}
+		}
+	}
+	else{
+		//non roster actions(shortlist,remove shortlist) other than ignore and chat
+		if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+			if(arrID[1] != undefined){
+				var profileSplitData = arrID[1].split("i");
+				var chatStatus = "offline";
+				if(elementObj.parent().find(".OnlineChat").length == 1){
+					chatStatus = "online";
+				}
+				var pcChatData = [],action = "",group="";
+				switch(arrID[0]){
+					case "SHORTLIST":
+						var isShortlisted = elementObj.attr("data");
+						if(isShortlisted.indexOf("&shortlist=false")>-1){
+							action = "ADD";
+							group = "shortlist";
+						}
+						else if(isShortlisted.indexOf("&shortlist=true")>-1){
+							action = "REMOVE";
+							group = "shortlist"
+						}
+						break;
+				}
+				if(action != "" && elementObj.parent().parent().hasClass("pcChatHelpData")){
+					pcChatData = (elementObj.parent().parent().attr("data-pcChat")).split(",");
+					//console.log("from cEButtonActionCalling ",profileSplitData,action,group,chatStatus);
+					updateNonRosterListOnCEAction({
+											"user_id":profileSplitData[1],
+											"action":action,
+											"chatStatus":chatStatus,
+											"username":pcChatData[0],
+											"profilechecksum":pcChatData[1],
+											"groupId":group,
+											"otherGender":pcChatData[2]
+										});
+				}
+			}
+		}
+	}
+}
+
 function hpOverlayBinding()
 {
 	$(".js-overlay").bind('click',function() {
@@ -995,6 +1092,18 @@ ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
 ajaxConfig.success=function(response){
+
+	if(response.responseStatusCode == '1')
+	{	
+		if(typeof response.heading != 'undefined'){
+		$('#headingReportInvalid').html(response.heading);
+		}
+	}
+	else if(response.responseStatusCode == '0')
+	{	
+		$('#headingReportInvalid').html('Phone no. reported as invalid');
+	}
+	$('#invalidConfirmMessage').html(response.message);
 	$('#reportInvalidReason-layer').fadeOut(300,"linear");
 	hideCommonLoader();
 	var jObject=$("#reportInvalidConfirmLayer");

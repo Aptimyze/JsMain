@@ -40,7 +40,7 @@ class page1v1Action extends sfAction {
 				$phone_with_std=$phone[std].$phone[landline];
 				
 			$now = date("Y-m-d G:i:s");
-      $today = date("Y-m-d");
+      $today = CommonUtility::makeTime(date("Y-m-d"));
       $this->ip = CommonFunction::getIP();
       
 			$values_that_are_not_in_form = array('INCOMPLETE' => 'Y', 'ACTIVATED' => 'N', 'SCREENING' => 0, 'SERVICE_MESSAGES' =>'S', 'ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today, 'SORT_DT' => $now, 'IPADD' => $this->ip, 'PROMO_MAILS' =>'S', 'CRM_TEAM' => "online", 'PERSONAL_MATCHES' =>'A', 'GET_SMS' =>'Y', 'SEC_SOURCE' => "S", 'KEYWORDS' => $keywords,'AGE'=>$age,'SHOWPHONE_MOB'=>'Y','SHOWPHONE_RES'=>'Y');
@@ -55,7 +55,7 @@ class page1v1Action extends sfAction {
 			RegistrationMisc::updateAlertData($id,$alertArr,'A');
 			
 			$jpartnerFields=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","CITY_RES","AGE","RELIGION","OCCUPATION","HEIGHT","INCOME","EDU_LEVEL_NEW");
-			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields);
+			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields,$reg_params[casteNoBar]);
 			RegistrationMisc::contactArchiveUpdate($this->loginProfile,$this->ip);
 			RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
 			$partnerField = new PartnerField();

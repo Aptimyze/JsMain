@@ -21,7 +21,7 @@ class VariableDiscountHandler
 		$this->cutOffDate		=date("Y-m-d",strtotime("$this->todayDate - $this->cutOffDurationInMonth month"));
                 $this->twoMonthOldDate  	=date("Y-m-d",strtotime("$this->todayDate - 2 month"));
 		$this->lastWeekDate		=date("Y-m-d",strtotime("$this->todayDate - 6 days"));     
-		$this->discountFieldMapping 	=array("2"=>"2_DISCOUNT","3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
+		$this->discountFieldMapping 	=array("1"=>"1_DISCOUNT","2"=>"2_DISCOUNT","3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
 
 		// New table structure is created as required
 		$this->createNewTableStructure();
@@ -38,6 +38,10 @@ class VariableDiscountHandler
 			$analyticScore 	=$row['ANALYTIC_SCORE'];
        	       	        $sql1 		="insert ignore into billing.VARIABLE_DISCOUNT_POOL_TECH(`PROFILEID`,`SCORE`) VALUES('$pid','$analyticScore')";
        	       	        mysql_query_decide($sql1,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($this->myDb)));
+
+                        $sql1           ="insert ignore into billing.VARIABLE_DISCOUNT_POOL_TECH_LOG1(`PROFILEID`,`SCORE`) VALUES('$pid','$analyticScore')";
+                        mysql_query_decide($sql1,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($this->myDb)));
+
         	}
 	}
 
@@ -89,6 +93,12 @@ class VariableDiscountHandler
                 $endDate                =$lastVdGivenDetails['EDATE'];
                 $activationDt           =$lastVdGivenDetails['ENTRY_DT'];
 
+                $todayDate              = date("Y-m-d");
+		$timeVal		= date('H');
+		$timeArr		= array("18","19","20","21","22","23","24");
+                if((strtotime($startDate) != strtotime($todayDate)) && (!in_array($timeVal, $timeArr)))
+			return;
+
                 $sql1 ="select * from billing.VARIABLE_DISCOUNT_POOL_TECH";
                 $res1 =mysql_query_decide($sql1,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($this->myDb)));
                 while($row1 =mysql_fetch_array($res1)){
@@ -107,12 +117,16 @@ class VariableDiscountHandler
         }
 
 	// removed profiles from VD Pool 
-	public function removeVdPoolProfiles($profileArr)
+	public function removeVdPoolProfiles($profileArr,$flag='')
 	{
 		if(is_array($profileArr))
 			$profileStr =@implode(",",$profileArr);
 		$sql ="delete from billing.VARIABLE_DISCOUNT_POOL_TECH where PROFILEID IN($profileStr)";
 		mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+		foreach($profileArr as $key=>$pid){
+			$sqlLog ="insert into billing.VD_FILTER_LOG(`PROFILEID`,`TYPE`,`ENTRY_DT`) VALUES('$pid','$flag',now())";
+			mysql_query_decide($sqlLog,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sqlVdDuration.mysql_error($this->myDb)));
+		}
 	}
 
 	// fetch profiles from VD Pool
@@ -137,24 +151,24 @@ class VariableDiscountHandler
                         $age            =$rowJ['AGE'];
 			$subscription	=$rowJ['SUBSCRIPTION'];
                         if($gender=='M' && $age<=23){
-                                $this->removeVdPoolProfiles(array($profileid));
+                                $this->removeVdPoolProfiles(array($profileid),'G');
                                 return;
                         }
 			$subExpiryPeriodExist =$this->checkSubscriptionExpiryPeriod($profileid);
 			if(!$subExpiryPeriodExist){
                         	if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!="")){
-					$this->removeVdPoolProfiles(array($profileid));
+					$this->removeVdPoolProfiles(array($profileid),'P');
 					return;
 				}
 			}
 			else if($subExpiryPeriodExist){
-				$this->removeVdPoolProfiles(array($profileid));
+				$this->removeVdPoolProfiles(array($profileid),'R');
 				return;
 			}
                 	$sqlVd ="update billing.VARIABLE_DISCOUNT_POOL_TECH SET GENDER='$gender',MTONGUE='$mtongue' where PROFILEID='$profileid'";
                 	mysql_query_decide($sqlVd,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sqlVd.mysql_error($this->myDb)));
 		}else
-			$this->removeVdPoolProfiles(array($profileid));
+			$this->removeVdPoolProfiles(array($profileid),'N');
 	}	
 
 	// Profiles expiring in the period of- 30 days before expiry to 10 days after expiry.
@@ -222,7 +236,7 @@ class VariableDiscountHandler
 			}
 			if(count($pidArr)>1){
         	        	unset($pidArr[$maxprofileid]);                  		
-        	       		$this->removeVdPoolProfiles($pidArr);
+        	       		$this->removeVdPoolProfiles($pidArr,'D');
 			}	
 		}
 		unset($pidArr);
@@ -359,6 +373,13 @@ class VariableDiscountHandler
                 // Truncate table billing.VARIABLE_DISCOUNT_POOL_TECH
                 $sql ="TRUNCATE TABLE billing.VARIABLE_DISCOUNT_DURATION_POOL_TECH";
                 mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+
+                $sql ="TRUNCATE TABLE billing.VARIABLE_DISCOUNT_POOL_TECH_LOG1";
+                mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+
+                $sql ="TRUNCATE TABLE billing.VD_FILTER_LOG";
+                mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+
 
 	}
 

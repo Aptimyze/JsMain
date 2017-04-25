@@ -27,6 +27,25 @@ class newjs_DIOCESES extends TABLE implements AutoSuggestor {
           throw new jsException($e);
 		}
 	}
+        public function match ($DIOCESES)
+        {
+                try
+                {
+
+                        $sql = "Select DIOCESES from newjs.DIOCESES where DIOCESES=:DIOCESES";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":DIOCESES",$DIOCESES, PDO::PARAM_STR);
+                        $prep->execute();
+                        if($result = $prep->fetch(PDO::FETCH_NUM))
+                        {
+                                $records[]=$result[0];
+                        }
+                        return $records;
+                }
+                catch (Exception $e) {
+                        throw new jsException($e);
+                }
+        }
 } 	
 
 ?>

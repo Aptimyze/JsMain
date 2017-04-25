@@ -2,7 +2,7 @@
 class EditReligionEthnicity extends EditProfileComponent {
 	public function submit() {
 		
-		$today = date("Y-m-d");
+		$today = CommonUtility::makeTime(date("Y-m-d"));
 		$this->request = $this->action->getRequest();
 		$Subcaste = $this->request->getParameter('subcaste');
 		$Subcaste = trim($Subcaste);

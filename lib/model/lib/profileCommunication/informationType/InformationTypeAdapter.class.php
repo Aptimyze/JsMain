@@ -14,7 +14,7 @@ class InformationTypeAdapter
         $this->profileId = $profileId;
     }
     
-    public function getProfiles($condition, $skipArray,$subscription="")
+    public function getProfiles($condition, $skipArray,$subscription="",$considerProfiles = '')
     {
 		$profilesArray = array();
        
@@ -139,7 +139,7 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["PROFILE"] = $this->profileId;
                 $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
                 $condition["WHERE"]["IN"]["TYPE"]     = "R";
-                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray);
+                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray,$considerProfiles);
                 break;
         case "MY_MESSAGE_RECEIVED":
                 $messageLogObj                        = new MessageLog();
@@ -229,11 +229,40 @@ class InformationTypeAdapter
 	                uasort($profilesArray,array($this,"cmp"));
 								$profilesArray = array_slice($profilesArray,0,$limit,true);
                 break;
-
+            case "MATCH_OF_THE_DAY":
+                        $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
+                        $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
+                        if($condition["GENDER"] == 'F'){
+                                $searchObj = new NEWJS_SEARCH_MALE();
+                        }else{
+                                $searchObj = new NEWJS_SEARCH_FEMALE();
+                        }
+                        if(!empty($profilesArray)){
+                                $data = $searchObj->getArray(array("PROFILEID"=>implode(',',$profilesArray)));
+                                $profilesArray1 = array();
+                                $profilesArraySorted = array();
+                                if(!empty($data)){
+                                        foreach($data as $profiles){
+                                                $profilesArray1[] = $profiles["PROFILEID"];
+                                        }
+                                        foreach($profilesArray as $profileid){
+                                                if(in_array($profileid, $profilesArray1))
+                                                        $profilesArraySorted[$profileid]["PROFILEID"] =  $profileid;
+                                        }
+                                        unset($profilesArray);
+                                        $profilesArray = $profilesArraySorted;
+                                }else{
+                                    $profilesArray = array();
+                                }
+                        }else{
+                                $profilesArray = array();
+                        }
+                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileId,  count($profilesArray));
+                break;
+        
             default:
 				throw new JsException("","Wrong infoType is given in InformationTypeAdapter.class.php");
         }
-
         return $profilesArray;
         
     }

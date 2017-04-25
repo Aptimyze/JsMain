@@ -85,7 +85,7 @@ window.onload=function(){
     if (prev_handler) {
         prev_handler();
     }
-    setTimeout(function(){loadScript('http://xp1.zedo.com/client/xp1/fmos.js',renderBanners);},100); 
+    setTimeout(function(){loadScript('https://saxp.zedo.com/sclient/tt3/fmos.js',renderBanners);},100); 
     var zedoLoad = 1;
 }
 </script>
@@ -228,7 +228,7 @@ window.onload=function(){
                                      <li>
                                     <a href="/inbox/10/1">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl"> Declined</div>
+                                        <div class="fl"> Declined/Cancelled</div>
                                         <div class="fr">
                                             <div id="membersDeclinedMeCountParent" class="disp-tbl txtc" style="display:none">
                                                 <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
@@ -341,7 +341,7 @@ window.onload=function(){
                                                 <div class="fullwidth clearfix pl10">
                                                     <div class="contentHeader mCustomScrollbar" style="height:360px;padding-bottom:25px;">
                                                         <ul class="clearfix hor_list">
-                                                            <li><a title="Hindi Delhi Matrimony" href="/hindi-delhi-matrimony-matrimonials"> Hindi-Delhi </a></li>
+                                                            <li><a title="Hindi Delhi Matrimony" href="/matrimonials/hindi-matrimonial/"> Hindi-Delhi </a></li>
                                                             <li><a title="Marathi Matrimony" href="/matrimonials/marathi-matrimonial/"> Marathi </a></li>
                                                             <li><a title="Hindi UP Matrimony" href="/hindi-up-matrimony-matrimonials"> Hindi-UP </a></li>
                                                             <li><a title="Punjabi Matrimony" href="/matrimonials/punjabi-matrimonial/"> Punjabi </a></li>

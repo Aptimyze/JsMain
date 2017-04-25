@@ -154,16 +154,23 @@ class Decline extends ContactEvent{
         $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",1);
       if($currentFlag==ContactHandler::INITIATED)
       {
-        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
-        {
-          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
-        }
         if ($filtered!='Y'){
+          if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
+          {
+            $profileMemcacheServiceViewerObj->update("INTEREST_ARCHIVED",-1);
+          }
+          else
+          {
+            if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+            {
+              $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+            }
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
         $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
-		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+		      $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+          }
 }
  else $profileMemcacheServiceViewerObj->update("FILTERED",-1);
       }

@@ -253,6 +253,8 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
+		$mappingName = $this->getlogMappingName($moduleName);
+		$scriptName = $this->getlogScriptName();
 		//$headers = getallheaders();
 		$logData = array();
 
@@ -304,10 +306,17 @@ class LoggingManager
 			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
-		if ( $message != "")
+		$logData[LoggingEnums::MESSAGE] = $message;
+
+		if($mappingName != "")
 		{
-			$logData[LoggingEnums::MESSAGE] = $message;
-		} 
+			$logData[LoggingEnums::MAPPING] = $mappingName;
+		}
+
+		if($scriptName != "")
+		{
+			$logData[LoggingEnums::SCRIPT] = $scriptName;
+		}
 
 		if($this->canWriteTrace($this->moduleName))
 		{
@@ -328,6 +337,26 @@ class LoggingManager
 
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
 		}
+		else
+		{
+			$logData[LoggingEnums::REFERER] = $_SERVER['HTTP_REFERER'];
+		}
+
+		if($exception instanceof Exception)
+		{
+			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
+		}
+
+		if(isset($logArray[LoggingEnums::CONSUMER_NAME]))
+		{
+			$logData[LoggingEnums::CONSUMER_NAME] = $logArray[LoggingEnums::CONSUMER_NAME];
+		}
+
+		if(isset($logArray[LoggingEnums::PHISHING_URL]))
+		{
+			$logData[LoggingEnums::PHISHING_URL] = $logArray[LoggingEnums::PHISHING_URL];	
+		}
+
 		return $logData;
 	}
 
@@ -583,7 +612,10 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
-		$this->setLogged();
+		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+		{
+			$this->setLogged();
+		}
 	}
 
 	/**
@@ -616,20 +648,21 @@ class LoggingManager
 	private function canLog($enLogType,$Var,$isSymfony,$logArray)
 	{
 		// A request should be logged only once.
-		if($this->getLogged())
+		if($enLogType == LoggingEnums::LOG_ERROR && $this->getLogged())
 		{
 			return false;
 		}
 		// set module name
 		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
+		// check Log Level
+		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName) || ($this->szLogPath != null));
+
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);
-		// check Log Level
-		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName));
 		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
@@ -664,5 +697,37 @@ class LoggingManager
 	private function canWriteTrace($moduleName)
 	{
 		return LoggingConfig::getInstance()->traceStatus($moduleName);
+	}
+
+	/**
+	 * @param $moduleName
+	 * @return Mapping name of a module
+	 */
+	private function getlogMappingName($moduleName)
+	{
+		if(in_array($moduleName, array_keys(LoggingEnums::$ModuleMapping)))
+		{
+			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
+		}
+		else if(strpos($moduleName, '404') !== false)
+		{
+			$mappingName = LoggingEnums::$MappingNames[20];
+		}
+		else
+		{
+			$mappingName = LoggingEnums::$MappingNames[21];
+		}
+		return $mappingName;
+	}
+
+	// Get script name for failed cli scripts like RabbitMQ consumer crons.
+	private function getlogScriptName()
+	{
+		$scriptName = '';
+		if(php_sapi_name() === 'cli')
+		{
+			$scriptName = json_encode($_SERVER['argv']) . $_SERVER['SCRIPT_FILENAME'];
+		}
+		return $scriptName;
 	}
 }

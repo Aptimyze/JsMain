@@ -191,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='',$source='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -209,7 +209,7 @@ class SearchCommonFunctions
                 if($twoWayMatches)
                     $SearchParamtersObj->getSearchCriteria();
                 else
-                    $SearchParamtersObj->getDppCriteria();
+                    $SearchParamtersObj->getDppCriteria('',$source);
                 if($verifiedProfilesDate){
                     $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
                     $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
@@ -256,22 +256,29 @@ class SearchCommonFunctions
         * This section will give count for justJoinedMatches and top10 results
 		* @return array containing count and ids info.
         */
-        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly")
+        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly",$havePhotoCriteria="")
         {
                 $searchEngine = 'solr';
 				$noAwaitingContacts=1;
+				
 				$sort = SearchSortTypesEnums::justJoinedSortFlag;
                 if(!$loggedInProfileObj)
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('JustJoinedMatches',$loggedInProfileObj);
                 $SearchParamtersObj->getSearchCriteria($searchCriteria);
+                if($havePhotoCriteria!="")
+                {
+                	$SearchParamtersObj->setHAVEPHOTO("Y");
+                }
                 $SearchServiceObj = new SearchService($searchEngine);
                 $SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
                 $SearchUtilityObj =  new SearchUtility;
                 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
+
+                $resultsArr = $responseObj->getResultsArr();
                 $arr['PIDS'] = $responseObj->getsearchResultsPidArr();
-                $arr['CNT']  = $responseObj->getTotalResults();
+                $arr['CNT']  = $responseObj->getTotalResults();                            
                 return $arr;
         }
 
@@ -356,5 +363,24 @@ class SearchCommonFunctions
 		//$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
 		return $arr;
 	}
+        public static function getOccupationMappingData($occupationArray = array()){
+                $mappingOccupationData = array();
+                if(!empty($occupationArray)){
+                        $mappedArr = FieldMap::getFieldLabel("occupation_grouping_mapping_to_occupation",1,1);
+                        $map = array();
+                        foreach($mappedArr as $key=>$mappedOcc){
+                                $map[$key] = explode(",", $mappedOcc);
+                        }
+                        foreach($occupationArray as $occupation){
+                                foreach($map as $k=>$occupations){
+                                        if(in_array($occupation, $occupations)){
+                                                $mappingOccupationData = array_merge($mappingOccupationData,$occupations);
+                                        }
+                                }
+                        }
+                }
+                $mappingOccupationData = array_unique($mappingOccupationData);
+                return $mappingOccupationData;
+        }
 }
 ?>

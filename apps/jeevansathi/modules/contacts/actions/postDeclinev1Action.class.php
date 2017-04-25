@@ -45,7 +45,7 @@ class postDeclinev1Action extends sfAction
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
-					$responseArray           = $this->getContactArray();
+					$responseArray           = $this->getContactArray($request);
 				}
 			}
 		}
@@ -68,13 +68,21 @@ class postDeclinev1Action extends sfAction
 	}
 	
 	
-	private function getContactArray()
+	private function getContactArray($request)
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,array("source"=>$this->source),$this->contactHandlerObj);
+
+		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+		{
+			$actionType = "CHATDECLINE";
+		}
+		else{
+			$actionType = ContactHandler::DECLINE;
+		}
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::DECLINE);
+			$responseButtonArray = $buttonObj->getAfterActionButton($actionType);
 		}
 		
 		else

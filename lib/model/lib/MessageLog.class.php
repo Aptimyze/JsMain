@@ -31,7 +31,7 @@ class MessageLog
         return $messageCount;
     }
     
-    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '')
+    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '',$considerProfile='')
     {
         if (!$where["RECEIVER"] && !$where["SENDER"]) {
             throw new jsException("", "No Sender or reciever is specified in funcion getContactsCount OF Contacts.class.php");
@@ -43,7 +43,7 @@ class MessageLog
         }
         $dbName        = JsDbSharding::getShardNo($profileid);
         $messageLogObj = new newjs_MESSAGE_LOG($dbName);
-        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile);
+        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile,$considerProfile);
         
         return $count;
     }
@@ -76,19 +76,46 @@ class MessageLog
 		$count = $messageLogObj->markMessageSeen($viewer,$viewed);
 		return $count;
 	}
-	public function getEOIMessages($loginProfile,$profileArray)
-	{
-		
+	public function getEOIMessages($loginProfile,$profileArray,$arrayForRB = '')
+	{  
+		$request = sfContext::getInstance()->getRequest();
+		$infoTypeId = $request->getParameter('infoTypeId');
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getEOIMessages(array($loginProfile),$profileArray);
+
 		foreach($messageArray as $key=>$value)
-		{
+		{	
 			$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 			$value["MESSAGE"] = str_ireplace($breaks,"\r\n",$value["MESSAGE"]);
 			$message[$key] = $value;
 		}
+
+		if(!is_array($message)){
+		$message = array();
+		}
+		if(is_array($arrayForRB))
+		{	
+		foreach ($arrayForRB as $key => $value) {
+			if($value['MSG_DEL'] == 'Y' && $this->toUpdateRB($message,$value['SENDER'],$value['RECEIVER']))
+			{
+				$RBmessage['SENDER'] = $value['SENDER'];
+				$RBmessage['RECEIVER'] = $value['RECEIVER'];
+				$RBmessage['TYPE'] = $value['TYPE'];
+ 				$RBmessage['DATE'] = $value['TIME'];
+                                $profileObj = new Profile('',$value['SENDER']);
+                                $receiverObj = new Profile('',$value['RECEIVER']);
+				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);
+				unset($profileObj);
+				unset($receiverObj);
+				$RBmessage['MESSAGE'] = $messageForRB;
+				array_push($message, $RBmessage);
+			}
+
+		}
+ }
 		return $message;
+       		
 	}
 	public function getEOIMessagesForChat($loginProfile,$profileArray)
 	{
@@ -104,11 +131,31 @@ class MessageLog
 		}
 		return $message;
 	}
-	public function getMessageListing($loginProfile,$condition,$skipArray)
+	public function getMessageListing($loginProfile,$condition,$skipArray='',$inArray='')
 	{
 		$dbName = JsDbSharding::getShardNo($loginProfile);
-		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-		$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+
+		$pid = $loginProfile;
+		$memccKey = $pid."_cc_myMessage";
+		$profileArray = JsMemcache::getInstance()->get($memccKey);
+		if($profileArray && array_key_exists("pageNo", $condition) && $condition["pageNo"]==1)
+		{
+			//JsMemcache::getInstance()->set($memccKey,'',0);
+			JsMemcache::getInstance()->delete($memccKey);
+		}
+		else
+		{
+			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
+			if(InboxEnums::$messageLogInQuery)
+				$profileArray = $messageLogObj->getMessageListing($condition,'',$inArray);
+			else
+				$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+                        if(!array_key_exists("pageNo", $condition))
+                            JsMemcache::getInstance()->set($memccKey,$profileArray);
+		}
+
+
+                
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
                 $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
@@ -152,10 +199,22 @@ class MessageLog
 	
 	public function getCommunicationHistory($viewer,$viewed)
 	{
-		
+
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
+		foreach ($messageArray as $key => $value) {
+
+			if( $key=='0' && $value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
+			{ 
+                          $receiverObj = new Profile('',$value['RECEIVER']);
+                          $profileObj = new Profile('',$value['SENDER']);
+			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);	
+			  $messageArray[$key]['MESSAGE'] = $message;	
+			}
+		}
+		unset($receiverObj);
+		unset($profileObj);
 		return $messageArray;
 	}
 
@@ -262,5 +321,68 @@ if($limit == 1000000)
             }
             return $finalInnerArr;
         }
+
+      private function isJsDummyMember($profileid)
+	{
+		if($this->isDummy[0]==$profileid)
+			return $this->isDummy[1];
+
+		$dbObj=new jsadmin_PremiumUsers;
+		$this->isDummy[0]=$profileid;
+		if($dbObj->isDummy($profileid))
+		{
+			$this->isDummy[1]=true;
+			return true;
+		}
+		$this->isDummy[1]=false;
+		return false;
+	}
+
+	public function EOIFromRB($sender,$receiver)
+	{
+
+           $dbName = JsDbSharding::getShardNo($sender,'');
+	   $dbObj = new newjs_CONTACTS($dbName);
+	   $isRB = $dbObj->isRBContact($sender,$receiver);
+
+	   if($isRB == 1)
+	   {  
+	   		return 1;
+	   }
+	   return 0;
+	}
+
+	public function getRBMessage($sender,$receiverObj,$profileObj)
+	{
+
+		if($this->isJsDummyMember($sender))
+				{
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
+							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
+					else
+					{
+							$draftsObj = new ProfileDrafts($profileObj);
+							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+							unset($draftsObj);
+					}
+				}
+				else{
+					$message= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
+				}
+
+		return $message;		
+	}
+
+	public function toUpdateRB($messageArr,$sender,$receiver)
+	{    
+		
+		foreach ($messageArr as $key => $value) {
+			# code...
+			if($value['SENDER'] == $sender && $value['RECEIVER'] == $receiver && ($value['MESSAGE']!=''|| $value['MESSAGE'] != NULL) )
+				return 0;
+		}
+
+		return 1;
+	}
 }
 ?>

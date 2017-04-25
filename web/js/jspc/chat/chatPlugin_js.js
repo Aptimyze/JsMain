@@ -869,10 +869,11 @@ JsChat.prototype = {
                     //console.log("true",addIndex);
                     if(addIndex == 0 || listCount == 0){
                         $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                        //console.log("here out",groupID,addIndex,-1);
                     }
                     else{
                         var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
-                        //console.log("here out",insertAfterPos);
+                        //console.log("here out",groupID,addIndex,insertAfterPos);
                         if(insertAfterPos == -1){
                             $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                         }
@@ -2327,9 +2328,9 @@ JsChat.prototype = {
                                 curElem._enableChatAfterPaidInitiates(other_id);
                             }
                         }
-                        if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
+                        /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
                             curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
-                        }
+                        }*/
                         //append received message
                         logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
                         $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
@@ -2404,7 +2405,11 @@ JsChat.prototype = {
         //console.log("in _appendRecievedMessage");
         //append received message in chatbox
         
-        if (typeof message != "undefined" && message != "") {
+        if (message == chatConfig.Params[device].rejectObsceneMsg){
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p mt15">' + message + '</div>').addClass("restrictMessg2");
+            $("#text_"+userId+"_"+uniqueId).next().attr('obscene',true);
+        }
+        else if (typeof message != "undefined" && message != "") {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
@@ -2675,7 +2680,9 @@ JsChat.prototype = {
     _handlePreUnreadMessages:function(userId){
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             $('chat-box[user-id="' + userId + '"]').find(".nchatic_10").each(function () {
-                $(this).removeClass("nchatic_10").addClass("nchatic_9");
+                if($(this).attr("obscene") != "true"){
+                    $(this).removeClass("nchatic_10").addClass("nchatic_9");
+                }
             });
         }
     },

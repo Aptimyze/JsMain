@@ -163,7 +163,7 @@ class noprofileAction extends sfAction
       $this->PRIMARYMESSAGE = noProfileConstants::PROFILE_IGNORED_BY_OTHER;
 		}
 		//$this->smartyAssign($request,$smarty,$data);
-		
+		$this->STYPE = $request->getParameter('stype');
 		$response=sfContext::getInstance()->getResponse();
 		
 		if($title)
@@ -172,7 +172,7 @@ class noprofileAction extends sfAction
 			$response->setTitle($this->MESSAGE);
 		$this->SeoFooter($request);
 		//$response->setTitle("Profile Page");
-		ProfileCommon::old_smarty_assign($this);	
+		ProfileCommon::old_smarty_assign($this);
 		$this->setLayoutMobile();
                 if(MobileCommon::isDesktop() && $request->getParameter("oldjspc")!=1)
                 {

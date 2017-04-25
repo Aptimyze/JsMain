@@ -26,6 +26,26 @@ class ApiEditSubmitV1Action extends sfActions
 		$this->loginProfile->setJpartner($jpartnerObj);
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+
+		// added this to check whether request is originated from the same origin
+		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
+		{
+			$http_msg=print_r($_SERVER,true);
+			$date = date('Y-m-d');
+			// mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+			// $errorArr["ERROR"]="Something went wrong.";
+			// $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			// $apiResponseHandlerObj->setResponseBody($errorArr);
+			// ValidationHandler::getValidationHandler("","Something went wrong.");
+			// $apiResponseHandlerObj->generateResponse();
+
+			// if($request->getParameter('internally'))
+			// 	return sfView::NONE;
+			// die;
+			//writing in the file to keep track
+            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf_new.$date.txt",$http_msg,FILE_APPEND);
+		}
+		
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');		
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{
@@ -60,6 +80,21 @@ class ApiEditSubmitV1Action extends sfActions
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_YES;
 		else
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_NO;
+                
+                if(($this->editFieldNameArr['EMAIL'] && (strpos($_SERVER['HTTP_REFERER'],JsConstants::$siteUrl)!=0) && (MobileCommon::isDesktop() || MobileCommon::isNewMobileSite()))){
+                    $http_msg=print_r($_SERVER,true);
+                    mail("ankitshukla125@gmail.com,lavesh.rawat@gmail.com","referrer not jeevansathi","details :$http_msg");
+                    $errorArr["ERROR"]="Field Array is not valid";
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody($errorArr);
+                    ValidationHandler::getValidationHandler("","EditField Array is not valid");
+                    $apiResponseHandlerObj->generateResponse();
+
+                    if($request->getParameter('internally'))
+                        return sfView::NONE;
+                    die;
+                }
+                
 		if(is_array($this->editFieldNameArr))
 		{
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);

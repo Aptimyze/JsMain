@@ -208,8 +208,8 @@
             <div class="fullwid clearfix disp-none jsdd-aboutme" id="aboutmeHelp">
                <div class="fullwid bg-white reg-wid3 fr">
                         <div class="padall-10 fontreg f14 colr4 lh20">
-                          <div>Introduce yourself. Write about your values, beliefs/goals and aspirations.</div>
-                          <div>How do you describe yourself? Your interests and hobbies.</div>
+                          <div>Introduce yourself (Don't mention your name). Write about your values, beliefs/goals and aspirations.                    How do you describe yourself? Your interests and hobbies.</div>
+                          <div><br>This text will be screened by our team.</div>
                         </div>
                       </div>
               </div>

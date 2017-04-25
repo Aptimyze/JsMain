@@ -6,7 +6,7 @@ var cook = readCookie('AUTHCHECKSUM');
 //}
 chatConfig.Params = {
     //array of groups for which no roster exists in openfire and polling is to be done
-    nonRosterPollingGroups:['dpp'],
+    nonRosterPollingGroups:['dpp','shortlist'],
     categoryNames: {
         "Desired Partner Matches": "dpp",
         "Interest Received": "intrec",
@@ -87,6 +87,13 @@ chatConfig.Params = {
                 "type":"CHATDPP"
             },
             "timeoutTime":120000 //1 min
+        },
+        "shortlist":{
+            "extraGETParams":{
+                "source":"chat",
+                "listing":"shortlist"
+            },
+            "timeoutTime":120000 //1 min
         }
     },
     //api config for chat history
@@ -108,8 +115,8 @@ chatConfig.Params = {
                 "tab_name": "Online Matches",
                 "groups": [
                     {
-                        "id": "dpp",
-                        "group_name": "Desired Partner Matches",
+                        "id": "intrec",
+                        "group_name": "Interest Received",
                         "show_group_name": true,
                         "hide_offline_users": true
                     },
@@ -118,17 +125,20 @@ chatConfig.Params = {
                         "group_name": "Interest Sent",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    }, {
-                        "id": "intrec",
-                        "group_name": "Interest Received",
-                        "show_group_name": true,
-                        "hide_offline_users": true
-                    }, {
+                    }, 
+                    {
                         "id": "shortlist",
                         "group_name": "Shortlisted Members",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    },{
+                    },
+                    {
+                        "id": "dpp",
+                        "group_name": "Desired Partner Matches",
+                        "show_group_name": true,
+                        "hide_offline_users": true
+                    },
+                    {
                         "id":"mysearch",
                         "group_name":"Search Results",
                         "show_group_name":false,
@@ -320,9 +330,9 @@ chatConfig.Params = {
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
-            "intrec": 50,
-            "shortlist": 50,
-            "intsent":50,
+            "intrec": 20,
+            "shortlist": 20,
+            "intsent":20,
             "acceptance":400
         },
         storeMsgInLocalStorage:false,
@@ -334,16 +344,18 @@ chatConfig.Params = {
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         //autoChatLogin:false,
-        autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
+        autoChatLogin:((hideUnimportantFeatureAtPeakLoad != undefined && hideUnimportantFeatureAtPeakLoad >= 3) ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
         clearListingCacheTimeout:86400000, //Time in milliseconds(1 day)
         //listingRefreshTimeout:600000, //Time in milliseconds (10 min)
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000,  //time in ms(5 min)
         nameTrimmLength:14,
-        logChatTimeout:true,
+        logChatTimeout:false,
         autoDisplayLoginPanel: 30000, //time in ms
-        audioChatFilesLocation:'/audio/jspc/chat/'
+        audioChatFilesLocation:'/audio/jspc/chat/',
+        enableLoadTestingStanza:true,
+        rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];

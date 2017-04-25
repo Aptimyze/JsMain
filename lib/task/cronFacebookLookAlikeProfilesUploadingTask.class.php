@@ -196,7 +196,7 @@ EOF;
 
             $valueArray['MOB_STATUS']="Y";
 
-            $lastLoginLimit = date('Y-m-d', strtotime("-365 days"));
+            $lastLoginLimit = CommonUtility::makeTime(date('Y-m-d', strtotime("-365 days")));
 
             $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
             

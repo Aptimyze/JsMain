@@ -25,6 +25,7 @@ class ProfileCacheConstants
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     const NOT_FILLED = "-NF-";
     const DUPLICATE_FIELD_DELIMITER = "-d-";
+    const GETARRAY_PROFILEID_LIMIT = 50;
     
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
@@ -216,6 +217,26 @@ class ProfileCacheConstants
                                         "MASA",
                                         "HAVE_ASTRO",
                                         "FSO_EXISTS",
+
+                                        //Key for Alerts
+                                        'PROFILEID',
+                                        'MEMB_CALLS',
+                                        'OFFER_CALLS',
+                                        'SERV_CALLS_SITE',
+                                        'SERV_CALLS_PROF',
+                                        'MEMB_MAILS',
+                                        'CONTACT_ALERT_MAILS',
+                                        'KUNDLI_ALERT_MAILS',
+                                        'PHOTO_REQUEST_MAILS',
+                                        'NEW_MATCHES_MAILS',
+                                        'SERVICE_SMS',
+                                        'SERVICE_MMS',
+                                        'SERVICE_USSD',
+                                        'PROMO_USSD',
+                                        'SERVICE_MAILS',
+                                        'PROMO_MMS',
+
+
                                         // Jprofile Contact details
                                         "ALT_MOBILE",
                                         "ALT_MOBILE_ISD",
@@ -248,7 +269,9 @@ class ProfileCacheConstants
                                         "FAV_TVSHOW",
                                         "FAV_FOOD",
                                         "FAV_BOOK",
-                                        "FAV_VAC_DEST"
+                                        "FAV_VAC_DEST",
+                                        "YOUR_INFO_OLD",
+
                                     );
     
     public static $arrJProfileColumns = array(
@@ -467,6 +490,27 @@ class ProfileCacheConstants
                                         'BTIME',
     );
 
+      public static $arrJProfileAlertsColumn = array(
+                                        'PROFILEID',
+                                        'MEMB_CALLS',
+                                        'OFFER_CALLS',
+                                        'SERV_CALLS_SITE',
+                                        'SERV_CALLS_PROF',
+                                        'MEMB_MAILS',
+                                        'CONTACT_ALERT_MAILS',
+                                        'KUNDLI_ALERT_MAILS',
+                                        'PHOTO_REQUEST_MAILS',
+                                        'NEW_MATCHES_MAILS',
+                                        'SERVICE_SMS',
+                                        'SERVICE_MMS',
+                                        'SERVICE_USSD',
+                                        'PROMO_USSD',
+                                        'SERVICE_MAILS',
+                                        'PROMO_MMS',
+        
+    );
+
+
     public static $arrJProfileContact = array(
                                         "PROFILEID",
                                         "ALT_MOBILE",
@@ -509,5 +553,14 @@ class ProfileCacheConstants
                                         "FAV_BOOK",
                                         "FAV_VAC_DEST"
                                     );
+
+    public static $arrOldYourInfo = array(
+                                   'PROFILEID',
+                                   "YOUR_INFO_OLD",
+                                   );
+    public static $arrAutoExpiry = array(
+                                   'PROFILEID',
+                                   "AUTO_EXPIRY_DATE",
+                                   );
 }
 ?>

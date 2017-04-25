@@ -3,3 +3,9 @@ all:
     enable_login: off
   LogCheckinCheckoutV1:
     enable_login: on
+  dialerInboundCallIvr:
+    enable_login: off    
+  dialerIvrUpdate:
+    enable_login: off
+  dialerSmsNearestBranchDetailsV1:
+    enable_login: off

@@ -85,6 +85,9 @@
         ~else`
           <input id="vasImpression" type="hidden" name="vasImpression" value="~$data.tracking_params.vasImpression`">
         ~/if`
+        ~if $data.upgradeMem && $data.backendLink.fromBackend neq '1'`
+        <input type="hidden" name="upgradeMem" value="~$data.upgradeMem`">
+        ~/if`
          ~if $data.backendLink.fromBackend eq '1'`
           <input type="hidden" name="backendRedirect" value="~$data.backendLink.fromBackend`">
           <input type="hidden" name="fromBackend" value="~$data.backendLink.fromBackend`">
@@ -264,6 +267,10 @@
   });
   $("#payAtBranch").click(function(e){
     var url = "~sfConfig::get('app_site_url')`/membership/jsms?displayPage=10";
+    var upgradeMem = $('[name=upgradeMem]').val();
+    if(checkEmptyOrNull(upgradeMem)){
+      url += "&upgradeMem="+upgradeMem;
+    }
     if(checkEmptyOrNull(readCookie('device'))){
       url += '&device=' + readCookie('device');
     }

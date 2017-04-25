@@ -1052,6 +1052,8 @@ class SearchUtility
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
+                // delete data Match of the day
+                JsMemcache::getInstance()->set("cachedMM24$pid","");
 			}	
                 }
                 return 0;

@@ -122,7 +122,7 @@ class FAQFeedBack
 				} catch (Exception $e) {
 					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
-
+				
 				//End
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
@@ -167,6 +167,56 @@ class FAQFeedBack
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
+		$dataArray = $this->webRequest->getParameter('feed');
+
+	if($dataArray['category'] == FeedbackEnum::CAT_ABUSE)
+	{
+		if($this->webRequest->getParameter('fromCRM')){  
+			$reporteeId=$this->webRequest->getParameter('reporteePFID');
+			$profileObj = NEWJS_JPROFILE::getInstance();
+			$dataArray = $this->webRequest->getParameter('feed');
+			$reporterId = $profileObj->getProfileIdFromUsername($dataArray['reporter']);
+			unset($profileObj);
+		}
+		else{  
+			//print_r($this->m_szName);die('aaa');
+			if(MobileCommon::isIOSApp())
+			{
+				$loginProfile=LoggedInProfile::getInstance();
+				$reporterId = $loginProfile->getPROFILEID();
+     	$feed=$this->webRequest->getParameter('feed');
+                        $reason=$feed['message'];
+     	$pos2=strpos($reason,'by');
+                        $arr2=split(' ',trim(substr($reason,$pos2+2)));
+                        $otherUsername=trim($arr2[0]);
+                 $profileObj = NEWJS_JPROFILE::getInstance();
+     	$reporteeId = $profileObj->getProfileIdFromUsername($otherUsername); 
+     	unset($profileObj);      
+			}
+			else
+			{
+		$reporteeId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		$profileObj = NEWJS_JPROFILE::getInstance();
+     	$reporterId = $profileObj->getProfileIdFromUsername($this->m_szUserName);
+     		}
+     	unset($profileObj);
+		}
+
+		$reportAbuseObj = new REPORT_ABUSE_LOG();
+		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		
+
+  		
+	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
+		{  
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
+			$error[message]='You cannot report abuse against the same person more than twice.';
+			$apiResponseHandlerObj->setResponseBody($error);
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}
+	}	
+
 		$this->m_objForm->setDefaults($arrDeafults);  
 		if($request->isMethod('POST') && $request->getParameter('CMDSubmit'))
 		{  

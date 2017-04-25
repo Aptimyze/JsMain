@@ -16,19 +16,24 @@ $slaveDb=connect_737();		// slave connection
 $variableDiscountObj =new VariableDiscountHandler($myDb,$slaveDb);
 
 // step1,step3
+mail($emailId,"step1-3 VD Start", date("Y-m-d H:i:s"));
 $variableDiscountObj->addProfileInVddPool();
 $variableDiscountObj->logVdProcess('1_3');
 
 // step2,step4
+mail($emailId,"step2-4 VD Start", date("Y-m-d H:i:s"));
 $variableDiscountObj->filterVdPoolProfiles();
 $variableDiscountObj->logVdProcess('2_4');
 
 // step5
+mail($emailId,"step5 VD Start", date("Y-m-d H:i:s"));
 $variableDiscountObj->calculateVdDiscount();
 $variableDiscountObj->logVdProcess('5');
 
 // step6
+mail($emailId,"step6 VD Start", date("Y-m-d H:i:s"));
 $variableDiscountObj->addVariableDiscount();
 $variableDiscountObj->logVdProcess('6');
 
+mail($emailId,"step7 VD End", date("Y-m-d H:i:s"));
 ?>

@@ -45,6 +45,8 @@ class SortStrategyFactory
 			return new SortByTrendsScore($SearchParamtersObj,$loggedInProfileObj);
                 if($slogic == SearchSortTypesEnums::SortByLoginDate) 
 			return new SortByLoginDate($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByVisitorsTimestamp) 
+			return new SortByVisitors($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }

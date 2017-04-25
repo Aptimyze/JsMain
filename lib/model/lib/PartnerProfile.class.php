@@ -172,7 +172,13 @@ class PartnerProfile extends SearchParamters
                                                 }
                                         }
                                 }
-				
+                                // if($this->getOCCUPATION() && $source != 'AP'){
+                                //         $occpationArray = explode(",",$this->getOCCUPATION());
+                                //         $occupationNewWithGrouping = SearchCommonFunctions::getOccupationMappingData($occpationArray);
+                                //         if($occupationNewWithGrouping){
+                                //                $this->setOCCUPATION(implode(',',$occupationNewWithGrouping)); 
+                                //         }
+                                // }
 				//Special case for mapped values. => useful for cluster display
 				$mappedStr = $arr[0]['MAPPED_TO_DPP'];
 				if($mappedStr)
