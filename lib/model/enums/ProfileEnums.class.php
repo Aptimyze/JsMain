@@ -23,6 +23,7 @@ class ProfileEnums
   const PROFILE_HIDDEN  = 'H';
   const PROFILE_UNDERSCREENING  = 'U';
         public static $saveBlankIfZeroForFields = array("DIET","DRINK","SMOKE","MOTHER_OCC","FAMILY_BACK","FAMILY_STATUS","FAMILY_TYPE","FAMILY_VALUES","COMPLEXION","BTYPE","FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA","NATIVE_STATE");
+        public static $dppTickFields = array("dpp_age"=>"AGE","dpp_height"=>"HEIGHT","dpp_marital_status"=>"MSTATUS","dpp_have_children"=>"HAVECHILD","dpp_country"=>"COUNTRYRES","dpp_city"=>"CITYRES","dpp_religion"=>"RELIGION","dpp_caste"=>"CASTE","dpp_mtongue"=>"MTONGUE","dpp_manglik"=>"MANGLIK","dpp_edu_level"=>"ELEVEL_NEW","dpp_occupation"=>"OCCUPATION","dpp_earning"=>"INCOME","dpp_diet"=>"DIET","dpp_smoke"=>"SMOKE","dpp_drink"=>"DRINK","dpp_complexion"=>"COMP","dpp_btype"=>"BTYPE","dpp_handi"=>"HANDI");
 
 }
 ?>
