@@ -2,8 +2,8 @@
 class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
         public function __construct($dbname="")
         {
-			$dbname ='notification_master';
-			$this->databaseName ='NOTIFICATION_NEW';
+                        $dbname ='notification_master';
+                        $this->databaseName ='NOTIFICATION_NEW';
                         parent::__construct($dbname);
 			$this->REGISTRATION_ID_BIND_TYPE = "STR";
 			$this->PROFILEID_BIND_TYPE = "INT";
@@ -16,10 +16,12 @@ class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
                         $this->DEVICE_BRAND_BIND_TYPE ="STR";
                         $this->DEVICE_MODEL_BIND_TYPE ="STR";
 			$this->SENT_BIND_TYPE = "STR";
+            $this->ENTRY_DATE_BIND_TYPE = "STR";
         }
 	public function insert($profileid='',$key='',$messageId='',$sent='',$nextPollTime='', $osType='')
 	{
-		$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.LOCAL_NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`ENTRY_DATE`,`SENT`,`ALARM_TIME`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,now(),:SENT,:ALARM_TIME,:OS_TYPE)";
+        $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+		$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.LOCAL_NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`ENTRY_DATE`,`SENT`,`ALARM_TIME`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,:ENTRY_DATE,:SENT,:ALARM_TIME,:OS_TYPE)";
 		$resInsert = $this->db->prepare($sqlInsert);
 		$resInsert->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 		$resInsert->bindValue(":NOTIFICATION_KEY",$key,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
@@ -27,6 +29,7 @@ class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
 		$resInsert->bindValue(":ALARM_TIME",$nextPollTime,constant('PDO::PARAM_'.$this->{'ALARM_TIME_BIND_TYPE'}));
 		$resInsert->bindValue(":SENT",$sent,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
+        $resInsert->bindValue(":ENTRY_DATE",$istTime,constant('PDO::PARAM_'.$this->{'ENTRY_DATE_BIND_TYPE'}));
 		$resInsert->execute();
 	}
         public function addLog($registrationid, $apiappVersion ,$currentOSversion, $profileid,$deviceBrand='',$deviceModel='')
