@@ -46,6 +46,17 @@ class billing_DISCOUNT_HISTORY extends TABLE{
         }
     }
 
+    public function backupDailyData($entryDt){
+        try{
+            $sql = "INSERT IGNORE INTO billing.DISCOUNT_HISTORY_BACKUP SELECT * FROM billing.DISCOUNT_HISTORY WHERE DATE LIKE :ENTRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
     public function getLastLoginProfilesAfterDateCount($lastLoginDt){   
         if(!$lastLoginDt)
                 throw new jsException("","date blank passed");
