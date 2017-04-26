@@ -167,7 +167,8 @@ class TrendsPartnerProfiles extends SearchParamters {
             $this->INCOME_SORTBY = $this->getValue($myrow, $k);
           }
         } else {
-          if ($l <= 3 || !in_array($k, array('EDU_LEVEL_NEW', 'OCCUPATION', 'CITY_RES')))
+          //if ($l <= 3 || !in_array($k, array('EDU_LEVEL_NEW', 'OCCUPATION', 'CITY_RES')))
+          if ($l <= 3 || !in_array($k, array('EDU_LEVEL_NEW', 'OCCUPATION')))
             $this->$k = $this->getValue($myrow, $k);
         }
       }
