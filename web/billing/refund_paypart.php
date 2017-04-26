@@ -305,7 +305,7 @@ if(authenticated($cid))
             //**START - Entry for negative transactions
             if($val=="refund"){
                 $memHandlerObject = new MembershipHandler();
-                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())),'REFUND');
                 unset($memHandlerObject);
             }
             //**END - Entry for negative transactions
