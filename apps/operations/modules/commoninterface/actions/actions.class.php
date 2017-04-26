@@ -230,7 +230,19 @@ class commoninterfaceActions extends sfActions
 		else
 			$cityName = "";
 		$membershipObj = new Membership;
-		$membership_details["serviceid"] = $activeServiceDetails["SERVICEID"];
+		
+		//auto bill RB for dummy profile with Js Exclusive and Js Boost
+		$servicesObj = new billing_SERVICES("newjs_slave");
+		$RBServiceID = "T".$mainServiceDuration;
+		$RBDetails = $servicesObj->fetchServiceDetails(array($RBServiceID));
+		if(is_array($RBDetails) && is_array($RBDetails[$RBServiceID]) && $RBDetails[$RBServiceID]['ACTIVE'] == 'Y'){
+			$autoActivateServices = $activeServiceDetails["SERVICEID"].",".$RBServiceID;
+		}
+		else{
+			$autoActivateServices = $activeServiceDetails["SERVICEID"];
+		}
+		
+		$membership_details["serviceid"] = $autoActivateServices;
 		$membership_details["profileid"] = $dummyProfileID;
         $membership_details["custname"] = $dummyUsername;
 		$membership_details["username"] = $dummyUsername;
