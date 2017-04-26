@@ -29,6 +29,7 @@ class RabbitmqHelper
                           "instantEoi" => "nikmittal4994@gmail.com,niteshsethi1987@gmail.com",
                           "writeMsg" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           "updateSeenProfile" => "niteshsethi1987@gmail.com",
+                          "updateSeen" => "niteshsethi1987@gmail.com",
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -40,7 +41,10 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg" || $to == "loggingQueue" || $to == "updateSeenProfile")
+    // enable alerts for these
+    $arrEnableAlert = array("screening","instantEoi","writeMsg","loggingQueue","updateSeenProfile","updateSeen");
+
+    if(in_array($to, $arrEnableAlert))
     {
       SendMail::send_email($emailTo,$message,$subject);
     }
