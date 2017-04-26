@@ -524,8 +524,12 @@ class MembershipHandler
     {
         $memCacheObject     = JsMemcache::getInstance();
         $membershipKeyArray = VariableParams::$membershipKeyArray;
+        $mtongueArr = FieldMap::getFieldLabel("community_small",null,"1");
         foreach ($membershipKeyArray as $key => $keyVal) {
-            $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
+            $memCacheObject->remove($keyVal."_-1");
+            foreach ($mtongueArr as $k => $v) {
+                $memCacheObject->remove($keyVal."_".$k);
+            }
         }
         $memCacheObject->remove('NO_MAIN_MEM_FILTER_MTONGUE');
         $memCacheObject->remove('NO_ADDON_MEM_FILTER_MTONGUE');
