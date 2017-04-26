@@ -3,11 +3,16 @@ include("connect.inc");
 $memCacheObject = JsMemcache::getInstance();
 $membershipKeyArray = VariableParams::$membershipKeyArray;
 $keys_removed = "";
+$mtongueArr = FieldMap::getFieldLabel("community_small",null,"1");
+
 foreach ($membershipKeyArray as $key => $keyVal) {
 	//echo "\n";
 	//echo ($keyVal."--");
 	//print_r(unserialize($memCacheObject->get($keyVal)));
-    $output1 = $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
+	$memCacheObject->remove($keyVal."_-1");
+    foreach ($mtongueArr as $k => $v) {
+        $memCacheObject->remove($keyVal."_".$k);
+    }
     $keys_removed .= $keyVal.",\n"; 
 }
 
