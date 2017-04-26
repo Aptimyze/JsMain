@@ -2217,6 +2217,13 @@ break;
                                         $field->setTableName("JPROFILE:SECT");
                                         $page_obj->setField(132,"","",$field);
 
+                                        $field=new Field(202);
+                                        $field->setName('JAMAAT');
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setTableName("JP_MUSLIM:JAMAAT");
+                                        $page_obj->setField(202,"","",$field);
+
                                         break;
 
 
