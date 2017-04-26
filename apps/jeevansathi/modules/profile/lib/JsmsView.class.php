@@ -239,5 +239,23 @@ class JsmsView extends DetailedViewApi
         
         return $value;
     }
+
+    /**
+* function to decorate Matching values with viewer's profile
+* @param void
+* @return void 
+* @access protected
+*/
+  protected function getDecorated_LookingFor(){
+      parent::getDecorated_LookingFor();
+      $objProfile = $this->m_objProfile;  
+      $jPartnerObj = $objProfile->getJpartner();
+       $this->m_arrOut['dpp_diet'] = $jPartnerObj->getDecoratedPARTNER_DIET();
+       $this->m_arrOut['dpp_smoke'] = $jPartnerObj->getDecoratedPARTNER_SMOKE();
+       $this->m_arrOut['dpp_drink'] = $jPartnerObj->getDecoratedPARTNER_DRINK();
+       $this->m_arrOut['dpp_complexion']=$jPartnerObj->getDecoratedPARTNER_COMP();
+       $this->m_arrOut['dpp_btype'] = $jPartnerObj->getDecoratedPARTNER_BTYPE();
+       $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();       
+    }
 }
 ?>
