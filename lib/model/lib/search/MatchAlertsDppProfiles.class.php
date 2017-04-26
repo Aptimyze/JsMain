@@ -64,6 +64,8 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 if($occupation!=''){
                     $relaxedOccupation = $this->getRelaxedOccupation($occupation);
                     $this->setOCCUPATION($relaxedOccupation['occ']);
+                    if($relaxedOccupation['occ']=='')
+                        $this->setOCCUPATION_GROUPING('');
                     if($relaxedOccupation['notOcc']!='')
                         $this->setOCCUPATION_IGNORE($relaxedOccupation['notOcc']);
                 }
