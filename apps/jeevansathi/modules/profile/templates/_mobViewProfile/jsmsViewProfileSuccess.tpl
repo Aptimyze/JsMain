@@ -22,7 +22,7 @@
 <div class="space70" >&nbsp;</div>
 		</div>
 		<div id="dppContent">
-			~include_partial("profile/mobViewProfile/_dppInfo",['arrData'=>$arrOutDisplay.dpp,'gender'=>$arrOutDisplay.about.gender,'matchingArr'=>$arrOutDisplay.showTicks])`
+			~include_partial("profile/mobViewProfile/_dppInfo",['arrData'=>$arrOutDisplay.dpp,'gender'=>$arrOutDisplay.about.gender,'matchingArr'=>$arrOutDisplay.showTicks,'picArr'=>$arrOutDisplay["pic"],'thumbnailPic'=>$arrOutDisplay.about.thumbnailPic])`
 <div class="space70" >&nbsp;</div>
 		</div>
 	~/if`

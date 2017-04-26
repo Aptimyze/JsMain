@@ -15,10 +15,10 @@
 	</div>
 	<div class="clearfix pt10 pb10">
 		<div class="fl VPwid30p txtc">
-			<img src="http://mediacdn.jeevansathi.com/2508/18/50178321-1453703478.jpeg" class="VPimg"/>
+			<img src="~$thumbnailPic`" class="VPimg"/>
 		</div>
 		<div class="fr wid27p txtc">
-			<img src="http://mediacdn.jeevansathi.com/4843/9/96869925-1486570210.jpeg" class="VPimg"/>
+			<img src="~$picArr.url`" class="VPimg"/>
 		</div>
 	</div>
 
