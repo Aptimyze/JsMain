@@ -306,10 +306,7 @@ class LoggingManager
 			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
-		if ( $message != "")
-		{
-			$logData[LoggingEnums::MESSAGE] = $message;
-		} 
+		$logData[LoggingEnums::MESSAGE] = $message;
 
 		if($mappingName != "")
 		{

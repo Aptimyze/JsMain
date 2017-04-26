@@ -53,12 +53,13 @@ class test_VD_UPLOAD_TEMP extends TABLE{
     public function addVDRecordsInUploadTemp($profileid,$startDate,$endDate,$discount,$service)
     {
         try{
-                $sql = "INSERT IGNORE INTO test.VD_UPLOAD_TEMP (`PROFILEID`,`SDATE`,`EDATE`,`SERVICE`,`2`,`3`,`6`,`12`) VALUES(:PROFILEID,:SDATE,:EDATE,:SERVICE,:DISC2,:DISC3,:DISC6,:DISC12)";
+                $sql = "INSERT IGNORE INTO test.VD_UPLOAD_TEMP (`PROFILEID`,`SDATE`,`EDATE`,`SERVICE`,`1`,`2`,`3`,`6`,`12`) VALUES(:PROFILEID,:SDATE,:EDATE,:SERVICE,:DISC1,:DISC2,:DISC3,:DISC6,:DISC12)";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $res->bindValue(":SDATE",$startDate, PDO::PARAM_STR);
                 $res->bindValue(":EDATE",$endDate, PDO::PARAM_STR);
                 $res->bindValue(":SERVICE",$service, PDO::PARAM_STR);
+		$res->bindValue(":DISC1", $discount, PDO::PARAM_INT);
                 $res->bindValue(":DISC2", $discount, PDO::PARAM_INT);
                 $res->bindValue(":DISC3", $discount, PDO::PARAM_INT);
                 $res->bindValue(":DISC6", $discount, PDO::PARAM_INT);

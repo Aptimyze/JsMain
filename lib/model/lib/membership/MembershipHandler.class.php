@@ -366,7 +366,7 @@ class MembershipHandler
 
     public function isDiscountOfferActive()
     {
-        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_slave');
+        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
         $active                = $discountOfferLogObj->checkDiscountOffer();
         $this->discountOfferID = $active;
         return $active;
@@ -1969,7 +1969,7 @@ class MembershipHandler
     public function sendEmailForCallback($subject, $msgBody, $to = '')
     {
         if (!$to) {
-            $to = "premium.js@jeevansathi.com";
+            $to = "premium.js@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com";
         }
 
         $from = "js-sums@jeevansathi.com";

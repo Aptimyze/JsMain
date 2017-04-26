@@ -201,7 +201,7 @@
 						</li>
 					</ul>
 					<p class="pt35 f15">Strong Photo Privacy Options | No downloads allowed | Photos are Watermarked</p>
-					<p class="pt6 f15">Jpeg, Jpg | Upto 6MB | 20 photos only</p>
+					<p class="pt6 f15">Jpeg, Jpg, PNG | Upto 10MB | 20 photos only</p>
 				</div>
 			</div>                
 		</div> 

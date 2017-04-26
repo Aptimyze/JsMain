@@ -970,7 +970,7 @@ function criticalLayerButtonsAction(clickAction,button) {
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
-                
+                var calTracking = '';
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -990,11 +990,16 @@ function criticalLayerButtonsAction(clickAction,button) {
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    if(layerId==18)
+                    {   
+                        calTracking  +=( '&occupText=' + $(".js-otheroccInp input").val().trim());
+                        
+                      }
 
 
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
-                    var URL="/common/criticalActionLayerTracking";
+                    var URL="/common/criticalActionLayerTracking?"+calTracking;
                     $.ajax({
                         url: URL,
                         type: "POST",
@@ -1109,7 +1114,18 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             
             jObject.find('.sendInterest').attr('onClick', postAction);
 
-            jObject.find('.profileName').html(profiles[i].username);
+            var username = '';
+            if(typeof profiles[i].name_of_user != 'undefined' && profiles[i].name_of_user != '')
+            {
+              username = profiles[i].name_of_user;
+            }
+            else
+            {
+              username = profiles[i].username;
+            }
+
+            jObject.find('.profileName').html(username);
+
             jObject.find('.profileName').attr('profileChecksum',profileChecksum);
             jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);
             jObject.find('.gunascore').html(profiles[i].gunascore);

@@ -39,7 +39,7 @@ class RabbitmqHelper
     if(file_exists($errorLogPath)==false)
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
-    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg")
+    if($to == "screening" || $to == "instantEoi" || $to == "writeMsg" || $to == "loggingQueue")
     {
       SendMail::send_email($emailTo,$message,$subject);
     }

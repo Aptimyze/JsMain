@@ -31,19 +31,19 @@ class ApiEditSubmitV1Action extends sfActions
 		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
 		{
 			$http_msg=print_r($_SERVER,true);
-			$date = date('Y-m-d');
-			// mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
-			// $errorArr["ERROR"]="Something went wrong.";
-			// $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			// $apiResponseHandlerObj->setResponseBody($errorArr);
-			// ValidationHandler::getValidationHandler("","Something went wrong.");
-			// $apiResponseHandlerObj->generateResponse();
+			// $date = date('Y-m-d');
+			mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+			$errorArr["ERROR"]="Something went wrong.";
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->setResponseBody($errorArr);
+			ValidationHandler::getValidationHandler("","Something went wrong.");
+			$apiResponseHandlerObj->generateResponse();
 
-			// if($request->getParameter('internally'))
-			// 	return sfView::NONE;
-			// die;
+			if($request->getParameter('internally'))
+				return sfView::NONE;
+			die;
 			//writing in the file to keep track
-            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf_new.$date.txt",$http_msg,FILE_APPEND);
+            // file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf_new.$date.txt",$http_msg,FILE_APPEND);
 		}
 		
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');		

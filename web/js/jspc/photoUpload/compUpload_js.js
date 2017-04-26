@@ -57,19 +57,19 @@ $(document).ready(function()
 	$("#nowUpload").show();
             for (var i = 0; (i < canBeUploaded) ; i++)
             {
-                var file = files[i];
-
-                var fileType = file.type;
+                var file = files[i];                
+                var fileType = file.type;                
                 if(!fileType) 
 		{
                         fileType="image/"+file.name.split(".")[1];
                         var fileTypeNull=1;
                 }
+
                 if (imageFormat.indexOf(fileType) == -1) // image type check
                 {
 		lastAction="UPLOAD";
                     ajaxRequestToTrack(profileId,"fileTypeError","File Type-"+fileType);
-		    var message = "Only jpg/jpeg images are supported";
+		    var message = "Only jpg/jpeg/png images are supported";
 		    if(file.name)
 			message = getMessageWithFileName(file.name,message);
                     displayConfirmationMessage(message,1);
@@ -84,6 +84,7 @@ $(document).ready(function()
 		    completedPerTime++;
                     continue;
                 }
+                //max file size needs to be changed since the png images have larger size
                 if (((file.size) > (appMaxPhotoSize*1048576))||((file.fileSize) > (appMaxPhotoSize*1048576))) // image size check
                 {
 		lastAction="UPLOAD";

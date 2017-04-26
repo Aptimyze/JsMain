@@ -21,7 +21,7 @@ class VariableDiscountHandler
 		$this->cutOffDate		=date("Y-m-d",strtotime("$this->todayDate - $this->cutOffDurationInMonth month"));
                 $this->twoMonthOldDate  	=date("Y-m-d",strtotime("$this->todayDate - 2 month"));
 		$this->lastWeekDate		=date("Y-m-d",strtotime("$this->todayDate - 6 days"));     
-		$this->discountFieldMapping 	=array("2"=>"2_DISCOUNT","3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
+		$this->discountFieldMapping 	=array("1"=>"1_DISCOUNT","2"=>"2_DISCOUNT","3"=>"3_DISCOUNT","6"=>"6_DISCOUNT","12"=>"12_DISCOUNT","L"=>"L_DISCOUNT");
 
 		// New table structure is created as required
 		$this->createNewTableStructure();
@@ -94,8 +94,8 @@ class VariableDiscountHandler
                 $activationDt           =$lastVdGivenDetails['ENTRY_DT'];
 
                 $todayDate              = date("Y-m-d");
-		$timeVal		=date('H');
-		$timeArr		=array("18","19","20","21","22","23");
+		$timeVal		= date('H');
+		$timeArr		= array("18","19","20","21","22","23","24");
                 if((strtotime($startDate) != strtotime($todayDate)) && (!in_array($timeVal, $timeArr)))
 			return;
 
