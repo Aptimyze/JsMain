@@ -1210,6 +1210,12 @@ case 'P_OCCUPATION_GROUPING':
 					$field->setConstraintClass("partner_occupation_grouping");
 					$field->setTableName("JPARTNER:OCCUPATION_GROUPING");
 				break;
+case 'JAMAAT':
+					$field = new Field('','JAMAAT');
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setTableName("JP_MUSLIM:JAMAAT");
+				break;
 }
 
 				return($field);
