@@ -12,7 +12,7 @@ class LightningDeal
 	public function __construct($debug=0){
 		$this->dealConfig = VariableParams::$lightningDealOfferConfig;
 		$this->debug = $debug;
-		$this->sqlSelectLimit = 5000;
+		$this->sqlSelectLimit = 500;
 	}
 
 	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
@@ -24,9 +24,9 @@ class LightningDeal
 		$pool1 = array();
 
 		//use billing.DISCOUNT_HISTORY to get last logged in pool within offset time
-        $discTrackingObj = new billing_DISCOUNT_HISTORY("newjs_slave");
+        $discTrackingObj = new billing_DISCOUNT_HISTORY("crm_slave");
         $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCount($offsetDate);
-        $serviceStObj = new billing_SERVICE_STATUS("newjs_slave");
+        $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
         	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
      		
@@ -68,8 +68,8 @@ class LightningDeal
 			$lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
 
 			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
-			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("newjs_slave");
-			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('','Y',$lastViewedDt);
+			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('','V',$lastViewedDt);
 			unset($lightningDiscObj);
 
 			//filter out above pool from pool1 to get pool2

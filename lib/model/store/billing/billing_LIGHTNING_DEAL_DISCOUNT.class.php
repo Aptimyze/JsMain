@@ -23,7 +23,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
 		}
     }
 
-    public function filterDiscountActivatedProfiles($pid="",$viewed='Y',$offsetDt="")
+    public function filterDiscountActivatedProfiles($pid="",$viewed='V',$offsetDt="")
     {
         try {
             if (is_array($pid))
@@ -46,12 +46,12 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
            	if(!empty($offsetDt)){
            		$sql .= " ENTRY_DT>=:ENTRY_DT";
            	}
-           	$sql .= " AND VIEWED=:VIEWED";
+           	$sql .= " AND STATUS=:STATUS";
             $prep = $this->db->prepare($sql);
             if(!empty($offsetDt)){
             	$prep->bindValue(":ENTRY_DT", $offsetDt,PDO::PARAM_STR);
             }
-            $prep->bindValue(":VIEWED", $viewed,PDO::PARAM_STR);
+            $prep->bindValue(":STATUS", $viewed,PDO::PARAM_STR);
             $prep->execute();
             while ($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profilesArr[] = $res['PROFILEID'];
