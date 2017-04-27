@@ -216,10 +216,26 @@ padding: 10px 15px ;
 
 .VPwid98p{width:89%;}
 .VPwid30p{width:30%;}
+.VPwid25p{width:25%;}
+.VPwid28p{width:28%;}
+.VPwid46p{width:46%;}
 .VPmt5{margin-top: 5px}
 .VPpl95p{padding-left: 95px}
 .checkmarkVP{display:inline-block;}
-.checkmarkVP:after{content: '';display: block;width: 6px;height: 15px;border: solid #d9475c;border-width: 0 1px 1px 0;transform: rotate(45deg);}
-.dashVP{border-bottom: 1px solid #888080; height:1px; width:15px; margin-top: 5px}
+.checkmarkVP:after{
+    content: '';
+    display: block;
+    width: 6px;
+    height: 15px;
+    border: solid #d9475c;
+    border-width: 0 1px 1px 0;
+    transform: rotate(45deg);
+    -webkit-transform:rotate(45deg);
+    -ms-transform:rotate(45deg);
+
+}
+.dashVP{
+    border-bottom: 1px solid #888080; 
+    height:1px; width:15px; margin-top: 5px}
 .VPimg{width:60px; height: 60px; border-radius: 30px}
 

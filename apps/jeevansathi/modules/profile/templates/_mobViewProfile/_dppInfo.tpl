@@ -9,19 +9,19 @@
 	~/if`
 
 	<div class="clearfix f13 fontlig">
-		<div class="fl color2 wid27p">~if $gender eq Male` Her ~else` His ~/if` Preference</div>
-		<div class="fr color2 wid24p">Matches you</div>
-		<div class="fl color13 wid48p txtc">
+		<div class="fl color2 VPwid28p">~if $gender eq Male` Her ~else` His ~/if` Preference</div>
+		<div class="fr color2 VPwid25p">Matches you</div>
+		<div class="fl color13 VPwid46p txtc">
 			<span class="js-matching"></span> of 
 			<span class="js-total"></span> matchings
 		</div>
 	</div>
 	<div class="clearfix pt10 pb10">
 		<div class="fl wid24p txtc">
-			<img src="~$thumbnailPic`" class="VPimg"/>
+			<img src="" class="VPimg"/> <!-- see how self image can be displayed -->
 		</div>
 		<div class="fr wid27p txtc">
-			<img src="~$picArr.url`" class="VPimg"/>
+			<img src="~$thumbnailPic`" class="VPimg"/>
 		</div>
 	</div>
 
