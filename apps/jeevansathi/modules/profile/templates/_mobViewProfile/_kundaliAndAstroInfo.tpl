@@ -49,7 +49,6 @@
             </div>
         ~/if`
        
-    </div>
     <!--end:Kundali And Astro--> 
 ~/if`
 <!-- Religious Beliefs Section-->
