@@ -41,7 +41,9 @@ if (isset($data)) //successful login
         if (in_array("UpSSup", $priv) || in_array("FPSUP", $priv) || in_array("INBSUP", $priv) || in_array("ExcPrm", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("P", $priv) || in_array("MG", $priv) || in_array("TRNG", $priv) || in_array("ExcFld", $priv) || in_array("SupFld", $priv) || in_array("RSP", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmDeallocation/ReleaseProfile\">Release Single Profile</a>";
         }
-
+        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
+        }
         if (in_array('MnAllc', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/manualExtAllocation\">Manual Allocation/Extension</a>";
         }
@@ -597,6 +599,14 @@ if (isset($data)) //successful login
 
         if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
             $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request user to delete profile</a>";
+
+        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
+        }
+        // link for search sugarcrm LTF profiles
+        if (in_array('LTFSUP', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sugarcrm_LTF_search.php?cid=$cid\">Search details of LTF registered profile</a>";
+        }
     }
 
     $smarty->assign("linkarr", $linkarr);
