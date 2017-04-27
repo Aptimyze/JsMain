@@ -33,9 +33,9 @@
                 ~/if`
                 ~if (!$arrData.NO_ASTRO && $arrData.sameGender neq 1)`
                  <button class="fontlig lh40 astroBtn1 fr ~if $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N' AND $arrData.paidMem eq 'Y'` js-astroCompMem ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N'` js-freeAstroComp ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION neq 'N'` js-astroMem ~/if`" style="width:48%">Get Astro Report</button>
-                 ~/if`
-                 ~/if`
+                 ~/if`                 
              </div>
+             ~/if`
              <!--end:button-->
                 ~if isset($arrData.more_astro.horo_match)`
                 <div class="clearfix pt10">
@@ -49,6 +49,7 @@
             </div>
         ~/if`
        
+    </div>
     <!--end:Kundali And Astro--> 
 ~/if`
 <!-- Religious Beliefs Section-->
