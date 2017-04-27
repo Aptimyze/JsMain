@@ -13,11 +13,21 @@ class ProcessHandler
    * @access public
    * @param $type,$body
    */
-	public function sendMail($type,$body)
+	public function sendMail($type,$body,$delayedMail=false)
 	{
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
+    
+    if($delayedMail) {
+      $currentConatacType = $this->processDelayedMail($senderid, $receiverid, $type);
+      //if current contact type is different then type of this message then return
+      //
+      if($currentConatacType != $type) {
+        return ;
+      }
+    }
+
     if($type!='INITIATECONTACT')
     {
         if($senderid)
@@ -59,12 +69,18 @@ class ProcessHandler
                               
                               }
                               break;
+      case 'REMINDERCONTACT':
+            ContactMailer::InstantReminderMailer($receiverid, $senderid, $message, $body['viewedSubscriptionStatus']);
+          break;
+      case 'CANCEL_ACCEPT_CONTACT':
+          ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
+          break;
     }
 	}
 
   /**
    * 
-   * Function for sending SMS.
+   * Function for sending SMS.      
    * 
    * @access public
    * @param $type,$body
@@ -419,6 +435,30 @@ public function logDiscount($body,$type){
             JsMemcache::getInstance()->remove($cacheKey);
         }        
     }
+    
+    /**
+     * 
+     * @param type $iSenderId
+     * @param type $iReceiverId
+     * @param type $szContactTypeInMsg
+     */
+    private function processDelayedMail($iSenderId, $iReceiverId, $szContactTypeInMsg)
+    {
+      $arrConatactTypeProcess = array(
+                                      "I"=>"INITIATECONTACT",
+                                      "E"=>"CANCELCONTACT",
+                                      "A"=>"ACCEPTCONTACT",
+                                      "D"=>"DECLINECONTACT",
+                                      "R"=>"REMINDERCONTACT",
+                                      "C"=>"CANCEL_ACCEPT_CONTACT"
+                                       );
+      
+      $szContactType = explode("_", Contacts::getContactsTypeCache($iSenderId, $iReceiverId))[0];
 
+      if($szContactTypeInMsg == "REMINDERCONTACT" && $szContactType == "I") {
+        $szContactType = "R";
+      }
+      return $arrConatactTypeProcess[$szContactType];
+    }
  }
 ?>
