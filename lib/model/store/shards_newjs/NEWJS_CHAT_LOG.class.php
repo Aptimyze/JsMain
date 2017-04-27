@@ -245,5 +245,78 @@ class NEWJS_CHAT_LOG extends TABLE{
 			}
 			return $count;
 		}
+    
+    /**
+     * 
+     * @param type $iProfileID
+     * @return type
+     * @throws jsException
+     */
+    public function getAllChatForHousKeeping($iProfileID)
+    {
+      try{
+        if(!$iProfileID)
+				{
+					throw new jsException("","Profile id is not specified in function getAllChatForHousKeeping of NEWJS_CHAT_LOG.class.php");
+				}
+        
+        $sql = "SELECT CHATID FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        $prep=$this->db->prepare($sql);
+        $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        $prep->execute();
+        while($row = $prep->fetch(PDO::FETCH_ASSOC))
+        {
+          $output[] = $row['CHATID'];
+        }
+        return $output;
+      } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
+    
+    /**
+     * 
+     * @param type $iProfileID
+     * @return type
+     * @throws jsException
+     */
+    public function deleteAllChatForUser($iProfileID)
+    {
+      try{
+        if(!$iProfileID)
+				{
+					throw new jsException("","Profile id is not specified in function deleteAllChatForUser of NEWJS_CHAT_LOG.class.php");
+				}
+        
+        $sql = "DELETE FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        $prep=$this->db->prepare($sql);
+        $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        $prep->execute();
+        
+        } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
+    
+  /**
+   * 
+   * @param type $iProfileID
+   */
+  public function insertRecordsIntoChatLogFromRetreieve($iProfileID,$listOfActiveProfiles)
+  {
+    try {
+      if (!$iProfileID || !$listOfActiveProfiles) {
+        throw new jsException("", "PROFILEID OR LISTOFACTIVEPROFILE IS BLANK IN selectActiveDeletedData() of NEWJS_CHAT_LOG.class.php");
+      }
+      
+      $sql = "INSERT IGNORE INTO newjs.CHAT_LOG SELECT * FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET WHERE (SENDER = :PID AND RECEIVER IN ({$listOfActiveProfiles}) ) OR (RECEIVER = :PID AND SENDER IN ({$listOfActiveProfiles}) )";
+      $prep = $this->db->prepare($sql);
+      $prep->bindValue(":PID", $iProfileID, PDO::PARAM_INT);
+      $prep->execute();
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
+
 }
 	?>

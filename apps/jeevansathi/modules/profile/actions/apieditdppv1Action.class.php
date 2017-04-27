@@ -102,11 +102,16 @@ class apieditdppv1Action extends sfAction
 	{
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		
 		//Update Partner Income Also if Income is updated
 		//if(stristr($scase,"LINCOME") || stristr($scase,"HINCOME") || stristr($scase,"LINCOME_DOL") ||stristr($scase,"HINCOME_DOL"))
 		if(array_key_exists("P_LRS",$arrEditDppFieldIDs) || array_key_exists("P_HRS",$arrEditDppFieldIDs) || array_key_exists("P_LDS",$arrEditDppFieldIDs) ||array_key_exists("P_HDS",$arrEditDppFieldIDs) )
 		{
+                        if($arrEditDppFieldIDs['P_LRS'] != 0 && $arrEditDppFieldIDs['P_LDS'] == 0 && $this->partnerObj->getLINCOME_DOL() != 12){
+                                $arrEditDppFieldIDs['P_LDS'] = 12;
+                                if(!$arrEditDppFieldIDs['P_HDS']){
+                                        $arrEditDppFieldIDs['P_HDS'] = 19;
+                                }
+                        }
 			if($arrEditDppFieldIDs['P_LRS'] || $arrEditDppFieldIDs['P_HRS'])
 			{
 				$rArr["minIR"] = $arrEditDppFieldIDs['P_LRS'] ;
@@ -128,8 +133,7 @@ class apieditdppv1Action extends sfAction
 			$arrEditDppFieldIDs['P_HDS'] = intval($incomeMapArr['doHIncome']);
 			
 			$request->setParameter("editFieldArr",$arrEditDppFieldIDs);
-		} 
-		
+		}
 		$arrDppUpdate = array();
 		foreach($arrEditDppFieldIDs as $key=>$val)
 		{
