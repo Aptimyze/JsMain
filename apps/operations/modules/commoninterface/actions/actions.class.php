@@ -257,9 +257,15 @@ class commoninterfaceActions extends sfActions
 		$membership_details["curtype"] = "RS";
 		$membership_details["deposit_date"] = date('Y-m-d');
 		$serviceObj = new billing_SERVICES("newjs_slave");
-		$priceRes= $serviceObj->fetchServiceDetailForRupeesTrxn($membership_details["serviceid"], 'desktop');
+		$priceRsDetails= $serviceObj->fetchServiceDetailForRupeesTrxn(explode(",",$membership_details["serviceid"]), 'desktop');
+		
+		$totalActualAmount = 0;
+		foreach ($priceRsDetails as $k1 => $v1) {
+			$totalActualAmount += $v1['PRICE'];
+		}
 		$membership_details["deposit_branch"] = "NOIDA";
-		$membership_details["discount"] = $priceRes["PRICE"];
+		$membership_details["discount"] = $totalActualAmount;
+		$membership_details["amount"] = 0;
 		$membership_details["discount_type"] = "2";
 		$membership_details["discount_reason"] = "100% disount for dummy profile";
 		$membership_details["entry_from"] = "N";
