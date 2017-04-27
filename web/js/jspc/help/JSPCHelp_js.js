@@ -41,10 +41,22 @@ $(document).ready(function (e) {
         });
     });
     //on selecting dropdown option
-    $("#catDropDown").on("click", function () {
-        $(this).find("i").toggleClass("chosen-container-active");
-        $(".dropOption").toggleClass("disp-none");
+    $(".catDropDown").each(function(){
+        $(this).on("click", function () {
+            $(this).find("i").toggleClass("chosen-container-active");
+            $(".dropOption").toggleClass("disp-none");
+        }); 
+    })
+    $("body").on("click",function(e){
+        var arrAllowedClass = ["selectedDrop","dropOptionLi"];
+        if($(e.target).attr("class")) {
+            if(arrAllowedClass.indexOf($(e.target).attr("class")) == -1 && $(e.target).attr("class").indexOf("catDropDown") == -1) {
+                $(this).find("i").removeClass("chosen-container-active");
+                $(".dropOption").addClass("disp-none");
+            }
+        }
     });
+
     $(".goBackBtn").on("click", function () {
         location.reload();
     });
@@ -121,7 +133,7 @@ function getData() {
 function setDropDownData() {
     setTimeout(function () {
         for (var j = 0; j < catogaries.length; j++) {
-            $(".dropOption").append("<li class=" + catogaries[j].split(' ')[0] + ">" + catogaries[j] + "</li>");
+            $(".dropOption").append("<li class='dropOptionLi' id=" + catogaries[j].split(' ')[0] + ">" + catogaries[j] + "</li>");
         }
         $(".dropOption li").on("click", function () {
             $(".selectedDrop").html($(this).html());

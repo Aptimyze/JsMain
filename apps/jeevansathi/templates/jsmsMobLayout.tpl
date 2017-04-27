@@ -61,6 +61,9 @@
 		~/if`
 		var appPromoPerspective=0;
 		var DualHamburger=1;
+                ~if $sf_request->getAttribute('messageListAppPromo')`
+                    var messageListAppPromo=~$sf_request->getAttribute('messageListAppPromo')`;
+                ~/if`
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
