@@ -9,7 +9,7 @@
 	~/if`
 
 	<div class="clearfix f13 fontlig">
-		<div class="fl color2 wid27p">~if $gender eq Male` Her ~else` His ~/if Preference</div>
+		<div class="fl color2 wid27p">~if $gender eq Male` Her ~else` His ~/if` Preference</div>
 		<div class="fr color2 wid24p">Matches you</div>
 		<div class="fl color13 wid48p txtc">
 			<span class="js-matching"></span> of 
@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	<div class="clearfix pt10 pb10">
-		<div class="fl VPwid30p txtc">
+		<div class="fl wid24p txtc">
 			<img src="~$thumbnailPic`" class="VPimg"/>
 		</div>
 		<div class="fr wid27p txtc">
