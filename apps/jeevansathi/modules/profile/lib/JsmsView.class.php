@@ -23,7 +23,33 @@ class JsmsView extends DetailedViewApi
 	{
 		parent::__construct($actionObject);
 	}
-	
+
+	/**
+* function to decorate primary info values in hobbies
+* @param void
+* @return void 
+* @access protected
+*/
+  protected function getDecorated_PrimaryInfo(){
+    $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
+    $viewedProfile = $this->m_objProfile->getPROFILEID();
+    parent::getDecorated_PrimaryInfo();          
+    $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+        if($havePhoto=='Y'){
+            if($this->m_actionObject->THUMB_URL) {
+                $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+                if($thumbNailArray[label] != '')
+                    $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
+                else
+                    $thumbNail = $thumbNailArray['url'];
+            }
+                
+        }
+        else {
+            $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
+        }
+      $this->m_arrOut['thumbnailPic'] = $thumbNail;
+}
 	/**
 	 * getDecorated_LifeStyle
 	 * 
@@ -258,4 +284,6 @@ class JsmsView extends DetailedViewApi
        $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();       
     }
 }
+
+
 ?>

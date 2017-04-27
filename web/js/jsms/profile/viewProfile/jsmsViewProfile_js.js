@@ -547,6 +547,8 @@ $(document).ready(function()
     handleBackButton();
     handlePreviousNext();	
     initGunnaScore();
+
+    getMatchingCount();
 	
 	astroCompatibility();    
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
@@ -704,6 +706,13 @@ function closeAstroLayer()
 			e.preventDefault();
 			return false;
 		});
+}
+
+getMatchingCount = function()
+{
+	var totalFields = $(".js-countFields").length;
+	$(".js-total").html(totalFields);
+	$(".js-matching").html($(".checkmarkVP").length);
 }
 
 setTimeout(enableLoader,50);
