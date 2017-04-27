@@ -18,7 +18,7 @@
 	</div>
 	<div class="clearfix pt10 pb10">
 		<div class="fl wid24p txtc">
-			<img src="" class="VPimg"/> <!-- see how self image can be displayed -->
+			<img src="~$selfThumbnail`" class="VPimg"/>
 		</div>
 		<div class="fr wid27p txtc">
 			<img src="~$thumbnailPic`" class="VPimg"/>

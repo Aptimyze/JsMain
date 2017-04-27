@@ -33,11 +33,14 @@ class JsmsView extends DetailedViewApi
   protected function getDecorated_PrimaryInfo(){
     $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
     $viewedProfile = $this->m_objProfile->getPROFILEID();
-    parent::getDecorated_PrimaryInfo();          
-    $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+    parent::getDecorated_PrimaryInfo();
+    $selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();
+
+    $havePhoto=$this->m_objProfile->getHAVEPHOTO();   
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {
-                $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+                $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_actionObject->loginProfile->getGENDER());
+                
                 if($thumbNailArray[label] != '')
                     $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
                 else
@@ -49,6 +52,25 @@ class JsmsView extends DetailedViewApi
             $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
         }
       $this->m_arrOut['thumbnailPic'] = $thumbNail;
+
+      //thumbnail for self
+      if($selfHavePhoto != "N")
+      {
+      	$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
+      	$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+      	$this->ProfilePicUrl='';
+      	if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+      	{
+      		$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
+      		$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+      	}
+      }      
+      else
+      {
+      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ProfilePic235Url", $profileObj->getGENDER());
+      }
+    $this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
+       
 }
 	/**
 	 * getDecorated_LifeStyle
