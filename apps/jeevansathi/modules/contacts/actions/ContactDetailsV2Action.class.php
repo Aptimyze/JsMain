@@ -378,14 +378,17 @@ class ContactDetailsV2Action extends sfAction
 				}
 			}
 			 elseif ($priArr[0]["CALL_DIRECT"]["ALLOWED"] == "Y") {
-			 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
+			 /*	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
 			 	{
 			 		$DeskMob=1;
 			 	}
 			 	else
 			 		$DeskMob=0;
-			 	if($request->getParameter("VIEWCONTACT") == 1 || $DeskMob==0)
-			 	{
+			 */
+			//	if($request->getParameter("VIEWCONTACT") == 1 || $DeskMob==0)
+	 
+				if($request->getParameter("VIEWCONTACT") == 1)
+					{
 
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 
