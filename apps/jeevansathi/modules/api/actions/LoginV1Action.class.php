@@ -251,7 +251,7 @@ class LoginV1Action extends sfActions
 			elseif($request->getParameter("secureSite"))
             	$szToUrl = JsConstants::$ssl_siteUrl;
     		else    
-            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl)
+            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 			$js_function = " <script>	var message = \"\";
 			if(window.addEventListener)	
 				message ={\"body\":\"$result\"};
