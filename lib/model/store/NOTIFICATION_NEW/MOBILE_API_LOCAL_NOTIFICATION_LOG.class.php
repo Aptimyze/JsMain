@@ -2,8 +2,8 @@
 class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
         public function __construct($dbname="")
         {
-                        $dbname ='notification_master';
-                        $this->databaseName ='NOTIFICATION_NEW';
+                        //$dbname ='notification_master';
+                        $this->databaseName ='MOBILE_API';
                         parent::__construct($dbname);
 			$this->REGISTRATION_ID_BIND_TYPE = "STR";
 			$this->PROFILEID_BIND_TYPE = "INT";
