@@ -798,6 +798,7 @@ class crmInterfaceActions extends sfActions
         //Start:Common Code for Excel View and HTML View
         $this->cid = $request->getParameter('cid');
         $this->name = $request->getParameter('name');
+       
         $this->rangeYear = date("Y", time());
         $this->showInitial = 1;
         if ($request->getParameter("submit") || $request->getParameter('date1')) {
@@ -826,6 +827,8 @@ class crmInterfaceActions extends sfActions
                     //Logic To create excel sheet in CRON:
                     $memcacheObj = JsMemcache::getInstance();
                     $this->memcacheKey =$this->start_date . "_" . $this->end_date . "_" . $this->device;
+                    if($this->name)
+			$this->memcacheKey .="_".$this->name;
                     $memKeySet = $memcacheObj->get($this->memcacheKey);
                     
                     if (strstr($memKeySet, 'Computing')) {
@@ -836,20 +839,20 @@ class crmInterfaceActions extends sfActions
                     else if (strstr($memKeySet, 'Finished')) {
                         //File is ready and CRON is finished,now get the filename  and echo
                         $memcacheObj->delete("$this->memcacheKey");
-                        $memcacheObj->delete("MIS_FDI_PARAMS_KEY");
-                        $file=$filename = "FDI_$this->memcacheKey.xls";
-                        $file ='/usr/local/scripts/config/branch3/'.$file;
-                        if (file_exists($file)) {
+                        $xlData = $memcacheObj->get("MIS_FDI_PARAMS_KEY_".$start_date."_".$end_date."_".$this->device."_".$this->name);
+                        $memcacheObj->delete("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name);
+                        $file = "FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
+                        //$file ='/usr/local/scripts/config/branch3/'.$file;
+                        //if (file_exists($file)) {
                             header('Content-Description: File Transfer');
                             header('Content-Type: application/octet-stream');
                             header('Content-Disposition: attachment; filename="' . basename($file) . '"');
                             header('Expires: 0');
                             header('Cache-Control: must-revalidate');
                             header('Pragma: public');
-                            header('Content-Length: ' . filesize($file));
-                            readfile($file);
-                            unlink($file);
-                        }
+                            echo $xlData;
+                            die;
+                        //}
                     } else if ($memKeySet == '') {
                         //CRON is not running, initiate the cron and wait
                         $this->computing = true;
@@ -858,10 +861,11 @@ class crmInterfaceActions extends sfActions
                         $memcacheValue['ENDDATE']=$this->end_date;
                         $memcacheValue['DEVICE']=$this->device;
                         $memcacheValue['MAINKEYNAME']=$this->memcacheKey;
+                        $memcacheValue['FILENAME']="FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
                         
                         $memcacheObj->set("$this->memcacheKey", 'Computing');
-                        $memcacheObj->set("MIS_FDI_PARAMS_KEY", $memcacheValue);
-                        $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask > /dev/null &";
+                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue);
+                        $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask ". $start_date."_".$end_date."_".$this->device."_".$this->name."> /dev/null &";
                         //$filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask &";
                         $command = JsConstants::$php5path . " " . $filePath;
                         //echo $command;
@@ -877,7 +881,7 @@ class crmInterfaceActions extends sfActions
                 //End:Common Code for Excel View and HTML View
                 
                 //Start: Code for Pagination setting in HTML View
-                $pageLimit = 10;
+                $pageLimit = 100;
                 $pageIndex = $request->getParameter('pageIndex');
 
                 if (!$pageIndex) {  //Checking if this is the first time submit has been pressed

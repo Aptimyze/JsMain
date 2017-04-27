@@ -12,6 +12,9 @@ Call it with:
 
   [php symfony cron:cronFinanceDataInterfaceExcelTask] 
 EOF;
+        $this->addArguments(array(
+            new sfCommandArgument('AGENT', sfCommandArgument::OPTIONAL, 'My argument'),
+            ));
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'operations'),
         ));
@@ -20,14 +23,16 @@ EOF;
     protected function execute($arguments = array(), $options = array()) {
         if (!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
+        $agent = $arguments["AGENT"];
         $memObject = JsMemcache::getInstance();
-        $memcacheValue = $memObject->get("MIS_FDI_PARAMS_KEY");
-        $memObject->delete("MIS_FDI_PARAMS_KEY");
+        $memcacheValue = $memObject->get("MIS_FDI_PARAMS_KEY_".$agent);
+        //$memObject->delete("MIS_FDI_PARAMS_KEY_".$agent);
 
         $start_date = $memcacheValue['STARTDATE'];
         $end_date = $memcacheValue['ENDDATE'];
         $device = $memcacheValue['DEVICE'];
         $mainKey = $memcacheValue['MAINKEYNAME'];
+        $fileName = $memcacheValue['FILENAME'];
         // Data fetch logic
         $billServObj = new billing_SERVICES('newjs_slave');
         $purchaseObj = new BILLING_PURCHASES('newjs_slave');
@@ -55,15 +60,18 @@ EOF;
             }
         }
         $xlData = $headerString . $dataString;
-        $string1 = $start_date . "_" . $end_date . "_". $device;
+        //$string1 = $start_date . "_" . $end_date . "_". $device."_".$agent;
         //header("Content-Type: application/vnd.ms-excel");
         //header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
         //header("Pragma: no-cache");
         //header("Expires: 0");
         //echo $xlData;
-        $memObject->set($mainKey,'Finished');
-        $fileName ="FDI_".$string1.".xls";
-        passthru("echo '$xlData' >>/usr/local/scripts/config/branch3/'$fileName'");
+        //$fileName ="FDI_".$string1.".xls";
+        //If you need to store in file instead of Redis, uncomment below  line
+        //passthru("echo '$xlData' >>/usr/local/scripts/config/branch3/'$fileName'");
+        
+        //Storing computed data into a rediskey
+        $memObject->set("MIS_FDI_PARAMS_KEY"."_".$agent, $xlData);
         $memObject->set($mainKey,'Finished');
         //echo $xlData;
         //die;
