@@ -67,7 +67,7 @@ class JsmsView extends DetailedViewApi
       }      
       else
       {
-      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ProfilePic235Url", $profileObj->getGENDER());
+      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ProfilePic235Url", $this->m_actionObject->loginProfile->getGENDER());
       }
     $this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
        

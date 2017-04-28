@@ -64,7 +64,7 @@
 		<div class="clearfix js-countFields">			
 			<div class="fl wid71p">
 				<div class="f12 color1">Marital Status</div>
-				<div class="fontlig pb15 pt5 js-cut" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
+				<div class="fontlig pb15 pt5" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -115,7 +115,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">Religion</div>
-				<div class="fontlig pb15 js-cut" id="vpro_dpp_religion">~$arrData.dpp_religion|decodevar`</div>
+				<div class="fontlig pb15" id="vpro_dpp_religion">~$arrData.dpp_religion|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
