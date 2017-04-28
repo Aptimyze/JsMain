@@ -209,7 +209,7 @@ class ApiRequestHandler
 					else
 						$defaultArray[FORCEUPGRADE] = "N";
 				} else {
-                                        if($apiLevel >= $Device[APILEVEL]  && ($request->getParameter(KEY)!='android' || $this->checkForRandomNess($Device)))
+                                        if($apiLevel >= $Device[APILEVEL]  && ($request->getParameter(KEY)!='android' || $this->checkForRandomNess()))
                                             $defaultArray[UPGRADE] = "Y";
 					if ($this->forceUpgrade || ($apiappVersion < $Device[FORCE_API_APP_VERSION]))
 						$defaultArray[FORCEUPGRADE] = "Y";
