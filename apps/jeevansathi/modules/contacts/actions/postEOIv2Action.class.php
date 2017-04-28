@@ -38,13 +38,6 @@ class postEOIv2Action extends sfAction
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
 
-						/** caching unset **/
-						$request->setParameter("caching",1);
-						$ifApiCached = SearchUtility::cachedSearchApi('del',$request,$this->loginProfile->getPROFILEID());
-						$ifApiCached = SearchUtility::cachedSearchApi('del',$request,$this->Profile->getPROFILEID());
-						$ifApiCached = InboxUtility::cachedInboxApi('del',$request,$this->Profile->getPROFILEID());
-						$ifApiCached = InboxUtility::cachedInboxApi('del',$request,$this->loginProfile->getPROFILEID());
-						/** caching unset **/
                                       
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}

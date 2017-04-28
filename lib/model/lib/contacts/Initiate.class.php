@@ -385,6 +385,13 @@ class Initiate extends ContactEvent{
     // delete data of Match of the day
     JsMemcache::getInstance()->set("cachedMM24".$this->viewed->getPROFILEID(),"");
     JsMemcache::getInstance()->set("cachedMM24".$this->viewer->getPROFILEID(),"");
+    /** caching unset **/
+    sfContext::getInstance()->getRequest()->setParameter("caching",1);
+    SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$this->viewed->getPROFILEID());
+    SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$this->viewer->getPROFILEID());
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->viewed->getPROFILEID());
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->viewer->getPROFILEID());
+    /** caching unset **/
   }
 
 	public function sendMail()
