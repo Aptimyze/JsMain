@@ -612,10 +612,11 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
-		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
-		{
-			$this->setLogged();
-		}
+                if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+                {
+                        $this->setLogged();
+                }
+
 	}
 
 	/**
@@ -730,4 +731,34 @@ class LoggingManager
 		}
 		return $scriptName;
 	}
+
+        public function writeToFileForCoolMetric($body)
+	{
+
+                if(LoggingEnums::$COOL_METRIC[$body['type']])return;
+                $dataOutput = array();
+                $dataOutput['Date'] = $body['currentTime'];
+                $dataOutput['type'] = $body['type'];
+                $dataOutput['channel'] = $body['whichChannel'];
+                $dataOutput['profileId'] = $body['profileId'];
+                $dataOutput = json_encode($dataOutput);
+                $currDate = Date('Y-m-d');
+                try{
+		$filePath =  $this->serverLogPath."/coolMetric/$currDate/".$currDate.".log";
+                if(!file_exists(dirname($filePath)))
+                    mkdir(dirname($filePath), 0777, true);                
+		$fileResource = fopen($filePath,"a");
+		fwrite($fileResource,$dataOutput."\n");
+		fclose($fileResource);
+                }
+                catch(Exception $e){
+                    
+                    return;
+                }
+	}
+
+        
+        
+        
+        
 }
