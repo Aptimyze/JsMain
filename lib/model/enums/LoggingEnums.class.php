@@ -83,6 +83,7 @@ class LoggingEnums
     const TRACE_STRING = 'traceString';
     const CONSUMER_NAME = 'Rabbitmq-Consumer';
     const PHISHING_URL = 'phishingUrl';
+    const COOL_M_LOGIN = 'LOG';
 
     public static $MappingNames = array(
         // JSC module names
@@ -182,4 +183,14 @@ class LoggingEnums
         "myjs_api" => 10,
         "common" => 21,
         );
+    
+     
+     public static $COOL_METRIC = array(
+         
+         'ACC' =>false,
+         'REG' => false,
+         'EOI' => false,
+         self::COOL_M_LOGIN=>true
+         
+     );
 }
