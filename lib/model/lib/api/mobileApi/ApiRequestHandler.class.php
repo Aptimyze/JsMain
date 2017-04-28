@@ -225,7 +225,7 @@ class ApiRequestHandler
 			if ($defaultArray[FORCEUPGRADE] == "Y")
 				$defaultArray["forceupgrade_message"] = "This version of your Jeevansathi App has expired please upgrade";
 		} else
-			$defaultArray["message"] = "Introducing Chat! Exchange messages in real time with online matches.";
+			$defaultArray["message"] = "This version of your Jeevansathi App has expired. Please upgrade";
 		return $defaultArray;
 	}
 // if for 50% set divisor =2, 25 % set to 4
