@@ -6,7 +6,7 @@ class PromoLib
 	public static $daysToShowPromo = 4;
 	
 	public static function showPromo($promoToBeShown,$profileId,$loginObj)
-	{ return true;
+	{ 
 		if($promoToBeShown == "chatPromo")
 		{
 			self::ChatPromo($profileId,$loginObj);
