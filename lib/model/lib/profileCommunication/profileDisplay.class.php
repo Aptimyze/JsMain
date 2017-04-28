@@ -74,13 +74,12 @@ class profileDisplay{
 
 	public static function getNextProfileIdForMyjs($iListingType,$iOffset)
 	{	
+
 		$profileObj= LoggedInProfile::getInstance();
 		$pid = $profileObj->getPROFILEID();
-
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
-
 		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
-		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset];
 		 return($profileIdToReturn);		
 	}
 

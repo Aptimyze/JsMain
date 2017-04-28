@@ -34,7 +34,7 @@ class userSpecific
 	 * on detailed page.
 	 */
 	public function showNextPrev()
-	{
+	{	
 		$request=sfContext::getInstance()->getRequest();
 		$this->searchid=$request->getParameter("searchid");
 		$this->show_profile=$request->getParameter("show_profile");
@@ -52,9 +52,6 @@ class userSpecific
 		$this->SHOW_NEXT=0;
 		$this->bIsSearchIdExpire = false;
 		$bHitFromMyjsPageAndroid = strlen($request->getParameter("hitFromMyjs"))!=0?true:false;
-		if($bHitFromMyjsPageAndroid){
-            $this->profilechecksum = profileDisplay::getNextPreviousProfileForMyjs('dailymatches',$this->actual_offset_real);
-        }
 		if($this->is_allowed_np() || $bHitFromMyjsPageAndroid)
 		{  
 			if(($this->searchid && $this->show_profile) || $bHitFromMyjsPageAndroid)
@@ -129,7 +126,7 @@ class userSpecific
 			$this->actual_offset=($this->j-1)*SearchCommonFunctions::getProfilesPerPageOnSearch()+$this->offset;
 		if($hitFromMyjs == true)
 		{  
-		  $this->next_prev_prof = profileDisplay::getNextProfileIdForMyjs('dailymatches',$this->actual_offset_real);;
+		  $this->next_prev_prof = profileDisplay::getNextProfileIdForMyjs('dailymatches',$this->actual_offset_real);
 		}
 		else
 		{	
