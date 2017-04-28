@@ -318,6 +318,26 @@ label {
 	        <br>
 		<div class="clr"></div>
 		<!-- Caste Ends Here -->
+                
+                <!-- SectMuslim Starts Here -->
+	        <li id="sectMuslim">
+				<br>
+				<div id="sectMuslim_submit_err_label" >
+					<span id="sectMuslim_section"> 
+						<label id="sectMuslim_label" class="l1">Caste<u>*</u> :</label>
+						
+							~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
+							
+						 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_caste' class='error'>
+							<label class="l1">&nbsp;</label>
+							<div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
+						</div>
+					</span>
+				</div>
+	        </li>
+	        <br>
+		<div class="clr"></div>
+		<!-- SectMuslim Ends Here -->
 		<!-- City Starts from here -->
 				<li id="city_padding">
 					<div id="city_res_show_hide" style="width:290px;float:left">
@@ -562,6 +582,7 @@ $(document).ready(function(){
 	$("li#gender_padding").hide();
 	onRelationShipChange();
 	$("#caste").hide();
+        $("#sectMuslim").hide();
 			
 	setTimeout(function(){
 		if($("#reg_country_res").val()==51){
@@ -653,6 +674,7 @@ function callReligion(drpDown)
 	var val = drpDown.value;
 	$("#caste").hide();
 	$("#caste_err_msg").html("Please provide a caste");
+        $("#sectMuslim").hide();
 	
 	if(val == 2 || val == 3 )
 	{
@@ -662,6 +684,9 @@ function callReligion(drpDown)
 	if(val <=4 || val==9)
 	{
 		$("#caste").show();
+                if(val == 2){
+                    $("#sectMuslim").show();
+                }
 	}
 }
 

@@ -213,6 +213,7 @@ var registration={
 //				show_hide_partner(this);
 //				populate_partner_religion(this);
 				populate_caste_from_religion(this);
+                                showHideCasteMuslim();
 			}
 		},
 
@@ -1864,4 +1865,11 @@ function CheckPincode()
 		document.getElementById("pincode_submit_err").style.display="none";
 	}
 	return err_msg;
+}
+function showHideCasteMuslim(){
+    religionSelected = document.getElementById("religion").value.split("|X|")[0];
+    if(religionSelected == '2')
+        document.getElementById("CasteMuslimDiv").style.display = "inline";
+    else
+        document.getElementById("CasteMuslimDiv").style.display = "none";
 }

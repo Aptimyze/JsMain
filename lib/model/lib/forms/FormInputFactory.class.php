@@ -99,7 +99,7 @@ class FormInputFactory{
 							$field_map_name=ObjectiveFieldMap::getFieldMapKey($field->getName(),$page);
 						//get all dropdown values from Fieldmaplib
 						if($field_map_name)
-							$choices=FieldMap::getFieldLabel($field_map_name,'',1);
+                                                    $choices=FieldMap::getFieldLabel($field_map_name,'',1);
 					if($field->getBlankLabel()){
 						$blankArr[$field->getBlankValue()]=$field->getBlankLabel();
 						$choices = $blankArr+$choices;

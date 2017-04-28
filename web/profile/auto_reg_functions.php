@@ -274,6 +274,13 @@ function validate_mtongue($mtongue,&$is_error,&$errors){
 			$errors[]='mtongue_err1';
 				}
 }
+function validate_casteMuslim($casteMuslim,&$is_error,&$errors){
+		if(!$casteMuslim)
+                {
+                        $is_error++;
+			$errors[]='casteMuslim_err1';
+				}
+}
 function validate_relationship($relationship,&$is_error,&$errors){
 	if(!$relationship)
 	{

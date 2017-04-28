@@ -830,7 +830,7 @@ if($submit_pg2) // for the IE
 
 		validate_mtongue($mtongue,$is_error,$errors);
 
-//Ends validating mtongue
+//Ends validating mtongue                
 
 		//starts Validating religion
 $check_partner_caste=validate_religionandcaste($religion,$is_error,$caste,$errors,'N');
@@ -847,6 +847,11 @@ $religion_val = $religion_temp[0];
 			  }
 
 //Validation ends here
+//Starts validating casteMuslim
+              if($religion == '2')
+                validate_casteMuslim($casteMuslim,$is_error,$errors);
+
+//Ends validating casteMuslim
 //	}
 if(!empty($record_id)){		
 	if(!$degree)
@@ -904,6 +909,7 @@ if(!empty($record_id)){
 		$smarty->assign("SHOWMOBILE",$showmobile);
 		$smarty->assign("OCCUPATION",$occupation);
 		$smarty->assign("RELIGION",$religion);
+                $smarty->assign("CASTE_MUSLIM",$casteMuslim);
 		$smarty->assign("CASTE",$caste);
 		$smarty->assign("MATCH_ALERT",$match_alerts);
 		//$smarty->assign("SPEAK_URDU",$speak_urdu);
@@ -1144,6 +1150,7 @@ if(!empty($record_id)){
 				"SEC_SOURCE" => $secondary_source,
 				"SERIOUSNESS_COUNT" => $seriousness_count,
 				"PINCODE" =>  $pincode,
+                                "SECT" => $casteMuslim,
 			);
 			$result = $objInsert->insertJPROFILE($arrFields);
 			if(false === $result) {
@@ -1955,6 +1962,32 @@ else
 					$option_string.= "<option value=\"$religion_value_arr[$i]\">$religion_label_arr[$i]</option>";
 			}
 			$smarty->assign("religion",$option_string);
+                        
+                        $sql = "select SQL_CACHE VALUE,LABEL from SECT where PARENT_RELIGION=2 ORDER BY SORTBY";
+			$res = mysql_query_decide($sql) or logError("error",$sql);
+			while($row = mysql_fetch_array($res))
+			{
+				$casteMuslim_label_arr[] = $row['LABEL'];
+				$casteMuslim_value = $row['VALUE'];
+				$casteMuslim_str= $casteMuslim_value;
+				$caste_str="";
+				$casteMuslim_value_arr[] = substr($casteMuslim_str,0,strlen($casteMuslim_str)-1);
+			}
+
+			$option_string="";		
+			for($i=0;$i<count($casteMuslim_value_arr);$i++)
+			{
+				if($casteMuslim_lead)
+				      $casteMuslim_val=$casteMuslim_lead;
+
+				$temp_rel = explode("|X|",$casteMuslim_value_arr[$i]);
+
+				if($casteMuslim_val == $temp_rel[0])
+					$option_string.= "<option value=\"$casteMuslim_value_arr[$i]\" selected=\"yes\">$casteMuslim_label_arr[$i]</option>";
+				else
+					$option_string.= "<option value=\"$casteMuslim_value_arr[$i]\">$casteMuslim_label_arr[$i]</option>";
+			}
+			$smarty->assign("casteMuslim",$option_string);
 
 			$curDate=date('Y', JSstrToTime('-6570 days'));
 			for($i=$curDate;$i>=1941;$i--)
