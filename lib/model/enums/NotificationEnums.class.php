@@ -75,4 +75,8 @@ class NotificationEnums
 
       //config for notifications, not eligible for local polling
       public static $notEligibleForPolling = array("LOGIN_REGISTER");
+
+      // time criteria notification array	
+      public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
+
 }
