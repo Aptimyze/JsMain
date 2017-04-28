@@ -95,6 +95,7 @@ class ProcessHandler
                                 }
                                 $varArray["editedFields"] = implode(", ", $fieldLabel);
                                 $varArray["editedFieldsCount"] = count($fieldLabel);
+                                $varArray["PHONE_MOB"] = $body["PHONE"];
                                 $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
                                 $smsViewer->send();  
                                 JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
