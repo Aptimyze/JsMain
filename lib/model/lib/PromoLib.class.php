@@ -2,85 +2,67 @@
 
 class PromoLib
 {
+	public static $baseDate = '2017-04-28';
+	public static $daysToShowPromo = 4;
 	
-	public static function showPromo($promoToBeShown,$channel,$profileId,$loginObj)
-	{
+	public static function showPromo($promoToBeShown,$profileId,$loginObj)
+	{ return true;
 		if($promoToBeShown == "chatPromo")
 		{
-			$this->ChatPromo($channel,$profileId,$loginObj);
+			self::ChatPromo($profileId,$loginObj);
 		}
 
 	}
 
 
-	private function ChatPromo($channel,$profileId,$loginObj)
+	private function ChatPromo($profileId,$loginObj)
 	{
-		$baseDate = '2017-04-28';
+
 		$obj = new MOBILE_API_APP_LOGIN_PROFILES();
 
-		$isIOSUser = $obj->ifIOSUser($profileId);
-
-		if($isIOSUser)
-			return;
-
-		$loggedInLast7daysAndroid = $obj->loggedInAndroidLastNDays($profileId,7);
-		if($loggedInLast7daysAndroid)
-			return;
-
-		
-		//$isKeySet = $cachObj->keyExist('CHAT_PROMO_ANDROID_'.$profileId);
-
-		if($_COOKIE['CHAT_PROMO_ANDROID'] == '1')
+		$isUserEligible = $obj->ifUserIsEligible($profileId);
+		//var_dump($isUserEligible); die('asas');
+		if($isUserEligible != false)
 		{
-			if($_COOKIE['DAY_CHECK_CHAT_PROMO'] == '1')
+			if($isUserEligible['APP_TYPE'] == "I")
+				return false;
+			else if($isUserEligible['APP_TYPE'] == "A")
 			{
-				return;
+				if(strtotime(now) - strtotime(self::$baseDate) < 3600*24*7)
+					return false;
 			}
-			else
-			{
-				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 
-				if($channel == "JSPC")
-				$this->forward("promotions","ChatPromoJSPC");
-				else if($channel == "JSMS")
-				$this->forward("promotions","ChatPromoJSMS");
-			}
 		}
+
+		if($_COOKIE['DAY_CHECK_CHAT_PROMO'] == '1')
+		{  
+			return false;
+		}		
 		else
-		{
-			$date1 = new DateTime($baseDate);
+		{  
+			$date1 = new DateTime(self::$baseDate);
 			$date2 = new DateTime();
 			$interval = $date1->diff($date2);
 
 			if($interval->h <= 96)
 			{
-				setcookie('CHAT_PROMO_ANDROID_', '1', time() + 3600*$interval, "/");
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
-
-				if($channel == "JSPC")
-				$this->forward("promotions","ChatPromoJSPC");
-				else if($channel == "JSMS")
-				$this->forward("promotions","ChatPromoJSMS");
+				return true;
 			}
 			else
 			{
 				$activatedOn = $loginObj->getVERIFY_ACTIVATED_DT();
-				if((strtotime(now) - strtotime($activatedOn)) < 86400)
-				{
-					$daysToShowPromo = 4;
-					setcookie('CHAT_PROMO_ANDROID_', '1', time() + 3600*$daysToShowPromo, "/");
+
+				if((strtotime(now) - strtotime($activatedOn)) < 3600*24*self::$daysToShowPromo)
+				{  
 					setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
-
-				if($channel == "JSPC")
-				$this->forward("promotions","ChatPromoJSPC");
-				else if($channel == "JSMS")
-				$this->forward("promotions","ChatPromoJSMS");
-
+					return true;
 				}
 
-
+				return false;
 			}
 		}
+		
 		
 	}
 

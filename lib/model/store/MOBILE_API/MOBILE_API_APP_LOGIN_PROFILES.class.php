@@ -62,52 +62,22 @@ class MOBILE_API_APP_LOGIN_PROFILES extends TABLE
 		}
 	}
 
-	public function ifIOSUser($pid)
+	public function ifUserIsEligible($pid)
 	{
 		try
 		{
-			$sql = "select count(1) as CNT from MOBILE_API.APP_LOGIN_PROFILES where PROFILEID =:PROFILEID AND APP_TYPE='I'";
+			$sql = "select * from MOBILE_API.APP_LOGIN_PROFILES where PROFILEID =:PROFILEID";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_STR);
 			$res->execute();
 			$row = $res->fetch(PDO::FETCH_ASSOC);
-
-				if($row['CNT'] == 1)
-				return true;
-			
-			return false;
+			return $row;
 		}
 		catch(PDOException $e)
 		{
 			throw new jsException($e);
 		}
 	}
-
-	public function loggedInAndroidLastNDays($pid,$days)
-	{
-		try
-		{	
-			$prevDate = new DateTime('7 days ago');
-			$date =  $prevDate->format('Y-m-d h:i:s');
-			$sql = "select count(1) as CNT from MOBILE_API.APP_LOGIN_PROFILES where PROFILEID =:PROFILEID AND DATE > $date";
-			$res=$this->db->prepare($sql);
-			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_STR);
-			$res->execute();
-			$row = $res->fetch(PDO::FETCH_ASSOC);
-
-				if($row['CNT'] == 1)
-				return true;
-			
-			return false;
-		}
-		catch(PDOException $e)
-		{
-			throw new jsException($e);
-		}
-	}
-
-
-
 
 }
 ?>

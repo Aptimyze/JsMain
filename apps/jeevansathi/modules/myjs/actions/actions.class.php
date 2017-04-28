@@ -300,8 +300,12 @@ class myjsActions extends sfActions
         }
 
         $promoObj = new PromoLib();
-        $promoObj->showPromo("chatPromo","JSMS",$pid,$this->loginProfile);
-        
+       $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
+        if($chatPromoToShow == true)
+        {
+          $this->forward("promotions", "chatPromoJSMS");
+        }
+
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -375,9 +379,13 @@ class myjsActions extends sfActions
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
-    
+ 
     $promoObj = new PromoLib();
-    $promoObj->showPromo("chatPromo","JSPC",$pid,$this->loginProfile);
+    $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
+    if($chatPromoToShow == true)
+    {
+      $this->forward("promotions", "chatPromoJSPC");
+    }
 
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
