@@ -19,7 +19,7 @@ class ApiRequestHandler
 		if ($this->responseFlag) {
 			$this->AuthenticateDevice($request);
 		}
-		$this->app = array("android" => array('APILEVEL' => '14', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION,'checkForRandomness'=>true), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1,'checkForRandomness'=>false));
+		$this->app = array("android" => array('APILEVEL' => '14', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
 	}
 
 	/*
@@ -209,7 +209,7 @@ class ApiRequestHandler
 					else
 						$defaultArray[FORCEUPGRADE] = "N";
 				} else {
-                                        if($apiLevel >= $Device[APILEVEL]  && $this->checkForRandomNess($Device))
+                                        if($apiLevel >= $Device[APILEVEL]  && ($request->getParameter(KEY)!='android' || $this->checkForRandomNess($Device)))
                                             $defaultArray[UPGRADE] = "Y";
 					if ($this->forceUpgrade || ($apiappVersion < $Device[FORCE_API_APP_VERSION]))
 						$defaultArray[FORCEUPGRADE] = "Y";
@@ -231,7 +231,6 @@ class ApiRequestHandler
 // if for 50% set divisor =2, 25 % set to 4
         
         public function  checkForRandomNess(){
-            if(!$Device['checkForRandomness']) return true;
             $Divisor = 2;
             $randNum = rand(1,$Divisor);
             if($randNum % $Divisor  == 0 )return true;
