@@ -720,20 +720,24 @@ getMatchingCount = function()
 setTimeout(enableLoader,50);
 
 shortContentVP = function(){
+	console.log('a4');
+	
+	
 	$('.js-cut').each(function(){
 		if($(this).html().length>60)
 		{
-			var firstP = $(this).html().substring(0, 50);
-			var secondP = $(this).html().substring(51);
-			var newText = firstP +'<span class=\"js-moreVP color1\">...more</span><div class="\dispnone\">'+secondP+'</div>';
-			console.log(newText);
+			
+			var content = $(this).html();
+			var c = content.substr(0, 50);
+            var h = content.substr(50, content.length - 50);           
+			var newText = c +'<span class=\"js-moreVP color1\">...more</span><div class="\dispnone\">'+ h +'</div>';
 			$(this).html(newText);
 		}
 	})
 
 	$('.js-moreVP ').click(function(){
 
-		$(this).css('display','none').next().css('display','inline-block');
+		$(this).css('display','none').next().css('display','inline');
 	})
 
 
