@@ -248,6 +248,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -278,6 +279,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -308,6 +310,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",

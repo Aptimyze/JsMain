@@ -363,7 +363,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 				<div class="fullwidth f14 fontreg white">\
 					<div class="clearfix">\
 						<div class="fl wid48p textTru">\
-							{age}, {height}\
+							{age}, {height}, {mstatus}\
 						</div>\
 						<div class="fr wid48p textTru">\
 							{occupation}\
@@ -957,6 +957,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
         if(val1.name_of_user!='' && val1.name_of_user!=null){
                 val1.username = val1.name_of_user;
         }
+        val1.age = val1.age.replace(" Years","");
 	var mapping={
 			
 			'{noPhotoDiv}':removeNull(noPhotoDiv),
@@ -989,6 +990,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{buttonsDiv}':"buttons"+profileNoId,
 			'{buttonInputId}':"buttonInput"+profileNoId,
 			'{profilechecksum}':removeNull(val1.profilechecksum),
+			'{mstatus}':removeNull(val1.mstatus),
 			'{verificationSeal}':removeNull(verificationSeal),
 			'{blahblahToEnd_withNoComma}':"----------"
 		};
