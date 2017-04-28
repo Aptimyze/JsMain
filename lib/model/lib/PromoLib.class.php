@@ -28,7 +28,7 @@ class PromoLib
 				return false;
 			else if($isUserEligible['APP_TYPE'] == "A")
 			{
-				if(strtotime(now) - strtotime(self::$baseDate) < 3600*24*7)
+				if(strtotime(now) - strtotime($isUserEligible['DATE']) < 3600*24*7)
 					return false;
 			}
 
