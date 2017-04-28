@@ -735,7 +735,7 @@ class LoggingManager
         public function writeToFileForCoolMetric($body)
 	{
 
-                if(LoggingEnums::$COOL_METRIC[$body['type']])return;
+                if(!LoggingEnums::$COOL_METRIC[$body['type']])return;
                 $dataOutput = array();
                 $dataOutput['Date'] = $body['currentTime'];
                 $dataOutput['type'] = $body['type'];
