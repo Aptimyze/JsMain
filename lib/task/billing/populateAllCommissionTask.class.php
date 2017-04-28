@@ -61,25 +61,29 @@ EOF;
 		$billingOrdersDeviceObj = new billing_ORDERS_DEVICE('newjs_slave');
 
 		$comissionsArr = array();
-
 		if(!empty($profilesArr)){
 			
 			foreach($profilesArr as $key=>$details) {
-				
-				$paymentSource = $billingOrdersDeviceObj->getPaymentSourceFromBillid($details['BILLID']);
-
-				if($paymentSource == 'iOS_app') {
-                                        $appleFlag = 1;
-					$appleCommissionPercentage = $appleCommissionObj->getActiveAppleCommissionPercentage($details['ENTRY_DT']);
-					$appleComm = ($appleCommissionPercentage/100)*($details['AMOUNT']);
-                                        //Start: JSC-2668: Apple Commission fix to calculate correct net amount
-                                        $newAmt = ($details['AMOUNT']) - $appleComm;
+                            //Start: JSC-2668: Apple Commission fix to calculate correct net amount
+				if($details['APPLE_COMMISSION'] == NULL || $details['APPLE_COMMISSION'] == 0){
+                                    $paymentSource = $billingOrdersDeviceObj->getPaymentSourceFromBillid($details['BILLID']);
+                                    if($paymentSource == 'iOS_app') {
+                                            $appleFlag = 1;
+                                            $appleCommissionPercentage = $appleCommissionObj->getActiveAppleCommissionPercentage($details['ENTRY_DT']);
+                                            $appleComm = ($appleCommissionPercentage/100)*($details['AMOUNT']);
+                                            $newAmt = ($details['AMOUNT']) - $appleComm;
+                                            $newAmt = round($newAmt,3);
+                                        }
+                                        else{
+                                            $appleFlag = 0;
+                                            $appleComm= 0;
+                                            $newAmt=($details['AMOUNT']);
+                                        }
 				}
 				else{
 					$appleComm = 0;
                                         $appleFlag = 0;
                                         $newAmt = ($details['AMOUNT']);
-                                        
                                 }
                                 $allotedAgent = $incentiveCrmDailyAllotObj->getAllotedAgentToTransaction($details['PROFILEID'], $details['ENTRY_DT']);
 
@@ -88,7 +92,6 @@ EOF;
                                         $franComm = round($franComm, 2);
                                 }
 
-				
 				$billingPaymentDetailObj->updateComissions($details['PROFILEID'],$details['BILLID'],$appleComm,$franComm,$appleFlag,$newAmt);
                                 unset($appleFlag);
                                 unset($newAmt);

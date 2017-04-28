@@ -5,6 +5,10 @@ var ap_randNumber=new Date().getTime();
 var OperaMiniFlag=0;
 var perspective=0;
 var showOldSiteMessage=1;
+var messagesAppPromoTime = "messagesAppPromoTime";
+var hoursLimit = 6;
+var divForMessageAppPromo='';
+var messageListingAppPromo=0;
 //var isLoaderSearch="";
 var AppPromoHgt=$(window).height();
 if(!getCookieData("apRandomUser"))
@@ -16,10 +20,15 @@ if(typeof(AndroidPromotion)=="undefined"){
 }
 $( document ).ready(function() {
 	//
-
+      if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
+        messageListingAppPromo = showAppPromoForMessageListingPage();
+        if(messageListingAppPromo)
+            divForMessageAppPromo= "<div class=\"padAppPromo clearfix\"> <div class = \"f14 innerTextBorder txtc pb10 pt5\">Chat real time with online matches, Download App</div></div>";
+        
+      }  
       if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
-      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined'))
-      {  
+      if((!getCookieData("appPromo") && (typeof appPromo === 'undefined')) || messageListingAppPromo)
+      { 
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#main").length)
 			{
@@ -31,26 +40,29 @@ $( document ).ready(function() {
 			if($("#mainContent").length){
 				
 
-				if(typeof pageMyJs != 'undefined' && pageMyJs==1)
+				if((typeof pageMyJs != 'undefined' && pageMyJs==1))
 				{
-					var showAppClass = 'ham_b20_n';
+					var showAppClass = 'ham_b20_n ham_minu20';
 				}
+                                else if(messageListingAppPromo){
+                                        var showAppClass = 'ham_b20_n borderMessAppPromo ham_minu_mess20';
+                                }
 				else
 				{
 					$("#mainContent").addClass("ham_b100");
-					var showAppClass = 'ham_b20';
+					var showAppClass = 'ham_b20 ham_minu20';
 				}
 				
 				perspective=1;
 				//isLoaderSearch=1;
 				if(getAndroidVersion())
 				{
-					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+' ham_minu20  newocbbg1 fullwid\'>    	<div class=\'padAppPromo clearfix\'>        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=androidLayer\" class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt13 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App | 3 MB </div>                <div class=\"ocbnewimg ocbstar\" style =\"float:right\"></div>            </div>        </div>    </div>');
+					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+'  newocbbg1 fullwid\'>   '+divForMessageAppPromo+' 	<div class=\'padAppPromo clearfix\'>        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=androidLayer\" class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt13 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App | 3 MB </div>                <div class=\"ocbnewimg ocbstar\" style =\"float:right\"></div>            </div>        </div>    </div>');
 					AppPromoHgt=$("#appPromo").height();
 				}
 				if(getIosVersion())
 				{  
-					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+' ham_minu20  newocbbg1 fullwid\'>    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>');
+					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+'  newocbbg1 fullwid\'>    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>');
 					AppPromoHgt=$("#appPromo").height();
 				}
 			if($("#outerDivAppPromo")){
@@ -176,18 +188,26 @@ function writeCookie (key, value, hours) {
 	})
 	  document.getElementById("appPromo").style.height=AppPromoHgt+"px";
 	 
-		$("#appPromo").removeClass("ham_minu20");
-		if(typeof pageMyJs == 'undefined')
-		{
-		$("#mainContent").addClass("ham_plus20");
+                if(messageListingAppPromo)
+                    $("#appPromo").removeClass("ham_minu_mess20");
+                else
+                    $("#appPromo").removeClass("ham_minu20");
+                if(typeof pageMyJs == 'undefined' && !messageListingAppPromo)
+                {
+                    $("#mainContent").addClass("ham_plus20");
 		}
 		startTouchEvents(100);
 		setTimeout(function(){$(document).unbind('touchmove');},2000);
  }
  else if(abc==4)
  {
-	
-		$("#appPromo").addClass("ham_minu20");
+                if(messageListingAppPromo){
+                    $("#appPromo").addClass("ham_minu_mess20");
+                    dateToStore = new Date();
+                    localStorage.setItem(messagesAppPromoTime,dateToStore);
+                }
+                else
+                    $("#appPromo").addClass("ham_minu20");
 		$("#mainContent").removeClass("ham_plus20");
 		setTimeout(function(){$("#appPromo").remove();},2000);
 		$(document).unbind('touchmove');
@@ -298,4 +318,20 @@ function getIosVersion(ua) {
 	else
 		return false;
 	
+}
+
+function showAppPromoForMessageListingPage(){
+    var currentDate = new Date();
+    var storedDate = localStorage.getItem(messagesAppPromoTime);
+    if ( storedDate !== null)
+    {
+            diff = new Date(currentDate-new Date(storedDate));
+            if ( Math.floor(diff/(1000*60*60)) < hoursLimit)    
+                    return 0;
+            else
+            {
+                    localStorage.removeItem(messagesAppPromoTime);
+            }
+    }
+    return 1;
 }
