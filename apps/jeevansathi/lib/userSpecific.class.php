@@ -126,7 +126,7 @@ class userSpecific
 			$this->actual_offset=($this->j-1)*SearchCommonFunctions::getProfilesPerPageOnSearch()+$this->offset;
 		if($hitFromMyjs == true)
 		{  
-		  $this->next_prev_prof = profileDisplay::getNextProfileIdForMyjs('dailymatches',$this->actual_offset_real);
+		  $this->next_prev_prof = profileDisplay::getNextProfileIdForMyjs('dailymatches',$this->actual_offset_real+1);
 		}
 		else
 		{	
