@@ -18,10 +18,10 @@
 	</div>
 	<div class="clearfix pt10 pb10">
 		<div class="fl wid24p txtc">
-			<img src="~$selfThumbnail`" class="VPimg"/>
+			<img src="~$thumbnailPic`" class="VPimg"/>
 		</div>
 		<div class="fr wid27p txtc">
-			<img src="~$thumbnailPic`" class="VPimg"/>
+			<img src="~$selfThumbnail`" class="VPimg"/>
 		</div>
 	</div>
 	~/if`
