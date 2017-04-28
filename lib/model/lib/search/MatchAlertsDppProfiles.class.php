@@ -209,12 +209,12 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                     if(!in_array($value, $occValues))
                         $finalOccArr['notOcc'].= ','.$value;
                     }
-                    $finalOccArr['Occ']= '';      
+                    $finalOccArr['occ']= '';      
                     $finalOccArr['notOcc'] = trim($finalOccArr['notOcc'],',');
                     return $finalOccArr;
                 }
             }
-            $finalOccArr['Occ']= $occupation;           
+            $finalOccArr['occ']= $occupation;           
             return $finalOccArr;            
         }
         
