@@ -433,7 +433,7 @@ $js_arr[]=array("jsms/photo/photo_upload_js"        => "7");
 $js_arr[]=array("jsms/photo/photo_privacy_js" => "1");
 $js_arr[]=array("jsms/membership/shimmer_js"  => "1");
 $js_arr[]=array("jsms/utility/vSlider_js"               => "16");
-$js_arr[]=array("jsms/utility/hamSearch_js"          => "10");
+$js_arr[]=array("jsms/utility/hamSearch_js"           => "11");
 $js_arr[]=array("jsms/membership/revamp_mobile_membership"      => "5");
 $js_arr[]=array("jsms/phone/phone_js"                        => "25");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_membership"                        => "21");
@@ -612,7 +612,7 @@ $js_arr[]=array("jspc/chat/chatPCHelper_js"                                     
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                                      => "112");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                                   => "67");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
-$js_arr[]=array("jspc/help/JSPCHelp_js"              => "18");
+$js_arr[]=array("jspc/help/JSPCHelp_js"               => "19");
 $js_arr[]=array("jsms/help/JSMSHelp_js"            => "14");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"        => "6");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
