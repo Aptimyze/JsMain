@@ -556,6 +556,8 @@ $(document).ready(function()
 	{
 		setTimeout(function(){disableLoader();},300);
 	}
+
+	shortContentVP();
     
 });
 getCommHistory = function()
@@ -716,4 +718,29 @@ getMatchingCount = function()
 }
 
 setTimeout(enableLoader,50);
+
+shortContentVP = function(){
+	$('.js-cut').each(function(){
+		if($(this).html().length>60)
+		{
+			var firstP = $(this).html().substring(0, 50);
+			var secondP = $(this).html().substring(51);
+			var newText = firstP +'<span class=\"js-moreVP color1\">...more</span><div class="\dispnone\">'+secondP+'</div>';
+			console.log(newText);
+			$(this).html(newText);
+		}
+	})
+
+	$('.js-moreVP ').click(function(){
+
+		$(this).css('display','none').next().css('display','inline-block');
+	})
+
+
+
+
+
+}
+
+
 

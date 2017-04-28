@@ -64,7 +64,7 @@
 		<div class="clearfix js-countFields">			
 			<div class="fl wid71p">
 				<div class="f12 color1">Marital Status</div>
-				<div class="fontlig pb15 pt5" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
+				<div class="fontlig pb15 pt5 js-cut" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -115,7 +115,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">Religion</div>
-				<div class="fontlig pb15" id="vpro_dpp_religion">~$arrData.dpp_religion|decodevar`</div>
+				<div class="fontlig pb15 js-cut" id="vpro_dpp_religion">~$arrData.dpp_religion|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -132,7 +132,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">Mother Tongue</div>
-				<div class="fontlig pb15" id="vpro_dpp_mtongue">~$arrData.dpp_mtongue|decodevar`</div>
+				<div class="fontlig pb15 js-cut" id="vpro_dpp_mtongue">~$arrData.dpp_mtongue|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -149,7 +149,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">Caste</div>
-				<div class="fontlig pb15" id="vpro_dpp_caste">~$arrData.dpp_caste|decodevar`</div>
+				<div class="fontlig pb15 js-cut" id="vpro_dpp_caste">~$arrData.dpp_caste|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -166,7 +166,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">City</div>
-				<div class="fontlig pb15" id="vpro_dpp_city">~$arrData.dpp_city|decodevar`</div>
+				<div class="fontlig pb15 js-cut" id="vpro_dpp_city">~$arrData.dpp_city|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -184,7 +184,7 @@
 		<div class="clearfix js-countFields">
 			<div class="fl wid71p">
 				<div class="f12 color1">Country</div>
-				<div class="fontlig pb15" id="vpro_dpp_country">~$arrData.dpp_country|decodevar`</div>
+				<div class="fontlig pb15 js-cut" id="vpro_dpp_country">~$arrData.dpp_country|decodevar`</div>
 			</div>
 			~if  $myPreview neq "1"`
 			<div class="fr wid27p txtc VPmt5">
@@ -210,7 +210,7 @@
 			<div class="clearfix js-countFields">
 				<div class="wid71p fl">
 					<div class="f12 color1">Education Level</div>
-					<div class="fontlig pb15" id="vpro_dpp_edu_level">~$arrData.dpp_edu_level`</div>
+					<div class="fontlig pb15 js-cut" id="vpro_dpp_edu_level">~$arrData.dpp_edu_level`</div>
 				</div>
 				~if  $myPreview neq "1"`
 				<div class="fr wid27p txtc VPmt5">
@@ -230,7 +230,7 @@
 			<div class="clearfix js-countFields">
 				<div class="wid71p fl">
 					<div class="f12 color1">Occupation</div>
-					<div class="fontlig pb15" id="vpro_dpp_occupation">~$arrData.dpp_occupation`</div>
+					<div class="fontlig pb15 js-cut" id="vpro_dpp_occupation">~$arrData.dpp_occupation`</div>
 				</div>
 				~if  $myPreview neq "1"`
 				<div class="fr wid27p txtc VPmt5">
