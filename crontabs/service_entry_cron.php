@@ -8,23 +8,25 @@ $db_slave =connect_db();
 
 $ts=time();
 $ts-=24*60*60;
+
 $today=date("Y-m-d",$ts);
-//$today ="2014-04-15";
+//$today ="2017-04-27";
+
 $st_date=$today." 00:00:00";
 $end_date=$today." 23:59:59";
-//$st_date="2017-04-12 00:00:00";
-//$end_date="2017-04-17 23:59:59";
+
 /* Section for newly purchased services */
 $sql ="SELECT COUNT(*) cnt,A.SERVICEID,B.CENTER, MEM_UPGRADE AS UPGRADE FROM billing.SERVICE_STATUS AS A JOIN billing.PURCHASES AS B ON A.BILLID=B.BILLID WHERE B.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND B.STATUS='DONE' GROUP BY A.SERVICEID,CENTER,MEM_UPGRADE";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
 while($row=mysql_fetch_array($res))
 {
-        if($row['UPGRADE']!='MAIN'){
+        if($row['UPGRADE'] ==NULL){
+
 	$count		=$row["cnt"];
 	$serviceid	=$row["SERVICEID"];
 	$center		=$row["CENTER"];
 
-	$sql1 ="SELECT BILLID,ENTRY_DT,SERVICEID FROM billing.PURCHASES WHERE ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND STATUS='DONE' AND CENTER='$center'";
+	$sql1 ="SELECT BILLID,ENTRY_DT,SERVICEID FROM billing.PURCHASES WHERE ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND STATUS='DONE' AND CENTER='$center' AND MEM_UPGRADE IS NULL";
 	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 	while($row1=mysql_fetch_array($res1))
 	{
@@ -84,13 +86,20 @@ while($row=mysql_fetch_array($res))
                 //print_r($sqlIns);
 		mysql_query_decide($sqlIns,$db) or die("$sqlIns".mysql_error_js($db));
         }
+	unset($paidCount);
+        unset($freeCnt);
+        unset($count);
+        unset($center);
+        unset($serviceid);
+
         }else{
             /* Start: JSC-2558: Section for entry in case of upgrade services */
+
         $count		=$row["cnt"];
 	$serviceid	=$row["SERVICEID"];
 	$center		=$row["CENTER"];
 
-	$sql1 ="SELECT BILLID,ENTRY_DT,SERVICEID FROM billing.PURCHASES WHERE ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND STATUS='DONE' AND CENTER='$center' AND MEM_UPGRADE = 'MAIN'";
+	$sql1 ="SELECT BILLID,ENTRY_DT,SERVICEID FROM billing.PURCHASES WHERE ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND STATUS='DONE' AND CENTER='$center' AND MEM_UPGRADE='MAIN'";
 	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 	while($row1=mysql_fetch_array($res1))
 	{
@@ -152,7 +161,13 @@ while($row=mysql_fetch_array($res))
 //                print_r($sqlIns);
 		mysql_query_decide($sqlIns,$db) or die("$sqlIns".mysql_error_js($db));
 	}
+        unset($paidCount);
+        unset($freeCnt);
+        unset($count);
+        unset($center);
+        unset($serviceid);
         }
+
         /* End: JSC-2558: Section for entry in case of upgrade services */
 }
 
