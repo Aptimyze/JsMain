@@ -17,6 +17,8 @@ class PromoLib
 
 	private function ChatPromo($profileId,$loginObj)
 	{
+		if($loginObj->getACTIVATED() == 'U')
+			return false;
 
 		$obj = new MOBILE_API_APP_LOGIN_PROFILES();
 
