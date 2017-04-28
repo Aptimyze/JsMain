@@ -15,7 +15,7 @@ $end_date=$today." 23:59:59";
 //$st_date="2017-04-12 00:00:00";
 //$end_date="2017-04-17 23:59:59";
 /* Section for newly purchased services */
-$sql ="SELECT COUNT(*) cnt,A.SERVICEID,B.CENTER, MEM_UPGRADE AS UPGRADE FROM billing.SERVICE_STATUS AS A JOIN billing.PURCHASES AS B ON A.BILLID=B.BILLID WHERE B.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND B.STATUS='DONE' GROUP BY A.SERVICEID,CENTER";
+$sql ="SELECT COUNT(*) cnt,A.SERVICEID,B.CENTER, MEM_UPGRADE AS UPGRADE FROM billing.SERVICE_STATUS AS A JOIN billing.PURCHASES AS B ON A.BILLID=B.BILLID WHERE B.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND B.STATUS='DONE' GROUP BY A.SERVICEID,CENTER,MEM_UPGRADE";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
 while($row=mysql_fetch_array($res))
 {
@@ -133,26 +133,12 @@ while($row=mysql_fetch_array($res))
 					}
 				}
 			}
-		}
-                 else if(strstr($serviceid1,'X')){
-			$sql3 ="select SERVICEID from billing.SERVICE_STATUS where BILLID='$billid' AND SERVICEID='$serviceid'";
-			$res3=mysql_query_decide($sql3,$db_slave) or die("$sql3".mysql_error_js($db_slave));
-			if($row3=mysql_fetch_array($res3)){
-				$count--;
-				if(strstr($serviceid,'X')){
-                                         $serviceidwithUG = $serviceid1."-UG";
-					$dataSet[$center][$serviceidwithUG]++;
-					if(!empty($amount) && $amount>0){
-						$paidComboCount[$center][$serviceidwithUG]++;
-					}
-				}
-			}
 		}else {
 			$sql3 ="select SERVICEID from billing.SERVICE_STATUS where BILLID='$billid' AND SERVICEID='$serviceid'";
 			$res3=mysql_query_decide($sql3,$db_slave) or die("$sql3".mysql_error_js($db_slave));
 			if($row3=mysql_fetch_array($res3)){
 				if(!empty($amount) && $amount>0){
-					$paidCount[$center][$serviceid1]++;
+					$paidCount[$center][$serviceid]++;
 				}
 			}
 		}
