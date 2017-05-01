@@ -65,11 +65,11 @@ EOF;
 
         	// Fetching Payment Source(Channels)
 	        $orderDetArr = $billOrdDev->getPaymentSourceFromBillidStr($billidStr);
-	        
+	       
 	        foreach($orderDetArr as $k1=>$v1){
 	            $orderIdArr[] = $v1['ID'];
 	        }
-	        
+	      
 	        $orderIdStr = "'".implode("','", $orderIdArr)."'";
 
 	        // Fetching Payment Gateway
@@ -81,7 +81,7 @@ EOF;
 	                $val['GATEWAY'] = $orderGatewayArr[$val['ID']]['GATEWAY'];
 	            }
 	        }
-	        
+	  
 	        // Setting Sources(Channels) for All Payments
 	        foreach($paidProfilesArr as $key=>&$val){
 	            // Setting proper Channel, if not found i.e. backend billind default Desktop
@@ -91,7 +91,7 @@ EOF;
 	                $val['CHANNEL'] = 'desktop, Backend';
 	            }
 	        }
-
+	     
 	        $purArr = $billPurObj->fetchAllDataForBillidArr($billidArr);
 	        $purDetArr = $billPurDet->getAllDetailsForBillidArr($billidArr);
 	        $serviceIdArr = array();
@@ -108,7 +108,7 @@ EOF;
 	        		}
         		}
         	}
-
+       
         	$servNameArr = $billServObj->getServiceNameArr($serviceIdArr);
         	$skipBillId = array();
 			foreach($paidProfilesArr as $k=>&$v){
@@ -130,8 +130,12 @@ EOF;
 	        			$finalArr[$incrementID]['PAYMENT_DATE'] = $v['ENTRY_DT'];
 	        			$finalArr[$incrementID]['SERVICE_ACTIVATION_DATE'] = $val['START_DATE'];
 
+	        			
 	        			if($skipFlag){
 	        				$finalArr[$incrementID]['MEMBERSHIP_NAME'] = $servNameArr[@explode(",",$purArr[$val['BILLID']]['SERVICEID'])[0]];
+	        				if($purArr[$val['BILLID']]['MEM_UPGRADE'] == "MAIN" && !empty($finalArr[$incrementID]['MEMBERSHIP_NAME'])){
+	        					$finalArr[$incrementID]['MEMBERSHIP_NAME'] .= " Upgrade";
+	        				}
 	        				if($v['TYPE'] == 'DOL'){
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $v['DOL_CONV_RATE'] * $v['AMOUNT'] , 2);
 		        			} else {
@@ -139,6 +143,9 @@ EOF;
 		        			}
 	        			} else {
 	        				$finalArr[$incrementID]['MEMBERSHIP_NAME'] = $servNameArr[$val['SERVICEID']];
+	        				if($purArr[$val['BILLID']]['MEM_UPGRADE'] == "MAIN" && !empty($finalArr[$incrementID]['MEMBERSHIP_NAME'])){
+	        					$finalArr[$incrementID]['MEMBERSHIP_NAME'] .= " Upgrade";
+	        				}
 		        				if($v['TYPE'] == 'DOL'){
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $v['DOL_CONV_RATE'] * $val['NET_AMOUNT'] , 2);
 		        			} else {
@@ -158,7 +165,7 @@ EOF;
 	        				$finalArr[$incrementID]['ACCEPTANCES'] = $newjsContactObj3->getContactAcceptanceCount($val['PROFILEID'],'BOTH');
 	        				$status = $newjsJpartnerObj3->isDppSetByUser($val['PROFILEID']);
 	        			}
-
+	        			
 	        			if($status == "E"){
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "Yes";
 	        			} else {
@@ -171,8 +178,8 @@ EOF;
 	        	}
 	        }
         }
-
-        $filepath = "/var/www/html/web/uploads/csv_files/";
+       
+        $filepath = JsConstants::$docRoot."/uploads/csv_files/";
 		$filename = $filepath."dailyMailerReport.csv";
 		unlink($filename);
 		$csvData = fopen("$filename", "w") or print_r("Cannot Open");
