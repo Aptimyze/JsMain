@@ -6,7 +6,7 @@ function showUploadOption() {
 }
 function hideUploadOption(param) {
 	if(param=="goBack")
-		window.location='/profile/viewprofile.php?ownview=1';
+		window.location=SITE_URL + '/profile/viewprofile.php?ownview=1';
         $("#FadedRegion" ).hide();
 	$("#optionForUpload").hide(); 
 	$("#addPhotoAlbumPage").css("overflow","auto");
