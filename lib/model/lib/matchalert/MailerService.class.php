@@ -983,7 +983,7 @@ return $edu;
 		return $recievers;
 	}
 
-	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each savedSearch mail receiver
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each addPhoto mail receiver
 	*@param sno : serial number of mail
 	*@param flag : sent status of the mail
 	*/

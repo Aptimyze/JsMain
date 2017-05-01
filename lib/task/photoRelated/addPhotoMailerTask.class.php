@@ -72,6 +72,7 @@ $this->addOptions(array(
 					$this->smarty->assign('data',$data);
                     $mailerServiceObj->loadPartials();                    
                     $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
+
                     /*$file = fopen("addPhotoSample.html","w");
                     fwrite($file,$msg);die("DONE");*/
                     //Sending mail and tracking sent status
@@ -80,7 +81,6 @@ $this->addOptions(array(
 				else
 					$flag = 'I'; // Invalid users given in database
 				$mailerServiceObj->updateSentForaddPhotoUsers($sno,$flag,$pid);
-				echo("mail sent");die;
                 unset($subject);
                         unset($mailSent);
                         unset($data);

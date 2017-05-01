@@ -7,6 +7,7 @@ class PICTURE_ADD_PHOTO_MAILER extends TABLE
 		parent::__construct($szDBName);
 	}
 
+	//truncate the table
 	public function truncatePhotoMailerData()
 	{
 		try
@@ -21,6 +22,7 @@ class PICTURE_ADD_PHOTO_MAILER extends TABLE
 		}
 	}
 
+	//insert data into ADD_PHOTO_MAILER from the given data
 	public function insertnoPhotoMailerData($receiverData)
 	{
 		try
@@ -51,6 +53,7 @@ class PICTURE_ADD_PHOTO_MAILER extends TABLE
 		}
 	}
 
+	//select profiles from ADD_PHOTO_MAILER with profiles that satisfy the condition
 	public function getaddPhotoMailerProfiles($fields,$totalScript,$script,$limit)
 	{
 		try
@@ -90,6 +93,7 @@ class PICTURE_ADD_PHOTO_MAILER extends TABLE
 		}
 	}
 
+	//update flag upon mail being sent
 	public function updateAddPhotoUsersFlag($sno,$flag,$pid)
 	{
 		try
