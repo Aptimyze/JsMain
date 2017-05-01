@@ -814,7 +814,7 @@ class crmInterfaceActions extends sfActions
             $diff = floor($diff / (60 * 60 * 24));
             if ($start_date > $end_date) {
                 $this->errorMsg = "Invalid Date Selected";
-            }else if($diff>31){
+            }else if($diff>31 && $formArr["report_format"] == "XLS"){
                 $this->errorMsg = "Date range should be less than or equal to one month";
             }
             if (!$this->errorMsg) { //If no error message then submit the page
@@ -842,9 +842,7 @@ class crmInterfaceActions extends sfActions
                     }
                     else if (strstr($memKeySet, 'Finished')) {
                         //File is ready and CRON is finished,now get the filename  and echo
-                        $memcacheObj->delete("$this->memcacheKey");
                         $xlData = $memcacheObj->get("MIS_FDI_PARAMS_KEY_".$start_date."_".$end_date."_".$this->device."_".$this->name);
-                        $memcacheObj->delete("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name);
                         $file = "FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
                         //$file ='/usr/local/scripts/config/branch3/'.$file;
                         //if (file_exists($file)) {
@@ -867,8 +865,8 @@ class crmInterfaceActions extends sfActions
                         $memcacheValue['MAINKEYNAME']=$this->memcacheKey;
                         $memcacheValue['FILENAME']="FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
                         
-                        $memcacheObj->set("$this->memcacheKey", 'Computing');
-                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue);
+                        $memcacheObj->set("$this->memcacheKey", 'Computing',1800);
+                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue,1800);
                         $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask ". $start_date."_".$end_date."_".$this->device."_".$this->name."> /dev/null &";
                         //$filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask &";
                         $command = JsConstants::$php5path . " " . $filePath;
@@ -885,7 +883,7 @@ class crmInterfaceActions extends sfActions
                 //End:Common Code for Excel View and HTML View
                 
                 //Start: Code for Pagination setting in HTML View
-                $pageLimit = 100;
+                $pageLimit = 10;
                 $pageIndex = $request->getParameter('pageIndex');
 
                 if (!$pageIndex) {  //Checking if this is the first time submit has been pressed
@@ -917,7 +915,12 @@ class crmInterfaceActions extends sfActions
                
 
                 //Get total number of records
-                $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device);
+                if(!$request->getParameter('screener')){
+                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device);
+                }else{
+                    $totalRec = $request->getParameter('screener');
+                }
+                
                 $this->totalRec=$totalRec;
                 //Get records within offset and limit as calculated above in pagination code
                 $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit);
@@ -927,7 +930,7 @@ class crmInterfaceActions extends sfActions
                 //End:JSC-2667: Commented as change in legacy data not required 
                 
                 $linkUrl = sfConfig::get("app_site_url") . "/operations.php/crmInterface/financeDataInterface";
-                $this->pageLinkVar = $crmUtilityObj->pageLink($pageLimit, $totalRec, $currentPage, $this->cid, $linkUrl, '', $this->device, '', '', '', $this->start_date, $this->end_date);
+                $this->pageLinkVar = $crmUtilityObj->pageLink($pageLimit, $totalRec, $currentPage, $this->cid, $linkUrl, '', $this->device, '', '', '', $this->start_date, $this->end_date,$totalRec);
                 $this->totalPages = ceil($totalRec / $pageLimit);
                 $this->currentPage = $currentPage;
 

@@ -71,8 +71,8 @@ EOF;
         //passthru("echo '$xlData' >>/usr/local/scripts/config/branch3/'$fileName'");
         
         //Storing computed data into a rediskey
-        $memObject->set("MIS_FDI_PARAMS_KEY"."_".$agent, $xlData);
-        $memObject->set($mainKey,'Finished');
+        $memObject->set("MIS_FDI_PARAMS_KEY"."_".$agent, $xlData,1800);     //Setting time of 30 mins
+        $memObject->set($mainKey,'Finished',1800);
         //echo $xlData;
         //die;
     }
