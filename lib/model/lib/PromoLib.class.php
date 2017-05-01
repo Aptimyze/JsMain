@@ -17,13 +17,21 @@ class PromoLib
 
 	private function ChatPromo($profileId,$loginObj)
 	{
+
 		if($loginObj->getACTIVATED() == 'U')
 			return false;
 
+		$str = ($_SERVER['HTTP_USER_AGENT']);
+		(preg_match_all('/Android ([0-9])(\.[0-9]){1}/', $str, $matches));
+		$val = explode(' ', $matches[0][0]);
+
+		if($val[1] < 4)
+			return false;
+		  
 		$obj = new MOBILE_API_APP_LOGIN_PROFILES();
 
 		$isUserEligible = $obj->ifUserIsEligible($profileId);
-		//var_dump($isUserEligible); die('asas');
+		
 		if($isUserEligible != false)
 		{
 			if($isUserEligible['APP_TYPE'] == "I")
