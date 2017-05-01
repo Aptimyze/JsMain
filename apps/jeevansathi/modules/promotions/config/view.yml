@@ -1,0 +1,10 @@
+chatPromoJSMSSuccess:
+  metas:
+    title: Jeevansathi.com
+  stylesheets: [promotions/chatPromo/chatPromoMS_css]
+  javascripts: []
+  layout: jsmsMobLayout
+chatPromoJSPCSuccess:
+  stylesheets: [promotions/chatPromo/chatPromoPC_css] 
+  javascripts: []
+  layout: jspcLayout

@@ -1,0 +1,7 @@
+	#chatPormoMS .cpbg1{ background-color:#e4e4e4}
+	#chatPormoMS .setshare {top:50%;transform:translate(-50%, -50%);left:50%}
+	#chatPormoMS .closeCP {position: absolute;right:10px;top: -42px;width: 20px;height: 20px;}
+	#chatPormoMS .closeCP:before, .closeCP:after {position: absolute;left: 15px;content: ' ';height: 20px;width: 2px;background-color: #405367;}
+	#chatPormoMS .closeCP:before { transform: rotate(45deg);}
+	#chatPormoMS .closeCP:after { transform: rotate(-45deg);}
+	#chatPormoMS button{border:0;padding:18px 40px; margin-top:20px}
