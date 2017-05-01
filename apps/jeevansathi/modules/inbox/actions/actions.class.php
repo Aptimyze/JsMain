@@ -809,7 +809,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]=null;
 					break;
                                         case "MY_MESSAGE":$response2["hidePaginationCount"] = 1;
-					case "MY_MESSAGE_RECEIVED":
+                                        case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{
                                                 if(JsConstants::$updateSeenQueueConfig['ALL_MESSAGES'])
@@ -976,6 +976,9 @@ public function executePerformV2(sfWebRequest $request)
 				{
 				   $this->firstResponse = $jsonResponse;
 				}
+                                if($request->getParameter("searchId")==4 && MobileCommon::isNewMobileSite())
+                                            $request->setAttribute("messageListAppPromo",1);
+                                    
 				 //   print_r($ResponseArr)  ; die();
 				 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobContactPageUrl);
 				 if($request->getParameter('fromReg')==1)
