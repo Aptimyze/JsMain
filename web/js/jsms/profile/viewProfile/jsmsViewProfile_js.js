@@ -720,7 +720,6 @@ getMatchingCount = function()
 setTimeout(enableLoader,50);
 
 shortContentVP = function(){
-	console.log('a4');
 	
 	
 	$('.js-cut').each(function(){

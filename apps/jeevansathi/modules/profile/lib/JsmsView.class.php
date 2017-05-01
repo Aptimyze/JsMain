@@ -42,14 +42,14 @@ class JsmsView extends DetailedViewApi
                 $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_actionObject->loginProfile->getGENDER());
                 
                 if($thumbNailArray[label] != '')
-                    $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
+                    $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ThumbailUrl');
                 else
                     $thumbNail = $thumbNailArray['url'];
             }
                 
         }
         else {
-            $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ProfilePic120Url');
+            $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ThumbailUrl');
         }
       $this->m_arrOut['thumbnailPic'] = $thumbNail;
 
@@ -67,7 +67,7 @@ class JsmsView extends DetailedViewApi
       }      
       else
       {
-      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ProfilePic235Url", $this->m_actionObject->loginProfile->getGENDER());
+      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
       }
     $this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
        
