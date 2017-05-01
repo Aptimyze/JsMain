@@ -65,9 +65,9 @@ EOF;
 
         	// Fetching Payment Source(Channels)
 	        $orderDetArr = $billOrdDev->getPaymentSourceFromBillidStr($billidStr);
-
-	        foreach($orderDetArr as $key=>$val){
-	            $orderIdArr = $val['ID'];
+	        
+	        foreach($orderDetArr as $k1=>$v1){
+	            $orderIdArr[] = $v1['ID'];
 	        }
 	        
 	        $orderIdStr = "'".implode("','", $orderIdArr)."'";
@@ -94,7 +94,7 @@ EOF;
 
 	        $purArr = $billPurObj->fetchAllDataForBillidArr($billidArr);
 	        $purDetArr = $billPurDet->getAllDetailsForBillidArr($billidArr);
-
+	        $serviceIdArr = array();
 	        foreach($paidProfilesArr as $k=>&$v){
 	        	foreach($purArr as $key=>&$val){
 	        		if($v['BILLID'] == $val['BILLID']){
@@ -110,7 +110,7 @@ EOF;
         	}
 
         	$servNameArr = $billServObj->getServiceNameArr($serviceIdArr);
-
+        	$skipBillId = array();
 			foreach($paidProfilesArr as $k=>&$v){
 	        	foreach($purDetArr as $key=>&$val){
 	        		if($v['PROFILEID'] == $val['PROFILEID'] && $v['BILLID'] == $val['BILLID'] && !in_array($val['BILLID'], $skipBillId)){
@@ -187,9 +187,9 @@ EOF;
 		$csvAttachment = file_get_contents($filename);
 		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
-		$cc = "avneet.bindra@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+		$cc = "ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 		$from = "js-sums@jeevansathi.com";
-		$subject = "Daily Payments Report";
+		$subject = "Daily Report on details of paying users";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
 
         SendMail::send_email($to, $msgBody, $subject, $from, $cc, '', $csvAttachment, '', 'dailyMailerReport.csv');
