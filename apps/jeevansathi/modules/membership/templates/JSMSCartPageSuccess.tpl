@@ -19,7 +19,9 @@
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="f19 fontthin">~$data.title`</div>
-				<div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
+				~if $data.backendLink.fromBackend neq 1`
+                                    <div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
+                                ~/if`
 			</div>
 		</div>
 	</div>
