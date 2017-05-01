@@ -246,6 +246,10 @@ class RegistrationFunctions
                 $completeFields["haveChildren"] = $loginProfileObj->getHAVECHILD();
                 $completeFields["pin"] = $loginProfileObj->getPINCODE();
                 $completeFields["horoscopeMatch"] = $loginProfileObj->getHOROSCOPE_MATCH();
+                if($completeFields["religion"] =='2' && $completeFields["caste"]=='152'){
+                    $religionInfo = (array)$loginProfileObj->getReligionInfo(1);
+                    $completeFields["jamaat"] = $religionInfo['JAMAAT'];
+                }
                 $country_res=$loginProfileObj->getCOUNTRY_RES();
                 $completeFields["countryReg"] = $country_res;
                 if($country_res==51 || $country_res==128){
