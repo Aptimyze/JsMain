@@ -865,8 +865,8 @@ class crmInterfaceActions extends sfActions
                         $memcacheValue['MAINKEYNAME']=$this->memcacheKey;
                         $memcacheValue['FILENAME']="FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
                         
-                        $memcacheObj->set("$this->memcacheKey", 'Computing',1800);
-                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue,1800);
+                        $memcacheObj->set("$this->memcacheKey", 'Computing',3600);
+                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue,3600);
                         $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask ". $start_date."_".$end_date."_".$this->device."_".$this->name."> /dev/null &";
                         //$filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask &";
                         $command = JsConstants::$php5path . " " . $filePath;
@@ -883,7 +883,7 @@ class crmInterfaceActions extends sfActions
                 //End:Common Code for Excel View and HTML View
                 
                 //Start: Code for Pagination setting in HTML View
-                $pageLimit = 10;
+                $pageLimit = 100;
                 $pageIndex = $request->getParameter('pageIndex');
 
                 if (!$pageIndex) {  //Checking if this is the first time submit has been pressed
