@@ -47,7 +47,7 @@ $this->addOptions(array(
         	$mailerLinks = $mailerServiceObj->getLinks();
     		$this->smarty->assign('mailerLinks',$mailerLinks);
     		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);            
-    		$widgetArray = array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+    		
     		foreach($receivers as $sno => $values)
     		{
     			$pid = $values["PROFILEID"];
@@ -82,8 +82,8 @@ $this->addOptions(array(
 					$flag = 'I'; // Invalid users given in database
 				$mailerServiceObj->updateSentForaddPhotoUsers($sno,$flag,$pid);
                 unset($subject);
-                        unset($mailSent);
-                        unset($data);
+                unset($mailSent);
+                unset($data);
     		}
         }
 	}

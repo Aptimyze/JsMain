@@ -29,12 +29,12 @@ EOF;
     {
         if(!sfContext::hasInstance())
             sfContext::createInstance ($this->configuration);
-        ini_set('memory_limit','512M');
+        ini_set('memory_limit','256M');
 
         $totalScripts = $arguments["totalScripts"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
         
-        $photoMailerObj = new PICTURE_ADD_PHOTO_MAILER();
+        $photoMailerObj = new PICTURE_ADD_PHOTO_MAILER("newjs_masterRep");
     
     //Truncate table Data       
     $photoMailerDDLObj = new PICTURE_ADD_PHOTO_MAILER('newjs_masterDDL');
@@ -46,7 +46,7 @@ EOF;
         //select from slave
     $jprofileObj = new JPROFILE("newjs_slave");
     $receiverData = $jprofileObj->getProfileForNoPhotoMailer($dateConditionArr);
-        unset($selectSearchAgentObj);
+        unset($jprofileObj);
         
         if(is_array($receiverData))
         {

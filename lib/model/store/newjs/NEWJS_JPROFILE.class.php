@@ -1800,7 +1800,7 @@ SQL;
     {
         try
         {            
-            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO = ".noPhotoMailerEnum::HAVEPHOTOFLAG." AND ";
+            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO = ".noPhotoMailerEnum::HAVEPHOTOFLAG." AND HAVEPHOTO='' AND";
             $count=1;
             foreach($dateConditionArr as $key=>$val)
             {

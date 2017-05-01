@@ -27,11 +27,11 @@ class PICTURE_ADD_PHOTO_MAILER extends TABLE
 	{
 		try
 		{
-			$sql = "INSERT INTO PICTURE.ADD_PHOTO_MAILER (SNO,PROFILEID,TYPE,SENT) VALUES ";
+			$sql = "INSERT INTO PICTURE.ADD_PHOTO_MAILER (PROFILEID,TYPE,SENT) VALUES ";
 			$count=1;
 			foreach($receiverData as $key=>$value)
 			{
-				$sqlAppend .= "($count,:PROFILEID".$count.",:TYPE".$count.",".noPhotoMailerEnum::NOSENTFLAG."), ";
+				$sqlAppend .= "(:PROFILEID".$count.",:TYPE".$count.",".noPhotoMailerEnum::NOSENTFLAG."), ";
 				$count++;
 			}
 			$sqlAppend = rtrim($sqlAppend,", ");

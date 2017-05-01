@@ -1,7 +1,7 @@
 use PICTURE;
 
 CREATE TABLE `ADD_PHOTO_MAILER` (
- `SNO` mediumint(11) unsigned NOT NULL,
+ `SNO` mediumint(11) unsigned NOT NULL AUTO_INCREMENT,
  `PROFILEID` int(11) NOT NULL DEFAULT '0',
  `TYPE` smallint(1) unsigned NOT NULL DEFAULT '0',
  `SENT` varchar(1) NOT NULL DEFAULT 'N',
@@ -16,6 +16,6 @@ CREATE TABLE `UPLOAD_PHOTO_FROM_MAILER_TRACKING` (
  `DATE` date NOT NULL,
  `TYPE` smallint(1) unsigned NOT NULL,
  PRIMARY KEY (`SNO`)
-) ENGINE=InnoDB;
+) ENGINE=MYISAM;
 
 
