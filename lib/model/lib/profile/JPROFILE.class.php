@@ -770,7 +770,7 @@ class JPROFILE
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+       // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
 }
 
