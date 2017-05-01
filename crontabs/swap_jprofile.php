@@ -150,7 +150,8 @@ $sql="truncate table SWAP";
 mysql_query($sql,$db) or die("1 ".mysql_error1($db));
 
 // take the profiles from SWAP_JPROFILE1. This table could contain records older than the previous hour also if the script did not execute properly last time around. This ensures that all updates to JPROFILE are eventually reflected in search tables  even if the script misbehaves.
-											
+		
+$memcacheObj = JsMemcache::getInstance();
 $sql="SELECT PROFILEID FROM SWAP_JPROFILE1";
 $res=mysql_query($sql,$db) or die("3 ".mysql_error1($db));
 $popular=0;
@@ -269,11 +270,12 @@ while($row=mysql_fetch_row($res))
         }
         // Paid user check
         
-        $sqlIsPaid = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID =$profileid ORDER BY ENTRY_DT DESC LIMIT 1";
-        $IsPaid = mysql_query($sqlIsPaid,$db) or die("error in data from billing purchases for $profileid".mysql_error1($db));
-        $dataIsPaid    =mysql_fetch_array($IsPaid);
-        if(!empty($dataIsPaid) && $dataIsPaid["ENTRY_DT"] != ''){
-                $sql_update="UPDATE SWAP SET PAID_ON = '".$dataIsPaid["ENTRY_DT"]."' WHERE PROFILEID=$profileid";
+        //$sqlIsPaid = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID =$profileid ORDER BY ENTRY_DT DESC LIMIT 1";
+        //$IsPaid = mysql_query($sqlIsPaid,$db) or die("error in data from billing purchases for $profileid".mysql_error1($db));
+        //$dataIsPaid    =mysql_fetch_array($IsPaid);
+        $dataIsPaid    = $memcacheObj->get("FreeToP_$profileid");
+        if($dataIsPaid !== false && $dataIsPaid != ''){
+                $sql_update="UPDATE SWAP SET PAID_ON = '".$dataIsPaid."' WHERE PROFILEID=$profileid";
                 mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
         }
         // Paid user check end
