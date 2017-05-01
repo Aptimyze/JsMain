@@ -808,12 +808,8 @@ class crmInterfaceActions extends sfActions
             $start_date        = date("Y-m-d", strtotime($start_date));
             $end_date          = date("Y-m-d", strtotime($end_date));
             $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
-            $diff = strtotime($end_date)-strtotime($start_date);
-            $diff = floor($diff / (60 * 60 * 24));
             if ($start_date > $end_date) {
                 $this->errorMsg = "Invalid Date Selected";
-            }else if($diff>31){
-                $this->errorMsg = "Date range should be less than or equal to one month";
             }
             if (!$this->errorMsg) //If no error message then submit the page
             {
