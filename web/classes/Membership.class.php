@@ -950,6 +950,17 @@ class Membership
         elseif(strstr($this->serviceid, 'X')){
             $mainServ = $this->serviceid;
             $mainServDur = preg_replace("/[^0-9]/","",$mainServ);
+            $mainServArr = explode(",", $mainServ);
+            if(is_array($mainServArr)){
+                foreach ($mainServArr as $k1 => $v1) {
+                    if($v1 == 'XL'){
+                        $mainServDur = 'L';
+                    }
+                    else if(strstr($v1, 'X')){
+                        $mainServDur = preg_replace("/[^0-9]/","",$v1);
+                    }
+                }
+            }
             $serviceArr = array();
             foreach(VariableParams::$jsExclusiveComboAddon as $key => $val){
                 $serviceArr[] = $val.$mainServDur;

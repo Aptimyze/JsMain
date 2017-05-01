@@ -1,0 +1,2 @@
+update MIS.MIS_MAINPAGE set ACTIVE = 'Y' where ID IN (9,10,11,15,17,21,22,23,24);
+

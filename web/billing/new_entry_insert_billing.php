@@ -172,7 +172,6 @@ if(authenticated($cid))
 			$membership_details["dol_conv_bill"]='Y';
 		else
 			$membership_details["dol_conv_bill"]='N';
-		
 		$membershipObj->startServiceBackend($membership_details);
 		$membershipObj->makePaid();
 		$membershipObj->updateEasyBill();

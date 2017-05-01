@@ -793,25 +793,21 @@ class crmInterfaceActions extends sfActions
         }
     }
 
-    public function executeFinanceDataInterface(sfWebRequest $request) {
-        
-        //Start:Common Code for Excel View and HTML View
-        $this->cid = $request->getParameter('cid');
-        $this->name = $request->getParameter('name');
-       
-        $this->rangeYear = date("Y", time());
+    public function executeFinanceDataInterface(sfWebRequest $request)
+    {
+        $this->cid         = $request->getParameter('cid');
+        $this->name        = $request->getParameter('name');
+        $this->rangeYear   = date("Y", time());
         $this->showInitial = 1;
-        if ($request->getParameter("submit") || $request->getParameter('date1')) {
+        if ($request->getParameter("submit")) {
             $formArr = $request->getParameterHolder()->getAll();
-            $formArr["date1_dateLists_month_list"] ++;
-            $formArr["date2_dateLists_month_list"] ++;
-            $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
-            $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
-            $start_date = date("Y-m-d", strtotime($start_date));
-            $end_date = date("Y-m-d", strtotime($end_date));
+            $formArr["date1_dateLists_month_list"]++;
+            $formArr["date2_dateLists_month_list"]++;
+            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date        = date("Y-m-d", strtotime($start_date));
+            $end_date          = date("Y-m-d", strtotime($end_date));
             $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
-            $diff = strtotime($end_date)-strtotime($start_date);
-            $diff = floor($diff / (60 * 60 * 24));
             if ($start_date > $end_date) {
                 $this->errorMsg = "Invalid Date Selected";
             }else if($diff>31 && $formArr["report_format"] == "XLS"){
@@ -935,7 +931,53 @@ class crmInterfaceActions extends sfActions
                 $this->currentPage = $currentPage;
 
                 //Code for HTML View ends
-
+            }
+            if (!$this->errorMsg) //If no error message then submit the page
+            {
+                $this->range_format = $formArr["range_format"];
+                $this->start_date   = $start_date . " 00:00:00";
+                $this->end_date     = $end_date . " 23:59:59";
+                $this->showInitial  = 0;
+                $this->showData     = 1;
+                $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
+                $billServObj        = new billing_SERVICES('newjs_slave');
+                $this->device       = $formArr["device"];
+                $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
+                //Start:JSC-2667: Commented as change in legacy data not required 
+                //$this->rawData      = $this->filterData($this->rawData);
+                //End:JSC-2667: Commented as change in legacy data not required 
+                $this->serviceData  = $billServObj->getFinanceDataServiceNames();
+                if ($formArr["report_format"] == "XLS") {
+                    $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
+                    if ($this->rawData && is_array($this->rawData)) {
+                        foreach ($this->rawData as $k => $v) {
+                            $dataString = $dataString . $v["ENTRY_DT"] . "\t";
+                            $dataString = $dataString . $v["BILLID"] . "\t";
+                            $dataString = $dataString . $v["RECEIPTID"] . "\t";
+                            $dataString = $dataString . $v["PROFILEID"] . "\t";
+                            $dataString = $dataString . $v["USERNAME"] . "\t";
+                            $dataString = $dataString . $v["SERVICEID"] . "\t";
+                            $dataString = $dataString . $this->serviceData[$v["SERVICEID"]] . "\t";
+                            $dataString = $dataString . $v["START_DATE"] . "\t";
+                            $dataString = $dataString . $v["END_DATE"] . "\t";
+                            $dataString = $dataString . $v["CUR_TYPE"] . "\t";
+                            $dataString = $dataString . $v["PRICE"] . "\t";
+                            $dataString = $dataString . $v["AMOUNT"] . "\t";
+                            $dataString = $dataString . $v["DEFERRABLE"] . "\t";
+                            $dataString = $dataString . $v["ASSD"] . "\t";
+                            $dataString = $dataString . $v["ASED"] . "\t";
+                            $dataString = $dataString . $v["INVOICE_NO"] . "\r\n";
+                        }
+                    }
+                    $xlData = $headerString . $dataString;
+                    $string .= $start_date . "_to_" . $end_date;
+                    header("Content-Type: application/vnd.ms-excel");
+                    header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
+                    header("Pragma: no-cache");
+                    header("Expires: 0");
+                    echo $xlData;
+                    die;
+                }
             }
         }
     }

@@ -585,6 +585,23 @@ class billing_SERVICES extends TABLE
         }
     }
 
+    public function fetchServiceDetails($servArr) {
+        try {
+            if(is_array($servArr)){
+                $servStr = "'".implode("','", $servArr)."'";
+                $sql = "SELECT SERVICEID, ACTIVE FROM billing.SERVICES WHERE SERVICEID IN ($servStr)";
+                $resSelectDetail = $this->db->prepare($sql);
+                $resSelectDetail->execute();
+                while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                    $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+                }
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
     public function changeServiceActivations($updateShowOnlineNew=null) {
         try {
             if(is_array($updateShowOnlineNew) && count($updateShowOnlineNew) > 0){
