@@ -62,15 +62,21 @@ class VariableParams
 		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
         
-        //config for membership upgrade
-        public static $memUpgradeConfig = array(
-                                            "deactivationCurlTimeout"=>120000,
-                                            "allowedUpgradeMembershipAllowed"=>array("MAIN"),
-                                            "mainMemUpgradeLimit"=>7,
-                                            "upgradeMainMemAdditionalPercent"=>0.05,
-                                            "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                            "excludeMainMembershipUpgrade"=>array("X","ESP")
-                                            );
+    //config for membership upgrade
+    public static $memUpgradeConfig = array(
+                                        "deactivationCurlTimeout"=>120000,
+                                        "allowedUpgradeMembershipAllowed"=>array("MAIN"),
+                                        "mainMemUpgradeLimit"=>7,
+                                        "upgradeMainMemAdditionalPercent"=>0.05,
+                                        "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
+                                        "excludeMainMembershipUpgrade"=>array("X","ESP")
+                                        );
+
+    public static $lightningDealOfferConfig = array(
+                                        "lastLoggedInOffset" => 30,
+                                        "lastLightningDiscountViewedOffset" => 30,
+                                        "pool2FilterPercent" => 10,
+                                        );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(

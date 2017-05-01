@@ -363,6 +363,7 @@ public function logDiscount($body,$type){
             $this->userObj = new memUser($profileid);
             $this->userObj->setMemStatus();
             $memHandlerObj = new MembershipHandler();
+            
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
             list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
             $allMainMem["PROFILEID"] = $profileid;
