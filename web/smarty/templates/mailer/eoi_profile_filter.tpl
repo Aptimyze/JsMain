@@ -16,7 +16,7 @@
                                     <td width="280">
                                         <table width="110" border="0" cellspacing="0" cellpadding="0" align="left">
                                             <tr>
-                                                <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=~JSTrackingPageType::EOI_FILTER_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0" align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=1,profileid=~$eoiProfileId`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
+                                                <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=~JSTrackingPageType::EOI_FILTER_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0" align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=1,profileid=~$eoiProfileId`,photo_type=mailer(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
                                             </tr>
                                             <tr>
                                                 <td height="15"></td>

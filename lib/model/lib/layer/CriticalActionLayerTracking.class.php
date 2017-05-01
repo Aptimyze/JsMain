@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  { 
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -366,7 +366,7 @@ return 0;
                           $oneTwoPhotos = 1;
                         }
                       $entryDate = $profileObj->getENTRY_DT();
-                      if(self::satisfiesDateCondition($profileid,9) && ((time() - strtotime($entryDate)) > 15*24*60*60 ) && $oneTwoPhotos)
+                      if(((time() - strtotime($entryDate)) > 15*24*60*60 ) && $oneTwoPhotos)
                       {
                           $show=1;
                            

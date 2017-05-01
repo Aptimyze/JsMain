@@ -296,9 +296,9 @@ class JPROFILE
         return self::$objProfileMysql->fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset);
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
-        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause);
+        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause,$orderby);
     }
 
     public function checkPhone($numberArray = '', $isd = '')
@@ -770,7 +770,7 @@ class JPROFILE
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+       // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
 }
 

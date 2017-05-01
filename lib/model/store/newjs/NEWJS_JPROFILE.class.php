@@ -277,7 +277,7 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
         try {
             if (is_array($pid))
@@ -291,12 +291,23 @@ class NEWJS_JPROFILE extends TABLE
                 $sql = $sql . " = " . $str;
             if (is_array($extraWhereClause)) {
                 foreach ($extraWhereClause as $key => $val) {
-                    if ($key == 'SUBSCRIPTION')
-                        $sql .= " AND $key LIKE :$key";
-                    else
+                    if ($key == 'SUBSCRIPTION'){
+                        if(empty($val)){
+                            $sql .= " AND ($key LIKE '' OR $key IS NULL)";
+                        }
+                        else{
+                            $sql .= " AND $key LIKE :$key";
+                            $extraBind[$key] = $val;
+                        }
+                    }
+                    else{
                         $sql .= " AND $key=:$key";
-                    $extraBind[$key] = $val;
+                        $extraBind[$key] = $val;
+                    }
                 }
+            }
+            if($orderby != ""){
+                $sql .= " ORDER BY $orderby";
             }
 
             $prep = $this->db->prepare($sql);

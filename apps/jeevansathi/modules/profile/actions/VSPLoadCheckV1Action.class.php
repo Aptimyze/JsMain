@@ -13,6 +13,7 @@ class VSPLoadCheckV1Action extends sfAction
   */
 
  function execute($request){
+         return true;
  	$decryptObj= new Encrypt_Decrypt();
  	$jsAuthentication = new jsAuthentication();
  	$viewer = $request->getParameter("viewer");

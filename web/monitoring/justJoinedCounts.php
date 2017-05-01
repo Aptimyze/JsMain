@@ -9,7 +9,7 @@ $daily = "&fq=VERIFY_ACTIVATED_DT:[".$startDate." ".$endDate."]";
 $url = $solr1.'/select';
 $postParamsMale = 'q=*:*&wt=phps&rows=0&fq=GENDER:(M)'.$daily;
 $postParamsFemale = 'q=*:*&wt=phps&rows=0&fq=GENDER:(F)'.$daily;
-
+$jj = $argv[1];
 $res = sendCurlPostRequestJJ($url,$postParamsMale);   
 $res=unserialize($res);
 $countM = $res["response"]["numFound"];
@@ -39,14 +39,19 @@ foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
                         }
                 }
 }
-if($alertSMS == 1){
-        sendJJSMS();
+if($jj == 1 && $alertSMS == 1){
+	sendJJSMS(1);
+}elseif($alertSMS == 1){
+	sendJJSMS();
+	$php5 = JsConstants::$php5path;
+    $cronDocRoot = JsConstants::$cronDocRoot;
+    passthru("$php5 $cronDocRoot/web/monitoring/justJoinedCounts.php 1");
 }
-function sendJJSMS(){
+function sendJJSMS($flag =""){
         $FROM_ID = "JSSRVR";
         $PROFILE_ID = "144111";
         $SMS_TO = array('9650350387','9873639543');
-        $smsMessage = "Mysql Error Count have reached Threshold on Just joined count within 5 minutes";
+        $smsMessage = "Mysql Error Count have reached Threshold on Just joined count $flag within 5 minutes";
         foreach ($SMS_TO as $mobPhone) {
                 $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";
                 $xml_content = "%3CSMS%20UDH=%220%22%20CODING=%221%22%20TEXT=%22" . urlencode($smsMessage) . "%22%20PROPERTY=%220%22%20ID=%22" . $PROFILE_ID . "%22%3E%3CADDRESS%20FROM=%22" . $FROM_ID . "%22%20TO=%22" . $mobPhone . "e%22%20SEQ=%22" . $PROFILE_ID . "%22%20TAG=%22%22/%3E%3C/SMS%3E";
@@ -64,8 +69,7 @@ function sendJJSMS(){
 }
 function sendCurlPostRequestJJ($urlToHit,$postParams,$timeout='',$headerArr="")
 {
-    if(!$timeout)
-        $timeout = 50000;
+    $timeout = 50000;
     $ch = curl_init($urlToHit);
 	
 	if($postParams)
