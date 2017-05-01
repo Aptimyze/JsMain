@@ -429,7 +429,7 @@ $js_arr[]=array("mobBrowser_js_2"      => "2");
 $js_arr[]=array("jsms/membership/jquery_sly"   => "2");
 $js_arr[]=array("jquery_ui_min"   => "2");
 $js_arr[]=array("jsms/membership/jquery_animateNumber"  => "1");
-$js_arr[]=array("jsms/photo/photo_upload_js"  => "1");
+$js_arr[]=array("jsms/photo/photo_upload_js"   => "2");
 $js_arr[]=array("jsms/photo/photo_privacy_js" => "1");
 $js_arr[]=array("jsms/membership/shimmer_js"  => "1");
 $js_arr[]=array("jsms/utility/vSlider_js"              => "15");
