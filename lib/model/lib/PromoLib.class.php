@@ -2,7 +2,7 @@
 
 class PromoLib
 {
-	public static $baseDate = '2017-02-1';
+	public static $baseDate = '2017-02-1 0:0:0';
 	public static $daysToShowPromo = 4;
 	
 	public static function showPromo($promoToBeShown,$profileId,$loginObj)
@@ -52,11 +52,10 @@ class PromoLib
 		}		
 		else
 		{  
-			$date1 = new DateTime(self::$baseDate);
-			$date2 = new DateTime();
-			$interval = $date1->diff($date2);
+			
+			$interval = strtotime(now) - strtotime(self::$baseDate);
 
-			if($interval->h <= 96)
+			if($interval < 24*4*3600)
 			{  
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 				return true;
