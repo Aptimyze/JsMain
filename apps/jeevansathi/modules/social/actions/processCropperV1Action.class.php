@@ -24,6 +24,22 @@ class processCropperV1Action extends sfActions
 		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
 		$cropImageSource = $ProfilePicUrlObj->getMainPicUrl();
 
+                if(MobileCommon::isApp()=="A")
+                {
+			$appImageWidth = $cropBoxDimensionsArr['fw'];
+			$appImageHeight = $cropBoxDimensionsArr['fh'];
+			unset($cropBoxDimensionsArr['fw']);
+			unset($cropBoxDimensionsArr['fh']);
+			list($imageOrigWidth, $imageOrigHeight) = getimagesize($cropImageSource);
+
+			$factorWidth = $imageOrigWidth/$appImageWidth;
+			$factorHeight = $imageOrigHeight/$appImageHeight;
+			$cropBoxDimensionsArr['x'] = $cropBoxDimensionsArr['x'] * $factorWidth;
+			$cropBoxDimensionsArr['y'] = $cropBoxDimensionsArr['y'] * $factorHeight;
+			$cropBoxDimensionsArr['w'] = $cropBoxDimensionsArr['w'] * $factorWidth;
+			$cropBoxDimensionsArr['h'] = $cropBoxDimensionsArr['h'] * $factorHeight;
+                }
+
                 $cropperProcessObj = new CropperProcess($profileObj);
                 $profilesUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
                 if(is_array($profilesUpdate))
