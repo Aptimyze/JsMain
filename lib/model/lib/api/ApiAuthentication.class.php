@@ -294,7 +294,7 @@ Abstract class ApiAuthentication
      
     public function CommonLoginTracking()
 	{
-                if($this->loginData['ACTIVATED']=='D') return ;
+		if($this->loginData['ACTIVATED']=='D') return ;
 		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
 		$profileId=$this->loginData["PROFILEID"];
 		$ip=CommonFunction::getIP();
@@ -349,6 +349,8 @@ Abstract class ApiAuthentication
 			$queueArr['websiteVersion']=$websiteVersion;
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
+                        $queueArr['whichChannel'] = MobileCommon::getChannel();
+
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -413,14 +415,17 @@ Abstract class ApiAuthentication
 				$dbJprofile=new JPROFILE("newjs_masterRep");
 			else
 				$dbJprofile=new JPROFILE("newjs_master");
-			
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-			$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
-			$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
-			$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
-			if(!PasswordHashFunctions::slowEquals($pwd,$password))
+			if($username){
+				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+				$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
+				$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
+				$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
+				if(!PasswordHashFunctions::slowEquals($pwd,$password))
+					return NULL;
+				$time=36*60;
+			}
+			else
 				return NULL;
-			$time=36*60;
 		}
 		else
 		{
@@ -448,12 +453,16 @@ Abstract class ApiAuthentication
 					return NULL;
 			}
 			$id=$temp[PR];
-			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-				$dbJprofile=new JPROFILE("newjs_masterRep");
+			if($id){
+				if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+					$dbJprofile=new JPROFILE("newjs_masterRep");
+				else
+					$dbJprofile=new JPROFILE("newjs_master");
+				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+				$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
+			}
 			else
-				$dbJprofile=new JPROFILE("newjs_master");
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-			$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
+				return NULL;
 		}
 
 		return $this->encryptAppendTime($this->createAuthChecksum($time));
@@ -812,6 +821,10 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
+                        $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
+                        LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);  
+
+                        
 		}
 		if($trackingData[logLoginHistoryTracking])
 		{
@@ -838,7 +851,9 @@ Abstract class ApiAuthentication
 		if($trackingData["appLoginProfileTracking"])
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+			$appType = MobileCommon::isApp();
+			$date = $trackingData["currentTime"];
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
 		}
 		if($trackingData["logLogoutTracking"])
 		{

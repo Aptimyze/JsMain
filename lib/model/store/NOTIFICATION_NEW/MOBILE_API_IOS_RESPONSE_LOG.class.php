@@ -2,6 +2,8 @@
 class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
         public function __construct($dbname="")
         {
+                //$dbname ='notification_master';
+                $this->databaseName ='MOBILE_API';
 		parent::__construct($dbname);
 		$this->PROFILEID_BIND_TYPE = "INT";
 		$this->REGISTRATION_ID_BIND_TYPE = "STR";
@@ -15,7 +17,7 @@ class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
 	{
 		try
 		{
-			$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.IOS_RESPONSE_LOG (PROFILEID, REGISTRATION_ID,MESSAGE_ID,STATUS_CODE,STATUS_MESSAGE,NOTIFICATION_KEY,SEND_DATE) VALUES (:PROFILEID, :REGISTRATION_ID, :MESSAGE_ID, :STATUS_CODE, :STATUS_MESSAGE, :NOTIFICATION_KEY, now())";
+			$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.IOS_RESPONSE_LOG (PROFILEID, REGISTRATION_ID,MESSAGE_ID,STATUS_CODE,STATUS_MESSAGE,NOTIFICATION_KEY,SEND_DATE) VALUES (:PROFILEID, :REGISTRATION_ID, :MESSAGE_ID, :STATUS_CODE, :STATUS_MESSAGE, :NOTIFICATION_KEY, now())";
 			$resInsert = $this->db->prepare($sqlInsert);
 			$resInsert->bindValue(":PROFILEID", $profileid, constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 			$resInsert->bindValue(":REGISTRATION_ID", $registrationId, constant('PDO::PARAM_'.$this->{'REGISTRATION_ID_BIND_TYPE'}));
@@ -34,7 +36,7 @@ class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
         public function getDataCountForRange($startDate, $endDate)
         {
                 try{
-                        $sql = "SELECT count(distinct PROFILEID) count, NOTIFICATION_KEY FROM MOBILE_API.`IOS_RESPONSE_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY";
+                        $sql = "SELECT count(PROFILEID) count, NOTIFICATION_KEY FROM $this->databaseName.`IOS_RESPONSE_LOG` WHERE SEND_DATE>=:START_DATE AND SEND_DATE<=:END_DATE GROUP BY NOTIFICATION_KEY";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);

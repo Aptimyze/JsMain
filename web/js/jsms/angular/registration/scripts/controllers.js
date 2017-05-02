@@ -662,6 +662,7 @@
       
 			if($scope.screenName=='s4' && indexPos==2)
 			{
+				$scope.initMuslimCaste();
 				$scope.initHoroscope();
 				$scope.initCasteNoBar();
 			}
@@ -690,7 +691,7 @@
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 4;
+      var horoscopeFieldIndex = 5;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -699,11 +700,26 @@
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
+    $scope.initMuslimCaste =function()
+    {
+	var allowedReligion = 2;
+	var religionFieldIndex= 2;
+	var muslimCasteFieldIndex=3;
+	if($scope.fields[religionFieldIndex].userDecision==allowedReligion)
+	{
+		$scope.fields[muslimCasteFieldIndex].show = true;
+	}
+	else
+	{
+		$scope.fields[muslimCasteFieldIndex].show = false;
+		Gui.resetField('s4','dindex',muslimCasteFieldIndex);
+	}
+    }
 	$scope.initCasteNoBar = function()    
 	{
 	        var allowedReligion = ['1','4','9'];
 		var religionFieldIndex= 2;
-		var casteNoBarFieldIndex = 3;
+		var casteNoBarFieldIndex = 4;
 
 	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
 		{
@@ -715,6 +731,7 @@
 		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
 		}     
 	 }
+	$scope.initMuslimCaste();
 	$scope.initHoroscope();
 	$scope.initCasteNoBar();
 	$scope.enableNextBtn();

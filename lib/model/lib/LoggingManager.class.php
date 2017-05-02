@@ -346,6 +346,17 @@ class LoggingManager
 		{
 			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
 		}
+
+		if(isset($logArray[LoggingEnums::CONSUMER_NAME]))
+		{
+			$logData[LoggingEnums::CONSUMER_NAME] = $logArray[LoggingEnums::CONSUMER_NAME];
+		}
+
+		if(isset($logArray[LoggingEnums::PHISHING_URL]))
+		{
+			$logData[LoggingEnums::PHISHING_URL] = $logArray[LoggingEnums::PHISHING_URL];	
+		}
+
 		return $logData;
 	}
 
@@ -601,10 +612,11 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
-		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
-		{
-			$this->setLogged();
-		}
+                if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+                {
+                        $this->setLogged();
+                }
+
 	}
 
 	/**
@@ -719,4 +731,34 @@ class LoggingManager
 		}
 		return $scriptName;
 	}
+
+        public function writeToFileForCoolMetric($body)
+	{
+
+                if(!LoggingEnums::$COOL_METRIC[$body['type']])return;
+                $dataOutput = array();
+                $dataOutput['Date'] = $body['currentTime'];
+                $dataOutput['logType'] = $body['type'];
+                $dataOutput['channel'] = $body['whichChannel'];
+                $dataOutput['profileId'] = $body['profileId'];
+                $dataOutput = json_encode($dataOutput);
+                $currDate = Date('Y-m-d');
+                try{
+		$filePath =  $this->serverLogPath."/coolMetric/$currDate/".$currDate.".log";
+                if(!file_exists(dirname($filePath)))
+                    mkdir(dirname($filePath), 0777, true);                
+		$fileResource = fopen($filePath,"a");
+		fwrite($fileResource,$dataOutput."\n");
+		fclose($fileResource);
+                }
+                catch(Exception $e){
+                    
+                    return;
+                }
+	}
+
+        
+        
+        
+        
 }

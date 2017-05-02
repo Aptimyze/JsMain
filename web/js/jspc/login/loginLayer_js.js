@@ -415,6 +415,7 @@ function customCheckboxLogin(checkboxName,flag) {
 }
 
 $(document).ready(function(){
+	logSiteUrl();
 	commonLoginBinding();
 	if(typeof(LoggedoutPage)!="undefined")
 	{ 	
@@ -610,4 +611,19 @@ function removeCaptcha()
 {
   $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
+}
+
+function logSiteUrl()
+{
+	var url = location.href;
+	if(url.indexOf("jeevansathi") == -1)
+	{
+		var dataObject = JSON.stringify({'url' : encodeURIComponent(url)});
+		$.ajax({
+			url : '/api/v1/common/logOtherUrl',
+			dataType: 'json',
+			data: 'data='+dataObject,
+			success: function(response) {}
+		});
+	}
 }
