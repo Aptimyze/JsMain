@@ -472,6 +472,9 @@ class MessageCommunication
 	 */
 	public function getUSER()
 	{
+    if(is_null($this->USER)) {
+      $this->USER = "";
+    }
 		return $this->USER;
 	}
 	
@@ -494,6 +497,10 @@ class MessageCommunication
 	 */	
 	public function getDATE_EDIT()
 	{
+    if(is_null($this->DATE_EDIT)) {
+      $this->DATE_EDIT = "0000-00-00 00:00:00";
+    }
+    
 		return $this->DATE_EDIT;
 	}
 	
@@ -516,6 +523,9 @@ class MessageCommunication
 	 */
 	public function getBLOCKED()
 	{
+    if(is_null($this->BLOCKED)) {
+      $this->BLOCKED = MessageCommunication::TEMPORARY;
+    }
 		return $this->BLOCKED;
 	}
 	
@@ -536,7 +546,12 @@ class MessageCommunication
 	 * @return string
 	 */
 	public function getMARKCC()
-	{
+	{ 
+    if(is_null($this->MARKCC) || 0 === strlen($this->MARKCC)) {
+      //use default config
+      $this->MARKCC = MessageCommunication::NO;
+    }
+    
 		return $this->MARKCC;
 	}
 	
@@ -711,7 +726,7 @@ class MessageCommunication
 		{
 			$this->setObscene(MessageCommunication::YES);
 			$this->setIS_MSG(MessageCommunication::YES);
-			
+      
 			$obsceneId = $this->insertIntoObsceneMessage();
 			
 			//set message as blank if it is obscene
@@ -836,8 +851,6 @@ class MessageCommunication
 		$this->setIS_MSG($value["IS_MSG"]);
 		$this->setSEEN($value["SEEN"]);
 	}
-		
-
 }
 
 ?>
