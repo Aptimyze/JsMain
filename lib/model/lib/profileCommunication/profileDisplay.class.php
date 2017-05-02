@@ -79,18 +79,15 @@ class profileDisplay{
 		$pid = $profileObj->getPROFILEID();
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
 		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
-
-		if($iOffset % $maxProfileReqdToHitNext == 5)
-		{
+	
 			if($cachedResultsPoolArray[$iOffset] == NULL)
-			{
+			{  
 			$request=sfContext::getInstance()->getRequest();	
 			$request->setParameter('matchalerts',1);
 			ob_start();
         	$request->setParameter("useSfViewNone",1);
         	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');
         	$output = (array)(json_decode(ob_get_contents(),true));
-
         	ob_end_clean();
         	$iterate = $iOffset;
         	if(is_array($output) && array_key_exists("profiles",$output)){
@@ -100,7 +97,7 @@ class profileDisplay{
         	}
         	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
 			}	
-		}
+		
 
 		$profileIdToReturn = $cachedResultsPoolArray[$iOffset];
 		 return($profileIdToReturn);		
