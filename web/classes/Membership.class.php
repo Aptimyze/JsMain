@@ -698,6 +698,7 @@ class Membership
 
     function setApiTempObj($memUpgrade="NA",$userObjTemp=""){
         if(in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+            //error_log("ankita set apiTempObj");
             $apiTempObj = new MembershipAPIResponseHandler();
             $purchasesObj = new BILLING_PURCHASES();
             $purchaseDetails = $purchasesObj->getCurrentlyActiveService($this->profileid,"PU.DISCOUNT_PERCENT");
@@ -1344,9 +1345,9 @@ class Membership
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
                     $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
-                    
-                    if (JsConstants::$whichMachine != 'prod') {
-                        SendMail::send_email('ankita.g@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
+                    //error_log("ankita msg-".$msg);
+                    if (JsConstants::$whichMachine == 'prod') {
+                        SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
         		}
             }

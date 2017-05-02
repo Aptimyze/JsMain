@@ -194,7 +194,7 @@ EOF;
 		$csvAttachment = file_get_contents($filename);
 		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
-		$cc = "ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+		$cc = "rohan.mathur@jeevansathi.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 		$from = "js-sums@jeevansathi.com";
 		$subject = "Daily Report on details of paying users";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
