@@ -1,7 +1,7 @@
 <body>
 	<div id="chatPormoMS">
     	<div class="fullwid fullheight cpbg1 posrel">
-        	<div class="posabs setshare txtc color7 wid94p"> 
+        	<div class="posabs setshare txtc color7 wid94p" id="PLayer"> 
             	<p class="fontreg f14">JeevanSathi Chat now on Android!</p>  
                 <ul class="txtc fontlig f12 pt15 lh25" style="list-style-position:inside">
                 	<li>Connect faster with your matches through the Chat feature. </li>
@@ -25,7 +25,13 @@
     $(function(){
 
         var Phgt = $(window).height();
+        var pht = $('#PLayer').height();
+        if(Phgt < pht)
+        {   
+            $('#PLayer').parent().removeClass('fullheight').css('height',(pht+100));
+        }     
         $('#chatPormoMS').css('height',Phgt);
+        
     })
 
     function goToPlayStore()
