@@ -9,7 +9,7 @@
 	~/if`
 	~if $myPreview neq "1"`
 	<div class="clearfix f13 fontlig">
-		<div class="fl color2 VPwid28p">~if $gender eq Male` Her ~else` His ~/if` Preference</div>
+		<div class="fl color2 VPwid28p">~if $gender eq Male` His ~else` Her ~/if` Preference</div>
 		<div class="fr color2 VPwid25p">Matches you</div>
 		<div class="fl color13 VPwid46p txtc">
 			<span class="js-matching"></span> of 
