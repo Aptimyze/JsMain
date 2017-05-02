@@ -588,11 +588,6 @@ $screeningValMainAdmin = 0;
 							{
 								$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
 								$producerObj->sendMessage($sendMailData);
-								// production logging
-								$currdate = date('Y-m-d');
-								$file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQProduce-$currdate", "a+");
-								fwrite($file, "$pid\n");
-								fclose($file);
 							}
 						}
 						catch(Exception $e) {}
