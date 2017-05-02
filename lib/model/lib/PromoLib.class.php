@@ -2,14 +2,15 @@
 
 class PromoLib
 {
-	public static $baseDate = '2017-04-28';
+	public static $baseDate = '2017-02-1';
 	public static $daysToShowPromo = 4;
 	
 	public static function showPromo($promoToBeShown,$profileId,$loginObj)
 	{ 
 		if($promoToBeShown == "chatPromo")
 		{
-			self::ChatPromo($profileId,$loginObj);
+			$valToReturn = self::ChatPromo($profileId,$loginObj);
+			return $valToReturn;
 		}
 
 	}
@@ -23,9 +24,10 @@ class PromoLib
 
 		$str = ($_SERVER['HTTP_USER_AGENT']);
 		(preg_match_all('/Android ([0-9])(\.[0-9]){1}/', $str, $matches));
+		if($matches != NULL && $matches[0][0] != NULL)
 		$val = explode(' ', $matches[0][0]);
 
-		if($val[1] < 4)
+		if($val != NULL && $val[1] < 4)
 			return false;
 		  
 		$obj = new MOBILE_API_APP_LOGIN_PROFILES();
@@ -55,7 +57,7 @@ class PromoLib
 			$interval = $date1->diff($date2);
 
 			if($interval->h <= 96)
-			{
+			{  
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 				return true;
 			}

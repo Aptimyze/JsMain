@@ -3,7 +3,7 @@
         <div class="setshare pos-abs" style="width:1000px">
             <!--start:layer content-->
             <div class="fullwid clearfix pos-rel">
-                <a href="#" class="closeCP"><script>SSL_SITE_URL</script></a>
+                <a href="" class="closeCP"></a>
                 
                 <!--start:left-->
                 <div class="fl color11 wid40p">
