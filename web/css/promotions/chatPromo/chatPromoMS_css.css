@@ -5,3 +5,9 @@
 	#chatPormoMS .closeCP:before { transform: rotate(45deg);}
 	#chatPormoMS .closeCP:after { transform: rotate(-45deg);}
 	#chatPormoMS button{border:0;padding:18px 40px; margin-top:20px}
+	#chatPormoMS ul { list-style: none; margin:0; padding:0}
+	#chatPormoMS ul li{line-height:20px}
+	#chatPormoMS ul li:before {content: "\2022  ";}
+	#chatPormoMS .wid98p{width:98%}
+	#chatPormoMS .padl38{padding-left:38px}
+
