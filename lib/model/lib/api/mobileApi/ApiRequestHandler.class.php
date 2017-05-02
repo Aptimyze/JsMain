@@ -231,7 +231,7 @@ class ApiRequestHandler
 // if for 50% set divisor =2, 25 % set to 4
         
         public function  checkForRandomNess(){
-            $Divisor = 20;
+            $Divisor = 10;
             $randNum = rand(1,$Divisor);
             if($randNum % $Divisor  == 0 )return true;
             else return false;
