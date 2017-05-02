@@ -88,7 +88,7 @@ class NotificationFunctions
 		// code execute for Scheduled Notification      
 		if(in_array("$notificationKey", $scheduledNotificationKey)){
 			$schedduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
-			if(!$messageId)
+			if(!$messageId && !in_array($notificationKey, NotificationEnums::$loggedOutNotifications))
 				$schedduledAppNotificationObj->updateSent('',$notificationKey,$status,$profileid);
 			else if($messageId)
 				$schedduledAppNotificationObj->updateSuccessSent($status,$messageId);
@@ -101,7 +101,7 @@ class NotificationFunctions
 			$notificationObj =new MOBILE_API_NOTIFICATION_LOG;
 			$notificationDelLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG;
 		}
-		if(!$messageId){
+		if(!$messageId && !in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
 			$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
 		}
 		else if($messageId && $osType){

@@ -85,7 +85,7 @@ window.onload=function(){
     if (prev_handler) {
         prev_handler();
     }
-    setTimeout(function(){loadScript('https://saxp.zedo.com/sclient/tt3/fmos.js',renderBanners);},100); 
+    setTimeout(function(){loadScript('http://xp1.zedo.com/client/xp1/fmos.js',renderBanners);},100);
     var zedoLoad = 1;
 }
 </script>

@@ -939,7 +939,6 @@ if (isset($data) || $JSIndicator) {
                     . " AND a.STATUS $condition"
                     . " AND AMOUNT != '0'"      //condition added to remove 100% discount cases 
                     . " GROUP BY qtr";
-            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $qtr = $row['qtr'] - 1;
@@ -1037,7 +1036,6 @@ if (isset($data) || $JSIndicator) {
                     . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
                     . " AND a.STATUS $condition"
                     . " GROUP BY month";
-            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $mm = $row['month'];

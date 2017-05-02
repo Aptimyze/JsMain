@@ -1,3 +1,5 @@
+var cancelLocalStorageKey = "lastCancelledTime";
+var hoursLimit = 24;
 function showUploadOption() {
 	$("#FadedRegion" ).show();
 	$("#optionForUpload").show();
@@ -26,17 +28,41 @@ function setTransition_AlbumToUpload() {
 function setTransition_UploadToAlbum() {
 	$("#addPhotoAlbumPage").show();
 	$("#photoUploadProgress").hide();
+	$("#updatetextover").hide();
 }
 $(document).ready(function(){
+	showHideUploadMoreOption();
 	PhotoUpload();
 });
+
+/**
+ * added to honor cancel button for one hour.
+ */
+function showHideUploadMoreOption() 
+{
+	var currentDate = new Date();
+	var storedDate = localStorage.getItem(cancelLocalStorageKey);
+	if ( storedDate !== null)
+	{
+		diff = new Date(currentDate-new Date(storedDate));
+		if ( Math.floor(diff/(1000*60*60)) < hoursLimit)
+		{
+			$("#updatetextover").hide();
+		}
+		else
+		{
+			$("#updatetextover").show();
+            localStorage.removeItem(cancelLocalStorageKey);
+		}
+	}
+}
 
 function PhotoUpload(){
 showUploadOption();
 	$("#addPhotoMobile").click(function(){
 		showUploadOption();
 	});
-	if(selectFile == 1) 
+	if( typeof selectFile !== "undefined" && selectFile == 1) 
 		$("#addPhotoMobile").trigger("click");
 
 	$("#FadedRegion").click(function(){
@@ -66,6 +92,18 @@ showUploadOption();
                 $("#privacyoptionshow").hide();
                 $("#addPhotoAlbumPage").show();
 });
+
+$("#uploadPhotoClose").click(function()
+    {
+    	$("#updatetextover").hide();
+    	storedDate = new Date();
+		localStorage.setItem(cancelLocalStorageKey,storedDate);         
+	});
+
+// $("#uploadMoreText").click(function()
+//     {
+//     	$("#updatetextover").hide();         
+// 	});
 
 };
 

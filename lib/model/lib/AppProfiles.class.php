@@ -4,7 +4,7 @@ class AppProfilesHandler
 	public static $res=array();
 	public static $startPointer=array();
 	public static $allProfilesDone=array();
-	public static function getProfiles($notificationKey,$count, $restart = false,$noOfScripts,$currentScript,$osType='ALL')
+	public static function getProfiles($notificationKey,$count, $restart = false,$noOfScripts,$currentScript,$osType='ALL',$androidMaxVersion='')
 	{
 		if(self::$allProfilesDone[$notificationKey][$currentScript] && !$restart)
 			return;
@@ -23,18 +23,40 @@ class AppProfilesHandler
 				$appVersionAnd =$appVersion['AND'];
 			if($osType=='IOS' || $osType=='ALL')
 				$appVersionIos =$appVersion['IOS'];
-
-			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos);
+			if(in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
+				$separateWhereProfile = "(PROFILEID IS NULL OR PROFILEID = 0)";
+				$separateSelectColumns = "REG_ID";
+				$notificationStatus = 'Y';
+			}
+			else{
+				$separateWhereProfile = '';
+				$separateSelectColumns = '';
+				$notificationStatus = '';
+			}
+			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos,$androidMaxVersion,$notificationStatus,$separateWhereProfile,$separateSelectColumns);
 			self::$startPointer[$notificationKey][$currentScript] = 0;
 			self::$allProfilesDone[$notificationKey][$currentScript] = false;
 		}
 		if(isset(self::$res[$notificationKey][$currentScript]))
 		{
+			if(in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
+				$separateSelectColumns = "REG_ID";
+			}
+			else{
+				$separateSelectColumns = '';
+			}
 			for($i=0;$i<$count;$i++)
 			{
 				self::$startPointer[$notificationKey][$currentScript]+=$i;
-				if($row = self::$res[$notificationKey][$currentScript]->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS,self::$startPointer[$notificationKey][$currentScript]))
-					$detailArr[] = $row['PROFILEID'];
+				if($row = self::$res[$notificationKey][$currentScript]->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS,self::$startPointer[$notificationKey][$currentScript])){
+					
+					if($separateSelectColumns == '' || strpos($separateSelectColumns, "PROFILEID") !== false){
+						$detailArr[] = $row['PROFILEID'];
+					}
+					else{
+						$detailArr[] = $row['REG_ID'];
+					}
+				}
 				else
 				{
 					self::$allProfilesDone[$notificationKey][$currentScript]=true;

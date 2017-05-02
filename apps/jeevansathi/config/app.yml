@@ -33,9 +33,9 @@ all:
   PROFILE_PHOTO_PRIVACY: "Sorry, you cannot view this user's photos as the user has chosen to show photos only to contacted members"
   PROFILE_PHOTO_ABSENT: "Photo not uploaded. <a class='thickbox' href='SITE_URL/social/photoRequest?showtemp=Y&other_username=USERNAME&checksum=&profilechecksum=PROFILECHECKSUM'>Click here</a> to Request photo"
   PROFILE_PHOTO_SCREEN: "Photo is currently under screening. Please check later"    
-  max_photo_size: 6
+  max_photo_size: 10
   max_no_of_photos: 20
-  photo_formats: 'Jpeg, Gif, Jpg'
+  photo_formats: 'Jpeg, Gif, Jpg, Png'
   photo_email: 'photos@jeevansathi.com'
   SCREENED_PHOTO_URL: "<?php echo JsConstants::$screenedPhotosUrl?>"
   screened_dir_path: "<?php echo JsConstants::$screenedPhotoDir?>"

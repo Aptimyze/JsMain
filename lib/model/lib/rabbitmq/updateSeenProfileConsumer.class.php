@@ -44,7 +44,7 @@ class updateSeenProfileConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"updateSeenProfile");
     }
     try
     {
@@ -54,7 +54,7 @@ class updateSeenProfileConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"updateSeenProfile");
       return;
     }
   }
@@ -75,7 +75,7 @@ class updateSeenProfileConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"updateSeenProfile");
       return;
     }  
     try
@@ -85,7 +85,7 @@ class updateSeenProfileConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"updateSeenProfile");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')
@@ -131,7 +131,7 @@ class updateSeenProfileConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"updateSeenProfile");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.

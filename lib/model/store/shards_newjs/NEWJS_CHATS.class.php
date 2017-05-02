@@ -41,6 +41,57 @@ class NEWJS_CHATS extends TABLE{
 				throw new jsException($e);
 			}
 		}
-		
-}
+    
+    /**
+     * 
+     * @param type $arrChatIds
+     * @return type
+     * @throws jsException
+     * @throws jsExcception
+     */
+    public function removeRecords($arrChatIds)
+    {
+      try {
+        if (0 === count($arrChatIds)) {
+          throw new jsException("", "Empty array passed to removeRecords in NEWJS_CHAT.class.php");
+        }
+
+        $strChatIds = "'".implode("','", $arrChatIds)."'";
+
+        $sql = "DELETE FROM newjs.CHATS where ID IN ({$strChatIds})";
+
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":CHATIDS", $strChatIds, PDO::PARAM_STR);
+        $prep->execute();
+        return $prep->rowCount();
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
+    }
+        
+		/**
+     * 
+     * @param type $arrChatIds
+     * @return type
+     * @throws jsException
+     */
+    public function insertFromEligibleForRet($arrChatIds)
+    {
+      try{
+        if (0 === count($arrChatIds)) {
+          throw new jsException("", "Empty array passed to insertFromEligibleForRet in NEWJS_CHATS.class.php");
+        }
+
+        $strChatIds = "'".implode("','", $arrChatIds)."'";
+        $sql = "INSERT INTO newjs.CHATS SELECT * FROM newjs.DELETED_CHATS_ELIGIBLE_FOR_RET where ID IN ({$strChatIds})";
+
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":CHATIDS", $strChatIds, PDO::PARAM_STR);
+        $prep->execute();
+        return $prep->rowCount();
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
+    }
+        }
 	?>

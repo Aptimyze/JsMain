@@ -26,15 +26,15 @@ class ScheduleSms
         for ($activeServerId = 0; $activeServerId < $noOfActiveServers; $activeServerId++) {
             $myDbName           = getActiveServerName($activeServerId, "slave");
             $myDbarr[$myDbName] = $mysqlObj->connect("$myDbName");
-            mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000', $myDbarr[$myDbName]);
+            mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $myDbarr[$myDbName]);
         }
         $db_slave = connect_slave();
-        mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000', $db_slave);
+        mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $db_slave);
         /*****************/
         $match_slave = connect_slave81();
-        mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000', $match_slave);
+        mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $match_slave);
         $db_master = connect_db();
-        mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000', $db_master);
+        mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $db_master);
         $this->mysqlObj = $mysqlObj;
         $this->dbSlave  = $db_slave;
         $this->dbMaster = $db_master;
@@ -1574,6 +1574,7 @@ class ScheduleSms
             	$vdDiscountSmsLog 	=new billing_VARIABLE_DISCOUNT_SMS_LOG();
 
                 $variableDiscountObj 	=new VariableDiscount();
+                error_log("ankita confirm what to pass in input,profileid");
                 $durationArr =$variableDiscountObj->getActiveDurations();
 
 		$smsLogDetails	=$vdDiscountSmsLog->getFrequencyAndTimes($entry_dt);		
@@ -2519,7 +2520,7 @@ class ScheduleSms
 
         public function userLoggedInFromApp($profileid,$date)
         {
-                        $sql = "SELECT count(*) as CNT FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=$profileid AND date(DATE)>='$date' AND WEBSITE_VERSION IN ('A','I')";
+                        $sql = "SELECT count(*) as CNT FROM MIS.`LOGIN_TRACKING` WHERE `PROFILEID`=$profileid AND DATE>='$date' AND WEBSITE_VERSION IN ('A','I')";
                         $result = mysql_query($sql, $this->dbSlave) or $this->SMSLib->errormail($sql, mysql_errno() . ":" . mysql_error(), "Error occured while fetching details for SMS Key:  EOI  in processData() function while executing on MIS.LOGIN_TRACKING");
                         if($row = mysql_fetch_assoc($result))
                         {
