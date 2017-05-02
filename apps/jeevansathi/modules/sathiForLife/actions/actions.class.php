@@ -23,6 +23,8 @@ class sathiForLifeActions extends sfActions
     {
       unset($profileDetailsArr["submitForm"]);
     	$this->submitForm($profileDetailsArr);
+      $this->successMsg = "Your Entry has been saved";
+      $this->setTemplate("sathiForLife");
     }
     else
     {
@@ -32,7 +34,7 @@ class sathiForLifeActions extends sfActions
 
   public function submitForm($profileDetailsArr)
   {
-    $requiredDetailsArr = array("NAME","AGE","PARTNER_NAME","USERNAME","PHONE","EMAIL","DESCRIPTION","PICTURE","VIDEO_URL","SATHI_STORY","TWITER_HANDLE","INSTA_USERNAME");
+    $requiredDetailsArr = array("NAME","AGE","PARTNER_NAME","USERNAME","PHONE","EMAIL","DESCRIPTION","PICTURE","VIDEO_URL","SATHI_STORY","TWITTER_HANDLE","INSTA_USERNAME");
 
     $filesArr = array("PICTURE" => array( "name" => "96181271-1486279920.jpeg","type" => "image/jpeg","tmp_name" => "/tmp/phpS2JWcD","error" => 0 ,"size" => "48161" ) );
     if(is_array($filesArr))
@@ -48,6 +50,14 @@ class sathiForLifeActions extends sfActions
       $displayUrl = $this->getDisplayUrlDoc($picFormat);
       $pictureFunctionsObj = new PictureFunctions();
       $result = $pictureFunctionsObj->moveImage($validFiles["PICTURE"]["tmp_name"],$saveUrl);
+      if(1)//$result)
+      {
+        $profileDetailsArr["PICTURE"] = $displayUrl;
+      }
+      else
+      {
+        $this->filesError = "Error In Image";
+      }
     }
     foreach($profileDetailsArr as $key=>$values)
     {
@@ -56,10 +66,8 @@ class sathiForLifeActions extends sfActions
         unset($profileDetailsArr[$key]);
       }  
     }
-
   	$marketingObj = new MARKETING_PROFILE_DETAILS("newjs_masterRep");
   	$marketingObj->insertProfileDetails($profileDetailsArr);
-    echo("saved");die;
   }
 
 
