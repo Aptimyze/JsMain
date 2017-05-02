@@ -1350,7 +1350,7 @@ class MembershipHandler
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
                 }
                 if($upsellMRP > 0){
-                    error_log("ankita in getUpgradeMembershipDiscount-".$upgradableMemArr["upgradeMem"]."---".$upgradableMemArr["upgradeMemDur"]);
+
                     $upsellMRP = ($upsellMRP < (0.3*($upgradeMemMRP - $currentMemMRP)))?(0.3*($upgradeMemMRP - $currentMemMRP)):$upsellMRP;
                     $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
                 }
@@ -1527,8 +1527,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
-            if(is_array($upgradePercentArr))
-            error_log("ankita upgradePercentArr-".$mainMembership."---".$upgradePercentArr["C3"]["discountedUpsellMRP"]);
+            
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {

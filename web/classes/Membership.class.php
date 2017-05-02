@@ -697,7 +697,6 @@ class Membership
     }
 
     function setApiTempObj($memUpgrade="NA",$userObjTemp=""){
-        error_log("ankita set apiTempObj");
         if(in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
             $apiTempObj = new MembershipAPIResponseHandler();
             $purchasesObj = new BILLING_PURCHASES();
@@ -711,7 +710,7 @@ class Membership
                 $apiTempObj->memID = @strtoupper($purchaseDetails);
                 $apiTempObj->lastPurchaseDiscount = 0;
             }
-            error_log("ankita memId-".$apiTempObj->memID."--".$apiTempObj->lastPurchaseDiscount);
+            
             $memHandlerObj = new MembershipHandler(false);
             if($userObjTemp != ""){
                 $apiTempObj->subStatus = $memHandlerObj->getSubscriptionStatusArray($userObjTemp,null,null,$apiTempObj->memID);
@@ -1300,7 +1299,7 @@ class Membership
         $serviceObj  = new billing_SERVICES();
         $servObj = new Services();
         $mainMembership = array_shift(@explode(",", $this->serviceid));
-        error_log("ankita mainMembership-".$mainMembership);
+        
         if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
         } else {
             $mainMembership = null;
@@ -1322,7 +1321,7 @@ class Membership
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true,$upgradeMem,$apiTempObj);
-            error_log("ankita total-".$total." ,discount-".$discount." , amount-".$this->amount.", ".$this->discount);
+            
             if ($total > $this->amount) {
                 $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
                 $actDisc = $iniAmt - $this->amount;
@@ -1334,7 +1333,7 @@ class Membership
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
                     $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
-                    error_log("ankita msg-".$msg);
+                    
                     if (JsConstants::$whichMachine != 'prod') {
                         SendMail::send_email('ankita.g@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
