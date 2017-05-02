@@ -57,7 +57,9 @@ $this->addOptions(array(
 
                 $data["RECEIVER"]["PROFILE"] = $profileObj;
                 $data["RECEIVER"]["EMAILID"] = $profileObj->getEMAIL();
-                if(is_array($data) && isset($data["RECEIVER"]["PROFILE"]))
+                $havePhoto = $profileObj->getHAVEPHOTO();
+                
+                if(is_array($data) && isset($data["RECEIVER"]["PROFILE"]) && !in_array($havePhoto, noPhotoMailerEnum::$havePhotoConditionArr))
 				{
 					$data["stypeMatch"] =$stypeMatch;
                     $data["type"] = $type;					
@@ -84,6 +86,7 @@ $this->addOptions(array(
                 unset($subject);
                 unset($mailSent);
                 unset($data);
+                unset($havePhoto);
     		}
         }
 	}
