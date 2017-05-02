@@ -852,10 +852,8 @@ class CommonFunction
 		$x = date('Y-m-d',strtotime($verifyDate));
 		$y = date('Y-m-d');
 
-		$t1 = strtotime($x);
-		$t2 = strtotime($y);
-
-		$daysDiff = ($t2 - $t1)/(24*60*60);
+		$dayObject = date_diff( date_create($y), date_create($x));
+		$daysDiff = $dayObject->days;
 
 		$weeks = floor($daysDiff/7) * 7;
 
@@ -879,11 +877,8 @@ class CommonFunction
 		$x = date('Y-m-d',strtotime($verifyDate));
 		$y = date('Y-m-d');
 
-		$t1 = strtotime($x);
-		$t2 = strtotime($y);
-
-		$daysDiff = ($t2 - $t1)/(24*60*60);
-
+		$dayObject = date_diff( date_create($y), date_create($x));
+		$daysDiff = $dayObject->days;
 		if($errlimit == "WEEK")
 		{
 			if($daysDiff % 7 == 0)

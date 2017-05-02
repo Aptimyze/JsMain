@@ -218,7 +218,7 @@ return $css_arr;
 /* JavaScript File */
 function getJsFilesArr(){
 $js_arr[]=array("jsms/common/scrollTo"   => "1");
-$js_arr[]=array("jsms/search/mobSearchDropDown_js"              => "12");
+$js_arr[]=array("jsms/search/mobSearchDropDown_js"               => "13");
 $js_arr[]=array("jsms/search/mobSearchForm_js"      => "4");
 $js_arr[]=array("contactEngineNew_js"   => "4");
 $js_arr[]=array("registration_ajax_new_js"    => "6");
@@ -449,7 +449,7 @@ $js_arr[]=array("jsms/common/CommonFunctions"                                   
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
-$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                             => "63");
+$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                              => "64");
 $js_arr[]=array("jsms/search/JsmsSearch"   => "2");
 $js_arr[]=array("jsms/search/MobileSearchCommon"   => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular_min"  => "1");
@@ -519,7 +519,7 @@ $js_arr[]=array("jspc/search/hslider"    => "1");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min"    => "1");
 $js_arr[]=array("jspc/search/test1"    => "1");
 $js_arr[]=array("jspc/search/scrollBar"    => "1");
-$js_arr[]=array("jspc/common/searchDropdown_js"     => "2");
+$js_arr[]=array("jspc/common/searchDropdown_js"      => "3");
 $js_arr[]=array("jspc/search/searchTuples"              => "11");
 $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
 $js_arr[]=array("jspc/inbox/contactCenter"                                                     => "52");
@@ -539,7 +539,7 @@ $js_arr[]=array("jspc/search/searchSliders"    => "1");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"    => "1");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat"   => "1");
 $js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                                                      => "58");
-$js_arr[]=array("jspc/utility/chosen/chosen_jquery"                             => "28");
+$js_arr[]=array("jspc/utility/chosen/chosen_jquery"                              => "29");
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism"    => "1");
 $js_arr[]=array("jspc/logout/hpjs"      => "3");
 $js_arr[]=array("jspc/common/hslider"    => "1");

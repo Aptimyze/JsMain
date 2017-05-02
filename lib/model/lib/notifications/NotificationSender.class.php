@@ -23,6 +23,9 @@ class NotificationSender
      */
     public function sendNotifications($profileDetails,$regIds='') 
     {
+	$JsMemcacheObj =JsMemcache::getInstance();
+	$date =date("Ymd");
+
     	if(is_array($profileDetails))
     	{
     		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
@@ -83,7 +86,8 @@ class NotificationSender
                         $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
                     }
     			}
-    			// logging of Notification Messages 
+
+		// logging of Notification Messages 
                 $key            =$details['NOTIFICATION_KEY'];
                 $msgId          =$details['MSG_ID'];
                 $message        =$details['MESSAGE'];
@@ -92,6 +96,14 @@ class NotificationSender
                 $notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
                 $notificationMsgLog->insert($key,$msgId,$message,$title);
                 // end
+
+		// Notification Increment counter fir profile specific using Hash
+		if(in_array("$key", NotificationEnums::$timeCriteriaNotification)){	
+	                $key    ="INST_APP|".$key."|".$date;
+	                $field  ="PID-".$profileid;
+	                $JsMemcacheObj->hIncrBy($key,$field,1);
+		}
+		// end
               
                 unset($regIds);
     		}
