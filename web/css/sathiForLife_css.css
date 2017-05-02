@@ -1,0 +1,175 @@
+html {
+	font-size:100%;
+	-webkit-text-size-adjust:100%;
+	-ms-text-size-adjust:100%
+}
+html, body, ul, form, button, input, p {
+	margin:0;
+	padding:0
+}
+form {
+	display:inline
+}
+a {
+	text-decoration:none;
+	outline:0
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
+	display:block
+}
+section:after, footer:after, clearline {
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+	overflow:hidden;
+	zoom:1
+}
+i {
+	display:inline-block;
+	font-style:normal
+}
+.container {
+	margin:0 auto;
+	padding:0
+}
+.clearfix {
+*zoom:1
+}
+.clearfix:before, .clearfix:after {
+	display:table;
+	line-height:0;
+	content:""
+}
+.clearfix:after {
+	clear:both
+}
+
+
+
+.M-header {
+	background:url(../images/sathi/M-headimg.jpg) no-repeat center center #Dbdbdb;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.fs1{font-family:Cambria}
+.fs2{font-family:Arial, Helvetica, sans-serif}
+.fsos1 {font-family: 'Open Sans', sans-serif;font-weight:300}
+.fsos2 {font-family: 'Open Sans', sans-serif;font-weight:600}
+.fsos3 {font-family: 'Open Sans', sans-serif;font-weight:700}
+ 
+.f11{font-size:11px}
+.f12{font-size:12px}
+.f13{font-size:13px}
+.f14{font-size:14px}
+.f15{font-size:15px}
+.f18{font-size:18px}
+.f20{font-size:20px}
+.f30{font-size:30px}
+.txtc{text-align:center}
+.lh18{line-height:18x}
+
+
+.dispib{display:inline-block}
+.dispi{display:inline}
+.dispt{display:table}
+.disptc{display:table-cell}
+.lquo{background:url(../images/sathi/quotes.png) 1px 1px no-repeat; width:16px; height:14px;}
+.rquo{background:url(../images/sathi/quotes.png) 1px -13px no-repeat; width:16px; height:14px;}
+.lquo2{background:url(../images/sathi/quotes2.png) no-repeat 1px 1px; width:24px; height:24px}
+.rquo2{background:url(../images/sathi/quotes2.png) no-repeat 1px -20px; width:24px; height:24px}
+ 
+ 
+.bdr1{border-right:1px solid #767676}
+
+.bdr2{border-right:1px solid #ebebeb;}
+ 
+ul.imglist{list-style-type:none; padding:0; margin:0}
+.imgd{width:258px; height:145px}
+ 
+
+
+.maut{margin:0 auto}
+.fl{float:left}
+.fr{float:right}
+
+.bg1{background-color:#f4f6f6}
+.bg2{background-color:#fff}
+.bg3{background-color:#999999}
+.bg4{background-color:#363636}
+label{font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#666666; padding-bottom:7px; display:block}
+
+.shade1{-webkit-box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);
+-moz-box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);
+box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);}
+
+.posrel{position:relative}
+.posabs{position:absolute}
+
+
+#submitform input{padding:11px 9px}
+
+.pos1{top:0; left:0}
+.pos2{bottom:5px; right:20px}
+ 
+.wid90p{width: 90%}
+.wid95p{width: 95%}
+.hgta{height:434px}
+.wida{width:990px}
+.widb{width:930px}
+.widc{width:530px}
+.fullw{width:100%}
+.widd{width:68%}
+.wide{width:30%}
+.widf{width:280px}
+.widg{width:420px}
+.pt10{padding-top:10px}
+.pt12{padding-top:12px}
+.pt20{padding-top:20px}
+.pt34{padding-top:34px}
+.pt37{padding-top:37px}
+.pt50{padding-top:50px}
+.pt60{padding-top:60px}
+.pt131{padding-top:131px}
+.pad1{padding:30px 0}
+.pad2{padding:30px 0 50px 0}
+.pad4{padding:10px}
+.pad3{padding:30px 25px}
+.pad5{padding:10px 15px}
+.pl28{padding-left:28px}
+.pb20{padding-bottom:20px}
+.pb50{padding-bottom:50px}
+.pr8{padding-right:8px}
+.m10{margin:10px}
+.mt40{margin-top:40px}
+.pad6{padding:5px 0 20px 0}
+.pad7{padding:20px 10px 10px 10px}
+.pl10{padding-left:10px}	
+.pb10{padding-bottom:10px}
+.pr10{padding-right:10px}
+
+.upbtn{ background:none;border:1px solid #ec3963; color:#ec3963; font-size:15px;width:100%; line-height:39px; margin-top:21px}
+.subbtn{background:#ec3963; color:#fff; font-family:"Arial", Gadget, sans-serif; font-size:15px; font-weight:bold;  width:100%; border:0; line-height:40px;border:0}
+.cls1{width:218px; font-style:italic; line-height:25px}
+ 
+
+
+
+.color1{color:#3d2c09}
+.color2{color:#666666}
+.color3{color:#d82742}
+.color4{color:#333333}
+.color5{color:#fff}
+.color6{color:#ec3963}
+
+
+.wid40p{width:40%}
+.wid50p{width:50%}
+
+.dispibl{display:inline-block}
+.dn{display:none}
+
+.brdr1{border:1px solid #ec3963}
+.vTop{vertical-align:top}
