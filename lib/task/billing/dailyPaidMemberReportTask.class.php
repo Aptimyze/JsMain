@@ -111,8 +111,10 @@ EOF;
        
         	$servNameArr = $billServObj->getServiceNameArr($serviceIdArr);
         	$skipBillId = array();
+        	//print_r($paidProfilesArr);
 			foreach($paidProfilesArr as $k=>&$v){
 	        	foreach($purDetArr as $key=>&$val){
+	        		$skipFlag = false;
 	        		if($v['PROFILEID'] == $val['PROFILEID'] && $v['BILLID'] == $val['BILLID'] && !in_array($val['BILLID'], $skipBillId)){
 	        			if(strpos($purArr[$val['BILLID']]['SERVICEID'],'NCP') !== false){
 	        				$skipFlag = true;
@@ -153,7 +155,12 @@ EOF;
 		        			}
 	        			}
 	        			
-	        			$finalArr[$incrementID]['DISCOUNT'] = round(($val['DISCOUNT']/$val['PRICE'])*100,2)."%";
+	        			if($val['PRICE']!=0){
+	        				$finalArr[$incrementID]['DISCOUNT'] = round(($val['DISCOUNT']/$val['PRICE'])*100,2)."%";
+	        			}
+	        			else{
+	        				$finalArr[$incrementID]['DISCOUNT'] = 0;
+	        			}
 
 	        			if((($val['PROFILEID'] % 3) + 1) == 1){
 	        				$finalArr[$incrementID]['ACCEPTANCES'] = $newjsContactObj1->getContactAcceptanceCount($val['PROFILEID'],'BOTH');
@@ -172,7 +179,7 @@ EOF;
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "No";
 	        			}
 	        			$finalArr[$incrementID]['Paid earlier'] = $v['Paid earlier'];
-
+	        			//print_r($finalArr);
 	        			unset($status, $incrementID);
 	        		}
 	        	}
@@ -194,7 +201,8 @@ EOF;
 		$csvAttachment = file_get_contents($filename);
 		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
-		$cc = "rohan.mathur@jeevansathi.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+		//$to = "ankita.g@jeevansathi.com";
+		$cc = "ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com";
 		$from = "js-sums@jeevansathi.com";
 		$subject = "Daily Report on details of paying users";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
