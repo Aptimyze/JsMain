@@ -2435,7 +2435,7 @@ class Membership
     
     public function setRedisForFreeToPaid($userObjTemp){
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE){
-            JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d h:i:s"),604800);
+            JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
         }
     }
 }
