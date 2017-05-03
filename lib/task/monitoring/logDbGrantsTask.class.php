@@ -29,7 +29,7 @@ EOF;
                                         while ($row = @mysql_fetch_assoc($res)) {
                                                 $arrayValue = array_values($row);
                                                 $arrayValue = explode("TO",$arrayValue[0]);
-                                                $serverArray[$serverName] = $arrayValue[0];
+                                                $serverArray[$serverName][] = $arrayValue[0];
                                         }
                                 }
                                 unset($db);
@@ -38,8 +38,9 @@ EOF;
                 ksort($serverArray);
                 $fileName = sfConfig::get("sf_upload_dir") . "/SearchLogs/dbGrants".date("Ymd").".txt";
                 $grantStr = "";
-                foreach($serverArray as $key=>$grantString){
-                        $grantStr .= $key.":: ".$grantString."\n\n";
+                foreach($serverArray as $key=>$grantStringArr){
+                        $grantString = implode(" \n ",$grantStringArr);
+                        $grantStr .= $key.":: \n ".$grantString."\n\n";
                 }
                 file_put_contents($fileName,$grantStr);
         }
