@@ -15,7 +15,7 @@ class sathiForLifeActions extends sfActions
   *
   * @param sfRequest $request A request object
   */
-  public function executeSathi(sfWebRequest $request)
+  public function executeIndex(sfWebRequest $request)
   {
     //$this->forward('default', 'module');
     $profileDetailsArr = $request->getParameterHolder()->getAll();    
@@ -23,8 +23,7 @@ class sathiForLifeActions extends sfActions
     {
       unset($profileDetailsArr["submitForm"]);
     	$this->submitForm($profileDetailsArr);
-      $this->successMsg = "Your Entry has been saved successfully!";
-      $this->setTemplate("sathiForLife");
+      $this->setTemplate("formSubmit");
     }
     else
     {
@@ -41,7 +40,11 @@ class sathiForLifeActions extends sfActions
     {
       $files = $this->validateFiles($filesArr);
     }
-    $this->filesError = $files["Error"]["PICTURE"];
+    if($files["Error"]["PICTURE"])
+    {
+      $this->filesError = $files["Error"]["PICTURE"];      
+      return;  
+    }
     $validFiles = $files["Valid"];
     if(is_null($files["Error"]) && is_array($validFiles))
     {
@@ -49,25 +52,27 @@ class sathiForLifeActions extends sfActions
       $saveUrl = $this->getSaveUrl($picFormat,$validFiles["PICTURE"]["name"]);
       $displayUrl = $this->getDisplayUrlDoc($picFormat);
       $pictureFunctionsObj = new PictureFunctions();
-      $result = $pictureFunctionsObj->moveImage($validFiles["PICTURE"]["tmp_name"],$saveUrl);
+      $result = copy($validFiles["PICTURE"]["tmp_name"],$saveUrl);      
       if($result)
       {
         $profileDetailsArr["PICTURE"] = $displayUrl;
+        foreach($profileDetailsArr as $key=>$values)
+        {
+          if(!in_array($key, $requiredDetailsArr) || $values == "")
+          {
+            unset($profileDetailsArr[$key]);
+          }  
+        }
+        $marketingObj = new MARKETING_PROFILE_DETAILS("newjs_masterRep");
+        $marketingObj->insertProfileDetails($profileDetailsArr);
+        unset($marketingObj);
+        $this->successMsg = "Your Entry has been saved successfully!";
       }
       else
       {
         $this->filesError = "Error In Image";
       }
     }
-    foreach($profileDetailsArr as $key=>$values)
-    {
-      if(!in_array($key, $requiredDetailsArr) || $values == "")
-      {
-        unset($profileDetailsArr[$key]);
-      }  
-    }
-  	$marketingObj = new MARKETING_PROFILE_DETAILS("newjs_masterRep");
-  	$marketingObj->insertProfileDetails($profileDetailsArr);
   }
 
 
@@ -127,14 +132,14 @@ class sathiForLifeActions extends sfActions
   }
 
   public function getDisplayUrlDoc($type="")
-        {
-                $displayUrl = "";
-                if(!$type)
-                        $type=".jpg";
-                else
-                        $type=".".$type;            
-                $displayUrl="JS/uploads/sathiForLife/".$this->docUrl.$type;
-                return $displayUrl;
-        }
+  {
+    $displayUrl = "";
+    if(!$type)
+      $type=".jpg";
+    else
+      $type=".".$type;            
+    $displayUrl="JS/uploads/sathiForLife/".$this->docUrl.$type;
+    return $displayUrl;
+  }
 
 }

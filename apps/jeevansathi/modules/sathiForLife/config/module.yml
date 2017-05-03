@@ -5,5 +5,3 @@ all:
   show_mtongue: 0
   index:
     enable_login:  off
-  sathiForLife:	
-    enable_login:  off

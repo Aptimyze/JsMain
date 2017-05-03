@@ -149,6 +149,7 @@ box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);}
 .pl10{padding-left:10px}	
 .pb10{padding-bottom:10px}
 .pr10{padding-right:10px}
+.pt5{padding-top: 5px}
 
 .upbtn{ background:none;border:1px solid #ec3963; color:#ec3963; font-size:15px;width:100%; line-height:39px; margin-top:21px}
 .subbtn{background:#ec3963; color:#fff; font-family:"Arial", Gadget, sans-serif; font-size:15px; font-weight:bold;  width:100%; border:0; line-height:40px;border:0}

@@ -25,9 +25,11 @@ $(document).ready(function(e) {
 	});
 	$("#submitform input").focus(function() {
             $(this).removeClass("brdr1");
-            if($(this).prev().attr("id").indexOf("Error")!= -1) {
-				$(this).prev().html("");
-			}
+            if($(this).prev().attr("id")) {
+                if($(this).prev().attr("id").indexOf("Error")!= -1) {
+                    $(this).prev().html("");
+                }    
+            } 
         });
 });
 

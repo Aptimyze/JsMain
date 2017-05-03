@@ -26,7 +26,7 @@
 <!--start:content-->
 <div class="container pad1 widb">
   <p class="fs2 f14 color2 txtc lh18">We are inviting you to send us your #MySathiMoments - A <strong>photograph/10 second video</strong> of those unique moments you've shared with theone you love. <strong>Dinner dates, Movie Nights, Long Drives, Exotic Travels</strong> - we'd love to see all those precious moments that define your world.</p>
-  <p class="pt50 color3 f20 fs1 txtc widc maut"> The best entries stand a chance to win a holiday of a lifetime, a photo-shoot opportunity and other exciting prizes. </p>
+  <p class="pt50 color3 f20 fs1 txtc widc maut"> The best entries stand a chance to win a <span class = "fsos2">holiday of a lifetime</span>, a <span class = "fsos2">photo-shoot opportunity</span> and other <span class = "fsos2">exciting prizes</span>. </p>
 </div>
 <!--end:content--> 
 
@@ -41,19 +41,19 @@
       <div class="bg2 fullw shade1">
       
       <div class="pad3 fs2" id="submitform">
-        <form id="submitform" action="/sathiForLife/Sathi?submitForm=1" method="POST" enctype="multipart/form-data">
+        <form id="submitform" action="/sathiForLife/?submitForm=1" method="POST" enctype="multipart/form-data">
           <div class="clearfix pb20"> 
             <!--start:name field-->
             <div class="fl widf">
               <label class="wid40p dispibl">Name</label>
-              <span id="nameError" class="dn color6 fr f11 pr8"></span>
+              <span id="nameError" class="dn pt5 color6 fr f11 pr8"></span>
               <input class="wid90p" name="NAME" id="nameField" type="text"/>
             </div>
             <!--end:name field--> 
             <!--start:age field-->
             <div class="fr widf">
               <label class="wid40p dispibl">Age</label> 	
-              <span id="ageError" class="dn color6 fr f11 pr8"></span>
+              <span id="ageError" class="dn pt5 color6 fr f11 pr8"></span>
               <input class="wid90p"  name="AGE" id="ageField" type="text"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
             </div>
             <!--end:age field--> 
@@ -62,7 +62,7 @@
             <!--start:sathi name field-->
             <div class="fl widf">
               <label class="wid40p dispibl">#Sathi's Name</label>
-              <span id="sathiNameError" class="dn color6 fr f11 pr8"></span>
+              <span id="sathiNameError" class="dn pt5 color6 fr f11 pr8"></span>
               <input class="wid90p" name="PARTNER_NAME" id="sathiNameField" type="text"/>
             </div>
             <!--end:sathi name field--> 
@@ -77,21 +77,21 @@
             <!--start:phone no. field-->
             <div class="fl widf">
               <label class="wid40p dispibl">Phone No.</label>
-              <span id="phoneError" class="dn color6 fr f11 pr8"></span>
+              <span id="phoneError" class="dn pt5 color6 fr f11 pr8"></span>
               <input class="wid90p" name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
             </div>
             <!--end:phone no. field--> 
             <!--start:email field-->
             <div class="fr widf">
-              <label class="wid90p dispibl">E-mail Id</label>
-              <span id="emailError" class="dn color6 fr f11 pr8"></span>
+              <label class="wid40p dispibl">E-mail Id</label>
+              <span id="emailError" class="dn pt5 color6 fr f11 pr8"></span>
               <input class="wid90p" name="EMAIL" id="emailField" type="text"/>
             </div>
             <!--end:email field--> 
           </div>
           <div class="pb20">
             <label class="wid50p dispibl">Hashtag that best describes you and your #Sathi</label>
-            <span id="hashtagError" class="dn color6 fr f11 pr8"></span>
+            <span id="hashtagError" class="dn pt5 color6 fr f11 pr8"></span>
             <input class="wid95p" name="DESCRIPTION" id="hashtagField" type="text" placeholder="Example: #FoodieSathi"/>
           </div>
           <div class="pb50 clearfix">
@@ -111,7 +111,7 @@
           </div>
           <div class="pb20">
             <label>Your #MySathiMoment Story (Optional)</label>
-            <input class="wid95p" name="SATHI_STORY" id="storyField" type="text" placeholder="Less than 2000 characters"/>
+            <input class="wid95p" name="SATHI_STORY" id="storyField" type="text"  maxlength="2000" placeholder="Less than 2000 characters"/>
           </div>
           <div class="clearfix pb50"> 
             <!--start:Twitter Handle (Optional) field-->
@@ -130,7 +130,7 @@
           <div class="widf">
           	<input type="submit" id="subbtn" class="subbtn txtc" value="Submit" />
           </div>
-          <div class="fullw txtc f12 pt37 color2">If unable to submit, mail your entries to sathiforlife@gmail.com</div>
+          <div class="fullw txtc f12 pt20 color2">If unable to submit, mail your entries to sathiforlife@gmail.com</div>
         </form>
       </div>
     </div>
