@@ -23,7 +23,7 @@ class sathiForLifeActions extends sfActions
     {
       unset($profileDetailsArr["submitForm"]);
     	$this->submitForm($profileDetailsArr);
-      $this->successMsg = "Your Entry has been saved";
+      $this->successMsg = "Your Entry has been saved successfully!";
       $this->setTemplate("sathiForLife");
     }
     else
@@ -50,7 +50,7 @@ class sathiForLifeActions extends sfActions
       $displayUrl = $this->getDisplayUrlDoc($picFormat);
       $pictureFunctionsObj = new PictureFunctions();
       $result = $pictureFunctionsObj->moveImage($validFiles["PICTURE"]["tmp_name"],$saveUrl);
-      if(1)//$result)
+      if($result)
       {
         $profileDetailsArr["PICTURE"] = $displayUrl;
       }
