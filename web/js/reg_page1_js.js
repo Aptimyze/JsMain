@@ -262,6 +262,15 @@ $(document).ready(function () {
 					}
 		}
 		);
+                $('#reg_religion').change(function(){
+				if(this.value=='2'){
+						$('#sectMuslim_section').css('display','inline');
+					}else
+					{
+						$('#sectMuslim_section').css('display','none');
+					}
+		}
+		);
 		$('#reg_havechild').rules("add",{
 			haveChild : true
 		});

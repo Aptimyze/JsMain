@@ -755,7 +755,7 @@ font:12px Arial, Helvetica, sans-serif; color:#4a4a48;}
                 <!-- CasteMuslim Starts Here -->
 			~if !($record_id neq '' and $CASTE_MUSLIM neq '')`
 	        <li>
-                    <div id ="CasteMuslimDiv"  style = "display:none;">
+                    <div id ="CasteMuslimDiv"  ~if $CASTE_MUSLIM eq ''`style = "display:none;"~/if`>
 			<div id="casteMuslim_submit_err_label">
 			<div id="casteMuslim_sugar"~if $Edit eq ''`style="display:inline;"~/if`>
 				<span id="casteMuslim_section"> 

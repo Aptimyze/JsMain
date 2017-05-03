@@ -328,7 +328,7 @@ label {
 						
 							~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
 							
-						 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_caste' class='error'>
+						 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_sectMuslim' class='error'>
 							<label class="l1">&nbsp;</label>
 							<div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
 						</div>
