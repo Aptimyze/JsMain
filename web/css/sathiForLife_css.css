@@ -60,6 +60,7 @@ i {
 .fsos2 {font-family: 'Open Sans', sans-serif;font-weight:600}
 .fsos3 {font-family: 'Open Sans', sans-serif;font-weight:700}
  
+.f10{font-size:10px} 
 .f11{font-size:11px}
 .f12{font-size:12px}
 .f13{font-size:13px}
@@ -140,9 +141,11 @@ box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);}
 .pad5{padding:10px 15px}
 .pl28{padding-left:28px}
 .pb20{padding-bottom:20px}
+.pb30{padding-bottom: 30px}
 .pb50{padding-bottom:50px}
 .pr8{padding-right:8px}
 .m10{margin:10px}
+.mt10{margin-top: 10px}
 .mt40{margin-top:40px}
 .pad6{padding:5px 0 20px 0}
 .pad7{padding:20px 10px 10px 10px}
@@ -151,7 +154,7 @@ box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);}
 .pr10{padding-right:10px}
 .pt5{padding-top: 5px}
 
-.upbtn{ background:none;border:1px solid #ec3963; color:#ec3963; font-size:15px;width:100%; line-height:39px; margin-top:21px}
+.upbtn{ background:none;border:1px solid #ec3963; color:#ec3963; font-size:15px;width:100%; line-height:39px; margin-top:10px}
 .subbtn{background:#ec3963; color:#fff; font-family:"Arial", Gadget, sans-serif; font-size:15px; font-weight:bold;  width:100%; border:0; line-height:40px;border:0}
 .cls1{width:218px; font-style:italic; line-height:25px}
  
@@ -174,3 +177,4 @@ box-shadow: 0px 5px 7px 0px rgba(166,156,166,1);}
 
 .brdr1{border:1px solid #ec3963}
 .vTop{vertical-align:top}
+.vishid{visibility: hidden;}

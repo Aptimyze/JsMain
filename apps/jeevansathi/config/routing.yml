@@ -293,7 +293,7 @@ settings:
   param: { module: settings, action: index }
 
 sathiForLife:
-  url:   /sathiForLife/
+  url:   /SathiForLife/
   param: { module: sathiForLife, action: index }
 
 # generic rules

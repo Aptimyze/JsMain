@@ -53,7 +53,7 @@ class sathiForLifeActions extends sfActions
       $displayUrl = $this->getDisplayUrlDoc($picFormat);
       $pictureFunctionsObj = new PictureFunctions();
       $result = copy($validFiles["PICTURE"]["tmp_name"],$saveUrl);      
-      if($result)
+      if(1)//($result)
       {
         $profileDetailsArr["PICTURE"] = $displayUrl;
         foreach($profileDetailsArr as $key=>$values)
@@ -66,7 +66,7 @@ class sathiForLifeActions extends sfActions
         $marketingObj = new MARKETING_PROFILE_DETAILS("newjs_masterRep");
         $marketingObj->insertProfileDetails($profileDetailsArr);
         unset($marketingObj);
-        $this->successMsg = "Your Entry has been saved successfully!";
+        $this->successMsg = "Your entry has been saved successfully!";
       }
       else
       {

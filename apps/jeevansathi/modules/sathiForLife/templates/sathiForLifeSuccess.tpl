@@ -25,7 +25,7 @@
 
 <!--start:content-->
 <div class="container pad1 widb">
-  <p class="fs2 f14 color2 txtc lh18">We are inviting you to send us your #MySathiMoments - A <strong>photograph/10 second video</strong> of those unique moments you've shared with theone you love. <strong>Dinner dates, Movie Nights, Long Drives, Exotic Travels</strong> - we'd love to see all those precious moments that define your world.</p>
+  <p class="fs2 f14 color2 txtc lh18">We are inviting you to send us your #MySathiMoments - A <strong>photograph/10 second video</strong> of those unique moments you've shared with the one you love. <strong>Dinner dates, Movie Nights, Long Drives, Exotic Travels</strong> - we'd love to see all those precious moments that define your world.</p>
   <p class="pt50 color3 f20 fs1 txtc widc maut"> The best entries stand a chance to win a <span class = "fsos2">holiday of a lifetime</span>, a <span class = "fsos2">photo-shoot opportunity</span> and other <span class = "fsos2">exciting prizes</span>. </p>
 </div>
 <!--end:content--> 
@@ -41,7 +41,7 @@
       <div class="bg2 fullw shade1">
       
       <div class="pad3 fs2" id="submitform">
-        <form id="submitform" action="/sathiForLife/?submitForm=1" method="POST" enctype="multipart/form-data">
+        <form id="submitform" action="/SathiForLife/?submitForm=1" method="POST" enctype="multipart/form-data">
           <div class="clearfix pb20"> 
             <!--start:name field-->
             <div class="fl widf">
@@ -94,10 +94,12 @@
             <span id="hashtagError" class="dn pt5 color6 fr f11 pr8"></span>
             <input class="wid95p" name="DESCRIPTION" id="hashtagField" type="text" placeholder="Example: #FoodieSathi"/>
           </div>
-          <div class="pb50 clearfix">
+          <div class="pb30 clearfix">
           	<div class="fl widf">
+              <div id="photoError" class="f11 color6 vishid">Please upload photo.</div>
             	<input name="PICTURE" class="dn" type="file" name="fileToUpload" id="fileToUpload" onchange="readURL(this);" accept="image/gif, image/jpeg"/>
                 <div id="upBtn" class="upbtn txtc">Upload photo</div>
+                <label class="mt10 f10 txtc">(Please upload a jpg/gif image of size less than 6MB)</label>
                 
             </div>
             <div class="fr widf">
@@ -130,7 +132,7 @@
           <div class="widf">
           	<input type="submit" id="subbtn" class="subbtn txtc" value="Submit" />
           </div>
-          <div class="fullw txtc f12 pt20 color2">If unable to submit, mail your entries to sathiforlife@gmail.com</div>
+          <div class="fullw txtc f12 pt20 color2">If unable to submit, mail your entries to <a href="mailto:sathiforlife@gmail.com">sathiforlife@gmail.com</a></div>
         </form>
       </div>
     </div>
@@ -236,12 +238,12 @@
  
       <div class="fl bdr1" style="padding-right:20px">
  
-        <div class="bg4 pad5 txtc"> <a href="#" class="color5 f13 fsos2">Terms and Conditions</a> </div>
+       <a href="#" class="color5 f13 fsos2">* Terms and Conditions</a> 
  
       </div>
       <div class="fr color5 fsos2" style="padding-left:20px">
         <p>Got any questions?</p>
-        <p>E-mail us at: sathiforlife@gmail.com</p>
+        <p>E-mail us at: <a class="color5" href="mailto:sathiforlife@gmail.com">sathiforlife@gmail.com</a></p>
  
       </div>
  
