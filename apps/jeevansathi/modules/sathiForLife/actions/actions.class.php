@@ -139,7 +139,7 @@ class sathiForLifeActions extends sfActions
       $type=".jpg";
     else
       $type=".".$type;            
-    $displayUrl="JS/uploads/sathiForLife/".$this->docUrl.$type;
+    $displayUrl="JS/uploads/sathi/".$this->docUrl.$type;
     return $displayUrl;
   }
 
