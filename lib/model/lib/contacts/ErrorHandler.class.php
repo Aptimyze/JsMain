@@ -754,7 +754,7 @@ class ErrorHandler
 			    }
 				$this->setErrorType('LIMIT','TOTAL');
 			}
-			else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
+		/*	else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
 			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));
 				if($this->contactHandlerObj->getPageSource()=='Search')
@@ -766,7 +766,7 @@ class ErrorHandler
 				
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
 					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
-			}
+			}*/
 		}
 		return $error;		
 	}
