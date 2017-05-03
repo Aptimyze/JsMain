@@ -274,6 +274,13 @@ function validate_mtongue($mtongue,&$is_error,&$errors){
 			$errors[]='mtongue_err1';
 				}
 }
+function validate_jamaat($jamaat,&$is_error,&$errors){
+ 		if(!$jamaat)
+                 {
+                         $is_error++;
+ 			$errors[]='jamaat_err1';
+ 				}
+ }
 function validate_relationship($relationship,&$is_error,&$errors){
 	if(!$relationship)
 	{

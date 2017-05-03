@@ -847,6 +847,11 @@ $religion_val = $religion_temp[0];
 			  }
 
 //Validation ends here
+//Starts validating JAMAAT
+               if($religion == '2' && $caste == '152')
+                 validate_jamaat($jamaat,$is_error,$errors);
+ 
+ //Ends validating JAMAAT
 //	}
 if(!empty($record_id)){		
 	if(!$degree)
@@ -905,6 +910,7 @@ if(!empty($record_id)){
 		$smarty->assign("OCCUPATION",$occupation);
 		$smarty->assign("RELIGION",$religion);
 		$smarty->assign("CASTE",$caste);
+                $smarty->assign("JAMAAT",$jamaat);
 		$smarty->assign("MATCH_ALERT",$match_alerts);
 		//$smarty->assign("SPEAK_URDU",$speak_urdu);
                
@@ -1150,6 +1156,10 @@ if(!empty($record_id)){
 				$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
 				logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
 			}
+                        if($jamaat){
+                            $sql = "INSERT INTO newjs.JP_MUSLIM(PROFILEID,JAMAAT) VALUES ('$result','$jamaat')";
+                            mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
+                        }
 //			$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
 //			mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
 //			$id=mysql_insert_id_js();
@@ -1327,7 +1337,7 @@ if(!empty($record_id)){
 		
 		//added by Neha Verma for archiving contact info
 		//EMAIL
-
+                    
 		if($email!='')
 		{
 			$sql_id= "INSERT INTO newjs.CONTACT_ARCHIVE (PROFILEID,FIELD) VALUES($id,'EMAIL')";
@@ -1956,6 +1966,28 @@ else
 			}
 			$smarty->assign("religion",$option_string);
 
+                        $sql = "select SQL_CACHE VALUE,LABEL from JAMAAT ORDER BY SORTBY";
+ 			$res = mysql_query_decide($sql) or logError("error",$sql);
+ 			while($row = mysql_fetch_array($res))
+ 			{
+ 				$jamaat_label_arr[] = $row['LABEL'];
+ 				$jamaat_value = $row['VALUE'];
+ 				$jamaat_value_arr[] = $jamaat_value;
+ 			}
+ 			$option_string="";		
+ 			for($i=0;$i<count($jamaat_value_arr);$i++)
+ 			{
+ 				if($jamaat_lead)
+ 				      $jamaat_val=$jamaat_lead;
+ 
+ 				$temp_rel = explode("|X|",$jamaat_value_arr[$i]);
+ 
+ 				if($jamaat_val == $temp_rel[0])
+ 					$option_string.= "<option value=\"$jamaat_value_arr[$i]\" selected=\"yes\">$jamaat_label_arr[$i]</option>";
+ 				else
+ 					$option_string.= "<option value=\"$jamaat_value_arr[$i]\">$jamaat_label_arr[$i]</option>";
+ 			}
+ 			$smarty->assign("jamaat",$option_string);
 			$curDate=date('Y', JSstrToTime('-6570 days'));
 			for($i=$curDate;$i>=1941;$i--)
 				     $yearArray[]=$i;
