@@ -9,7 +9,8 @@ var listingInputData = [],
     loggingEnabledPC = false,
     clearTimedOut,
     listingPhotoRequestCompleted = ",",
-    localStorageExists = isStorageExist();
+    localStorageExists = isStorageExist(),
+    rosterMsgTime= '0';
 
 /*clearNonRosterPollingInterval
 function to stop polling for non roster webservice api 
@@ -2032,7 +2033,7 @@ $(document).ready(function () {
             "ip":"192.168.182.77",
             "from":from,
             "to": to,
-            "check":"2",
+            "check":"1",
             "id":generateChatHistoryID("received")
             });
             $.myObj.ajax({
@@ -2053,9 +2054,6 @@ $(document).ready(function () {
                         }
                         if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
                             $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
-                        }
-                        else{
-                            $("#rosterDeleteMsg_"+to).html(msg);
                         }
                     }
                 },

@@ -2564,9 +2564,13 @@ JsChat.prototype = {
                                     $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
                                     if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0){
                                         //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-                                        var selfJID = getConnectedUserJID();
-                                        curElem.rosterDeleteChatBoxReponse(selfJID,userId);
-                                        //console.log("added 1");
+                                        var currentT = new Date().getTime();
+                                        if((currentT - rosterMsgTime)> 500){
+                                            var selfJID = getConnectedUserJID();
+                                            curElem.rosterDeleteChatBoxReponse(selfJID,userId);
+                                            //console.log("added 1");
+                                            rosterMsgTime = currentT;
+                                            }
                                         }
                                     
                                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
