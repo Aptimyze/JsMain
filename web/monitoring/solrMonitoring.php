@@ -14,26 +14,34 @@ $urlTocheckArray = array(
     5=>array("append"=>'/select?q=*:*&fq=GENDER:(M)'.$daily,"counter"=>160),
 );
 $downServers = array();
-foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
-        $index = array_search($solrUrl, JsConstants::$solrServerUrls);
-        if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
-                foreach($urlTocheckArray as $checkData){
-                        $url = $solrUrl.$checkData["append"]."&wt=phps";
-                        $res = CommonUtility::sendCurlPostRequest($url,'nouse=1',"100");
-                        $res = unserialize($res);
-                        $totalResults = $res['response']['numFound'];
-                        if($totalResults < $checkData["counter"])
-                        {               
-                                if($res == ""){
-                                        $downServers[] = "down server ".$key;
-                                        $msg="$key server is down";
-                                }else{
-                                        $fromServer[]="from server ".$key;
-                                        $msg="TotalResults:$totalResults , Expected:More than ".$checkData["counter"];
+$sendSmsCounter = array();
+for($i=0;$i<2;$i++){
+        foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
+                $index = array_search($solrUrl, JsConstants::$solrServerUrls);
+                if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
+                        foreach($urlTocheckArray as $checkData){
+                                $url = $solrUrl.$checkData["append"]."&wt=phps";
+                                $res = CommonUtility::sendCurlPostRequest($url,'nouse=1',"100");
+                                $res = unserialize($res);
+                                $totalResults = $res['response']['numFound'];
+                                if($totalResults < $checkData["counter"])
+                                {               
+                                        if($res == ""){
+                                                $downServers[] = "down server ".$key;
+                                                if(isset($sendSmsCounter[$key])){
+                                                        $sendSmsCounter[$key] = $sendSmsCounter[$key] + 1;
+                                                }else{
+                                                        $sendSmsCounter[$key] = 1;
+                                                }
+                                                $msg="$key server is down";
+                                        }else{
+                                                $fromServer[]="from server ".$key;
+                                                $msg="TotalResults:$totalResults , Expected:More than ".$checkData["counter"];
+                                        }
                                 }
                         }
                 }
-        }
+        }sleep(2);
 }
 $downServers = array_unique($downServers);
 $fromServer = array_unique($fromServer);
@@ -72,15 +80,29 @@ if(!empty($fromServer) || !empty($downServers))
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         }
         if(!empty($downServers)){
-                $mobile         = "9818424749";
-                $date = date("Y-m-d h");
-                $str=implode(",", $downServers);
-                $message        = "Mysql Error Count have reached solr $date within 5 minutes $str";
-                $from           = "JSSRVR";
-                $profileid      = "144111";
-                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                $sendSMS = 0;
+                foreach($sendSmsCounter as $counter){
+                        if($counter > 3){
+                                $sendSMS = 1;
+                        }
+                }
+                if($sendSMS == 1){
+                        $mobile         = "9818424749";
+                        $date = date("Y-m-d h");
+                        $str=implode(",", $downServers);
+                        $message        = "Mysql Error Count have reached solr $date within 5 minutes $str";
+                        $from           = "JSSRVR";
+                        $profileid      = "144111";
+                        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
-                $mobile         = "9650350387";
-                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        $mobile         = "9650350387";
+                        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        
+                        $mobile         = "8376883735";
+                        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        
+                        $mobile         = "9873639543";
+                        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                }
         }
 }
