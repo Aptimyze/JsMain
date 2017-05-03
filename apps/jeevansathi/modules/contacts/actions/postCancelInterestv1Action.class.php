@@ -75,18 +75,18 @@ class postCancelInterestv1Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = array();
+		$request = sfContext::getInstance()->getRequest();
+
 		if($this->contactEngineObj->messageId)
 		{
-		if ($this->getParameter($request,"coming_from") == "search")
+			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
+		}
+		else if ($request->getParameter("coming_from") == "search")
 		{   
-			$responseButtonArray["buttons"][] = $buttonObj->getInitiateButton();
+			$responseButtonArray["buttons"][] = ButtonResponseApi::getInitiateButton();
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
 			$responseButtonArray["buttons"][] = $buttonObj->getIgnoreButton('','','',true,'Ignore');
-			$responseButtonArray["buttons"][] = $buttonObj->getContactDetailsButton();
-		}
-		else{
-			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
-			}
+			$responseButtonArray["buttons"][] = ButtonResponseApi::getContactDetailsButton();
 		}
 		else
 		{
