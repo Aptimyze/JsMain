@@ -78,7 +78,7 @@
             <div class="fl widf">
               <label class="wid40p dispibl">Phone No.</label>
               <span id="phoneError" class="dn pt5 color6 fr f11 pr8"></span>
-              <input class="wid90p" name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+              <input maxlength="10" class="wid90p" name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
             </div>
             <!--end:phone no. field--> 
             <!--start:email field-->

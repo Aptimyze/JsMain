@@ -35,7 +35,8 @@ class sathiForLifeActions extends sfActions
   {
     $requiredDetailsArr = array("NAME","AGE","PARTNER_NAME","USERNAME","PHONE","EMAIL","DESCRIPTION","PICTURE","VIDEO_URL","SATHI_STORY","TWITTER_HANDLE","INSTA_USERNAME");
 
-    $filesArr = array("PICTURE" => array( "name" => "96181271-1486279920.jpeg","type" => "image/jpeg","tmp_name" => "/tmp/phpS2JWcD","error" => 0 ,"size" => "48161" ) );
+    $filesArr = $_FILES;
+
     if(is_array($filesArr))
     {
       $files = $this->validateFiles($filesArr);
@@ -51,9 +52,9 @@ class sathiForLifeActions extends sfActions
       $picFormat = $this->getImageType($validFiles["PICTURE"]["type"]);
       $saveUrl = $this->getSaveUrl($picFormat,$validFiles["PICTURE"]["name"]);
       $displayUrl = $this->getDisplayUrlDoc($picFormat);
-      $pictureFunctionsObj = new PictureFunctions();
-      $result = copy($validFiles["PICTURE"]["tmp_name"],$saveUrl);      
-      if(1)//($result)
+      $pictureFunctionsObj = new PictureFunctions();      
+      $result = $pictureFunctionsObj->moveImage($validFiles["PICTURE"]["tmp_name"],$saveUrl);      
+      if($result)
       {
         $profileDetailsArr["PICTURE"] = $displayUrl;
         foreach($profileDetailsArr as $key=>$values)
@@ -116,7 +117,7 @@ class sathiForLifeActions extends sfActions
 
   public function getSaveUrl($type="",$picName)
   {
-    $uploadDir = sfConfig::get("sf_upload_dir")."/sathiForLife/";
+    $uploadDir = sfConfig::get("sf_upload_dir")."/sathi/";
     if(!is_dir($uploadDir)){
       mkdir($uploadDir);
     }
@@ -127,7 +128,7 @@ class sathiForLifeActions extends sfActions
       $type=".".$type;
     $picName = explode(".",$picName);
     $this->docUrl = $picName[0].rand();
-    $saveUrl=sfConfig::get("sf_upload_dir")."/sathiForLife/".$this->docUrl.$type;
+    $saveUrl=sfConfig::get("sf_upload_dir")."/sathi/".$this->docUrl.$type;
     return $saveUrl;
   }
 

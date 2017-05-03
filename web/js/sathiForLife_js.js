@@ -25,6 +25,10 @@ $(document).ready(function(e) {
             validForm = false;
             $("#photoError").removeClass("vishid");
         }
+        if($("#phoneField").val().length != 10) {
+            validForm = false;
+            $("#phoneError").removeClass("dn").html("Please enter a 10 digit number")
+        }
 		if(validForm == false) {
 		  event.preventDefault();
 		}
