@@ -536,7 +536,12 @@ class MessageCommunication
 	 * @return string
 	 */
 	public function getMARKCC()
-	{
+	{ 
+    if(is_null($this->MARKCC) || 0 === strlen($this->MARKCC)) {
+      //use default config
+      $this->MARKCC = MessageCommunication::NO;
+    }
+    
 		return $this->MARKCC;
 	}
 	
