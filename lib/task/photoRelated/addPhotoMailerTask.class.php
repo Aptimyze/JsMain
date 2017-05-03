@@ -112,7 +112,7 @@ Your photos are safe with us and will carry our watermark. There is absolutely n
         	$subject["subject"] = "Make your photo visible ONLY to accepted contacts.Click to learn how";
         	$subject["body"] = 'Uploading photos on Jeevansathi is safe and easy.<br><br>
 You can make your photo visible ONLY to people you send interests to and people you accept.Your photos will not be visible to the rest of the members on the site.
-You will have to select "Vissible on Accept" setting while uploading your photographs.<br><br>
+You will have to select "Visible on Accept" setting while uploading your photographs.<br><br>
 You will get an increased response from the members you send interest to as they will be able to see your photo.<br><br>
 Your photos will carry our watermark.<br>
 There is absolutely no reason to wait !<br><br>';
