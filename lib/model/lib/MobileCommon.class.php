@@ -130,8 +130,8 @@ class MobileCommon{
 	{
 		$bc=new BrowserCheck;
 		$k=$bc->IsHtml5Browser();
-		if(sfContext::getInstance()->getRequest()->getCookie("TO_OLD_JSMS")==1)
-			$k=0;
+//		if(sfContext::getInstance()->getRequest()->getCookie("TO_OLD_JSMS")==1)
+//			$k=0;
 		if(MobileCommon::isMobile() && !MobileCommon::isApp())
 		{
 			if($k)
