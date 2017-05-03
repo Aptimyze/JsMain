@@ -83,6 +83,7 @@ class postCancelInterestv1Action extends sfAction
 		}
 		else if ($this->contactEngineObj->messageId && $request->getParameter("coming_from") == "search")
 		{   
+			$request->setParameter("coming_from","search");
 			$responseButtonArray["buttons"][] = ButtonResponseApi::getInitiateButton();
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
 			$responseButtonArray["buttons"][] = $buttonObj->getIgnoreButton('','','',true,'Ignore');
