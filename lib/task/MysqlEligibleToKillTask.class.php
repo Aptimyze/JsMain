@@ -207,7 +207,7 @@ EOF;
       $this->log("Kill ".$iProcessID.";");
       $arrInfo[] = $iProcessID." => ".trim($szQueryInfo['query']).", TIME : ".trim($szQueryInfo['time']);
     }
-    $this->logSection("Queries Information is as follows : ");
+    $this->logSection("Queries Information is as follows : ", "");
     $this->log(implode("\n",$arrInfo));
     
   }
