@@ -553,6 +553,7 @@
             eraseCookie('mainMem');
             eraseCookie('mainMemDur');
             eraseCookie('selectedVas');
+            createCookie('redirectedFrom','backendLink',0);
             ~if $data.subscription_id`
             createCookie('mainMem', '~$data.subscription_id`', 0);
             ~/if`
