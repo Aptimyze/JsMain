@@ -449,7 +449,7 @@ $js_arr[]=array("jsms/common/CommonFunctions"                                   
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
-$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                             => "63");
+$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                              => "64");
 $js_arr[]=array("jsms/search/JsmsSearch"   => "2");
 $js_arr[]=array("jsms/search/MobileSearchCommon"   => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular_min"  => "1");
@@ -551,7 +551,7 @@ $js_arr[]=array("jspc/common/phoneVeriLayers_js"                   => "17");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_slider"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_js"                              => "39");
-$js_arr[]=array("jspc/membership/upgrade_mem_js"                             => "16");
+$js_arr[]=array("jspc/membership/upgrade_mem_js"                              => "17");
 $js_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_scrollpane"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_mousewheel"    => "1");
