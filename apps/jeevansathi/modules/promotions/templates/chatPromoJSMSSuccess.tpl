@@ -9,7 +9,7 @@
                     <li>Chat with real time online matches and get instant response. </li>                    
                 </ul> 
                 <p class="fontreg f14 pt10 pb20">All this and much more !!</p>    	
-            	<a class="closeCP" href=""></a>
+            	<a class="closeCP pt20" href=""></a>
                 <div>
               	<img src="/images/chatPromoImg1.png" class="txtc"/>
                 </div>
