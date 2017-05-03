@@ -61,6 +61,7 @@ class FieldForm extends sfForm
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
           $sendSMSToPhone = $this->loggedInObj->getPHONE_MOB();
+          $prevManglikStatus = $this->loggedInObj->getMANGLIK();
           $fieldsEdited = array();
           $sendSMS = ProfileEnums::$sendInstantMessagesForFields;
 	  foreach($this->formValues as $field_name=>$value){
@@ -70,7 +71,8 @@ class FieldForm extends sfForm
 		}
 		if(array_key_exists($field_name,$sendSMS))
 		{
-			$fieldsEdited[] = $field_name;
+                        if($field_name != "MANGLIK" || ($field_name == "MANGLIK" && ($prevManglikStatus !="S0" && $prevManglikStatus !="S")))
+                                $fieldsEdited[] = $field_name;
 		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
@@ -173,7 +175,6 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-          
           
 		//Native Place Update
     if(count($nativePlaceArr)){

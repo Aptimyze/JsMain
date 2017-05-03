@@ -88,6 +88,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
 		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
 		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
+		if($this->smsKey=='CRITICAL_INFORMATION') return true;
 
 		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
