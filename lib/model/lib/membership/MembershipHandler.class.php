@@ -2360,6 +2360,7 @@ class MembershipHandler
             $payDetObj = new BILLING_PAYMENT_DETAIL();
             foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
                 $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $this->deleteRedisForFreeToPaid($source, $payDetData["PROFILEID"]);
                 $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
                 if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
                     $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
@@ -2574,5 +2575,11 @@ class MembershipHandler
         ob_end_clean();
         $data = json_decode($output, true);
         return $data;
+    }
+    
+    public function deleteRedisForFreeToPaid($source,$profileid){
+        if($source == 'CANCEL' || $source == 'CHARGE_BACK' || $source == 'BOUNCE'){
+            JsMemcache::getInstance()->remove("FreeToP_$profileid");
+        }
     }
 }
