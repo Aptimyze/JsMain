@@ -2024,6 +2024,45 @@ $(document).ready(function () {
             }
         });
        }
+       
+       objJsChat.rosterDeleteChatBoxReponse = function(from,to){
+           var headerData = {"Content-Type": "application/json"};
+           var inputParams = JSON.stringify({
+            "msg":"chatCheck",
+            "ip":"192.168.182.77",
+            "from":from,
+            "to": to,
+            "check":"2",
+            "id":generateChatHistoryID("received")
+            });
+            $.myObj.ajax({
+                url: listingWebServiceUrl["rosterRemoveMsg"],
+                dataType: 'json',
+                type: 'POST',
+                cache:false,
+                async: true,
+                timeout: 60000,
+                headers:headerData,
+                data: inputParams,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    if(response["header"]["status"] == 400){
+                        var msg = response["data"]["buttondetails"]["infomsglabel"];
+                        if(msg == undefined){
+                            msg = objJsChat._rosterDeleteChatBoxMsg;
+                        }
+                        if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
+                            $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                        }
+                        else{
+                            $("#rosterDeleteMsg_"+to).html(msg);
+                        }
+                    }
+                },
+                error: function (xhr) {
+                }
+            });
+       }
         objJsChat.start();
     }
 

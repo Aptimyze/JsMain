@@ -80,7 +80,7 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`"};
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`","rosterRemoveMsg":"~JsConstants::$chatListingWebServiceUrl['rosterRemoveMsg']`"};
         var nonRosterRefreshUpdate = {"dpp":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Paid']`"},"shortlist":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Paid']`"}};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
