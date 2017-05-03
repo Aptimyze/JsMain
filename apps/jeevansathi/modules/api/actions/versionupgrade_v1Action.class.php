@@ -37,6 +37,7 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["updateInfo"]['optionalUpgradeVersion']=  ApiRequestHandler::$ANDROID_OPTIONAL_UPGRADE_VERSION;
 		$this->defaultArray["updateInfo"]['forceUpgradeVersion']=  ApiRequestHandler::$ANDROID_FORCE_UPGRADE_VERSION;
 		$this->defaultArray["updateInfo"]['updateFeatures']=self::$updateArray;
+		$this->defaultArray["RATE_US_BEHAVIORAL_CAP"]=4;
                 
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiObj->setResponseBody($this->defaultArray);
