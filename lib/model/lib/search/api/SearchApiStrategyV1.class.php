@@ -729,6 +729,7 @@ class SearchApiStrategyV1
 			if($value==self::contactNoLabel)		
 			{  
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
+				$page = '';
 				if($this->getSearchType($SearchParamtersObj->getSEARCH_TYPE()) == '' && MobileCommon::isApp() =="A")
 				$page['comingFromPage'] = 'search';
 				$value = ButtonResponseApi::getInitiateButton($page);
