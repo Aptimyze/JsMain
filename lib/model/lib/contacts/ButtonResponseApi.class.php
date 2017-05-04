@@ -258,11 +258,15 @@ Class ButtonResponseApi
             }
             return (self::buttonMerge($button,$enable));
     }
-	public static function getCancelInterestButton()
+	public static function getCancelInterestButton($showNewButtons = '')
 	{
 		$button["iconid"] = IdToAppImagesMapping::CANCEL_INTEREST;
 		$button["label"]  = "Cancel Interest";
 		$button["action"] = "CANCEL_INTEREST";
+		if($showNewButtons == 'search')
+		{
+			 $button["params"]  = "&coming_from=search";
+		}
 		$button           = self::buttonMerge($button);
 		return $button;
 	}

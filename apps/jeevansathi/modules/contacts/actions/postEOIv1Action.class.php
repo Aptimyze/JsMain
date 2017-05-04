@@ -109,7 +109,7 @@ class postEOIv1Action extends sfAction
 		{   
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
-			$responseButtonArray["buttons"][] = $buttonObj->getCancelInterestButton();
+			$responseButtonArray["buttons"][] = $buttonObj->getCancelInterestButton('search');
 			$responseButtonArray["buttons"][] = $buttonObj->getContactDetailsButton();
 		}
 		else

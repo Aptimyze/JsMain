@@ -81,10 +81,10 @@ class postCancelInterestv1Action extends sfAction
 		{
 			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
 		}
-		else if ($this->contactEngineObj->messageId && $request->getParameter("coming_from") == "search")
+		else if ($request->getParameter("coming_from") == "search")
 		{   
-			$request->setParameter("coming_from","search");
-			$responseButtonArray["buttons"][] = ButtonResponseApi::getInitiateButton();
+			$page['comingFromPage'] = 'search';
+			$responseButtonArray["buttons"][] = ButtonResponseApi::getInitiateButton($page);
 			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
 			$responseButtonArray["buttons"][] = $buttonObj->getIgnoreButton('','','',true,'Ignore');
 			$responseButtonArray["buttons"][] = ButtonResponseApi::getContactDetailsButton();
