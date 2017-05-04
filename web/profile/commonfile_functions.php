@@ -128,7 +128,7 @@ $css_arr[]=array("jsms/membership/new_revamp_membership_css"              => "12
 $css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"                 => "21");
 $css_arr[]=array("jsms/register/regis_css"            => "14");
 $css_arr[]=array("jsms/register/reg_animate"   => "4");
-$css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"                   => "24");
+$css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"                    => "25");
 $css_arr[]=array("jsms/common/errorBar" => "1");
 $css_arr[]=array("jsms/contacts/contact_engine" => "2");
 $css_arr[]=array("mobreg_pass_css"     => "2");
@@ -464,7 +464,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                  
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                            => "50");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                        => "31");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                          => "89");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                   => "40");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                    => "41");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                          => "47");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
