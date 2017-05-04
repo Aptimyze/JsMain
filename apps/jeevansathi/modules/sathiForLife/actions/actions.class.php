@@ -95,7 +95,7 @@ class sathiForLifeActions extends sfActions
         elseif(!in_array($value["type"],$file_type_array))
           $fileArr["Error"][$key]="Use a valid image file ('jpg','jpeg','gif')";
         elseif($value["size"] > (sfConfig::get("app_max_photo_size")*1024*1024) )
-          $fileArr["Error"][$key]="Use a smaller image (Upto 6 MB)";
+          $fileArr["Error"][$key]="Use a smaller image (Upto 10 MB)";
         else
           $fileArr["Valid"][$key]=$value;
       }
