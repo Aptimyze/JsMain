@@ -729,6 +729,7 @@ class SearchApiStrategyV1
 			if($value==self::contactNoLabel)		
 			{
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
+				if($SearchParamtersObj->getSEARCH_TYPE() == '' && $this->channel =="A")
 				$page['comingFromPage'] = 'search';
 				$value = ButtonResponseApi::getInitiateButton($page);
 			}
