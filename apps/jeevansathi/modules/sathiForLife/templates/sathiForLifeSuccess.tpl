@@ -178,7 +178,7 @@
                 <p> it with the one you love</p>
               </div>
             </div>
-          <div class="pt10">
+          <div class="pt14">
             <div class="bg2 fullw shade1">
               <div class="pad7">
                 <ul class="imglist">
@@ -196,7 +196,7 @@
                   </li>
                   <li>
                     <img src="~sfConfig::get('app_img_url')`/images/sathi/ArtySathi.jpg" class="imgd"/>
-                    <p class="f13 fsos2 color2 pad6">#ArtySathi</p>
+                    <p class="f13 fsos2 color2 padChange">#ArtySathi</p>
                   </li>
                 </ul>
               </div>
