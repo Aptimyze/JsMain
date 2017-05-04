@@ -21,8 +21,8 @@ EOF;
     {
         sfContext::createInstance($this->configuration);
         ini_set('memory_limit', '-1');
-        $start_time = date("Y-m-d 00:00:00", (time()-86400));
-        $end_time = date("Y-m-d 23:59:59", (time()-86400));
+        $start_time = date("Y-m-d 00:00:00",(time()-86400));
+        $end_time = date("Y-m-d 23:59:59",(time()-86400));
 
         $billPaymentDet = new BILLING_PAYMENT_DETAIL('newjs_slave');
         $billPurDet = new billing_PURCHASE_DETAIL('newjs_slave');
@@ -116,7 +116,7 @@ EOF;
 	        	foreach($purDetArr as $key=>&$val){
 	        		$skipFlag = false;
 	        		if($v['PROFILEID'] == $val['PROFILEID'] && $v['BILLID'] == $val['BILLID'] && !in_array($val['BILLID'], $skipBillId)){
-	        			if(strpos($purArr[$val['BILLID']]['SERVICEID'],'NCP') !== false){
+	        			if(strpos($purArr[$val['BILLID']]['SERVICEID'],'NCP') !== false || strpos($purArr[$val['BILLID']]['SERVICEID'],'X') !== false){
 	        				$skipFlag = true;
 	        				$skipBillId[] = $val['BILLID'];
 	        			}
@@ -132,7 +132,6 @@ EOF;
 	        			$finalArr[$incrementID]['PAYMENT_DATE'] = $v['ENTRY_DT'];
 	        			$finalArr[$incrementID]['SERVICE_ACTIVATION_DATE'] = $val['START_DATE'];
 
-	        			
 	        			if($skipFlag){
 	        				$finalArr[$incrementID]['MEMBERSHIP_NAME'] = $servNameArr[@explode(",",$purArr[$val['BILLID']]['SERVICEID'])[0]];
 	        				if($purArr[$val['BILLID']]['MEM_UPGRADE'] == "MAIN" && !empty($finalArr[$incrementID]['MEMBERSHIP_NAME'])){
@@ -154,14 +153,14 @@ EOF;
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $val['NET_AMOUNT'] , 2);
 		        			}
 	        			}
-	        			
+	        		
 	        			if($val['PRICE']!=0){
 	        				$finalArr[$incrementID]['DISCOUNT'] = round(($val['DISCOUNT']/$val['PRICE'])*100,2)."%";
 	        			}
 	        			else{
 	        				$finalArr[$incrementID]['DISCOUNT'] = 0;
 	        			}
-
+	        			
 	        			if((($val['PROFILEID'] % 3) + 1) == 1){
 	        				$finalArr[$incrementID]['ACCEPTANCES'] = $newjsContactObj1->getContactAcceptanceCount($val['PROFILEID'],'BOTH');
 	        				$status = $newjsJpartnerObj1->isDppSetByUser($val['PROFILEID']);
@@ -179,7 +178,6 @@ EOF;
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "No";
 	        			}
 	        			$finalArr[$incrementID]['Paid earlier'] = $v['Paid earlier'];
-	        			//print_r($finalArr);
 	        			unset($status, $incrementID);
 	        		}
 	        	}
@@ -202,7 +200,7 @@ EOF;
 		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
 		//$to = "ankita.g@jeevansathi.com";
-		$cc = "ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com";
+		$cc = "rohan.mathur@jeevansathi.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com";
 		$from = "js-sums@jeevansathi.com";
 		$subject = "Daily Report on details of paying users";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
