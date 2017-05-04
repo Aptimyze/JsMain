@@ -159,9 +159,9 @@ class Branch:
                         not re.search(filterAuthor, commitAuthor):
                             continue # a different owner
                     comment = commitObj.getCommitSubject()
-                    if comment[:10] not in jira_ids and comment[:10] not in ignoreArray:
-                        print comment[:10]
-                        jira_ids.append(comment[:10])
+                    if comment[:15] not in jira_ids and comment[:15] not in ignoreArray:
+                        print comment[:15]
+                        jira_ids.append(comment[:15])
                     #print '  %s %s %s' % \
                     #    (commitID, commitAuthor, commitObj.getCommitSubject() )
 

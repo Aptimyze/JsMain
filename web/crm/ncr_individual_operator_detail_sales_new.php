@@ -40,7 +40,7 @@ if(authenticated($cid))
 	}
 			
 	if($operator_name != 'all'){
-		$sql ="SELECT PROFILEID, (AMOUNT-APPLE_COMMISSION) as AMOUNT, ENTRY_DT AS PAID_DT,ALLOTED_TO, MODE, ALLOT_TIME FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND ALLOTED_TO='$operator_name' ORDER BY ENTRY_DT DESC";	
+		$sql ="SELECT PROFILEID, AMOUNT, ENTRY_DT AS PAID_DT,ALLOTED_TO, MODE, ALLOT_TIME FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND ALLOTED_TO='$operator_name' ORDER BY ENTRY_DT DESC";
 	}
 	else{
 		$name=getname($cid);

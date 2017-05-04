@@ -659,6 +659,7 @@ class Membership
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
         $userObjTemp = $this->getTempUserObj();
+        $this->setRedisForFreeToPaid($userObjTemp);
         if($skipBill == true || in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateBillParams();
         } else {
@@ -2441,6 +2442,12 @@ class Membership
         
         $finalReceiptid = "JS-".$receiptId;
         return $finalReceiptid;
+    }
+    
+    public function setRedisForFreeToPaid($userObjTemp){
+        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE){
+            JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+        }
     }
 }
 ?>
