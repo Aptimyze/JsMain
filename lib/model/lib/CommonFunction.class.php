@@ -148,7 +148,10 @@ class CommonFunction
 		$loginProfile = LoggedInProfile::getInstance();
 		$pid = $loginProfile->getPROFILEID();
 		if(!isset($pid))
+		{
 			return $everPaid;
+		}
+
 		$payment = $billing->isPaidEver($pid);
 		if(is_array($payment) && $payment[$pid])
 		{
