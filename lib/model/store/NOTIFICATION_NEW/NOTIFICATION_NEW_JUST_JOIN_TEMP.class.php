@@ -21,9 +21,9 @@ class NOTIFICATION_NEW_JUST_JOIN_TEMP extends TABLE
 
     public function getProfiles($currentScript=0)
     {
-        $sql = "SELECT PROFILEID from $this->databaseName.JUST_JOIN_TEMP WHERE SCRIPT=:SCRIPT_NO";
+        $sql = "SELECT PROFILEID from $this->databaseName.JUST_JOIN_TEMP WHERE SCRIPT_NO=:SCRIPT_NO";
         $res = $this->db->prepare($sql);
-	$resInsert->bindValue(":SCRIPT", $currentScript, PDO::PARAM_INT);
+	$res->bindValue(":SCRIPT_NO", $currentScript, PDO::PARAM_INT);
         $res->execute();
         while($result = $res->fetch(PDO::FETCH_ASSOC)){
   		$profilesArr[] = $result['PROFILEID'];

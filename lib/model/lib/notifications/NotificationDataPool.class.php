@@ -73,6 +73,7 @@ class NotificationDataPool
     //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
+	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
 		if(is_array($logProfiles)){
