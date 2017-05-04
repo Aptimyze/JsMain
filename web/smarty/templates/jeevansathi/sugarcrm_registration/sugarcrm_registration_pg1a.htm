@@ -751,6 +751,34 @@ font:12px Arial, Helvetica, sans-serif; color:#4a4a48;}
 	        </li>
 			~/if`
 		<!-- Caste Ends Here -->
+                
+                <!-- Jamaat Starts Here -->
+ 			~if !($record_id neq '' and $JAMAAT neq '')`
+ 	        <li>
+                     <div id ="jamaatDiv"  ~if $JAMAAT eq ''`style = "display:none;"~/if`>
+ 			<div id="jamaat_submit_err_label">
+ 			<div id="jamaat_sugar"~if $Edit eq ''`style="display:inline;"~/if`>
+ 				<span id="jamaat_section"> 
+ 					
+ 					<label id="jamaat_label" class="l1">Jamaat<u>*</u> :</label>
+ 					<input type="hidden" name="jamaat_selected" value="~$JAMAAT`" >
+ 					<span id="jamaat_dropdown" style="display:inline">
+ 						<select name="jamaat" id="jamaat" class="sel_bgst fl" style="width:204px;">
+ 							<option value="">Please select</option>
+ 							~$jamaat`
+ 						</select>
+ 					</span>
+ 				</span>
+ 			</div>
+ 				<div id="jamaat_submit_err" style="display:none" class="err">
+ 					<label class="l1">&nbsp;</label>
+ 					<span id="jamaat_error" style="display:none">Please select a caste.</span>
+ 				</div>
+ 			</div>
+                     </div>
+ 	        </li>
+ 			~/if`
+ 		<!-- Caste Ends Here 
 ~if $record_id neq ''`
 		<!-- Highest Degree Starts from here -->
 	~if $DEGREE eq ''`

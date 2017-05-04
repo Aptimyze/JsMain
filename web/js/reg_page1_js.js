@@ -116,6 +116,9 @@ $(document).ready(function () {
 		$("#reg_caste").rules("add",{
 			checkSelectDropDown:true
 		});
+//                $("#reg_jamaat").rules("add",{
+//			checkSelectDropDown:true
+//		});
 		$("#reg_religion").rules("add",{
 			checkSelectDropDown:true
 		});
@@ -262,6 +265,14 @@ $(document).ready(function () {
 					}
 		}
 		);
+                $('#reg_caste').change(function(){
+				if(this.value=='152'){
+						$('#jamaat').css('display','inline');
+					}else
+					{
+						$('#jamaat').css('display','none');
+					}
+		});
 		$('#reg_havechild').rules("add",{
 			haveChild : true
 		});

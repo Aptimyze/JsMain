@@ -55,6 +55,9 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'string':
 			return new sfValidatorString(array('required'=>false));
 			break;
+                case 'jamaat':
+                        return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
+                        break;
 		case 'email':
 			$err_em_mes="This email is already registered in our system.";
                         if(!MobileCommon::isApp() && !MobileCommon::isMobile())

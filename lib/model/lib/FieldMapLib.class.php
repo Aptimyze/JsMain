@@ -10117,10 +10117,10 @@ case "jamaat":
 
     $arr=array(
 "1" => "Ahle Hadees",
-"2" => "Tablighi Jamaat",
-"3" => "Barelvi",
-"4" => "Deobandi",
-"5" => "Sufi"
+"2" => "Barelvi",
+"3" => "Deobandi",
+"4" => "Sufi",
+"5" => "Tablighi Jamaat"
 );
 default:
 

@@ -318,6 +318,26 @@ label {
 	        <br>
 		<div class="clr"></div>
 		<!-- Caste Ends Here -->
+                
+                 
+                 <!-- SectMuslim Starts Here -->
+ 	        <li id="jamaat" style="display:~if $form['jamaat']->hasError()`inline~else`none~/if`;">
+ 				<div id="jamaat_submit_err_label" >
+ 					<span id="jamaat_section"> 
+ 						<label id="jamaat_label" class="l1">Jamaat<u>*</u> :</label>
+ 						
+ 							~$form['jamaat']->render(['class'=>'sel_lng','tabindex'=>14])`
+ 							
+ 						 <div id="jamaat_err" style="display:~if $form['jamaat']->hasError()`inline~else`none~/if`;" for='reg_jamaat' class='error'>
+ 							<label class="l1">&nbsp;</label>
+ 							<div class="err_msg" id="jamaat_err_msg">~if $form['jamaat']->hasError()`~$form['jamaat']->getError()`~else`Please provide a jamaat.~/if`</div>
+ 						</div>
+ 					</span>
+ 				</div>
+ 	        </li>
+ 	        <br>
+ 		<div class="clr"></div>
+ 		<!-- SectMuslim Ends Here -->
 		<!-- City Starts from here -->
 				<li id="city_padding">
 					<div id="city_res_show_hide" style="width:290px;float:left">
