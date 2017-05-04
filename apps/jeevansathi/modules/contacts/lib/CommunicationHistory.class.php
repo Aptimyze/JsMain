@@ -232,13 +232,13 @@ class CommunicationHistory
 			foreach ($message_log as $key => $val) {
                                 if($val[self::$viewerKey])
                                 {
-                                    $CON_HISTORY[$start]["time"] = $key;
-                    				$CON_HISTORY[$start++]         = $val[self::$viewerKey];
+                    				$CON_HISTORY[$start]         = $val[self::$viewerKey];
+                                                $CON_HISTORY[$start++]["time"] = $key;
                                 }
                                 if($val[self::$viewedKey])
                                 {
-                                    $CON_HISTORY[$start]["time"] = $key;
-                    				$CON_HISTORY[$start++]         = $val[self::$viewedKey];
+                    				$CON_HISTORY[$start]         = $val[self::$viewedKey];
+                                                $CON_HISTORY[$start++]["time"] = $key;
                                 }
 			} else {
 			return false;
