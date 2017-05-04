@@ -8,20 +8,22 @@ class NOTIFICATION_NEW_JUST_JOIN_TEMP extends TABLE
         parent::__construct($dbname);
     }
 
-    public function addProfile($profileid)
+    public function addProfile($profileid,$currentScript=0)
     {
         $istTime = date("Y-m-d", strtotime('+9 hour 30 minutes'));
-        $sqlInsert = "INSERT IGNORE INTO  $this->databaseName.JUST_JOIN_TEMP(`PROFILEID` ,`ENTRY_DT`) VALUES (:PROFILEID,:ENTRY_DT)";
+        $sqlInsert = "INSERT IGNORE INTO  $this->databaseName.JUST_JOIN_TEMP(`PROFILEID`,`SCRIPT_NO`,`ENTRY_DT`) VALUES (:PROFILEID,:SCRIPT_NO,:ENTRY_DT)";
         $resInsert = $this->db->prepare($sqlInsert);
         $resInsert->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
         $resInsert->bindValue(":ENTRY_DT", $istTime, PDO::PARAM_STR); 
+        $resInsert->bindValue(":SCRIPT_NO", $currentScript, PDO::PARAM_INT);
         $resInsert->execute();
     }
 
-    public function getProfiles()
+    public function getProfiles($currentScript=0)
     {
-        $sql = "SELECT PROFILEID from $this->databaseName.JUST_JOIN_TEMP";
+        $sql = "SELECT PROFILEID from $this->databaseName.JUST_JOIN_TEMP WHERE SCRIPT=:SCRIPT_NO";
         $res = $this->db->prepare($sql);
+	$resInsert->bindValue(":SCRIPT", $currentScript, PDO::PARAM_INT);
         $res->execute();
         while($result = $res->fetch(PDO::FETCH_ASSOC)){
   		$profilesArr[] = $result['PROFILEID'];

@@ -68,18 +68,17 @@ class NotificationDataPool
 		return $dataAccumulated;
     }
 
-  public function getJustJoinData($applicableProfiles)
+  public function getJustJoinData($applicableProfiles,$logProfiles,$currentScript=0)
   {
     //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
-	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();	
-	$tempProfileArr = $tempObj->getProfiles();
-
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
-		if(in_array("$profileid", $tempProfileArr))
-			continue;
+		if(is_array($logProfiles)){
+			if(in_array("$profileid", $logProfiles))
+				continue;
+		}
                 $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
                 $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
@@ -88,7 +87,7 @@ class NotificationDataPool
                     $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
 
 		// Add logging for re-try logic
-		$tempObj->addProfile($profileid);
+		$tempObj->addProfile($profileid,$currentScript);
 
         }
         unset($loggedInProfileObj);

@@ -47,7 +47,7 @@ $this->addOptions(array(
         	$currentAndroidMaxVersion = $arguments["currentAndroidMaxVersion"];
         	$this->checkForUpdateApp($notificationKey, $androidMaxVersion, $currentAndroidMaxVersion);
                 $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion);
-                $appNotificationSchedulerObj->scheduleNotificationsForKey();
+                $appNotificationSchedulerObj->scheduleNotificationsForKey($currentScript);
                 $this->mailScheduleComplete($notificationKey,$noOfScripts,$currentScript);
   }
   
