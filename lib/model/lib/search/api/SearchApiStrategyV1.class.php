@@ -727,9 +727,9 @@ class SearchApiStrategyV1
 		if($key=='eoi_label')
 		{
 			if($value==self::contactNoLabel)		
-			{
+			{  
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
-				if($SearchParamtersObj->getSEARCH_TYPE() == '' && $this->channel =="A")
+				if($this->getSearchType($SearchParamtersObj->getSEARCH_TYPE()) == '' && MobileCommon::isApp() =="A")
 				$page['comingFromPage'] = 'search';
 				$value = ButtonResponseApi::getInitiateButton($page);
 			}
