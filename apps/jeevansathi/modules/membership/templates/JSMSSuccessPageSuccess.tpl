@@ -96,6 +96,10 @@
   });
   var username = "~$data.userDetails.USERNAME`";
   var email = "~$data.userDetails.EMAIL`";
+  if("~$data.device eq 'Android_app'`"){
+      var host = window.location.hostname;
+      $("#continueBtn a").attr('href','http://'+host+'/profile/mainmenu.php');
+    }
   setTimeout(function(){
     autoPopupFreshdesk(username,email);
   }, 90000);
