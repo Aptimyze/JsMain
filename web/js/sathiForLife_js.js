@@ -49,7 +49,7 @@ function readURL(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             photoUploaded = true;
-            //Manvi
+            
             $('#uploadLabel').html("Image uploaded successfully").addClass("color6");
             
         };
