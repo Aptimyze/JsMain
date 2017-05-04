@@ -728,8 +728,9 @@ class SearchApiStrategyV1
 		{
 			if($value==self::contactNoLabel)		
 			{  
+				$request = sfContext::getInstance()->getRequest();
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
-				if($this->getSearchType($SearchParamtersObj->getSEARCH_TYPE()) == '' && MobileCommon::isApp() =="A")
+				if(MobileCommon::isApp() =="A" /*&& $request->getParameter('API_APP_VERSION')>=96)*/)
 				$page['comingFromPage'] = 'search';
 				$value = ButtonResponseApi::getInitiateButton($page);
 			}
