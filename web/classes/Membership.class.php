@@ -659,6 +659,7 @@ class Membership
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
         $userObjTemp = $this->getTempUserObj();
+        $this->setRedisForFreeToPaid($userObjTemp);
         if($skipBill == true || in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateBillParams();
         } else {
@@ -950,6 +951,17 @@ class Membership
         elseif(strstr($this->serviceid, 'X')){
             $mainServ = $this->serviceid;
             $mainServDur = preg_replace("/[^0-9]/","",$mainServ);
+            $mainServArr = explode(",", $mainServ);
+            if(is_array($mainServArr)){
+                foreach ($mainServArr as $k1 => $v1) {
+                    if($v1 == 'XL'){
+                        $mainServDur = 'L';
+                    }
+                    else if(strstr($v1, 'X')){
+                        $mainServDur = preg_replace("/[^0-9]/","",$v1);
+                    }
+                }
+            }
             $serviceArr = array();
             foreach(VariableParams::$jsExclusiveComboAddon as $key => $val){
                 $serviceArr[] = $val.$mainServDur;
@@ -2430,6 +2442,12 @@ class Membership
         
         $finalReceiptid = "JS-".$receiptId;
         return $finalReceiptid;
+    }
+    
+    public function setRedisForFreeToPaid($userObjTemp){
+        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE){
+            JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+        }
     }
 }
 ?>
