@@ -178,6 +178,7 @@ class ApiResponseHandler
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
 		$output["userActionState"]=$this->userActionState;
+		$output["apiTimeTracking"]=(microtime(true)-sfContext::getInstance()->getRequest()->getParameter("startScriptTime"))/60;
 
 		//android chat on/off flag
 		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");
