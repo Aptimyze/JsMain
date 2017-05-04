@@ -82,4 +82,6 @@ class NotificationEnums
 
       // time criteria notification array	
       public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
+
+      public static $notificationTempLogArr =array('JUST_JOIN');	
 }
