@@ -49,6 +49,12 @@ function readURL(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             photoUploaded = true;
+            //Manvi
+            /*$('#imgTemp')
+                    .attr('src', e.target.result)
+                    .width(100)
+                    .height(100);
+            */
         };
         reader.readAsDataURL(input.files[0]);
     }
