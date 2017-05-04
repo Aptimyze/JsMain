@@ -170,7 +170,7 @@
             <div class="posrel txtc">
               <div class="posabs lquo2 pos1"></div>
               <div class="posabs rquo2 pos2"></div>
-              <div class="f18 fs1 color4 pt10 pb10">
+              <div class="f17 fs1 color4 pt10 pb10">
                 <p>Everything you do becomes so</p>
                 <p> much more fun when you do</p>
                 <p> it with the one you love</p>
@@ -213,7 +213,7 @@
     <p class="color4 f15 pb20 fsos3">Winners from Season 1 of #SathiforLife</p>
     <div class="dispt">
       <div class="disptc bdr2 pr10">
-        <div> <a href="https://www.youtube.com/watch?v=NBEvsHb3ZHA"><img src="~sfConfig::get('app_img_url')`/images/sathi/shruti-mohit.jpg"/> </a></div>
+        <div> <a target="_blank" href="https://www.youtube.com/watch?v=NBEvsHb3ZHA"><img src="~sfConfig::get('app_img_url')`/images/sathi/shruti-mohit.jpg"/> </a></div>
         <P class="fsos3 f13 color2 pt12">Shruti and Mohit</P>
         <div class="clearfix fsos1 color2 f13 cls1 pt20 pb10">
           <div class="dispib lquo"></div>
@@ -222,7 +222,7 @@
         </div>
       </div>
       <div class="disptc bdr2 pr10 pl10">
-        <div> <a href="https://www.youtube.com/watch?v=AKaCg8M24ks"><img src="~sfConfig::get('app_img_url')`/images/sathi/Nitesh-Esha.jpg"/></a> </div>
+        <div> <a target="_blank" href="https://www.youtube.com/watch?v=AKaCg8M24ks"><img src="~sfConfig::get('app_img_url')`/images/sathi/Nitesh-Esha.jpg"/></a> </div>
         <P class="fsos3 f13 color2 pt12">Nitesh and Esha</P>
         <div class="clearfix fsos1 color2 f13 cls1 pt20 pb10">
           <div class="dispib lquo"></div>
@@ -231,7 +231,7 @@
         </div>
       </div>
       <div class="disptc bdr2 pr10 pl10">
-        <div><a href="https://www.youtube.com/watch?v=6Sdy_hdudSc"> <img src="~sfConfig::get('app_img_url')`/images/sathi/Archika-Akshat.jpg"/> </a></div>
+        <div><a target="_blank" href="https://www.youtube.com/watch?v=6Sdy_hdudSc"> <img src="~sfConfig::get('app_img_url')`/images/sathi/Archika-Akshat.jpg"/> </a></div>
         <P class="fsos3 f13 color2 pt12">Archika and Akshat</P>
         <div class="clearfix fsos1 color2 f13 cls1 pt20 pb10">
           <div class="dispib lquo"></div>
@@ -240,7 +240,7 @@
         </div>
       </div>
       <div class="disptc pl10">
-        <div> <a href="https://www.youtube.com/watch?v=uSl3HtJURTM"><img src="~sfConfig::get('app_img_url')`/images/sathi/Nishit-Shakeel.jpg"/> </a></div>
+        <div> <a target="_blank" href="https://www.youtube.com/watch?v=uSl3HtJURTM"><img src="~sfConfig::get('app_img_url')`/images/sathi/Nishit-Shakeel.jpg"/> </a></div>
         <P class="fsos3 f13 color2 pt12">Nishit and Shakeel </P>
         <div class="clearfix fsos1 color2 f13 cls1 pt20 pb10">
           <div class="dispib lquo"></div>
