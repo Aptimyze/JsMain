@@ -70,7 +70,14 @@ EOF;
 
 
 		/* populate logic */
-		$interval="6 MONTH";
+		$interval="1 MONTH";
+                $intervalAddCon = "";
+                $day_of_week=date("w");
+                if($day_of_week == 5){
+                        $intervalAddCon = "|| (LAST_LOGIN_DT BETWEEN date( now( ) - INTERVAL 3 MONTH ) AND date( now( ) - INTERVAL 1 MONTH ) && (jp.PROFILEID % 4=0 || jp.PROFILEID % 4=1))";
+                }elseif($day_of_week == 6){
+                        $intervalAddCon = "|| (LAST_LOGIN_DT BETWEEN date( now( ) - INTERVAL 3 MONTH ) AND date( now( ) - INTERVAL 1 MONTH ) && (jp.PROFILEID % 4=2 || jp.PROFILEID % 4=3))";
+                }
 		/*$day_of_week=date("w");
 		if( in_array($day_of_week,array('1','3','5')))
 		{
@@ -81,7 +88,7 @@ EOF;
 			$conditionNew = "PERSONAL_MATCHES='A' AND ";
 		}*/
 		$conditionNew = "(ACTIVATED='Y' OR ACTIVATED = 'N') AND ";
-		$conditionNew .= "(((jp.ENTRY_DT >= DATE_SUB( now( ) , INTERVAL 15 DAY )) || (jp.ENTRY_DT < DATE_SUB( now( ) , INTERVAL 15 DAY )) && (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y' || jpc.ALT_MOB_STATUS = 'Y')) && (jp.LAST_LOGIN_DT >= DATE_SUB( now( ) , INTERVAL 3 MONTH )))";
+		$conditionNew .= "(((jp.ENTRY_DT >= DATE_SUB( now( ) , INTERVAL 15 DAY )) || (jp.ENTRY_DT < DATE_SUB( now( ) , INTERVAL 15 DAY )) && (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y' || jpc.ALT_MOB_STATUS = 'Y')) && ((jp.LAST_LOGIN_DT >= DATE_SUB( now( ) , INTERVAL $interval) $intervalAddCon)))";
 		$matchalerts_MATCHALERTS_TO_BE_SENT->populateTables($conditionNew);
                 
                 /*

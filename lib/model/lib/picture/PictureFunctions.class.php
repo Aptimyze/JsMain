@@ -6,7 +6,7 @@ class PictureFunctions
 	@param imageUrl: image url
 	@return imageType: image format type
 	*/
-	public static function getImageFormatType($imageUrl)
+	public static function getImageFormatType($imageUrl,$flag="")
 	{
 		$imageInfo = getimagesize($imageUrl);
 		
@@ -22,7 +22,15 @@ class PictureFunctions
 				$imageT = "gif";
 				break;
 				case 'image/png':
-				$imageT ="jpeg";
+				if($flag=="1")
+				{
+					$imageT = "png";
+				}
+				else
+				{
+					$imageT ="jpeg";
+				}
+				
 				break;
 		}
 		
@@ -548,7 +556,7 @@ class PictureFunctions
 	 */	
 	public function createImage($Path)
 	{
-		$szType = $this->getImageFormatType($Path);
+		$szType = $this->getImageFormatType($Path,"1");
 		
 		if($szType == "gif")
 		{

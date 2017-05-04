@@ -506,7 +506,7 @@ class PictureService
       $getFromMasterR = '1';
     } 
     $pics=$PICTURE_NEW->get($whereCondition,$getFromMasterR);
-    if(is_array($pics) && $pics[0]!='')
+    if(is_array($pics) && ($pics[0]!='' || $class != 'Profile'))
     {
       foreach ($pics as $k => $v) {
         $ScreenedPicture[$k] = new ScreenedPicture;

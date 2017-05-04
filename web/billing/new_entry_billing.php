@@ -265,7 +265,8 @@ if(authenticated($cid))
 				}
 			}
 			
-			$services_arr = array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+			//$services_arr = array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+			$services_arr = array("membership_service","astro_service","JSExclusive_service");
                         for($i=0;$i<count($services_arr);$i++)
                         {
                                 $to_check = "chk_".$services_arr[$i];
@@ -297,7 +298,8 @@ if(authenticated($cid))
 		if($is_error==0)
 		{
 			$no_err=0;
-			$services_arr = array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+			//$services_arr = array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+			$services_arr = array("membership_service","astro_service","JSExclusive_service");
 			for($i=0;$i<count($services_arr);$i++)
 			{
 				$to_check = "chk_".$services_arr[$i];
