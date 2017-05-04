@@ -122,7 +122,7 @@
                         <div id="photoError" class="f11 color6 vishid">Please upload photo.</div>
                          <input name="PICTURE" class="dn" type="file" name="fileToUpload" id="fileToUpload" onchange="readURL(this);" accept="image/gif, image/jpeg"/>
                          <div id="upBtn" class="upbtn txtc">Upload photo</div>
-                         <label class="mt10 f10 txtc">(Please upload a jpg/gif image of size less than 6MB)</label>
+                         <label class="mt10 f10 txtc">(Please upload a jpg/gif image of size less than 10MB)</label>
                          <!--Manvi-->
                          <!--img id="imgTemp" /-->
                       </div>
