@@ -544,14 +544,17 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($religion==RELIGION::HINDU || $religion==Religion::JAIN || $religion==Religion::SIKH )
 			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Caste" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
-			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown,'','','UpdateMuslimSectSection');
 		if($religion==Religion::MUSLIM && $this->profile->getCaste()==152)
 		{
+			$jamaatHide = false;
+		}
+		else
+			$jamaatHide = true;
 			$relinfo = (array)$this->profile->getReligionInfo();
 			$relinfo_values = (array)$this->profile->getReligionInfo(1);
 
-			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("JAMAAT","Jamaat" ,$relinfo['JAMAAT'],$relinfo_values['JAMAAT'],$this->getApiScreeningField("JAMAAT"),$this->dropdown);
-		}
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("JAMAAT","Jamaat" ,$relinfo['JAMAAT'],$relinfo_values['JAMAAT'],$this->getApiScreeningField("JAMAAT"),$this->dropdown,'','','UpdateJamaat',$jamaatHide);
                 if($religion==RELIGION::CHRISTIAN)
 		$basicArr["Ethnicity"][OnClick][] =$this->getApiFormatArray("DIOCESE","Diocese" ,$relinfo[DIOCESE],"",$this->getApiScreeningField("DIOCESE"),$this->text);
 		//SUB-CASTE

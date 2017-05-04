@@ -1213,7 +1213,7 @@ case 'P_OCCUPATION_GROUPING':
 case 'JAMAAT':
 					$field = new Field('','JAMAAT');
                                         $field->setFieldType("dropdown");
-                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setConstraintClass("jamaat");
                                         $field->setTableName("JP_MUSLIM:JAMAAT");
 				break;
 }

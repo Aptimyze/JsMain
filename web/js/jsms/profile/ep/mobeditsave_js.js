@@ -422,6 +422,42 @@ function UpdateSection(json,realJson,indexPos)
 	CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
 
 }
+function UpdateMuslimSectSection(json,realJson,indexPos)
+{
+	if(realJson.OnClick[0].key=="RELIGION" && realJson.OnClick[0].value=='2' && json.hasOwnProperty('caste'))
+	{
+		if(!json['caste'].hasOwnProperty("Sunni"))
+		{
+		        $('#JAMAAT_TOP').addClass('dn');
+			var pos = $('#JAMAAT_TOP').attr('dindexpos');
+			CommonOverlayEditUpdate("","JAMAAT");
+			UpdateSection.call($('#JAMAAT_TOP'),{'jamaat':''},realJson,pos);
+			$("#JAMAAT").html(NOT_FILLED_IN).attr("value","");
+			$("#JAMAAT").addClass("color2").removeClass("color3o color3");
+			$("#JAMAATlabel").addClass("color2").removeClass("color3");			
+				
+		}
+		else
+		{
+		    $('#JAMAAT_TOP').removeClass('dn');
+		    var jamaatVal =realJson.OnClick[2].value;
+		    if(jamaatVal)
+			CommonOverlayEditUpdate(jamaatVal,"JAMAAT");
+		}
+	}
+        UpdateSection.call(this,json,realJson,indexPos);
+        return;
+}
+function UpdateJamaat(json,realJson,indexPos)
+{
+	if(json.hasOwnProperty('jamaat'))
+	{
+		$("#JAMAAT").removeClass("color2").addClass("color3o color3");
+		$("#JAMAATlabel").removeClass("color2").addClass("color3");
+	}
+        UpdateSection.call(this,json,realJson,indexPos);
+        return;
+}
 function UpdateCountrySection(json,realJson,indexPos)
 {
 var removeState = false;

@@ -138,7 +138,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		$defaultMsg = ErrorHelp::getDefaultMessage($field->getNAME());
 		$errInvalid = ErrorHelp::INVALID_VALUE_ERR;
 		$hobby_arr=array('hobbies_language','hobbies_hobby','hobbies_interest','hobbies_music','hobbies_book','hobbies_sports','hobbies_cuisine','hobbies_dress','hobbies_movie');
-		$not_to_check_arr=array('termsandconditions','source','record_id','phone_mob','phone_res','promo','email','password','dtofbirth','isd','gender');
+		$not_to_check_arr=array('termsandconditions','source','record_id','phone_mob','phone_res','promo','email','password','dtofbirth','isd','gender','jamaat');
 		if($field_map_name && !in_array($field_map_name,$hobby_arr)&& !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
@@ -165,6 +165,17 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			break;
 		case 'alt_email':
 			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
+			break;
+		case 'jamaat':
+			if($form_values['CASTE'])
+			{
+				$caste = $form_values['CASTE'];
+			}
+			else
+			{
+				$caste = $loggedInObj->getCASTE();
+			}
+			return new jsValidatorJamaat(array('caste'=>$caste,'required'=>false),array('required' => $defaultMsg));
 			break;
 		case 'pin':
 		{
