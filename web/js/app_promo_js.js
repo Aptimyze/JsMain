@@ -97,7 +97,7 @@ $( document ).ready(function() {
 			if($("#mainContent").css("position")=="relative")
 			   topX=0;
 		   showOldSiteMessage=0;
-			if(showOldMobileSiteInfo() && !getCookieData(oldbrowser)){
+			if(showOldMobileSiteInfo() && !getCookieData('oldbrowser')){
 				showOldSiteMessage=1;
 				var mes=ReturnBrowMes();
 				if(mes)
@@ -258,11 +258,11 @@ function ReturnBrowMes()
 {
  if( navigator.userAgent.match(/Android/i))
 	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download Chrome browser or the latest app from Playstore";
- if(navigator.userAgent.match(/iPhone/i))
+ if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i))
 	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download Safari browser or the latest app from Appstore";
 if(navigator.userAgent.match(/Windows Phone/i))
 	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download UC Browser ";
-return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
+return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download either Chrome ,safari or UC browser";
 }
 
 function getIosVersion(ua) {
@@ -303,7 +303,7 @@ function showAppPromoForMessageListingPage(){
 
 function showOldMobileSiteInfo()
 {
-	if(getIosVersion() || getAndroidVersion())
+	if((getIosVersion() || getAndroidVersion()))
 		return false;
 	var ua = ua || navigator.userAgent;
 	var android=ua.indexOf("Android");
@@ -313,26 +313,34 @@ function showOldMobileSiteInfo()
 	var windows=ua.indexOf("Windows Phone");
 	if(android!=-1 && match!=null && typeof(parseFloat(match[1]))=='number')
  	{
-	   var androidVersion=match[1].substring(0,3);
-	   if(androidVersion>2.3)
-	    return false;
-	  else if(androidVersion==2.3 && match[1].charAt(4)>0)
-	    return false;
-	  else
-	    return true;
+	   	var androidVersion=match[1].substring(0,3);
+	   	if(androidVersion>=5.0)
+			return false;
+ 	 	else
+			return true;
 	}
+	if(navigator.userAgent.indexOf('Opera')!=-1 && navigator.userAgent.indexOf('Opera')!=null) {
+		return true;
+ 	}
 	var matchIos= ua.match(/(iPhone);/i);
 	//console.log(match);
 	var OsVersion=ua.match(/OS\s[0-9.]*/i);
 	//console.log(OsVersion);
 	if(OsVersion!=null && matchIos !=null && OsVersion[0].substring(3,5)>=7)
 		return false;
-
-	if(navigator.userAgent.indexOf('Opera')) {
-		return true;
- 	}
+	
  	if(navigator.userAgent.match(/Windows Phone/i)){
-   		 return true;
+ 		var matchWindows = navigator.userAgent.match(/Windows Phone\s([0-9\.]*)/);
+ 		if(matchWindows!=null && typeof(parseFloat(matchWindows[1]))=='number')
+ 		{
+ 			var windowVersion=matchWindows[1].substring(0,3);
+   		 	if(windowVersion>9)
+   		 		return false;
+   		 	else
+   		 		return true;	
+   		}
+   		else
+   			return false;
 	}
 	
 		return false;
