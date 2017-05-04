@@ -439,7 +439,7 @@ $js_arr[]=array("jsms/phone/phone_js"                        => "25");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_membership"                        => "21");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_payment"             => "12");
 $js_arr[]=array("jsms/membership/jsms_upgrade_js"              => "8");
-$js_arr[]=array("jsms/profile/ep/mobeditsave_js"                           => "31");
+$js_arr[]=array("jsms/profile/ep/mobeditsave_js"                            => "32");
 $js_arr[]=array("jsms/photo/mobPhotoUpload_v1"     => "7");
 $js_arr[]=array("jsms/search/relaxCriteria_v1"  => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_v1"   => "2");
