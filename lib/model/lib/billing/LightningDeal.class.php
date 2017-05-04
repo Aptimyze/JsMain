@@ -69,7 +69,7 @@ class LightningDeal
 
 			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
 			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
-			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('','V',$lastViewedDt);
+			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('',$lastViewedDt);
 			unset($lightningDiscObj);
 
 			//filter out above pool from pool1 to get pool2
