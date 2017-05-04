@@ -101,6 +101,7 @@ i {
 .pl28{padding-left:28px}
 .pt10{padding-top:10px}
 .pt12{padding-top:12px}
+.pt14{padding-top: 14px}
 .pt20{padding-top:20px}	
 .pt34{padding-top:34px}
 .pt37{padding-top:37px}
@@ -199,9 +200,10 @@ padding: 0px !important;}
     -o-background-size: cover;background-size: cover;}
 	
 	.pos1{top:0; left:0}
-
+	.padChange {padding: 7px 0 20px 0;}
 	@-moz-document url-prefix() {
     	.pos1{top:0; left:-5px}
+    	.padChange{padding: 7px 0px 34px;}
 	}
 
 .pos2{bottom:5px; right:20px}

@@ -71,7 +71,7 @@
                       <div class="pc-fr ms-widf pc-widf ms-pta">
                         <label class="wid40p dispibl">Age</label>   
                         <span id="ageError" class="dn pt5 color6 fr f11 pr8"></span>
-                        <input maxlength="2" name="AGE" id="ageField" type="text"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <input maxlength="2" name="AGE" id="ageField" type="text"  onkeypress='return event.charCode == 0 || event.charCode >= 48 && event.charCode <= 57'/>
                       </div>
                       <!--end:age field--> 
                     </div>
@@ -98,7 +98,7 @@
                       <div class="pc-fl ms-widf pc-widf">
                         <label class="wid40p dispibl">Phone No.</label>
                         <span id="phoneError" class="dn pt5 color6 fr f11 pr8"></span>
-                        <input name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <input name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode == 0 || event.charCode >= 48 && event.charCode <= 57'/>
                       </div>
                       <!--end:phone no. field--> 
                       <!--start:email field-->
@@ -178,7 +178,7 @@
                 <p> it with the one you love</p>
               </div>
             </div>
-          <div class="pt10">
+          <div class="pt14">
             <div class="bg2 fullw shade1">
               <div class="pad7">
                 <ul class="imglist">
@@ -196,7 +196,7 @@
                   </li>
                   <li>
                     <img src="~sfConfig::get('app_img_url')`/images/sathi/ArtySathi.jpg" class="imgd"/>
-                    <p class="f13 fsos2 color2 pad6">#ArtySathi</p>
+                    <p class="f13 fsos2 color2 padChange">#ArtySathi</p>
                   </li>
                 </ul>
               </div>
