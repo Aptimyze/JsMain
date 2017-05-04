@@ -37,4 +37,20 @@ for($i=0;$i<count($SERVER_ARR);$i++)
 	}
 }
 echo $str;
+
+$redis = new Redis();
+$redis->pconnect(JsConstants::$ifSingleRedis['host'],JsConstants::$ifSingleRedis['port'],306,1);
+
+if($redis->ping() == "+PONG")
+{
+        $hideUnimportantFeatureAtPeakLoadOnRunTime = $redis->get("hideUnimportantFeatureAtPeakLoad");
+        if(JsConstants::$hideUnimportantFeatureAtPeakLoad < $hideUnimportantFeatureAtPeakLoadOnRunTime){
+                JsConstants::$hideUnimportantFeatureAtPeakLoad = $hideUnimportantFeatureAtPeakLoadOnRunTime;
+        }
+}
+
+echo "\n Redis value:";
+echo JsConstants::$hideUnimportantFeatureAtPeakLoad;
+
+
 ?>

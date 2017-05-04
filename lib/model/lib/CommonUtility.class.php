@@ -823,7 +823,7 @@ die;
 			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
-		//error_log("ankita-".$getName);
+		
 		return $userName;
 	}
 
@@ -1020,6 +1020,17 @@ die;
 		}
 		return 0;
 
+	}
+        public static function runFeatureInDaytime($after = 10,$before = 22){
+                $datetime = new DateTime; // current time = server time
+                $otherTZ  = new DateTimeZone('Asia/Kolkata');
+                $datetime->setTimezone($otherTZ); // Indian Time
+		$timeNow = $datetime->format('H');
+		if($timeNow>=$after && $timeNow<=$before)
+		{
+			return 1;
+		}
+		return 0;
 	}
 }
 ?>

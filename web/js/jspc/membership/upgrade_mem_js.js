@@ -44,6 +44,8 @@ function initializeUpgradePage(){
 
 function bindVasPayBtnClick(){
     $(".vasPayBtn").click(function(e){
+        eraseCookie('mainMem');
+        eraseCookie('mainMemDur');
         var selectedVasCookie = readCookie('selectedVas'),selectedVasKey=$(this).attr("vasKey");
         var price = $("#selectedVasPrice_"+selectedVasKey+" span").html();
        

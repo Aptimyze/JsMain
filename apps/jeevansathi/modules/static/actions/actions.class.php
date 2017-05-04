@@ -435,6 +435,7 @@ class staticActions extends sfActions
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
+    $this->subText = $layerData[SUBTEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
     $this->contentTextNEW = $layerData[TEXTNEW];
@@ -445,6 +446,12 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
+    if($this->layerId==18)
+    {
+          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+          $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
+          $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
+   }
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -945,6 +952,20 @@ public function executeAppredirect(sfWebRequest $request)
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+        //this part was added to remove religion "Others" from Registration in JSMS
+      if(MobileCommon::isMobile() && $val=="religion")
+      {
+        foreach($outData["religion"] as $k1=>$v1)
+        {
+          foreach($v1 as $k2=>$v2)
+          {
+            if(strpos($v2[8], RegistrationEnums::$otherText) !== false)
+            {
+              unset($outData["religion"][$k1][$k2]);
+            }
+          }
+        }        
+      }
 			if($val=="family_income")
 			{
 				$optionalArr[0] = array("0"=>array("0"=>"Select"));
@@ -1180,6 +1201,9 @@ public function executeAppredirect(sfWebRequest $request)
 				{
 					$key = $k.$arrAllowedCaste[$i].'_';
 					$output[$key] = $this->getRegCaste($key);
+                                        if($i==1){
+                                            unset($output[$key][2]);
+                                        }
 					++$i;
 				}
 			}
@@ -1345,7 +1369,7 @@ if($k=="state_res")
 		  $Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
 		 
 	  }
-	  
+	  unset($Arr[2][0][2]);
 		return $Arr;
   }
   private function getNonOtherCaste()
@@ -1922,6 +1946,7 @@ if($k=="state_res")
     }
     
     $arrCaste[1][0] = $arrOut;
+    unset($arrCaste[2][0][2]);
     return $arrCaste;
   }
   

@@ -189,7 +189,7 @@ class ApiResponseHandler
 
 		//set membershipSubscription
 		$this->setSelfSubscription();
-
+                $output["isPaid"] = $this->membershipSubscription ==  "Free" ? 'N' : 'Y';
 		//set webservice caching flag for android
 		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
 

@@ -442,8 +442,13 @@ class negativeTreatment
     public function fetchProfileDetailsFromNegative($negType, $negativeVal)
     {
         $negativeListObj        =new incentive_NEGATIVE_LIST('newjs_slave');
-
-        $dataArr =$negativeListObj->getProfileData($negType,$negativeVal);
+        //add 91 code if agent has submitted 10 digit phone number to fetch negative profile details
+        $inClause = false;
+        if($negType == "PHONE_NUM" && strlen($negativeVal) == 10){
+            $negativeVal = array($negativeVal,"91".$negativeVal);
+            $inClause = true;
+        }
+        $dataArr =$negativeListObj->getProfileData($negType,$negativeVal,$inClause);
 	if(is_array($dataArr)){
 		$id =$dataArr['SUBMISSION_ID'];
 		$submissionListObj =new incentive_NEGATIVE_SUBMISSION_LIST('newjs_slave');

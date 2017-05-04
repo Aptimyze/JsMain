@@ -48,7 +48,7 @@ class dialerIvrUpdateAction extends sfActions
 	{
 		$to 		="help@jeevansathi.com";
 		$from		="info@jeevansathi.com";
-		$cc		="manoj.rana@naukri.com";
+		$cc		="manoj.rana@naukri.com,ankit.jadiya@jeevansathi.com,anant.gupta@naukri.com";
 		SendMail::send_email($to,$msg,$subject,$from,$cc);
 		
 	}

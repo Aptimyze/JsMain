@@ -44,7 +44,7 @@ class InstantEoiNotifyConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"instantEoi");
     }
     try
     {
@@ -54,7 +54,7 @@ class InstantEoiNotifyConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"instantEoi");
       return;
     }
   }
@@ -75,7 +75,7 @@ class InstantEoiNotifyConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"instantEoi");
       return;
     }  
     try
@@ -85,7 +85,7 @@ class InstantEoiNotifyConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"instantEoi");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')

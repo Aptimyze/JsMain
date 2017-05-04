@@ -26,7 +26,7 @@ class myjsActions extends sfActions
   	* 
   	*/
 	private function getMembershipLink($pageId){
-  	$arr=array('16'=>'/profile/contacts_made_received.php?page=phonebook_contacts_viewed&filter=M',
+  	$arr=array('16'=>'/inbox/16/1',
   		'6'=>'/profile/mem_comparison.php','4'=>'/profile/viewprofile.php?ownview=1#Family','2'=>'/profile/viewprofile.php?ownview=1#Education','3'=>'/profile/viewprofile.php?ownview=1#Career');
   	return $arr[$pageId];
   }
