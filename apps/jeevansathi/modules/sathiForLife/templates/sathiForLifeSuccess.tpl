@@ -243,7 +243,7 @@
       </div>
       <div class="disptc pl10">
         <div> <a target="_blank" href="https://www.youtube.com/watch?v=uSl3HtJURTM"><img src="~sfConfig::get('app_img_url')`/images/sathi/Nishit-Shakeel.jpg"/> </a></div>
-        <P class="fsos3 f13 color2 pt12">Nishit and Shakeel </P>
+        <P class="fsos3 f13 color2 pt12">Nishat and Shakeel </P>
         <div class="clearfix fsos1 color2 f13 cls1 pt20 pb10">
           <div class="dispib lquo"></div>
           <div class="dispi">I wanted a partner who was quite different from me</div>
