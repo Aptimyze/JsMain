@@ -68,7 +68,7 @@ class NotificationDataPool
 		return $dataAccumulated;
     }
 
-  public function getJustJoinData($applicableProfiles,$logProfiles,$currentScript=0)
+  public function getJustJoinData($applicableProfiles,$logProfiles='',$currentScript=0)
   {
     //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
