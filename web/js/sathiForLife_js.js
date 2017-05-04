@@ -25,7 +25,7 @@ $(document).ready(function(e) {
             validForm = false;
             $("#photoError").removeClass("vishid");
         }
-        if($("#phoneField").val().length != 10 && $("#phoneField").val().length != 11) { 
+        if($("#phoneField").val().length != 10 && $("#phoneField").val().length != 11 || /^\d+$/.test($("#phoneField").val()) == false) { 
             validForm = false;
             $("#phoneError").removeClass("dn").html("Please enter a valid number");
         }
