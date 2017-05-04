@@ -71,7 +71,7 @@
                       <div class="pc-fr ms-widf pc-widf ms-pta">
                         <label class="wid40p dispibl">Age</label>   
                         <span id="ageError" class="dn pt5 color6 fr f11 pr8"></span>
-                        <input name="AGE" id="ageField" type="text"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <input maxlength="2" name="AGE" id="ageField" type="text"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                       </div>
                       <!--end:age field--> 
                     </div>

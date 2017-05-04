@@ -18,16 +18,16 @@ $(document).ready(function(e) {
             }
         })
         if ($("#emailField").val().length != 0 && email_regex.test($("#emailField").val()) == false) {
-            $("#emailError").html("Please enter a valid E-mail Id");
+            $("#emailError").html("Please enter a valid E-mail Id").removeClass("dn");
             validForm = false
         }
         if(photoUploaded == false) {
             validForm = false;
             $("#photoError").removeClass("vishid");
         }
-        if($("#phoneField").val().length != 10) {
+        if($("#phoneField").val().length != 10 && $("#phoneField").val().length != 11) { 
             validForm = false;
-            $("#phoneError").removeClass("dn").html("Please enter a 10 digit number")
+            $("#phoneError").removeClass("dn").html("Please enter a 10 or 11 digit number")
         }
 		if(validForm == false) {
 		  event.preventDefault();
