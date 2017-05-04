@@ -71,7 +71,7 @@
                       <div class="pc-fr ms-widf pc-widf ms-pta">
                         <label class="wid40p dispibl">Age</label>   
                         <span id="ageError" class="dn pt5 color6 fr f11 pr8"></span>
-                        <input maxlength="2" name="AGE" id="ageField" type="text"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <input maxlength="2" name="AGE" id="ageField" type="text"  onkeypress='return event.charCode == 0 || event.charCode >= 48 && event.charCode <= 57'/>
                       </div>
                       <!--end:age field--> 
                     </div>
@@ -98,7 +98,7 @@
                       <div class="pc-fl ms-widf pc-widf">
                         <label class="wid40p dispibl">Phone No.</label>
                         <span id="phoneError" class="dn pt5 color6 fr f11 pr8"></span>
-                        <input name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <input name="PHONE" id="phoneField" type="text" onkeypress='return event.charCode == 0 || event.charCode >= 48 && event.charCode <= 57'/>
                       </div>
                       <!--end:phone no. field--> 
                       <!--start:email field-->
@@ -122,7 +122,7 @@
                         <div id="photoError" class="f11 color6 vishid">Please upload photo.</div>
                          <input name="PICTURE" class="dn" type="file" name="fileToUpload" id="fileToUpload" onchange="readURL(this);" accept="image/gif, image/jpeg"/>
                          <div id="upBtn" class="upbtn txtc">Upload photo</div>
-                         <label class="mt10 f10 txtc">(Please upload a jpg/gif image of size less than 6MB)</label>
+                         <label class="mt10 f10 txtc">(Please upload a jpg/gif image of size less than 10MB)</label>
                          <!--Manvi-->
                          <!--img id="imgTemp" /-->
                       </div>
