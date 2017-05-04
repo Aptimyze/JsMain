@@ -27,7 +27,7 @@ $(document).ready(function(e) {
         }
         if($("#phoneField").val().length != 10 && $("#phoneField").val().length != 11) { 
             validForm = false;
-            $("#phoneError").removeClass("dn").html("Please enter a 10 or 11 digit number")
+            $("#phoneError").removeClass("dn").html("Please enter a valid number");
         }
 		if(validForm == false) {
 		  event.preventDefault();
@@ -50,11 +50,8 @@ function readURL(input) {
         reader.onload = function (e) {
             photoUploaded = true;
             //Manvi
-            /*$('#imgTemp')
-                    .attr('src', e.target.result)
-                    .width(100)
-                    .height(100);
-            */
+            $('#uploadLabel').html("Image uploaded successfully").addClass("color6");
+            
         };
         reader.readAsDataURL(input.files[0]);
     }
