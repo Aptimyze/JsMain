@@ -74,11 +74,31 @@ class profileDisplay{
 
 	public static function getNextProfileIdForMyjs($iListingType,$iOffset)
 	{	
-
+		$maxProfileReqdToHitNext = 6;	
 		$profileObj= LoggedInProfile::getInstance();
 		$pid = $profileObj->getPROFILEID();
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
 		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
+	
+			if($cachedResultsPoolArray[$iOffset] == NULL)
+			{  
+			$request=sfContext::getInstance()->getRequest();	
+			$request->setParameter('matchalerts',1);
+			ob_start();
+        	$request->setParameter("useSfViewNone",1);
+        	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');
+        	$output = (array)(json_decode(ob_get_contents(),true));
+        	ob_end_clean();
+        	$iterate = $iOffset;
+        	if(is_array($output) && array_key_exists("profiles",$output)){
+        	foreach ($output['profiles'] as $key => $value) {
+        		array_push($cachedResultsPoolArray, $value['profileid']);
+        	}
+        	}
+        	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
+			}	
+		
+
 		$profileIdToReturn = $cachedResultsPoolArray[$iOffset];
 		 return($profileIdToReturn);		
 	}
