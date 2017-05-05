@@ -16,9 +16,8 @@
         ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
         ~if $ampurl|strstr:"amp"`
             <link rel="amphtml" href="~$ampurl`">
-        ~else`
-            ~include_canurl`
         ~/if`
+	~include_canurl`
         ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();

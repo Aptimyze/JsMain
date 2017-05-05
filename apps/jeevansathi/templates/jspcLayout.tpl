@@ -19,10 +19,9 @@
         <link rel="amphtml" href="~$ampurl`">
     ~/if`-->
     ~if $ampurl`
-        <link rel="amphtml" href="~$ampurl`">
-    ~else`
-        ~include_canurl`
+        <link rel="amphtml" href="~$ampurl`"/>
     ~/if`
+    ~include_canurl`
     ~include_http_metas`
     ~include_title`
     ~include_metas`
