@@ -29,6 +29,7 @@ class ProfileMemcacheService
     const INTRO_CALLS= 43;
     const SKIP_PROFILES = 47;
     const MESSAGE_ALL = 53;
+    const GROUPS_UPDATED = "GROUPS_UPDATED";
     private $groups = array(
 						ProfileMemcacheService::CONTACTS => array(
 							'ACC_BY_ME', 
@@ -74,7 +75,7 @@ class ProfileMemcacheService
 						ProfileMemcacheService::JUST_JOINED_MATCHES => array('JUST_JOINED_MATCHES','JUST_JOINED_MATCHES_NEW'), 
 						ProfileMemcacheService::CONTACTS_VIEWED => array('CONTACTS_VIEWED'), 
 						ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS => array('PEOPLE_WHO_VIEWED_MY_CONTACTS'),
-                        ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT','VISITORS_ALL'), 
+                                                ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT','VISITORS_ALL'), 
 						ProfileMemcacheService::CHAT_REQUEST => array('CHAT_REQUEST'), 
 						ProfileMemcacheService::BOOKMARK => array('BOOKMARK'),
 						ProfileMemcacheService::SAVED_SEARCH => array('SAVED_SEARCH'),
@@ -124,10 +125,7 @@ class ProfileMemcacheService
     {
         $set = $this->checkPreSettings($key, $optionalDataFlag);
         if ($set === true)
-            return call_user_func(array(
-                $this->memcache,
-                'get' . $key
-            ));
+            return $this->memcache->get($key);
         return false;
     }
     /**
@@ -148,15 +146,9 @@ class ProfileMemcacheService
     {
         $set = $this->checkPreSettings($key, $optionalDataFlag);
         if ($set === true) {
-            $previous     = call_user_func(array(
-                $this->memcache,
-                'get' . $key
-            ));
+            $previous     = $this->memcache->get($key);
             $valueToBeSet = $this->updateCount($previous, $updateBy = $value);
-            call_user_func(array(
-                $this->memcache,
-                'set' . $key
-            ), $valueToBeSet);
+            $this->memcache->set($key, $valueToBeSet);
         }
     }
     /**
@@ -222,92 +214,27 @@ class ProfileMemcacheService
         $this->groupId = $this->findGroupId($key);
         if ($this->groupId === false)
             throw new jsException("", "key not handled in memcache via services");
-        return $unsett = $this->unsetDataForGroup($this->groupId);
-    }
-    public function unsetDataForGroup($groupId)
-    {
-        if ($this->checkValidGroupId($groupId) === true) 
-	{
-            $this->groupId = $groupId;
-            return $unSet = $this->unsetGroup();
-        }
-    }
-
-    private function unsetGroup()
-    {
-	if(false===$this->isGroupUnset($this->groupId))
-	{
-		$this->unsett();
-		return $unsett = true;
-	}
-	else
-		return $alreadyUnset = true;
-    }
-    public function isGroupUnset($groupId)
-    {
-        if ($this->memcache->getGROUPS_UPDATED() % $groupId != 0)
-            return true;
-        return false;
-    }
-public function unsett()
-{
-        switch ($this->groupId) {
-            case ProfileMemcacheService::CONTACTS:
-                $this->unsetContactsData();
-                break;
-            case ProfileMemcacheService::CONTACTS_LIMIT:
-                $this->unsetContactsLimitData();
-                break;
-            case ProfileMemcacheService::HOROSCOPE:
-                $this->unsetHoroscopeData();
-                break;
-            case ProfileMemcacheService::INTRO_CALLS:
-                $this->unsetINRO_CALLSData();
-                break;
-            case ProfileMemcacheService::PHOTO_REQUEST:
-                $this->unsetPhotoRequestData();
-                break;
-            case ProfileMemcacheService::CUSTOM_MESSAGE:
-                $this->unsetCustomMessageData();
-                break;
-            case ProfileMemcacheService::MATCHALERT:
-                $this->unsetMatchAlertData();
-                break;
-            case ProfileMemcacheService::VISITOR_ALERT:
-                $this->unsetVisitorAlertData();
-                break;
-            case ProfileMemcacheService::CHAT_REQUEST:
-                $this->unsetChatRequestData();
-                break;
-            case ProfileMemcacheService::BOOKMARK:
-                $this->unsetBookmarkData();
-                break;
-            case ProfileMemcacheService::MESSAGE_ALL:
-                $this->unsetMessageAllData();
-                break;
-            case ProfileMemcacheService::JUST_JOINED_MATCHES:
-                $this->unsetJustJoinedMatchesData();
-                break;
-            case ProfileMemcacheService::CONTACTS_VIEWED:
-                $this->unsetContactsViewedData();
-                break;
-            case ProfileMemcacheService::SKIP_PROFILES:
-                $this->unsetSKIP_PROFILES();
-                break;
-               
-        }
         $this->unsetGroupUpdated();
         $this->memcache->updateMemcacheData();
-       
-}
+
+    }
     private function unsetGroupUpdated()
     {
-        if ($this->memcache->getGROUPS_UPDATED() % $this->groupId != 0)
+        if ($this->memcache->get('GROUPS_UPDATED') % $this->groupId != 0)
             return;
-        $newGroupValue = $this->memcache->getGROUPS_UPDATED()/$this->groupId;
-        $this->memcache->setGROUPS_UPDATED($newGroupValue);
+        $newGroupValue = $this->memcache->get('GROUPS_UPDATED')/$this->groupId;
+        $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
+        $this->memcache->setFieldUpdated($key);
     }
 
+    private function setFieldsUpdated($arr)
+    {
+        foreach($arr as $key => $value)
+        {
+            $this->memcache->setFieldUpdated($key);  
+            
+        }
+    }
 
 
     private function print_data()
@@ -331,55 +258,72 @@ public function unsett()
         //		print_r($this->memcache);
         switch ($this->groupId) {
             case ProfileMemcacheService::CONTACTS:
+                $arr = $this->groups[ProfileMemcacheService::CONTACTS];
                 $this->setContactsData();
                 break;
             case ProfileMemcacheService::CONTACTS_LIMIT:
                 $this->setContactsLimitData();
+                $arr = $this->groups[ProfileMemcacheService::CONTACTS_LIMIT];
                 break;
             case ProfileMemcacheService::HOROSCOPE:
+                $arr = $this->groups[ProfileMemcacheService::HOROSCOPE];
                 $this->setHoroscopeData();
                 break;
             case ProfileMemcacheService::INTRO_CALLS:
+                $arr = $this->groups[ProfileMemcacheService::INTRO_CALLS];
                 $this->setINTRO_CALLSData();
                 break;
             case ProfileMemcacheService::PHOTO_REQUEST:
+                $arr = $this->groups[ProfileMemcacheService::PHOTO_REQUEST];
                 $this->setPhotoRequestData();
                 break;
             case ProfileMemcacheService::CUSTOM_MESSAGE:
+                $arr = $this->groups[ProfileMemcacheService::CUSTOM_MESSAGE];
                 $this->setCustomMessageData();
                 break;
             case ProfileMemcacheService::MATCHALERT:
+                $arr = $this->groups[ProfileMemcacheService::MATCHALERT];
                 $this->setMatchAlertData();
                 break;
             case ProfileMemcacheService::VISITOR_ALERT:
+                $arr = $this->groups[ProfileMemcacheService::VISITOR_ALERT];
                 $this->setVisitorAlertData();
                 break;
             case ProfileMemcacheService::CHAT_REQUEST:
+                $arr = $this->groups[ProfileMemcacheService::CHAT_REQUEST];
                 $this->setChatRequestData();
                 break;
             case ProfileMemcacheService::BOOKMARK:
+                $arr = $this->groups[ProfileMemcacheService::BOOKMARK];
                 $this->setBookmarkData();
                 break;
             case ProfileMemcacheService::MESSAGE_ALL:
+                $arr = $this->groups[ProfileMemcacheService::MESSAGE_ALL];
                 $this->setMessageAllData();
                 break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
+                $arr = $this->groups[ProfileMemcacheService::JUST_JOINED_MATCHES];
                 $this->setJustJoinedMatchesData();
                 break;
             case ProfileMemcacheService::CONTACTS_VIEWED:
+                $arr = $this->groups[ProfileMemcacheService::CONTACTS_VIEWED];
                 $this->setContactsViewedData();
                 break;
-             case ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS:
-             $this->setContactViewersData();
+            case ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS:
+                $arr = $this->groups[ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS];
+                $this->setContactViewersData();
                 break;
-	     case ProfileMemcacheService::SAVED_SEARCH:
-	     $this->setSavedSearchData();
-							case ProfileMemcacheService::SKIP_PROFILES:
+	    case ProfileMemcacheService::SAVED_SEARCH:
+                $arr = $this->groups[ProfileMemcacheService::SAVED_SEARCH];
+                $this->setSavedSearchData();
+                break;
+            case ProfileMemcacheService::SKIP_PROFILES:
                 $this->setSKIP_PROFILES();
+                $arr = $this->groups[ProfileMemcacheService::SKIP_PROFILES];
                 break;
         }
         $this->setGroupUpdated();
-        //		print_r($this->memcache);
+        $this->setFieldsUpdated($arr);
         $this->memcache->updateMemcacheData();
         
     }
@@ -389,10 +333,10 @@ public function unsett()
      **/
     private function setGroupUpdated()
     {
-        if ($this->memcache->getGROUPS_UPDATED() % $this->groupId == 0)
+        if ($this->memcache->get('GROUPS_UPDATED') % $this->groupId == 0)
             return;
-        $newGroupValue = $this->memcache->getGROUPS_UPDATED() * $this->groupId;
-        $this->memcache->setGROUPS_UPDATED($newGroupValue);
+        $newGroupValue = $this->memcache->get('GROUPS_UPDATED') * $this->groupId;
+        $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
     }
     /**
      *@function findGroupId
@@ -415,7 +359,7 @@ public function unsett()
      **/
     public function isGroupUpdated($groupId)
     {
-        if ($this->memcache->getGROUPS_UPDATED() % $groupId == 0)
+        if ($this->memcache->get('GROUPS_UPDATED') % $groupId == 0)
             return true;
         return false;
     }
@@ -547,39 +491,21 @@ public function unsett()
             }
         }
 
-        $this->memcache->setACC_BY_ME($ACC_BY_ME ? $ACC_BY_ME : 0);
-        $this->memcache->setACC_ME($ACC_ME ? $ACC_ME : 0);
-        $this->memcache->setACC_ME_NEW($ACC_ME_NEW ? $ACC_ME_NEW : 0);
-        $this->memcache->setDEC_BY_ME($DEC_BY_ME ? $DEC_BY_ME : 0);
-        $this->memcache->setDEC_ME($DEC_ME ? $DEC_ME : 0);
-        $this->memcache->setDEC_ME_NEW($DEC_ME_NEW ? $DEC_ME_NEW : 0);
-        $this->memcache->setNOT_REP($NOT_REP ? $NOT_REP : 0);
-        $this->memcache->setCANCELLED_EOI($CANCELLED_EOI ? $CANCELLED_EOI : 0);
-        $this->memcache->setFILTERED($FILTERED ? $FILTERED : 0);
-        $this->memcache->setFILTERED_NEW($FILTERED_NEW ? $FILTERED_NEW : 0);
-        $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
-        $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
-        $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
-        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
-        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
-    }
-    public function unsetContactsData()
-    {
-        $this->memcache->setACC_BY_ME($ACC_BY_ME=0);
-        $this->memcache->setACC_ME($ACC_ME=0);
-        $this->memcache->setACC_ME_NEW($ACC_ME_NEW=0);
-        $this->memcache->setDEC_BY_ME($DEC_BY_ME=0);
-        $this->memcache->setDEC_ME($DEC_ME=0);
-        $this->memcache->setDEC_ME_NEW($DEC_ME_NEW=0);
-        $this->memcache->setNOT_REP($NOT_REP=0);
-        $this->memcache->setCANCELLED_EOI($CANCELLED_EOI=0);
-        $this->memcache->setFILTERED($FILTERED=0);
-        $this->memcache->setFILTERED_NEW($FILTERED_NEW=0);
-        $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
-        $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
-        $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
-        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
-        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING = 0);
+        $this->memcache->set('ACC_BY_ME',$ACC_BY_ME ? $ACC_BY_ME : 0);
+        $this->memcache->set('ACC_ME',$ACC_ME ? $ACC_ME : 0);
+        $this->memcache->set('ACC_ME_NEW',$ACC_ME_NEW ? $ACC_ME_NEW : 0);
+        $this->memcache->set('DEC_BY_ME',$DEC_BY_ME ? $DEC_BY_ME : 0);
+        $this->memcache->set('DEC_ME',$DEC_ME ? $DEC_ME : 0);
+        $this->memcache->set('DEC_ME_NEW',$DEC_ME_NEW ? $DEC_ME_NEW : 0);
+        $this->memcache->set('NOT_REP',$NOT_REP ? $NOT_REP : 0);
+        $this->memcache->set('CANCELLED_EOI',$CANCELLED_EOI ? $CANCELLED_EOI : 0);
+        $this->memcache->set('FILTERED',$FILTERED ? $FILTERED : 0);
+        $this->memcache->set('FILTERED_NEW',$FILTERED_NEW ? $FILTERED_NEW : 0);
+        $this->memcache->set('AWAITING_RESPONSE',$AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
+        $this->memcache->set('AWAITING_RESPONSE_NEW',$AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
+        $this->memcache->set('OPEN_CONTACTS',$OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->set('INTEREST_ARCHIVED',$INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
+        $this->memcache->set('INTEREST_EXPIRING',$INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
     }
     /**
      * fucntion setPhotoRequestData()
@@ -597,15 +523,9 @@ public function unsett()
         $PHOTO_REQUEST      = $photoRequestCounts[0]['TOTAL_COUNT'];
         $PHOTO_REQUEST_NEW  = $photoRequestCounts[0]['UNSEEN'];
         $PHOTO_REQUEST_BY_ME = $photoRequestSentCounts[0]['TOTAL_COUNT'];
-        $this->memcache->setPHOTO_REQUEST($PHOTO_REQUEST ? $PHOTO_REQUEST : 0);
-        $this->memcache->setPHOTO_REQUEST_NEW($PHOTO_REQUEST_NEW ? $PHOTO_REQUEST_NEW : 0);
-        $this->memcache->setPHOTO_REQUEST_BY_ME($PHOTO_REQUEST_BY_ME ? $PHOTO_REQUEST_BY_ME : 0);
-    }
-    public function unsetPhotoRequestData()
-    {
-        $this->memcache->setPHOTO_REQUEST($PHOTO_REQUEST=0);
-        $this->memcache->setPHOTO_REQUEST_NEW($PHOTO_REQUEST_NEW=0);
-        $this->memcache->setPHOTO_REQUEST_BY_ME($PHOTO_REQUEST_BY_ME=0);
+        $this->memcache->set('PHOTO_REQUEST',$PHOTO_REQUEST ? $PHOTO_REQUEST : 0);
+        $this->memcache->set('PHOTO_REQUEST_NEW',$PHOTO_REQUEST_NEW ? $PHOTO_REQUEST_NEW : 0);
+        $this->memcache->set('PHOTO_REQUEST_BY_ME',$PHOTO_REQUEST_BY_ME ? $PHOTO_REQUEST_BY_ME : 0);
     }
     /**
      * fucntion setContactsLimitData()
@@ -674,19 +594,11 @@ public function unsett()
             $OVERALL_CONTACTS_MADE = 0;
         if (!$TOTAL_CONTACTS_MADE)
             $TOTAL_CONTACTS_MADE = $OVERALL_CONTACTS_MADE;
-        $this->memcache->setTODAY_INI_BY_ME($TODAY_INI_BY_ME ? $TODAY_INI_BY_ME : 0);
-        $this->memcache->setWEEK_INI_BY_ME($WEEK_INI_BY_ME ? $WEEK_INI_BY_ME : 0);
-        $this->memcache->setMONTH_INI_BY_ME($MONTH_INI_BY_ME ? $MONTH_INI_BY_ME : 0);
-        $this->memcache->setTOTAL_CONTACTS_MADE($TOTAL_CONTACTS_MADE ? $TOTAL_CONTACTS_MADE : 0);
-        $this->memcache->setCONTACTS_MADE_AFTER_DUP($CONTACTS_MADE_AFTER_DUP ? $CONTACTS_MADE_AFTER_DUP : 0);
-    }
-    public function unsetContactsLimitData()
-    {
-        $this->memcache->setTODAY_INI_BY_ME($TODAY_INI_BY_ME=0);
-        $this->memcache->setWEEK_INI_BY_ME($WEEK_INI_BY_ME=0);
-        $this->memcache->setMONTH_INI_BY_ME($MONTH_INI_BY_ME=0);
-        $this->memcache->setTOTAL_CONTACTS_MADE($TOTAL_CONTACTS_MADE=0);
-        $this->memcache->setCONTACTS_MADE_AFTER_DUP($CONTACTS_MADE_AFTER_DUP=0);
+        $this->memcache->set('TODAY_INI_BY_ME',$TODAY_INI_BY_ME ? $TODAY_INI_BY_ME : 0);
+        $this->memcache->set('WEEK_INI_BY_ME',$WEEK_INI_BY_ME ? $WEEK_INI_BY_ME : 0);
+        $this->memcache->set('MONTH_INI_BY_ME',$MONTH_INI_BY_ME ? $MONTH_INI_BY_ME : 0);
+        $this->memcache->set('TOTAL_CONTACTS_MADE',$TOTAL_CONTACTS_MADE ? $TOTAL_CONTACTS_MADE : 0);
+        $this->memcache->set('CONTACTS_MADE_AFTER_DUP',$CONTACTS_MADE_AFTER_DUP ? $CONTACTS_MADE_AFTER_DUP : 0);
     }
     /**
      * fucntion setHoroscopeData()
@@ -705,15 +617,9 @@ public function unsett()
         $HOROSCOPE_NEW      = $horoscopeRequestReceivedCounts[0]['UNSEEN'];
         $HOROSCOPE_REQUEST_BY_ME      = $horoscopeRequestSentCounts[0]['TOTAL_COUNT'];
         //$HOROSCOPE_NEW   = $horoscopeCounts[0]['UNSEEN'];
-        $this->memcache->setHOROSCOPE($HOROSCOPE ? $HOROSCOPE : 0);
-        $this->memcache->setHOROSCOPE_REQUEST_BY_ME($HOROSCOPE_REQUEST_BY_ME ? $HOROSCOPE_REQUEST_BY_ME : 0);
-        $this->memcache->setHOROSCOPE_NEW($HOROSCOPE_NEW ? $HOROSCOPE_NEW : 0);
-    }
-    public function unsetHoroscopeData()
-    {
-        $this->memcache->setHOROSCOPE($HOROSCOPE=0);
-        $this->memcache->setHOROSCOPE_NEW($HOROSCOPE_NEW=0);
-        $this->memcache->setHOROSCOPE_REQUEST_BY_ME($HOROSCOPE_REQUEST_BY_ME=0);
+        $this->memcache->set('HOROSCOPE',$HOROSCOPE ? $HOROSCOPE : 0);
+        $this->memcache->set('HOROSCOPE_REQUEST_BY_ME',$HOROSCOPE_REQUEST_BY_ME ? $HOROSCOPE_REQUEST_BY_ME : 0);
+        $this->memcache->set('HOROSCOPE_NEW',$HOROSCOPE_NEW ? $HOROSCOPE_NEW : 0);
     }
      /**
      * fucntion setINTRO_CALLSData(), set data for INTRO_CALLS
@@ -726,14 +632,8 @@ public function unsett()
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
         $INTRO_CALLS = $introCallObj->getIntroCallsPendingCount($this->profileid,$skipProfile);
         $INTRO_CALLS_COMPLETE = $introCallObj->getIntroCallsCompleteCount($this->profileid,$skipProfile);
-        $this->memcache->setINTRO_CALLS($INTRO_CALLS ? $INTRO_CALLS : 0);
-        $this->memcache->setINTRO_CALLS_COMPLETE($INTRO_CALLS_COMPLETE ? $INTRO_CALLS_COMPLETE : 0);    
-    }
-    //unset intro calls data
-    public function unsetINRO_CALLSData()
-    {
-        $this->memcache->setINTRO_CALLS($INTRO_CALLS=0);
-        $this->memcache->setINTRO_CALLS_COMPLETE($INTRO_CALLS_COMPLETE=0);
+        $this->memcache->set('INTRO_CALLS',$INTRO_CALLS ? $INTRO_CALLS : 0);
+        $this->memcache->set('INTRO_CALLS_COMPLETE',$INTRO_CALLS_COMPLETE ? $INTRO_CALLS_COMPLETE : 0);    
     }
     /**
      * fucntion setCustomMessageData()
@@ -786,15 +686,9 @@ public function unsett()
 		$where = array("SENDER"=>$this->profileid,"TYPE" => 'R',"IS_MSG"=>'Y');
 		$msgCount = $message->getMessageLogCount($where,$group,$select,$skipProfile);
 		$MESSAGE_SENT =  $msgCount[0]["COUNT"]; */
-		$this->memcache->setMESSAGE($MESSAGE ? $MESSAGE : 0);
-        $this->memcache->setMESSAGE_NEW($MESSAGE_NEW ? $MESSAGE_NEW : 0);
+		$this->memcache->set('MESSAGE',$MESSAGE ? $MESSAGE : 0);
+        $this->memcache->set('MESSAGE_NEW',$MESSAGE_NEW ? $MESSAGE_NEW : 0);
        
-    }
-    public function unsetCustomMessageData()
-    {
-	$this->memcache->setMESSAGE($MESSAGE=0);
-        $this->memcache->setMESSAGE_NEW($MESSAGE_NEW=0);
-        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL=0);
     }
     /**
      * fucntion setMatchAlertData()
@@ -808,19 +702,13 @@ public function unsett()
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
         $matchAlertCount   = $matchAlertObj->getMatchAlertCount($this->profileid, $skipProfile);
-        $this->memcache->setMATCHALERT($matchAlertCount["NEW"] ? $matchAlertCount["NEW"] : 0);
-        $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"] ? $matchAlertCount["TOTAL"] : 0);
+        $this->memcache->set('MATCHALERT',$matchAlertCount["NEW"] ? $matchAlertCount["NEW"] : 0);
+        $this->memcache->set('MATCHALERT_TOTAL',$matchAlertCount["TOTAL"] ? $matchAlertCount["TOTAL"] : 0);
     }
     
-    public function unsetMatchAlertData()
-    {
-        $this->memcache->setMATCHALERT($matchAlertCount["NEW"]=0);
-        $this->memcache->setMATCHALERT_TOTAL($matchAlertCount["TOTAL"]=0);
-    }
- 
         public function setMATCHALERT($new=0)
     {
-        $this->memcache->setMATCHALERT($new);
+        $this->memcache->set('MATCHALERT',$new);
     }
  
     
@@ -830,25 +718,17 @@ public function unsett()
         $visitorObj = new Visitors($profileObj);
                 $infoTypenav["matchedOrAll"]='A';
 		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
-		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);
+		$this->memcache->set('VISITOR_ALERT',count($visitors) ? count($visitors) : 0);
 	}
-    public function unsetVisitorAlertData()
-    {
-		$this->memcache->setVISITOR_ALERT(0);
-    }
     public function setVisitorsAll($allVisitorCount)
     {
-		$this->memcache->setVISITORS_ALL($allVisitorCount ? $allVisitorCount : 0);
+		$this->memcache->set('VISITORS_ALL',$allVisitorCount ? $allVisitorCount : 0);
     }
     public function setChatRequestData()
     {
         $chatObj     = new ChatLibrary();
         $chatRequest = $chatObj->getChatRequestCount($this->profileid);
-        $this->memcache->setCHAT_REQUEST($chatRequest ? $chatRequest : 0);
-    }
-    public function unsetChatRequestData()
-    {
-        $this->memcache->setCHAT_REQUEST($chatRequest=0);
+        $this->memcache->set('CHAT_REQUEST',$chatRequest ? $chatRequest : 0);
     }
     public function setBookmarkData()
     {
@@ -857,11 +737,7 @@ public function unsett()
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
         $count       = $bookmarkObj->getBookmarkCount($this->profileid,$skipProfile);
-        $this->memcache->setBOOKMARK($count ? $count : 0);
-    }
-    public function unsetBookmarkData()
-    {
-        $this->memcache->setBOOKMARK($count=0);
+        $this->memcache->set('BOOKMARK',$count ? $count : 0);
     }
     public function setMessageAllData()
     {
@@ -892,11 +768,7 @@ public function unsett()
 	}
         if(is_array($profilesArray))
 		$MESSAGE_ALL = count($profilesArray);
-        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
-    }
-    public function unsetMessageAllData()
-    {
-        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL=0);
+        $this->memcache->set('MESSAGE_ALL',$MESSAGE_ALL?$MESSAGE_ALL:0);
     }
     /**
      * fucntion setJustJoinedMatchesData()
@@ -909,13 +781,8 @@ public function unsett()
 		$justJoinedMatches=$justJoinMatchArr['CNT'];
 		$justJoinMatchArrNew = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile,"CountOnly","havePhoto"); 
 		$justJoinedMatchesNew=$justJoinMatchArrNew['CNT'];
-		$this->memcache->setJUST_JOINED_MATCHES($justJoinedMatches ? $justJoinedMatches : 0);
-	        $this->memcache->setJUST_JOINED_MATCHES_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
-    }
-    public function unsetJustJoinedMatchesData()
-    {
-		$this->memcache->setJUST_JOINED_MATCHES($justJoinedMatches=0);
-		$this->memcache->setJUST_JOINED_MATCHES_NEW($justJoinedMatchesNew =0);
+		$this->memcache->set('JUST_JOINED_MATCHES',$justJoinedMatches ? $justJoinedMatches : 0);
+	        $this->memcache->set('JUST_JOINED_MATCHES_NEW',$justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
     }
      /**
      * fucntion setContactsViewedData()
@@ -930,14 +797,9 @@ public function unsett()
 
 		$contactsViewedObj=new JSADMIN_VIEW_CONTACTS_LOG();
 		$contactsViewedCount=$contactsViewedObj->totalContactsViewedEver($this->profileid,$skipArray);
-		$this->memcache->setCONTACTS_VIEWED($contactsViewedCount ? $contactsViewedCount : 0);
-        //$this->memcache->setCONTACTS_VIEWED_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
+		$this->memcache->set('CONTACTS_VIEWED',$contactsViewedCount ? $contactsViewedCount : 0);
+        //$this->memcache->set('CONTACTS_VIEWED_NEW',$justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
     }
-    public function unsetContactsViewedData()
-    {
-		//$this->memcache->unsetCONTACTS_VIEWED($contactsViewedCount=0);
-    }
-
     /**
      * fucntion setContactViewersData()
      *@brief fetches data from view contacts log table to show all viewers of our contacts
@@ -951,8 +813,8 @@ public function unsett()
                 
         $contactViewersObj=new JSADMIN_VIEW_CONTACTS_LOG();
         $contactViewersCount=$contactViewersObj->totalContactViewersEver($this->profileid,$skipArray);
-        $this->memcache->setPEOPLE_WHO_VIEWED_MY_CONTACTS($contactViewersCount ? $contactViewersCount : 0);
-        //$this->memcache->setCONTACTS_VIEWED_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
+        $this->memcache->set('PEOPLE_WHO_VIEWED_MY_CONTACTS',$contactViewersCount ? $contactViewersCount : 0);
+        //$this->memcache->set('CONTACTS_VIEWED_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);
     }
     
     /**
@@ -1033,7 +895,7 @@ public function unsett()
         $loggedInProfile = new Profile('',$this->profileid);	
 	$userSavedSearchesObj = new UserSavedSearches($loggedInProfile);
 	$savedSearchesCount = $userSavedSearchesObj->countRecord();	
-        $this->memcache->setSAVED_SEARCH($savedSearchesCount ? $savedSearchesCount : 0);
+        $this->memcache->set('SAVED_SEARCH',$savedSearchesCount ? $savedSearchesCount : 0);
     }
     
    
@@ -1045,21 +907,13 @@ public function unsett()
         $skipArray       = $skipProfileObj->getSkipProfiles($skipConditionArray,"1");
        // print_r($skipArray); die;
 		
-			$this->memcache->setCONTACTED_BY_ME(serialize($skipArray["CONTACTED_BY_ME"]));
-	    $this->memcache->setCONTACTED_ME(serialize($skipArray["CONTACTED_ME"]));
-			$this->memcache->setIGNORED(serialize($skipArray["IGNORED"]));
+			$this->memcache->set('CONTACTED_BY_ME',serialize($skipArray["CONTACTED_BY_ME"]));
+                	$this->memcache->set('CONTACTED_ME',serialize($skipArray["CONTACTED_ME"]));
+			$this->memcache->set('IGNORED',serialize($skipArray["IGNORED"]));
 			$this->memcache->updateMemcacheData();
     }
     
     
-    public function unsetSKIP_PROFILES()
-    {
-				
-		$this->memcache->setCONTACTED_BY_ME("");
-	        $this->memcache->setCONTACTED_ME("");
-	  $this->memcache->setIGNORED("");
-	  $this->memcache->updateMemcacheData();
-    }
     
 }
 ?>

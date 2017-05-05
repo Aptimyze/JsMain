@@ -406,6 +406,35 @@ class JsMemcache extends sfMemcacheCache{
         }
     }
 
+	/**
+	 * @param $key
+	 * @param $arrValue
+	 * @param int $expiryTime
+	 * @param bool $throwException
+	 * @return mixed
+	 * @throws Exception
+	 */
+    public function setHashObjectWithoutExp($key,$arrValue,$throwException = false)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {
+                    $result = $this->client->hmset($key, $arrValue);
+                    return $result->__toString();
+                }
+                catch (Exception $e)
+                {
+					if ($throwException) {
+						throw $e;
+					}
+                    jsException::log("HS-redisClusters".$e->getMessage());
+                }
+            }
+        }
+    }
     /**
      * @param $key
      * @param $subKey
