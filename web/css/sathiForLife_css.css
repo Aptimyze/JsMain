@@ -138,13 +138,15 @@ label {
 .dn{display:none}
 .vishid {visibility: hidden;}
 .upbtn {
-    background: none;
-    border: 1px solid #ec3963;
-    color: #ec3963;
+    background-color: #ec3963;
+    border: 0;
+    color: #fff;
     font-size: 15px;
     width: 100%;
     line-height: 39px;
     margin-top: 10px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;font-weight:600
 }
 .subbtn{
 	background:#ec3963; 
