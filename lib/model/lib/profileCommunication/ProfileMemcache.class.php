@@ -438,10 +438,10 @@ class ProfileMemcache
 
     /**
      * 
-     * Set data about groups updated in memcache
+     * Set data for a key in object
      * 
      * <p>
-     * This function sets the member variable value to the specified $newValue value.
+     * This function sets the member variable value to the specified $value value.
      * </p>
      * 
      * @access public
@@ -451,6 +451,22 @@ class ProfileMemcache
     public function set($key,$value)    {
         $this->$key  = $value;
         $this->memcache->setFieldUpdated($key);
+
+    }
+    /**
+     * 
+     * Get data for a key in object
+     * 
+     * <p>
+     * This function gets the member variable value .
+     * </p>
+     * 
+     * @access public
+     * @param $newValue integer
+     */
+    
+    public function get($key)    {
+        return $this->$key  ;
 
     }
 
