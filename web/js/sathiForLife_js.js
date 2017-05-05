@@ -29,6 +29,11 @@ $(document).ready(function(e) {
             validForm = false;
             $("#phoneError").removeClass("dn").html("Please enter a valid number");
         }
+        if($("#ageField").val().length != 2 || /^\d+$/.test($("#ageField").val()) == false) { 
+            validForm = false;
+            $("#ageError").removeClass("dn").html("Please enter a valid age");
+            $("#ageField").addClass("brdr1");
+        }
 		if(validForm == false) {
 		  event.preventDefault();
 		}
