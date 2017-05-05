@@ -267,8 +267,7 @@ class ProfileMemcache
         if (true === is_numeric($profileid)) {
             $this->_profileid     = $profileid;
             $this->_updatedFields = null;
-            //JsMemcache::getInstance()->delete($this->_profileid);
-            $this->_memcache      = JsMemcache::getInstance()->getHashAllValue($this->_getProfileKey());
+            $this->getMemcacheData();            
             $this->_initializeMemcacheData();
             
         } else {
