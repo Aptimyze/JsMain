@@ -54,22 +54,25 @@ class JsmsView extends DetailedViewApi
       $this->m_arrOut['thumbnailPic'] = $thumbNail;
 
       //thumbnail for self
-      if($selfHavePhoto != "N")
+      if($viewerProfile)
       {
-      	$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
-      	$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
-      	$this->ProfilePicUrl='';
-      	if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+      	if($selfHavePhoto != "N")
       	{
-      		$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
-      		$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+      		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
+      		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+      		$this->ProfilePicUrl='';
+      		if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+      		{
+      			$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
+      			$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+      		}
+      	}      
+      	else
+      	{
+      		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
       	}
-      }      
-      else
-      {
-      	$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
-      }
-    $this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
+      	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
+      }     
        
 }
 	/**
