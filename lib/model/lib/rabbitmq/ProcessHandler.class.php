@@ -99,6 +99,23 @@ class ProcessHandler
       case 'ACCEPTANCE_VIEWED' : $smsViewer = new InstantSMS($type,$receiverid,'',$senderid);
                                  $smsViewer->send();  
                                  break; 
+      case 'CRITICAL_INFORMATION_CHANGE' : 
+                                $fieldLabel= array();
+                                $impFields = ProfileEnums::$sendInstantMessagesForFields;
+                                if(!empty($body["editedFields"])){
+                                        foreach($body["editedFields"] as $field){
+                                                if(array_key_exists($field, $impFields)){
+                                                       $fieldLabel[] =  $impFields[$field];
+                                                }
+                                        }
+                                }
+                                $varArray["editedFields"] = implode(", ", $fieldLabel);
+                                $varArray["editedFieldsCount"] = count($fieldLabel);
+                                $varArray["PHONE_MOB"] = $body["PHONE"];
+                                $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
+                                $smsViewer->send();  
+                                JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
+                                 break; 
     }
   }
 public function sendAutoReminder($receiver,$sender){
@@ -379,6 +396,7 @@ public function logDiscount($body,$type){
             $this->userObj = new memUser($profileid);
             $this->userObj->setMemStatus();
             $memHandlerObj = new MembershipHandler();
+            
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
             list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
             $allMainMem["PROFILEID"] = $profileid;

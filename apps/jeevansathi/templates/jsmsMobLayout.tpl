@@ -17,6 +17,7 @@
         ~if $ampurl|strstr:"amp"`
             <link rel="amphtml" href="~$ampurl`">
         ~/if`
+	~include_canurl`
         ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
@@ -39,7 +40,6 @@
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
-    ~include_canurl`
     ~use helper = SfMinify`
 
     <script  src="~JsConstants::$jquery`"></script>
@@ -61,6 +61,9 @@
 		~/if`
 		var appPromoPerspective=0;
 		var DualHamburger=1;
+                ~if $sf_request->getAttribute('messageListAppPromo')`
+                    var messageListAppPromo=~$sf_request->getAttribute('messageListAppPromo')`;
+                ~/if`
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>

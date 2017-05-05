@@ -23,6 +23,9 @@ class NotificationSender
      */
     public function sendNotifications($profileDetails,$regIds='') 
     {
+	$JsMemcacheObj =JsMemcache::getInstance();
+	$date =date("Ymd");
+
     	if(is_array($profileDetails))
     	{
     		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
@@ -84,21 +87,32 @@ class NotificationSender
                     }
     			}
     			// logging of Notification Messages 
-                $key            =$details['NOTIFICATION_KEY'];
-                $msgId          =$details['MSG_ID'];
-                $message        =$details['MESSAGE'];
-                $title          =$details['TITLE'];
-
-                $notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
-                $notificationMsgLog->insert($key,$msgId,$message,$title);
-                // end
+    			$key            =$details['NOTIFICATION_KEY'];
+    			$msgId          =$details['MSG_ID'];
+    			$message        =$details['MESSAGE'];
+    			$title          =$details['TITLE'];
+    			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
+    			$notificationMsgLog->insert($key,$msgId,$message,$title);
+    			// end
+		
+			// Redis Tracking for Notification sending
+        		$notificationFunction =new NotificationFunctions();
+        		$notificationFunction->appNotificationCountCachng($key,'','APP_NOTIFICATION');
+		
+			// Notification Increment counter fir profile specific using Hash
+			if(in_array("$key", NotificationEnums::$timeCriteriaNotification)){	
+	        	        $key    ="INST_APP|".$key."|".$date;
+	        	        $field  ="PID-".$profileid;
+	        	        $JsMemcacheObj->hIncrBy($key,$field,1);
+			}
+			// end
               
-                unset($regIds);
+                	unset($regIds);
     		}
-            if($this->sendMultipleParallelNotification == true){
-                $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
-                $engineObject->executeMultiCurlRequest(true);
-            }
+            	if($this->sendMultipleParallelNotification == true){
+            	    $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject('GCM');
+            	    $engineObject->executeMultiCurlRequest(true);
+            	}
     	}
     }
 
