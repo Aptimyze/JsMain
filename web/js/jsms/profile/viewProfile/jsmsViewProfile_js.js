@@ -547,6 +547,8 @@ $(document).ready(function()
     handleBackButton();
     handlePreviousNext();	
     initGunnaScore();
+
+    getMatchingCount();
 	
 	astroCompatibility();    
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
@@ -554,6 +556,8 @@ $(document).ready(function()
 	{
 		setTimeout(function(){disableLoader();},300);
 	}
+
+	shortContentVP();
     
 });
 getCommHistory = function()
@@ -585,7 +589,7 @@ initGunnaScore = function()
         if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
         //Show Guna Score String        
-        if(data.responseStatusCode==0 && (data.SCORE != 0 || data.SCORE !=null))
+        if(data.responseStatusCode==0 && (data.SCORE != 0 && data.SCORE !=null && data.SCORE != "null"))
         {
             var col = "green";
             if(parseInt(data.SCORE)<18)
@@ -706,5 +710,40 @@ function closeAstroLayer()
 		});
 }
 
+getMatchingCount = function()
+{
+	var totalFields = $(".js-countFields").length;
+	$(".js-total").html(totalFields);
+	$(".js-matching").html($(".checkmarkVP").length);
+}
+
 setTimeout(enableLoader,50);
+
+shortContentVP = function(){
+	
+	
+	$('.js-cut').each(function(){
+		if($(this).html().length>60)
+		{
+			
+			var content = $(this).html();
+			var c = content.substr(0, 50);
+            var h = content.substr(50, content.length - 50);           
+			var newText = c +'<span class=\"js-moreVP color1\">...more</span><div class="\dispnone\">'+ h +'</div>';
+			$(this).html(newText);
+		}
+	})
+
+	$('.js-moreVP ').click(function(){
+
+		$(this).css('display','none').next().css('display','inline');
+	})
+
+
+
+
+
+}
+
+
 
