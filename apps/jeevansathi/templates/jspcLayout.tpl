@@ -26,7 +26,7 @@
     ~include_title`
     ~include_metas`
     ~if $pageType =="privacypolicy"`
-        <link rel="amphtml" href="~$ampurl`">
+        <link rel="amphtml" href="~$ampurl`" />
     ~/if`
     ~use helper = SfMinify`
     ~minify_include_stylesheets('common')`
