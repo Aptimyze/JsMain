@@ -19,10 +19,11 @@
         <link rel="amphtml" href="~$ampurl`">
     ~/if`-->
     ~if $ampurl`
-        <link rel="amphtml" href="~$ampurl`" />
+        <link rel="amphtml" href="~$ampurl`">
+    ~else`
+        ~include_canurl`
     ~/if`
     ~include_http_metas`
-    ~include_canurl`
     ~include_title`
     ~include_metas`
     ~if $pageType =="privacypolicy"`
