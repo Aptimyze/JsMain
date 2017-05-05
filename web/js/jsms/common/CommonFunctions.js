@@ -600,8 +600,38 @@ function hostReachable() {
     }
 }
 
+function createCookieExpireMidnight(name,value,path) {
+	var expires = "";
+	var date = new Date();
+	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+	expires = "; expires=" + midnight.toGMTString();
+	if (!path) {
+		path = "/";
+	}
+	document.cookie = name + "=" + value + expires + "; path=" + path;
+}
+
+function readCookie(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
 (function(){
   $(document).ready(function() {
+        var url = window.location.hostname;
+        var profile = readCookie('hinditracking');
+        var d = new Date();
+        var date = d.toLocaleDateString();
+        if(url.includes("hindi")&& (profile!=trackingProfile) && (trackingProfile!="")){
+            createCookieExpireMidnight("hinditracking",trackingProfile);
+            trackJsEventGA('jsms', 'hindi',date,trackingProfile);
+        }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
         setInterval(function(){
             var online = hostReachable();
