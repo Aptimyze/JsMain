@@ -450,7 +450,7 @@ class ProfileMemcache
     
     public function set($key,$value)    {
         $this->$key  = $value;
-        $this->memcache->setFieldUpdated($key);
+        $this->setFieldUpdated($key);
 
     }
     /**

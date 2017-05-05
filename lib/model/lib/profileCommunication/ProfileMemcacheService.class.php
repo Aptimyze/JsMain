@@ -226,17 +226,6 @@ class ProfileMemcacheService
         $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
         $this->memcache->setFieldUpdated($key);
     }
-
-    private function setFieldsUpdated($arr)
-    {
-        foreach($arr as $key => $value)
-        {
-            $this->memcache->setFieldUpdated($key);  
-            
-        }
-    }
-
-
     private function print_data()
     {
         //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
@@ -255,75 +244,57 @@ class ProfileMemcacheService
     
     private function set()
     {
-        //		print_r($this->memcache);
         switch ($this->groupId) {
             case ProfileMemcacheService::CONTACTS:
-                $arr = $this->groups[ProfileMemcacheService::CONTACTS];
                 $this->setContactsData();
                 break;
             case ProfileMemcacheService::CONTACTS_LIMIT:
                 $this->setContactsLimitData();
-                $arr = $this->groups[ProfileMemcacheService::CONTACTS_LIMIT];
                 break;
             case ProfileMemcacheService::HOROSCOPE:
-                $arr = $this->groups[ProfileMemcacheService::HOROSCOPE];
                 $this->setHoroscopeData();
                 break;
             case ProfileMemcacheService::INTRO_CALLS:
-                $arr = $this->groups[ProfileMemcacheService::INTRO_CALLS];
                 $this->setINTRO_CALLSData();
                 break;
             case ProfileMemcacheService::PHOTO_REQUEST:
-                $arr = $this->groups[ProfileMemcacheService::PHOTO_REQUEST];
                 $this->setPhotoRequestData();
                 break;
             case ProfileMemcacheService::CUSTOM_MESSAGE:
-                $arr = $this->groups[ProfileMemcacheService::CUSTOM_MESSAGE];
                 $this->setCustomMessageData();
                 break;
             case ProfileMemcacheService::MATCHALERT:
-                $arr = $this->groups[ProfileMemcacheService::MATCHALERT];
                 $this->setMatchAlertData();
                 break;
             case ProfileMemcacheService::VISITOR_ALERT:
-                $arr = $this->groups[ProfileMemcacheService::VISITOR_ALERT];
                 $this->setVisitorAlertData();
                 break;
             case ProfileMemcacheService::CHAT_REQUEST:
-                $arr = $this->groups[ProfileMemcacheService::CHAT_REQUEST];
                 $this->setChatRequestData();
                 break;
             case ProfileMemcacheService::BOOKMARK:
-                $arr = $this->groups[ProfileMemcacheService::BOOKMARK];
                 $this->setBookmarkData();
                 break;
             case ProfileMemcacheService::MESSAGE_ALL:
-                $arr = $this->groups[ProfileMemcacheService::MESSAGE_ALL];
                 $this->setMessageAllData();
                 break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
-                $arr = $this->groups[ProfileMemcacheService::JUST_JOINED_MATCHES];
                 $this->setJustJoinedMatchesData();
                 break;
             case ProfileMemcacheService::CONTACTS_VIEWED:
-                $arr = $this->groups[ProfileMemcacheService::CONTACTS_VIEWED];
                 $this->setContactsViewedData();
                 break;
             case ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS:
-                $arr = $this->groups[ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS];
                 $this->setContactViewersData();
                 break;
 	    case ProfileMemcacheService::SAVED_SEARCH:
-                $arr = $this->groups[ProfileMemcacheService::SAVED_SEARCH];
                 $this->setSavedSearchData();
                 break;
             case ProfileMemcacheService::SKIP_PROFILES:
                 $this->setSKIP_PROFILES();
-                $arr = $this->groups[ProfileMemcacheService::SKIP_PROFILES];
                 break;
         }
         $this->setGroupUpdated();
-        $this->setFieldsUpdated($arr);
         $this->memcache->updateMemcacheData();
         
     }
