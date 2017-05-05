@@ -554,6 +554,7 @@
             eraseCookie('mainMemDur');
             eraseCookie('selectedVas');
             createCookie('redirectedFrom','backendLink',0);
+            createCookie('backendLink', window.location.href, 0.0188);
             ~if $data.subscription_id`
             createCookie('mainMem', '~$data.subscription_id`', 0);
             ~/if`
