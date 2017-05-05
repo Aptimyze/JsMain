@@ -213,7 +213,7 @@ $css_arr[]=array("jsms/myjs/CALJSMS_css"                  => "16");
 $css_arr[]=array("-1"     => "3");
 $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 $css_arr[]=array("yatra_style"     => "5");
-$css_arr[]=array("sathiForLife_css"         => "5");
+$css_arr[]=array("sathiForLife_css"          => "6");
 return $css_arr;
 }
 /* JavaScript File */
