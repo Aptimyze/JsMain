@@ -39,7 +39,7 @@ if(isset($data))
             
             //**START - Entry for negative transactions
             $memHandlerObject = new MembershipHandler();
-            $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)));
+            $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)),'CHARGE_BACK');
             unset($memHandlerObject);
             //**END - Entry for negative transactions            
 

@@ -68,6 +68,10 @@ class NotificationEnums
       public static $jscDevMail = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,smarth.katyal@jeevansathi.com";
 
       //config for sending multiple curl requests for GCM notification in parallel
+      public static $monitorInstantKeyArr =array('ACCEPTANCE','EOI','MESSAGE_RECEIVED','PHOTO_REQUEST','EOI_REMINDER','BUY_MEMB','PROFILE_VISITOR','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG');	
+
+      public static $monitorScheduledKeyArr =array('JUST_JOIN'=>'13-18','PENDING_EOI'=>'13-18','MATCH_OF_DAY'=>'13-18','MATCHALERT'=>'4-22');
+      			
       public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI"));
 
       //config for logged out notifications
@@ -75,4 +79,7 @@ class NotificationEnums
 
       //config for notifications, not eligible for local polling
       public static $notEligibleForPolling = array("LOGIN_REGISTER");
+
+      // time criteria notification array	
+      public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
 }

@@ -41,7 +41,6 @@ $fileName = "ci.txt";
 if ($file = fopen($fileName, "r")) {
     while(!feof($file)) {
         $line = fgets($file);
-        
         //Check to determine the first block of hotfix. Here hotFixBlock variable is set to true and it remains true until the break delimeter is excountered
         if(strpos($line,$missingFromQASanityPattern) !== FALSE){
         	$hotFixBlock = true;
@@ -128,7 +127,8 @@ function getJiraProjectAndIds($line){
 		//Check whether the text in square brackets is actually a jira id or some other text
     	if(array_key_exists($subString, $groups)){
     		//Adding it to two different arrays. One for unique jira ids and the other to get the project
-    		$result[0] = $matches[1];
+    		//$result[0] = $matches[1];
+            $result[0] = substr($matches[1], 0,8);
     		$result[1] = $subString;
     	}
 	}
