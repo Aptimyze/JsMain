@@ -100,7 +100,6 @@ class ProfileMemcacheService
         else
             $this->profileid = $profile;
         if ($this->profileid) {
-            $this->updatedFields = null;
             $this->memcache      = ProfileMemcache::getInstance($this->profileid);
         }
     }
@@ -224,7 +223,6 @@ class ProfileMemcacheService
             return;
         $newGroupValue = $this->memcache->get('GROUPS_UPDATED')/$this->groupId;
         $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
-        $this->memcache->setFieldUpdated($key);
     }
     private function print_data()
     {
@@ -884,6 +882,15 @@ class ProfileMemcacheService
 			$this->memcache->updateMemcacheData();
     }
     
+    public function unsetSKIP_PROFILES()
+    {
+                $this->groupId = self::SKIP_PROFILES;
+		$this->memcache->setCONTACTED_BY_ME("");
+	        $this->memcache->setCONTACTED_ME("");
+                $this->memcache->setIGNORED("");
+                $this->memcache->updateMemcacheData();
+                $this->unsetGroupUpdated();
+    }
     
     
 }

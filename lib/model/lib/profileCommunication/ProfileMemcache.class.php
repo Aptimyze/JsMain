@@ -288,6 +288,9 @@ class ProfileMemcache
     private function _initializeMemcacheData()
     {
         $this->GROUPS_UPDATED          = $this->_memcache["GROUPS_UPDATED"] ? $this->_memcache["GROUPS_UPDATED"] : 1;
+        $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
+        $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
+        $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
     
     }
     
@@ -560,5 +563,61 @@ class ProfileMemcache
             unset(self::$_instance[$profileid]);
     }
     
-   
+
+    /**
+     * 
+     * Get CONTACTED_BY_ME profiles.
+     * 
+     * <p>
+     * This function returns the CONTACTED_BY_ME profiles.
+     * </p>
+     * 
+     * @access public
+     * @return string
+     */
+    public function getCONTACTED_BY_ME()
+    {
+        
+        return $this->CONTACTED_BY_ME;
+        
+    }
+
+    
+    /**
+     * 
+     * Get CONTACTED_ME profiles.
+     * 
+     * <p>
+     * This function returns the CONTACTED_ME profiles.
+     * </p>
+     * 
+     * @access public
+     * @return string
+     */
+    public function getCONTACTED_ME()
+    {
+        
+        return $this->CONTACTED_ME;
+        
+    }
+    
+    
+    /**
+     * 
+     * Get IGNORED profiles.
+     * 
+     * <p>
+     * This function returns the IGNORED profiles.
+     * </p>
+     * 
+     * @access public
+     * @return string
+     */
+    public function getIGNORED()
+    {
+        
+        return $this->IGNORED;
+        
+    }
+    
 }
