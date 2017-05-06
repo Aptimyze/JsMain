@@ -884,6 +884,9 @@ class ProfileMemcacheService
     
     public function unsetSKIP_PROFILES()
     {
+		$this->memcache->set('CONTACTED_BY_ME',"");
+	        $this->memcache->set('CONTACTED_ME',"");
+                $this->memcache->set('IGNORED',"");
                 $this->groupId = self::SKIP_PROFILES;
                 $this->unsetGroupUpdated();
                 $this->memcache->updateMemcacheData();

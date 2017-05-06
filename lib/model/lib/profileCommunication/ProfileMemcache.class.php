@@ -564,6 +564,23 @@ class ProfileMemcache
     }
     
 
+     /**
+     * 
+     * Set CONTACTED_BY_ME profiles.
+     * 
+     * <p>
+     * This function set CONTACTED_BY_ME.
+     * </p>
+     * 
+     * @access public
+     * @param $current string
+     */
+    public function setCONTACTED_BY_ME($current = '')
+    {
+        $this->CONTACTED_BY_ME = $current;
+        
+    }
+    
     /**
      * 
      * Get CONTACTED_BY_ME profiles.
@@ -581,7 +598,23 @@ class ProfileMemcache
         return $this->CONTACTED_BY_ME;
         
     }
-
+    
+     /**
+     * 
+     * Set CONTACTED_ME profiles.
+     * 
+     * <p>
+     * This function set CONTACTED_ME.
+     * </p>
+     * 
+     * @access public
+     * @param $current string
+     */
+    public function setCONTACTED_ME($current = '')
+    {
+        $this->CONTACTED_ME = $current;
+        
+    }
     
     /**
      * 
@@ -601,6 +634,22 @@ class ProfileMemcache
         
     }
     
+     /**
+     * 
+     * Set IGNORED profiles.
+     * 
+     * <p>
+     * This function set IGNORED.
+     * </p>
+     * 
+     * @access public
+     * @param $current string
+     */
+    public function setIGNORED($current = '')
+    {
+        $this->IGNORED = $current;
+        
+    }
     
     /**
      * 
