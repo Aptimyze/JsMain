@@ -888,8 +888,8 @@ class ProfileMemcacheService
 		$this->memcache->setCONTACTED_BY_ME("");
 	        $this->memcache->setCONTACTED_ME("");
                 $this->memcache->setIGNORED("");
-                $this->memcache->updateMemcacheData();
                 $this->unsetGroupUpdated();
+                $this->memcache->updateMemcacheData();
     }
     
     
