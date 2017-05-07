@@ -287,11 +287,11 @@ class ProfileMemcache
      */
     private function _initializeMemcacheData()
     {
-        $this->GROUPS_UPDATED          = $this->_memcache["GROUPS_UPDATED"] ? $this->_memcache["GROUPS_UPDATED"] : 1;
-        $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
-        $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
-        $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
-    
+        $arr = $this->_memcache;
+        
+        foreach ($arr as $key => $value) {
+         $this->$key = $value ? $value :"";   
+        }
     }
     
     /**
