@@ -434,11 +434,6 @@ class ProfileMemcache
             //      jsException::log("Please set the instance first by calling \"getInstance\" method.");
         }
     }
-    
-    public function getGROUPS_UPDATED()
-    {
-        return $this->GROUPS_UPDATED ? $this->GROUPS_UPDATED : 1;
-    }
 
     /**
      * 
