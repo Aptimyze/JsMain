@@ -201,7 +201,6 @@ class ProfileMemcacheService
         if (false === $this->isGroupUpdated($this->groupId)) {
             if ($optionalDataFlag === false) {
                 $this->set();
-                //$this->print_data();
                 return $set = true;
             } else
                 return $updateGroup = false;
@@ -219,15 +218,14 @@ class ProfileMemcacheService
     }
     private function unsetGroupUpdated()
     {
-        if ($this->memcache->get('GROUPS_UPDATED') % $this->groupId != 0)
+        if (!$this->isGroupUpdated($this->groupId))
             return;
-        $newGroupValue = $this->memcache->get('GROUPS_UPDATED')/$this->groupId;
+        $newGroupValue = str_replace($this->getGroupKey($this->groupId),"",$this->memcache->get('GROUPS_UPDATED'));
         $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
     }
     private function print_data()
     {
         //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
-       // print_r($md);   die;
     }
     /**
      * 
@@ -302,9 +300,9 @@ class ProfileMemcacheService
      **/
     private function setGroupUpdated()
     {
-        if ($this->memcache->get('GROUPS_UPDATED') % $this->groupId == 0)
+        if ($this->isGroupUpdated($this->groupId))
             return;
-        $newGroupValue = $this->memcache->get('GROUPS_UPDATED') * $this->groupId;
+        $newGroupValue = $this->memcache->get('GROUPS_UPDATED'). $this->getGroupKey($this->groupId);
         $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
     }
     /**
@@ -327,9 +325,11 @@ class ProfileMemcacheService
      *@return returns true of the group is updated else returns false
      **/
     public function isGroupUpdated($groupId)
-    {
-        if ($this->memcache->get('GROUPS_UPDATED') % $groupId == 0)
-            return true;
+    { 
+        if (strpos($this->memcache->get('GROUPS_UPDATED') , $this->getGroupKey($groupId)) !== false){
+        return true;
+        
+        }
         return false;
     }
     /**
@@ -631,7 +631,6 @@ class ProfileMemcacheService
 		$considerProfiles = array_diff($considerProfiles,$skipProfile);
 		unset($skipProfile);
 	}
-       // print_r($skipProfile);
 	if(is_array($considerProfiles) && count($considerProfiles)>0)
 		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
 //        $configObj            = new ProfileInformationModuleMap();
@@ -641,7 +640,6 @@ class ProfileMemcacheService
         
         
         
-        //print_r($msgCount); die;
         if(is_array($msgCount))
 		{
 			foreach($msgCount as $k=>$v)
@@ -720,7 +718,6 @@ class ProfileMemcacheService
 		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
 		$considerProfiles = array_diff($considerProfiles,$skipProfile);
 	}
-       // print_r($skipProfile);
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
@@ -870,11 +867,10 @@ class ProfileMemcacheService
    
     public function setSKIP_PROFILES()
     {
-				$skipConditionArray = SkipArrayCondition::$SkippedAll;
-        $skipProfileObj     = SkipProfile::getInstance($this->profileid);
-        //print_r($skipConditionArray); die;
-        $skipArray       = $skipProfileObj->getSkipProfiles($skipConditionArray,"1");
-       // print_r($skipArray); die;
+                        
+                        $skipConditionArray = SkipArrayCondition::$SkippedAll;
+                        $skipProfileObj     = SkipProfile::getInstance($this->profileid);
+                        $skipArray       = $skipProfileObj->getSkipProfiles($skipConditionArray,"1");
 		
 			$this->memcache->set('CONTACTED_BY_ME',serialize($skipArray["CONTACTED_BY_ME"]));
                 	$this->memcache->set('CONTACTED_ME',serialize($skipArray["CONTACTED_ME"]));
@@ -892,6 +888,9 @@ class ProfileMemcacheService
                 $this->memcache->updateMemcacheData();
     }
     
-    
+    private function getGroupKey($groupId)
+    {
+        return "_".$groupId."_";
+    }
 }
 ?>
