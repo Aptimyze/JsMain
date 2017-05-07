@@ -867,14 +867,16 @@ class ProfileMemcacheService
    
     public function setSKIP_PROFILES()
     {
-                        
+                        $this->groupId = self::SKIP_PROFILES;
+                        if ($this->isGroupUpdated($this->groupId))
+                            return;
                         $skipConditionArray = SkipArrayCondition::$SkippedAll;
                         $skipProfileObj     = SkipProfile::getInstance($this->profileid);
                         $skipArray       = $skipProfileObj->getSkipProfiles($skipConditionArray,"1");
-		
-			$this->memcache->set('CONTACTED_BY_ME',serialize($skipArray["CONTACTED_BY_ME"]));
+                        $this->memcache->set('CONTACTED_BY_ME',serialize($skipArray["CONTACTED_BY_ME"]));
                 	$this->memcache->set('CONTACTED_ME',serialize($skipArray["CONTACTED_ME"]));
 			$this->memcache->set('IGNORED',serialize($skipArray["IGNORED"]));
+                        $this->setGroupUpdated();
 			$this->memcache->updateMemcacheData();
     }
     
