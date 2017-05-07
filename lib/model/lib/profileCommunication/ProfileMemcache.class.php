@@ -349,7 +349,8 @@ class ProfileMemcache
         $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileKey());
         foreach($this->_updatedFields as $key =>$value)
         {
-           $tempArr[$value] = $this->get($value);
+           $tempArr[$key] = $this->get($key);
+
         }
         if($lifetime < 0)
         {
@@ -555,7 +556,7 @@ class ProfileMemcache
     public function setFieldUpdated($key)
     {
         
-        $this->_updatedFields[] = $key;
+        $this->_updatedFields[$key] = 1;
         
     }
     public static function unsetInstance($profileid)
