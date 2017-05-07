@@ -314,7 +314,6 @@ abstract class ContactEvent {
     $viewedProfile = $this->contactHandler->getViewed()->getPROFILEID();
     $memcacheServiceViewedObj = new ProfileMemcacheService($viewedProfile);
     $memcacheServiceViewedObj->unsetSKIP_PROFILES();
-    $memcacheServiceObj->updateMemcache();
 	}
 }
 ?>
