@@ -14,7 +14,7 @@
             ~if $brideGroom eq 'Grooms'`Brides ~else` Grooms~/if`
         </div>
 	</button>
-    <amp-lightbox id="my-lightbox" layout="nodisplay">
+    <amp-lightbox id="my-lightbox" scrollable layout="nodisplay">
         <div class="lightbox" role="button" tabindex="0">
             <h1>
                 <div class="fullwid bg10 pad18">
