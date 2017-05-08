@@ -600,7 +600,7 @@ function hostReachable() {
     }
 }
 
-function createCookieExpireMidnight(name,value,path) {
+function createCookieExpireMidnight(name,value,path,specificDomain) {
 	var expires = "";
 	var date = new Date();
 	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
@@ -608,7 +608,12 @@ function createCookieExpireMidnight(name,value,path) {
 	if (!path) {
 		path = "/";
 	}
-	document.cookie = name + "=" + value + expires + "; path=" + path;
+        if(specificDomain == undefined || specificDomain == ""){
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path="+path;
+        }else{
+            document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path="+path;
+        }
+        
 }
 
 function readCookie(name) {
@@ -629,7 +634,7 @@ function readCookie(name) {
         var d = new Date();
         var date = d.toLocaleDateString();
         if(url.includes("hindi")&& (profile!=trackingProfile) && (trackingProfile!="")){
-            createCookieExpireMidnight("hinditracking",trackingProfile);
+            createCookieExpireMidnight("hinditracking",trackingProfile,"/",".jeevansathi.com");
             trackJsEventGA('jsms', 'hindi',date,trackingProfile);
         }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
