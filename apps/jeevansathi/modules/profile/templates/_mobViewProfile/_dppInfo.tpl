@@ -7,7 +7,7 @@
     ~else`
         <div class="hgt10"></div>
 	~/if`
-	~if $myPreview neq "1"`
+	~if $myPreview neq "1" && $selfProfileId neq ""`
 	<div class="clearfix f13 fontlig">
 		<div class="fl color2 VPwid28p">~if $gender eq Male` His ~else` Her ~/if` Preference</div>
 		<div class="fr color2 VPwid25p">Matches you</div>
@@ -32,7 +32,7 @@
 				<div class="f12 color1">~if $gender eq Male` She ~else` He ~/if` should be</div>
 				<div class="fontlig pb15 pt5" id="vpro_dpp_height">~$arrData.dpp_height`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.HEIGHT eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -49,7 +49,7 @@
 				<div class="f12 color1">Age between</div>
 				<div class="fontlig pb15 pt5" id="vpro_dpp_age">~$arrData.dpp_age`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.AGE eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -66,7 +66,7 @@
 				<div class="f12 color1">Marital Status</div>
 				<div class="fontlig pb15 pt5" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 				~if $matchingArr.MSTATUS eq 'gnf'`
 					<div class="checkmarkVP"></div>
@@ -83,7 +83,7 @@
 				<div class="f12 color1">Have Children</div>
 				<div class="fontlig pb15 pt5" id="vpro_dpp_marital_status">~$arrData.dpp_have_child`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.HAVECHILD eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -100,7 +100,7 @@
 				<div class="f12 color1">Kundli & Astro</div>
 				<div class="fontlig pb15" id="vpro_dpp_manglik">~$arrData.dpp_manglik`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.MANGLIK eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -117,7 +117,7 @@
 				<div class="f12 color1">Religion</div>
 				<div class="fontlig pb15" id="vpro_dpp_religion">~$arrData.dpp_religion|decodevar`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.RELIGION eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -134,7 +134,7 @@
 				<div class="f12 color1">Mother Tongue</div>
 				<div class="fontlig pb15 js-cut" id="vpro_dpp_mtongue">~$arrData.dpp_mtongue|decodevar`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.MTONGUE eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -151,7 +151,7 @@
 				<div class="f12 color1">Caste</div>
 				<div class="fontlig pb15 js-cut" id="vpro_dpp_caste">~$arrData.dpp_caste|decodevar`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.CASTE eq 'gnf' || $matchingArr.SECT eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -168,7 +168,7 @@
 				<div class="f12 color1">City</div>
 				<div class="fontlig pb15 js-cut" id="vpro_dpp_city">~$arrData.dpp_city|decodevar`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.CITYRES eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -186,7 +186,7 @@
 				<div class="f12 color1">Country</div>
 				<div class="fontlig pb15 js-cut" id="vpro_dpp_country">~$arrData.dpp_country|decodevar`</div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 			~if $matchingArr.COUNTRYRES eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -212,7 +212,7 @@
 					<div class="f12 color1">Education Level</div>
 					<div class="fontlig pb15 js-cut" id="vpro_dpp_edu_level">~$arrData.dpp_edu_level`</div>
 				</div>
-				~if  $myPreview neq "1"`
+				~if  $myPreview neq "1" && $selfProfileId neq ""`
 				<div class="fr wid27p txtc VPmt5">
 					~if $matchingArr.ELEVEL_NEW eq 'gnf'`
 						<div class="checkmarkVP"></div>
@@ -232,9 +232,9 @@
 					<div class="f12 color1">Occupation</div>
 					<div class="fontlig pb15 js-cut" id="vpro_dpp_occupation">~$arrData.dpp_occupation`</div>
 				</div>
-				~if  $myPreview neq "1"`
+				~if  $myPreview neq "1" && $selfProfileId neq ""`
 				<div class="fr wid27p txtc VPmt5">
-					~if $matchingArr.OCCUPATION eq 'gnf' && $myPreview neq "1"`
+					~if $matchingArr.OCCUPATION eq 'gnf' && $myPreview neq "1" && $selfProfileId neq ""`
 						<div class="checkmarkVP"></div>
 					~else`
 					<div class="dashVP"></div>
@@ -250,9 +250,9 @@
 					<div class="f12 color1">Earning</div>
 					<div class="fontlig pb15" id="vpro_dpp_earning">~$arrData.dpp_earning`</div>
 				</div>
-				~if  $myPreview neq "1"`
+				~if  $myPreview neq "1" && $selfProfileId neq ""`
 				<div class="fr wid27p txtc VPmt5">
-					~if $matchingArr.INCOME eq 'gnf' && $myPreview neq "1"`
+					~if $matchingArr.INCOME eq 'gnf' && $myPreview neq "1" && $selfProfileId neq ""`
 						<div class="checkmarkVP"></div>
 					~else`
 					<div class="dashVP"></div>
@@ -275,9 +275,9 @@
 				<div class="f12 color1">Diet</div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_diet` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
-				~if $matchingArr.DIET eq 'gnf' && $myPreview neq "1"`
+				~if $matchingArr.DIET eq 'gnf' && $myPreview neq "1" && $selfProfileId neq ""`
 					<div class="checkmarkVP"></div>
 				~else`
 					<div class="dashVP"></div>
@@ -292,9 +292,9 @@
 				<div class="f12 color1">Smoke</div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_smoke` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
-				~if $matchingArr.SMOKE eq 'gnf' && $myPreview neq "1"`
+				~if $matchingArr.SMOKE eq 'gnf' && $myPreview neq "1" && $selfProfileId neq ""`
 				<div class="checkmarkVP"></div>
 				~else`
 				<div class="dashVP"></div>
@@ -309,9 +309,9 @@
 				<div class="f12 color1">Drink</div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_drink` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
-				~if $matchingArr.DRINK eq 'gnf' && $myPreview neq "1"`
+				~if $matchingArr.DRINK eq 'gnf' && $myPreview neq "1" && $selfProfileId neq ""`
 				<div class="checkmarkVP"></div>
 				~else`
 				<div class="dashVP"></div>
@@ -326,7 +326,7 @@
 				<div class="f12 color1">Complexion</div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_complexion` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 				~if $matchingArr.COMP eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -343,7 +343,7 @@
 				<div class="f12 color1">Body Type </div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_btype` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 				~if $matchingArr.BTYPE eq 'gnf'`
 				<div class="checkmarkVP"></div>
@@ -360,7 +360,7 @@
 				<div class="f12 color1">Challenged </div>
 				<div class="fontlig pb15" id="vpro_dpp_lifestyle">~$arrData.dpp_handi` </div>
 			</div>
-			~if  $myPreview neq "1"`
+			~if  $myPreview neq "1" && $selfProfileId neq ""`
 			<div class="fr wid27p txtc VPmt5">
 				~if $matchingArr.HANDI eq 'gnf'`
 				<div class="checkmarkVP"></div>
