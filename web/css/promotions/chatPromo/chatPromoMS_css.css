@@ -1,0 +1,14 @@
+	#chatPormoMS .cpbg1{ background-color:#e4e4e4}
+	#chatPormoMS .setshare {top:50%;left:50%;transform:translate(-50%, -50%);-webkit-transform:translate(-50%, -50%);-ms-transform:translate(-50%, -50%);}
+	#chatPormoMS .closeCP {position: absolute;right:10px;top: -42px;width: 20px;height: 20px;}
+	#chatPormoMS .closeCP:before, .closeCP:after {position: absolute;left: 15px;content: ' ';height: 20px;width: 2px;background-color: #405367;}
+	#chatPormoMS .closeCP:before { transform: rotate(45deg);-webkit-transform: rotate(45deg);-ms-transform:rotate(45deg)}
+	#chatPormoMS .closeCP:after { transform: rotate(-45deg);-webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg);}
+	#chatPormoMS button{border:0;padding:18px 40px; margin-top:20px}
+	#chatPormoMS ul { list-style: none; margin:0; padding:0}
+	#chatPormoMS ul li{line-height:20px}
+	#chatPormoMS ul li:before {content: "\2022  ";}
+	#chatPormoMS .wid98p{width:98%}
+	#chatPormoMS .padl38{padding-left:38px}
+
+
