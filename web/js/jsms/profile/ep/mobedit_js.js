@@ -13,7 +13,7 @@ var storeJson={};
 var hamburgerObj={};
 var overlayObj={};
 var NOT_FILLED_IN="Not filled in";
-var outerMessageContact= {'Y':'Show to all','N':'Hidden','C':'Show on interest'};
+var outerMessageContact= {'':'Show to all','Y':'Show to all','N':'Hidden','C':'Show on interest'};
 
 
 	function overlaySet(){
