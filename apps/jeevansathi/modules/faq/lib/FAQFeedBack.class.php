@@ -41,6 +41,7 @@ class FAQFeedBack
 			{
 				$this->otherProfile=new Profile();	
 			}
+
 		if($this->webRequest->getParameter('profilechecksum') && ($reasonNew || $reasonMap))
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
@@ -53,7 +54,6 @@ class FAQFeedBack
 
                         $pos=strpos($reason,':');
                         $reasonNew=trim(substr($reason,$pos+1));
-
                         $pos2=strpos($reason,'by');
                         $arr2=split(' ',trim(substr($reason,$pos2+2)));
                         $otherUsername=trim($arr2[0]);
@@ -73,16 +73,16 @@ class FAQFeedBack
                         $reasonNew=$this->webRequest->getParameter('other_reason');
                 }
 
-		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile');
+		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile','one or more of profile details are incorrect','photo on profile doesn\'t belong to the person','user is using abusive/indecent language','user is stalking me with messages/calls','user is asking for money','user has no intent to marry',
+			'user is already married / engaged','user is not picking up phone calls','person on phone denied owning this profile','user\'s phone is switched off/not reachable','user\'s phone is invalid');
 
 		if(in_array(strtolower($reasonNew),$reasonsCategory))
-		{
+		{    
 			$categoryNew=$reasonNew;
 			$otherReason=''; 
-
 		}
 		else
-		{
+		{ 
 			$categoryNew='other';
 			$otherReason=$reasonNew; 
 
@@ -102,7 +102,7 @@ class FAQFeedBack
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
 		} 
-		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return; 
+		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName);
 			
 				// block for blocking the reported abuse added by Palash
@@ -181,7 +181,7 @@ class FAQFeedBack
 		else{  
 			//print_r($this->m_szName);die('aaa');
 			if(MobileCommon::isIOSApp())
-			{
+			{ 
 				$loginProfile=LoggedInProfile::getInstance();
 				$reporterId = $loginProfile->getPROFILEID();
      	$feed=$this->webRequest->getParameter('feed');
@@ -194,7 +194,7 @@ class FAQFeedBack
      	unset($profileObj);      
 			}
 			else
-			{
+			{ 
 		$reporteeId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
 		$profileObj = NEWJS_JPROFILE::getInstance();
      	$reporterId = $profileObj->getProfileIdFromUsername($this->m_szUserName);
@@ -206,7 +206,6 @@ class FAQFeedBack
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		
 
-  		
 	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{  
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
@@ -219,7 +218,7 @@ class FAQFeedBack
 
 		$this->m_objForm->setDefaults($arrDeafults);  
 		if($request->isMethod('POST') && $request->getParameter('CMDSubmit'))
-		{  
+		{   
 			$arrFeed = $request->getParameter('feed');
 			if($arrFeed["email"])
 				$this->m_objForm->bind($arrFeed);
@@ -228,7 +227,7 @@ class FAQFeedBack
 				$arrFeed["email"]=$this->m_szEmail;
 				$this->m_objForm->bind($arrFeed);
 			}
-			
+
 			if($this->m_objForm->isValid())
 			{   
 				if($this->m_objForm->getValue('name'))
@@ -326,8 +325,7 @@ class FAQFeedBack
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
 
 			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
-			{	
-
+			{	  				
     			$this->insertReportAbuseLog();
     		}	
 		}
