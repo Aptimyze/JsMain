@@ -57,9 +57,15 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$this->varArray["SAPHONE"] = $row["PHONE"];
 			}
 		}
+                if($this->varArray["editedFields"] && $this->smsKey == "CRITICAL_INFORMATION"){
+                        $this->varArray["WAS_WERE"] = "was";
+                        if($this->varArray["editedFieldsCount"]>1){
+                                $this->varArray["WAS_WERE"] = "were";
+                        }
+                }
                 if($this->varArray) 
                     $this->profileDetails = array_merge($this->profileDetails,$this->varArray);
-//		print_r($this->profileDetails);
+		//print_r($this->profileDetails);
 		
 	}	
 	private function inDNC() {
@@ -82,6 +88,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
 		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
 		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
+		if($this->smsKey=='CRITICAL_INFORMATION') return true;
 
 		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);

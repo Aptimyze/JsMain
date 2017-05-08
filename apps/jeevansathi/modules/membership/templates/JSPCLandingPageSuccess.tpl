@@ -899,6 +899,7 @@
     });
 
     $(document).ready(function() {
+        eraseCookie('backendLink');
     ~if $data.serviceContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -1050,7 +1051,11 @@
             }
         });
 
-	eraseCookie('mainMem');
+        //erasing mainmem cookie for backend link case
+        if(checkEmptyOrNull(readCookie('redirectedFrom')) && readCookie('redirectedFrom')=='backendLink'){
+          eraseCookie('mainMem');
+           eraseCookie('redirectedFrom');
+        }
 
         
         $(".astroAddon").each(function(k,v){

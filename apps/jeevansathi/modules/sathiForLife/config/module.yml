@@ -1,0 +1,7 @@
+all:
+  lead_banner: 0
+  show_mobile: 0
+  show_age: 0
+  show_mtongue: 0
+  index:
+    enable_login:  off

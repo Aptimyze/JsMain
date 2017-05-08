@@ -128,7 +128,7 @@ $css_arr[]=array("jsms/membership/new_revamp_membership_css"              => "12
 $css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"                 => "21");
 $css_arr[]=array("jsms/register/regis_css"            => "14");
 $css_arr[]=array("jsms/register/reg_animate"   => "4");
-$css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"                   => "24");
+$css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"                    => "25");
 $css_arr[]=array("jsms/common/errorBar" => "1");
 $css_arr[]=array("jsms/contacts/contact_engine" => "2");
 $css_arr[]=array("mobreg_pass_css"     => "2");
@@ -213,12 +213,13 @@ $css_arr[]=array("jsms/myjs/CALJSMS_css"                  => "16");
 $css_arr[]=array("-1"     => "3");
 $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 $css_arr[]=array("yatra_style"     => "5");
+$css_arr[]=array("sathiForLife_css"          => "6");
 return $css_arr;
 }
 /* JavaScript File */
 function getJsFilesArr(){
 $js_arr[]=array("jsms/common/scrollTo"   => "1");
-$js_arr[]=array("jsms/search/mobSearchDropDown_js"               => "13");
+$js_arr[]=array("jsms/search/mobSearchDropDown_js"                => "14");
 $js_arr[]=array("jsms/search/mobSearchForm_js"      => "4");
 $js_arr[]=array("contactEngineNew_js"   => "4");
 $js_arr[]=array("registration_ajax_new_js"    => "6");
@@ -449,7 +450,7 @@ $js_arr[]=array("jsms/common/CommonFunctions"                                   
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
-$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                              => "64");
+$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                               => "65");
 $js_arr[]=array("jsms/search/JsmsSearch"   => "2");
 $js_arr[]=array("jsms/search/MobileSearchCommon"   => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular_min"  => "1");
@@ -464,7 +465,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                  
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                            => "50");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                        => "31");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                          => "89");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                 => "38");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                    => "41");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                          => "47");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
@@ -519,7 +520,7 @@ $js_arr[]=array("jspc/search/hslider"    => "1");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min"    => "1");
 $js_arr[]=array("jspc/search/test1"    => "1");
 $js_arr[]=array("jspc/search/scrollBar"    => "1");
-$js_arr[]=array("jspc/common/searchDropdown_js"      => "3");
+$js_arr[]=array("jspc/common/searchDropdown_js"       => "4");
 $js_arr[]=array("jspc/search/searchTuples"              => "11");
 $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
 $js_arr[]=array("jspc/inbox/contactCenter"                                                     => "52");
@@ -539,7 +540,7 @@ $js_arr[]=array("jspc/search/searchSliders"    => "1");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"    => "1");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat"   => "1");
 $js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                                                      => "58");
-$js_arr[]=array("jspc/utility/chosen/chosen_jquery"                              => "29");
+$js_arr[]=array("jspc/utility/chosen/chosen_jquery"                               => "30");
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism"    => "1");
 $js_arr[]=array("jspc/logout/hpjs"      => "3");
 $js_arr[]=array("jspc/common/hslider"    => "1");
@@ -551,7 +552,7 @@ $js_arr[]=array("jspc/common/phoneVeriLayers_js"                   => "17");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_slider"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_js"                              => "39");
-$js_arr[]=array("jspc/membership/upgrade_mem_js"                             => "16");
+$js_arr[]=array("jspc/membership/upgrade_mem_js"                               => "18");
 $js_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_scrollpane"    => "1");
 $js_arr[]=array("jspc/membership/jspc_mem_mousewheel"    => "1");
@@ -633,6 +634,7 @@ $js_arr[]=array("operations_validate2"        => "6");
 $js_arr[]=array("jsms/settings/mobHideProfile_js"                      => "18");
 $js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 $js_arr[]=array("/web/billing/billing"   => "1");
+$js_arr[]=array("sathiForLife_js"        => "6");
 return $js_arr;
 }
 function getJavascript(){
