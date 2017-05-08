@@ -91,11 +91,10 @@ class search_PAID_MEMBERS_MAILER extends TABLE
             $sql.=",USER$i";
             $userValues .= ",:USER_ID".$i;
           }
-          $sql.=",DATE) VALUES (:RECEIVER_ID".$userValues.",:DATE)";
+          $sql.=") VALUES (:RECEIVER_ID".$userValues.")";
           
           $res = $this->db->prepare($sql);
           $res->bindValue(":RECEIVER_ID", $receiverId, PDO::PARAM_INT);
-          $res->bindValue(":DATE",date('Y-m-d'),PDO::PARAM_INT);
           
           $userCounter = 1;
           foreach($profileIds as $userId){
