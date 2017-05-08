@@ -361,7 +361,7 @@ class UploadPhoto extends PictureService
                 	else
                 	{
                 		$error['ErrorCounter']=1;
-                		SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","error in converting pic with path \n\n".$picInfoArr['SRC']."\n and pic id:".$picInfoArr["PIC_ID"]);
+                		//SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","error in converting pic with path \n\n".$picInfoArr['SRC']."\n and pic id:".$picInfoArr["PIC_ID"]);
                         return $error;
                 	}
                 	
