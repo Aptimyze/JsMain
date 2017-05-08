@@ -224,6 +224,7 @@
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	~if $data.backendLink`
+                createCookie('backendLink', window.location.href, 0.0188);
 		~if $data.cart_items.main_memberships`
 			createCookie('mainMem', '~$data.subscription_id`', 0);
 			createCookie('mainMemDur', '~$data.subscription_duration`', 0);

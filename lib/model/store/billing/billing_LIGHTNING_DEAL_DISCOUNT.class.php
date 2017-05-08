@@ -23,7 +23,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
 		}
     }
 
-    public function filterDiscountActivatedProfiles($pid="",$offsetDt="")
+    public function filterDiscountActivatedProfiles($pid="",$viewed='V',$offsetDt="")
     {
         try {
             if (is_array($pid))
@@ -46,12 +46,12 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
            	if(!empty($offsetDt)){
            		$sql .= " ENTRY_DT>=:ENTRY_DT";
            	}
-           	$sql .= " AND STATUS NOT LIKE :STATUS";
+           	$sql .= " AND STATUS=:STATUS";
             $prep = $this->db->prepare($sql);
             if(!empty($offsetDt)){
             	$prep->bindValue(":ENTRY_DT", $offsetDt,PDO::PARAM_STR);
             }
-            $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
+            $prep->bindValue(":STATUS", $viewed,PDO::PARAM_STR);
             $prep->execute();
             while ($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profilesArr[] = $res['PROFILEID'];
@@ -60,7 +60,22 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             /*** echo the sql statement and error message ***/
             throw new jsException($e);
         }
+    }
 
+    public function insertInLightningDealDisc($params){
+        if(is_array($params)){
+            try{
+                $sql = "INSERT INTO billing.LIGHTNING_DEAL_DISCOUNT (`PROFILEID`,`DISCOUNT`,`ENTRY_DT`,`STATUS`) VALUES (:PROFILEID, :DISCOUNT, :ENTRY_DT, :STATUS)";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":PROFILEID", $params["PROFILEID"], PDO::PARAM_INT);
+                $res->bindValue(":DISCOUNT", $params["DISCOUNT"], PDO::PARAM_INT);
+                $res->bindValue(":ENTRY_DT", $params["ENTRY_DT"], PDO::PARAM_STR);
+                $res->bindValue(":STATUS", $params["STATUS"], PDO::PARAM_STR);
+                $res->execute();
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
     }
 }
 ?>

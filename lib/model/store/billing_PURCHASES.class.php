@@ -309,21 +309,26 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
-            if ($start_dt) {
-                $sql .= " AND ENTRY_DT >= :START_DT";
+            if(empty($profileStr)){
+                throw new jsException("empty profileStr passed in isPaidEver in billing_PURCHASES class");
             }
+            else{
+                $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+                if ($start_dt) {
+                    $sql .= " AND ENTRY_DT >= :START_DT";
+                }
 
-            $prep = $this->db->prepare($sql);
-            if ($start_dt) {
-                $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
-            }
+                $prep = $this->db->prepare($sql);
+                if ($start_dt) {
+                    $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+                }
 
-            $prep->execute();
-            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
+                $prep->execute();
+                while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $res[$row['PROFILEID']] = $row['ENTRY_DT'];
+                }
+                return $res;
             }
-            return $res;
         } catch (PDOException $e) {
             throw new jsException($e);
         }

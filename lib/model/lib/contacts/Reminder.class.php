@@ -151,14 +151,25 @@ class Reminder extends ContactEvent {
       $this->setPostDrafts($this->component->drafts);
     }
   }
-
+  
+  /**
+   * 
+   */
   public function sendMail(){   
     $viewed = $this->contactHandler->getViewed();
     $viewer = $this->contactHandler->getViewer();
+    
     $viewedSubscriptionStatus = $viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-
     $this->_setReminderMailerDraft(stripslashes(htmlspecialchars($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE), ENT_QUOTES)));
-    ContactMailer::InstantReminderMailer($viewed->getPROFILEID(), $viewer->getPROFILEID(), $this->_getReminderMailerDraft(), $viewedSubscriptionStatus);
+    
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+    {
+      $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'REMINDERCONTACT','body'=>array('senderid'=>$viewer->getPROFILEID(),'receiverid'=>$viewed->getPROFILEID(),'message'=>$this->_getReminderMailerDraft(), 'viewedSubscriptionStatus'=> $viewedSubscriptionStatus) ), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($sendMailData);
+    } else {
+      ContactMailer::InstantReminderMailer($viewed->getPROFILEID(), $viewer->getPROFILEID(), $this->_getReminderMailerDraft(), $viewedSubscriptionStatus);
+    }    
   }
 
   private function _setReminderMailerDraft($draft) {

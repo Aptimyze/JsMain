@@ -137,7 +137,8 @@ class Producer
 			$this->channel->queue_declare(MQ::INSTANT_EOI_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
-			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+			
+      $this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
 			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
@@ -146,8 +147,16 @@ class Producer
 						"x-message-ttl" => array("I", MQ::DELAY_WRITEMSG*1000))
 					);
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-			$this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
-
+      $this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
+      
+      //For Instant Mail
+      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array(
+            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
+            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
+						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
+					);
+      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -273,7 +282,9 @@ class Producer
 				case MQ::INSTANT_EOI_PROCESS:
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::INSTANT_EOI_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
-
+        case MQ::DELAYED_MAIL_PROCESS:
+          $this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min,MQ::DELAYED_INSTANT_MAIL);
+          break;
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

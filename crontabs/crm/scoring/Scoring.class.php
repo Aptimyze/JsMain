@@ -118,6 +118,15 @@ class Scoring
             }
         }
 
+        // Adding Channel Code
+	$channel ='Offline';
+        $sqlCh = "SELECT CHANNEL from MIS.REG_TRACK_CHANNEL WHERE PROFILEID='$this->PROFILEID' AND PAGE_TYPE='Page1' ORDER BY ID DESC LIMIT 1";
+        $resCh = mysql_query($sqlCh, $myDb) or die($sqlCh . mysql_error($myDb));
+        if($rowCh = mysql_fetch_array($resCh)) {
+                $channel = $rowCh['CHANNEL'];
+        }
+	$this->newmodel[CHANNEL]  = trim($channel);
+
         //Activity Data
         $this->newmodel[Search_In14Days] = "";
 	$lim_14_dt = date("Y-m-d",time()-14*86400);
