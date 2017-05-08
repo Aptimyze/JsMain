@@ -343,7 +343,7 @@ class ProfileMemcache
      * @access private
      * @return bool
      */
-    private function _setMemcacheData()
+    private function _setCacheData()
     {
         // Get TTL of Key
         $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileKey());
@@ -380,7 +380,7 @@ class ProfileMemcache
      */
     private function _updateMemcacheVariables()
     {
-        $this->_setMemcacheData();
+        $this->_setCacheData();
     }
     
    /**
@@ -501,7 +501,7 @@ class ProfileMemcache
     public function updateMemcacheData()
     {
         
-        $this->_setMemcacheData();        
+        $this->_setCacheData();        
     }
     
     /**
