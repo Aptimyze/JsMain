@@ -635,6 +635,8 @@ $js_arr[]=array("operations_validate2"        => "6");
 $js_arr[]=array("jsms/settings/mobHideProfile_js"                      => "18");
 $js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 $js_arr[]=array("/web/billing/billing"   => "1");
+$js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js"   => "1");
+$js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
