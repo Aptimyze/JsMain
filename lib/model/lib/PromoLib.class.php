@@ -1,11 +1,17 @@
 <?php
 
+/*
+	This Library is created for adding functions related to Promotions on the website. Just call the function showPromo() with the appropriate promo name 
+	and add more checks in that function for further processing.
+*/
+
 class PromoLib
 {
-	public static $baseDate = '2017-02-1 0:0:0';
-	public static $daysToShowPromo = 4;
-	
-	public static function showPromo($promoToBeShown,$profileId,$loginObj)
+	private $baseDate = '2017-05-8 0:0:0';
+	private $lastSevenDaysCheck = 3600*24*7;
+	private $timeForPromo = 3600*24*4;
+
+	private function showPromo($promoToBeShown,$profileId,$loginObj)
 	{ 
 		if($promoToBeShown == "chatPromo")
 		{
@@ -18,6 +24,11 @@ class PromoLib
 
 	private function ChatPromo($profileId,$loginObj)
 	{
+
+		if($_COOKIE['DAY_CHECK_CHAT_PROMO'] == '1')
+		{  
+			return false;
+		}
 
 		if($loginObj->getACTIVATED() == 'U')
 			return false;
@@ -40,22 +51,15 @@ class PromoLib
 				return false;
 			else if($isUserEligible['APP_TYPE'] == "A")
 			{
-				if(strtotime(now) - strtotime($isUserEligible['DATE']) < 3600*24*7)
+				if(strtotime(now) - strtotime($isUserEligible['DATE']) < self::$lastSevenDaysCheck)
 					return false;
 			}
 
-		}
-
-		if($_COOKIE['DAY_CHECK_CHAT_PROMO'] == '1')
-		{  
-			return false;
-		}		
-		else
-		{  
+		}		 
 			
 			$interval = strtotime(now) - strtotime(self::$baseDate);
 
-			if($interval < 24*4*3600)
+			if($interval < self::$timeForPromo)
 			{  
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 				return true;
@@ -64,7 +68,7 @@ class PromoLib
 			{
 				$activatedOn = $loginObj->getVERIFY_ACTIVATED_DT();
 
-				if((strtotime(now) - strtotime($activatedOn)) < 3600*24*self::$daysToShowPromo)
+				if((strtotime(now) - strtotime($activatedOn)) < self::$timeForPromo)
 				{  
 					setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 					return true;
@@ -72,7 +76,7 @@ class PromoLib
 
 				return false;
 			}
-		}
+		
 		
 		
 	}
