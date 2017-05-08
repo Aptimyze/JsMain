@@ -33,7 +33,7 @@
 <td>
   <table width="30%" style="background-color:#ad160d;">
     <tbody><tr>
-      <td style="text-align:center;height:25px"><a href="~sfConfig::get('app_site_url')`/social/addPhotos?fromAddPhotoMailer=1&mailType=1" style="color:#fff;text-decoration:none">Upload now</a></td>
+      <td style="text-align:center;height:25px"><a href="~$mailerLinks['UPLOAD_PHOTO']`~$data.commonParamaters`?fromAddPhotoMailer=1&mailType=1" style="color:#fff;text-decoration:none">Upload now</a></td>
     </tr>
   </tbody></table>
 </td>
