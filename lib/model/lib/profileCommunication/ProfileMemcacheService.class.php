@@ -143,7 +143,7 @@ class ProfileMemcacheService
      */
     public function update($key, $value, $optionalDataFlag = false)
     {
-        $set = $this->checkPreSettings($key, $optionalDataFlag);
+        $set = $this->checkPreSettingsForUpdate($key, $optionalDataFlag);
         if ($set === true) {
             $previous     = $this->memcache->get($key);
             $valueToBeSet = $this->updateCount($previous, $updateBy = $value);
@@ -188,6 +188,27 @@ class ProfileMemcacheService
             throw new jsException("", "key not handled in memcache via services");
         }
         $this->print_data();
+        return $set = $this->updateGroup($optionalDataFlag);
+    }
+    /**
+     * 
+     * function checkPreSettingsForUPdate
+     * 
+     * <p>
+     * This function takes the key, check if data is not set then do nothing to save cache memory
+     * </p>
+     * 
+     * @access private
+     */
+    
+    private function checkPreSettingsForUpdate($key, $optionalDataFlag = false)
+    {
+        $this->groupId = $this->findGroupId($key);
+        if ($this->groupId === false){
+            throw new jsException("", "key not handled in memcache via services");
+        }
+        if (false === $this->isGroupUpdated($this->groupId)) return $updateGroup = false;
+
         return $set = $this->updateGroup($optionalDataFlag);
     }
     /**

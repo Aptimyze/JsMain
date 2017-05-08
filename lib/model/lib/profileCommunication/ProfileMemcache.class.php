@@ -241,6 +241,8 @@ class ProfileMemcache
      * @var Object
      */
     private static $_instance;
+    
+    const EXPIRY_THRESHHOLD = 120;
     /**
      * 
      * Constructor for instantiating object of ProfileMemcache class
@@ -352,7 +354,7 @@ class ProfileMemcache
            $tempArr[$key] = $this->get($key);
 
         }
-        if($lifetime < 0)
+        if($lifetime < self::EXPIRY_THRESHHOLD)
         {
             // key doesnot exist or expire time is not defined
             $lifetime = 1800;
