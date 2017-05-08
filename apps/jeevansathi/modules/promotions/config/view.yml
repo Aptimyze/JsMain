@@ -2,9 +2,9 @@ chatPromoJSMSSuccess:
   metas:
     title: Jeevansathi.com
   stylesheets: [promotions/chatPromo/chatPromoMS_css]
-  javascripts: [jsms/promotions/chatPromo_js]
+  javascripts: [jsms/promotions/chatPromo/chatPromo_js]
   layout: jsmsMobLayout
 chatPromoJSPCSuccess:
   stylesheets: [promotions/chatPromo/chatPromoPC_css] 
-  javascripts: [jspc/promotions/chatPromo_js]
+  javascripts: [jspc/promotions/chatPromo/chatPromo_js]
   layout: jspcLayout

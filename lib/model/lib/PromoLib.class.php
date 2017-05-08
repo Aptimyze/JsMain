@@ -11,7 +11,7 @@ class PromoLib
 	private $lastSevenDaysCheck = 3600*24*7;
 	private $timeForPromo = 3600*24*4;
 
-	private function showPromo($promoToBeShown,$profileId,$loginObj)
+	public function showPromo($promoToBeShown,$profileId,$loginObj)
 	{ 
 		if($promoToBeShown == "chatPromo")
 		{
@@ -51,15 +51,15 @@ class PromoLib
 				return false;
 			else if($isUserEligible['APP_TYPE'] == "A")
 			{
-				if(strtotime(now) - strtotime($isUserEligible['DATE']) < self::$lastSevenDaysCheck)
+				if(strtotime(now) - strtotime($isUserEligible['DATE']) < $this->lastSevenDaysCheck)
 					return false;
 			}
 
 		}		 
-			
-			$interval = strtotime(now) - strtotime(self::$baseDate);
 
-			if($interval < self::$timeForPromo)
+			$interval = strtotime(now) - strtotime($this->baseDate);
+		
+			if($interval < $this->timeForPromo)
 			{  
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 				return true;
@@ -68,7 +68,7 @@ class PromoLib
 			{
 				$activatedOn = $loginObj->getVERIFY_ACTIVATED_DT();
 
-				if((strtotime(now) - strtotime($activatedOn)) < self::$timeForPromo)
+				if((strtotime(now) - strtotime($activatedOn)) < $this->timeForPromo)
 				{  
 					setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
 					return true;
