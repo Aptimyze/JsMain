@@ -215,6 +215,7 @@ $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 $css_arr[]=array("yatra_style"     => "5");
 $css_arr[]=array("promotions/chatPromo/chatPromoMS_css"        => "4");
 $css_arr[]=array("promotions/chatPromo/chatPromoPC_css" => "2");
+$css_arr[]=array("sathiForLife_css"          => "6");
 return $css_arr;
 }
 /* JavaScript File */
@@ -637,6 +638,7 @@ $js_arr[]=array("jspc/photoUpload/fbPage_js" => "1");
 $js_arr[]=array("/web/billing/billing"   => "1");
 $js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js"   => "1");
 $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js"   => "1");
+$js_arr[]=array("sathiForLife_js"        => "6");
 return $js_arr;
 }
 function getJavascript(){

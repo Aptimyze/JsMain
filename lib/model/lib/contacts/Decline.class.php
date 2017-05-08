@@ -93,7 +93,7 @@ class Decline extends ContactEvent{
       {
         $receiver = $this->contactHandler->getViewed();
         $sender = $this->contactHandler->getViewer();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
+        $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
       }
 

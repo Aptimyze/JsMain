@@ -899,6 +899,7 @@
     });
 
     $(document).ready(function() {
+        eraseCookie('backendLink');
     ~if $data.serviceContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -1052,7 +1053,7 @@
 
         //erasing mainmem cookie for backend link case
         if(checkEmptyOrNull(readCookie('redirectedFrom')) && readCookie('redirectedFrom')=='backendLink'){
-    	   eraseCookie('mainMem');
+          eraseCookie('mainMem');
            eraseCookie('redirectedFrom');
         }
 
