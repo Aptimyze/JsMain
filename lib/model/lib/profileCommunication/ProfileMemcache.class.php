@@ -292,7 +292,7 @@ class ProfileMemcache
         $arr = $this->_memcache;
         
         foreach ($arr as $key => $value) {
-         $this->$key = $value ? $value :"";   
+         $this->$key = $value ;   
         }
     }
     
