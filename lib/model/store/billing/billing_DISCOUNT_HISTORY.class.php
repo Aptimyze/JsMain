@@ -80,7 +80,7 @@ class billing_DISCOUNT_HISTORY extends TABLE{
                 throw new jsException("","date blank passed");
         try
         {
-            $sql = "select PROFILEID,MAX(P) AS P_MAX from billing.DISCOUNT_HISTORY where ";
+            $sql = "select PROFILEID,MAX(P) AS P_MAX, MAX(C) as C_MAX, MAX(NCP) as NCP_MAX, MAX(X) as X_MAX from billing.DISCOUNT_HISTORY where ";
             if(!empty($profileStr)){
                 $sql .= "PROFILEID IN($profileStr) AND ";
             }
@@ -94,8 +94,10 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             $res = $this->db->prepare($sql);
             $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();
-            while($result = $res->fetch(PDO::FETCH_ASSOC))
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                if(! ($result['P_MAX'] == 0 && $result['C_MAX'] == 0 && $result['NCP_MAX'] == 0 && $result['X_MAX'] == 0) )
                     $profilesArr[$result['PROFILEID']] = $result;
+            }
             return $profilesArr;
         }
         catch(PDOException $e){
