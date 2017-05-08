@@ -39,15 +39,16 @@ EOF;
         $eligiblePool = $dealObj->generateDealEligiblePool();
 
         //store eligible pool
-        $dealObj->storeDealEligiblePool();
+        $dealObj->storeDealEligiblePool($eligiblePool);
         unset($dealObj);
 
         //truncate billing.DISCOUNT_HISTORY table
         $todayDate = date("Y-m-d");
+        $today1Date = date("Y-m-d",strtotime("$todayDate -1 days"));
 		$offsetDate = date("Y-m-d",strtotime("$todayDate -".VariableParams::$lightningDealOfferConfig["lastLoggedInOffset"]." days"));
         $discHistObj = new billing_DISCOUNT_HISTORY();
         //backup daily data to billing.DISCOUNT_HISTORY_BACKUP
-        $discHistObj->backupDailyData($todayDate);
+        $discHistObj->backupDailyData($today1Date);
 
         //uncomment ankita later
         $discHistObj->truncateTable($offsetDate);

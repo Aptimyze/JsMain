@@ -25,8 +25,14 @@ class AppNotificationScheduler extends NotificationScheduler
 		$notificationDetail =$this->notificationObj->getNotificationDetail($valueArray);
 		$this->osType =$notificationDetail[0]['OS_TYPE'];
   }
-    public function scheduleNotificationsForKey()
+    public function scheduleNotificationsForKey($currentScript=0)
   {
+	  // Just Join Check
+	  if(in_array($this->notificationKey, NotificationEnums::$notificationTempLogArr)){
+	        $tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
+	        $logProfiles = $tempObj->getProfiles($currentScript);
+	  }
+
 	  $appProfilesHandlerObj = new AppProfilesHandler;
 	  $numberOfLoopsExecuted = 0;
 	  while(1)
@@ -38,7 +44,7 @@ class AppNotificationScheduler extends NotificationScheduler
 		  $appProfiles = $appProfilesHandlerObj->getProfiles($this->notificationKey,$numberOfProfilesPerLoop=100,$restartLooper,$this->noOfScripts,$this->currentScript,$this->osType,$this->androidMaxVersion);
 		  if(is_array($appProfiles))
 		  {
-			  $notificationData = $this->notificationObj->getNotificationData($appProfiles,$this->notificationKey);
+			  $notificationData = $this->notificationObj->getNotificationData($appProfiles,$this->notificationKey,'','',$logProfiles,$currentScript);
 			  $this->schedule($notificationData);
 		  }
 		  else
