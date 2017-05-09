@@ -249,7 +249,7 @@ class MembershipHandler
         return $options;
     }
 
-    public function getDiscountInfo($user,$upgradeMem="NA")
+    public function getDiscountInfo($user,$upgradeMem="NA",$device="desktop")
     {
         $userType = $user->userType;
         $fest     = $this->getFestiveFlag();
@@ -260,7 +260,7 @@ class MembershipHandler
         } else{
             if($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
                 if ($user->getProfileid() != '') {
-                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid());
+                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
                 }
                 if ($this->lightningDealDiscount) {
                     $discountInfo["TYPE"] = discountType::LIGHTNING_DEAL_DISCOUNT;
@@ -270,7 +270,7 @@ class MembershipHandler
                 }
             } else {
                 if ($user->getProfileid() != '') {
-                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),date("Y-m-d H:i:s"));
+                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
                     if(!$this->lightningDealDiscount){
                         $varDiscount       = $this->memObj->getSpecialDiscount($user->getProfileid());
                         $this->varDiscount = $varDiscount;
@@ -339,7 +339,7 @@ class MembershipHandler
             }
             else{
 
-                $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem);
+                $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem,$device);
             }
             $discountType    = $discountTypeArr['TYPE'];
         }
@@ -623,9 +623,9 @@ class MembershipHandler
         return $discount;
     }
 
-    public function getLightningDealDiscount($profileId,$currentTime="")
+    public function getLightningDealDiscount($profileId,$device="desktop")
     {
-        $discount = $this->memObj->getLightningDealDiscount($profileId,$currentTime);
+        $discount = $this->memObj->getLightningDealDiscount($profileId,$device);
         if ($discount != 0) {
             list($yy, $mm, $dd) = explode('-', $discount["EDATE"]);
             $ts                 = mktime(0, 0, 0, $mm, $dd, $yy);
@@ -1006,6 +1006,12 @@ class MembershipHandler
 
     public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="",$upgardeMem="NA")
     {
+        if($apiObj!="" && $apiObj->device){
+            $device = $apiObj->device;
+        }
+        else{
+            $device = "desktop";
+        }
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
             $profileObj->getDetail();
@@ -1019,7 +1025,7 @@ class MembershipHandler
                     $discountTypeArr = $apiObj->discountTypeInfo;
                 }
                 else{
-                    $discountTypeArr = $this->getDiscountInfo($userObj,$upgardeMem);
+                    $discountTypeArr = $this->getDiscountInfo($userObj,$upgardeMem,$device);
                 }
                 $discountType    = $discountTypeArr['TYPE'];
             }
@@ -1314,7 +1320,7 @@ class MembershipHandler
                 $lightningDealDiscount = $this->lightningDealDiscount["DISCOUNT"];
             }
             else{
-                $lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid());
+                $lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
             }
             if(empty($lightningDealDiscount)){
                 $lightningDealDiscount = 0;
@@ -1606,7 +1612,7 @@ class MembershipHandler
                         $discPerc = $lightningDealDiscountPercent;
                     }
                     else{
-                        $discPercArr = $this->memObj->getLightningDealDiscount($profileid);
+                        $discPercArr = $this->memObj->getLightningDealDiscount($profileid,$device);
                         if(is_array($discPercArr)) 
                             $discPerc = $discPercArr["DISCOUNT"];
                         else

@@ -168,7 +168,7 @@ class MembershipAPIResponseHandler {
             $this->upgradeMem = "MAIN";
         }
         //set discount info so that it can be used as common variable
-        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem);
+        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem,$this->device);
         if($this->discountTypeInfo == null){
             $this->discountTypeInfo = array();
         }

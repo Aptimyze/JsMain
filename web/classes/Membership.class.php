@@ -2141,10 +2141,16 @@ class Membership
         else return 0;
     }
 
-    function getLightningDealDiscount($profile,$currentTime="") {
-        $today = date('Y-m-d');
+    function getLightningDealDiscount($profile,$device="desktop") {
+        if(empty($device)){
+            $device = "desktop";
+        }
+        if(!in_array($device,VariableParams::$lightningDealOfferConfig["channelsAllowed"])){
+            return 0;
+        }
+        $today = date('Y-m-d H:i:s');
         $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
-        $row = $billingVarDiscObj->fetchDiscountDetails($profile,$currentTime);
+        $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
         if (is_array($row) && $row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
             $data['EDATE'] = $row['EDATE'];

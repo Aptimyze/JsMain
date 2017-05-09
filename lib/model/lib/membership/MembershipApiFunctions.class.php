@@ -118,7 +118,16 @@ class MembershipApiFunctions
 
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1 || $lightningDealActive == 1) {
                 if ($lightningDealActive == 1) {
-                    $discPerc = $lightningDealDiscountPercent;
+                    if(!empty($lightningDealDiscountPercent)){
+                        $discPerc = $lightningDealDiscountPercent;
+                    }
+                    else{
+                        $discPercArr = $memHandlerObj->getLightningDealDiscount($apiObj->profileid,$apiObj->device);
+                        if(is_array($discPercArr)) 
+                            $discPerc = $discPercArr["DISCOUNT"];
+                        else
+                            $discPerc = 0;
+                    }
                 }
                 else if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
                     $discPerc = $renewalPercent;
