@@ -43,7 +43,7 @@ class RabbitmqHelper
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
     // enable alerts for these
-    $arrEnableAlert = array("screening","instantEoi","writeMsg","loggingQueue","updateSeenProfile","updateSeen","memoryAlarmAlert");
+    $arrEnableAlert = array("screening","instantEoi","writeMsg","loggingQueue","updateSeenProfile","updateSeen");
 
     if(in_array($to, $arrEnableAlert))
     {
