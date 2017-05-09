@@ -2582,4 +2582,14 @@ class MembershipHandler
             JsMemcache::getInstance()->remove("FreeToP_$profileid");
         }
     }
+    
+    public function clearMembershipCacheForProfile($profileid){
+        $memCacheObject = JsMemcache::getInstance();
+        if ($memCacheObject) {
+            $memCacheObject->remove($profileid . '_MEM_NAME');
+            $memCacheObject->remove($profileid . "_MEM_OCB_MESSAGE_API17");
+            $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
+            $memCacheObject->remove($profileid . "_MEM_SUBSTATUS_ARRAY");
+        }
+    }
 }

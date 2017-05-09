@@ -77,5 +77,38 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             }
         }
     }
+    
+    public function getLightningDealDiscountData($profileid){
+        if($profileid){
+            try{
+                $sql = "SELECT * from billing.LIGHTNING_DEAL_DISCOUNT where PROFILEID = :PROFILEID ORDER BY ENTRY_DT DESC LIMIT 1";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $prep->execute();
+                if($res = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $result = $res;
+                }
+                return $res;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+    }
+    
+    public function activateLightningDeal($params){
+        if(is_array($params)){
+            try{
+                $sql = "UPDATE billing.LIGHTNING_DEAL_DISCOUNT SET SDATE = :SDATE, EDATE = :EDATE, STATUS = :STATUS WHERE PROFILEID = :PROFILEID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":SDATE", $params["SDATE"], PDO::PARAM_STR);
+                $prep->bindValue(":EDATE", $params["EDATE"], PDO::PARAM_STR);
+                $prep->bindValue(":STATUS", $params["STATUS"], PDO::PARAM_STR);
+                $prep->bindValue(":PROFILEID", $params["PROFILEID"], PDO::PARAM_INT);
+                $prep->execute();
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+    }
 }
 ?>

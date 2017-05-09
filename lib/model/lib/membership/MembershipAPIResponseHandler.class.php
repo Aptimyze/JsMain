@@ -1877,6 +1877,7 @@ class MembershipAPIResponseHandler {
                 }
                 $bottom = "Renew Membership";
                 $expiryDate = date("Y-m-d", strtotime($this->userObj->expiryDate));
+                $disc = $this->renewalPercent;
             } 
             elseif ($this->specialActive == 1) {
                 $discountVD = $vdodObj->getDiscountDetails($this->profileid);
@@ -1902,12 +1903,14 @@ class MembershipAPIResponseHandler {
                     $bottom = "Upgrade Membership";
                 }
                 $expiryDate = date("Y-m-d", strtotime($this->expiry_date));
+                $disc = $this->discPerc;
             } 
             elseif ($this->discountActive == 1) {
             	$discountDisplayText = $vdodObj->getCashDiscountDispText($this->profileid,'cap');
                 $top = $discountDisplayText . " " . $this->discPerc . "% Off till " . date("d M", strtotime($this->expiry_date)) . "!";
                 $bottom = "Upgrade Membership";
                 $expiryDate = date("Y-m-d", strtotime($this->expiry_date));
+                $disc = $this->discPerc;
             } 
             elseif ($this->fest == 1) {
                 $top = "Get extra months / discount till " . date("d M", strtotime($this->festEndDt)) . "!";
@@ -1941,6 +1944,7 @@ class MembershipAPIResponseHandler {
 
         $startingPlanData = $this->generateMembershipPlansStartingRange();
         $output['startingPlan'] = $startingPlanData['startingPlan'];
+        $output['maxDiscount'] = $disc;
         unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();
