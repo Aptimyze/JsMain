@@ -148,12 +148,23 @@ class IgnoredProfiles
 	public function ifIgnored($profileid,$otherProfileId,$suffix="")
 	{
 		 $this->addDataToFile("old");
-		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId,$suffix);
-		 if($response == "noKey" || $response == false)
+		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId,$suffix);		 		 				 
+		 
+		 if($response == "noKey")
 		 {
 		 	$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
-		 	$this->addDataToFile("new");	
-			return $ignoreObj->isIgnored($profileid,$otherProfileId);
+		 	$this->addDataToFile("new");
+		 	$responseFromQuery = $ignoreObj->isIgnored($profileid,$otherProfileId);		 	
+		 	
+		 	if($responseFromQuery)
+		 	{
+		 		IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId);
+		 	}
+		 	else
+		 	{
+		 		IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId,"emptyKey");	
+		 	}
+		 	return $responseFromQuery;			 			
 		 }
 		 elseif($response == 1)
 		 {

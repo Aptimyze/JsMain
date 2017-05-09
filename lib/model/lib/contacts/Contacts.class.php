@@ -735,7 +735,7 @@ class Contacts {
             if(!$result)
                 {
 				$ignoreObj = new IgnoredProfiles();
-                                $whoignored = $ignoreObj->ifIgnored($profileId1,$profileId2)? 1 :($ignoreObj->ifIgnored($profileId2,$profileId1) ? 2 : 0);
+                                $whoignored = $ignoreObj->ifIgnored($profileId1,$profileId2,ignoredProfileCacheConstants::BYME)? 1 :($ignoreObj->ifIgnored($profileId2,$profileId1,ignoredProfileCacheConstants::BYME) ? 2 : 0);
 				if($whoignored)
                                 {
                                        $type='B';

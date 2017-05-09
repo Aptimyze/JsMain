@@ -291,11 +291,11 @@ class DetailActionLib
 			else
 			{
 				$ignore=new IgnoredProfiles();
-				if($ignore->ifIgnored($sender,$receiver))
+				if($ignore->ifIgnored($sender,$receiver,ignoredProfileCacheConstants::BYME))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender,ignoredProfileCacheConstants::BYME))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }

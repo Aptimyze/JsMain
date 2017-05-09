@@ -161,20 +161,29 @@ class IgnoredProfileCacheLib
     }
 
     //This function adds an ignoredProfileId to three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
-    public function addDataToCache($profileid,$ignoredProfileid)
+    public function addDataToCache($profileid,$ignoredProfileid,$extraParameter="")
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
-    	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
-        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
-        if(JsMemcache::getInstance()->keyExist($pidKey3))
+        if($extraParameter)
         {
-            JsMemcache::getInstance()->addDataToCache($pidKey3,$profileid);   
+            $pidKey =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+            JsMemcache::getInstance()->addDataToCache($pidKey,"");
         }
-    	JsMemcache::getInstance()->addDataToCache($pidKey1,$ignoredProfileid);
-    	JsMemcache::getInstance()->addDataToCache($pidKey2,$ignoredProfileid);
+        else
+        {
+            $pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
+            $pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+            $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+            
+            if(JsMemcache::getInstance()->keyExist($pidKey3))
+            {
+                JsMemcache::getInstance()->addDataToCache($pidKey3,$profileid);   
+            }
+            JsMemcache::getInstance()->addDataToCache($pidKey1,$ignoredProfileid);
+            JsMemcache::getInstance()->addDataToCache($pidKey2,$ignoredProfileid);
+        }    	
     }
 
     //This function checks if a particular value exists in the redis corresponding to a given key and accordingly returns the boolean response
@@ -194,8 +203,12 @@ class IgnoredProfileCacheLib
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
         if($keyExists == 1)
     	{
-    		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);
-    		return $response;
+    		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);    		
+            if($response == 0)
+            {
+                $response = "no";
+            }            
+            return $response;
     	}
     	else
     	{

@@ -15,6 +15,7 @@ class ignoredProfileCacheConstants
     const ALL_DATA = "_all";
     const BYME_DATA = "_byMe";
     const NO_KEY = "noKey";
+    const BYME = "byMe";
     //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
     //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
 }
