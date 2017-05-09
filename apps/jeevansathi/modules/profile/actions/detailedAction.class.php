@@ -359,12 +359,13 @@ class detailedAction extends sfAction
 			$arrOutDisplay["buttonDetails"] = json_encode($buttonObj->getNewButtonArray($arrPass));
 		}
 		$arrOutDisplay["showTicks"] = $this->CODEDPP;
+		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
-		//print_R($this->arrOutDisplay);die;
+				
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
