@@ -148,7 +148,8 @@ class JsNotificationsLogConsume
 	$messageId	=$body['messageId'];
 	$status		=$body['status'];
 	$osType		=$body['osType'];			
-	NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
+	$rabbitMq	=1;
+	NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType,$rabbitMq);
       }
       elseif($type == 'UPDATE_NOTIFICATION_STATUS_API')
       {

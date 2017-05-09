@@ -131,6 +131,9 @@ class MembershipHandler
     }
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
+        if(empty($device)){
+            $device = "desktop";
+        }
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
@@ -140,6 +143,7 @@ class MembershipHandler
             if(!empty($userObj)){
                 $mtongue = $userObj->mtongue;
             }
+            
             $key_main = $device . "_".$membership."_MEMBERSHIP";
             $key_main .= "_" . $userObj->getCurrency()."_".$mtongue;
             $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
@@ -148,6 +152,7 @@ class MembershipHandler
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
+
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
                 $fetchOffline = false;
@@ -156,7 +161,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
-            
+
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {
@@ -366,7 +371,7 @@ class MembershipHandler
 
     public function isDiscountOfferActive()
     {
-        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_slave');
+        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
         $active                = $discountOfferLogObj->checkDiscountOffer();
         $this->discountOfferID = $active;
         return $active;
@@ -524,8 +529,12 @@ class MembershipHandler
     {
         $memCacheObject     = JsMemcache::getInstance();
         $membershipKeyArray = VariableParams::$membershipKeyArray;
+        $mtongueArr = FieldMap::getFieldLabel("community_small",null,"1");
         foreach ($membershipKeyArray as $key => $keyVal) {
-            $memCacheObject->deleteKeysWithMatchedSuffix($keyVal,"prefix");
+            $memCacheObject->remove($keyVal."_-1");
+            foreach ($mtongueArr as $k => $v) {
+                $memCacheObject->remove($keyVal."_".$k);
+            }
         }
         $memCacheObject->remove('NO_MAIN_MEM_FILTER_MTONGUE');
         $memCacheObject->remove('NO_ADDON_MEM_FILTER_MTONGUE');
@@ -988,8 +997,10 @@ class MembershipHandler
         }
         if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
             $upgradeActive  = '1';
+
             //get upgrade discount for this user
             if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+
                 $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem,$apiObj);
             }
             else{
@@ -1316,7 +1327,6 @@ class MembershipHandler
                
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
                 
-                //print_r($apiObj);
                 if($apiObj!=""){
                     if(!is_array($apiObj->allMainMem)){
                         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $apiObj->device,false);
@@ -1340,6 +1350,8 @@ class MembershipHandler
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
                 }
                 if($upsellMRP > 0){
+
+                    $upsellMRP = ($upsellMRP < (0.3*($upgradeMemMRP - $currentMemMRP)))?(0.3*($upgradeMemMRP - $currentMemMRP)):$upsellMRP;
                     $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
                 }
             }
@@ -1515,6 +1527,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
+            
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
@@ -1622,6 +1635,7 @@ class MembershipHandler
             $mems = explode(',', $allMemberships);
         }
         $allMemberships = $allMemberships;
+
         if ($currency == 'RS') {
             $price             = 0;
             $totalCartPrice    = 0;
@@ -1695,8 +1709,7 @@ class MembershipHandler
                 $totalCartPrice += $price - round($price * ($discPerc / 100), 2);
             }
         }
-
-         //add additional discount for upgrade membership if applicable
+        //add additional discount for upgrade membership if applicable
         if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
             //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
             //$temp = $totalCartPrice;
@@ -1716,7 +1729,7 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-        
+       
         return array(
             $totalCartPrice,
             $discountCartPrice,
@@ -1969,7 +1982,7 @@ class MembershipHandler
     public function sendEmailForCallback($subject, $msgBody, $to = '')
     {
         if (!$to) {
-            $to = "premium.js@jeevansathi.com";
+            $to = "premium.js@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com";
         }
 
         $from = "js-sums@jeevansathi.com";
@@ -2347,6 +2360,7 @@ class MembershipHandler
             $payDetObj = new BILLING_PAYMENT_DETAIL();
             foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
                 $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $this->deleteRedisForFreeToPaid($source, $payDetData["PROFILEID"]);
                 $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
                 if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
                     $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
@@ -2537,10 +2551,14 @@ class MembershipHandler
             }
         }
         $servDisc["PROFILEID"] = $memPriceArr["PROFILEID"];
-        if($nonZero){
-            $disHistObj = new billing_DISCOUNT_HISTORY();
-            $disHistObj->insertDiscountHistory($servDisc);
+        if($nonZero == false){
+            $servDisc['P'] = 0;
+            $servDisc['C'] = 0;
+            $servDisc['NCP'] = 0;
+            $servDisc['X'] = 0;
         }
+        $disHistObj = new billing_DISCOUNT_HISTORY();
+        $disHistObj->insertDiscountHistory($servDisc);
         unset($nonZero);
     }
 
@@ -2557,5 +2575,11 @@ class MembershipHandler
         ob_end_clean();
         $data = json_decode($output, true);
         return $data;
+    }
+    
+    public function deleteRedisForFreeToPaid($source,$profileid){
+        if($source == 'CANCEL' || $source == 'CHARGE_BACK' || $source == 'BOUNCE'){
+            JsMemcache::getInstance()->remove("FreeToP_$profileid");
+        }
     }
 }

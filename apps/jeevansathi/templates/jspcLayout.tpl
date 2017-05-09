@@ -15,12 +15,18 @@
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
     ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-    ~include_http_metas`
+  <!--  ~if $pageType =="privacypolicy"`
+        <link rel="amphtml" href="~$ampurl`">
+    ~/if`-->
+    ~if $ampurl`
+        <link rel="amphtml" href="~$ampurl`"/>
+    ~/if`
     ~include_canurl`
+    ~include_http_metas`
     ~include_title`
     ~include_metas`
     ~if $pageType =="privacypolicy"`
-        <link rel="amphtml" href="~$ampurl`">
+        <link rel="amphtml" href="~$ampurl`" />
     ~/if`
     ~use helper = SfMinify`
     ~minify_include_stylesheets('common')`
@@ -161,6 +167,8 @@
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
+if (window.location.protocol == "https:")
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->

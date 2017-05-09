@@ -225,7 +225,8 @@ if(authenticated($cid))
 					$row=mysql_fetch_array($res);
                                         if($row['ACTIVATED']=='D')
                                         {
-                                                $path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+                                                //$path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+						$path = $_SERVER['DOCUMENT_ROOT']."/profile/retrieveprofile_bg.php $profileid > /dev/null &";
                                                 $cmd = JsConstants::$php5path." -q ".$path;
                                                 passthru($cmd);
                                                                                                                              
@@ -305,7 +306,7 @@ if(authenticated($cid))
             //**START - Entry for negative transactions
             if($val=="refund"){
                 $memHandlerObject = new MembershipHandler();
-                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())),'REFUND');
                 unset($memHandlerObject);
             }
             //**END - Entry for negative transactions

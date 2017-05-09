@@ -88,6 +88,7 @@
     var winHeight = $(window).height();
     var continueHeight = $("#continueBtn").height();
     $('.rv2_bg1').css('height',(winHeight-continueHeight));
+    eraseCookie('backendLink');
     eraseCookie('backState');
     eraseCookie('mainMem');
     eraseCookie('mainMemDur');

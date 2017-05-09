@@ -6,9 +6,10 @@ class PictureFunctions
 	@param imageUrl: image url
 	@return imageType: image format type
 	*/
-	public static function getImageFormatType($imageUrl)
+	public static function getImageFormatType($imageUrl,$flag="")
 	{
 		$imageInfo = getimagesize($imageUrl);
+		
 		switch($imageInfo["mime"])
 		{
 			case 'image/jpg':
@@ -20,7 +21,19 @@ class PictureFunctions
 			case 'image/gif':
 				$imageT = "gif";
 				break;
+				case 'image/png':
+				if($flag=="1")
+				{
+					$imageT = "png";
+				}
+				else
+				{
+					$imageT ="jpeg";
+				}
+				
+				break;
 		}
+		
 		return $imageT;
 
 	}
@@ -60,17 +73,20 @@ class PictureFunctions
 	
 	public function maintain_ratio_canvas($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$type_of_image,$click='1')
 	{
-		$filename = $pic_name;
-		$new_filename = $final_pic_name;
-		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			$image = imagecreatefromgif($filename);
+		$filename = $pic_name;		
+		if($type_of_image == "image/png")
+			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
 		else
-			$image = imagecreatefromjpeg($filename);
-			
+			$new_filename = $final_pic_name;
 
+		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
+			$image = imagecreatefromgif($filename);		
+		else
+			$image = imagecreatefromjpeg($filename); //since we have already converted the png under the $filename, we can now use the jpeg function instead of the png
+					
 		$width_orig = imagesx($image);
 		$height_orig = imagesy($image);
-
+		
 		$ratio_orig = ($width_orig/$height_orig);
                  if ($click == "1") {
                         if ($width_orig < $width && $height_orig < $height) {
@@ -113,7 +129,7 @@ class PictureFunctions
 
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			imagegif($image_p, $new_filename);
+			imagegif($image_p, $new_filename);		
 		else
 			imagejpeg($image_p, $new_filename);
 		//$command = "chmod -R 777 ".$new_filename;
@@ -124,10 +140,17 @@ class PictureFunctions
 	public function maintain_ratio_profile_thumb($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$final_width,$final_height,$type_of_image)
 	{
 		$filename = $pic_name;
-		$new_filename = $final_pic_name;
+		if($type_of_image == "image/png")
+			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
+		else
+			$new_filename = $final_pic_name;
 
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			$image = imagecreatefromgif($filename);
+		/*elseif($type_of_image == "image/png")
+		{
+			$image = imagecreatefrompng($filename);		 //Note required since we have already converted the pic to jpeg hence jpeg function can be used
+		}*/
 		else
 			$image = imagecreatefromjpeg($filename);
 			
@@ -144,6 +167,11 @@ class PictureFunctions
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			imagegif($image_p1, $new_filename);
+		/*elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
+		{
+			imagejpeg($image_p1, $new_filename);
+   			imagedestroy($image);
+		}*/
 		else
 			imagejpeg($image_p1, $new_filename);
 
@@ -153,17 +181,19 @@ class PictureFunctions
 	}
 
 	public function generate_image_for_canvas($new_filename,$max_height,$max_width,$type_of_image,$click="1")
-	{
+	{		
 		$filename1 = $new_filename;
-		
+
 		$hmargin=0;
 	        $wmargin=0;
 	        
 	      	if($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 	          	$src_img = imagecreatefromgif($filename1);
+	        elseif($type_of_image == "image/png")
+				$src_img = imagecreatefrompng($filename1);					
 	    	else
 	            	$src_img = imagecreatefromjpeg($filename1);
-	
+			
 	        $w=imagesx($src_img);
 	        $h=imagesy($src_img);
                 if ($click == "1") {
@@ -197,20 +227,34 @@ class PictureFunctions
                                         $filename = sfConfig::get('sf_web_dir') . "/images/white340.jpg";
                                 else
                                         $filename = sfConfig::get('sf_web_dir') . "/images/white96.jpg";
-                                $des_img = imagecreatefromjpeg($filename);
+                                $des_img = imagecreatefromjpeg($filename);                                
                         }
 
                         imagecopymerge($des_img, $src_img, $x, $y, 0, 0, $w, $h, 100);
                         unset($src_img);
                         if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF") {
                                 imagegif($des_img, $filename1);
-                        } else {
+                        }
+                        elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
+                        {
+                        	imagejpeg($des_img, $filename1);
+                        	imagedestroy($des_img);
+                        } 
+                        else
+                        {
                                 imagejpeg($des_img, $filename1);
                         }
                 } else {
                         if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF") {
                                 imagegif($src_img, $filename1);
-                        } else {
+                        }
+                        elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
+                        {
+                        	imagejpeg($des_img, $filename1);
+                        	imagedestroy($des_img);
+                        }
+                        else 
+                        {
                                 imagejpeg($src_img, $filename1);
                         }
                 }
@@ -512,16 +556,20 @@ class PictureFunctions
 	 */	
 	public function createImage($Path)
 	{
-		$szType = $this->getImageFormatType($Path);
+		$szType = $this->getImageFormatType($Path,"1");
+		
 		if($szType == "gif")
 		{
 			$image = imagecreatefromgif($Path);
 		}
-		else if($szType == "jpeg")
+		elseif($szType == "jpeg")
 		{
 			$image = imagecreatefromjpeg($Path);
 		}
-		
+		elseif($szType == 'png')
+		{
+			$image = imagecreatefrompng($Path);
+		}		
 		return $image;
 	}
 
@@ -535,12 +583,18 @@ class PictureFunctions
 	 */	
 	public function storeResizedImage($new_image,$StoragePath,$type)
 	{
+
 		if($type == "gif")
 		{
 			imagegif($new_image, $StoragePath);
 		}
 		else if($type == "jpeg" || $type == "jpg")
 		{
+			imagejpeg($new_image, $StoragePath,90);
+		}
+		elseif($type == "png")
+		{
+			$StoragePath = str_replace(".png",".jpeg",$StoragePath);
 			imagejpeg($new_image, $StoragePath,90);
 		}
 	}

@@ -349,6 +349,8 @@ Abstract class ApiAuthentication
 			$queueArr['websiteVersion']=$websiteVersion;
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
+                        $queueArr['whichChannel'] = MobileCommon::getChannel();
+
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -819,6 +821,10 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
+                        $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
+                        LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);  
+
+                        
 		}
 		if($trackingData[logLoginHistoryTracking])
 		{
@@ -845,7 +851,9 @@ Abstract class ApiAuthentication
 		if($trackingData["appLoginProfileTracking"])
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+			$appType = MobileCommon::isApp();
+			$date = $trackingData["currentTime"];
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
 		}
 		if($trackingData["logLogoutTracking"])
 		{

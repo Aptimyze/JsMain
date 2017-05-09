@@ -193,7 +193,7 @@ public function getSendersPending($chunkStr)
 		}
 		else if($direction == "BOTH")
 		{
-			$text = "SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+			$text = "(SENDER = :PROFILEID OR RECEIVER = :PROFILEID)";
 		}
 		else
 		{

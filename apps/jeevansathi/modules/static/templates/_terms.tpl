@@ -63,7 +63,7 @@ The User / subscriber / visitor to Jeevansathi.com is prohibited from uploading,
 <td>Monthly Limit</td> <td>400</td><td>800</td><td>400</td> <td>1400</td>
 </tr>
 <tr>
-<td>Overall Limit</td> <td>400</td><td>Unlimited*</td><td>Unlimited*</td> <td>Unlimited*</td>
+<td>Profile Lifetime Limit</td> <td>400</td><td>Unlimited*</td><td>Unlimited*</td> <td>Unlimited*</td>
 </tr>
 </tbody></table></p>
 <p class="content">* Subject to monthly limits at the discretion of Jeevansathi.com</p>

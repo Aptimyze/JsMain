@@ -321,8 +321,8 @@ class MobileCommon{
   }
   public static function getHttpsUrl()
   {
-	if(MobileCommon::isApp()=="A")
-		return false;
-	return true;
+        if(MobileCommon::isApp()=="I")
+                return true;
+        return false;
   }
 }

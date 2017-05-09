@@ -687,6 +687,16 @@ class commonActions extends sfActions
             
         }
         
+        if($layerToShow==18)
+        {
+            $occupText = $request->getParameter("occupText");
+            if($occupText)
+            {
+                (new MIS_CAL_OCCUPATION_TRACK())->insert($loginData['PROFILEID'],$occupText);
+            }
+
+        }        
+
         if($layerToShow==15)
         {
             $namePrivacy = $button=='B1' ? 'Y' : 'N';
@@ -732,7 +742,7 @@ class commonActions extends sfActions
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
-
+        $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;         
         $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
         $this->setTemplate('CALJSMS');
 

@@ -13,11 +13,21 @@ class ProcessHandler
    * @access public
    * @param $type,$body
    */
-	public function sendMail($type,$body)
+	public function sendMail($type,$body,$delayedMail=false)
 	{
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
+    
+    if($delayedMail) {
+      $currentConatacType = $this->processDelayedMail($senderid, $receiverid, $type);
+      //if current contact type is different then type of this message then return
+      //
+      if($currentConatacType != $type) {
+        return ;
+      }
+    }
+
     if($type!='INITIATECONTACT')
     {
         if($senderid)
@@ -59,12 +69,18 @@ class ProcessHandler
                               
                               }
                               break;
+      case 'REMINDERCONTACT':
+            ContactMailer::InstantReminderMailer($receiverid, $senderid, $message, $body['viewedSubscriptionStatus']);
+          break;
+      case 'CANCEL_ACCEPT_CONTACT':
+          ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
+          break;
     }
 	}
 
   /**
    * 
-   * Function for sending SMS.
+   * Function for sending SMS.      
    * 
    * @access public
    * @param $type,$body
@@ -82,6 +98,23 @@ class ProcessHandler
                                  break;
       case 'ACCEPTANCE_VIEWED' : $smsViewer = new InstantSMS($type,$receiverid,'',$senderid);
                                  $smsViewer->send();  
+                                 break; 
+      case 'CRITICAL_INFORMATION_CHANGE' : 
+                                $fieldLabel= array();
+                                $impFields = ProfileEnums::$sendInstantMessagesForFields;
+                                if(!empty($body["editedFields"])){
+                                        foreach($body["editedFields"] as $field){
+                                                if(array_key_exists($field, $impFields)){
+                                                       $fieldLabel[] =  $impFields[$field];
+                                                }
+                                        }
+                                }
+                                $varArray["editedFields"] = implode(", ", $fieldLabel);
+                                $varArray["editedFieldsCount"] = count($fieldLabel);
+                                $varArray["PHONE_MOB"] = $body["PHONE"];
+                                $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
+                                $smsViewer->send();  
+                                JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
                                  break; 
     }
   }
@@ -363,6 +396,7 @@ public function logDiscount($body,$type){
             $this->userObj = new memUser($profileid);
             $this->userObj->setMemStatus();
             $memHandlerObj = new MembershipHandler();
+            
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
             list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
             $allMainMem["PROFILEID"] = $profileid;
@@ -419,6 +453,30 @@ public function logDiscount($body,$type){
             JsMemcache::getInstance()->remove($cacheKey);
         }        
     }
+    
+    /**
+     * 
+     * @param type $iSenderId
+     * @param type $iReceiverId
+     * @param type $szContactTypeInMsg
+     */
+    private function processDelayedMail($iSenderId, $iReceiverId, $szContactTypeInMsg)
+    {
+      $arrConatactTypeProcess = array(
+                                      "I"=>"INITIATECONTACT",
+                                      "E"=>"CANCELCONTACT",
+                                      "A"=>"ACCEPTCONTACT",
+                                      "D"=>"DECLINECONTACT",
+                                      "R"=>"REMINDERCONTACT",
+                                      "C"=>"CANCEL_ACCEPT_CONTACT"
+                                       );
+      
+      $szContactType = explode("_", Contacts::getContactsTypeCache($iSenderId, $iReceiverId))[0];
 
+      if($szContactTypeInMsg == "REMINDERCONTACT" && $szContactType == "I") {
+        $szContactType = "R";
+      }
+      return $arrConatactTypeProcess[$szContactType];
+    }
  }
 ?>

@@ -26,6 +26,9 @@ jsmb_seoSuccess:
 seo_mobSuccess:
   stylesheets:	[-*,jsms/common/commoncss,jsms/common/fonts,jsms/common/mediaquery,jsms/Seo/seoMobile_css]
   layout:         jsmsMobLayout
+seo_mob_ampSuccess:
+  stylesheets:	[-*,jsms/common/commoncss,jsms/common/fonts,jsms/common/mediaquery,jsms/Seo/seoMobile_css]
+  layout:         jsmsMobAmpLayout
 seo_IndexTabsSuccess:
   metas:
     title: "Browse Matrimony profiles by Community - Jeevansathi.com"

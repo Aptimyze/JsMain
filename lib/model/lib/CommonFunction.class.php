@@ -107,6 +107,14 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
+			else if(CommonFunction::isEverPaid())
+			{
+				$day_limit=100;
+				$weekly_limit=100;
+				$month_limit=400;
+				$overall_limit=800000;
+				$notValidNumber_limit=100;
+			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -130,6 +138,26 @@ class CommonFunction
             $paid=1;
         }
 		return $paid;
+	}
+
+	public static function isEverPaid()
+	{
+		
+		$everPaid = false;
+		$billing = new BILLING_PURCHASES();
+		$loginProfile = LoggedInProfile::getInstance();
+		$pid = $loginProfile->getPROFILEID();
+		if(!isset($pid))
+		{
+			return $everPaid;
+		}
+
+		$payment = $billing->isPaidEver($pid);
+		if(is_array($payment) && $payment[$pid])
+		{
+			$everPaid = true;
+		}
+		return $everPaid;
 	}
 
 	public static function isEvalueMember($subscription)
@@ -816,6 +844,64 @@ class CommonFunction
     	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
     	return $decoratedOccGroups;
     }
+
+    public static function getContactLimitDates()
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$dayObject = date_diff( date_create($y), date_create($x));
+		$daysDiff = $dayObject->days;
+
+		$weeks = floor($daysDiff/7) * 7;
+
+		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		$months = floor($daysDiff/30) * 30;
+
+		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
+
+		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
+	}
+
+	public static function getLimitEndingDate($errlimit)
+	{
+		$loginProfile = LoggedInProfile::getInstance();
+		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+		{
+			$verifyDate = $loginProfile->getENTRY_DT();
+		}
+		$x = date('Y-m-d',strtotime($verifyDate));
+		$y = date('Y-m-d');
+
+		$dayObject = date_diff( date_create($y), date_create($x));
+		$daysDiff = $dayObject->days;
+		if($errlimit == "WEEK")
+		{
+			if($daysDiff % 7 == 0)
+				$daysDiff += 1;
+			$weeks = ceil($daysDiff/7) * 7 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
+
+		}
+		elseif($errlimit == "MONTH")
+		{
+			if($daysDiff % 30 == 0)
+				$daysDiff += 1;
+			$months = ceil($daysDiff/30) * 30 - 1;
+			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
+		}
+
+		return $endDate;
+	}
 
      /**
          * 

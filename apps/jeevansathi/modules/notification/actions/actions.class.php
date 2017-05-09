@@ -113,7 +113,7 @@ class notificationActions extends sfActions
 	$osType =MobileCommon::isApp();
         $loginData =$request->getAttribute("loginData");
         $profileid =$loginData['PROFILEID'];
-        if($profileid)
+        if($profileid || in_array($notificationKey, NotificationEnums::$loggedOutNotifications))
         {
 		// New code
 	        if(($apiappVersion>=90 || $deviceUpgrade==true) && $registrationid){
@@ -121,6 +121,10 @@ class notificationActions extends sfActions
 	        }
                 $producerObj = new JsNotificationProduce();
                 if($producerObj->getRabbitMQServerConnected()){
+
+                        $notificationFunction =new NotificationFunctions();
+                        $notificationFunction->appNotificationCountCachng('','','DELIVERY_TRACKING_API');
+
                         $dataSet =array('profileid'=>$profileid,'notificationKey'=>$notificationKey,'messageId'=>$messageId,'status'=>$status,'osType'=>$osType);
                         $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
                         $producerObj->sendMessage($msgdata);

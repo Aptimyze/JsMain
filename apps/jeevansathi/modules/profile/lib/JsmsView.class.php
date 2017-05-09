@@ -23,7 +23,58 @@ class JsmsView extends DetailedViewApi
 	{
 		parent::__construct($actionObject);
 	}
-	
+
+	/**
+* function to decorate primary info values in hobbies
+* @param void
+* @return void 
+* @access protected
+*/
+  protected function getDecorated_PrimaryInfo(){
+    $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
+    $viewedProfile = $this->m_objProfile->getPROFILEID();
+    parent::getDecorated_PrimaryInfo();
+    $selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();
+
+    $havePhoto=$this->m_objProfile->getHAVEPHOTO();   
+        if($havePhoto=='Y'){
+            if($this->m_actionObject->THUMB_URL) {
+                $thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_actionObject->loginProfile->getGENDER());
+                
+                if($thumbNailArray[label] != '')
+                    $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ThumbailUrl');
+                else
+                    $thumbNail = $thumbNailArray['url'];
+            }
+                
+        }
+        else {
+            $thumbNail = PictureFunctions::getNoPhotoJSMS($this->m_objProfile->getGender(),'ThumbailUrl');
+        }
+      $this->m_arrOut['thumbnailPic'] = $thumbNail;
+
+      //thumbnail for self
+      if($viewerProfile)
+      {
+      	if($selfHavePhoto != "N")
+      	{
+      		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
+      		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+      		$this->ProfilePicUrl='';
+      		if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+      		{
+      			$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
+      			$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+      		}
+      	}      
+      	else
+      	{
+      		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
+      	}
+      	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
+      }     
+       
+}
 	/**
 	 * getDecorated_LifeStyle
 	 * 
@@ -239,5 +290,25 @@ class JsmsView extends DetailedViewApi
         
         return $value;
     }
+
+    /**
+* function to decorate Matching values with viewer's profile
+* @param void
+* @return void 
+* @access protected
+*/
+  protected function getDecorated_LookingFor(){
+      parent::getDecorated_LookingFor();
+      $objProfile = $this->m_objProfile;  
+      $jPartnerObj = $objProfile->getJpartner();
+       $this->m_arrOut['dpp_diet'] = $jPartnerObj->getDecoratedPARTNER_DIET();
+       $this->m_arrOut['dpp_smoke'] = $jPartnerObj->getDecoratedPARTNER_SMOKE();
+       $this->m_arrOut['dpp_drink'] = $jPartnerObj->getDecoratedPARTNER_DRINK();
+       $this->m_arrOut['dpp_complexion']=$jPartnerObj->getDecoratedPARTNER_COMP();
+       $this->m_arrOut['dpp_btype'] = $jPartnerObj->getDecoratedPARTNER_BTYPE();
+       $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();       
+    }
 }
+
+
 ?>
