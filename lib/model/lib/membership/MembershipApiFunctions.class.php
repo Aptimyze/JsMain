@@ -360,6 +360,12 @@ class MembershipApiFunctions
         $newData = array();
         $vasDesc = VariableParams::$newApiVasNamesAndDescription;
         $memHandlerObj = new MembershipHandler();
+        if($apiObj->lightningDealDiscount && $apiObj->lightningDealDiscount["DISCOUNT"]){
+            $lightningDealDisc = $apiObj->lightningDealDiscount["DISCOUNT"];
+        }
+        else{
+            $lightningDealDisc = 0;
+        }
         $vdDisc = $memHandlerObj->getSpecialDiscountForAllDurations($apiObj->profileid);
         $mainDisc = $memHandlerObj->getDiscountOffer($apiObj->mainMem . $apiObj->mainMemDur);
         foreach ($apiObj->vas_data as $key => & $value) {
@@ -409,8 +415,14 @@ class MembershipApiFunctions
                     $priceArr['standard_price'] = "" . round($vv['PRICE'], 2);
                     $priceArr['orig_price'] = $priceArr['standard_price'];
                     $priceArr['orig_price_formatted'] = number_format($priceArr['standard_price'], 2, '.', ',');
-                    if (($apiObj->specialActive == 1 || $apiObj->discountActive == 1 || $apiObj->renewalActive == 1 || $apiObj->fest == 1) && ($backendDiscount == 0) && $apiObj->device != "iOS_app") {
-                        if ($apiObj->specialActive == 1) {
+                    if (($apiObj->specialActive == 1 || $apiObj->discountActive == 1 || $apiObj->renewalActive == 1 || $apiObj->fest == 1 || $apiObj->lightningDealActive == 1) && ($backendDiscount == 0) && $apiObj->device != "iOS_app") {
+                        if ($apiObj->lightningDealActive == 1) {
+                            $temp = ($vv['PRICE'] - ($vv['PRICE'] * ($lightningDealDisc / 100)));
+                            $priceArr['price'] = "" . round($temp, 2);
+                            $temp = ($priceArr['standard_price'] - $priceArr['price']);
+                            $priceArr['discount_given'] = "" . round($temp, 2);
+                        }
+                        else if ($apiObj->specialActive == 1) {
                             $temp = ($vv['PRICE'] - ($vv['PRICE'] * ($vdDisc[$apiObj->mainMem][$apiObj->mainMemDur] / 100)));
                             $priceArr['price'] = "" . round($temp, 2);
                             $temp = ($priceArr['standard_price'] - $priceArr['price']);
