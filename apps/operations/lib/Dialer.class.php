@@ -122,6 +122,16 @@ class Dialer
 						$this->updateIndialerProfileLog($profileid,$username,'N',"DISPOSITION",$disposition);
 						continue;
 					}	
+					// Disposition check added to remove NI marked profiles fir 1 day
+		                        if($disposition=='NI'){
+                        			$todayDate      =date("Y-m-d");
+                        			$prev2Days      =date('Y-m-d', strtotime('-1 days',strtotime($todayDate)));
+                        			if(strtotime($dispEntryDt)>=strtotime($prev2Days)){
+                                			$this->updateIndialerProfileLog($profileid, $username,'N','DISPOSITION',$disposition);
+                                			continue;
+                        			}
+                    			}
+					// End
 					if(!in_array($profileid, $everPaidPool)){
 						$allDispositionCount =$historyObj->getCountOfDisposition($profileid);
 						$singleDispositionCount =$historyObj->getCountOfDisposition($profileid,'CNC');
