@@ -2301,8 +2301,8 @@ class Membership
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
         }else {
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
-        
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
+           
             // Existing codes for setting discount type in billing.ORDERS
             // 10 - Backend Discount Link
             // 1 - Renewal Discount
@@ -2338,6 +2338,8 @@ class Membership
                 }
             } else if($upgradeActive == "1"){
                 $discount_type = 15;
+            } else if($lightningDealActive == "1"){
+                $discount_type = 16;
             } else {
                 $discount_type = 12;
             }

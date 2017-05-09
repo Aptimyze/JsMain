@@ -290,6 +290,7 @@ class MembershipHandler
                 }
             }
         }
+
         return $discountInfo;
     }
 
@@ -1035,6 +1036,7 @@ class MembershipHandler
                 $upgradePercentArr = array();
             }
         }
+
         if (strpos(discountType::LIGHTNING_DEAL_DISCOUNT, $discountType) !== false) {
             $lightningDealActive = '1';
 
@@ -1042,6 +1044,7 @@ class MembershipHandler
             $ts                       = mktime(0, 0, 0, $mm, $dd, $yy);
             $lightning_deal_discount_expiry = date("Y-m-d", $ts);
             $lightningDealDiscountPercent          = $this->lightningDealDiscount['DISCOUNT'];
+
         }
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
             $discountActive  = '1';
@@ -1595,11 +1598,21 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
-            
+           
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1 || $lightningDealActive == 1) {
                 if($lightningDealActive == 1){
-                    $discPerc = $lightningDealDiscountPercent;
+                    if(!empty($lightningDealDiscountPercent)){
+                        $discPerc = $lightningDealDiscountPercent;
+                    }
+                    else{
+                        $discPercArr = $this->memObj->getLightningDealDiscount($profileid);
+                        if(is_array($discPercArr)) 
+                            $discPerc = $discPercArr["DISCOUNT"];
+                        else
+                            $discPerc = 0;
+                    }
+
                 }
                 else if ($userObj->userType == 4 || $userObj->userType == 6) {
                     $discPerc = $renewalPercent;

@@ -718,6 +718,7 @@ class MembershipAPIResponseHandler {
         }
         
         $this->memApiFuncs->customizeVASDataForAPI($this->validation, 0, $this);
+
         $vas_text = NULL;
         $skip_text = "Continue";
         

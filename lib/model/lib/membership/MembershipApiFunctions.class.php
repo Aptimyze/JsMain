@@ -360,12 +360,13 @@ class MembershipApiFunctions
         $newData = array();
         $vasDesc = VariableParams::$newApiVasNamesAndDescription;
         $memHandlerObj = new MembershipHandler();
-        if($apiObj->lightningDealDiscount && $apiObj->lightningDealDiscount["DISCOUNT"]){
-            $lightningDealDisc = $apiObj->lightningDealDiscount["DISCOUNT"];
+        if($apiObj->lightningDealDiscountPercent){
+            $lightningDealDisc = $apiObj->lightningDealDiscountPercent;
         }
         else{
             $lightningDealDisc = 0;
         }
+      
         $vdDisc = $memHandlerObj->getSpecialDiscountForAllDurations($apiObj->profileid);
         $mainDisc = $memHandlerObj->getDiscountOffer($apiObj->mainMem . $apiObj->mainMemDur);
         foreach ($apiObj->vas_data as $key => & $value) {
