@@ -1348,7 +1348,7 @@ class Membership
                     $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
                     //error_log("ankita msg-".$msg);
                     if (JsConstants::$whichMachine == 'prod') {
-                        SendMail::send_email('rohan.mathur@jeevansathi.com,ankita.g@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
+                        SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
         		}
             }
@@ -2141,6 +2141,24 @@ class Membership
         else return 0;
     }
 
+    function getLightningDealDiscount($profile,$device="desktop") {
+        if(empty($device)){
+            $device = "desktop";
+        }
+        if(!in_array($device,VariableParams::$lightningDealOfferConfig["channelsAllowed"])){
+            return 0;
+        }
+        $today = date('Y-m-d H:i:s');
+        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
+        $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
+        if (is_array($row) && $row['DISCOUNT']) {
+            $data['DISCOUNT'] = $row['DISCOUNT'];
+            $data['EDATE'] = $row['EDATE'];
+            return $data;
+        } 
+        else return 0;
+    }
+
     public function getDiscountDetailsForProfile($profileid, $memID)
     {
         $vd_exist = $this->getSpecialDiscount($profileid);
@@ -2289,8 +2307,8 @@ class Membership
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
         }else {
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
-        
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
+           
             // Existing codes for setting discount type in billing.ORDERS
             // 10 - Backend Discount Link
             // 1 - Renewal Discount
@@ -2326,6 +2344,8 @@ class Membership
                 }
             } else if($upgradeActive == "1"){
                 $discount_type = 15;
+            } else if($lightningDealActive == "1"){
+                $discount_type = 16;
             } else {
                 $discount_type = 12;
             }
