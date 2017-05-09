@@ -830,7 +830,7 @@ if($submit_pg2) // for the IE
 
 		validate_mtongue($mtongue,$is_error,$errors);
 
-//Ends validating mtongue
+//Ends validating mtongue                
 
 		//starts Validating religion
 $check_partner_caste=validate_religionandcaste($religion,$is_error,$caste,$errors,'N');
@@ -852,6 +852,11 @@ $religion_val = $religion_temp[0];
                  validate_jamaat($jamaat,$is_error,$errors);
  
  //Ends validating JAMAAT
+//Starts validating casteMuslim
+              if($religion == '2')
+                validate_casteMuslim($casteMuslim,$is_error,$errors);
+
+//Ends validating casteMuslim
 //	}
 if(!empty($record_id)){		
 	if(!$degree)
@@ -909,6 +914,7 @@ if(!empty($record_id)){
 		$smarty->assign("SHOWMOBILE",$showmobile);
 		$smarty->assign("OCCUPATION",$occupation);
 		$smarty->assign("RELIGION",$religion);
+                $smarty->assign("CASTE_MUSLIM",$casteMuslim);
 		$smarty->assign("CASTE",$caste);
                 $smarty->assign("JAMAAT",$jamaat);
 		$smarty->assign("MATCH_ALERT",$match_alerts);
@@ -1150,10 +1156,11 @@ if(!empty($record_id)){
 				"SEC_SOURCE" => $secondary_source,
 				"SERIOUSNESS_COUNT" => $seriousness_count,
 				"PINCODE" =>  $pincode,
+                                "SECT" => $casteMuslim,
 			);
 			$result = $objInsert->insertJPROFILE($arrFields);
 			if(false === $result) {
-				$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode')";
+				$sql = "INSERT INTO JPROFILE (RELATION,EMAIL,PASSWORD,USERNAME,GENDER,DTOFBIRTH,MSTATUS,HAVECHILD,HEIGHT,COUNTRY_RES,CITIZENSHIP,ISD,STD,CITY_RES,PHONE_RES,SHOWPHONE_RES,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,PHONE_MOB,SHOWPHONE_MOB,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,TIME_TO_CALL_START,TIME_TO_CALL_END,EDU_LEVEL_NEW,OCCUPATION,INCOME,MTONGUE,RELIGION,SPEAK_URDU,CASTE,PROMO_MAILS,SERVICE_MESSAGES,ENTRY_DT,MOD_DT,LAST_LOGIN_DT,SORT_DT,AGE,IPADD,SOURCE,ACTIVATED,INCOMPLETE,KEYWORDS,SCREENING,YOURINFO,DRINK,SMOKE,CRM_TEAM,PERSONAL_MATCHES,GET_SMS,SHOW_HOROSCOPE,SEC_SOURCE,SERIOUSNESS_COUNT,PINCODE,SECT) VALUES('$relationship','$email','$passwordEncrypted','$username','$gender','$date_of_birth','$mstatus','$has_children','$height','$country_residence','','$country_code','$state_code','$city_residence','$phone','$showphone','','','$mobile','$showmobile','','','','','$degree','$occupation','$income','$mtongue','$religion_val','$speak_urdu','$caste','$promo','$service_email','$now','$now','$today','$now','$age','$ip','$tieup_source','N','Y','$keyword',0,'','$drink','$smoke','$crm_team','$match_def','$sms_def','$show_horoscope','$secondary_source','$seriousness_count','$pincode','$casteMuslim')";
 				logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
 			}
                         if($jamaat){
@@ -1965,6 +1972,32 @@ else
 					$option_string.= "<option value=\"$religion_value_arr[$i]\">$religion_label_arr[$i]</option>";
 			}
 			$smarty->assign("religion",$option_string);
+                        
+                        $sql = "select SQL_CACHE VALUE,LABEL from SECT where PARENT_RELIGION=2 ORDER BY SORTBY";
+			$res = mysql_query_decide($sql) or logError("error",$sql);
+			while($row = mysql_fetch_array($res))
+			{
+				$casteMuslim_label_arr[] = $row['LABEL'];
+				$casteMuslim_value = $row['VALUE'];
+				$casteMuslim_str= $casteMuslim_value;
+				$caste_str="";
+				$casteMuslim_value_arr[] = substr($casteMuslim_str,0,strlen($casteMuslim_str)-1);
+			}
+
+			$option_string="";		
+			for($i=0;$i<count($casteMuslim_value_arr);$i++)
+			{
+				if($casteMuslim_lead)
+				      $casteMuslim_val=$casteMuslim_lead;
+
+				$temp_rel = explode("|X|",$casteMuslim_value_arr[$i]);
+
+				if($casteMuslim_val == $temp_rel[0])
+					$option_string.= "<option value=\"$casteMuslim_value_arr[$i]\" selected=\"yes\">$casteMuslim_label_arr[$i]</option>";
+				else
+					$option_string.= "<option value=\"$casteMuslim_value_arr[$i]\">$casteMuslim_label_arr[$i]</option>";
+			}
+			$smarty->assign("casteMuslim",$option_string);
 
                         $sql = "select SQL_CACHE VALUE,LABEL from JAMAAT ORDER BY SORTBY";
  			$res = mysql_query_decide($sql) or logError("error",$sql);

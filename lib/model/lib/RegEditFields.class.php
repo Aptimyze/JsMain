@@ -1382,6 +1382,18 @@ break;
 					$field->setBlankLabel("Please Select");
 					$field->setTableName("JP_MUSLIM:JAMAAT");
 					$page_obj->setField(134,"c","",$field);
+                                        
+                                        $field=new Field(133);
+					$field->setName("SECT_MUSLIM");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("sectMuslim");
+					$field->setJsValidation("validate_select");
+					$field->setDependentField("14");
+					$field->setLabel("Caste :");
+					$field->setBlankValue("");
+					$field->setBlankLabel("Please Select");
+					$field->setTableName("JPROFILE:SECT");
+					$page_obj->setField(133,"c","",$field);
 
 					$field=new Field(14);
 					$field->setName("RELIGION");
@@ -2496,7 +2508,7 @@ case 'DP2':
                                         break;
 
 case 'DP1':
-						$field_array=array('SOURCE','PROMO','PHONE_RES','CASTE','RELIGION','JAMAAT','HAVECHILD','MSTATUS','CITY_RES','COUNTRY_RES','HEIGHT','EMAIL','PASSWORD','RELATIONSHIP','GENDER','DTOFBIRTH','MTONGUE','PHONE_MOB','SHOWPHONE','SHOWMOBILE','PINCODE','TERMSANDCONDITIONS','RECORD_ID');
+						$field_array=array('SOURCE','PROMO','PHONE_RES','CASTE','RELIGION','SECT_MUSLIM','JAMAAT','HAVECHILD','MSTATUS','CITY_RES','COUNTRY_RES','HEIGHT','EMAIL','PASSWORD','RELATIONSHIP','GENDER','DTOFBIRTH','MTONGUE','PHONE_MOB','SHOWPHONE','SHOWMOBILE','PINCODE','TERMSANDCONDITIONS','RECORD_ID');
 					break;
 case 'MP1':
 						$field_array=array('PHONE_MOB','MTONGUE','DTOFBIRTH','GENDER','RELATIONSHIP','EMAIL','PASSWORD','SOURCE');

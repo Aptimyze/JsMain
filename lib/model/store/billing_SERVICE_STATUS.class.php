@@ -743,6 +743,25 @@ class BILLING_SERVICE_STATUS extends TABLE {
         }
     }
 
+    public function getCurrentlyPaidProfiles($profileidArr){
+        try{
+            if(is_array($profileidArr)){
+                $profileIdStr = implode(",", $profileidArr);
+                $sql = "SELECT DISTINCT PROFILEID from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileIdStr) AND ACTIVE = :ACTIVE AND ACTIVATED = :ACTIVATED AND SERVEFOR LIKE '%F%'";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":ACTIVATED", 'Y', PDO::PARAM_STR);
+                $prep->bindValue(":ACTIVE", 'Y', PDO::PARAM_STR);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $result[] = $row['PROFILEID'];
+                }
+            }
+            return $result;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
     /*fetch billing details by bill id for profileid's
     * @input : $billId(array or single int value),$fields="*",$serveFor=""
     * @output: $rows

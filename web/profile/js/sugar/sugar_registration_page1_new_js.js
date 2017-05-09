@@ -214,6 +214,7 @@ var registration={
 //				populate_partner_religion(this);
 				populate_caste_from_religion(this);
                                 showHideJamaat();
+                                showHideCasteMuslim();
 			}
 		},
 
@@ -1875,3 +1876,10 @@ function showHideJamaat(){
      else
          document.getElementById("jamaatDiv").style.display = "none";
  }
+function showHideCasteMuslim(){
+    religionSelected = document.getElementById("religion").value.split("|X|")[0];
+    if(religionSelected == '2')
+        document.getElementById("CasteMuslimDiv").style.display = "inline";
+    else
+        document.getElementById("CasteMuslimDiv").style.display = "none";
+}
