@@ -157,6 +157,7 @@ class Profile{
 	private $NAME;
 	private $SERIOUSNESS_COUN;
 	private $education_other;
+        private $religionInfoArr = array();
 	protected $fieldsArray=array();
         /**
          * @fn __construct
@@ -1261,24 +1262,25 @@ class Profile{
          */
         public function getReligionInfo($valuesOnly="")
         {
-		$data = "";
-
+            if(empty($this->religionInfoArr)){
+                
                 //Jain profile
-                if($this->getRELIGION()==Religion::JAIN) $data = $this->getJainData($valuesOnly);
+                if($this->getRELIGION()==Religion::JAIN) $this->religionInfoArr = $this->getJainData($valuesOnly);
 
                 //Christian profile     
-                if($this->getRELIGION()==Religion::CHRISTIAN) $data = $this->getChristianData($valuesOnly);
+                if($this->getRELIGION()==Religion::CHRISTIAN) $this->religionInfoArr = $this->getChristianData($valuesOnly);
 
                 //Muslim profile
-                if($this->getRELIGION()==Religion::MUSLIM) $data = $this->getMuslimData($valuesOnly);
+                if($this->getRELIGION()==Religion::MUSLIM) $this->religionInfoArr = $this->getMuslimData($valuesOnly);
 
                 //Sikh profile
-                if($this->getRELIGION()==Religion::SIKH) $data = $this->getSikhData($valuesOnly);
+                if($this->getRELIGION()==Religion::SIKH) $this->religionInfoArr = $this->getSikhData($valuesOnly);
 
                 //Parsi profile
-                if($this->getRELIGION()==Religion::PARSI) $data = $this->getParsiData($valuesOnly);
-
-		return $data;
+                if($this->getRELIGION()==Religion::PARSI) $this->religionInfoArr = $this->getParsiData($valuesOnly);
+                
+            }
+            return $this->religionInfoArr;
         }
 
         /**
