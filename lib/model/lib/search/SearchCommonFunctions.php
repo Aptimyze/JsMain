@@ -274,6 +274,9 @@ class SearchCommonFunctions
 				$countryStr = 51;
 			}
 		}
+                if($countryStr == ""){
+                        $countryStr = $countryRes;
+                }
                 return $countryStr;
          }
         /**
