@@ -214,6 +214,10 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                             $outputArr[] = $value;
                                     }
                                 }
+                                if(!MobileCommon::isNewMobileSite() && !MobileCommon::isDesktop() && !(MobileCommon::isIOSApp() && $vspPage=='PD')){
+                                     $dateHourToAppend = date('Y-m-d', time())."_".date('h', time());
+                                     JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT"."_".$dateHourToAppend,MobileCommon::getChannel(),count($output));
+                                 }
                                 $paramArray["profiles"] = $outputArr;
                                 $paramArray[noresultmessage] = null;
                                 $paramArray["no_of_results"] = count($output);
