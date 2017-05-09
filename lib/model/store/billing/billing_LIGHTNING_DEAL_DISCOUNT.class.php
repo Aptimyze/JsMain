@@ -81,7 +81,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
     public function getLightningDealDiscountData($profileid){
         if($profileid){
             try{
-                $sql = "SELECT * from billing.LIGHTNING_DEAL_DISCOUNT where PROFILEID = :PROFILEID ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql = "SELECT * from billing.LIGHTNING_DEAL_DISCOUNT where PROFILEID = :PROFILEID AND STATUS = 'N' ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $prep->execute();
