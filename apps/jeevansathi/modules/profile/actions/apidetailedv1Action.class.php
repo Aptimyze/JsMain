@@ -288,12 +288,12 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        /*if(MobileCommon::isAndroidApp())
+        if(MobileCommon::isAndroidApp())
         {
         	$tickArr = array();
 
         	if($this->loginProfile->getPROFILEID())
-        	{        		
+        	{      
 				//Green label for desired partner profile section of viewed profile.
         		if($this->profile->getJpartner()!=null)
         		{
@@ -301,7 +301,7 @@ class apidetailedv1Action extends sfAction
         		}
         	}        	
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);			
-        }*/
+        }
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
 		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
 			$out['show_gunascore'] = "n";
