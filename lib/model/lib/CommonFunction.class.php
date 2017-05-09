@@ -953,5 +953,21 @@ class CommonFunction
         	$label .= ' & '.$nativePlace;
         return $label;
     }
+
+    public static function loginTrack($registrationid, $profileid)
+    {
+    	// APP_LOGINTRACKING
+    	$appType = "";
+    	if(MobileCommon::isAndroidApp())
+    	{
+    		$appType = "Android";
+    	}
+    	elseif (MobileCommon::isIOSApp())
+    	{
+    		$appType = "IOS";
+    	}
+
+    	
+    }
 }
 ?>
