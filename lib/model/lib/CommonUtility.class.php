@@ -1038,7 +1038,7 @@ die;
 
 	public static function sendSlackmessage($message)
 	{
-		$url = 'https://hooks.slack.com/services/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';
+		$url = 'https://hooks.slack.com/services/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';
 		$breaks = array("<br />","<br>","<br/>");
 		$message = str_ireplace($breaks, "\n", $message);
 		$data = array("text" => $message );
