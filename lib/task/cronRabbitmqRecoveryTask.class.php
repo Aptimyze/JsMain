@@ -111,9 +111,11 @@ EOF;
         {          
           if(($row->mem_limit - $row->mem_used) < MessageQueues::SAFE_LIMIT)
           {
+            //echo "here...".$arguments["server"];
             JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
-            RabbitmqHelper::sendAlert($str,"default");
+            if($arguments["server"] == "72")
+              RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
           }
           else
           {
@@ -124,7 +126,8 @@ EOF;
           {
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
-            RabbitmqHelper::sendAlert($str,"default");
+            if($arguments["server"] == "72")
+              RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
           }
           else
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
