@@ -94,7 +94,16 @@ class LoggedInProfile extends Profile{
 			}
 			$paramArr['USERNAME']=$username;
 			$paramArr['PASSWORD']=PasswordHashFunctions::createHash($paramArr['PASSWORD']);
-			if($id=$this->JPROFILE->insert($paramArr))
+            if($paramArr["DTOFBIRTH"])
+            {                
+                $age=CommonFunction::getAge($paramArr["DTOFBIRTH"]);                
+                if($age > 80 || $age < 18)
+                {   
+                    $http_msg=print_r($_SERVER,true);
+                    SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com,eshajain88@gmail.com","error in DOB while registration \n\n".$paramArr["DTOFBIRTH"]."\n\n for USERNAME:".$paramArr["USERNAME"]."\n\n\n\n".$http_msg);
+                }
+            }
+            if($id=$this->JPROFILE->insert($paramArr))
 			{
 				foreach($paramArr as $field=>$value)
 				{
