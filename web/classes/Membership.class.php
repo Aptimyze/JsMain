@@ -2145,7 +2145,7 @@ class Membership
         $today = date('Y-m-d');
         $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
         $row = $billingVarDiscObj->fetchDiscountDetails($profile,$currentTime);
-        if ($row['DISCOUNT']) {
+        if (is_array($row) && $row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
             $data['EDATE'] = $row['EDATE'];
             return $data;

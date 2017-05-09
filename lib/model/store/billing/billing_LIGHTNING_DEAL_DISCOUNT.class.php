@@ -83,7 +83,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             throw new Exception("Blank pid passed in fetchDiscountDetails in billing_LIGHTNING_DEAL_DISCOUNT class");
         }
         try{
-            $sql = "SELECT DISCOUNT,EDATE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE PROFILEID = :PROFILEID AND STATUS != :STATUS";
+            $sql = "SELECT DISCOUNT,EDATE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE PROFILEID = :PROFILEID AND STATUS = :STATUS";
             if($currentTime!=""){
                 $sql .= " AND SDATE<=:CURRENT_TIME AND EDATE>=:CURRENT_TIME";
             }
@@ -92,7 +92,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
                 $res->bindValue(":CURRENT_TIME", $currentTime, PDO::PARAM_STR);
             }
             $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
-            $res->bindValue(":STATUS", 'A', PDO::PARAM_STR);
+            $res->bindValue(":STATUS", 'V', PDO::PARAM_STR);
             $res->execute();
             $row = $res->fetch(PDO::FETCH_ASSOC);
             return $row;
