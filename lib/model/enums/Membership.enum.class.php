@@ -660,6 +660,8 @@ class VariableParams
     public static $jsExclusiveComboAddon = array('J');
     
     public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
+    
+    public static $lightningDealDuration = '30'; //in minutes;
 }
 class discountType
 {
