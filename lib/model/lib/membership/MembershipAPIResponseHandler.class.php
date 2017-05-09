@@ -194,7 +194,7 @@ class MembershipAPIResponseHandler {
             $ignoreShowOnlineCheck = false;
         }
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
-        
+       
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {

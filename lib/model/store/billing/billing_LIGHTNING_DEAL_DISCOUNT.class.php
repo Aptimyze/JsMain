@@ -77,5 +77,28 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             }
         }
     }
+
+    public function fetchDiscountDetails($pid,$currentTime=""){
+        if(!$pid){
+            throw new Exception("Blank pid passed in fetchDiscountDetails in billing_LIGHTNING_DEAL_DISCOUNT class");
+        }
+        try{
+            $sql = "SELECT DISCOUNT,EDATE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE PROFILEID = :PROFILEID AND STATUS != :STATUS";
+            if($currentTime!=""){
+                $sql .= " AND SDATE<=:CURRENT_TIME AND EDATE>=:CURRENT_TIME";
+            }
+            $res = $this->db->prepare($sql);
+            if($currentTime != ""){
+                $res->bindValue(":CURRENT_TIME", $currentTime, PDO::PARAM_STR);
+            }
+            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+            $res->bindValue(":STATUS", 'A', PDO::PARAM_STR);
+            $res->execute();
+            $row = $res->fetch(PDO::FETCH_ASSOC);
+            return $row;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
 ?>

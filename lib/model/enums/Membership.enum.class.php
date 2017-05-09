@@ -45,7 +45,8 @@ class memDiscountTypes
         11 => 'Cash Discount',
         12 => 'No Discount',
         14 => 'Coupon Code Discount',
-        15 => 'Main Membership Upgrade Discount'
+        15 => 'Main Membership Upgrade Discount',
+        16 => 'Lightning Deal Discount'
     );
 }
 
@@ -668,6 +669,7 @@ class discountType
     const SPECIAL_DISCOUNT = "SPECIAL";
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
+    const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
 }
 class mainMem
 {
