@@ -164,5 +164,66 @@ class LightningDeal
             unset($lightningDiscObj);
         }
 	}
+    
+    /*Get lightning deal eligibility for  CAL and data*/
+    public function getLightningDealCalData($request){
+        $loginData = $request->getAttribute("loginData");
+        $profileid = $loginData["PROFILEID"];
+        if($profileid && CommonFunction::getMembershipName($profileid) == "Free"){
+            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+            $data = $lightningObj->getLightningDealDiscountData($profileid);
+            $memHandlerObj = new MembershipHandler();
+            $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);
+            $currentMaxDisc = $hamburgerMsg["maxDiscount"];
+            if($data && ($currentMaxDisc < $data["DISCOUNT"])){
+                $memHandlerObj = new MembershipHandler();
+                list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
+                $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
+                $minDiscountedPrice = '1200';
+                if($currency == 'RS')
+                    $symbol = '&#8377;';
+                else if ($currency == 'DOL')
+                    $symbol = '$';
+                $result['line1'] = "Don't miss this rare opportunity!";
+                $result['line2'] = $data["DISCOUNT"]."% OFF";
+                $result['line3'] = "on all memberships";
+                $result['line4'] = "Plan starts @$symbol{strikeoutPrice} $symbol$minDiscountedPrice";
+                $result['strikeoutPrice'] = $minActualPrice;
+                return $result;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    
+    /*Activate Lighning Deal*/
+    public function activateLightningDealForProfile($profileid){
+        if($profileid){
+            $lightningDuration = VariableParams::$lightningDealDuration;
+            $params["PROFILEID"] = $profileid;
+            $params["SDATE"] = date('Y-m-d H:i:s');
+            $params["EDATE"] = date('Y-m-d H:i:s', strtotime("$lightningDuration minutes",  strtotime($params["SDATE"])));
+            $params["STATUS"] = "V";
+            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+            $lightningObj->activateLightningDeal($params);
+        }
+    }
+    
+    /*Get lightning deal eligibility and data, activate offer and clear membership cache*/
+    public function lightningDealCalAndOfferActivate($request){
+        $data = $this->getLightningDealCalData($request);
+        if($data){
+            $loginData = $request->getAttribute("loginData");
+            $profileid = $loginData["PROFILEID"];
+            $this->activateLightningDealForProfile($profileid);
+            $memHandler = new MembershipHandler();
+            $memHandler->clearMembershipCacheForProfile($profileid); 
+        }
+        return $data;
+    }
 }
 ?>
