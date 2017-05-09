@@ -26,7 +26,7 @@ class MOBILE_API_APP_LOGIN_PROFILES extends TABLE
 
 			$sql = "select PROFILEID from MOBILE_API.APP_LOGIN_PROFILES where PROFILEID =:PROFILEID";
 			$res=$this->db->prepare($sql);
-			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_STR);
+			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
@@ -50,11 +50,28 @@ class MOBILE_API_APP_LOGIN_PROFILES extends TABLE
 			$sql = "INSERT IGNORE INTO MOBILE_API.APP_LOGIN_PROFILES (PROFILEID,DATE,APP_TYPE) VALUES(:PROFILEID,:DATE,:APP_TYPE)";
 			
 			$res=$this->db->prepare($sql);
-			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_STR);
+			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 			$res->bindValue(":DATE", $date, PDO::PARAM_STR);
 			$res->bindValue(":APP_TYPE", $appType, PDO::PARAM_STR);
 			$res->execute();
 			
+		}
+		catch(PDOException $e)
+		{
+			throw new jsException($e);
+		}
+	}
+
+	public function ifUserIsEligible($pid)
+	{
+		try
+		{
+			$sql = "select * from MOBILE_API.APP_LOGIN_PROFILES where PROFILEID =:PROFILEID";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+			$res->execute();
+			$row = $res->fetch(PDO::FETCH_ASSOC);
+			return $row;
 		}
 		catch(PDOException $e)
 		{

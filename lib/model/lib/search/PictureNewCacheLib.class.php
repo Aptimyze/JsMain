@@ -451,6 +451,7 @@ class PictureNewCacheLib
      */
     private function logDelCount()
     {
+	return;
         $key = 'cacheDeleteCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
