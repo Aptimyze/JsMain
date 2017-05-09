@@ -121,7 +121,16 @@ if(authenticated($cid))
 				}
 				else
 				{
-					$del_scr="N";	
+          $sql_sel="SELECT ID from newjs.PROFILE_DEL_REASON where PROFILEID=$Profileid order by ID DESC LIMIT 1";
+          $result_sel = mysql_query_decide($sql_sel) or die("$sql_sel" . mysql_error_js());
+          $bExist = mysql_num_rows($result_sel)? true : false;
+          
+          if($bExist) {
+            $del_scr = "N";
+          } else {
+            $del_scr = "N2";
+          }        
+					
 				}
                 $sql_negative = "select PROFILEID from incentive.NEGATIVE_LIST where PROFILEID = $Profileid";
                 $result_negaive=mysql_query_decide($sql_negative) or die("$sql_negative".mysql_error_js());

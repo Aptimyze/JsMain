@@ -288,22 +288,20 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        if(MobileCommon::isAndroidApp())
+        /*if(MobileCommon::isAndroidApp())
         {
         	$tickArr = array();
-        	//Getting partner details of viewer
-			$jpartnerObj=ProfileCommon::getDpp($this->loginProfile->getPROFILEID());
-			
-			//Getting loginned profile desired partner data and setting object as well.
-			$this->loginProfile->setJpartner($jpartnerObj);
-			
-			//Green label for desired partner profile section of viewed profile.
-			if($this->profile->getJpartner()!=null)
-			{
-				$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
-			}
+
+        	if($this->loginProfile->getPROFILEID())
+        	{        		
+				//Green label for desired partner profile section of viewed profile.
+        		if($this->profile->getJpartner()!=null)
+        		{
+        			$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
+        		}
+        	}        	
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);			
-        }
+        }*/
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
 		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
 			$out['show_gunascore'] = "n";

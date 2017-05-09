@@ -157,6 +157,12 @@ function loadForm()
                 <td>&nbsp;</td>
                 <td height="21" align="CENTER" colspan=3>Deleted by Profile-owner</td>
 	</tr>~/if`
+        ~if $ROW[index].del_scr eq "N2"`
+        <tr bgcolor="#fbfbfb" class=fieldsnew>
+                <td>&nbsp;</td>
+                <td height="21" align="CENTER" colspan=3>Unknown Reason</td>
+       </tr>
+        ~/if`
 ~if $ROW[index].del_scr eq "N1"`
 	<tr bgcolor="#fbfbfb" class=fieldsnew>
                 <td>&nbsp;</td>
