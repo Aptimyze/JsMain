@@ -103,6 +103,7 @@ EOF;
       //checks whether rabbitmq has raised either the memory alarm or disk alarm.
       $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
+
       JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,false);
       JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
       if(is_array($resultAlarm))
@@ -114,7 +115,8 @@ EOF;
             JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
             RabbitmqHelper::sendAlert($str,"default");
-            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon");
+            
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".$row->mem_used. "at ".$row->cluster_links->name);
           }
           else
           {
