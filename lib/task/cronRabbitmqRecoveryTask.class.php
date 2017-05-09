@@ -116,7 +116,7 @@ EOF;
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
             RabbitmqHelper::sendAlert($str,"default");
             
-            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".$row->mem_used. " at ".$row->cluster_links[0]->name);
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name);
           }
           else
           {
