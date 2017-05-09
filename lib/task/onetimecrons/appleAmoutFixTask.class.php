@@ -47,7 +47,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-            print_r("Execusion Started");
+            print_r("\nExecusion Started\n");
             $startDate = '2017-01-25 00:00:00';
             $endDate = '2017-01-30 23:59:59';
             
@@ -55,7 +55,7 @@ EOF;
             include_once(JsConstants::$docRoot."/profile/connect_db.php");
             $db = connect_db();                    
             $sql  = "SELECT BILLID FROM billing.PAYMENT_DETAIL"
-                        . " WHERE APPLE_COMMISSION =0"
+                        . " WHERE APPLE_COMMISSION>0"
                         . " and ENTRY_DT BETWEEN '$startDate' and '$endDate'";
             $row = mysql_query_decide($sql, $db) or die("$sql Error" );
             while($row1 = mysql_fetch_array($row))
@@ -94,7 +94,7 @@ EOF;
             /*For 'PL' Set correct price(goes in purchase_details),
              *amount & applecommission(goes in payment_detail and payment_detail_new);
              */
-            print_r("Got all Data, Going to update for PL");
+            print_r("\nGot all Data, Going to update for PL\n");
             $serviceIdPL='PL';
             $pricePL='8500';        //100 amount
             $amountPL='5950';       //70 percent 
@@ -106,7 +106,7 @@ EOF;
             /*For 'C3' Set correct price(goes in purchase_details),
             *amount & applecommission(goes in payment_detail and payment_detail_new);
             */
-            print_r("Going to update for C3");
+            print_r("\nGoing to update for C3\n");
             $serviceIdC3='C3';
             $priceC3='4000';
             $amountC3='2800';
@@ -118,7 +118,7 @@ EOF;
             /*For 'CL' Set correct price(goes in purchase_details),
             *amount & applecommission(goes in payment_detail and payment_detail_new);
             */
-            print_r("Going to update for CL");
+            print_r("\nGoing to update for CL\n");
             $serviceIdCL='CL';
             $priceCL='9900';
             $amountCL='6930';
@@ -127,6 +127,6 @@ EOF;
             $this->updateAmountAndCommissionInPaymentDetailNew($priceCL,$billIdCLArrStr,$db);
             $this->updateAmountInPurchaseDetail($serviceIdCL,$priceCL,$billIdCLArrStr,$db);
             
-            print_r("Execusion Finished");
+            print_r("\nExecusion Finished\n");
 	}
 }
