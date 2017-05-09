@@ -1,9 +1,91 @@
 
 $(document).ready(function() {
-	
 
-          
-        if($("#CriticalActionlayerId").val()=='16'){
+if($("#CriticalActionlayerId").val()=='18'){
+
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#occMidDiv").css("height",window.innerHeight - 50);
+        $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        });	
+    }
+    occuSelected= 0;
+
+    $("#occInputDiv input").on('keydown',function(event){
+        var self = $(this);
+        setTimeout(function(){
+          var regex = /[^a-zA-Z. 0-9]+/g; 
+            
+         var value = self.val();
+         value = value.trim().replace(regex,"");
+         if(value != self.val().trim())
+           self.val(value);
+        },1);
+        
+//        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0) && inputValue != 8 && (inputValue != 32 && inputValue != 0) ) { 
+//            event.preventDefault(); 
+//        }
+    } );
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occClickDiv").on("click", function() {
+        if(typeof listArray == 'undefined')
+        {      $.ajax({
+                    url: "/static/getFieldData?k=occupation&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        listArray = res[0];
+                        appendOccupationData(listArray);
+                    },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+            }
+            else appendOccupationData(listArray);
+                $("#listDiv").removeClass("dn");
+        });
+
+     appendOccupationData = function(res) {
+        $("#occList").html('');
+        occuSelected = 0;
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+                if(index1!=43) //  omitting 'others' option
+                    $("#occList").append('<li occCode = "'+index1+'">' + elem1 + '</li>');
+            });
+        });
+        $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
+        $("#occList li").each(function(index, element) {
+            $(this).bind("click", function() {
+
+                $("#occSelect").html($(this).html());
+                $("#occSelect").attr('occCode',$(this).attr('occCode'));
+                $("#listDiv").addClass("dn");
+                $('#searchOcc').val("");
+                $("#occList").html("");
+                if ($(this).attr("id") == "notFound") {
+                    occuSelected = 0;
+                    $("#contText").hide();
+                    $("#inputDiv").removeClass("dn");
+                    $("#occuText").focus();
+                } else {
+                    occuSelected = 1;
+                    $("#inputDiv").addClass("dn");
+                    $("#contText").hide();
+                    $(this)
+                }
+                $("#occupationSubmit").show();
+            });
+        });
+        $("#listLoader").addClass("dn");
+        $("#occList").removeClass("dn");
+        }
+
+        }  
+else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
         }  
@@ -58,6 +140,46 @@ else {
                             return;
                         }
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
+                    }
+        if(layerId==18)
+                    {   
+
+                        if (occuSelected==1)
+                        {
+                            var occuCode = $("#occSelect").attr('occCode');
+                            dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+                        }
+                        else if ($("#occInputDiv input").val().trim()!='')
+                        {
+                            
+                            var occupText = $("#occInputDiv input").val();
+                            window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
+                            CALButtonClicked=0;
+                            return;
+                        }
+                        else{
+
+                                showError("Please enter occupation");
+                                CALButtonClicked=0;
+                                return;
+
+
+                        }
+
                     }
 
 

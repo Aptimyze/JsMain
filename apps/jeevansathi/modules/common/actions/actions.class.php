@@ -687,6 +687,16 @@ class commonActions extends sfActions
             
         }
         
+        if($layerToShow==18)
+        {
+            $occupText = $request->getParameter("occupText");
+            if($occupText)
+            {
+                (new MIS_CAL_OCCUPATION_TRACK())->insert($loginData['PROFILEID'],$occupText);
+            }
+
+        }        
+
         if($layerToShow==15)
         {
             $namePrivacy = $button=='B1' ? 'Y' : 'N';
@@ -732,7 +742,7 @@ class commonActions extends sfActions
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
-
+        $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;         
         $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
         $this->setTemplate('CALJSMS');
 
@@ -949,6 +959,23 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         else
         {
             $response = array('success' => 0);
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
+
+    public function executeLogOtherUrlV1(sfWebRequest $request)
+    {
+        $data = json_decode($request->getParameter('data'), true);
+        if(isset($data['url']))
+        {
+            $url = $data['url'];
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(
+                LoggingEnums::PHISHING_URL => $url,
+                LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
         }
         $respObj = ApiResponseHandler::getInstance();
         $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

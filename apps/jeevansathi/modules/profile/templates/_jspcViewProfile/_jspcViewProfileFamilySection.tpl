@@ -57,6 +57,23 @@
                         </span>
                       </p>
                     </li>
+
+                    ~if $apiData["lifestyle"]["religion_value"] eq "2" && !$bEditView` 
+                    <li>
+                      <p class="fontlig color12 pt15">Caste</p>
+                      <p class="pt2 pr20">
+                        <span id="caste_MuslimView" ~if $bEditView && $apiData["family"]["caste"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["caste"] eq null` class="notFilledInColor" ~/if` >
+                          ~if $apiData["family"]["caste"] neq null`
+                            ~$apiData["family"]["caste"]`
+                          ~else`
+                            Not filled in
+                          ~/if`
+                        </span>
+                      </p>
+                    </li>
+                    ~/if`
+
+
                     ~if $apiData["lifestyle"]["religion_value"] eq "1"`
                     <li>
                       <p class="fontlig color12 pt15" id="subcasteLabelParent">Sub-caste 

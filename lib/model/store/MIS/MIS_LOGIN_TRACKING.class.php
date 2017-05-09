@@ -26,13 +26,17 @@ class MIS_LOGIN_TRACKING extends TABLE{
                         throw new jsException($e);
                 }
         }
-        public function getLastLoginProfilesForDate($profileStr,$lastLoginDt, $channelStr)
+        public function getLastLoginProfilesForDate($profileStr="",$lastLoginDt, $channelStr)
         {     
-                if(!$profileStr || !$lastLoginDt)
-                        throw new jsException("","profiles/date blank passed");
+                if(!$lastLoginDt)
+                        throw new jsException("","date blank passed");
                 try
                 {
-                        $sql = "select distinct PROFILEID from MIS.LOGIN_TRACKING where PROFILEID IN($profileStr) AND DATE>=:DATE AND WEBSITE_VERSION IN($channelStr)";
+                        $sql = "select distinct PROFILEID from MIS.LOGIN_TRACKING where ";
+                        if(!empty($profileStr)){
+                            $sql .= "PROFILEID IN($profileStr) AND ";
+                        }
+                        $sql .= "DATE>=:DATE AND WEBSITE_VERSION IN($channelStr)";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
                         $res->execute();

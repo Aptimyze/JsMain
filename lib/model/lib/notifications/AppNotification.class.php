@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='',$logProfiles='',$currentScript=0)
   {
 	  switch($notificationKey)
 	  {
@@ -106,7 +106,8 @@ public function microtime_float()
             		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
-            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles,$logProfiles,$currentScript);
+
             		unset($poolObj);
 			break;
 
@@ -188,6 +189,12 @@ public function microtime_float()
 			// print_r($dataAccumulated);
 			unset($poolObj);
 			break;
+		   case "LOGIN_REGISTER":
+		   		$poolObj = new NotificationDataPool();
+				$dataAccumulated = $poolObj->getLoggedoutNotificationData($appProfiles);
+				//print_r($dataAccumulated);die;
+				unset($poolObj);
+		   		break;
                   case "CSV_UPLOAD":
                         $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
                         foreach($appProfiles as $k=>$v)
@@ -448,10 +455,22 @@ public function microtime_float()
             
             unset($poolObj);
             break;
+          case "UPGRADE_APP":              
+              $applicableProfiles=array();
+              $counter = 0;
+              foreach($appProfiles as $key => $pid){
+                  if($pid != 0){
+                    $applicableProfiles[$pid] = array();
+                    $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
+                    $dataAccumulated[$counter]['COUNT']="SINGLE";
+                    $counter++;
+                  }
+              }
+              break;
 	  }
-
 	  $completeNotificationInfo = array();
 	  $counter = 0;
+
 	  if(is_array($dataAccumulated))
 	  {
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
@@ -461,7 +480,7 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  // print_r($completeNotificationInfo); die;
+				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
 				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
@@ -478,6 +497,7 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }

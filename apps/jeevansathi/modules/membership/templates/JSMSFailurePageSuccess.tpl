@@ -91,9 +91,16 @@
       newHref += "&upgradeMem="+upgradeMem;
     }
     $("#redirectToCart").click(function(e){
-      e.preventDefault();
-      createCookie('backState','failurePage');
-      window.location.href = newHref;
+        if(checkEmptyOrNull(readCookie('backendLink'))){
+            e.preventDefault();
+            createCookie('backState','failurePage');
+            window.location.href = readCookie('backendLink');
+        }else{
+            e.preventDefault();
+            createCookie('backState','failurePage');
+            window.location.href = newHref;
+        }
+      
     });
     var username = "~$data.userDetails.USERNAME`";
     var email = "~$data.userDetails.EMAIL`";

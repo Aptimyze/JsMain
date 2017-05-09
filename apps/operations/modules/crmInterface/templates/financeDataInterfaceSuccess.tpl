@@ -161,7 +161,20 @@
             </input>
         </form>
         ~else if $showData eq 1`
+      	~include_partial('global/header')`
+	<table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
+            <tr width=100% border=1>
+                    <td width="25%" class="formhead" align="center"><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/financeDataInterface?cid=~$cid`">Go back</a></td>
+            </tr>
+	</table>
         <table width=100%>
+            <tr align="CENTER">
+		<td class="formhead" colspan="100%" height="23">
+                    <b>
+			<font color="red">Page ~$currentPage` of ~$totalPages`</font>
+                    </b>
+		</td>
+            </tr>
             <tr class=formhead style="background-color:LightSteelBlue; line-height: 20px; font-size: 15px;">
                 <td align=center>Entry Date</td>
                 <td align=center>Billid</td>
@@ -200,6 +213,18 @@
                 <td align=center><font color="#000">~$profileArr.INVOICE_NO`</font></td>
             </tr>
             ~/foreach`
+            <tr align="CENTER">
+		<td class="formhead" colspan="100%" height="23">
+                    <b>
+			<font color="red">Total Number of Records: ~$totalRec`</font>
+                    </b>
+		</td>
+            </tr>
+            <tr bgcolor="#fbfbfb">
+                <td colspan="100%" height="21">
+                    ~$pageLinkVar|decodevar`
+                </td>
+            </tr>
         </table>
         ~/if`
     </body>

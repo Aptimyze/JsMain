@@ -114,7 +114,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$jpartnerObj=new JPartnerDecorated('',$page_source);
 		$mysqlObj=new Mysql;
 		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
+		$myDb=$mysqlObj->connect("$myDbName");		
 		$jpartnerObj->setPartnerDetails($profileid,$myDb,$mysqlObj);
 		$request=sfContext::getInstance()->getRequest();
 		if($jpartnerObj instanceof JPartnerDecorated && !$request->getAttribute("loginData"))

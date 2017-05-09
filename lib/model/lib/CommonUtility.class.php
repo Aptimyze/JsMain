@@ -823,7 +823,7 @@ die;
 			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
-		//error_log("ankita-".$getName);
+		
 		return $userName;
 	}
 
@@ -1031,6 +1031,9 @@ die;
 			return 1;
 		}
 		return 0;
+	}
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
 	}
 }
 ?>

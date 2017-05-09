@@ -363,7 +363,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 				<div class="fullwidth f14 fontreg white">\
 					<div class="clearfix">\
 						<div class="fl wid48p textTru">\
-							{age}, {height}\
+							{age}, {height}, {mstatus}\
 						</div>\
 						<div class="fr wid48p textTru">\
 							{occupation}\
@@ -393,7 +393,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
-if(idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
+if(AppLoggedInUser && idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
         if(getAndroidVersion() || getIosVersion()){
                 var mbtext = "";
                 if(getAndroidVersion()){
@@ -405,7 +405,7 @@ if(idd == 3 && contactCenter != 1 && viewSimilar !=1 ){
                         var type = "apppromotionSRPIos";
                         var lableText = "iOS";
                 }                
-                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=\"trackJsEventGA(\'Download App\',\'SRP\', \''+lableText+'\');\" href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
+                tupleStructure += '<div class="srp_bgmsg dispnone padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=\"trackJsEventGA(\'Download App\',\'SRP\', \''+lableText+'\');\" href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
         }
 }
 	return tupleStructure;
@@ -957,6 +957,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
         if(val1.name_of_user!='' && val1.name_of_user!=null){
                 val1.username = val1.name_of_user;
         }
+        val1.age = val1.age.replace(" Years","");
 	var mapping={
 			
 			'{noPhotoDiv}':removeNull(noPhotoDiv),
@@ -989,6 +990,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{buttonsDiv}':"buttons"+profileNoId,
 			'{buttonInputId}':"buttonInput"+profileNoId,
 			'{profilechecksum}':removeNull(val1.profilechecksum),
+			'{mstatus}':removeNull(val1.mstatus),
 			'{verificationSeal}':removeNull(verificationSeal),
 			'{blahblahToEnd_withNoComma}':"----------"
 		};
@@ -1103,6 +1105,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 			}
 		},timedOut);
 		BindNextPage();
+		$('.srp_bgmsg').css('display','block');
 	},timedOut);
 		BindNextPage();
 }

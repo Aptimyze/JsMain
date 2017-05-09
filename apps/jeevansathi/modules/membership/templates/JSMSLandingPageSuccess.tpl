@@ -416,6 +416,7 @@
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        eraseCookie('backendLink');
         if(!checkEmptyOrNull(readCookie('expCheck'))){
             eraseCookie('selectedVas');
             createCookie('expCheck', '1');

@@ -151,8 +151,45 @@ function afterUpload()
 		handleContinueMessage();
 	}
 }
+function showMessageZeroMorePhoto() {
+    newPhotoCount = successfulUploads - newDeletedCount;
+    totalCount = (parseInt(alreadyPhotoCount) + parseInt(newPhotoCount)- parseInt(oldDeletedCount));
+
+    //added for showing messages when photo count is less than 3
+    if ( totalCount < 3 && totalCount > 0 )
+    {
+        $('#morePhotoUploaded p:first').prop('id',"");
+        $('#morePhotoUploaded button:first').prop('id',"");
+
+        $('#lessPhotoUploaded p:first').prop('id',"continueText");
+        $('#lessPhotoUploaded button:nth-child(2)').prop('id',"continue");
+
+        $("#morePhotoUploadedMessage").hide();
+        $("#lessPhotoUploadedMessage").show();
+        $("#lessPhotoUploaded").show();
+        $("#morePhotoUploaded").hide();
+    }
+    else
+    {
+        $('#lessPhotoUploaded p:first').prop('id',"");
+        $('#lessPhotoUploaded button:nth-child(2)').prop('id',"");
+
+        $('#morePhotoUploaded p:first').prop('id',"continueText");
+        $('#morePhotoUploaded button:first').prop('id',"continue");
+
+        $("#lessPhotoUploadedMessage").hide();
+
+        $("#lessPhotoUploaded").hide();
+        
+        $("#morePhotoUploadedMessage").show();
+        $("#morePhotoUploaded").show();
+    }
+   
+}
+
 function showContinueMessage(message)
 {
+    showMessageZeroMorePhoto();
 	$("#nowUpload").hide();
 	$("#continueText").html(message);
 	$(".continueDiv").show();
