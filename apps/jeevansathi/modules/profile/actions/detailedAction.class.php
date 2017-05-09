@@ -358,6 +358,7 @@ class detailedAction extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			$arrOutDisplay["buttonDetails"] = json_encode($buttonObj->getNewButtonArray($arrPass));
 		}
+		$arrOutDisplay["showTicks"] = $this->CODEDPP;
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
@@ -602,16 +603,14 @@ class detailedAction extends sfAction
 			//Getting loginned profile desired partner data and setting object as well.
 			$this->loginProfile->setJpartner($jpartnerObj);
 			//Green label for detailed profile section of viewed profile.
-			if($jpartnerObj!=null)
+			/*if($jpartnerObj!=null)
 			{
 					$this->CODEOWN=JsCommon::colorCode($this->profile,$this->loginProfile->getJpartner(),$this->casteLabel,$this->sectLabel);
-			}
+			}*/
 			//Green label for desired partner profile section of viewed profile.
 			if($this->profile->getJpartner()!=null)
 			{
-				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);
-                                
-				
+				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                	
 			}
                         
 		}	

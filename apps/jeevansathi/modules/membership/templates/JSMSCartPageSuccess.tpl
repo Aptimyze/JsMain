@@ -19,7 +19,9 @@
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="f19 fontthin">~$data.title`</div>
-				<div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
+				~if $data.backendLink.fromBackend neq 1`
+                                    <div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
+                                ~/if`
 			</div>
 		</div>
 	</div>
@@ -222,6 +224,7 @@
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	~if $data.backendLink`
+                createCookie('backendLink', window.location.href, 0.0188);
 		~if $data.cart_items.main_memberships`
 			createCookie('mainMem', '~$data.subscription_id`', 0);
 			createCookie('mainMemDur', '~$data.subscription_duration`', 0);

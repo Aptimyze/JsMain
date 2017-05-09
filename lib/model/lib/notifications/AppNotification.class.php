@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='',$logProfiles='',$currentScript=0)
   {
 	  switch($notificationKey)
 	  {
@@ -106,7 +106,7 @@ public function microtime_float()
             		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
-            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles,$logProfiles,$currentScript);
 
             		unset($poolObj);
 			break;
