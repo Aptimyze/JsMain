@@ -55,8 +55,10 @@ EOF;
             include_once(JsConstants::$docRoot."/profile/connect_db.php");
             $db = connect_db();                    
             $sql  = "SELECT BILLID FROM billing.PAYMENT_DETAIL"
-                        . " WHERE APPLE_COMMISSION>0"
-                        . " and ENTRY_DT BETWEEN '$startDate' and '$endDate'";
+                    . " WHERE APPLE_COMMISSION>0"
+                    . " AND APPLE_COMMISSION IS NOT NULL"
+                    . " and ENTRY_DT BETWEEN '$startDate' and '$endDate'";
+            
             $row = mysql_query_decide($sql, $db) or die("$sql Error" );
             while($row1 = mysql_fetch_array($row))
                     $billIdArr[] = $row1['BILLID'];
