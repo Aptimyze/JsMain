@@ -114,8 +114,8 @@ EOF;
             //echo "here...".$arguments["server"];
             JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
-            if($arguments["server"] == "72")
-              RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
+            
+            RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
           }
           else
           {
@@ -126,8 +126,8 @@ EOF;
           {
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
-            if($arguments["server"] == "72")
-              RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
+            
+            RabbitmqHelper::sendAlert($str,"memoryAlarmAlert");
           }
           else
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
