@@ -316,6 +316,7 @@ class ScreenedPicture extends Picture
 	}
 	public function logCacheConsumed()
 	{
+		return;
 		$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
 		$funName  = "PIC_NEW";
 		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
@@ -323,6 +324,7 @@ class ScreenedPicture extends Picture
 	}
 	public function logTableConsumed()
 	{
+		return;
 		$redisKey = 'picNewFromTable' . '_' . date('Y-m-d');
 		$funName  = "PIC_NEW";
 		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);

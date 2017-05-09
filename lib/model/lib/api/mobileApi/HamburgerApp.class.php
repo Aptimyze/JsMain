@@ -20,7 +20,7 @@ class HamburgerApp
 			if($profilePicObj)
                         {
 			if($profilePic=='U')	
-				$picUrl = $profilePicObj->getThumbail96Url();
+				$picUrl = $profilePicObj->getProfilePic235Url();
 			else
 				$picUrl = $profilePicObj->getProfilePic120Url();
 			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());

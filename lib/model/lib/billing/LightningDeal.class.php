@@ -119,9 +119,15 @@ class LightningDeal
 			if(is_array($pool2)){
 				$finalPool = $this->fetchDealFinalPool($pool1,$pool2);
 			}
+            
+            /*Storing discount in final pool from existing data of pool 1*/
+            if(is_array($finalPool)){
+                $finalPoolWithDiscount = $this->fetchFinalPoolWithDiscount($finalPool,$pool1);
+            }
 			unset($pool1);
 			unset($pool2);
-			return $finalPool;
+            unset($finalPool);
+			return $finalPoolWithDiscount;
 		}
 		catch(Exception $e){
 			$message = "Error in generateDealEligiblePool in LightningDeal class-".$e->getMessage();
@@ -129,9 +135,34 @@ class LightningDeal
 			return null;
 		}
 	}
+    
+    /*Adding discount to final pool array*/
+    public function fetchFinalPoolWithDiscount($finalPool=null,$pool1=null){
+        if(is_array($finalPool) && is_array($pool1)){
+            foreach($finalPool as $key => $val){
+                $result[$val] = $pool1[$val];
+            }
+        }
+        if($this->debug == 1){
+	        echo "\nfinal pool with discount \n";
+	        print_r($result);
+	    }
+        return $result;
+    }
 
 	public function storeDealEligiblePool($finalPool=null){
-		
+		if(is_array($finalPool)){
+            print_r($finalPool);
+            $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+            foreach($finalPool as $key => $val){
+                $params["PROFILEID"] = $val["PROFILEID"];
+                $params["DISCOUNT"] = max($val["P_MAX"],$val["C_MAX"],$val["NCP_MAX"],$val["X_MAX"]) + 5;
+                $params["STATUS"] = "N";
+                $params["ENTRY_DT"] = date('Y-m-d H:i:s');
+                $lightningDiscObj->insertInLightningDealDisc($params);
+            }
+            unset($lightningDiscObj);
+        }
 	}
 }
 ?>

@@ -64,7 +64,7 @@ class ProfilePicturesTypeEnum
 						"MobileAppPicUrl","ThumbailUrl","SearchPicUrl");
 	public static $PICTURE_NONSCREENED_SIZES_FIELDS = array("MainPicUrl","OriginalPicUrl","ProfilePic120Url",
 						"ProfilePic235Url","ProfilePicUrl","ProfilePic450Url",
-						"MobileAppPicUrl","Thumbail96Url");
+						"MobileAppPicUrl","Thumbail96Url","ThumbailUrl");
 	public static $PICTURE_SCREENED_SIZES_FIELDS = array("MainPicUrl","OriginalPicUrl","ProfilePic120Url",
 						"ProfilePic235Url","ProfilePicUrl","ProfilePic450Url",
 						"MobileAppPicUrl","Thumbail96Url",

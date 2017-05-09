@@ -18,7 +18,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                 $pid = $loggedInProfileObj->getPROFILEID();
                 $vspPage = $request->getParameter('vspPage');
                 if($pid){
-                    if(MobileCommon::isIOSApp() && $vspPage='PD' && in_array($pid%4, array(2,3))){
+                    if(MobileCommon::isIOSApp() && $vspPage=='PD' && in_array($pid%4, array(2,3))){
                         $paramArray["profiles"] = null;
                         $paramArray[noresultmessage] = '';
                         $paramArray["no_of_results"] = 0;
@@ -35,7 +35,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                 $loggedInProfileObj->getDetail("", "", "USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,MTONGUE,ENTRY_DT,HAVEPHOTO,SHOW_HOROSCOPE,COUNTRY_RES,BTYPE,COMPLEXION,EDU_LEVEL_NEW,OCCUPATION,MSTATUS,CITY_RES,DRINK,SMOKE,DIET,HANDICAPPED,MANGLIK,RELATION,HANDICAPPED,HIV,SUBSCRIPTION,BTIME,MOB_STATUS,LANDL_STATUS,ACTIVATED,INCOMPLETE");
                 $viewerGender = $loggedInProfileObj->getGENDER();
                 }
-                elseif(!MobileCommon::isDesktop() && !(MobileCommon::isIOSApp() && $vspPage='PD')) {
+                elseif(!MobileCommon::isDesktop() && !(MobileCommon::isIOSApp() && $vspPage=='PD')) {
                         $context = sfContext::getInstance();
                         $context->getController()->forward("static", "logoutPage"); //Logout page
                         throw new sfStopException();
@@ -214,6 +214,10 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                             $outputArr[] = $value;
                                     }
                                 }
+                                if(!MobileCommon::isNewMobileSite() && !MobileCommon::isDesktop() && !(MobileCommon::isIOSApp() && $vspPage=='PD')){
+                                     $dateHourToAppend = date('Y-m-d-H', time());
+                                     JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT",$dateHourToAppend."_".MobileCommon::getChannel(),count($output));
+                                 }
                                 $paramArray["profiles"] = $outputArr;
                                 $paramArray[noresultmessage] = null;
                                 $paramArray["no_of_results"] = count($output);

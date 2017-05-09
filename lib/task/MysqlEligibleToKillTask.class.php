@@ -152,12 +152,13 @@ EOF;
     $szSqlQuery = "SELECT ID,INFO,TIME FROM INFORMATION_SCHEMA.PROCESSLIST WHERE COMMAND='Query'";
     
     //DB Filter
-    $defaultDB = "newjs";
+    $defaultDB = "";
     if(isset($options[self::OPT_DATABASE])) {
       $defaultDB = $options[self::OPT_DATABASE];
     }
-    $szSqlQuery .= " AND DB='".$defaultDB."'";
-    
+    if(strlen($defaultDB)) {
+      $szSqlQuery .= " AND DB='".$defaultDB."'";
+    }
     //DML Filter
     $defaultDml = "select";
     if(isset($options[self::OPT_DML])) {
@@ -206,7 +207,7 @@ EOF;
       $this->log("Kill ".$iProcessID.";");
       $arrInfo[] = $iProcessID." => ".trim($szQueryInfo['query']).", TIME : ".trim($szQueryInfo['time']);
     }
-    $this->logSection("Queries Information is as follows : ");
+    $this->logSection("Queries Information is as follows : ", "");
     $this->log(implode("\n",$arrInfo));
     
   }

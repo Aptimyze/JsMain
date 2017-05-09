@@ -50,7 +50,7 @@ class myjsActions extends sfActions
     if(is_null($loggedInProfileObj) || is_null($pid)) {
       $this->forward("static", "logoutPage");
     }
-    
+
     //	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
 		$infoTypeId = $request->getParameter("infoTypeId");
 		$pageNo = $request->getParameter("pageNo");
@@ -298,7 +298,14 @@ class myjsActions extends sfActions
         if(is_null($this->loginProfile) || is_null($pid)) {
           $this->forward("static", "logoutPage");
         }
-        
+
+        $promoObj = new PromoLib();
+       $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
+        if($chatPromoToShow == true)
+        {
+          $this->forward("promotions", "chatPromoJSMS");
+        }
+
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -363,7 +370,7 @@ class myjsActions extends sfActions
 		{
 			header("Location:".sfConfig::get("app_site_url"));die;
 		}
-		
+
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcMYJSUrl);
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$this->profileid=$this->loginProfile->getPROFILEID();
@@ -372,7 +379,14 @@ class myjsActions extends sfActions
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
-    
+ 
+    $promoObj = new PromoLib();
+    $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
+    if($chatPromoToShow == true)
+    {
+      $this->forward("promotions", "chatPromoJSPC");
+    }
+
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();

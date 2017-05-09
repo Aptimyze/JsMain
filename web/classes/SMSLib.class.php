@@ -77,6 +77,7 @@ class SMSLib
     {
         $varArr = array(
             "USERNAME"        => array("maxlength" => "8"),
+            "FIELD_LIST"      => array("maxlength" => "30"),
             "PASSWORD"        => array("maxlength" => "16"),
             "MSTATUS"         => array("maxlength" => "13"),
             "MTONGUE"         => array("maxlength" => "12"),
@@ -123,6 +124,15 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "FIELD_LIST":
+                    $FIELD_LIST = $this->getVariables("FIELD_LIST");
+                    $fieldsList = strlen($tokenValue['editedFields']) <= $FIELD_LIST["maxlength"] ? $tokenValue['editedFields'] : substr($tokenValue['editedFields'], 0, $FIELD_LIST["maxlength"] - 2) . "..";
+                    return $fieldsList;
+                        break;
+            case "WAS_WERE":                    
+                    $wasWere = $tokenValue['WAS_WERE']; 
+                    return $wasWere;
+                        break;
             case "PHOTO_REJECTION_REASON":                    
                     $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
                     return $rejectReasonArr[0];
