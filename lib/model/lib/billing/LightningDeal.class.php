@@ -159,6 +159,7 @@ class LightningDeal
                 $params["DISCOUNT"] = max($val["P_MAX"],$val["C_MAX"],$val["NCP_MAX"],$val["X_MAX"]) + 5;
                 $params["STATUS"] = "N";
                 $params["ENTRY_DT"] = date('Y-m-d H:i:s');
+                $params["DISCOUNT"] = min($params["DISCOUNT"],80);
                 $lightningDiscObj->insertInLightningDealDisc($params);
             }
             unset($lightningDiscObj);
@@ -170,12 +171,14 @@ class LightningDeal
         $loginData = $request->getAttribute("loginData");
         $profileid = $loginData["PROFILEID"];
         if($profileid && CommonFunction::getMembershipName($profileid) == "Free"){
+            $dateGreaterThan = date('Y-m-d H:i:s', strtotime('-1 day', strtotime(date('Y-m-d H:i:s'))));
             $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
-            $data = $lightningObj->getLightningDealDiscountData($profileid);
+            $data = $lightningObj->getLightningDealDiscountData($profileid,$dateGreaterThan);
+            
             $memHandlerObj = new MembershipHandler();
             $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);
             $currentMaxDisc = $hamburgerMsg["maxDiscount"];
-            if($data && ($currentMaxDisc < $data["DISCOUNT"])){
+            if($data && ($currentMaxDisc <= $data["DISCOUNT"])){
                 $memHandlerObj = new MembershipHandler();
                 list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
                 $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
