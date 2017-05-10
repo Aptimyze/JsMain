@@ -259,18 +259,12 @@ class MembershipHandler
             $discountInfo["TYPE"] = discountType::UPGRADE_DISCOUNT;
         } else{
             if($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
-                if ($user->getProfileid() != '') {
-                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
-                }
-                if ($this->lightningDealDiscount) {
-                    $discountInfo["TYPE"] = discountType::LIGHTNING_DEAL_DISCOUNT;
-                }
-                else{
-                    $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
-                }
+                $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
             } else {
                 if ($user->getProfileid() != '') {
-                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
+                    if($userType == memUserType::FREE || $userType == memUserType::EXPIRED_BEYOND_LIMIT){
+                        $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
+                    }
                     if(!$this->lightningDealDiscount){
                         $varDiscount       = $this->memObj->getSpecialDiscount($user->getProfileid());
                         $this->varDiscount = $varDiscount;
@@ -290,7 +284,6 @@ class MembershipHandler
                 }
             }
         }
-
         return $discountInfo;
     }
 
