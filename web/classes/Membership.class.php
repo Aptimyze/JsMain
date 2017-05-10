@@ -690,6 +690,13 @@ class Membership
             $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
         }
+        
+        //mark availed status for lightning deal discount
+        if($this->discount_type == 16){
+            $lightningDealObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+            $lightningDealObj->updateLightningDealStatus("A",date("Y-m-d H:i:s"));
+            unset($lightningDealObj);
+        }
 
         //flush myjs cache after success payment
         if($this->profileid && !empty($this->profileid)){

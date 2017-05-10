@@ -111,6 +111,20 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
         }
     }
 
+    public function updateLightningDealStatus($status,$currentTime){
+        if(!empty($status) && !empty($currentTime)){
+            try{
+                $sql = "UPDATE billing.LIGHTNING_DEAL_DISCOUNT SET STATUS = :STATUS WHERE PROFILEID = :PROFILEID AND SDATE<=:CURRENT_DAT AND EDATE>=:CURRENT_DAT";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":CURRENT_DAT", $currentTime, PDO::PARAM_STR);
+                $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
+                $prep->execute();
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+    }
+
     public function fetchDiscountDetails($pid,$currentTime=""){
         if(!$pid){
             throw new Exception("Blank pid passed in fetchDiscountDetails in billing_LIGHTNING_DEAL_DISCOUNT class");
