@@ -2030,7 +2030,6 @@ $(document).ready(function () {
            var headerData = {"Content-Type": "application/json"};
            var inputParams = JSON.stringify({
             "msg":"chatCheck",
-            "ip":"192.168.182.77",
             "from":from,
             "to": to,
             "check":"1",
