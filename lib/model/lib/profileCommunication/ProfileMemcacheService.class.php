@@ -29,7 +29,6 @@ class ProfileMemcacheService
     const INTRO_CALLS= 43;
     const SKIP_PROFILES = 47;
     const MESSAGE_ALL = 53;
-    const GROUPS_UPDATED = "GROUPS_UPDATED";
     private $groups = array(
 						ProfileMemcacheService::CONTACTS => array(
 							'ACC_BY_ME', 
@@ -241,8 +240,7 @@ class ProfileMemcacheService
     {
         if (!$this->isGroupUpdated($this->groupId))
             return;
-        $newGroupValue = str_replace($this->getGroupKey($this->groupId),"",$this->memcache->get('GROUPS_UPDATED'));
-        $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
+        $this->memcache->set('G'.$this->groupId,0);
     }
     private function print_data()
     {
@@ -323,8 +321,7 @@ class ProfileMemcacheService
     {
         if ($this->isGroupUpdated($this->groupId))
             return;
-        $newGroupValue = $this->memcache->get('GROUPS_UPDATED'). $this->getGroupKey($this->groupId);
-        $this->memcache->set('GROUPS_UPDATED',$newGroupValue);
+        $this->memcache->set('G'.$this->groupId,1);
     }
     /**
      *@function findGroupId
@@ -347,7 +344,7 @@ class ProfileMemcacheService
      **/
     public function isGroupUpdated($groupId)
     { 
-        if (strpos($this->memcache->get('GROUPS_UPDATED') , $this->getGroupKey($groupId)) !== false){
+        if ($this->memcache->get('G'.$groupId)){
         return true;
         
         }
@@ -909,11 +906,6 @@ class ProfileMemcacheService
                 $this->groupId = self::SKIP_PROFILES;
                 $this->unsetGroupUpdated();
                 $this->memcache->updateMemcacheData();
-    }
-    
-    private function getGroupKey($groupId)
-    {
-        return "_".$groupId."_";
     }
 }
 ?>
