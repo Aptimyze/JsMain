@@ -271,6 +271,7 @@ $(document).ready(function () {
 					}else
 					{
 						$('#jamaat').css('display','none');
+                                                $('#reg_jamaat').val('');
 					}
 		});
                 $('#reg_religion').change(function(){
@@ -279,6 +280,9 @@ $(document).ready(function () {
 					}else
 					{
 						$('#sectMuslim_section').css('display','none');
+                                                $('#reg_sectMuslim').val('');
+                                                $('#jamaat').css('display','none');
+                                                $('#reg_jamaat').val('');
 					}
 		});
 		$('#reg_havechild').rules("add",{

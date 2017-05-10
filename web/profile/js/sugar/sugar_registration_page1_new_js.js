@@ -1873,13 +1873,17 @@ function showHideJamaat(){
      casteSelected = document.getElementById("caste").value.split("|X|")[0];
      if(religionSelected == '2' && casteSelected == '152')
          document.getElementById("jamaatDiv").style.display = "inline";
-     else
+     else{
          document.getElementById("jamaatDiv").style.display = "none";
+         document.getElementById("jamaat").value = '';
+     }
  }
 function showHideCasteMuslim(){
     religionSelected = document.getElementById("religion").value.split("|X|")[0];
     if(religionSelected == '2')
         document.getElementById("CasteMuslimDiv").style.display = "inline";
-    else
+    else{
         document.getElementById("CasteMuslimDiv").style.display = "none";
+        document.getElementById("casteMuslim").value = '';
+    }
 }
