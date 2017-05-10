@@ -54,7 +54,7 @@ class dppSuggestionsCALV1Action extends sfActions
 					foreach($val as $key1=>$val1)
 					{									
 						$type = $val["type"];				
-						if($key1 == "data")
+						if($key1 == "data" && $val1[0] != "DM")
 						{	
 							$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
 						}					
