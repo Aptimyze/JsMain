@@ -1,8 +1,10 @@
 ~assign var=brideGroom value=CommonUtility::getSplitName($levelObj->getH1Tag())`
 <div class="fullwid bg10 pad18">
     <div class="posrel txtc">
+        <h1>
         <div class="color5 fontthin f19">~$levelObj->getH1Tag()`<span id="brideGroom"> Matrimonial</span></div>
         <a href="/browse-matrimony-profiles-by-community-jeevansathi"></a>
+        </h1>
     </div>
 </div>
 <div id="listView">
@@ -16,7 +18,7 @@
 	</button>
     <amp-lightbox id="my-lightbox" scrollable layout="nodisplay">
         <div class="lightbox" role="button" tabindex="0">
-            <h1>
+            <h3>
                 <div class="fullwid bg10 pad18">
                     <div class="posrel txtc">
                         <div class="color5 fontthin f19">~$levelObj->getH1Tag()`<span id="brideGroom"> Matrimonial</span></div>
@@ -31,7 +33,7 @@
                     	~if $brideGroom eq 'Grooms'`Grooms ~else` Brides~/if`
                 	</div>      
                 </button>
-            </h1>
+            </h3>
         </div>
     </amp-lightbox>
     <div class="textcl pad18">
