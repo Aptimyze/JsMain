@@ -140,6 +140,11 @@ class MessageQueues
   const INSTANT_EOI_QUEUE = "instantEOINotificationQueue";
   const INSTANTEOICONSUMERCOUNT = 2;  //Number of instances of instant EOI Notify consumer class run at a time.
   CONST CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND = "symfony cronConsumeInstantEOIQueue"; //Command to start cron:cronConsumeScreeningQueueTask
+  
+  //Delayed Maile Queue
+  const DELAYED_INSTANT_MAIL = 'DelayedMailQueue';
+  const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
+  const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
 }
 
 ?>
