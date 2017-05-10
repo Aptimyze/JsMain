@@ -13,18 +13,14 @@ class jsValidatorJamaat extends sfValidatorBase
   	$caste = $this->getOption('caste');
   	if($clean)
 	{
-		if(!caste)
-		{
-			throw new sfValidatorError($this,'please provide a caste value for jamaat');
-		}
-		elseif($caste=='152')
+		if($caste=='152')
 			$field_map_jamaat_name=ObjectiveFieldMap::getFieldMapKey("JAMAAT");
 		else
 			throw new sfValidatorError($this,'Jamaat is not allowed for '.FieldMap::getFieldLabel('caste',$caste));
 		$choices=@array_keys(FieldMap::getFieldLabel($field_map_jamaat_name,'',1));
 		if(!in_array($clean,$choices))
 		{
-			throw new sfValidatorError($this,'please provide a valid value for jamaat for '.FieldMap::getFieldLabel('caste',$caste));
+			throw new sfValidatorError($this,'Please provide a valid value of jamaat for '.FieldMap::getFieldLabel('caste',$caste));
 		}
 	}
         else if($caste == '152')

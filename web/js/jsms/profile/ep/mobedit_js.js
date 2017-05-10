@@ -227,6 +227,7 @@ function SaveSub(json,attr)
 	var isValid=true;
 	var updatedJson="";
 	var isValidStateCity;
+	var isValidJamaat=true;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
@@ -236,8 +237,11 @@ function SaveSub(json,attr)
 	}
 	else
 		isValidStateCity = true;
-		
-	if(isValid && isValidStateCity){
+	if(validatorFormId=="Ethnicity")
+	{
+		isValidJamaat = jamaatRequired(key);
+	}
+	if(isValid && isValidStateCity && isValidJamaat){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{

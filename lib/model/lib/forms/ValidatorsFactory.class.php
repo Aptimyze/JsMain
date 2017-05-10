@@ -228,7 +228,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			return new sfValidatorAnd(array($choiceValidator,new jsValidatorHasChildren(array('mstatus'=>$form_values['mstatus']))),array('required'=>false),array('required' => $defaultMsg));
 			break;	
 		case 'caste':
-			return new jsValidatorCaste(array('religion'=>$loggedInObj->getRELIGION()),array('required' => $defaultMsg));
+			return new jsValidatorCaste(array('religion'=>$loggedInObj->getRELIGION(),'jamaat'=>@$form_values['JAMAAT']),array('required' => $defaultMsg));
 			break;
 		case 'religion':
 			return new jsValidatorReligion(array('caste'=>$form_values['CASTE'],'required'=>false),array('required' => $defaultMsg));
