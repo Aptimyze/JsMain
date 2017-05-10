@@ -112,13 +112,14 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
         }
     }
 
-    public function updateLightningDealStatus($status,$currentTime){
-        if(!empty($status) && !empty($currentTime)){
+    public function updateLightningDealStatus($profileid,$status,$currentTime){
+        if(!empty($status) && !empty($currentTime) && !empty($profileid)){
             try{
                 $sql = "UPDATE billing.LIGHTNING_DEAL_DISCOUNT SET STATUS = :STATUS WHERE PROFILEID = :PROFILEID AND SDATE<=:CURRENT_DAT AND EDATE>=:CURRENT_DAT";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":CURRENT_DAT", $currentTime, PDO::PARAM_STR);
                 $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
+                $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $prep->execute();
             } catch (Exception $ex) {
                 throw new jsException($ex);
