@@ -1177,7 +1177,7 @@ class MembershipHandler
         if ($validityCheck && ($renewCheckFlag || $specialActive == 1 || $discountActive == 1 || $fest == 1 || $lightningDealActive == 1)) {
             if ($lightningDealActive == 1) {
                 //ankita change discounttype to add switch case in getOCB text
-                $discountType = 'VD';
+                $discountType = 'LIGHTNING_DEAL';
                 $messageArr   = $this->getOCBTextMessage($profileid, $discountType, $discPerc, $expiry_date, $fest);
                 $text         = "discount of " . str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
             }
