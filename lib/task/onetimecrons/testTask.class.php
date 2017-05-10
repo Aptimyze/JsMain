@@ -25,11 +25,52 @@ class testTask extends sfBaseTask
 		[php symfony CRM:test|INFO]
 EOF;
 	}
-
+private function checkRabbitmqServerStatus($serverid,$api_url)
+  {
+    $server_credentials='FIRST_SERVER';
+    $rabbitmq_mgmnt_port=JsConstants::$rabbitmqManagementPort;
+    $rabbitmq_host="10.10.18.104";
+    $rabbitmq_user="admin";
+    $rabbitmq_pswd="admin";
+    $rabbitmq_creds="$rabbitmq_user:$rabbitmq_pswd";
+    $rabbitmq_base_url="http://{$rabbitmq_host}:{$rabbitmq_mgmnt_port}";    
+    $rest_url="{$rabbitmq_base_url}{$api_url}";
+    $response=RabbitmqHelper::curlToRabbitmqAPI($rest_url,$rabbitmq_creds);
+    return $response;
+  }
 	protected function execute($arguments = array(), $options = array())
 	{
+    sfContext::createInstance($this->configuration);
 	    // SET BASIC CONFIGURATION
-	   
+	   $alarmApi_url="/api/nodes";
+      $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
+
+     
+      if(is_array($resultAlarm))
+      {
+       foreach($resultAlarm as $row)
+        {          
+          if($row->mem_used >= 0)
+          {
+            
+            $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
+            RabbitmqHelper::sendAlert($str,"default");
+            
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name);
+          }
+          
+          if(($row->disk_free - $row->disk_free_limit) < MessageQueues::SAFE_LIMIT)
+          {
+            JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
+            $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
+            
+            RabbitmqHelper::sendAlert($str,"default");
+          }
+          else
+            JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
+        }
+      }
+      die;
     $user = $arguments["user"];
     if($user){
       //$memHandlerObj = new MembershipHandler(false);
