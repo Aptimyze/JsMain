@@ -955,19 +955,27 @@ class CommonFunction
     }
 
     public static function loginTrack($registrationid, $profileid)
-    {
-    	// APP_LOGINTRACKING
-    	$appType = "";
-    	if(MobileCommon::isAndroidApp())
-    	{
-    		$appType = "Android";
-    	}
-    	elseif (MobileCommon::isIOSApp())
-    	{
-    		$appType = "IOS";
-    	}
+	{
+		if( ! isset($registrationid) || ! isset($profileid) )
+			return ;
 
-    	
-    }
+		// APP_LOGINTRACKING
+		$appType = "";
+		if(MobileCommon::isAndroidApp())
+		{
+			$appType = "Android";
+		}
+		elseif (MobileCommon::isIOSApp())
+		{
+			$appType = "IOS";
+		}
+
+		$loginTrack = new MIS_APP_LOGINTRACKING();
+		if(!$loginTrack->getRecord($registrationid, $profileid))
+		{
+			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
+			// send mail
+		}
+	}
 }
 ?>
