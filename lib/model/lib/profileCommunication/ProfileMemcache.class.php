@@ -243,6 +243,7 @@ class ProfileMemcache
     private static $_instance;
     
     const EXPIRY_THRESHHOLD = 120;
+    const EXPIRY_TIME = 1800;
     /**
      * 
      * Constructor for instantiating object of ProfileMemcache class
@@ -270,7 +271,7 @@ class ProfileMemcache
             $this->_profileid     = $profileid;
             $this->_updatedFields = null;
             $this->getMemcacheData();            
-            $this->_initializeMemcacheData();
+            $this->_initializeCacheData();
             
         } else {
             jsException::log("ProfileId is not numeric. Supplied profileid = $profileid");
@@ -287,7 +288,7 @@ class ProfileMemcache
      * 
      * @access private
      */
-    private function _initializeMemcacheData()
+    private function _initializeCacheData()
     {
         $arr = $this->_memcache;
         
@@ -357,7 +358,7 @@ class ProfileMemcache
         if($lifetime < self::EXPIRY_THRESHHOLD)
         {
             // key doesnot exist or expire time is not defined
-            $lifetime = 1800;
+            $lifetime = self::EXPIRY_TIME;
             JsMemcache::getInstance()->setHashObject($this->_getProfileKey(),$tempArr,$lifetime) ;
 
         }
@@ -366,23 +367,6 @@ class ProfileMemcache
         $this->_updatedFields = null;
 //        $ret_val = JsMemcache::getInstance()->set($this->_getProfileKey(), $data_variables, $lifetime);
         return $ret_val;
-    }
-    
-    /**
-     * 
-     * Update JsMemcache Variables.
-     * 
-     * <p>
-     * This function updates the variables for current profileid's JsMemcache Object.
-     * </p>
-     * 
-     * @param $data_variables, Must be serialized only.
-     * @access private
-     * @throws Exception
-     */
-    private function _updateMemcacheVariables()
-    {
-        $this->_setCacheData();
     }
     
    /**
@@ -663,7 +647,7 @@ class ProfileMemcache
      */
     public function getACC_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->ACC_BY_ME ? $this->ACC_BY_ME : 0;
@@ -683,14 +667,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setACC_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->ACC_BY_ME = $current;
     }
     
     public function getCHAT_REQUEST()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->CHAT_REQUEST ? $this->CHAT_REQUEST : 0;
@@ -699,13 +683,13 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function setCHAT_REQUEST($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->CHAT_REQUEST = $current;
     }
     public function getBOOKMARK()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->BOOKMARK ? $this->BOOKMARK : 0;
@@ -714,13 +698,13 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function setBOOKMARK($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->BOOKMARK = $current;
     }
     public function getSAVED_SEARCH()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->SAVED_SEARCH ? $this->SAVED_SEARCH : 0;
@@ -729,7 +713,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function setSAVED_SEARCH($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->SAVED_SEARCH = $current;
     }
@@ -746,7 +730,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getACC_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->ACC_ME ? $this->ACC_ME : 0;
@@ -755,7 +739,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getACC_ME_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->ACC_ME_NEW ? $this->ACC_ME_NEW : 0;
@@ -774,13 +758,13 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setACC_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->ACC_ME = $current;
     }
     public function setACC_ME_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->ACC_ME_NEW = $current;
     }
@@ -798,7 +782,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getDEC_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->DEC_BY_ME ? $this->DEC_BY_ME : 0;
@@ -818,7 +802,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setDEC_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->DEC_BY_ME = $current;
         
@@ -837,7 +821,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getDEC_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->DEC_ME ? $this->DEC_ME : 0;
@@ -845,7 +829,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function getDEC_ME_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->DEC_ME_NEW ? $this->DEC_ME_NEW : 0;
@@ -864,21 +848,21 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setDEC_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->DEC_ME = $current;
         
     }
     public function setDEC_ME_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->DEC_ME_NEW = $current;
         
     }
     public function getMESSAGE()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->MESSAGE ? $this->MESSAGE : 0;
@@ -886,7 +870,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setMESSAGE($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MESSAGE = $current;
         
@@ -894,7 +878,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getMESSAGE_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->MESSAGE_NEW ? $this->MESSAGE_NEW : 0;
@@ -902,14 +886,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setMESSAGE_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MESSAGE_NEW = $current;
         
     }
     public function getHOROSCOPE()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->HOROSCOPE ? $this->HOROSCOPE : 0;
@@ -917,14 +901,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setHOROSCOPE($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->HOROSCOPE = $current;
         
     }
     public function getINTRO_CALLS()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->INTRO_CALLS ? $this->INTRO_CALLS : 0;
@@ -932,14 +916,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setINTRO_CALLS($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->INTRO_CALLS = $current;
         
     }
     public function getINTRO_CALLS_COMPLETE()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->INTRO_CALLS_COMPLETE ? $this->INTRO_CALLS_COMPLETE : 0;
@@ -947,14 +931,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setINTRO_CALLS_COMPLETE($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->INTRO_CALLS_COMPLETE = $current;
         
     }
     public function getHOROSCOPE_REQUEST_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->HOROSCOPE_REQUEST_BY_ME ? $this->HOROSCOPE_REQUEST_BY_ME : 0;
@@ -962,7 +946,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setHOROSCOPE_REQUEST_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->HOROSCOPE_REQUEST_BY_ME = $current;
         
@@ -970,7 +954,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     /*public function getHOROSCOPE_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
@@ -978,7 +962,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setHOROSCOPE_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->HOROSCOPE_NEW = $current;
         
@@ -986,7 +970,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getPHOTO_REQUEST()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->PHOTO_REQUEST ? $this->PHOTO_REQUEST : 0;
@@ -994,7 +978,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setPHOTO_REQUEST($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->PHOTO_REQUEST = $current;
         
@@ -1002,13 +986,13 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
 
     public function getINTEREST_ARCHIVED()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
     }
     public function setINTEREST_ARCHIVED($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->INTEREST_ARCHIVED = $current;
     }
@@ -1016,7 +1000,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
 
     public function getPHOTO_REQUEST_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->PHOTO_REQUEST_BY_ME ? $this->PHOTO_REQUEST_BY_ME : 0;
@@ -1024,7 +1008,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setPHOTO_REQUEST_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
 
         $this->PHOTO_REQUEST_BY_ME = $current;
@@ -1034,7 +1018,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getPHOTO_REQUEST_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->PHOTO_REQUEST_NEW ? $this->PHOTO_REQUEST_NEW : 0;
@@ -1042,7 +1026,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setPHOTO_REQUEST_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->PHOTO_REQUEST_NEW = $current;
         
@@ -1050,7 +1034,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
 
     public function getHOROSCOPE_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
@@ -1058,7 +1042,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setHOROSCOPE_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->HOROSCOPE_NEW = $current;
         
@@ -1067,33 +1051,33 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getMATCHALERT()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->MATCHALERT ? $this->MATCHALERT : 0;
     }
     public function setMATCHALERT($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MATCHALERT = $current;
     }
     public function getMATCHALERT_TOTAL()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->MATCHALERT_TOTAL ? $this->MATCHALERT_TOTAL : 0;
     }
     public function setMATCHALERT_TOTAL($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MATCHALERT_TOTAL = $current;
     }
     
     public function getVISITOR_ALERT()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->VISITOR_ALERT ? $this->VISITOR_ALERT : 0;
@@ -1101,21 +1085,21 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function setVISITOR_ALERT($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->VISITOR_ALERT = $current;
     }
     
     public function getVISITORS_ALL()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->VISITORS_ALL ? $this->VISITORS_ALL : 0;
         
     }
     public function setVISITORS_ALL($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->VISITORS_ALL = $current;
     }
@@ -1132,7 +1116,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getAWAITING_RESPONSE()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->AWAITING_RESPONSE ? $this->AWAITING_RESPONSE : 0;
@@ -1140,7 +1124,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     }
     public function getAWAITING_RESPONSE_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->AWAITING_RESPONSE_NEW ? $this->AWAITING_RESPONSE_NEW : 0;
@@ -1158,14 +1142,14 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setAWAITING_RESPONSE($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->AWAITING_RESPONSE = $current;
         
     }
     public function setAWAITING_RESPONSE_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->AWAITING_RESPONSE_NEW = $current;
         
@@ -1182,7 +1166,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getFILTERED()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->FILTERED ? $this->FILTERED : 0;
@@ -1201,7 +1185,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setFILTERED($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->FILTERED = $current;
     }
@@ -1218,7 +1202,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getFILTERED_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->FILTERED_NEW ? $this->FILTERED_NEW : 0;
@@ -1237,7 +1221,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setFILTERED_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->FILTERED_NEW = $current;
     }
@@ -1257,7 +1241,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setJUST_JOINED_MATCHES($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
          $this->JUST_JOINED_MATCHES = $current;
         
@@ -1274,7 +1258,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getJUST_JOINED_MATCHES()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->JUST_JOINED_MATCHES;
         
@@ -1293,7 +1277,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setJUST_JOINED_MATCHES_NEW($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->JUST_JOINED_MATCHES_NEW = $current;
         
@@ -1310,7 +1294,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getJUST_JOINED_MATCHES_NEW()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->JUST_JOINED_MATCHES_NEW;
         
@@ -1329,7 +1313,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setCONTACTS_VIEWED($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
          $this->CONTACTS_VIEWED = $current;
         
@@ -1346,7 +1330,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getCONTACTS_VIEWED()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->CONTACTS_VIEWED;
         
@@ -1365,7 +1349,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setPEOPLE_WHO_VIEWED_MY_CONTACTS($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
          $this->PEOPLE_WHO_VIEWED_MY_CONTACTS = $current;
         
@@ -1382,7 +1366,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getPEOPLE_WHO_VIEWED_MY_CONTACTS()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->PEOPLE_WHO_VIEWED_MY_CONTACTS;
         
@@ -1402,7 +1386,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getTODAY_INI_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->TODAY_INI_BY_ME ? $this->TODAY_INI_BY_ME : 0;
@@ -1422,7 +1406,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setTODAY_INI_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->TODAY_INI_BY_ME = $current;
         
@@ -1441,7 +1425,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getWEEK_INI_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->WEEK_INI_BY_ME ? $this->WEEK_INI_BY_ME : 0;
@@ -1461,7 +1445,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setWEEK_INI_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->WEEK_INI_BY_ME = $current;
         
@@ -1480,7 +1464,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getMONTH_INI_BY_ME()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->MONTH_INI_BY_ME ? $this->MONTH_INI_BY_ME : 0;
@@ -1500,20 +1484,20 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setMONTH_INI_BY_ME($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MONTH_INI_BY_ME = $current;
         
     }
     public function getCONTACTS_MADE_AFTER_DUP()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->CONTACTS_MADE_AFTER_DUP ? $this->CONTACTS_MADE_AFTER_DUP : 0;
     }
     public function setCONTACTS_MADE_AFTER_DUP($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->CONTACTS_MADE_AFTER_DUP = $current;
     }
@@ -1531,7 +1515,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getTOTAL_CONTACTS_MADE()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->TOTAL_CONTACTS_MADE ? $this->TOTAL_CONTACTS_MADE : 0;
@@ -1550,7 +1534,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setTOTAL_CONTACTS_MADE($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->TOTAL_CONTACTS_MADE = $current;
         
@@ -1569,7 +1553,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function getGROUPS_UPDATED()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->GROUPS_UPDATED ? $this->GROUPS_UPDATED : 1;
     }
@@ -1587,7 +1571,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
     
     public function setGROUPS_UPDATED($newValue = 1)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->GROUPS_UPDATED                   = $newValue;
         $this->_updatedFields['GROUPS_UPDATED'] = $this->GROUPS_UPDATED;
@@ -1605,7 +1589,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getNOT_REP()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
  
         return $this->NOT_REP ? $this->NOT_REP : 0;
         
@@ -1624,7 +1608,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setNOT_REP($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->NOT_REP = $current;
         
@@ -1643,7 +1627,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getOPEN_CONTACTS()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->OPEN_CONTACTS ? $this->OPEN_CONTACTS : 0;
@@ -1663,7 +1647,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setOPEN_CONTACTS($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->OPEN_CONTACTS = $current;
         
@@ -1682,7 +1666,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setINTEREST_EXPIRING($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->INTEREST_EXPIRING = $current;
         
@@ -1701,7 +1685,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getCANCELLED_EOI()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         
         return $this->CANCELLED_EOI ? $this->CANCELLED_EOI : 0;
@@ -1721,7 +1705,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function setCANCELLED_EOI($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->CANCELLED_EOI = $current;
         
@@ -1739,7 +1723,7 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getINTEREST_EXPIRING()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->INTEREST_EXPIRING;
     }
@@ -1758,13 +1742,13 @@ SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom 
      */
     public function getMESSAGE_ALL()
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         return $this->MESSAGE_ALL ? $this->MESSAGE_ALL : 0;
     }
     public function setMESSAGE_ALL($current = 0)
     {
-SendMail::send_email('palash.chordia@jeevansathi.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
         $this->MESSAGE_ALL = $current;
     }
