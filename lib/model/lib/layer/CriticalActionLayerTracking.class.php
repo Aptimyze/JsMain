@@ -453,7 +453,13 @@ break;
                     'A' => '84',
                     'I' => '4.5'
                     
+                        ),
+                          '18' => array(
+                    
+                    'A' => '95'
+                    
                         )
+
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
