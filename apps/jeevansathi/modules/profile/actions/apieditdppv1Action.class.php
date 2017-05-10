@@ -42,53 +42,62 @@ class apieditdppv1Action extends sfAction
 		//Get symfony form object related to Edit Fields coming.
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");		
 		
-		if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
+		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
 		{
-			$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
-			$this->form->bind($arrEditDppFieldIDs);
-			if ($this->form->isValid())
+			$errorArr["ERROR"]="Something went wrong.";
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->setResponseBody($errorArr);
+		}		
+		else
+		{
+			if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 			{
-				if($this->m_bDppUpdate)
+				$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
+				$this->form->bind($arrEditDppFieldIDs);
+				if ($this->form->isValid())
 				{
-					$this->Update();
+					if($this->m_bDppUpdate)
+					{
+						$this->Update();
+					}
+
+					if($this->m_bEditSpouse)
+					{
+						$this->form->updateData();
+					}	
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
+					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
+					if($request->getParameter("getData")=="dpp"){
+						ob_start();
+						$request->setParameter("sectionFlag","dpp");
+						$request->setParameter("internal",1);
+						$fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
+						$this->dppData = ob_get_contents();
+						ob_end_clean();
+						$apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
+
+					}
 				}
-				
-				if($this->m_bEditSpouse)
+				else
 				{
-					$this->form->updateData();
-				}	
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
-				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
-                                if($request->getParameter("getData")=="dpp"){
-                                    ob_start();
-                                    $request->setParameter("sectionFlag","dpp");
-                                    $request->setParameter("internal",1);
-                                    $fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
-                                    $this->dppData = ob_get_contents();
-                                    ob_end_clean();
-                                    $apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-				    
-                                }
+					$error=array();
+					$e=$this->form->getErrorSchema();
+					foreach($e as $k=>$v)
+					{
+						$errorArr[$k]=$v->getMessage();
+					}
+					$error[error]=json_decode(json_encode(array_values($errorArr)), FALSE);
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+					$apiResponseHandlerObj->setResponseBody($error);
+				}
 			}
 			else
 			{
-				$error=array();
-				$e=$this->form->getErrorSchema();
-				foreach($e as $k=>$v)
-				{
-					$errorArr[$k]=$v->getMessage();
-				}
-				$error[error]=json_decode(json_encode(array_values($errorArr)), FALSE);
+				$errorArr["ERROR"]="Field Array is not valid";
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-				$apiResponseHandlerObj->setResponseBody($error);
+				$apiResponseHandlerObj->setResponseBody($errorArr);
 			}
-		}
-		else
-		{
-			$errorArr["ERROR"]="Field Array is not valid";
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
 		$apiResponseHandlerObj->generateResponse();
 		die;
