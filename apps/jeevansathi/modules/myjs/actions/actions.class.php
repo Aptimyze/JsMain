@@ -303,7 +303,9 @@ class myjsActions extends sfActions
        $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
         if($chatPromoToShow == true)
         {
-          $this->forward("promotions", "chatPromoJSMS");
+          $this->setModuleActionName($request,"promotions","chatPromoJSMS");
+          sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSMS");
+          die;
         }
 
         $entryDate = $this->loginProfile->getENTRY_DT();
@@ -384,7 +386,9 @@ class myjsActions extends sfActions
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
     {
-      $this->forward("promotions", "chatPromoJSPC");
+      $this->setModuleActionName($request,"promotions","chatPromoJSPC");
+      sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSPC");
+      die;
     }
 
 		$this->gender=$this->loginProfile->getGENDER();
@@ -667,4 +671,13 @@ return $staticCardArr;
 		$respObj->generateResponse();
 		die;
 	}
+
+  private function setModuleActionName($request,$moduleName,$actionName)
+  {
+    $request->setParameter("module",$moduleName);
+    $request->setParameter("action",$actionName);
+    $request->setParameter("moduleName",$moduleName);
+    $request->setParameter("actionName",$actionName);
+  }
+
 }
