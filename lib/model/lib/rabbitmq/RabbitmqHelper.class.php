@@ -45,7 +45,7 @@ class RabbitmqHelper
     // enable alerts for these
     $arrEnableAlert = array("screening","instantEoi","writeMsg","loggingQueue","updateSeenProfile","updateSeen");
 
-    if(in_array($to, $arrEnableAlert))
+    if(in_array($to, $arrEnableAlert) && JsConstants::$whichMachine == 'prod')
     {
       SendMail::send_email($emailTo,$message,$subject);
     }
