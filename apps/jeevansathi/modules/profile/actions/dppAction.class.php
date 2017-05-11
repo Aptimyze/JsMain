@@ -246,9 +246,14 @@ class dppAction extends sfAction {
             $this->toggleMatchalerts = "new";
      
      if(isset($this->fromReg)){
-      $name_pdo = new incentive_NAME_OF_USER();
-      $this->name        = $name_pdo->getName($this->profileId);
-      unset($name_pdo);   
+     	//added this for caching
+        $nameOfUserOb=new NameOfUser();        
+        $nameOfUserArr = $nameOfUserOb->getNameData($this->profileId);
+        $this->name = $nameOfUserArr[$this->profileId]["NAME"];
+        
+      /*$name_pdo = new incentive_NAME_OF_USER();
+      $this->name        = $name_pdo->getName($this->profileId);*/
+      unset($nameOfUserOb);   
      }
      
      $this->setTemplate("_jspcDpp/jspcDpp");

@@ -125,14 +125,23 @@ class desktopView extends DetailedViewApi
       }
       
       //Name Work
-      $name_pdo = new incentive_NAME_OF_USER();
+      //Caching
+      $nameOfUserOb=new NameOfUser();
+      $this->m_arrOut['name'] = ApiViewConstants::getNullValueMarker();        
+      $nameOfUserArr = $nameOfUserOb->getNameData($objProfile->getPROFILEID());
+      $szName = $nameOfUserArr[$objProfile->getPROFILEID()]["NAME"];
+      if(strlen($szName)) {
+        $this->m_arrOut['name'] = $szName;
+      }
+      unset($nameOfUserOb);
+      /*$name_pdo = new incentive_NAME_OF_USER();
       $this->m_arrOut['name'] = ApiViewConstants::getNullValueMarker();
       
       $szName = $name_pdo->getName($objProfile->getPROFILEID());
       if(strlen($szName)) {
         $this->m_arrOut['name'] = $szName;
       }
-      unset($name_pdo);
+      unset($name_pdo);*/
       
       include_once (sfConfig::get("sf_web_dir") . "/profile/ntimes_function.php");
       //In case of viewing own page, to see the count of profile visitors.

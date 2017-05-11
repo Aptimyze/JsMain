@@ -143,15 +143,15 @@ class IgnoredProfileCacheLib
     	return $resultVal;
     }
 
-    //This function removes an ignoredProfileId from three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
+    //This function removes an ignoredProfileId from three different keys. (List_<profileId>_IgnoredAll,List_<profileId>_IgnoredByMe,List_<ignoredProfileId>_IgnoredAll)
     public function deleteDataFromCache($profileid,$ignoredProfileid)
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
-    	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
-        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+    	$pidKey1 = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;
+    	$pidKey2 =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
+        $pidKey3 = ignoredProfileCacheConstants::PREPEND_KEY.$ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
         if(JsMemcache::getInstance()->keyExist($pidKey3))
         {
             JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey3,$profileid);   
@@ -160,7 +160,7 @@ class IgnoredProfileCacheLib
     	JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey2,$ignoredProfileid);
     }
 
-    //This function adds an ignoredProfileId to three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
+    //This function adds an ignoredProfileId to three different keys. (List_<profileId>_IgnoredAll,List_<profileId>_IgnoredByMe,List_<ignoredProfileId>_IgnoredAll)
     public function addDataToCache($profileid,$ignoredProfileid,$extraParameter="")
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
@@ -168,14 +168,15 @@ class IgnoredProfileCacheLib
         }
         if($extraParameter)
         {
-            $pidKey =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+            $pidKey =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
             JsMemcache::getInstance()->addDataToCache($pidKey,"");
         }
+        
         else
         {
-            $pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
-            $pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
-            $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+            $pidKey1 = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;
+            $pidKey2 =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
+            $pidKey3 = ignoredProfileCacheConstants::PREPEND_KEY.$ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
             
             if(JsMemcache::getInstance()->keyExist($pidKey3))
             {
@@ -192,13 +193,13 @@ class IgnoredProfileCacheLib
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-        if($suffix == "byMe")
+        if($suffix == ignoredProfileCacheConstants::BYME)
         {
-           $pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA; 
+           $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA; 
         }
     	else
         {
-             $pidKey = $profileid.ignoredProfileCacheConstants::ALL_DATA; 
+             $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA; 
         }
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
         if($keyExists == 1)
@@ -221,7 +222,7 @@ class IgnoredProfileCacheLib
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey = $profileID.ignoredProfileCacheConstants::BYME_DATA;
+    	$pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileID.ignoredProfileCacheConstants::BYME_DATA;
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
     	if($keyExists == 1)
     	{

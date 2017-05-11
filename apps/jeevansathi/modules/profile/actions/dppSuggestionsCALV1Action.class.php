@@ -37,6 +37,7 @@ class dppSuggestionsCALV1Action extends sfActions
 			
 		//getDppDataArr is used to format the data in the required format.
 		$dppDataArr = $this->getDppDataArr($decodedData);		
+		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loginProfile->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -63,7 +64,6 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 
-		
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);									

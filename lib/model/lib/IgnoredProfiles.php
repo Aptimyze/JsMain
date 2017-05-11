@@ -32,7 +32,7 @@ class IgnoredProfiles
         {
         	$this->addDataToFile("old");
         	//changed pidKey and made call to ignoredProfileCacheLib
-        	$pidKey = $pid."_all";
+        	$pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$pid.ignoredProfileCacheConstants::ALL_DATA;
         	$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
         	if($resultArr == "noKey" || $resultArr == false)
         	{
@@ -95,7 +95,7 @@ class IgnoredProfiles
 	public function ifProfilesIgnored($profileIdStr, $viewer, $key='')
 	{
 		$this->addDataToFile("old");
-		$viewerKey = $viewer."_byMe";
+		$viewerKey = ignoredProfileCacheConstants::PREPEND_KEY.$viewer.ignoredProfileCacheConstants::BYME_DATA;
 		if($profileIdStr == '0')
 		{
 			$resArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($viewerKey);
