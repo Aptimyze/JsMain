@@ -1177,8 +1177,10 @@ class SearchParamters
                 foreach ($city_arr as $k=>$cityVal){
                     if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
                         $state_from_city =  $this->cityStateConversion($cityVal);
-                            $state_arr = array_merge($state_arr,$state_from_city);
-                        $state_arr = array_unique($state_arr);
+                        if(is_array($state_arr)){
+                                $state_arr = array_merge($state_arr,$state_from_city);
+                                $state_arr = array_unique($state_arr);
+                        }
                     }
                 }
 
