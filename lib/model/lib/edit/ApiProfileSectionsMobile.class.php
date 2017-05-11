@@ -402,6 +402,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			//$landline_value="";
 		}
 		$contactArr[]=$this->getApiFormatArray("PHONE_RES","Landline No." ,$landline_label,$landline_value,$this->getApiScreeningField("PHONE_RES"),$this->text);
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+    
 			
 		if($this->profile->getTIME_TO_CALL_START() && $this->profile->getTIME_TO_CALL_END())
 		{
