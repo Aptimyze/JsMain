@@ -27,8 +27,8 @@ $( document ).ready(function() {
         
       }  
       if((getAndroidVersion() || getIosVersion()) && 
-      	AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
-      if((!getCookieData("appPromo") && (typeof appPromo === 'undefined')) || messageListingAppPromo)
+      	AndroidPromotion && (typeof webView ==='undefined' || webView =="") && !getCookieData("appPromo")){
+      if(((typeof appPromo === 'undefined')) || messageListingAppPromo)
       { 
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#mainContent").length){
@@ -107,7 +107,7 @@ $( document ).ready(function() {
 							oldBrowserInfo="<a href='/static/appredirect?type=androidMobFooter' style='text-decoration:none'>"+oldBrowserInfo+"</a>";
 
 					$("#mainContent").before(oldBrowserInfo);
-					//writeCookie("oldbrowser",1,1);
+					writeCookie("oldbrowser",1,1);
 				}
 			}
 		}
