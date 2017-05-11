@@ -182,7 +182,7 @@ class LightningDeal
                 $memHandlerObj = new MembershipHandler();
                 list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
                 $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
-                $minDiscountedPrice = '1200';
+                $minDiscountedPrice = $minActualPrice*((100-$data["DISCOUNT"])/100);
                 if($currency == 'RS')
                     $symbol = '&#8377;';
                 else if ($currency == 'DOL')
