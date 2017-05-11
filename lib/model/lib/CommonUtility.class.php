@@ -1032,5 +1032,26 @@ die;
 		}
 		return 0;
 	}
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
+	}
+
+	public static function sendSlackmessage($message)
+	{
+		$url = 'https://hooks.slack.com/services/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';
+		$breaks = array("<br />","<br>","<br/>");
+		$message = str_ireplace($breaks, "\n", $message);
+		$data = array("text" => $message );
+		$ch=curl_init($url);
+		$data_string = json_encode($data);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,
+		array("Content-type: application/json"));
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result;
+	}
 }
 ?>

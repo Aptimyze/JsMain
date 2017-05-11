@@ -589,7 +589,7 @@ initGunnaScore = function()
         if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
         //Show Guna Score String        
-        if(data.responseStatusCode==0 && (data.SCORE != 0 || data.SCORE !=null))
+        if(data.responseStatusCode==0 && (data.SCORE != 0 && data.SCORE !=null && data.SCORE != "null"))
         {
             var col = "green";
             if(parseInt(data.SCORE)<18)
