@@ -84,6 +84,7 @@ EOF;
 	    $this->ifSend = 1;
 	    $this->ifSmsSend = 1;
             $this->mailMessage .= "<br/><br/>".$serverName."- Cannot Connect to server";
+            $this->slackMessage[$serverName] = $serverName."- Cannot Connect to server";
             $this->errorServer[] = $i;
         }else{
             $this->checkThreshold($res,$serverName,$SERVER_ARR[$i]['threshold']);
