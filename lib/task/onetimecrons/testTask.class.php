@@ -44,7 +44,7 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
 	    // SET BASIC CONFIGURATION
 	   $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
-
+      echo "345112";die;
      
       if(is_array($resultAlarm))
       {
