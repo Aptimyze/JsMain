@@ -325,7 +325,7 @@ function showOldMobileSiteInfo()
 	//console.log(match);
 	var OsVersion=ua.match(/OS\s[0-9.]*/i);
 	//console.log(OsVersion);
-	if(OsVersion!=null && matchIos !=null && OsVersion[0].substring(3,5)>=7)
+	if(OsVersion!=null && matchIos !=null && OsVersion[0].substring(3,5)>="7")
 		return false;
 	
  	if(navigator.userAgent.match(/Windows Phone/i)){
