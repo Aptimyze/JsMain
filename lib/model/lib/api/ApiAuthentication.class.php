@@ -77,6 +77,7 @@ Abstract class ApiAuthentication
 					{
 						$profileObj= LoggedInProfile::getInstance();
 						$profileObj->getDetail($this->loginData[PROFILEID],"PROFILEID","*");
+						$this->setLoginTrackingCookie($this->loginData);
 						if(IncompleteLib::isProfileIncomplete($profileObj) && $profileObj->getINCOMPLETE()!="Y")
 						{
 							$this->loginData[INCOMPLETE]="Y";
@@ -868,5 +869,35 @@ Abstract class ApiAuthentication
 
 	}
 
+	/*
+	* @function: setLoginTrackingCookie
+	* @param array - login data
+	*/ 
+    public function setLoginTrackingCookie($loginData)
+	{
+		$username = $loginData["USERNAME"];
+		$cookieName = "track";
+		$expiryTime = 31536000;
+
+		if(!isset($_COOKIE[$cookieName]))
+		{
+			@setcookie($cookieName, json_encode(array($username)), time() + $expiryTime, "/", $this->domain);
+			// send mail
+		}
+		else
+		{
+			$cookieData = json_decode($_COOKIE[$cookieName], true);
+			if(!in_array($username, $cookieData))
+			{
+				array_push($cookieData, $username);
+				@setcookie($cookieName, json_encode($cookieData), time() + $expiryTime, "/", $this->domain);
+				// send mail
+			}
+		}
+
+		var_dump($_COOKIE);
+		die(X);
+
+	}
 }
 ?>
