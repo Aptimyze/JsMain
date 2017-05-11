@@ -45,10 +45,10 @@ class RabbitmqHelper
     // enable alerts for these
     $arrEnableAlert = array("screening","instantEoi","writeMsg","loggingQueue","updateSeenProfile","updateSeen");
 
-    if(in_array($to, $arrEnableAlert))
-    {
-      SendMail::send_email($emailTo,$message,$subject);
-    }
+    // if(in_array($to, $arrEnableAlert))
+    // {
+    //   SendMail::send_email($emailTo,$message,$subject);
+    // }
   }
 
   public static function sendChatConsumerAlert($message)
