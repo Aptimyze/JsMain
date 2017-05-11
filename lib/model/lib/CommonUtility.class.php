@@ -1035,10 +1035,14 @@ die;
           public static function getSplitName($str){
 		return explode(" ",$str)[1];
 	}
-
-	public static function sendSlackmessage($message)
+        /**
+         * This function will post message to slack on the basis of identifier
+         * @param type $message slack message
+         * @param type $identifier identifier for url as per SlackMessagesEnums class
+         */
+	public static function sendSlackmessage($message,$identifier = "default")
 	{
-		$url = 'https://hooks.slack.com/services/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';
+		$url = SlackMessagesEnums::$slackModuleArray[$identifier];
 		$breaks = array("<br />","<br>","<br/>");
 		$message = str_ireplace($breaks, "\n", $message);
 		$data = array("text" => $message );
