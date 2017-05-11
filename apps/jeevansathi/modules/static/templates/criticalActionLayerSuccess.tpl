@@ -1,4 +1,11 @@
 
+<style type="text/css">
+ul.time{list-style-type:none;}
+ul.time li{display:inline-block;font-size:28px}
+ul.time li span{font-size:20px}
+.inscol:after{ content:":"; padding-left:10px}
+</style>
+
 ~if $layerId == '13'`<script>
     var primaryEmail = '~$primaryEmail`';
      function validateAlternateEmail(altEmail,primaryMail){        
@@ -148,6 +155,33 @@ function validateAndSend(){
         <!--end:layer 1-->
         </div> 
 </div>
+
+~elseif $layerId == '19'`
+  <div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;"> 
+    <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+        <div class="disp-cell vmid fontlig color11">
+            <div class="wid470 mauto">
+                <p class="f24">~$titleText`</p>
+                <p class="f28 pt20">~$discountPercentage`</p>
+        <p class="f24">~$discountSubtitle`</p>
+                <p class="pt20 f20">~$startDate`<span class="txtstr color12"><span>&#x20B9;</span>~$oldPrice`</span>  <span>&#x20B9;</span>~$newPrice`</p>
+                <p class="f16 pt20">Valid for 30 minutes</p>
+                <ul class="time">
+                  <li class="inscol">29<span>M</span></li>
+                    <li class="pl10">44<span>S</span></li>
+                </ul>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+        <div class="clearfix">
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
+        </div>
+</div>
+
 ~elseif $layerId == '18'`
  
  <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>

@@ -606,13 +606,21 @@ if(CALayerShow!='0')
   {
       
     var layer=$("#CALayerShow").val();
+    var discount_percentage=$("#DiscountPercentage").val();
+    var discount_subtitle=$("#DiscountSubtitle").val();
+    var start_date=$("#StartDate").val();
+    var old_price=$("#OldPrice").val();
+    var new_price=$("#NewPrice").val();
     var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer};
+ var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
+  if(CALayerShow==19){
+  startTimer(19);
+}
   if(CALayerShow==9) 
       $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
   else
@@ -1228,3 +1236,26 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 			});
     }
 
+
+    function startTimer(calId) {
+   
+      var currentTime=new Date(); 
+      
+     // var timeDiffInSeconds=(expiryDate-currentTime)/1000;
+      //if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
+      //$("#memExpiryDiv").show();
+      var temp=timeDiffInSeconds;
+      var timerSeconds=temp%60;
+      temp=Math.floor(temp/60);
+      var timerMinutes=temp%60;
+      temp=Math.floor(temp/60);
+      var timerHrs=temp;
+      memTimerExtraDays=Math.floor(timerHrs/24);
+      memTimerTime=new Date();
+      memTimerTime.setHours(timerHrs);
+      memTimerTime.setMinutes(timerMinutes);
+      memTimerTime.setSeconds(timerSeconds);
+
+      memTimer=setInterval('updateMemTimer()',1000);
+
+  }

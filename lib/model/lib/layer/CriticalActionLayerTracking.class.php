@@ -74,6 +74,7 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   { 
+
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -81,6 +82,7 @@ class CriticalActionLayerTracking
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
+
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -102,25 +104,29 @@ class CriticalActionLayerTracking
             /* make sure no layer opens before one day */
 
         if($maxEntryDt)
-        {
+        {  
           if ( (time() - strtotime($maxEntryDt)) <= 60*60*24) 
           {
             return 0;
           }
           
         }
+
 // in the order of priority
         for ($i=1;;$i++)
         { 
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+
       if (!$layer) 
         { 
             JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,86400);
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
+      {
           return $layer;
+      }
 
         }
 
@@ -383,7 +389,24 @@ return 0;
                            
                       }
                       
-                      
+                    case '19': 
+
+                      if(!MobileCommon::isApp() /*|| (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))*/){ 
+                      $hitFromMembership = 1;
+
+                      if($hitFromMembership){
+
+                        $request->setParameter('DISCOUNT_PERCENTAGE','60% OFF');
+                        $request->setParameter('DISCOUNT_SUBTITLE','on all memberships');
+                        $request->setParameter('START_DATE','Plan starts @');
+                        $request->setParameter('OLD_PRICE','3000');
+                        $request->setParameter('NEW_PRICE','1200');
+                        $show=1;       
+
+                      //  JsMemcache::getInstance()->setHashObject("LIGHTNING_CAL_".$profileid,$syncRecords,30);                    
+                      }
+
+                      }                      
                     break;
           default : return false;
         }

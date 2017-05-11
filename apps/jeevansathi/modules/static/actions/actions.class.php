@@ -452,6 +452,16 @@ class staticActions extends sfActions
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
           $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
    }
+    if($this->layerId==19)
+     {    
+
+            $this->discountPercentage = $request->getParameter('discountPercentage');
+            $this->discountSubtitle  = $request->getParameter('discountSubtitle');
+            $this->startDate  = $request->getParameter('startDate');
+            $this->oldPrice = $request->getParameter('oldPrice');
+            $this->newPrice = $request->getParameter('newPrice');
+     }
+    // print_r($this->startDate.'---'.)
     $this->setTemplate("criticalActionLayer");
   }
 
