@@ -47,12 +47,18 @@ if($data)
         echo "</table></form>";
     }
     else{
+        $c = JsMemcache::getInstance()->getHashAllValue('SFL_images')['lastReplaced'];
+        if(!$c)
+            $c=0;
         foreach($_POST as $key=>$val){
+            if($c>12)
+                $c=0;
             if(explode('_',$key)[0] == 'checkbox'){
                 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-                $toStore[] = $val;
+                $toStore[$c++] = $val;
             }
         }
+        $toStore['lastReplaced'] = $c;
         JsMemcache::getInstance()->setHashObject('SFL_images',$toStore,3600*24*30,true);
         echo "Your selected photos have been saved, these will be displayed on 'SathiForLife page'";
     }

@@ -179,6 +179,26 @@
           <div class="pt14">
             <div class="bg2 fullw shade1">
               <div class="pad7 marqOver">
+                ~if $noRediskey`
+                <ul class="imglist">
+                  <li>
+                    <img src="~sfConfig::get('app_img_url')`/images/sathi/DanceSathi.jpg" class="imgd"/>
+                    <p class="f13 fsos2 color2 pad6">#DanceSathi</p>
+                  </li>
+                  <li>
+                    <img src="~sfConfig::get('app_img_url')`/images/sathi/FoodieSathi.jpg" class="imgd"/>
+                    <p class="f13 fsos2 color2 pad6">#FoodieSathi</p>
+                  </li>
+                  <li>
+                    <img src="~sfConfig::get('app_img_url')`/images/sathi/NatureSathi.jpg" class="imgd"/>
+                    <p class="f13 fsos2 color2 pad6">#NatureSathi</p>
+                  </li>
+                  <li>
+                    <img src="~sfConfig::get('app_img_url')`/images/sathi/ArtySathi.jpg" class="imgd"/>
+                    <p class="f13 fsos2 color2 padChange">#ArtySathi</p>
+                  </li>
+                </ul>
+                ~else`
                 <marquee direction="up" style="height:777px">
                   <ul class="imglist">
                   ~foreach $imageDescArray as $imageDesc`
@@ -188,7 +208,8 @@
                   </li>
                   ~/foreach`
                   </ul>
-                </marquee>      
+                </marquee>
+                ~/if`
               </div>
             </div>
           </div>
