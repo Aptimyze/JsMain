@@ -92,11 +92,10 @@ $( document ).ready(function() {
     }
    else
    {
-   	 if($("#mainContent").length && showOldSiteMessage && typeof webView ==='undefined' || webView ==""){	 
+   	 if($("#mainContent").length  && typeof webView ==='undefined' || webView ==""){	 
 			var topX=0;
 			if($("#mainContent").css("position")=="relative")
 			   topX=0;
-		   showOldSiteMessage=0;
 			if(showOldMobileSiteInfo() && !getCookieData('oldbrowser')){
 				showOldSiteMessage=1;
 				var mes=ReturnBrowMes();
