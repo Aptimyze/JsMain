@@ -13,7 +13,7 @@ class FAQFeedBack
 	private $m_iTracePath;
 	private $errorReq;
 	private $webRequest;
-	private static $REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other');
+	private static $REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other','one or more of profile details are incorrect','photo on profile doesn\'t belong to the person','user is using abusive/indecent language','user is stalking me with messages/calls','user is asking for money','user has no intent to marry','user is already married / engaged','user is not picking up phone calls','person on phone denied owning this profile','user\'s phone is switched off/not reachable','User\'s phone is invalid');
 
         public function __construct($api=0)
 	{
