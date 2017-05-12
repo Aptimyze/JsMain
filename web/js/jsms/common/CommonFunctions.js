@@ -629,18 +629,6 @@ function readCookie(name) {
 
 (function(){
   $(document).ready(function() {
-        var url = window.location.hostname;
-        if(checkEmptyOrNull(trackingProfile)){
-          var profile = readCookie('hinditrackingnew');  
-          if((!checkEmptyOrNull(profile) || trackingProfile!=profile) && url.includes("hindi")){
-                var d = new Date();
-                var date = d.toLocaleDateString();
-                createCookieExpireMidnight("hinditrackingnew",trackingProfile,"/",".jeevansathi.com");
-                trackJsEventGA('jsms', 'hindi',date,trackingProfile);
-           }           
-        }
-        
-
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
         setInterval(function(){
             var online = hostReachable();
