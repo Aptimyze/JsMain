@@ -71,14 +71,14 @@ class FAQFeedBack
                 if($reasonMap)
                 {	
                 	if(in_array($reasonMap,$newReasonsAndroid))
-                	{
+                	{    
                 		$askOtherReasonAndroid = 1;
                 	}
 
                     $reasonMapArray=self::$REASON_MAP;
                     $reasonNew=$reasonMapArray[$reasonMap-1];
                     
-                    if($reasonNew=='other' || $askOtherReasonAndroid)
+                    if($reasonNew=='other')
                         $reasonNew=$this->webRequest->getParameter('other_reason');
                 }
 
@@ -86,10 +86,10 @@ class FAQFeedBack
 			'user is already married / engaged','user is not picking up phone calls','person on phone denied owning this profile','user\'s phone is switched off/not reachable','user\'s phone is invalid');
 
 		if(in_array(strtolower($reasonNew),$reasonsCategory))
-		{    
+		{ 
 			$categoryNew=$reasonNew;
 			if($askOtherReasonAndroid == 1){
-				$otherReason=$reasonNew;
+				$otherReason=$this->webRequest->getParameter('other_reason');
 			}
 			else{	 
 						$otherReason = '';
@@ -116,6 +116,7 @@ class FAQFeedBack
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
 		} 
+
 		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName);
 			
@@ -176,7 +177,7 @@ class FAQFeedBack
 	}
 	
 	public function ProcessData(sfWebRequest $request)
-	{ 
+	{   
 		$this->extractInfo($request);
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
@@ -221,16 +222,16 @@ class FAQFeedBack
 		
 
 	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
-		{  
+		{   
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
 			$error[message]='You cannot report abuse against the same person more than twice.';
 			$apiResponseHandlerObj->setResponseBody($error);
 			$apiResponseHandlerObj->generateResponse();
 			die;
 		}
+		
 	}	
-
-		$this->m_objForm->setDefaults($arrDeafults);  
+		$this->m_objForm->setDefaults($arrDeafults); 
 		if($request->isMethod('POST') && $request->getParameter('CMDSubmit'))
 		{   
 			$arrFeed = $request->getParameter('feed');
@@ -271,7 +272,7 @@ class FAQFeedBack
 
 			}
 			else
-			{
+			{  
 				if($this->api)
 				{
 					$errorObj=$this->m_objForm->getErrorSchema();
@@ -285,6 +286,7 @@ class FAQFeedBack
 			}
 
 		}
+		
 		return false;
 	}
 	
@@ -294,7 +296,7 @@ class FAQFeedBack
 	}
 	
 	private function InsertFeedBack()
-	{
+	{  
 		if($this->m_bValidForm == false)
 			return;
 
