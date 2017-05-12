@@ -215,7 +215,7 @@ $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 $css_arr[]=array("yatra_style"     => "5");
 $css_arr[]=array("promotions/chatPromo/chatPromoMS_css"         => "5");
 $css_arr[]=array("promotions/chatPromo/chatPromoPC_css"  => "3");
-$css_arr[]=array("sathiForLife_css"            => "8");
+$css_arr[]=array("sathiForLife_css"             => "9");
 return $css_arr;
 }
 /* JavaScript File */
