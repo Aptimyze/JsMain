@@ -349,12 +349,22 @@ class UploadPhoto extends PictureService
                 elseif($actualType == "png")
                 {
                 	$srcPath = $this->convertPngToJpeg($picInfoArr['SRC']);
-                	$picInfoArr["SRC"] = $srcPath;
-                	$picInfoArr["ACTUAL_TYPE"] = "jpeg";
-                	$todayDate = date("Y-m-d");
-                	$pngTrackingObj = new PICTURE_PNG_PHOTO_TRACKING("newjs_masterRep");
-                	$pngTrackingObj->insertPngTracking($todayDate,$picInfoArr["PIC_ID"]);
-                	unset($pngTrackingObj);
+                	if($srcPath != "0")
+                	{
+                		$picInfoArr["SRC"] = $srcPath;
+                		$picInfoArr["ACTUAL_TYPE"] = "jpeg";
+                		$todayDate = date("Y-m-d");
+                		$pngTrackingObj = new PICTURE_PNG_PHOTO_TRACKING("newjs_masterRep");
+                		$pngTrackingObj->insertPngTracking($todayDate,$picInfoArr["PIC_ID"]);
+                		unset($pngTrackingObj);
+                	}
+                	else
+                	{
+                		$error['ErrorCounter']=1;
+                		//SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","error in converting pic with path \n\n".$picInfoArr['SRC']."\n and pic id:".$picInfoArr["PIC_ID"]);
+                        return $error;
+                	}
+                	
                 }
 
 		return $picInfoArr;
@@ -424,6 +434,9 @@ class UploadPhoto extends PictureService
 		$image = imagecreatefrompng($filename);		
     	imagejpeg($image,$destFilename);
     	imagedestroy($image);
-    	return $destFilename;
+    	if($image == "")
+    		return 0;
+    	else
+    		return $destFilename;
 	}
 }

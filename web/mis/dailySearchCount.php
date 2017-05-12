@@ -231,7 +231,7 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'WMOD' => 'Match of day JSMS',
  'PMM'=>'PAID_MEMBERS_MAILER',
  'PM'=>'PAID_MEMBERS',
- );
+ 'APM'=>'Add Photo Mailer',);
 
 
         $index=array('A','D','C','I','E');

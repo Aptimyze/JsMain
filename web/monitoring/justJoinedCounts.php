@@ -44,8 +44,9 @@ if($jj == 1 && $alertSMS == 1){
 }elseif($alertSMS == 1){
 	sendJJSMS();
 	$php5 = JsConstants::$php5path;
-    $cronDocRoot = JsConstants::$cronDocRoot;
-    passthru("$php5 $cronDocRoot/web/monitoring/justJoinedCounts.php 1");
+        $cronDocRoot = JsConstants::$cronDocRoot;
+        sleep(2);
+        passthru("$php5 $cronDocRoot/web/monitoring/justJoinedCounts.php 1");
 }
 function sendJJSMS($flag =""){
         $FROM_ID = "JSSRVR";

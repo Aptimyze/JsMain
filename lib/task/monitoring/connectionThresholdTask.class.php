@@ -25,6 +25,7 @@ class connectionThresholdTask extends sfBaseTask
     * @var string $mailMessage email body text
   */
   private $mailMessage = "";
+  private $slackMessage = array();
   private $sleepQuery = array();
   private $ifSend = 0;
   /*
@@ -83,6 +84,7 @@ EOF;
 	    $this->ifSend = 1;
 	    $this->ifSmsSend = 1;
             $this->mailMessage .= "<br/><br/>".$serverName."- Cannot Connect to server";
+            $this->slackMessage[$serverName] = $serverName."- Cannot Connect to server";
             $this->errorServer[] = $i;
         }else{
             $this->checkThreshold($res,$serverName,$SERVER_ARR[$i]['threshold']);
@@ -115,6 +117,7 @@ EOF;
 	    $this->ifSend = 1;
 	}
         $this->mailMessage .= "<br/><br/>".$serverName." is having ".$connectionCount." connections <br/>";
+        $this->slackMessage[$serverName] = $serverName." is having ".$connectionCount." connections";
         $this->formatMsg($conn,$serverName);
     }
     /*
@@ -123,12 +126,14 @@ EOF;
      */
     private function formatMsg($res,$serverName)
     {
+        $sleepcount = 0;
         $this->mailMessage .= "Connection Details <br/>";
         while($row=@mysql_fetch_assoc($res))
         {
                 if($row["COMMAND"] != "Sleep"){
                         $this->mailMessage .= implode("|\t",$row)."<br/>";
                 }else{
+                        $sleepcount ++;
                         $server = explode(":",$row["HOST"]);
                         if(!isset($this->sleepQuery[$server[0]])){
                                 $this->sleepQuery[$server[0]] = array();
@@ -139,6 +144,7 @@ EOF;
                         $this->sleepQuery[$server[0]][$serverName]++;
                 }
         }
+        $this->slackMessage[$serverName] .= " :: Sleep count is ".$sleepcount;
     }
     /*
      * This function trigger email
@@ -161,6 +167,7 @@ EOF;
         $serverMessage .= $tableBody;
         $serverMessage .= "</br></br>".$this->mailMessage;
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
+        CommonUtility::sendSlackmessage(" \n ",implode($this->slackMessage),"mysql");
     }
 /*
      * @param int $memCacheValue memcache threshold value

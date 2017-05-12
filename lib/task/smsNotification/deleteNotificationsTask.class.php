@@ -31,6 +31,9 @@ $this->addOptions(array(
                 {
                         $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterDDL');
                         $scheduledAppNotificationsObj->truncate();
+
+	                $tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
+	                $tempObj->truncate();
                 }
   }
 }

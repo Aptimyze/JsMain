@@ -1825,6 +1825,44 @@ SQL;
         return NULL;
     }
 
+    public function getProfileForNoPhotoMailer($dateConditionArr)
+    {
+        try
+        {            
+            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO NOT IN (".noPhotoMailerEnum::havePhotoCondition.") AND ACTIVATED = ".noPhotoMailerEnum::ACTIVATED." AND activatedKey = ".noPhotoMailerEnum::activatedKey." AND ";
+            $count=1;
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dateTime = $val." ".noPhotoMailerEnum::TIME;
+                $sqlAppend .= " (ENTRY_DT BETWEEN  :VAL".$count." AND :DATETIME".$count.") OR";
+                $count++;
+            }
+            $sqlAppend = rtrim($sqlAppend," OR");
+            $sql .=$sqlAppend;
+
+            $prep = $this->db->prepare($sql);
+            $i=1; 
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dt = $val." ".noPhotoMailerEnum::TIME;
+                $prep->bindValue(":VAL$i", $val, PDO::PARAM_STR);
+                $prep->bindValue(":DATETIME$i", $dt, PDO::PARAM_STR);
+                $i++;
+            }                       
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {                          
+                    $dataArr[] =$row;
+            }        
+            return $dataArr;
+            
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }        
+    }
+
 }
 
 ?>

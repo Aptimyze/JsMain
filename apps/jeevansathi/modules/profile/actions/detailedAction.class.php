@@ -358,12 +358,14 @@ class detailedAction extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			$arrOutDisplay["buttonDetails"] = json_encode($buttonObj->getNewButtonArray($arrPass));
 		}
+		$arrOutDisplay["showTicks"] = $this->CODEDPP;
+		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
-		//print_R($this->arrOutDisplay);die;
+				
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
@@ -602,16 +604,14 @@ class detailedAction extends sfAction
 			//Getting loginned profile desired partner data and setting object as well.
 			$this->loginProfile->setJpartner($jpartnerObj);
 			//Green label for detailed profile section of viewed profile.
-			if($jpartnerObj!=null)
+			/*if($jpartnerObj!=null)
 			{
 					$this->CODEOWN=JsCommon::colorCode($this->profile,$this->loginProfile->getJpartner(),$this->casteLabel,$this->sectLabel);
-			}
+			}*/
 			//Green label for desired partner profile section of viewed profile.
 			if($this->profile->getJpartner()!=null)
 			{
-				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);
-                                
-				
+				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                	
 			}
                         
 		}	

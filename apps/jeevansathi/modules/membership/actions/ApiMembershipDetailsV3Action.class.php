@@ -55,7 +55,7 @@ class ApiMembershipDetailsV3Action extends sfAction
                     } catch (Exception $e) {
                         $serverStr = "\n<br>\n<br>\n<br>" . json_encode($_SERVER);
                         if (JsConstants::$whichMachine == 'prod') {
-                            SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $e . $serverStr, 'Failure in Setting Gateway Parameters', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+                            SendMail::send_email('vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com', $e . $serverStr, 'Failure in Setting Gateway Parameters', 'js-sums@jeevansathi.com', '', '', '', '', '', '', '', '', 'Membership Alerts');
                         }
                     }
                     try {
@@ -63,7 +63,7 @@ class ApiMembershipDetailsV3Action extends sfAction
                     } catch (Exception $e) {
                         $serverStr = "\n<br>\n<br>\n<br>" . json_encode($_SERVER);
                         if (JsConstants::$whichMachine == 'prod') {
-                            SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $e . $serverStr, 'Failure in User Re-Authentication Function', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+                            SendMail::send_email('vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com', $e . $serverStr, 'Failure in User Re-Authentication Function', 'js-sums@jeevansathi.com', '', '', '', '', '', '', '', '', 'Membership Alerts');
                         }
                     }
                 }

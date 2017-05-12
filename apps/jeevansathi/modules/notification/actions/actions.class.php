@@ -121,6 +121,10 @@ class notificationActions extends sfActions
 	        }
                 $producerObj = new JsNotificationProduce();
                 if($producerObj->getRabbitMQServerConnected()){
+
+                        $notificationFunction =new NotificationFunctions();
+                        $notificationFunction->appNotificationCountCachng('','','DELIVERY_TRACKING_API');
+
                         $dataSet =array('profileid'=>$profileid,'notificationKey'=>$notificationKey,'messageId'=>$messageId,'status'=>$status,'osType'=>$osType);
                         $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
                         $producerObj->sendMessage($msgdata);

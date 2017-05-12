@@ -15,8 +15,9 @@
 	~include_metas`
         ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
         ~if $ampurl|strstr:"amp"`
-            <link rel="amphtml" href="~$ampurl`">
+            <link rel="amphtml" href="~$ampurl`"/>
         ~/if`
+	~include_canurl`
         ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
@@ -39,7 +40,6 @@
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
-    ~include_canurl`
     ~use helper = SfMinify`
 
     <script  src="~JsConstants::$jquery`"></script>

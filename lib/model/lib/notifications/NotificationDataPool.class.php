@@ -68,22 +68,28 @@ class NotificationDataPool
 		return $dataAccumulated;
     }
 
-  public function getJustJoinData($applicableProfiles)
+  public function getJustJoinData($applicableProfiles,$logProfiles='',$currentScript=0)
   {
     //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
+	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
-            //if($applicableProfilesData[$profileid])
-            {
+		if(is_array($logProfiles)){
+			if(in_array("$profileid", $logProfiles))
+				continue;
+		}
                 $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
                 $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
                 $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
                 if($matchCount[$profileid]>0)
                     $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
-            }
+
+		// Add logging for re-try logic
+		$tempObj->addProfile($profileid,$currentScript);
+
         }
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
@@ -411,8 +417,10 @@ class NotificationDataPool
 		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
         $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
         //Remove blocked profiles. Those that have been blocked by the sender
-        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
-		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        //$ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		//$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        $ignoreProfileObj = new IgnoredProfiles("newjs_slave");
+        $ignoredProfiles = $ignoreProfileObj->ifProfilesIgnored($data["IGNORED_STRING"],$data['SELF']);
         if($ignoredProfiles){
             foreach($ignoredProfiles as $key => $val){
                 unset($data['SENDER'][$val]);

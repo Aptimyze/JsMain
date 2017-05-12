@@ -772,6 +772,12 @@ class JPROFILE
 
        // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
+
+    //This function is used to find details of users who do not have a photo and whose date condition satifies the condition given in the array
+    public function getProfileForNoPhotoMailer($dateConditionArr) 
+    {
+        return self::$objProfileMysql->getProfileForNoPhotoMailer($dateConditionArr);
+    }
 }
 
 ?>

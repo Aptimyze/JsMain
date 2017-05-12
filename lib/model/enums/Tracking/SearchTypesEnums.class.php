@@ -160,5 +160,6 @@ class SearchTypesEnums
     const ANDROID_MATCHOFDAY = "AMOD";
     const PAID_MEMBERS_MAILER = "PMM";
     const PAID_MEMBERS = "PM";
+    const ADD_PHOTO_MAILER = "APM";
 }
 ?>
