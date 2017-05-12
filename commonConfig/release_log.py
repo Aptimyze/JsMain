@@ -163,7 +163,7 @@ class Branch:
                     comment = commitObj.getCommitSubject()
                     commentUptoTenChar = comment[:10]
                     jiraId = commentUptoTenChar
-                    print commentUptoTenChar[-1:]
+                    
                     if commentUptoTenChar.startswith(commitHookStartDelimiter) and not commentUptoTenChar.endswith(commitHookEndDelimiter):
                         jiraId = re.sub(commentUptoTenChar[-1:]+'$',commitHookEndDelimiter,commentUptoTenChar)
                     
