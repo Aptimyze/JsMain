@@ -13,7 +13,7 @@ class InboxUtility
 			}
 			if(!$pid)
 				return 0;
-                        if(in_array($request->getParameter("infoTypeId"),array(7,8,2,24)))
+                        if(in_array($request->getParameter("infoTypeId"),array(7,8,2,24,5,23)))
                         {      
 				$memcacheid =  "MM".$request->getParameter("infoTypeId"); 
                                 if($type=='set')
