@@ -631,11 +631,11 @@ function readCookie(name) {
   $(document).ready(function() {
         var url = window.location.hostname;
         if(checkEmptyOrNull(trackingProfile)){
-          var profile = readCookie('hinditracking');  
+          var profile = readCookie('hinditrackingnew');  
           if((!checkEmptyOrNull(profile) || trackingProfile!=profile) && url.includes("hindi")){
                 var d = new Date();
                 var date = d.toLocaleDateString();
-                createCookieExpireMidnight("hinditracking",trackingProfile,"/",".jeevansathi.com");
+                createCookieExpireMidnight("hinditrackingnew",trackingProfile,"/",".jeevansathi.com");
                 trackJsEventGA('jsms', 'hindi',date,trackingProfile);
            }           
         }
