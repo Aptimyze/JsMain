@@ -29,7 +29,7 @@ if($data)
             echo "<tr>";
             foreach($row as $key=>$column){
                 if($key==8 && $column){
-                    $replacedUrl = str_replace ('JS',  JsConstants::$siteUrl,$column);
+                    $replacedUrl = preg_replace('/JS/',  JsConstants::$siteUrl,$column,1);
                     $column = "<a target='_blank' href = ".$replacedUrl.">Image</a>";
                 }
                 echo "<td>$column</td>";

@@ -24,7 +24,7 @@ class sathiForLifeActions extends sfActions
         $this->noRediskey = 1;
     $c = 0;
     foreach($fetchedArray  as $key=>$val){
-        if($key!="lastReplaced"){
+        if((string)$key!="lastReplaced"){
             $imageDescArr[$c]['image'] = explode('_*_',$val)[0];
             $imageDescArr[$c]['desc'] = explode('_*_',$val)[1];
             $c++;
