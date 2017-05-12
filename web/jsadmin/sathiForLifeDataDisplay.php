@@ -54,7 +54,6 @@ if($data)
             if($c>12)
                 $c=0;
             if(explode('_',$key)[0] == 'checkbox'){
-                include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
                 $toStore[$c++] = $val;
             }
         }

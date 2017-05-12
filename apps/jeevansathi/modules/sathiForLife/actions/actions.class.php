@@ -23,14 +23,16 @@ class sathiForLifeActions extends sfActions
     if(!$fetchedArray)
         $this->noRediskey = 1;
     $c = 0;
-    foreach($fetchedArray  as $key=>$val){
-        if((string)$key!="lastReplaced"){
-            $imageDescArr[$c]['image'] = explode('_*_',$val)[0];
-            $imageDescArr[$c]['desc'] = explode('_*_',$val)[1];
-            $c++;
+    if(is_array($fetchedArray)){
+        foreach($fetchedArray  as $key=>$val){
+            if((string)$key!="lastReplaced"){
+                $imageDescArr[$c]['image'] = explode('_*_',$val)[0];
+                $imageDescArr[$c]['desc'] = explode('_*_',$val)[1];
+                $c++;
+            }
         }
+        $this->imageDescArray = $imageDescArr;
     }
-    $this->imageDescArray = $imageDescArr;
     if($profileDetailsArr["submitForm"] == 1)
     {
       unset($profileDetailsArr["submitForm"]);
