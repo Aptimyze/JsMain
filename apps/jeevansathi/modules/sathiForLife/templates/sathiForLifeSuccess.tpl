@@ -178,7 +178,8 @@
             </div>
           <div class="pt14">
             <div class="bg2 fullw shade1">
-              <div class="pad7">
+              <div class="pad7 marqOver">
+                ~if $noRediskey`
                 <ul class="imglist">
                   <li>
                     <img src="~sfConfig::get('app_img_url')`/images/sathi/DanceSathi.jpg" class="imgd"/>
@@ -197,6 +198,18 @@
                     <p class="f13 fsos2 color2 padChange">#ArtySathi</p>
                   </li>
                 </ul>
+                ~else`
+                <marquee direction="up" style="height:777px">
+                  <ul class="imglist">
+                  ~foreach $imageDescArray as $imageDesc`
+                  <li>
+                    <img src="~$imageDesc['image']`" class="imgd"/>
+                    <p class="f13 fsos2 color2 pad6">~$imageDesc['desc']`</p>
+                  </li>
+                  ~/foreach`
+                  </ul>
+                </marquee>
+                ~/if`
               </div>
             </div>
           </div>
