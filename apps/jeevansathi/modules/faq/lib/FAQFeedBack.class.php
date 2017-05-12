@@ -32,6 +32,9 @@ class FAQFeedBack
 
 	private function insertReportAbuseLog(){
 
+		$newReasonsAndroid = array(7,8,9,10,11,12,13,14,16,18);
+		$askOtherReasonAndroid = 0;
+
 		$reasonNew=$this->webRequest->getParameter('reason');
                 $reasonMap=$this->webRequest->getParameter('reason_map');
                 if($this->webRequest->getParameter('fromCRM')){
@@ -66,10 +69,16 @@ class FAQFeedBack
                 }
 	
                 if($reasonMap)
-                {
+                {	
+                	if(in_array($reasonMap,$newReasonsAndroid))
+                	{
+                		$askOtherReasonAndroid = 1;
+                	}
+
                     $reasonMapArray=self::$REASON_MAP;
                     $reasonNew=$reasonMapArray[$reasonMap-1];
-                    if($reasonNew=='other')
+                    
+                    if($reasonNew=='other' || $askOtherReasonAndroid)
                         $reasonNew=$this->webRequest->getParameter('other_reason');
                 }
 
@@ -79,7 +88,12 @@ class FAQFeedBack
 		if(in_array(strtolower($reasonNew),$reasonsCategory))
 		{    
 			$categoryNew=$reasonNew;
-			$otherReason=''; 
+			if($askOtherReasonAndroid == 1){
+				$otherReason=$reasonNew;
+			}
+			else{	 
+						$otherReason = '';
+					}
 		}
 		else
 		{ 
