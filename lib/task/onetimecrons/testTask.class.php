@@ -41,6 +41,10 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
 	protected function execute($arguments = array(), $options = array())
 	{
     sfContext::createInstance($this->configuration);
+
+    $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(1,76601);
+        die;
 	    // SET BASIC CONFIGURATION
 	   $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);

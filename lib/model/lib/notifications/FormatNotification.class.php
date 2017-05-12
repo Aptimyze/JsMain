@@ -55,7 +55,7 @@ class FormatNotification
     }
     public static function formaterForIos($details)
     {
-        $dataArray = array('PROFILE_CHECKSUM'=>$details['PROFILE_CHECKSUM'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID']);
+        $dataArray = array('PROFILE_CHECKSUM'=>$details['PROFILE_CHECKSUM'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID'],'PHOTO_URL'=>$details['PHOTO_URL']);
         if($details['NOTIFICATION_KEY']=='PHOTO_REQUEST')
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_IOS;
         if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')

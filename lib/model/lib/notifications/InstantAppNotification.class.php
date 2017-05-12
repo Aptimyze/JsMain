@@ -86,6 +86,7 @@ class InstantAppNotification
 				$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
 			}
 			$notificationData = $notificationDetails[0];
+
 			if(is_array($notificationData))
 			{
 				$profileDetails[$selfProfile]['FREQUENCY']=$notificationData['FREQUENCY'];
@@ -106,10 +107,10 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
 				$profileDetails[$selfProfile]['MSG_ID']=$notificationData['MSG_ID'];
 
-                          	if($notificationData['PHOTO_URL']=="O")
-                          	{
-	                               	$profileObj = new Profile('',$otherProfile);
-	                               	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
+                if($notificationData['PHOTO_URL']=="O")
+                {
+                   	$profileObj = new Profile('',$otherProfile);
+                   	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
 					$havePhoto =$profileObj->getHAVEPHOTO();
 					if($havePhoto=='Y')
 					{
@@ -118,10 +119,10 @@ class InstantAppNotification
 						if($profilePicObj)
 							$thumbNail = $profilePicObj->getThumbailUrl();
 					}
-                          	}
-                          	if($thumbNail)
+                }
+                if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	elseif($notificationData['PHOTO_URL']!='')
+                else if($notificationData['PHOTO_URL']!='')
 					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
 				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
@@ -149,6 +150,7 @@ class InstantAppNotification
 				if($notificationData['NOTIFICATION_KEY']=='CSV_UPLOAD'){
 					$profileDetails[$selfProfile]['IMG_URL']=$exUrl;
 				}
+				
 				$notificationSenderObj->sendNotifications($profileDetails,$regIds);
 			}
 		}

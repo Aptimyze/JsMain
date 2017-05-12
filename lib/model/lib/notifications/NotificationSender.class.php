@@ -33,6 +33,7 @@ class NotificationSender
             $notificationLogEtnObj = new MOBILE_API_NOTIFICATION_LOG_ETN;
     		foreach($profileDetails as $identifier=>$details)
     		{
+
                 $osType = "";
                 if(!in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                     $profileid = $identifier;
@@ -53,10 +54,13 @@ class NotificationSender
                         $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
                     }
                 }
+
     			if(is_array($regIds))
     			{
+
     				if(is_array($regIds[$identifier]["AND"]))
     				{
+
     					$osType = "AND";
                         if($details['NOTIFICATION_KEY']=='ATN')
                             $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
@@ -75,14 +79,16 @@ class NotificationSender
     				}
     				if(is_array($regIds[$identifier]["IOS"]))
                     {
+
     					$osType = "IOS";
-                        $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
+                        //$details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
     					if($details['NOTIFICATION_KEY']=='ATN')
                             $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         if($details['NOTIFICATION_KEY']=='ETN')
                             $notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         $notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject($osType);
+                        
                         $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
                     }
     			}

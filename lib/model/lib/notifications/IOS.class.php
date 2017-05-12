@@ -10,6 +10,7 @@ class IOS implements NotificationEngine {
 
     public function sendNotification($registrationIds, $details, $profileid='') 
     {
+
 	$this->profileid =$profileid;
 	$this->logObj = new MOBILE_API_IOS_RESPONSE_LOG;
 	$this->notificationKey = $details['NOTIFICATION_KEY'];
@@ -33,6 +34,7 @@ class IOS implements NotificationEngine {
 	}
 	stream_set_blocking ($fp, 0);
 	$dataArray =FormatNotification::formaterForIos($details);
+	
 	foreach($registrationIds as $key=>$deviceToken){
 		
 		// Message details start:
