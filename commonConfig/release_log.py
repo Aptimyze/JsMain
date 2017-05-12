@@ -163,8 +163,9 @@ class Branch:
                     comment = commitObj.getCommitSubject()
                     commentUptoTenChar = comment[:10]
                     jiraId = commentUptoTenChar
-                    if commentUptoTenChar.startswith(commitHookStartDelimiter) and commentUptoTenChar.endswith('_'):
-                        jiraId = re.sub('_$',commitHookEndDelimiter,commentUptoTenChar)
+                    print commentUptoTenChar[-1:]
+                    if commentUptoTenChar.startswith(commitHookStartDelimiter) and not commentUptoTenChar.endswith(commitHookEndDelimiter):
+                        jiraId = re.sub(commentUptoTenChar[-1:]+'$',commitHookEndDelimiter,commentUptoTenChar)
                     
                     if jiraId not in jira_ids and commentUptoTenChar not in ignoreArray:
                         print comment[:15]
