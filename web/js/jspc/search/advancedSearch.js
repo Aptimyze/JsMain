@@ -307,7 +307,6 @@ $('#partner_mstatus_arr').on("change",function(){
   
   $('#Submit').on("click",function(){
     $form = $("<form action='/search/advanceSearch' name='searchForm' method='post' style='display:none;'></form>");
-    getParamtersForTracking($(this));
     $('.js-frmfld').each(function(){
       $value="";
       if($(this).is('select'))

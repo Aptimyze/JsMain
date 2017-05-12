@@ -301,7 +301,7 @@
           <div id="moreVisArea">  
           <!--start:title-->
           <div class="advbg2 advbdr4">
-            <div class="advp7 txtc"> <span class="disp_ib f17 fontreg advcolor1 pr20 pos-rel cursp advopt ~if $dataArray['selectedValues']['openOption']['MORE'] eq '1'`js-openSection~/if` GATracking" id="moreopt">More options<i class="pos-abs vicons advic1 advpos1"></i></span> </div>
+            <div class="advp7 txtc"> <span class="disp_ib f17 fontreg advcolor1 pr20 pos-rel cursp advopt ~if $dataArray['selectedValues']['openOption']['MORE'] eq '1'`js-openSection~/if`" id="moreopt">More options<i class="pos-abs vicons advic1 advpos1"></i></span> </div>
           </div>
           <!--end:title--> 
           <!--start:form section-->
