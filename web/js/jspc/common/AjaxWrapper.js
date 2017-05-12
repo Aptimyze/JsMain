@@ -82,7 +82,7 @@
       { 
         if ( typeof objConfig.channel === 'undefined' || objConfig.channel !== 'mobile' )
           {
-            showCustomCommonError("Nothing went wrong. Please try again after some time.",1500);
+            showCustomCommonError("Something went wrong. Please try again after some time.",1500);
           }
         }
         if ( $.isFunction(objConfig.error) ) {
