@@ -344,7 +344,7 @@ class ProfileMemcacheService
      **/
     public function isGroupUpdated($groupId)
     { 
-        if ($this->memcache->get('G'.$groupId)){
+        if ($this->memcache->get('G'.$groupId)==1){
         return true;
         
         }
