@@ -374,7 +374,7 @@ $js_arr[]=array("mini_reg_revamp_js"  => "2");
 $js_arr[]=array("regPage5_js"  => "4");
 $js_arr[]=array("mobselectType_js" => "2");
 $js_arr[]=array("html5_js" => "3");
-$js_arr[]=array("reg_page1_js"    => "12");
+$js_arr[]=array("reg_page1_js"     => "13");
 $js_arr[]=array("jsmb_page1_js" => "3");
 $js_arr[]=array("jsmb_page2_js" => "2");
 $js_arr[]=array("jsmb_page3_js"  => "5");
@@ -504,7 +504,7 @@ $js_arr[]=array("helpWidget_js"                      => "21");
 $js_arr[]=array("advance_search"   => "1");
 $js_arr[]=array("jsms/search/overlayLayerJsms"      => "3");
 $js_arr[]=array("jsms/search/savesearch_js"          => "8");
-$js_arr[]=array("sugar/sugar_registration_page1_new_js"        => "6");
+$js_arr[]=array("sugar/sugar_registration_page1_new_js"         => "7");
 $js_arr[]=array("app_promo"      => "3");
 $js_arr[]=array("sugar/registration_page1_new"     => "3");
 $js_arr[]=array("registration_pg2"     => "3");
@@ -640,6 +640,7 @@ $js_arr[]=array("/web/profile/js/sugar/sugar_registration_page1_new_js"   => "1"
 $js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js"    => "2");
 $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js"    => "2");
 $js_arr[]=array("sathiForLife_js"          => "8");
+$js_arr[]=array("sugar/sugar_registration_new_page_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
