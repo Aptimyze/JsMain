@@ -627,6 +627,71 @@ function readCookie(name) {
     return null;
 }
 
+
+
+function showTimerForLightningMemberShipPlan(source) {
+    if(source == "jsmsMyjs"){
+        var cT = new Date();
+        var eT = new Date(membershipPlanExpiry);
+        lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
+    }
+    if(!lightningDealExpiryInSec) 
+        return;
+    var currentTime=new Date(); 
+    var expiryDate=new Date();
+    expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
+    if(expiryDate<currentTime) return;
+    var timeDiffInSeconds=(expiryDate-currentTime)/1000;
+    if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
+    var temp=timeDiffInSeconds;
+    var timerSeconds=temp%60;
+    temp=Math.floor(temp/60);
+    var timerMinutes=temp%60;
+    temp=Math.floor(temp/60);
+    var timerHrs=temp;
+    memTimerExtraDays=Math.floor(timerHrs/24);
+    memTimerTime=new Date();
+    memTimerTime.setHours(timerHrs);
+    memTimerTime.setMinutes(timerMinutes);
+    memTimerTime.setSeconds(timerSeconds);
+    console.log("memTimerTime",memTimerTime);
+    src = source;
+    memTimer=setInterval('updateMemTimer()',1000);
+}
+
+
+function formatTime(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+function updateMemTimer(){
+  var h = memTimerTime.getHours();
+  var s = memTimerTime.getSeconds();
+  var m = memTimerTime.getMinutes();
+  if (!m && !s && !h) {
+    if(!memTimerExtraDays) clearInterval(memTimer);
+    else memTimerExtraDays--;
+  }
+  
+    memTimerTime.setSeconds(s-1);
+    h=h+memTimerExtraDays*24;
+    
+    m = formatTime(m);
+    s = formatTime(s);
+    h = formatTime(h);
+    
+    if(src == "jsmsLanding"){
+        $("#jsmsLandingM").html(m);
+        $("#jsmsLandingS").html(s);
+    }
+    else if (src == "jsmsMyjs"){
+        $("#myjsM").html(m);
+        $("#mysjsS").html(s);
+    }
+}
+
 (function(){
   $(document).ready(function() {
         var url = window.location.hostname;

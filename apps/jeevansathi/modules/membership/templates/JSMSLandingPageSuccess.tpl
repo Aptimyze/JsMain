@@ -76,13 +76,35 @@
 	<!--end:overlay2-->
 	<!--end:header-->
 	<div class="rv2_bg1" id="jsmsLandingContent">
-		~if $data.dividerText && !$data.upgradeMembershipContent`
+		~if $data.dividerText && !($data.upgradeMembershipContent || $data.lightningDealContent)`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
 			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
 		</div>
 		<!--end:offer div-->
 		~/if`
+        ~if $data.lightningDealContent`
+        <!--start:offer div-->
+            <div class="rv2_pad5" style="padding-top:10px;">
+                <div id="dividerText" class="bg3 posrel fontreg f18 color2 rv2_pad16"> 
+                    <p class="f16 pt10">~$data.lightningDealContent.top|decodevar`</p>
+                    <p class="f20 pt5">~$data.lightningDealContent.middle|decodevar`</p>
+                    <p class="fontlig f16 pt5">~$data.lightningDealContent.bottom|decodevar`</p>
+                    <i class="posabs rv2_sprtie1 setoffb setoffbl rv2_offb_left"></i> 
+                    <i class="posabs rv2_sprtie1 setoffbr rv2_offb_right"></i> 
+                    <!--start:timer div-->
+                    <div class="posabs" style="right:14px; top:13px">
+                        <p class="f14 color7">Valid for 30 minutes</p>
+                         <ul class="time color7">
+                             <li class="inscol"><span id='jsmsLandingM'></span><span>M</span></li>
+                             <li><span id='jsmsLandingS'></span><span>S</span></li>
+                            </ul>
+                    </div>
+                    <!--end:timer div-->
+               </div>
+            </div>
+        <!--end:offer div-->
+        ~/if`
 		~if $data.upgradeMembershipContent`
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
@@ -415,6 +437,7 @@
 	var AndroidPromotion = 0;
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+    var lightningDealExpiryInSec = "~$data.lightningDealContent.diffSecond`";
 	$(document).ready(function(){
         eraseCookie('backendLink');
         if(!checkEmptyOrNull(readCookie('expCheck'))){
@@ -768,5 +791,6 @@
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
 		}, 90000);
+        showTimerForLightningMemberShipPlan("jsmsLanding");
 	});
 </script>

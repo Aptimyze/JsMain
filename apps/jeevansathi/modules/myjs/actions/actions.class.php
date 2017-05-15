@@ -343,7 +343,6 @@ class myjsActions extends sfActions
 	            }
 	            $this->apiData['gender']=$this->loginProfile->getGENDER();
               	$this->apiData['membership_message_link']=$this->getMembershipLink($this->apiData['membership_message']['pageId']);	
-
               			
 ///// block for adding desired partner option in profile completion slider in mobile
 
@@ -358,7 +357,7 @@ class myjsActions extends sfActions
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage','Y');
 
-         
+                   $this->currentTime = date('Y-m-d H:i:s');
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);

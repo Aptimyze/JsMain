@@ -224,10 +224,9 @@ class LightningDeal
         $data = $this->getLightningDealCalData($request);
         if($data){
             $loginData = $request->getAttribute("loginData");
-            $profileid = $loginData["PROFILEID"];  
+            $profileid = $loginData["PROFILEID"];
             $endTime = $this->activateLightningDealForProfile($profileid);
-            $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d 
-H:i:s'));
+            $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
             $memHandler = new MembershipHandler();
             $memHandler->clearMembershipCacheForProfile($profileid); 
         }
