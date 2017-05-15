@@ -215,6 +215,18 @@
                           </p>
                         </li>
                         ~/if`
+                        ~if $editApiResponse.Details.CASTE.value eq 152`
+                        <li>
+                          <p class="color12 pt15 fontlig">Jamaat</p>
+                          <p class="pt2 fontlig" >
+                       ~if $arrOutDisplay.about.jamaat neq ''`
+                            <span id="m_statusView">~$arrOutDisplay.about.jamaat`</span>
+                       ~else`
+                         <p class="pt2 color5 fontlig" id='posted_byView'>~$notFilledInText`</p>
+                          ~/if`
+                          </p>
+                       </li>
+                       ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->
