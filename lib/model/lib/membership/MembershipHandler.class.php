@@ -131,6 +131,9 @@ class MembershipHandler
     }
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
+        if(empty($device)){
+            $device = "desktop";
+        }
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
@@ -140,6 +143,7 @@ class MembershipHandler
             if(!empty($userObj)){
                 $mtongue = $userObj->mtongue;
             }
+            
             $key_main = $device . "_".$membership."_MEMBERSHIP";
             $key_main .= "_" . $userObj->getCurrency()."_".$mtongue;
             $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
@@ -148,6 +152,7 @@ class MembershipHandler
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
+
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
                 $fetchOffline = false;
@@ -156,7 +161,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
-            
+
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {
@@ -279,6 +284,11 @@ class MembershipHandler
     {
         $profileid = $userObj->getProfileid();
         $userType  = $userObj->getUserType();
+	if($userType==8)
+		$this->memUpgrade=true;
+	else
+		$this->memUpgrade=false;
+	
         if ($source == 1) {
             $serviceSelected           = $userObj->getMemStatus();
             $navigationSuggestedString = $serviceSelected;
@@ -290,7 +300,7 @@ class MembershipHandler
         $serviceSelectedArr = array_filter($serviceSelectedArr);
         $serviceSelected    = implode(',', $serviceSelectedArr);
 
-        if ($trackType == 'F' || $source == 100) {
+        if(($trackType == 'F' || $source == 100) && $this->memUpgrade==false) {
             $trackFailedPaymentObj    = new billing_TRACKING_FAILED_PAYMENT();
             $trackFailedPaymentLogObj = new billing_TRACKING_FAILED_PAYMENT_LOG();
             if ($paymentTab) {
@@ -992,8 +1002,10 @@ class MembershipHandler
         }
         if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
             $upgradeActive  = '1';
+
             //get upgrade discount for this user
             if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+
                 $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem,$apiObj);
             }
             else{
@@ -1320,7 +1332,6 @@ class MembershipHandler
                
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
                 
-                //print_r($apiObj);
                 if($apiObj!=""){
                     if(!is_array($apiObj->allMainMem)){
                         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $apiObj->device,false);
@@ -1344,6 +1355,7 @@ class MembershipHandler
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
                 }
                 if($upsellMRP > 0){
+
                     $upsellMRP = ($upsellMRP < (0.3*($upgradeMemMRP - $currentMemMRP)))?(0.3*($upgradeMemMRP - $currentMemMRP)):$upsellMRP;
                     $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
                 }
@@ -1520,6 +1532,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
+            
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
@@ -1627,6 +1640,7 @@ class MembershipHandler
             $mems = explode(',', $allMemberships);
         }
         $allMemberships = $allMemberships;
+
         if ($currency == 'RS') {
             $price             = 0;
             $totalCartPrice    = 0;
@@ -1700,8 +1714,7 @@ class MembershipHandler
                 $totalCartPrice += $price - round($price * ($discPerc / 100), 2);
             }
         }
-
-         //add additional discount for upgrade membership if applicable
+        //add additional discount for upgrade membership if applicable
         if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
             //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
             //$temp = $totalCartPrice;
@@ -1721,7 +1734,7 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-        
+       
         return array(
             $totalCartPrice,
             $discountCartPrice,

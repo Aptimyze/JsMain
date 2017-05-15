@@ -16,7 +16,9 @@ cherryPickLine = '\(cherry picked from commit '
 commitBranchLogA = []
 commitBranchLogB = []
 detailedLog = False
-ignoreArray = ['[CIRelease','Merge bran']
+ignoreArray = ['[CIRelease','Merge bran','[QASanityR']
+commitHookStartDelimiter = '['
+commitHookEndDelimiter = ']'
 
 # just a basic commit object
 class gitCommit:
@@ -159,9 +161,15 @@ class Branch:
                         not re.search(filterAuthor, commitAuthor):
                             continue # a different owner
                     comment = commitObj.getCommitSubject()
-                    if comment[:15] not in jira_ids and comment[:15] not in ignoreArray:
-                        print comment[:15]
-                        jira_ids.append(comment[:15])
+                    commentUptoTenChar = comment[:10]
+                    jiraId = commentUptoTenChar
+                    
+                    if commentUptoTenChar.startswith(commitHookStartDelimiter) and not commentUptoTenChar.endswith(commitHookEndDelimiter):
+                        jiraId = re.sub(commentUptoTenChar[-1:]+'$',commitHookEndDelimiter,commentUptoTenChar)
+
+                    if jiraId not in jira_ids and commentUptoTenChar not in ignoreArray:
+                        print jiraId
+                        jira_ids.append(jiraId)
                     #print '  %s %s %s' % \
                     #    (commitID, commitAuthor, commitObj.getCommitSubject() )
 

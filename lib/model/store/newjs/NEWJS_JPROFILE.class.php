@@ -1806,6 +1806,62 @@ SQL;
             throw new jsException($e);
         } 
     }
+    
+    public function getLastLoggedInData($conditionNew,$limitStr = "0,2000")
+    {
+        try {
+                $result = NULL;
+                $sqlSelectDetail = "SELECT jp.PROFILEID FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew." ORDER BY jp.LAST_LOGIN_DT DESC LIMIT $limitStr";
+                $resSelectDetail = $this->db->prepare($sqlSelectDetail);
+                $resSelectDetail->execute();
+                while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
+                {
+                        $result[]= $row["PROFILEID"];
+                }
+                return $result;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+        return NULL;
+    }
+
+    public function getProfileForNoPhotoMailer($dateConditionArr)
+    {
+        try
+        {            
+            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO NOT IN (".noPhotoMailerEnum::havePhotoCondition.") AND ACTIVATED = ".noPhotoMailerEnum::ACTIVATED." AND activatedKey = ".noPhotoMailerEnum::activatedKey." AND ";
+            $count=1;
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dateTime = $val." ".noPhotoMailerEnum::TIME;
+                $sqlAppend .= " (ENTRY_DT BETWEEN  :VAL".$count." AND :DATETIME".$count.") OR";
+                $count++;
+            }
+            $sqlAppend = rtrim($sqlAppend," OR");
+            $sql .=$sqlAppend;
+
+            $prep = $this->db->prepare($sql);
+            $i=1; 
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dt = $val." ".noPhotoMailerEnum::TIME;
+                $prep->bindValue(":VAL$i", $val, PDO::PARAM_STR);
+                $prep->bindValue(":DATETIME$i", $dt, PDO::PARAM_STR);
+                $i++;
+            }                       
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {                          
+                    $dataArr[] =$row;
+            }        
+            return $dataArr;
+            
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }        
+    }
 
 }
 

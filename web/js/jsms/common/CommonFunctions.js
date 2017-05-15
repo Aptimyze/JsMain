@@ -600,6 +600,33 @@ function hostReachable() {
     }
 }
 
+function createCookieExpireMidnight(name,value,path,specificDomain) {
+	var expires = "";
+	var date = new Date();
+	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+	expires = "; expires=" + midnight.toGMTString();
+	if (!path) {
+		path = "/";
+	}
+        if(specificDomain == undefined || specificDomain == ""){
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path="+path;
+        }else{
+            document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path="+path;
+        }
+        
+}
+
+function readCookie(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
 (function(){
   $(document).ready(function() {
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
