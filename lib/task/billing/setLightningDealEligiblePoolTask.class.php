@@ -39,7 +39,7 @@ EOF;
         $eligiblePool = $dealObj->generateDealEligiblePool();
 
         //store eligible pool
-        $dealObj->storeDealEligiblePool();
+        $dealObj->storeDealEligiblePool($eligiblePool);
         unset($dealObj);
 
         //truncate billing.DISCOUNT_HISTORY table

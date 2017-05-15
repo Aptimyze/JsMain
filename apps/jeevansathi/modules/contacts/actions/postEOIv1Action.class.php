@@ -106,7 +106,17 @@ class postEOIv1Action extends sfAction
 			$responseButtonArray["cansend"] = true;
 			$responseButtonArray["sent"] = true;
 		}
+		else if ($this->getParameter($request,"coming_from") == "search")
+		{   
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
+			$responseButtonArray["buttons"][] = $buttonObj->getCancelInterestButton('search');
+			$responseButtonArray["buttons"][] = $buttonObj->getContactDetailsButton();
+		}
+		else
+		{	
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+		}
 		if($this->contactEngineObj->messageId)
 		{
         	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")

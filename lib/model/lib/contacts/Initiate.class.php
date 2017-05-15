@@ -401,7 +401,7 @@ class Initiate extends ContactEvent{
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
 
 		if(! $this->sendDataOfQueue(
-				'MAIL', 'INITIATECONTACT',
+            'MAIL', 'INITIATECONTACT',
 				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ))
 		)
 		{
