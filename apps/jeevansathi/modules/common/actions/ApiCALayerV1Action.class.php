@@ -79,6 +79,7 @@ class ApiCALayerV1Action extends sfActions
             $layerData['startDate']  = $request->getParameter('START_DATE');
             $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
             $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
+            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
      
 	    }
 		$this->m_arrOut=$layerData;

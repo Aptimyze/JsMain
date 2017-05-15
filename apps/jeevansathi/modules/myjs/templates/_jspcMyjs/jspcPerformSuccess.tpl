@@ -24,6 +24,7 @@
     <input type="hidden" id="StartDate" value="~$startDate`"></input>
     <input type="hidden" id="OldPrice" value="~$oldPrice`"></input>
     <input type="hidden" id="NewPrice" value="~$newPrice`"></input>
+    <input type="hidden" id="TimeForLightning" value="~$time`"></input>
     <input type="hidden" id="showConsentMsgId" value="~$showConsentMsg`"> ~if $videoLinkLayer neq 'N'`
     <div id="videoLinkDivID" class="fullwid" style="background-color:#fdfdfd">
         <div class="container mainwid pos-rel txtc lh61">

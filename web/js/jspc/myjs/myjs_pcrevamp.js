@@ -611,13 +611,18 @@ if(CALayerShow!='0')
     var start_date=$("#StartDate").val();
     var old_price=$("#OldPrice").val();
     var new_price=$("#NewPrice").val();
+    var time = $("#TimeForLightning").val();
     var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price};
+ var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
+      if(CALayerShow==19)
+{        var time = $("#TimeForLightning").val();
+  showTimerForLightningCal(time);
+}
   if(CALayerShow==9) 
       $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
   else
@@ -1233,7 +1238,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 			});
     }
 
-  function showTimerForLightningCal(lightningCALTime) {
+function showTimerForLightningCal(lightningCALTime) {
     console.log(lightningCALTime+'---');
     console.log('hree');
 if(!lightningCALTime) return;
@@ -1270,3 +1275,4 @@ function updateCalTimer(){
   $("#calExpiryMnts").html(m);
   $("#calExpirySec").html(s);
     }
+
