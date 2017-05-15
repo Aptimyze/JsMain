@@ -158,6 +158,7 @@ class Profile{
 	private $SERIOUSNESS_COUN;
 	private $education_other;
         private $religionInfoArr = array();
+        private $religionInfoValArr = array();
 	protected $fieldsArray=array();
         /**
          * @fn __construct
@@ -1262,25 +1263,35 @@ class Profile{
          */
         public function getReligionInfo($valuesOnly="")
         {
-            if(empty($this->religionInfoArr)){
+            if(($valuesOnly && empty($this->religionInfoValArr)) || (!$valuesOnly && empty($this->religionInfoArr))){
                 
                 //Jain profile
-                if($this->getRELIGION()==Religion::JAIN) $this->religionInfoArr = $this->getJainData($valuesOnly);
+                if($this->getRELIGION()==Religion::JAIN) $relInfoArr = $this->getJainData($valuesOnly);
 
                 //Christian profile     
-                if($this->getRELIGION()==Religion::CHRISTIAN) $this->religionInfoArr = $this->getChristianData($valuesOnly);
+                if($this->getRELIGION()==Religion::CHRISTIAN) $relInfoArr = $this->getChristianData($valuesOnly);
 
                 //Muslim profile
-                if($this->getRELIGION()==Religion::MUSLIM) $this->religionInfoArr = $this->getMuslimData($valuesOnly);
+                if($this->getRELIGION()==Religion::MUSLIM) $relInfoArr = $this->getMuslimData($valuesOnly);
 
                 //Sikh profile
-                if($this->getRELIGION()==Religion::SIKH) $this->religionInfoArr = $this->getSikhData($valuesOnly);
+                if($this->getRELIGION()==Religion::SIKH) $relInfoArr = $this->getSikhData($valuesOnly);
 
                 //Parsi profile
-                if($this->getRELIGION()==Religion::PARSI) $this->religionInfoArr = $this->getParsiData($valuesOnly);
+                if($this->getRELIGION()==Religion::PARSI) $relInfoArr = $this->getParsiData($valuesOnly);
                 
+            
+                if($valuesOnly){
+                    $this->religionInfoValArr = $relInfoArr;
+                }
+                else
+                    $this->religionInfoArr = (array)$relInfoArr;
             }
-            return $this->religionInfoArr;
+            if($valuesOnly)
+                   return $this->religionInfoValArr;
+            else
+                return $this->religionInfoArr;
+            
         }
 
         /**
