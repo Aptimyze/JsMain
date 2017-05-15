@@ -975,6 +975,7 @@ class CommonFunction
 		{
 			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
 			// send mail
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK));
 		}
 	}
 }
