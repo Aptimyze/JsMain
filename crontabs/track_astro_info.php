@@ -74,7 +74,8 @@ function update_astro_details($profileid,$astrodata="",$horoscope="",$db,$mysqlO
 			//$updateStr = implode(",",$updateArr);
                         foreach ($updateArr as $val){
                           $arr = explode('=',$val);
-                          $arrFields[trim($arr[0])] =  trim(str_replace(array(" ","'"),'',$arr[1]),',');
+                          $sampleString =  trim($arr[1],' ');
+                          $arrFields[trim($arr[0])] = trim($sampleString,"'");
                         }
                         $objUpdate = JProfileUpdateLib::getInstance();
 			//$statement = "update newjs.JPROFILE SET ".$updateStr." where PROFILEID = '$profileid'";

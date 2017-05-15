@@ -607,6 +607,11 @@ if (isset($data)) //successful login
         if (in_array('LTFSUP', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sugarcrm_LTF_search.php?cid=$cid\">Search details of LTF registered profile</a>";
         }
+        
+        // link for sathi for life table data display
+        if (in_array('SFL', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sathiForLifeDataDisplay.php?cid=$cid\">Users' data of Sathi For Life</a>";
+        }
     }
 
     $smarty->assign("linkarr", $linkarr);
