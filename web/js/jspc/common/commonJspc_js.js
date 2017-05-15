@@ -1,4 +1,67 @@
 var currentlyDisplayedLayer = '';
+
+//this variable has been added for idfy
+var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
+        '<div class="txtc padnew20">'+
+        '<div class="fontreg f22 disp_ib">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
+        '<div class="f14 fontreg lh21 pad1520">'+
+        '<div>Be sure of the person you want to marry. Verify him/her through IDfy</div>'+
+        '<div>Here’s how it works:</div>'+
+        '<table class="txtList">'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>Who is verifying the information? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>Jeevansathi has partnered with IDfy to help verify the profiles. IDfy is India’s leading background verification service provider.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>How is the information being verified?</td>'+ 
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>You will need to have some details of the person handy. Please click the verification link, fill in these details and proceed to checkout. The verification report would be available  in 3-5 days.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>What will you check? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>We can check if the person has a criminal background (Court Record Check). We can also check if he/she works in the place he/she claims to work (Employment Check Lite).</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>What details of the person do you need to verify?</td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>You’ll need the following:</div>'+
+        '<ul>'+
+        '<li>Court Record Check - Full Name, Father’s Name, Date of Birth, and his/her Address.</li>'+
+        '<li>Employment Lite - Name of the organization, Office/branch location, Designation (optional) and Department of the person (optional).</li>'+
+        '</ul>'+
+        '</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>Do you need consent from the other person?</td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>These checks do not need any consent and as such the other person will not be contacted. All you need to ensure if that you have his/her details handy.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>How do I pay? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>It’s really simple, you can pay by Debit or Credit card. It is as simple as buying a product online.</td>'+
+        '</tr>'+
+        '</table>'+
+        
+        '</div>'+
+        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh50 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
+        '</div>'+
+        '<div id="closeBtn" class="disp_ib vTop cursp"><i class="sprite2 closeSprite"></i></div>'+
+        '</div>';
 // JavaScript Document
 //this function is for achieving inheritence in javascript
 var inheritsFrom = function (child, parent) {
@@ -60,6 +123,18 @@ $(document).ready(function (e) {
 				window.location.href = url;
         
     });
+
+    //adding idfy code
+    $(".idfyDiv, .idfyDiv2").each(function(){
+        $(this).off("click").on("click",function(){
+            $("#commonOverlay").removeClass("disp-none");   
+            $("#commonOverlay").html(idfyStr);
+            $("#closeBtn").off("click").on("click",function(){
+                $("#commonOverlay").addClass("disp-none");
+            }); 
+        }); 
+    });
+    
 });
 
 function closeOverlayOnClick() {
