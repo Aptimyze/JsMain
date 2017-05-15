@@ -44,7 +44,8 @@ class NotificationSender
     			if(!isset($details))
     				continue;
 
-                if(!is_array($regIds)){       
+                if(!is_array($regIds)){ 
+                    /*add notification image support in case logged out notifications or upgrade app is extended for IOS channel*/    
                     if(in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['NOTIFICATION_KEY'],$profileDetails[$identifier]['REG_ID']); 
                     }
@@ -55,7 +56,6 @@ class NotificationSender
                         $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
                     }
                 }
-
     			if(is_array($regIds))
     			{
     				if(is_array($regIds[$identifier]["AND"]))
@@ -90,7 +90,7 @@ class NotificationSender
                         $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject($osType);
                         
                         $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid,$regIds[$identifier]['IOS_NOTIFICATION_IMAGE']);
-                        
+
                     }
     			}
     			// logging of Notification Messages 
