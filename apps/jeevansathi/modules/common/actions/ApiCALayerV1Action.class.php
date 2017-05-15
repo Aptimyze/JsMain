@@ -79,7 +79,9 @@ class ApiCALayerV1Action extends sfActions
             $layerData['startDate']  = $request->getParameter('START_DATE');
             $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
             $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
-     
+            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
+            $layerData['symbol'] = $request->getParameter('SYMBOL');
+     		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for '.floor($layerData['lightningCALTime']/60).'minutes';
 	    }
 		$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;

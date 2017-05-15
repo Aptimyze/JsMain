@@ -21,9 +21,11 @@
     <input type="hidden" id="CALayerShow" value="~$CALayerShow`"></input>
     <input type="hidden" id="DiscountPercentage" value="~$discountPercentage`"></input>
     <input type="hidden" id="DiscountSubtitle" value="~$discountSubtitle`"></input>
+    <input type="hidden" id="Symbol" value="~$symbol`"></input>
     <input type="hidden" id="StartDate" value="~$startDate`"></input>
     <input type="hidden" id="OldPrice" value="~$oldPrice`"></input>
     <input type="hidden" id="NewPrice" value="~$newPrice`"></input>
+    <input type="hidden" id="TimeForLightning" value="~$time`"></input>
     <input type="hidden" id="showConsentMsgId" value="~$showConsentMsg`"> ~if $videoLinkLayer neq 'N'`
     <div id="videoLinkDivID" class="fullwid" style="background-color:#fdfdfd">
         <div class="container mainwid pos-rel txtc lh61">

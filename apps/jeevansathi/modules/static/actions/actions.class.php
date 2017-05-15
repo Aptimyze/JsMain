@@ -460,8 +460,10 @@ class staticActions extends sfActions
             $this->startDate  = $request->getParameter('startDate');
             $this->oldPrice = $request->getParameter('oldPrice');
             $this->newPrice = $request->getParameter('newPrice');
+            $this->time = floor($request->getParameter('time')/60);
+            $this->symbol = $request->getParameter('symbol');
      }
-    // print_r($this->startDate.'---'.)
+    
     $this->setTemplate("criticalActionLayer");
   }
 

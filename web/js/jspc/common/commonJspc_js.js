@@ -583,6 +583,7 @@ function showLayerCommon(layerId) {
             })
         });
     });
+
 }
 
 function closeCurrentLayerCommon(extraFunction) {
