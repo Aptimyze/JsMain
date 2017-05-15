@@ -39,7 +39,7 @@ $(document).ready(function () {
 			{
 				$(element.form).find("label[for=reg_dtofbirth]").css("color","red");
 			}
-			else
+			else 
 	        $(element.form).find("label[for=" + element.id + "]").css("color","red");
             
 		},
@@ -116,8 +116,18 @@ $(document).ready(function () {
 		$("#reg_caste").rules("add",{
 			checkSelectDropDown:true
 		});
-                $("#reg_jamaat").rules("add",{
-                     checkSelectDropDown:true,
+               
+                $("#reg_sect_muslim").rules("add",{
+                     required:true,
+                     messages: {
+						required: $("#sectMuslim_err").html()
+				},
+                });
+                 $("#reg_jamaat").rules("add",{
+                     required:true,
+                     messages: {
+						required: $("#jamaat_err").html()
+				},
                 });
 
 		$("#reg_religion").rules("add",{
@@ -203,7 +213,7 @@ $(document).ready(function () {
 		  {
 			  required:$("#mstatus_required").html()
 		  }
-		});  
+		});
 		$('#reg_dtofbirth_year').rules("add",{
 		   required: true,    	  	
 		   check_date_of_birth: true,

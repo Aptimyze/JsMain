@@ -334,7 +334,6 @@ label {
  					</span>
  				</div>
  	        </li>
- 	        <br>
  		<div class="clr"></div>
  		<!-- jamaatMuslim Ends Here -->
                 
@@ -345,14 +344,12 @@ label {
 					<span id="sectMuslim_section"> 
 						<label id="sectMuslim_label" class="l1">Caste<u>*</u> :</label>
 						
-							~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
-							
-						 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_sectMuslim' class='error'>
-							<label class="l1">&nbsp;</label>
-							<div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
-						</div>
-					</span>
-				</div>
+                                        ~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
+
+                                 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_sect_muslim' class='error'>
+                                        <label class="l1">&nbsp;</label>
+                                        <div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
+                                </div>
 	        </li>
 	        <br>
 		<div class="clr"></div>
