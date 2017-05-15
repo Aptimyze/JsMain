@@ -74,11 +74,11 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   { 
-
+   
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
-
+            //die('loll');
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
@@ -111,7 +111,7 @@ class CriticalActionLayerTracking
           }
           
         }
-
+  
 // in the order of priority
         for ($i=1;;$i++)
         { 
@@ -141,7 +141,7 @@ return 0;
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
   { 
-
+   
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -158,6 +158,7 @@ return 0;
     $show=0;
     $request=sfContext::getInstance()->getRequest();
     $isApp=MobileCommon::isApp();
+
         switch ($layerToShow) {
           case '1': 
                     $picObj= new PictureService($profileObj);
@@ -392,15 +393,16 @@ return 0;
                     case '19': 
 
                       if(!MobileCommon::isApp() /*|| (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))*/){ 
-                      $hitFromMembership = 1;
+                      $lightningCALObj = new LightningDeal();
+                      $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
+                      var_dump($lightningCALData); die('aaa');
+                      if($lightningCALData != false){
 
-                      if($hitFromMembership){
-
-                        $request->setParameter('DISCOUNT_PERCENTAGE','60% OFF');
-                        $request->setParameter('DISCOUNT_SUBTITLE','on all memberships');
+                        $request->setParameter('DISCOUNT_PERCENTAGE',$lightningCALData['line2']);
+                        $request->setParameter('DISCOUNT_SUBTITLE',$lightningCALData['line3']);
                         $request->setParameter('START_DATE','Plan starts @');
-                        $request->setParameter('OLD_PRICE','3000');
-                        $request->setParameter('NEW_PRICE','1200');
+                        $request->setParameter('OLD_PRICE',$lightningCALData['strikeoutPrice']);
+                        $request->setParameter('NEW_PRICE',$lightningCALData['discountedPrice']);
                         $show=1;       
 
                       //  JsMemcache::getInstance()->setHashObject("LIGHTNING_CAL_".$profileid,$syncRecords,30);                    

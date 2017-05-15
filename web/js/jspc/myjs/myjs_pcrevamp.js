@@ -2,7 +2,7 @@
 
 var t1=null;
 var profileCompletionCount=pc_temp1=limit=pc_temp2=0;
-var memTimer,memTimerTime,memTimerExtraDays=0;
+var memTimer,memTimerTime,memTimerExtraDays=0,calTimerTime,calTimer;
          
 var timeI=""; var timeE=""; var timeD="";
 var MyjsRequestCounter=0;
@@ -618,9 +618,6 @@ if(CALayerShow!='0')
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
-  if(CALayerShow==19){
-  startTimer(19);
-}
   if(CALayerShow==9) 
       $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
   else
@@ -1236,26 +1233,40 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 			});
     }
 
+  function showTimerForLightningCal(lightningCALTime) {
+    console.log(lightningCALTime+'---');
+    console.log('hree');
+if(!lightningCALTime) return;
+var expiryTime=new Date(lightningCALTime);
+var timerSeconds=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerMinutes=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerHrs=lightningCALTime;
+calTimerTime=new Date();
+calTimerTime.setHours(timerHrs);
+calTimerTime.setMinutes(timerMinutes);
+calTimerTime.setSeconds(timerSeconds);
+console.log(timerHrs+'---'+timerMinutes+'---'+timerSeconds);
+calTimer=setInterval('updateCalTimer()',1000);
+}
 
-    function startTimer(calId) {
-   
-      var currentTime=new Date(); 
-      
-     // var timeDiffInSeconds=(expiryDate-currentTime)/1000;
-      //if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
-      //$("#memExpiryDiv").show();
-      var temp=timeDiffInSeconds;
-      var timerSeconds=temp%60;
-      temp=Math.floor(temp/60);
-      var timerMinutes=temp%60;
-      temp=Math.floor(temp/60);
-      var timerHrs=temp;
-      memTimerExtraDays=Math.floor(timerHrs/24);
-      memTimerTime=new Date();
-      memTimerTime.setHours(timerHrs);
-      memTimerTime.setMinutes(timerMinutes);
-      memTimerTime.setSeconds(timerSeconds);
 
-      memTimer=setInterval('updateMemTimer()',1000);
-
-  }
+function updateCalTimer(){
+  var h = calTimerTime.getHours();
+  var s = calTimerTime.getSeconds();
+  var m = calTimerTime.getMinutes();
+  if (!m && !s && !h) {
+     clearInterval(calTimer);
+     }
+  
+    calTimerTime.setSeconds(s-1);
+    h=h+memTimerExtraDays*24;
+    
+    m = formatTime(m);
+    s = formatTime(s);
+    h = formatTime(h);
+//  $("#calExpiryHrs").html(h);
+  $("#calExpiryMnts").html(m);
+  $("#calExpirySec").html(s);
+    }

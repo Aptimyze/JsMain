@@ -583,6 +583,11 @@ function showLayerCommon(layerId) {
             })
         });
     });
+    var CALayerShow=$("#CALayerShow").val();
+  console.log(CALayerShow);
+      if(CALayerShow==19){
+  showTimerForLightningCal(60);
+}
 }
 
 function closeCurrentLayerCommon(extraFunction) {
@@ -768,4 +773,48 @@ function inviewCheck()
             return $.inviewport(a, {threshold : 0});
         }
     });
+}
+
+  function showTimerForLightningCal(lightningCALTime) {
+    console.log(lightningCALTime+'---');
+    console.log('hree');
+if(!lightningCALTime) return;
+var expiryTime=new Date(lightningCALTime);
+var timerSeconds=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerMinutes=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerHrs=lightningCALTime;
+calTimerTime=new Date();
+calTimerTime.setHours(timerHrs);
+calTimerTime.setMinutes(timerMinutes);
+calTimerTime.setSeconds(timerSeconds);
+console.log(timerHrs+'---'+timerMinutes+'---'+timerSeconds);
+calTimer=setInterval('updateCalTimer()',1000);
+}
+
+
+function updateCalTimer(){
+  var h = calTimerTime.getHours();
+  var s = calTimerTime.getSeconds();
+  var m = calTimerTime.getMinutes();
+  if (!m && !s && !h) {
+     clearInterval(calTimer);
+     }
+  
+    calTimerTime.setSeconds(s-1);
+    h=h+memTimerExtraDays*24;
+    
+    m = formatTime(m);
+    s = formatTime(s);
+    h = formatTime(h);
+//  $("#calExpiryHrs").html(h);
+  $("#calExpiryMnts").html(m);
+  $("#calExpirySec").html(s);
+    }
+
+
+    function formatTime(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
 }

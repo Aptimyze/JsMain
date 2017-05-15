@@ -2,7 +2,7 @@
 <style type="text/css">
 ul.time{list-style-type:none;}
 ul.time li{display:inline-block;font-size:28px}
-ul.time li span{font-size:20px}
+ul.time li span:nth-child(2){font-size:20px}
 .inscol:after{ content:":"; padding-left:10px}
 </style>
 
@@ -167,8 +167,8 @@ function validateAndSend(){
                 <p class="pt20 f20">~$startDate`<span class="txtstr color12"><span>&#x20B9;</span>~$oldPrice`</span>  <span>&#x20B9;</span>~$newPrice`</p>
                 <p class="f16 pt20">Valid for 30 minutes</p>
                 <ul class="time">
-                  <li class="inscol">29<span>M</span></li>
-                    <li class="pl10">44<span>S</span></li>
+                  <li class="inscol"><span id = "calExpiryMnts"> </span><span>M</span></li>
+                    <li class="pl10"><span id = "calExpirySec"></span><span>S</span></li>
                 </ul>
                 
                 
