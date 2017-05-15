@@ -962,7 +962,7 @@ class CommonFunction
     	}
     	else
     	{
-    		return true;
+    		return false;
     	}
     }
 }
