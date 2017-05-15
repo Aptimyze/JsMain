@@ -18,7 +18,21 @@ class sathiForLifeActions extends sfActions
   public function executeIndex(sfWebRequest $request)
   {
     //$this->forward('default', 'module');
-    $profileDetailsArr = $request->getParameterHolder()->getAll();    
+    $profileDetailsArr = $request->getParameterHolder()->getAll();  
+    $fetchedArray = JsMemcache::getInstance()->getHashAllValue('SFL_images');
+    if(!$fetchedArray)
+        $this->noRediskey = 1;
+    $c = 0;
+    if(is_array($fetchedArray)){
+        foreach($fetchedArray  as $key=>$val){
+            if((string)$key!="lastReplaced"){
+                $imageDescArr[$c]['image'] = explode('_*_',$val)[0];
+                $imageDescArr[$c]['desc'] = explode('_*_',$val)[1];
+                $c++;
+            }
+        }
+        $this->imageDescArray = $imageDescArr;
+    }
     if($profileDetailsArr["submitForm"] == 1)
     {
       unset($profileDetailsArr["submitForm"]);

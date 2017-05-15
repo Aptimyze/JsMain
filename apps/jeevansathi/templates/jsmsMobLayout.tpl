@@ -15,7 +15,7 @@
 	~include_metas`
         ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
         ~if $ampurl|strstr:"amp"`
-            <link rel="amphtml" href="~$ampurl`">
+            <link rel="amphtml" href="~$ampurl`"/>
         ~/if`
 	~include_canurl`
         ~include_partial('global/jsmsCommonHeader')`

@@ -228,7 +228,10 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'MOD' => 'Match of the day JSPC',
  'AMOD' => 'Android Match Of Day',
  'IMOD' => 'IOS Match Of Day',
- 'WMOD' => 'Match of day JSMS');
+ 'WMOD' => 'Match of day JSMS',
+ 'PMM'=>'PAID_MEMBERS_MAILER',
+ 'PM'=>'PAID_MEMBERS',
+ 'APM'=>'Add Photo Mailer',);
 
 
         $index=array('A','D','C','I','E');
