@@ -374,7 +374,7 @@ $js_arr[]=array("mini_reg_revamp_js"  => "2");
 $js_arr[]=array("regPage5_js"  => "4");
 $js_arr[]=array("mobselectType_js" => "2");
 $js_arr[]=array("html5_js" => "3");
-$js_arr[]=array("reg_page1_js"     => "13");
+$js_arr[]=array("reg_page1_js"      => "14");
 $js_arr[]=array("jsmb_page1_js" => "3");
 $js_arr[]=array("jsmb_page2_js" => "2");
 $js_arr[]=array("jsmb_page3_js"  => "5");
