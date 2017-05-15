@@ -117,11 +117,9 @@ $(document).ready(function () {
 			checkSelectDropDown:true
 		});
                 $("#reg_jamaat").rules("add",{
-			required: true,
-		});
-                $("#reg_sectMuslim").rules("add",{
-			required: true,
-		});
+                     checkSelectDropDown:true,
+                });
+
 		$("#reg_religion").rules("add",{
 			checkSelectDropDown:true
 		});

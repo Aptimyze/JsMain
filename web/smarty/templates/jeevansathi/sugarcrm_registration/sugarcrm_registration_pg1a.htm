@@ -751,35 +751,6 @@ font:12px Arial, Helvetica, sans-serif; color:#4a4a48;}
 	        </li>
 			~/if`
 		<!-- Caste Ends Here -->
-                
-                <!-- CasteMuslim Starts Here -->
-			~if !($record_id neq '' and $CASTE_MUSLIM neq '')`
-	        <li>
-                    <div id ="CasteMuslimDiv"  ~if $CASTE_MUSLIM eq ''`style = "display:none;"~/if`>
-			<div id="casteMuslim_submit_err_label">
-			<div id="casteMuslim_sugar"~if $Edit eq ''`style="display:inline;"~/if`>
-				<span id="casteMuslim_section"> 
-					
-					<label id="casteMuslim_label" class="l1">Muslim Caste<u>*</u> :</label>
-					<input type="hidden" name="casteMuslim_selected" value="~$CASTE_MUSLIM`" >
-					<span id="casteMuslim_dropdown" style="display:inline">
-						<select name="casteMuslim" id="casteMuslim" class="sel_bgst fl" style="width:204px;">
-							<option value="">Please select</option>
-							~$casteMuslim`
-						</select>
-					</span>
-				</span>
-			</div>
-				<div id="casteMuslim_submit_err" style="display:none" class="err">
-					<label class="l1">&nbsp;</label>
-					<span id="casteMuslim_error">Please select a caste.</span>
-				</div>
-			</div>
-                    </div>
-	        </li>
-			~/if`
-		<!-- Caste Ends Here -->
-                
                 <!-- Jamaat Starts Here -->
  			~if !($record_id neq '' and $JAMAAT neq '')`
  	        <li>
@@ -806,7 +777,35 @@ font:12px Arial, Helvetica, sans-serif; color:#4a4a48;}
                      </div>
  	        </li>
  			~/if`
- 		<!-- Caste Ends Here 
+ 		<!-- Jamaat Ends Here 
+   
+                <!-- CasteMuslim Starts Here -->
+			~if !($record_id neq '' and $CASTE_MUSLIM neq '')`
+	        <li>
+                    <div id ="CasteMuslimDiv"  ~if $CASTE_MUSLIM eq ''`style = "display:none;"~/if`>
+			<div id="casteMuslim_submit_err_label">
+			<div id="casteMuslim_sugar"~if $Edit eq ''`style="display:inline;"~/if`>
+				<span id="casteMuslim_section"> 
+					
+					<label id="casteMuslim_label" class="l1">Muslim Caste<u>*</u> :</label>
+					<input type="hidden" name="casteMuslim_selected" value="~$CASTE_MUSLIM`" >
+					<span id="casteMuslim_dropdown" style="display:inline">
+						<select name="casteMuslim" id="casteMuslim" class="sel_bgst fl" style="width:204px;">
+							<option value="">Please select</option>
+							~$casteMuslim`
+						</select>
+					</span>
+				</span>
+			</div>
+				<div id="casteMuslim_submit_err" style="display:none" class="err">
+					<label class="l1">&nbsp;</label>
+					<span id="casteMuslim_error">Please select a caste.</span>
+				</div>
+			</div>
+                    </div>
+	        </li>
+			~/if`
+		<!-- CasteMuslim Ends Here -->
 ~if $record_id neq ''`
 		<!-- Highest Degree Starts from here -->
 	~if $DEGREE eq ''`
