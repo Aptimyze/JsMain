@@ -639,9 +639,13 @@ class MembershipAPIResponseHandler {
         }
         else{
             $output["top"] = "FLASH DEAL";
+            $output["discText"] = $output["discount"]."% OFF";
+            $output["other"] = "on all memberships";
             $output["middle"] = $output["discount"]."% OFF <span class='fontlig f14'>on all memberships</span>";
             $output["bottom"] = $planText;
             $curTime = date('Y-m-d H:i:s');
+            $output['priceStrike'] = $output["currencySymbol"].$output["origStartingPrice"];
+            $output['discPrice']   = $output["currencySymbol"].$output["discountedPrice"];
             $output["diffSecond"] = strtotime($output["expiryDate"]) - strtotime($curTime);
         }
         return $output;        

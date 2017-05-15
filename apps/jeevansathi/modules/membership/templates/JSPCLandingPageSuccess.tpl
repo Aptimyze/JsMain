@@ -19,6 +19,10 @@
     var paidBenefits = new Array();
     var vasPrice = new Array();
     var openedCount = "~$data.openedCount`";
+    var lightDiscText = "~$data.lightningDealContent.discText`";
+    var priceStrike = "~$data.lightningDealContent.priceStrike`";
+    var discPrice = "~$data.lightningDealContent.discPrice`";
+    var lightningDealExpiryInSec = "~$data.lightningDealContent.diffSecond`";
     ~if $data.lightningDealContent`
         var lightningTop = "~$data.lightningDealContent.top`";
         var lightningMiddle = "~$data.lightningDealContent.middle`";
