@@ -752,7 +752,7 @@ class commonActions extends sfActions
         $this->oldPrice = $request->getParameter('OLD_PRICE');
         $this->newPrice = $request->getParameter('NEW_PRICE');
         $this->time = floor($request->getParameter('LIGHTNING_CAL_TIME')/60);
-        $this->time = $request->getParameter('SYMBOL');
+        $this->symbol = $request->getParameter('SYMBOL');
         }
         $this->setTemplate('CALJSMS');
 

@@ -536,6 +536,9 @@ class myjsActions extends sfActions
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
 
 		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
+    
+    if($this->CALayerShow == 19)
+    {
     $this->discountPercentage = $calObject[discountPercentage]? $calObject[discountPercentage] : ' '; 
     $this->discountSubtitle = $calObject[discountSubtitle]? $calObject[discountSubtitle] : ' ';
     $this->startDate = $calObject[startDate]? $calObject[startDate] : ' ';
@@ -543,6 +546,7 @@ class myjsActions extends sfActions
     $this->newPrice = $calObject[newPrice]? $calObject[newPrice] : ' ';
     $this->time = $calObject[lightningCALTime]? $calObject[lightningCALTime] : ' ';
     $this->symbol = $calObject[symbol]? $calObject[symbol] : ' ';
+    }
 //--------------- Critical Action Layer section ends ------------
 				
 // ---------------consent message variable
