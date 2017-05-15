@@ -22,7 +22,6 @@ class ApiCALayerV1Action extends sfActions
 	public function execute($request)
 	{
 
-
 		// LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In ApiCALayer");
 
 		$loginData=$request->getAttribute("loginData");
@@ -71,10 +70,22 @@ class ApiCALayerV1Action extends sfActions
         		$layerData['dppCALGeneric'] = 0;
         	}
 	    }
+
+	    if($layerToShow == 19)
+	    {
+      		
+            $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
+            $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
+            $layerData['startDate']  = $request->getParameter('START_DATE');
+            $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
+            $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
+     
+	    }
 		$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;
                 $this->m_arrOut['NAME_PRIVACY']=$namePrivacy ? $namePrivacy : NULL;
 	    }
+
 		//Api Response Object
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;                                     

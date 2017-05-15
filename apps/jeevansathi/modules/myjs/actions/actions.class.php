@@ -259,6 +259,7 @@ class myjsActions extends sfActions
         $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
       }
       $layerData = json_decode($layerData, true);
+
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
 
@@ -333,7 +334,7 @@ class myjsActions extends sfActions
                 
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
-           	    {
+           	    {  
            	    	$request->setAttribute('calObject',$this->apiData['calObject']);
            	    	$request->setAttribute('gender',$this->loginProfile->getGENDER());
 
@@ -524,15 +525,23 @@ class myjsActions extends sfActions
 		//name of user
 		$nameOfUserOb=new incentive_NAME_OF_USER();
 		$this->nameOfUser=$nameOfUserOb->getName($this->profileid);
-	
+
 //--------------- Critical Action Layer section ------------
 	    ob_start();
     	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
     	$layerData = ob_get_contents();
-    	ob_end_clean();
+    	ob_end_clean(); 
     	$layerData=json_decode($layerData,true);
+
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
+
 		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
+    $this->discountPercentage = $calObject[DISCOUNT_PERCENTAGE]? $calObject[DISCOUNT_PERCENTAGE] : ' '; 
+    $this->discountSubtitle = $calObject[DISCOUNT_SUBTITLE]? $calObject[DISCOUNT_SUBTITLE] : ' ';
+    $this->startDate = $calObject[START_DATE]? $calObject[START_DATE] : ' ';
+    $this->oldPrice = $calObject[OLD_PRICE]? $calObject[OLD_PRICE] : ' ';
+    $this->newPrice = $calObject[NEW_PRICE]? $calObject[NEW_PRICE] : ' ';
+    
 //--------------- Critical Action Layer section ends ------------
 				
 // ---------------consent message variable
