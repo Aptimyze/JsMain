@@ -40,9 +40,9 @@ class IOS implements NotificationEngine {
 		// Message details start:
 		$message = $details['MESSAGE'];
 		$title = $details['TITLE'];
-		$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default');
+		$body['aps'] = array('alert' => array("body" => $message,"title"=>$title,"photoUrl"=>$dataArray["PHOTO_URL"]),'badge' =>1,'sound'=>'default');
                	$body['Arguments'] = $dataArray;
-
+        //print_r($body);die;
 		// Encode the payload as JSON
                 $payload = json_encode($body);
 
