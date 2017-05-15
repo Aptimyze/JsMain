@@ -960,16 +960,7 @@ class CommonFunction
 			return ;
 
 		// APP_LOGINTRACKING
-		$appType = "";
-		if(MobileCommon::isAndroidApp())
-		{
-			$appType = "Android";
-		}
-		elseif (MobileCommon::isIOSApp())
-		{
-			$appType = "IOS";
-		}
-
+		$appType = MobileCommon::getAppName();
 		$loginTrack = new MIS_APP_LOGINTRACKING();
 		if(!$loginTrack->getRecord($registrationid, $profileid))
 		{
