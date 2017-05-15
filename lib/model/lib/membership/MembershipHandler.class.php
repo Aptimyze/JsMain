@@ -1874,6 +1874,7 @@ class MembershipHandler
             ob_end_clean();
         }
         $data = json_decode($output, true);
+        $data = $this->modifyResponseForLightningDeal($data);
         return $data;
     }
 
@@ -2674,5 +2675,12 @@ class MembershipHandler
             $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
             $memCacheObject->remove($profileid . "_MEM_SUBSTATUS_ARRAY");
         }
+    }
+    
+    public function modifyResponseForLightningDeal($data,$source=''){
+        if (strpos($data["membership_message"]["top"], 'FLASH DEAL') !== false) {
+            $data["membership_message"]["endTimeInSec"] = strtotime($data["membership_message"]["expiryDate"]) - strtotime(date('Y-m-d H:i:s'));
+        }
+        return $data;
     }
 }

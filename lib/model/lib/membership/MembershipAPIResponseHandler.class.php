@@ -520,6 +520,15 @@ class MembershipAPIResponseHandler {
                 $output["title"] = "Upgrade to ".$output["upgradeMembershipContent"]["upgradeMainMemName"];
             }
         }
+        
+        if(in_array($this->device, VariableParams::$lightningDealOfferConfig["channelsAllowed"]) && $this->discountTypeInfo["TYPE"] == discountType::LIGHTNING_DEAL_DISCOUNT){
+            $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
+            
+            if(is_array($output["lightningDealContent"]) && is_array($output)){
+                $output["title"] = "Upgrade Membership";
+            }
+        }
+        
         //error_log("device in generateLandingPageResponse= ".$this->device);    
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             if($this->upgradeMem || in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
@@ -608,9 +617,12 @@ class MembershipAPIResponseHandler {
         return $output;
     }
     
-    public function generateLightningDealResponse($request,$source,$startingPlanData){
+    public function generateLightningDealResponse($request,$source='',$startingPlanData=''){
         $memObj = new Membership();
         $lightningDealDiscount = $memObj->getLightningDealDiscount($this->profileid);
+        if($startingPlanData == ''){
+                $startingPlanData = $this->generateMembershipPlansStartingRange();
+        }
         $output["discount"] = $lightningDealDiscount['DISCOUNT'];
         $output["origStartingPrice"] = $startingPlanData["startingPlan"]["origStartingPrice"];
         $output["discountedPrice"] = $output["origStartingPrice"]*((100-$output["discount"])/100);
@@ -620,6 +632,17 @@ class MembershipAPIResponseHandler {
         }
         else{
             $output["currencySymbol"] = "$";
+        }
+        $planText = "Plans starts @ <span class='strike color8 opa70'>".$output["currencySymbol"].$output["origStartingPrice"]."</span> ".$output["currencySymbol"].$output["discountedPrice"];
+       if($source == "MyjsOCB" || $source == "Hamburger"){
+            return $output;
+        }
+        else{
+            $output["top"] = "FLASH DEAL";
+            $output["middle"] = $output["discount"]."% OFF <span class='fontlig f14'>on all memberships</span>";
+            $output["bottom"] = $planText;
+            $curTime = date('Y-m-d H:i:s');
+            $output["diffSecond"] = strtotime($output["expiryDate"]) - strtotime($curTime);
         }
         return $output;        
     }
@@ -1772,9 +1795,9 @@ class MembershipAPIResponseHandler {
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
                 $top = "FLASH DEAL";
-                $bottom = "Plan starts at $currencySymbol$startingPrice$currencySymbol$discountedPrice";
-                $extra = "$disc% off on all memberships";
-                $expiryDate = $lightningDealDiscount['EDATE'];
+                $bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'>$currencySymbol$startingPrice</span> $currencySymbol$discountedPrice</p>";
+                $extra = "<span class='f20'>$disc% off</span> on all memberships";
+                $expiryDate = $response['expiryDate'];
             }
             else if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
@@ -1863,13 +1886,15 @@ class MembershipAPIResponseHandler {
                     'extra' => $extra
                 )
             );
+            if(!empty($expiryDate)){
+                $output['membership_message']['expiryDate'] = $expiryDate;
+            }
         } 
         else {
             $output = array(
                 'membership_message' => NULL
             );
         }
-        
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_OBC_MESSAGE_API' . $this->appVersion, serialize($output) , 1800);
         return $output;
@@ -1895,8 +1920,10 @@ class MembershipAPIResponseHandler {
                 $startingPrice = $response['origStartingPrice'];
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
-                $top = "Flash Deal";
-                $bottom = "$disc% OFF on all Plans.";
+                $top = "FLASH DEAL";
+                $bottom = "FLAT $disc% OFF on all Plans, Prices starting @$currencySymbol$discountedPrice";
+                //$bottom = "$disc% OFF on all Plans.";
+                //$bottom = "Upgrade Membership";
                 $extra = "FD";
                 $expiryDate = $response['expiryDate'];
             }

@@ -19,6 +19,11 @@
     var paidBenefits = new Array();
     var vasPrice = new Array();
     var openedCount = "~$data.openedCount`";
+    ~if $data.lightningDealContent`
+        var lightningTop = "~$data.lightningDealContent.top`";
+        var lightningMiddle = "~$data.lightningDealContent.middle`";
+        var lightningBottom = "~$data.lightningDealContent.bottom`";
+    ~/if`
     var filteredVasServices = "~$data.filteredVasServices`";
     var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
     ~if $data.serviceContent` 
