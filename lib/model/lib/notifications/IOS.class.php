@@ -10,7 +10,6 @@ class IOS implements NotificationEngine {
 
     public function sendNotification($registrationIds, $details, $profileid='') 
     {
-
 	$this->profileid =$profileid;
 	$this->logObj = new MOBILE_API_IOS_RESPONSE_LOG;
 	$this->notificationKey = $details['NOTIFICATION_KEY'];
@@ -40,7 +39,8 @@ class IOS implements NotificationEngine {
 		// Message details start:
 		$message = $details['MESSAGE'];
 		$title = $details['TITLE'];
-		$body['aps'] = array('alert' => array("body" => $message,"title"=>$title,"photoUrl"=>$dataArray["PHOTO_URL"]),'badge' =>1,'sound'=>'default');
+		$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default','mutable-content'=>'1','category'=>'JSIMAGE');
+		$body['otherCustomURL'] = $details['PHOTO_URL'];
                	$body['Arguments'] = $dataArray;
         //print_r($body);die;
 		// Encode the payload as JSON
