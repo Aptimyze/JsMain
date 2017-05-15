@@ -47,7 +47,7 @@ class RabbitmqHelper
 
     if(in_array($to, $arrEnableAlert))
     {
-      SendMail::send_email($emailTo,$message,$subject);
+  //    SendMail::send_email($emailTo,$message,$subject);
     }
   }
 
