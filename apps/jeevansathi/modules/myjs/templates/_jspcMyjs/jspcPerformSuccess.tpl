@@ -21,6 +21,7 @@
     <input type="hidden" id="CALayerShow" value="~$CALayerShow`"></input>
     <input type="hidden" id="DiscountPercentage" value="~$discountPercentage`"></input>
     <input type="hidden" id="DiscountSubtitle" value="~$discountSubtitle`"></input>
+    <input type="hidden" id="Symbol" value="~$symbol`"></input>
     <input type="hidden" id="StartDate" value="~$startDate`"></input>
     <input type="hidden" id="OldPrice" value="~$oldPrice`"></input>
     <input type="hidden" id="NewPrice" value="~$newPrice`"></input>

@@ -612,8 +612,9 @@ if(CALayerShow!='0')
     var old_price=$("#OldPrice").val();
     var new_price=$("#NewPrice").val();
     var time = $("#TimeForLightning").val();
+    var symbol = $("#Symbol").val();
     var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time};
+ var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time,'symbol':symbol};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){

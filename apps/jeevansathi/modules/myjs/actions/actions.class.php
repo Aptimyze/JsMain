@@ -542,6 +542,7 @@ class myjsActions extends sfActions
     $this->oldPrice = $calObject[oldPrice]? $calObject[oldPrice] : ' ';
     $this->newPrice = $calObject[newPrice]? $calObject[newPrice] : ' ';
     $this->time = $calObject[lightningCALTime]? $calObject[lightningCALTime] : ' ';
+    $this->symbol = $calObject[symbol]? $calObject[symbol] : ' ';
 //--------------- Critical Action Layer section ends ------------
 				
 // ---------------consent message variable

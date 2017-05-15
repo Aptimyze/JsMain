@@ -172,12 +172,21 @@
   </div>
    
   <div class="txtc">   
-  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
-  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.DISCOUNT_PERCENTAGE`</div>
-  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.DISCOUNT_SUBTITLE`</div>
-  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.START_DATE`</div>
-  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.OLD_PRICE`</div>
-  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.NEW_PRICE`</div>
+  <div class="fontlig white f20 pb20 color16 ">~$calObject.TITLE`</div>
+  <div class="pad1 lh25 fontlig calf27 calcol1">~$discountPercentage`</div>
+  <div class="pad1 lh25 fontlig f20 calcol1 pb20">~$discountSubtitle`</div>
+  <div class="white fontlig f16 pb30">
+  <span class="" >~$startDate` &nbsp</span>
+  <span class="calcol1 lineth" >~$oldPrice` &nbsp</span>
+  <span class="" >~$newPrice`</span>
+  </div>
+  </div>
+  <div class="white txtc mar0auto pb30" style="width: 60%">
+    <p class="f16 pt20">Hurry! Offer valid for <span id ="lightningTime">~$time`</span> minutes</p>
+                <ul class="time">
+                  <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
+                    <li class="pl10"><span id = "calExpirySec">00</span><span>S</span></li>
+                </ul>
   </div>
   <!--start:div-->
   ~if $calObject.ACTION1 neq ''`
@@ -185,7 +194,7 @@
   <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');">~$calObject.BUTTON1`</div>
   </div>
   <!--end:div-->
-  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc; padding-top: 12%;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
+  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc; padding-top: 20px;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
   ~else`
   <div style='padding: 25px 0 8% 0;'>
   <div id='CALButtonB2' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');">~$calObject.BUTTON2`</div>

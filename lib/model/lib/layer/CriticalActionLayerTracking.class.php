@@ -76,8 +76,8 @@ class CriticalActionLayerTracking
   { 
    
     $profileId = $profileObj->getPROFILEID();
-    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
-              return 0;
+    //if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
+      //        return 0;
             //die('loll');
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
@@ -103,7 +103,7 @@ class CriticalActionLayerTracking
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
 
-        if($maxEntryDt)
+        if(!$maxEntryDt)
         {  
           if ( (time() - strtotime($maxEntryDt)) <= 60*60*24) 
           {
@@ -124,8 +124,8 @@ class CriticalActionLayerTracking
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
-      {
-          return $layer;
+      {   
+           return $layer;
       }
 
         }
@@ -140,8 +140,8 @@ return 0;
    * @return- layerid to display layer 
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
-  { 
-   
+  {
+ 
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -149,11 +149,12 @@ return 0;
          /*check for diffTime then check whether it is the same layer that was shown last or next layer
          *for both, same or changed layer compare diffTime with their respective values in table if diffTime is less than any of them return null
          */
+
     $compareTime=$layerInfo['MINIMUM_INTERVAL'];
-    if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
-    if( (time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
-          return false;
-            
+    //if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
+    //if( !(time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
+      //    return false;
+       
     $profileid = $profileObj->getPROFILEID();
     $show=0;
     $request=sfContext::getInstance()->getRequest();
@@ -389,13 +390,13 @@ return 0;
                           $show=1;
                            
                       }
-                      
+                      break;
                     case '19': 
-
+                              
                       if(!MobileCommon::isApp() /*|| (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))*/){ 
                       $lightningCALObj = new LightningDeal();
                       $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
-                      var_dump($lightningCALData); die('aaa');
+                      //print_r($lightningCALData); die('aaaa');
                       if($lightningCALData != false){
 
                         $request->setParameter('DISCOUNT_PERCENTAGE',$lightningCALData['line2']);
@@ -403,7 +404,10 @@ return 0;
                         $request->setParameter('START_DATE','Plan starts @');
                         $request->setParameter('OLD_PRICE',$lightningCALData['strikeoutPrice']);
                         $request->setParameter('NEW_PRICE',$lightningCALData['discountedPrice']);
-                        $show=1;       
+                        $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
+                        $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
+                        $show=1;  
+                        //die($layerToShow.'hbhsd');
 
                       //  JsMemcache::getInstance()->setHashObject("LIGHTNING_CAL_".$profileid,$syncRecords,30);                    
                       }
@@ -415,6 +419,7 @@ return 0;
         /*check if this layer is to be displayed
          * and then check no. of times the layer has been shown and then compare it with value of max times in the table
          */
+        //print_r($layerToShow); print_r($show); die;
         if($show)
           return true;
         else 

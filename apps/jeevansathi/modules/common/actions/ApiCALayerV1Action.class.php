@@ -80,6 +80,7 @@ class ApiCALayerV1Action extends sfActions
             $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
             $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
             $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
+            $layerData['symbol'] = $request->getParameter('SYMBOL');
      
 	    }
 		$this->m_arrOut=$layerData;

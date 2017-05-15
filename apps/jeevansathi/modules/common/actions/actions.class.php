@@ -744,6 +744,16 @@ class commonActions extends sfActions
 			$this->showPhoto='0';
         $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;         
         $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+        if($calObject['LAYERID']==19)
+        {
+        $this->discountPercentage = $request->getParameter('DISCOUNT_PERCENTAGE');
+        $this->discountSubtitle  = $request->getParameter('DISCOUNT_SUBTITLE');
+        $this->startDate  = $request->getParameter('START_DATE');
+        $this->oldPrice = $request->getParameter('OLD_PRICE');
+        $this->newPrice = $request->getParameter('NEW_PRICE');
+        $this->time = floor($request->getParameter('LIGHTNING_CAL_TIME')/60);
+        $this->time = $request->getParameter('SYMBOL');
+        }
         $this->setTemplate('CALJSMS');
 
     }
