@@ -192,6 +192,8 @@ class LightningDeal
                 $result['line3'] = "on all memberships";
                 $result['line4'] = "Plan starts @$symbol{strikeoutPrice} $symbol$minDiscountedPrice";
                 $result['strikeoutPrice'] = $minActualPrice;
+                $result['discountedPrice'] = $minDiscountedPrice;
+                $result['currencySymbol'] = $symbol;
                 return $result;
             }
             else{
@@ -213,6 +215,7 @@ class LightningDeal
             $params["STATUS"] = "V";
             $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT();
             $lightningObj->activateLightningDeal($params);
+            return $params["EDATE"];
         }
     }
     
@@ -222,7 +225,8 @@ class LightningDeal
         if($data){
             $loginData = $request->getAttribute("loginData");
             $profileid = $loginData["PROFILEID"];
-            $this->activateLightningDealForProfile($profileid);
+            $endTime = $this->activateLightningDealForProfile($profileid);
+            $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
             $memHandler = new MembershipHandler();
             $memHandler->clearMembershipCacheForProfile($profileid); 
         }
