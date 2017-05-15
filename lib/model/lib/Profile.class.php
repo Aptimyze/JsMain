@@ -157,7 +157,7 @@ class Profile{
 	private $NAME;
 	private $SERIOUSNESS_COUN;
 	private $education_other;
-        private $religionInfoArr = array();
+        private $religionInfoArr;
         private $religionInfoValArr = array();
 	protected $fieldsArray=array();
         /**
@@ -1285,7 +1285,7 @@ class Profile{
                     $this->religionInfoValArr = $relInfoArr;
                 }
                 else
-                    $this->religionInfoArr = (array)$relInfoArr;
+                    $this->religionInfoArr = $relInfoArr;
             }
             if($valuesOnly)
                    return $this->religionInfoValArr;
