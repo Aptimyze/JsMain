@@ -52,12 +52,6 @@ class jsValidatorCaste extends sfValidatorBase
         $return= $clean[0];
 	else
 		$return=$clean;
-	if($return=="152")
-	{
-	  	$jamaat = $this->getOption('jamaat');
-		if($jamaat=='')
-			throw new sfValidatorError($this,'Please provide a valid jamaat');
-	}
 	return $return;
   }
   

@@ -24,7 +24,7 @@ class jsValidatorJamaat extends sfValidatorBase
 		}
 	}
         else if($caste == '152')
-            throw new sfValidatorError($this,'Jamaat is mandatory for'.FieldMap::getFieldLabel('caste',$caste));
+            throw new sfValidatorError($this,'Jamaat is mandatory for '.FieldMap::getFieldLabel('caste',$caste));
       return $clean;
   }
   

@@ -116,9 +116,12 @@ $(document).ready(function () {
 		$("#reg_caste").rules("add",{
 			checkSelectDropDown:true
 		});
-//                $("#reg_jamaat").rules("add",{
-//			checkSelectDropDown:true
-//		});
+                $("#reg_jamaat").rules("add",{
+			required: true,
+		});
+                $("#reg_sectMuslim").rules("add",{
+			required: true,
+		});
 		$("#reg_religion").rules("add",{
 			checkSelectDropDown:true
 		});
