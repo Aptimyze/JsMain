@@ -848,10 +848,11 @@ Abstract class ApiAuthentication
 			$dbJprofile=new JPROFILE("newjs_master");
 			$dbJprofile->updateLoginSortDate($profileId,$currentTime);
 		}
-		if($trackingData["appLoginProfileTracking"])
+
+		if($trackingData["appLoginProfileTracking"] || ($trackingData[misLoginTracking] && ($trackingData["websiteVersion"] == 'A' ||$trackingData["websiteVersion"] == 'I') ) )
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appType = MobileCommon::isApp();
+			$appType = $trackingData["websiteVersion"];
 			$date = $trackingData["currentTime"];
 			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
 		}
