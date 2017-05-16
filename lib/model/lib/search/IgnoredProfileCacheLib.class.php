@@ -195,14 +195,14 @@ class IgnoredProfileCacheLib
         }
         if($suffix == ignoredProfileCacheConstants::BYME)
         {
-           $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA; 
+           $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;                        
         }
     	else
         {
-             $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA; 
+            $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;              
         }
-    	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
-        if($keyExists == 1)
+    	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);        
+        if($keyExists)
     	{
     		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);    		
             if($response == 0)

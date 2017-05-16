@@ -32,33 +32,47 @@ class IgnoredProfiles
         {
         	$this->addDataToFile("old");
         	//changed pidKey and made call to ignoredProfileCacheLib
-        	$pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$pid.ignoredProfileCacheConstants::ALL_DATA;
+        	$pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$pid.ignoredProfileCacheConstants::ALL_DATA;        	
         	$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
+
         	if($resultArr == "noKey" || $resultArr == false)
         	{
         		$NEWJS_IGNOREObj = new newjs_IGNORE_PROFILE($this->dbname);
-				$resultArr = $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);
+				$resultArr = $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);				
 				if(is_array($resultArr))
-				{
-					IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr,'2');
-				}
-				else
-				{
-					IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr,'');
-				}
-				$this->addDataToFile("new");
-				
-        		return $resultArr;
+				{									
+					foreach($resultArr as $key=>$value)
+					{
+						$ignoredAllArr[] = $key;
+						if($value == "me")
+						{
+							$ignoredByMeArr[] = $key;
+						}							
+					}
+
+					if(is_array($ignoredAllArr))
+					{
+						IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$ignoredAllArr,'2');	
+					}
+					if(is_array($ignoredByMeArr))
+					{
+						$pidKey1 = ignoredProfileCacheConstants::PREPEND_KEY.$pid.ignoredProfileCacheConstants::BYME_DATA;
+						IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey1,$ignoredByMeArr,'2');	 
+					}
+
+					if($seperator == "spaceSeperator")
+					{						
+						$ignoredAllArr = $this->getStringFromArray($ignoredAllArr);						
+					}					
+				}		
+				$this->addDataToFile("new");			
+        		return $ignoredAllArr;
         	}
         	else
         	{
         		if($seperator == "spaceSeperator")
         		{
-        			$resultArr = implode(" ",$resultArr);
-        			if($resultArr !="")
-        			{
-        				$resultArr.= " ";
-        			}
+        			$resultArr = $this->getStringFromArray($resultArr);        			        			
         		}        		
         		return $resultArr;        		
         	}
@@ -147,34 +161,44 @@ class IgnoredProfiles
 
 	public function ifIgnored($profileid,$otherProfileId,$suffix="")
 	{
-		 $this->addDataToFile("old");
-		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId,$suffix);		 		 				 
-		 
-		 if($response == "noKey")
-		 {
-		 	$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
-		 	$this->addDataToFile("new");
-		 	$responseFromQuery = $ignoreObj->isIgnored($profileid,$otherProfileId);		 	
-		 	
-		 	if($responseFromQuery)
-		 	{
-		 		IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId);
-		 	}
-		 	else
-		 	{
-		 		IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId,"emptyKey");	
-		 	}
-		 	return $responseFromQuery;			 			
-		 }
-		 elseif($response == 1)
-		 {
-		 	return true;
-		 }
-		 else
-		 {
-		 	return false;
-		 }
+		$this->loginProfile = LoggedInProfile::getInstance();	
+		$loggedInProfileId = $this->loginProfile->getPROFILEID();
+		if($profileid == $loggedInProfileId)
+		{
+			$response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId,$suffix);		 	
+		}
+		else
+		{
+			$response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($otherProfileId,$profileid);
+		}
+
+		$this->addDataToFile("old");		 		 				 
+
+		if($response == "noKey")
+		{
+			$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
+			$this->addDataToFile("new");
+			$responseFromQuery = $ignoreObj->isIgnored($profileid,$otherProfileId);		 	
+			if($responseFromQuery)
+			{
+				IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId);
+			}
+			else
+			{
+				IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$otherProfileId,"emptyKey");	
+			}
+			return $responseFromQuery;			 			
+		}
+		elseif($response == 1)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
+ 		
  		//COUNT
 	public function getCountIgnoredProfiles($profileID)
 	{
@@ -219,6 +243,17 @@ class IgnoredProfiles
 				fwrite($file,$contents);
 			}
 		}
+	}
+
+	public function getStringFromArray($ignoredAllArr)
+	{
+		$ignoredAllArr = implode(" ",$ignoredAllArr);
+		if($ignoredAllArr !="")
+		{
+			$ignoredAllArr.= " ";
+		}
+
+		return $ignoredAllArr;
 	}
 }
 ?>
