@@ -52,16 +52,27 @@
                     </table>
                 </td>
               </tr>
-              <tr>
-                
+              <tr>  
                       <td valign="top"><br /><font color="#000000">
                       We noticed a recent login for your account <var>{{USERNAME:profileid=~$profileid`}}</var>.
+                      </font></td>
+              </tr>
+              <tr>
+                      <td><br /><font color="#000000">
                       <b>Device</b>  ~$channel` on ~$deviceName`
-                      <b>Location*</b> ~$city`, ~$country`
+                      <br><b>Location*</b> ~$city`, ~$country`
+                      </font></td>
+              </tr>
+              <tr>
+                      <td><br /><font color="#000000">
                       
-                      <b>If this was you:</b>
+                      <b>If this was you:</b><br>
                       Great! There's nothing else you need to do.
-                      <b>If this wasn’t you:</b>
+                      </font></td>
+              </tr>
+              <tr>
+                      <td><br /><font color="#000000">
+                      <b>If this wasn’t you:</b><br>
                       Your account may have been compromised and you should take a few steps to make sure your account is secure. To start, <a href="resetpasswordLink">reset your password now.</a>
                       </font></td>
               </tr>
