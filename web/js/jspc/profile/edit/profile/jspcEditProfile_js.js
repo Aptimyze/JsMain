@@ -3514,10 +3514,12 @@ EditApp = function(){
 	{
 		if(casteVal==152)
 		{
+			requiredFieldStore.add(jamaatFieldObject);
 			showHideField(jamaatFieldObject,"show",false);
 		}
 		else
 		{
+			requiredFieldStore.remove(jamaatFieldObject);
 			showHideField(jamaatFieldObject,"hide",true);
 		}
 	}
@@ -5231,6 +5233,18 @@ EditApp = function(){
           if(phoneDescriptionMap.indexOf(key.toLowerCase()) !== -1){
             updatePhoneDescView(viewId,$(viewId).text());
           }
+        if(key=="jamaat")
+        {
+                if(section['caste_val']=="152")
+                {
+                        $("#jamaatlistitem").show();
+                }
+                else
+                {
+                        $("#jamaatlistitem").hide();
+                }
+        }
+
         }
       };
       
