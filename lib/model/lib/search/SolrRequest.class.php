@@ -199,6 +199,10 @@ class SolrRequest implements RequestHandleInterface
                 if(!$this->searchResults){
                         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                        if($this->searchParamtersObj->getIS_VSP() && $diff>4){
+                            $dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
+                            JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__99",1);
+                        }
                 }
 	}
 
