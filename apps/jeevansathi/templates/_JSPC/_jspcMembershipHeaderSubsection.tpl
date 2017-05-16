@@ -1,12 +1,33 @@
 <div class="disp-none" id="memebershipPageContent" class='disp-none'>
     <!--start:close view-->
     <div class="mempad30 js-closeview">
-        <div class="wid63p mem_bgwh clearfix mem_pad13 fontmed colrw disp_ib">
-            <div class="fl pl30" id="bannerTextMinimize">
-                <span class="f24 disp_ib">
-                </span>
+        <div class="wid63p mem_bgwh clearfix mem_pad13 fontmed colrw disp_ib" id='memMsgParent'>
+            <div id='memMsgContent'>
+                <div class="fl pl30" id="bannerTextMinimize">
+                    <span class="f24 disp_ib">
+                    </span>
+                </div>
+                <div class="fr f20 timer pr30" id="bannerMinimizedTimer">
+                </div>
             </div>
-            <div class="fr f20 timer pr30" id="bannerMinimizedTimer">
+            <div id='lightningContent'>
+                <div class="disp-tbl fullwid">
+                    <div class="disp-cell wid63p">
+                        <div class="padall-10">
+                            <p class="f16">FLASH DEAL</p>
+                            <p class="pt7"><span class="f30 disp_ib" id='lightDisc'></span><span class="disp_ib f15 pl10">ON ALL MEMBERSHIPS</span></p>
+                            <p class="pt7 f15">PLAN STARTS @ <span class="color12 strike"><span id='lightStrikePrice'></span></span>&nbsp;<span id='lightDiscPrice'><span></p>
+                        </div>
+                    </div>
+                    <div class="disp-cell vmid wid20p">
+                        <div class="fontlig f14 pb10">Valid for 30 min
+                        </div>
+                        <ul class="time">
+                            <li class="inscol"><span id='jspcLandingM'></span><span>M</span></li>
+                            <li class="padl10"><span id='jspcLandingS'></span><span>S</span></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="wid36p disp_ib vtop">
@@ -410,6 +431,17 @@ $(document).ready(function() {
             insertText += "<li>"+item+"</li>";
         });
         $("#paidBenefits").html(insertText);
+    }
+    if(lightDiscText){
+        $("#memMsgContent").hide();
+        $("#lightDisc").html(lightDiscText);
+        $("#lightStrikePrice").html(priceStrike);
+        $("#lightDiscPrice").html(discPrice);
+        $("#memMsgParent").removeClass("mem_pad13");
+        showTimerForLightningMemberShipPlan("jspcLanding");
+    }
+    else{
+        $("#lightningContent").hide();
     }
 });
 </script>

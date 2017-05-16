@@ -321,7 +321,9 @@ function closeHam()
                 $(document).on('contextmenu', 'img',function(e) {
                 return false;
                 });
-        showTimerForLightningMemberShipPlan("jsmsMyjs");
+        if(typeof membershipPlanExpiry != "undefined"){
+            showTimerForLightningMemberShipPlan("jsmsMyjs");
+        }
     });
 function getHamburgerCounts(){
     

@@ -88,8 +88,8 @@
             <div class="rv2_pad5" style="padding-top:10px;">
                 <div id="dividerText" class="bg3 posrel fontreg f18 color2 rv2_pad16"> 
                     <p class="f16 pt10">~$data.lightningDealContent.top|decodevar`</p>
-                    <p class="f20 pt5">~$data.lightningDealContent.middle|decodevar`</p>
-                    <p class="fontlig f16 pt5">~$data.lightningDealContent.bottom|decodevar`</p>
+                    <p class="f20 pt5">~$data.lightningDealContent.discText|decodevar`<span class='fontlig f14'>on all memberships</span></p>
+                    <p class="fontlig f16 pt5">Plans starts @ <span class='strike color8 opa70'> ~$data.lightningDealContent.priceStrike`</span>  ~$data.lightningDealContent.discPrice`</p>
                     <i class="posabs rv2_sprtie1 setoffb setoffbl rv2_offb_left"></i> 
                     <i class="posabs rv2_sprtie1 setoffbr rv2_offb_right"></i> 
                     <!--start:timer div-->
