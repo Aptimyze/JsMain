@@ -190,7 +190,7 @@
 ul.time{list-style-type:none; padding:10px 0}
 ul.time li{display:inline-block;font-size:25px}
 ul.time li span:nth-child(2){font-size:20px}
-.inscol:after{ content:":"; padding-left:10px}
+.inscol:after{ content:":"; padding-left:5px}
 
 .calpt1
 {

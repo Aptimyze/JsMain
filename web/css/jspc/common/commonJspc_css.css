@@ -2367,3 +2367,8 @@ line-height:25px;
     position: absolute;
     padding: 14px 27px;
     width: 100%;}
+
+ul.time{list-style-type:none;}
+ul.time li{display:inline-block;font-size:25px}
+ul.time li span:nth-child(2){font-size:20px}
+.inscol:after{ content:":"; padding-left:5px}
