@@ -350,6 +350,7 @@ label {
                                         <label class="l1">&nbsp;</label>
                                         <div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
                                 </div>
+                                        </span>
 	        </li>
 	        <br>
 		<div class="clr"></div>
