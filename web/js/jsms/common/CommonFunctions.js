@@ -654,7 +654,6 @@ function showTimerForLightningMemberShipPlan(source) {
     memTimerTime.setHours(timerHrs);
     memTimerTime.setMinutes(timerMinutes);
     memTimerTime.setSeconds(timerSeconds);
-    console.log("memTimerTime",memTimerTime);
     src = source;
     memTimer=setInterval('updateMemTimer()',1000);
 }

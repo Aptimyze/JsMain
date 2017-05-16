@@ -261,6 +261,8 @@ class myjsActions extends sfActions
         $appV1DisplayJson['membership_message'] = NULL;
       }
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+//////////////////////////////////
+      $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
 
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
