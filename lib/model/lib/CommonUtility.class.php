@@ -1035,5 +1035,27 @@ die;
           public static function getSplitName($str){
 		return explode(" ",$str)[1];
 	}
+        /**
+         * This function will post message to slack on the basis of identifier
+         * @param type $message slack message
+         * @param type $identifier identifier for url as per SlackMessagesEnums class
+         */
+	public static function sendSlackmessage($message,$identifier = "default")
+	{
+		$url = SlackMessagesEnums::$slackModuleArray[$identifier];
+		$breaks = array("<br />","<br>","<br/>");
+		$message = str_ireplace($breaks, "\n", $message);
+		$data = array("text" => $message );
+		$ch=curl_init($url);
+		$data_string = json_encode($data);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,
+		array("Content-type: application/json"));
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result;
+	}
 }
 ?>

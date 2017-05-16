@@ -623,6 +623,7 @@ class socialActions extends sfActions
 	{
 		$this->fromCALphoto = 1;
 	}
+
 	$this->keywords=sfConfig::get("app_social_keywords");//array("My photo", "My family", "My friends", "My office", "My home");
 	$this->request->setAttribute('bms_sideBanner',711);
 
@@ -632,6 +633,13 @@ class socialActions extends sfActions
 	$this->havePhoto = $profileObj->getHAVEPHOTO();
 	$this->showMyjs=0;
 
+	//this was added to add tracking for upload click from mailer
+	if($request->getParameter("fromAddPhotoMailer")==1)
+	{
+		$photoUploadTrackingObj = new PICTURE_UPLOAD_PHOTO_FROM_MAILER_TRACKING("newjs_masterRep");
+		$photoUploadTrackingObj->insertTrackingRecord($profileObj->getPROFILEID(),$request->getParameter('mailType'),date("Y-m-d"));
+		unset($photoUploadTrackingObj);
+	}
 	$currentTime=time();
 	$registrationTime = strtotime($profileObj->getENTRY_DT());
 	if(($currentTime - $registrationTime)/(3600)<24)
