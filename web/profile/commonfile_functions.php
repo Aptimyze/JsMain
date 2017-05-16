@@ -641,6 +641,7 @@ $js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js"    => "2");
 $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js"    => "2");
 $js_arr[]=array("sathiForLife_js"          => "8");
 $js_arr[]=array("sugar/sugar_registration_new_page_js"   => "1");
+$js_arr[]=array(" /web/profile/js/sugar/sugar_registration_page1_new_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
