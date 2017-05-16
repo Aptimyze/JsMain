@@ -171,7 +171,7 @@ $css_arr[]=array("jspc/logout/homecss"            => "9");
 $css_arr[]=array("jspc/phone/phoneVerification_css"     => "2");
 $css_arr[]=array("jspc/common/colorbox_css" => "1");
 $css_arr[]=array("jspc/common/NProgress"   => "3");
-$css_arr[]=array("jspc/membership/jspc_mem_css"                        => "30");
+$css_arr[]=array("jspc/membership/jspc_mem_css"                         => "31");
 $css_arr[]=array("jspc/membership/upgrade_mem_css"                            => "11");
 $css_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar"    => "1");
 $css_arr[]=array("jspc/membership/jspc_mem_sweetalert"    => "1");
