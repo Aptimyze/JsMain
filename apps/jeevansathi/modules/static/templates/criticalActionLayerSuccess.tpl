@@ -206,7 +206,7 @@ function validateAndSend(){
                 <p class="f16 pt20">Hurry! Offer valid for</p>
                 <ul class="time">
                   <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
-                    <li class="pl10"><span id = "calExpirySec">00</span><span>S</span></li>
+                    <li class=""><span id = "calExpirySec">00</span><span>S</span></li>
                 </ul>
                 
                 

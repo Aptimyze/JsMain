@@ -210,6 +210,19 @@ class myjsActions extends sfActions
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+      ////cal layer added by palash            
+      $stCALTime = microtime(TRUE);
+      ob_start();
+      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+      $layerData = ob_get_contents();
+      ob_end_clean();
+      if($this->bEnableProfiler) {
+        //CAL Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
+      }
+      $layerData = json_decode($layerData, true);
+
+//////////////////////////////////
         
         //MyJS is Not Cached
         if (!$appV1DisplayJson) {
@@ -247,21 +260,8 @@ class myjsActions extends sfActions
       if (MobileCommon::isApp() == "I") {
         $appV1DisplayJson['membership_message'] = NULL;
       }
-
-      ////cal layer added by palash            
-      $stCALTime = microtime(TRUE);
-      ob_start();
-      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-      $layerData = ob_get_contents();
-      ob_end_clean();
-      if($this->bEnableProfiler) {
-        //CAL Time taken
-        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
-      }
-      $layerData = json_decode($layerData, true);
-
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
-//////////////////////////////////
+
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
@@ -443,10 +443,6 @@ class myjsActions extends sfActions
     		 $this->expirySubscription = date('d M Y', $yrdata);;
 		}
 
-		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-		$this->MembershipMessage = $data2['hamburger_message']; 
-		//PROFILE COMPLETIION 
-		$this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 		
 		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
@@ -542,6 +538,9 @@ class myjsActions extends sfActions
     $this->lightningCALData = $calObject;  
     }
 //--------------- Critical Action Layer section ends ------------
+    $data2 = $memHandlerObj->fetchHamburgerMessage($request);
+    $this->MembershipMessage = $data2['hamburger_message']; 
+    $this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 				
 // ---------------consent message variable
 		$this->showConsentMsg=$request->getParameter('showConsentMsg');
