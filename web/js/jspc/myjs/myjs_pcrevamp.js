@@ -1239,37 +1239,4 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 			});
     }
 
-function showTimerForLightningCal(lightningCALTime) {
-if(!lightningCALTime) return;
-var timerSeconds=lightningCALTime%60;
-lightningCALTime=Math.floor(lightningCALTime/60);
-var timerMinutes=lightningCALTime%60;
-lightningCALTime=Math.floor(lightningCALTime/60);
-var timerHrs=lightningCALTime;
-calTimerTime=new Date();
-calTimerTime.setHours(timerHrs);
-calTimerTime.setMinutes(timerMinutes);
-calTimerTime.setSeconds(timerSeconds);
-calTimer=setInterval('updateCalTimer()',1000);
-}
-
-
-function updateCalTimer(){
-  var h = calTimerTime.getHours();
-  var s = calTimerTime.getSeconds();
-  var m = calTimerTime.getMinutes();
-  if (!m && !s && !h) {
-     clearInterval(calTimer);
-     }
-  
-    calTimerTime.setSeconds(s-1);
-    h=h+memTimerExtraDays*24;
-    
-    m = formatTime(m);
-    s = formatTime(s);
-    h = formatTime(h);
-
-  $("#calExpiryMnts").html(m);
-  $("#calExpirySec").html(s);
-    }
 
