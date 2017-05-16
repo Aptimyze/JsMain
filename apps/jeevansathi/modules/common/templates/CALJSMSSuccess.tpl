@@ -177,8 +177,8 @@
   <div class="pad1 lh25 fontlig f20 calcol1 pb20">~$discountSubtitle`</div>
   <div class="white fontlig f16 pb30">
   <span class="" >~$startDate` &nbsp</span>
-  <span class="calcol1 lineth" >~$oldPrice` &nbsp</span>
-  <span class="" >~$newPrice`</span>
+  <span class="calcol1 lineth" >~$symbol`~$oldPrice`</span>&nbsp
+  <span class="" >~$symbol`~$newPrice`</span>
   </div>
   </div>
   <div class="white txtc mar0auto pb30" style="width: 60%">

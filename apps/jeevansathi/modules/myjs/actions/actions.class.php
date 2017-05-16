@@ -536,16 +536,10 @@ class myjsActions extends sfActions
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
 
 		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
-    
+
     if($this->CALayerShow == 19)
     {
-    $this->discountPercentage = $calObject[discountPercentage]? $calObject[discountPercentage] : ' '; 
-    $this->discountSubtitle = $calObject[discountSubtitle]? $calObject[discountSubtitle] : ' ';
-    $this->startDate = $calObject[startDate]? $calObject[startDate] : ' ';
-    $this->oldPrice = $calObject[oldPrice]? $calObject[oldPrice] : ' ';
-    $this->newPrice = $calObject[newPrice]? $calObject[newPrice] : ' ';
-    $this->time = $calObject[lightningCALTime]? $calObject[lightningCALTime] : ' ';
-    $this->symbol = $calObject[symbol]? $calObject[symbol] : ' ';
+    $this->lightningCALData = $calObject;  
     }
 //--------------- Critical Action Layer section ends ------------
 				
