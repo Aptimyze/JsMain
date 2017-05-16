@@ -182,7 +182,7 @@
   </div>
   </div>
   <div class="white txtc mar0auto pb30" style="width: 60%">
-    <p class="f16 pt20">Hurry! Offer valid for <span id ="lightningTime">~$time`</span> minutes</p>
+    <p class="f16 pt20">Hurry! Offer valid for</p>
                 <ul class="time">
                   <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
                     <li class="pl10"><span id = "calExpirySec">00</span><span>S</span></li>
