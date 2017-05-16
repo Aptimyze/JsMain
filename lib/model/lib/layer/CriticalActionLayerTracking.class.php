@@ -153,9 +153,9 @@ return 0;
          */
 
     $compareTime=$layerInfo['MINIMUM_INTERVAL'];
-    //if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
-    //if( !(time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
-      //    return false;
+    if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
+    if( !(time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
+         return false;
        
     $profileid = $profileObj->getPROFILEID();
     $show=0;
