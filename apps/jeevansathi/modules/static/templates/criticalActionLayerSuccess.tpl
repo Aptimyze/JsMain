@@ -157,6 +157,44 @@ function validateAndSend(){
 </div>
 
 ~elseif $layerId == '19'`
+<script>    
+ function showTimerForLightningCal(lightningCALTime) {
+ if(!lightningCALTime) return;
+ var timerSeconds=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerMinutes=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerHrs=lightningCALTime;
+ calTimerTime=new Date();
+ calTimerTime.setHours(timerHrs);
+ calTimerTime.setMinutes(timerMinutes);
+ calTimerTime.setSeconds(timerSeconds);
+ calTimer=setInterval('updateCalTimer()',1000);
+ }
+ 
+ 
+ function updateCalTimer(){
+   var h = calTimerTime.getHours();
+   var s = calTimerTime.getSeconds();
+   var m = calTimerTime.getMinutes();
+   if (!m && !s && !h) {
+      clearInterval(calTimer);
+      }
+   
+     calTimerTime.setSeconds(s-1);
+     h=h+memTimerExtraDays*24;
+     
+     m = formatTime(m);
+     s = formatTime(s);
+     h = formatTime(h);
+	
+ 
+   $("#calExpiryMnts").html(m);
+   $("#calExpirySec").html(s);
+     }
+</script>
+    
+    
   <div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;"> 
     <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
         <div class="disp-cell vmid fontlig color11">
