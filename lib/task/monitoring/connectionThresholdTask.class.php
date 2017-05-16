@@ -167,7 +167,7 @@ EOF;
         $serverMessage .= $tableBody;
         $serverMessage .= "</br></br>".$this->mailMessage;
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
-        CommonUtility::sendSlackmessage(" \n ",implode($this->slackMessage),"mysql");
+        CommonUtility::sendSlackmessage(implode(" \n ",$this->slackMessage),"mysql");
     }
 /*
      * @param int $memCacheValue memcache threshold value
