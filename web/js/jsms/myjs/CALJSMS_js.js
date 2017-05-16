@@ -318,8 +318,6 @@ else {
 
 
 function showTimerForLightningCal(lightningCALTime) {
-    console.log(lightningCALTime+'---');
-    console.log('hree');
 if(!lightningCALTime) return;
 var expiryTime=new Date(lightningCALTime);
 var timerSeconds=lightningCALTime%60;
@@ -331,7 +329,6 @@ calTimerTime=new Date();
 calTimerTime.setHours(timerHrs);
 calTimerTime.setMinutes(timerMinutes);
 calTimerTime.setSeconds(timerSeconds);
-console.log(timerHrs+'---'+timerMinutes+'---'+timerSeconds);
 calTimer=setInterval('updateCalTimer()',1000);
 }
 
