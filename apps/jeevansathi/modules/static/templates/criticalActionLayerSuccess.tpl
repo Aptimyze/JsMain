@@ -1,10 +1,4 @@
 
-<style type="text/css">
-ul.time{list-style-type:none;}
-ul.time li{display:inline-block;font-size:25px}
-ul.time li span:nth-child(2){font-size:20px}
-.inscol:after{ content:":"; padding-left:10px}
-</style>
 
 ~if $layerId == '13'`<script>
     var primaryEmail = '~$primaryEmail`';

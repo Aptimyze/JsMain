@@ -1835,4 +1835,4 @@ ul.memul li:nth-last-child(1) {
 ul.time{list-style-type:none;}
 ul.time li{display:inline-block;font-size:20px}
 ul.time li span{font-size:15px}
-.inscol:after{ content:":"; padding-left:5px}
+.inscol:after{ content:":"; padding-left:10px}
