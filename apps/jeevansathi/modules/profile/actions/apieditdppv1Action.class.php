@@ -44,6 +44,8 @@ class apieditdppv1Action extends sfAction
 		
 		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
 		{
+			$http_msg=print_r($_SERVER,true);
+			mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
 			$errorArr["ERROR"]="Something went wrong.";
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiResponseHandlerObj->setResponseBody($errorArr);

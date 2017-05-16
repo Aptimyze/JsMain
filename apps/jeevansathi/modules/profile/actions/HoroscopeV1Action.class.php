@@ -15,6 +15,8 @@ class HoroscopeV1Action extends sfAction{
         $apiResponseHandlerObj=ApiResponseHandler::getInstance();
         if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
         {
+            $http_msg=print_r($_SERVER,true);
+            mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
             $msg["Error"] = "Something went wrong";
             $apiResponseHandlerObj->setResponseBody($msg);
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
