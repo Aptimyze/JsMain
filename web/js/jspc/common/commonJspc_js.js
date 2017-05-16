@@ -3,11 +3,11 @@ var currentlyDisplayedLayer = '';
 //this variable has been added for idfy
 var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '<div class="txtc padnew20">'+
-        '<div class="fontreg f22 disp_ib">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
-        '<div class="f14 fontreg lh21 pad1520">'+
+        '<div class="fontreg f18 color11 disp_ib vertSup">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
+        '<div class="f13 color2 fontreg lh21 pad1530">'+
         '<div>Be sure of the person you want to marry. Verify him/her through IDfy</div>'+
         '<div>Here’s how it works:</div>'+
-        '<table class="txtList">'+
+        '<table class="txtList mt15">'+
         '<tr>'+
         '<td>Q.</td>'+
         '<td>Who is verifying the information? </td>'+
@@ -58,10 +58,10 @@ var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '</table>'+
         
         '</div>'+
-        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh50 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
+        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
         '</div>'+
-        '<div id="closeBtn" class="disp_ib vTop cursp"><i class="sprite2 closeSprite"></i></div>'+
-        '</div>';
+        '</div>'+
+        '<div id="closeBtn" class="disp_ib vTop cursp closeBtnNew"><i class="sprite2 closeSprite"></i></div>';
 // JavaScript Document
 //this function is for achieving inheritence in javascript
 var inheritsFrom = function (child, parent) {

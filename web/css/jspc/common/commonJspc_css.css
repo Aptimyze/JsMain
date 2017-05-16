@@ -2404,13 +2404,13 @@ line-height:25px;
     left: 50% ;
     top: 50% ;
     transform: translate(-50% ,-50% );
-    width: 800px;
+    width: 900px;
 
     position: relative;
 
 }
 .overlayMid {
-    background: #e4e4e4;width: 700px
+    background: #e4e4e4;width: 900px
 }
 .closeSprite {
     margin: 10px;width: 35px;
@@ -2421,7 +2421,7 @@ line-height:25px;
     vertical-align: bottom
 } 
 .padnew20 {
-    padding: 4px 20px 0px 20px
+    padding: 20px 20px 0px 20px
 }
 .lh21 {
     line-height: 21px
@@ -2432,7 +2432,7 @@ line-height:25px;
 .pl28 {
     padding-left: 28px
 }
-
+.txtList{border-collapse: collapse;}
 .txtList li {
     padding-left: 11px;
     padding-top: 4px;
@@ -2446,13 +2446,16 @@ line-height:25px;
     vertical-align: top;
     width: 30px;
 }
+.txtList tr{line-height: 15px;}
+.txtList tr:nth-child(even) td:nth-child(even){margin-bottom: 15px;display: block;}
+
 .lh50 {
     line-height: 50px
 }
 .pad20 {
     padding: 20px
 }
-.pad1520{padding: 15px 20px}
+.pad1530{padding: 15px 30px}
 .ml30 {
     margin-left: 30px
 }
@@ -2476,3 +2479,9 @@ line-height:25px;
     margin-left: -4px;
     cursor: pointer;
 }
+.closeBtnNew{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+.vertSup{    vertical-align: super;}
