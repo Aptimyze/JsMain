@@ -166,7 +166,7 @@
                     <div class="row">
 
 
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Registrations</h2>
@@ -199,7 +199,7 @@
                     <div class="clearfix"></div>
                     <div class="row">
                         
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Interests</h2>
@@ -215,7 +215,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Acceptances</h2>
