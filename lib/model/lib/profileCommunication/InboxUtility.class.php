@@ -4,7 +4,7 @@ class InboxUtility
 	public static function cachedInboxApi($type,$request="",$pid="",$response="")
         {
                 $caching = $request->getParameter("caching");
-                if($caching)
+                if($caching || $type=="del")
                 {      
 			if(!$pid)
 			{
