@@ -976,7 +976,7 @@ class CommonFunction
 		if(!isset($profileid))
 			return ;
 
-		try 
+		try
 		{
 			$channel = "Browser";
 			if(MobileCommon::isAndroidApp())
@@ -987,7 +987,6 @@ class CommonFunction
 			{
 				$channel = "Ios App";
 			}
-
 
 			// TODO:
 			$deviceName = "device";
