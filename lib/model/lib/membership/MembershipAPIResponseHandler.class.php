@@ -1801,10 +1801,10 @@ class MembershipAPIResponseHandler {
                 $endTimeIST = date('H:i',strtotime('+9 hour 30 minutes',  strtotime($response['expiryDate'])));
                 $top = "FLASH DEAL";
                 //$bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'><del>$currencySymbol$startingPrice</del></span> $currencySymbol$discountedPrice</p>";
-                $bottom = "<p class='fontlig f16 pt5'>Prices starting @$currencySymbol$discountedPrice</p>";
-                $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST(IST)";
+                $bottom = "<p class='fontlig f16 pt5'>Prices starting @ $currencySymbol$discountedPrice</p>";
+                $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST (IST)";
                 $expiryDate = $response['expiryDate'];
-                $valid = "Valid for ".VariableParams::$lightningDealDuration." minutes";
+                $valid = "Valid for";
             }
             else if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
@@ -1931,7 +1931,7 @@ class MembershipAPIResponseHandler {
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
                 $top = "FLASH DEAL";
-                $bottom = "FLAT $disc% OFF on all Plans, Prices starting @$currencySymbol$discountedPrice";
+                $bottom = "FLAT $disc% OFF on all Plans, Prices starting @ $currencySymbol$discountedPrice";
                 //$bottom = "$disc% OFF on all Plans.";
                 //$bottom = "Upgrade Membership";
                 $extra = "FD";
