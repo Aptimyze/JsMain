@@ -2889,6 +2889,11 @@ Added by Esha
 	{
 		return $this->nullValueMarker;
 	}
+  public function resetReligionInfo()
+  {
+	unset($this->religionInfoArr);
+	unset($this->religionInfoValArr);
+  }
 /**************************************Ends here********************************************************/
 }
 ?>

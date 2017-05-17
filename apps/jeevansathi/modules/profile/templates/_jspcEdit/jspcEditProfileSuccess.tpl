@@ -215,8 +215,8 @@
                           </p>
                         </li>
                         ~/if`
-                        ~if $editApiResponse.Details.CASTE.value eq 152`
-                        <li>
+                        ~if $editApiResponse.Details.RELIGION.value eq 2`
+                        <li id="jamaatlistitem">
                           <p class="color12 pt15 fontlig">Jamaat</p>
                           <p class="pt2 fontlig" >
                        ~if $arrOutDisplay.about.jamaat neq ''`
@@ -639,5 +639,10 @@
    var $profileScore = null;
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
+  var caste = "~$editApiResponse.Details.CASTE.value`";
+if(caste!=152)
+	$("#jamaatlistitem").hide();
+else
+	$("#jamaatlistitem").show();
 </script>
 
