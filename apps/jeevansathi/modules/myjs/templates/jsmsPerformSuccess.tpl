@@ -209,10 +209,10 @@
         ~if $apiData.membership_message.expiryDate neq ''`
             <!--start:timer div-->
             <div class="posabs white" style="right:14px; top:0">
-                <p class="f14">Valid for 30 minutes</p>
+                <p class="f14 pl38 pb4">Valid for</p>
                  <ul class="time">
-                     <li class="inscol"><span id='myjsM'></span><span>M</span></li>
-                        <li class="padl10"><span id='mysjsS'></span><span>S</span></li>
+                     <li class="inscol"><span id='myjsM' style="font-size: 16px"></span><span>M</span></li>
+                        <li class=""><span id='mysjsS' style="font-size: 16px"></span><span>S</span></li>
                     </ul>
                  <div class="txtr pt5">
                     <i class="mainsp" style="background-position: -323px -168px;width: 17px;height: 27px;"></i>

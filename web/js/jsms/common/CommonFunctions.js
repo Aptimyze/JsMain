@@ -693,6 +693,10 @@ function updateMemTimer(){
         $("#jspcLandingM").html(m);
         $("#jspcLandingS").html(s);
     }
+    else if( src == "jspcMyjs"){
+        $("#jspcMyjsM").html(m);
+        $("#jspcMyjsS").html(s);
+    }
 }
 
 (function(){

@@ -112,13 +112,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="colrw fontmed pt20 pl30 pb20"> ~if $MembershipMessage['top'] neq ''`
+                    <div class='clearfix pt20 pb20 fontlig colrw'>
+                    <div class="pl30 fl" id="jspcMemMsg"> ~if $MembershipMessage['top'] neq ''`
                         <a href='/profile/mem_comparison.php' onclick="trackJsEventGA('My JS JSPC', 'Offer Text',loggedInJspcGender,'')" class='colrw'> <span class="f26">~$MembershipMessage['top']`</span> <span id='memExpiryDiv' style='display:none;'><span class="disp_ib pl5 f15">|</span> <span id='memExpiryHrs' class="disp_ib f15 pl10"></span><small>H</small> <span id='memExpiryMnts' class="disp_ib pl10 f15"></span><small>M</small><span id='memExpirySec' class="disp_ib pl10 f15"></span><small>S</small></span>
                         ~if $MembershipMessage['extra'] &&  $MembershipMessage['extra'] neq "" && $MembershipMessage['bottom'] && $MembershipMessage['bottom'] neq ""`
                             <br>
                             <span id="memExtraDiv" class="f16 fontlig">~$MembershipMessage['bottom']`</span>
                         ~/if`
                         </a> ~/if` </div>
+                    <div class='fl pt10 pl15' id="lightningTimer" style='display:none;'>
+                        <p class="f14 pb5 pl15">Hurry! Offer valid for</p>
+                        <ul class="time pl15" style="border-left:1px solid #fff;">
+                            <li class="inscol" style='font-size: 16px'><span id='jspcMyjsM'></span><span>M</span></li>
+                            <li class="padl10" style='font-size: 16px'><span id='jspcMyjsS'></span><span>S</span></li>
+                        </ul>
+                    </div>
+                    </div>
                 </div>
             </div>
 </header>

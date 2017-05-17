@@ -772,7 +772,7 @@ function inviewCheck()
 }
 
 function showTimerForLightningMemberShipPlan(source) {
-    if(source == "jsmsMyjs"){
+    if(source == "jsmsMyjs" || source == "jspcMyjs"){
         var cT = new Date();
         var eT = new Date(membershipPlanExpiry);
         lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
@@ -834,5 +834,9 @@ function updateMemTimerLightning(){
     else if( src == "jspcLanding"){
         $("#jspcLandingM").html(m);
         $("#jspcLandingS").html(s);
+    }
+    else if( src == "jspcMyjs"){
+        $("#jspcMyjsM").html(m);
+        $("#jspcMyjsS").html(s);
     }
 }

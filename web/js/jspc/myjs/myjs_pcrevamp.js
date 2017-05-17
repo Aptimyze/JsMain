@@ -793,6 +793,31 @@ function videoLinkRequest()
 
 }
 
+function modifyMemMsgForLightningDeal(){
+    var flag = false;
+    if($('#jspcMemMsg span:first').html() == "FLASH DEAL"){
+        $('#jspcMemMsg span:first').addClass('f16').removeClass('f26');
+        var txt = $("#memExtraDiv").html();
+        $("#memExtraDiv").html('');
+        var memText = txt.split(" ");
+        $("#memExtraDiv").append("<span class=''></span><span class=''></span>");
+        var s1 = '';var s2='';
+        for(var i=0;i<3;i++){
+            s1+=memText[i]+" ";
+        }
+        for(var i=3;i<memText.length;i++){
+            s2+=memText[i]+" ";
+        }
+        $("#memExtraDiv span:nth-child(1)").html(s1);
+        $("#memExtraDiv span:nth-child(2)").html(s2);
+        $("#memExtraDiv span:nth-child(1)").addClass('f30 fontmed');
+        flag = true;
+        $("#lightningTimer").show();
+        showTimerForLightningMemberShipPlan("jspcMyjs");
+    }
+    return flag;
+}
+
 
 $(document).ready(function() {
 if($("#showConsentMsgId").val()=='Y')
@@ -817,9 +842,12 @@ else {
   {
     videoLinkRequest(profileid);
   });
-
+    
+    var responseFlag = modifyMemMsgForLightningDeal();
+    if(!responseFlag)
       showTimerForMemberShipPlan();
 	profile_completion(iPCS);
+    
 	if(showFTU){
 		var desiredPartnersObj = new desiredPartnerMatches();
 		desiredPartnersObj.pre();

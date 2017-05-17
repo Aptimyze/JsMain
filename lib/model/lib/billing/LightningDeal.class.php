@@ -178,7 +178,7 @@ class LightningDeal
             $memHandlerObj = new MembershipHandler();
             $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);
             $currentMaxDisc = $hamburgerMsg["maxDiscount"];
-            if($data && ($currentMaxDisc <= $data["DISCOUNT"])){
+            if($data && ($data['STATUS'] == 'V' || $currentMaxDisc <= $data["DISCOUNT"])){
                 $memHandlerObj = new MembershipHandler();
                 list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
                 $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
@@ -194,6 +194,10 @@ class LightningDeal
                 $result['strikeoutPrice'] = $minActualPrice;
                 $result['discountedPrice'] = $minDiscountedPrice;
                 $result['currencySymbol'] = $symbol;
+                if($data['STATUS'])
+                    $result['STATUS'] = $data['STATUS'];
+                if($data['EDATE'])
+                    $result['EDATE'] = $data['EDATE'];
                 return $result;
             }
             else{
@@ -222,13 +226,21 @@ class LightningDeal
     /*Get lightning deal eligibility and data, activate offer and clear membership cache*/
     public function lightningDealCalAndOfferActivate($request){
         $data = $this->getLightningDealCalData($request);
+        if($data && $data['STATUS'] == 'V' && (strtotime($data['EDATE']) < strtotime(date('Y-m-d H:i:s'))))
+            return false;
         if($data){
             $loginData = $request->getAttribute("loginData");
             $profileid = $loginData["PROFILEID"];
-            $endTime = $this->activateLightningDealForProfile($profileid);
+            if($data['STATUS'] == 'V')
+                $endTime = $data['EDATE'];
+            else
+                $endTime = $this->activateLightningDealForProfile($profileid);
             $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
             $memHandler = new MembershipHandler();
             $memHandler->clearMembershipCacheForProfile($profileid); 
+            MyJsMobileAppV1::deleteMyJsCache(array($profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
         }
         return $data;
     }
