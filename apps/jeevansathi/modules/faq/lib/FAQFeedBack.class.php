@@ -31,7 +31,7 @@ class FAQFeedBack
 
 
 	private function insertReportAbuseLog(){
-
+  
 		$newReasonsAndroid = array(7,8,9,10,11,12,13,14,16,18);
 		$askOtherReasonAndroid = 0;
 
@@ -52,18 +52,20 @@ class FAQFeedBack
 		
 		else {
 
+
                         $feed=$this->webRequest->getParameter('feed');
                         $reason=$feed['message'];
 
                         $pos=strpos($reason,':');
                         $reasonNew=trim(substr($reason,$pos+1));
+                       
                         $pos2=strpos($reason,'by');
                         $arr2=split(' ',trim(substr($reason,$pos2+2)));
                         $otherUsername=trim($arr2[0]);
 
-                        if(!$this->webRequest->getParameter('fromCRM'))
+                        if(!$this->webRequest->getParameter('fromCRM')){  
                         $this->otherProfile->getDetail($otherUsername,"USERNAME");
-
+                    }
                         $otherProfileId=$this->otherProfile->getPROFILEID();  
 
                 }
@@ -98,8 +100,12 @@ class FAQFeedBack
 		else
 		{ 
 			$categoryNew='other';
-			$otherReason=$reasonNew; 
+			if($feed['mainReason'] != '' || $feed['mainReason'] != NULL )
+			{
+				$categoryNew = $feed['mainReason'];
+			}
 
+			$otherReason=$reasonNew; 
 		}
 
 		$category = '';
@@ -116,8 +122,8 @@ class FAQFeedBack
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
 		} 
-
 		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
+		
 		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName);
 			
 				// block for blocking the reported abuse added by Palash
@@ -177,7 +183,7 @@ class FAQFeedBack
 	}
 	
 	public function ProcessData(sfWebRequest $request)
-	{   
+	{     
 		$this->extractInfo($request);
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
@@ -185,7 +191,7 @@ class FAQFeedBack
 		$dataArray = $this->webRequest->getParameter('feed');
 
 	if($dataArray['category'] == FeedbackEnum::CAT_ABUSE)
-	{
+	{   
 		if($this->webRequest->getParameter('fromCRM')){  
 			$reporteeId=$this->webRequest->getParameter('reporteePFID');
 			$profileObj = NEWJS_JPROFILE::getInstance();
@@ -196,7 +202,7 @@ class FAQFeedBack
 		else{  
 			//print_r($this->m_szName);die('aaa');
 			if(MobileCommon::isIOSApp())
-			{ 
+			{    
 				$loginProfile=LoggedInProfile::getInstance();
 				$reporterId = $loginProfile->getPROFILEID();
      	$feed=$this->webRequest->getParameter('feed');
@@ -296,7 +302,7 @@ class FAQFeedBack
 	}
 	
 	private function InsertFeedBack()
-	{  
+	{    
 		if($this->m_bValidForm == false)
 			return;
 
@@ -341,7 +347,7 @@ class FAQFeedBack
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
 
 			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
-			{	  				
+			{			
     			$this->insertReportAbuseLog();
     		}	
 		}
