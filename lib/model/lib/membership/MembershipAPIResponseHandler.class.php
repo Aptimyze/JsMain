@@ -1798,10 +1798,13 @@ class MembershipAPIResponseHandler {
                 $startingPrice = $response['origStartingPrice'];
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
+                $endTimeIST = date('H:i',strtotime('+9 hour 30 minutes',  strtotime($response['expiryDate'])));
                 $top = "FLASH DEAL";
-                $bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'>$currencySymbol$startingPrice</span> $currencySymbol$discountedPrice</p>";
-                $extra = "<span class='f20'>$disc% off</span> on all memberships";
+                //$bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'><del>$currencySymbol$startingPrice</del></span> $currencySymbol$discountedPrice</p>";
+                $bottom = "<p class='fontlig f16 pt5'>Prices starting @$currencySymbol$discountedPrice</p>";
+                $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST(IST)";
                 $expiryDate = $response['expiryDate'];
+                $valid = "Valid for ".VariableParams::$lightningDealDuration." minutes";
             }
             else if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
@@ -1892,6 +1895,9 @@ class MembershipAPIResponseHandler {
             );
             if(!empty($expiryDate)){
                 $output['membership_message']['expiryDate'] = $expiryDate;
+            }
+            if(!empty($valid)){
+                $output['membership_message']['valid'] = $valid;
             }
         } 
         else {

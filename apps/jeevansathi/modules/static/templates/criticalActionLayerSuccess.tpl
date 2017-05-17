@@ -1,10 +1,4 @@
 
-<style type="text/css">
-ul.time{list-style-type:none;}
-ul.time li{display:inline-block;font-size:25px}
-ul.time li span:nth-child(2){font-size:20px}
-.inscol:after{ content:":"; padding-left:10px}
-</style>
 
 ~if $layerId == '13'`<script>
     var primaryEmail = '~$primaryEmail`';
@@ -157,6 +151,44 @@ function validateAndSend(){
 </div>
 
 ~elseif $layerId == '19'`
+<script>    
+ function showTimerForLightningCal(lightningCALTime) {
+ if(!lightningCALTime) return;
+ var timerSeconds=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerMinutes=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerHrs=lightningCALTime;
+ calTimerTime=new Date();
+ calTimerTime.setHours(timerHrs);
+ calTimerTime.setMinutes(timerMinutes);
+ calTimerTime.setSeconds(timerSeconds);
+ calTimer=setInterval('updateCalTimer()',1000);
+ }
+ 
+ 
+ function updateCalTimer(){
+   var h = calTimerTime.getHours();
+   var s = calTimerTime.getSeconds();
+   var m = calTimerTime.getMinutes();
+   if (!m && !s && !h) {
+      clearInterval(calTimer);
+      }
+   
+     calTimerTime.setSeconds(s-1);
+     h=h+memTimerExtraDays*24;
+     
+     m = formatTime(m);
+     s = formatTime(s);
+     h = formatTime(h);
+	
+ 
+   $("#calExpiryMnts").html(m);
+   $("#calExpirySec").html(s);
+     }
+</script>
+    
+    
   <div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;"> 
     <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
         <div class="disp-cell vmid fontlig color11">
@@ -165,10 +197,10 @@ function validateAndSend(){
                 <p class="f28 pt20">~$discountPercentage`</p>
         <p class="f24">~$discountSubtitle`</p>
                 <p class="pt20 f20">~$startDate`&nbsp<span class="txtstr color12"><span >~$symbol`</span>~$oldPrice`&nbsp</span>  <span>~$symbol`</span>~$newPrice`&nbsp</p>
-                <p class="f16 pt20">Hurry! Offer valid for <span id ="lightningTime">~$time`</span> minutes</p>
+                <p class="f16 pt20">Hurry! Offer valid for</p>
                 <ul class="time">
                   <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
-                    <li class="pl10"><span id = "calExpirySec">00</span><span>S</span></li>
+                    <li class=""><span id = "calExpirySec">00</span><span>S</span></li>
                 </ul>
                 
                 

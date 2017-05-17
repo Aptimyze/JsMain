@@ -210,6 +210,19 @@ class myjsActions extends sfActions
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+      ////cal layer added by palash            
+      $stCALTime = microtime(TRUE);
+      ob_start();
+      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+      $layerData = ob_get_contents();
+      ob_end_clean();
+      if($this->bEnableProfiler) {
+        //CAL Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
+      }
+      $layerData = json_decode($layerData, true);
+
+//////////////////////////////////
         
         //MyJS is Not Cached
         if (!$appV1DisplayJson) {
@@ -247,21 +260,10 @@ class myjsActions extends sfActions
       if (MobileCommon::isApp() == "I") {
         $appV1DisplayJson['membership_message'] = NULL;
       }
-
-      ////cal layer added by palash            
-      $stCALTime = microtime(TRUE);
-      ob_start();
-      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-      $layerData = ob_get_contents();
-      ob_end_clean();
-      if($this->bEnableProfiler) {
-        //CAL Time taken
-        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
-      }
-      $layerData = json_decode($layerData, true);
-
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
+      $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
+
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
@@ -300,13 +302,13 @@ class myjsActions extends sfActions
           $this->forward("static", "logoutPage");
         }
 
-        $promoObj = new PromoLib();
+   /*     $promoObj = new PromoLib();
        $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
         if($chatPromoToShow == true)
         {
           $this->forward("promotions", "chatPromoJSMS");
         }
-
+  */
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -379,14 +381,14 @@ class myjsActions extends sfActions
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
- 
+ /*
     $promoObj = new PromoLib();
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
     {
       $this->forward("promotions", "chatPromoJSPC");
     }
-
+*/
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
@@ -443,10 +445,6 @@ class myjsActions extends sfActions
     		 $this->expirySubscription = date('d M Y', $yrdata);;
 		}
 
-		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-		$this->MembershipMessage = $data2['hamburger_message']; 
-		//PROFILE COMPLETIION 
-		$this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 		
 		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
@@ -536,18 +534,15 @@ class myjsActions extends sfActions
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
 
 		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
-    
+
     if($this->CALayerShow == 19)
     {
-    $this->discountPercentage = $calObject[discountPercentage]? $calObject[discountPercentage] : ' '; 
-    $this->discountSubtitle = $calObject[discountSubtitle]? $calObject[discountSubtitle] : ' ';
-    $this->startDate = $calObject[startDate]? $calObject[startDate] : ' ';
-    $this->oldPrice = $calObject[oldPrice]? $calObject[oldPrice] : ' ';
-    $this->newPrice = $calObject[newPrice]? $calObject[newPrice] : ' ';
-    $this->time = $calObject[lightningCALTime]? $calObject[lightningCALTime] : ' ';
-    $this->symbol = $calObject[symbol]? $calObject[symbol] : ' ';
+    $this->lightningCALData = $calObject;  
     }
 //--------------- Critical Action Layer section ends ------------
+    $data2 = $memHandlerObj->fetchHamburgerMessage($request);
+    $this->MembershipMessage = $data2['hamburger_message']; 
+    $this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 				
 // ---------------consent message variable
 		$this->showConsentMsg=$request->getParameter('showConsentMsg');
