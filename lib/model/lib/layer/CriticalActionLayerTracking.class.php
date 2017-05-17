@@ -395,7 +395,7 @@ return 0;
                       break;
                     case '19': 
                               
-                      if(!MobileCommon::isApp() /*|| (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))*/){ 
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
                       $lightningCALObj = new LightningDeal();
                       $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
                       if($lightningCALData != false){
@@ -480,7 +480,10 @@ break;
                     'A' => '84',
                     'I' => '4.5'
                     
-                        )
+                        ),
+                '19' => array(
+                  'A' => '97',
+                  )
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
