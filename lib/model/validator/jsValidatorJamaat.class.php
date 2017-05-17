@@ -9,6 +9,10 @@ class jsValidatorJamaat extends sfValidatorBase
   
   protected function doClean($value)
   {
+if(MobileCommon::isApp())
+{
+        return $value;
+}
     $clean = (string) $value;
   	$caste = $this->getOption('caste');
   	if($clean)
