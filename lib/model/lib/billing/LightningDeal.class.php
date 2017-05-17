@@ -229,6 +229,9 @@ class LightningDeal
             $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
             $memHandler = new MembershipHandler();
             $memHandler->clearMembershipCacheForProfile($profileid); 
+            MyJsMobileAppV1::deleteMyJsCache(array($profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
         }
         return $data;
     }
