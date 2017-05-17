@@ -311,7 +311,8 @@ class DetailedViewApi
                 
                 if($objProfile->getReligion() == 2 && $objProfile->getCaste() == 152){
                     $religionInfo = (array)$objProfile->getReligionInfo();
-                    $this->m_arrOut['caste'] = $this->m_arrOut['caste'].", ".$religionInfo["JAMAAT"];
+                    if($religionInfo["JAMAAT"])
+                        $this->m_arrOut['caste'] = $this->m_arrOut['caste'].", ".$religionInfo["JAMAAT"];
                 }
 		//Caste End Here
                 if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())

@@ -85,11 +85,7 @@
                     <li class="textTru">~$apiData['about']['location']`</li>
                     <li class="textTru">~$apiData['about']['work_status']['value']`</li>
                     
-                    ~if $apiData["lifestyle"]["religion_value"] eq "2" && $apiData["family"]["caste"] neq ""`
-                     <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`, ~$apiData["family"]["caste"]`</li>
-                     ~else`
                     <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
-                    ~/if`
                     <li class="textTru">~$apiData['about']['income']`</li>
                     <li class="textTru">~$apiData['about']['mtongue']`</li>
                     <li class="textTru">~$apiData['about']['m_status']`</li>
