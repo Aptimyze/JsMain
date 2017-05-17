@@ -3,22 +3,22 @@ class AgentPreAllocation
 {
         public function createTempPoolForPreAllocation()
         {
-                $profileTechObj=new incentive_PROFILE_ALLOCATION_TECH('newjs_masterDDL');
+                $profileTechObj=new incentive_PROFILE_ALLOCATION_TECH('newjs_master');
                 $profileTechObj->truncate();
         }
 	public function truncateProfilesTech()
 	{
-		$profileTechObj=new incentive_PROFILE_ALLOCATION_TECH('newjs_masterDDL');
+		$profileTechObj=new incentive_PROFILE_ALLOCATION_TECH('newjs_master');
 		$profileTechObj->truncate();
 	}
 	public function truncateFTAProfilesTech()
         {
-                $ftaProfileTechObj=new incentive_FTA_ALLOCATION_TECH('newjs_masterDDL');
+                $ftaProfileTechObj=new incentive_FTA_ALLOCATION_TECH('newjs_master');
                 $ftaProfileTechObj->truncate();
         }
         public function truncatePreAllocTempPool()
         {
-                $preAllocationTempPoolObj=new incentive_PRE_ALLOCATION_TEMP_POOL('newjs_masterDDL');
+                $preAllocationTempPoolObj=new incentive_PRE_ALLOCATION_TEMP_POOL('newjs_master');
                 $preAllocationTempPoolObj->truncate();
         }
         public function createPoolForPreAllocation()

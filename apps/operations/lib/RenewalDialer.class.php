@@ -13,7 +13,7 @@ class RenewalDialer {
     //Create Temp Pool
     public function createTempPoolForRenewalDialer()
     {
-        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_masterDDL');
+        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_master');
         $inRenewalDialerTempPool->truncate();
         $profiles = $this->inRenewalDialerInsObj->fetchRenewalDialerProfiles();
         if($profiles)
