@@ -10,7 +10,6 @@ class gunaScore
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
-    private $thirdPartyVenderUrl = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?";
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $parentValueArr = gunaScoreConstants::$parentValues;
@@ -23,9 +22,9 @@ class gunaScore
           //To convert profilechecksum to profileId array
         foreach($profilechecksumArr as $val)
         {
-          $profileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
-          $searchIdArr[] = $profileid;
-          $flipIdArr[$val] = $profileid;
+          $otherProfileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
+          $searchIdArr[] = $otherProfileid;
+          $flipIdArr[$val] = $otherProfileid;
         }        
           //FlippedSearchIdArr used to map gunaScore to profilechecksum
         $this->flippedSearchIdArr = array_flip($flipIdArr);
@@ -89,14 +88,13 @@ class gunaScore
           {
             $gunaData_1 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[0]);
             $gunaData_2 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[1]);
-            $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                                        
-            return $gunaData;
+            $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                                                    
           }
           else
           {
-            $gunaData = $this->thirdPartyVendorCall($logged_astro_details,$compstring);
-            return ($gunaData);
+            $gunaData = $this->thirdPartyVendorCall($logged_astro_details,$compstring);          
           }
+          return ($gunaData);
         }
         else
         {
@@ -133,8 +131,8 @@ class gunaScore
   {	
     $gunaData = array();
     $compstring = implode(",",$compstring);
-    $url = $this->thirdPartyVenderUrl.$logged_astro_details."&".$compstring;  
-    $fresult = CommonUtility::sendCurlGetRequest($url,4000);
+    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;  
+    $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
@@ -156,13 +154,16 @@ class gunaScore
         {
           $gunaData[$this->otherProfileId] = $matches[1][0];
         }
-        foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
+        else
         {
-          if($guna_pid == $pid && $matches[1][0] != "0")
+          foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
           {
-            $gunaData[$key][$profchecksum]=$matches[1][0];
+            if($guna_pid == $pid && $matches[1][0] != "0")
+            {
+              $gunaData[$key][$profchecksum]=$matches[1][0];
+            }
           }
-        }
+        }        
       }
     }
     return($gunaData);

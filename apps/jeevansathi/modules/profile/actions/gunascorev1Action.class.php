@@ -11,8 +11,7 @@ class gunascorev1Action extends sfAction
 {
 	public function execute($request)
 	{
-		$apiObj=ApiResponseHandler::getInstance();
-		$sameGender = $request->getParameter("sameGender");
+		$apiObj=ApiResponseHandler::getInstance();	
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$loggedInDetails = $loggedInProfileObj->getDetail("","","*");
 		$profileId=$loggedInDetails['PROFILEID'];  //getting the profileid
@@ -21,7 +20,15 @@ class gunascorev1Action extends sfAction
 
 		$oProfile=CommonFunction::getProfileFromChecksum($request->getParameter("oprofile"));
 		
-		//$oProfile=intval($request->getParameter("oprofile"));
+		if(!MobileCommon::isApp())
+		{
+			$sameGender = $request->getParameter("sameGender");
+		}
+		else
+		{
+			$sameGender = $this->getSameGender($gender,$oProfile);
+		}
+		
 		$parent="";
 		if($oProfile && $profileId && !$sameGender)
 		{
@@ -47,5 +54,16 @@ class gunascorev1Action extends sfAction
 		$gunaData = $gunaScoreObj->getGunaScore($profileId,$caste,$otherProfileId,$gender,'',$shutDownConnections);		
 		unset($gunaScoreObj);
 		return($gunaData);
+	}
+
+	public function getSameGender($loggedInGender,$otherProfileId)
+	{
+		$dbJprofile= new JPROFILE();        
+ 		$otherRow=$dbJprofile->get($otherProfileId,"PROFILEID","GENDER");
+ 			if($loggedInGender == $otherRow[GENDER])
+ 				$sameGender=1;
+ 			else
+ 				$sameGender=0;
+ 		return $sameGender;
 	}
 } 
