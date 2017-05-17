@@ -8,7 +8,7 @@ class SolrRequest implements RequestHandleInterface
 {
 	private $searchResults;
 	private $solrPagination;
-        private $solrCurlTimeout = 1000;
+        private $solrCurlTimeout = 400;
 	/**
 	* constructor of solr Request class
 	* @param responseObj contains information about output type (array/xml/...) and engine used(solr/sphinx/mysql....)
@@ -199,10 +199,6 @@ class SolrRequest implements RequestHandleInterface
                 if(!$this->searchResults){
                         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".date('H:i:s')." ::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
-                        if($this->searchParamtersObj->getIS_VSP() && $diff>10){
-                            $dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
-                            JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__99",1);
-                        }
                 }
 	}
 
