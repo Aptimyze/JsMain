@@ -956,14 +956,15 @@ class CommonFunction
 
     public static function getFlagForIdfy($profileId)
     {
-    	if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    	if($profileId)
     	{
-    		return true;
-    	}
-    	else
-    	{
-    		return false;
-    	}
+    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		{
+    			return true;
+    		}
+    		return false;    		
+    	}    	
+    	return false;
     }
 }
 ?>
