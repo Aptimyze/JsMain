@@ -121,7 +121,7 @@
                         ~/if`
                         </a> ~/if` </div>
                     <div class='fl pt10 pl15' id="lightningTimer" style='display:none;'>
-                        <p class="f14 pb5 pl14">Valid for</p>
+                        <p class="f14 pb5 pl15">Hurry! Offer valid for</p>
                         <ul class="time pl15" style="border-left:1px solid #fff;">
                             <li class="inscol" style='font-size: 16px'><span id='jspcMyjsM'></span><span>M</span></li>
                             <li class="padl10" style='font-size: 16px'><span id='jspcMyjsS'></span><span>S</span></li>
