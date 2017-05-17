@@ -94,7 +94,7 @@
                     <i class="posabs rv2_sprtie1 setoffbr rv2_offb_right"></i> 
                     <!--start:timer div-->
                     <div class="posabs" style="right:14px; top:13px">
-                        <p class="f14 color7">Valid for 30 minutes</p>
+                        <p class="f14 color7 pl38">Valid for</p>
                          <ul class="time color7">
                              <li class="inscol"><span id='jsmsLandingM'></span><span>M</span></li>
                              <li><span id='jsmsLandingS'></span><span>S</span></li>

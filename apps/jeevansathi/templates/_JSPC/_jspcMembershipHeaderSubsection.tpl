@@ -20,11 +20,11 @@
                         </div>
                     </div>
                     <div class="disp-cell vmid wid20p">
-                        <div class="fontlig f14 pb10">Valid for 30 min
+                        <div class="fontlig f14 pb10">Valid for
                         </div>
                         <ul class="time">
-                            <li class="inscol"><span id='jspcLandingM'></span><span>M</span></li>
-                            <li class="padl10"><span id='jspcLandingS'></span><span>S</span></li>
+                            <li class="inscol"><span id='jspcLandingM' style="font-size: 20px"></span><span style="font-size: 15px">M</span></li>
+                            <li class="padl10"><span id='jspcLandingS' style="font-size: 20px"></span><span style="font-size: 15px">S</span></li>
                         </ul>
                     </div>
                 </div>
