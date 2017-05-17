@@ -33,10 +33,10 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                                            },';
             }
             $fieldToQuery = $request->getParameter('type');
-            $elkServer = '10.10.18.66' ;
+            $elkServer = JsConstants::$kibana['ELK_SERVER'] ;
             $keyToFetch = "coolmatric-*";
             $key2 = "coolmatric";
-            $elkPort = '9200';
+            $elkPort = JsConstants::$kibana['ELASTIC_PORT'];
             $query = '_search';
             $unId = time() + LoggedInProfile::getInstance()->getPROFILEID();
             $urlToHit = $elkServer.':'.$elkPort."/".$keyToFetch."/".$key2."/".$query;
