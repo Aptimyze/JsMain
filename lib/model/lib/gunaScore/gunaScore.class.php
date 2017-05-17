@@ -10,27 +10,29 @@ class gunaScore
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
-
-    public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='',$shutDownConnections='')
+    private $thirdPartyVenderUrl = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?";
+    public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $parentValueArr = gunaScoreConstants::$parentValues;
       $searchIdArr = array();
-      if(is_array($profilechecksumArr))
+      $this->gunaForPD = 0;
+
+      if(strpos($profilechecksumStr, ',') !== false)
       {
-        $profilechecksumArr = explode(",",$profilechecksumArr);
+        $profilechecksumArr = explode(",",$profilechecksumStr);
           //To convert profilechecksum to profileId array
         foreach($profilechecksumArr as $val)
         {
           $profileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
           $searchIdArr[] = $profileid;
           $flipIdArr[$val] = $profileid;
-        }
+        }        
           //FlippedSearchIdArr used to map gunaScore to profilechecksum
         $this->flippedSearchIdArr = array_flip($flipIdArr);
       }
       else
       {
-        $this->otherProfileId = $profilechecksumArr;
+        $this->otherProfileId = $profilechecksumStr;
         $searchIdArr[] = $this->otherProfileId;
         $this->gunaForPD = 1;        
       }
@@ -39,7 +41,7 @@ class gunaScore
       if(in_array($parent, $parentValueArr))
       {
        $astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections);
-        			//uses $artroDetails data to compile $logged_astro_details and compstring[]
+        			//uses $artroDetails data to compile $logged_astro_details and compstring[]       
        if(is_array($astroDetails))
        {
           foreach($astroDetails as $key=>$myAstroData)
@@ -87,7 +89,7 @@ class gunaScore
           {
             $gunaData_1 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[0]);
             $gunaData_2 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[1]);
-            $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                            
+            $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                                        
             return $gunaData;
           }
           else
@@ -131,14 +133,16 @@ class gunaScore
   {	
     $gunaData = array();
     $compstring = implode(",",$compstring);
-    $url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
+    $url = $this->thirdPartyVenderUrl.$logged_astro_details."&".$compstring;  
     $fresult = CommonUtility::sendCurlGetRequest($url,4000);
-    
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
     }
-
+    elseif($fresult="")
+    {
+      SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$profileId," Guna score response NULL");   
+    }
     if(is_array($fresult))
     {
       foreach($fresult as $key=>$val)
@@ -160,10 +164,6 @@ class gunaScore
           }
         }
       }
-    }
-    elseif($fresult="")
-    {
-      SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$profileId," Guna score response NULL");   
     }
     return($gunaData);
   }
