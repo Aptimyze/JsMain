@@ -770,14 +770,12 @@ li.current-page a {
     overflow: hidden;
     font-weight: 400;
     font-size: 22px;
-    width: 100%;
     color: #ECF0F1 !important;
     margin-left: 0 !important;
     line-height: 59px;
     display: block;
     height: 55px;
     margin: 0;
-    padding-left: 10px;
 }
 
 .site_title:hover,
@@ -2456,8 +2454,10 @@ legend {
     color: inherit;
 }
 
-.checkbox {}
 
+.checkbox label input[type="checkbox"] {
+    display: none;
+}
 .form-horizontal .form-group {
     margin-right: 0;
     margin-left: 0;
