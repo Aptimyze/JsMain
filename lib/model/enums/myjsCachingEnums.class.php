@@ -12,7 +12,7 @@
 		const PAGEID = 'pageId';
 		const IS_NULL = 'is_null';
         const VALID = 'valid';
-        const EXPIRY_DATE = 'EXPIRY_DATE';
+        const EXPIRY_DATE = 'expiryDate';
  		const FLAG = 0;// 1 to Disbale Membership cache else make it 0
 	}
 
