@@ -177,8 +177,8 @@ class SearchCommonFunctions
 
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults()==viewSimilarConfig::$suggAlgoNoOfResults_Mobile)
 			return $SearchParametersObj->getNoOfResults();
-
-                if(MobileCommon::isApp()=='A')
+                
+                if(MobileCommon::isApp()=='A' && !$SearchParametersObj->getIS_VSP())
                     return SearchConfig::$profilesPerPageOnApp;
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
