@@ -234,10 +234,11 @@ function updateEducation(json,realJson,indexPos)
 					$.each(v1,function(key,value){	
 						if(parseInt(key)==parseInt(val))
 						{
-                                                        if(parseInt(val) == 42 || parseInt(val) == 21)
-                                                             showPgDegree = 1;
-                                                        else
-                                                            CommonOverlayEditUpdate(val,"degree_pg");
+							showPgDegree = 1;
+                                                        if(parseInt(val) != 42 && parseInt(val) != 21 && realJson['OnClick'][1].value==null)
+							{
+								CommonOverlayEditUpdate(val,"degree_pg");
+							}
 							findpg=1;
 							findug=1;
 						}

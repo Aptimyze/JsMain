@@ -71,7 +71,7 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -82,7 +82,7 @@ EditApp = function(){
     var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
-                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
+                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,mstatus,relationship,income,degree_pg,degree_ug',
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
@@ -2943,13 +2943,13 @@ EditApp = function(){
         $(viewName).addClass(dispNone);
         bindBehaviour();
         if(sectionId == BASIC){
-          initUGAndPGDegreeMap();
         }
         if(sectionId == FAMILY){
           initNativeFields();
           initSiblings();
         }
         if(sectionId == EDU_CAREER){
+          initUGAndPGDegreeMap();
           initEducationFields();
         }
         if(sectionId == CONTACT){
@@ -3150,6 +3150,54 @@ EditApp = function(){
      * @param {type} sectionId
      * @returns {undefined}
      */
+updateEduLevelChanges =function(eduLevelVal)
+{
+      var gradDeg = editAppObject[EDU_CAREER]["DEGREE_UG"];
+      var gradCollg = editAppObject[EDU_CAREER]["COLLEGE"];
+
+      var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
+      var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
+      var gradDegID = '#'+gradDeg.key.toLowerCase();
+      var postGradDegID = '#'+postGradDeg.key.toLowerCase();
+      var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
+      var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
+	if(eduLevelVal!='')
+	{
+		if( $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 &&
+		  $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
+		)
+		{
+			editedFields["career"]["DEGREE_PG"]=''
+			editedFields["career"]["PG_COLLEGE"]=''
+			editedFields["career"]["OTHER_PG_DEGREE"]=''
+			
+			if(gradDeg.value=='')
+			{
+				editedFields["career"]["DEGREE_UG"]= eduLevelVal;
+			}
+		}
+		else if($(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 &&
+		  $(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
+		  )
+		{
+			if(eduLevelVal != 42 && eduLevelVal != 21 && postGradDeg.value=='')
+			{
+				editedFields["career"]["DEGREE_PG"]= eduLevelVal;
+			}
+			
+		}
+		else
+		{
+			editedFields["career"]["DEGREE_UG"]='';
+			editedFields["career"]["COLLEGE"]='';
+			editedFields["career"]["OTHER_UG_DEGREE"]='';
+			editedFields["career"]["DEGREE_PG"]='';
+			editedFields["career"]["PG_COLLEGE"]='';
+			editedFields["career"]["OTHER_PG_DEGREE"]='';
+		}
+	}
+}
+
     onSectionSave = function(sectionId,showLoader){
       //If no editing happens, then gracefully hide :D
       if(editedFields.hasOwnProperty(sectionId) === false){
@@ -3164,6 +3212,18 @@ EditApp = function(){
           $('#alt_mobileParent').trigger('onSave');
         }
       }
+	var eduLevelVal='';
+	if(sectionId==EDU_CAREER)
+	{
+		if(editedFields["career"].hasOwnProperty("EDU_LEVEL_NEW"))
+		{
+			eduLevelVal = editedFields["career"]['EDU_LEVEL_NEW'];
+		}
+	}
+	if(eduLevelVal!='')
+	{
+		updateEduLevelChanges(eduLevelVal);
+	}
       for(var key in requiredArray[sectionId]){
         var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
         parentDOM.find('.js-errorLabel').removeClass(dispNone);
@@ -3397,10 +3457,12 @@ EditApp = function(){
     onSectionCancel = function(sectionId){
       fillSection(sectionId);
       if(sectionId == BASIC){
-        var eduField = editAppObject[BASIC]["EDU_LEVEL_NEW"+"_"+BASIC];
-        onHighestEducationChange(eduField.value,eduField.key);
 	var displayNameField = editAppObject[BASIC]["DISPLAYNAME"];
 	showDisplayNameSettingFirstTime(displayNameField);
+      }
+      if(sectionId==EDU_CAREER){
+        var eduField = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
+        onHighestEducationChange(eduField.value,eduField.key);
       }
       delete editedFields[sectionId];
       requiredFieldStore.removeAll(sectionId);
@@ -3724,16 +3786,15 @@ EditApp = function(){
      * @returns {undefined}
      */
     onHighestEducationChange = function(eduLevelVal,fieldID){
+//      if(fieldID.indexOf(EDU_CAREER) !==-1)
+      {
       var gradDeg = editAppObject[EDU_CAREER]["DEGREE_UG"];
       var gradCollg = editAppObject[EDU_CAREER]["COLLEGE"];
       
       var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
       var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
       
-      if(fieldID.indexOf(EDU_CAREER) !==-1)
-        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+EDU_CAREER];
-      else
-        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+BASIC];
+        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
       
       var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
       var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
@@ -3741,8 +3802,7 @@ EditApp = function(){
       var gradDegID = '#'+gradDeg.key.toLowerCase();
       var postGradDegID = '#'+postGradDeg.key.toLowerCase();
       
-      //For education Section
-      if(fieldID.indexOf(EDU_CAREER) !==-1){
+// highest education is bachelor degree
         if( $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 && 
           $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
         )
@@ -3754,9 +3814,9 @@ EditApp = function(){
           $('#'+postGradCollg.key.toLowerCase()).val("");
           $('#'+other_pgDeg.key.toLowerCase()).val("");
 
-          showHideField(postGradDeg,"hide",true);
-          showHideField(postGradCollg,"hide",true);
-          showHideField(other_pgDeg,"hide",true);
+          showHideField(postGradDeg,"hide");
+          showHideField(postGradCollg,"hide");
+          showHideField(other_pgDeg,"hide");
           
           if(gradDeg.isUnderScreen){
             showHideUnderScreeningMsg(gradDeg,"show");
@@ -3775,6 +3835,7 @@ EditApp = function(){
           showHideUnderScreeningMsg(other_pgDeg,"hide");
 
         }
+//highest education is master degree
         else if($(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 && 
           $(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
           )
@@ -3782,11 +3843,11 @@ EditApp = function(){
           showHideField(gradDeg,"show");
           showHideField(gradCollg,"show");
           showHideField(other_ugDeg,"show");
-          if(eduLevelVal == 42 || eduLevelVal == 21)
+//PhD or MPhil values: 21 and 42 respectively
             showHideField(postGradDeg,"show");
-          else{
+          if(eduLevelVal != 42 && eduLevelVal != 21 && postGradDeg.value=='')
+	{
             editedFields["career"]["DEGREE_PG"]= eduLevelVal;
-            showHideField(postGradDeg,"hide");  
           }
           showHideField(postGradCollg,"show");
           showHideField(other_pgDeg,"show");
@@ -3816,13 +3877,14 @@ EditApp = function(){
           }   
         }
         else{
-          showHideField(gradDeg,"hide",true);
-          showHideField(gradCollg,"hide",true);
-          showHideField(other_ugDeg,"hide",true);
+console.log("esha1");
+          showHideField(gradDeg,"hide");
+          showHideField(gradCollg,"hide");
+          showHideField(other_ugDeg,"hide");
 
-          showHideField(postGradDeg,"hide",true);
-          showHideField(postGradCollg,"hide",true);
-          showHideField(other_pgDeg,"hide",true);
+          showHideField(postGradDeg,"hide");
+          showHideField(postGradCollg,"hide");
+          showHideField(other_pgDeg,"hide");
 
           $('#'+gradCollg.key.toLowerCase()).val("");
           $('#'+other_ugDeg.key.toLowerCase()).val("");
@@ -3841,6 +3903,7 @@ EditApp = function(){
         }
     
       }
+/*
       else if(fieldID.indexOf(BASIC) !==-1){
         if( ugDegreeMap.indexOf(eduLevelVal) != -1 )
         { 
@@ -3929,6 +3992,7 @@ EditApp = function(){
           showHideUnderScreeningMsg(other_ugDeg,"hide");
         }
       }
+*/
     }
     
     /*
@@ -5488,7 +5552,7 @@ EditApp = function(){
       var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
       var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
       
-      var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+EDU_CAREER];
+      var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
       
       var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
       var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
@@ -5510,10 +5574,7 @@ EditApp = function(){
         showHideField(gradCollg,"show");
         showHideField(other_ugDeg,"show");
         
-        if(maxEducation.value == '21' || maxEducation.value == '42')
-            showHideField(postGradDeg,"show");
-        else
-            showHideField(postGradDeg,"hide");
+	showHideField(postGradDeg,"show");
         showHideField(postGradCollg,"show");
         showHideField(other_pgDeg,"show");
       }
@@ -6561,7 +6622,6 @@ $('.js-previewAlbum').click(function(){
         $("#"+fieldId).focus();
     }
   }
-
   /**
    * function is used to get url get parameters
    * @return {String}      get parameter
