@@ -217,9 +217,10 @@ function appendData(obj) {
                 var url = JSON.stringify(sendObj).split('"').join("%22");
 			closeDppCal();
 	      showLoader();
-                $.ajax({
+                $.myObj.ajax({
                     url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData=' + url,
                     type: 'POST',
+                    channel : 'mobile',
                     success: function(response) {
 			      showLoader();
 			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
