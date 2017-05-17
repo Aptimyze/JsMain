@@ -1977,13 +1977,13 @@ else
 			$res = mysql_query_decide($sql) or logError("error",$sql);
 			while($row = mysql_fetch_array($res))
 			{
-				$casteMuslim_label_arr[] = $row['LABEL'];
+				$casteMuslim_label_arr[] = explode(" ",$row['LABEL'])[1];
 				$casteMuslim_value = $row['VALUE'];
 				$casteMuslim_str= $casteMuslim_value;
 				$caste_str="";
-				$casteMuslim_value_arr[] = substr($casteMuslim_str,0,strlen($casteMuslim_str)-1);
+				$casteMuslim_value_arr[] = $casteMuslim_str;
 			}
-
+                        
 			$option_string="";		
 			for($i=0;$i<count($casteMuslim_value_arr);$i++)
 			{

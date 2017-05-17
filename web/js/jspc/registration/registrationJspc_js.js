@@ -1543,6 +1543,19 @@ var padding = 31;
 		$("#casteNoBarDiv").removeClass("disp-none");
             }
             $("caste-inputBox_set").val("");
+            $("#jamaat-inputBox_set").val("");
+            $("#casteMuslim-inputBox_set").val("");
+            $("#jamaat_value").val("");
+            $("#casteMuslim_value").val("");
+            $("#jamaat-gridUl").find(".activeopt").removeClass("activeopt");
+            $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
+            inputData["jamaat"] = "";
+            inputData["castemuslim"] = "";
+            if(typeof ele1.muslimDependentObj.selected !="undefined")
+                ele1.muslimDependentObj.selected='';
+            if(typeof regField["caste"].sunniDependentObj.selected != "undefined")
+                regField["caste"].sunniDependentObj.selected='';
+            
             if (ele1.selected == "Hindu" || ele1.selected == "Jain" || ele1.selected == "Sikh" || ele1.selected == "Buddhist") {
               if (ele1.selected == "Hindu") {
                 $("#subcaste_selector").removeClass("disp-none");
