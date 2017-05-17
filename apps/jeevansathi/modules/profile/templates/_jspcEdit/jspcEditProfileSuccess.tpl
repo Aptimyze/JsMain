@@ -219,11 +219,7 @@
                         <li id="jamaatlistitem">
                           <p class="color12 pt15 fontlig">Jamaat</p>
                           <p class="pt2 fontlig" >
-                       ~if $arrOutDisplay.about.jamaat neq ''`
                             <span id="jamaatView">~$arrOutDisplay.about.jamaat`</span>
-                       ~else`
-                         <p class="pt2 color5 fontlig" id='posted_byView'>~$notFilledInText`</p>
-                          ~/if`
                           </p>
                        </li>
                        ~/if`

@@ -5182,6 +5182,18 @@ EditApp = function(){
       updateLastUpdated(viewApiResponse);
       var iterateOnResponse = function(section){
         for(var key in section){
+
+        if(key=="jamaat")
+        {
+                if(section['caste_val']=="152")
+                {
+                        $("#jamaatlistitem").show();
+                }
+                else
+                {
+                        $("#jamaatlistitem").hide();
+                }
+        }
           var viewId = '#'+key.toLowerCase()+'View';
           
           if($(viewId).length === 0 && typeof section[key] == "string"){
@@ -5211,7 +5223,8 @@ EditApp = function(){
             }
           }
           else if(typeof section[key] == "string" )//&& section[key].length)
-          { 
+          {
+ 
             var value = $('<textarea />').html(section[key]).text();      
             
             $(viewId).text(value);
@@ -5233,17 +5246,6 @@ EditApp = function(){
           if(phoneDescriptionMap.indexOf(key.toLowerCase()) !== -1){
             updatePhoneDescView(viewId,$(viewId).text());
           }
-        if(key=="jamaat")
-        {
-                if(section['caste_val']=="152")
-                {
-                        $("#jamaatlistitem").show();
-                }
-                else
-                {
-                        $("#jamaatlistitem").hide();
-                }
-        }
 
         }
       };
