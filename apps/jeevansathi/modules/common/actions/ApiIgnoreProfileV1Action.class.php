@@ -32,6 +32,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray($this->m_iResponseStatus);
 		$apiResponseHandlerObj->setResponseBody($this->m_arrOut);	
+		$apiResponseHandlerObj->setUserActionState(2);
 		$apiResponseHandlerObj->generateResponse();
 		
 		if($request->getParameter('INTERNAL')==1){
