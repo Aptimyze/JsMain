@@ -526,3 +526,31 @@ left: 60px;
             vertical-align: super;
             padding-right: 5px;
         }
+
+        
+        
+        
+        /* Date drop box*/
+        .regdropbox{border:1px solid #d9475c;background-color:#fff;border-radius:2px}
+        ul#datesub li, ul#monthsub li, ul#yearsub li{border-left:0; border-bottom:1px solid #d9d9d9; }
+        ul#datesub li{width:40px}
+        ul#monthsub li{width:82px}
+        ul#yearsub li{width:78px}
+        ul#datesub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
+        .reg-pos5 {left:205px;top:478px}
+        .reg-pos10 {right:0;top:47px}
+        .reg-zi1 {z-index:1}
+        .reg-wid12{width:400px;}
+        .reg-droparrow {
+	background-position: -6px -214px;
+	width: 16px;
+	height: 11px;
+}
+.rarrwdob{background-position: -1px -131px;
+
+    width: 18px;
+
+    height: 12px;}
+.reg-pos11{ right: 10px;
+
+    top: 16px;}

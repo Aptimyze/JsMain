@@ -30,14 +30,14 @@ EditApp = function(){
     var INT_PHONE_MAX_LEN = 15;
     var Url               = '/api/v1/profile/editprofile?sectionFlag=all'
     var editAppObject     = {needToUpdate:true}; 
-    var responseKeyArray  = ["Details","Education","Career","Family","Lifestyle","Contact","Kundli"];
-    var viewResponseKeyArray =["about","dpp","family","lifestyle","contact"];
+    var responseKeyArray  = ["Critical","Details","Education","Career","Family","Lifestyle","Contact","Kundli"];
+    var viewResponseKeyArray =["Critical","about","dpp","family","lifestyle","contact"];
     var viewResponseSubSection =["hobbies","sibling"];
     var fieldObject       = function(){return {"key":"","type":"","isEditable":"true","label":"","decValue":"","isUnderScreen":"false","value":""}};
     var editedFields      = {};
     var staticTables      = new SessionStorage;
     var chosenUpdateEvent = "chosen:updated";
-    
+    var dataMonthArray = {1: "Jan", 2: "Feb", 3: "Mar", 4: "April", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
     //Error Map
     var errorMap          = {
                               "RELATION":"Please choose who posted this profile",
@@ -62,6 +62,7 @@ EditApp = function(){
                             };
     //Section List
     var BASIC             = "basic";
+    var CRITICAL          = "critical";
     var LIKES             = "likes";
     var LIFE_STYLE        = "lifestyle";
     var FAMILY            = "family";
@@ -71,7 +72,8 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var criticalSectionArray   = ["MSTATUS","DTOFBIRTH","MSTATUS_PROOF"];
+    var basicSectionArray   = ["NAME","GENDER","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -82,7 +84,8 @@ EditApp = function(){
     var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
-                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
+                                "critical" : 'mstatus',
+                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,edu_level_new,occupation,relationship,income,degree_pg,degree_ug',
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
@@ -93,11 +96,11 @@ EditApp = function(){
                               }; 
     
     
-    var storeTogetherFields         ={"CITY_RES":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE"} 
-    var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
+    var storeTogetherFields         ={"CITY_RES":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","MSTATUS_PROOF":"MSTATUS"} 
+    var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER","MSTATUS_PROOF":"MSTATUS"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type","MSTATUS":"mstatus","MSTATUS_PROOF":"mstatus_proof"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100','ALT_EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
@@ -113,6 +116,8 @@ EditApp = function(){
     var unCookedFields = ['DISPLAYNAME'];
     var autoSuggestFields         = ["SUBCASTE","GOTHRA","GOTHRA_MATERNAL","SCHOOL","COLLEGE","PG_COLLEGE","COMPANY_NAME"]; 
     
+    var DATE_TYPE                  = "D";
+    var dateTypeFields             = ["DTOFBIRTH"];
     var BOX_TYPE                  = "B";
     var boxTypeFields             = ["RELATION","DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","BLOOD_GROUP","HIV","THALASSEMIA","BTYPE","PARENT_CITY_SAME","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","T_SISTER","T_BROTHER","FAMILY_TYPE","FAMILY_STATUS","FAMILY_VALUES","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","HIJAB","WORKING_MARRIAGE","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","MARRIED_WORKING","GOING_ABROAD","HIJAB_MARRIAGE","HAVECHILD"];
     var boxTypeMaxAllowed         = {"RELATION":3};
@@ -130,7 +135,7 @@ EditApp = function(){
     var phoneTypeFields           = ["PHONE_MOB","ALT_MOBILE","PHONE_RES"];
     
     var FILE_TYPE            = "FT";
-    var fileTypeFields        = ["ID_PROOF_VAL","ADDR_PROOF_VAL"];
+    var fileTypeFields        = ["ID_PROOF_VAL","ADDR_PROOF_VAL","MSTATUS_PROOF"];
     
     var PRIVACY_TYPE              = "PR";
     var privacyTypeFields          = ["SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","SHOWADDRESS","SHOW_PARENTS_CONTACT"]
@@ -146,7 +151,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city","MSTATUS":"js-mstatus","MSTATUS_PROOF":"js-mstatus_proof"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -255,6 +260,11 @@ EditApp = function(){
               var sectionNameArr = [];
               if(sectionArr[j].key == "RELIGION")
                   userReligion = sectionArr[j].value;
+          
+              if(criticalSectionArray.indexOf(sectionArr[j].key) !== -1){
+                sectionNameArr.push(CRITICAL);
+                inAnySection = true;
+              }
               if(basicSectionArray.indexOf(sectionArr[j].key) !== -1){
                 sectionNameArr.push(BASIC);
                 inAnySection = true;
@@ -330,6 +340,10 @@ EditApp = function(){
 
               if(boxTypeFields.indexOf(field.key) !== -1){
                 field.type          = BOX_TYPE;/*Box Type*/
+              }
+              
+              if(dateTypeFields.indexOf(field.key) !== -1){
+                field.type          = DATE_TYPE;/*Box Type*/
               }
 
               if(multipleSelectTypeFields.indexOf(field.key) !== -1){
@@ -412,7 +426,9 @@ EditApp = function(){
      * @returns {Array} Array of Section 
      */
     getSectionArray = function(sectionId){
-                  
+      if(sectionId === CRITICAL){
+        return criticalSectionArray;
+      }
       if(sectionId === BASIC){
         return basicSectionArray;
       }
@@ -606,7 +622,21 @@ EditApp = function(){
         fieldDOM.find('.js-endAmPm ul li[value="'+endAmPm+'"]').addClass('activeopt');
       }
     }
-    
+    cookNoteTextBeforeSubmitButton = function(domElement,sectionId,configObject){
+                var parentAttr    = {class:"clearfix pt30",id:sectionId+'section-bottom'};
+                var labelAttr     = {class:"fl pt11 edpcolr3 ",text:''};
+                var spanAttr     = {class:"ml10",text:'We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully before submitting.'};
+                var divAttr     = {class:"fl edpwid3 edpbrad1 cursp pos-rel outline-none js-bottomText",text:''};
+                
+                var parentDiv = $("<div />",parentAttr);
+                var labelDOM  = $("<label />",labelAttr);
+                var divDOM  = $("<div />",divAttr);
+                
+                divDOM.append($("<span />",spanAttr));
+                parentDiv.append(labelDOM);
+                parentDiv.append(divDOM);
+                domElement.append(parentDiv);
+    };
     /*
      * cookSaveCancelButton
      * @param {type} domElement
@@ -863,6 +893,86 @@ EditApp = function(){
       domElement.append(parentDiv);
       //Bind Box Common Events 
       bindBoxCommonEvents(fieldObject,maxAllowedEle);
+      
+      if(hideTheField){
+        showHideField(fieldObject,"hide");
+      }
+    }
+    
+    /*
+     * cookDateBoxTypeField
+     * @param {type} domElement
+     * @param {type} fieldObject
+     * @returns {undefined}
+     */
+    cookDateBoxTypeField = function(domElement,fieldObject,configObject){
+      
+      var parentAttr    = {class:"clearfix pt30",id:fieldObject.key.toLowerCase()+'Parent'};
+      var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
+      var fieldDivAttr  = {class:"fl edpbrd3 edpwid3 edpbrad1 cursp pos-rel outline-none js-boxField",id:fieldObject.key.toLowerCase(),tabindex:"0"};
+      var decValAttr    = {class:"fl lh40 edpwid3 edpbrad1 js-decVal"};
+      
+      if(typeof configObject != "undefined"){
+        /*Loop and replace in default One*/
+      }
+        
+      var parentDiv = $("<div />",parentAttr);
+      var labelDOM  = $("<label />",labelAttr);
+      
+      parentDiv.append(labelDOM);
+      
+      var fieldDivDom = $("<div />",fieldDivAttr);
+      var decValDom  = $("<div />",decValAttr);
+      
+      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel errorTop f13 colr5 disp-none",text:errorMap[fieldObject.key]}));
+           
+      var decText = fieldObject.decValue;
+      var filledClass= "";
+      if(fieldObject.decValue.length == 0){
+        decText = notFilledText;
+        filledClass = " color12";
+      }
+      
+      decValDom.append($("<span />",{class:"ml10 js-decVal"+filledClass,text:decText}));
+      fieldDivDom.append(decValDom);
+      
+      var optionString = "";
+      var hideTheField = false;
+      
+      optionString =  prepareDateBoxOptionDropDown(fieldObject,3);
+      
+      var boxContentDOM = $("<div />",{class:"js-boxContent"});      
+      boxContentDOM.append(optionString)
+      fieldDivDom.append(boxContentDOM);
+      
+      //Add Some Sides UI Element
+      if(sidesUIMap.indexOf(fieldObject.key) != -1){
+        cookoutSidesUIElement(fieldObject,fieldDivDom);
+      }
+      parentDiv.append(fieldDivDom);
+      domElement.append(parentDiv);
+      
+      var parentAttr2    = {class:"js-date sub-mainlist pos_abs reg-pos5 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'datesub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      domElement.append(parentDOM2);
+      var parentAttr2    = {class:"js-month sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'monthsub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      domElement.append(parentDOM2);
+      var parentAttr2    = {class:"js-year sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'yearsub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      domElement.append(parentDOM2);
+
+      //Bind Box Common Events 
+      bindDateBoxCommonEvents(fieldObject,3);
       
       if(hideTheField){
         showHideField(fieldObject,"hide");
@@ -1157,16 +1267,23 @@ EditApp = function(){
      * cookTextAreaField
      * @param {type} domElement
      * @param {type} fieldObject
-     * @param {type} configObject
+     * @param {type} sectionId
      * @returns {undefined}
      */
-    cookFileField = function(domElement,fieldObject,configObject){
+    cookFileField = function(domElement,fieldObject,sectionId){
+      if(sectionId == CRITICAL){
+              var parentAttr    = {class:"clearfix fontlig pt30",id:fieldObject.key.toLowerCase()+'Parent'};
+              var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
+              var btnAttr     = {class:"bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()};
+              var fieldDivAttr  = {class:"fl edpwid3 edpbrad1 cursp pos-rel outline-none"}
+      }else{
+                var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
+                var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
+                var fieldDivAttr  = {class:"js-fileBox pos-rel"}
+                var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
+      }
       
-      var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
-      var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
-      var fieldDivAttr  = {class:"js-fileBox pos-rel"}
       var textAreaAttr     = {class:"color11 fontlig f15 brdr-0 bgnone outline-none wh0 disp-none",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
-       var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
        var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase()}
       
       if(debugInfo){
@@ -1187,7 +1304,11 @@ EditApp = function(){
       var fieldDivDom = $("<div />",fieldDivAttr);
       
       var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
-      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
+      if(sectionId == CRITICAL){
+                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:errorText}));
+      }else{
+                fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
+      }
       
       fieldDivDom.append($("<div />",btnAttr));
       fieldDivDom.append($("<div />",labelAttr2));
@@ -1606,6 +1727,141 @@ EditApp = function(){
             
       //Main keydown Event
       fieldDOM.on('keydown',onKeydown);
+      
+      //MyBlur
+      fieldDOM.on('boxBlur',onBlur);
+
+    }
+    /*
+     * bindBoxCommonEvents : Click and blur Events
+     * @param {type} fieldObject
+     * @param {type} maxAllowedEle
+     * @returns {undefined}
+     */
+    bindDateBoxCommonEvents = function(fieldObject,maxAllowedEle){
+      var fieldDOM = $('#' + fieldObject.key.toLowerCase());
+      var removeActiveFromMore = false;
+      var activeClass = 'activeopt';
+      
+      var onClick = function(event){
+              createDateList();
+              createMonthList();
+              createYearList();
+        fieldDOM.find('.js-errorLabel').addClass(dispNone);
+        if(event.target && event.target.tagName === "LI"){
+          var val = event.target.getAttribute("value");
+          
+            var arrSelectedEle = fieldDOM.find('ul li.'+activeClass);
+            for(var i=0;i<arrSelectedEle.length;i++){
+              var ele = $(arrSelectedEle[i]); 
+              ele.removeClass(activeClass);
+            }
+          
+          if(val === "-1" && typeof maxAllowedEle != "undefined"){
+            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
+            $(event.target).addClass(activeClass);
+            return ;
+          }
+                    
+          if($(event.target).hasClass('js-boxSubListOption') == false){
+            fieldDOM.find('.js-subBoxList').addClass(dispNone);
+            fieldDOM.find('ul li[value="-1"]').removeClass(activeClass);
+          }else{
+            fieldDOM.find('ul li[value="-1"]').addClass(activeClass);
+          }
+                  
+          $(event.target).addClass(activeClass);
+          fieldDOM.find('span').removeClass('color12').text($(event.target).text());
+          storeFieldChangeValue(fieldObject,val);
+          
+          fieldDOM.trigger("box-change");
+             }
+        fieldDOM.find('.js-decVal').addClass(dispNone);
+        fieldDOM.find('.boxType').removeClass(dispNone);
+        //Show and hide Main Option 
+        if(event.target && $(event.target).hasClass('js-decVal') === true || 
+           event.target.id==fieldObject.key.toLowerCase()){
+          fieldDOM.find('.js-decVal').addClass(dispNone);
+          fieldDOM.find('.boxType').removeClass(dispNone);
+          
+          if( typeof maxAllowedEle != "undefined" && fieldDOM.find('ul li[value="-1"]').hasClass(activeClass)){
+            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
+          }
+          
+          if(fieldDOM.find('ul li.activeopt').hasClass('js-boxSubListOption') == true){
+            fieldDOM.find('ul li[value="-1"]').addClass('activeopt');
+            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
+          }
+        }
+      }
+        var createDateList = function () {
+                dateHtml = generateList(2, 31, "date", 1);
+                $("#datesub").html(dateHtml);
+                $("#datesub").parent().attr("style","display:block");
+        }
+        var createMonthList = function () {
+                monthHtml = generateList(2, 12, "month", "Jan");
+                $("#monthsub").html(monthHtml);
+        }
+        var createYearList = function () {
+                var d = new Date();
+                var n = d.getFullYear();
+                yearHtml = generateList(n - 19, n - 70, "year", n - 18);
+                $("#yearsub").html(yearHtml);
+        }
+        var generateList = function(l, h, c, d){
+                var dropHtml = '<li id="{{cusId}}">{{customValue}}</li>{{newLi}}';
+                dropHtml = dropHtml.replace(/{{customValue}}/g, d);
+                if (c == "month")
+                  dropHtml = dropHtml.replace(/{{cusId}}/g, c + "li1");
+                else
+                  dropHtml = dropHtml.replace(/{{cusId}}/g, c + "li" + d);
+          
+                var firstLi = '<li id="{{cusId}}">{{customValue}}</li>{{newLi}}';;
+                //for year the list is in reverse order
+                if (c == "year") {
+                  for (i = l; i >= h; i--) {
+                    tempHtml = firstLi.replace(/{{customValue}}/g, i);
+                    tempHtml = tempHtml.replace(/{{cusId}}/g, c + "li" + i);
+                    dropHtml = dropHtml.replace(/{{newLi}}/g, tempHtml);
+                  }
+                }
+                else {
+                  for (i = l; i <= h; i++) {
+                    if (c == "month")
+                      tempHtml = firstLi.replace(/{{customValue}}/g, dataMonthArray[i]);
+                    else
+                      tempHtml = firstLi.replace(/{{customValue}}/g, i);
+                    tempHtml = tempHtml.replace(/{{cusId}}/g, c + "li" + i);
+                    dropHtml = dropHtml.replace(/{{newLi}}/g, tempHtml);
+                  }
+                }
+                dropHtml = dropHtml.replace(/{{newLi}}/g, "");
+                return(dropHtml);
+      }
+      var onBlur  = function(event){
+        var arrSelectedEle = fieldDOM.find('ul li.activeopt');
+        if(arrSelectedEle.length === 1 && $(arrSelectedEle[0]).attr("value") === "-1"){
+          fieldDOM.find('.js-errorLabel').removeClass(dispNone);
+          stopEventPropagation(event);
+          return false;
+        }
+        fieldDOM.find('.js-decVal').removeClass(dispNone);
+        fieldDOM.find('.boxType').addClass(dispNone);
+        fieldDOM.find('.js-subBoxList').addClass(dispNone);
+        $("#datesub").parent().attr("style","display:none");
+        $("#monthsub").parent().attr("style","display:none");
+        $("#yearsub").parent().attr("style","display:none");
+      }
+      
+      
+      var clickFn = onClick;
+      
+      //focus
+      fieldDOM.on('focus',clickFn);
+      
+      //Main Click Event
+      fieldDOM.on('click',clickFn);
       
       //MyBlur
       fieldDOM.on('boxBlur',onBlur);
@@ -2502,6 +2758,81 @@ EditApp = function(){
      * @param {type} fieldObject
      * @returns {String}
      */
+    prepareDateBoxOptionDropDown = function(fieldObject,maxAllowed){
+        var optionString = '<ul class="hor_list lh40 boxType disp-none">';
+        var cssClassOnLI = "";/*Class on LI DOM*/
+        var subOptionString = '<ul class="rlist" >';
+        var maxElement = 0, maxWidth   = 490, maxWidthPerEle = 40;
+        var styleAttr = "",styleSubList = "";
+      
+      var calcWidth = function(length){
+        maxElement = parseInt(length);
+        maxWidthPerEle = maxWidth/maxElement;
+        //maxWidthPerEle = Math.floor(maxWidthPerEle);
+        styleAttr = " style=\"width:"+(maxWidthPerEle-1)+"px\"";        
+      };
+      
+      var dataArr =[];
+      dataArr[0] = {"D":"DAY"};
+      dataArr[1] = {"M":"MONTH"};
+      dataArr[2] = {"Y":"YEAR"};
+      var data = [dataArr];
+      console.log(data);
+      try{
+        var i=0;
+        //Loop the data section 
+        $.each(data,function(key1,data1)
+        {
+          if( typeof(Object.keys(data1).length) != "undefined" && Object.keys(data1).length !== 1){
+            calcWidth(Object.keys(data1).length);
+          }
+          $.each(data1,function(key2,data2)
+          {
+            if( typeof(Object.keys(data2).length) != "undefined" && Object.keys(data2).length !== 1){
+            calcWidth(Object.keys(data2).length);
+          }
+            
+            $.each(data2,function(value,label)
+            { 
+              cssClassOnLI += "option_" + i;
+              
+              if( value == fieldObject.value )
+              {
+                cssClassOnLI+=" activeopt";
+              }
+              
+              //Adjust Width for last element
+              if(i==maxElement-1){
+                //var lastWidth = maxWidth - ((maxWidthPerEle-1)*(maxElement-1));
+                styleAttr = " style=\"width:"+(maxWidthPerEle)+"px\"";
+              }
+              var spanId = label.toLowerCase();
+              console.log(maxAllowed+"---------"+i);
+              if(i < maxAllowed){
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                cssClassOnLI = ""
+              }
+              
+              ++i;
+              
+            });
+          });
+        });
+        
+        optionString+='</ul>'
+        if(i>maxAllowed){
+          var subDivString = '<i class="reg-sprtie reg-droparrow pos_abs epdpos12 z2 disp-none js-subBoxList"></i> <div class="pos_abs sub-mainlist epdpos11 z1 edpdbox boxshadow js-subBoxList disp-none">';
+          subOptionString= subDivString + subOptionString+'</ul></div>';
+          
+          optionString+=subOptionString;
+        }
+      }
+      catch(e){
+        optionString = "";
+        console.log(e);
+      }
+      return optionString;
+    }
     prepareBoxOptionDropDown = function(data,fieldObject,maxAllowed){
             
       var optionString = '<ul class="hor_list lh40 boxType disp-none">';
@@ -2528,6 +2859,7 @@ EditApp = function(){
         
       try{
         var i=0;
+        console.log(data);
         //Loop the data section 
         $.each(data,function(key1,data1)
         {
@@ -2764,7 +3096,7 @@ EditApp = function(){
         }
         if( fieldObject.type === FILE_TYPE)
         {
-          cookFileField(editSectionFormDOM,fieldObject);
+          cookFileField(editSectionFormDOM,fieldObject,sectionId);
         }
         
         if(fieldObject.type === OPEN_TEXT_TYPE && rightAlignedFields.indexOf(fieldObject.key) !== -1){
@@ -2784,6 +3116,10 @@ EditApp = function(){
         
         if(fieldObject.type === BOX_TYPE){
           cookBoxTypeField(editSectionFormDOM,fieldObject);
+        }
+        
+        if(fieldObject.type === DATE_TYPE){
+          cookDateBoxTypeField(editSectionFormDOM,fieldObject);
         }
         
         if(fieldObject.type === NON_EDITABLE_TYPE){
@@ -2848,7 +3184,9 @@ EditApp = function(){
           $('#'+fieldObject.key.toLowerCase()).addClass(behaviourMap[fieldMapKey]);
         }
       }
-      
+      if(sectionId == CRITICAL){
+        cookNoteTextBeforeSubmitButton(editSectionFormDOM,sectionId);
+      }
       //Add Save and Cancel Button
       if(rightAlignedSections.indexOf(sectionId) !== -1){
         var parentAttr    = {class:"clearfix pt20"};
@@ -2942,6 +3280,9 @@ EditApp = function(){
         bakeSection(sectionId);
         $(viewName).addClass(dispNone);
         bindBehaviour();
+        if(sectionId == CRITICAL){
+          initMstatusDocumentMap();
+        }
         if(sectionId == BASIC){
           initUGAndPGDegreeMap();
         }
@@ -3151,6 +3492,8 @@ EditApp = function(){
      * @returns {undefined}
      */
     onSectionSave = function(sectionId,showLoader){
+            console.log(editedFields);
+            console.log("test");return true;
       //If no editing happens, then gracefully hide :D
       if(editedFields.hasOwnProperty(sectionId) === false){
         showHideEditSection(sectionId,"hide");
@@ -3489,6 +3832,9 @@ EditApp = function(){
       else if ( fieldObject.type === BOX_TYPE ){
         optionString = prepareBoxOptionDropDown(data,fieldObject);
       }
+      else if ( fieldObject.type === DATE_TYPE ){
+        optionString = prepareDateBoxOptionDropDown(fieldObject,3);
+      }
       
       fieldObject.value=tempValue;
       
@@ -3502,6 +3848,11 @@ EditApp = function(){
         $(fieldId).trigger(chosenUpdateEvent);
       }
       else if ( fieldObject.type === BOX_TYPE ){
+        $(fieldId).find('.js-boxContent').html("");
+        $(fieldId).find('.js-boxContent').html(optionString);
+        $(fieldId).find('span').text(notFilledText).addClass('color12');
+      }
+      else if ( fieldObject.type === DATE_TYPE ){
         $(fieldId).find('.js-boxContent').html("");
         $(fieldId).find('.js-boxContent').html(optionString);
         $(fieldId).find('span').text(notFilledText).addClass('color12');
@@ -3718,7 +4069,17 @@ EditApp = function(){
         showHideUnderScreeningMsg(ancestralOrigin,"hide");
       }
     }
-    
+    onMstatusChange = function(eduLevelVal,fieldID){
+            var mstatusProofField = editAppObject[CRITICAL]['MSTATUS_PROOF'];
+            $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
+            if(eduLevelVal == "D"){
+                        $('#mstatus_proofParent').removeClass(dispNone);
+                        requiredFieldStore.add(mstatusProofField);
+            }else{
+                        $('#mstatus_proofParent').addClass(dispNone);
+                        requiredFieldStore.remove(mstatusProofField);
+            }
+    }
     /*
      * onHighestEducationChange
      * @param {type} eduLevelVal
@@ -4369,7 +4730,7 @@ EditApp = function(){
     }
     validateImage = function(fieldId,fieldKey){
         if(typeof $('#' + fieldId)[0].files[0] == 'undefined' || $('#' + fieldId)[0].files[0] == null){
-                return true;
+                return false;
         }
         var file = $('#'+fieldId)[0].files[0];
         if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
@@ -4423,6 +4784,19 @@ EditApp = function(){
         $('#addr_proof_val').attr("value",'');
         $('#addr_proof_val').val("");
     }
+    
+    onMstatusProofValChange = function(){
+        var mstatusProofTypeField = editAppObject[CRITICAL]["MSTATUS_PROOF"];
+        var uploadStatus = validateImage('mstatus_proof',mstatusProofTypeField);
+        if(uploadStatus === false){
+                return false;
+        }else{
+                if(mstatusProofTypeField.value !== '' && typeof editedFields[CRITICAL]["MSTATUS_PROOF"] == 'undefined'){
+                        storeFieldChangeValue(mstatusProofTypeField,mstatusProofTypeField.value);
+                }
+        }
+    }
+    
     geteditedValue = function(fieldKey,fieldtype){
         var fieldObj = editAppObject["verification"][fieldKey];
         if(fieldtype != "VALUE" && fieldObj.value != '' && typeof editedFields[VERIFICATION][fieldKey] == 'undefined'){
@@ -4654,7 +5028,13 @@ EditApp = function(){
       $('.js-educationChange').on('change',function(event){
         onHighestEducationChange($(this).val(),$(this).attr("id"));
       });
-      
+      $('.js-mstatus').on('change',function(event){
+        onMstatusChange($(this).val(),$(this).attr("id"));
+      });
+      $('.js-mstatus_proof').on('change',onMstatusProofValChange);
+      $('#idBtn_mstatus_proof').unbind('click').on('click',function(event){
+        $('.js-mstatus_proof').click();
+      });
       //About me field
       $('.js-aboutMe').on('keydown',function(event){
         if(false == whiteListingKeys(event,"forAbout")){
@@ -4810,8 +5190,25 @@ EditApp = function(){
       $('.js-forAbout').unbind('keydown').on('keydown',function(event){
         whiteListingKeys(event,"forAbout")
       });
+      $('#datesub').on('mousedown',function(event){
+              alert("test");
+              hideShowList(event);
+       // onHighestEducationChange($(this).val(),$(this).attr("id"));
+      });
     }
-    
+    hideShowList = function(con) {
+      $("#datesub").parent().hide();
+      $("#dateArrow1").hide();
+      $("#monthsub").parent().hide();
+      $("#monthArrow1").hide();
+      $("#yearsub").parent().hide();
+      $("#yearArrow1").hide();
+      if (con == "blur") {
+        $("#dateArrow2").show();
+        $("#monthArrow2").show();
+        $("#yearArrow2").show();
+      }
+    }
     /*
      * BakeEditAppObject
      * @returns {undefined}
@@ -4929,6 +5326,24 @@ EditApp = function(){
         
         //For Box Type Field
         if(fieldObject.type === BOX_TYPE){          
+          $(fieldId).find('.js-decVal').removeClass(dispNone);
+          $(fieldId).find('.boxType').addClass(dispNone);
+          $(fieldId).find('.js-subBoxList').addClass(dispNone);
+          if(typeof fieldObject.value == "string" && fieldObject.value.length){
+            $(fieldId+' ul li[value="'+fieldObject.value+'"]').trigger('click');
+          }
+          else{//Not filled in case
+            $(fieldId+' span').text(notFilledText).addClass('color12');
+            var arrSelected = $(fieldId+' ul li.activeopt');
+            for(var j=0;j<arrSelected.length;j++){
+              $(arrSelected[j]).removeClass('activeopt');
+            }
+          }
+          $(fieldId).trigger("boxBlur");
+        }
+        
+        //For Date Type Field
+        if(fieldObject.type === DATE_TYPE){          
           $(fieldId).find('.js-decVal').removeClass(dispNone);
           $(fieldId).find('.boxType').addClass(dispNone);
           $(fieldId).find('.js-subBoxList').addClass(dispNone);
@@ -5530,7 +5945,10 @@ EditApp = function(){
       
       
     }
-    
+    initMstatusDocumentMap = function(){
+            var mstatus = JSON.parse(getDataFromStaticTables("MSTATUS"));
+            $('#mstatus_proofParent').addClass(dispNone);
+    }
     /*
      * initUGAndPGDegreeMap
      * @returns {}

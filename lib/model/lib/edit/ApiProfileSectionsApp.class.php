@@ -343,7 +343,19 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		return $contactArr;
 	}
 	
-	
+	public function getApiCriticalInfo() {
+                //date of birth
+		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"Y");
+		
+		//mstatus
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");
+                
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","Divorced Status" ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
+                if($this->profile->getMSTATUS() != 'N'){
+                    $criricalArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
+                }
+                return $criricalArr;
+        }
 	/** @function
 	 * @returns key value array of Basic Information section of app
 	 * */
@@ -364,10 +376,10 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
 		//date of birth
-		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"N");
+		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"Y");
 		
 		//mstatus
-		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");
                 
                 //HaveChild
                 if($this->profile->getMSTATUS() != 'N'){

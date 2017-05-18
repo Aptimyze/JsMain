@@ -24,6 +24,10 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
         $this->Docs = $this->verifyDocsObj->getDocumentsList($profile->getPROFILEID());       
   }
   
+  public function getApiCriticalInfo(){
+    $criricalArr = parent::getApiCriticalInfo();
+    return $criricalArr;
+  }
   public function getApiBasicInfo(){
     $basicArr = parent::getApiBasicInfo();
     
