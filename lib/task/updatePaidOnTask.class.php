@@ -36,6 +36,7 @@ $this->addOptions(array(
 	$incrementValue = 2000;
 
 	$memObject=JsMemcache::getInstance();
+
 	$storeObj = new NEWJS_SEARCH_MALE("newjs_slave");
 	$storeUpdateObj = new NEWJS_SEARCH_MALE("newjs_masterRep");
 	
