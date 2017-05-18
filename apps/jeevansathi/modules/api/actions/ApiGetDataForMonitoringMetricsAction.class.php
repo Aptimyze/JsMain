@@ -14,7 +14,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
 	* @param sfRequest $request A request object
 	*/
     
-        private $timeChange = 9.5*60*60;
+        private $timeChange = 34200;//9.5*60*60;
 	public function execute($request)
 	{
             $startDate = strtotime($request->getParameter('startDate'))-$this->timeChange;
