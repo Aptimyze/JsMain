@@ -17,6 +17,7 @@
         var bellCountStatus = 0;
         var membershipPlanExpiry = '~$membershipPlanExpiry`';
         var showHelpScreen = '~$showHelpScreen`';
+        var current = "~$currentTime`";
     </script>
     <input type="hidden" id="CALayerShow" value="~$CALayerShow`"></input>
     <input type="hidden" id="DiscountPercentage" value="~$lightningCALData.discountPercentage`"></input>

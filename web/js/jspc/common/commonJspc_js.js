@@ -773,7 +773,7 @@ function inviewCheck()
 
 function showTimerForLightningMemberShipPlan(source) {
     if(source == "jsmsMyjs" || source == "jspcMyjs"){
-        var cT = new Date();
+        var cT = new Date(current);
         var eT = new Date(membershipPlanExpiry);
         lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
     }

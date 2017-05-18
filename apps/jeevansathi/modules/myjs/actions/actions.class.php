@@ -587,7 +587,8 @@ class myjsActions extends sfActions
 			}
 			else
 				$this->videoLinkLayer='N';
-
+        
+        $this->currentTime = date('Y-m-d H:i:s');
 		//enable JPSC notifications layer depending on user earlier registered or not
        	$notificationObj = new NotificationConfigurationFunc();
         $this->showEnableNotificationsLayer = $notificationObj->showEnableNotificationLayer($this->profileid);
