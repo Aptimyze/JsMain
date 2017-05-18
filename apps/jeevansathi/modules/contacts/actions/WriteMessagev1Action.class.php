@@ -102,6 +102,7 @@ class WriteMessagev1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
+			$apiObj->setUserActionState(2);
 			
 			$apiObj->generateResponse();
 		}

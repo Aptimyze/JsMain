@@ -35,9 +35,11 @@ EOF;
         $url1 = $arguments["URL1"];
         $url1 = $this->replaceAllSpaces($url1);
         $startTime = time();
+        $count = 0;
         print_r("CRON Start Time: ". $startTime . "\n");
         if($url1 && $url1 != 'ALL'){
-            $url1 = "https://cdn.ampproject.org/update-ping/c/jeevansathi.com". url1;
+            $count++;
+            $url1 = "https://cdn.ampproject.org/update-ping/c/jeevansathi.com". $url1;
             $ch = curl_init($url1);
             curl_setopt($ch, CURLOPT_HEADER, false);    // we dont want headers
             curl_setopt($ch, CURLOPT_NOBODY, true);    // we don't need body
@@ -51,12 +53,62 @@ EOF;
             print_r("HTTP Code:" . $httpcode . "\n");
             curl_close($ch);
         }
-        else{	
+        else{
+            //First Set of URL's fetched from NEWJS_COMMUNITY_PAGES table
+            $communityPagesObj = new NEWJS_COMMUNITY_PAGES();
+            $url1Array = $communityPagesObj->getAll();
+            foreach ($url1Array as $detail){
+                if($detail['ACTIVE']=='Y'){
+                    $url = $this->replaceAllSpaces($detail['URL']);
+                    if ($url) {
+                        $count++;
+                        $url1 = "https://cdn.ampproject.org/update-ping/c/jeevansathi.com" . $url . "?amp=1";
+                        $ch = curl_init($url1);
+                        curl_setopt($ch, CURLOPT_HEADER, false);    // we dont want headers
+                        curl_setopt($ch, CURLOPT_NOBODY, true);    // we don't need body
+                        curl_setopt($ch, CURLOPT_HTTPGET, true);     //setting request as GET
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);        //Connection timeout as 5 seconds
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 5);       //Setting read timeout as 5 seconds
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        $output = curl_exec($ch);
+                        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        print_r("URL: " . $url1. "::");
+                        print_r("HTTP Code:" . $httpcode . "\n");
+                        curl_close($ch);
+                    }
+                }
+            }
+            //Second Set of URLs fetched from NEWJS.COMMUNITY_PAGES_MAPPING
+            $communityPagesMappingObj = new NEWJS_COMMUNITY_PAGES_MAPPING();
+            $url1Array = $communityPagesMappingObj->getAll();
+            foreach ($url1Array as $detail){
+                if($detail['ACTIVE']=='Y'){
+                    $url = $this->replaceAllSpaces($detail['URL']);
+                    if ($url) {
+                        $count++;
+                        $url1 = "https://cdn.ampproject.org/update-ping/c/jeevansathi.com" . $url . "?amp=1";
+                        $ch = curl_init($url1);
+                        curl_setopt($ch, CURLOPT_HEADER, false);    // we dont want headers
+                        curl_setopt($ch, CURLOPT_NOBODY, true);    // we don't need body
+                        curl_setopt($ch, CURLOPT_HTTPGET, true);     //setting request as GET
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);        //Connection timeout as 5 seconds
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 5);       //Setting read timeout as 5 seconds
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        $output = curl_exec($ch);
+                        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        print_r("URL: " . $url1. "::");
+                        print_r("HTTP Code:" . $httpcode . "\n");
+                        curl_close($ch);
+                    }
+                }
+            }
+            //Third Set of URLS fetched from NEWJS.SEO table
             $seoObj = new newjs_SEO();
             $url1Array = $seoObj->getURL1List();
             foreach ($url1Array as $url1 => $detail){
                 $url = $this->replaceAllSpaces($detail);
                 if($url){
+                    $count++;
                     $url1 = "https://cdn.ampproject.org/update-ping/c/jeevansathi.com". $url . "?amp=1";
                     $ch = curl_init($url1);
                     curl_setopt($ch, CURLOPT_HEADER, false);    // we dont want headers
@@ -76,6 +128,7 @@ EOF;
         $endTime = time();
         print_r("CRON End Time: ". $endTime. "\n");
         print_r("Total Time: ". ($endTime - $startTime) . "seconds");
+        print_r("\nTotal URL's pinged: ". $count."\n");
     }
 
     /*

@@ -97,6 +97,8 @@ class desktopView extends DetailedViewApi
           $szSectValue = $objProfile->getDecoratedSect();
           $szCasteLabel = 'Sect';
           $szSectLabel  = 'Caste';
+	  $relinfo = (array)$objProfile->getReligionInfo();
+	  $jamaat = $relinfo['JAMAAT'];
         break;
         case 3://Christain
           $szCasteValue = $objProfile->getDecoratedCaste();
@@ -123,6 +125,9 @@ class desktopView extends DetailedViewApi
         $this->m_arrOut['edit_caste'] = $szCasteValue . ($szSectValue === null ? "" : ", " );
         $this->m_arrOut['edit_sect']  = ($szSectValue === null ? "" : $szSectValue);
       }
+	if($objProfile->getReligion()=="2")
+		$this->m_arrOut['jamaat']=($jamaat)===null?"-":$jamaat;
+	$this->m_arrOut['caste_val']=$objProfile->getCaste();
       
       //Name Work
       $name_pdo = new incentive_NAME_OF_USER();

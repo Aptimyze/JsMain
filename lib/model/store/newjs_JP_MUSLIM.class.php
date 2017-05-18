@@ -75,6 +75,23 @@ class NEWJS_JP_MUSLIM extends TABLE{
 						throw new jsException($e);
 					}
 		}
+                
+                public function delete($pid)
+		{
+	   
+			try {   
+                                if($pid)
+				{ 
+					$sql="DELETE FROM JP_MUSLIM WHERE PROFILEID=:PROFILEID";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
+					$prep->execute();
+                                }
+			}catch(PDOException $e)
+			{
+                                throw new jsException($e);
+			}
+		}
     private function logFunctionCalling($funName)
     {
       $key = __CLASS__.'_'.date('Y-m-d');

@@ -71,7 +71,7 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","JAMAAT","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -82,7 +82,7 @@ EditApp = function(){
     var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
-                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,mstatus,relationship,income,degree_pg,degree_ug',
+                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,mstatus,relationship,income,degree_pg,degree_ug,jamaat',
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
@@ -97,14 +97,14 @@ EditApp = function(){
     var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type","JAMAAT":"jamaat"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100','ALT_EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
     //Type of Fields By Default All are 'S' Type means single select
     
     var SINGLE_SELECT_TYPE        = "S";
-    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","STATE_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE"];
+    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","STATE_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE","JAMAAT"];
     var NON_EDITABLE_TYPE         = "N";
     
     var OPEN_TEXT_TYPE            = "O";
@@ -146,7 +146,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city","CASTE":"js-caste"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -313,7 +313,6 @@ EditApp = function(){
               field.isEditable      = sectionArr[j].edit      === "N" ? false : true;
               field.isUnderScreen   = sectionArr[j].screenBit === "1" ? true  : false;
               field.type            = SINGLE_SELECT_TYPE;/*Single Select Type*/
-
               if((field.value === null || field.value.length === 0) && field.isUnderScreen ){
                 field.isUnderScreen = false;
               }
@@ -2943,6 +2942,7 @@ EditApp = function(){
         $(viewName).addClass(dispNone);
         bindBehaviour();
         if(sectionId == BASIC){
+	  initJamaat();
         }
         if(sectionId == FAMILY){
           initNativeFields();
@@ -3568,7 +3568,23 @@ updateEduLevelChanges =function(eduLevelVal)
         $(fieldId).find('span').text(notFilledText).addClass('color12');
       }
     }
-    
+    onCasteChange = function(casteVal){
+	var religionFieldObject  = editAppObject[BASIC]["RELIGION"];
+	var jamaatFieldObject = editAppObject[BASIC]["JAMAAT"];
+	if(religionFieldObject.value==2)
+	{
+		if(casteVal==152)
+		{
+			requiredFieldStore.add(jamaatFieldObject);
+			showHideField(jamaatFieldObject,"show",false);
+		}
+		else
+		{
+			requiredFieldStore.remove(jamaatFieldObject);
+			showHideField(jamaatFieldObject,"hide",true);
+		}
+	}
+    }
     /*
      * onCountryChange
      * @param {type} countryVal
@@ -4681,6 +4697,9 @@ updateEduLevelChanges =function(eduLevelVal)
       $('.js-country').on('change',function(event){
         onCountryChange($('#country_res').val());
       });
+      $('.js-caste').on('change',function(event){
+	onCasteChange($("#caste").val());
+      });
       
       //OnState Change
       $('.js-state').on('change',function(event){
@@ -5225,6 +5244,18 @@ updateEduLevelChanges =function(eduLevelVal)
       updateLastUpdated(viewApiResponse);
       var iterateOnResponse = function(section){
         for(var key in section){
+
+        if(key=="jamaat")
+        {
+                if(section['caste_val']=="152")
+                {
+                        $("#jamaatlistitem").show();
+                }
+                else
+                {
+                        $("#jamaatlistitem").hide();
+                }
+        }
           var viewId = '#'+key.toLowerCase()+'View';
           
           if($(viewId).length === 0 && typeof section[key] == "string"){
@@ -5254,7 +5285,8 @@ updateEduLevelChanges =function(eduLevelVal)
             }
           }
           else if(typeof section[key] == "string" )//&& section[key].length)
-          { 
+          {
+ 
             var value = $('<textarea />').html(section[key]).text();      
             
             $(viewId).text(value);
@@ -5276,6 +5308,7 @@ updateEduLevelChanges =function(eduLevelVal)
           if(phoneDescriptionMap.indexOf(key.toLowerCase()) !== -1){
             updatePhoneDescView(viewId,$(viewId).text());
           }
+
         }
       };
       
@@ -5589,7 +5622,11 @@ updateEduLevelChanges =function(eduLevelVal)
       
       
     }
-    
+    initJamaat = function()
+    {
+	var caste = editAppObject[BASIC]["CASTE"];
+	onCasteChange(caste.value);
+    }
     /*
      * initUGAndPGDegreeMap
      * @returns {}

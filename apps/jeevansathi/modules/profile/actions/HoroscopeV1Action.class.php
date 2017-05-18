@@ -16,12 +16,10 @@ class HoroscopeV1Action extends sfAction{
         if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
         {
             $http_msg=print_r($_SERVER,true);
-            mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
-            $msg["Error"] = "Something went wrong";
-            $apiResponseHandlerObj->setResponseBody($msg);
-            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-        }
-        else
+            $http_msg .= print_r($_POST,true);
+            mail("ahmsjahan@gmail.com,eshajain88@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+        }   
+        if(1)
         {
             if($profileid){
                 if($request->getParameter("update")){
