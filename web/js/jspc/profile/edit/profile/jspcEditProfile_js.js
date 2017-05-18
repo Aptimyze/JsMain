@@ -164,7 +164,7 @@ EditApp = function(){
 	// array to show top label for a section
     var sectionTopLabelMap        = {"verification":"Upload at least one document"};
     var sectionTopLabelRequired   = ["verification"];
-    var duplicateFieldMap         = ['education','income','occupation'];
+    var duplicateFieldMap         = ['income'];
     
     var duplicateEditFieldMap     = {};
     var ugDegreeMap               = [];
@@ -3877,7 +3877,6 @@ updateEduLevelChanges =function(eduLevelVal)
           }   
         }
         else{
-console.log("esha1");
           showHideField(gradDeg,"hide");
           showHideField(gradCollg,"hide");
           showHideField(other_ugDeg,"hide");
