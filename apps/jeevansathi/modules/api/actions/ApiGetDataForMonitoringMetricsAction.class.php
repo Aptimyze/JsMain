@@ -15,23 +15,33 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
 	*/
 	public function execute($request)
 	{
-            $greaterThan = date('Y-m-d',strtotime($request->getParameter('startDate')))."T".date('H:i:s',strtotime($request->getParameter('startDate')));
-            $lessThan = date('Y-m-d',strtotime($request->getParameter('endDate')))."T".date('H:i:s',strtotime($request->getParameter('endDate')));
-            $timeDiff = strtotime($lessThan) -  strtotime($greaterThan);
-            $type = $request->getParameter("type");
-            $interval = intval($timeDiff/8);
-            $channelQuery = "";
-            $channel = $request->getParameter('channel');
-            if($channel!="all")
-            {
-                 $channelQuery = '"must": 
-                                            {
-                                                    "match": 
-                                                    {
-                                                            "channel": "'.$channel.'"
-                                                    }
-                                           },';
+            $startDate = strtotime($request->getParameter('startDate'));
+            $endDate = strtotime($request->getParameter('endDate'));
+            $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',$startDate);
+            $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',$endDate);
+
+            $timeDiff = $endDate -  $startDate;
+            
+            $startDate2 = strtotime($request->getParameter('startDate2'));
+            if($startDate2){
+            $endDate2 = $startDate2 + $timeDiff;
+
+            $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',$startDate2);
+            $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',$endDate2);
             }
+            
+            
+            $type = $request->getParameter("type");
+            $this->interval = intval($timeDiff/8);
+            $channelQuery = "";
+            $channel =$request->getParameter('channel');
+            if($channel!="all")
+                    $channelQuery ='{ "match" : {"channel" : "'.$channel.'"}},';
+                   
+                    $this->mustQuery = '"must":  ['.  $channelQuery.   
+                                                            '{ "match" : {"logType" : "'.$type.'"}}'.
+                                                 '],';
+                   // die($this->mustQuery);
             $fieldToQuery = $request->getParameter('type');
             $elkServer = JsConstants::$kibana['ELK_SERVER'] ;
             $keyToFetch = "coolmatric-*";
@@ -39,21 +49,32 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             $elkPort = JsConstants::$kibana['ELASTIC_PORT'];
             $query = '_search';
             $unId = time() + LoggedInProfile::getInstance()->getPROFILEID();
-            $urlToHit = $elkServer.':'.$elkPort."/".$keyToFetch."/".$key2."/".$query;
-            $params = '{
+            $this->urlToHit = $elkServer.':'.$elkPort."/".$keyToFetch."/".$key2."/".$query;
+            $totalResponse= array();
+            $totalResponse[] = $this->getResponse($greaterThan, $lessThan);
+            if($startDate2){
+            $totalResponse[] = $this->getResponse($greaterThan2, $lessThan2);
+            }
+            
+            echo json_encode($totalResponse);die;//die('pa');
+            return sfView::NONE;
+    }
+    
+    public function getResponse($gt,$lt){
+       $params =  '{
                         "size": "0",
                         "query": 
                         {
                                 "bool": 
-                                {'. $channelQuery.
+                                {'. $this->mustQuery.
                                         '"filter": 
                                             {
                                                     "range": 
                                                     {
                                                             "@timestamp": 
                                                             {
-                                                                    "gte": "'.$greaterThan.'",
-                                                                    "lte": "'.$lessThan.'"
+                                                                    "gte": "'.$gt.'",
+                                                                    "lte": "'.$lt.'"
                                                             }
                                                     }
                                             }
@@ -66,23 +87,25 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                                         "date_histogram": 
                                         {
                                                 "field": "@timestamp",
-                                                "interval": "'.$interval.'s",
-                                                "extended_bounds" : {"min" : "'.$greaterThan.'","max" : "'.$lessThan.'"},
+                                                "interval": "'.$this->interval.'s",
+                                                "extended_bounds" : {"min" : "'.$gt.'","max" : "'.$lt.'"},
                                                 "min_doc_count" : 0    
                                         }
                                 }
                         }
                 }';
-            
-            $response = CommonUtility::sendCurlPostRequest($urlToHit,$params);
+        
+       // print_r($params);print_r($this->urlToHit);
+            $response = CommonUtility::sendCurlPostRequest($this->urlToHit,$params);
             $phpResponse = json_decode($response,true);
             foreach ($phpResponse['aggregations']['articles_over_time']['buckets'] as $key => $value) {
                 $newResponse['timestamp'][] = $value['key_as_string'];
                 $newResponse['count'][] = $value['doc_count'];
             }
             $newResponse['totalCount'] = $phpResponse['hits']['total'];
-            echo json_encode($newResponse);die;//die('pa');
-            return sfView::NONE;
+            return $newResponse;
+        
+        
     }
         
 }

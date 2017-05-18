@@ -245,7 +245,7 @@
                   <div id = 'time2-MainDiv' style='visibility: hidden;display: block;width: 100%;' >
                        <div class='tooltipNew'>
                             <span class="tooltiptext">Select start date for the Second Date Range</span>
-                      <div class=' input-group date col-sm-6 end-date' id="time-end">
+                      <div class=' input-group date col-sm-6 end-date' id="time-start2">
             <input id="time2-startVal" type='text' style="cursor: pointer;" class="form-control" placeholder="End Time" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
           </div>
@@ -433,7 +433,7 @@ $('#time-end').datetimepicker({
     minuteStep: 1,
     endDate: new Date()
 });
-            $('#time-start').datetimepicker({
+            $('#time-start2').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
     pickerPosition: "bottom-left",
@@ -482,21 +482,23 @@ function loadCurrentDateTime()
     
 }
 function drawCharts(data,type){
-            if(typeof data.count=='undefined')return false;
-            if(data.count.length<2)return false;
+            if(typeof data[0].count=='undefined')return false;
+            if(data[0].count.length<2)return false;
             var eleArr = $("#chart-"+type);
             eleArr.show();
             var newLineChartData = jQuery.extend(true, {}, lineChartData);
-            var newData = jQuery.extend(true, {}, data);
+            var newData = jQuery.extend(true, {}, data[0]);
             newLineChartData['labels'] = newData.timestamp;
             for(i=0;i<newLineChartData['labels'].length;i++){
                 newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(0,19);
             }
             newLineChartData['datasets'][0]['data'] = jQuery.extend(true, {}, newData.count);
-        $.each(newData.count, function( index, value ) {
-                    newData.count[index] = value +50000;
-        });
-            newLineChartData['datasets'][1]['data'] = jQuery.extend(true, {}, newData.count);
+            
+            if(data[1]){
+                var newData2 = jQuery.extend(true, {}, data[1]);
+                newLineChartData['datasets'][1]['data'] = jQuery.extend(true, {}, newData2.count);
+
+            }
            chartOb[type] = new Chart(eleArr[0].getContext("2d")).Line(newLineChartData, {
                 responsive: true,
                 tooltipFillColor: "rgba(51, 51, 51, 0.55)"
@@ -511,6 +513,8 @@ function sendAjaxForData(type){
     postParams.channel = currentChannel;
     postParams.startDate = $("#time-startVal").val();
     postParams.endDate = $("#time-EndVal").val();
+    if (doubleRange)
+        postParams.startDate2 = $("#time2-startVal").val();
     $.ajax({
         
         'url':'/api/v1/api/metricMonitoring',
