@@ -37,13 +37,16 @@ class JsForm extends sfForm
 	* @returns LoggedInProfile object if it is created otherwise return id of entry that was updated
 	* */
 	public function updateData($profileid='',$values_that_are_not_in_form=array()){
-	  $this->formValues=$this->getValues();	  
+	  $this->formValues=$this->getValues();
 	  if(in_array("casteNoBar", array_keys($this->formValues)))
 	  {
 	  	unset($this->formValues['casteNoBar']);	  	
 	  }
           $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
+                  if($field_name == "jamaat" && $value=='' && $this->formValues['religion']!='2'){
+                      $removeJPReligionTableEntry = 1;
+                  }
 		  if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->page_obj->getFieldByName($field_name);
@@ -99,9 +102,9 @@ class JsForm extends sfForm
 						$nameOfUserArr[$column_name]=trim($value);
 					  break;
 			  }
-			  
+                          
 			  //Handle religion related fields here as religion table names start with JP_
-			  if(strpos($table_name,"JP_")!==false && $value){
+			  if(strpos($table_name,"JP_")!==false && $value){  
 				  //for maththab there are certain changes in values do following
 				  if($column_name=='MATHTHAB'){
 
@@ -213,6 +216,11 @@ class JsForm extends sfForm
 		  include_once(sfConfig::get("sf_web_dir") . "/profile/functions_edit_profile.php");
 		  edit_nonHindu_religion($religionArr,"newjs.".$religion_table,$religion_log_table);
 	  }
+          if($removeJPReligionTableEntry){
+              $jpMuslimObj = new NEWJS_JP_MUSLIM();
+              $jpMuslimObj->delete($profileid);
+          }
+              
 	  if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$profileid;
 			$nativePlaceObj = ProfileNativePlace::getInstance();
