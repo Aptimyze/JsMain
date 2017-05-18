@@ -55,8 +55,18 @@ EOF;
 
 		public function skipProfiles($arranged,$key)
 	{
+            
+            $memcacheServiceObj = new ProfileMemcacheService($key);
+
+            if($memcacheServiceObj->isGroupUpdated(47))
+            {
+            $skipProfiles = $memcacheServiceObj->get("IGNORED");
+            }
+            else
+            {	
             $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
-        	$skipProfiles       = $skipProfileObj->listIgnoredProfile($key);
+        	$skipProfiles = $skipProfileObj->listIgnoredProfile($key);
+        	}
 
 			if(is_array($skipProfiles))
 				$temp=array_diff($arranged,$skipProfiles); 
