@@ -40,29 +40,29 @@ $mysqlPath=MysqlDbConstants::$mySqlPath;
 $mysqldumpPath=MysqlDbConstants::$mySqlDumpPath;
 
 
-$masterHostName = MysqlDbConstants::$masterDDL[HOST];
-$masterPort = MysqlDbConstants::$masterDDL[PORT];
-$masterUserName = MysqlDbConstants::$masterDDL[USER];
-$masterPassword = MysqlDbConstants::$masterDDL[PASS];
+$masterHostName = MysqlDbConstants::$master[HOST];
+$masterPort = MysqlDbConstants::$master[PORT];
+$masterUserName = MysqlDbConstants::$master[USER];
+$masterPassword = MysqlDbConstants::$master[PASS];
 
-$shard1HostName = MysqlDbConstants::$shard1SlaveDDL[HOST];
-$shard1Port = MysqlDbConstants::$shard1SlaveDDL[PORT];
+$shard1HostName = MysqlDbConstants::$shard1[HOST];
+$shard1Port = MysqlDbConstants::$shard1[PORT];
 
-$shard1UserName = MysqlDbConstants::$shard1SlaveDDL[USER];
-$shard1Password = MysqlDbConstants::$shard1SlaveDDL[PASS];
+$shard1UserName = MysqlDbConstants::$shard1[USER];
+$shard1Password = MysqlDbConstants::$shard1[PASS];
 
 
-$shard2HostName = MysqlDbConstants::$shard2SlaveDDL[HOST];
-$shard2Port = MysqlDbConstants::$shard2SlaveDDL[PORT];
+$shard2HostName = MysqlDbConstants::$shard2[HOST];
+$shard2Port = MysqlDbConstants::$shard2[PORT];
 
-$shard2UserName = MysqlDbConstants::$shard2SlaveDDL[USER];
-$shard2Password = MysqlDbConstants::$shard2SlaveDDL[PASS];
+$shard2UserName = MysqlDbConstants::$shard2[USER];
+$shard2Password = MysqlDbConstants::$shard2[PASS];
 
-$shard3HostName = MysqlDbConstants::$shard3SlaveDDL[HOST];
-$shard3Port = MysqlDbConstants::$shard3SlaveDDL[PORT];
+$shard3HostName = MysqlDbConstants::$shard3[HOST];
+$shard3Port = MysqlDbConstants::$shard3[PORT];
 
-$shard3UserName = MysqlDbConstants::$shard3SlaveDDL[USER];
-$shard3Password = MysqlDbConstants::$shard3SlaveDDL[PASS];
+$shard3UserName = MysqlDbConstants::$shard3[USER];
+$shard3Password = MysqlDbConstants::$shard3[PASS];
 
 
 $genderArr[0]='MALE';

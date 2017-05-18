@@ -651,10 +651,10 @@ class Membership
         $billingVouchViewedObj->updateVoucherOption($this->profileid);
     }
     
-    function log_payment_status($orderid, $status, $gateway, $msg) {
+    function log_payment_status($orderid, $status, $gateway, $msg, $profileid="") {
         $msg = addslashes(stripslashes($msg));
         $billingPayStatLog = new billing_PAYMENT_STATUS_LOG();
-        $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
+        $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg,$profileid);
     }
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
@@ -2511,7 +2511,8 @@ class Membership
     }
     
     public function setRedisForFreeToPaid($userObjTemp){
-        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE){
+        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
+        {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
         }
     }

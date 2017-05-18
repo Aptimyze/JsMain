@@ -78,10 +78,22 @@ class inboxActions extends sfActions
 		$output = $inputValidateObj->getResponse();
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
+			$ifApiCached = InboxUtility::cachedInboxApi('get',$request);
+                        if($ifApiCached)
+                        {
+                                $response  = $ifApiCached;
+                                unset($ifApiCached);
+                                $date = date("Y-m-d");
+                                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/ifApiCached".$date.".txt","\n",FILE_APPEND);
+                        }
+                        else
+			{
+
+
 			$module= "ContactCenterAPP";
 			$infoTypeId = $request->getParameter("infoTypeId");
 			$pageNo = $request->getParameter("pageNo");
-			if($request->getParameter("myjs") == 1)
+			if($request->getParameter("myjs") == 1 && !$request->getParameter("androidMyjsNew"))
 				$module = "ContactCenterMYJS";
 			$profileList = $request->getParameter("profilelist");
 			
@@ -316,6 +328,12 @@ class inboxActions extends sfActions
 					break;
 
 			}
+		}
+		
+
+			/** caching **/
+                        $ifApiCached = InboxUtility::cachedInboxApi('set',$request,'',$response);
+                        /** caching **/		
 			$respObj = ApiResponseHandler::getInstance();
 			$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$respObj->setResponseBody($response);

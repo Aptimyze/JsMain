@@ -41,7 +41,9 @@ private static $featuredProfileCount= 1;
         */
         public static function getSearchTypeMatchalerts()
         {        
-                 return SearchTypesEnums::AppMatchAlertsCC;
+                 if(sfContext::getInstance()->getRequest()->getParameter('myjs')==1)
+        	        return SearchTypesEnums::AppMyJsMatchAlertSection;
+	         return SearchTypesEnums::AppMatchAlertsCC;
         }
 	/**
         * getSearchTypeContactViewAttempt.

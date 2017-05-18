@@ -25,7 +25,7 @@
 	<div width="100%" style="background-color:lightblue;text-align:left;padding:20px;font-size:12px;font-weight:bold;">
         ~if $CRMTECorDA`        
         <div>
-                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/startVdOffer?name=~$name`&cid=~$cid`">Start Variable Discount Offer</a>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/startVdOffer?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer</a>
                 </div>
 		<br>
                 <div>

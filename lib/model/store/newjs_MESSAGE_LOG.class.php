@@ -609,7 +609,7 @@ public function updateMessageLogDetails($msgCommObj)
 				}
 				else
 				{
-					$sql = "SELECT SENDER, DATE, MESSAGE FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE = 'R' ORDER BY DATE";
+					$sql = "SELECT SENDER, DATE, MESSAGE FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE IN ('R','I') ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
@@ -774,12 +774,13 @@ public function updateMessageLogDetails($msgCommObj)
 						$sql.= $sender;
 					if($sender1)
 						$sql.=$sender1;
-					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ";
+
+					$sql.=" AND  `TYPE` in ('R','I') AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ";
 					if($receiver)
 						$sql.=$receiver;
 					if($receiver1)
 						$sql.=$receiver1;
-					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
+					$sql.=" AND  `TYPE` in ('R','I') AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
@@ -1729,7 +1730,7 @@ return $result;
 						$paginationStr=" AND MESSAGE_LOG.ID<:MSG_ID ";
 					else
 						$paginationStr="";
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE,MESSAGE_LOG.ID FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE = 'R' ".$paginationStr." ORDER BY DATE Desc ".$limitStr;
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE,MESSAGE_LOG.ID FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE IN ('R','I') ".$paginationStr." ORDER BY DATE Desc ".$limitStr;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

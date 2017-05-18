@@ -11,7 +11,7 @@
 			</tr>
 			<tr class="formhead" align="center" width="100%">
 				<td colspan="3" style="background-color:lightblue" height="30">
-					<font size=3>Start Variable Discount Offer</font>
+					<font size=3>Schedule Variable Discount Offer</font>
 				</td>
 			</tr>
 			<tr>
@@ -26,27 +26,45 @@
 		<div width="100%" style="background-color:lightblue;text-align:center;padding:20px;font-size:12px;">
                         <div><b>
 				~if $vdActive`
-					Currently VD Offer is active till ~$vdExpiryDate`
+					Currently VD Offer is active till ~$vdExpiryDate`<br>
 				~else if $vdError`
 					<font color="red">Please select correct dates.</font>
 				~else if $vdSuccess`
-	                                VD Offer Process started successfully.
-					VD Start Date: ~$startDate` , VD End Date: ~$endDate`  
+	                                VD Offer scheduled successfully.<br>
 				~/if`
-                        </b></div>
+				~if $vdScheduled`	
+					New VD Offer is already scheduled. 
+				~/if`
+			</div>
+		</div>
+		<div width="100%" style="background-color:lightblue;text-align:left;padding:20px;font-size:12px;">
+				~if $vdSuccess || $vdScheduled`
+					VD Start Date:&nbsp;&nbsp; ~$startDate`<br> 
+					VD End Date:&nbsp;&nbsp; ~$endDate`<br> 
+					Schedule Date:&nbsp;&nbsp; ~$vdExecuteDate`  
+				~/if`
+                 </div>
 			<br>
-			<div>
-				Select New VD Offer Start Date: 
+			<div align="left" width="100%">
+				Select New VD Offer Start Date:
                                 <select name="vdStartDate" >
                                         ~foreach from=$vdDateDropdown key=k item=v`
                                                 <option value="~$k`">~$v`</option>
                                         ~/foreach`
                                 </select>
 			</div>
-                        <div>
+                        <div align="left">
                                 Select New VD Offer End Date:                             
                                 <select name="vdEndDate" >
                                         ~foreach from=$vdDateDropdown key=k item=v`
+                                                <option value="~$k`">~$v`</option>
+                                        ~/foreach`
+                                </select>
+                        </div>
+                        <div align="left">
+                                Select VD Execution Time:                             
+                                <select name="vdExecuteDate" >
+                                        ~foreach from=$scheduleDateDropdown key=k item=v`
                                                 <option value="~$k`">~$v`</option>
                                         ~/foreach`
                                 </select>
@@ -55,9 +73,9 @@
 		<br>
 		<div style="margin:0 auto;text-align:center;">
 			~if $disableStart`
-				<input style="font-size:16px;" type="submit" name="submit" value="Start" disabled>	
+				<input style="font-size:16px;" type="submit" name="submit" value="Schedule" disabled>	
 			~else`
-				<input style="font-size:16px;" type="submit" name="submit" value="Start">
+				<input style="font-size:16px;" type="submit" name="submit" value="Schedule">
 			~/if`
 			<input type="hidden" name="name" value="~$name`">
 			<input type="hidden" name="cid" value="~$cid`">

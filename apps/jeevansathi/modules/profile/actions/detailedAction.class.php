@@ -1338,7 +1338,9 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);die;
+        
+        //This part was added to allow idfy to go Online percentage wise
+        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);        
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }

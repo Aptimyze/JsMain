@@ -2372,7 +2372,127 @@ line-height:25px;
     padding: 14px 27px;
     width: 100%;}
 
+
 ul.time{list-style-type:none;}
 ul.time li{display:inline-block;font-size:25px}
 ul.time li span:nth-child(2){font-size:20px}
 .inscol:after{ content:":"; padding-left:5px}
+
+/*adding css for idfy*/
+
+
+.idfyIcon {
+    background: url(IMG_URL/images/jspc/commonimg/idfy.png);
+    width: 35px;
+    background-position: 0px 5px;
+    height: 23px;
+    background-repeat: no-repeat;
+    margin-left: 6px;
+}
+.idfyIconBig {
+    background: url(IMG_URL/images/jspc/commonimg/idfy_big.png);
+    width: 56px;
+    background-position: 0px 5px;
+    height: 41px;
+    background-repeat: no-repeat;
+    margin-left: 10px;
+}
+
+
+.idfyDiv {
+    border: 1px solid #d4d4d4;
+    border-radius: 20px;
+    line-height: 20px!important;
+    margin-top: 10px;
+    margin-left: -12px;
+    cursor: pointer;
+}
+.wid213 {
+    width: 213px
+}
+.overlayDiv {
+    left: 50% ;
+    top: 50% ;
+    transform: translate(-50% ,-50% );
+    width: 900px;
+
+    position: relative;
+
+}
+.overlayMid {
+    background: #e4e4e4;width: 900px
+}
+.closeSprite {
+    margin: 10px;width: 35px;
+    height: 30px;
+    background-position:-69px -176px;
+}
+.vBot {
+    vertical-align: bottom
+} 
+.padnew20 {
+    padding: 20px 20px 0px 20px
+}
+.lh21 {
+    line-height: 21px
+}
+.vTop {
+    vertical-align: top
+}
+.pl28 {
+    padding-left: 28px
+}
+.txtList{border-collapse: collapse;}
+.txtList li {
+    padding-left: 11px;
+    padding-top: 4px;
+
+}
+.txtList ul {
+    padding-left: 15px;
+
+}
+.txtList td:first-child {
+    vertical-align: top;
+    width: 30px;
+}
+.txtList tr{line-height: 15px;}
+.txtList tr:nth-child(even) td:nth-child(even){margin-bottom: 15px;display: block;}
+
+.lh50 {
+    line-height: 50px
+}
+.pad20 {
+    padding: 20px
+}
+.pad1530{padding: 15px 30px}
+.ml30 {
+    margin-left: 30px
+}
+.wid223 {
+    width: 223px
+}
+.ml3 {
+    margin-left: 3px
+}
+
+.idfyText {
+    padding-right: 6px;
+    border-right: 1px solid #d4d4d4;
+    vertical-align: text-bottom;
+}
+
+.idfyDiv2 {
+    border: 1px solid #d4d4d4;
+    border-radius: 12px;
+    line-height: 20px !important;
+    margin-left: -4px;
+    cursor: pointer;
+}
+.closeBtnNew{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+.vertSup{    vertical-align: super;}
+
