@@ -312,7 +312,7 @@ class NEWJS_SEARCH_MALE extends TABLE
    {
     try
     {
-        $sql = "UPDATE ".$tableName." SET PAID_ON =:PAID_ON WHERE PROFILEID=:PROFILEID";        
+        $sql = "UPDATE ".$tableName." SET PAID_ON =:PAID_ON WHERE PROFILEID=:PROFILEID";
         $res = $this->db->prepare($sql);       
         $res->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
         $res->bindValue(":PAID_ON", $paidOn, PDO::PARAM_STR);
