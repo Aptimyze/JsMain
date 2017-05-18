@@ -42,7 +42,7 @@ class csvGenerationHandler
 							$salesCsvData->removeProfiles($csvEntryDate);
 			}
 			// truncate regular sales temp table
-			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP('newjs_masterDDL');
+			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP('newjs_master');
 			$saleCsvTempObj->truncate();	
 		}
 		elseif($processName=="SALES_REGISTRATION")
@@ -52,7 +52,7 @@ class csvGenerationHandler
 						$salesRegCsvData->removeProfiles($csvEntryDate);
 	
 			// truncate registration sales temp table
-			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP('newjs_masterDDL');
+			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP('newjs_master');
 			$saleCsvTempObj->truncate();
 		}
 		elseif($processName=="SUGARCRM_LTF")

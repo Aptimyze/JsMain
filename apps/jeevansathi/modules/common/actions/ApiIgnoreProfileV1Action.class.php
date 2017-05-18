@@ -32,6 +32,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray($this->m_iResponseStatus);
 		$apiResponseHandlerObj->setResponseBody($this->m_arrOut);	
+		$apiResponseHandlerObj->setUserActionState(2);
 		$apiResponseHandlerObj->generateResponse();
 		
 		if($request->getParameter('INTERNAL')==1){
@@ -115,7 +116,6 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
 					//changed to library call
 					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID);
-
 					if(!$isIgnored) {
 						$this->contactObj = new Contacts($this->loginProfile, $this->ignoreProfile);
 						if ($this->contactObj->getTYPE() == ContactHandler::ACCEPT) {
@@ -232,6 +232,10 @@ class ApiIgnoreProfileV1Action extends sfActions
 					return false;
 				}
 			}
+			// del myjs cache
+			SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$profileID);
+    		InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$profileID);
+					
 		}
 		else
 		{
