@@ -382,7 +382,7 @@
         <!--end:form 5--> 
         <div class="avdgr1 advwid5 txtc" id="srchscroll">
 						<div style="position: relative; overflow: hidden; left: 50%; transform: translate(-50%, 0px); width: 181px; height: 44px;" class="mt15">
-							<button id="Submit" class="cursp bg_pink pinkRipple hoverPink colrw f20 fontreg brdr-0 lh44 advp9 ">Search</button>
+							<button id="Submit" class="cursp bg_pink pinkRipple hoverPink colrw f20 fontreg brdr-0 lh44 advp9">Search</button>
 						</div>
 							
 				</div>

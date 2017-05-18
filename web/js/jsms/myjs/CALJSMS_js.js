@@ -292,9 +292,10 @@ else {
 							}
                         });
                         var url = JSON.stringify(sendObj).split('"').join("%22");
-						 $.ajax({
+						 $.myObj.ajax({
 							url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,
 							type: 'POST',
+                            channel : 'mobile',
 							success: function(response) {
 								criticalLayerButtonsAction('','B1');
 							},

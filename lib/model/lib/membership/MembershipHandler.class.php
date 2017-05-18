@@ -284,6 +284,11 @@ class MembershipHandler
     {
         $profileid = $userObj->getProfileid();
         $userType  = $userObj->getUserType();
+	if($userType==8)
+		$this->memUpgrade=true;
+	else
+		$this->memUpgrade=false;
+	
         if ($source == 1) {
             $serviceSelected           = $userObj->getMemStatus();
             $navigationSuggestedString = $serviceSelected;
@@ -295,7 +300,7 @@ class MembershipHandler
         $serviceSelectedArr = array_filter($serviceSelectedArr);
         $serviceSelected    = implode(',', $serviceSelectedArr);
 
-        if ($trackType == 'F' || $source == 100) {
+        if(($trackType == 'F' || $source == 100) && $this->memUpgrade==false) {
             $trackFailedPaymentObj    = new billing_TRACKING_FAILED_PAYMENT();
             $trackFailedPaymentLogObj = new billing_TRACKING_FAILED_PAYMENT_LOG();
             if ($paymentTab) {

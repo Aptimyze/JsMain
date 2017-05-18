@@ -55,7 +55,7 @@ $this->addOptions(array(
                         break;
                   $numberOfLoopsExecuted++;
           }
-	$maxAlarTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
+	$maxAlarTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_master');
 	$maxAlarTimeObj->updateMaxAlarmTime($this->alarmCurrentTime);
   }
 }

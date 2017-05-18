@@ -183,35 +183,10 @@ $className = get_class($this);
 				else
 					$displayV1[strtolower($key)]=NULL;
 			}
+			$profileArray=$this->getProfileInfo($profileInfo);
 		
-		if(is_array($profileInfo))
-		{
-			foreach($profileInfo as $key=>$value)
-			{
-				if($key == "INCOMPLETE")
-				{
-					if(is_array($value))
-					{
-						foreach($value as $k=>$v)
-						{
-							$displayV1[strtolower("MY_PROFILE")][strtolower($key)][strtolower($k)]=$v?$v:NULL;
-						}
-					}
-					else
-						$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =NULL;
-				}
-				else
-				$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =$value?(is_array($value)?$value:strval($value)):NULL; 		
-			
-
-
-			}
-
-			
-
-			}
-		 
-
+		if($profileArray[strtolower("MY_PROFILE")])
+			$displayV1[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
@@ -272,6 +247,32 @@ $className = get_class($this);
     }
 
     return $MESSAGE;
+  }
+  public function getProfileInfo($profileInfo)
+  {
+
+  	if(is_array($profileInfo))
+		{
+			foreach($profileInfo as $key=>$value)
+			{
+				if($key == "INCOMPLETE")
+				{
+					if(is_array($value))
+					{
+						foreach($value as $k=>$v)
+						{
+							$displayV1[strtolower("MY_PROFILE")][strtolower($key)][strtolower($k)]=$v?$v:NULL;
+						}
+					}
+					else
+						$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =NULL;
+				}
+				else
+				$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =$value?(is_array($value)?$value:strval($value)):NULL; 		
+			
+			}
+		}
+		return $displayV1;
   }
 
   public function getPhotoTypeFromId($key){

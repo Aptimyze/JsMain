@@ -221,6 +221,8 @@ class Accept extends ContactEvent
       }
       $profileMemcacheServiceViewerObj->updateMemcache();
       $profileMemcacheServiceViewedObj->updateMemcache();
+       InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewer()->getPROFILEID(),"",1);
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewed()->getPROFILEID(),"",1);
     }
     catch (Exception $e) {
       throw new jsException($e);

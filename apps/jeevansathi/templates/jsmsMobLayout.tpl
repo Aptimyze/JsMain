@@ -3,6 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
@@ -15,7 +16,7 @@
 	~include_metas`
         ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
         ~if $ampurl|strstr:"amp"`
-            <link rel="amphtml" href="~$ampurl`">
+            <link rel="amphtml" href="~$ampurl`"/>
         ~/if`
 	~include_canurl`
         ~include_partial('global/jsmsCommonHeader')`
