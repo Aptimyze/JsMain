@@ -58,7 +58,7 @@ EOF;
             
             $memcacheServiceObj = new ProfileMemcacheService($key);
 
-            if($memcacheServiceObj->isGroupUpdated(47))
+            if($key && $memcacheServiceObj->isGroupUpdated(47))
             {
             $skipProfiles = $memcacheServiceObj->get("IGNORED");
             }
