@@ -47,7 +47,7 @@
 </body>
 
 <script>
-var selfUrl = 'http://t.j.com/jaagterahoo/duniyaWalo';
+var selfUrl = '/jaagterahoo/duniyaWalo';
 var serverHealthConfig = ~$serverHealthConfig|decodevar`;
 var marGayeServers = ~$marGayeServers|decodevar`;
 var mysqlStatus = ~$mysqlStatus|decodevar`;
