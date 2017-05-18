@@ -537,7 +537,7 @@ left: 60px;
         ul#monthsub li{width:82px}
         ul#yearsub li{width:78px}
         ul#datesub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
-        .reg-pos5 {left:205px;top:478px}
+        .reg-pos5 {top:39px}
         .reg-pos10 {right:0;top:47px}
         .reg-zi1 {z-index:1}
         .reg-wid12{width:400px;}

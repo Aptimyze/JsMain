@@ -942,7 +942,28 @@ EditApp = function(){
       optionString =  prepareDateBoxOptionDropDown(fieldObject,3);
       
       var boxContentDOM = $("<div />",{class:"js-boxContent"});      
-      boxContentDOM.append(optionString)
+      boxContentDOM.append(optionString);
+      
+      
+      var parentAttr2    = {class:"js-date sub-mainlist pos_abs reg-pos5 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'datesub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      boxContentDOM.append(parentDOM2);
+      var parentAttr2    = {class:"js-month sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'monthsub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      boxContentDOM.append(parentDOM2);
+      var parentAttr2    = {class:"js-year sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+      var parentDOM2  = $("<div />",parentAttr2);
+      var dateAttr    = {id:'yearsub'};
+      var dateDOM  = $("<ul />",dateAttr);
+      parentDOM2.append(dateDOM);
+      boxContentDOM.append(parentDOM2);
+      
       fieldDivDom.append(boxContentDOM);
       
       //Add Some Sides UI Element
@@ -951,25 +972,6 @@ EditApp = function(){
       }
       parentDiv.append(fieldDivDom);
       domElement.append(parentDiv);
-      
-      var parentAttr2    = {class:"js-date sub-mainlist pos_abs reg-pos5 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'datesub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      domElement.append(parentDOM2);
-      var parentAttr2    = {class:"js-month sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'monthsub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      domElement.append(parentDOM2);
-      var parentAttr2    = {class:"js-year sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'yearsub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      domElement.append(parentDOM2);
 
       //Bind Box Common Events 
       bindDateBoxCommonEvents(fieldObject,3);
@@ -2777,7 +2779,6 @@ EditApp = function(){
       dataArr[1] = {"M":"MONTH"};
       dataArr[2] = {"Y":"YEAR"};
       var data = [dataArr];
-      console.log(data);
       try{
         var i=0;
         //Loop the data section 
@@ -2807,7 +2808,6 @@ EditApp = function(){
                 styleAttr = " style=\"width:"+(maxWidthPerEle)+"px\"";
               }
               var spanId = label.toLowerCase();
-              console.log(maxAllowed+"---------"+i);
               if(i < maxAllowed){
                 optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
                 cssClassOnLI = ""
@@ -5191,17 +5191,67 @@ EditApp = function(){
         whiteListingKeys(event,"forAbout")
       });
       $('#datesub').on('mousedown',function(event){
-              alert("test");
+              clickCallBack("date",event);
               hideShowList(event);
-       // onHighestEducationChange($(this).val(),$(this).attr("id"));
+      });
+      $('#monthsub').on('mousedown',function(event){
+              clickCallBack("month",event);
+              hideShowList(event);
+      });
+      $('#yearsub').on('mousedown',function(event){
+              clickCallBack("year",event);
+              hideShowList(event);
       });
     }
+    function clickCallBack (selectField,eve) {
+        eve.stopPropagation();
+        var target = $(eve.target);
+        //check if the target of click in whole of the sublist is a li
+        if (target.is("li")) {
+          $("#" + selectField + "_value").html(target.html());
+          //for month values are replaced by month numbers
+          if (selectField == "month")
+            $("#" + selectField + "_value").val(eve.target.id.substr(7, eve.target.id.length));
+          else
+            $("#" + selectField + "_value").val(target.html());
+          $("#" + selectField + "sub").find(".activeopt").removeClass("activeopt");
+          target.addClass("activeopt");
+          $(this).parent().hide();
+          hideShowList(eve);
+          
+          //if date is clicked open month by default
+          if (selectField == "date") {
+            setTimeout(function () {
+              $("#monthsub").parent().attr("style","display:block");
+            }, 0);
+            $("#monthArrow1").show();
+            $("#monthArrow2").hide();
+            $("#dateArrow2").show();
+            clicked = eve.target;
+          }
+          //open year sublist on month list click
+          if (selectField == "month") {
+            setTimeout(function () {
+              $("#yearsub").parent().attr("style","display:block");
+            }, 0);
+            $("#yearArrow1").show();
+            $("#yearArrow2").hide();
+            $("#monthArrow2").show();
+            clicked = eve.target;
+          }
+          if (selectField == "year") {
+            $("#yearArrow2").show();
+            clicked = "";
+          }
+          //$("#dob_value").parent().focus();
+        }
+    }
     hideShowList = function(con) {
-      $("#datesub").parent().hide();
+      $("#datesub").parent().attr("style","display:none");
       $("#dateArrow1").hide();
-      $("#monthsub").parent().hide();
+      $("#monthsub").parent().attr("style","display:none");
       $("#monthArrow1").hide();
-      $("#yearsub").parent().hide();
+      $("#yearsub").parent().attr("style","display:none");
       $("#yearArrow1").hide();
       if (con == "blur") {
         $("#dateArrow2").show();
