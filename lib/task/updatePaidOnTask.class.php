@@ -34,16 +34,14 @@ $this->addOptions(array(
 	$incrementValue = 2000;
 
 	$memObject=JsMemcache::getInstance();
-	if($tableName == "SearchMale")
-	{
 		$storeObj = new NEWJS_SEARCH_MALE("newjs_slave");
 		$storeUpdateObj = new NEWJS_SEARCH_MALE("newjs_masterRep");
+	if($tableName == "SearchMale")
+	{
 		$tbName = "newjs.SEARCH_MALE";
 	}
 	elseif($tableName == "SearchFemale")
 	{	
-		$storeObj = new NEWJS_SEARCH_FEMALE("newjs_slave");
-		$storeUpdateObj = new NEWJS_SEARCH_FEMALE("newjs_masterRep");
 		$tbName = "newjs.SEARCH_FEMALE";
 	}
 	for($i=0;$i<$maxCount;$i+= $incrementValue)
