@@ -24,7 +24,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
 
             $timeDiff = $endDate -  $startDate;
             
-            $startDate2 = strtotime($request->getParameter('startDate2'));
+            $startDate2 = strtotime($request->getParameter('startDate2'))-$this->timeChange;
             if($startDate2){
                 $endDate2 = $startDate2 + $timeDiff;
 
