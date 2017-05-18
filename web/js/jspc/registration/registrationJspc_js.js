@@ -1551,10 +1551,12 @@ var padding = 31;
             $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
             inputData["jamaat"] = "";
             inputData["castemuslim"] = "";
-            if(typeof ele1.muslimDependentObj.selected !="undefined")
+            if(typeof ele1.muslimDependentObj!="undefined" && typeof ele1.muslimDependentObj.selected !="undefined")
                 ele1.muslimDependentObj.selected='';
-            if(typeof regField["caste"].sunniDependentObj.selected != "undefined")
+            if(typeof regField["caste"] !="undefined" && typeof regField["caste"].sunniDependentObj !="undefined" && typeof regField["caste"].sunniDependentObj.selected != "undefined"){
                 regField["caste"].sunniDependentObj.selected='';
+                regField["caste"].sunniDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+            }
             
             if (ele1.selected == "Hindu" || ele1.selected == "Jain" || ele1.selected == "Sikh" || ele1.selected == "Buddhist") {
               if (ele1.selected == "Hindu") {

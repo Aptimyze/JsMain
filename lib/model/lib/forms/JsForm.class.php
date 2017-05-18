@@ -44,8 +44,12 @@ class JsForm extends sfForm
 	  }
           $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
-                  if($field_name == "jamaat" && $value=='' && $this->formValues['religion']!='2'){
-                      $removeJPReligionTableEntry = 1;
+                  if($field_name == "jamaat" && $value==''){
+                      if($this->formValues['religion']!='2')
+                        $removeJPReligionTableEntry = 1;
+                      elseif($this->formValues['caste']!='152')
+                        $removeJamaat = 1;
+                        
                   }
 		  if($value!==null){
 		  $field_name=strtoupper($field_name);
@@ -219,6 +223,10 @@ class JsForm extends sfForm
           if($removeJPReligionTableEntry){
               $jpMuslimObj = new NEWJS_JP_MUSLIM();
               $jpMuslimObj->delete($profileid);
+          }
+          if($removeJamaat){
+              $jpMuslimObj = new NEWJS_JP_MUSLIM();
+              $jpMuslimObj->update($profileid,array("JAMAAT"=>''));
           }
               
 	  if(count($nativePlaceArr)){
