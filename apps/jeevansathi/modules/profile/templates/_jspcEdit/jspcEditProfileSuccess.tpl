@@ -159,16 +159,8 @@
                           <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`), <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
                         </li>
                         <li>
-                          <p class="color12 pt15 fontlig">Highest Education</p>
-                          <p class="pt2 fontlig" id='educationView'>~$arrOutDisplay.about.education`</p>
-                        </li>
-                        <li>
                           <p class="color12 pt15 fontlig">Religion</p>
                           <p class="pt2 fontlig" id='religionView'>~$arrOutDisplay.about.religion`</p>
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Occupation</p>
-                          <p class="pt2 fontlig" id='occupationView'>~$arrOutDisplay.about.occupation`</p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Mother Tongue</p>
