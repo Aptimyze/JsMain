@@ -73,7 +73,7 @@
               <tr>
                       <td><br /><font color="#000000">
                       <b>If this wasn’t you:</b><br>
-                      Your account may have been compromised and you should take a few steps to make sure your account is secure. To start, <a href="resetpasswordLink">reset your password now.</a>
+                      Your account may have been compromised and you should take a few steps to make sure your account is secure. To start, <a href="~$resetPasswordUrl`">reset your password now.</a>
                       </font></td>
               </tr>
             

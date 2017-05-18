@@ -998,7 +998,9 @@ class CommonFunction
 			// TODO : change subject
 			$subject = "new Login related subject here";
 			$tpl->setSubject($subject);
-
+			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
+			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
+			$tpl->getSmarty()->assign("resetPasswordUrl",$forgotPasswordUrl);
 			$tpl->getSmarty()->assign("channel", $channel);
 			$tpl->getSmarty()->assign("deviceName", $deviceName);
 			$tpl->getSmarty()->assign("city", $city);
