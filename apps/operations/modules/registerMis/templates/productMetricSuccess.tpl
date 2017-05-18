@@ -276,7 +276,7 @@
                     <div class="row">
 
 
-                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Registrations</h2>
@@ -309,7 +309,7 @@
                     <div class="clearfix"></div>
                     <div class="row">
                         
-                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Interests</h2>
@@ -325,7 +325,7 @@
                             </div>
                         </div>
 
-                        <div style="display:none" class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Acceptances</h2>
@@ -444,17 +444,17 @@ $('#time-end').datetimepicker({
 
             loadCurrentDateTime();
             
-            //sendAjaxForData('ACC');
-            //sendAjaxForData('REG');
-            //sendAjaxForData('EOI');
+            sendAjaxForData('ACC');
+            sendAjaxForData('REG');
+            sendAjaxForData('EOI');
             sendAjaxForData('LOG');
     });
 
 function loadData(channel){
     currentChannel = channel;
-    //sendAjaxForData('ACC');
-    //sendAjaxForData('REG');
-    //sendAjaxForData('EOI');
+    sendAjaxForData('ACC');
+    sendAjaxForData('REG');
+    sendAjaxForData('EOI');
     sendAjaxForData('LOG');
 
 }
@@ -527,8 +527,11 @@ function sendAjaxForData(type){
             dummyHtml = $(dummyHtml).attr('id','chart-'+type);
             $("#chart-"+type + "Parent").append(dummyHtml);
             if(response!=null){
-            $("#"+type+"Count").text(response.totalCount);
-            drawCharts(response,type);
+                if(doubleRange)
+                    $("#"+type+"Count").text(response[0].totalCount+','+response[1].totalCount);
+                else
+                    $("#"+type+"Count").text(response[0].totalCount);
+                drawCharts(response,type);
             }
         }
         
