@@ -14,7 +14,7 @@ var hamburgerObj={};
 var overlayObj={};
 var NOT_FILLED_IN="Not filled in";
 var outerMessageContact= {'':'Show to all','Y':'Show to all','N':'Hidden','C':'Show on interest'};
-
+var selectedListValue;
 
 	function overlaySet(){
             
@@ -518,6 +518,7 @@ function UpdateOverlayTags(string,json,indexPos)
             		if ( OnClickArray[key].key == showSettingText)
             		{
             			string=string.replace(/\{\{contactPrivacySettingText\}\}/g,outerMessageContact[OnClickArray[key].value]);
+            			selectedListValue = OnClickArray[key].value;
             		}
             	}
             }
@@ -1303,7 +1304,6 @@ function onHoroscopeButtonClick()
 function setContactOverlayClick()
 {
 	var clickedId;
-	var selectedListValue;
 
 	$(".contact_icon").each(function(index, element) {
         $(this).on("click", function(){

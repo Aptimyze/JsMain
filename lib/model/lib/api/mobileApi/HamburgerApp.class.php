@@ -5,6 +5,7 @@ class HamburgerApp
         {
 		$moduleName = $forwardingArray['moduleName'];
 		$actionName = $forwardingArray['actionName'];
+		$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
                         $isNewMobileSite = MobileCommon::isNewMobileSite();
@@ -84,6 +85,8 @@ class HamburgerApp
 			}
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
+				$hamburgerDetails['ACC_ME'] = $profileMemcacheObj->get('ACC_ME');
+				$hamburgerDetails['ACC_BY_ME'] = $profileMemcacheObj->get('ACC_BY_ME');
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
@@ -97,6 +100,32 @@ class HamburgerApp
 					else
 						$hamburgerDetails['SAVE_SEARCH'] = 0;
 				}
+			if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew")){
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+	         		$hamburgerDetails['PHOTO_REQUEST_NEW']=0;
+		     	else
+		     		$hamburgerDetails['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
+
+		     	$declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
+				 if($declinedMeNewMemcacheCount)
+					$hamburgerDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+				else
+					$hamburgerDetails['DEC_ME_NEW'] = 0;
+				
+				$declinedMeCount=$profileMemcacheObj->get('DEC_ME');
+				 if($declinedMeCount)
+					$hamburgerDetails['DEC_ME']=JsCommon::convert99($declinedMeCount);
+				else
+					$hamburgerDetails['DEC_ME'] = 0;
+				
+				$declinedByMeCount=$profileMemcacheObj->get('DEC_BY_ME');
+				 if($declinedByMeCount)
+					$hamburgerDetails['DEC_BY_ME']=JsCommon::convert99($declinedByMeCount);
+				else
+					$hamburgerDetails['DEC_BY_ME'] = 0;
+				
+			$hamburgerDetails['TOTAL_NEW']=JsCommon::convert99($hamburgerDetails['AWAITING_RESPONSE_NEW'] + $hamburgerDetails['ACC_ME_NEW'] + $$hamburgerDetails['MESSAGE_NEW'] + $hamburgerDetails['PHOTO_REQUEST_NEW'] + $hamburgerDetails['JUST_JOINED_NEW'] + $hamburgerDetails["FILTERED_NEW"] + $hamburgerDetails['DEC_ME_NEW']);
+		     }
 				
 			return $hamburgerDetails;
 		}

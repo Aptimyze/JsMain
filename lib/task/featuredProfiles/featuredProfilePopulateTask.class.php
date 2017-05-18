@@ -35,7 +35,7 @@ EOF;
     
         //creating featured profile store object
         $featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
-        $featuredProfileDDLObj = new FEATURED_PROFILE_MAILER("newjs_masterDDL");
+        $featuredProfileDDLObj = new FEATURED_PROFILE_MAILER("newjs_master");
 
         //Truncate table Data       
         $featuredProfileDDLObj->truncateFeaturedProfileData();

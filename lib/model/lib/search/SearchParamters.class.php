@@ -1034,6 +1034,21 @@ class SearchParamters
 		}
 		$this->LLAST_LOGIN_DT = $x;
 	}
+        public function getLPAID_ON(){return $this->LPAID_ON;}
+        
+        public function setLPAID_ON($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->LPAID_ON = $x;
+	}
         public function getLLAST_LOGIN_DT(){return $this->LLAST_LOGIN_DT;}
         public function setHLAST_LOGIN_DT($x)
 	{
@@ -1047,6 +1062,21 @@ class SearchParamters
 				$x = str_replace(" ","T",$x)."Z";
 		}
 		$this->HLAST_LOGIN_DT = $x;
+	}
+        
+        public function getHPAID_ON(){return $this->HPAID_ON;}
+        public function setHPAID_ON($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->HPAID_ON = $x;
 	}
         public function getHLAST_LOGIN_DT(){return $this->HLAST_LOGIN_DT;}
 
@@ -1177,8 +1207,10 @@ class SearchParamters
                 foreach ($city_arr as $k=>$cityVal){
                     if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
                         $state_from_city =  $this->cityStateConversion($cityVal);
-                            $state_arr = array_merge($state_arr,$state_from_city);
-                        $state_arr = array_unique($state_arr);
+                        if(is_array($state_arr)){
+                                $state_arr = array_merge($state_arr,$state_from_city);
+                                $state_arr = array_unique($state_arr);
+                        }
                     }
                 }
 

@@ -1040,7 +1040,9 @@ class MembershipAPIResponseHandler {
                         if ($vv['vas_key'] == $vasID[0]) {
                             foreach ($vv['vas_options'] as $x => $z) {
                                 if ($z['id'] == $val) {
-                                    if ($this->mainMem == "NCP" || $this->mainMem == "ESP") {
+                                    //JSC-2435, additional check for Astro so that when NCP and astro are given
+                                    // through backend link, price is not set to zero.
+                                    if (($this->mainMem == "NCP" && ($vasID[0] != 'A')) || $this->mainMem == "ESP") {
                                         $v['vas_id'] = $z['id'];
                                         $v['price'] = 0;
                                         $v['orig_price'] = 0;
@@ -2208,7 +2210,7 @@ class MembershipAPIResponseHandler {
 							$appleId = $val->transaction_id;
 							if ($billingAppleOrdersObj->checkIfAppleIdExists($appleId) == 0 && $appleId == $txnid) {
 								$billingAppleOrdersObj->insertOrderDetails($this->profileid,$part2,$part1,$appleId,date("Y-m-d H:i:s"),$receipt);
-								$logStatus = 0;
+								$logStatus = 10;        //Means pure success
 							} else if ($billingAppleOrdersObj->checkIfAppleIdExists($appleId) == 1 && $appleId == $txnid) {
 								$logStatus = 1;
 							}
@@ -2230,7 +2232,7 @@ class MembershipAPIResponseHandler {
 	    	}
 	    }
         
-        if ($logStatus == 0) {
+        if ($logStatus == 10) {
         	$status = 'transaction_successful';
             $AuthDesc = "Y";
             $ret_status="S";
@@ -2258,6 +2260,11 @@ class MembershipAPIResponseHandler {
             $status = 'receipt_validation_failure';
             $AuthDesc = "R_F";
             $ret_status="F";
+        } else if($logStatus ==""){
+            $status = 'transaction_failure';
+            $AuthDesc = "N";
+            $ret_status="F";
+            $logStatus = 2;
         }
 
         /*
@@ -2273,13 +2280,15 @@ class MembershipAPIResponseHandler {
         $memHandlerObj = new MembershipHandler();
 
         $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
-       	$membershipObj->log_payment_status($Order_Id,$ret_status,'APPLEPAY',$status);
-
+       	$membershipObj->log_payment_status($Order_Id,$ret_status,'APPLEPAY',$status, $this->profileid);
         $dup = false;
 
         if ($AuthDesc=="Y") {
             $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
             if (!$dup && $ret) {
+                if($logStatus == 10){
+                    $logStatus = 0;
+                }
                 $membershipObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => $status,
