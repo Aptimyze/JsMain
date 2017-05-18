@@ -964,7 +964,7 @@ class CommonFunction
 		$loginTrack = new MIS_APP_LOGINTRACKING();
 		if(!$loginTrack->getRecord($registrationid, $profileid))
 		{
-			// $loginTrack->replaceRecord($profileid, $registrationid, $appType);
+			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
 			// send mail
 			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK));
 			CommonFunction::SendEmailNewLogin($profileid);
