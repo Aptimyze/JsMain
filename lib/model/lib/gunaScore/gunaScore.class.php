@@ -12,7 +12,6 @@ class gunaScore
 		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
-      $parentValueArr = gunaScoreConstants::$parentValues;
       $searchIdArr = array();
       $this->gunaForPD = 0;
 
@@ -37,7 +36,7 @@ class gunaScore
       }
 
       $parent = $this->getParent($caste);      
-      if(in_array($parent, $parentValueArr))
+      if(in_array($parent, gunaScoreConstants::$parentValues))
       {
        $astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections);
         			//uses $artroDetails data to compile $logged_astro_details and compstring[]       
