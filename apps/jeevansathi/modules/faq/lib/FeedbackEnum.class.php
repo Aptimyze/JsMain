@@ -20,7 +20,7 @@ class FeedbackEnum
   const CAT_ABUSE			= "Abuse";
   
   //Success Messages
-  const SUCCESS_ABUSE_MSG = "We will look into this case and delete the profile permanently if we can establish that the user is abusing the system.";
+  const SUCCESS_ABUSE_MSG = "Thank you for helping us. We will look into this case and delete the profile permanently if we can establish that the user is abusing the system.";
   const SUCCESS_ANDROID_MSG = "Thank you for helping us. We will look into this case and delete the profile permanently if we can establish that the user is abusing the system.";
   const SUCCESS_IOS_MSG = "Thank you for helping us. We will look into this case and delete the profile permanently if we can establish that the user is abusing the system.";
 }
