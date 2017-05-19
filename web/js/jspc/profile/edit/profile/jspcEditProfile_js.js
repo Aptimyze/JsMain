@@ -1762,6 +1762,7 @@ EditApp = function(){
                 //storeFieldChangeValue(fieldObject,val);
                 hideShowList();
                 if(val == "D"){
+                        console.log("TT");
                         $("#datesub").parent().attr("style","display:block");
                         $("#dayArrow1").attr("style","display:block");
                         fieldDOM.find('ul li[value="D"]').addClass(activeClass);
@@ -1870,6 +1871,7 @@ EditApp = function(){
       }
       
       var onClick2 = function(event){
+              console.log("TT2");
                         fieldDOM.find('.js-decVal').addClass(dispNone);
                         fieldDOM.find('.boxType').removeClass(dispNone);
                         fieldDOM.find('.boxType').removeClass(dispNone);
@@ -5264,7 +5266,7 @@ EditApp = function(){
       $(".js-month").attr("style","display:none");
       $(".js-year").attr("style","display:none");
       
-      $("#dateArrow1").attr("style","display:none");
+      $("#dayArrow1").attr("style","display:none");
       $("#monthArrow1").attr("style","display:none");
       $("#yearArrow1").attr("style","display:none");
       if (con == "blur") {
