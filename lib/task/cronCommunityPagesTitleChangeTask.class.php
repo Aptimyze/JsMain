@@ -21,9 +21,9 @@ EOF;
             sfContext::createInstance($this->configuration);
         
         
-        $communityPagesObjMaster = new NEWJS_COMMUNITY_PAGES("newjs_masterDDL");
+        $communityPagesObjMaster = new NEWJS_COMMUNITY_PAGES("newjs_master");
         $communityPagesObjSlave = new NEWJS_COMMUNITY_PAGES("newjs_slave");
-        $communityPagesMappingObjMaster = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_masterDDL");
+        $communityPagesMappingObjMaster = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_master");
         $communityPagesMappingObjSlave = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_slave");
         
         //Create backup table before performing title changes;

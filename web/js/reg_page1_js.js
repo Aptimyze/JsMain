@@ -39,7 +39,7 @@ $(document).ready(function () {
 			{
 				$(element.form).find("label[for=reg_dtofbirth]").css("color","red");
 			}
-			else
+			else 
 	        $(element.form).find("label[for=" + element.id + "]").css("color","red");
             
 		},
@@ -116,6 +116,7 @@ $(document).ready(function () {
 		$("#reg_caste").rules("add",{
 			checkSelectDropDown:true
 		});
+
 		$("#reg_religion").rules("add",{
 			checkSelectDropDown:true
 		});
@@ -199,7 +200,7 @@ $(document).ready(function () {
 		  {
 			  required:$("#mstatus_required").html()
 		  }
-		});  
+		});
 		$('#reg_dtofbirth_year').rules("add",{
 		   required: true,    	  	
 		   check_date_of_birth: true,
@@ -262,6 +263,41 @@ $(document).ready(function () {
 					}
 		}
 		);
+                $('#reg_caste').change(function(){
+				if(this.value=='152'){
+						$('#jamaat').css('display','inline');
+                                                $("#reg_jamaat").rules("add",{
+                                                    required:true,
+                                                    messages: {
+                                                        required: $("#jamaat_err").html()
+                                                    },
+                                                });
+					}else
+					{
+						$('#jamaat').css('display','none');
+                                                $('#reg_jamaat').val('');
+                                                $("#reg_jamaat").rules("remove");
+					}
+		});
+                $('#reg_religion').change(function(){
+				if(this.value=='2'){
+						$('#sectMuslim_section').css('display','inline');
+                                                $("#reg_sect_muslim").rules("add",{
+                                                     required: true,
+                                                     messages: {
+                                                        required: $("#sectMuslim_err").html()
+                                                     },
+                                                });
+					}else
+					{
+						$('#sectMuslim_section').css('display','none');
+                                                $('#reg_sectMuslim').val('');
+                                                $('#jamaat').css('display','none');
+                                                $('#reg_jamaat').val('');
+                                                $("#reg_jamaat").rules("remove");
+                                                $("#reg_sect_muslim").rules("remove");
+					}
+		});
 		$('#reg_havechild').rules("add",{
 			haveChild : true
 		});

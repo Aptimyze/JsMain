@@ -99,7 +99,7 @@ class LoggedInProfile extends Profile{
                 $age=CommonFunction::getAge($paramArr["DTOFBIRTH"]);                
                 if($age > 80 || $age < 18)
                 {   
-                    $http_msg=print_r($_SERVER,true);
+                    $http_msg=print_r($_SERVER,true).print_R($_POST,true);
                     SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com,eshajain88@gmail.com","error in DOB while registration \n\n".$paramArr["DTOFBIRTH"]."\n\n for USERNAME:".$paramArr["USERNAME"]."\n\n\n\n".$http_msg);
                 }
             }

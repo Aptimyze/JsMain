@@ -1829,7 +1829,7 @@ SQL;
     {
         try
         {            
-            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO NOT IN (".noPhotoMailerEnum::havePhotoCondition.") AND ACTIVATED = ".noPhotoMailerEnum::ACTIVATED." AND activatedKey = ".noPhotoMailerEnum::activatedKey." AND ";
+            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO NOT IN (".noPhotoMailerEnum::havePhotoCondition.") AND ACTIVATED = ".noPhotoMailerEnum::ACTIVATED." AND activatedKey = ".noPhotoMailerEnum::activatedKey." AND (";
             $count=1;
             foreach($dateConditionArr as $key=>$val)
             {
@@ -1838,7 +1838,7 @@ SQL;
                 $count++;
             }
             $sqlAppend = rtrim($sqlAppend," OR");
-            $sql .=$sqlAppend;
+            $sql .=$sqlAppend.")";
 
             $prep = $this->db->prepare($sql);
             $i=1; 
@@ -1853,7 +1853,7 @@ SQL;
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {                          
                     $dataArr[] =$row;
-            }        
+            }
             return $dataArr;
             
         }

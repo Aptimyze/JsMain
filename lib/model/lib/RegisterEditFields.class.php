@@ -1503,6 +1503,18 @@
 					$field->setTableName("JPROFILE:SECT");
                                         $page_obj->setField(127,"","",$field);
 				break;
+                                case 'JAMAAT':
+					$field=new Field(128);
+                                        $field->setName("JAMAAT");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("jamaat");
+                                        $field->setDependentField("");
+					$field->setLabel("");
+					$field->setBlankValue("");
+					$field->setBlankLabel("");
+					$field->setTableName("JP_MUSLIM:JAMAAT");
+                                        $page_obj->setField(127,"","",$field);
+				break;
 			}
 		}
 

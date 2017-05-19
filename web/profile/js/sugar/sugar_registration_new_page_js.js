@@ -10,7 +10,7 @@ document.onkeyup = crossCheckKeycode;
 
 //var validate_fields = new Array("email","password","gender","day","month","year","mstatus","has_children","height","country_residence","city_residence","phone","showphone","mobile","showmobile","degree","occupation","income","mtongue","religion","caste","termsandconditions");
 //alert(document.getElementsById('amit'));
-var validate_fields = new Array("password","relationship","gender","day","month","year","mstatus","has_children","height","country_residence","city_residence","pincode","phone","showphone","mobile","showmobile","mtongue","religion","caste","termsandconditions","income","degree","occupation");
+var validate_fields = new Array("password","relationship","gender","day","month","year","mstatus","has_children","height","country_residence","city_residence","pincode","phone","showphone","mobile","showmobile","mtongue","religion","caste","termsandconditions","income","degree","occupation","jamaat","casteMuslim");
 
 //for document.form
 var docF = "";

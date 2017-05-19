@@ -10,7 +10,8 @@ class connectionThresholdTask extends sfBaseTask
   /**
     * @var const EMAIL_TO comma separated email ids
   */
-  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
+  //const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
+  const EMAIL_TO = "bhavana.kadwal@jeevansathi.com,lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,nitesh.s@gmail.com,vibhor.garg@jeevansathi.com,pankaj.khandelwal@Jeevansathi.com,ankit.shukla@jeevansathi.com,esha.jain@jeevansathi.com,manoj.rana@naukri.com,kunal.verma@jeevansathi.com";
   private $SMS_TO = array('9650350387','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707','8826380350');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
@@ -167,7 +168,7 @@ EOF;
         $serverMessage .= $tableBody;
         $serverMessage .= "</br></br>".$this->mailMessage;
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
-        CommonUtility::sendSlackmessage(" \n ",implode($this->slackMessage),"mysql");
+        CommonUtility::sendSlackmessage(implode(" \n ",$this->slackMessage),"mysql");
     }
 /*
      * @param int $memCacheValue memcache threshold value
