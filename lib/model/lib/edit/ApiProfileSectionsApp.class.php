@@ -350,7 +350,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//mstatus
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");
                 
-		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","Divorced Status" ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
                 if($this->profile->getMSTATUS() != 'N'){
                     $criricalArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
                 }

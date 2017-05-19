@@ -38,6 +38,7 @@ EditApp = function(){
     var staticTables      = new SessionStorage;
     var chosenUpdateEvent = "chosen:updated";
     var dataMonthArray = {1: "Jan", 2: "Feb", 3: "Mar", 4: "April", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
+    var inputData = {};
     //Error Map
     var errorMap          = {
                               "RELATION":"Please choose who posted this profile",
@@ -72,7 +73,7 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var criticalSectionArray   = ["MSTATUS","DTOFBIRTH","MSTATUS_PROOF"];
+    var criticalSectionArray   = ["MSTATUS","MSTATUS_PROOF","DTOFBIRTH"];
     var basicSectionArray   = ["NAME","GENDER","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
@@ -1744,40 +1745,39 @@ EditApp = function(){
       var fieldDOM = $('#' + fieldObject.key.toLowerCase());
       var removeActiveFromMore = false;
       var activeClass = 'activeopt';
-      
+      var inputData = [];
       var onClick = function(event){
-              createDateList();
-              createMonthList();
-              createYearList();
         fieldDOM.find('.js-errorLabel').addClass(dispNone);
         if(event.target && event.target.tagName === "LI"){
-          var val = event.target.getAttribute("value");
-          
-            var arrSelectedEle = fieldDOM.find('ul li.'+activeClass);
-            for(var i=0;i<arrSelectedEle.length;i++){
-              var ele = $(arrSelectedEle[i]); 
-              ele.removeClass(activeClass);
-            }
-          
-          if(val === "-1" && typeof maxAllowedEle != "undefined"){
-            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
-            $(event.target).addClass(activeClass);
-            return ;
-          }
-                    
-          if($(event.target).hasClass('js-boxSubListOption') == false){
-            fieldDOM.find('.js-subBoxList').addClass(dispNone);
-            fieldDOM.find('ul li[value="-1"]').removeClass(activeClass);
-          }else{
-            fieldDOM.find('ul li[value="-1"]').addClass(activeClass);
-          }
+                var val = event.target.getAttribute("value");
+
+                  var arrSelectedEle = fieldDOM.find('ul li.'+activeClass);
+                  for(var i=0;i<arrSelectedEle.length;i++){
+                    var ele = $(arrSelectedEle[i]); 
+                    ele.removeClass(activeClass);
+                  }
                   
-          $(event.target).addClass(activeClass);
-          fieldDOM.find('span').removeClass('color12').text($(event.target).text());
-          storeFieldChangeValue(fieldObject,val);
-          
-          fieldDOM.trigger("box-change");
-             }
+                $(event.target).addClass(activeClass);
+                //fieldDOM.find('span').removeClass('color12').text($(event.target).text());
+                //storeFieldChangeValue(fieldObject,val);
+                hideShowList();
+                if(val == "D"){
+                        $("#datesub").parent().attr("style","display:block");
+                        fieldDOM.find('ul li[value="D"]').addClass(activeClass);
+                }else{
+                        if(val == "M"){
+                        $("#monthsub").parent().attr("style","display:block");
+                        fieldDOM.find('ul li[value="M"]').addClass(activeClass);
+                        
+                        }else{
+                                if(val == "Y"){
+                                        $("#yearsub").parent().attr("style","display:block");
+                                        fieldDOM.find('ul li[value="Y"]').addClass(activeClass);
+                                }
+                        }
+                }
+                fieldDOM.trigger("box-change");
+        }
         fieldDOM.find('.js-decVal').addClass(dispNone);
         fieldDOM.find('.boxType').removeClass(dispNone);
         //Show and hide Main Option 
@@ -1785,21 +1785,11 @@ EditApp = function(){
            event.target.id==fieldObject.key.toLowerCase()){
           fieldDOM.find('.js-decVal').addClass(dispNone);
           fieldDOM.find('.boxType').removeClass(dispNone);
-          
-          if( typeof maxAllowedEle != "undefined" && fieldDOM.find('ul li[value="-1"]').hasClass(activeClass)){
-            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
-          }
-          
-          if(fieldDOM.find('ul li.activeopt').hasClass('js-boxSubListOption') == true){
-            fieldDOM.find('ul li[value="-1"]').addClass('activeopt');
-            fieldDOM.find('.js-subBoxList').removeClass(dispNone);
-          }
         }
       }
         var createDateList = function () {
                 dateHtml = generateList(2, 31, "date", 1);
                 $("#datesub").html(dateHtml);
-                $("#datesub").parent().attr("style","display:block");
         }
         var createMonthList = function () {
                 monthHtml = generateList(2, 12, "month", "Jan");
@@ -1842,11 +1832,31 @@ EditApp = function(){
                 return(dropHtml);
       }
       var onBlur  = function(event){
-        var arrSelectedEle = fieldDOM.find('ul li.activeopt');
-        if(arrSelectedEle.length === 1 && $(arrSelectedEle[0]).attr("value") === "-1"){
-          fieldDOM.find('.js-errorLabel').removeClass(dispNone);
-          stopEventPropagation(event);
-          return false;
+        if(inputData.hasOwnProperty(fieldObject.key.toLowerCase()) === false){
+                inputData[fieldObject.key.toLowerCase()] = {};
+        }
+        inputData[fieldObject.key.toLowerCase()]["day"] = parseInt($("#day_value").val());
+        inputData[fieldObject.key.toLowerCase()]["month"] = parseInt($("#month_value").val());
+        inputData[fieldObject.key.toLowerCase()]["year"] = parseInt($("#year_value").val());
+        if(!isNaN(inputData[fieldObject.key.toLowerCase()]["day"]) && typeof inputData[fieldObject.key.toLowerCase()]["day"] != undefined && inputData[fieldObject.key.toLowerCase()]["day"] != "Day" && !isNaN(inputData[fieldObject.key.toLowerCase()]["month"]) && typeof inputData[fieldObject.key.toLowerCase()]["month"] != undefined && inputData[fieldObject.key.toLowerCase()]["month"] != "Month" && !isNaN(inputData[fieldObject.key.toLowerCase()]["year"]) && typeof inputData[fieldObject.key.toLowerCase()]["year"] != undefined && inputData[fieldObject.key.toLowerCase()]["year"] != "Year" ){
+                var dateString = "";
+                dateString += inputData[fieldObject.key.toLowerCase()]["day"];
+                if(inputData[fieldObject.key.toLowerCase()]["day"] == 2){
+                        dateString +="nd ";
+                }else{
+                        if(inputData[fieldObject.key.toLowerCase()]["day"] == 1){
+                                dateString +="st ";
+                        }else{
+                                if(inputData[fieldObject.key.toLowerCase()]["day"] == 3){
+                                        dateString +="rd ";
+                                }else{
+                                        dateString +="th ";
+                                }
+                        }
+                }
+                
+                dateString += " "+dataMonthArray[inputData[fieldObject.key.toLowerCase()]["month"]]+" "+inputData[fieldObject.key.toLowerCase()]["year"];
+                fieldDOM.find('span.js-decVal').html(dateString);
         }
         fieldDOM.find('.js-decVal').removeClass(dispNone);
         fieldDOM.find('.boxType').addClass(dispNone);
@@ -1856,18 +1866,29 @@ EditApp = function(){
         $("#yearsub").parent().attr("style","display:none");
       }
       
-      
+      var onClick2 = function(event){
+                        fieldDOM.find('.js-decVal').addClass(dispNone);
+                        fieldDOM.find('.boxType').removeClass(dispNone);
+                        fieldDOM.find('.boxType').removeClass(dispNone);
+                        $("#datesub").parent().attr("style","display:block");
+                        fieldDOM.find('ul li[value="D"]').addClass(activeClass);
+      }
       var clickFn = onClick;
+      var clickFn2 = onClick2;
       
       //focus
-      fieldDOM.on('focus',clickFn);
+      fieldDOM.find('div.js-decVal').on('focus',clickFn2);
+      fieldDOM.find('div.js-decVal').on('click',clickFn2);
+      fieldDOM.find('.js-boxContent .boxType').on('focus',clickFn);
       
       //Main Click Event
-      fieldDOM.on('click',clickFn);
+      fieldDOM.find('.js-boxContent .boxType').on('click',clickFn);
       
       //MyBlur
       fieldDOM.on('boxBlur',onBlur);
-
+        createDateList();
+        createMonthList();
+        createYearList();
     }
     
     /*
@@ -2809,7 +2830,7 @@ EditApp = function(){
               }
               var spanId = label.toLowerCase();
               if(i < maxAllowed){
-                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
                 cssClassOnLI = ""
               }
               
@@ -5191,16 +5212,13 @@ EditApp = function(){
         whiteListingKeys(event,"forAbout")
       });
       $('#datesub').on('mousedown',function(event){
-              clickCallBack("date",event);
-              hideShowList(event);
+              clickCallBack("day",event);
       });
       $('#monthsub').on('mousedown',function(event){
               clickCallBack("month",event);
-              hideShowList(event);
       });
       $('#yearsub').on('mousedown',function(event){
               clickCallBack("year",event);
-              hideShowList(event);
       });
     }
     function clickCallBack (selectField,eve) {
@@ -5218,40 +5236,32 @@ EditApp = function(){
           target.addClass("activeopt");
           $(this).parent().hide();
           hideShowList(eve);
-          
           //if date is clicked open month by default
-          if (selectField == "date") {
-            setTimeout(function () {
-              $("#monthsub").parent().attr("style","display:block");
-            }, 0);
-            $("#monthArrow1").show();
+          if (selectField == "day") {
+              $(".js-month").attr("style","display:block");
+                $("#monthArrow1").show();
             $("#monthArrow2").hide();
             $("#dateArrow2").show();
-            clicked = eve.target;
           }
           //open year sublist on month list click
           if (selectField == "month") {
-            setTimeout(function () {
-              $("#yearsub").parent().attr("style","display:block");
-            }, 0);
+            $(".js-year").attr("style","display:block");
             $("#yearArrow1").show();
             $("#yearArrow2").hide();
             $("#monthArrow2").show();
-            clicked = eve.target;
           }
           if (selectField == "year") {
             $("#yearArrow2").show();
-            clicked = "";
           }
-          //$("#dob_value").parent().focus();
         }
     }
     hideShowList = function(con) {
-      $("#datesub").parent().attr("style","display:none");
+      $(".js-date").attr("style","display:none");
+      $(".js-month").attr("style","display:none");
+      $(".js-year").attr("style","display:none");
+      
       $("#dateArrow1").hide();
-      $("#monthsub").parent().attr("style","display:none");
       $("#monthArrow1").hide();
-      $("#yearsub").parent().attr("style","display:none");
       $("#yearArrow1").hide();
       if (con == "blur") {
         $("#dateArrow2").show();
