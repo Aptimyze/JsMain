@@ -1763,15 +1763,18 @@ EditApp = function(){
                 hideShowList();
                 if(val == "D"){
                         $("#datesub").parent().attr("style","display:block");
+                        $("#dayArrow1").attr("style","display:block");
                         fieldDOM.find('ul li[value="D"]').addClass(activeClass);
                 }else{
                         if(val == "M"){
                         $("#monthsub").parent().attr("style","display:block");
+                        $("#monthArrow1").attr("style","display:block");
                         fieldDOM.find('ul li[value="M"]').addClass(activeClass);
                         
                         }else{
                                 if(val == "Y"){
                                         $("#yearsub").parent().attr("style","display:block");
+                                        $("#yearArrow1").attr("style","display:block");
                                         fieldDOM.find('ul li[value="Y"]').addClass(activeClass);
                                 }
                         }
@@ -1871,6 +1874,7 @@ EditApp = function(){
                         fieldDOM.find('.boxType').removeClass(dispNone);
                         fieldDOM.find('.boxType').removeClass(dispNone);
                         $("#datesub").parent().attr("style","display:block");
+                        $("#dayArrow1").attr("style","display:block");
                         fieldDOM.find('ul li[value="D"]').addClass(activeClass);
       }
       var clickFn = onClick;
@@ -2816,7 +2820,7 @@ EditApp = function(){
             
             $.each(data2,function(value,label)
             { 
-              cssClassOnLI += "option_" + i;
+              cssClassOnLI += "pos-rel option_" + i;
               
               if( value == fieldObject.value )
               {
@@ -3513,8 +3517,6 @@ EditApp = function(){
      * @returns {undefined}
      */
     onSectionSave = function(sectionId,showLoader){
-            console.log(editedFields);
-            console.log("test");return true;
       //If no editing happens, then gracefully hide :D
       if(editedFields.hasOwnProperty(sectionId) === false){
         showHideEditSection(sectionId,"hide");
@@ -3532,6 +3534,8 @@ EditApp = function(){
         var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
         parentDOM.find('.js-errorLabel').removeClass(dispNone);
       }
+            console.log(editedFields);
+            console.log("test");return true;
       
       //Check Any Error Lable is visible or not
       var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)';   
@@ -5239,19 +5243,19 @@ EditApp = function(){
           //if date is clicked open month by default
           if (selectField == "day") {
               $(".js-month").attr("style","display:block");
-                $("#monthArrow1").show();
-            $("#monthArrow2").hide();
-            $("#dateArrow2").show();
+              $("#monthArrow1").attr("style","display:block");
+                $("#monthArrow2").attr("style","display:none");
+                $("#dateArrow2").attr("style","display:block");
           }
           //open year sublist on month list click
           if (selectField == "month") {
             $(".js-year").attr("style","display:block");
-            $("#yearArrow1").show();
-            $("#yearArrow2").hide();
-            $("#monthArrow2").show();
+            $("#yearArrow1").attr("style","display:block");
+            $("#yearArrow2").attr("style","display:none");
+            $("#monthArrow2").attr("style","display:block");
           }
           if (selectField == "year") {
-            $("#yearArrow2").show();
+            $("#yearArrow2").attr("style","display:block");
           }
         }
     }
@@ -5260,13 +5264,13 @@ EditApp = function(){
       $(".js-month").attr("style","display:none");
       $(".js-year").attr("style","display:none");
       
-      $("#dateArrow1").hide();
-      $("#monthArrow1").hide();
-      $("#yearArrow1").hide();
+      $("#dateArrow1").attr("style","display:none");
+      $("#monthArrow1").attr("style","display:none");
+      $("#yearArrow1").attr("style","display:none");
       if (con == "blur") {
-        $("#dateArrow2").show();
-        $("#monthArrow2").show();
-        $("#yearArrow2").show();
+        $("#dateArrow2").attr("style","display:block");
+        $("#monthArrow2").attr("style","display:block");
+        $("#yearArrow2").attr("style","display:block");
       }
     }
     /*
