@@ -75,10 +75,12 @@ class Producer
 			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
 			$endLogTime = microtime(true);
 			$diff = $endLogTime-$startLogTime;
-			$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
-			if(file_exists($errorLogPath)==false)
-      			exec("touch"." ".$logPath,$output);
-			error_log(round($diff,4)."\n",3,$logPath);
+			if(MQ::$logConnectionTime == 1){
+				$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
+				if(file_exists($errorLogPath)==false)
+	      			exec("touch"." ".$logPath,$output);
+				error_log(round($diff,4)."\n",3,$logPath);
+			}
 			$this->setRabbitMQServerConnected(1);
 			return true;
 		} catch (Exception $e) {
