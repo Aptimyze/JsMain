@@ -16,6 +16,7 @@ class ApiResponseHandler
 	private $cache_flag=true;
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
+	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
 	private $androidChat;
 	private $membershipSubscription;
@@ -107,6 +108,8 @@ class ApiResponseHandler
 
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
+	public function setUserActionState($userActionState){$this->userActionState = $userActionState;}
+	public function getUserActionState(){return $this->userActionState;}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -174,6 +177,8 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+		$output["userActionState"]=$this->userActionState;
+		$output["apiTimeTracking"]=(microtime(true)-sfContext::getInstance()->getRequest()->getParameter("startScriptTime"))*1000*1000;
 
 		//android chat on/off flag
 		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");

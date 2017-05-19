@@ -287,6 +287,42 @@ class NEWJS_SEARCH_MALE extends TABLE
        throw new jsException($e);
     }
    }
+
+   public function getProfilesForPaidOn($tableName,$lowerLimit,$upperLimit)
+   {
+    try
+    {
+        $sql = "SELECT PROFILEID from ".$tableName." WHERE SUBSCRIPTION !='' AND PAID_ON ='1960-01-01 00:00:00'"." LIMIT ".$lowerLimit.",".$upperLimit;        
+        $res = $this->db->prepare($sql);       
+        $res->execute();
+        while($row = $res->fetch(PDO::FETCH_ASSOC))
+        {
+            $detailArr[] = $row["PROFILEID"];
+        }        
+        return $detailArr;
+
+    }
+    catch(PDOException $e)
+    {
+       throw new jsException($e);
+    }
+   }
+
+   public function updatePaidOn($tableName,$profileId,$paidOn)
+   {
+    try
+    {
+        $sql = "UPDATE ".$tableName." SET PAID_ON =:PAID_ON WHERE PROFILEID=:PROFILEID";
+        $res = $this->db->prepare($sql);       
+        $res->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
+        $res->bindValue(":PAID_ON", $paidOn, PDO::PARAM_STR);
+        $res->execute();        
+    }
+    catch(PDOException $e)
+    {
+       throw new jsException($e);
+    }
+   }
            
 }
 ?>

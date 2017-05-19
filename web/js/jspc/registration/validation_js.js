@@ -39,7 +39,8 @@ var arrErors = {
 	"INCOME_REQUIRED":"Please provide an income range",
 	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
 	"NAME_ERROR":"Name should have alphabets only",
-        "CASTEMUSLIM_REQUIRED":"Please provide a Caste"
+        "CASTEMUSLIM_REQUIRED":"Please provide a Caste",
+        "JAMAAT_REQUIRED":"Please provide a Jamaat"
 };
 //regular expressions for validations
 var name_regex = /^[a-zA-Z\s\.\']*$/;
@@ -836,6 +837,31 @@ return pincodeValidator;
    return casteMuslimValidator;
    })();
    this.casteMuslimValidator=casteMuslimValidator;
+ }).call(this);
+ 
+ // inherted class from validator for Jamaat
+(function() {
+    var jamaatValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(jamaatValidator,validator);
+      //constructor
+      function jamaatValidator(fieldElement) {
+      jamaatValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      jamaatValidator.prototype.validate = function()
+      {
+        var jamaat = this.getValue("jamaat");
+        jamaatValidator.prototype.parent.validate.call(this,jamaat);
+        if(this.error){
+            if((inputData["religion"] =="2") && (inputData["caste"] =="152"))
+	      this.error=arrErors["JAMAAT_REQUIRED"];
+                return false;
+        }
+        return true;
+      }
+   return jamaatValidator;
+   })();
+   this.jamaatValidator=jamaatValidator;
  }).call(this);
 // inherted class from validator for hdegree
 (function() {

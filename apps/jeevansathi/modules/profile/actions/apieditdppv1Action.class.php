@@ -42,15 +42,13 @@ class apieditdppv1Action extends sfAction
 		//Get symfony form object related to Edit Fields coming.
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");		
 		
-		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
-		{
-			$http_msg=print_r($_SERVER,true);
-			mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
-			$errorArr["ERROR"]="Something went wrong.";
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			$apiResponseHandlerObj->setResponseBody($errorArr);
-		}		
-		else
+		 if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
+        {
+            $http_msg=print_r($_SERVER,true);
+            $http_msg .= print_r($_POST,true);
+            mail("ahmsjahan@gmail.com,eshajain88@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+        }	
+		if(1)
 		{
 			if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 			{

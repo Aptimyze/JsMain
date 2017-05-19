@@ -74,5 +74,13 @@ class ServerHealthEnums
 							"host"=>"http://10.10.18.81/jsstats/load.php",
 							"loadThreshold"=>40,
 							"memoryThreshold"=>7),
+                                "84"=>array(
+                                                        "host"=>"http://10.10.18.84/jsstats/load.php",
+                                                        "loadThreshold"=>50,
+                                                        "memoryThreshold"=>7),
+                                "88"=>array(
+                                                        "host"=>"http://10.10.18.88/jsstats/load.php",
+                                                        "loadThreshold"=>50,
+                                                        "memoryThreshold"=>7),
 					);
 } 

@@ -682,4 +682,13 @@ class registerMisActions extends sfActions {
 	}
     }
   }
+  
+  
+   public function executeProductMetric(sfWebRequest $request) 
+  {
+        $this->setTemplate('productMetric');
+  
+  }
+ 
+
 }
