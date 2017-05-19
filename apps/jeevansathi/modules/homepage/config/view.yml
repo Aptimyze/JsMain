@@ -1,6 +1,6 @@
 indexSuccess:
   metas:   
-    canonical: https://www.jeevansathi.com/
+    canonical: http://www.jeevansathi.com/
     title: Matrimony, Marriage, Matrimonial Sites, Match Making
     verify-v1: y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=   
   stylesheets: [jspc/logout/homecss,jspc/search/searchBand]
