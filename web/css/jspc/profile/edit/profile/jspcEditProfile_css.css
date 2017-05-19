@@ -538,9 +538,9 @@ left: 60px;
         ul#yearsub li{width:78px}
         ul#datesub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
         .reg-pos5 {top:39px}
-        .reg-pos10 {right:0;top:47px}
+        .reg-pos10 {right:0;top:39px}
         .reg-zi1 {z-index:1}
-        .reg-wid12{width:400px;}
+        /*.reg-wid12{width:400px;}*/
         .reg-droparrow {
 	background-position: -6px -214px;
 	width: 16px;
@@ -554,3 +554,7 @@ left: 60px;
 .reg-pos11{ right: 10px;
 
     top: 16px;}
+.reg-pos12{bottom:-1px;left:48%;}
+.js-date{width:400px;}
+.js-month{width:330px;}
+.js-year{width: 312px}
