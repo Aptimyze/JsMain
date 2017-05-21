@@ -167,6 +167,10 @@ EOF;
         $tableBody .= "</table>";
         $serverMessage .= $tableBody;
         $serverMessage .= "</br></br>".$this->mailMessage;
+        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/connectionThreshold".date('Ymd').".txt";
+        $breaks = array("<br />","<br>","<br/>");
+        $msgWithSlashN = str_ireplace($breaks, "\n", $serverMessage);
+        file_put_contents($fileName, date("Y m d H:i:s", strtotime("now"))."\n".$msgWithSlashN."\n\n", FILE_APPEND);
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
         CommonUtility::sendSlackmessage(implode(" \n ",$this->slackMessage),"mysql");
     }
