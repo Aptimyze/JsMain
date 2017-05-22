@@ -90,7 +90,8 @@ class Producer
 				$memcacheObj = JsMemcache::getInstance();
 				if($memcacheObj){
 					$cachekey = "rmqtimeout_".date("Y-m-d");
-					if(empty($memcacheObj->get($cachekey,null,0,0))==false){
+					$cacheValue = $memcacheObj->get($cachekey,null,0,0);
+					if(empty($cacheValue)==false){
 						$memcacheObj->incrCount($cachekey);
 					}
 					else{

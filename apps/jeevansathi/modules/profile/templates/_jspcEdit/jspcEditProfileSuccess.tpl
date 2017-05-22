@@ -159,16 +159,8 @@
                           <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`), <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
                         </li>
                         <li>
-                          <p class="color12 pt15 fontlig">Highest Education</p>
-                          <p class="pt2 fontlig" id='educationView'>~$arrOutDisplay.about.education`</p>
-                        </li>
-                        <li>
                           <p class="color12 pt15 fontlig">Religion</p>
                           <p class="pt2 fontlig" id='religionView'>~$arrOutDisplay.about.religion`</p>
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Occupation</p>
-                          <p class="pt2 fontlig" id='occupationView'>~$arrOutDisplay.about.occupation`</p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Mother Tongue</p>
@@ -215,6 +207,14 @@
                           </p>
                         </li>
                         ~/if`
+                        ~if $editApiResponse.Details.RELIGION.value eq 2`
+                        <li id="jamaatlistitem">
+                          <p class="color12 pt15 fontlig">Jamaat</p>
+                          <p class="pt2 fontlig" >
+                            <span id="jamaatView">~$arrOutDisplay.about.jamaat`</span>
+                          </p>
+                       </li>
+                       ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->
@@ -627,5 +627,10 @@
    var $profileScore = null;
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
+  var caste = "~$editApiResponse.Details.CASTE.value`";
+if(caste!=152)
+	$("#jamaatlistitem").hide();
+else
+	$("#jamaatlistitem").show();
 </script>
 

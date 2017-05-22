@@ -16,7 +16,8 @@ $data=authenticated($cid);
 if($data)
 {
 $name=getname($cid);
-$db=connect_ddl();
+//$db=connect_ddl();
+$db=connect_db();
 if($send)
 {
 	$cnt++;
