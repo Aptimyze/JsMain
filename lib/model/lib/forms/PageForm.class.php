@@ -235,7 +235,7 @@ class PageForm extends sfForm
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
-				$nativePlaceObj->UpdateRecord($id,$nativePlaceArr);
+				$nativePlaceObj->UpdateRecord($loggedInObj->getPROFILEID(),$nativePlaceArr);
 			}
 	  }
            if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!='')){

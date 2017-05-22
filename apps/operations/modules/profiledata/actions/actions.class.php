@@ -335,6 +335,20 @@ class ProfileDataActions extends sfActions
                 }
 	}
 		
-	
+	/**
+   * 
+   * @param sfWebRequest $request
+   * @return type
+   */ 
+  public function executeChatDetail(sfWebRequest $request)
+	{
+		$objChatDetail = new ChatDetail($this->profileid);
+    $this->arrDetails = $objChatDetail->getDetails();
 
+    if ($request->getParameter("useSfViewNone") == 1) {
+      echo json_encode($this->arrDetails);
+      return sfView::NONE;
+      die;
+    }
+  }
 }
