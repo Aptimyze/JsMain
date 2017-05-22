@@ -651,10 +651,10 @@ class Membership
         $billingVouchViewedObj->updateVoucherOption($this->profileid);
     }
     
-    function log_payment_status($orderid, $status, $gateway, $msg) {
+    function log_payment_status($orderid, $status, $gateway, $msg, $profileid="") {
         $msg = addslashes(stripslashes($msg));
         $billingPayStatLog = new billing_PAYMENT_STATUS_LOG();
-        $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
+        $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg,$profileid);
     }
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
@@ -1348,7 +1348,7 @@ class Membership
                     $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
                     //error_log("ankita msg-".$msg);
                     if (JsConstants::$whichMachine == 'prod') {
-                        SendMail::send_email('rohan.mathur@jeevansathi.com,ankita.g@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
+                        SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
         		}
             }
@@ -2484,7 +2484,8 @@ class Membership
     }
     
     public function setRedisForFreeToPaid($userObjTemp){
-        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE){
+        if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
+        {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
         }
     }

@@ -104,7 +104,7 @@ EOF;
       //NewJs_Slave Connection
       $this->m_SlaveObj  =  new PROFILE_PROFILE_COMPLETION_SCORE('newjs_slave');
       $this->m_MasterObj  =  new PROFILE_PROFILE_COMPLETION_SCORE();
-      $this->m_MasterDDLObj  =  new PROFILE_PROFILE_COMPLETION_SCORE('newjs_masterDDL');
+      $this->m_MasterDDLObj  =  new PROFILE_PROFILE_COMPLETION_SCORE('newjs_master');
       
     }
     

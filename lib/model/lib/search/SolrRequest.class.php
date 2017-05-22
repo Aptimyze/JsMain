@@ -198,7 +198,7 @@ class SolrRequest implements RequestHandleInterface
                 
                 if(!$this->searchResults){
                         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
-                        file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                        file_put_contents($fileName, $diff." :::: ".date('H:i:s')." ::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
 	}
 
