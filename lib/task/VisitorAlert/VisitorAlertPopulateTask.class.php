@@ -29,14 +29,14 @@ EOF;
         $lastLoginDate = date('Y-m-d', strtotime(VisitorAlertEnums::LAST_LOGIN_DATE));
 
 
-        $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_masterDDL');
+        $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
 
         $result = $visitoralertMailerVisitors->countTotalSent();
 
         $result['TOTAL'] == NULL ? $total = 0:$total = $result['TOTAL'];
         $result['COUNT'] == NULL ? $count = 0:$count = $result['COUNT'];
 
-        $visitorAlertRecord = new visitorAlert_RECORD('shard1_masterDDL');
+        $visitorAlertRecord = new visitorAlert_RECORD('shard1_master');
 
 
         $visitorAlertRecord->updateVisitorAlertRecord($total,$count);        

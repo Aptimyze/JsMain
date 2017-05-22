@@ -28,12 +28,12 @@ $this->addOptions(array(
       sfContext::createInstance($this->configuration);
     
     //remove sent notification count entries
-    $notificationsCountObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT('newjs_masterDDL');
+    $notificationsCountObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT('newjs_master');
     $notificationsCountObj->truncateCountEntries();
     unset($notificationsCountObj);
 
     //remove all digest notification entries
-    $digestNotificationObj = new MOBILE_API_DIGEST_NOTIFICATIONS('newjs_masterDDL');
+    $digestNotificationObj = new MOBILE_API_DIGEST_NOTIFICATIONS('newjs_master');
     $digestNotificationObj->removeEntries(date("Y-m-d"));
     unset($digestNotificationObj);
   }

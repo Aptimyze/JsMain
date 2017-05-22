@@ -1,7 +1,8 @@
 <?
 include("connect.inc");
 
-$db=connect_ddl();
+//$db=connect_ddl();
+$db=connect_db();
 
 if(authenticated($cid))
 {

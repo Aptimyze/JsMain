@@ -1,7 +1,7 @@
 <?php
 
 include_once("connect.inc");
-$db=connect_ddl();
+$db=connect_db();
 if(authenticated($cid))
 {
 	$name = getname($cid);

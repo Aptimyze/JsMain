@@ -310,6 +310,12 @@ class DetailedViewApi
 		{
 			$this->m_arrOut['caste'] = $objProfile->getDecoratedCaste();
 		}
+                
+                if($objProfile->getReligion() == 2 && $objProfile->getCaste() == 152){
+                    $religionInfo = (array)$objProfile->getReligionInfo();
+                    if($religionInfo["JAMAAT"])
+                        $this->m_arrOut['caste'] = $this->m_arrOut['caste'].", ".$religionInfo["JAMAAT"];
+                }
 		//Caste End Here
                 if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())
                     $this->m_arrOut['last_active'] = "Online now";

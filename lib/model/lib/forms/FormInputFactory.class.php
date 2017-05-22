@@ -82,6 +82,14 @@ class FormInputFactory{
 						$Obj=new FieldOrder;
 						$choices=$Obj->getHeight_page1();
 					}
+                                        else if($field->getName()=="SECT_MUSLIM"){
+						$Obj=new FieldOrder;
+						$choices=$Obj->getSectMuslim();
+                                                if($field->getBlankLabel()){
+                                                    $blankArr[$field->getBlankValue()]=$field->getBlankLabel();
+                                                    $choices = $blankArr+$choices;
+						}
+					}
 					else{
 						//For muslim shia and sunni sects, maththab dropdown is different
 						//So need to add conditions here
@@ -99,7 +107,7 @@ class FormInputFactory{
 							$field_map_name=ObjectiveFieldMap::getFieldMapKey($field->getName(),$page);
 						//get all dropdown values from Fieldmaplib
 						if($field_map_name)
-							$choices=FieldMap::getFieldLabel($field_map_name,'',1);
+                                                    $choices=FieldMap::getFieldLabel($field_map_name,'',1);
 					if($field->getBlankLabel()){
 						$blankArr[$field->getBlankValue()]=$field->getBlankLabel();
 						$choices = $blankArr+$choices;

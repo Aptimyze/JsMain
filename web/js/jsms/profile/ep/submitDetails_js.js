@@ -56,11 +56,11 @@ var saveDetail=(function(){
         if(this.flag==0)
         {
 			//showLoader();
-        $.ajax({
+        $.myObj.ajax({
           url: "/api/v1/profile/editsubmit",
           type: 'POST',
           datatype: 'json',
-          headers: { 'X-Requested-By': 'jeevansathi' },       
+          channel:'mobile',
           cache: true,
           async: true,
           data: {editFieldArr : editFieldArr},
@@ -126,10 +126,11 @@ saveDetail.prototype.submitDpp= function()
         if(this.flag==0)
         {
 			showLoader();
-        $.ajax({
+        $.myObj.ajax({
           url: "/api/v1/profile/dppsubmit",
           type: 'POST',
           datatype: 'json',
+          channel : 'mobile',
           cache: true,
           async: true,
           data: {editFieldArr : editFieldArr},
