@@ -1390,6 +1390,10 @@ class InboxMobileAppV2
 					else
 						$message="";
 				}
+				if ( MobileCommon::isDesktop() )
+				{
+					$message= nl2br($message);
+				}
 				$message =addslashes(htmlspecialchars_decode($message));
 			}
 			else
