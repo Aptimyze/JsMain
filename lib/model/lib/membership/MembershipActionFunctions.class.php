@@ -7,6 +7,15 @@ class MembershipActionFunctions
         if (!$displayPage) {
             $displayPage = 1;
         }
+        if($displayPage == 4){
+            $upgradeMem = $request->getParameter('upgradeMem');
+            if(!in_array($upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $upgradeMem = 'NA';
+            }
+        }
+        else{
+            $upgradeMem = 'NA';
+        }
         $pageURL = "displayPage=" . $displayPage . "&JSX=1";
         $mainMem = "&mainMem=" . $request->getParameter('mainMem');
         $mainMemDur = "&mainMemDur=" . $request->getParameter('mainMemDur');
@@ -37,7 +46,7 @@ class MembershipActionFunctions
                 $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link&userProfile=" . $userProfile;
             }
         }
-        
+
         $fromGCM = $request->getParameter('FROM_GCM');
         if ($fromGCM) {
             $pageURL.= "&FROM_GCM=" . $fromGCM;
@@ -45,7 +54,7 @@ class MembershipActionFunctions
             $notificationKey = $request->getParameter("notificationKey");
             $loginData =$request->getAttribute("loginData");
             $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
-            //error_log("in api request membership ankita-".$msgId."---".$notificationKey);
+            
             //file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
             NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$msgId,"notificationKey"=>$notificationKey));
         }
@@ -62,7 +71,8 @@ class MembershipActionFunctions
             $reqid,
             $mainMembership,
             $vasImpression,
-            $authchecksum
+            $authchecksum,
+            $upgradeMem
         );
     }
     
@@ -271,6 +281,15 @@ class MembershipActionFunctions
         elseif ($data['currency'] == 'DOL') {
             $data['currency'] = '$';
         }
+        if(is_array($data) && ($displayPage=='3' || $displayPage=='5')){
+            $continueText = $data["continueText"];
+            $proceed_text = $data["proceed_text"];
+        }
+        else{
+            $continueText = "";
+            $proceed_text = "";
+        }
+        
         array_walk_recursive($data, function (&$val, $key){
             $number = preg_replace('/[^\d.]/', '', $val);
             $fnumber = floatval(preg_replace('/[^\d.]/', '', $val));
@@ -278,6 +297,15 @@ class MembershipActionFunctions
                 $val = number_format($fnumber, 0, '.', ',');
             }
         });
+        if($data["upgradeMem"] == 'MAIN' && ($displayPage=='3' || $displayPage=='5') && $data['currency'] == '$'){
+            if($displayPage == '3'){
+                $data["continueText"] = $continueText;
+            }
+            else{
+                $data["proceed_text"] = $proceed_text;
+            }
+        }
+        
         return $data;
     }
 

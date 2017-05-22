@@ -10,7 +10,8 @@ class connectionThresholdTask extends sfBaseTask
   /**
     * @var const EMAIL_TO comma separated email ids
   */
-  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
+  //const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
+  const EMAIL_TO = "bhavana.kadwal@jeevansathi.com,lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,nitesh.s@gmail.com,vibhor.garg@jeevansathi.com,pankaj.khandelwal@Jeevansathi.com,ankit.shukla@jeevansathi.com,esha.jain@jeevansathi.com,manoj.rana@naukri.com,kunal.verma@jeevansathi.com";
   private $SMS_TO = array('9650350387','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707','8826380350');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
@@ -20,15 +21,18 @@ class connectionThresholdTask extends sfBaseTask
   private $smsMessage = "";
   private $ifSmsSend = 0;
   private $errorServer = array();
+  private $servers = array();
   /**
     * @var string $mailMessage email body text
   */
   private $mailMessage = "";
+  private $slackMessage = array();
+  private $sleepQuery = array();
   private $ifSend = 0;
   /*
    * @var array $thresholdValue having threshold value for each server   
    */
-  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300);
+  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300);
   
   protected function configure()
   {
@@ -45,15 +49,28 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {      
       // server configuration array with threshold value is indexed at 'threshold'
-      $SERVER_ARR[]=array("master",MysqlDbConstants::$master["HOST"],MysqlDbConstants::$master["USER"],MysqlDbConstants::$master["PASS"],MysqlDbConstants::$master["PORT"],'threshold'=>self::$thresholdValue['master']);
-      $SERVER_ARR[]=array("masterRO",MysqlDbConstants::$masterRO["HOST"],MysqlDbConstants::$masterRO["USER"],MysqlDbConstants::$masterRO["PASS"],MysqlDbConstants::$masterRO["PORT"],'threshold'=>self::$thresholdValue['masterRO']);
+	$SERVER_ARR[]=array("master",MysqlDbConstants::$masterDDL["HOST"],MysqlDbConstants::$masterDDL["USER"],MysqlDbConstants::$masterDDL["PASS"],MysqlDbConstants::$masterDDL["PORT"],'threshold'=>self::$thresholdValue['master']);
+       $SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1DDL["HOST"],MysqlDbConstants::$shard1DDL["USER"],MysqlDbConstants::$shard1DDL["PASS"],MysqlDbConstants::$shard1DDL["PORT"],'threshold'=>self::$thresholdValue['shard1']);
+       $SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2DDL["HOST"],MysqlDbConstants::$shard2DDL["USER"],MysqlDbConstants::$shard2DDL["PASS"],MysqlDbConstants::$shard2DDL["PORT"],'threshold'=>self::$thresholdValue['shard2']);
+       $SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3DDL["HOST"],MysqlDbConstants::$shard3DDL["USER"],MysqlDbConstants::$shard3DDL["PASS"],MysqlDbConstants::$shard3DDL["PORT"],'threshold'=>self::$thresholdValue['shard3']);
+       $SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1SlaveDDL["HOST"],MysqlDbConstants::$shard1SlaveDDL["USER"],MysqlDbConstants::$shard1SlaveDDL["PASS"],MysqlDbConstants::$shard1SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
+       $SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2SlaveDDL["HOST"],MysqlDbConstants::$shard2SlaveDDL["USER"],MysqlDbConstants::$shard2SlaveDDL["PASS"],MysqlDbConstants::$shard2SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
+       $SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3SlaveDDL["HOST"],MysqlDbConstants::$shard3SlaveDDL["USER"],MysqlDbConstants::$shard3SlaveDDL["PASS"],MysqlDbConstants::$shard3SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
+//       $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsDDL["HOST"],MysqlDbConstants::$alertsDDL["USER"],MysqlDbConstants::$alertsDDL["PASS"],MysqlDbConstants::$alertsDDL["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
+       
+      //$SERVER_ARR[]=array("master",MysqlDbConstants::$master["HOST"],MysqlDbConstants::$master["USER"],MysqlDbConstants::$master["PASS"],MysqlDbConstants::$master["PORT"],'threshold'=>self::$thresholdValue['master']);
       $SERVER_ARR[]=array("masterRep",MysqlDbConstants::$masterRep["HOST"],MysqlDbConstants::$masterRep["USER"],MysqlDbConstants::$masterRep["PASS"],MysqlDbConstants::$masterRep["PORT"],'threshold'=>self::$thresholdValue['masterRep']);
-      $SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1["HOST"],MysqlDbConstants::$shard1["USER"],MysqlDbConstants::$shard1["PASS"],MysqlDbConstants::$shard1["PORT"],'threshold'=>self::$thresholdValue['shard1']);
-      $SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2["HOST"],MysqlDbConstants::$shard2["USER"],MysqlDbConstants::$shard2["PASS"],MysqlDbConstants::$shard2["PORT"],'threshold'=>self::$thresholdValue['shard2']);
-      $SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3["HOST"],MysqlDbConstants::$shard3["USER"],MysqlDbConstants::$shard3["PASS"],MysqlDbConstants::$shard3["PORT"],'threshold'=>self::$thresholdValue['shard3']);
+      //$SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1["HOST"],MysqlDbConstants::$shard1["USER"],MysqlDbConstants::$shard1["PASS"],MysqlDbConstants::$shard1["PORT"],'threshold'=>self::$thresholdValue['shard1']);
+      //$SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2["HOST"],MysqlDbConstants::$shard2["USER"],MysqlDbConstants::$shard2["PASS"],MysqlDbConstants::$shard2["PORT"],'threshold'=>self::$thresholdValue['shard2']);
+      //$SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3["HOST"],MysqlDbConstants::$shard3["USER"],MysqlDbConstants::$shard3["PASS"],MysqlDbConstants::$shard3["PORT"],'threshold'=>self::$thresholdValue['shard3']);
      $SERVER_ARR[]=array("shard1Rep",MysqlDbConstants::$shard1Rep["HOST"],MysqlDbConstants::$shard1Rep["USER"],MysqlDbConstants::$shard1Rep["PASS"],MysqlDbConstants::$shard1Rep["PORT"],'threshold'=>self::$thresholdValue['shard1Rep']);
      $SERVER_ARR[]=array("shard2Rep",MysqlDbConstants::$shard2Rep["HOST"],MysqlDbConstants::$shard2Rep["USER"],MysqlDbConstants::$shard2Rep["PASS"],MysqlDbConstants::$shard2Rep["PORT"],'threshold'=>self::$thresholdValue['shard2Rep']);
      $SERVER_ARR[]=array("shard3Rep",MysqlDbConstants::$shard3Rep["HOST"],MysqlDbConstants::$shard3Rep["USER"],MysqlDbConstants::$shard3Rep["PASS"],MysqlDbConstants::$shard3Rep["PORT"],'threshold'=>self::$thresholdValue['shard3Rep']);
+     
+     //$SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],MysqlDbConstants::$shard1Slave["USER"],MysqlDbConstants::$shard1Slave["PASS"],MysqlDbConstants::$shard1Slave["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
+     //$SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],MysqlDbConstants::$shard2Slave["USER"],MysqlDbConstants::$shard2Slave["PASS"],MysqlDbConstants::$shard2Slave["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
+     //$SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],MysqlDbConstants::$shard3Slave["USER"],MysqlDbConstants::$shard3Slave["PASS"],MysqlDbConstants::$shard3Slave["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
+     
       $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],MysqlDbConstants::$viewSimilar["USER"],MysqlDbConstants::$viewSimilar["PASS"],MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
       $SERVER_ARR[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],MysqlDbConstants::$bmsSlave["USER"],MysqlDbConstants::$bmsSlave["PASS"],MysqlDbConstants::$bmsSlave["PORT"],'threshold'=>self::$thresholdValue['bmsSlave']);
       $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],MysqlDbConstants::$alertsSlave["USER"],MysqlDbConstants::$alertsSlave["PASS"],MysqlDbConstants::$alertsSlave["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
@@ -61,16 +78,28 @@ EOF;
       $serverArrayCount = count($SERVER_ARR);
       for ($i = 0; $i < $serverArrayCount; $i++) {    
         $serverName = $SERVER_ARR[$i][0];
+        $this->servers[] = $serverName;
         $db = @mysql_connect($SERVER_ARR[$i][1] . ":" . $SERVER_ARR[$i][4],$SERVER_ARR[$i][2],$SERVER_ARR[$i][3]);
-        $res=mysql_query("SHOW FULL PROCESSLIST",$db);
+         $res=mysql_query("SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST WHERE COMMAND != 'Binlog Dump' AND COMMAND != 'Connect' ORDER BY TIME DESC",$db);
         if(!$res){
 	    $this->ifSend = 1;
 	    $this->ifSmsSend = 1;
             $this->mailMessage .= "<br/><br/>".$serverName."- Cannot Connect to server";
+            $this->slackMessage[$serverName] = $serverName."- Cannot Connect to server";
             $this->errorServer[] = $i;
         }else{
             $this->checkThreshold($res,$serverName,$SERVER_ARR[$i]['threshold']);
         }
+
+	if($serverName == 'master'){
+		$sql_l = "SELECT * FROM information_schema.processlist WHERE user NOT IN ('system user') AND user not like '%repl%' AND time >= '2700' AND COMMAND!='Sleep'";
+		$res_l =mysql_query($sql_l,$db);
+		$row_l = mysql_fetch_array($res_l);
+		if($row_l){
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/jaago.txt","\n\n".date("Y-m-d h:i:s")."---".var_export($row_l,true));
+			$this->sendSMS('','new');
+		}
+	}
       }
       if($this->ifSend== "1"){ // trigger mail if mail body is not empty
           $this->notify();
@@ -89,34 +118,73 @@ EOF;
 	    $this->ifSend = 1;
 	}
         $this->mailMessage .= "<br/><br/>".$serverName." is having ".$connectionCount." connections <br/>";
-        $this->formatMsg($conn);
+        $this->slackMessage[$serverName] = $serverName." is having ".$connectionCount." connections";
+        $this->formatMsg($conn,$serverName);
     }
     /*
      * This function formats the process list query and append it to mailmessage variable
      * @param object $res database connection
      */
-    private function formatMsg($res)
+    private function formatMsg($res,$serverName)
     {
+        $sleepcount = 0;
         $this->mailMessage .= "Connection Details <br/>";
-        while($row=@mysql_fetch_row($res))
+        while($row=@mysql_fetch_assoc($res))
         {
-                $this->mailMessage .= implode("|\t",$row)."<br/>";
+                if($row["COMMAND"] != "Sleep"){
+                        $this->mailMessage .= implode("|\t",$row)."<br/>";
+                }else{
+                        $sleepcount ++;
+                        $server = explode(":",$row["HOST"]);
+                        if(!isset($this->sleepQuery[$server[0]])){
+                                $this->sleepQuery[$server[0]] = array();
+                        }
+                        if(!isset($this->sleepQuery[$server[0]][$serverName])){
+                                $this->sleepQuery[$server[0]][$serverName] = 0;
+                        }
+                        $this->sleepQuery[$server[0]][$serverName]++;
+                }
         }
+        $this->slackMessage[$serverName] .= " :: Sleep count is ".$sleepcount;
     }
     /*
      * This function trigger email
      */
     private function notify(){
 	$dt = date("Y-m-d H:i:s");
-        $serverMessage = "Hi,<br/><br/>"."Please find below the server details exceeding threshold.".$this->mailMessage;
+        $serverMessage = "Hi,<br/><br/>"."Please find below the server details exceeding threshold. <br/><br/>Sleep Queries::<br/>";
+        $tableBody = "<table style='border:1px solid black;border-collapse:collapse;'>";
+        sort($this->servers);
+        $tableBody .= "<tr style='border:1px solid ;'>"."<th style='border:1px solid ;'>Server</th><th style='border:1px solid ;'>".implode("</th><th style='border:1px solid ;'>",$this->servers)."</th>"."</tr>";
+        foreach($this->sleepQuery as $key=>$v){
+                $aDiff = array_diff($this->servers,array_keys($v));
+                foreach($aDiff as $server){
+                        $this->sleepQuery[$key][$server] = 0;
+                }
+                ksort($this->sleepQuery[$key]);
+                $tableBody .= "<tr style='border:1px solid ;'><td style='border:1px solid ;'>$key</td><td style='border:1px solid ;'>".implode("</td><td style='border:1px solid ;'>",$this->sleepQuery[$key])."</td></tr>";
+        }
+        $tableBody .= "</table>";
+        $serverMessage .= $tableBody;
+        $serverMessage .= "</br></br>".$this->mailMessage;
+        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/connectionThreshold".date('Ymd').".txt";
+        $breaks = array("<br />","<br>","<br/>");
+        $msgWithSlashN = str_ireplace($breaks, "\n", $serverMessage);
+        file_put_contents($fileName, date("Y m d H:i:s", strtotime("now"))."\n".$msgWithSlashN."\n\n", FILE_APPEND);
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
+        CommonUtility::sendSlackmessage(implode(" \n ",$this->slackMessage),"mysql");
     }
 /*
      * @param int $memCacheValue memcache threshold value
      */
-    private function sendSMS($memCacheValue) {
-      $servers = implode(',',$this->errorServer);
-      $this->smsMessage = "Mysql Error Count have reached Threshold on ".$servers." ".$memCacheValue." within 5 minutes";
+    private function sendSMS($memCacheValue,$flag="") {
+     if($flag=="new"){
+	      $this->smsMessage = "Mysql Error Count have reached jaago on master within 5 minutes";
+	}
+      else{
+	      $servers = implode(',',$this->errorServer);
+	      $this->smsMessage = "Mysql Error Count have reached Threshold on ".$servers." ".$memCacheValue." within 5 minutes";
+       }
       foreach ($this->SMS_TO as $mobPhone) {
         $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";
         $xml_content="%3CSMS%20UDH=%220%22%20CODING=%221%22%20TEXT=%22".urlencode($this->smsMessage)."%22%20PROPERTY=%220%22%20ID=%22".self::PROFILE_ID."%22%3E%3CADDRESS%20FROM=%22".self::FROM_ID."%22%20TO=%22".$mobPhone."e%22%20SEQ=%22".self::PROFILE_ID."%22%20TAG=%22%22/%3E%3C/SMS%3E";

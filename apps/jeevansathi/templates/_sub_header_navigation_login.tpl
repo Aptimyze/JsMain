@@ -267,5 +267,5 @@
 		</ul>
 <script>
 if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>

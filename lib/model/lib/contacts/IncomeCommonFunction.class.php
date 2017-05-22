@@ -654,6 +654,64 @@ class IncomeCommonFunction
 			}
 		return $resultArr;
 	}
+        /**
+         * This function returns the sorted income array on the basis of dollar or INR value
+         * @param type $incomeStr
+         * @return type
+         */
+        static public function getIncomeDppFilterArray($incomeStr)
+	{
+		$income_data=FieldMap::getFieldLabel("income_data","","1");
+		$i=0;$j=0;
+		$incomeArr=explode(",",$incomeStr);
+		
+		foreach($incomeArr as $key=>$val){
+			foreach($income_data as $k=>$v){
+				if($val ==$v["VALUE"])
+				{
+					if($v["TYPE"]=="RUPEES")
+					{
+						if($i==0){
+							$minRupee=$v["MIN_VALUE"];
+							$i++;
+						}
+						if($income_data[$val]["MIN_VALUE"]<$minRupee)
+                                                        $minRupee=$v["MIN_VALUE"];
+					}
+					else
+					{
+						if($j==0){
+							$minDollar=$v["MIN_VALUE"];
+							$j++;
+						}
+						if($income_data[$val]["MIN_VALUE"]<$minDollar)
+							$minDollar=$v["MIN_VALUE"];
+					}
+				}
+			}
+		}
+                        if($minRupee && $minDollar){
+                                $rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
+                                $doArray=array('minID'=>$minDollar,'maxID'=>19);
+				$incomeMapping= new IncomeMapping($rsArray,$doArray);
+                        }
+			else if($minRupee)
+			{
+				$rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
+				$incomeMapping= new IncomeMapping($rsArray);
+			}
+			else
+			{
+				$doArray=array('minID'=>$minDollar,'maxID'=>19);
+				$incomeMapping= new IncomeMapping("",$doArray);	
+			}
+			
+			$incomeArr=$incomeMapping->incomeMapping();
+			$incomeString = $incomeArr[istr] .",". $incomeStr;
+			$incomeArr = explode(",",str_replace("'","",$incomeString));
+			return array_unique($incomeArr);
+		
+	}
 }
 
 ?>

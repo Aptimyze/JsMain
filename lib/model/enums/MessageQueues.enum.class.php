@@ -3,7 +3,8 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 5;  //Number of instances of Consumer class run at a time.
+  CONST CONSUMERCOUNT = 8;  //Number of instances of Consumer class run at a time.  
+  CONST BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT = 3; //Number of instances of BufferInstantNotificationConsumer class run at a time.  
   CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
   CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
@@ -15,7 +16,7 @@ class MessageQueues
   CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
-  CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
+  CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
@@ -23,6 +24,8 @@ class MessageQueues
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
   CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 3; //count of discount tracking consumer count
+  CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
+  CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
@@ -30,7 +33,7 @@ class MessageQueues
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE"); //queues not to be considered for msg upper limit alert
-  CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
+  CONST SAFE_LIMIT = 500000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
   CONST PASSIVE = false;      //If set, the server will reply with Declare-Ok if the queue already exists with the same name, and raise an error if queue with the given name doesnt exist.
@@ -55,6 +58,7 @@ class MessageQueues
   CONST CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
   CONST CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeWriteMessageQUEUE"; //Command to start cron:cronConsumeWriteMessageQUEUE write message queue
   CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
+  CONST CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND = "symfony cron:cronConsumeBufferInstantNotifications";
   CONST FALLBACK_STATUS= true;   //If true, second server is used to handle fallback otherwise only one server is in use.
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
   CONST AGENT_NOTIFICATIONSQUEUE = "AgentsNotificationsQueue"; //Queue for storing agent notifications(notify for FP online users to agents)
@@ -64,10 +68,14 @@ class MessageQueues
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST UPDATE_SEEN_PROFILE_QUEUE = "updateSeenProfileQueue";
+  CONST UPDATE_MATCHALERTS_LAST_SEEN_QUEUE = "updateMatchAlertsLastSeenQueue";
+  CONST UPDATE_JUSTJOINED_LAST_SEEN_QUEUE = "updateJustJoinedLastSeenQueue";
   CONST LOGGING_QUEUE = "loginTrackingQueue";
   CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST CRONMATCHALERTSLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeMatchAlertsLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
+  CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEENPROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenProfileQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATE_FEATURED_PROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateFeaturedProfileQueue"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -126,6 +134,19 @@ class MessageQueues
   //Profiler Log Queue
   const SCRIPT_PROFILER_Q = "JsProfilerQueue";
   const SCRIPT_PROFILER_PROCESS = "JS_PROFILER_PROCESS";
+
+  // Instant EOI notification
+  const INSTANT_EOI_PROCESS = "instantEOINotification";
+  const INSTANT_EOI_QUEUE = "instantEOINotificationQueue";
+  const INSTANTEOICONSUMERCOUNT = 2;  //Number of instances of instant EOI Notify consumer class run at a time.
+  CONST CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND = "symfony cronConsumeInstantEOIQueue"; //Command to start cron:cronConsumeScreeningQueueTask
+  
+  //Delayed Maile Queue
+  const DELAYED_INSTANT_MAIL = 'DelayedMailQueue';
+  const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
+  const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
+  public static $logConnectionTime = 0;
+  public static $logConnectionTimeout = 1;
 }
 
 ?>

@@ -358,11 +358,14 @@ class detailedAction extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			$arrOutDisplay["buttonDetails"] = json_encode($buttonObj->getNewButtonArray($arrPass));
 		}
+		$arrOutDisplay["showTicks"] = $this->CODEDPP;
+		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
+				
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
@@ -601,16 +604,14 @@ class detailedAction extends sfAction
 			//Getting loginned profile desired partner data and setting object as well.
 			$this->loginProfile->setJpartner($jpartnerObj);
 			//Green label for detailed profile section of viewed profile.
-			if($jpartnerObj!=null)
+			/*if($jpartnerObj!=null)
 			{
 					$this->CODEOWN=JsCommon::colorCode($this->profile,$this->loginProfile->getJpartner(),$this->casteLabel,$this->sectLabel);
-			}
+			}*/
 			//Green label for desired partner profile section of viewed profile.
 			if($this->profile->getJpartner()!=null)
 			{
-				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);
-                                
-				
+				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                	
 			}
                         
 		}	
@@ -931,6 +932,7 @@ class detailedAction extends sfAction
 	 */
 	private function alterSeenTable()
 	{
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterdetailActionUncalledFunc.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$this->getRequest();
@@ -1336,7 +1338,9 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);
+        
+        //This part was added to allow idfy to go Online percentage wise
+        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);        
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }

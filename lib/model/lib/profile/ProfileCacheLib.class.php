@@ -930,6 +930,9 @@ class ProfileCacheLib
         else if (false !== stristr($storeName, "YOUR_INFO_OLD") ){
             $arrFields = ProfileCacheConstants::$arrOldYourInfo;
         }
+        else if(false !== stristr($storeName, "ProfileAUTO_EXPIRY")) {
+           $arrFields = ProfileCacheConstants::$arrAutoExpiry;
+        }
         return $arrFields;
     }
     
@@ -1046,11 +1049,14 @@ class ProfileCacheLib
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
         return false;
       }
-   
       if(false === $this->validateCriteria($criteria)) {
           return false;
       }
-        
+
+      if(false === $this->checkRelevantFields($fields, $storeName)){
+        return false;
+      }
+
       //Get Relevant Fields
       $arrFields = $this->getRelevantFields($fields, $storeName);
       
@@ -1059,7 +1065,10 @@ class ProfileCacheLib
       
       //Get Records from Cache
       $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
-      
+
+      if(!isset($arrResponse))
+        return false;
+
       // Get array of profile ids for which data doesnt exist in cache
       $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
 
@@ -1082,6 +1091,38 @@ class ProfileCacheLib
         'notCachedPids' => implode(',', $arrPids),
       );
       return $result;
+    }
+
+    /**
+     * @param $arrFields
+     * @param $storeName
+     * @return bool
+     */
+    private function checkRelevantFields($arrFields, $storeName="")
+    {
+        $bStoreNameExist = strlen($storeName) ? true : false;
+        $storeSuffix = $this->getStoreSuffix($storeName);
+
+        if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
+          $arrFields = $this->getColumnArr($storeName);
+        } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = ProfileCacheConstants::$arrHashSubKeys;
+        } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = explode(',',$arrFields);
+            foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
+        }
+        //TODO: If $arrFields is not an array, handle this case
+        $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_unique($array);
+
+        if(count(array_diff(array_unique($arrFields),$array)))
+        {
+          return false;
+        }
+
+        // the fields are relevant
+        return true;
     }
 
 }

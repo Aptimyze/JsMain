@@ -99,6 +99,7 @@ class membershipActions extends sfActions
                 $template  = 'JSPCLandingPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
+                
 
                 if ($data['dividerExpiry'] != null) {
                     list($this->days, $this->showCountdown, $this->countdown) = $memActFunc->setTickerData($data['dividerExpiry']);
@@ -189,7 +190,7 @@ class membershipActions extends sfActions
         $memActFunc = new MembershipActionFunctions();
 
         //parse request params for module
-        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
+        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum,$upgradeMem) = $memActFunc->getReqParamsForRevMobMem($request);
         if ($device == "Android_app") {
 
             $_SERVER[HTTP_USER_AGENT] = "Chrome/39 JsAndWeb";
@@ -228,6 +229,7 @@ class membershipActions extends sfActions
 
             case '4':
                 $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
+                $this->upgradeMem = $upgradeMem;
                 $template                         = 'JSMSCouponPage';
 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);
@@ -479,10 +481,10 @@ class membershipActions extends sfActions
 
             $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
 
-            // Code added to specifically remove 1 month membership from display
-            if (isset($allMainMem['P']['P1'])) {
+            // ankita :Code removed to specifically remove 1 month membership from display
+            /*if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
-            }
+            }*/
 
             $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
             $discountType       = $discountTypeArr['TYPE'];
@@ -632,11 +634,11 @@ class membershipActions extends sfActions
         $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
         $this->tabs = $memHandlerObj->getMobMembershipTabs($allMainMem, $this->memID);
 
-        // Code added to specifically remove 1 month membership from display
-        if (isset($allMainMem['P']['P1'])) {
+        // ankita Code removed to specifically remove 1 month membership from display
+        /*if (isset($allMainMem['P']['P1'])) {
             unset($allMainMem['P']['P1']);
             unset($this->tabs[1]);
-        }
+        }*/
 
         $this->mainSubMemId   = $request->getParameter('mainSubMemId');
         $this->allMemberships = $memHandlerObj->getMobSuggestedService($this->memID, $this->tabs);

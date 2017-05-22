@@ -175,7 +175,7 @@
 ~if $details["show_score"] eq 1`
     <tr class="bggreyl">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Profile source</td>
-     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$SOURCE`</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["SOURCE"]`</td>
     </tr>
     <tr class="bggrey">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">User Score</td>

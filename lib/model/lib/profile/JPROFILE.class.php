@@ -31,7 +31,7 @@ class JPROFILE
      * and rest from store.
      * @var static
      */
-    const ENABLE_GETFORPARTIALKEYS = false;
+    const ENABLE_GETFORPARTIALKEYS = true;
 
     var $activatedKey; //archiving
 
@@ -271,7 +271,7 @@ class JPROFILE
                     LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
                 }
 
-                if(0 && ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
                   $this->logCacheConsumption();
                   return $result;
                 }
@@ -296,9 +296,9 @@ class JPROFILE
         return self::$objProfileMysql->fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset);
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
-        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause);
+        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause,$orderby);
     }
 
     public function checkPhone($numberArray = '', $isd = '')
@@ -770,7 +770,13 @@ class JPROFILE
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+       // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+    }
+
+    //This function is used to find details of users who do not have a photo and whose date condition satifies the condition given in the array
+    public function getProfileForNoPhotoMailer($dateConditionArr) 
+    {
+        return self::$objProfileMysql->getProfileForNoPhotoMailer($dateConditionArr);
     }
 }
 

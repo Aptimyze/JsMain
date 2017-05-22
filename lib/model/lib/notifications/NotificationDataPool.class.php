@@ -68,25 +68,33 @@ class NotificationDataPool
 		return $dataAccumulated;
     }
 
-  public function getJustJoinData($applicableProfiles)
+  public function getJustJoinData($applicableProfiles,$logProfiles='',$currentScript=0)
   {
+    //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
+	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
-            //if($applicableProfilesData[$profileid])
-            {
+		if(is_array($logProfiles)){
+			if(in_array("$profileid", $logProfiles))
+				continue;
+		}
                 $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
-                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj);
-                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT'];
+                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
+                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
                 if($matchCount[$profileid]>0)
                     $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
-            }
+
+		// Add logging for re-try logic
+		$tempObj->addProfile($profileid,$currentScript);
+
         }
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
+        
         if(is_array($matchedProfiles))
         {
             foreach($matchedProfiles as $k1=>$v1)
@@ -133,6 +141,7 @@ class NotificationDataPool
         unset($matchedProfiles);
         unset($matchCount);
     }
+
     return $dataAccumulated;
   }
   
@@ -264,6 +273,10 @@ class NotificationDataPool
         }
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        if($notificationKey == 'CHAT_MSG' || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){
+            $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
+            $dataAccumulated[0]['OTHER_USERNAME']=$details[$profilesArr["OTHER"]]["USERNAME"];
+        }
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -404,8 +417,10 @@ class NotificationDataPool
 		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
         $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
         //Remove blocked profiles. Those that have been blocked by the sender
-        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
-		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        //$ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		//$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        $ignoreProfileObj = new IgnoredProfiles("newjs_slave");
+        $ignoredProfiles = $ignoreProfileObj->ifProfilesIgnored($data["IGNORED_STRING"],$data['SELF']);
         if($ignoredProfiles){
             foreach($ignoredProfiles as $key => $val){
                 unset($data['SENDER'][$val]);
@@ -531,6 +546,18 @@ class NotificationDataPool
             return $dataAccumulated;
         }
     }
+
+    function getLoggedoutNotificationData($applicableProfiles){
+        if(is_array($applicableProfiles)){
+            $counter =0;
+            foreach($applicableProfiles as $key=>$regId){
+                $dataAccumulated[$counter++]['SELF']=array('REG_ID'=>$regId,'PROFILEID'=>0);
+            }
+            $dataAccumulated[0]['COUNT'] = "SINGLE";
+            unset($applicableProfiles);
+            return $dataAccumulated;
+        }
+    }
     
     public function notificationLogging($logArr,$logPoint){
         if (JsConstants::$whichMachine == 'test' && NotificationEnums::$enableNotificationLogging == true) {
@@ -541,6 +568,25 @@ class NotificationDataPool
                 print_r($val);
                 print_r("\n");
             }
+        }
+    }
+    
+    public function getNotificationServiceData(){
+        $notificationServiceUrl = JsConstants::$chatNotificationService."/communication/v1/notification";
+        $headerArr[] = "JB-Internal: true";
+        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
+        $modifiedData = json_decode($response,true);
+        return $modifiedData;
+    }
+    
+    public function sendChatNotification($notificationData){
+        if(!empty($notificationData) && is_array($notificationData)){
+            $chatMsgInstantNotObj = new InstantAppNotification("MESSAGE_RECEIVED");
+            foreach($notificationData as $key => $valOld){
+                    $val = json_decode($valOld, true);
+                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
+            }
+            unset($chatMsgInstantNotObj);
         }
     }
 }

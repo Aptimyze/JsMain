@@ -324,12 +324,17 @@ die;
         /**
         * General Utility function to send 'get' curl request.
         */
-        public static function sendCurlGetRequest($urlToHit,$timeout='')
+        public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
-                $ch = curl_init($urlToHit);
+		     $ch = curl_init($urlToHit);
+		    if($headerArr)
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+			else
                 curl_setopt($ch, CURLOPT_HEADER, 0);
+               
+                
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
@@ -818,7 +823,7 @@ die;
 			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
-		//error_log("ankita-".$getName);
+		
 		return $userName;
 	}
 
@@ -998,7 +1003,15 @@ die;
 		}
 		return $redirectUrl;
 	}
-  
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
   public static function runFeatureAtNonPeak(){
 		
 		if(in_array(date('H'),array("17","18","19","20","21")))
@@ -1007,6 +1020,42 @@ die;
 		}
 		return 0;
 
+	}
+        public static function runFeatureInDaytime($after = 10,$before = 22){
+                $datetime = new DateTime; // current time = server time
+                $otherTZ  = new DateTimeZone('Asia/Kolkata');
+                $datetime->setTimezone($otherTZ); // Indian Time
+		$timeNow = $datetime->format('H');
+		if($timeNow>=$after && $timeNow<=$before)
+		{
+			return 1;
+		}
+		return 0;
+	}
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
+	}
+        /**
+         * This function will post message to slack on the basis of identifier
+         * @param type $message slack message
+         * @param type $identifier identifier for url as per SlackMessagesEnums class
+         */
+	public static function sendSlackmessage($message,$identifier = "default")
+	{
+		$url = SlackMessagesEnums::$slackModuleArray[$identifier];
+		$breaks = array("<br />","<br>","<br/>");
+		$message = str_ireplace($breaks, "\n", $message);
+		$data = array("text" => $message );
+		$ch=curl_init($url);
+		$data_string = json_encode($data);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,
+		array("Content-type: application/json"));
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result;
 	}
 }
 ?>

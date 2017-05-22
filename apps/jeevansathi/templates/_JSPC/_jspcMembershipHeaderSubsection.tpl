@@ -249,48 +249,7 @@
         </div>
     </div>
 </div>
-<div id="cartPageContent" class='disp-none'>
-    <div class="pt30 mauto mem-wid13 pb30">
-        <!--start:list-->
-        <div class="pb10">
-            <ul class="hor_list clearfix fontlig colrw f20">
-                <li class="opa80 wid33p_1 txtc">Membership Plan</li>
-                <li class="opa80 wid33p_1 txtc">Value Added Services</li>
-                <li class="wid33p_1 txtc">Payment</li>
-            </ul>
-        </div>
-        <!--end:list-->
-        <!--start:progress bar-->
-        <div class="pos-rel mem-wid13 mem-hgt1">
-            <!--start:opaque line-->
-            <div class="pos-abs fullwid mem-pos2">
-                <div class="opa30 mem-brd2"></div>
-            </div>
-            <!--end:opaque line-->
-            <!--start:dark line-->
-            <div class="pos-abs mem-progline mem-pos2">
-                <div class="mem-brd2"></div>
-            </div>
-            <!--end:dark line-->
-            <!--start:div-->
-            <div class="clearfix">
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-check1 z2 pos-rel"></i> </div>
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-check1 z2 pos-rel"></i> </div>
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-notcheck1 z2 pos-rel"></i> </div>
-            </div>
-            <!--end:div-->
-        </div>
-        <!--end:progress bar-->
-        <!--start:list-->
-        <div class="pt12">
-            <ul class="hor_list clearfix fontlig colrw f13">
-                <li class="opa80 wid33p_1 txtc">Done</li>
-                <li class="opa80 wid33p_1 txtc">Done</li>
-                <li class="wid33p_1 txtc">Pending</li>
-            </ul>
-        </div>
-        <!--end:list-->
-    </div>
+<div id="cartPageContent" class='disp-none pt35'>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {

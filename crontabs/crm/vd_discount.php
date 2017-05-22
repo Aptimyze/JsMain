@@ -15,20 +15,33 @@ $myDb 	=connect_ddl();		// master connection
 $slaveDb=connect_737();		// slave connection
 $variableDiscountObj =new VariableDiscountHandler($myDb,$slaveDb);
 
-// step1,step3
+$status =$variableDiscountObj->checkDiscountEligibleStatus();
+if(!$status)
+	successfullDie('die');
+$emailId ='manoj.rana@naukri.com';
+
+// step1
+mail($emailId,"Step-1 VD (Poll creation)", date("Y-m-d H:i:s"));
 $variableDiscountObj->addProfileInVddPool();
-$variableDiscountObj->logVdProcess('1_3');
+$variableDiscountObj->logVdProcess('1');
 
-// step2,step4
+// step2
+mail($emailId,"Step-2 VD (Filter process)", date("Y-m-d H:i:s"));
 $variableDiscountObj->filterVdPoolProfiles();
-$variableDiscountObj->logVdProcess('2_4');
+$variableDiscountObj->logVdProcess('2');
 
-// step5
+// step3
+mail($emailId,"Step-3 VD (Discount calculation)", date("Y-m-d H:i:s"));
 $variableDiscountObj->calculateVdDiscount();
-$variableDiscountObj->logVdProcess('5');
+$variableDiscountObj->logVdProcess('3');
 
-// step6
+// step4
+mail($emailId,"Step-4 VD (Final pool)", date("Y-m-d H:i:s"));
 $variableDiscountObj->addVariableDiscount();
-$variableDiscountObj->logVdProcess('6');
+$variableDiscountObj->logVdProcess('4','N');
+
+// stepe5
+mail($emailId,"Step-5 VD (Done)", date("Y-m-d H:i:s"));
 
 ?>
+

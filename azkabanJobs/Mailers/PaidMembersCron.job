@@ -1,0 +1,3 @@
+type=command
+dependencies=PaidMembersCalculate0Task,PaidMembersCalculate1Task,PaidMembersCalculate2Task
+command=echo Success

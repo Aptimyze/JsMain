@@ -1,6 +1,7 @@
 ~assign var=module value= $sf_request->getParameter('module')`
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
 ~assign var=action value= $sf_context->getActionName()`
+~assign var=pageType value= $sf_request->getParameter('type')`
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
@@ -12,11 +13,21 @@
     <meta http-equiv="content-language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
-    <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
-    ~include_http_metas`
+    <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+    ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
+  <!--  ~if $pageType =="privacypolicy"`
+        <link rel="amphtml" href="~$ampurl`">
+    ~/if`-->
+    ~if $ampurl`
+        <link rel="amphtml" href="~$ampurl`"/>
+    ~/if`
     ~include_canurl`
+    ~include_http_metas`
     ~include_title`
     ~include_metas`
+    ~if $pageType =="privacypolicy"`
+        <link rel="amphtml" href="~$ampurl`" />
+    ~/if`
     ~use helper = SfMinify`
     ~minify_include_stylesheets('common')`
     ~minify_include_stylesheets()`
@@ -75,8 +86,8 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
-        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`","rosterRemoveMsg":"~JsConstants::$chatListingWebServiceUrl['rosterRemoveMsg']`"};
+        var nonRosterRefreshUpdate = {"dpp":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Paid']`"},"shortlist":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Paid']`"}};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
         //console.log("dppLiveForAll",dppLiveForAll);
@@ -153,11 +164,11 @@
     <!--Google Analytics Code-->
 </div>
 </body>
-~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->

@@ -93,7 +93,7 @@ class Decline extends ContactEvent{
       {
         $receiver = $this->contactHandler->getViewed();
         $sender = $this->contactHandler->getViewer();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
+        $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'DECLINECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
       }
 
@@ -154,10 +154,6 @@ class Decline extends ContactEvent{
         $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",1);
       if($currentFlag==ContactHandler::INITIATED)
       {
-        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
-        {
-          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
-        }
         if ($filtered!='Y'){
           if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
           {
@@ -165,11 +161,15 @@ class Decline extends ContactEvent{
           }
           else
           {
+            if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+            {
+              $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+            }
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
         $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
-		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+		      $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
           }
 }
  else $profileMemcacheServiceViewerObj->update("FILTERED",-1);
@@ -183,6 +183,9 @@ class Decline extends ContactEvent{
       }
       $profileMemcacheServiceViewerObj->updateMemcache();
       $profileMemcacheServiceViewedObj->updateMemcache(); 	
+       InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewer()->getPROFILEID(),"",1);
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewed()->getPROFILEID(),"",1);
+    
     }
     catch (Exception $e) {
       throw new jsException($e);

@@ -24,5 +24,7 @@ class feedbackMatchAlertMailerAction extends sfActions
 		$this->redirectLink = $this->matchAlertLink."/".$this->echecksum."/".$this->checksum."?From_Mail=Y&stype=".$this->stype."&clicksource=matchalert1";
 		$matchAlertFeedbackObj = new matchAlertFeedback();
 		$matchAlertFeedbackObj->insertMatchAlertFeedback($this->profileid,$this->mailSentDate,$this->stype,$this->feedbackValue,$this->feedbackTime);
+		
+		$this->countRedirectDpp = 15;
 	}
 }

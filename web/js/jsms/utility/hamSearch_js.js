@@ -27,7 +27,7 @@ function ShowHamSearch(type,tapid)
 	var searchid=$("#search_ham_"+tapid);
 	if(searchid.length)
 		searchid.val("");
-	if($.inArray(type,['reg_city_jspc','state_res','city_res','country_res','caste','p_caste','p_country','p_city','occupation','mtongue','reg_mtongue'])==-1 && type.indexOf('reg_caste_') ==-1)
+	if($.inArray(type,['reg_city_jspc','edu_level_new','state_res','city_res','country_res','caste','p_caste','p_country','p_city','occupation','mtongue','reg_mtongue','sect'])==-1 && type.indexOf('reg_caste_') ==-1)
 	{   
 		searchid.parent().parent().addClass('dn');
 			return false;

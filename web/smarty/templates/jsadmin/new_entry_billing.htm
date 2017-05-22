@@ -102,7 +102,7 @@
 		}
 		
 		var required_id;
-		var services_array = new Array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+		var services_array = new Array("membership_service",/*"boldlisting_service",*/"astro_service",/*"matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service",*/"JSExclusive_service");
 		function get_service_price(obj,calculate_for_all)
 		{
 			var curtype = document.getElementById("curtype").value;
@@ -196,7 +196,8 @@
 					alert('Please fill the Address field');
 					return false;
 				}
-				if(!document.pg1_frm.chk_membership_service.checked && !document.pg1_frm.chk_boldlisting_service.checked && !document.pg1_frm.chk_astro_service.checked && !document.pg1_frm.chk_matriprofile_service.checked && !document.pg1_frm.chk_display_service.checked && !document.pg1_frm.chk_assistance_service.checked && !document.pg1_frm.chk_introcalls_service.checked && !document.pg1_frm.chk_featuredprofile_service.checked && !document.pg1_frm.chk_JSExclusive_service.checked)
+				/*if(!document.pg1_frm.chk_membership_service.checked && !document.pg1_frm.chk_boldlisting_service.checked && !document.pg1_frm.chk_astro_service.checked && !document.pg1_frm.chk_matriprofile_service.checked && !document.pg1_frm.chk_display_service.checked && !document.pg1_frm.chk_assistance_service.checked && !document.pg1_frm.chk_introcalls_service.checked && !document.pg1_frm.chk_featuredprofile_service.checked && !document.pg1_frm.chk_JSExclusive_service.checked)*/
+				if(!document.pg1_frm.chk_membership_service.checked && !document.pg1_frm.chk_astro_service.checked && !document.pg1_frm.chk_JSExclusive_service.checked)
 				{
 					alert('Please select a Membership');
 					return false;
@@ -801,7 +802,7 @@
 						</td>
 						<td class="fieldsnew"><input type="text" name="membership_service_price" id="membership_service_price" disabled size="8"></td>
 					</tr>
-					<tr>
+					<!--tr>
 						<td class="label">
 							<input type="checkbox" name="chk_assistance_service" id="chk_assistance_service" value="Y" onchange="get_service_price(this);">
 						</td>
@@ -822,7 +823,7 @@
 							</select>
 						</td>
 						<td class="fieldsnew"><input type="text" name="assistance_service_price" id="assistance_service_price" disabled size="8"></td>
-					</tr>
+					</tr-->
 					<!-- Profile home delivery service stopped
 					<tr>
 						<td class="label">
@@ -847,7 +848,7 @@
 						<td class="fieldsnew"><input type="text" name="courier_service_price" id="courier_service_price" disabled size="8"></td>
 					</tr>
 					-->
-					<tr>
+					<!--tr>
 						<td class="label">
 							<input type="checkbox" name="chk_boldlisting_service" id="chk_boldlisting_service" value="Y" onchange="get_service_price(this);">
 						</td>
@@ -868,7 +869,7 @@
 							</select>
 						</td>
 						<td class="fieldsnew"><input type="text" name="boldlisting_service_price" id="boldlisting_service_price" disabled size="8"></td>
-					</tr>
+					</tr-->
 					<tr>
 						<td class="label">
 							<input type="checkbox" name="chk_astro_service" id="chk_astro_service" value="Y" onchange="get_service_price(this);">
@@ -891,7 +892,7 @@
 						</td>
 						<td class="fieldsnew"><input type="text" name="astro_service_price" id="astro_service_price" disabled size="8"></td>
 					</tr>
-					<tr>
+					<!--tr>
 						<td class="label">
 							<input type="checkbox" name="chk_matriprofile_service" id="chk_matriprofile_service" value="Y" onchange="get_service_price(this);">
 						</td>
@@ -966,7 +967,7 @@
 							</select>
 						</td>
 						<td class="fieldsnew"><input type="text" name="featuredprofile_service_price" id="featuredprofile_service_price" disabled size="8"></td>
-					</tr>
+					</tr-->
 					<!-- New JS Exclusive service added -->
 					<tr>
 						<td class="label">

@@ -309,21 +309,26 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
-            if ($start_dt) {
-                $sql .= " AND ENTRY_DT >= :START_DT";
+            if(empty($profileStr)){
+                throw new jsException("empty profileStr passed in isPaidEver in billing_PURCHASES class");
             }
+            else{
+                $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+                if ($start_dt) {
+                    $sql .= " AND ENTRY_DT >= :START_DT";
+                }
 
-            $prep = $this->db->prepare($sql);
-            if ($start_dt) {
-                $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
-            }
+                $prep = $this->db->prepare($sql);
+                if ($start_dt) {
+                    $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+                }
 
-            $prep->execute();
-            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
+                $prep->execute();
+                while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $res[$row['PROFILEID']] = $row['ENTRY_DT'];
+                }
+                return $res;
             }
-            return $res;
         } catch (PDOException $e) {
             throw new jsException($e);
         }
@@ -474,7 +479,13 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
+            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,"
+                    . "PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT,"
+                    . " ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY,"
+                    . " PUR.MEM_UPGRADE"
+                    . " FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD"
+                    . " WHERE PD.BILLID=PUR.BILLID"
+                    . " AND PUR.BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();
@@ -557,12 +568,15 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getProfilesForReconsiliationAfter($time)
+    public function getProfilesForReconsiliationAfter($time,$limit="1")
     {
         try
         {
             if ($time) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC";
+                if($limit != ""){
+                    $sql .= " LIMIT ".$limit;
+                }
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
                 $prep->execute();
@@ -577,22 +591,47 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function fetchFinanceData($startDt, $endDt, $device = 'other')
+    public function fetchFinanceData($startDt, $endDt, $device = 'other',$offset=0,$limit='')
     {
         try {
             if ($device == "other") {
-                $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.SUBSCRIPTION_START_DATE AS ASSD,pur_d.SUBSCRIPTION_END_DATE ASED,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+                $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.SUBSCRIPTION_START_DATE AS ASSD,pur_d.SUBSCRIPTION_END_DATE ASED,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0) ORDER BY p.ENTRY_DT";
             } else {
-                $sql = "SELECT pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE, ROUND(((pd.AMOUNT*pur_d.SHARE)/100)*0.7,2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+                $sql = "SELECT pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE, ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0) ORDER BY p.ENTRY_DT";
+            }
+            if($limit>0&& $offset>=0){
+                $sql.=" limit :OFFSET,:LIMIT";
             }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DATE", $startDt, PDO::PARAM_STR);
             $prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
+            if($limit>0&& $offset>=0){
+                $prep->bindValue(":OFFSET", $offset, PDO::PARAM_INT);
+                $prep->bindValue(":LIMIT", $limit, PDO::PARAM_INT);
+             }
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $profiles[] = $result;
             }
             return $profiles;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+     public function fetchFinanceDataCount($startDt, $endDt, $device = 'other')
+    {
+        try {
+            if ($device == "other") {
+                $sql = "SELECT count(*) AS COUNT FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+            } else {
+                $sql = "SELECT count(*) AS COUNT FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+            }
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE", $startDt, PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
+            $prep->execute();
+            $result = $prep->fetch(PDO::FETCH_ASSOC);
+            return $result['COUNT'];
         } catch (PDOException $e) {
             throw new jsException($e);
         }

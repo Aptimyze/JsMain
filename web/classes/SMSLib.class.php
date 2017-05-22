@@ -77,6 +77,7 @@ class SMSLib
     {
         $varArr = array(
             "USERNAME"        => array("maxlength" => "8"),
+            "FIELD_LIST"      => array("maxlength" => "30"),
             "PASSWORD"        => array("maxlength" => "16"),
             "MSTATUS"         => array("maxlength" => "13"),
             "MTONGUE"         => array("maxlength" => "12"),
@@ -123,6 +124,15 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "FIELD_LIST":
+                    $FIELD_LIST = $this->getVariables("FIELD_LIST");
+                    $fieldsList = strlen($tokenValue['editedFields']) <= $FIELD_LIST["maxlength"] ? $tokenValue['editedFields'] : substr($tokenValue['editedFields'], 0, $FIELD_LIST["maxlength"] - 2) . "..";
+                    return $fieldsList;
+                        break;
+            case "WAS_WERE":                    
+                    $wasWere = $tokenValue['WAS_WERE']; 
+                    return $wasWere;
+                        break;
             case "PHOTO_REJECTION_REASON":                    
                     $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
                     return $rejectReasonArr[0];
@@ -615,6 +625,41 @@ class SMSLib
             case "LINK_DEL":
                $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
                 return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
+
+            case "REPORT_INVALID_PHONE_ISD_COMMA":
+
+                $toSendForPrivacy = 0;
+
+                if($messageValue["SHOWPHONE_MOB"] == 'C')
+                { 
+                    include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+                   $contactDetails = Contacts::getContactsTypeCache($messageValue["RECEIVER"]["PROFILEID"],$messageValue["PROFILEID"]);
+                   $contactArr = explode('_',$contactDetails);
+                   $smaller = $messageValue["RECEIVER"]["PROFILEID"] > $messageValue["PROFILEID"] ? $messageValue["PROFILEID"] :
+                   $messageValue["RECEIVER"]["PROFILEID"]; 
+                   $type = $contactArr[0];
+                   $senderReceiver = $contactArr[1];
+
+                   if($type == 'A' || $smaller == $messageValue["PROFILEID"] && $senderReceiver == 'S' && $type == 'I')
+                   {
+                        $toSendForPrivacy = 1;
+                   }
+                   else
+                   {
+                        $toSendForPrivacy = 0;
+                   }
+                }
+                if ($toSendForPrivacy || (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"]))) { 
+                    $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
+                    $mob_len = $this->getVariables("PHONE_ISD_COMMA");
+                    $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
+                    $mob     = '+' . $mob . ' , ';
+                } 
+                else {
+                    $mob = '';
+                }
+                return $mob;
+
             default:
                 return "";
         }

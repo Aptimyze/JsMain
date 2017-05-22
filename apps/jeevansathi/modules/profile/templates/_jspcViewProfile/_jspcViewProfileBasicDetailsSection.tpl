@@ -84,7 +84,12 @@
                     <li class="textTru">~$apiData['about']['educationOnSummary']`</li>
                     <li class="textTru">~$apiData['about']['location']`</li>
                     <li class="textTru">~$apiData['about']['work_status']['value']`</li>
+                    
+                    ~if $apiData["lifestyle"]["religion_value"] eq "2" && $apiData["family"]["caste"] neq ""`
+                     <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`, ~$apiData["family"]["caste"]`</li>
+                     ~else`
                     <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
+                    ~/if`
                     <li class="textTru">~$apiData['about']['income']`</li>
                     <li class="textTru">~$apiData['about']['mtongue']`</li>
                     <li class="textTru">~$apiData['about']['m_status']`</li>
@@ -93,7 +98,7 @@
                     ~/if`
                   </ul> 
                 </div>
-                  <div class="pt20"> 
+                  <div class="pt20 wid50p disp_ib fl"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
                     ~if !$loginProfileId`
@@ -167,6 +172,9 @@
 
 
                   </div>
+                  ~if $showIdfy`
+                   <div  id="idfyDiv" class="idfyDiv2 disp_ib fr wid223 mt16 fl"><span class="color5 f13 fontlig idfyText ml3">Get details of this user verified</span><i class="idfyIcon"></i></div>
+                  ~/if`
               </div>
             </div>
             ~if $apiData['about']['gender'] eq "Male"`

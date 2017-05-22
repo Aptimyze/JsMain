@@ -44,7 +44,7 @@ class postAcceptv1Action extends sfAction
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
-					$responseArray           = $this->getContactArray();
+					$responseArray           = $this->getContactArray($request);
 				}
 			}
 		}
@@ -52,6 +52,7 @@ class postAcceptv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
+			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -66,14 +67,21 @@ class postAcceptv1Action extends sfAction
 	}
 	
 	
-	private function getContactArray()
+	private function getContactArray($request)
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
+		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+		{
+			$actionType = "CHATACCEPT";
+		}
+		else{
+			$actionType = ContactHandler::ACCEPT;
+		}
 		
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::ACCEPT);
+			$responseButtonArray = $buttonObj->getAfterActionButton($actionType);
 		}
 		else
 		{

@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='',$logProfiles='',$currentScript=0)
   {
 	  switch($notificationKey)
 	  {
@@ -101,20 +101,13 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            //$xx2 = count($applicableProfiles);
-            		$applicableProfilesArr = array_keys($applicableProfiles);
-            		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
-            //$xx3 = count($applicableProfilesData);
-			unset($applicableProfilesArr);
-            
+            		//$applicableProfilesArr = array_keys($applicableProfiles);
+            		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
-            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
-            //$xx4 = count($dataAccumulated);
-            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
-            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
-            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
+            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles,$logProfiles,$currentScript);
+
             		unset($poolObj);
 			break;
 
@@ -188,12 +181,20 @@ public function microtime_float()
 		  case "EOI":
 		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
+          case "CHAT_MSG":
+          case "CHAT_EOI_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
 			// print_r($dataAccumulated);
 			unset($poolObj);
 			break;
+		   case "LOGIN_REGISTER":
+		   		$poolObj = new NotificationDataPool();
+				$dataAccumulated = $poolObj->getLoggedoutNotificationData($appProfiles);
+				//print_r($dataAccumulated);die;
+				unset($poolObj);
+		   		break;
                   case "CSV_UPLOAD":
                         $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
                         foreach($appProfiles as $k=>$v)
@@ -454,10 +455,22 @@ public function microtime_float()
             
             unset($poolObj);
             break;
+          case "UPGRADE_APP":              
+              $applicableProfiles=array();
+              $counter = 0;
+              foreach($appProfiles as $key => $pid){
+                  if($pid != 0){
+                    $applicableProfiles[$pid] = array();
+                    $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
+                    $dataAccumulated[$counter]['COUNT']="SINGLE";
+                    $counter++;
+                  }
+              }
+              break;
 	  }
-
 	  $completeNotificationInfo = array();
 	  $counter = 0;
+
 	  if(is_array($dataAccumulated))
 	  {
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
@@ -467,7 +480,7 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  // print_r($completeNotificationInfo); die;
+				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
 				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
@@ -484,6 +497,7 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }
@@ -497,7 +511,8 @@ public function microtime_float()
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
-	  if($notificationKey =='VD'){	
+        //For variable Title
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
@@ -508,7 +523,7 @@ public function microtime_float()
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD'){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else
@@ -520,6 +535,12 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+          if($dataPerNotification['OTHER_PROFILEID']){
+            $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
+          }
+          if($dataPerNotification['OTHER_USERNAME']){
+            $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
+          }
 		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }

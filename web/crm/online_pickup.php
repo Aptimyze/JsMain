@@ -7,14 +7,17 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php";
 include_once(JsConstants::$docRoot."/classes/ShortURL.class.php");
 
 if (authenticated($cid)) {
+
     $name = getname($cid);
     $center = get_centre($cid);
+
     $smarty->assign("name", $name);
     $serviceObj = new Services;
+
     $max_limit = '80';
     $mainServiceArr = array("P", "C", "D", "ESP", "X", "NCP");
-
     if ($submit) {
+
         $is_error = 0;
 
         if ($discount == "") {
@@ -68,7 +71,7 @@ if (authenticated($cid)) {
         }
 
         if ($is_error >= 1) {
-            $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
+            $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$profileid);
             $smarty->assign("SERVICE_MAIN", $service_main);
             $smarty->assign("USERNAME", stripslashes($USERNAME));
             $smarty->assign("PROFILEID", $profileid);
@@ -158,8 +161,7 @@ if (authenticated($cid)) {
             die();
         }
 
-        $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
-
+        $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$pid);
         $smarty->assign("SERVICE_MAIN", $service_main);
         $smarty->assign("USERNAME", stripslashes($username));
         $smarty->assign("PROFILEID", $pid);

@@ -177,8 +177,8 @@ class SearchCommonFunctions
 
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults()==viewSimilarConfig::$suggAlgoNoOfResults_Mobile)
 			return $SearchParametersObj->getNoOfResults();
-
-                if(MobileCommon::isApp()=='A')
+                
+                if(MobileCommon::isApp()=='A' && (!$SearchParametersObj ||  !$SearchParametersObj->getIS_VSP()))
                     return SearchConfig::$profilesPerPageOnApp;
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
@@ -251,27 +251,65 @@ class SearchCommonFunctions
                     $arr['ClusterCount'] = $responseObj->getClustersResults();
 		return $arr;
 	}
-
+        /**
+         * set country india if city india present
+         * @param type $cities
+         * @param type $countryRes
+         * @return int
+         */
+         public static function setCountryIfcityPresent($cities,$countryRes){
+                $countryStr = '';
+		if($cities && !$countryRes && $cities!='DONT_MATTER')
+		{
+			$cityArr = explode(",",$cities);
+			foreach($cityArr as $k=>$v)
+			{
+				if(CommonUtility::isIndia($v))
+					$india=1;
+				else
+					$nonIndia=1;
+			}
+			if($india && !$nonIndia)
+			{
+				$countryStr = 51;
+			}
+		}
+                if($countryStr == ""){
+                        $countryStr = $countryRes;
+                }
+                return $countryStr;
+         }
         /**
         * This section will give count for justJoinedMatches and top10 results
 		* @return array containing count and ids info.
         */
-        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly")
+        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly",$havePhotoCriteria="")
         {
                 $searchEngine = 'solr';
 				$noAwaitingContacts=1;
+				
 				$sort = SearchSortTypesEnums::justJoinedSortFlag;
                 if(!$loggedInProfileObj)
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('JustJoinedMatches',$loggedInProfileObj);
                 $SearchParamtersObj->getSearchCriteria($searchCriteria);
+                if($havePhotoCriteria!="")
+                {
+                	$SearchParamtersObj->setHAVEPHOTO("Y");
+                }
+                $countryStr = self::setCountryIfcityPresent($SearchParamtersObj->getCITY_INDIA(),$SearchParamtersObj->getCOUNTRY_RES());
+                if($countryStr != ''){
+                        $SearchParamtersObj->setCOUNTRY_RES($countryStr);
+                }
                 $SearchServiceObj = new SearchService($searchEngine);
                 $SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
                 $SearchUtilityObj =  new SearchUtility;
                 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
+
+                $resultsArr = $responseObj->getResultsArr();
                 $arr['PIDS'] = $responseObj->getsearchResultsPidArr();
-                $arr['CNT']  = $responseObj->getTotalResults();
+                $arr['CNT']  = $responseObj->getTotalResults();                            
                 return $arr;
         }
 
@@ -359,7 +397,7 @@ class SearchCommonFunctions
         public static function getOccupationMappingData($occupationArray = array()){
                 $mappingOccupationData = array();
                 if(!empty($occupationArray)){
-                        $mappedArr = FieldMap::getFieldLabel("newoccupation_mapping_for_dpp",1,1);
+                        $mappedArr = FieldMap::getFieldLabel("occupation_grouping_mapping_to_occupation",1,1);
                         $map = array();
                         foreach($mappedArr as $key=>$mappedOcc){
                                 $map[$key] = explode(",", $mappedOcc);

@@ -881,7 +881,7 @@ class SearchUtility
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
         {  
                 $caching = $request->getParameter("caching");
-                if($caching)
+                if($cachingi || $type=="del")
                 {       
 			if(!$pid)
 			{

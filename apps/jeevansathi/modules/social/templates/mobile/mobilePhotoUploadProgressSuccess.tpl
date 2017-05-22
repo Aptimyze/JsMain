@@ -47,7 +47,7 @@
         var profileId = ~$profileId`;
         var selectFile = ~$selectFileOrNot`;
         var debug = true;
-        var imageFormat = ["image/jpg", "image/jpeg"];
+        var imageFormat = ["image/jpg", "image/jpeg","image/png"];
         var alreadyPhotoCount = ~$alreadyPhotoCount`;
         var appMaxPhotoSize = ~sfConfig::get("app_max_photo_size")`;
         var maxNoOfPhotos = ~sfConfig::get("app_max_no_of_photos")`;

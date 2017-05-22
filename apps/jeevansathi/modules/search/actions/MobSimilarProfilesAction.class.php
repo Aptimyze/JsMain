@@ -22,9 +22,10 @@ class MobSimilarProfilesAction extends sfActions
                 //Get profile of whos similar to be found
 		$this->viewedProfilechecksum=$request->getParameter("profilechecksum");
 		$viewedProfileID = JsCommon::getProfileFromChecksum($this->viewedProfilechecksum);
-		$viewedProfileObj=new Profile();
-		$viewedProfileObj->getDetail($viewedProfileID,"PROFILEID");
-		
+                if($viewedProfileID != 0){
+                        $viewedProfileObj=new Profile();
+                        $viewedProfileObj->getDetail($viewedProfileID,"PROFILEID");
+                }
                 //Get refferer to process
 		$referUrl = $_SERVER["HTTP_REFERER"];
 		$query_str = parse_url($referUrl, PHP_URL_QUERY);
@@ -33,7 +34,11 @@ class MobSimilarProfilesAction extends sfActions
                 //Whether and what to show as successfull message
 		if($request->getParameter("fromProfilePage") && $query_params["profilechecksum"]==$this->viewedProfilechecksum){
 			$this->InterestSentMessage=$request->getParameter("fromProfilePage");
-			$this->InterestSentToUsername=$viewedProfileObj->getUSERNAME();
+                        if($viewedProfileID != 0 && $viewedProfileObj && $viewedProfileObj->getPROFILEID() != ""){
+                                $this->InterestSentToUsername=$viewedProfileObj->getUSERNAME();
+                        }else{
+                                $this->InterestSentToUsername = "this profile";
+                        }
 		}
 		else
 			$this->InterestSentMessage=0;
@@ -50,6 +55,9 @@ class MobSimilarProfilesAction extends sfActions
                 
                 $this->firstResponse=$jsonResponse;
 		$ResponseArr = json_decode($jsonResponse,true);
+                $dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
+                $noOfResultsToStore = min($ResponseArr["no_of_results"],25);
+                JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);
 		 if($ResponseArr["no_of_results"]==0 && $request->getParameter("fromViewSimilarActionMobile")){
                         $url=JsConstants::$siteUrl.'/myjs/jsmsPerform';
                         header('Location: '.$url);die;

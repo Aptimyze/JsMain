@@ -107,6 +107,10 @@
                     </div>
                     <div class="colrw fontmed pt20 pl30 pb20"> ~if $MembershipMessage['top'] neq ''`
                         <a href='/profile/mem_comparison.php' onclick="trackJsEventGA('My JS JSPC', 'Offer Text',loggedInJspcGender,'')" class='colrw'> <span class="f26">~$MembershipMessage['top']`</span> <span id='memExpiryDiv' style='display:none;'><span class="disp_ib pl5 f15">|</span> <span id='memExpiryHrs' class="disp_ib f15 pl10"></span><small>H</small> <span id='memExpiryMnts' class="disp_ib pl10 f15"></span><small>M</small><span id='memExpirySec' class="disp_ib pl10 f15"></span><small>S</small></span>
+                        ~if $MembershipMessage['extra'] &&  $MembershipMessage['extra'] neq "" && $MembershipMessage['bottom'] && $MembershipMessage['bottom'] neq ""`
+                            <br>
+                            <span id="memExtraDiv" class="f16 fontlig">~$MembershipMessage['bottom']`</span>
+                        ~/if`
                         </a> ~/if` </div>
                 </div>
             </div>

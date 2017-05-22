@@ -41,21 +41,15 @@ if (isset($data)) //successful login
         if (in_array("UpSSup", $priv) || in_array("FPSUP", $priv) || in_array("INBSUP", $priv) || in_array("ExcPrm", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("P", $priv) || in_array("MG", $priv) || in_array("TRNG", $priv) || in_array("ExcFld", $priv) || in_array("SupFld", $priv) || in_array("RSP", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmDeallocation/ReleaseProfile\">Release Single Profile</a>";
         }
-
+        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
+        }
         if (in_array('MnAllc', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/manualExtAllocation\">Manual Allocation/Extension</a>";
         }
 
         $linkarr[] = "<a href=\"$SITE_URL/jsadmin/change_passwd.php?name=$user&cid=$cid\">Change your password</a>";
 
-        if (in_array('RC', $priv)) {
-            //$name=getname($cid);
-            $linkarr[] = "<a target='_blank' href=\"$SITE_URL/P/inputprofile.php?source=onoffreg&operator=$name\">Register an offline user</a>";
-        }
-        if (in_array('SE', $priv)) {
-            //$name=getname($cid);
-            $linkarr[] = "<a target='_blank' href=\"$SITE_URL/P/inputprofile.php?source=onoffreg&operator=$name\">Register an offline user</a>";
-        }
         // Added by Reshu for profile document verification trac#3626 and trac#3632
         /*if(in_array("ExcFld",$priv) || in_array("SupFld",$priv) || in_array("MgrFld",$priv) || in_array("SLHDO",$priv) || in_array("MG",$priv) || in_array("P",$priv) || in_array("TRNG",$priv))
         $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
@@ -78,7 +72,6 @@ if (isset($data)) //successful login
 
         if (in_array('IUO', $priv)) {
             //CRM outbound users
-            $linkarr[] = "<a href=\"/mis/ni_handled_incentive_calc.php?cid=$cid&user=$user\">Executive-wise Revenue for Incentive Calculation</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/daily_handled_list.php?cid=$cid\">Daily Handled List</a>";
         }
 
@@ -93,50 +86,26 @@ if (isset($data)) //successful login
         if (in_array("CRMTEC", $priv) || in_array("DA", $priv) || in_array("MG", $priv) || in_array("SLHDO", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/manageVdOffer\">Manage Variable Discount Offer </a>";
         }
-        if (in_array('MBU', $priv) || in_array('BU', $priv) || in_array('BA', $priv)) //Misc-Revenue billing entry operator
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/billing/search_rev_user.php?user=$name&cid=$cid\">Misc Revenue Billing</a>";
-        }
-
         if (in_array("IUI", $priv) || in_array("IUO", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/mis/performance_track_mis.php?cid=$cid\">Performance Track MIS</a>";
         }
 
-        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
-        }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/selectGateway\">Select Gateway Redirection</a>";
         }
 
     } else {
         //    if(in_array('MA',$priv)||in_array("MC",$priv)||in_array("CSEXEC",$priv)||in_array("CSSUP",$priv)||in_array("LTFSUP",$priv)||in_array("LTFHD",$priv)||in_array("SLSUP",$priv)||in_array("SLHD",$priv)||in_array("SLMGR",$priv)||in_array("SLSMGR",$priv)||in_array("SLHDO",$priv)||in_array("AUTLOG",$priv) || in_array("SupFld",$priv) || in_array("MgrFld",$priv) || in_array("PA",$priv))
-        if (in_array("LTFHD", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("AUTLOG", $priv)) {
+        if (in_array("LTFHD", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("AUTLOG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/generateAutologinLink\">Generate Autologin</a>";
         }
-	if(in_array("LTFSUP",$priv)|| in_array("MG",$priv)||in_array("P",$priv))
-	{
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php//sugarcrm/csvToSugar\">Upload Sugarcrm CSV</a>";
-	}
         if (in_array('ANT', $priv)) {
-            //$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/uploadVD\">Upload variable special discount data</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/upload_offer_discount.php?name=$user&cid=$cid\">Upload Offer Discount csv</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/upload_bluedart_airway.php?name=$user&cid=$cid\">Upload Bluedart Airway csv</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/csv_for_bms.php?name=$user&cid=$cid&bmscsv=1\">Upload variable special discount csv for BMS </a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/csv_for_bms.php?name=$user&cid=$cid&bmscsv=2\">Upload contacts stats csv for BMS</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/csvUpload/uploadNotificationCsv\">Upload Notification CSV</a>";
         }
 
-        if (in_array('BDTA', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/bluedart_request.php?name=$user&cid=$cid\">Send BlueDart COD Request</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/bluedart_print_bill.php?name=$user&cid=$cid\">Print Bluedart COD Request Bill</a>";
-        }
-
         if (in_array('P', $priv) || in_array('IJS', $priv) || in_array('SJS', $priv) || in_array('TSJS', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/switch_match_alert_algo.php?name=$user&cid=$cid\">Switch Match Alert Algorithm</a>";
             $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Invalid Reported Contacts</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/allot_contact.php?name=$user&cid=$cid\"> Allot contacts View to Paid members. </a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/check_profiles_score.php?cid=$cid\">Check forward and reverse score for two profiles</a>";
         } elseif (in_array('QC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Invalid Reported Contacts </a>";
         }
@@ -147,13 +116,9 @@ if (isset($data)) //successful login
             if (in_array('OA', $priv)) {
                 if (in_array('OB', $priv));
                 else{
-                    $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/login_customer.php?cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Offline user login</a>";
                 }
 
                 $linkarr[] = "<a href=\"$SITE_URL/jsadmin/change_passwd_op.php?name=$user&cid=$cid\">Change operator password</a>";
-                $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mod_acceptances.php?name=$user&cid=$cid\">Modify Acceptance Limit</a>";
-                $linkarr[] = "<a href=\"$SITE_URL/jsadmin/operator_statistics.php?name=$user&cid=$cid\">Users registerd by an operator</a>";
-                $linkarr[] = "<a href=\"$SITE_URL/jsadmin/addnew_user.php?name=$user&cid=$cid\"> Add New operator or admin</a>";
                 $timein    = 1;
             }
         }
@@ -162,20 +127,9 @@ if (isset($data)) //successful login
         /*Operator Privileges Start*/
 
         if (in_array('OB', $priv)) {
-            //$name = getname($cid);
             $smarty->assign("username", $name);
             $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/login_customer.php?cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Offline user login</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/billing_start.php?user=$name&cid=$cid&offline_billing=1\">Bill an offline user</a>";
-            $linkarr[] = "<a href=#  onClick=\"window.open('$SITE_URL/jsadmin/customers_list.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Users registered by me</a>";
-            $linkarr[] = "<a href=#  onClick=\"window.open('$SITE_URL/jsadmin/customers_list_tobeserviced.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Clients to be serviced today</a>";
-            // $linkarr[]="<a href=#  onClick=\"window.open('$SITE_URL/jsadmin/offline_renewal_clients.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Clients to follow up for renewals</a>";
-            $linkarr[] = "<a target='_blank' href=\"$SITE_URL/P/inputprofile.php?source=101&operator=$name\">Register 101 members</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/registered_by_me_101.php?cid=$cid&name=$name\">101 members registered by me</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/client_feedback.php?cid=$cid\">Client Feedback Form</a>";
             $timein    = 1;
-        }
-        if (in_array('OA', $priv)) {
-            // $linkarr[]="<a href=# onClick=\"window.open('$SITE_URL/jsadmin/duplicate_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Override Duplicate Phone Numbers</a>";
         }
         if (in_array('VRFYPH', $priv)) {
             $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/offline_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Verify/Unverify Users</a>";
@@ -248,12 +202,6 @@ if (isset($data)) //successful login
 
         /*MatriProfile Privileges Start*/
         if (in_array('MPU', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/show_matri_allot.php?checksum=$cid&user=$user\">Allotted Matri profiles</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/search_matri_profile.php?checksum=$cid&user=$user&show_image=1\">Search Matri-Profile member</a>";
-        }
-        if (in_array('MPA', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/matri_reply_manage.php?checksum=$cid&user=$user\">Matri-Profile Reply Manage</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/show_matriprofile.php?checksum=$cid&user=$user\">View / Allot Matri-Profile Members</a>";
         }
         /*MatriProfile Privileges End*/
 
@@ -267,14 +215,9 @@ if (isset($data)) //successful login
 	if(in_array('DP', $priv) || in_array('MG', $priv) || in_array('P', $priv) || in_array('SLHDO', $priv)) {
 		$linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";
 	}
-        if (in_array('NU1', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/userview_1min.php?name=$user&cid=$cid\">View assigned profiles - 1 Min</a>";
-        }
-
         if (in_array('A', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/mis/matriprofile_todownload.php?checksum=$cid&user=$user\">Mark uploaded Matri-Profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/view_profile_count.php?name=$user&cid=$cid&val=new\">View Screening Stats</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/newusername.php?name=$user&cid=$cid\">Screen New Username</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/show_user_record.php?name=$user&cid=$cid\">Search for a record</a>";
         }
         if (in_array('QC', $priv)) {
@@ -290,8 +233,6 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
         if (in_array('IUO', $priv) || in_array('IUI', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/special_var_discount.php?cid=$cid\">Special Discount User</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/special_discount.php?cid=$cid\">40% DISCOUNT CHECK</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/only_service.php?name=$username&cid=$cid&mode=W\">Disposing call without alloting profile</a>";
         }
         if (in_array('R', $priv)) {
@@ -305,11 +246,6 @@ if (isset($data)) //successful login
         {
             // $linkarr[]="<a href=\"$SITE_URL/jsadmin/show_thumbnails_to_screen.php?username=$name&cid=$cid\">View Assigned Thumbnails</a>";
         }
-        if (in_array('F', $priv)) //Feedback operator
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/feedback_check.php?user=$name&cid=$cid\">Feedback Check</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/faq_admin_main.php?user=$name&cid=$cid\">FAQ Admin</a>";
-        }
         if (in_array('MS', $priv) || in_array("AdSlEx", $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mobcheckuser.php?user=$name&cid=$cid\">Search user based on Phone Number</a>";
         }
@@ -320,33 +256,18 @@ if (isset($data)) //successful login
         if (in_array('BU', $priv)) //billing entry operator
         {
             $linkarr[] = "<a href=\"$SITE_URL/billing/billing.php?user=$name&cid=$cid\">Billing</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/dueamountlist.php?user=$name&cid=$cid\">List for Due Amount</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/search_rev_user.php?user=$name&cid=$cid\">Misc Revenue Billing</a>";
         }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
-        if (in_array('MBU', $priv)) //Misc-Revenue billing entry operator
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/billing/search_rev_user.php?user=$name&cid=$cid\">Misc Revenue Billing</a>";
-        }
         if (in_array('BA', $priv)) //billing admin
         {
             $linkarr[] = "<a href=\"$SITE_URL/billing/billing.php?user=$name&cid=$cid\">Billing</a>";
             $linkarr[] = "<a href=\"$SITE_URL/billing/order_check.php?user=$name&cid=$cid\">Start online orders Billing</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/bank_main.php?user=$name&cid=$cid\">View/Add/Modify Bank Records</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/dueamountlist.php?user=$name&cid=$cid\">List for Due Amount</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/search_rev_user.php?user=$name&cid=$cid\">Misc Revenue Billing</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/charge_back_stats.php?name=$user&cid=$cid\">Search for Charge Back Users</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/stats_for_allUsers.php?name=$user&cid=$cid\">Search stats - for all Users</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/billing/search_ivr_users.php?name=$user&cid=$cid\">Search for IVR Users</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/discount_new_entry.php?user=$name&cid=$cid\">Enter Discount Details</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/retrievepage.php?user=$name&cid=$cid\">Retrieve Profile</a>";
-        }
-        if (in_array('OR', $priv)) // 'OR' privilage for top admin viewing order records
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/billing/order_records.php?name=$user&cid=$cid\">View Order Records</a>";
         }
         if (in_array('BTR', $priv)) // 'OR' privilage for top admin viewing order records
         {
@@ -356,8 +277,6 @@ if (isset($data)) //successful login
         if (in_array('RA', $priv) || in_array('M', $priv)) //resources admin
         {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/manage_banner_sources.php?username=$username&cid=$cid&val=add\">Manage Banner Sources</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/pixel_code_insertion.php?username=$username&cid=$cid\">Pixelcode insertion</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/resources/resources_admin_cat.php?username=$username&cid=$cid\">Resources Admin</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sem.php?menu=Y&username=$username&cid=$cid\">SEM Registration Pages Customization</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/add_source_entry_in_custom_mini_reg.php?username=$username&cid=$cid&val=add\">Add source in customize mini reg</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/sem\">Custom Registration Page</a>";
@@ -367,35 +286,13 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/mis/mainpage.php?name=$misname&cid=$cid\">View MIS</a>";
         }
 
-        if (in_array('MP', $priv)) //manage homepage photo
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/manage_homepage.php?name=$username&cid=$cid\">Manage HomePage Profile</a>";
-        }
-
-        if (in_array('LC', $priv)) //manage live chat status
-        {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/livechat_status_manage.php?name=$username&cid=$cid\">Live Chat Status</a>";
-        }
-
-        if (in_array('ES', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mailid_view.php?cid=$cid\">View improper profiles</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mailid_list.php?cid=$cid\">Search improper profiles</a>";
-        }
-
         /*CRM Privileges Start*/
         if (in_array('IA', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/get_history.php?name=$username&cid=$cid\">View history of a particular user</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/yes_no_mail.php?name=$username&cid=$cid\">On Demand Yes-No mailer</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ondemand_sms.php?name=$username&cid=$cid\">On Demand SMS</a>";
 
             $operator = $name; //getname($cid);
 
-            //$center=getcenter_for_walkin($operator);
-            if (strtoupper($center) == 'NOIDA') {
-                $linkarr[] = "<a href=\"$SITE_URL/mis/performance_track_upload.php?cid=$cid\">Performance Track MIS - Upload CSV</a>";
-                $linkarr[] = "<a href=\"$SITE_URL/mis/performance_track_edit.php?cid=$cid\">Performance Track MIS - Edit CSV</a>";
-
-            }
             $linkarr[] = "<a href=\"$SITE_URL/crm/calling_details.php?name=$operator&cid=$cid\">Get complete telecalling details of a profile</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/manualExtDaysAllocation\">Profile allocation extension - for my team</a>";
 
@@ -413,11 +310,6 @@ if (isset($data)) //successful login
         $operator = $name; //getname($cid);
         //$center=getcenter_for_walkin($operator);
 
-        if (in_array("UFOS", $priv) || in_array("P", $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/crm/inbound_online.php?name=$operator&cid=$cid\">Unalloted free online search</a>";
-        }
-
-        // Outbound Call User Link accessibility
         if (in_array("FTAFTO", $priv) || in_array("FTASup", $priv) || in_array("ExcUpS", $priv) || in_array("UpSSup", $priv) || in_array("ExcRnw", $priv) || in_array("RnwSup", $priv) || in_array("ExcFP", $priv) || in_array("FPSUP", $priv) || in_array("ExcDIb", $priv) || in_array("INBSUP", $priv) || in_array("ExcDOb", $priv) || in_array("ExcBSD", $priv) || in_array("ExcBID", $priv) || in_array("ExcFSD", $priv) || in_array("ExcFID", $priv) || in_array("ExcPrm", $priv) || in_array("ExPrmO", $priv) || in_array("ExPrmI", $priv) || in_array("ExcWFH", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("P", $priv) || in_array("MG", $priv) || in_array("TRNG", $priv) || in_array("PreAll", $priv) || in_array("ExcWL", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/outboundProcessList\">Outbound Calls User</a>";
         }
@@ -429,7 +321,6 @@ if (isset($data)) //successful login
         if (in_array('IUO', $priv)) //CRM outbound users
         {
             $linkarr[] = "<a href=\"$SITE_URL/crm/get_history.php?name=$username&cid=$cid\">View history of a particular user</a>";
-            $linkarr[] = "<a href=\"/mis/ni_handled_incentive_calc.php?cid=$cid&user=$user\">Executive-wise Revenue for Incentive Calculation</a>";
             $linkarr[] = "<a href=\"$SITE_URL/mis/crm_monthly_revenue_mis.php?name=$username&cid=$cid\">CRM DailyWork / Revenue / Conversion MIS</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/daily_handled_list.php?cid=$cid\">Daily Handled List</a>";
         } elseif ((in_array('ExcDIb', $priv) || in_array('INBSUP', $priv)) && strtoupper($center) == "NOIDA") {
@@ -451,7 +342,6 @@ if (isset($data)) //successful login
         /*CRM Privileges End*/
 
         if (in_array('IUP', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Payment Collection Entry</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/status_track.php?user=$name&cid=$cid\">Track status for pickup request</a>";
         }
         if (in_array('IUU', $priv)) {
@@ -459,22 +349,11 @@ if (isset($data)) //successful login
         }
         if (in_array('IUA', $priv)) {
             $operator = $name; //getname($cid);
-            //$center=getcenter_for_walkin($operator);
-            $linkarr[] = "<a href=\"$SITE_URL/crm/clientinvoice.php?user=$name&cid=$cid\">Invoice Generation and Pickups Handling</a>";
-            if (strtoupper($center) == 'NOIDA' || strtoupper($center) == 'HO') {
-                $linkarr[] = "<a href=\"$SITE_URL/crm/mail_for_skypak.php?user=$name&cid=$cid\">Mail for Skypak</a>";
-                $linkarr[] = "<a href=\"$SITE_URL/crm/resend_mail_for_skypak.php?user=$name&cid=$cid\">Resend Mail for Skypak</a>";
-            }
         }
 
         if (in_array('BMD', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/bounceMail/bounceMailDetection\">Bounce Mail Detection</a>";
         }
-
-        if (in_array('IS', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invoice_mis.php?user=$name&cid=$cid\">Skypak Mail Archive</a>";
-        }
-
         if (in_array('IUS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/status_activation.php?user=$name&cid=$cid\">Service Status And Activation</a>";
         }
@@ -512,11 +391,6 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/transferProfiles?subMethod=FRESH\">Transfer Fresh Profiles</a>";
         }
 
-        // Transfer profile links
-        if (in_array('UpSSup', $priv) || in_array("P", $priv) || in_array('MG', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/transferProfiles?subMethod=UPSELL\">Transfer Upsell profiles</a>";
-        }
-
         if (in_array('RnwSup', $priv) || in_array("P", $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/transferProfiles?subMethod=RENEWAL\">Transfer Renewal profiles</a>";
         }
@@ -552,73 +426,16 @@ if (isset($data)) //successful login
 
         }
 
-        if (in_array('SEO', $priv) || in_array('M', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/seo_matrimonialdisplay.php?name=$user&cid=$cid&mode=N\">Modify Matrimonial records </a>";
-
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/form_index_seo.php?user=$name&cid=$cid\">Title,keyword and description entry for homepage </a>";
-
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/manage_google_keywords.php?user=$name&cid=$cid\">Manage google adsense keywords </a>";
-        }
         /**********MODIFICATION ENDS HERE*********************/
-
-        if (in_array('BT', $priv) || in_array('M', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/manage_template_input.php?name=$user&cid=$cid\">Manage Input Profile Creative</a>";
-        }
         if (in_array('PGA', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/manage_payment_gateway.php?name=$user&cid=$cid\">Manage Payment Gateway</a>";
         }
         if (in_array('SA', $priv) || in_array('EPR', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/show_editprofile_request.php?name=$user&cid=$cid\">Edit profile requests</a>";
         }
-        if (in_array('BS', $priv) || in_array('M', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/maingate.php?name=$user&cid=$cid\">Manage Affiliate Records</a>";
-        }
-
-        if (in_array('UB', $priv) || in_array('M', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/banners.php?name=$user&cid=$cid\">Upload/Edit Banners for BusinessSathi</a>";
-        }
-
-        if (in_array("ECA", $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/mis/view_service.php?cid=$cid&user=$user\">Verify e-Classifed/Horo/Kundali Services MIS</a>";
-        }
-        if (in_array('WD', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mainAds.php?name=$user&cid=$cid\">Manage Wedding Gallery Listings</a>";
-        }
-        if (in_array('BCR', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/billing/bounced_cheque_mis.php?name=$user&cid=$cid\">Bounced Cheque Reminder Module</a>";
-        }
-
-        if (in_array('MR', $priv))
-        // $linkarr[]="<a href=\"$SITE_URL/jsadmin/mbureau.php?cid=$cid\">Manage Marriage Bureau</a>";
-        {
-            if (in_array('IVPM', $priv)) {
-                $linkarr[] = "<a href=\"$SITE_URL/jsadmin/infovision_username_list.php?cid=$cid\">Mail to Profiles Registered via Infovision</a>";
-            }
-        }
-
-        if (in_array('WM', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mmm_module.php?cid=$cid&new=1\">Manage MMMJS Branch Details</a>";
-        }
 
         if (in_array('VA', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/voucher_issued_detail.php?name=$user&cid=$cid\">View Issued Voucher Numbers detail</a>";
-            // $linkarr[]="<a href=\"$SITE_URL/jsadmin/voucher_resend.php?name=$user&cid=$cid\">Resend Vouchers</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/voucher_success_issued.php?name=$user&cid=$cid\">Success Story Gift</a>";
-        }
-
-        if (in_array('VU', $priv) || in_array('VA', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/voucher_issued.php?name=$user&cid=$cid\">View Vouchers detail to be issued</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/voucher_successstory.php?name=$user&cid=$cid\">Success Story e-Vouchers</a>";
-        }
-        if (in_array('VS', $priv)) {
-            // $linkarr[]="<a href=\"$SITE_URL/jsadmin/voucher_backend_sales.php?name=$user&cid=$cid&new=1\">Upload New Deal / Edit Existing Deal</a>";
-        }
-        if (in_array('VD', $priv)) {
-            // $linkarr[]="<a href=\"$SITE_URL/jsadmin/voucher_backend_design.php?name=$user&cid=$cid\">Design Images for New Deals</a>";
-        }
-
-        if (in_array('EBC', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/easybill_uploadcsv.php?name=$user&cid=$cid\">Upload Easy Bill CSV</a>";
         }
 
         $username = $name; //getname($cid);
@@ -638,31 +455,18 @@ if (isset($data)) //successful login
         }
 
         if (in_array('NTSP', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/yes_no_mail.php?name=$username&cid=$cid\">On Demand Yes-No mailer</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ondemand_sms.php?name=$username&cid=$cid\">On Demand SMS</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/calling_details.php?name=$operator&cid=$cid\">Get complete telecalling details of a profile</a>";
         }
-        if (in_array('RC', $priv)) {
-            //$name=getname($cid);
-            $linkarr[] = "<a target='_blank' href=\"$SITE_URL/P/inputprofile.php?source=onoffreg&operator=$name\">Register an offline user</a>";
-        }
         //Links for Assisted Product Users
         if (in_array('SE', $priv)) {
-            //$name=getname($cid);
-            $linkarr[] = "<a target='_blank' href=\"$SITE_URL/P/inputprofile.php?source=onoffreg&operator=$name\">Register an offline user</a>";
             $linkarr[] = "<a href=\"$SITE_URL/billing/billing.php?user=$name&cid=$cid\">Billing</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_dashboard.php?cid=$cid&pagination=1&active=1\">My Dashboard</a>";
         }
 
         if (in_array('QA', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_dpp.php?cid=$cid&new=1\">QA new profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_dpp.php?cid=$cid\">QA review profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_pull_profile.php?cid=$cid\">Audit profile out of queue</a>";
-        }
-
-        if (in_array('DIS', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_list.php?cid=$cid&list=TBD\">Open Dispatch Queue</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_pull_profile.php?cid=$cid\">Service profile out of queue</a>";
         }
 
         if (in_array('TC', $priv)) {
@@ -676,10 +480,6 @@ if (isset($data)) //successful login
         }
 
         if (in_array('MGR', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_reassign_profile.php?cid=$cid\">Reassign Assisted Product Profile</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_delete_se.php?cid=$cid\">Delete SE</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_dispatcher_cities.php?cid=$cid\">Assign cities to Dispatcher</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_increase_credits.php?cid=$cid\">Increase call credits</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_dashboard_oh.php?cid=$cid&pagination=1\">Operation head's dashboard</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/ap_toggle_auto_apply.php?cid=$cid\">Toggle Auto Apply Services</a>";
         }
@@ -698,12 +498,8 @@ if (isset($data)) //successful login
 
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";
         }
         // link for search sugarcrm LTF profiles
-        if (in_array('LTFSUP', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sugarcrm_LTF_search.php?cid=$cid\">Search details of LTF registered profile</a>";
-        }
 
         if (in_array('OPS', $priv) || in_array('OPM', $priv) || in_array('OPSSUP', $priv) || in_array('OPSHD', $priv) || in_array('TRNGOP', $priv) || in_array('P', $priv) || in_array('MG', $priv))
         //     $linkarr[]="<a href=\"$SITE_URL/jsadmin/unverified_users.php?cid=$cid\">Verify profiles who denied registration on Verification Call or SMS</a>";
@@ -720,9 +516,6 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/profiledata/index\">User backend Information[For Legal].</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/mobcheckuser.php?user=$name&cid=$cid\">Search user based on Phone Number</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/legal/NameLocationAgeSearch\">Name Age Location Search[For Legal].</a>";
-        }
-        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
         }
 
         // if(in_array("FTAReg",$priv) || in_array("TRNG",$priv) || in_array("P",$priv) || in_array("MG",$priv))
@@ -806,6 +599,19 @@ if (isset($data)) //successful login
 
         if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
             $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request user to delete profile</a>";
+
+        if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
+        }
+        // link for search sugarcrm LTF profiles
+        if (in_array('LTFSUP', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sugarcrm_LTF_search.php?cid=$cid\">Search details of LTF registered profile</a>";
+        }
+        
+        // link for sathi for life table data display
+        if (in_array('SFL', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sathiForLifeDataDisplay.php?cid=$cid\">Users' data of Sathi For Life</a>";
+        }
     }
 
     $smarty->assign("linkarr", $linkarr);

@@ -5,6 +5,10 @@ var ap_randNumber=new Date().getTime();
 var OperaMiniFlag=0;
 var perspective=0;
 var showOldSiteMessage=1;
+var messagesAppPromoTime = "messagesAppPromoTime";
+var hoursLimit = 6;
+var divForMessageAppPromo='';
+var messageListingAppPromo=0;
 //var isLoaderSearch="";
 var AppPromoHgt=$(window).height();
 if(!getCookieData("apRandomUser"))
@@ -15,10 +19,16 @@ if(typeof(AndroidPromotion)=="undefined"){
 	var AndroidPromotion=0;
 }
 $( document ).ready(function() {
-	
+	//
+      if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
+        messageListingAppPromo = showAppPromoForMessageListingPage();
+        if(messageListingAppPromo)
+            divForMessageAppPromo= "<div class=\"padAppPromo clearfix\"> <div class = \"f14 innerTextBorder txtc pb10 pt5\">Chat real time with online matches, Download App</div></div>";
+        
+      }  
       if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
-      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined') && AppLoggedInUser )
-      {
+      if((!getCookieData("appPromo") && (typeof appPromo === 'undefined')) || messageListingAppPromo)
+      { 
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#main").length)
 			{
@@ -28,17 +38,31 @@ $( document ).ready(function() {
 					$( "#main" ).before("<div id=\"appPromo\" class =\"app_posr app_txtc\" style =\"background-color:#721108;\"><img id= \"appPromoImg\" src=\"IMG_URL/images/mobilejs/wap_promotion3.jpg\" border=\"0\"/><div class=\"app_posa app_pos1\"><div class=\"napp_pad1\"><div class=\"app_fnt38 nfamily2 app_txtl ncolr1 app_txtl\" style=\"font-size:25px\">What our users say</div><div class=\"app_txtl app_fntb ncolr2 napp_pt1 nfamily2\">\"Amazing app. Very handy and lightning fast access to all the profiles with great picture clarity and neat fonts. Truly satisfying….\" </div><div class=\"clearfix napp_pt1\"><div class=\"pull-left\"> <div class=\"napp_rat5\"></div>                          </div><div class=\"pull-right app_fntb ncolr2 app_txtr\">Rahulkumar<br/><span class=\"app_fnta\">16th June 2014</span></div></div>  <div class=\"napp_pt20 ncolr2 app_fntb\">Get the best experience with the</br><div class =\"app_f20\"> Jeevansathi Apple App</div></div>  <div class=\"app_pt30\"><div class=\"app_btn app_f40\"><a href=\"/static/appredirect?type=iosLayer\" style=\"color: #fff; text-decoration:none\">Download for Free</a></div><div class=\"napp_pt_abc app_clr1 app_f16\" onclick=\"showPromo(0);\">Skip to mobile site</div></div>    </div></div><img style=\"width:0px;height:0px;\" src=\"/static/trackinterstitial?rand="+ap_randNumber+"&randUser="+ap_assignRandom+"\"/></div><div id=\"appPromoHide\" class=\"appPromoHide\" style=\"opacity:1; height:100%; width:100%; z-index:11;margin-top:0px; position:absolute;\"></div>");
 			}
 			if($("#mainContent").length){
-				$("#mainContent").addClass("ham_b100");
+				
+
+				if((typeof pageMyJs != 'undefined' && pageMyJs==1))
+				{
+					var showAppClass = 'ham_b20_n ham_minu20';
+				}
+                                else if(messageListingAppPromo){
+                                        var showAppClass = 'ham_b20_n borderMessAppPromo ham_minu_mess20';
+                                }
+				else
+				{
+					$("#mainContent").addClass("ham_b100");
+					var showAppClass = 'ham_b20 ham_minu20';
+				}
+				
 				perspective=1;
 				//isLoaderSearch=1;
 				if(getAndroidVersion())
 				{
-					$("#mainContent").before("    <div id=\"appPromo\" class=\" ham_b20 ham_minu20  newocbbg1 fullwid\">    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=androidLayer\" class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt13 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App | 3 MB </div>                <div class=\"ocbnewimg ocbstar\" style =\"float:right\"></div>            </div>        </div>    </div>");
+					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+'  newocbbg1 fullwid\'>   '+divForMessageAppPromo+' 	<div class=\'padAppPromo clearfix\'>        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=androidLayer\" class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt13 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App | 3 MB </div>                <div class=\"ocbnewimg ocbstar\" style =\"float:right\"></div>            </div>        </div>    </div>');
 					AppPromoHgt=$("#appPromo").height();
 				}
 				if(getIosVersion())
-				{
-					$("#mainContent").before("    <div id=\"appPromo\" class=\" ham_b20 ham_minu20  newocbbg1 fullwid\">    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>");
+				{  
+					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+'  newocbbg1 fullwid\'>    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>');
 					AppPromoHgt=$("#appPromo").height();
 				}
 			if($("#outerDivAppPromo")){
@@ -164,15 +188,26 @@ function writeCookie (key, value, hours) {
 	})
 	  document.getElementById("appPromo").style.height=AppPromoHgt+"px";
 	 
-		$("#appPromo").removeClass("ham_minu20");
-		$("#mainContent").addClass("ham_plus20");
+                if(messageListingAppPromo)
+                    $("#appPromo").removeClass("ham_minu_mess20");
+                else
+                    $("#appPromo").removeClass("ham_minu20");
+                if(typeof pageMyJs == 'undefined' && !messageListingAppPromo)
+                {
+                    $("#mainContent").addClass("ham_plus20");
+		}
 		startTouchEvents(100);
 		setTimeout(function(){$(document).unbind('touchmove');},2000);
  }
  else if(abc==4)
  {
-	
-		$("#appPromo").addClass("ham_minu20");
+                if(messageListingAppPromo){
+                    $("#appPromo").addClass("ham_minu_mess20");
+                    dateToStore = new Date();
+                    localStorage.setItem(messagesAppPromoTime,dateToStore);
+                }
+                else
+                    $("#appPromo").addClass("ham_minu20");
 		$("#mainContent").removeClass("ham_plus20");
 		setTimeout(function(){$("#appPromo").remove();},2000);
 		$(document).unbind('touchmove');
@@ -264,8 +299,6 @@ function ReturnBrowMes()
 	return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
 return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
 }
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 
 function getIosVersion(ua) {
 	//return false;
@@ -285,4 +318,20 @@ function getIosVersion(ua) {
 	else
 		return false;
 	
+}
+
+function showAppPromoForMessageListingPage(){
+    var currentDate = new Date();
+    var storedDate = localStorage.getItem(messagesAppPromoTime);
+    if ( storedDate !== null)
+    {
+            diff = new Date(currentDate-new Date(storedDate));
+            if ( Math.floor(diff/(1000*60*60)) < hoursLimit)    
+                    return 0;
+            else
+            {
+                    localStorage.removeItem(messagesAppPromoTime);
+            }
+    }
+    return 1;
 }

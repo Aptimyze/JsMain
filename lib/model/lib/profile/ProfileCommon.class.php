@@ -114,7 +114,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$jpartnerObj=new JPartnerDecorated('',$page_source);
 		$mysqlObj=new Mysql;
 		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
+		$myDb=$mysqlObj->connect("$myDbName");		
 		$jpartnerObj->setPartnerDetails($profileid,$myDb,$mysqlObj);
 		$request=sfContext::getInstance()->getRequest();
 		if($jpartnerObj instanceof JPartnerDecorated && !$request->getAttribute("loginData"))
@@ -596,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                
 				$ALBUM_CNT=count($album);
 			}		
 		}
