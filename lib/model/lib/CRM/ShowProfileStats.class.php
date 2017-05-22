@@ -61,6 +61,7 @@ class ShowProfileStats
 		$this->geMembershipDiscount();
 		$this->getServiceRequirement();
 		$this->getScore();
+		$this->getEoiLimit();
 		$this->detailedDataArr['SOURCE'] = $this->profileObj->getSOURCE();
 
 		// get Table Name for Contact
@@ -155,6 +156,23 @@ class ShowProfileStats
 		$this->detailedDataArr['SCORE'] = $result['SCORE'];
 		$this->detailedDataArr['ANALYTIC_SCORE'] = $result['ANALYTIC_SCORE'];
 
+	}
+
+	private function getEoiLimit()
+	{
+		$startDates = CommonFunction::getContactLimitDates();
+		if(is_array($startDates))
+		{
+			$this->detailedDataArr['weekStartDate'] = $startDates['weekStartDate'];
+			$this->detailedDataArr['weekEndDate'] = CommonFunction::getLimitEndingDate("WEEK");
+			$this->detailedDataArr['monthStartDate'] = $startDates['monthStartDate'];
+			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH");
+		}
+		
+		$profileMemcacheServiceObj = new ProfileMemcacheService($this->profileObj);
+		$this->detailedDataArr['todayLimit'] = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
+		$this->detailedDataArr['weeklyLimit'] = $profileMemcacheServiceObj->get("WEEK_INI_BY_ME");
+		$this->detailedDataArr['monthlyLimit'] = $profileMemcacheServiceObj->get("MONTH_INI_BY_ME");
 	}
 	/**
 	 *
