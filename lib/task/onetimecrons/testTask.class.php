@@ -42,6 +42,36 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
 	{
     sfContext::createInstance($this->configuration);
 	    // SET BASIC CONFIGURATION
+
+    $fileName1 = "/home/ankita/Desktop/rabbitTimeNonPeak.log";
+    $fileName2 = "/home/ankita/Desktop/rabbitTimePeak.log";
+    $contents1 = file_get_contents($fileName1);
+    $contents2 = file_get_contents($fileName2);
+    $logArr1 = explode("\n", $contents1);
+    $logArr2 = explode("\n", $contents2);
+    $avgTimeNonPeak = 0;
+    $avgTimePeak = 0;
+    foreach ($logArr1 as $key1 => $value1) {
+      $avgTimeNonPeak += $value1;
+    }
+    foreach ($logArr2 as $key2 => $value2) {
+      $avgTimePeak += $value2;
+    }
+    $avgTimeNonPeak = round($avgTimeNonPeak/count($logArr1),3);
+    $avgTimePeak = round($avgTimePeak/count($logArr2),3);
+    var_dump("non peak--".$avgTimeNonPeak);
+    var_dump("peak--".$avgTimePeak);die;
+
+    $producerObj = new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+    {
+      echo "connected";
+      //$notificationData = array("notificationKey"=>"EOI","selfUserId" => 99401121,"otherUserId" => 1); 
+      //$producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+    }
+    unset($producerObj);
+    die();
+
 	   $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
       echo "3451122";die;
