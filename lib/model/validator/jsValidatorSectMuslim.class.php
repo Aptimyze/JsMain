@@ -28,7 +28,7 @@ class jsValidatorSectMuslim extends sfValidatorBase
 		}
 	}
         else if($religion == Religion::MUSLIM)
-            throw new sfValidatorError($this,'Sect is mandatory for'.FieldMap::getFieldLabel('religion',$religion));
+            throw new sfValidatorError($this,'Caste is mandatory for '.FieldMap::getFieldLabel('religion',$religion));
       return $clean;
   }
   
