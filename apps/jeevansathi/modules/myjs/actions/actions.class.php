@@ -317,7 +317,7 @@ class myjsActions extends sfActions
           $this->forward("static", "logoutPage");
         }
 
-   /*     $promoObj = new PromoLib();
+        $promoObj = new PromoLib();
        $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
         if($chatPromoToShow == true)
         {
@@ -325,7 +325,7 @@ class myjsActions extends sfActions
           sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSMS");
           die;
         }
-  */
+  
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -399,7 +399,7 @@ class myjsActions extends sfActions
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
- /*
+ 
     $promoObj = new PromoLib();
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
@@ -408,7 +408,7 @@ class myjsActions extends sfActions
       sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSPC");
       die;
     }
-*/
+
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
