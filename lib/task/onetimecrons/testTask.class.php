@@ -43,7 +43,7 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
     sfContext::createInstance($this->configuration);
 	    // SET BASIC CONFIGURATION
 
-    $fileName1 = "/home/ankita/Desktop/rabbitTimeNonPeak.log";
+    /*$fileName1 = "/home/ankita/Desktop/rabbitTimeNonPeak.log";
     $fileName2 = "/home/ankita/Desktop/rabbitTimePeak.log";
     $contents1 = file_get_contents($fileName1);
     $contents2 = file_get_contents($fileName2);
@@ -60,7 +60,7 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
     $avgTimeNonPeak = round($avgTimeNonPeak/count($logArr1),3);
     $avgTimePeak = round($avgTimePeak/count($logArr2),3);
     var_dump("non peak--".$avgTimeNonPeak);
-    var_dump("peak--".$avgTimePeak);die;
+    var_dump("peak--".$avgTimePeak);die;*/
 
     $producerObj = new Producer();
     if($producerObj->getRabbitMQServerConnected())

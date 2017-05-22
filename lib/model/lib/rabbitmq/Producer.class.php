@@ -74,8 +74,9 @@ class Producer
 			$startLogTime = microtime(true);
 			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
 			$endLogTime = microtime(true);
-			$diff = $endLogTime-$startLogTime;
+
 			if(MQ::$logConnectionTime == 1){
+				$diff = $endLogTime-$startLogTime;
 				$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
 				if(file_exists($errorLogPath)==false)
 	      			exec("touch"." ".$logPath,$output);
@@ -84,6 +85,19 @@ class Producer
 			$this->setRabbitMQServerConnected(1);
 			return true;
 		} catch (Exception $e) {
+			//logging the counter for rabbitmq connection timeout in redis
+			if(MQ::$logConnectionTimeout == 1 && $serverId == "FIRST_SERVER"){
+				$memcacheObj = JsMemcache::getInstance();
+				if($memcacheObj){
+					$cachekey = "rmqtimeout_".date("Y-m-d");
+					if(empty($memcacheObj->get($cachekey,null,0,0))==false){
+						$memcacheObj->incrCount($cachekey);
+					}
+					else{
+						$memcacheObj->set($cachekey,1,86400,0,'X');
+					}
+				}
+			}
 			return false;
 		}
 	}
