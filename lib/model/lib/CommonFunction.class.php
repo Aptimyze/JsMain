@@ -1005,7 +1005,8 @@ class CommonFunction
 			$tpl->getSmarty()->assign("deviceName", $deviceName);
 			$tpl->getSmarty()->assign("city", $city);
 			$tpl->getSmarty()->assign("country", $country);
-			$top8Mailer->send();
+			// send mail
+			// $top8Mailer->send();
 		} catch (Exception $e) {
 			throw new jsException($e);
 		}
