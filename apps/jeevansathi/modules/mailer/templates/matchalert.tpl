@@ -87,7 +87,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks,fromMatchAlert=>1])`
+                        	~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks,fromMatchAlertMailer=>1])`
                         </td>
                     </tr>
                     <tr>
