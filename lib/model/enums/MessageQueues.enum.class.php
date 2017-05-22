@@ -145,6 +145,11 @@ class MessageQueues
   const DELAYED_INSTANT_MAIL = 'DelayedMailQueue';
   const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
   const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
+  
+  
+  const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
+  const PRODUCT_METRICS = "PRODUCT_METRICS";
+
 }
 
 ?>

@@ -429,4 +429,18 @@ public function contact_archive($field="",$val="")
 	mail("palashc2011@gmail.com,niteshsethi1987@gmail.com","rabbit mq server issue in PhoneVerification Duplication check","rabbit mq server issue in PhoneVerification Duplication check");
   }
 
+  
+    private function sendToProductMetricQueue(){
+
+        
+                if(JsMemcache::getInstance()->get($this->profileObject->getPROFILEID().'_fromMemToPhoneVer')!=1)return false;
+                $producerObj=new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
+                        $producerObj->sendMessage($updateSeenData);
+                }
+                JsMemcache::getInstance()->delete($this->profileObject->getPROFILEID().'_fromMemToPhoneVer');        
+    }
+
 }

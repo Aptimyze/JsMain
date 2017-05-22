@@ -399,10 +399,12 @@ class Initiate extends ContactEvent{
 		$sender = $this->viewer;
 		$receiver = $this->viewed;
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
 
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
-				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ))
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ))
 		)
 		{
 			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
@@ -619,12 +621,21 @@ class Initiate extends ContactEvent{
       }
       else{
                 if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
+                {
+                    
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
+
+                $this->sendDataOfQueue(
+                MessageQueues::PRODUCT_METRICS, '',
+		array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ));
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
                 $this->viewed->getPROFILEID(),
                 $this->_getEOIMailerDraft(),
                 "N");
+                }
         return false;
       }
     }
