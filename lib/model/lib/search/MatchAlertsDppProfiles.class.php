@@ -245,6 +245,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
         }
         
         public function getRelaxedMtongues($mtongue){
+            $removeValuesIfNotPresent = array("7"); // Remove castes if they are not filled in but added as part of group currently bihari
             $mtongueValues = explode(',',$mtongue);
             $allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues", '', 1);
             $checkHindiMtongues = array_flip($allHindiMtongues);
@@ -254,6 +255,12 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                     $mtongueFlag = 1;
                 else
                     $finalMtongue.=','.$value;
+            }
+            foreach($removeValuesIfNotPresent as $val){
+                if(!in_array($val, $mtongueValues)){ // remove bihari mtongue if not already present
+                        unset($checkHindiMtongues[$val]);
+                        $allHindiMtongues = array_flip($checkHindiMtongues);
+                }
             }
             if($mtongueFlag==1)
                 $finalMtongue.= ','.implode(',',$allHindiMtongues);
