@@ -52,9 +52,12 @@ class WriteMessagev2Action extends sfAction
 						$chatLogObj = new NEWJS_CHAT_LOG($dbName);
 						$msgDetailsArr = $messageLogObj->getMessageHistoryPagination($this->loginProfile->getPROFILEID(),$profileid,$limit,$msgId);
             
+            //Parser Message
             foreach($msgDetailsArr as $key => $msgArr) {
               if($msgArr["SENDER"] == $this->loginProfile->getPROFILEID()) {
                 $msgDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->loginProfile, $msgArr['MESSAGE']);
+              } else {
+                $msgDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->Profile, $msgArr['MESSAGE']);
               }
             }
             
