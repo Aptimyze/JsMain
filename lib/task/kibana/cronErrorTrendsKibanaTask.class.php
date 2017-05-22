@@ -73,7 +73,10 @@ EOF;
                   "Parent"=>
                   [
                       "terms"=>
-                      [ "field" => "Parent"],
+                      [
+                        "field" => "Parent",
+                        "size" => 1000
+                      ],
 
                       "aggs"=> [
                         "channelName"=>

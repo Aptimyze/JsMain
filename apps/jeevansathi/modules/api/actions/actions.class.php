@@ -79,8 +79,11 @@ class apiActions extends sfActions
 	{
 		$respObj = ApiResponseHandler::getInstance();
 		//$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
+		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+    if($appVersion<94){
 		$hamburgerDetails = HamburgerApp::getHamburgerDetails($loginData[PROFILEID],$request->getParameter("version"),$forwardingArray);
 		$respObj->setHamburgerDetails($hamburgerDetails);
+		}
 		if($upgradeStatus)
 			$respObj->setUpgradeDetails($upgradeStatus);
 
@@ -88,7 +91,14 @@ class apiActions extends sfActions
 	}
         public function executeHamburgerDetailsV1(sfWebRequest $request)
 	{
-		$respObj = ApiResponseHandler::getInstance();
+		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+		 $forwardingArray =ApiRequestHandler::getInstance($request)->getModuleAndActionName($request);
+		 $respObj = ApiResponseHandler::getInstance();
+		if($appVersion>=94){
+			$hamburgerDetails = HamburgerApp::getHamburgerDetails($request->getAttribute('profileid'),$request->getParameter("version"),$forwardingArray);
+			$respObj->setHamburgerDetails($hamburgerDetails);
+		}
+		
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();
 		die;
