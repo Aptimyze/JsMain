@@ -42,6 +42,18 @@
      <td class="mediumblackb">~$details["CONTACTS"]["DEC_ME"]` </td>
     </tr>
     <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Daily Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["PROFILE_LENGTH"]`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Weekly Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["PROFILE_LENGTH"]`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Monthly Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["PROFILE_LENGTH"]`</td>
+    </tr>
+    <tr class="bggrey">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Profile Length</td>
      <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["PROFILE_LENGTH"]`</td>
     </tr>
