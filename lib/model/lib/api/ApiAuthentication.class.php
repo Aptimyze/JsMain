@@ -877,7 +877,7 @@ Abstract class ApiAuthentication
     public function setLoginTrackingCookie($loginData)
 	{
 		$username = $loginData["USERNAME"];
-		$cookieName = "track";
+		$cookieName = "loginTracking";
 		$expiryTime = 31536000; // Approx 1 year
 
 		if(!isset($_COOKIE[$cookieName]))
