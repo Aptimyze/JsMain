@@ -399,7 +399,7 @@ UNLIMITED => "N"
 ),     
 
 18=>array(LAYERID=>"18",
-PRIORITY=>"1",
+PRIORITY=>"2",
 TIMES=>"1",
 MINIMUM_INTERVAL=>"168",
 TITLE=>"Update Occupation Details",
