@@ -28,9 +28,10 @@ function ajaxInsertAstroPull(retryAttempt){
     if(retryAttempt < 3){
         retryAttempt++;
         var url = "/api/v1/profile/horoscope";
-        $.ajax({
+        $.myObj.ajax({
             type: 'POST',
             url: url,
+            channel : 'mobile',
             data: {update: "update"},
             success: function(response){
                 retryAttempt = 0;

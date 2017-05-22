@@ -1010,5 +1010,18 @@ class CommonFunction
 			throw new jsException($e);
 		}
 	}
+
+    public static function getFlagForIdfy($profileId)
+    {
+    	if($profileId)
+    	{
+    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		{
+    			return true;
+    		}
+    		return false;    		
+    	}    	
+    	return false;
+    }
 }
 ?>

@@ -618,21 +618,25 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "REMINDER|CANCEL|CONTACT",
 			"TRACKING"=> "",
 		),
-		"MATCH_ALERT"=>Array( 
+				"MATCH_ALERT"=>Array( 
 			"ID"=> "7",
-			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"APP_TYPE"=> "ANDROID",
+			"VERSION"=> "1",
+			"SORT_ORDER"=> "3",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
-			"TUPLE_ORDER"=> "",
+			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
+			"VIEW_FLAG"=> "NEW",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
 			"TITLE"=> "Daily Recommendations",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
-			"TRACKING"=> "stype=AM",
+			"BUTTONS"=> "INITIATE",
+			"TRACKING"=> "stype=A15",
+      			"CONTACT_ID"=>"",
 		),
 		"SHORTLIST"=>Array( 
 			"ID"=> "8",
@@ -811,8 +815,8 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Match of the day",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "",
-			"TRACKING"=> "",
+			"BUTTONS"=> "INITIATE",
+			"TRACKING"=> "stype=AMOD",
                         "CONTACT_ID"=>""
                 )
 

@@ -271,5 +271,27 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			}
 		}
 
+        public function getAppRegisteredProfile($osType,$dateTime1, $dateTime2, $limit1, $limit2)
+        {
+		try{
+                	$sqlSel = "SELECT REG_ID FROM MOBILE_API.REGISTRATION_ID WHERE OS_TYPE=:OS_TYPE AND TIME>=:TIME1 AND TIME2<=:TIME2 LIMIT $limit1,$limit2";
+                	$resSel = $this->db->prepare($sqlSel);
+
+                	$resSel->bindValue(":OS_TYPE", $osType, PDO::PARAM_STR);
+                	$resSel->bindValue(":TIME1", $dateTime1, PDO::PARAM_STR);
+                	$resSel->bindValue(":TIME2",$dateTime2, PDO::PARAM_STR);
+                	$resSel->execute();
+                	if($rowSelectDetail = $resSel->fetch(PDO::FETCH_ASSOC))
+                	        $regIdArr[] =$rowSelectDetail['REG_ID'];
+                	return $regIdArr;
+			}
+                catch(PDOException $e)
+                {
+                	throw new jsException($e);
+                }
+
+        }
+
+
 }
 ?>

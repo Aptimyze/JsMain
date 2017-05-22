@@ -98,22 +98,24 @@ class crmInterfaceActions extends sfActions
     public function executeStartVdOffer(sfWebRequest $request)
     {
         $emailId ='manoj.rana@naukri.com';
-        mail($emailId,"Step0 VD Started", date("Y-m-d H:i:s"));
 
         $this->cid      = $request->getParameter('cid');
         $commCrmFuncObj = new CommonCrmInterfaceFunctions();
         $curDate        = date("Y-m-d");
 
-        if ($request->getParameter('submit') == 'Start') {
+        if ($request->getParameter('submit') == 'Schedule') {
             $startDate = $request->getParameter('vdStartDate');
             $endDate   = $request->getParameter('vdEndDate');
+	    $vdExecuteDate = $request->getParameter('vdExecuteDate');	
 
             if ($startDate && $endDate && (strtotime($endDate) >= strtotime($startDate))) {
-                $commCrmFuncObj->startVdOffer($startDate, $endDate);
+                $commCrmFuncObj->startVdOffer($startDate, $endDate,$vdExecuteDate);
                 $this->startDate    = date("d M Y", strtotime($startDate));
                 $this->endDate      = date("d M Y", strtotime($endDate));
+		$this->vdExecuteDate = date("d M Y H:i:s", strtotime($vdExecuteDate));	
                 $this->vdSuccess    = true;
                 $this->disableStart = true;
+		mail($emailId,"Main VD Scheduled at- $this->vdExecuteDate", date("Y-m-d H:i:s"));
             } else {
                 $this->vdError = true;
             }
@@ -124,8 +126,34 @@ class crmInterfaceActions extends sfActions
                 $this->vdActive     = true;
                 $this->vdExpiryDate = date("d M Y", strtotime($vdExpiryDate));
             }
+	    $durationObj =new billing_VARIABLE_DISCOUNT_DURATION('newjs_masterRep');	
+	    $schDataArr =$durationObj->getVdOfferDates();	
+	    $status =$schDataArr['STATUS'];	            
+	    if($status=='Y'){
+	    	$this->vdScheduled =true;
+                $this->startDate    = date("d M Y", strtotime($schDataArr['SDATE']));
+                $this->endDate      = date("d M Y", strtotime($schDataArr['EDATE']));
+                $this->vdExecuteDate = date("d M Y H:i:s", strtotime($schDataArr['SCHEDULE_DATE']));
+	    }		
         }
         $this->vdDateDropdown = $commCrmFuncObj->getDateDropDown($curDate, 15);
+
+	// schedule date dropdown
+	$scheduleDateArr =$commCrmFuncObj->getDateDropDown($curDate, 1);
+	$time =date("Y-m-d H:i:s");
+	foreach($scheduleDateArr as $key=>$val){
+		$time1 =$val." 00:00:00";
+		$time2 =$val." 14:30:00";
+                $ktime1 =$key." 00:00:00";
+                $ktime2 =$key." 14:30:00";
+		
+		if(strtotime($time1)>=strtotime($time))
+			$dateArr[$ktime1] =$time1;
+		if(strtotime($time2)>=strtotime($time))
+			$dateArr[$ktime2] =$time2;
+	}
+	$this->scheduleDateDropdown =$dateArr;
+	// end	
     }
 
     // Schedule VD Sms
@@ -251,7 +279,7 @@ class crmInterfaceActions extends sfActions
         $this->durPerc                                                                                 = floor(100 / (count($this->serviceDurations) + 1));
         // Check if Discount Offer is active
         $discountOfferLogObj = new billing_DISCOUNT_OFFER_LOG();
-        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_masterDDL');
+        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_master');
         $discountOfferID     = $discountOfferLogObj->checkDiscountOffer();
         if ($discountOfferID) {
             $this->successMsg = "Discount offer is Currently Active";
@@ -590,8 +618,8 @@ class crmInterfaceActions extends sfActions
         $this->cid               = $request->getParameter('cid');
         $this->name              = $request->getParameter('name');
         $testDiscountLookupObj   = new test_DISCOUNT_LOOKUP_UPLOAD('newjs_local111');
-        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_masterDDL');
-        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_masterDDL');
+        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_master');
+        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_master');
 
         $records = $testDiscountLookupObj->getRecords();
         if ($records) {
