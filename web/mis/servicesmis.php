@@ -83,6 +83,7 @@ if(authenticated($cid))
 					$sql="SELECT SUM(PAID_COUNT) as cnt,SERVICE,DAY(ENTRY_DT) as mm,BRANCH FROM MIS.SERVICE_DETAILS WHERE ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date'";
 			if($branch)
 				$sql.=" AND UPPER(BRANCH)='".strtoupper($branch)."' ";
+                        $sql.=" AND SERVICE NOT LIKE '%J%' ";
 			$sql.=" GROUP BY mm, BRANCH, SERVICE ORDER BY SERVICE";
 			$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db));
 			while($row=mysql_fetch_array($res))

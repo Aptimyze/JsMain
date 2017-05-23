@@ -151,4 +151,30 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         		jsException::nonCriticalError($e);
         	}        
         }
+        /**
+         * get count for tracking 
+         * @param type $totalScript
+         * @param type $currentScript
+         * @return type
+         */
+         public function getTotalCountWithScript($totalScript="1",$currentScript="0")
+        {
+        	try
+        	{
+        		$sql = "SELECT COUNT(*) as TOTALCOUNT FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE IS_CALCULATED = 'N' AND PROFILEID%:TOTAL_SCRIPT=:SCRIPT";
+        		$prep = $this->db->prepare($sql);
+                        $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+                        $prep->bindValue(":SCRIPT",$currentScript,PDO::PARAM_INT);
+        		$prep->execute();
+        		while($row = $prep->fetch(PDO::FETCH_ASSOC))
+        		{
+        			$resultCount = $row["TOTALCOUNT"];
+        		}        	
+				return $resultCount;
+        	}
+        	catch (PDOException $e)
+        	{
+        		jsException::nonCriticalError($e);
+        	}        
+        }
 }
