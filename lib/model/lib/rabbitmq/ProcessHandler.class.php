@@ -47,7 +47,7 @@ class ProcessHandler
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
                               break;
       case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
-                              LoggingManager::getInstance()->writeToFileForCoolMetric($message);                              
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
