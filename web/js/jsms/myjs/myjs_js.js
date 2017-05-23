@@ -1,4 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
+/var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
 
 
 

@@ -280,7 +280,6 @@
             <div class="txtc">
                 <div id="photoIDDiv" class="photoDiv">
 
-                <img id="profilePhoto" class="srp_box2 mr6" src="http://mediacdn.jeevansathi.com/1255/13/25113359-1411734648.jpeg">
                 </div>
                 <div class="pad2 f16 fontlig" id="newErrMsg"></div>
                 <div class="pad20 f16 fontlig mt15" id="membershipheading"></div>
