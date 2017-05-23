@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/EmailTypeCreater.php
 	This class should not be updated manually.
-	Created on 2017-04-17
+	Created on 2017-05-23
 	 */
 	class MailerType{
 		private static $emailTypeArray=array(
@@ -120,6 +120,8 @@
 '1845'=>array('ID'=>'1867','MAIL_ID'=>'1845','TPL_LOCATION'=>'contactQuota.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Contact Quota increment mailer to be sent after increasing contact quota n report invalid.','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
 '1847'=>array('ID'=>'1868','MAIL_ID'=>'1847','TPL_LOCATION'=>'autoReminderOnPhotoUpload.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'5','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'contacts@jeevansathi.com','DESCRIPTION'=>'auto reminder mailer after photo uploads of the sender of interest','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Contacts','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
 '1848'=>array('ID'=>'1869','MAIL_ID'=>'1848','TPL_LOCATION'=>'sampleAstroCompatibilityMailer.tpl','HEADER_TPL'=>'top8_dpp_Review.tpl','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Sample Astro Compatibility Mail','MEMBERSHIP_TYPE'=>'D','GENDER'=>'N','PHOTO_PROFILE'=>'N','REPLY_TO_ENABLED'=>'N','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
+'1849'=>array('ID'=>'1870','MAIL_ID'=>'1849','TPL_LOCATION'=>'loginAlert.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Mails for login through new devices.','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
+'1850'=>array('ID'=>'1871','MAIL_ID'=>'1850','TPL_LOCATION'=>'astroCompatibiltyMailer.tpl','HEADER_TPL'=>'top8_dpp_Review.tpl','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'astro compatibility not generated','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
 );
  
  
