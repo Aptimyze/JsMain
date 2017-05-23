@@ -721,6 +721,11 @@ class registerActions extends sfActions
                         $this->forward('register','jsmbPage1');
 		$objCustomPage = new CustomRegPage;
 		$newHtmlContent = $objCustomPage->ProcessRequest($request);
+		$newHtmlContent = str_replace("http","https",$newHtmlContent);
+                $newHtmlContent = str_replace("httpss","https",$newHtmlContent);
+                $newHtmlContent = str_replace("ieplads","www.ieplads",$newHtmlContent);
+                $newHtmlContent = str_replace("wwwwww","www",$newHtmlContent);
+
 		//If 1 is returned then Page_id Does Not exit, then Fwd to Page1 of Register
 		if(is_numeric($newHtmlContent) && $newHtmlContent == 1)
 		{
