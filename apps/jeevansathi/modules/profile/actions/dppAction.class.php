@@ -333,7 +333,16 @@ class dppAction extends sfAction {
           $request->setParameter("internal",1);
           $fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
           $this->dppData = json_decode(ob_get_contents(),true);
-          ob_end_clean();          
+          ob_end_clean();
+	  foreach($this->dppData as $k=>$v)
+	  {
+		if($v['key']=="P_CASTE")
+		{
+			if($v['value']=="DM")
+				$this->dppData[$k]['label_val']="Doesn't Matter";
+			break;
+		}
+	  }          
           return $this->dppData;
         }
         /*
