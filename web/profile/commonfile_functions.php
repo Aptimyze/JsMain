@@ -476,7 +476,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                  
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                               => "53");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                        => "31");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                          => "89");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                     => "42");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                      => "43");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                          => "47");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
@@ -584,7 +584,7 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                      => "116");
-$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"              => "69");
+$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"               => "70");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                                                => "60");
