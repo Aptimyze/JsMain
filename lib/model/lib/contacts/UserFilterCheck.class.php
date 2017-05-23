@@ -260,7 +260,7 @@ class UserFilterCheck
                     $ignoreFilter = $ignFilterStatus;
                 else{
                     $ignoreObj = new IgnoredProfiles("newjs_master");
-                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
+                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID(),ignoredProfileCacheConstants::BYME);
                 }
 		if($ignoreFilter)
 		{	$data= "Ignored By the Reciever";

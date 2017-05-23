@@ -258,7 +258,9 @@ class DetailedViewApi
                 }
                 unset($nameOfUserObj);
         if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
-        	$this->m_arrOut['sameGender']=1;
+        	$this->m_arrOut['sameGender']=1;        
+    	else
+        	$this->m_arrOut['sameGender']=0;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		

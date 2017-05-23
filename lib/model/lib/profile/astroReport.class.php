@@ -2,13 +2,18 @@
 class astroReport
 {
 	//This function is used to send mails (sample astro report/actual astro report) to the user who requested it
-	public function sendAstroMail($mailID,$otherUsername,$otherProfileId,$file,$type,$loggedInProfileId)
+	public function sendAstroMail($mailID,$otherUsername,$otherProfileId,$file,$type,$loggedInProfileId,$extraParameter="")
 	{
 		$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,$mailID);
+		
 		$emailTpl = $email_sender->setProfileId($loggedInProfileId);
 		$smartyObj = $emailTpl->getSmarty();
 		$smartyObj->assign('otherUsername',$otherUsername);
 		$smartyObj->assign('otherProfile',$otherProfileId);
+		if($extraParameter == "noData")
+		{
+			$smartyObj->assign('noAttachment',"1");
+		}
 		$email_sender->setAttachment($file);
 		if($type == "sample")
 		{
@@ -19,7 +24,6 @@ class astroReport
 		{
 			$email_sender->setAttachmentName("astroCompatibility-".$otherUsername.".pdf");
 			$successArr["MESSAGE"]  = "Astro Report Sent";
-
 		}
 		$email_sender->setAttachmentType('application/pdf');
 		$email_sender->send();
