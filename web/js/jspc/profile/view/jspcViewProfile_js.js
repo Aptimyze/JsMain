@@ -602,8 +602,9 @@ var feed={};
 reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
+feed.mainReason=mainReason;
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
-ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason,'mainReason':mainReason};
+ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST'

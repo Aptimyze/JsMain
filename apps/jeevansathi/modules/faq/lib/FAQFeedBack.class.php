@@ -31,7 +31,7 @@ class FAQFeedBack
 
 
 	private function insertReportAbuseLog(){
-  
+      
 		$newReasonsAndroid = array(7,8,9,10,11,12,13,14,16,18);
 		$askOtherReasonAndroid = 0;
 
@@ -48,6 +48,7 @@ class FAQFeedBack
 		if($this->webRequest->getParameter('profilechecksum') && ($reasonNew || $reasonMap))
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+			$feed=$this->webRequest->getParameter('feed');
 		}
 		
 		else {
@@ -62,7 +63,6 @@ class FAQFeedBack
                         $pos2=strpos($reason,'by');
                         $arr2=split(' ',trim(substr($reason,$pos2+2)));
                         $otherUsername=trim($arr2[0]);
-
                         if(!$this->webRequest->getParameter('fromCRM')){  
                         $this->otherProfile->getDetail($otherUsername,"USERNAME");
                     }
@@ -98,10 +98,11 @@ class FAQFeedBack
 					}
 		}
 		else
-		{ 
+		{   
 			$categoryNew='other';
+			//print_r($feed); die('asvjas');
 			if($feed['mainReason'] != '' || $feed['mainReason'] != NULL )
-			{
+			{   
 				$categoryNew = $feed['mainReason'];
 			}
 
@@ -227,7 +228,7 @@ class FAQFeedBack
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		
 
-	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
+	 	if(0 && !$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{   
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
 			$error[message]='You cannot report abuse against the same person more than twice.';
