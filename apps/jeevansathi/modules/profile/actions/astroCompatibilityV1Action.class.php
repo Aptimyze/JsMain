@@ -131,7 +131,7 @@ class astroCompatibilityV1Action extends sfActions
 						}
 						else
 						{
-							$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId,"noData");
+							$successArr = $astroObj->sendAstroMail(1850,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId,"noData");
 						}	
 						
 					}

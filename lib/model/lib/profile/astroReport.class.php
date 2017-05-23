@@ -5,6 +5,7 @@ class astroReport
 	public function sendAstroMail($mailID,$otherUsername,$otherProfileId,$file,$type,$loggedInProfileId,$extraParameter="")
 	{
 		$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,$mailID);
+		
 		$emailTpl = $email_sender->setProfileId($loggedInProfileId);
 		$smartyObj = $emailTpl->getSmarty();
 		$smartyObj->assign('otherUsername',$otherUsername);
@@ -23,7 +24,6 @@ class astroReport
 		{
 			$email_sender->setAttachmentName("astroCompatibility-".$otherUsername.".pdf");
 			$successArr["MESSAGE"]  = "Astro Report Sent";
-
 		}
 		$email_sender->setAttachmentType('application/pdf');
 		$email_sender->send();
