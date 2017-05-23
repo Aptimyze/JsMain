@@ -155,7 +155,7 @@ $css_arr[]=array("jsms/search/savesearchcss"         => "10");
 $css_arr[]=array("iosprmo"  => "2");
 $css_arr[]=array("jspc/common/commonJspc_css"                             => "34");
 $css_arr[]=array("jspc/registration/registrationJspc_css"               => "16");
-$css_arr[]=array("jspc/myjs/myjs"                    => "35");
+$css_arr[]=array("jspc/myjs/myjs"                    => "36");
 $css_arr[]=array("jspc/common/fontsJspc_css"   => "1");
 $css_arr[]=array("jspc/common/headerFooterJspc_css"                 => "16");
 $css_arr[]=array("jspc/search/scrollbar"      => "1");
@@ -469,7 +469,7 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                    
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                          => "89");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                     => "42");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                                           => "48");
+$js_arr[]=array("jsms/login/newMobLogin_js"                                           => "49");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
 $js_arr[]=array("jsms/hamburger/ham_js"                         => "50");
