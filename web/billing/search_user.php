@@ -202,44 +202,46 @@ if(isset($data))
 			unset($price_tax);
                         $sql_service = "SELECT * FROM billing.PURCHASE_DETAIL WHERE BILLID='$billid'";
                         $res_service = mysql_query_decide($sql_service) or logError_sums($sql_service);
-                        while($row_service = mysql_fetch_assoc($res_service))
-                        {
-                                $serviceid = $row_service["SERVICEID"];
-                                $sname = $serviceObj->getServiceName($serviceid);
-                                if($convertCToNCP == true && strpos($sname[$serviceid]["NAME"], "e-Value Pack")!==false){
-                                	$service_details[$serviceid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$serviceid]["NAME"]);
-                                }
-                                else{
-                                	$service_details[$serviceid]["SERVICE"] = $sname[$serviceid]["NAME"];
-                                }
-				if(ddiff($row_service["START_DATE"])>0)
-				{
-                                	$service_details[$serviceid]["ACTIVATE_ON"] = $row_service["START_DATE"];
-                                	$service_details[$serviceid]["ACTIVATED_ON"] = "0000-00-00";
-				}
-				else
-				{
-                                	$service_details[$serviceid]["ACTIVATE_ON"] = "0000-00-00";
-                                	$service_details[$serviceid]["ACTIVATED_ON"] = $row_service["START_DATE"];
-				}
-                                $service_details[$serviceid]["EXPIRY_DT"] = $row_service["END_DATE"];
-                                $service_details[$serviceid]["PRICE"]=$row_service["PRICE"];
-                                $service_details[$serviceid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_service["END_DATE"]);
+        while($row_service = mysql_fetch_assoc($res_service))
+        {
+                $serviceid = $row_service["SERVICEID"];
+                if(strpos($serviceid,"J")===false){
+	                $sname = $serviceObj->getServiceName($serviceid);
+	                if($convertCToNCP == true && strpos($sname[$serviceid]["NAME"], "e-Value Pack")!==false){
+	                	$service_details[$serviceid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$serviceid]["NAME"]);
+	                }
+	                else{
+	                	$service_details[$serviceid]["SERVICE"] = $sname[$serviceid]["NAME"];
+	                }
+					if(ddiff($row_service["START_DATE"])>0)
+					{
+	                                	$service_details[$serviceid]["ACTIVATE_ON"] = $row_service["START_DATE"];
+	                                	$service_details[$serviceid]["ACTIVATED_ON"] = "0000-00-00";
+					}
+					else
+					{
+	                                	$service_details[$serviceid]["ACTIVATE_ON"] = "0000-00-00";
+	                                	$service_details[$serviceid]["ACTIVATED_ON"] = $row_service["START_DATE"];
+					}
+	                $service_details[$serviceid]["EXPIRY_DT"] = $row_service["END_DATE"];
+	                $service_details[$serviceid]["PRICE"]=$row_service["PRICE"];
+	                $service_details[$serviceid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_service["END_DATE"]);
 
-				// Current Time
-                                list($yy,$mm,$dd) = @explode("-",$today);
-                                $ts = mktime(0,0,0,$mm,$dd,$yy);
-				// Expiry Time
-                                list($eyy,$emm,$edd) = @explode("-",$service_details[$serviceid]["EXPIRY_DT"]);
-                                $ets = mktime(0,0,0,$emm,$edd,$eyy);
+	// Current Time
+	                list($yy,$mm,$dd) = @explode("-",$today);
+	                $ts = mktime(0,0,0,$mm,$dd,$yy);
+	// Expiry Time
+	                list($eyy,$emm,$edd) = @explode("-",$service_details[$serviceid]["EXPIRY_DT"]);
+	                $ets = mktime(0,0,0,$emm,$edd,$eyy);
 
-				/*if($eyy > $yy)
-                                        $refund_arr[] = $billid;
-                                elseif($ets > $ts)*/
-                                $refund_arr[] = $billid;
+	/*if($eyy > $yy)
+	                        $refund_arr[] = $billid;
+	                elseif($ets > $ts)*/
+	                $refund_arr[] = $billid;
 				$price_tax += $row_service["PRICE"];
-                        }
-                        $user_details[$billid]["SERVICE_DETAILS"] = $service_details;
+			}
+        }
+            $user_details[$billid]["SERVICE_DETAILS"] = $service_details;
 	
 			$services_amount = $serviceObj->getServicesAmountWithoutTax($serviceid_str,$user_details[$billid]["CURTYPE"]);
 			$services_amount_tax = $serviceObj->getServicesAmount($serviceid_str,$user_details[$billid]["CURTYPE"]);
@@ -340,7 +342,7 @@ if(isset($data))
 			}
 			$user_details[$billid]["SERVICE_DETAILS"] = $service_details;*/
 		}
-		//print_r($user_details);//die;
+		print_r($user_details);//die;
 		
 		$smarty->assign("user_details",$user_details);
 
@@ -349,18 +351,20 @@ if(isset($data))
 		$res_last_service = mysql_query_decide($sql_last_service) or logError_sums($sql_last_service);
 		while($row_last_service = mysql_fetch_assoc($res_last_service))
 		{
-			$last_active_billid = $row_last_service["BILLID"];
-			$sid = $row_last_service["SERVICEID"];
-			$sname = $serviceObj->getServiceName($sid);
-			if(strpos($sname[$sid]["NAME"], 'e-Value')!==false && strpos($row_last_service["SERVEFOR"], 'N')!==false){
-				$last_active_services[$sid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$sid]["NAME"]);
+			if(strpos($row_last_service["SERVICEID"], "J")===false){
+				$last_active_billid = $row_last_service["BILLID"];
+				$sid = $row_last_service["SERVICEID"];
+				$sname = $serviceObj->getServiceName($sid);
+				if(strpos($sname[$sid]["NAME"], 'e-Value')!==false && strpos($row_last_service["SERVEFOR"], 'N')!==false){
+					$last_active_services[$sid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$sid]["NAME"]);
+				}
+				else{
+					$last_active_services[$sid]["SERVICE"] = $sname[$sid]["NAME"];
+				}
+				$last_active_services[$sid]["ACTIVATED_ON"] = $row_last_service["ACTIVATED_ON"];
+				$last_active_services[$sid]["EXPIRY_DT"] = $row_last_service["EXPIRY_DT"];
+				$last_active_services[$sid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_last_service["EXPIRY_DT"]);
 			}
-			else{
-				$last_active_services[$sid]["SERVICE"] = $sname[$sid]["NAME"];
-			}
-			$last_active_services[$sid]["ACTIVATED_ON"] = $row_last_service["ACTIVATED_ON"];
-			$last_active_services[$sid]["EXPIRY_DT"] = $row_last_service["EXPIRY_DT"];
-			$last_active_services[$sid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_last_service["EXPIRY_DT"]);
 		}
 		
 		$sql_purchases = "SELECT USERNAME, NAME, ADDRESS, CITY, EMAIL, RPHONE, OPHONE, MPHONE, PIN, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, CUR_TYPE, STATUS, WALKIN FROM billing.PURCHASES WHERE BILLID='$last_active_billid'";
