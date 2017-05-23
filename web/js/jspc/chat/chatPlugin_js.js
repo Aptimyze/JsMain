@@ -2542,7 +2542,7 @@ JsChat.prototype = {
             
 
     },
-    
+    rosterDeleteChatBoxReponse: null,
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
         //console.log("in disablechatPanelsBox");
@@ -2563,9 +2563,14 @@ JsChat.prototype = {
                                     
                                     $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
                                     if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0){
-
-                                        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-                                        //console.log("added 1");
+                                        //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+                                        var currentT = new Date().getTime();
+                                        if((currentT - rosterMsgTime)> 500){
+                                            var selfJID = getConnectedUserJID();
+                                            curElem.rosterDeleteChatBoxReponse(selfJID,userId);
+                                            //console.log("added 1");
+                                            rosterMsgTime = currentT;
+                                            }
                                         }
                                     
                                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);

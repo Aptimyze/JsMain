@@ -30,6 +30,7 @@ class RabbitmqHelper
                           "writeMsg" => "niteshsethi1987@gmail.com,nikmittal4994@gmail.com",
                           "updateSeenProfile" => "niteshsethi1987@gmail.com",
                           "updateSeen" => "niteshsethi1987@gmail.com",
+                          "memoryAlarmAlert"=>"pankaj.khandelwal@jeevansathi.com,lavesh.rawat@jeevansathi.com,ankita.g@jeevansathi.com,nitish,sharma@jeevansathi.com"
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -46,7 +47,7 @@ class RabbitmqHelper
 
     if(in_array($to, $arrEnableAlert))
     {
-      SendMail::send_email($emailTo,$message,$subject);
+  //    SendMail::send_email($emailTo,$message,$subject);
     }
   }
 

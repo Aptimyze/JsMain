@@ -7,9 +7,11 @@
 
 class PromoLib
 {
-	private $baseDate = '2017-05-8 0:0:0';
-	private $lastSevenDaysCheck = 3600*24*7;
-	private $timeForPromo = 3600*24*4;
+	private $baseDate = '2017-05-22 10:30:00';
+	//Time in seconds for last 7 days. PHP version too old
+	private $lastSevenDaysCheck = 604800;
+	//Time in seconds for last 4 days. PHP version too old
+	private $timeForPromo = 345600;
 
 	public function showPromo($promoToBeShown,$profileId,$loginObj)
 	{ 
@@ -58,7 +60,9 @@ class PromoLib
 		}		 
 
 			$interval = strtotime(now) - strtotime($this->baseDate);
-		
+			
+			if($interval > 0)
+		{		
 			if($interval < $this->timeForPromo)
 			{  
 				setcookie('DAY_CHECK_CHAT_PROMO', '1', time() + 86400, "/");
@@ -76,9 +80,9 @@ class PromoLib
 
 				return false;
 			}
+		}
 		
-		
-		
+		return false;
 	}
 
 

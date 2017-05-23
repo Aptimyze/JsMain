@@ -33,6 +33,32 @@ class InboxMobileAppV1
 	static public function init()
 	{
 		self::$informationTupleFields    = Array(
+       "INTEREST_RECEIVED_FILTERED"=>Array(
+                                "PROFILECHECKSUM",
+                                "USERNAME",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "MESSAGE",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+                                "ProfilePic120Url"),
+
 			"INTEREST_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -57,6 +83,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -213,6 +240,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -236,6 +264,7 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				"ProfilePic120Url"
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -434,35 +463,31 @@ class InboxMobileAppV1
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",),
                     "MATCH_OF_THE_DAY"=>Array(
-				"PROFILECHECKSUM",
-				"USERNAME",
-				"tuple_title_field",
-				"LOCATION",
-				"AGE",
-				"HEIGHT",
-				"RELIGION",
-				"CASTE",
-				"MTONGUE",
-				"INCOME",
-				"subscription_icon",
-				"subscription_text",
-				"TIME",
-				"MESSAGE",
-				"SEEN",
-				"edu_level_new",
-				"userloginstatus",
-				"FILTERED",
-				"ProfilePic120Url",
-				"ProfilePic450Url",
-				"MSTATUS",
-				"VERIFICATION_SEAL",
+			                                "PROFILECHECKSUM",
+                                "USERNAME",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "MESSAGE",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "VERIFICATION_SEAL",
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
-				)
-			);
+                                "ProfilePic120Url"),
+);
 		self::$informationTypeFields     = Array(
 				"NEW_COUNT",
 				"TOTAL_COUNT",
@@ -550,7 +575,15 @@ class InboxMobileAppV1
 						$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED());
 					}
 					else
+					{
+						if(sfContext::getInstance()->getRequest()->getParameter('myjs')==1)
+							{
+								$gender=$tupleObj->getGENDER();
+								$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),"ProfilePic120Url","",$gender);
+							}
+						else 
 						$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+					}
 					if($infoKey!="SHORTLIST" && $infoKey!="PEOPLE_WHO_VIEWED_MY_CONTACTS")
 					{
 						$buttons = explode("|",$tupleObj->getBUTTONS());

@@ -141,8 +141,13 @@ class detailedAction extends sfAction
 			$this->from_mailer=1;
 		else
 			$this->from_mailer=0;
-		
-		
+
+		//matchAlertThursdayTracking
+		if($request->getParameter("fromMatchAlertMailer"))
+			$this->fromMatchAlertMailer=1;
+		else
+			$this->fromMatchAlertMailer=0;
+				
 		//Update Profile Data, like tables and count which are as follow
 		// 	
 		//Log View Table
@@ -318,6 +323,7 @@ class detailedAction extends sfAction
   						$deepLinkingObj = new deepLinking();
   						$resultValue = $deepLinkingObj->getDeepLinkingHeader($request);
   						$this->headerURLDeepLinking = $resultValue;
+  						$this->matchAlertTracking($request->getParameter("stype"));
   					}
   					$this->setJsmsViewProfileLayout();
   		    }  
@@ -894,7 +900,7 @@ class detailedAction extends sfAction
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
 			$ignore=new IgnoredProfiles("newjs_master");
-			if($ignore->ifIgnored($sender,$receiver))
+			if($ignore->ifIgnored($sender,$receiver,"byMe"))
 					$this->IGNORED=1;
 		}
 	}
@@ -1279,7 +1285,9 @@ class detailedAction extends sfAction
             {
                             $this->STYPE="WO";
             }
-            $this->responseTracking = urlencode($this->responseTracking);		
+            $this->responseTracking = urlencode($this->responseTracking);
+            $this->matchAlertTracking($request->getParameter("stype"));
+
              //JSB9 Tracking
             $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
             switch($this->tabName)
@@ -1338,9 +1346,22 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);die;
+        
+        //This part was added to allow idfy to go Online percentage wise
+        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);        
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
+    }
+
+    private function matchAlertTracking($stype)
+    {
+    	if($this->fromMatchAlertMailer && in_array($stype,ProfileEnums::$matchAlertMailerStypeArr))
+    	{    
+    		$channel = MobileCommon::getChannel();
+    		$key = "MatchAlertTracking_".$channel."_".date("Y-m-d");
+    		$memCacheObj = JsMemcache::getInstance();
+  			$memCacheObj->incrCount($key);					
+    	}  				
     }
 
 }

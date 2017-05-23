@@ -34,7 +34,7 @@ EOF;
 	$vdObj = new billing_VARIABLE_DISCOUNT();
 
         // Truncate temporary table and insert data into it
-        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY('newjs_masterDDL');
+        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY('newjs_master');
         $vdBackupOneDayObj->truncate();
         $vdBackupOneDayObj->insertDataFromVariableDiscount($todayDate);
 
