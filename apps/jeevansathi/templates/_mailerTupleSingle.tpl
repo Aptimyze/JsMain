@@ -1,13 +1,13 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
     <tr>
         <td></td>
-        <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
+        <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
         <td height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""`Guna Match ~$user->getGUNA()`/36 ~/if`</td>
     </tr>
     <tr>
         <td width="22"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="20" height="1" vspace="0" hspace="0" align="left"></td>
         <td style="width:100px;" height="140" valign="top">
-             <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" style="text-decoration:none; color:#0f529d;" target="_blank">
+             <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" style="text-decoration:none; color:#0f529d;" target="_blank">
              <img src="~$user->getSearchPicUrl()`" align="left" width="100" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
         </td>
         <td valign="top" style="padding-left:10px;">
@@ -44,7 +44,7 @@
     <tr>
         <td></td>
         <td colspan="2" style="padding-right: 5px;">
-            About ~$user->getUSERNAME()`: ~$user->getYOURINFO()`... <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" target="_blank" style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:none;">Read more</a> 
+            About ~$user->getUSERNAME()`: ~$user->getYOURINFO()`... <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:none;">Read more</a> 
 	</td>
     </tr>
     ~/if`

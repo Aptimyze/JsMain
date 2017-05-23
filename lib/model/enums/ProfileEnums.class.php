@@ -26,5 +26,7 @@ class ProfileEnums
         public static $dppTickFields = array("dpp_age"=>"AGE","dpp_height"=>"HEIGHT","dpp_marital_status"=>"MSTATUS","dpp_have_children"=>"HAVECHILD","dpp_country"=>"COUNTRYRES","dpp_city"=>"CITYRES","dpp_religion"=>"RELIGION","dpp_caste"=>"CASTE","dpp_mtongue"=>"MTONGUE","dpp_manglik"=>"MANGLIK","dpp_edu_level"=>"ELEVEL_NEW","dpp_occupation"=>"OCCUPATION","dpp_earning"=>"INCOME","dpp_diet"=>"DIET","dpp_smoke"=>"SMOKE","dpp_drink"=>"DRINK","dpp_complexion"=>"COMP","dpp_btype"=>"BTYPE","dpp_handi"=>"HANDI");
         public static $sendInstantMessagesForFields = array("CASTE"=>"Caste","PHONE_MOB"=>"Phone Number","EMAIL"=>"Email","CITY_RES"=>"City","MTONGUE"=>"Mother Tongue","INCOME"=>"Income","EDU_LEVEL_NEW"=>"Highest Education","OCCUPATION"=>"Occupation","MANGLIK"=>"Manglik");
 
+        public static $matchAlertMailerStypeArr = array("BN1","BN2","BN3","BN4","BN5");
+
 }
 ?>

@@ -62,7 +62,7 @@ class NameOfUser
        //print_r($finalData);die;
 	return $finalData;
     }
-    public function insertName($profileid,$name,$display)
+    public function insertName($profileid,$name,$display="")
     {
 	if($profileid && ($name ||$display))
 	{
