@@ -583,7 +583,7 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                         => "114");
-$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"              => "69");
+$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"               => "70");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                                                 => "61");
