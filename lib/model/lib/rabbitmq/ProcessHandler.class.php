@@ -52,8 +52,9 @@ class ProcessHandler
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
       case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
-                              ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus);
-                              LoggingManager::getInstance()->writeToFileForCoolMetric($message);                              
+                              if($body['onlyLogging']==0)
+                                  ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus);
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;

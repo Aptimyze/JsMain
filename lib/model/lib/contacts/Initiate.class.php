@@ -92,6 +92,10 @@ class Initiate extends ContactEvent{
   private $tasksThruQueue;
 
   private $producerObj;
+
+
+  private $onlyLogging;
+
   /**#@-*/
 
   /**
@@ -366,7 +370,15 @@ class Initiate extends ContactEvent{
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
-      
+      else {
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $this->sendDataOfQueue(
+            'MAIL', 'INITIATECONTACT',
+				array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>1 ));
+          
+      }
+       
        $viewedEntryDate = $this->viewed->getENTRY_DT();
        $now = date("Y-m-d");
        $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
@@ -404,7 +416,7 @@ class Initiate extends ContactEvent{
 
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
-				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ))
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>0 ))
 		)
 		{
 			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
