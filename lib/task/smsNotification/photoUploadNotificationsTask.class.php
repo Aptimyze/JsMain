@@ -55,7 +55,7 @@ $this->addOptions(array(
                                 
                                 $type = $contactsObj->getTYPE();
                                 if($type != 'C' && $type != 'D' && $type != 'E'){
-                                    if(!$ignore->ifIgnored($profileid,$key) && !$ignore->ifIgnored($key,$profileid)){
+                                    if(!$ignore->ifIgnored($profileid,$key,"byMe") && !$ignore->ifIgnored($key,$profileid,"byMe")){
                                         $instantNotifObj->sendNotification($key,$profileid);
                                         requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
                                     }

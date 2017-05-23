@@ -115,7 +115,9 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
 					//changed to library call
-					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID);
+
+					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID,ignoredProfileCacheConstants::BYME);
+
 					if(!$isIgnored) {
 						$this->contactObj = new Contacts($this->loginProfile, $this->ignoreProfile);
 						if ($this->contactObj->getTYPE() == ContactHandler::ACCEPT) {
@@ -220,7 +222,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 				}
 				case self::STATUS : 
 				{
-					$bStatus = ($ignore_Store_Obj->ifIgnored($profileID,$ignoredProfileid))?1:0;
+					$bStatus = ($ignore_Store_Obj->ifIgnored($profileID,$ignoredProfileid,ignoredProfileCacheConstants::BYME))?1:0;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array('status'=>"$bStatus");
 					break;

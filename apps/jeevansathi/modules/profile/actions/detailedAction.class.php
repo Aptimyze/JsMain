@@ -900,7 +900,7 @@ class detailedAction extends sfAction
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
 			$ignore=new IgnoredProfiles("newjs_master");
-			if($ignore->ifIgnored($sender,$receiver))
+			if($ignore->ifIgnored($sender,$receiver,"byMe"))
 					$this->IGNORED=1;
 		}
 	}
