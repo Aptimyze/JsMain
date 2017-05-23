@@ -612,6 +612,9 @@ if (isset($data)) //successful login
         if (in_array('SFL', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/sathiForLifeDataDisplay.php?cid=$cid\">Users' data of Sathi For Life</a>";
         }
+        
+                    $linkarr[]="<a href=\"$SITE_URL/operations.php/registerMis/productMetric\">Product Metrics</a>";
+
     }
 
     $smarty->assign("linkarr", $linkarr);

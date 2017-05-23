@@ -150,6 +150,8 @@ class MessageQueues
   const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
   const PRODUCT_METRICS = "PRODUCT_METRICS";
 
+  public static $logConnectionTime = 0;
+  public static $logConnectionTimeout = 1;
 }
 
 ?>

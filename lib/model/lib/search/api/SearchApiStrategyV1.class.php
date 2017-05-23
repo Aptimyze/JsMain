@@ -189,8 +189,13 @@ class SearchApiStrategyV1
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		
-		$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		if($request->getParameter("androidMyjsNew")==1){
+			$this->photoType= 'ProfilePic120Url';
+		}
+		else
+		{
+			$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		}
 		/* trac#4249 : at the end*/
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{

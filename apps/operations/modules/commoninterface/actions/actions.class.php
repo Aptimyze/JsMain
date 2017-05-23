@@ -293,7 +293,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_master');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}

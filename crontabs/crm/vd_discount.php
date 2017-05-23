@@ -11,7 +11,7 @@ include_once(JsConstants::$docRoot."/classes/VariableDiscountHandler.class.php")
 ini_set('max_execution_time',0);
 ini_set('memory_limit',-1);
 
-$myDb 	=connect_ddl();		// master connection
+$myDb 	=connect_db();		// master connection
 $slaveDb=connect_737();		// slave connection
 $variableDiscountObj =new VariableDiscountHandler($myDb,$slaveDb);
 

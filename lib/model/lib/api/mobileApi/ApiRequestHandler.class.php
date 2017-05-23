@@ -4,9 +4,9 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 90;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 94;
-	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 95;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 95;
+	public static $ANDROID_FORCE_UPGRADE_VERSION = 90;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
 	private $response;
