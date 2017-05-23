@@ -292,12 +292,21 @@ try{
  }
  public function updateSeenProfile($typeInfo,$body)
  {
-	$fromSym=$body['fromSym'];
-	$type = $body['type'];
-	$mypid = $body['mypid'];
-	$updatecontact = $body['updatecontact'];
-	$profileid = $body['profileid']; 
-	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+	if(array_key_exists("UPDATE_SEEN",$body))
+	{
+		$updateSeenData = $body["UPDATE_SEEN"];
+		$fromSym=$updateSeenData['fromSym'];
+		$type = $updateSeenData['type'];
+		$mypid = $updateSeenData['mypid'];
+		$updatecontact = $updateSeenData['updatecontact'];
+		$profileid = $updateSeenData['profileid']; 
+		include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+	}
+	if(array_key_exists("VIEW_LOG",$body))
+	{
+		$viewLogData = $body['VIEW_LOG'];
+		$this->updateViewLogTable($viewLogData,$viewLogData['triggerOrNot']);
+	}
  }
  public function updateMatchAlertsLaseSeen($body)
  {
