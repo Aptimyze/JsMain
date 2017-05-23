@@ -1358,7 +1358,7 @@ class detailedAction extends sfAction
     	if($this->fromMatchAlertMailer && in_array($stype,ProfileEnums::$matchAlertMailerStypeArr))
     	{    
     		$channel = MobileCommon::getChannel();
-    		$key = "MatchAlert_".$channel."_".date("Y-m-d");
+    		$key = "MatchAlertTracking_".$channel."_".date("Y-m-d");
     		$memCacheObj = JsMemcache::getInstance();
   			$memCacheObj->incrCount($key);					
     	}  				
