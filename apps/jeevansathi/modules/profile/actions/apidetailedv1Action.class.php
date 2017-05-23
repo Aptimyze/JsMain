@@ -160,7 +160,7 @@ class apidetailedv1Action extends sfAction
 		//Now Create OutPut Array
 		$arrOut = $this->BakeMyView();
 		$arrOut['USERNAME']=$this->profile->getUSERNAME();
-
+		
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
     	{
@@ -300,7 +300,11 @@ class apidetailedv1Action extends sfAction
         			$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
         		}
         	}        	
-			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);			
+			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);
+			if($this->loginProfile->getPROFILEID())
+			{
+				$out["dpp_Ticks"]["matching"] = $this->getTotalAndMatchingDppCount($out["dpp_Ticks"]);
+			}
         }
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
 		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
@@ -309,7 +313,7 @@ class apidetailedv1Action extends sfAction
                 $out['show_vsp'] = true;
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
-		}
+		}		
 		return $out;
 	}
 
@@ -490,9 +494,34 @@ class apidetailedv1Action extends sfAction
 		{
 			$tickKey = ProfileEnums::$dppTickFields[$key];
 			$dppTickArray[$key]["VALUE"] = $value;
-			$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+			if($tickArray[$tickKey] && $value)
+			{
+				$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+			}		
 		}
 		return $dppTickArray;
+	}
+
+	public function getTotalAndMatchingDppCount($ticksArr)
+	{
+		$totalCount = 0;
+		$matchingCount = 0;
+		$countArr = array();
+		foreach($ticksArr as $key=>$value)
+		{
+			if($value["VALUE"])
+			{
+				$totalCount++;
+				if($value["STATUS"] == "gnf")
+				{
+					$matchingCount++;
+				}
+			}
+				
+		}
+		$countArr["totalCount"] =$totalCount;
+		$countArr["matchingCount"] =$matchingCount;
+		return $countArr;
 	}
 } 
 ?>
