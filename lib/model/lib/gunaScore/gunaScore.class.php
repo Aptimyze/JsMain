@@ -14,7 +14,7 @@ class gunaScore
     {	
       $searchIdArr = array();
       $this->gunaForPD = 0;
-
+      $this->profileId = $profileId;
       if(strpos($profilechecksumStr, ',') !== false)
       {
         $profilechecksumArr = explode(",",$profilechecksumStr);
@@ -132,13 +132,14 @@ class gunaScore
     $compstring = implode(",",$compstring);
     $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;  
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
+
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
     }
-    elseif($fresult="")
+    elseif(!$fresult)
     {
-      SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$profileId," Guna score response NULL");   
+      SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
     }
     if(is_array($fresult))
     {
