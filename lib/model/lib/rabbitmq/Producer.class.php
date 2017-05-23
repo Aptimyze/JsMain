@@ -312,7 +312,7 @@ class Producer
           $this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min,MQ::DELAYED_INSTANT_MAIL);
           break;
 
-        case 'PRODUCT_METRICS':
+        case MQ::PRODUCT_METRICS:
                      $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PRODUCT_METRIC_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
         break;
  

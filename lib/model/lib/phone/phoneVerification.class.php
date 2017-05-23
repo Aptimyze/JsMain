@@ -208,7 +208,11 @@ public function sendMailerAfterVerification($noOfTimesVerified) {
 
 			
 			if($noOfTimesVerified==0 && $activated=="Y")
+                        {
 			CommonFunction::sendWelcomeMailer($profileid);
+                        $this->sendToProductMetricQueue();
+                        }
+                        
 }
 
 
@@ -433,14 +437,14 @@ public function contact_archive($field="",$val="")
     private function sendToProductMetricQueue(){
 
         
-                if(JsMemcache::getInstance()->get($this->profileObject->getPROFILEID().'_fromMemToPhoneVer')!=1)return false;
                 $producerObj=new Producer();
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
                 if($producerObj->getRabbitMQServerConnected())
                 {
-                        $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
+                        $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'REG','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
                         $producerObj->sendMessage($updateSeenData);
                 }
-                JsMemcache::getInstance()->delete($this->profileObject->getPROFILEID().'_fromMemToPhoneVer');        
     }
 
 }
