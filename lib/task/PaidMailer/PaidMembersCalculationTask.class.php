@@ -37,7 +37,7 @@ EOF;
 		$flag=0;
 
 		do{
-			$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT();
+			$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT("newjs_master");
 			$arr = $search_PAIDMEMBERS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
                         
 			if(is_array($arr))
@@ -59,6 +59,8 @@ EOF;
 			}
 			else
 				$flag=0;
+                        
+                        unset($search_PAIDMEMBERS_TO_BE_SENT);
 		}while($flag);
 	}
 }
