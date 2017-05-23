@@ -215,7 +215,7 @@ $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 $css_arr[]=array("yatra_style"     => "5");
 $css_arr[]=array("promotions/chatPromo/chatPromoMS_css"         => "5");
 $css_arr[]=array("promotions/chatPromo/chatPromoPC_css"  => "3");
-$css_arr[]=array("sathiForLife_css"              => "11");
+$css_arr[]=array("sathiForLife_css"               => "12");
 $css_arr[]=array(" /web/css/ /web/css/ /web/css/productmetric/animate"   => "1");
 $css_arr[]=array("productmetric/icheck/green"     => "3");
 $css_arr[]=array("productmetric/fonts/css/font-awesome"     => "3");
@@ -224,6 +224,7 @@ $css_arr[]=array("productmetric/custom"     => "3");
 $css_arr[]=array("productmetric/bootstrap"     => "3");
 $css_arr[]=array("productmetric/animate"     => "3");
 $css_arr[]=array(" /web/css/productmetric/animate"   => "1");
+$css_arr[]=array(" /web/css/ /web/css/productmetric/animate"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -456,7 +457,7 @@ $js_arr[]=array("jsms/search/relaxCriteria_v1"  => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_v1"   => "2");
 $js_arr[]=array("jsms/photo/mobPhotoUploadCommon_js"  => "1");
 $js_arr[]=array("jsms/common/urlParamHandling"  => "1");
-$js_arr[]=array("jsms/common/CommonFunctions"                                             => "61");
+$js_arr[]=array("jsms/common/CommonFunctions"                                              => "62");
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
@@ -582,8 +583,8 @@ $js_arr[]=array("jspc/common/urlHandling"              => "13");
 $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                           => "116");
-$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"             => "68");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                      => "116");
+$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"              => "69");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                                                => "60");
@@ -659,6 +660,7 @@ $js_arr[]=array("productmetric/custom"     => "3");
 $js_arr[]=array("productmetric/chartjs/chart"     => "3");
 $js_arr[]=array("productmetric/bootstrap"     => "3");
 $js_arr[]=array(" /web/css/productmetric/animate.min.css /web/css/productmetric/bootstrap.min.css /web/css/productmetric/custom.css /web/css/productmetric/datetimePicker/datetimeCss.css /web/css/productmetric/fonts/css/font-awesome.css /web/css/productmetric/fonts/css/font-awesome.min.css /web/css/productmetric/fonts/scss/_bordered-pulled.scss /web/css/productmetric/fonts/scss/_core.scss /web/css/productmetric/fonts/scss/_fixed-width.scss /web/css/productmetric/fonts/scss/_icons.scss /web/css/productmetric/fonts/scss/_larger.scss /web/css/productmetric/fonts/scss/_list.scss /web/css/productmetric/fonts/scss/_mixins.scss /web/css/productmetric/fonts/scss/_path.scss /web/css/productmetric/fonts/scss/_rotated-flipped.scss /web/css/productmetric/fonts/scss/_spinning.scss /web/css/productmetric/fonts/scss/_stacked.scss /web/css/productmetric/fonts/scss/_variables.scss /web/css/productmetric/fonts/scss/font-awesome.scss /web/css/productmetric/icheck/green.css /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/productmetric/bootstrap.min"   => "1");
+$js_arr[]=array(" /web/css/jspc/common/commonJspc_css.css /web/css/productmetric/animate.min.css /web/css/productmetric/bootstrap.min.css /web/css/productmetric/custom.css /web/css/productmetric/datetimePicker/datetimeCss.css /web/css/productmetric/fonts/css/font-awesome.css /web/css/productmetric/fonts/css/font-awesome.min.css /web/css/productmetric/fonts/scss/_bordered-pulled.scss /web/css/productmetric/fonts/scss/_core.scss /web/css/productmetric/fonts/scss/_fixed-width.scss /web/css/productmetric/fonts/scss/_icons.scss /web/css/productmetric/fonts/scss/_larger.scss /web/css/productmetric/fonts/scss/_list.scss /web/css/productmetric/fonts/scss/_mixins.scss /web/css/productmetric/fonts/scss/_path.scss /web/css/productmetric/fonts/scss/_rotated-flipped.scss /web/css/productmetric/fonts/scss/_spinning.scss /web/css/productmetric/fonts/scss/_stacked.scss /web/css/productmetric/fonts/scss/_variables.scss /web/css/productmetric/fonts/scss/font-awesome.scss /web/css/productmetric/icheck/green.css /web/css/sathiForLife_css.css /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/ /web/js/productmetric/bootstrap.min"   => "1");
 return $js_arr;
 }
 function getJavascript(){
