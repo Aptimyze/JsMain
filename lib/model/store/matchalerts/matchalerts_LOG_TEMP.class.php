@@ -186,6 +186,27 @@ GROUP BY LOGICLEVEL, RecCount";
       jsException::nonCriticalError($e);
     }
   }
+  public function getDatesRowsForTracking()
+  {
+    try
+    {
+      $sql = "SELECT count(*),DATE from matchalerts.`LOG_TEMP` GROUP BY DATE";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      $resultArr = array();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr[] = $row;          
+      }              
+      return $resultArr; 
+
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
 }
 ?>
 
