@@ -144,7 +144,7 @@ if(isset($data))
 		{
 			unset($orderid);
 			$billid = $row_purchases["BILLID"];
-			
+		
 			$transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL('newjs_slave');
             $approvedByArr = $transObj->fetchApprovedBy($billid);
             $user_details[$billid]["APPROVED_BY"] = $approvedByArr[$billid];
@@ -191,6 +191,10 @@ if(isset($data))
 			$user_details[$billid]["CURTYPE"] = $row_purchases["CUR_TYPE"];
 			
 			$serviceid_str = $row_purchases["SERVICEID"];
+			$convertCToNCP = false;
+			if(strstr($serviceid_str, 'NCP')){
+				$convertCToNCP = true;
+			}
 			$serviceid_arr = @explode(",",$serviceid_str);
 
 			 unset($service_details);
@@ -202,8 +206,12 @@ if(isset($data))
                         {
                                 $serviceid = $row_service["SERVICEID"];
                                 $sname = $serviceObj->getServiceName($serviceid);
-                                $service_details[$serviceid]["SERVICE"] = $sname[$serviceid]["NAME"];
-				
+                                if($convertCToNCP == true && strpos($sname[$serviceid]["NAME"], "e-Value Pack")!==false){
+                                	$service_details[$serviceid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$serviceid]["NAME"]);
+                                }
+                                else{
+                                	$service_details[$serviceid]["SERVICE"] = $sname[$serviceid]["NAME"];
+                                }
 				if(ddiff($row_service["START_DATE"])>0)
 				{
                                 	$service_details[$serviceid]["ACTIVATE_ON"] = $row_service["START_DATE"];
@@ -337,20 +345,23 @@ if(isset($data))
 		$smarty->assign("user_details",$user_details);
 
 		//To show last active service.
-		$sql_last_service = "SELECT BILLID, SERVICEID, ACTIVATED_ON, EXPIRY_DT FROM billing.SERVICE_STATUS WHERE PROFILEID='$pid' AND ACTIVE='Y'";
+		$sql_last_service = "SELECT BILLID, SERVICEID, ACTIVATED_ON, EXPIRY_DT,SERVEFOR FROM billing.SERVICE_STATUS WHERE PROFILEID='$pid' AND ACTIVE='Y'";
 		$res_last_service = mysql_query_decide($sql_last_service) or logError_sums($sql_last_service);
 		while($row_last_service = mysql_fetch_assoc($res_last_service))
 		{
 			$last_active_billid = $row_last_service["BILLID"];
 			$sid = $row_last_service["SERVICEID"];
 			$sname = $serviceObj->getServiceName($sid);
-			$last_active_services[$sid]["SERVICE"] = $sname[$sid]["NAME"];
+			if(strpos($sname[$sid]["NAME"], 'e-Value')!==false && strpos($row_last_service["SERVEFOR"], 'N')!==false){
+				$last_active_services[$sid]["SERVICE"] = str_replace("e-Value Pack", "eAdvantage", $sname[$sid]["NAME"]);
+			}
+			else{
+				$last_active_services[$sid]["SERVICE"] = $sname[$sid]["NAME"];
+			}
 			$last_active_services[$sid]["ACTIVATED_ON"] = $row_last_service["ACTIVATED_ON"];
 			$last_active_services[$sid]["EXPIRY_DT"] = $row_last_service["EXPIRY_DT"];
 			$last_active_services[$sid]["EXPIRY_DT_COLOR"] = get_expiry_dt_color($row_last_service["EXPIRY_DT"]);
 		}
-		
-		//print_r($last_active_services);
 		
 		$sql_purchases = "SELECT USERNAME, NAME, ADDRESS, CITY, EMAIL, RPHONE, OPHONE, MPHONE, PIN, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, CUR_TYPE, STATUS, WALKIN FROM billing.PURCHASES WHERE BILLID='$last_active_billid'";
 		$res_purchases = mysql_query_decide($sql_purchases) or logError_sums($sql_purchases);
