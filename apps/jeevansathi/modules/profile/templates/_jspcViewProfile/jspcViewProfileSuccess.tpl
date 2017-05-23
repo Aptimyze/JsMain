@@ -153,26 +153,32 @@
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
                     <ul class="listnone reportlist fontlig f15 pt10 color2">
                       <li>
-                          <input type="radio"  name="report_profile">Looks like fake profile</li>
+                          <input class="reportAbuseReasons" type="radio"  name="report_profile" id = "opt1" class="reportAbuseReasons">One or more of Profile Details are incorrect</li>
                           <li>
-                          <input type="radio"   name="report_profile">Inappropriate content</li>
+                          <input class='reportAbuseReasons' type="radio"   name="report_profile" id = "opt2" class="reportAbuseReasons">Photo on profile doesn't belong to the person</li>
                            <li>
-                          <input type="radio"   name="report_profile">Spam</li>
+                          <input class='reportAbuseReasons' type="radio"   name="report_profile" id = "opt3" class="reportAbuseReasons">User is stalking me with messages/calls</li>
                             <li>
-                          <input type="radio"  name="report_profile">Duplicate profile</li>
+                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt4" class="reportAbuseReasons">User is asking for money</li>
                             <li>
-                          <input type="radio"  name="report_profile">Already married/engaged</li>
+                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt5" class="reportAbuseReasons">User has no intent to marry</li>
+                          <li>
+                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt6" class="reportAbuseReasons">User is already married / engaged</li>
+
                              <li>
-                          <input type="radio"  name="report_profile">Incorrect details/photo</li>
+                          <input type="radio"  name="report_profile" id = "opt7">User is not picking up phone calls</li>
+                          <li>
+                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt8" class="reportAbuseReasons">Person on Phone denied owning this profile</li>
+                          <li>
+                          <input type="radio"  name="report_profile" id = "opt9">User's phone is switched off/not reachable</li>
+                          <li>
+                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt10" class="reportAbuseReasons">User's phone is invalid</li>
                              <li>
-                          <input id='otherOptionBtn' type="radio"  name="report_profile">Others
+                          <input  type="radio"  name="report_profile" class="reportAbuseReasons">Others
                         <div id='otherOptionMsgBox' class='disp-none' >
                         <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
-                        <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Add Comments'></textarea></div>
-                           </li>
-                        
-                          
-                        
+                        <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible.'></textarea></div>
+                           </li>             
                     
                     </ul>
                 

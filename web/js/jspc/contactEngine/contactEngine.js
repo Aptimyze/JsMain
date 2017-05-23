@@ -1165,6 +1165,7 @@ $('#reportInvalidCross').unbind().bind('click',closeReportInvalidLayer);
 
 
 function customOptionButton(optionBtnName) {
+
        var checkBox = $('input[name="' + optionBtnName + '"]');
        $(checkBox).each(function() {
                $(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
@@ -1176,6 +1177,10 @@ function customOptionButton(optionBtnName) {
                $(checkBox).click(function() {
                        $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
                        $(this).closest('li').addClass("selected");
+                       if($(this).attr('id') == 'opt1' || $(this).attr('id') == 'opt2'|| $(this).attr('id') == 'opt3'||$(this).attr('id') == 'opt4' ||$(this).attr('id') == 'opt5'||$(this).attr('id') == 'opt6'||$(this).attr('id') == 'opt8' || $(this).attr('id') == 'opt10' )
+                       $('#otherOptionMsgBox').removeClass("disp-none");
+                   	  else
+                   	  	$('#otherOptionMsgBox').addClass("disp-none");
                });
 
 }
