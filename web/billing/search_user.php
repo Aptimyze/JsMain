@@ -342,7 +342,7 @@ if(isset($data))
 			}
 			$user_details[$billid]["SERVICE_DETAILS"] = $service_details;*/
 		}
-		print_r($user_details);//die;
+		//print_r($user_details);//die;
 		
 		$smarty->assign("user_details",$user_details);
 
