@@ -77,7 +77,7 @@ $(document).ready(function() {
             <input type="hidden" id="buttonInput~$id`" value="~$tupleInfo.profilechecksum`">
                   <input type="hidden" id="primeAction~$id`" value="WRITE_MESSAGE">
             
-                <span id="lastMsgId_~$id`" style="~if $tupleInfo.seen eq 'N'` font-weight:bold; ~else` font-weight:300; ~/if` font-family:Roboto;">~$tupleInfo.last_message`</span>
+                <span id="lastMsgId_~$id`" style="~if $tupleInfo.seen eq 'N'` font-weight:bold; ~else` font-weight:300; ~/if` font-family:Roboto;">~$tupleInfo.last_message|nl2br`</span>
             
           
 
