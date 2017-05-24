@@ -2460,7 +2460,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
-        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_masterDDL');
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_master');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
             $result = $autoIncReceiptidObj->getLastInsertedRow();
@@ -2487,7 +2487,19 @@ class Membership
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+            //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
+        else{
+            //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
+        }
+        
+    }
+    
+    public function sendMailForPaidUser($msg,$subject){
+        $to = "nitishpost@gmail.com";
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>

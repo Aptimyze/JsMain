@@ -17,7 +17,7 @@
                     <li>
                       <p class="color12 pt15">Highest Education</p>
                       <p class="pt2 pr20">
-                        <span id="educationView1" ~if $bEditView && $apiData["about"]["education"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["education"] eq null` class="notFilledInColor" ~/if` >
+                        <span id="educationView" ~if $bEditView && $apiData["about"]["education"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["education"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["education"] neq null || $bEditView`
                             ~$apiData["about"]["education"]`
                           ~else`
@@ -186,7 +186,7 @@
                     <li>
                       <p class="color12 pt15">Occupation</p>
                       <p class="pt2 pr20">
-                        <span id="occupationView1" ~if $bEditView && $apiData["about"]["occupation"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["occupation"] eq null` class="notFilledInColor" ~/if` >
+                        <span id="occupationView" ~if $bEditView && $apiData["about"]["occupation"] eq $notFilledInText`  class="color5" ~else if $apiData["about"]["occupation"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["about"]["occupation"] neq null || $bEditView`
                             ~$apiData["about"]["occupation"]`
                           ~else`

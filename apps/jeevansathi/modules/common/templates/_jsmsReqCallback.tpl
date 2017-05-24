@@ -59,7 +59,7 @@
     ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
         rcbForCAL = 'RCB_CAL';
     ~/if`
-		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
+		url ="/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
     var rcbResponse = $('#reqCallBack').attr('data-rcbResponse');
     if(typeof rcbResponse != "undefined"){
       url += '&rcbResponse='+ rcbResponse;

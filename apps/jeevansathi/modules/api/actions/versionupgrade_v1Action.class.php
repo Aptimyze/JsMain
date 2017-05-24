@@ -17,7 +17,8 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-			"Introducing Chat! Exchange messages in real time with online matches.⁠⁠⁠⁠"            
+			"Introducing Online Chat 
+			Safer,  more secure Jeevansathi"            
         );
 	public function execute($request)
 	{	

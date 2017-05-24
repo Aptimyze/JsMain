@@ -1370,6 +1370,30 @@ break;
 					$field->setBlankLabel("");
 					$field->setTableName("JPROFILE:CASTE");
 					$page_obj->setField(15,"c","",$field);
+            
+                                        $field=new Field(134);
+					$field->setName("JAMAAT");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("jamaat");
+					$field->setJsValidation("validate_select");
+					$field->setDependentField("15");
+					$field->setLabel("Jamaat :");
+					$field->setBlankValue("");
+					$field->setBlankLabel("Please Select");
+					$field->setTableName("JP_MUSLIM:JAMAAT");
+					$page_obj->setField(134,"c","",$field);
+                                        
+                                        $field=new Field(133);
+					$field->setName("SECT_MUSLIM");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("sectMuslim");
+					$field->setJsValidation("validate_select");
+					$field->setDependentField("14");
+					$field->setLabel("Caste :");
+					$field->setBlankValue("");
+					$field->setBlankLabel("Please Select");
+					$field->setTableName("JPROFILE:SECT");
+					$page_obj->setField(133,"c","",$field);
 
 					$field=new Field(14);
 					$field->setName("RELIGION");
@@ -2217,6 +2241,13 @@ break;
                                         $field->setTableName("JPROFILE:SECT");
                                         $page_obj->setField(132,"","",$field);
 
+                                        $field=new Field(134);
+                                        $field->setName('JAMAAT');
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("jamaat");
+                                        $field->setTableName("JP_MUSLIM:JAMAAT");
+                                        $page_obj->setField(134,"c","",$field);
+
                                         break;
 
 
@@ -2477,7 +2508,7 @@ case 'DP2':
                                         break;
 
 case 'DP1':
-						$field_array=array('SOURCE','PROMO','PHONE_RES','CASTE','RELIGION','HAVECHILD','MSTATUS','CITY_RES','COUNTRY_RES','HEIGHT','EMAIL','PASSWORD','RELATIONSHIP','GENDER','DTOFBIRTH','MTONGUE','PHONE_MOB','SHOWPHONE','SHOWMOBILE','PINCODE','TERMSANDCONDITIONS','RECORD_ID');
+						$field_array=array('SOURCE','PROMO','PHONE_RES','CASTE','RELIGION','SECT_MUSLIM','JAMAAT','HAVECHILD','MSTATUS','CITY_RES','COUNTRY_RES','HEIGHT','EMAIL','PASSWORD','RELATIONSHIP','GENDER','DTOFBIRTH','MTONGUE','PHONE_MOB','SHOWPHONE','SHOWMOBILE','PINCODE','TERMSANDCONDITIONS','RECORD_ID');
 					break;
 case 'MP1':
 						$field_array=array('PHONE_MOB','MTONGUE','DTOFBIRTH','GENDER','RELATIONSHIP','EMAIL','PASSWORD','SOURCE');
@@ -2489,7 +2520,7 @@ case 'MP4':
 						$field_array=array('YOURINFO');
 					break;
 case 'APP1':
-						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK");
+						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK","JAMAAT");
 					break;
 case 'APP2':
 						$field_array=array('YOURINFO');
