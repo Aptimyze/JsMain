@@ -422,6 +422,8 @@ class AgentBucketHandler
 			$processObj->setUsername($exe);
 
 			// Added new code for Renewal
+                        unset($privilegeChk);
+                        unset($processNameChk);
 			$privilegeChk =$privilegeArr[$exe];
 			$processNameChk =$utilityObj->getProcessName($privilegeChk);
 			$processNameChk =trim($processNameChk);
