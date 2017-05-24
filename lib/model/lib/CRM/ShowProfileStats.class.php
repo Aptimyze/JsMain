@@ -169,10 +169,18 @@ class ShowProfileStats
 			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH");
 		}
 		
+		$limitArr = CommonFunction::getContactLimits($this->profileObj->getSUBSCRIPTION(), $this->profileid);
+
+		// Limits given
+		$this->detailedDataArr['dayLimit'] = $limitArr['DAY_LIMIT'];
+		$this->detailedDataArr['weeklyLimit'] = $limitArr['WEEKLY_LIMIT'];
+		$this->detailedDataArr['monthlyLimit'] = $limitArr['MONTH_LIMIT'];
+
+		//  Sent Limits
 		$profileMemcacheServiceObj = new ProfileMemcacheService($this->profileObj);
-		$this->detailedDataArr['todayLimit'] = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
-		$this->detailedDataArr['weeklyLimit'] = $profileMemcacheServiceObj->get("WEEK_INI_BY_ME");
-		$this->detailedDataArr['monthlyLimit'] = $profileMemcacheServiceObj->get("MONTH_INI_BY_ME");
+		$this->detailedDataArr['todaySentLimit'] = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
+		$this->detailedDataArr['weeklySentLimit'] = $profileMemcacheServiceObj->get("WEEK_INI_BY_ME");
+		$this->detailedDataArr['monthlySentLimit'] = $profileMemcacheServiceObj->get("MONTH_INI_BY_ME");
 	}
 	/**
 	 *
