@@ -2688,4 +2688,13 @@ class MembershipHandler
         }
         return $data;
     }
+    
+    public function modifiedMessage($data){
+        $msg = $data['hamburger_message']['top'];
+        if( (strpos($data['hamburger_message']['top'], 'FLASH DEAL') !== false) ){
+            $msgArr = explode(",",$data['hamburger_message']['bottom']);
+            $msg = $msgArr[0];
+        }
+        return $msg;
+    }
 }

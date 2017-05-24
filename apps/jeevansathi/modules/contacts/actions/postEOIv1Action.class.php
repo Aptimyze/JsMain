@@ -229,6 +229,7 @@ class postEOIv1Action extends sfAction
 						$memHandlerObj = new MembershipHandler();
 						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 						$MembershipMessage = $data2['hamburger_message']['top']; 
+                        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
