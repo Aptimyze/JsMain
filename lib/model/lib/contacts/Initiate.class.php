@@ -417,7 +417,7 @@ class Initiate extends ContactEvent{
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
                 $channel =  MobileCommon::getChannel();
                 $date = date('Y-m-d H:i:s');
-
+                // the variable only logging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
 				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>0 ))

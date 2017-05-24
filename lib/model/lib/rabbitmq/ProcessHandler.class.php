@@ -52,6 +52,8 @@ class ProcessHandler
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
       case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
+                          // the variable onlylogging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
+
                               if($body['onlyLogging']==0)
                                   ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus);
                               LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
