@@ -635,12 +635,6 @@ class Initiate extends ContactEvent{
                 if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
                 {
                     
-                $channel =  MobileCommon::getChannel();
-                $date = date('Y-m-d H:i:s');
-
-                $this->sendDataOfQueue(
-                MessageQueues::PRODUCT_METRICS, '',
-		array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date ));
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
