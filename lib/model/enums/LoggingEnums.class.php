@@ -187,9 +187,9 @@ class LoggingEnums
      
      public static $COOL_METRIC = array(
          
-         'ACC' =>false,
-         'REG' => false,
-         'EOI' => false,
+         'ACC' =>true,
+         'REG' => true,
+         'EOI' => true,
          self::COOL_M_LOGIN=>true
          
      );
