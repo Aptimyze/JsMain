@@ -370,11 +370,16 @@ class Initiate extends ContactEvent{
         $this->sendMail();
       }
       else {
+             try {
         $channel =  MobileCommon::getChannel();
         $date = date('Y-m-d H:i:s');
         $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
 				array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>1 ));
+      } catch (Exception $e) {
+        
+      }
+
           
       }
        

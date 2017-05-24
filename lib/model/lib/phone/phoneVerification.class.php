@@ -445,6 +445,9 @@ public function contact_archive($field="",$val="")
                         $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'REG','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
                         $producerObj->sendMessage($updateSeenData);
                 }
+            } catch (Exception $e) {
+        
+                        }
     }
 
 }
