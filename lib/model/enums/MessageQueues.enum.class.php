@@ -18,6 +18,7 @@ class MessageQueues
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
+  CONST PRODUCT_METRIC_QUEUE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
