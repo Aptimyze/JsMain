@@ -126,6 +126,12 @@ class InstantAppNotification
 					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
 				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
+				if($notificationData['IOS_PHOTO_URL']!=''){
+					$profileDetails[$selfProfile]['IOS_PHOTO_URL'] =$notificationData['IOS_PHOTO_URL'];
+				}
+				else{
+					$profileDetails[$selfProfile]['IOS_PHOTO_URL'] ="D";
+				}
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])
 					$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
