@@ -80,12 +80,27 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                Someone on Jeevansathi has indicated that you are already married/engaged. But we want to be double sure. Hence, we request you to delete your profile on your own if you indeed are engaged/married:
+                Someone on Jeevansathi has indicated that you have already found a match.
                         </td>
 
                         <td width="20"></td>
                     </tr>
-                
+                        <tr>
+                        <td width="20"></td>
+                        <td>
+                    But we understand that this could be in error, so this Email is triggered to check if you have indeed found a match.
+                        </td>
+
+                        <td width="20"></td>
+                    </tr>
+                        <tr>
+                        <td width="20"></td>
+                        <td>
+                    If you have found a match, congratulations! Please delete your profile and post a success story if you found a match through Jeevansath
+                        </td>
+
+                        <td width="20"></td>
+                    </tr>
                 <tr>
       <td></td>
     <td colspan="2">
@@ -106,7 +121,7 @@ Deletion of profiles who have already found a match helps create a better experi
                 <tr>
                         <td width="20"></td>
                         <td>
-If you have already found a match, congratulations! If not, please excuse us for the inconvenience. Someone could have incorrectly reported that you are already married/engaged.
+If haven't yet found a match as indicated by the member, please excuse us for the inconvenience. Someone could have incorrectly reported that you have already found a match.
                         </td>
                         <td width="20"></td>
                 </tr>
