@@ -83,7 +83,7 @@
                 <!--start:listing1-->
                 <div class = "brdr9_ham pt20">
                   <ul class="fontlig">
-                  <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
+                 <!-- <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>-->
                   <li>                  <!--start:listing6-->
                 <div id='appDownloadLink1' style='display:none'>       
                     <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  App | 3MB only </a>
@@ -227,7 +227,7 @@
                 </div> </li>
                 <!--end:listing7-->  
 
-                  <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>
+                 <!-- <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>-->
                     <li><a href="/" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
