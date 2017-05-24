@@ -23,13 +23,42 @@ EOF;
         if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-        
-        $purchasesObj = new billing_PURCHASES("newjs_slave");
+        $counter = 0;
+        //confirm slave lag
+        $purchasesObj = new billing_PURCHASES();
         $purchaseDetails = $purchasesObj->fetchJsBoostBillingPool("2017-02-01 00:00:00");
-        unset($purchasesObj);
         //print_r($purchaseDetails);die;
-        foreach ($purchaseDetails as $billid => $details) {
-        	
-        }
+        unset($purchasesObj);
+        if(is_array($purchaseDetails)){
+	        $billIdArr = array_keys($purchaseDetails);
+	        if(is_array($billIdArr)){
+		        echo "billid string to be processed."."\n";
+		        var_dump(implode(",", $billIdArr));
+		        echo "count -".count($billIdArr)."\n";
+		        $paymentDetObj = new billing_PAYMENT_DETAILS();
+		        unset($paymentDetObj);
+		        $netBillingAmountArr = $paymentDetObj->getAllDetailsForBillidArr($billIdArr);
+		        foreach ($purchaseDetails as $billid => $billDetails) {
+		        	if(!empty($netBillingAmountArr[$billid])){
+		        		echo "\n"."updating for billid-".$billid;
+		        		$addonNetPrice = 0;
+		        		if(!empty($billDetails["A"])){
+		        			$addonNetPrice = $billDetails["A"]["NET_AMOUNT"];
+		        		}
+		        		$newCNetPrice = $netBillingAmountArr[$billid]-$addonNetPrice;
+		        		$newCActualPrice = $newCNetPrice+$netBillingAmountArr["C"]["DISCOUNT"];
+		        		echo "\n"."orig price-".$newCActualPrice." net price-".$newCNetPrice;
+		        		$purchasesObj->updateDetails($billDetails["SID"],$newCNetPrice,$newCActualPrice);
+		        		++$counter;
+
+		        	}
+		        	else{
+		        		echo "\n"."billid-".$billid." ignored as no entry in billing.PAYMENT_DETAILS";
+		        	}
+		        }
+		    }
+	    }
+	    echo "\n"."updated count-".$counter;
+	    unset($purchasesObj);
 	}
 }
