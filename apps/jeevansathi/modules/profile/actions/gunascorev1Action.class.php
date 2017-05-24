@@ -19,7 +19,11 @@ class gunascorev1Action extends sfAction
 		$caste = $loggedInDetails["CASTE"];
 
 		$oProfile=CommonFunction::getProfileFromChecksum($request->getParameter("oprofile"));
-		
+		if($oProfile == $profileId)
+		{
+			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			$apiObj->generateResponse();
+		}
 		if(!MobileCommon::isApp())
 		{
 			$sameGender = $request->getParameter("sameGender");
@@ -39,12 +43,9 @@ class gunascorev1Action extends sfAction
 			if($request->getParameter('INTERNAL')==1)
 			{
 				return sfView::NONE;
-			}
-			else
-			{
-				die;
-			}
+			}			
 		}
+		die;
 	}
 
 	//This function calls the gunsScore.class.php and returns $gunaData
