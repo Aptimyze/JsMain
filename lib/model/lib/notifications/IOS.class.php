@@ -39,9 +39,9 @@ class IOS implements NotificationEngine {
 		// Message details start:
 		$message = $details['MESSAGE'];
 		$title = $details['TITLE'];
-		if(is_array($notificationImageArr) && $notificationImageArr[$key] && $notificationImageArr[$key]=='Y'){
-			$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default','mutable-content'=>'1','category'=>'JSIMAGE');
-			$body['otherCustomURL'] = $details['PHOTO_URL'];
+		if(is_array($notificationImageArr) && $notificationImageArr[$key] && $notificationImageArr[$key]=='Y' && !empty($details['IOS_PHOTO_URL']) && $details['IOS_PHOTO_URL']!="D"){
+			$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default','mutable-content'=>'1','category'=>'IMAGE');
+			$body['icon'] = $details['IOS_PHOTO_URL'];
 		}
 		else{
 			$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default');
