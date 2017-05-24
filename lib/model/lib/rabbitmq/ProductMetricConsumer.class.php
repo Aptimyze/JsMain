@@ -123,11 +123,10 @@ class ProductMetricConsumer
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
-    $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
     try
     {
-        (new LoggingManager())->writeToFileForCoolMetric($body);
+        LoggingManager::getInstance()->writeToFileForCoolMetric($body);
     }     
     
     catch (Exception $exception) 
