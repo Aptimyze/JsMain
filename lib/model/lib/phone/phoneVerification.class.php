@@ -435,8 +435,8 @@ public function contact_archive($field="",$val="")
 
   
     private function sendToProductMetricQueue(){
-
         
+            try{
                 $producerObj=new Producer();
                 $channel =  MobileCommon::getChannel();
                 $date = date('Y-m-d H:i:s');
