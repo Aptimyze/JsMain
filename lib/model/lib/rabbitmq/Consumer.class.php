@@ -85,7 +85,6 @@ class Consumer
       $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
 
 
-      $this->channel->queue_declare(MQ::PRODUCT_METRIC_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
     } 
     catch (Exception $exception) 
     {
@@ -107,7 +106,6 @@ class Consumer
 						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
 					);
       $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
-      $this->channel->basic_consume(MQ::PRODUCT_METRIC_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));      
     }
     catch (Exception $exception) 
     {
