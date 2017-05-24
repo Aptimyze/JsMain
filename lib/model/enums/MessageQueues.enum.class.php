@@ -82,6 +82,7 @@ class MessageQueues
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   CONST UPDATE_VIEW_LOG_STARTCOMMAND = "symfony cron:cronConsumeUpdateViewLogQueue"; //Command to start VIEW LOG consuming cron
   CONST  CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronConsumeLoggingQueue"; //Command to start cron:cronConsumeQueueMessageTask
+  CONST  CRON_PRODUCT_METRIC_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronExecuteProductMetricLoggingQueue"; //Command to start cron:cronConsumeQueueMessageTask
 
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
