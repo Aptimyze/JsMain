@@ -94,7 +94,6 @@ class Initiate extends ContactEvent{
   private $producerObj;
 
 
-  private $onlyLogging;
 
   /**#@-*/
 
