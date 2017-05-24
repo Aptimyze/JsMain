@@ -92,6 +92,9 @@ class Initiate extends ContactEvent{
   private $tasksThruQueue;
 
   private $producerObj;
+
+
+
   /**#@-*/
 
   /**
@@ -366,7 +369,20 @@ class Initiate extends ContactEvent{
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
-      
+      else {
+             try {
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $this->sendDataOfQueue(
+            'MAIL', 'INITIATECONTACT',
+				array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>1 ));
+      } catch (Exception $e) {
+        
+      }
+
+          
+      }
+       
        $viewedEntryDate = $this->viewed->getENTRY_DT();
        $now = date("Y-m-d");
        $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
@@ -399,10 +415,12 @@ class Initiate extends ContactEvent{
 		$sender = $this->viewer;
 		$receiver = $this->viewed;
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
+                // the variable only logging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
-				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ))
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>0 ))
 		)
 		{
 			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
@@ -619,12 +637,15 @@ class Initiate extends ContactEvent{
       }
       else{
                 if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
+                {
+                    
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
                 $this->viewed->getPROFILEID(),
                 $this->_getEOIMailerDraft(),
                 "N");
+                }
         return false;
       }
     }
