@@ -7,7 +7,7 @@ class CustomRegPage
 	private $m_szHeading 		= "REGISTER FREE";
 	private $m_szSubHeading1 	= "& meet over";
 	private $m_szSubHeading2 	= "2 Lakh profiles";
-	private $m_urlImage			= "http://ieplads.com/mailers/2013/jeevansathi/shortReg_p1/images/mainIMG1.jpg";
+	private $m_urlImage			= "https://ieplads.com/mailers/2013/jeevansathi/shortReg_p1/images/mainIMG1.jpg";
 	private $m_iPageId			= -1;
 	
 	const HEADING 		= "HEADING";

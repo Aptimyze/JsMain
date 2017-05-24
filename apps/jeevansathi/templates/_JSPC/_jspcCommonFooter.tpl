@@ -81,7 +81,7 @@
                         <li class="f16 fontreg">Services</li>
                         <!--<li><a target="_blank" href="http://www.jeevansathimatchpoint.com">Jeevansathi offline</a></li>-->
                         <li><a href="/membership/jspc">Membership Options</a></li>
-                        <li><a href="http://careers.jeevansathi.com">Jeevansathi Careers</a></li>
+                        <li><a href="https://careers.jeevansathi.com">Jeevansathi Careers</a></li>
                     </ul>
                 </div>
                 <!--end:column one-->
