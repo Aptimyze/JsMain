@@ -87,7 +87,7 @@ class IgnoredProfiles
         	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
         	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
         	$this->addDataToFile("new");
-        	$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
+        	$returnVal = $this->listIgnoredProfile($profileid);
         	IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$ignoredProfileid);
                 Contacts::setContactsTypeCache($profileid, $ignoredProfileid, 'B');
         }
@@ -101,7 +101,7 @@ class IgnoredProfiles
 		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 		$ignObj->undoIgnoreProfile($profileid,$ignoredProfileid);
 		$this->addDataToFile("new");
-		$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
+		$returnVal = $this->listIgnoredProfile($profileid);
 		IgnoredProfileCacheLib::getInstance()->deleteDataFromCache($profileid,$ignoredProfileid);
                 Contacts::unSetContactsTypeCache($profileid, $ignoredProfileid);
 	}
