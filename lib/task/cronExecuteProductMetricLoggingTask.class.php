@@ -3,7 +3,7 @@
 This php script reads no. of instances of rabbitmq consumer from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeQueueMessage.
 */
 
-class cronExecuteLoggingQueueMessageTask extends sfBaseTask
+class cronExecuteProductMetricLoggingTask extends sfBaseTask
 {
   /**
    * 
@@ -15,11 +15,11 @@ class cronExecuteLoggingQueueMessageTask extends sfBaseTask
   protected function configure()
   {
     $this->namespace           = 'cron';
-    $this->name                = 'cronExecuteLoggingQueueMessage';
+    $this->name                = 'cronExecuteProductMetricLogging';
     $this->briefDescription    = 'reads no. of instances of rabbitmq consumer from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeQueueMessage.';
     $this->detailedDescription = <<<EOF
      The [cronExecuteSingleConsumer|INFO] reads no. of instances of rabbitmq consumer from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeQueueMessage:
-     [php symfony cron:cronExecuteLoggingQueueMessage] 
+     [php symfony cron:cronExecuteProductMetricLogging] 
 EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
@@ -36,12 +36,9 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     if (!sfContext::hasInstance())
-    sfContext::createInstance($this->configuration);
-    $instancesNum=MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT;
-    for($i=1;$i<=$instancesNum;$i++)
-    {
-      passthru(JsConstants::$php5path." ".MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND." > /dev/null &");
-    }
+        sfContext::createInstance($this->configuration);
+    $consumerObj=new ProductMetricConsumer('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+    $consumerObj->receiveMessage(); 
 	}
 }
 ?>

@@ -10,7 +10,6 @@
     	public static function getPageFields($page,$returnArr='')
     	{
 		$page_obj=new PageFields($page);
-
                 foreach (RegistrationEnums::$pageFieldMap[$page] as $id=>$fieldName)
                 {
 			switch($fieldName)
@@ -1513,7 +1512,7 @@
 					$field->setBlankValue("");
 					$field->setBlankLabel("");
 					$field->setTableName("JP_MUSLIM:JAMAAT");
-                                        $page_obj->setField(127,"","",$field);
+                                        $page_obj->setField(128,"","",$field);
 				break;
 			}
 		}
