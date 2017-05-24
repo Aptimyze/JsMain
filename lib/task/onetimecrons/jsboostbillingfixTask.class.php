@@ -31,7 +31,7 @@ EOF;
         echo "billid string to be processed."."\n";
         $billIdStr = implode(",", $billIdArr);
         var_dump($billIdStr);
-        //echo "count -".count($billIdArr)."\n";
+        echo "count- ".count($billIdArr)."\n";
         
        	$purchaseDetObj = new billing_PURCHASE_DETAIL();
        	$purchaseDetails = $purchaseDetObj->getBillingDetails($billIdStr,true);
