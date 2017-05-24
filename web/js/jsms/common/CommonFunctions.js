@@ -631,8 +631,14 @@ function readCookie(name) {
 
 function showTimerForLightningMemberShipPlan(source) {
     if(source == "jsmsMyjs"){
-        var cT = new Date(current);
-        var eT = new Date(membershipPlanExpiry);
+        if(getIosVersion()){
+            var cT = new Date(current.replace(/\s+/g, 'T'));
+            var eT = new Date(membershipPlanExpiry.replace(/\s+/g, 'T'));
+        }
+        else{
+            var cT = new Date(current);
+            var eT = new Date(membershipPlanExpiry);
+        }
         lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
     }
     if(!lightningDealExpiryInSec) 
