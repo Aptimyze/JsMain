@@ -34,7 +34,7 @@ EOF;
                 ini_set('memory_limit','512M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
-		$flag=0;
+		$flag = 1;
 
 		do{
 			$search_PAIDMEMBERS_TO_BE_SENT = new search_PAIDMEMBERS_TO_BE_SENT("newjs_master");
