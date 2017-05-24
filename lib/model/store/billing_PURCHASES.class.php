@@ -393,12 +393,12 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT * FROM billing.PURCHASES WHERE ENTRY_DT >= :ENTRY_DT AND SERVEFOR LIKE '%J%' ORDER BY ENTRY_DT ASC";
+            $sql  = "SELECT DISTINCT(BILLID) AS BILLID FROM billing.PURCHASES WHERE ENTRY_DT >= :ENTRY_DT AND SERVEFOR LIKE '%J%' AND SERVEFOR LIKE '%N%' ORDER BY ENTRY_DT ASC";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $profiles[$result['BILLID']][substr($result['SERVICEID'], 0,1)] = $result;
+                $profiles[] = $result['BILLID'];
             }
         } catch (Exception $e) {
             throw new jsException($e);
@@ -451,21 +451,6 @@ class BILLING_PURCHASES extends TABLE
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-            $prep->execute();
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-        return $profiles;
-    }
-
-    public function updateDetails($sid,$netAmount,$actualAmount)
-    {
-        try
-        {
-            $sql  = "UPDATE billing.PURCHASES SET NET_AMOUNT=:NET_AMOUNT,PRICE=:PRICE WHERE SID=:SID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PRICE", $actualAmount, PDO::PARAM_INT);
-            $prep->bindValue(":NET_AMOUNT", $netAmount, PDO::PARAM_INT);
             $prep->execute();
         } catch (Exception $e) {
             throw new jsException($e);
