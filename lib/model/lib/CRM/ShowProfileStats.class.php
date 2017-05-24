@@ -160,13 +160,13 @@ class ShowProfileStats
 
 	private function getEoiLimit()
 	{
-		$startDates = CommonFunction::getContactLimitDates();
+		$startDates = CommonFunction::getContactLimitDates($this->profileObj);
 		if(is_array($startDates))
 		{
 			$this->detailedDataArr['weekStartDate'] = $startDates['weekStartDate'];
-			$this->detailedDataArr['weekEndDate'] = CommonFunction::getLimitEndingDate("WEEK");
+			$this->detailedDataArr['weekEndDate'] = CommonFunction::getLimitEndingDate("WEEK", $this->profileObj);
 			$this->detailedDataArr['monthStartDate'] = $startDates['monthStartDate'];
-			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH");
+			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH", $this->profileObj);
 		}
 		
 		$limitArr = CommonFunction::getContactLimits($this->profileObj->getSUBSCRIPTION(), $this->profileid);
