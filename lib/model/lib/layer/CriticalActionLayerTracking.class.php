@@ -397,6 +397,7 @@ return 0;
         $tempArr[$key] = explode(':', $value)[1]; 
       }
       $layerDppCaste = implode(',', $tempArr);
+      $layerDppCaste = trim($layerDppCaste);
       $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
                       $show=1;
                     }
@@ -427,6 +428,7 @@ return 0;
   case in_array($highestDegree, explode(',',$fieldArray['ug'])):
     return false;
   break;
+  
 
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
