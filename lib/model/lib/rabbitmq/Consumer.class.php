@@ -173,9 +173,6 @@ class Consumer
         case MQ::DELAYED_MAIL_PROCESS:
           $handlerObj->sendMail($type,$body,true);  
           break;
-         case MQ::PRODUCT_METRICS:
-             (new LogginManager())->writeToFileForCoolMetric($body);
-         break;      
       }
     }
     catch (Exception $exception) 
