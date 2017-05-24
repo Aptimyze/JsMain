@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  { 
+  {
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -384,6 +384,23 @@ return 0;
                       }
                       
                       
+                    break;
+                     case '21': 
+
+                     $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
+                    $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
+
+                    if($strDPPCaste != '' && $strDPPCaste != NULL)
+                    {
+                      $layerDppCaste = explode(',',$strDPPCaste);
+      foreach ($layerDppCaste as $key => $value) {
+        $tempArr[$key] = explode(':', $value)[1]; 
+      }
+      $layerDppCaste = implode(',', $tempArr);
+      $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
+                      $show=1;
+                    }
+                          
                     break;
           default : return false;
         }
