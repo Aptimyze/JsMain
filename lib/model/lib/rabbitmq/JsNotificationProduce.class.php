@@ -88,7 +88,7 @@ class JsNotificationProduce
   {
     try {
       $startLogTime = microtime(true);
-      $this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST'],false,'AMQPLAIN',null,'en_US',MQ::$rmqConnectionTimeout["threshold"]);
+      $this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
       $endLogTime = microtime(true);
 
       if(MQ::$logConnectionTime == 1){
