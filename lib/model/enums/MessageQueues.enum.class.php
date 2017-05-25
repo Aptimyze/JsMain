@@ -146,7 +146,8 @@ class MessageQueues
   const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
   const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
   public static $logConnectionTime = 0;
-  public static $logConnectionTimeout = 1;
+  
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
 }
 
 ?>
