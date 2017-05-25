@@ -31,12 +31,11 @@ class FAQFeedBack
 
 
 	private function insertReportAbuseLog(){
-      
+        
 		$newReasonsAndroid = array(7,8,9,10,11,12,13,14,16,18);
 		$askOtherReasonAndroid = 0;
-
 		$reasonNew=$this->webRequest->getParameter('reason');
-                $reasonMap=$this->webRequest->getParameter('reason_map');
+		 $reasonMap=$this->webRequest->getParameter('reason_map');
                 if($this->webRequest->getParameter('fromCRM')){
 				$this->otherProfile=new Profile('',$this->webRequest->getParameter('reporteePFID'));  
 		}
@@ -45,7 +44,7 @@ class FAQFeedBack
 				$this->otherProfile=new Profile();	
 			}
 
-		if($this->webRequest->getParameter('profilechecksum') && ($reasonNew || $reasonMap))
+		if($this->webRequest->getParameter('profilechecksum'))
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
 			$feed=$this->webRequest->getParameter('feed');
@@ -100,12 +99,11 @@ class FAQFeedBack
 		else
 		{   
 			$categoryNew='other';
-			//print_r($feed); die('asvjas');
+
 			if($feed['mainReason'] != '' || $feed['mainReason'] != NULL )
 			{   
 				$categoryNew = $feed['mainReason'];
 			}
-
 			$otherReason=$reasonNew; 
 		}
 
@@ -122,9 +120,9 @@ class FAQFeedBack
 		}
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
-		} 
-		if(!$reasonNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
-		
+		} 		 
+		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
+
 		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName);
 			
 				// block for blocking the reported abuse added by Palash
@@ -192,7 +190,7 @@ class FAQFeedBack
 		$dataArray = $this->webRequest->getParameter('feed');
 
 	if($dataArray['category'] == FeedbackEnum::CAT_ABUSE)
-	{   
+	{    
 		if($this->webRequest->getParameter('fromCRM')){  
 			$reporteeId=$this->webRequest->getParameter('reporteePFID');
 			$profileObj = NEWJS_JPROFILE::getInstance();
@@ -348,7 +346,7 @@ class FAQFeedBack
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
 
 			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
-			{			
+			{    
     			$this->insertReportAbuseLog();
     		}	
 		}

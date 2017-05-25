@@ -460,7 +460,9 @@ function showReportAbuseLayer(){
 	var jObject=$("#reportAbuse-layer");
 	jObject.find('.js-username').html(finalResponse.about.username);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
-
+  $("#reportAbuseList").mCustomScrollbar({
+ theme: "light",
+});
 $('.js-overlay').unbind();
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportAbuse-layer').fadeIn(300,"linear",function(){})}); 
 closeReportAbuseLayer=function() {
@@ -585,10 +587,22 @@ function reportAbuse(ele){
 var reason='';
 var mainReason = '';
 var layerObj=$("#reportAbuse-layer");  
-if(layerObj.find(".reportAbuseReasons").is(':checked')) { 
-	var reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val(); 
-	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
-}
+var isValid = false;
+    layerObj.find("#reportAbuseList li").each(function(){
+      if($(this).hasClass('selected')) { 
+        mainReason = $(this).find(".reason").html();
+        if($(this).hasClass("openBox")) {
+         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val();
+        if(!reason) {
+            layerObj.find('#errorText').removeClass('disp-none');
+            isValid = true;
+        }
+      }
+    }
+    })
+    if(isValid == true) {
+      return;
+    }
 $('.js-overlay').unbind('click');
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;

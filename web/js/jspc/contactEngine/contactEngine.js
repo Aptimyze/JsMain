@@ -1064,13 +1064,14 @@ function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
 
 
 function reportInvalidReason(ele,profileChecksum,username,photoUrl){
-if(!profileChecksum || !ele) return;
+if(!profileChecksum || !ele) return; 
 var reason;
 var Otherreason='';
 var layerObj=$("#reportInvalidReason-layer");
 if(layerObj.find("#otherOptionBtn").is(':checked')) {
  reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
-	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
+	if(!reason) {layerObj.find('#errorText').removeClass('disp-none').html('Please Enter The Comments');return;}
+	
 	Otherreason = reason;
 }
 $('.js-overlay').unbind('click');
@@ -1174,13 +1175,17 @@ function customOptionButton(optionBtnName) {
                        }
                        else $(this).closest('li').removeClass("selected"); 
                });
-               $(checkBox).click(function() {
+                $(checkBox).click(function() {
+                $(".otherOptionMsgBox").each(function() {
+                $(this).addClass("disp-none");
+                })
                        $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
                        $(this).closest('li').addClass("selected");
-                       if($(this).attr('id') == 'opt1' || $(this).attr('id') == 'opt2'|| $(this).attr('id') == 'opt3'||$(this).attr('id') == 'opt4' ||$(this).attr('id') == 'opt5'||$(this).attr('id') == 'opt6'||$(this).attr('id') == 'opt8' || $(this).attr('id') == 'opt10' )
-                       $('#otherOptionMsgBox').removeClass("disp-none");
-                   	  else
-                   	  	$('#otherOptionMsgBox').addClass("disp-none");
+            
+                       if($(this).attr("id") == "openBox") {
+                        $(this).closest("li").find(".otherOptionMsgBox").removeClass("disp-none");
+                       } else {
+                        $(this).closest("li").find(".otherOptionMsgBox").addClass("disp-none");
+                       }
                });
-
 }

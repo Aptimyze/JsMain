@@ -151,36 +151,129 @@
                 </div>
                 <div class="pl12 pt20">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
-                    <ul class="listnone reportlist fontlig f15 pt10 color2">
-                      <li>
-                          <input class="reportAbuseReasons" type="radio"  name="report_profile" id = "opt1" class="reportAbuseReasons">One or more of Profile Details are incorrect</li>
-                          <li>
-                          <input class='reportAbuseReasons' type="radio"   name="report_profile" id = "opt2" class="reportAbuseReasons">Photo on profile doesn't belong to the person</li>
-                           <li>
-                          <input class='reportAbuseReasons' type="radio"   name="report_profile" id = "opt3" class="reportAbuseReasons">User is stalking me with messages/calls</li>
-                            <li>
-                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt4" class="reportAbuseReasons">User is asking for money</li>
-                            <li>
-                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt5" class="reportAbuseReasons">User has no intent to marry</li>
-                          <li>
-                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt6" class="reportAbuseReasons">User is already married / engaged</li>
+                     <ul id="reportAbuseList" class="listnone hgt200 reportlist fontlig f15 pt10 color2 mb20">
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile" /><span class="reason">One or more of Profile Details are incorrect</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Photo on profile doesn't belong to the person</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is using abusive/indecent language</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
-                             <li>
-                          <input type="radio"  name="report_profile" id = "opt7">User is not picking up phone calls</li>
-                          <li>
-                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt8" class="reportAbuseReasons">Person on Phone denied owning this profile</li>
-                          <li>
-                          <input type="radio"  name="report_profile" id = "opt9">User's phone is switched off/not reachable</li>
-                          <li>
-                          <input class='reportAbuseReasons' type="radio"  name="report_profile" id = "opt10" class="reportAbuseReasons">User's phone is invalid</li>
-                             <li>
-                          <input  type="radio"  name="report_profile" class="reportAbuseReasons">Others
-                        <div id='otherOptionMsgBox' class='disp-none' >
-                        <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
-                        <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible.'></textarea></div>
-                           </li>             
-                    
-                    </ul>
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is stalking me with messages/calls</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"> <span class="reason">User is asking for money</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User has no intent to marry</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is already married / engaged</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li>
+        <input type="radio" name="report_profile"><span class="reason">User is not picking up phone calls</span></li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Person on Phone denied owning this profile</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+    </li>
+    <li>
+        <input type="radio" name="report_profile" /><span class="reason">User's phone is switched off/not reachable</span>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User's phone is invalid</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+    </li>
+
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Other reasons</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+            </div>
+            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+
+</ul>
                 
                 
                 </div>
