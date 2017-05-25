@@ -72,7 +72,7 @@ class Producer
 	{
 		try {
 			$startLogTime = microtime(true);
-			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
+			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST'],false,'AMQPLAIN',null,'en_US',MQ::$rmqConnectionTimeout["threshold"]);
 			$endLogTime = microtime(true);
 
 			if(MQ::$logConnectionTime == 1){
@@ -86,7 +86,7 @@ class Producer
 			return true;
 		} catch (Exception $e) {
 			//logging the counter for rabbitmq connection timeout in redis
-			if(MQ::$logConnectionTimeout == 1 && $serverId == "FIRST_SERVER"){
+			if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
 				$memcacheObj = JsMemcache::getInstance();
 				if($memcacheObj){
 					$cachekey = "rmqtimeout_".date("Y-m-d");
