@@ -385,6 +385,16 @@ return 0;
                       
                       
                     break;
+                    case '22': 
+                    if(strtotime('-30 days') >= strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
+                    $picObj= new PictureService($profileObj);
+                    $havePhoto= $picObj->isProfilePhotoPresent();
+                    if ($havePhoto == null)
+                      $show=1;
+                    }
+                    break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
