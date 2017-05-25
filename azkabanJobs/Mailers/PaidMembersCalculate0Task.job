@@ -1,5 +1,5 @@
 type=command
 dependencies=PaidMembersPopulateTask
-command=${php5} ${docRoot}/symfony PaidMailer:PaidMembersCalculation 3 0
+command=${php5} ${docRoot}/symfony PaidMailer:PaidMembersCalculation 1 0
 retries=3
 retry.backoff=50000

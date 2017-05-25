@@ -3575,7 +3575,10 @@ updateEduLevelChanges =function(eduLevelVal)
 	{
 		if(casteVal==152)
 		{
-			requiredFieldStore.add(jamaatFieldObject);
+			if(jamaatFieldObject.value=='' || jamaatFieldObject.value==null)
+			{
+				requiredFieldStore.add(jamaatFieldObject);
+			}
 			showHideField(jamaatFieldObject,"show",false);
 		}
 		else

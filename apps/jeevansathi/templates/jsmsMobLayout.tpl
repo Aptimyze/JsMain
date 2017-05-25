@@ -9,8 +9,6 @@
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
 	}
-        if (window.location.protocol == "https:")
-            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 	</script>
 	~include_http_metas`
 	~include_metas`

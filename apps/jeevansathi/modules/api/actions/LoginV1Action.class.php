@@ -54,6 +54,10 @@ class LoginV1Action extends sfActions
 						{
 							$szToUrl = JsConstants::$ssl_siteUrl;
 						}
+						elseif($request->getParameter("secureSite"))
+                    		$szToUrl = JsConstants::$ssl_siteUrl;
+            			else    
+                    		$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 						$js_function = " <script>	var message = \"\";
 						if(window.addEventListener)	
 							message ={\"body\":\"1\"};
@@ -105,6 +109,10 @@ class LoginV1Action extends sfActions
 					{
 						$szToUrl = JsConstants::$ssl_siteUrl;
 					}
+					elseif($request->getParameter("secureSite"))
+                    	$szToUrl = JsConstants::$ssl_siteUrl;
+            		else    
+                    	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 					$js_function = " <script>	var message = \"\";
 					if(window.addEventListener)
 						message ={\"body\":\"2\"};
@@ -178,6 +186,11 @@ class LoginV1Action extends sfActions
 			{
 				$szToUrl = JsConstants::$ssl_siteUrl;
 			}
+			elseif($request->getParameter("secureSite"))
+            	$szToUrl = JsConstants::$ssl_siteUrl;
+    		else    
+            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
+
 			$js_function = " <script>	var message = \"\";
 			if(window.addEventListener)	
 				message ={\"body\":\"$result\"};
@@ -235,6 +248,10 @@ class LoginV1Action extends sfActions
 			{
 				$szToUrl = JsConstants::$ssl_siteUrl;
 			}
+			elseif($request->getParameter("secureSite"))
+            	$szToUrl = JsConstants::$ssl_siteUrl;
+    		else    
+            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 			$js_function = " <script>	var message = \"\";
 			if(window.addEventListener)	
 				message ={\"body\":\"$result\"};

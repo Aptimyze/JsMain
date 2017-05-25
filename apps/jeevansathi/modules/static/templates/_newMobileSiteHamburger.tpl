@@ -83,7 +83,7 @@
                 <!--start:listing1-->
                 <div class = "brdr9_ham pt20">
                   <ul class="fontlig">
-                  <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
+                 <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
                   <li>                  <!--start:listing6-->
                 <div id='appDownloadLink1' style='display:none'>       
                     <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  App | 3MB only </a>
