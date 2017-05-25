@@ -86,11 +86,15 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 					}
 					else
 					{
+						$dppDataTypeArr = array();
+						$dppDataTypeArr = explode(",",$dppDataArr[$value->type]);
+						$appendArr = array();
 						foreach($value->data as $k=>$v)
 						{
-							if(strpos($dppDataArr[$value->type],$v) === false && strpos($appendValues,$v) === false)
+							if(!in_array($v,$dppDataTypeArr) && !in_array($v,$appendArr))
 							{
 								$appendValues.= ",".$v;
+								$appendArr[]=$v;
 							}
 						}
 						$finalDppArr["P_".$value->type] = $dppDataArr[$value->type].$appendValues;

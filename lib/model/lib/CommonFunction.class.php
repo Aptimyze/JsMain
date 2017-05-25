@@ -953,5 +953,18 @@ class CommonFunction
         	$label .= ' & '.$nativePlace;
         return $label;
     }
+
+    public static function getFlagForIdfy($profileId)
+    {
+    	if($profileId)
+    	{
+    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		{
+    			return true;
+    		}
+    		return false;    		
+    	}    	
+    	return false;
+    }
 }
 ?>

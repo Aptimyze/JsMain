@@ -86,7 +86,7 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`"};
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`","rosterRemoveMsg":"~JsConstants::$chatListingWebServiceUrl['rosterRemoveMsg']`"};
         var nonRosterRefreshUpdate = {"dpp":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Paid']`"},"shortlist":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Paid']`"}};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
@@ -167,8 +167,6 @@
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
-if (window.location.protocol == "https:")
-            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->

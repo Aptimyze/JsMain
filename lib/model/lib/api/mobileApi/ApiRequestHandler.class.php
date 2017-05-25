@@ -4,8 +4,8 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 90;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 94;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 95;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 95;
 	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
@@ -231,6 +231,7 @@ class ApiRequestHandler
 // if for 50% set divisor =2, 25 % set to 4
         
         public function  checkForRandomNess(){
+        	return true;
             $Divisor = 10;
             $randNum = rand(1,$Divisor);
             if($randNum % $Divisor  == 0 )return true;

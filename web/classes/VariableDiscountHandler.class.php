@@ -49,10 +49,10 @@ class VariableDiscountHandler
 	// filter conditions
         public function filterVdPoolProfiles()
         {
-                mail($this->emailId,"setp1(filterOtherCondition) Start", date("Y-m-d H:i:s"));
+                mail($this->emailId,"Step-2 VD (Filter: OtherCondition) Start", date("Y-m-d H:i:s"));
                 $this->filterOtherCondition();
 
-                mail($this->emailId,"setp2(filterDuplicateClusterProfiles) Start", date("Y-m-d H:i:s"));
+                mail($this->emailId,"Step-2 VD (Filter: DuplicateClusterProfiles) Start", date("Y-m-d H:i:s"));
                 $poolProfilesArr =$this->fetchVdPoolProfiles();
                 if(count($poolProfilesArr)>0){
                         foreach($poolProfilesArr as $keyPid=>$profileid)
@@ -60,7 +60,7 @@ class VariableDiscountHandler
                 }
                 unset($poolProfilesArr);
 
-                mail($this->emailId,"setp3(filterJprofileCondition) Start", date("Y-m-d H:i:s"));
+                mail($this->emailId,"Step-2 VD (Filter:JprofileCondition) Start", date("Y-m-d H:i:s"));
                 $poolProfilesArr =$this->fetchVdPoolProfiles();
                 if(count($poolProfilesArr)>0){
                         foreach($poolProfilesArr as $keyPid=>$profileid)
@@ -93,11 +93,12 @@ class VariableDiscountHandler
                 $endDate                =$lastVdGivenDetails['EDATE'];
                 $activationDt           =$lastVdGivenDetails['ENTRY_DT'];
 
-                $todayDate              = date("Y-m-d");
+                /*$todayDate              = date("Y-m-d");
 		$timeVal		= date('H');
 		$timeArr		= array("18","19","20","21","22","23","24");
                 if((strtotime($startDate) != strtotime($todayDate)) && (!in_array($timeVal, $timeArr)))
 			return;
+		*/
 
                 $sql1 ="select * from billing.VARIABLE_DISCOUNT_POOL_TECH";
                 $res1 =mysql_query_decide($sql1,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($this->myDb)));
@@ -337,9 +338,12 @@ class VariableDiscountHandler
 	}
 
         // function to get last Vd given dates
-        public function logVdProcess($processStep)
+        public function logVdProcess($processStep,$status='')
         {
-                $sql ="update billing.VARIABLE_DISCOUNT_DURATION SET STEPS_COMPLETED='$processStep' ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql ="update billing.VARIABLE_DISCOUNT_DURATION SET STEPS_COMPLETED='$processStep'";
+		if($status)
+			$sql .=",STATUS='$status'";
+		$sql .=" ORDER BY ENTRY_DT DESC LIMIT 1";
                 mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
         }
 
@@ -380,7 +384,26 @@ class VariableDiscountHandler
                 $sql ="TRUNCATE TABLE billing.VD_FILTER_LOG";
                 mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
 
+	}
 
+	public function checkDiscountEligibleStatus(){
+
+		$curHr =date("H");
+                $sql ="select * from billing.VARIABLE_DISCOUNT_DURATION ORDER BY ENTRY_DT DESC LIMIT 1";
+                $res =mysql_query_decide($sql,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($this->myDb)));
+                if($row =mysql_fetch_array($res)){
+                	$status     	=$row['STATUS'];
+			if($status!='Y')
+				return;
+                	$scheduleDate  	=$row['SCHEDULE_DATE'];
+			list($schDate, $schTime) 	=explode(" ",$scheduleDate );
+			list($schHr, $schMin,$schSec)	=explode(":", $schTime);  
+
+			if((strtotime($schDate)==strtotime($this->todayDate)) && ($schHr==$curHr)){
+				return 1;
+			}
+		}
+		return;
 	}
 
 }

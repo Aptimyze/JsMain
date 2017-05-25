@@ -71,6 +71,12 @@ EOF;
 		        	[
                     	"field" => "LogMessage"
                 	]
+		        ],
+		        [
+		        	"regexp" => 
+		        	[
+                    	"LogMessage" => ".{1,}"
+                	]
 		        ]
 		      ],
 		      "must_not" => [

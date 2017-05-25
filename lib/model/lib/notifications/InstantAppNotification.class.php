@@ -39,7 +39,7 @@ class InstantAppNotification
   // Function to send Notification
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array(), $rabbitMq='')
   {
-    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 9){
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 10){
         return;
     }
 

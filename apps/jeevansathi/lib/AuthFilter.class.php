@@ -14,7 +14,8 @@ class AuthFilter extends sfFilter {
 
 	$context = $this->getContext();
 	$request = $context->getRequest();
-
+	if(!$request->getParameter("startScriptTime"))
+			$request->setParameter("startScriptTime",microtime(true));
         // Notification filter
 	$requestUri =$_SERVER["REQUEST_URI"];
         if(strstr($requestUri,"api/v1/notification/poll/repeatAlarm"))
