@@ -22,8 +22,8 @@
 				<div class="ccbg2 fullwid">
 					<!--start:div for second level option-->
 					<div class="vone fullwid" id="listingWindow">
-						<!--start:horizontal list-->
-						~include_partial("inbox/JSPC/inboxListingTabs",[contactCenterTabMapping=>$contactCenterTabMapping])`
+						<!--start:horizontal list-->					
+						~include_partial("inbox/JSPC/inboxListingTabs",[contactCenterTabMapping=>$contactCenterTabMapping,"showIdfy"=>$showIdfy])`
 						<!--end:horizontal list-->
 						<!--end:div for second level option--> 
 

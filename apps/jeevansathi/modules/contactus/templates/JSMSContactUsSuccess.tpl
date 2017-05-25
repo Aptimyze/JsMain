@@ -52,7 +52,7 @@
         
     </div>
 </div>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript">
     function setPrevNextEvents(sly){
         $($('ul .active')).find(".prev").click(function(){

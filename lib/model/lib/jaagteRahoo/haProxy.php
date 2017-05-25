@@ -8,7 +8,7 @@ class HaProxy{
 	private $password;
 
 	public function __construct(){
-		$this->url ="172.10.11.25:8082/js/";
+               $this->url ="172.10.11.25:8082/js/";
 		$this->username = "readjs";
 		$this->password = "password@234";
 	}
@@ -27,8 +27,9 @@ class HaProxy{
 		$DOM->loadHTML($output);
 
 		$finder = new DomXPath($DOM);
-		$classname="active0";
+		$classname="active_down";
 		$nodes = $finder->query("//*[contains(@class, '$classname')]");
+		$servers = null;
 		foreach($nodes as $k=>$node)
 		{
 			if($y= $node->childNodes->item(0)->nodeValue)

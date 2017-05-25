@@ -495,12 +495,12 @@ class registerMisActions extends sfActions {
           {
             $row = "";
             if ($data_city['screened_CC'] != 0)
-              $row = $date.",".$city.",".$source.",CC,".$data_city['screened_CC'].",".($data_city['M26MVCC'] + $data_city['F22MVCC'])."\n";
+              $row .= $date.",".$city.",".$source.",CC,".$data_city['screened_CC'].",".($data_city['M26MVCC'] + $data_city['F22MVCC'])."\n";
             if ($data_city['screened_SIC'] != 0)
-              $row = $date.",".$city.",".$source.",SIC,".$data_city['screened_SIC'].",0"."\n";
+              $row .= $date.",".$city.",".$source.",SIC,".$data_city['screened_SIC'].",0"."\n";
 
             if ($data_city['OTHERS_COMMUNITY'] != 0)
-              $row = $date.",".$city.",".$source.",Others,".$data_city['OTHERS_COMMUNITY'].",0"."\n";
+              $row .= $date.",".$city.",".$source.",Others,".$data_city['OTHERS_COMMUNITY'].",0"."\n";
             
             $csvData = $csvData.$row ;
           }
@@ -682,4 +682,13 @@ class registerMisActions extends sfActions {
 	}
     }
   }
+  
+  
+   public function executeProductMetric(sfWebRequest $request) 
+  {
+        $this->setTemplate('productMetric');
+  
+  }
+ 
+
 }

@@ -9,7 +9,8 @@ var listingInputData = [],
     loggingEnabledPC = false,
     clearTimedOut,
     listingPhotoRequestCompleted = ",",
-    localStorageExists = isStorageExist();
+    localStorageExists = isStorageExist(),
+    rosterMsgTime= '0';
 
 /*clearNonRosterPollingInterval
 function to stop polling for non roster webservice api 
@@ -111,7 +112,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         type = "dpp";
     }
     var selfAuth = readCookie("AUTHCHECKSUM");
-    if(selfAuth != undefined && selfAuth != ""){
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
         //console.log("selfAuth",selfAuth);
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
@@ -2023,6 +2024,41 @@ $(document).ready(function () {
 		        }
             }
         });
+       }
+       
+       objJsChat.rosterDeleteChatBoxReponse = function(from,to){
+           var headerData = {"Content-Type": "application/json"};
+           var inputParams = JSON.stringify({
+            "msg":"chatCheck",
+            "from":from,
+            "to": to,
+            "check":"1",
+            "id":generateChatHistoryID("received")
+            });
+            $.myObj.ajax({
+                url: listingWebServiceUrl["rosterRemoveMsg"],
+                dataType: 'json',
+                type: 'POST',
+                cache:false,
+                async: true,
+                timeout: 60000,
+                headers:headerData,
+                data: inputParams,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    if(response["header"]["status"] == 400){
+                        var msg = response["data"]["buttondetails"]["infomsglabel"];
+                        if(msg == undefined){
+                            msg = objJsChat._rosterDeleteChatBoxMsg;
+                        }
+                        if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
+                            $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                        }
+                    }
+                },
+                error: function (xhr) {
+                }
+            });
        }
         objJsChat.start();
     }

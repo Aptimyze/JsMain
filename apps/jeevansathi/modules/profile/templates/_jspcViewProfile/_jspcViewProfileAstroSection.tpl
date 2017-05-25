@@ -146,11 +146,14 @@
                                 <div>
                                     <div id="kundli-layer" class="disp-none">
                                         <i id="cls-view-horo" class="sprite2 close pos_fix closepos cursp layersZ"></i>
-                                        <div class="pos_fix layersZ setshare">
-                                            <div class="content mCustomScrollbar">
+                                        <div class="pos_fix layersZ setshare" style="height:400px">
+                                        <div class="">
+                                        <div>
+                                            
                                                 <div id="putHoroscope">
                                                 </div>  
-                                            </div>
+                                            
+                                        </div>
                                         </div>
                                     </div> 
                                 </div>

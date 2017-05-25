@@ -166,6 +166,7 @@ if(count($myDbarr))
 			
                 $myDb=$myDbarr[$key];
 				$dbMessageLogObj->startTransaction();
+        $dbName = "shard{$i}_master";
 				$i++;
                 $sql="BEGIN";
                 mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
@@ -175,6 +176,11 @@ if(count($myDbarr))
 		retreiveFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr,'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj,$bInHouseKeeping);
 		retreiveFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',"SENDER","RECEIVER",$myDb,$profileid,$contactsStr,"newjs","","","","",$bInHouseKeeping);
 		retreiveFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr,"newjs","","","","",$bInHouseKeeping);
+      //Retreive Chat Data
+      if(strlen($contactsStr)) {
+        retreiveChatData($dbName, $profileid, $contactsStr);
+      }
+      
     }
     }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
@@ -619,5 +625,43 @@ function mysql_error_with_mail($msg)
 	//echo "-------->>".$msg;die;
         mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,kunal.test02@gmail.com","deleteprofile_bg_autocommit_final.php",$msg);
 	exit;
+}
+
+/**
+ * 
+ * @param type $dbName
+ * @param type $iProfileID
+ * @param type $listOfActiveProfileIds
+ */
+function retreiveChatData($dbName, $iProfileID, $listOfActiveProfileIds)
+{
+  try{
+    $deletedChatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
+    $arrChatIds = $deletedChatLogStoreObj->selectActiveProfileData($iProfileID,$listOfActiveProfileIds);
+
+    if(count($arrChatIds)) {
+      //Insert Data in Chat
+      $chatStoreObj = new NEWJS_CHATS($dbName);
+      $chatStoreObj->insertFromEligibleForRet($arrChatIds);
+      unset($chatStoreObj);
+
+      //Delete Data from Delete Chat Tables
+      $deleteChatStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
+      $deleteChatStoreObj->removeRecords($arrChatIds);
+      unset($deleteChatStoreObj);
+
+      //Insert Data to chat_logs
+      $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
+      $chatLogStoreObj->insertRecordsIntoChatLogFromRetreieve($iProfileID, $listOfActiveProfileIds);
+      unset($chatLogStoreObj);
+
+      //Delete Data From Delete Chat Log Table
+      $deletedChatLogStoreObj->deleteRecords($iProfileID,$listOfActiveProfileIds);
+    }
+    unset($deletedChatLogStoreObj);
+  } catch (Exception $ex) {
+    mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data {$iProfileID} on {$dbName}", print_r($ex->getTrace(),true));
+    die("Issue while retreiving data for chat tables");
+  }
 }
 ?>

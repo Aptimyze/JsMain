@@ -20,7 +20,7 @@ class inboxActions extends sfActions
   {	
   	//print_r($request->getParameterHolder()->getAll());
   	$params["request"] = $request;
-
+	
   	//handle mobile switch
   	if(MobileCommon::isMobile())
   	{
@@ -64,9 +64,10 @@ class inboxActions extends sfActions
     {
     	$infoId = $request->getParameter('infoTypeId');
     }
+  
    
-    $ccParams = InboxEnums::$INBOX_ACTION_MAPPING[$infoId];
-    $redirectUrl = $SITE_URL."/profile/contacts_made_received.php?page=".$ccParams["page"]."&filter=".$ccParams["filter"];
+   // $ccParams = InboxEnums::$INBOX_ACTION_MAPPING[$infoId];
+    $redirectUrl = $SITE_URL."/inbox/jsmsPerform?searchId=".$infoId;
     header("Location:".$redirectUrl);die;
   }
 
@@ -77,10 +78,22 @@ class inboxActions extends sfActions
 		$output = $inputValidateObj->getResponse();
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
+			$ifApiCached = InboxUtility::cachedInboxApi('get',$request);
+                        if($ifApiCached)
+                        {
+                                $response  = $ifApiCached;
+                                unset($ifApiCached);
+                                $date = date("Y-m-d");
+                                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/ifApiCached".$date.".txt","\n",FILE_APPEND);
+                        }
+                        else
+			{
+
+
 			$module= "ContactCenterAPP";
 			$infoTypeId = $request->getParameter("infoTypeId");
 			$pageNo = $request->getParameter("pageNo");
-			if($request->getParameter("myjs") == 1)
+			if($request->getParameter("myjs") == 1 && !$request->getParameter("androidMyjsNew"))
 				$module = "ContactCenterMYJS";
 			$profileList = $request->getParameter("profilelist");
 			
@@ -95,7 +108,7 @@ class inboxActions extends sfActions
 			$profileCommunication = new ProfileCommunication();
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     sfContext::getInstance()->getController()->forward("static","logoutPage");
+				sfContext::getInstance()->getController()->forward("static","logoutPage");
 			}
 			$pid=$profileObj->getPROFILEID();
 			$response = array();
@@ -153,7 +166,13 @@ class inboxActions extends sfActions
 							if($producerObj->getRabbitMQServerConnected())
 							{
                                                                 $currentTime = date('Y-m-j H:i:s');
-								$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
+								$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>
+									array(
+										'type' => 'ALL_CONTACTS',
+										'body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime),
+										"statusType" => 0,
+										"statusEoi" => 0,
+										), 'redeliveryCount'=>0 );
 								$producerObj->sendMessage($updateSeenData);
 							}
 							else
@@ -181,7 +200,12 @@ class inboxActions extends sfActions
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'PHOTO_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array(
+                                                                	'type' => 'PHOTO_REQUEST',
+                                                                	'body'=>array('profileid'=>$pid),
+                                                            		"statusType" => 0,
+																	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -206,7 +230,12 @@ class inboxActions extends sfActions
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array(
+                                                                	'type' => 'ALL_CONTACTS',
+                                                                	'body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT),
+                                                                	"statusType" => 0,
+																	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -233,7 +262,10 @@ class inboxActions extends sfActions
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
                                                                 $currentTime = date('Y-m-j H:i:s');
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime),
+                                                                	"statusType" => 0,
+																	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -262,7 +294,10 @@ class inboxActions extends sfActions
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid),
+                                                                	"statusType" => 0,
+																	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -289,9 +324,15 @@ class inboxActions extends sfActions
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE),
+                                                                	"statusType" => 0,
+                                                                	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL),
+                                                                	"statusType" => 0,
+                                                                	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                                 
                                                         }
@@ -315,6 +356,12 @@ class inboxActions extends sfActions
 					break;
 
 			}
+		}
+		
+
+			/** caching **/
+                        $ifApiCached = InboxUtility::cachedInboxApi('set',$request,'',$response);
+                        /** caching **/		
 			$respObj = ApiResponseHandler::getInstance();
 			$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$respObj->setResponseBody($response);
@@ -377,7 +424,8 @@ public function executePerformV2(sfWebRequest $request)
 				$profileCommunication = new ProfileCommunication();
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     sfContext::getInstance()->getController()->forward("static","logoutPage");
+					sfContext::getInstance()->getController()->forward("static","logoutPage");
+
 				}
 				$pid=$profileObj->getPROFILEID();
 				$response = array();
@@ -518,7 +566,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='Accepted Me ' . $response2['total'];
 					$response2["title2"]='I Accepted' ; 
 					$response2["infotypeid2"]=3; 
-					$response2["url"]="/profile/contacts_made_received.php?page=accept&filter=M";
+					$response2["url"]="/inbox/3/1";
 					//if(MobileCommon::isDesktop()==false)
 					{
                                                 if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
@@ -526,7 +574,10 @@ public function executePerformV2(sfWebRequest $request)
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT),
+                                                                	"statusType" => 0,
+                                                                	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -552,14 +603,14 @@ public function executePerformV2(sfWebRequest $request)
 					case 'ACCEPTANCES_SENT': 
 					$response2["subtitle"]='I Accepted '.$response2['total']; 
 					$response2["title2"]='Accepted Me';$response2["infotypeid2"]=2;
-					$response2["url"]="/profile/contacts_made_received.php?page=accept&filter=R";
+					$response2["url"]="/inbox/2/1";
 					break;
 				   
 					case 'INTEREST_SENT': 
 					$response2["subtitle"]='Sent '.$response2['total']; 
 					$response2["title2"]='Received';
 					$response2["infotypeid2"]=1;
-					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=R";
+					$response2["url"]="/inbox/1/1";
 					$response2['subheading'] = InboxEnums::getInboxSubHeading($response2);
 					 break;  
 					// later modified the data sent as we have to update the seen status of the receiver in the contacts table and also eoi viewed log
@@ -568,7 +619,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='Received '.$response2['total'];
 					$response2["title2"]='Sent';
 					$response2["infotypeid2"]=6 ;
-					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=M";
+					$response2["url"]="/inbox/6/1";
 					//if(MobileCommon::isDesktop()==false)
 					{
                                                 if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
@@ -577,7 +628,10 @@ public function executePerformV2(sfWebRequest $request)
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
                                                                 $currentTime = date('Y-m-j H:i:s');
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime),
+                                                                	"statusType" => 0,
+                                                                	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -607,14 +661,14 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='I Declined '.$response2['total']; 
 					$response2["title2"]='They Declined';
 					$response2["infotypeid2"]=10; 
-					$response2["url"]="/profile/contacts_made_received.php?page=decline&filter=R";
+					$response2["url"]="/inbox/10/1";
 					break;
 					
 					case 'NOT_INTERESTED': 
 					$response2["subtitle"]='They Declined '.$response2['total']; 
 					$response2["title2"]='I Declined';
 					$response2["infotypeid2"]=11; 
-					$response2["url"]="/profile/contacts_made_received.php?page=decline&filter=M";
+					$response2["url"]="/inbox/11/1";
 					$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
 						if($currentCount)
@@ -624,7 +678,10 @@ public function executePerformV2(sfWebRequest $request)
 								$producerObj=new Producer();
 								if($producerObj->getRabbitMQServerConnected())
 								{
-									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE),
+										"statusType" => 0,
+                                        "statusEoi" => 0,
+										), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
 									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
@@ -670,7 +727,9 @@ public function executePerformV2(sfWebRequest $request)
 									$producerObj=new Producer();
 									if($producerObj->getRabbitMQServerConnected())
 									{
-										$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'PHOTO_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+										$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'PHOTO_REQUEST','body'=>array('profileid'=>$pid),
+											"statusType" => 0,
+                                            "statusEoi" => 0,), 'redeliveryCount'=>0 );
 										$producerObj->sendMessage($updateSeenData);
 									}
 									else
@@ -705,7 +764,10 @@ public function executePerformV2(sfWebRequest $request)
                                                                         $producerObj=new Producer();
                                                                         if($producerObj->getRabbitMQServerConnected())
                                                                         {
-                                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'HOROSCOPE_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'HOROSCOPE_REQUEST','body'=>array('profileid'=>$pid),
+                                                                                	"statusType" => 0,
+                                                                					"statusEoi" => 0,
+                                                                                	), 'redeliveryCount'=>0 );
                                                                                 $producerObj->sendMessage($updateSeenData);
                                                                         }
                                                                         else
@@ -750,13 +812,13 @@ public function executePerformV2(sfWebRequest $request)
                                         elseif($infoTypenav["matchedOrAll"]=="A"){
                                             $response2["subtitle"]='All Visitors '.$response2['total'];
                                             $response2["title2"]="Matching"; 
-                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=M";
+                                            $response2["url"]="/search/visitors?matchedOrAll=M";
                                             $response2["visitorAllOrMatching"]='A';
                                         }
                                         else{
                                             $response2["title2"]='All Visitors';
                                             $response2["subtitle"]="Matching ".$response2['total']; 
-                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A";
+                                            $response2["url"]="/search/visitors?matchedOrAll=A";
                                             $response2["visitorAllOrMatching"]='M';
                                         }
 					break;
@@ -781,7 +843,10 @@ public function executePerformV2(sfWebRequest $request)
 								if($producerObj->getRabbitMQServerConnected())
 								{
                                                                         $currentTime = date('Y-m-j H:i:s');
-									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime),
+										"statusType" => 0,
+                                        "statusEoi" => 0,
+										), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
 								}
 								else
@@ -807,7 +872,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]=null;
 					break;
                                         case "MY_MESSAGE":$response2["hidePaginationCount"] = 1;
-					case "MY_MESSAGE_RECEIVED":
+                                        case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{
                                                 if(JsConstants::$updateSeenQueueConfig['ALL_MESSAGES'])
@@ -815,7 +880,10 @@ public function executePerformV2(sfWebRequest $request)
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid),
+                                                                	"statusType" => 0,
+                                                                	"statusEoi" => 0,
+                                                                	), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -887,20 +955,24 @@ public function executePerformV2(sfWebRequest $request)
   
   public function executeJsmsPerform($request)
 	{
-		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
+		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox');
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
-			$request->setParameter("infoTypeId",$request->getParameter("searchId"));
-			$request->setParameter("pageNo",$request->getParameter("currentPage"));
+			
+			$infoId = $request->getParameter("searchId")?$request->getParameter("searchId"):$request->getParameter("infoTypeId");
+			$request->setParameter("infoTypeId",$infoId);
+			$request->setParameter("searchId",$infoId);
+			$request->setParameter("pageNo",$request->getParameter("currentPage")?$request->getParameter("currentPage"):1);
 			$request->setParameter("fromPage","contacts");
 			$request->setParameter('useSfViewNone','1');
-
+		
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			if($profileObj==null || $profileObj->getPROFILEID()==null || $profileObj->getPROFILEID()==''){
-			     MobileCommon::gotoModuleUrl("static","logoutPage");
+				MobileCommon::gotoModuleUrl("static","logoutPage");
 			}
+
 			if(!$profileObj->getUSERNAME())
 				$profileObj->getDetail($profileObj->getPROFILEID(),"PROFILEID","*");
 			if($request->getParameter("searchId")==16 && !CommonFunction::isPaid($profileObj->getSUBSCRIPTION()))
@@ -915,15 +987,20 @@ public function executePerformV2(sfWebRequest $request)
 			else
 			{		
 				ob_start();
-				$navigation_type = $request->getParameter("navigation_type");
+				
+				if($request->getParameter("searchId")!=""){
+					
+					$navigation_type = InboxEnums::getViewProfilePageParams($request->getParameter("searchId"))["navigation_type"];
+				}
 				
 				$navigatorObj=new Navigator();
 				$durl=$navigatorObj->develop_url();
-				$navigatorObj->navigation($navigation_type,$durl);
+				
+				$navigatorObj->navigation($navigation_type,$durl,'','Symfony');
 				$this->BREADCRUMB=$navigatorObj->onlyBackBreadCrumb;
 				$this->NAVIGATOR=$navigatorObj->NAVIGATOR;
 				$this->nav_type=$navigation_type;
-
+				
 				sfContext::getInstance()->getController()->getPresentationFor('inbox','performV2');
 				$jsonResponse = ob_get_contents(); //we can also get output from above command.
 				ob_end_clean();
@@ -965,6 +1042,9 @@ public function executePerformV2(sfWebRequest $request)
 				{
 				   $this->firstResponse = $jsonResponse;
 				}
+                                if($request->getParameter("searchId")==4 && MobileCommon::isNewMobileSite())
+                                            $request->setAttribute("messageListAppPromo",1);
+                                    
 				 //   print_r($ResponseArr)  ; die();
 				 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobContactPageUrl);
 				 if($request->getParameter('fromReg')==1)

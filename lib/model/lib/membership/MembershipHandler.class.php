@@ -26,21 +26,133 @@ class MembershipHandler
         }
     }
 
+    public function getOnlineActiveMainMemDurationsWrapper($mtongue=""){
+        if(empty($mtongue)){
+            return 0;
+        }
+        else{
+            $runSqlQuery = true;
+            
+            $memCacheObject = JsMemcache::getInstance();
+            $noFilterMontongueList = $memCacheObject->get("NO_MAIN_MEM_FILTER_MTONGUE");
+            if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
+                if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
+                    $count = 0;
+                    $runSqlQuery = false;
+                }
+                else{
+                    //$count = 1;
+                    $runSqlQuery = true;
+                }
+            }
+            else{
+                //$noFilterMontongueList = "";
+                $runSqlQuery = true;
+            }
+            if($runSqlQuery == true){
+                $serviceObj = new billing_SERVICES("newjs_masterRep");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue);
+                unset($serviceObj);
+                if(is_array($activeOnlineServices)){
+                    $count = count($activeOnlineServices);
+                }
+                else{
+                    $count = 0;
+                }
+                if($count == 0){
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = ",";
+                    }
+                    $noFilterMontongueList .= $mtongue.",";
+                    $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+                else{
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = "";
+                    }
+                    $memCacheObject->set("NO_MAIN_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+            }
+
+            return $count;
+        }
+    }
+
+     public function getOnlineActiveAddonDurationsWrapper($mtongue=""){
+        if(empty($mtongue)){
+            return 0;
+        }
+        else{
+            $runSqlQuery = true;
+            $memCacheObject = JsMemcache::getInstance();
+            $noFilterMontongueList = $memCacheObject->get("NO_ADDON_MEM_FILTER_MTONGUE");
+            if (!empty($noFilterMontongueList) && $noFilterMontongueList !== false) {
+                if(strpos($noFilterMontongueList,",".$mtongue.",") !== false){
+                    $count = 0;
+                    $runSqlQuery = false;
+                }
+                else{
+                    //$count = 1;
+                    $runSqlQuery = true;
+                }
+            }
+            else{
+                //$noFilterMontongueList = ",";
+                $runSqlQuery = true;
+            }
+            
+            if($runSqlQuery == true){
+                $serviceObj = new billing_SERVICES("newjs_masterRep");
+                $activeOnlineServices = $serviceObj->getOnlineActiveDurations($mtongue,"Y");
+
+                unset($serviceObj);
+                if(is_array($activeOnlineServices)){
+                    $count = count($activeOnlineServices);
+                }
+                else{
+                    $count = 0;
+                }
+                if($count == 0){
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = ",";
+                    }
+                    $noFilterMontongueList .= $mtongue.",";
+                    $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+                else{
+                    if(empty($noFilterMontongueList)){
+                        $noFilterMontongueList = "";
+                    }
+                    $memCacheObject->set("NO_ADDON_MEM_FILTER_MTONGUE",$noFilterMontongueList,3600);
+                }
+            }
+            return $count;
+        }
+    }
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
+        if(empty($device)){
+            $device = "desktop";
+        }
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
+            $mtongue = "-1";
+            if(!empty($userObj)){
+                $mtongue = $userObj->mtongue;
+            }
+            
             $key_main = $device . "_".$membership."_MEMBERSHIP";
-            $key_main .= "_" . $userObj->getCurrency();
+            $key_main .= "_" . $userObj->getCurrency()."_".$mtongue;
             $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
-            $key_main_hidden .= "_" . $userObj->getCurrency();
+            $key_main_hidden .= "_" . $userObj->getCurrency()."_".$mtongue;
             $fetchOnline = true;
             $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
+
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
                 $fetchOffline = false;
@@ -49,6 +161,7 @@ class MembershipHandler
                 $allMainMem = unserialize($memCacheObject->get($key_main));
                 $fetchOnline = false;
             }
+
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 if ($userObj) {
@@ -101,8 +214,12 @@ class MembershipHandler
             }
             return $allMainMemCombined;
         } elseif ($membership == "ADDON") {
+            $mtongue = "-1";
+            if(!empty($userObj)){
+                $addonMtongue = $userObj->addonMtongue;
+            }
             $key = $device . "_ADDON_MEMBERSHIP";
-            $key .= "_" . $userObj->getCurrency();
+            $key .= "_" . $userObj->getCurrency()."_".$addonMtongue;
 
             if ($memCacheObject->get($key)) {
                 $addonMem = unserialize($memCacheObject->get($key));
@@ -110,11 +227,12 @@ class MembershipHandler
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device);
+                $addonMem = $this->serviceObj->getAddOnInfo($currencyType, 0, $device,$addonMtongue);
                 $memCacheObject->set($key, serialize($addonMem), 3600);
             }
             return $addonMem;
         }
+
     }
 
     public function fetchPaymentOptions($ipAddress)
@@ -166,6 +284,11 @@ class MembershipHandler
     {
         $profileid = $userObj->getProfileid();
         $userType  = $userObj->getUserType();
+	if($userType==8)
+		$this->memUpgrade=true;
+	else
+		$this->memUpgrade=false;
+	
         if ($source == 1) {
             $serviceSelected           = $userObj->getMemStatus();
             $navigationSuggestedString = $serviceSelected;
@@ -177,7 +300,7 @@ class MembershipHandler
         $serviceSelectedArr = array_filter($serviceSelectedArr);
         $serviceSelected    = implode(',', $serviceSelectedArr);
 
-        if ($trackType == 'F' || $source == 100) {
+        if(($trackType == 'F' || $source == 100) && $this->memUpgrade==false) {
             $trackFailedPaymentObj    = new billing_TRACKING_FAILED_PAYMENT();
             $trackFailedPaymentLogObj = new billing_TRACKING_FAILED_PAYMENT_LOG();
             if ($paymentTab) {
@@ -253,7 +376,7 @@ class MembershipHandler
 
     public function isDiscountOfferActive()
     {
-        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_slave');
+        $discountOfferLogObj   = new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
         $active                = $discountOfferLogObj->checkDiscountOffer();
         $this->discountOfferID = $active;
         return $active;
@@ -282,7 +405,15 @@ class MembershipHandler
         $memArray = VariableParams::$mainMembershipsArr;
         $userType = $userObj->userType;
 
-        $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device);
+        if(!empty($userObj) && $userObj!=""){
+            $mtongue = $userObj->mtongue;
+        }
+        else{
+            $mtongue = "-1";
+        }
+
+        $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device,$mtongue);
+        //print_r($minPriceInfoAggregateData);die;
         foreach ($memArray as $key => $value) {
             foreach ($minPriceInfoAggregateData as $kk => $vv) {
                 if ($value == substr($kk, 0, strlen($value))) {
@@ -331,6 +462,7 @@ class MembershipHandler
                 }
 
             }
+
             $minPriceArr[$mainMem]['OFFER_PRICE'] = min($offerPrice);
         }
 
@@ -402,9 +534,15 @@ class MembershipHandler
     {
         $memCacheObject     = JsMemcache::getInstance();
         $membershipKeyArray = VariableParams::$membershipKeyArray;
+        $mtongueArr = FieldMap::getFieldLabel("community_small",null,"1");
         foreach ($membershipKeyArray as $key => $keyVal) {
-            $memCacheObject->remove($keyVal);
+            $memCacheObject->remove($keyVal."_-1");
+            foreach ($mtongueArr as $k => $v) {
+                $memCacheObject->remove($keyVal."_".$k);
+            }
         }
+        $memCacheObject->remove('NO_MAIN_MEM_FILTER_MTONGUE');
+        $memCacheObject->remove('NO_ADDON_MEM_FILTER_MTONGUE');
     }
 
     public function memCallbackTracking($profileid, $phoneNo, $email, $device = null, $channel = null, $callbackSource = null, $date, $startTime, $endTime)
@@ -838,7 +976,7 @@ class MembershipHandler
         }
         return array(
             $ipAddress,
-            $currency,
+            $currency
         );
     }
 
@@ -864,8 +1002,10 @@ class MembershipHandler
         }
         if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
             $upgradeActive  = '1';
+
             //get upgrade discount for this user
             if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+
                 $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem,$apiObj);
             }
             else{
@@ -1111,12 +1251,13 @@ class MembershipHandler
     public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$apiObj="",$upgradeMem="NA")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
-       
-        if ($displayPage == 1) {
+        
+        //ankita: code removed to hide P1
+        /*if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
             }
-        }
+        }*/
 
         if (strpos(discountType::SPECIAL_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
             $discountArr = $this->getSpecialDiscountForAllDurations($userObj->getProfileid());
@@ -1191,7 +1332,6 @@ class MembershipHandler
                
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
                 
-                //print_r($apiObj);
                 if($apiObj!=""){
                     if(!is_array($apiObj->allMainMem)){
                         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $apiObj->device,false);
@@ -1213,9 +1353,10 @@ class MembershipHandler
                
                 if($upgradeMemMRP > 0 && $upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP && JsConstants::$whichMachine == 'prod'){
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
-                    //$upgradeTotalDiscount = 0;
                 }
                 if($upsellMRP > 0){
+
+                    $upsellMRP = ($upsellMRP < (0.3*($upgradeMemMRP - $currentMemMRP)))?(0.3*($upgradeMemMRP - $currentMemMRP)):$upsellMRP;
                     $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
                 }
             }
@@ -1391,6 +1532,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
+            
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
@@ -1498,6 +1640,7 @@ class MembershipHandler
             $mems = explode(',', $allMemberships);
         }
         $allMemberships = $allMemberships;
+
         if ($currency == 'RS') {
             $price             = 0;
             $totalCartPrice    = 0;
@@ -1571,8 +1714,7 @@ class MembershipHandler
                 $totalCartPrice += $price - round($price * ($discPerc / 100), 2);
             }
         }
-
-         //add additional discount for upgrade membership if applicable
+        //add additional discount for upgrade membership if applicable
         if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
             //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
             //$temp = $totalCartPrice;
@@ -1592,7 +1734,7 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-        
+       
         return array(
             $totalCartPrice,
             $discountCartPrice,
@@ -1671,7 +1813,8 @@ class MembershipHandler
                 $output = json_encode($output);
             }
         }
-        if (!$output) {
+        if (!$output) 
+        {
             ob_start();
             $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
             $output = ob_get_contents();
@@ -1744,7 +1887,7 @@ class MembershipHandler
             $profileObj      = LoggedInProfile::getInstance();
             $activatedStatus = $profileObj->getACTIVATED();
         }
-        if ($userType != 5 && $userType != memUserType::UPGRADE_ELIGIBLE && $activatedStatus == 'Y') {
+        if ($userType != 5 && $activatedStatus == 'Y') {
             return 1;
         } else {
             return 0;
@@ -1844,7 +1987,7 @@ class MembershipHandler
     public function sendEmailForCallback($subject, $msgBody, $to = '')
     {
         if (!$to) {
-            $to = "premium.js@jeevansathi.com";
+            $to = "premium.js@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com";
         }
 
         $from = "js-sums@jeevansathi.com";
@@ -2222,6 +2365,7 @@ class MembershipHandler
             $payDetObj = new BILLING_PAYMENT_DETAIL();
             foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
                 $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $this->deleteRedisForFreeToPaid($source, $payDetData["PROFILEID"]);
                 $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
                 if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
                     $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
@@ -2353,7 +2497,7 @@ class MembershipHandler
     * @inputs: $orderid
     * @outputs: none
     */
-    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=false){
+    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
         $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
         $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
         unset($upgradeOrdersObj);
@@ -2363,7 +2507,7 @@ class MembershipHandler
         }
     }
 
-    function checkMemUpgrade($orderid,$profileid,$flushCache=false){
+    function checkMemUpgrade($orderid,$profileid,$flushCache=true){
         //check whether user is eligible for membership upgrade or not
         $memCacheObject = JsMemcache::getInstance();
         $checkForMemUpgrade = $memCacheObject->get($profileid.'_MEM_UPGRADE_'.$orderid);
@@ -2412,10 +2556,35 @@ class MembershipHandler
             }
         }
         $servDisc["PROFILEID"] = $memPriceArr["PROFILEID"];
-        if($nonZero){
-            $disHistObj = new billing_DISCOUNT_HISTORY();
-            $disHistObj->insertDiscountHistory($servDisc);
+        if($nonZero == false){
+            $servDisc['P'] = 0;
+            $servDisc['C'] = 0;
+            $servDisc['NCP'] = 0;
+            $servDisc['X'] = 0;
         }
+        $disHistObj = new billing_DISCOUNT_HISTORY();
+        $disHistObj->insertDiscountHistory($servDisc);
         unset($nonZero);
+    }
+
+    /*function to compute starting price of membership plans with and without discount
+    * @inputs:$request
+    * @return:$output
+    */
+    public function fetchMembershipPlansStartingRange($request){
+        $request->setParameter('getMembershipPlansStartingRange', 1);
+        $request->setParameter('INTERNAL', 1);
+        ob_start();
+        $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'ApiMembershipDetailsV3');
+        $output = ob_get_contents();
+        ob_end_clean();
+        $data = json_decode($output, true);
+        return $data;
+    }
+    
+    public function deleteRedisForFreeToPaid($source,$profileid){
+        if($source == 'CANCEL' || $source == 'CHARGE_BACK' || $source == 'BOUNCE'){
+            JsMemcache::getInstance()->remove("FreeToP_$profileid");
+        }
     }
 }

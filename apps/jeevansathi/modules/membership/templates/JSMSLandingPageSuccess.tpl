@@ -76,7 +76,7 @@
 	<!--end:overlay2-->
 	<!--end:header-->
 	<div class="rv2_bg1" id="jsmsLandingContent">
-		~if $data.dividerText`
+		~if $data.dividerText && !$data.upgradeMembershipContent`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
 			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
@@ -416,6 +416,7 @@
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        eraseCookie('backendLink');
         if(!checkEmptyOrNull(readCookie('expCheck'))){
             eraseCookie('selectedVas');
             createCookie('expCheck', '1');
@@ -730,7 +731,14 @@
 				eraseCookie('backState');
 				eraseCookie('couponID');
 				eraseCookie('device');
-				window.location.href = "/profile/mainmenu.php";
+                if("~$data.device eq 'Android_app'`"){
+                    var host = window.location.hostname;
+                    $("#continueBtn a").attr('href','http://'+host+'/profile/mainmenu.php');
+                    window.location.href = 'http://'+host+'/profile/mainmenu.php';
+                }
+                else{
+                    window.location.href = "/profile/mainmenu.php";
+                }
 			} else {
 				window.history.back();
 			}

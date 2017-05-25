@@ -13,6 +13,7 @@ class InboxMobileAppV2
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_EXPIRING","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
+	const IOS_INTEREST_RECEIVED = "Interests received in the last <TIME> days but not responded to will appear here.";
 	const INTEREST_EXPIRING = "Interests which will expire within the next 7 days will appear here.";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
@@ -247,6 +248,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -277,6 +279,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -307,6 +310,7 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+                                "MSTATUS",
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -815,6 +819,7 @@ class InboxMobileAppV2
 					
 					eval('$profile[$count][strtolower($field)] =$tupleObj->get' . $field . '();');
 				}
+                                $profile[$count]['last_message']= $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['last_message']);
                                 $profile[$count]['last_message'] = addslashes(htmlspecialchars_decode($profile[$count]['last_message']));
                                 
                                $profile[$count]["time"] = $tupleObj->getDecoratedTime();
@@ -1045,6 +1050,12 @@ class InboxMobileAppV2
 		if(in_array($infoKey,self::$noresultArray) && $displayObj[$infoKey]["VIEW_ALL_COUNT"]==0)
 		{
 			$finalResponse["noresultmessage"] = constant('self::'.$infoKey);
+			
+			if($infoKey=="INTEREST_RECEIVED" && MobileCommon::isApp()=="I")
+			{
+				
+				$finalResponse["noresultmessage"]= str_replace('<TIME>',Contacts::INTEREST_RECEIVED_UPPER_LIMIT,self::IOS_INTEREST_RECEIVED);
+			}
 			if($infoKey=="CONTACTS_VIEWED")
 			{
 				if(MobileCommon::isDesktop()||MobileCommon::isApp()=="I")
@@ -1379,7 +1390,10 @@ class InboxMobileAppV2
 					else
 						$message="";
 				}
-				$message= nl2br($message);
+				if ( MobileCommon::isDesktop() )
+				{
+					$message= nl2br($message);
+				}
 				$message =addslashes(htmlspecialchars_decode($message));
 			}
 			else

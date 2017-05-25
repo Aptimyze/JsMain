@@ -159,16 +159,8 @@
                           <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`), <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
                         </li>
                         <li>
-                          <p class="color12 pt15 fontlig">Highest Education</p>
-                          <p class="pt2 fontlig" id='educationView'>~$arrOutDisplay.about.education`</p>
-                        </li>
-                        <li>
                           <p class="color12 pt15 fontlig">Religion</p>
                           <p class="pt2 fontlig" id='religionView'>~$arrOutDisplay.about.religion`</p>
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Occupation</p>
-                          <p class="pt2 fontlig" id='occupationView'>~$arrOutDisplay.about.occupation`</p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Mother Tongue</p>
@@ -215,6 +207,14 @@
                           </p>
                         </li>
                         ~/if`
+                        ~if $editApiResponse.Details.RELIGION.value eq 2`
+                        <li id="jamaatlistitem">
+                          <p class="color12 pt15 fontlig">Jamaat</p>
+                          <p class="pt2 fontlig" >
+                            <span id="jamaatView">~$arrOutDisplay.about.jamaat`</span>
+                          </p>
+                       </li>
+                       ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->
@@ -494,7 +494,7 @@
                         <!--end:div-->
                         <!--start:div-->
                         <div id="createHoroDiv" class="edpwid19 mauto disp-none">
-                            <iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
+                            <iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
                         </div>            
                         <!--end:div--> 
                     </div>
@@ -627,5 +627,10 @@
    var $profileScore = null;
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
+  var caste = "~$editApiResponse.Details.CASTE.value`";
+if(caste!=152)
+	$("#jamaatlistitem").hide();
+else
+	$("#jamaatlistitem").show();
 </script>
 

@@ -13,6 +13,8 @@ var storeJson={};
 var hamburgerObj={};
 var overlayObj={};
 var NOT_FILLED_IN="Not filled in";
+var outerMessageContact= {'':'Show to all','Y':'Show to all','N':'Hidden','C':'Show on interest'};
+var selectedListValue;
 
 	function overlaySet(){
             
@@ -227,6 +229,7 @@ function SaveSub(json,attr)
 	var isValid=true;
 	var updatedJson="";
 	var isValidStateCity;
+	var isValidJamaat=true;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
@@ -236,8 +239,11 @@ function SaveSub(json,attr)
 	}
 	else
 		isValidStateCity = true;
-		
-	if(isValid && isValidStateCity){
+	if(validatorFormId=="Ethnicity")
+	{
+		isValidJamaat = jamaatRequired(key);
+	}
+	if(isValid && isValidStateCity && isValidJamaat){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{
@@ -363,7 +369,7 @@ function UpdateOverlayLayer(attr)
 	$('#'+tabKey).submit(function() {
 	  return false;
 	});
-
+	setContactOverlayClick();
 	
 }
 function checkForLabelVal(html,json)
@@ -462,7 +468,7 @@ function UpdateOverlayTags(string,json,indexPos)
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
-		
+		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
 		string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
@@ -507,14 +513,27 @@ function UpdateOverlayTags(string,json,indexPos)
 		var input="";
 		if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
 		{
-			
-			
+			OnClickArray = changingEditData.Contact.PHONE_MOB.OnClick;
+			showSettingText = "SHOW"+json.key;
+            for (var key in OnClickArray)
+            {
+            	if ( OnClickArray.hasOwnProperty(key))
+            	{
+            		if ( OnClickArray[key].key == showSettingText)
+            		{
+            			string=string.replace(/\{\{contactPrivacySettingText\}\}/g,outerMessageContact[OnClickArray[key].value]);
+            			selectedListValue = OnClickArray[key].value;
+            		}
+            	}
+            }
+
 			textInputIsdOverlay=$("#textInputIsdOverlay").html();
 			textInputStdOverlay=$("#textInputStdOverlay").html();
-			
+
 			textInputIsdOverlay=textInputIsdOverlay.replace(/json_key/g,json.key);
 			textInputIsdOverlay=textInputIsdOverlay.replace(/json_label_val/g,json.label_val);
 			textInputIsdOverlay=textInputIsdOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
+
 			if(!json.value)
 				phoneArray=["91","",""];
 			else
@@ -582,7 +601,7 @@ function UpdateOverlayTags(string,json,indexPos)
 			}
 		}
 		else{
-
+			string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 			textInputOverlay=$("#textInputOverlay").html();
 			textInputOverlay=textInputOverlay.replace(/json_key/g,json.key);
 			textInputOverlay=textInputOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
@@ -594,7 +613,7 @@ function UpdateOverlayTags(string,json,indexPos)
 
 		}
 		string=string.replace(/\{\{inputDiv\}\}/g,input);
-		
+
 		//Checks for contact tab.
 		if(json.screenBit==1 && $.inArray(json.key,['EMAIL','PHONE_MOB','ALT_MOBILE','PHONE_RES','ALT_EMAIL'])==-1 && json.label_val!="")
 			string=string.replace(/\{\{underScreening\}\}/g,underScreenStr);
@@ -1024,6 +1043,7 @@ function hideLoader(noAjax)
 		if(sliderCurrentPage){
 		//setSliderLocation(sliderCurrentPage);
 		bxslider.gotoSlide(sliderCurrentPage);
+		//showCalDppSugg(sliderCurrentPage);
 		}
 		//else
 		//setSliderLocation(0);
@@ -1148,7 +1168,10 @@ function ToggleMore(keyName)
 		$("#topbar").css("position","").css("z-index","");
 		
 		if(typeof(index)!='undefined' && index!=-1)
+		{
 			bxslider.gotoSlide(parseInt(index));
+			//showCalDppSugg(index);
+		}
 		ev.preventDefault();
 		ev.stopPropagation();
 	//}
@@ -1246,6 +1269,7 @@ function SlideToCurrentPage()
 			if(typeof(sliderCurrentPage)!='undefined'){
 				//setSliderLocation(sliderCurrentPage);
 				bxslider.gotoSlide(parseInt(sliderCurrentPage),-1);
+				//showCalDppSugg(parseInt(sliderCurrentPage));
 			}
 }
 
@@ -1280,3 +1304,58 @@ function onHoroscopeButtonClick()
   bCallCreateHoroscope = true;
   $('[slideoverlayer="Kundli,HOROSCOPE_MATCH"]').trigger('click');
 }
+
+function setContactOverlayClick()
+{
+	var clickedId;
+
+	$(".contact_icon").each(function(index, element) {
+        $(this).on("click", function(){
+            $("#contactOverlay").removeClass("dn");
+            clickedId = "SHOW"+($(this).parent().attr("id").replace("label",""));
+
+            OnClickArray = changingEditData.Contact.PHONE_MOB.OnClick;
+            for (var key in OnClickArray)
+            {
+            	if ( OnClickArray.hasOwnProperty(key))
+            	{
+            		if ( OnClickArray[key].key == clickedId)
+            		{
+            		
+            			$("#showToAllContacts").removeClass("sp_contact_tick");
+            			$("#showToInterestedContacts").removeClass("sp_contact_tick");
+            			if (OnClickArray[key].value == 'Y' )
+            			{
+            				$("#showToAllContacts").addClass("sp_contact_tick");
+            			}
+            			if (OnClickArray[key].value == 'C')
+            			{
+            				$("#showToInterestedContacts").addClass("sp_contact_tick");
+            			}
+            		}
+            	}
+            }
+            
+        });
+    });
+
+	$("#contactSelect li").each(function(index, element) {
+		$(element).on("click",function(){
+			if(!$(element).find("i").hasClass("sp_contact_tick")) {
+				$("#contactSelect li").each(function(index2, element2) {
+					$(element2).find("i").removeClass("sp_contact_tick");
+				});
+				$(element).find("i").addClass("sp_contact_tick");
+				selectedListValue = $(this).attr('value');
+				submitObj.push(clickedId,selectedListValue);
+			} 
+		});
+	});
+
+	$("#submitContactPrivacySettings").on("click",function() {
+		$("#contactOverlay").addClass("dn");
+		$('#'+(clickedId+'label').replace('SHOW','')).find('.contact_icon > div')[0].innerText = outerMessageContact[selectedListValue]; 
+	});
+}
+
+

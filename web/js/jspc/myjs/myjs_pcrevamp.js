@@ -21,7 +21,7 @@ var noResultMessagesArray={
 	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
 };
 
-var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&matchedOrAll=A&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
+var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/search/visitors?matchedOrAll=A","SHORTLIST":"/search/shortlisted","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/inbox/9/1",
 "VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults","EXPIRINGINTEREST":"/inbox/23/1"};
 
 
@@ -140,7 +140,7 @@ component.prototype.request = function() {
 				jsLoadFlag = 1;
 				timeE = new Date().getTime();
 				timeD = (timeE - timeI)/3600;
-				jsb9init_fourth(timeD,true,2,'http://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
+				jsb9init_fourth(timeD,true,2,'https://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
 			}
           },
           beforeSend : function(data){
@@ -970,7 +970,7 @@ function criticalLayerButtonsAction(clickAction,button) {
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
-                
+                var calTracking = '';
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -990,11 +990,16 @@ function criticalLayerButtonsAction(clickAction,button) {
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    if(layerId==18)
+                    {   
+                        calTracking  +=( '&occupText=' + $(".js-otheroccInp input").val().trim());
+                        
+                      }
 
 
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
-                    var URL="/common/criticalActionLayerTracking";
+                    var URL="/common/criticalActionLayerTracking?"+calTracking;
                     $.ajax({
                         url: URL,
                         type: "POST",
@@ -1109,7 +1114,18 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             
             jObject.find('.sendInterest').attr('onClick', postAction);
 
-            jObject.find('.profileName').html(profiles[i].username);
+            var username = '';
+            if(typeof profiles[i].name_of_user != 'undefined' && profiles[i].name_of_user != '')
+            {
+              username = profiles[i].name_of_user;
+            }
+            else
+            {
+              username = profiles[i].username;
+            }
+
+            jObject.find('.profileName').html(username);
+
             jObject.find('.profileName').attr('profileChecksum',profileChecksum);
             jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);
             jObject.find('.gunascore').html(profiles[i].gunascore);

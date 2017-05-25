@@ -298,16 +298,34 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
-        public function executeHideOption(sfWebRequest $request) {}
+        public function executeHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
-        public function executeUnHideOption(sfWebRequest $request) {}
+        public function executeUnHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
-        public function executeUnHideResult(sfWebRequest $request) {}
+        public function executeUnHideResult(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
         public function executeHideCheckPassword(sfWebRequest $request)
         {
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+            }
         }
 
         public function executeHideDuration(sfWebRequest $request)
@@ -325,6 +343,10 @@ class staticActions extends sfActions
             elseif ($this->hideOption=="3")
             {
               $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
+            }
+            
+            if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
             }
         }
 
@@ -413,6 +435,7 @@ class staticActions extends sfActions
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
+    $this->subText = $layerData[SUBTEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
     $this->contentTextNEW = $layerData[TEXTNEW];
@@ -423,6 +446,12 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
+    if($this->layerId==18)
+    {
+          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+          $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
+          $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
+   }
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -923,6 +952,20 @@ public function executeAppredirect(sfWebRequest $request)
 				$outData[$val] = $this->getFieldMapData($val);
 			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+        //this part was added to remove religion "Others" from Registration in JSMS
+      if(MobileCommon::isMobile() && $val=="religion")
+      {
+        foreach($outData["religion"] as $k1=>$v1)
+        {
+          foreach($v1 as $k2=>$v2)
+          {
+            if(strpos($v2[8], RegistrationEnums::$otherText) !== false)
+            {
+              unset($outData["religion"][$k1][$k2]);
+            }
+          }
+        }        
+      }
 			if($val=="family_income")
 			{
 				$optionalArr[0] = array("0"=>array("0"=>"Select"));
@@ -1002,13 +1045,13 @@ public function executeAppredirect(sfWebRequest $request)
   
 	private function getFieldMapData($szKey)
 	{
-		$k = $szKey;
+		$k = $szKey;    
     if(strpos($k, 'p_') !== false)
     {
       $forDpp = 1; //This has been added so as to remove Select from the output where not required
     }
 		$output = "";
-		if($k=="relationship")
+		if($k=="relationship" || $k=="relation")
 		{
 			$output=$this->getField("relationship_edit");
 		}
@@ -1050,6 +1093,8 @@ public function executeAppredirect(sfWebRequest $request)
 
 		if($k=="p_occupation")
 		$k="occupation";
+    if($k=="p_occupation_grouping")
+      $k="occupation_grouping";
 		if($k=="p_religion")
 		$k="religion";
 		if($k=="p_manglik")
@@ -1075,8 +1120,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
-
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type","jamaat");
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);
 
@@ -1156,6 +1200,9 @@ public function executeAppredirect(sfWebRequest $request)
 				{
 					$key = $k.$arrAllowedCaste[$i].'_';
 					$output[$key] = $this->getRegCaste($key);
+                                        if($i==1){
+                                            unset($output[$key][2]);
+                                        }
 					++$i;
 				}
 			}
@@ -1321,7 +1368,7 @@ if($k=="state_res")
 		  $Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
 		 
 	  }
-	  
+	  unset($Arr[2][0][2]);
 		return $Arr;
   }
   private function getNonOtherCaste()
@@ -1898,6 +1945,7 @@ if($k=="state_res")
     }
     
     $arrCaste[1][0] = $arrOut;
+    unset($arrCaste[2][0][2]);
     return $arrCaste;
   }
   

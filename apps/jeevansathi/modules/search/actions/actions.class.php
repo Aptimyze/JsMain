@@ -1718,6 +1718,10 @@ class searchActions extends sfActions
 				if($resultArr["no_of_results"]==0)
 				{
                                         $statusArr = $this->SearchChannelObj->searchZeroResultMessage();
+                                        if($request->getParameter("myjs") && $this->SearchChannelObj->getChannelType()=="APP")
+                                        {
+											$statusArr["statusCode"]='0'; // For App Myjs it is not error case
+										}
 				}
 				else
 				{

@@ -27,10 +27,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
   public function getApiBasicInfo(){
     $basicArr = parent::getApiBasicInfo();
     
-    //Posted By
-    $szRelation = $this->profile->getDecoratedRELATION();
-    $basicArr[] =$this->getApiFormatArray("RELATION","Profile Managed by" ,$szRelation,$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"));
-    
     //Native Place
 		$nativePlaceObj = new JProfile_NativePlace($this->profile);
 		$nativePlaceObj->getInfo();
@@ -47,7 +43,14 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 			$basicArr[]  =$this->getApiFormatArray("SECT","Sect" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
 			$basicArr[]  =$this->getApiFormatArray("SECT","Caste" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
-           
+                if($religion==Religion::MUSLIM)
+                {
+                        $relinfo = (array)$this->profile->getReligionInfo();
+                        $relinfo_values = (array)$this->profile->getReligionInfo(1);
+
+                        $basicArr[]  =$this->getApiFormatArray("JAMAAT","Jamaat" ,$relinfo['JAMAAT'],$relinfo_values['JAMAAT'],$this->getApiScreeningField("JAMAAT"));
+                }
+
                 
     //state
         $stateVal = substr($this->profile->getCITY_RES(),0,2);
@@ -72,11 +75,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     
     //Cover Photo
     $basicArr[]= $this->getApiFormatArray("COVER","Cover Photo",$this->getCoverPhotoFromLib($this->profile->getPROFILEID()),$this->getCoverPhotoFromLib($this->profile->getPROFILEID()));
-    
-    //HaveChild
-    if($this->profile->getMSTATUS() != 'N'){
-      $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
-    }
 
     return $basicArr;
   }

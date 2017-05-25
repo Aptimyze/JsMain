@@ -881,7 +881,7 @@ class SearchUtility
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
         {  
                 $caching = $request->getParameter("caching");
-                if($caching)
+                if($caching || $type=="del")
                 {       
 			if(!$pid)
 			{
@@ -979,9 +979,17 @@ class SearchUtility
                elseif($request->getParameter("searchBasedParam")=='matchalerts')
                         {	
                                 if($type=='set')
-                                {	
-                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
-                                        JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+                                {
+					if($request->getParameter("androidMyjsNew"))
+					{
+						JsMemcache::getInstance()->set("cachedDMAS$pid",serialize($statusArr));
+                                                JsMemcache::getInstance()->set("cachedDMAR$pid",serialize($resultArr));
+					}
+					else
+					{	
+	                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
+        	                                JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+					}
                                         $profileIdPoolArray = array();
                                         if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
@@ -995,8 +1003,16 @@ class SearchUtility
                                 }
                                 elseif($type=='get')
                                 {	
-                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
-                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+					if($request->getParameter("androidMyjsNew"))
+                                        {
+	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMAS$pid");
+	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMAR$pid");
+                                        }       
+                                        else
+                                        {
+	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
+	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+					}
                                         if($statusArr && $resultArr)
                                         {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
@@ -1049,8 +1065,10 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
                 JsMemcache::getInstance()->set("cachedPMR$pid","");
                 JsMemcache::getInstance()->set("cachedDMS$pid","");
+                JsMemcache::getInstance()->set("cachedDMAS$pid","");
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
+                JsMemcache::getInstance()->set("cachedDMAR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
                 // delete data Match of the day
                 JsMemcache::getInstance()->set("cachedMM24$pid","");

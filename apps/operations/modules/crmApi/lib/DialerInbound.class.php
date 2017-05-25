@@ -7,7 +7,7 @@ class DialerInbound
 
 	public function getAbusiveStatus($phone)
 	{
-		$abusiveObj =new ABUSE_PHONE('newjs_slave');
+		$abusiveObj =new ABUSE_PHONE('crm_slave');
 		$status =$abusiveObj->getAbusiveStatus($phone);
 		if($status)
 			return true;
@@ -19,7 +19,7 @@ class DialerInbound
 			return;
 		$phoneArr =array("$phone","0$phone");
 		
-		$jprofileObj = NEWJS_JPROFILE::getInstance('newjs_slave');		
+		$jprofileObj = NEWJS_JPROFILE::getInstance('crm_slave');		
 		$fields = 'PROFILEID,USERNAME,MTONGUE,SUBSCRIPTION,GENDER,RELIGION,DTOFBIRTH,MSTATUS';
 		$profileArr = $jprofileObj->getDetailsForPhone($phoneArr,$fields);
 		$totProfiles = count($profileArr);
@@ -32,7 +32,7 @@ class DialerInbound
 		$gender 	= FieldMap::getFieldLabel('gender',$dataArr['GENDER']);
 		$mstatus 	= FieldMap::getFieldLabel('mstatus',$dataArr['MSTATUS']);
 		$religion 	= FieldMap::getFieldLabel('religion',$dataArr['RELIGION']);
-		$community 	=$this->getCommunityMapping($dataArr['RELIGION']);
+		$community 	=$this->getCommunityMapping($dataArr['MTONGUE']);
 		$dataArr['GENDER'] 	= $gender;
 		$dataArr['MSTATUS'] 	= $mstatus;
 		$dataArr['RELIGION'] 	= $religion;
@@ -42,6 +42,7 @@ class DialerInbound
 			$dataArr['SUBSCRIPTION'] ='Y';
 		else
 			$dataArr['SUBSCRIPTION'] ='N';
+		$this->profileDetails =$dataArr;
 		return $dataArr;
 	}
 	public function getMembershipDetails($profileid)
@@ -135,11 +136,22 @@ class DialerInbound
 		$memData['DISCOUNT_PERCENT'] 	=$discountVal;
 
 		// Renewal Info 
+		$subscription =$this->profileDetails['SUBSCRIPTION'];
 		if($renewalActive){
-			$curTime	=time();
+			$curDay	=date("Y-m-d");;
+			$curTime =strtotime($curDay);
+
+			if($subscription=='N'){
+				$expiryDate .=" ".date("Y");
+				$expiryDate =date("Y-m-d",strtotime("$expiryDate -10 days"));	
+			}
 			$expiryTime	=strtotime($expiryDate);
 			if($expiryTime>=$curTime){
 				$daysDiff =floor(($expiryTime-$curTime)/(60*60*24))+1;
+			}
+			elseif($subscription=='N'){
+				$daysDiff =floor(($curTime-$expiryTime)/(60*60*24));
+				$daysDiff ="-".$daysDiff;
 			}
 			$renewalActive ='Y';
 		}

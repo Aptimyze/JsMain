@@ -103,17 +103,20 @@ EOF;
       //checks whether rabbitmq has raised either the memory alarm or disk alarm.
       $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
+
       JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,false);
       JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
       if(is_array($resultAlarm))
       {
        foreach($resultAlarm as $row)
         {          
-          if(($row->mem_limit - $row->mem_used) < MessageQueues::SAFE_LIMIT)
+          if($row->mem_used >= MessageQueues::SAFE_LIMIT)
           {
             JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
             RabbitmqHelper::sendAlert($str,"default");
+            
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name,"rabbitmq");
           }
           else
           {
@@ -124,6 +127,7 @@ EOF;
           {
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
+            
             RabbitmqHelper::sendAlert($str,"default");
           }
           else
@@ -247,7 +251,11 @@ EOF;
                                     MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT,
                                   MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
-                                  MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT
+                                  MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
+                                  MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
+                                  MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
+                                  MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
                                     );
     }
     elseif($arguments["server"] == "63"){
@@ -258,14 +266,15 @@ EOF;
     }
     else{
         $this->consumerToCountMapping = array(
-                                    MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
+                                  MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
-                                  MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT
+                                  MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
                                     );
     }
     $this->callRabbitmqServerApi("FIRST_SERVER");

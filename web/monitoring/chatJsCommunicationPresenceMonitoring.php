@@ -17,7 +17,7 @@ if($status!='200')
                 }
         }
 }*/
-$serverUrlArray = array("http://10.10.18.67:8590","http://10.10.18.75:8590","http://10.10.18.72:8590","http://10.10.18.104:8590");
+$serverUrlArray = array("http://10.10.18.75:8590","http://10.10.18.72:8590","http://10.10.18.104:8590");
 foreach($serverUrlArray as $k=>$v){
         $status = sendPresenceRequest($v);
         if($status!='200'){

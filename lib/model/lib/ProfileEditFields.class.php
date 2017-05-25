@@ -1204,6 +1204,18 @@ case "DISPLAYNAME":
                                         $field->setConstraintClass("dropdown_not_req");
                                         $field->setTableName("NAME_OF_USER:DISPLAY");
 				break;
+case 'P_OCCUPATION_GROUPING':
+					$field=new Field('','P_OCCUPATION_GROUPING');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_occupation_grouping");
+					$field->setTableName("JPARTNER:OCCUPATION_GROUPING");
+				break;
+case 'JAMAAT':
+					$field = new Field('','JAMAAT');
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("jamaat");
+                                        $field->setTableName("JP_MUSLIM:JAMAAT");
+				break;
 }
 
 				return($field);

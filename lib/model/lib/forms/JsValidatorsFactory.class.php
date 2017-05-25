@@ -185,8 +185,11 @@ class JsValidatorsFactory {
 			return new jsValidatorCountryCity(array('required'=>true,'city'=>$city,'country'=>$country,'fieldName'=>'country'));
 			break;
 		case 'sect':
-			return new jsValidatorSect(array('religion'=>$form_values['religion_caste'],'required'=>false),array('required' => $defaultMsg));
-			break;	
+			return new jsValidatorSectMuslim(array('religion'=>$form_values['religion_caste'],'required'=>false),array('required' => $defaultMsg));
+			break;
+                case 'jamaat':
+			return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
+			break;
 		case 'integer':
 			return new sfValidatorInteger(array('required'=>false));
 			break;	

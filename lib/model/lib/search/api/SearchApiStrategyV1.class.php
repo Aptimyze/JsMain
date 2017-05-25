@@ -189,8 +189,13 @@ class SearchApiStrategyV1
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		
-		$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		if($request->getParameter("androidMyjsNew")==1){
+			$this->photoType= 'ProfilePic120Url';
+		}
+		else
+		{
+			$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		}
 		/* trac#4249 : at the end*/
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{
@@ -727,9 +732,13 @@ class SearchApiStrategyV1
 		if($key=='eoi_label')
 		{
 			if($value==self::contactNoLabel)		
-			{
+			{  
+				$request = sfContext::getInstance()->getRequest();
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
-				$value = ButtonResponseApi::getInitiateButton('');
+				$page = '';
+				if(MobileCommon::isApp() =="A" && $request->getParameter('API_APP_VERSION') >= 96)
+				$page['comingFromPage'] = 'search';
+				$value = ButtonResponseApi::getInitiateButton($page);
 			}
 			else
 				$value = ButtonResponseApi::getCustomButton($value,"","","",$value==self::contactSentLabel?IdToAppImagesMapping::TICK_CONTACT:IdToAppImagesMapping::DISABLE_CONTACT);

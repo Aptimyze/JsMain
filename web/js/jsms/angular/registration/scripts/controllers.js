@@ -584,7 +584,7 @@
 	});
 	
 	//Social Details Controller
-	app.controller("SocialDetailsController",function($scope,$location,Gui,Validate,$timeout,Constants,TrackParams,$route){
+	app.controller("SocialDetailsController",function($scope,$location,Gui,Validate,$timeout,Constants,TrackParams,$route,Storage){
 
 		$scope.slideDir = Gui.getSlideDir();
 		
@@ -662,6 +662,7 @@
       
 			if($scope.screenName=='s4' && indexPos==2)
 			{
+				$scope.initMuslimCaste();
 				$scope.initHoroscope();
 				$scope.initCasteNoBar();
 			}
@@ -690,7 +691,7 @@
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 4;
+      var horoscopeFieldIndex = 6;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -699,11 +700,38 @@
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
+    $scope.initMuslimCaste =function()
+    {
+                                var origUD=Storage.getUserData("UD");
+	var allowedReligion = 2;
+	var religionFieldIndex= 2;
+	var muslimCasteFieldIndex=4;
+	var jamaatIndex = 3;
+	var sunniCaste = 152;
+	if($scope.fields[religionFieldIndex].userDecision==allowedReligion)
+	{
+		$scope.fields[muslimCasteFieldIndex].show = true;
+	}
+	else
+	{
+		$scope.fields[muslimCasteFieldIndex].show = false;
+		Gui.resetField('s4','dindex',muslimCasteFieldIndex);
+	}
+	if(origUD.caste==sunniCaste)
+	{
+		$scope.fields[jamaatIndex].show = true;
+	}
+	else
+	{
+		$scope.fields[jamaatIndex].show = false;
+		Gui.resetField('s4','dindex',jamaatIndex);
+	}
+    }
 	$scope.initCasteNoBar = function()    
 	{
 	        var allowedReligion = ['1','4','9'];
 		var religionFieldIndex= 2;
-		var casteNoBarFieldIndex = 3;
+		var casteNoBarFieldIndex = 5;
 
 	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
 		{
@@ -715,6 +743,7 @@
 		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
 		}     
 	 }
+	$scope.initMuslimCaste();
 	$scope.initHoroscope();
 	$scope.initCasteNoBar();
 	$scope.enableNextBtn();

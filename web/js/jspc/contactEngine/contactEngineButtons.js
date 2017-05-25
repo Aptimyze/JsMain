@@ -44,10 +44,17 @@ if (!this.profileChecksum) return;
 if(this.name=="MEMBERSHIP" || this.name=="EDITPROFILE")
 {
 	if(this.name=="MEMBERSHIP")
-		location.href="/profile/mem_comparison.php";
+		{
+			location.href="/profile/mem_comparison.php";
+			return;
+		}
+
 	else
-		location.href="/profile/viewprofile.php?ownview=1";
-	
+		{
+			location.href="/profile/viewprofile.php?ownview=1";
+			return;
+		}
+
 }
 ajaxData=this.makePostDataForAjax(this.profileChecksum);
          $.myObj.ajax({
@@ -441,14 +448,15 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 			var mymessage = '';
 			mymessage = othertuple.replace(/\{time\}/g,removeNull(val.timeTxt));
 			mymessage = mymessage.replace(/\{otherimage\}/g,removeNull(data.viewed));
-			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/(<([^>]+)>)/ig,"")));
+			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,"")));
 			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
 		}
+                mymessage = mymessage.replace(/\{id\}/g,index);
 		messageCount = index+1;
 	});
         var tempJObj=$(innerHtml);
-        
+
         if(this.pagination){
             tempObj=$("#messageWindow").find('#list-'+profile.profilechecksum);
             tempLiObj=tempObj.find('li').eq(0);
@@ -472,6 +480,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 				$(this).attr("src",src);
 			}
 		});
+
         
         if(data.hasNext!=true)this.allMessageLoaded=true;
         this.MSGID=data.MSGID;        

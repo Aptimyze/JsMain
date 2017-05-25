@@ -32,7 +32,7 @@ public function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='')
+  public function getNotificationData($appProfiles,$notificationKey, $message='',$count='',$logProfiles='',$currentScript=0)
   {
 	  switch($notificationKey)
 	  {
@@ -101,20 +101,13 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            //$xx2 = count($applicableProfiles);
-            		$applicableProfilesArr = array_keys($applicableProfiles);
-            		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
-            //$xx3 = count($applicableProfilesData);
-			unset($applicableProfilesArr);
-            
+            		//$applicableProfilesArr = array_keys($applicableProfiles);
+            		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+			//unset($applicableProfilesArr);
             		$poolObj = new NotificationDataPool();
-            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
-            //$xx4 = count($dataAccumulated);
-            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
-            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
-            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
+            		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles,$logProfiles,$currentScript);
+
             		unset($poolObj);
 			break;
 
@@ -196,6 +189,12 @@ public function microtime_float()
 			// print_r($dataAccumulated);
 			unset($poolObj);
 			break;
+		   case "LOGIN_REGISTER":
+		   		$poolObj = new NotificationDataPool();
+				$dataAccumulated = $poolObj->getLoggedoutNotificationData($appProfiles);
+				//print_r($dataAccumulated);die;
+				unset($poolObj);
+		   		break;
                   case "CSV_UPLOAD":
                         $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
                         foreach($appProfiles as $k=>$v)
@@ -456,10 +455,22 @@ public function microtime_float()
             
             unset($poolObj);
             break;
+          case "UPGRADE_APP":              
+              $applicableProfiles=array();
+              $counter = 0;
+              foreach($appProfiles as $key => $pid){
+                  if($pid != 0){
+                    $applicableProfiles[$pid] = array();
+                    $dataAccumulated[$counter]['SELF']["PROFILEID"]=$pid;
+                    $dataAccumulated[$counter]['COUNT']="SINGLE";
+                    $counter++;
+                  }
+              }
+              break;
 	  }
-
 	  $completeNotificationInfo = array();
 	  $counter = 0;
+
 	  if(is_array($dataAccumulated))
 	  {
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
@@ -469,7 +480,7 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  // print_r($completeNotificationInfo); die;
+				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
 				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
@@ -486,6 +497,7 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }

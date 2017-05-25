@@ -18,7 +18,7 @@ class InstantAppNotification
 
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
 	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT');
-	$this->instantNotificationForMQ =array();
+	$this->instantNotificationForMQ =array('MATCHALERT');
   }
 
   // Push Notification to MQ
@@ -39,7 +39,7 @@ class InstantAppNotification
   // Function to send Notification
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array(), $rabbitMq='')
   {
-    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 10){
         return;
     }
 
@@ -168,19 +168,36 @@ class InstantAppNotification
   }
   private function getNotificationSentCount($profileid)
   {
-	$count = 0;
-	$dateToday = date("Y-m-d");
-	$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
-	$valueArray['PROFILEID']=$profileid;
-	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
-	$greatorThan['SEND_DATE']=$dateToday." 00:00:00";
-	$lessThan['SEND_DATE']=$dateToday." 23:59:59";
-	$notificationSentDetails = $notificationLogObj->getArray($valueArray,'',$greatorThan,"COUNT(1) AS COUNT",$lessThan);
-	if(is_array($notificationSentDetails))
-	{
-		$count = $notificationSentDetails[0]['COUNT'];
+	if(in_array("$this->notificationKey", NotificationEnums::$timeCriteriaNotification)){
+		$JsMemcacheObj =JsMemcache::getInstance();
+		$date 	=date("Ymd");
+		$key    ="INST_APP|".$this->notificationKey."|".$date;
+		$field  ="PID-".$profileid;
+
+		$count =$JsMemcacheObj->getHashOneValue($key,$field);
+		//echo $key; echo "(".$val.")"; echo "\n";
+
+		if(!$count || $count==0){
+			$fieldArr[$field] =0;
+			$JsMemcacheObj->setHashObject($key,$fieldArr,86400);
+			$count =0;
+		}
+		return $count;
+	}else{
+		$count = 0;
+		$dateToday = date("Y-m-d");
+		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
+		$valueArray['PROFILEID']=$profileid;
+		$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
+		$greatorThan['SEND_DATE']=$dateToday." 00:00:00";
+		$lessThan['SEND_DATE']=$dateToday." 23:59:59";
+		$notificationSentDetails = $notificationLogObj->getArray($valueArray,'',$greatorThan,"COUNT(1) AS COUNT",$lessThan);
+		if(is_array($notificationSentDetails))
+		{
+			$count = $notificationSentDetails[0]['COUNT'];
+		}
+		return $count;
 	}
-	return $count;
   }
 
   /*send eoi reminder notification on app

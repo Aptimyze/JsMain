@@ -26,6 +26,7 @@ $this->addOptions(array(
 
   protected function execute($arguments = array(), $options = array())
   {
+	die('notRequired');
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 	$this->alarmMinTime = NotificationEnums::$alarmMinTime;
@@ -55,7 +56,7 @@ $this->addOptions(array(
                         break;
                   $numberOfLoopsExecuted++;
           }
-	$maxAlarTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
+	$maxAlarTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_master');
 	$maxAlarTimeObj->updateMaxAlarmTime($this->alarmCurrentTime);
   }
 }

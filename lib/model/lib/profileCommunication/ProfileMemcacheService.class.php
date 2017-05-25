@@ -617,7 +617,7 @@ public function unsett()
         
         $dbInstance = new BILLING_SERVICE_STATUS();
         list($expDate, $expDays) = $dbInstance->getLastExpiryDate($this->profileid);
-        $select           = "RECEIVER, DATEDIFF(now(),DATE) as TIME";
+        $select           = "RECEIVER, DATEDIFF(now(),DATE) as TIME,DATE(DATE) as DATE";
         $group            = '';
         $where            = array(
             "SENDER" => $this->profileid,
@@ -634,16 +634,21 @@ public function unsett()
                         unset($overAllLimitArr[$val["RECEIVER"]]);
                 }
                 $contactArr[$val["RECEIVER"]] = $val["TIME"];
+                $contactDates[$val["RECEIVER"]] = $val["DATE"];
             }
         }
         if (is_array($contactArr)) {
             $datediff = floor(abs(JSstrToTime(date("Y-m-d")) - JSstrToTime(ErrorHandler::DUP_LIVE_DATE)) / (60 * 60 * 24));
+            $contactLimitDates = CommonFunction::getContactLimitDates();
             foreach ($contactArr as $key => $val) {
+                $contactDate = $contactDates[$key];
                 if ($val == 0)
                     $TODAY_INI_BY_ME++;
-                if (date('w') >= $val)
+                // insert logic for week's count
+                if (strtotime($contactLimitDates['weekStartDate'])  <= strtotime($contactDate))
                     $WEEK_INI_BY_ME++;
-                if (date('d') >= $val)
+                // insert logic for month's count
+                if (strtotime($contactLimitDates['monthStartDate'])  <= strtotime($contactDate))
                     $MONTH_INI_BY_ME++;
                 if ($datediff >= $val)
                 {

@@ -23,7 +23,7 @@
     }
     
     .up_sprite {
-        background-image: url("http://static.jeevansathi.com/images/jsms/photo/upload-sprite.png");
+        background-image: url("https://static.jeevansathi.com/images/jsms/photo/upload-sprite.png");
         background-repeat: no-repeat;
         display: block !important;
     }

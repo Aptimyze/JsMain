@@ -81,7 +81,7 @@
                         <li class="f16 fontreg">Services</li>
                         <!--<li><a target="_blank" href="http://www.jeevansathimatchpoint.com">Jeevansathi offline</a></li>-->
                         <li><a href="/membership/jspc">Membership Options</a></li>
-                        <li><a href="http://careers.jeevansathi.com">Jeevansathi Careers</a></li>
+                        <li><a href="https://careers.jeevansathi.com">Jeevansathi Careers</a></li>
                     </ul>
                 </div>
                 <!--end:column one-->
@@ -169,7 +169,7 @@
                                 <ul>
                                     <li class="pl55"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
                                     <li class="pl55"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
-                                    <li class="pl30"><a href="http://www.ambitionbox.com" target="_blank" title="AmbitionBox – Interview Prep & Company Reviews"><i class="headfootsprtie ambitionbox"></i></a></li>
+                                    <li class="pl30"><a href="http://ambitionbox.com" target="_blank" title="AmbitionBox – Interview Prep & Company Reviews"><i class="headfootsprtie ambitionbox"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -219,27 +219,7 @@
         ~/if`
     });
 </script>
-<!-- Begin Inspectlet Embed Code -->
-<script type="text/javascript" id="inspectletjs" > 
-window.__insp = window.__insp || [];
-__insp.push(['wid', 1937430883]);
-(function () {
-    function ldinsp() {
-        if (typeof window.__inspld != "undefined") return;
-        window.__inspld = 1;
-        var insp = document.createElement('script');
-        insp.type = 'text/javascript';
-        insp.async = true;
-        insp.id = "inspsync";
-        insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js';
-        var x = document.getElementsByTagName('script')[0];
-        x.parentNode.insertBefore(insp, x);
-    };
-    setTimeout(ldinsp, 500);
-    document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
-})(); 
-</script>
-<!-- End Inspectlet Embed Code -->
+
 ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`

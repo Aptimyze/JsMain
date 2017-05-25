@@ -40,54 +40,64 @@ class apieditdppv1Action extends sfAction
 		$this->PreprocessInput();
 		
 		//Get symfony form object related to Edit Fields coming.
-		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
+		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");		
+		
+		 if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
+        {
+            $http_msg=print_r($_SERVER,true);
+            $http_msg .= print_r($_POST,true);
+            mail("ahmsjahan@gmail.com,eshajain88@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+        }	
+		if(1)
 		{
-			$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
-			$this->form->bind($arrEditDppFieldIDs);
-			if ($this->form->isValid())
+			if($arrEditDppFieldIDs && is_array($arrEditDppFieldIDs))
 			{
-				if($this->m_bDppUpdate)
+				$this->form = new FieldForm($arrEditDppFieldIDs,$this->m_objLoginProfile);			       
+				$this->form->bind($arrEditDppFieldIDs);
+				if ($this->form->isValid())
 				{
-					$this->Update();
+					if($this->m_bDppUpdate)
+					{
+						$this->Update();
+					}
+
+					if($this->m_bEditSpouse)
+					{
+						$this->form->updateData();
+					}	
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
+					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
+					if($request->getParameter("getData")=="dpp"){
+						ob_start();
+						$request->setParameter("sectionFlag","dpp");
+						$request->setParameter("internal",1);
+						$fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
+						$this->dppData = ob_get_contents();
+						ob_end_clean();
+						$apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
+
+					}
 				}
-				
-				if($this->m_bEditSpouse)
+				else
 				{
-					$this->form->updateData();
-				}	
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
-				JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
-                                if($request->getParameter("getData")=="dpp"){
-                                    ob_start();
-                                    $request->setParameter("sectionFlag","dpp");
-                                    $request->setParameter("internal",1);
-                                    $fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
-                                    $this->dppData = ob_get_contents();
-                                    ob_end_clean();
-                                    $apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-				    
-                                }
+					$error=array();
+					$e=$this->form->getErrorSchema();
+					foreach($e as $k=>$v)
+					{
+						$errorArr[$k]=$v->getMessage();
+					}
+					$error[error]=json_decode(json_encode(array_values($errorArr)), FALSE);
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+					$apiResponseHandlerObj->setResponseBody($error);
+				}
 			}
 			else
 			{
-				$error=array();
-				$e=$this->form->getErrorSchema();
-				foreach($e as $k=>$v)
-				{
-					$errorArr[$k]=$v->getMessage();
-				}
-				$error[error]=json_decode(json_encode(array_values($errorArr)), FALSE);
+				$errorArr["ERROR"]="Field Array is not valid";
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-				$apiResponseHandlerObj->setResponseBody($error);
+				$apiResponseHandlerObj->setResponseBody($errorArr);
 			}
-		}
-		else
-		{
-			$errorArr["ERROR"]="Field Array is not valid";
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
 		$apiResponseHandlerObj->generateResponse();
 		die;
@@ -101,11 +111,16 @@ class apieditdppv1Action extends sfAction
 	{
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppFieldIDs = $request->getParameter("editFieldArr");
-		//
 		//Update Partner Income Also if Income is updated
 		//if(stristr($scase,"LINCOME") || stristr($scase,"HINCOME") || stristr($scase,"LINCOME_DOL") ||stristr($scase,"HINCOME_DOL"))
 		if(array_key_exists("P_LRS",$arrEditDppFieldIDs) || array_key_exists("P_HRS",$arrEditDppFieldIDs) || array_key_exists("P_LDS",$arrEditDppFieldIDs) ||array_key_exists("P_HDS",$arrEditDppFieldIDs) )
 		{
+                        if($arrEditDppFieldIDs['P_LRS'] != 0 && $arrEditDppFieldIDs['P_LDS'] == 0 && $this->partnerObj->getLINCOME_DOL() != 12){
+                                $arrEditDppFieldIDs['P_LDS'] = 12;
+                                if(!$arrEditDppFieldIDs['P_HDS']){
+                                        $arrEditDppFieldIDs['P_HDS'] = 19;
+                                }
+                        }
 			if($arrEditDppFieldIDs['P_LRS'] || $arrEditDppFieldIDs['P_HRS'])
 			{
 				$rArr["minIR"] = $arrEditDppFieldIDs['P_LRS'] ;
@@ -127,8 +142,7 @@ class apieditdppv1Action extends sfAction
 			$arrEditDppFieldIDs['P_HDS'] = intval($incomeMapArr['doHIncome']);
 			
 			$request->setParameter("editFieldArr",$arrEditDppFieldIDs);
-		} 
-		
+		}
 		$arrDppUpdate = array();
 		foreach($arrEditDppFieldIDs as $key=>$val)
 		{
@@ -144,7 +158,7 @@ class apieditdppv1Action extends sfAction
 		}
 		
 		$szFinalQuery = implode(",",$arrUpdateQuery);
-		$this->m_szQuery = $szFinalQuery;
+		$this->m_szQuery = $szFinalQuery;		
 	}
 	
 	private function Update()
@@ -275,7 +289,7 @@ class apieditdppv1Action extends sfAction
 		$this->mysqlObj=new Mysql;
 		$this->myDbName=getProfileDatabaseConnectionName($this->profileId,'',$this->mysqlObj);
 		$this->myDb=$this->mysqlObj->connect($this->myDbName);
-		$this->partnerObj->setPartnerDetails($this->profileId,$this->myDb,$this->mysqlObj);
+		$this->partnerObj->setPartnerDetails($this->profileId,$this->myDb,$this->mysqlObj);    	
     $this->m_objLoginProfile->setJpartner($this->partnerObj);
 	}
 	
@@ -285,6 +299,7 @@ class apieditdppv1Action extends sfAction
 		//Get symfony form object related to Edit Fields coming.
 		$request = sfContext::getInstance()->getRequest();
 		$arrEditDppField = $request->getParameter("editFieldArr");
+
 		$arrOut = array();
 		//arrMapNullValue contains all those value which used to mark as a null value or Doesnot matter value
 		//as in case of API we are sending DM in view to map those values as doesnot matter in app
@@ -370,12 +385,25 @@ class apieditdppv1Action extends sfAction
 				}
 				$arrOut["P_COUNTRY"] = $val;
 			}
+			elseif($key == "P_OCCUPATION")
+			{
+				$this->m_bDppUpdate = true;
+				$arrOut["P_OCCUPATION"] = $val;
+				$arrOut["P_OCCUPATION_GROUPING"] = CommonFunction::getOccupationGroups($val); //this function was created to find occupation groups for values selected
+			}
+			elseif($key == "P_OCCUPATION_GROUPING")
+			{
+				$this->m_bDppUpdate = true;				
+				$arrOut["P_OCCUPATION_GROUPING"] = $val;
+				$arrOut["P_OCCUPATION"] = CommonFunction::getOccupationValues($val);	//this function was created to find occupation values for groups selected			
+			}
 			else
 			{
 				$arrOut[$key] = ($val == -1)? "" : $val ;
 				$this->m_bDppUpdate = true;
 			}
 		}//End of For loop
+		
 		$request->setParameter("editFieldArr",$arrOut);
 	}
 }

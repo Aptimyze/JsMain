@@ -254,10 +254,9 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("EDU_LEVEL_NEW","Highest Degree",$this->profile->getDecoratedEducation(),$this->profile->getEDU_LEVEL_NEW(),$this->getApiScreeningField("EDU_LEVEL_NEW"),$this->dropdown,"","","updateEducation");
 		$isPG=FieldMap::getFieldLabel("degree_pg",$this->profile->getEDU_LEVEL_NEW())?1:0;
                 $showPg = 0;
-                if($this->profile->getEDU_LEVEL_NEW() == 21 || $this->profile->getEDU_LEVEL_NEW() == 42)
-                   $showPg = 1;
 		//highest degree should in a pg degree
-		//if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
+		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
+			$showPg=1;
 		//{
 			//if(!$isPG)
 			//$education["PG_DEGREE"]="N_B";
@@ -402,6 +401,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			//$landline_value="";
 		}
 		$contactArr[]=$this->getApiFormatArray("PHONE_RES","Landline No." ,$landline_label,$landline_value,$this->getApiScreeningField("PHONE_RES"),$this->text);
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+    
 			
 		if($this->profile->getTIME_TO_CALL_START() && $this->profile->getTIME_TO_CALL_END())
 		{
@@ -528,6 +534,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//mstatus
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
 		
+                $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		
@@ -543,7 +550,17 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($religion==RELIGION::HINDU || $religion==Religion::JAIN || $religion==Religion::SIKH )
 			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Caste" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
-			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown,'','','UpdateMuslimSectSection');
+		if($religion==Religion::MUSLIM && $this->profile->getCaste()==152)
+		{
+			$jamaatHide = false;
+		}
+		else
+			$jamaatHide = true;
+			$relinfo = (array)$this->profile->getReligionInfo();
+			$relinfo_values = (array)$this->profile->getReligionInfo(1);
+
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("JAMAAT","Jamaat" ,$relinfo['JAMAAT'],$relinfo_values['JAMAAT'],$this->getApiScreeningField("JAMAAT"),$this->dropdown,'','','UpdateJamaat',$jamaatHide);
                 if($religion==RELIGION::CHRISTIAN)
 		$basicArr["Ethnicity"][OnClick][] =$this->getApiFormatArray("DIOCESE","Diocese" ,$relinfo[DIOCESE],"",$this->getApiScreeningField("DIOCESE"),$this->text);
 		//SUB-CASTE
@@ -797,7 +814,20 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
+		//Occupation grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"),$this->dropdown,'',1);				
+		//commented the occupation array because it is not needed on JSMS
+		//$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
 		//Income
 		$szIncomeRs = $this->getDecorateDPP_Response($jpartnerObj->getLINCOME());
 		$szIncomeRs .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME());
@@ -811,7 +841,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_RS","Income Rs",trim($incLab[0]),$szIncomeRs,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);			
 		return $DppBasicArr;		
 	}
 

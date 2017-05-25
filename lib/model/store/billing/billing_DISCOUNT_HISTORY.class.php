@@ -27,4 +27,81 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             }
         }
     }
+
+    public function truncateTable($beforeDt=""){
+        try{
+            if($beforeDt == ""){
+                $sql = "TRUNCATE TABLE billing.DISCOUNT_HISTORY";
+            }
+            else{
+                $sql = "DELETE FROM billing.DISCOUNT_HISTORY WHERE DATE<:BEFORE_DT";
+            }
+            $prep = $this->db->prepare($sql);
+            if($beforeDt != ""){
+                $prep->bindValue(":BEFORE_DT",$beforeDt,PDO::PARAM_STR);
+            }
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
+    public function backupDailyData($entryDt){
+        try{
+            $sql = "INSERT IGNORE INTO billing.DISCOUNT_HISTORY_BACKUP SELECT * FROM billing.DISCOUNT_HISTORY WHERE DATE LIKE :ENTRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
+    public function getLastLoginProfilesAfterDateCount($lastLoginDt){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select count(distinct PROFILEID) as cnt from billing.DISCOUNT_HISTORY where ";
+            $sql .= "DATE>=:DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            if($result = $res->fetch(PDO::FETCH_ASSOC))
+                return $result['cnt'];
+            return 0;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
+    public function getLastLoginProfilesAfterDate($profileStr="",$lastLoginDt,$limit="",$offset=""){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select PROFILEID,MAX(P) AS P_MAX, MAX(C) as C_MAX, MAX(NCP) as NCP_MAX, MAX(X) as X_MAX from billing.DISCOUNT_HISTORY where ";
+            if(!empty($profileStr)){
+                $sql .= "PROFILEID IN($profileStr) AND ";
+            }
+            $sql .= "DATE>=:DATE GROUP BY PROFILEID ORDER BY DATE DESC";
+            if($limit!=""){
+                if(empty($offset)){
+                    $offset = 0;
+                }
+                $sql .= " LIMIT $offset,$limit";
+            }
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                if(! ($result['P_MAX'] == 0 && $result['C_MAX'] == 0 && $result['NCP_MAX'] == 0 && $result['X_MAX'] == 0) )
+                    $profilesArr[$result['PROFILEID']] = $result;
+            }
+            return $profilesArr;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
 }

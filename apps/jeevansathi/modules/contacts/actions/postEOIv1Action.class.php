@@ -60,6 +60,7 @@ class postEOIv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
+			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -105,7 +106,17 @@ class postEOIv1Action extends sfAction
 			$responseButtonArray["cansend"] = true;
 			$responseButtonArray["sent"] = true;
 		}
+		else if ($this->getParameter($request,"coming_from") == "search")
+		{   
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
+			$responseButtonArray["buttons"][] = $buttonObj->getCancelInterestButton('search');
+			$responseButtonArray["buttons"][] = $buttonObj->getContactDetailsButton();
+		}
+		else
+		{	
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+		}
 		if($this->contactEngineObj->messageId)
 		{
         	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
@@ -197,16 +208,13 @@ class postEOIv1Action extends sfAction
 							$strdate = date( 'F j, Y');
 							break;
 						case "WEEK":
-							$dayNR = date('N');         //monday = 1, tuesday = 2, etc.
-						    $satDiff = 6-$dayNR;        //for monday we need to add 5 days -> 6 - 1
-						    $sunDiff = $satDiff+1;      //sunday is one day more
-						    $strdate = date('F j,Y', JsStrtotime(" +".$sunDiff." days"));
+						    $strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 						    break;
 						case "MONTH":
-							$strdate = date('F t,Y');
+							$strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
-					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for this '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
+					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for the '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
 					if(!$this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
 					{
 						$responseArray["errmsglabel"]= $responseArray["errmsglabel"].$membershipText;

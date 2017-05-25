@@ -230,7 +230,19 @@ class commoninterfaceActions extends sfActions
 		else
 			$cityName = "";
 		$membershipObj = new Membership;
-		$membership_details["serviceid"] = $activeServiceDetails["SERVICEID"];
+		
+		//auto bill RB for dummy profile with Js Exclusive and Js Boost
+		$servicesObj = new billing_SERVICES("newjs_slave");
+		$RBServiceID = "T".$mainServiceDuration;
+		$RBDetails = $servicesObj->fetchServiceDetails(array($RBServiceID));
+		if(is_array($RBDetails) && is_array($RBDetails[$RBServiceID]) && $RBDetails[$RBServiceID]['ACTIVE'] == 'Y'){
+			$autoActivateServices = $activeServiceDetails["SERVICEID"].",".$RBServiceID;
+		}
+		else{
+			$autoActivateServices = $activeServiceDetails["SERVICEID"];
+		}
+		
+		$membership_details["serviceid"] = $autoActivateServices;
 		$membership_details["profileid"] = $dummyProfileID;
         $membership_details["custname"] = $dummyUsername;
 		$membership_details["username"] = $dummyUsername;
@@ -245,9 +257,15 @@ class commoninterfaceActions extends sfActions
 		$membership_details["curtype"] = "RS";
 		$membership_details["deposit_date"] = date('Y-m-d');
 		$serviceObj = new billing_SERVICES("newjs_slave");
-		$priceRes= $serviceObj->fetchServiceDetailForRupeesTrxn($membership_details["serviceid"], 'desktop');
+		$priceRsDetails= $serviceObj->fetchServiceDetailForRupeesTrxn(explode(",",$membership_details["serviceid"]), 'desktop');
+		
+		$totalActualAmount = 0;
+		foreach ($priceRsDetails as $k1 => $v1) {
+			$totalActualAmount += $v1['PRICE'];
+		}
 		$membership_details["deposit_branch"] = "NOIDA";
-		$membership_details["discount"] = $priceRes["PRICE"];
+		$membership_details["discount"] = $totalActualAmount;
+		$membership_details["amount"] = 0;
 		$membership_details["discount_type"] = "2";
 		$membership_details["discount_reason"] = "100% disount for dummy profile";
 		$membership_details["entry_from"] = "N";
@@ -275,7 +293,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_master');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}

@@ -202,7 +202,7 @@ class RegistrationFunctions
      * @param type $partnerField
      */
     public static function UpdateFilter($partnerField) 
-    {
+    {      
       $arrFilter = array();
       if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {
         $arrFilter["MSTATUS"] = 'Y';
@@ -213,6 +213,11 @@ class RegistrationFunctions
       if ($partnerField->partnerObj->getPARTNER_CASTE()) {
         $arrFilter["CASTE"] = 'Y';
       } 
+      //for marathi profiles, we have to auto set the filter
+      if($partnerField->partnerObj->getPARTNER_MTONGUE() == RegistrationEnums::$marathiValue)
+      {
+        $arrFilter["MTONGUE"] = 'Y';
+      }
 
       if(count($arrFilter)) {
         $hardSoft="Y";
@@ -232,6 +237,7 @@ class RegistrationFunctions
             if($pageId == "JSPCR2"){
                 $completeFields["religion"] = $loginProfileObj->getRELIGION();
                 $completeFields["caste"] = $loginProfileObj->getCASTE();
+                $completeFields["casteMuslim"] = $loginProfileObj->getSECT();
                 $completeFields["mtongue"] = $loginProfileObj->getMTONGUE();
                 $completeFields["mstatus"] = $loginProfileObj->getMSTATUS();
                 $completeFields["height"] = $loginProfileObj->getHEIGHT();
@@ -240,6 +246,10 @@ class RegistrationFunctions
                 $completeFields["haveChildren"] = $loginProfileObj->getHAVECHILD();
                 $completeFields["pin"] = $loginProfileObj->getPINCODE();
                 $completeFields["horoscopeMatch"] = $loginProfileObj->getHOROSCOPE_MATCH();
+                if($completeFields["religion"] =='2' && $completeFields["caste"]=='152'){
+                    $religionInfo = (array)$loginProfileObj->getReligionInfo(1);
+                    $completeFields["jamaat"] = $religionInfo['JAMAAT'];
+                }
                 $country_res=$loginProfileObj->getCOUNTRY_RES();
                 $completeFields["countryReg"] = $country_res;
                 if($country_res==51 || $country_res==128){

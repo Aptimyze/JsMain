@@ -791,7 +791,7 @@ die;
 	* @return: $showChat
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
-		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings","promotions"];
         $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
 		$showChat = 1;
 		if(!$loggedIn){
@@ -823,7 +823,7 @@ die;
 			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
-		//error_log("ankita-".$getName);
+		
 		return $userName;
 	}
 
@@ -1020,6 +1020,42 @@ die;
 		}
 		return 0;
 
+	}
+        public static function runFeatureInDaytime($after = 10,$before = 22){
+                $datetime = new DateTime; // current time = server time
+                $otherTZ  = new DateTimeZone('Asia/Kolkata');
+                $datetime->setTimezone($otherTZ); // Indian Time
+		$timeNow = $datetime->format('H');
+		if($timeNow>=$after && $timeNow<=$before)
+		{
+			return 1;
+		}
+		return 0;
+	}
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
+	}
+        /**
+         * This function will post message to slack on the basis of identifier
+         * @param type $message slack message
+         * @param type $identifier identifier for url as per SlackMessagesEnums class
+         */
+	public static function sendSlackmessage($message,$identifier = "default")
+	{
+		$url = SlackMessagesEnums::$slackModuleArray[$identifier];
+		$breaks = array("<br />","<br>","<br/>");
+		$message = str_ireplace($breaks, "\n", $message);
+		$data = array("text" => $message );
+		$ch=curl_init($url);
+		$data_string = json_encode($data);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,
+		array("Content-type: application/json"));
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result;
 	}
 }
 ?>

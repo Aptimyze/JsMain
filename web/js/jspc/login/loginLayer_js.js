@@ -1,4 +1,7 @@
 var loginAttempts=0;
+var secureSite=0;
+if (window.location.protocol == "https:")
+	secureSite=1;
 function LoginValidation()
 {
 	var email=$.trim($("#email").val());
@@ -12,7 +15,7 @@ function LoginValidation()
 		{				
 			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val()+"&secureSite="+secureSite;
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
@@ -272,8 +275,6 @@ if(window.addEventListener)
 		window.onload = onFrameLoginResponseReceived;
 	}
 
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 
 
     $(document).ready(function(){ 
@@ -417,6 +418,7 @@ function customCheckboxLogin(checkboxName,flag) {
 }
 
 $(document).ready(function(){
+	logSiteUrl();
 	commonLoginBinding();
 	if(typeof(LoggedoutPage)!="undefined")
 	{ 	
@@ -596,7 +598,7 @@ function postForgotEmailLayer()
 }
 
 function createCaptcha(fromLoggedOut){
-	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
+	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
 	if($(".g-recaptcha").length !=0){
             removeCaptcha();
     }
@@ -612,4 +614,19 @@ function removeCaptcha()
 {
   $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
+}
+
+function logSiteUrl()
+{
+	var url = location.href;
+	if(url.indexOf("jeevansathi") == -1)
+	{
+		var dataObject = JSON.stringify({'url' : encodeURIComponent(url)});
+		$.ajax({
+			url : '/api/v1/common/logOtherUrl',
+			dataType: 'json',
+			data: 'data='+dataObject,
+			success: function(response) {}
+		});
+	}
 }

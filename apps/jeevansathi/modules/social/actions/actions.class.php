@@ -623,6 +623,7 @@ class socialActions extends sfActions
 	{
 		$this->fromCALphoto = 1;
 	}
+
 	$this->keywords=sfConfig::get("app_social_keywords");//array("My photo", "My family", "My friends", "My office", "My home");
 	$this->request->setAttribute('bms_sideBanner',711);
 
@@ -632,6 +633,13 @@ class socialActions extends sfActions
 	$this->havePhoto = $profileObj->getHAVEPHOTO();
 	$this->showMyjs=0;
 
+	//this was added to add tracking for upload click from mailer
+	if($request->getParameter("fromAddPhotoMailer")==1)
+	{
+		$photoUploadTrackingObj = new PICTURE_UPLOAD_PHOTO_FROM_MAILER_TRACKING("newjs_masterRep");
+		$photoUploadTrackingObj->insertTrackingRecord($profileObj->getPROFILEID(),$request->getParameter('mailType'),date("Y-m-d"));
+		unset($photoUploadTrackingObj);
+	}
 	$currentTime=time();
 	$registrationTime = strtotime($profileObj->getENTRY_DT());
 	if(($currentTime - $registrationTime)/(3600)<24)
@@ -1092,43 +1100,8 @@ class socialActions extends sfActions
 
 		$picObj->getAlbumList();
 		$pictureServiceObj->associateJsUser_with_importUniqueId($this->profileid,$picObj->getUserIdentity(),$this->importSite);
-
-		$this->albumIdArr             = $picObj->getAlbumIdArr();
-		$this->albumCoverImageArr     = $picObj->getCoverImageArr();
-		$this->albumNameArr           = $picObj->getAlbumNameArr();
-		$this->photosCountInAlbum     = $picObj->getPhotosCountInAlbum();
-		$this->actionFile             = $picObj->getActionFile();
-		$this->authVariable           = "&".$picObj->getAuthVariables();
-		$this->noOfAlbums =  sizeof($this->albumIdArr);
-		$this->noOfAlbums1 =  sizeof($this->albumIdArr)-1;
-
-		$sum=0;
-		foreach($this->photosCountInAlbum as $v)
-		{
-			$sum+=$v;
-		}
-		if(!is_array($this->photosCountInAlbum) || $sum==0)
-		{
-			/*
-			$this->noAlbumsError="You have no albums in your ".$this->importSite." account.";
-			*/
-		}
-		else
-			$this->photo_array = $this->albumCoverImageArr;
-		foreach($this->photo_array as $k=>$v)
-		{
-			$newArr[$k]["name"] = $this->albumNameArr[$k];
-			$newArr[$k]["count"] = $this->photosCountInAlbum[$k];
-			$newArr[$k]["url"] = $v;
-			$newArr[$k]["albumId"] = $this->albumIdArr[$k];
-			if(strstr($this->albumNameArr[$k],'Profile Picture'))
-			{
-				$newArr1[$k] = $newArr[$k];
-				$listPhotos = $this->albumIdArr[$k];
-				unset($newArr[$k]);
-			}
-		}
-		$resultArr["albums"] = array_merge($newArr1,$newArr);
+		$this->final = $picObj->final;
+		$resultArr["data"] = $this->final;
 	}
 	if($listPhotos || $request->getParameter('listPhotos'))
 	{
@@ -1173,15 +1146,9 @@ class socialActions extends sfActions
 	$this->limit=sfConfig::get("app_max_no_of_photos") - $this->importLimit;  //no of photos that can be uploaded/imported by the user
 	$picObj=ImportPhotoFactory::getPhotoAgent($request->getParameter('importSite'));
 	$picObj->getAlbumList();
-	echo '<script type="text/javascript">
-function CloseMySelf(sender) {
-    window.opener.afterValidateFbAuth();
-    window.close();
-    return false;
-}
-CloseMySelf(this);</script>';
-	//echo '<script type="text/javascript">window.close();</script>';
-	die;
+	$this->picData =json_encode($picObj->final);
+	$this->importPhotosBarHeightPerShift = PictureStaticVariablesEnum::$importPhotosBarHeightPerShift;
+$this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosBarCountPerShift;
   }
 
 

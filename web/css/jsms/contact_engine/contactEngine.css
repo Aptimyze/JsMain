@@ -31,10 +31,10 @@
 .ot_pos2 {top: -4px;right: 0;}
 .ot_msg{background-position: -228px -49px;width: 28px;height: 20px;}
 .ot_dot{background-position: -277px -59px;width: 11px;height: 39px;}
-.ot_sprtie{	background-image:url(/images/ot_sprtie.png);	background-repeat:no-repeat;}
-.ot_chk{background-position: -5px -4px;width: 34px;height: 18px;}
+.ot_sprtie{    background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png);  background-repeat:no-repeat;}
+.ot_chk{background-position: -185px -206px;width: 34px;height: 18px;}
 .ot_icon1{background-position: -6px -26px;width: 24px;height: 25px;}
-.ot_bell{background-position: -4px -58px;width: 28px;height: 26px;}
+.ot_bell{background-position: 1px -184px;width: 40px;height: 35px;}
 .ot_pos3 {top:25px;right:20px;}
 .ot_pos4 {top:85px;right:20px;}
 .ot_pos5{top: -5px;right: -6px;}
@@ -172,15 +172,15 @@ color: transparent;
   }
 
 .newitcross {
-  background-image:url(/images/jsms/commonImg/newoticon1.png);  
-  background-repeat:no-repeat;
-  background-position:1px 1px; width:20px; height:20px
+  background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png);  
+   background-repeat:no-repeat;
+  background-position:-196px -180px; width:22px; height:20px
   }
 
 .newitchk {
-  background-image:url(/images/jsms/commonImg/newoticon1.png);
-  background-repeat:no-repeat;
-  background-position:1px -27px; width:22px; height:20px
+    background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+   background-repeat:no-repeat;
+   background-position:-198px -206px; width:22px; height:20px
 }
 
 

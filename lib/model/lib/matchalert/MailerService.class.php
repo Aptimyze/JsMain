@@ -969,5 +969,57 @@ return $edu;
 		unset($userList);
 		return $matchesDataFinal;
 	}
+
+	/* This function is used to get receivers for sending paid members mail
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getpaidMembersMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+		$recievers = $paidMembersMailerObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This function is used update the sent flag(Y for sent and F for fail) for each paidMember mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*@param profileId : profileId of the user
+	*/
+	public function updateSentForPaidMembersMailerReceivers($sno,$flag,$profileId)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForPaidMembersMailerReceivers() in savedSearchesMailerTask.class.php");
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+                $paidMembersMailerObj->updatePaidMembersReceiverFlag($sno,$flag,$profileId);
+    }
+
+    /* This function is used to get add photo mailer receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getaddPhotoMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$addPhotoMailerObj = new PICTURE_ADD_PHOTO_MAILER();
+		$recievers = $addPhotoMailerObj->getaddPhotoMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each addPhoto mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForaddPhotoUsers($sno,$flag,$pid)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForaddPhotoUsers() in addPhotoMailerTask.class.php");
+		$addPhotoMailerObj = new PICTURE_ADD_PHOTO_MAILER();
+                $addPhotoMailerObj->updateAddPhotoUsersFlag($sno,$flag,$pid);
+
+	}
 }
 ?>

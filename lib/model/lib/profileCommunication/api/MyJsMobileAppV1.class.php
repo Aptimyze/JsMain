@@ -46,7 +46,7 @@ class MyJsMobileAppV1
         if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
-				$myPic = $profilePicObj->getThumbail96Url();
+				$myPic = $profilePicObj->getProfilePic235Url();
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
@@ -183,35 +183,10 @@ $className = get_class($this);
 				else
 					$displayV1[strtolower($key)]=NULL;
 			}
+			$profileArray=$this->getProfileInfo($profileInfo);
 		
-		if(is_array($profileInfo))
-		{
-			foreach($profileInfo as $key=>$value)
-			{
-				if($key == "INCOMPLETE")
-				{
-					if(is_array($value))
-					{
-						foreach($value as $k=>$v)
-						{
-							$displayV1[strtolower("MY_PROFILE")][strtolower($key)][strtolower($k)]=$v?$v:NULL;
-						}
-					}
-					else
-						$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =NULL;
-				}
-				else
-				$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =$value?(is_array($value)?$value:strval($value)):NULL; 		
-			
-
-
-			}
-
-			
-
-			}
-		 
-
+		if($profileArray[strtolower("MY_PROFILE")])
+			$displayV1[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
@@ -273,6 +248,32 @@ $className = get_class($this);
 
     return $MESSAGE;
   }
+  public function getProfileInfo($profileInfo)
+  {
+
+  	if(is_array($profileInfo))
+		{
+			foreach($profileInfo as $key=>$value)
+			{
+				if($key == "INCOMPLETE")
+				{
+					if(is_array($value))
+					{
+						foreach($value as $k=>$v)
+						{
+							$displayV1[strtolower("MY_PROFILE")][strtolower($key)][strtolower($k)]=$v?$v:NULL;
+						}
+					}
+					else
+						$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =NULL;
+				}
+				else
+				$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =$value?(is_array($value)?$value:strval($value)):NULL; 		
+			
+			}
+		}
+		return $displayV1;
+  }
 
   public function getPhotoTypeFromId($key){
      		$mapArray=Array('INTEREST_RECEIVED'=>'ProfilePic120Url','MATCH_ALERT'=>'ProfilePic120Url','VISITORS'=>'ThumbailUrl');
@@ -330,6 +331,9 @@ $className = get_class($this);
       if ($valArr['pageId']) {
         $memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
       }
+      if($valArr['extra']){
+      	$memMessage['membership_message'][myjsCachingEnums::EXTRA_PART] = $valArr['extra'];
+      }
     }
     else {
       $memHandlerObj = new MembershipHandler();
@@ -340,6 +344,7 @@ $className = get_class($this);
         $arr[myjsCachingEnums::TOP_PART] = '';
         $arr[myjsCachingEnums::BOTTOM_PART] = '';
         $arr[myjsCachingEnums::PAGEID] = '';
+        $arr[myjsCachingEnums::EXTRA_PART] = '';
 
         if ($memMessage['membership_message'] == NULL) {
           $arr[myjsCachingEnums::IS_NULL] = 1;
