@@ -61,6 +61,7 @@ class ShowProfileStats
 		$this->geMembershipDiscount();
 		$this->getServiceRequirement();
 		$this->getScore();
+		$this->getEoiLimit();
 		$this->detailedDataArr['SOURCE'] = $this->profileObj->getSOURCE();
 
 		// get Table Name for Contact
@@ -155,6 +156,31 @@ class ShowProfileStats
 		$this->detailedDataArr['SCORE'] = $result['SCORE'];
 		$this->detailedDataArr['ANALYTIC_SCORE'] = $result['ANALYTIC_SCORE'];
 
+	}
+
+	private function getEoiLimit()
+	{
+		$startDates = CommonFunction::getContactLimitDates($this->profileObj);
+		if(is_array($startDates))
+		{
+			$this->detailedDataArr['weekStartDate'] = $startDates['weekStartDate'];
+			$this->detailedDataArr['weekEndDate'] = CommonFunction::getLimitEndingDate("WEEK", $this->profileObj);
+			$this->detailedDataArr['monthStartDate'] = $startDates['monthStartDate'];
+			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH", $this->profileObj);
+		}
+		
+		$limitArr = CommonFunction::getContactLimits($this->profileObj->getSUBSCRIPTION(), $this->profileid);
+
+		// Limits given
+		$this->detailedDataArr['dayLimit'] = $limitArr['DAY_LIMIT'];
+		$this->detailedDataArr['weeklyLimit'] = $limitArr['WEEKLY_LIMIT'];
+		$this->detailedDataArr['monthlyLimit'] = $limitArr['MONTH_LIMIT'];
+
+		//  Sent Limits
+		$profileMemcacheServiceObj = new ProfileMemcacheService($this->profileObj);
+		$this->detailedDataArr['todaySentLimit'] = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
+		$this->detailedDataArr['weeklySentLimit'] = $profileMemcacheServiceObj->get("WEEK_INI_BY_ME");
+		$this->detailedDataArr['monthlySentLimit'] = $profileMemcacheServiceObj->get("MONTH_INI_BY_ME");
 	}
 	/**
 	 *
