@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="disp-cell vmid wid20p">
-                        <div class="fontlig f14 pb10">Valid for
+                        <div class="fontlig f14 pb10">Offer Valid for
                         </div>
                         <ul class="time">
                             <li class="inscol"><span id='jspcLandingM' style="font-size: 20px"></span><span style="font-size: 15px">M</span></li>
