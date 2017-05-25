@@ -21,7 +21,7 @@ ini_set('log_errors_max_len',0);
 
 
 $db=connect_ddl();
-$debug = 0;
+$debug = 1;
 mysql_select_db("viewSimilar",$db);
 
 mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=30000",$db);
