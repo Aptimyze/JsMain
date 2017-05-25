@@ -86,5 +86,5 @@ class NotificationEnums
       public static $notificationTempLogArr =array('JUST_JOIN');	
 
       //>=this app version in IOS, notification image will be displayed
-      public static $IosNotificationImageCheck = array('APP_VERSION'=>1,'OS_VERSION'=>0);
+      public static $IosNotificationImageCheck = array('APP_VERSION'=>5.3,'OS_VERSION'=>10);
 }
