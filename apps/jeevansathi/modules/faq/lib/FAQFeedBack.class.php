@@ -226,7 +226,7 @@ class FAQFeedBack
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		
 
-	 	if(0 && !$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
+	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{   
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
 			$error[message]='You cannot report abuse against the same person more than twice.';
