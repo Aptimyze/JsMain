@@ -960,7 +960,7 @@ class CommonFunction
 			return ;
 
 		// APP_LOGINTRACKING
-		$appType = MobileCommon::getAppName();
+		$appType = MobileCommon::isApp();
 		$loginTrack = new MIS_APP_LOGINTRACKING();
 		if(!$loginTrack->getRecord($registrationid, $profileid))
 		{
@@ -973,6 +973,7 @@ class CommonFunction
 
 	public static function SendEmailNewLogin($profileid)
 	{
+		return ;
 		if(!isset($profileid))
 			return ;
 

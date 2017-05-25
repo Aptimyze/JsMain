@@ -326,16 +326,4 @@ class MobileCommon{
         return false;
   }
 
-	public static function getAppName()
-	{
-		if(MobileCommon::isAndroidApp())
-		{
-			return "Android";
-		}
-		elseif(MobileCommon::isIOSApp())
-		{
-			return "IOS";
-		}
-		return self::getFullChannelName();
-	}
 }
