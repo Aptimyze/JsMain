@@ -31,6 +31,9 @@ $this->addOptions(array(
 
 	public function execute($arguments = array(), $options = array())
 	{
+                if(!CommonUtility::runFeatureInDaytime() || CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
+                
 		if(!sfContext::hasInstance())
         	sfContext::createInstance($this->configuration);
 
