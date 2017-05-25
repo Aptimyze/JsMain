@@ -84,4 +84,7 @@ class NotificationEnums
       public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
 
       public static $notificationTempLogArr =array('JUST_JOIN');	
+
+      //>=this app version in IOS, notification image will be displayed
+      public static $IosNotificationImageCheck = array('APP_VERSION'=>1,'OS_VERSION'=>0);
 }
