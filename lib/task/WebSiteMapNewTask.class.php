@@ -381,7 +381,7 @@ EOF;
 		$domElement = $domtree->createElement($mainXML);
 		
 		$domAttribute=$domtree->createAttribute("xmlns");
-		$domAttribute->value="https://www.sitemaps.org/schemas/sitemap/0.9";
+		$domAttribute->value="http://www.sitemaps.org/schemas/sitemap/0.9";
 		
 		$domElement->appendChild($domAttribute);
 		
