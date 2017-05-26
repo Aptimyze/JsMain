@@ -317,6 +317,46 @@ class NEWJS_CHAT_LOG extends TABLE{
       throw new jsException($ex);
     }
   }
+  
+  /**
+   * 
+   * @param type $iProfileId
+   * @throws jsException
+   */
+  public function getChatLogForLegal($iProfileId) {
+    if(is_null($iProfileId) || 0 === strlen($iProfileId)) {
+      throw new jsException("", "Null profileid is passed in getChatLogForLegal of NEWJS_CHAT_LOG class");
+    }
+    
+    try {
+      $archiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+      $archivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
 
+      $archiveTableSql = " UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,IP as IP, MESSAGE FROM newjs.{$archivePrefix}DELETED_CHAT_LOG{$archiveSuffix} AS ADC JOIN newjs.{$archivePrefix}DELETED_CHATS{$archiveSuffix} AS AM ON ( AM.ID = ADC.CHATID ) WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+
+      $sql =  <<<SQL
+      SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE, IP, MESSAGE
+      FROM newjs.CHAT_LOG AS C
+      JOIN CHATS AS M 
+      ON ( M.ID = C.CHATID )
+      WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  
+      UNION 
+      SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,IP as IP, MESSAGE
+      FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET AS DCR
+      JOIN DELETED_CHATS_ELIGIBLE_FOR_RET AS DM
+      ON ( DM.ID = DCR.CHATID )    
+      WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID 
+      {$archiveTableSql} 
+      ORDER by DATE ASC
+SQL;
+      
+      $prep = $this->db->prepare($sql);
+      $prep->bindValue(":PROFILEID", $iProfileId, PDO::PARAM_INT);
+      $prep->execute();
+      return $prep->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
 }
 	?>

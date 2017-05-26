@@ -119,7 +119,12 @@ class myjsActions extends sfActions
     //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
-
+    $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
+    
+    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew"))
+      $oldMyjsApi=false;
+    else
+      $oldMyjsApi=true;
     $module = "MYJSAPP";
     $stSecondTime = microtime(TRUE);
     
@@ -206,25 +211,36 @@ class myjsActions extends sfActions
         $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
 
         $stSixthTime = microtime(TRUE);
-        $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
-        $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
-        $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
-        $bIsCached = true;
+         //If we want to get fresh data for membership 
         
-        //MyJS is Not Cached
-        if (!$appV1DisplayJson) {
-          $bIsCached = false;
-          $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
-          $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+        
+
+        if($oldMyjsApi){
+          $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
+          $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+          $bIsCached = true;
+        
+          //MyJS is Not Cached
+          if (!$appV1DisplayJson) {
+            $bIsCached = false;
+            $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
+            $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
+            JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+          }
         }
-        
-        //If we want to get fresh data for membership 
+        else{
+            $profileArray=$appV1obj->getProfileInfo($profileInfo);
+            if($profileArray[strtolower("MY_PROFILE")])
+              $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
+    
+            $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
+        }
         //use it wisely
         if($this->bInvalidateMemberShipCache) {
           $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
         }
         
+       
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -237,8 +253,10 @@ class myjsActions extends sfActions
       }
 
       //Bell Count
-      $stBELLTime = microtime(TRUE);
-      $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      if($oldMyjsApi){
+        $stBELLTime = microtime(TRUE);
+        $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      }
       
       if($this->bEnableProfiler) {
         //BELL Count Time taken
@@ -263,7 +281,7 @@ class myjsActions extends sfActions
 //////////////////////////////////
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-
+      $respObj->setUserActionState(1);
       $respObj->setResponseBody($appV1DisplayJson);
     } else {
       $respObj->setHttpArray($output);
@@ -299,13 +317,15 @@ class myjsActions extends sfActions
           $this->forward("static", "logoutPage");
         }
 
-   /*     $promoObj = new PromoLib();
+        $promoObj = new PromoLib();
        $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
         if($chatPromoToShow == true)
         {
-          $this->forward("promotions", "chatPromoJSMS");
+          $this->setModuleActionName($request,"promotions","chatPromoJSMS");
+          sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSMS");
+          die;
         }
-  */
+  
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -379,14 +399,16 @@ class myjsActions extends sfActions
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
- /*
+ 
     $promoObj = new PromoLib();
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
     {
-      $this->forward("promotions", "chatPromoJSPC");
+      $this->setModuleActionName($request,"promotions","chatPromoJSPC");
+      sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSPC");
+      die;
     }
-*/
+
 		$this->gender=$this->loginProfile->getGENDER();
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
@@ -667,4 +689,13 @@ return $staticCardArr;
 		$respObj->generateResponse();
 		die;
 	}
+
+  private function setModuleActionName($request,$moduleName,$actionName)
+  {
+    $request->setParameter("module",$moduleName);
+    $request->setParameter("action",$actionName);
+    $request->setParameter("moduleName",$moduleName);
+    $request->setParameter("actionName",$actionName);
+  }
+
 }

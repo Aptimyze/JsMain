@@ -28,8 +28,10 @@ class CONNECT extends TABLE
 	public function updateUserTime($userno)
 	{
 		$tm = time();
-		$sql = "update jsadmin.CONNECT set TIME=$tm where ID=$userno";
+		$sql = "update jsadmin.CONNECT set TIME=:TIME where ID=:ID";
 		$res=$this->db->prepare($sql);
+                $prep->bindValue(":TIME",$tm,PDO::PARAM_STR);
+		$prep->bindValue(":ID",$userno,PDO::PARAM_INT);
 		$res->execute();
 	}
 }
