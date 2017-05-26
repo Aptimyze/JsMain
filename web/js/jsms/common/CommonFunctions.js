@@ -629,7 +629,7 @@ function readCookie(name) {
 
 (function(){
   $(document).ready(function() {
-    if(trackingProfile!="" && trackingProfile=="16040413"){
+    if(typeof trackingProfile != "undefined" && trackingProfile!="" && trackingProfile=="16040413"){
         var url = window.location.hostname;
         var profile = readCookie('hinditracking');
         var d = new Date();
