@@ -159,7 +159,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
     </li>
     <li class="openBox">
@@ -169,7 +169,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
     </li>
     <li class="openBox">
@@ -179,7 +179,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
 
         </div>
@@ -191,7 +191,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
 
         </div>
@@ -203,7 +203,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
 
 
@@ -215,7 +215,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
 
         </div>
@@ -227,7 +227,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
 
         </div>
@@ -241,7 +241,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
 
     </li>
@@ -255,7 +255,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
 
     </li>
@@ -267,7 +267,7 @@
                 <br>
                 <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
             </div>
-            <textarea maxlength="25" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
 
         </div>
