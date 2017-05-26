@@ -452,12 +452,14 @@ public function logDiscount($body,$type){
         $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
         $seperator = "#";
         $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+
         if($preSetCache){
             $explodedVal = explode($seperator,$preSetCache);
             $notificationParams["COUNT"] = $explodedVal[0];
             $notificationParams["OTHER_PROFILE"] = $explodedVal[1];
             $notificationParams["OTHER_PROFILE_URL"] = $explodedVal[2];
             $lastLoginDt = $explodedVal[3];
+            $notificationParams["OTHER_PROFILE_IOS_URL"] = $explodedVal[4];
             $notificationKey = "MATCHALERT";
             $condition = $instantNotificationObj->notificationObj->checkNotificationOnLastLogin($notificationKey,$lastLoginDt);
             if($condition){

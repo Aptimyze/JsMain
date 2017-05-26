@@ -146,6 +146,7 @@ class InstantAppNotification
                     			if($notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
                         			$profileDetails[$selfProfile]['COUNT']=$extraParams["COUNT"];
                         			$profileDetails[$selfProfile]['PHOTO_URL']=$extraParams["OTHER_PROFILE_URL"];
+                        			$profileDetails[$selfProfile]['IOS_PHOTO_URL']=$extraParams["OTHER_PROFILE_IOS_URL"];
                     			}	
 					$profileDetails[$selfProfile]['SENT']='P';
 					$scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
@@ -219,7 +220,7 @@ class InstantAppNotification
 
   public function sendMatchAlertNotification($notificationParams=array())
   {
-    $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"]));
+    $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"],"OTHER_PROFILE_IOS_URL"=>$notificationParams["OTHER_PROFILE_IOS_URL"]));
   }
 
 }

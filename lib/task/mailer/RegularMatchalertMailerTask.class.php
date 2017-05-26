@@ -62,6 +62,7 @@ EOF;
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
 		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>false,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true,"sortSubscriptionFlag"=>true);
+
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
@@ -217,11 +218,13 @@ EOF;
   }
   
   public function setMatchAlertNotificationCache($data){
+   
       $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
       $count = $data["COUNT"];
       $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
       $otherProfileid = $data["USERS"][0]->getPROFILEID();
       $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
+      $otherPicIosUrl = $this->getValidImage($data["USERS"][0]->getProfilePic450Url());
       $cacheKey = "MA_NOTIFICATION_".$receiver;
       $seperator = "#";
       $preSetCache = JsMemcache::getInstance()->get($cacheKey);
@@ -229,7 +232,11 @@ EOF;
           $explodedVal = explode($seperator,$preSetCache);
           $count = $count+$explodedVal[0];
           if($this->getValidImage($otherPicUrl) == "D"){
-              $otherPicUrl = $explodedVal[2];
+            $otherPicUrl = $explodedVal[2];
+            $otherProfileid = $explodedVal[1];
+          }
+          if($this->getValidImage($otherPicIosUrl) == "D"){
+              $otherPicIosUrl = $explodedVal[4];
               $otherProfileid = $explodedVal[1];
           }
       }
@@ -242,7 +249,7 @@ EOF;
           $producerObj = new JsNotificationProduce();
           $producerObj->sendMessage($queueData);
       }
-      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate;
+      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
       $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
       JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
   }
