@@ -389,8 +389,7 @@ return 0;
 
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
-
-                    if($strDPPCaste != '' && $strDPPCaste != NULL)
+                    if($strDPPCaste != '' && $strDPPCaste != NULL && $strDPPCaste!="Doesn't Matter")
                     {
                       $layerDppCaste = explode(',',$strDPPCaste);
       foreach ($layerDppCaste as $key => $value) {
