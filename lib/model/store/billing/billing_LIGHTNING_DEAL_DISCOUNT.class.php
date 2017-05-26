@@ -65,12 +65,13 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
     public function insertInLightningDealDisc($params){
         if(is_array($params)){
             try{
-                $sql = "INSERT INTO billing.LIGHTNING_DEAL_DISCOUNT (`PROFILEID`,`DISCOUNT`,`ENTRY_DT`,`STATUS`) VALUES (:PROFILEID, :DISCOUNT, :ENTRY_DT, :STATUS)";
+                $sql = "INSERT IGNORE INTO billing.LIGHTNING_DEAL_DISCOUNT (`PROFILEID`,`DISCOUNT`,`ENTRY_DT`,`STATUS`,`DEAL_DATE`) VALUES (:PROFILEID, :DISCOUNT, :ENTRY_DT, :STATUS, :DEAL_DATE)";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PROFILEID", $params["PROFILEID"], PDO::PARAM_INT);
                 $res->bindValue(":DISCOUNT", $params["DISCOUNT"], PDO::PARAM_INT);
                 $res->bindValue(":ENTRY_DT", $params["ENTRY_DT"], PDO::PARAM_STR);
                 $res->bindValue(":STATUS", $params["STATUS"], PDO::PARAM_STR);
+                $res->bindValue(":DEAL_DATE", $params["DEAL_DATE"], PDO::PARAM_STR);
                 $res->execute();
             } catch (Exception $ex) {
                 throw new jsException($ex);

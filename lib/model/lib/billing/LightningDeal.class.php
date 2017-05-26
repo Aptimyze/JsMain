@@ -159,6 +159,7 @@ class LightningDeal
                 $params["DISCOUNT"] = max($val["P_MAX"],$val["C_MAX"],$val["NCP_MAX"],$val["X_MAX"]) + 5;
                 $params["STATUS"] = "N";
                 $params["ENTRY_DT"] = date('Y-m-d H:i:s');
+                $params["DEAL_DATE"] = date('Y-m-d');
                 $params["DISCOUNT"] = min($params["DISCOUNT"],80);
                 $lightningDiscObj->insertInLightningDealDisc($params);
             }
