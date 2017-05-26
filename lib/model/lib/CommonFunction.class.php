@@ -965,7 +965,7 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		if(($profileId % 100) == 1) //this needs to be changed as per requirement. Currently setting it to 1%users
     		{
     			return true;
     		}
