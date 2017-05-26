@@ -325,5 +325,4 @@ class MobileCommon{
                 return true;
         return false;
   }
-
 }
