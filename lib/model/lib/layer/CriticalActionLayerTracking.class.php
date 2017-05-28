@@ -154,10 +154,13 @@ return 0;
     $isApp=MobileCommon::isApp();
         switch ($layerToShow) {
           case '1': 
+            if(strtotime('-30 days') < strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
                     $picObj= new PictureService($profileObj);
                     $havePhoto= $picObj->isProfilePhotoPresent();
                     if ($havePhoto == null)
                       $show=1;
+                    }
                     break;
           case '2': if ($profileObj->getFAMILYINFO()=='')
                       $show=1;
