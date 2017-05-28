@@ -86,7 +86,7 @@ class Producer
 			return true;
 		} catch (Exception $e) {
 			//logging the counter for rabbitmq connection timeout in redis
-			if(MQ::$logConnectionTimeout == 1 && $serverId == "FIRST_SERVER"){
+			if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
 				$memcacheObj = JsMemcache::getInstance();
 				if($memcacheObj){
 					$cachekey = "rmqtimeout_".date("Y-m-d");

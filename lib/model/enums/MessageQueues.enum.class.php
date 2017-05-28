@@ -153,7 +153,8 @@ class MessageQueues
   const PRODUCT_METRICS = "PRODUCT_METRICS";
 
   public static $logConnectionTime = 0;
-  public static $logConnectionTimeout = 1;
+  
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
 }
 
 ?>

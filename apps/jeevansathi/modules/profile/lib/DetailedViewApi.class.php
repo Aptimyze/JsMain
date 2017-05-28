@@ -1413,7 +1413,11 @@ class DetailedViewApi
 		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
 		{
-		    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        if(MObileCommon::isApp()=="A")
+                                    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        else
+                                    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+
 		}
 	}
 	}

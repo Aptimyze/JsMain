@@ -141,7 +141,9 @@ class JsValidatorsFactory {
 				$min=21;
 			else
 				$min=18;
-			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
+                        $max = 70;
+                        return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" )),'min'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$max year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site.",'min'=>"Maximum age criteria not met."));
+
 			break;
 		case 'caste':
 		{

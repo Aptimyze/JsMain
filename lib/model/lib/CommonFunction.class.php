@@ -845,15 +845,18 @@ class CommonFunction
     	return $decoratedOccGroups;
     }
 
-    public static function getContactLimitDates()
+    public static function getContactLimitDates($profileObj = '')
 	{
-		$loginProfile = LoggedInProfile::getInstance();
+		$loginProfile = $profileObj;
+
+		if($profileObj == '')
+			$loginProfile = LoggedInProfile::getInstance();
+
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
 		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 		{
 			$verifyDate = $loginProfile->getENTRY_DT();
 		}
-
 		$x = date('Y-m-d',strtotime($verifyDate));
 		$y = date('Y-m-d');
 
@@ -871,9 +874,13 @@ class CommonFunction
 		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
 	}
 
-	public static function getLimitEndingDate($errlimit)
+	public static function getLimitEndingDate($errlimit, $profileObj = '')
 	{
-		$loginProfile = LoggedInProfile::getInstance();
+		$loginProfile = $profileObj;
+
+		if($profileObj == '')
+			$loginProfile = LoggedInProfile::getInstance();
+
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
 		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 		{
@@ -958,7 +965,7 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		if(($profileId % 100) == 1) //this needs to be changed as per requirement. Currently setting it to 1%users
     		{
     			return true;
     		}
