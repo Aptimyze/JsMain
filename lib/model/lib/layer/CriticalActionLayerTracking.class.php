@@ -116,7 +116,7 @@ class CriticalActionLayerTracking
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
       if (!$layer) 
         { 
-            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,86400);
+            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,21600);
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
