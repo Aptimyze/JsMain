@@ -555,7 +555,7 @@ function getChatHistory(apiParams,key) {
     var selfAuth = readCookie("AUTHCHECKSUM");
     if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
         var getRequestUrl = "",headerData={},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
-        var bare_from_jid = apiParams["extraParams"]["from"].split("/")[0],bare_to_jid = apiParams["extraParams"]["to"].split("/")[0];
+        var bare_from_jid = apiParams["from"].split("/")[0],bare_to_jid = apiParams["to"].split("/")[0];
         headerData["JB-Profile-Identifier"] = selfAuth;
         if (typeof apiParams["extraParams"] != "undefined") {
             $.each(apiParams["extraParams"], function (key, value) {
@@ -566,7 +566,7 @@ function getChatHistory(apiParams,key) {
                     getRequestUrl = getRequestUrl+"&"+key+"="+value;
                 }
             });
-            if(typeof apiParams["extraParams"]["messageId"] == "undefined"){
+            if(typeof apiParams["messageId"] == "undefined"){
                 if(chatConfig.Params[device].storeMsgInLocalStorage == true){
                     oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
                     if(typeof oldHistory!= "undefined"){
@@ -579,11 +579,11 @@ function getChatHistory(apiParams,key) {
                 fetchFromLocalStorage = false;
             }
         }
-        /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
+        /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["from"].split("@")[0], apiParams["to"].split("@")[0]);
         if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
             manageHistoryLoader(bare_to_jid,"hide");
             //call plugin function to append history in div
-            objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], messageFromLocalStorage,key);
+            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], messageFromLocalStorage,key);
         }
         else{*/
             $.myObj.ajax({
@@ -607,8 +607,8 @@ function getChatHistory(apiParams,key) {
                             }
                             manageHistoryLoader(bare_to_jid,"hide");
                             //call plugin function to append history in div
-                            objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], response["data"]["items"],key,response["canChat"]);
-                            //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
+                            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], response["data"]["items"],key,response["canChat"]);
+                            //objJsChat.storeMessagesInLocalHistory(apiParams["from"].split('@')[0],apiParams["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                         }
                         else{
                             $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");

@@ -1727,11 +1727,11 @@ JsChat.prototype = {
                         if($("#moreHistory_"+userId).val() == "1"){
                             manageHistoryLoader(userId+"@"+openfireServerName,"show");
                             getChatHistory({
+                                "from":getConnectedUserJID(),
+                                "to":userId+"@"+openfireServerName,
+                                //"messageId":latestMsgId,
                                 "extraParams": {
-                                    "from":getConnectedUserJID(),
-                                    "to":userId+"@"+openfireServerName,
-                                    "pogChecksum": to_checksum
-                                    //"messageId":latestMsgId
+                                    "pogChecksum": to_checksum 
                                 }
                             }); 
                         }
@@ -1788,9 +1788,9 @@ JsChat.prototype = {
                 if(hisStatus == undefined && hisStatus != "not"){
                     //fetch msg history
                     getChatHistory({
+                        "from": getConnectedUserJID(),
+                        "to": user_jid,
                         "extraParams": {
-                            "from": getConnectedUserJID(),
-                            "to": user_jid,
                             "pogChecksum": checkSum
                         }
                     },"first_history");
