@@ -25,6 +25,10 @@ SECTION_HTML
           <div class="fl wid9p pt20 dn" id="CboxArrow"> <i class="mainsp arow6"></i> </div>
           <div class="fl wid91p dn" id="cOuter"><div class="fullwid dn" id="CboxDiv" style="padding: 20px 0px 37px 0px;"></div></div>
         <div id="key_label" class="color3 f14 fontlig {{displayDiv}} pb12">TAB_LABEL {{underScreening}}
+          <div class="contact_icon dispibl fr {{contactIconShow}}">
+                <div class="dispibl f14 fonttlig color4 vTop">{{contactPrivacySettingText}}</div>
+                <i class="sprite_contact sp_contact_setting"></i>
+              </div>
         </div>
         {{inputDiv}}
       </div>

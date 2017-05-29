@@ -413,7 +413,15 @@ function getPlaceholder(key)
 	return text;
 }
 function UpdateOverlayTags(string,json,indexPos)
-{     
+{
+	if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"");
+	}     
+	else
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
+	}
         string=string.replace(/\{\{dindex\}\}/,"dindexpos=\""+indexPos+"\"");
 	if(json.action==2 ||json.action==3)
 	{
