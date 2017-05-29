@@ -32,7 +32,13 @@
 </tr>
 <tr>
 <td></td>
+~if $noAttachment`
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">We regret that Astro compatibility report with ~$otherUsername` could not be generated because of certain technical issue.<br><br>
+Please try again.
+</td>
+~else`
 <td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">We have attached your astro compatibility report with member ~$otherUsername` with this mail.</td>
+~/if`
 <td></td>
 </tr>
 <tr>

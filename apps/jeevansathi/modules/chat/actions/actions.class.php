@@ -473,8 +473,9 @@ class chatActions extends sfActions
 		$loginData = $request->getAttribute("loginData");
 		if ($loginData) {
             $profileid = $loginData['PROFILEID'];
-            $nameOfUserOb=new incentive_NAME_OF_USER();
-            $nameOfUser=$nameOfUserOb->getName($profileid);
+            $nameOfUserOb=new NameOfUser();
+            $nameOfUserArr = $nameOfUserOb->getNameData($profileid);
+            $nameOfUser = $nameOfUserArr[$profileid]["NAME"];
             if(!$nameOfUser){
                 $nameOfUser = $loginData['USERNAME'];
             }

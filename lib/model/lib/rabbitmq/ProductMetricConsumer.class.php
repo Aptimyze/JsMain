@@ -8,7 +8,7 @@ use MessageQueues as MQ;     //MessageQueues-having values defined for constants
 /*
 This class defines rabbitmq consumer for receiving messages from queues and process messages based on type of msg.
 */
-class Consumer
+class ProductMetricConsumer
 {
   private $connection;
   private $channel;
@@ -44,7 +44,7 @@ class Consumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
     }
     try
     {
@@ -54,7 +54,7 @@ class Consumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
       return;
     }
   }
@@ -68,49 +68,25 @@ class Consumer
    */ 
   public function receiveMessage()
   {   
+      
     try 
     {
-      $this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);   
-      $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      $this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      
-      //For Instant Mail
-      $this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
-					array(
-            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
-            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
-						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
-					);
-      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
-
-
+      $this->channel->queue_declare(MQ::PRODUCT_METRIC_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
     } 
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
       return;
     }  
     try
     {
-      $this->channel->basic_consume(MQ::MAILQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      $this->channel->basic_consume(MQ::SMSQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      $this->channel->basic_consume(MQ::DUPLICATE_LOG_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      //For Instant Mail
-      $this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
-					array(
-            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
-            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
-						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
-					);
-      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
+      $this->channel->basic_consume(MQ::PRODUCT_METRIC_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
     }
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')
@@ -143,40 +119,20 @@ class Consumer
    */
   public function processMessage(AMQPMessage $msg)
   {
+
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
-    $type=$msgdata['data']['type'];
-    $body=$msgdata['data']['body'];
+    $body=$msgdata['data'];
     try
     {
-      $handlerObj=new ProcessHandler();
-      switch($process)
-      {
-        case 'MAIL':
-          $handlerObj->sendMail($type,$body);  
-          break;
-        case 'SMS':   
-          $handlerObj->sendSMS($type,$body);  
-          break;
-        case 'GCM':   
-          $handlerObj->sendGCM($type,$body);  
-          break;
-        case 'BUFFER_INSTANT_NOTIFICATIONS':
-          $handlerObj->sendInstantNotification($type,$body);
-            break;
-        case 'DUPLICATE_LOG':
-            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
-          break;
-        case MQ::DELAYED_MAIL_PROCESS:
-          $handlerObj->sendMail($type,$body,true);  
-          break;
-      }
-    }
+        LoggingManager::getInstance()->writeToFileForCoolMetric($body);
+    }     
+    
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.

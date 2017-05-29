@@ -181,7 +181,7 @@ function closeWeTalkForYou(){
         $.myObj.ajax({
           showError: false, 
           method: "POST",
-          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum,
+          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum+'&sameGender='+sameGender,
           data : ({dataType:"json"}),
           async:true,
           timeout:20000,

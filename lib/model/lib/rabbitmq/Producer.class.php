@@ -163,6 +163,8 @@ class Producer
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
 			
       $this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+       			$this->channel->queue_declare(MQ::PRODUCT_METRIC_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
 			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
@@ -309,6 +311,11 @@ class Producer
         case MQ::DELAYED_MAIL_PROCESS:
           $this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min,MQ::DELAYED_INSTANT_MAIL);
           break;
+
+        case MQ::PRODUCT_METRICS:
+                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PRODUCT_METRIC_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+        break;
+ 
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
