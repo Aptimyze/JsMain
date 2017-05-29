@@ -476,7 +476,6 @@ function UpdateOverlayTags(string,json,indexPos)
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
-		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
 		string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
@@ -609,7 +608,6 @@ function UpdateOverlayTags(string,json,indexPos)
 			}
 		}
 		else{
-			string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 			textInputOverlay=$("#textInputOverlay").html();
 			textInputOverlay=textInputOverlay.replace(/json_key/g,json.key);
 			textInputOverlay=textInputOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
