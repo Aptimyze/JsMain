@@ -271,6 +271,19 @@ class ProfileCacheConstants
                                         "FAV_BOOK",
                                         "FAV_VAC_DEST",
                                         "YOUR_INFO_OLD",
+                                        
+                                        //Key for Filters
+                                        'FILTERID',
+                                        'AGE',
+                                        'MSTATUS',
+                                        'RELIGION',
+                                        'CASTE',
+                                        'COUNTRY_RES',
+                                        'CITY_RES',
+                                        'MTONGUE',
+                                        'INCOME',
+                                        'COUNT',
+                                        'HARDSOFT',
 
                                     );
     

@@ -130,7 +130,53 @@ class ProfileFilter
      */
     public function fetchFilterDetailsForMultipleProfiles($arrProfileIds)
     {
+        $bServedFromCache = false;
+        $objProCacheLib = ProfileCacheLib::getInstance();
         
+        $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrProfileIds, ProfileCacheConstants::ALL_FIELDS_SYM,__CLASS__);
+        
+        if (is_array($result) && false !== $result) {
+            $bServedFromCache = true;
+            $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+        }
+        
+        if(is_array($result) && count($result)) {
+            $tempResult = array();
+            foreach($result as $k=>$v){
+                $tempResult[$v['PROFILEID']] = $v;
+                unset($result[$k]);
+            }
+            $result = $tempResult;
+        }
+        
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            $this->logCacheConsumeCount(__CLASS__);
+            return $result;
+        }
+        
+        //Get Records from Mysql
+        $result = $this->getDBConnection()->fetchFilterDetailsForMultipleProfiles($arrProfileIds);
+        
+        if(is_array($result) && count($result) !== count($arrProfileIds)) {
+            $arrDataNotExist = array();
+            foreach($result as $key=>$val){
+                $arrDataNotExist[] = $val['PROFILEID'];
+            }
+            $arrDataNotExist = array_diff($arrProfileIds, $arrDataNotExist);
+            $dummyArray = array();
+            foreach($arrDataNotExist as $k => $v){
+                $dummyArray[] = array('PROFILEID'=>$v, "AGE"=>ProfileCacheConstants::NOT_FILLED);
+            }
+        }
+        
+        if(is_array($result) && count($result)) {
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result, __CLASS__);
+        }
+        
+        if($dummyArray && is_array($dummyArray) && count($dummyArray)) {
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray, __CLASS__);
+        }
+        return $result;
     }
     
     /**
@@ -203,6 +249,10 @@ class ProfileFilter
         return $arrOut;
     }
     
+    /**
+     * 
+     * @param type $funName
+     */
     private function logCacheConsumeCount($funName)
     {
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
