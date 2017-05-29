@@ -413,7 +413,7 @@ $js_arr[]=array("pixel_js" => "3");
 $js_arr[]=array("mouseClickTracking_js" => "3");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js" => "42");
 $js_arr[]=array("jsms/profile/ep/hamburger_js" => "47");
-$js_arr[]=array("jsms/profile/ep/mobedit_js" => "58");
+$js_arr[]=array("jsms/profile/ep/mobedit_js"  => "60");
 $js_arr[]=array("jsms/profile/ep/mobeditview_js" => "85");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js" => "9");
 $js_arr[]=array("jsms/common/disableScroll_js" => "5");
