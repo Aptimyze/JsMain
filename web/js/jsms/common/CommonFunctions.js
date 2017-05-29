@@ -636,7 +636,7 @@ function readCookie(name) {
         var date = d.toLocaleDateString();
         if((url.indexOf("hindi") != -1 )&& (profile!=trackingProfile) && (trackingProfile!="")){
             createCookieExpireMidnight("hinditracking",trackingProfile);
-            trackJsEventGA('jsms', 'hindi',date,trackingProfile);
+            trackJsEventGA('jsms', 'hindi',date,parseInt(trackingProfile));
         }
     }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
