@@ -2260,8 +2260,6 @@ JsChat.prototype = {
     },
     //append chat history in chat box
     _appendChatHistory: function (selfJID, otherJID, communication,requestType,canChatMore) {
-        //console.log("self message");
-        //console.log("_appendChatHistory"+requestType);
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
@@ -2282,60 +2280,57 @@ JsChat.prototype = {
                 now_mark_read = true;
                 read_class = "nchatic_9";
             }
-            $.each(communication, function (key, logObj) {
-               
-                latestMsgId = logObj["ID"];
-                //console.log(logObj);
-                if (parseInt(logObj["SENDER"]) == self_id) {
-                    if(logObj["CHATID"] == "" && now_mark_read == false){
-                        logObj["CHATID"] = generateChatHistoryID("sent");
-                        now_mark_read = true;
-                        read_class = "nchatic_9";
+            if(typeof communication != "undefined"){
+                $.each(communication, function (key, logObj) {
+                    latestMsgId = logObj["id"];
+                    //console.log(logObj);
+                    if (parseInt(logObj["sender"]) == self_id) {
+                        if(logObj["chatId"] == "" && now_mark_read == false){
+                            logObj["chatId"] = generateChatHistoryID("sent");
+                            now_mark_read = true;
+                            read_class = "nchatic_9";
 
-                    }
-                    var last_read_msg = fetchLastReadMsgFromStorage(other_id);
-                    //console.log("last_read",last_read_msg);
-                    if(last_read_msg == logObj["CHATID"] && now_mark_read == false){
-                        //console.log("set done");
-                        now_mark_read = true;
-                        read_class = "nchatic_9";
-                    }
-                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
-                        //append self sent message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
-                                var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
-                                    
-                                $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).next().css("margin-top",len);
-                        });
-                    }
-                } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    if(logObj["CHATID"] == ""){
-                        logObj["CHATID"] = generateChatHistoryID("received");
-                    }
-                    //check for default eoi message,remove after monday JSI release
-                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
-                        //console.log("done"+removeFreeMemMsg);
-                        if(removeFreeMemMsg == false){
-                            //console.log("iseoi",logObj["IS_EOI"]);
-                           //console.log(typeof logObj["IS_EOI"]+"-"+logObj["IS_EOI"]);
-                            if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
-                                //console.log("remove free msg");
-                                removeFreeMemMsg = true;
-                                curElem._enableChatAfterPaidInitiates(other_id);
-                            }
                         }
-                        /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
-                            curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
-                        }*/
-                        //append received message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
+                        var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+                        //console.log("last_read",last_read_msg);
+                        if(last_read_msg == logObj["chatId"] && now_mark_read == false){
+                            //console.log("set done");
+                            now_mark_read = true;
+                            read_class = "nchatic_9";
+                        }
+                        if(curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiSentMsg) == -1){
+                            //append self sent message
+                            logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText" data-msgid='+logObj["chatId"]+'>' + logObj["message"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
+                                    var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).height();
+                                        
+                                    $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).next().css("margin-top",len);
+                            });
+                        }
+                    } else if (parseInt(logObj["sender"]) == other_id) {
+                        if(logObj["chatId"] == ""){
+                            logObj["chatId"] = generateChatHistoryID("received");
+                        }
+                        //check for default eoi message,remove after monday JSI release
+                        if(curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1){
+                            if(removeFreeMemMsg == false){
+                                if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
+                                    removeFreeMemMsg = true;
+                                    curElem._enableChatAfterPaidInitiates(other_id);
+                                }
+                            }
+                            /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
+                                curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
+                            }*/
+                            //append received message
+                            logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText received_read" data-msgid=' + logObj["chatId"] + '>' + logObj["message"] + '</div></div></div>');
+                        }
                     }
+                });
+                if(requestType == "first_history"){
+                    curElem._scrollToBottom(other_id);
                 }
-            });
-            if(requestType == "first_history"){
-                curElem._scrollToBottom(other_id);
             }
             if(latestMsgId != ""){
                 //console.log("setting");
