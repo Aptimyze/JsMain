@@ -130,6 +130,9 @@ class ProfileFilter
      */
     public function fetchFilterDetailsForMultipleProfiles($arrProfileIds)
     {
+        if(false === is_array($arrProfileIds)) {
+            return ;
+        }
         $bServedFromCache = false;
         $objProCacheLib = ProfileCacheLib::getInstance();
         
