@@ -9,12 +9,6 @@ class jsValidatorSectMuslim extends sfValidatorBase
   
   protected function doClean($value)
   {
-    if(MobileCommon::isApp())
-    {   
-        $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-        if((MobileCommon::isAndroidApp() && $appVersion<97) || (MobileCommon::isIOSApp()))//don't validate on older app versions
-            return $value;
-    }
     $clean = (string) $value;
   	$religion = $this->getOption('religion');
   	if($clean)
@@ -33,8 +27,6 @@ class jsValidatorSectMuslim extends sfValidatorBase
 			throw new sfValidatorError($this,'please provide a valid value for sect for '.FieldMap::getFieldLabel('religion',$religion));
 		}
 	}
-        else if($religion == Religion::MUSLIM)
-            throw new sfValidatorError($this,'Caste is mandatory for '.FieldMap::getFieldLabel('religion',$religion));
       return $clean;
   }
   
