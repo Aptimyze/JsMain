@@ -37,7 +37,22 @@ class ProfileFilter
      */
     const DELAYED_DB_CONNETION = true;
     
-    
+    /**
+     *
+     * @var type 
+     */
+    private $arrDefaultValue = array(
+                                    'AGE' => 'Y',
+                                    'MSTATUS' => 'Y',
+                                    'RELIGION' => 'Y',
+                                    'CASTE' => 'Y',
+                                    'COUNTRY_RES' => 'Y',
+                                    'CITY_RES' => 'Y',
+                                    'MTONGUE' => 'Y',
+                                    'INCOME' => 'Y',
+                                    'HARDSOFT' => 'Y',
+                                    'COUNT' => 1,
+                                );
     /**
      * @fn __construct
      * @brief Constructor function
@@ -189,7 +204,13 @@ class ProfileFilter
      */
     public function updateFilters($iProfileId,$updStr)
     {
+        $bResult = $this->getDBConnection()->updateFilters($iProfileId, $updStr);
         
+        if(true === $bResult) {
+            $arrRecordData = $this->convertUptStrToArray($updStr);
+            ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, __CLASS__);
+        }
+        return $bResult;
     }
     
     /**
@@ -199,39 +220,105 @@ class ProfileFilter
      */
     public function insertFilterEntry($iProfileId,$updStr)
     {
+        $bResult = $this->getDBConnection()->updateFilters($iProfileId, $updStr);
         
+        if(true === $bResult) {
+            $arrRecordData = $this->convertUptStrToArray($updStr);
+            ProfileCacheLib::getInstance()->insertInCache($iProfileId, $arrRecordData, __CLASS__);
+        }
+        return $bResult;
     }
     
     
+    /**
+     * 
+     * @param type $profileId
+     * @param type $whrStr
+     * @param type $selectStr
+     * @return type
+     */
     public function fetchFilterDetails($profileId,$whrStr="",$selectStr="*")
     {
-        
+        //This function is not in use other then page6Action of register module
+        //Which is legacy code, not in use at production
+        return $this->getDBConnection()->fetchFilterDetails($profileId, $whrStr, $selectStr);
     }
     
-    
-    public function setAllFilters($profile)
+    /**
+     * 
+     * @param type $iProfileId
+     */
+    public function setAllFilters($iProfileId)
     {
-        
+        $bResult = $this->getDBConnection()->setAllFilters($iProfileId);
+        if(true === $bResult) {
+            $arrRecordData = $this->arrDefaultValue;
+            $arrRecordData['PROFILEID'] = $iProfileId;
+            ProfileCacheLib::getInstance()->insertInCache($iProfileId, $arrRecordData, __CLASS__);
+        }
+        return $bResult;
     }
     
-    public function updateRecord($iProfileID,$arrRecordData)
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $arrRecordData
+     */
+    public function updateRecord($iProfileId,$arrRecordData)
     {
+        $bResult = $this->getDBConnection()->updateRecord($iProfileId, $arrRecordData);
         
+        if(true === $bResult) {
+            ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, __CLASS__);
+        }
+        return $bResult;
     }
     
-    public function insertRecord($iProfileID,$arrRecordData)
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $arrRecordData
+     * @return type
+     */
+    public function insertRecord($iProfileId,$arrRecordData)
     {
-
+        $bResult = $this->getDBConnection()->insertRecord($iProfileId, $arrRecordData);
+        
+        if(true === $bResult) {
+            ProfileCacheLib::getInstance()->insertInCache($iProfileId, $arrRecordData, __CLASS__);
+        }
+        return $bResult;
     }
     
+    /**
+     * 
+     * @param type $field
+     * @param type $limit
+     * @param type $offset
+     * @return type
+     */
     public function fetchField($field,$limit='',$offset='')
     {
-        
+        return $this->getDBConnection()->fetchField($field, $limit, $offset);
     }
     
+    /**
+     * 
+     * @param type $field
+     * @param type $profileIdArr
+     */
     public function updateField($field,$profileIdArr)
     {
+        $bResult = $this->getDBConnection()->updateField($field, $profileIdArr);
         
+        if(true === $bResult) {
+            $objProfileCache = ProfileCacheLib::getInstance();
+        
+            foreach($profileIdArr as $key => $val) {
+                $objProfileCache->removeFieldsFromCache($val['PROFILEID'], __CLASS__);
+            }
+        }
+        return $bResult;        
     }
     
     /**
