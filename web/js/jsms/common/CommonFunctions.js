@@ -629,14 +629,12 @@ function readCookie(name) {
 
 (function(){
   $(document).ready(function() {
-    if(typeof trackingProfile != "undefined" && trackingProfile!="" && trackingProfile=="16040413"){
+    if(typeof trackingProfile != "undefined" && trackingProfile!=""){
         var url = window.location.hostname;
         var profile = readCookie('hinditracking');
-        var d = new Date();
-        var date = d.toLocaleDateString();
         if((url.indexOf("hindi") != -1 )&& (profile!=trackingProfile) && (trackingProfile!="")){
             createCookieExpireMidnight("hinditracking",trackingProfile);
-            trackJsEventGA('jsms', 'hindi',date,trackingProfile);
+            trackJsEventGA('jsms', 'hindi',trackingProfile);
         }
     }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
