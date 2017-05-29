@@ -619,7 +619,7 @@ $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"    => "3");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                                             => "109");
-$js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                 => "153");
+$js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                  => "154");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                                            => "118");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                                   => "67");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
