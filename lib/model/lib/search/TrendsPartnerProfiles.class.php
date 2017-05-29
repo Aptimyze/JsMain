@@ -64,7 +64,7 @@ class TrendsPartnerProfiles extends SearchParamters {
    * @return type array filter data
    */
   public function getFilterData() {
-    $mtObj = new NEWJS_FILTER();
+    $mtObj = new ProfileFilter();
     return $mtObj->fetchEntry($this->loggedInProfileObj->getPROFILEID());
   }
 
