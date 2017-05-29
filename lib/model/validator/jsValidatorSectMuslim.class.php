@@ -9,6 +9,12 @@ class jsValidatorSectMuslim extends sfValidatorBase
   
   protected function doClean($value)
   {
+    if(MobileCommon::isApp())
+    {   
+        $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+        if((MobileCommon::isAndroidApp() && $appVersion<99) || (MobileCommon::isIOSApp()))//don't validate on older app versions
+            return $value;
+    }
     $clean = (string) $value;
   	$religion = $this->getOption('religion');
   	if($clean)
