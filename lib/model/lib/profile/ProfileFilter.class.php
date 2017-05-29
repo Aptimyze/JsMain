@@ -35,7 +35,7 @@ class ProfileFilter
     /**
      * 
      */
-    const DELAYED_DB_CONNETION = false;
+    const DELAYED_DB_CONNETION = true;
     
     
     /**
@@ -83,7 +83,41 @@ class ProfileFilter
      */
     public function fetchEntry($iProfileId)
     {
+        $bServedFromCache = false;
+        $objProCacheLib =ProfileCacheLib::getInstance();
         
+        if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__)) {
+            //Get From Cache
+            $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
+
+            if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }           
+        }
+        
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            //TODO
+            //$this->logCacheConsumeCount(__CLASS__);
+            return $result;
+        }
+        
+        //Get Records from Mysql
+        $result = $this->getDBConnection()->fetchEntry($iProfileId);
+        
+        if(is_null($result)) { 
+            $dummyResult = array('PROFILEID'=>$iProfileId, "AGE"=>ProfileCacheConstants::NOT_FILLED);
+        }
+        
+        if (is_array($result) && false === $objProCacheLib->isCommandLineScript()) {
+            $result['PROFILEID'] = $iProfileId;
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
+        }
+        
+        if (is_array($dummyResult) && false === $objProCacheLib->isCommandLineScript()) {
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        }
+        return $result;
     }
     
     /**

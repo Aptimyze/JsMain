@@ -901,6 +901,9 @@ class ProfileCacheLib
         if(false !== stristr($storeName, "ASTRO")) {
             $suffixName = "ASTRO";
         }
+        if(false !== stristr($storeName, "FILTER")) {
+            $suffixName = "FILTER";
+        }
         return $suffixName;
     }
     
@@ -932,6 +935,9 @@ class ProfileCacheLib
         }
         else if(false !== stristr($storeName, "ProfileAUTO_EXPIRY")) {
            $arrFields = ProfileCacheConstants::$arrAutoExpiry;
+        }
+        else if(false !== stristr($storeName, "FILTER")) {
+           $arrFields = ProfileCacheConstants::$arrProfileFilter;
         }
         return $arrFields;
     }

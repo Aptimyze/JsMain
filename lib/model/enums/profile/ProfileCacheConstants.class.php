@@ -475,9 +475,16 @@ class ProfileCacheConstants
                                     );
     
     public static $arrDuplicateFieldsMap = array(
-                                        //'BTIME',
                                         'COUNTRY_BIRTH',
                                         'SHOW_HOROSCOPE',
+                                        'AGE',
+                                        'MSTATUS',
+                                        'RELIGION',
+                                        'CASTE',
+                                        'COUNTRY_RES',
+                                        'CITY_RES',
+                                        'MTONGUE',
+                                        'INCOME',
                                     );
 
     public static $arrFSOColumns = array(
@@ -562,5 +569,20 @@ class ProfileCacheConstants
                                    'PROFILEID',
                                    "AUTO_EXPIRY_DATE",
                                    );
+    
+    public static $arrProfileFilter = array(
+                                    'PROFILEID',
+                                    'FILTERID',
+                                    'AGE',
+                                    'MSTATUS',
+                                    'RELIGION',
+                                    'CASTE',
+                                    'COUNTRY_RES',
+                                    'CITY_RES',
+                                    'MTONGUE',
+                                    'INCOME',
+                                    'COUNT',
+                                    'HARDSOFT',
+                                    );
 }
 ?>
