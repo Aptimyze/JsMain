@@ -1725,15 +1725,13 @@ JsChat.prototype = {
                     var to_checksum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
                     clearTimedOut = setTimeout(function(){
                         if($("#moreHistory_"+userId).val() == "1"){
-                            //console.log("loading more history");
                             manageHistoryLoader(userId+"@"+openfireServerName,"show");
                             getChatHistory({
                                 "extraParams": {
-                                    "from": getConnectedUserJID(),
-                                    "to": userId+"@"+openfireServerName,
-                                    "to_checksum": to_checksum,
-                                    "from_checksum": self_checksum,
-                                    "messageId":latestMsgId
+                                    "from":getConnectedUserJID(),
+                                    "to":userId+"@"+openfireServerName,
+                                    "pogChecksum": to_checksum
+                                    //"messageId":latestMsgId
                                 }
                             }); 
                         }
@@ -1793,8 +1791,7 @@ JsChat.prototype = {
                         "extraParams": {
                             "from": getConnectedUserJID(),
                             "to": user_jid,
-                            "to_checksum": checkSum,
-                            "from_checksum": self_checksum
+                            "pogChecksum": checkSum
                         }
                     },"first_history");
                 }
