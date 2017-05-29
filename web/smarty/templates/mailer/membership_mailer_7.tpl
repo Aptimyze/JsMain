@@ -11,13 +11,13 @@
     <td><table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
         <td width="20"></td>
-          <td width="430" height="52" ><div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/logo.gif"></div></td>
+          <td width="430" height="52" ><div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/logo.gif"></div></td>
           <td width="100" valign="middle" ><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
               <tr>
                 <td align="right" valign="middle" height="50" style="vertical-align:middle;">
                 <table width="110" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="20" align="right"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/iconTop.gif" /></td>
+    <td width="20" align="right"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/iconTop.gif" /></td>
     <td align="right" style="font-family:Tahoma, Geneva, sans-serif; font-size:12px; color:#555555">1800 419 6299</td>
   </tr>
 </table>
@@ -39,7 +39,7 @@
   </tr>
   <tr>
     <td></td>
-    <td valign="middle" align="center" ><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/value-banner.jpg" width="100%" alt="MORE VALUE LESS PRICE."  style="font-size:35px; font-family:Tahoma, Geneva, sans-serif" /></td>
+    <td valign="middle" align="center" ><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/value-banner.jpg" width="100%" alt="MORE VALUE LESS PRICE."  style="font-size:35px; font-family:Tahoma, Geneva, sans-serif" /></td>
     <td ></td>
   </tr>
   <tr>
@@ -130,17 +130,17 @@ Your Basic account allows you to send and receive expressions of interest, but w
                     </tr>
                     <tr>
                     <td width="20"></td>
-                      <td width="20" valign="top"><img border="0" align="left" width="16" vspace="4" hspace="0" height="17" alt="1" src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull1.gif"></td>
+                      <td width="20" valign="top"><img border="0" align="left" width="16" vspace="4" hspace="0" height="17" alt="1" src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull1.gif"></td>
                       <td height="24">Instantly see Phone/Email of people you like</td>
                     </tr>
                     <tr>
                     <td width="20"></td>
-                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="2" src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull2.gif"></td>
+                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="2" src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull2.gif"></td>
                       <td height="24">Initiate Email, Message, Chat with them</td>
                     </tr>
                     <tr>
                     <td width="20"></td>
-                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="3" src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull3.gif"></td>
+                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="3" src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/bull3.gif"></td>
                       <td height="24">Get more Interests and faster Responses</td>
                     </tr>
                   </table>
@@ -164,7 +164,7 @@ Your Basic account allows you to send and receive expressions of interest, but w
                       <td></td>
                       <td><table cellspacing="0" cellpadding="0" border="0" align="left" width="198">
                           <tr>
-                            <td width="24" height="29"><img align="right" width="20" vspace="0" hspace="0" height="24" src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/lockIC.gif"></td>
+                            <td width="24" height="29"><img align="right" width="20" vspace="0" hspace="0" height="24" src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer1/images/lockIC.gif"></td>
                             <td><font color="#575656" face="Arial" style="font-size:11px;"><em>Easy and Secure Payment Options</em></font></td>
                           </tr>
                         </table></td>

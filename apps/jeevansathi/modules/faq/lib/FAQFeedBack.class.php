@@ -164,13 +164,27 @@ class FAQFeedBack
 			$loginProfile=LoggedInProfile::getInstance();
 			$this->m_szUserName = $loginProfile->getUSERNAME();// User Name
 			$this->m_szEmail = $loginProfile->getEMAIL();
-			$objNameStore = new incentive_NAME_OF_USER;
+			$this->profileid = $loginProfile->getPROFILEID();
+			//added this for caching
+        	$nameOfUserOb=new NameOfUser();        
+        	$nameOfUserArr = $nameOfUserOb->getNameData($profileid);
+        	$name = $nameOfUserArr[$profileid]["NAME"];			
+
+        	if($name)
+        	{
+        		$this->m_szName = $name;
+        	}
+        	else
+        	{
+        		$this->m_szName = "";
+        	}
+			/*$objNameStore = new incentive_NAME_OF_USER;
 			$name=$objNameStore->getName($loginProfile->getPROFILEID());
 			if($name)
 				$this->m_szName = $objNameStore->getName($loginProfile->getPROFILEID());
 			else
-				$this->m_szName = "";
-			unset($objNameStore);
+				$this->m_szName = "";*/
+			unset($nameOfUserOb);
 		}
 		else
 		{	

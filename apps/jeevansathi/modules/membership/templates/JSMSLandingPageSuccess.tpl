@@ -731,7 +731,14 @@
 				eraseCookie('backState');
 				eraseCookie('couponID');
 				eraseCookie('device');
-				window.location.href = "/profile/mainmenu.php";
+                if("~$data.device eq 'Android_app'`"){
+                    var host = window.location.hostname;
+                    $("#continueBtn a").attr('href','http://'+host+'/profile/mainmenu.php');
+                    window.location.href = 'http://'+host+'/profile/mainmenu.php';
+                }
+                else{
+                    window.location.href = "/profile/mainmenu.php";
+                }
 			} else {
 				window.history.back();
 			}

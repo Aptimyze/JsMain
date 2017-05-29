@@ -1291,7 +1291,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
 
             //add entry in EXCLUSIVE_MEMBERS TABLE
             $this->addExclusiveMemberEntry();
@@ -2487,7 +2487,19 @@ class Membership
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+            //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
+        else{
+            //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
+        }
+        
+    }
+    
+    public function sendMailForPaidUser($msg,$subject){
+        $to = "nitishpost@gmail.com";
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>

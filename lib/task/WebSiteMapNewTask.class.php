@@ -55,39 +55,39 @@ EOF;
 		$this->mobile=$options[mobile]?1:0;
 		
 		$domtree = new DOMDocument('1.0', 'UTF-8');
-		$domElement=$this->createRootXML($domtree,"new-sitemapindex");
+		$domElement=$this->createRootXML($domtree,"sitemapindex");
 
 		if(!$this->daily)
 		{
 			//Static Pages
-			$innerDomEle=$domtree->createElement('new-sitemap');
+			$innerDomEle=$domtree->createElement('sitemap');
 			$domElement->appendChild($innerDomEle);
 			$this->updateMainSiteMap($domtree,$innerDomEle,1);
 			$this->setStaticPages();
 			$this->IncrementLastIndex();
 		
 			//Normal community pages.
-			$innerDomEle=$domtree->createElement('new-sitemap');
+			$innerDomEle=$domtree->createElement('sitemap');
 			$domElement->appendChild($innerDomEle);
 			$this->updateMainSiteMap($domtree,$innerDomEle,.8);
 			$this->setCommunity("N",.8);
 			$this->IncrementLastIndex();
 			
 			//Bride community pages
-			$innerDomEle=$domtree->createElement('new-sitemap');
+			$innerDomEle=$domtree->createElement('sitemap');
 			$domElement->appendChild($innerDomEle);
 			$this->updateMainSiteMap($domtree,$innerDomEle,.7);
 			$this->setCommunity("B",.7);
 			$this->IncrementLastIndex();
 			
 			//Groom Community pages
-			$innerDomEle=$domtree->createElement('new-sitemap');
+			$innerDomEle=$domtree->createElement('sitemap');
 			$domElement->appendChild($innerDomEle);
 			$this->updateMainSiteMap($domtree,$innerDomEle,.7);
 			$this->setCommunity("G",.7);
 			$this->IncrementLastIndex();
 			//$domElement->appendChild($d);
-		}
+		};
 		
 		$this->GetAllProfiles("F",$domElement,$domtree);
 		$this->GetAllProfiles("M",$domElement,$domtree);
@@ -223,7 +223,7 @@ EOF;
 			$index=($i*$this->limit);
 			
 		//Section profile pages
-		$innerDomEle=$domtree->createElement('new-sitemap');
+		$innerDomEle=$domtree->createElement('sitemap');
 		$domElement->appendChild($innerDomEle);
 		$this->updateMainSiteMap($domtree,$innerDomEle,.5);
 		$this->setProfiles($index,$results);
@@ -381,7 +381,7 @@ EOF;
 		$domElement = $domtree->createElement($mainXML);
 		
 		$domAttribute=$domtree->createAttribute("xmlns");
-		$domAttribute->value="https://www.sitemaps.org/schemas/sitemap/0.9";
+		$domAttribute->value="http://www.sitemaps.org/schemas/sitemap/0.9";
 		
 		$domElement->appendChild($domAttribute);
 		

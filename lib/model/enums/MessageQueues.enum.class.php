@@ -18,6 +18,7 @@ class MessageQueues
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
+  CONST PRODUCT_METRIC_QUEUE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
@@ -82,6 +83,7 @@ class MessageQueues
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   CONST UPDATE_VIEW_LOG_STARTCOMMAND = "symfony cron:cronConsumeUpdateViewLogQueue"; //Command to start VIEW LOG consuming cron
   CONST  CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronConsumeLoggingQueue"; //Command to start cron:cronConsumeQueueMessageTask
+  CONST  CRON_PRODUCT_METRIC_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronExecuteProductMetricLogging"; //Command to start cron:cronConsumeQueueMessageTask
 
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
@@ -145,8 +147,14 @@ class MessageQueues
   const DELAYED_INSTANT_MAIL = 'DelayedMailQueue';
   const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
   const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
+  
+  
+  const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
+  const PRODUCT_METRICS = "PRODUCT_METRICS";
+
   public static $logConnectionTime = 0;
-  public static $logConnectionTimeout = 1;
+  
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
 }
 
 ?>

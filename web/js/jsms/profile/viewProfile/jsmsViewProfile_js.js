@@ -573,7 +573,7 @@ getCommHistory = function()
 getGunnaScore = function()
 {
     return $.ajax({
-				url : '/api/v1/profile/gunascore?oprofile='+getProfileCheckSum(),
+				url : '/api/v1/profile/gunascore?oprofile='+getProfileCheckSum()+"&sameGender="+sameGender,
 				data : ({dataType:"json"}),
 				async:true,
 				timeout:30000,

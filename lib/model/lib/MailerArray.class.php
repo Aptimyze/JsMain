@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-04-24
+	Created on 2017-05-23
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -425,6 +425,7 @@ private static $subjectArray=array(
 '1844'=>array('MAIL_ID'=>'1844','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Because, We decide as a family !'),
 '1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
 '1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'"Feedback request from Jeevansathi.com"'),
+'1850'=>array('MAIL_ID'=>'1850','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> could not be generated'),
 );
 public static function getLink($Id){
 
