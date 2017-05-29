@@ -246,11 +246,18 @@ class ProfileCacheLib
 
         $arrFields = $this->getRelevantFields($fields, $storeName);
         $arrOut = array();
+        $suffix = $this->getStoreSuffix($storeName);
         
         //Check for Not-Filled Case
         if(strlen($storeName)) {
             $arrColumns = $this->getColumnArr($storeName);
             foreach ($arrColumns as $col) {
+                
+                $isDuplicateField = in_array($col, ProfileCacheConstants::$arrDuplicateFieldsMap);
+                if($suffix && false !== $isDuplicateField) {
+                    $col = $col.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$suffix;
+                }
+                
                 if(isset($this->arrRecords[intval($key)][$col]) && 
                 $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) {
                     $iProfileID = $arrData['PROFILEID'];
@@ -419,6 +426,10 @@ class ProfileCacheLib
         if($bIsStoreNameExist) {
             $arrColumns = $this->getColumnArr($storeName);
             foreach ($arrColumns as $col) {
+                $isDuplicateField = in_array($col, ProfileCacheConstants::$arrDuplicateFieldsMap);
+                if($suffix && false !== $isDuplicateField) {
+                    $col = $col.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$suffix;
+                }
                 if(isset($this->arrRecords[intval($key)][$col]) && 
                 $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) {
                     return true;

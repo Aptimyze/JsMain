@@ -93,12 +93,16 @@ class ProfileFilter
             if (false !== $result) {
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }           
+            }
+            
+            if(in_array(ProfileCacheConstants::NOT_FILLED, $result)) {
+                $result = null;
+            }
         }
         
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             //TODO
-            //$this->logCacheConsumeCount(__CLASS__);
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
         
@@ -198,7 +202,14 @@ class ProfileFilter
         }
         return $arrOut;
     }
+    
+    private function logCacheConsumeCount($funName)
+    {
+        $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        JsMemcache::getInstance()->hIncrBy($key, $funName);
 
+        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+    }
 }
 
 ?>
