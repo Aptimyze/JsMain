@@ -451,77 +451,80 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
+    console.log(data);
     if (data) { 
+        var maxCount = 100;
+        var maxWrapStr = "99+";
         if (parseInt(data.TOTAL_NEW)) {
             $("#totalBellCountParent").css('display', 'table');
-            if (data.TOTAL_NEW < 10) {
+            if (data.TOTAL_NEW < maxCount) {
                 $("#totalBellCount").text(data.TOTAL_NEW);
             } else {
-                $("#totalBellCount").text("9+");
+                $("#totalBellCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.NEW_MATCHES)) {
             $("#justJoinedCountParent").css('display', 'block');
-            if (data.NEW_MATCHES < 10) {
+            if (data.NEW_MATCHES < maxCount) {
                 $("#justJoinedCount").text(data.NEW_MATCHES);
             } else {
-                $("#justJoinedCount").text("9+");
+                $("#justJoinedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.MESSAGE_NEW)) {
             $("#messagesCountParent").css('display', 'block');
-            if (data.MESSAGE_NEW < 10) {
+            if (data.MESSAGE_NEW < maxCount) {
                 $("#messagesCount").text(data.MESSAGE_NEW);
             } else {
-                $("#messagesCount").text("9+");
+                $("#messagesCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.PHOTO_REQUEST_NEW)) {
             $("#photoRequestsCountParent").css('display', 'block');
-            if (parseInt(data.PHOTO_REQUEST_NEW) < 10) {
+            if (parseInt(data.PHOTO_REQUEST_NEW) < maxCount) {
                 $("#photoRequestsCount").text(parseInt(data.PHOTO_REQUEST_NEW));
             } else {
-                $("#photoRequestsCount").text("9+");
+                $("#photoRequestsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.AWAITING_RESPONSE_NEW)) {
             $("#interestsReceivedCountParent").css('display', 'block');
-            if (data.AWAITING_RESPONSE_NEW < 10) {
+            if (data.AWAITING_RESPONSE_NEW < maxCount) {
                 $("#interestsReceivedCount").text(data.AWAITING_RESPONSE_NEW);
             } else {
-                $("#interestsReceivedCount").text("9+");
+                $("#interestsReceivedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.ACC_ME_NEW)) {
             $("#membersAcceptedMeCountParent").css('display', 'block');
-            if (data.ACC_ME_NEW < 10) {
+            if (data.ACC_ME_NEW < maxCount) {
                 $("#membersAcceptedMeCount").text(data.ACC_ME_NEW);
             } else {
-                $("#membersAcceptedMeCount").text("9+");
+                $("#membersAcceptedMeCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DAILY_MATCHES_NEW)) {
             $("#membersDailyMatchesCountParent").css('display', 'block');
-            if (data.DAILY_MATCHES_NEW < 10) {
+            if (data.DAILY_MATCHES_NEW < maxCount) {
                 $("#membersDailyMatchesCount").text(data.DAILY_MATCHES_NEW);
             } else {
-                $("#membersDailyMatchesCount").text("9+");
+                $("#membersDailyMatchesCount").text(maxWrapStr);
             }
         }
 	if (parseInt(data.FILTERED_NEW)) {
             $("#membersFilteredInterestCountParent").css('display', 'block');
-            if (data.FILTERED_NEW < 10) {
+            if (data.FILTERED_NEW < maxCount) {
                 $("#FilteredInterstsCount").text(data.FILTERED_NEW);
             } else {
-                $("#FilteredInterstsCount").text("9+");
+                $("#FilteredInterstsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DEC_ME_NEW)) {
             $("#membersDeclinedMeCountParent").css('display', 'block');
-            if (data.DEC_ME_NEW < 10) {
+            if (data.DEC_ME_NEW < maxCount) {
                 $("#DeclinedMeCount").text(data.DEC_ME_NEW);
             } else {
-                $("#DeclinedMeCount").text("9+");
+                $("#DeclinedMeCount").text(maxWrapStr);
             }
         } 
     }
