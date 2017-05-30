@@ -77,6 +77,27 @@ class ApiResponseHandler
 	//getter for androidChatLocalStorage flag
 	public function getAndroidChatLocalStorageFlag(){
 		$this->androidChatLocalStorage = JsConstants::$androidChatNew["flushLocalStorage"];
+		/**/
+		$memcacheInstance = JsMemcache::getInstance();
+		$specificProfile = $memcacheInstance->get("flushAndChatProfiles",null,0,0);
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$pid=$profileObj->getPROFILEID();
+		unset($profileObj);
+		
+		if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
+
+			if(strpos($specificProfile, ",".$pid.",")!==false){
+				$this->androidChatLocalStorage = true;
+				$specificProfile = str_replace( ",".$pid.",",",", $specificProfile);
+				if($specificProfile==","){
+					$memcacheInstance->remove("flushAndChatProfiles");
+				}
+				else{
+					$memcacheInstance->set("flushAndChatProfiles",$specificProfile,86400,0,'X');
+				}
+			}
+		}
+		/**/
 		return $this->androidChatLocalStorage;
 	}
 
