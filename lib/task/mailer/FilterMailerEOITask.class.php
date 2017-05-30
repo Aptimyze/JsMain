@@ -30,6 +30,9 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
+		ini_set('memory_limit','512M');
+		ini_set('max_execution_time', 0);
+		
 		if(!sfContext::hasInstance())
 	        sfContext::createInstance($this->configuration);
 	    $mailerEOIFilterObj = new MAIL_FilterEOI("newjs_masterDDL");
