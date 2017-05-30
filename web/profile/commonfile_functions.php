@@ -620,7 +620,7 @@ $js_arr[]=array("jsms/profile/horoscope/horoscope_js"    => "3");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                                              => "110");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                    => "156");
-$js_arr[]=array("jspc/chat/chatPlugin_js"                                                                                 => "123");
+$js_arr[]=array("jspc/chat/chatPlugin_js"                                                                                  => "124");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                                   => "67");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
 $js_arr[]=array("jspc/help/JSPCHelp_js"                => "20");
