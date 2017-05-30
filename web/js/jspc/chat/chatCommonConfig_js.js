@@ -331,6 +331,7 @@ chatConfig.Params = {
         moreMsgChunk: 20, //pagination count for msg history
         loginRetryTimeOut: 500,    
         appendRetryLimit: 1000,
+        checkForDefaultCommunication:true,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity

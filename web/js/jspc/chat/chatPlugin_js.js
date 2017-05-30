@@ -40,6 +40,7 @@ JsChat.prototype = {
     _rosterDeleteChatBoxMsg:"",
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
+    _checkForDefaultCommunication:false,
     _setLastReadMsgStorage:true,
     _chatAutoLogin:false,
     _categoryTrackingParams:{},
@@ -128,6 +129,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].checkForDefaultEoiMsg) {
             this._checkForDefaultEoiMsg = arguments[1][0].checkForDefaultEoiMsg;
+        }
+        if(arguments[1][0].checkForDefaultCommunication){
+            this._checkForDefaultCommunication = arguments[1][0].checkForDefaultCommunication;
         }
         if (arguments[1][0].setLastReadMsgStorage) {
             this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
@@ -2301,7 +2305,7 @@ JsChat.prototype = {
                         var last_read_msg = fetchLastReadMsgFromStorage(other_id);
                         //console.log("last_read",last_read_msg);
                         
-                        if(curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiSentMsg) == -1){
+                        if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiSentMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted their interest")==-1)){
                             //append self sent message
                             logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
                             $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText" data-msgid='+logObj["chatId"]+'>' + logObj["message"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
@@ -2320,13 +2324,14 @@ JsChat.prototype = {
                             logObj["chatId"] = generateChatHistoryID("received");
                         }
                         //check for default eoi message,remove after monday JSI release
-                        if(curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1){
-                            /*if(removeFreeMemMsg == false){
-                                if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
-                                    removeFreeMemMsg = true;
-                                    //curElem._enableChatAfterPaidInitiates(other_id);
-                                }
-                            }*/
+                        if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted your interest")==-1)){
+                            if(removeFreeMemMsg == false && $('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
+                                //if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
+                                removeFreeMemMsg = true;
+                                console.log("enabling text box realtime");
+                                curElem._enableChatAfterPaidInitiates(other_id);
+                                //}
+                            }
                             /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
                                 curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
                             }*/

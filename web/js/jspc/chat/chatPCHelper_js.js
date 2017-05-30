@@ -1797,6 +1797,7 @@ $(document).ready(function () {
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
             rosterGroups:chatConfig.Params[device].rosterGroups,
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
+            checkForDefaultCommunication:chatConfig.Params[device].checkForDefaultCommunication,
             setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
             chatAutoLogin:chatConfig.Params[device].autoChatLogin,
             categoryTrackingParams:chatConfig.Params.categoryTrackingParams,
