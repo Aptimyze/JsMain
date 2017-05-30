@@ -38,6 +38,11 @@ EditApp = function(){
     var staticTables      = new SessionStorage;
     var chosenUpdateEvent = "chosen:updated";
     var dataMonthArray = {1: "Jan", 2: "Feb", 3: "Mar", 4: "April", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
+    var dateTypeArr =[];
+      dateTypeArr[0] = {"D":"Day"};
+      dateTypeArr[1] = {"M":"Month"};
+      dateTypeArr[2] = {"Y":"Year"};
+      var dateDataArray = [dateTypeArr];
     var inputData = {};
     //Error Map
     var errorMap          = {
@@ -101,7 +106,7 @@ EditApp = function(){
     var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER","MSTATUS_PROOF":"MSTATUS"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type","MSTATUS":"mstatus","MSTATUS_PROOF":"mstatus_proof"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type","MSTATUS":"mstatus_edit,mstatus_muslim_edit","MSTATUS_EDIT":"mstatus_edit","MSTATUS_MUSLIM_EDIT":"mstatus_muslim_edit","MSTATUS_PROOF":"mstatus_proof"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100','ALT_EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
@@ -177,6 +182,7 @@ EditApp = function(){
     var pgDegreeMap               = [];
     var stdCodesMap               = [];
     var isdIndianAllowedCodes = ["0", "91","+91"];
+    var fileTypePostArray   = ["verification","critical"];
     /*
      * Get Edit Data
      */
@@ -941,29 +947,32 @@ EditApp = function(){
       var hideTheField = false;
       
       optionString =  prepareDateBoxOptionDropDown(fieldObject,3);
-      
       var boxContentDOM = $("<div />",{class:"js-boxContent"});      
       boxContentDOM.append(optionString);
+      var i = 0;
+        $.each(dateDataArray,function(key1,data1)
+        {
+          $.each(data1,function(key2,data2)
+          {
+                $.each(data2,function(value,label)
+                { 
+                        var ClassName = "reg-pos10";
+                        if(i ==0){
+                             var ClassName = "reg-pos5";   
+                        }
+                        var parentAttr2    = {class:"js-"+label.toLowerCase()+" sub-mainlist pos_abs "+ClassName+" reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+                        var parentDOM2  = $("<div />",parentAttr2);
+                        var dateAttr    = {id:label.toLowerCase()+'sub',rel:fieldObject.key.toLowerCase()};
+                        var dateDOM  = $("<ul />",dateAttr);
+                        parentDOM2.append(dateDOM);
+                        boxContentDOM.append(parentDOM2);
+                        i++;
+                })
+          })
+        })
+        
+  //return false;
       
-      
-      var parentAttr2    = {class:"js-date sub-mainlist pos_abs reg-pos5 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'datesub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      boxContentDOM.append(parentDOM2);
-      var parentAttr2    = {class:"js-month sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'monthsub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      boxContentDOM.append(parentDOM2);
-      var parentAttr2    = {class:"js-year sub-mainlist pos_abs reg-pos10 reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
-      var parentDOM2  = $("<div />",parentAttr2);
-      var dateAttr    = {id:'yearsub'};
-      var dateDOM  = $("<ul />",dateAttr);
-      parentDOM2.append(dateDOM);
-      boxContentDOM.append(parentDOM2);
       
       fieldDivDom.append(boxContentDOM);
       
@@ -1084,7 +1093,15 @@ EditApp = function(){
      
       //Add Chosen DropDown and options
       var chosenField = $("<select />",chosenAttr);
-      var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+        var ky = fieldObject.key;
+        if(fieldObject.key == "MSTATUS"){
+                  if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                          var ky = "MSTATUS_MUSLIM_EDIT";
+                  }else{
+                          var ky = "MSTATUS_EDIT";
+                  }
+        }
+      var data = JSON.parse(getDataFromStaticTables(ky));
       data = getDependantData(fieldObject,data);
       
       if(debugInfo)
@@ -1750,33 +1767,16 @@ EditApp = function(){
         fieldDOM.find('.js-errorLabel').addClass(dispNone);
         if(event.target && event.target.tagName === "LI"){
                 var val = event.target.getAttribute("value");
-
-                  var arrSelectedEle = fieldDOM.find('ul li.'+activeClass);
-                  for(var i=0;i<arrSelectedEle.length;i++){
-                    var ele = $(arrSelectedEle[i]); 
-                    ele.removeClass(activeClass);
-                  }
-                  
-                $(event.target).addClass(activeClass);
-                //fieldDOM.find('span').removeClass('color12').text($(event.target).text());
-                //storeFieldChangeValue(fieldObject,val);
-                hideShowList();
+                hideShowList(event,fieldObject.key.toLowerCase());
                 if(val == "D"){
-                        console.log("TT");
-                        $("#datesub").parent().attr("style","display:block");
-                        $("#dayArrow1").attr("style","display:block");
-                        fieldDOM.find('ul li[value="D"]').addClass(activeClass);
+                       highlightLI(fieldObject.key.toLowerCase(),"day","S");
                 }else{
                         if(val == "M"){
-                        $("#monthsub").parent().attr("style","display:block");
-                        $("#monthArrow1").attr("style","display:block");
-                        fieldDOM.find('ul li[value="M"]').addClass(activeClass);
+                                highlightLI(fieldObject.key.toLowerCase(),"month","S");
                         
                         }else{
                                 if(val == "Y"){
-                                        $("#yearsub").parent().attr("style","display:block");
-                                        $("#yearArrow1").attr("style","display:block");
-                                        fieldDOM.find('ul li[value="Y"]').addClass(activeClass);
+                                        highlightLI(fieldObject.key.toLowerCase(),"year","S");
                                 }
                         }
                 }
@@ -1793,7 +1793,7 @@ EditApp = function(){
       }
         var createDateList = function () {
                 dateHtml = generateList(2, 31, "date", 1);
-                $("#datesub").html(dateHtml);
+                $("#daysub").html(dateHtml);
         }
         var createMonthList = function () {
                 monthHtml = generateList(2, 12, "month", "Jan");
@@ -1802,7 +1802,13 @@ EditApp = function(){
         var createYearList = function () {
                 var d = new Date();
                 var n = d.getFullYear();
-                yearHtml = generateList(n - 19, n - 70, "year", n - 18);
+                var sub = 20;
+                var subStart = 19;
+                if(editAppObject[BASIC]['GENDER'].value == "M"){
+                        sub = 22;
+                        subStart = 21;
+                }
+                yearHtml = generateList(n - sub, n - 70, "year", n - subStart);
                 $("#yearsub").html(yearHtml);
         }
         var generateList = function(l, h, c, d){
@@ -1836,22 +1842,20 @@ EditApp = function(){
                 return(dropHtml);
       }
       var onBlur  = function(event){
-        if(inputData.hasOwnProperty(fieldObject.key.toLowerCase()) === false){
-                inputData[fieldObject.key.toLowerCase()] = {};
-        }
-        inputData[fieldObject.key.toLowerCase()]["day"] = parseInt($("#day_value").val());
-        inputData[fieldObject.key.toLowerCase()]["month"] = parseInt($("#month_value").val());
-        inputData[fieldObject.key.toLowerCase()]["year"] = parseInt($("#year_value").val());
-        if(!isNaN(inputData[fieldObject.key.toLowerCase()]["day"]) && typeof inputData[fieldObject.key.toLowerCase()]["day"] != undefined && inputData[fieldObject.key.toLowerCase()]["day"] != "Day" && !isNaN(inputData[fieldObject.key.toLowerCase()]["month"]) && typeof inputData[fieldObject.key.toLowerCase()]["month"] != undefined && inputData[fieldObject.key.toLowerCase()]["month"] != "Month" && !isNaN(inputData[fieldObject.key.toLowerCase()]["year"]) && typeof inputData[fieldObject.key.toLowerCase()]["year"] != undefined && inputData[fieldObject.key.toLowerCase()]["year"] != "Year" ){
+        var dayVal = parseInt($("#day_value").attr("rel"));
+        var monthVal = $("#month_value").attr("rel");
+        var yearVal = parseInt($("#year_value").attr("rel"));
+        var dateSelected = "";
+        if(!isNaN(dayVal) && typeof dayVal != undefined && dayVal != "Day" && isNaN(monthVal) && typeof monthVal != undefined && monthVal != "Month" && !isNaN(yearVal) && typeof yearVal != undefined && yearVal != "Year" ){
                 var dateString = "";
-                dateString += inputData[fieldObject.key.toLowerCase()]["day"];
-                if(inputData[fieldObject.key.toLowerCase()]["day"] == 2){
+                dateString += dayVal;
+                if(dayVal == 2 || dayVal == 22){
                         dateString +="nd ";
                 }else{
-                        if(inputData[fieldObject.key.toLowerCase()]["day"] == 1){
+                        if(dayVal == 1 || dayVal == 21 || dayVal == 31){
                                 dateString +="st ";
                         }else{
-                                if(inputData[fieldObject.key.toLowerCase()]["day"] == 3){
+                                if(dayVal == 3 || dayVal == 23){
                                         dateString +="rd ";
                                 }else{
                                         dateString +="th ";
@@ -1859,25 +1863,42 @@ EditApp = function(){
                         }
                 }
                 
-                dateString += " "+dataMonthArray[inputData[fieldObject.key.toLowerCase()]["month"]]+" "+inputData[fieldObject.key.toLowerCase()]["year"];
+                dateString += " "+monthVal.substring(0,3)+" "+yearVal;
+                
+                var monthIntVal =""
+                for (i = 1; i <= 12; i++) {
+                        if(dataMonthArray[i] == monthVal){
+                                if(i<10){
+                                        monthIntVal = "0"+i;
+                                }else{
+                                        monthIntVal = i;
+                                }
+                        }
+                }
+                if(dayVal<10){
+                        dayVal = "0"+dayVal;
+                }
+                dateSelected = yearVal+"-"+monthIntVal+"-"+dayVal;
+                if(fieldObject.value != dateSelected){
+                        storeFieldChangeValue(fieldObject,dateSelected);
+                }else{
+                        delete editedFields[CRITICAL][fieldObject.key];
+                }
                 fieldDOM.find('span.js-decVal').html(dateString);
         }
         fieldDOM.find('.js-decVal').removeClass(dispNone);
         fieldDOM.find('.boxType').addClass(dispNone);
         fieldDOM.find('.js-subBoxList').addClass(dispNone);
-        $("#datesub").parent().attr("style","display:none");
+        $("#daysub").parent().attr("style","display:none");
         $("#monthsub").parent().attr("style","display:none");
         $("#yearsub").parent().attr("style","display:none");
       }
       
       var onClick2 = function(event){
-              console.log("TT2");
-                        fieldDOM.find('.js-decVal').addClass(dispNone);
-                        fieldDOM.find('.boxType').removeClass(dispNone);
-                        fieldDOM.find('.boxType').removeClass(dispNone);
-                        $("#datesub").parent().attr("style","display:block");
-                        $("#dayArrow1").attr("style","display:block");
-                        fieldDOM.find('ul li[value="D"]').addClass(activeClass);
+                highlightLI(fieldObject.key.toLowerCase(),"day","S");
+                fieldDOM.find('.js-decVal').addClass(dispNone);
+                fieldDOM.find('.boxType').removeClass(dispNone);
+                fieldDOM.find('.boxType').removeClass(dispNone);
       }
       var clickFn = onClick;
       var clickFn2 = onClick2;
@@ -2800,12 +2821,7 @@ EditApp = function(){
         //maxWidthPerEle = Math.floor(maxWidthPerEle);
         styleAttr = " style=\"width:"+(maxWidthPerEle-1)+"px\"";        
       };
-      
-      var dataArr =[];
-      dataArr[0] = {"D":"DAY"};
-      dataArr[1] = {"M":"MONTH"};
-      dataArr[2] = {"Y":"YEAR"};
-      var data = [dataArr];
+      var data = dateDataArray
       try{
         var i=0;
         //Loop the data section 
@@ -2836,7 +2852,7 @@ EditApp = function(){
               }
               var spanId = label.toLowerCase();
               if(i < maxAllowed){
-                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
                 cssClassOnLI = ""
               }
               
@@ -3536,8 +3552,7 @@ EditApp = function(){
         var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
         parentDOM.find('.js-errorLabel').removeClass(dispNone);
       }
-            console.log(editedFields);
-            console.log("test");return true;
+            
       
       //Check Any Error Lable is visible or not
       var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)';   
@@ -3704,15 +3719,15 @@ EditApp = function(){
       var eData = {};
       eData.editFieldArr = editFieldArr;
       $.myObj.ajax({
-        url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
+        url: fileTypePostArray.indexOf(sectionId) !== -1?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
         datatype: 'json',
         headers: { 'X-Requested-By': 'jeevansathi' },       
         cache: false,
         async: true,
-        contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",
-        data: sectionId == 'verification'?editData:eData,
-        processData: sectionId == 'verification'?false:true,
+        contentType: fileTypePostArray.indexOf(sectionId) !== -1?false:"application/x-www-form-urlencoded",
+        data: fileTypePostArray.indexOf(sectionId) !== -1?editData:eData,
+        processData: fileTypePostArray.indexOf(sectionId) !== -1?false:true,
         success: function (result) {
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
@@ -3845,7 +3860,15 @@ EditApp = function(){
     updateFieldUI = function(fieldObject,data){
       
       if(typeof data == "undefined"){
-        var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+              var ky = fieldObject.key;
+                if(fieldObject.key == "MSTATUS"){
+                          if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                                  var ky = "MSTATUS_MUSLIM_EDIT";
+                          }else{
+                                  var ky = "MSTATUS_EDIT";
+                          }
+                }
+        var data = JSON.parse(getDataFromStaticTables(ky));
         data = getDependantData(fieldObject,data);
       }
       
@@ -5217,63 +5240,118 @@ EditApp = function(){
       $('.js-forAbout').unbind('keydown').on('keydown',function(event){
         whiteListingKeys(event,"forAbout")
       });
-      $('#datesub').on('mousedown',function(event){
-              clickCallBack("day",event);
+      $('#daysub').on('mousedown',function(event){
+              clickCallBack("day",event,$(this).attr("rel"));
+      });
+      $('#cancelBtncritical').on('click',function(event){
+                inputData = {};
+                $("#day_value").html("Day");
+                $("#month_value").html("Month");
+                $("#year_value").html("Year");
+                $("#day_value,#month_value,#year_value").attr("rel","");
+                $.each(criticalSectionArray,function(key,data)
+                {
+                        if(dateTypeFields.indexOf(data) !== -1){
+                                hideShowList(event,data.toLowerCase());
+                                $("#"+data.toLowerCase()).find("#daysub").find(".activeopt").removeClass("activeopt");
+                                $("#"+data.toLowerCase()).find("#monthsub").find(".activeopt").removeClass("activeopt");
+                                $("#"+data.toLowerCase()).find("#yearsub").find(".activeopt").removeClass("activeopt");
+                        }
+                });
       });
       $('#monthsub').on('mousedown',function(event){
-              clickCallBack("month",event);
+              clickCallBack("month",event,$(this).attr("rel"));
       });
       $('#yearsub').on('mousedown',function(event){
-              clickCallBack("year",event);
+              clickCallBack("year",event,$(this).attr("rel"));
       });
     }
-    function clickCallBack (selectField,eve) {
+    function clickCallBack (selectField,eve,sectionId) {
         eve.stopPropagation();
         var target = $(eve.target);
         //check if the target of click in whole of the sublist is a li
         if (target.is("li")) {
-          $("#" + selectField + "_value").html(target.html());
+          $("#"+sectionId).find("#" + selectField + "_value").html(target.html());
           //for month values are replaced by month numbers
-          if (selectField == "month")
-            $("#" + selectField + "_value").val(eve.target.id.substr(7, eve.target.id.length));
-          else
-            $("#" + selectField + "_value").val(target.html());
-          $("#" + selectField + "sub").find(".activeopt").removeClass("activeopt");
+          if (selectField == "month"){
+            $("#"+sectionId).find("#" + selectField + "_value").val(eve.target.id.substr(7, eve.target.id.length));
+           }else{
+            $("#"+sectionId).find("#" + selectField + "_value").val(target.html());
+                }
+                $("#"+sectionId).find("#" + selectField + "_value").attr("rel",target.html());
+          $("#"+sectionId).find("#" + selectField + "sub").find(".activeopt").removeClass("activeopt");
           target.addClass("activeopt");
           $(this).parent().hide();
-          hideShowList(eve);
-          //if date is clicked open month by default
-          if (selectField == "day") {
-              $(".js-month").attr("style","display:block");
-              $("#monthArrow1").attr("style","display:block");
-                $("#monthArrow2").attr("style","display:none");
-                $("#dateArrow2").attr("style","display:block");
-          }
-          //open year sublist on month list click
-          if (selectField == "month") {
-            $(".js-year").attr("style","display:block");
-            $("#yearArrow1").attr("style","display:block");
-            $("#yearArrow2").attr("style","display:none");
-            $("#monthArrow2").attr("style","display:block");
-          }
-          if (selectField == "year") {
-            $("#yearArrow2").attr("style","display:block");
-          }
+          hideShowList(eve,sectionId);
+          highlightLI(sectionId,selectField,"I");
         }
     }
-    hideShowList = function(con) {
-      $(".js-date").attr("style","display:none");
-      $(".js-month").attr("style","display:none");
-      $(".js-year").attr("style","display:none");
-      
-      $("#dayArrow1").attr("style","display:none");
-      $("#monthArrow1").attr("style","display:none");
-      $("#yearArrow1").attr("style","display:none");
-      if (con == "blur") {
-        $("#dateArrow2").attr("style","display:block");
-        $("#monthArrow2").attr("style","display:block");
-        $("#yearArrow2").attr("style","display:block");
-      }
+    hideShowList = function(con,sectionId) {
+                $.each(dateDataArray,function(key1,data1)
+                {
+                        $.each(data1,function(key2,data2)
+                        {
+                              $.each(data2,function(value,label)
+                              {
+                                    $("#"+sectionId).find(".js-"+label.toLowerCase()).attr("style","display:none");
+                                    $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow1").attr("style","display:none");
+                                    if (con == "blur") {
+                                        $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow2").attr("style","display:block");
+                                    }
+                              })
+                        })
+                })
+    }
+    highlightLI = function(sectionId,clickedField,INITIAL) { // INITIAL value to show next or currnet li
+                var activeClass = 'activeopt';
+                var arrSelectedEle = $("#"+sectionId).find(".js-boxContent").find(".boxType").find('li.'+activeClass);
+                for(var i=0;i<arrSelectedEle.length;i++){
+                        $(arrSelectedEle[i]).removeClass(activeClass);
+                }
+                if(INITIAL == "S"){
+                        $.each(dateDataArray,function(key1,data1)
+                        {
+                                $.each(data1,function(key2,data2)
+                                {
+                                      $.each(data2,function(value,label)
+                                      {
+                                                var display = "display:none";
+                                                var display2 = "display:none";
+                                                if(label.toLowerCase() == clickedField){
+                                                        var display = "display:block";
+                                                }else{
+                                                        var display2 = "display:block";
+                                                }
+                                                $("#"+sectionId).find(".js-"+label.toLowerCase()).attr("style",display);
+                                                $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow1").attr("style",display);
+                                                $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow2").attr("style",display2);
+
+                                      })
+                              })
+                        })
+                        $("#"+sectionId).find('ul li span[id="'+clickedField+'_value"]').parent("li").addClass(activeClass);
+                }else{
+                        if(INITIAL == "I"){
+                                if (clickedField == "day") {
+                                        $("#"+sectionId).find(".js-month").attr("style","display:block");
+                                        $("#"+sectionId).find("#monthArrow1").attr("style","display:block");
+                                        $("#"+sectionId).find("#monthArrow2").attr("style","display:none");
+                                        $("#"+sectionId).find("#dayArrow2").attr("style","display:block");
+                                        $("#"+sectionId).find('ul li span[id="month_value"]').parent("li").addClass(activeClass);
+                                }
+                                //open year sublist on month list click
+                                if (clickedField == "month") {
+                                        $("#"+sectionId).find(".js-year").attr("style","display:block");
+                                        $("#"+sectionId).find("#yearArrow1").attr("style","display:block");
+                                        $("#"+sectionId).find("#yearArrow2").attr("style","display:none");
+                                        $("#"+sectionId).find("#monthArrow2").attr("style","display:block");
+                                        $("#"+sectionId).find('ul li span[id="year_value"]').parent("li").addClass(activeClass);
+                                }
+                                if (clickedField == "year") {
+                                        $("#"+sectionId).find("#yearArrow2").attr("style","display:block");
+                                }
+                        }
+                }
     }
     /*
      * BakeEditAppObject
@@ -5413,8 +5491,9 @@ EditApp = function(){
           $(fieldId).find('.js-decVal').removeClass(dispNone);
           $(fieldId).find('.boxType').addClass(dispNone);
           $(fieldId).find('.js-subBoxList').addClass(dispNone);
-          if(typeof fieldObject.value == "string" && fieldObject.value.length){
-            $(fieldId+' ul li[value="'+fieldObject.value+'"]').trigger('click');
+          if(fieldObject.decValue.length){
+            $(fieldId).find('span.js-decVal').text(fieldObject.decValue);
+            $(fieldId).find('span.js-decVal').html(fieldObject.decValue);
           }
           else{//Not filled in case
             $(fieldId+' span').text(notFilledText).addClass('color12');
@@ -5428,8 +5507,15 @@ EditApp = function(){
         
         //For Chosen Single Select
         if(fieldObject.type === SINGLE_SELECT_TYPE){
-
-          var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+                var ky = fieldObject.key;
+                if(fieldObject.key == "MSTATUS"){
+                          if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                                  var ky = "MSTATUS_MUSLIM_EDIT";
+                          }else{
+                                  var ky = "MSTATUS_EDIT";
+                          }
+                }
+          var data = JSON.parse(getDataFromStaticTables(ky));
           data = getDependantData(fieldObject,data);
           var hideField = false;
           var optionString = "";
@@ -6012,7 +6098,6 @@ EditApp = function(){
       
     }
     initMstatusDocumentMap = function(){
-            var mstatus = JSON.parse(getDataFromStaticTables("MSTATUS"));
             $('#mstatus_proofParent').addClass(dispNone);
     }
     /*

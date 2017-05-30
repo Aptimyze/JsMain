@@ -532,11 +532,11 @@ left: 60px;
         
         /* Date drop box*/
         .regdropbox{border:1px solid #d9475c;background-color:#fff;border-radius:2px}
-        ul#datesub li, ul#monthsub li, ul#yearsub li{border-left:0; border-bottom:1px solid #d9d9d9; }
-        ul#datesub li{width:40px}
+        ul#daysub li, ul#monthsub li, ul#yearsub li{border-left:0; border-bottom:1px solid #d9d9d9; }
+        ul#daysub li{width:40px}
         ul#monthsub li{width:82px}
         ul#yearsub li{width:78px}
-        ul#datesub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
+        ul#daysub li:hover, ul#monthsub li:hover, ul#yearsub li:hover{background-color: #d9475c;color:#fff}
         .reg-pos5 {top:39px}
         .reg-pos10 {right:0;top:39px}
         .reg-zi1 {z-index:1}
@@ -555,6 +555,6 @@ left: 60px;
 
     top: 16px;}
 .reg-pos12{bottom:-1px;left:48%;}
-.js-date{width:400px;}
+.js-day{width:400px;}
 .js-month{width:330px;}
 .js-year{width: 312px}
