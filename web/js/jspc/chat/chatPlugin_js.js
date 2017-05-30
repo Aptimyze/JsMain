@@ -2321,12 +2321,12 @@ JsChat.prototype = {
                         }
                         //check for default eoi message,remove after monday JSI release
                         if(curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1){
-                            if(removeFreeMemMsg == false){
+                            /*if(removeFreeMemMsg == false){
                                 if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                     removeFreeMemMsg = true;
                                     //curElem._enableChatAfterPaidInitiates(other_id);
                                 }
-                            }
+                            }*/
                             /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
                                 curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
                             }*/
