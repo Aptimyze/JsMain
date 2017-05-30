@@ -5,7 +5,7 @@ var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '<div class="txtc padnew20">'+
         '<div class="fontreg f18 color11 disp_ib vertSup">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
         '<div class="f13 color2 fontreg lh21 pad1530">'+
-        '<div>Be sure of the person you want to marry. Verify him/her through IDfy</div>'+
+        '<div><b>Please Note:</b> You are leaving the networks of the website <b>Jeevansathi.com</b> to a third party website <b>Idfy.com</b>, (regulated by its own privacy policy), a website not affiliated to Info Edge (India) Limited. The verification of prospects is not being carried out by Jeevansathi.com or any of its agents/associates.<br></div>'+
         '<div>Here’s how it works:</div>'+
         '<table class="txtList mt15">'+
         '<tr>'+
