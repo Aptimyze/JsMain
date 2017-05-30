@@ -201,7 +201,7 @@ class send_saved_search_mail extends TABLE
             $defaultFields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,SEARCH_NAME,SEARCH_ID";
 
             $selectfields = $fields?$fields:$defaultFields;
-            $sql = "SELECT $selectfields FROM search.send_saved_search_mail where SENT IN ('U','F') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
+            $sql = "SELECT $selectfields FROM search.send_saved_search_mail where SENT IN ('U') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
             if($limit)
                 $sql.= " limit 0,:LIMIT";
             $prep = $this->db->prepare($sql);
