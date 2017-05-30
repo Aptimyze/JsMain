@@ -53,22 +53,21 @@ EOF;
             if(JsConstants::$whichMachine == "test"){
                 $to = "nitish.sharma@jeevansathi.com";
             }
-            $subject = "[Match Alert] Match Alert Not started";
-            $msgBody = "[Match Alert] Match Alert Not started";
-            SendMail::send_email($to, $msgBody, $subject);
             $msg = " Match Alert Not started";
+            $this->sendAlertMail($to, $msg, $msg);
             $this->sendAlertSMS($msg);
         }
         else{
             $offsetTime = date('Y-m-d H:i:s', strtotime("+1 hour",  strtotime($mailerStartTime)));
-            print_r(array("mailerStartTime"=>$mailerStartTime,"offsetTime"=>$offsetTime));
-            //die;
-            if(strtotime(date('Y-m-d H:i:s')) > strtotime($offsetTime)){                
+            print_r(array("mailerStartTime"=>$mailerStartTime,"offsetTime"=>$offsetTime,"currentTime"=>date('Y-m-d H:i:s')));
+            if(strtotime(date('Y-m-d H:i:s')) > strtotime($offsetTime)){ 
                 $matchalertSentObject = new matchalerts_MATCHALERTS_TO_BE_SENT();
                 $count = $matchalertSentObject->getTotalCountWithScript(1, 0);
+                print_r(array("initial count"=>$count));
                 if ($count != 0 && $count != "") {
-                    $matchalertMailertObject = new matchalerts_MAILER();
+                    $matchalertMailertObject = new matchalerts_MAILER("matchalerts_slave");
                     $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
+                    print_r(array('FinalCount'=>$MailersCount));
                     if($MailersCount[0]["CNT"] != 0){
                         $rmqObj = new RabbitmqHelper();
                         $rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
@@ -76,9 +75,8 @@ EOF;
                         if(JsConstants::$whichMachine == "test"){
                             $to = "nitish.sharma@jeevansathi.com";
                         }
-                        $subject = "[Match Alert] Instant Notification Queue Consumer killed";
-                        $msgBody = "[Match Alert] Instant Notification Queue Consumer killed";
-                        SendMail::send_email($to, $msgBody, $subject);
+                        $msg = "Match Alert Instant Notification Queue Consumer killed";
+                        $this->sendAlertMail($to, $msg, $msg);
                         $this->sendAlertSMS();
                     }
                 }
@@ -87,9 +85,7 @@ EOF;
             else{
                 $msg = "MatchAlert started @$mailerStartTime";
                 $to = "nitish.sharma@jeevansathi.com";
-                $subject = "[Match Alert] MatchAlert started @$mailerStartTime";
-                $msgBody = "[Match Alert] MatchAlert started @$mailerStartTime";
-                SendMail::send_email($to, $msgBody, $subject);
+                $this->sendAlertMail($to, $msg, $msg);
                 $this->sms("8989931104",$msg);
             }
         }
@@ -118,6 +114,12 @@ EOF;
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         $date = date("Y-m-d h");
+    }
+    
+    public function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>
