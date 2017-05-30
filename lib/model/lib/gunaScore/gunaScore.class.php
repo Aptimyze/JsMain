@@ -139,7 +139,7 @@ class gunaScore
     }
     elseif(!$fresult)
     {
-      SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
+      //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
     }
     if(is_array($fresult))
     {
