@@ -2324,7 +2324,7 @@ JsChat.prototype = {
                             if(removeFreeMemMsg == false){
                                 if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                     removeFreeMemMsg = true;
-                                    curElem._enableChatAfterPaidInitiates(other_id);
+                                    //curElem._enableChatAfterPaidInitiates(other_id);
                                 }
                             }
                             /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
