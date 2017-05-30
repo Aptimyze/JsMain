@@ -2587,4 +2587,31 @@ class MembershipHandler
             JsMemcache::getInstance()->remove("FreeToP_$profileid");
         }
     }
+
+    // Automated Outbound Call for Membership
+    public function checkEligibleForMemCall($profileid){
+	$minScore 	=91;
+	$maxScore 	=100;
+        $displayPage 	=1;
+        $device 	="desktop";
+        $ignoreShowOnlineCheck =false;
+	$result 	=array();	
+
+    	$mainAdminPoolObj = new incentive_MAIN_ADMIN_POOL('newjs_masterRep');	
+       	$eligible =$mainAdminPoolObj->getEligibileProfile($profileid, $minScore, $maxScore);     		
+	if($eligible){
+		$userObj = new memUser($profileid);
+		$userObj->setMemStatus();
+		$type =$userObj->getUserType();	
+		if($type==2){
+			list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+			list($allMainMem, $minPriceArr) = $this->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
+			$result =$minPriceArr['P'];
+			unset($result['PRICE_RS_TAX']);
+			return $result;
+		}
+	}
+	return false;
+    }
+
 }
