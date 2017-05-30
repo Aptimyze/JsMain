@@ -2328,7 +2328,7 @@ JsChat.prototype = {
                             if(removeFreeMemMsg == false && $('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
                                 //if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                 removeFreeMemMsg = true;
-                                console.log("enabling text box realtime");
+                                //console.log("enabling text box realtime in _appendChatHistory");
                                 curElem._enableChatAfterPaidInitiates(other_id);
                                 //}
                             }
