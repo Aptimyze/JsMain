@@ -67,6 +67,7 @@ EOF;
             }
             else
             {	
+            unset($memcacheServiceObj);
             $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
         	$skipProfiles = $skipProfileObj->listIgnoredProfile($key);
         	}
