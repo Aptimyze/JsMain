@@ -1,16 +1,20 @@
 <?php
 //This script reads the JIRA IDs from the QASanityMergedBranches.txt and CIMergedBranches.txt
-
+/* the arguments passed in this script are:
+	1) $targetBranch : QASanityReleaseNew/CIRelease
+	2)$pathName : /var/www/testjs09/
+*/
 
 $targetBranch = $argv[1];
+$pathName = $argv[2];
 
 if($targetBranch == "QASanityReleaseNew")
 {
-	$FileName = "/var/www/html/branches/branch2/crontabs/QASanityMergedBranches.txt"; //need to change this to the url finally decided.
+	$FileName = $pathName."/crontabs/QASanityMergedBranches.txt";
 }
 elseif($targetBranch == "CIRelease")
 {
-	$FileName = "/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt"; //need to change this to the url finally decided.
+	$FileName = $pathName."/crontabs/CIMergedBranches.txt";
 }
 else
 {

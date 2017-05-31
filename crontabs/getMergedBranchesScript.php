@@ -1,31 +1,27 @@
 <?php
 /*
-	This script is created to get the branhes merged on given number of days from a given target branch. We are uing three parameters currently in running the script.
-	1) time in days
-	2) target branch (QASanityReleaseNew,CIRelease)
-	3) state (opened,closed,merged)
-
+	This script is created to get the branhes merged on given number of days from a given target branch. We are uing three parameters currently in running the script.	
+	1) target branch (QASanityReleaseNew,CIRelease)	
+	2) pathName (e.g.: /var/www/testjs12/)
 	It will calculate the number of branches merged and store it in a file.
 */
 
 //arguments provided in the script
-//$timeInDays = $argv[1];
 $targetBranch = $argv[1];
-//$state = $argv[3];
+$pathName = $argv[2];
 
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=50&state=merged";
 
-// $paramArr = json_encode(array("state"=>"merged","per_page"=>"70"));
 $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
-	);
+	); //Token used is of the username : vidushi@naukri.com
 
-$SanityMergedFileName = "/var/www/html/branches/branch2/crontabs/QASanityMergedBranches.txt"; //need to change this to the url finally decided.
+$SanityMergedFileName = $pathName."/crontabs/QASanityMergedBranches.txt";
 
-$CIMergedFileName = "/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt"; //need to change this to the url finally decided.
+$CIMergedFileName = $pathName."/crontabs/CIMergedBranches.txt";
 
 //last released branch name is stored in this file
-$lastReleasedBranchFileName = "/var/www/html/branches/branch2/crontabs/lastReleasedBranch.txt"; 
+$lastReleasedBranchFileName = $pathName."/crontabs/lastReleasedBranch.txt"; 
 
 
 //To get files arr by reading the entire file
@@ -43,7 +39,7 @@ $currentDateTime = date("Y-m-d H:i:s");
 
 if($targetBranch == $targetBranchCI)
 {	
-	$CIlastReleaseDateFileName = "/var/www/html/branches/branch2/crontabs/CIReleaseLastReleaseDate.txt";
+	$CIlastReleaseDateFileName = $pathName."/crontabs/CIReleaseLastReleaseDate.txt";
 	$CILastReleaseDateArr = file($CIlastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 	$CILastReleaseDate = $CILastReleaseDateArr[0];
@@ -83,7 +79,7 @@ if($targetBranch == $targetBranchCI)
 }
 elseif($targetBranch == $targetBranchQA)
 {
-	$SanitylastReleaseDateFileName = "/var/www/html/branches/branch2/crontabs/QASanityLastReleaseDate.txt";
+	$SanitylastReleaseDateFileName = $pathName."/crontabs/QASanityLastReleaseDate.txt";
 
 	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -95,6 +91,7 @@ elseif($targetBranch == $targetBranchQA)
 		$updatedDate = str_replace("T"," ", $updatedAtDate[0]);
 
 	//echo("updateDate:".$updatedDate."\n greater than requiredDate:".$sanityLastReleaseDate."\n less than current date:".$currentDateTime);die;
+
 		if($updatedDate > $sanityLastReleaseDate && $updatedDate < $currentDateTime)
 		{	
 			if($value->target_branch == $targetBranchQA)
@@ -109,8 +106,7 @@ elseif($targetBranch == $targetBranchQA)
 		}
 		unset($updatedAtDate);
 	}
-	print_R($QASanityReleaseBranchesArr);
-	print_R($CIBranchesArr);die;
+	
 	//loop to remove same branches in CI and QASanity and also to remove RC branch which was merged back to QASanityReleaseNew
 	if(is_array($QASanityReleaseBranchesArr) && !empty($QASanityReleaseBranchesArr))
 	{
@@ -177,11 +173,7 @@ function sendCurlGETRequest($urlToHit,$postParams,$timeout='',$headerArr="",$req
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
 	else
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-	/*if($postParams)
-		curl_setopt($ch, CURLOPT_POST, 1);*/
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	/*if($postParams)
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);*/
 	curl_setopt($ch, CURLOPT_POST, 0);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
