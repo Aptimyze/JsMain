@@ -1242,7 +1242,288 @@ if (isset($data) || $JSIndicator) {
         $smarty->assign("viewmode", $viewmode);
         $smarty->display("collectionmis.htm");
     }
-    else {
+    //Start:JSC-2828: Community Wise view
+    else if ($CMDGo && $viewmode == 'C') {
+        $flag = 1;
+        $mmarr = array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
+        $qtrarr = array('Apr-Jun', 'Jul-Sep', 'Oct-Dec', 'Jan-Mar');
+        //Start:Changed to fix : Amount should be amount(70%)+apple(30%) if apple commission is not null: On 2-May-2017//
+        $appleCondition = "(if(a.APPLE_COMMISSION>0,a.APPLE_COMMISSION+a.AMOUNT,a.AMOUNT))";
+        $mtongueSql[] = " AND MTONGUE in (10,19,33,7,28,36)";
+        $mtongueSql[] = " AND MTONGUE in (27,30)";
+        $mtongueSql[] = " AND MTONGUE in (20,34)";
+        $mtongueSql[] = " AND MTONGUE = 12";
+        $mtongueSql[] = " AND MTONGUE = 6";
+        $mtongueSql[] = " AND MTONGUE = 25";
+        $mtongueSql[] = " AND MTONGUE = 3";
+        $mtongueSql[] = " AND MTONGUE = 16";
+        $mtongueSql[] = " AND MTONGUE = 31";
+        $mtongueSql[] = " AND MTONGUE = 17";
+        $mtongueSql[] = " AND (MTONGUE IS NULL OR MTONGUE NOT IN (10,19,33,7,28,36,27,30,20,34,12,6,25,3,16,31,17))";
+
+        $mtongueDisplayStr[] = "All Hindi, Bihari, Rajasthani & Urdu";
+        $mtongueDisplayStr[] = "Punjabi & Sindhi";
+        $mtongueDisplayStr[] = "Marathi & Konkani";
+        $mtongueDisplayStr[] = "Gujarati";
+        $mtongueDisplayStr[] = "Benagli";
+        $mtongueDisplayStr[] = "Oriya";
+        $mtongueDisplayStr[] = "Telgu";
+        $mtongueDisplayStr[] = "Kannada";
+        $mtongueDisplayStr[] = "Tamil";
+        $mtongueDisplayStr[] = "Malayalam";
+        $mtongueDisplayStr[] = "All Other";
+        
+        
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(All Hindi, Bihari, Rajasthani & Urdu)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Punjabi & Sindhi)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Marathi & Konkani)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Gujarati)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Benagli)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Oriya)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Telgu)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Kannada)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Tamil)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(Malayalam)";
+//        $mtongueDisplayStr[] = "TC from subscription sales after Service tax<br>(All Other)";
+
+        if ($vtype == 'Q') {
+            $yr1 = $qyear;
+            $yr2 = $qyear + 1;
+            $mnth1 = 04;
+            $mnth2 = 03;
+        } elseif ($vtype == 'M') {
+            $yr1 = $myear;
+            $yr2 = $myear + 1;
+            $mnth1 = 04;
+            $mnth2 = 03;
+        } elseif ($vtype == 'D') {
+            $yr1 = $yr2 = $dyear;
+            $mnth1 = $mnth2 = $dmonth;
+        }
+
+        $bflag = 'A';
+
+        if ($vtype == 'Q') {
+            unset($totalAmount);
+            unset($totalDiscount);
+            unset($totalCollFromSubSales);
+            unset($totalSerTaxSubsSales);
+            unset($totalCollFromSubsSalesAfterTax);
+            unset($totalCommissions);
+            unset($totalCollSubsSalesAfterTaxAndComm);
+            unset($totalCollAdSales);
+            unset($totalTaxAdSales);
+            unset($totalCollAdSalesAfterSerTax);
+            unset($finalTotal);
+            $qflag = 1;
+            $qyearp1 = $qyear + 1;
+            //count of $mtongueSql
+            for ($i = 0; $i < 11; $i++) {
+                // All Sales
+                $sql = "SELECT sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE,0)) AS dol_amt,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition)) AS inr_amt,"
+                        . " QUARTER(a.ENTRY_DT) AS qtr,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition/(1+TAX_RATE/100))) AS inr_tax,"
+                        . " sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                        . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                        . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                        . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount,"
+                        . " MTONGUE"
+                        . " FROM billing.$tableName a, billing.PURCHASES b"
+                        . " WHERE a.BILLID = b.BILLID"
+                        . " AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00'"
+                        . " AND '$qyearp1-03-31 23:59:59'"
+                        . " AND a.STATUS $condition"
+                        . " $mtongueSql[$i]"
+                        . " AND AMOUNT != '0'"      //condition added to remove 100% discount cases 
+                        . " GROUP BY qtr";
+                //print_r("<br>\n".$i ."\n<br>".$sql."============<br>\n");
+                $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
+                //unset row
+                unset($row);
+                while ($row = mysql_fetch_array($res)) {
+                    $qtr = $row['qtr'] - 1;
+                    if ($qtr < 1) {
+                        $qtr += 3;
+                    } else {
+                        $qtr -= 1;
+                    }
+                    $row1[$i] = round($row['dol_amt'] + $row['inr_amt'] + $row['discount'], 2);
+                    $totalAmount[$i][$qtr] = $row1[$i];
+                    $totalAmount[$i]['total'] += $row1[$i];
+                    $row2[$i] = round($row['discount'], 2);
+                    $totalDiscount[$i][$qtr] = $row2[$i];
+                    $totalDiscount[$i]['total'] += $row2[$i];
+                    $row3[$i] = round($row1[$i] - $row2[$i], 2);
+                    $totalCollFromSubSales[$i][$qtr] = $row3[$i];
+                    $totalCollFromSubSales[$i]['total'] += $row3[$i];
+                    $row4[$i] = round($row['inr_amt'] - $row['inr_tax'], 2) + round($row['dol_amt'] - $row['dol_tax'], 2);
+                    $totalSerTaxSubsSales[$i][$qtr] = $row4[$i];
+                    $totalSerTaxSubsSales[$i]['total'] += $row4[$i];
+                    $row5[$i] = round($row3[$i] - $row4[$i], 2);
+                    $totalCollFromSubsSalesAfterTax[$i][$qtr] = $row5[$i];
+                    $totalCollFromSubsSalesAfterTax[$i]['total'] += $row5[$i];
+                    $finalTotal[$qtr] += $row5[$i];
+                    $finalTotal['total'] += $row5[$i];
+                }
+            }
+        } elseif ($vtype == 'M') {
+            unset($totalAmount);
+            unset($totalDiscount);
+            unset($totalCollFromSubSales);
+            unset($totalSerTaxSubsSales);
+            unset($totalCollFromSubsSalesAfterTax);
+            unset($totalCommissions);
+            unset($totalCollSubsSalesAfterTaxAndComm);
+            unset($totalCollAdSales);
+            unset($totalTaxAdSales);
+            unset($totalCollAdSalesAfterSerTax);
+            unset($finalTotal);
+            $mflag = 1;
+            $myearp1 = $myear + 1;
+
+            for ($i = 0; $i < 11; $i++) {   //Looping 11 times for all languages
+                $sql = "SELECT sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE,0)) AS dol_amt,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition)) AS inr_amt,"
+                        . " MONTH(a.ENTRY_DT) AS month,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition/(1+TAX_RATE/100))) AS inr_tax,"
+                        . " sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                        . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                        . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                        . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                        . " FROM billing.$tableName a, billing.PURCHASES b"
+                        . " WHERE a.BILLID = b.BILLID"
+                        . " AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00'"
+                        . " AND '$myearp1-03-31 23:59:59'"
+                        . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                        . " AND a.STATUS $condition"
+                        . " $mtongueSql[$i]"  //Only where condition changes for different languages
+                        . " GROUP BY month";
+                //print_r("<br>\n".$i ."\n<br>".$sql."============<br>\n");
+                $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
+                //unset row
+                unset($row);
+                while ($row = mysql_fetch_array($res)) {
+                    $mm = $row['month'];
+                    if ($mm <= 3) {
+                        $mm += 8;
+                    } else {
+                        $mm -= 4;
+                    }
+                    $row1[$i] = round($row['dol_amt'] + $row['inr_amt'] + $row['discount'], 2);
+                    $totalAmount[$i][$mm] = $row1[$i];
+                    $totalAmount[$i]['total'] += $row1[$i];
+                    $row2[$i] = round($row['discount'], 2);
+                    $totalDiscount[$i][$mm] = $row2[$i];
+                    $totalDiscount[$i]['total'] += $row2[$i];
+                    $row3[$i] = round($row1[$i] - $row2[$i], 2);
+                    $totalCollFromSubSales[$i][$mm] = $row3[$i];
+                    $totalCollFromSubSales[$i]['total'] += $row3[$i];
+                    $row4[$i] = round($row['inr_amt'] - $row['inr_tax'], 2) + round($row['dol_amt'] - $row['dol_tax'], 2);
+                    $totalSerTaxSubsSales[$i][$mm] = $row4[$i];
+                    $totalSerTaxSubsSales[$i]['total'] += $row4[$i];
+                    $row5[$i] = round($row3[$i] - $row4[$i], 2);
+                    $totalCollFromSubsSalesAfterTax[$i][$mm] = $row5[$i];
+                    $totalCollFromSubsSalesAfterTax[$i]['total'] += $row5[$i];
+                    $finalTotal[$mm] += $row5[$i];
+                    $finalTotal['total'] += $row5[$i];
+                }
+            }
+        } elseif ($vtype == 'D') {
+            unset($totalAmount);
+            unset($totalDiscount);
+            unset($totalCollFromSubSales);
+            unset($totalSerTaxSubsSales);
+            unset($totalCollFromSubsSalesAfterTax);
+            unset($totalCommissions);
+            unset($totalCollSubsSalesAfterTaxAndComm);
+            unset($totalCollAdSales);
+            unset($totalTaxAdSales);
+            unset($totalCollAdSalesAfterSerTax);
+            unset($finalTotal);
+            $dflag = 1;
+
+            for ($i = 0; $i < 31; $i++) {
+                $ddarr[$i] = $i + 1;
+            }
+            for ($i = 0; $i < 11; $i++) {
+                $sql = "SELECT sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE,0)) AS dol_amt,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition)) AS inr_amt,"
+                        . " DAYOFMONTH(a.ENTRY_DT) AS day,"
+                        . " sum(IF(TYPE='DOL',0,$appleCondition/(1+TAX_RATE/100))) AS inr_tax,"
+                        . " sum(IF(TYPE='DOL',$appleCondition*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                        . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                        . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                        . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                        . " FROM billing.$tableName a, billing.PURCHASES b"
+                        . " WHERE a.BILLID = b.BILLID"
+                        . " AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00'"
+                        . " AND '$dyear-$dmonth-31 23:59:59'"
+                        . " AND a.STATUS $condition"
+                        . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                        . " $mtongueSql[$i]"            //Condtion to check for mtongue
+                        . " GROUP BY day";
+
+                $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
+                //unset row
+                unset($row);
+                while ($row = mysql_fetch_array($res)) {
+                    $dd = $row['day'] - 1;
+                    $row1[$i] = round($row['dol_amt'] + $row['inr_amt'] + $row['discount'], 2);
+                    $totalAmount[$i][$dd] = $row1[$i];
+                    $totalAmount[$i]['total'] += $row1[$i];
+                    $row2[$i] = round($row['discount'], 2);
+                    $totalDiscount[$i][$dd] = $row2[$i];
+                    $totalDiscount[$i]['total'] += $row2[$i];
+                    $row3[$i] = round($row1[$i] - $row2[$i], 2);
+                    $totalCollFromSubSales[$i][$dd] = $row3[$i];
+                    $totalCollFromSubSales[$i]['total'] += $row3[$i];
+                    $row4[$i] = round($row['inr_amt'] - $row['inr_tax'], 2) + round($row['dol_amt'] - $row['dol_tax'], 2);
+                    $totalSerTaxSubsSales[$i][$dd] = $row4[$i];
+                    $totalSerTaxSubsSales[$i]['total'] += $row4[$i];
+                    $row5[$i] = round($row3[$i] - $row4[$i], 2);
+                    $totalCollFromSubsSalesAfterTax[$i][$dd] = $row5[$i];
+                    $totalCollFromSubsSalesAfterTax[$i]['total'] += $row5[$i];
+                    $finalTotal[$dd] += $row5[$i];
+                    $finalTotal['total'] += $row5[$i];
+                }
+            }
+        }
+        if ($JSIndicator == 1) {
+            return;
+        }
+        $smarty->assign("mtongueDisplayStr", $mtongueDisplayStr);
+        $smarty->assign("brancharr", $brancharr);
+        $smarty->assign("branch", "All");
+        $smarty->assign("totalCollFromSubsSalesAfterTax", $totalCollFromSubsSalesAfterTax);
+        $smarty->assign("finalTotal", $finalTotal);
+        $smarty->assign("ddarr", $ddarr);
+        $smarty->assign("mmarr", $mmarr);
+        $smarty->assign("qtrarr", $qtrarr);
+        $smarty->assign("flag", $flag);
+        $smarty->assign("pflag", $pflag);
+        $smarty->assign("qflag", $qflag);
+        $smarty->assign("mflag", $mflag);
+        $smarty->assign("dflag", $dflag);
+        $smarty->assign("eflag", $eflag);
+        $smarty->assign("bflag", $bflag);
+        $smarty->assign("qyear", $qyear);
+        $smarty->assign("qyearp1", $qyearp1);
+        $smarty->assign("year", $year);
+        $smarty->assign("yearp1", $yearp1);
+        $smarty->assign("myear", $myear);
+        $smarty->assign("myearp1", $myearp1);
+        $smarty->assign("dyear", $dyear);
+        $smarty->assign("dmonth", $dmonth);
+        $smarty->assign("dmonthp1", $dmonthp1);
+        $smarty->assign("mode", $mode);
+        $smarty->assign("walkin", $walkin);
+        $smarty->assign("userarr", $userarr);
+        $smarty->assign("modearr", $modearr);
+        $smarty->assign("viewmode", $viewmode);
+        $smarty->display("collectionmis.htm");
+        //End:JSC-2828: Community Wise view
+    } else {
         $user = getname($checksum);
         for ($i = 0; $i < 12; $i++) {
             $mmarr[$i] = $i + 1;

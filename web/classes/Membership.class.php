@@ -84,6 +84,15 @@ class Membership
     private $dol_conv_bill;
     private $assisted_arr = array();
     private $discount_percent;
+    private $mtongue;
+    
+    function setMTongue($mtongue) {
+        $this->mtongue = $mtongue;
+    }
+    
+    function getMTongue() {
+        return $this->mtongue;
+    }
 
     function setBillid($billid) {
         $this->billid = $billid;
@@ -799,7 +808,8 @@ class Membership
 
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+        $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
     }
     
@@ -851,6 +861,19 @@ class Membership
             $paramsStr .= ", TAX_RATE";
             $valuesStr .= ",'$this->tax_rate'";
         }
+
+        //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+        if($this->mtongue==""){
+            $jprofileObj = new JPROFILE();
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $paramsStr .= ",MTONGUE";
+            $mtongue = $jprofileDetail['MTONGUE'];
+            $valuesStr .= ",'$mtongue'";
+        }else{
+            $paramsStr .= ",MTONGUE";
+            $valuesStr .= ",'$this->mtongue'";
+        }
+        //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
