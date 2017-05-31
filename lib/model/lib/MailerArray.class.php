@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-05-23
+	Created on 2017-05-16
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
