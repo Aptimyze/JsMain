@@ -180,7 +180,7 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-        if(count($criticalInfoFieldArr)){
+        if(count($criticalInfoFieldArr) && 0){
                 $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
                 $editedFields = array_keys($criticalInfoFieldArr);
                 $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields));
@@ -242,6 +242,10 @@ class FieldForm extends sfForm
 						if($field=="DTOFBIRTH")
 						{
                                                         $jprofileFieldArr["AGE"] = CommonFunction::getAge($jprofileFieldArr['DTOFBIRTH']);
+                                                }
+						if($field=="MSTATUS" && $value =="N")
+						{
+                                                        $jprofileFieldArr["HAVECHILD"] = "";
                                                 }
 						if($field=="YOURINFO")
 						{

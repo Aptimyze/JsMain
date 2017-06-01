@@ -236,7 +236,10 @@
                           ~/if`
                         </li>
                         ~if $editApiResponse.Details.MSTATUS.value neq N`
-                        <li>
+                        <li id="li-havechild">
+                        ~else`
+                        <li id="li-havechild" class="disp-none">
+                        ~/if`
                           <p class="color12 pt15 fontlig">Have Children?</p>
                           <p class="pt2 fontlig" >
                             <span id="have_childView" 
@@ -248,7 +251,6 @@
                             </span>
                           </p>
                         </li>
-                        ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->

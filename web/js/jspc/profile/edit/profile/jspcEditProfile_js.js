@@ -44,6 +44,8 @@ EditApp = function(){
       dateTypeArr[1] = {"M":"Month"};
       dateTypeArr[2] = {"Y":"Year"};
       var dateDataArray = [dateTypeArr];
+      var removeDepField = {"m_status":"havechild"};
+      var removeDepFieldOn = {"m_status":"Never Married"};
     var inputData = {};
     //Error Map
     var errorMap          = {
@@ -1914,7 +1916,7 @@ EditApp = function(){
       fieldDOM.find('.js-boxContent .boxType').on('click',clickFn);
       
       //MyBlur
-      fieldDOM.on('boxBlur',onBlur);
+      fieldDOM.on('focusout',onBlur);
         createDateList();
         createMonthList();
         createYearList();
@@ -5806,7 +5808,15 @@ EditApp = function(){
               $(duplicateID).addClass(colorClass).removeClass(notFilledInClass);
             }
           }
-          
+          if(removeDepField.hasOwnProperty(key) == true){
+                  var depId = "#li-"+removeDepField[key];
+                  if(removeDepFieldOn[key] == section[key]){
+                          $(depId).addClass(dispNone);
+                  }else{
+                          $(depId).removeClass(dispNone);
+                  }
+                  
+          }
           if(multiFieldViewMap.indexOf(key.toLowerCase()) !== -1){
             updateMultiFieldsView(viewId,$(viewId).text());
           }
