@@ -72,6 +72,7 @@ EOF;
 				$temp=array_diff($arranged,$skipProfiles); 
 			else
 				$temp=$arranged;      
+            ProfileMemcache::unsetInstance($key);            
 		return $temp;
 	}
 }
