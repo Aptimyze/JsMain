@@ -8,7 +8,7 @@
 
 //arguments provided in the script
 $targetBranch = $argv[1];
-$pathName = $argv[2];
+//$pathName = $argv[2];
 
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=50&state=merged";
 
@@ -19,16 +19,17 @@ $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
 	); //Token used is of the username : vidushi@naukri.com
 
-$SanityMergedFileName = $pathName."/crontabs/QASanityMergedBranches.txt";
+$SanityMergedFileName = "/var/www/QASanityMergedBranches.txt";
 
-$CIMergedFileName = $pathName."/crontabs/CIMergedBranches.txt";
+$CIMergedFileName = "/var/www/CIMergedBranches.txt";
 
 //last released branch name is stored in this file
-$lastReleasedBranchFileName = $pathName."/crontabs/lastReleasedBranch.txt"; 
+$lastReleasedBranchFileName = "/var/www/lastReleasedBranch.txt"; 
 
 
 //To get files arr by reading the entire file
 $SanityFilesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
 
 $CIFilesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -41,7 +42,7 @@ $currentDateTime = date("Y-m-d H:i:s");
 
 if($targetBranch == $targetBranchCI)
 {	
-	$CIlastReleaseDateFileName = $pathName."/crontabs/CIReleaseLastReleaseDate.txt";
+	$CIlastReleaseDateFileName = "/var/www/CIReleaseLastReleaseDate.txt";
 	$CILastReleaseDateArr = file($CIlastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 	$CILastReleaseDate = $CILastReleaseDateArr[0];
@@ -81,7 +82,7 @@ if($targetBranch == $targetBranchCI)
 }
 elseif($targetBranch == $targetBranchQA)
 {
-	$SanitylastReleaseDateFileName = $pathName."/crontabs/QASanityLastReleaseDate.txt";
+	$SanitylastReleaseDateFileName = "/var/www/QASanityLastReleaseDate.txt";
 
 	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);	
 	$sanityLastReleaseDate = $sanityLastReleaseDateArr[0];

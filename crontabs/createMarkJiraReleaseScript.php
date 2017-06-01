@@ -27,13 +27,13 @@ if($branchName == "CIRelease")
 {
     $parameter = "hotFix";
     $hotFixBlock = true;
-    $fileName = $pathName."/crontabs/CIMergedBranches.txt";
+    $fileName = "/var/www/CIMergedBranches.txt";
 }
 elseif($branchName == "QASanityReleaseNew")
 {
     $parameter = "release";
     $releaseBlock = true;
-    $fileName = $pathName."/crontabs/QASanityMergedBranches.txt";
+    $fileName = "/var/www/QASanityMergedBranches.txt";
 }
 else
 {
@@ -91,26 +91,26 @@ if(is_array($file) && !empty($file))
      */
     if($branchName == "CIRelease")
     {
-        $CIFile = fopen($pathName."/crontabs/CIMergedBranches.txt","w");
+        $CIFile = fopen("/var/www/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen($pathName."/crontabs/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen("/var/www/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
     }
     elseif($branchName == "QASanityReleaseNew")
     {
-        $SanityFile = fopen($pathName."/crontabs/QASanityMergedBranches.txt","w");
+        $SanityFile = fopen("/var/www/QASanityMergedBranches.txt","w");
         fclose($SanityFile);
 
-        $CIFile = fopen($pathName."/crontabs/CIMergedBranches.txt","w");
+        $CIFile = fopen("/var/www/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen($pathName."/crontabs/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen("/var/www/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
 
-        $sanityDateFile = fopen($pathName."/crontabs/QASanityLastReleaseDate.txt","w+");
+        $sanityDateFile = fopen("/var/www/QASanityLastReleaseDate.txt","w+");
         fwrite($sanityDateFile,date("Y-m-d H:i:s"));
         fclose($sanityDateFile);
     }

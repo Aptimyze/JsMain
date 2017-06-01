@@ -6,15 +6,15 @@
 */
 
 $targetBranch = $argv[1];
-$pathName = $argv[2];
+//$pathName = $argv[2];
 
 if($targetBranch == "QASanityReleaseNew")
 {
-	$FileName = $pathName."/crontabs/QASanityMergedBranches.txt";
+	$FileName = "/var/www/QASanityMergedBranches.txt";
 }
 elseif($targetBranch == "CIRelease")
 {
-	$FileName = $pathName."/crontabs/CIMergedBranches.txt";
+	$FileName = "/var/www/CIMergedBranches.txt";
 }
 else
 {

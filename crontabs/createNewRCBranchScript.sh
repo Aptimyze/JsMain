@@ -15,7 +15,7 @@ todayDate="$(date +'%Y-%m-%d')";
 #printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
 
 #file that contains name of last released branch
-lastReleasedBranch=$(</var/www/$branch/crontabs/lastReleasedBranch.txt);
+lastReleasedBranch=$(</var/www/lastReleasedBranch.txt);
 
 #date of last release
 lastReleasedBranchDate=${lastReleasedBranch:3};
