@@ -9,43 +9,43 @@ branchToCheckout=$2;
 #get to the required directory
 cd /var/www/$branch;
 
-nextDayDate="Asia/Kolkata $(date --date='1 day' +'%Y-%m-%d %z')"; #make sure that branches are made in Y-m-d format
+nextDayDate="$(date --date='1 day' +'%Y-%m-%d')"; #make sure that branches are made in Y-m-d format
 todayDate="$(date +'%Y-%m-%d')";
-#printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
+printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
+echo "$nextDayDate";
+# #file that contains name of last released branch
+# lastReleasedBranch=$(</var/www/$branch/crontabs/lastReleasedBranch.txt);
 
-#file that contains name of last released branch
-lastReleasedBranch=$(</var/www/$branch/crontabs/lastReleasedBranch.txt);
+# #date of last release
+# lastReleasedBranchDate=${lastReleasedBranch:3};
 
-#date of last release
-lastReleasedBranchDate=${lastReleasedBranch:3};
+# #date difference between current date and last release date
+# dateDiff=$(($(($(date -d "$todayDate" "+%s") - $(date -d "$lastReleasedBranchDate" "+%s"))) / 86400));
 
-#date difference between current date and last release date
-dateDiff=$(($(($(date -d "$todayDate" "+%s") - $(date -d "$lastReleasedBranchDate" "+%s"))) / 86400));
+# #git reset
+# git reset --hard;
 
-#git reset
-git reset --hard;
+# #git checkout QASanityReleaseNew
+# git checkout $branchToCheckout;
 
-#git checkout QASanityReleaseNew
-git checkout $branchToCheckout;
+# #git pull 
+# git pull origin $branchToCheckout;
 
-#git pull 
-git pull origin $branchToCheckout;
+# #git pull CIRelease
+# git pull origin CIRelease;
 
-#git pull CIRelease
-git pull origin CIRelease;
+# #git push origin QASanityReleaseNew
+# git push origin $branchToCheckout;
 
-#git push origin QASanityReleaseNew
-git push origin $branchToCheckout;
+# # create a new branch from QASanityReleaseNew based on whether the datediff is "0" or not.
+# # if the dateDiff is "0" i.e. the previous branch went LIVE, a new branch can be created directly.
+# # if the dateDiff is NOT "1" i.e. previous branch didnt go LIVE, we need to merge the previous branch to QASanityReleaseNew before creating the new branch
 
-# create a new branch from QASanityReleaseNew based on whether the datediff is "0" or not.
-# if the dateDiff is "0" i.e. the previous branch went LIVE, a new branch can be created directly.
-# if the dateDiff is NOT "1" i.e. previous branch didnt go LIVE, we need to merge the previous branch to QASanityReleaseNew before creating the new branch
+# if [ "$dateDiff" != "0" ] 
+# 	then	
+# 	git pull origin "RC@$todayDate";
+# 	git push origin QASanityReleaseNew;
+# fi
 
-if [ "$dateDiff" != "0" ] 
-	then	
-	git pull origin "RC@$todayDate";
-	git push origin QASanityReleaseNew;
-fi
-
-#create next day branch from QASanityReleaseNew
-git branch "RC@$nextDayDate" QASanityReleaseNew;
+# #create next day branch from QASanityReleaseNew
+# git branch "RC@$nextDayDate" QASanityReleaseNew;
