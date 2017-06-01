@@ -125,11 +125,11 @@ $sql = "INSERT INTO $databaseName.SUGGESTED_PROFILEIDS_2_$gender SELECT PROFILEI
 		if(is_numeric($shard1Port) && is_numeric($masterPort))
 		{
 			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -P $shard1Port $databaseName;");
-			passthru("$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -P $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard3HostName -P $shard1Port $databaseName");
+			passthru("$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -P $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard1HostName -P $shard1Port $databaseName");
 			//echo $x;die;
 		}
 		else
-			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName;$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -S $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard3HostName -S $shard1Port $databaseName");
+			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName;$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -S $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName");
 
 			//die("**");
 		if(is_numeric($shard2Port) && is_numeric($masterPort))
