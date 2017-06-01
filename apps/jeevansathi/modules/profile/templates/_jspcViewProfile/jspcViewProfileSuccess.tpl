@@ -157,7 +157,7 @@
         <div class='otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
@@ -167,7 +167,7 @@
         <div class='otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
@@ -177,7 +177,7 @@
         <div class='otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
@@ -189,7 +189,7 @@
         <div class='otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
@@ -201,7 +201,7 @@
         <div class='otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
@@ -213,7 +213,7 @@
         <div class=' otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
@@ -225,7 +225,7 @@
         <div class=' otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 
@@ -239,7 +239,7 @@
         <div class=' otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
@@ -253,7 +253,7 @@
         <div class=' otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
         </div>
@@ -265,7 +265,7 @@
         <div class=' otherOptionMsgBox disp-none'>
             <div id='errorText' class="disp-none">
                 <br>
-                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
             </div>
             <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
 

@@ -593,8 +593,8 @@ var isValid = false;
         mainReason = $(this).find(".reason").html();
         if($(this).hasClass("openBox")) {
          reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val();
-        if(!reason) {
-            layerObj.find('#errorText').removeClass('disp-none');
+        if(!reason || reason.length < 25) {
+            $(this).find('#errorText').removeClass('disp-none');
             isValid = true;
         }
       }
