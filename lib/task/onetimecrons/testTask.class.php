@@ -27,7 +27,6 @@ EOF;
 	}
 private function checkRabbitmqServerStatus($serverid,$api_url)
   {
-
     $server_credentials='FIRST_SERVER';
     $rabbitmq_mgmnt_port=JsConstants::$rabbitmqManagementPort;
     $rabbitmq_host="10.10.18.104";
