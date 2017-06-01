@@ -72,13 +72,13 @@ class NotificationEnums
 
       public static $monitorScheduledKeyArr =array('JUST_JOIN'=>'13-18','PENDING_EOI'=>'13-18','MATCH_OF_DAY'=>'13-18','MATCHALERT'=>'4-22');
       			
-      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT"));
+      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT","FILTERED_EOI"));
 
       //config for logged out notifications
       public static $loggedOutNotifications = array("LOGIN_REGISTER");
 
       //config for notifications, not eligible for local polling
-      public static $notEligibleForPolling = array("LOGIN_REGISTER","FILTERED_EOI");
+      public static $notEligibleForPolling = array("LOGIN_REGISTER");
 
       // time criteria notification array	
       public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
