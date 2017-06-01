@@ -206,10 +206,11 @@ public function sendMailerAfterVerification($noOfTimesVerified) {
 			$activated =$this->profileObject->getACTIVATED();
 			$profileid=$this->profileObject->getPROFILEID();
 
-			
+			JsMemcache::getInstance()->incrCount("PROD_METRIC_LOG_3");
 			if($noOfTimesVerified==0 && $activated=="Y")
                         {
 			CommonFunction::sendWelcomeMailer($profileid);
+                        JsMemcache::getInstance()->incrCount("PROD_METRIC_LOG_0");
                         $this->sendToProductMetricQueue();
                         }
                         
@@ -437,6 +438,7 @@ public function contact_archive($field="",$val="")
     private function sendToProductMetricQueue(){
         
             try{
+                JsMemcache::getInstance()->incrCount("PROD_METRIC_LOG_1");
                 $producerObj=new Producer();
                 $channel =  MobileCommon::getChannel();
                 $date = date('Y-m-d H:i:s');
@@ -444,9 +446,10 @@ public function contact_archive($field="",$val="")
                 {
                         $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'REG','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
                         $producerObj->sendMessage($updateSeenData);
+                        JsMemcache::getInstance()->incrCount("PROD_METRIC_LOG_2");
                 }
             } catch (Exception $e) {
-        
+                            JsMemcache::getInstance()->incrCount("PROD_METRIC_FAIL_LOG");
                         }
     }
 
