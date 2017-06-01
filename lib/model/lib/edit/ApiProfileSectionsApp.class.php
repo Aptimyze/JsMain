@@ -345,7 +345,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	
 	public function getApiCriticalInfo() {
                 //date of birth
-		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"Y");
+		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),"Y");
 		
 		//mstatus
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");
@@ -376,7 +376,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
 		//date of birth
-		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"Y");
+		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),"Y");
 		
 		//mstatus
 		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");

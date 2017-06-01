@@ -16,5 +16,6 @@ class EditProfileEnum
 	
 	public static  $INCOMPLETE_YES="Y";
 	public static  $INCOMPLETE_NO="N";
+        public static $editableCriticalArr = array("DTOFBIRTH","MSTATUS","MSTATUS_PROOF");
 	
 }

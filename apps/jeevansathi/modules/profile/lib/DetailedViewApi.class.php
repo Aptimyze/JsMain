@@ -122,6 +122,10 @@ class DetailedViewApi
 		$this->m_arrOut = array();
 		$this->getDecorated_MoreInfo();
 		$arrMoreInfo = $this->m_arrOut;
+                
+		$this->m_arrOut = array();
+		$this->getDecorated_CriticalInfo();
+		$arrCriticalInfo = $this->m_arrOut;
 		
         if($originalProflie)
             $this->m_objProfile = $originalProflie;
@@ -138,11 +142,17 @@ class DetailedViewApi
 							'dpp'		=>	$arrLookingFor,
 							'pic'		=>	$arrPicSection,
 							'page_info' =>	$arrMoreInfo,
+							'Critical' =>	$arrCriticalInfo,
 							);
 							
 		return $this->m_arrSectionOut;
 	}
-	
+	protected function getDecorated_CriticalInfo(){
+                $objProfile = $this->m_objProfile;
+                $this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();                
+                $this->m_arrOut['age'] = $objProfile->getAGE();
+                $this->m_arrOut['dtofbirth'] = "(".date("jS M Y", strtotime($objProfile->getDTOFBIRTH())).")";
+        }
 	/**
 	 * getDecorated_AboutMe
 	 * 

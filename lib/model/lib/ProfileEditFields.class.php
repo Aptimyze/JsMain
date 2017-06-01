@@ -1210,6 +1210,12 @@ case 'P_OCCUPATION_GROUPING':
 					$field->setConstraintClass("partner_occupation_grouping");
 					$field->setTableName("JPARTNER:OCCUPATION_GROUPING");
 				break;
+                        case 'MSTATUS_PROOF':
+                                        $field=new Field('','MSTATUS_PROOF');
+					$field->setFieldType("text");
+					$field->setConstraintClass("mstatus_proof");
+					$field->setTableName("CRITICAL_INFO_CHANGED_DOCS:DOCUMENT_PATH");
+				break;
 }
 
 				return($field);

@@ -76,6 +76,7 @@ class ApiEditSubmitV1Action extends sfActions
 			
 			$this->editFieldNameArr=$arr;
 		}
+                
 		if(strtoupper($request->getParameter('incomplete'))==EditProfileEnum::$INCOMPLETE_YES)
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_YES;
 		else
@@ -97,7 +98,16 @@ class ApiEditSubmitV1Action extends sfActions
                 
 		if(is_array($this->editFieldNameArr))
 		{
+                        if($this->verifyCriticalInfoEdit() === true){
+                                $errorArr["ERROR"]="Cannot edit Critical Information again";
+                                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                                $apiResponseHandlerObj->setResponseBody($errorArr);
+                                ValidationHandler::getValidationHandler("","Cannot edit Critical Information again");
+                                $apiResponseHandlerObj->generateResponse();
+                                die("out");       
+                        }
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);
+                        
 			$nonEditableField=$this->form->editableFieldsValidation($this->editFieldNameArr,$this->incomplete);
 			
 			//valid incomplete fields only
@@ -112,7 +122,6 @@ class ApiEditSubmitV1Action extends sfActions
 				else
 					$incompleteFieldFlag=true;
 			}
-			
 			$this->form->bind($this->editFieldNameArr);
 			if ($this->form->isValid() && !$nonEditableField && $incompleteFieldFlag)
 			{   
@@ -271,4 +280,19 @@ class ApiEditSubmitV1Action extends sfActions
 
     $memcacheObj->lpush($key,$profileId);
   }
+        public function verifyCriticalInfoEdit(){
+                $editableCriticalArr=EditProfileEnum::$editableCriticalArr;
+                $criticalInfoedited=0;
+                foreach($this->editFieldNameArr as $key=>$val)
+                {
+                        if(in_array($key,$editableCriticalArr))
+                                $criticalInfoedited=1;
+                }
+                if($criticalInfoedited == 1){
+                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                        return $infoChngObj->editedCriticalInfo($this->loginProfile->getPROFILEID());
+                }else{
+                        return false;
+                }
+        }
 }

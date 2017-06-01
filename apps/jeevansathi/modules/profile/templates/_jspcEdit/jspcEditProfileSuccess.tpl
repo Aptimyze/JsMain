@@ -8,7 +8,21 @@
 <input id='hiddenIsd2' type='hidden' value=''>
 <input id='hiddenLandline' type='hidden' value='' phonetype='L'>
 <input id='hiddenIsd3' type='hidden' value=''>
-
+ <!--start:layer for confirmation-->
+    <div id="" class="pos_fix layersZ setshare prfbg6 disp-none confirmationBox" style="width:700px;">
+    	<div class="crit_p2 txtc">
+        	<div class="f17 fontreg pt50">Are you sure you want to submit? </div>
+            <div class="pt15 fontlig f15 opa80 mauto crit_wid1">
+            	We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully 
+            	before submitting        
+        	</div>  
+        	<div class="clearfix crit_wid2 mauto pt19">
+        		<button class="bg_pink crit_cm1 btn-popup-cnfrm fontreg cursp">Confirm</button>
+            	<button class="crit_grey1 crit_cm1 btn-popup-cancel fontreg cursp">Canecl</button>
+        	</div>
+         </div> 
+    </div>    
+    <!--end:layer for confirmation-->
 <div class="pos-rel fullwid"> 
   <!--start:top part-->
   <div id="CPImage" class="prf-cover1" style="height:387px;">
@@ -135,15 +149,15 @@
                       <!-- Section Critical Info -->
                       <div class="prfbr3">
                   <div class="prfp5 noMultiSelect" id="section-critical">
-                    <div class="clearfix"> <i class="sprite2 fl edpic6"></i>
-                      <div class="fl colr5 pl8 f17 pt2" >Critical Fields</div>
-                        <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="critical">Edit</a> </div>
+                    <div class="clearfix"> <i class="fl critical-field"></i>
+                      <div class="fl colr5 pl8 f17 pt2" >Critical Fields <span class="f14 color11 opa60">- Can be edited only once in lifetime</span></div>
+                        <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections disp-none" data-section-id="critical">Edit</a> </div>
                     </div>
                     <div class="pl30 prflist1 fontlig js-criticalView">
                       <ul class="clearfix fontreg">
                         <li>
                           <p class="color12 pt15 fontlig">Age</p>
-                          <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`)</p>
+                          <p class="pt2 fontlig"><span id="ageView">~$arrOutDisplay.about.age`</span> <span id="dtofbirthView">(~$arrOutDisplay.about.formatted_dob`)</span></p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Marital Status</p>
@@ -221,6 +235,20 @@
                           <p class="pt2 color5 fontlig" id='posted_byView'>~$notFilledInText`</p>
                           ~/if`
                         </li>
+                        ~if $editApiResponse.Details.MSTATUS.value neq N`
+                        <li>
+                          <p class="color12 pt15 fontlig">Have Children?</p>
+                          <p class="pt2 fontlig" >
+                            <span id="have_childView" 
+                              ~if $arrOutDisplay.about.have_child eq $notFilledInText`
+                                class="color5"  
+                              ~/if`
+                            > 
+                            ~$arrOutDisplay.about.have_child`
+                            </span>
+                          </p>
+                        </li>
+                        ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->

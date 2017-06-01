@@ -35,6 +35,7 @@ EditApp = function(){
     var viewResponseSubSection =["hobbies","sibling"];
     var fieldObject       = function(){return {"key":"","type":"","isEditable":"true","label":"","decValue":"","isUnderScreen":"false","value":""}};
     var editedFields      = {};
+    var hideEditFor = [];
     var staticTables      = new SessionStorage;
     var chosenUpdateEvent = "chosen:updated";
     var dataMonthArray = {1: "Jan", 2: "Feb", 3: "Mar", 4: "April", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
@@ -79,7 +80,7 @@ EditApp = function(){
     var VERIFICATION      = "verification";
     
     var criticalSectionArray   = ["MSTATUS","MSTATUS_PROOF","DTOFBIRTH"];
-    var basicSectionArray   = ["NAME","GENDER","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var basicSectionArray   = ["NAME","GENDER","HAVECHILD","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -249,6 +250,7 @@ EditApp = function(){
       if(typeof data == "string")
         data = JSON.parse(data);
       
+      hideEditFor = data.cannot_edit_section;
       var profileCompData = data.profileCompletion;
       completeProfileCompletionBlock(profileCompData);
       updateProfileCompletionScore(profileCompData.PCS);
@@ -415,7 +417,7 @@ EditApp = function(){
             }
         }   
       }
-      
+      showHideEditLink();
       editAppObject.needToUpdate = false;
       isInitialized = true;
       setGlobalVariables();
@@ -632,8 +634,8 @@ EditApp = function(){
     cookNoteTextBeforeSubmitButton = function(domElement,sectionId,configObject){
                 var parentAttr    = {class:"clearfix pt30",id:sectionId+'section-bottom'};
                 var labelAttr     = {class:"fl pt11 edpcolr3 ",text:''};
-                var spanAttr     = {class:"ml10",text:'We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully before submitting.'};
-                var divAttr     = {class:"fl edpwid3 edpbrad1 cursp pos-rel outline-none js-bottomText",text:''};
+                var spanAttr     = {class:"",text:'We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully before submitting.'};
+                var divAttr     = {class:"outline-none js-bottomText fl edpwid3 edpbrad1 f13 pos-rel",text:''};
                 
                 var parentDiv = $("<div />",parentAttr);
                 var labelDOM  = $("<label />",labelAttr);
@@ -3094,7 +3096,6 @@ EditApp = function(){
       //Get DOM element
       var editSectionDOM = $(editSectionId);
       $(editSectionDOM).addClass(dispNone);
-      
       //Add Form Tag
       $(editSectionDOM).append("<form id=\"" +editSectionFormName+ "\"></form>");
       var editSectionFormDOM = $('#'+editSectionFormName);
@@ -3821,7 +3822,14 @@ EditApp = function(){
         }
       }
     }
-    
+    showHideEditLink = function(){
+                for(var i=0;i<viewResponseKeyArray.length;i++){
+                        var section = viewResponseKeyArray[i];
+                        if($.inArray( section, hideEditFor) != '-1'){
+                                $('#section-'+section.toLowerCase()).find('.js-editBtn').removeClass(dispNone);
+                        }
+                }
+        }
     /*
      * showHideEditSection
      * @param {type} sectionId
@@ -3847,6 +3855,9 @@ EditApp = function(){
         $(mainSection).find('.js-editBtn').removeClass(dispNone);
         $(sectionEdit).addClass(dispNone);
         $(document).scrollTop($(mainSection).offset().top);
+      }
+      if(sectionId.toLowerCase() == "critical"){
+              $(mainSection).find('.js-editBtn').addClass(dispNone);
       }
     }
     
@@ -4119,10 +4130,12 @@ EditApp = function(){
         showHideUnderScreeningMsg(ancestralOrigin,"hide");
       }
     }
-    onMstatusChange = function(eduLevelVal,fieldID){
+    onMstatusChange = function(mstatusVal,fieldID){
             var mstatusProofField = editAppObject[CRITICAL]['MSTATUS_PROOF'];
+            var mstatusField = editAppObject[CRITICAL]['MSTATUS'];
+            storeFieldChangeValue(mstatusField,mstatusVal);
             $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
-            if(eduLevelVal == "D"){
+            if(mstatusVal == "D"){
                         $('#mstatus_proofParent').removeClass(dispNone);
                         requiredFieldStore.add(mstatusProofField);
             }else{
@@ -5134,7 +5147,31 @@ EditApp = function(){
       
       //Save Btn
       $('.js-save').unbind('click').on('click',function(event){
-        onSectionSave(this.id.split('saveBtn')[1]);
+                var currId = $(this).attr("id");
+                if(currId =="saveBtncritical"){
+                        //onSectionSave(this.id.split('saveBtn')[1]);
+                                $("#commonOverlay").fadeIn("fast",function(){
+                                $("#commonOverlay").on('click',function(){
+                                    $(".confirmationBox").fadeOut("fast",function(){
+                                        $("#commonOverlay").fadeOut("fast"); 
+                                    });
+                                }); 
+                                $(".btn-popup-cnfrm").on('click',function(){
+                                        onSectionSave("critical");
+                                        $(".confirmationBox").fadeOut("fast",function(){
+                                            $("#commonOverlay").fadeOut("fast"); 
+                                        });
+                                });
+                                $(".btn-popup-cancel").on('click',function(){
+                                        $(".confirmationBox").fadeOut("fast",function(){
+                                            $("#commonOverlay").fadeOut("fast"); 
+                                        });
+                                });
+                                $(".confirmationBox").fadeIn("fast"); 
+                        });
+                }else{
+                        onSectionSave(this.id.split('saveBtn')[1]);
+                }
       });
       
       //Save Btn Keydown
@@ -5729,6 +5766,7 @@ EditApp = function(){
     updateView = function(viewApiResponse){
       updateLastUpdated(viewApiResponse);
       var iterateOnResponse = function(section){
+                
         for(var key in section){
           var viewId = '#'+key.toLowerCase()+'View';
           
@@ -5758,10 +5796,9 @@ EditApp = function(){
               $(duplicateID).addClass(notFilledInClass).removeClass(colorClass);
             }
           }
-          else if(typeof section[key] == "string" )//&& section[key].length)
+          else if(typeof section[key] == "string" || key == "age")//&& section[key].length)
           { 
-            var value = $('<textarea />').html(section[key]).text();      
-            
+            var value = $('<textarea />').html(section[key]).text(); 
             $(viewId).text(value);
             $(viewId).addClass(colorClass).removeClass(notFilledInClass);
             if(duplicateID && isDomElementVisible(duplicateID)){
