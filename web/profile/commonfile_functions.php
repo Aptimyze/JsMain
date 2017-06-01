@@ -474,7 +474,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/services"    => "5");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"                   => "26");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                                              => "52");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"                        => "31");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                           => "90");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                                            => "91");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                                     => "42");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                                          => "47");
