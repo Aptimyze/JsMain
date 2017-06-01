@@ -1,36 +1,22 @@
 <?php
 /*
-Script for creating versions and marking release in Jira
-Assumptions:
-The script loops line by line to the merging output
-The content of the block 
-"MISSING FROM QASanityReleaseNew........"" to "----------------------"
-and
-"MISSING FROM CIRelease........"" to "----------------------"
-is considered into hotfix and regular release respectively.
-For each block The first text within [] is taken to be the JIRA ids of the Jiras that are merged
-Each distinct group is used to create the version for corresponding block
-and for each JIRA id then the API is hit to mark release.
-
-In case a new group is added add it to the array $groups
-Change the fileName variable to the name of the file from which data is to be read
-$hotFix      : Array containg keys of distinct groups for which the release is to be made for hot fix
-$release     : Array containign keys of distinct groups for which the release is to be made for regular release
-$hotFixJira  : Array of all JIRA ids for hotfix
-$releaseJira : Array of all JIRA ids for regular release
-Three params:
-hotfix / release/ all
+This script is used to create versions for jira ids.
+The following parameters are required:
+1) $branchName : "QASanityReleaseNew" or "CIRelease"
+2) $pathName : e.g.: /var/www/testjs09
 */
-//$parameter = $argv[1];
+
 $branchName = $argv[1]; //This specifies whether the branch to be taken into account is QASanityReleaseNew or CIRelease
-$missingFromQASanityPattern  = "MISSING FROM QASanityReleaseNew";
-$missingFromCIReleasePattern = "MISSING FROM CIRelease";
-$breakDelimieter = "---------------------------------------------------------------------";
+$pathName = $argv[2];
+
 $hotFixBlock = false;
 $releaseBlock = false;
 $groups = array('JSC'=>array("name"=>"JSC","id"=>10013),'JSM'=>array("name"=>"JSM","id"=>10015),'JSI'=>array("name"=>"JSI","id"=>10014)); //Any other group needs to be added here
 $createVersionUrl = "https://jsba99.atlassian.net/rest/api/2/version";
 $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
+
+//setting defualt time zone
+date_default_timezone_set('Asia/Kolkata');
 
 $headerArr = array(
 				'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
@@ -41,30 +27,31 @@ if($branchName == "CIRelease")
 {
     $parameter = "hotFix";
     $hotFixBlock = true;
-    $fileName = "/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt";
+    $fileName = $pathName."/crontabs/CIMergedBranches.txt";
 }
 elseif($branchName == "QASanityReleaseNew")
 {
     $parameter = "release";
     $releaseBlock = true;
-    $fileName = "/var/www/html/branches/branch2/crontabs/QASanityMergedBranches.txt";
+    $fileName = $pathName."/crontabs/QASanityMergedBranches.txt";
 }
 else
 {
     die("Please provide a valid input parameter");
 }
 $file = file($fileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-if($branchName == "QASanityReleaseNew")
-{
-    $releaseJira = $file;
-}
-else
-{
-    $hotFixJira = $file;
-}
 
 if(is_array($file) && !empty($file))
 {
+    if($branchName == "QASanityReleaseNew")
+    {
+        $releaseJira = $file;
+    }
+    else
+    {
+        $hotFixJira = $file;
+    }
+
     foreach($file as $key=>$value)
     {        
         if($hotFixBlock == true)
@@ -80,48 +67,50 @@ if(is_array($file) && !empty($file))
         }
     }
 
-    // //For Creating Hotfix Versions
-    // if($parameter == "hotfix" || $parameter == "all")
-    //     createRelease($hotFix,"HF");
+    //For Creating Hotfix Versions
+    if($parameter == "hotfix" || $parameter == "all")
+        createRelease($hotFix,"HF");
 
-    // //For Creating regulat Release Versions
-    // if($parameter == "release" || $parameter == "all")
-    //     createRelease($release,"RC");
+    //For Creating regulat Release Versions
+    if($parameter == "release" || $parameter == "all")
+        createRelease($release,"RC");
 
-    // //For marking HotFix Versions
-    // if($parameter == "hotfix" || $parameter == "all")
-    //     markVersion($hotFixJira,"HF");
+    //For marking HotFix Versions
+    if($parameter == "hotfix" || $parameter == "all")
+        markVersion($hotFixJira,"HF");
 
-    // //For marking regular release Versions
-    // if($parameter == "release" || $parameter == "all")
-    //     markVersion($releaseJira,"RC");    
+    //For marking regular release Versions
+    if($parameter == "release" || $parameter == "all")
+        markVersion($releaseJira,"RC");    
 
     
-    //this part is used to ensure that previous data in files is deleted and time is udpated in the time file.
-    /*1) for CIRelease: The mergedBranches file is truncated and the lastReleaseDate file is set to the current time
-     2) for QASanityReleaseNew: The mergedBranches file for both CI and QA is truncated and the lastReleaseDate for both is updated.*/
+    /*
+    this part is used to ensure that previous data in files is deleted and time is udpated in the time file.
+    1) for CIRelease: The mergedBranches file is truncated and the lastReleaseDate file is set to the current time
+     2) for QASanityReleaseNew: The mergedBranches file for both CI and QA is truncated and the lastReleaseDate for both is updated.
+     */
     if($branchName == "CIRelease")
     {
-        $CIFile = fopen("/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt","w");
+        $CIFile = fopen($pathName."/crontabs/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen("/var/www/html/branches/branch2/crontabs/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen($pathName."/crontabs/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
     }
     elseif($branchName == "QASanityReleaseNew")
     {
-        $SanityFile = fopen("/var/www/html/branches/branch2/crontabs/QASanityMergedBranches.txt","w");
+        $SanityFile = fopen($pathName."/crontabs/QASanityMergedBranches.txt","w");
         fclose($SanityFile);
 
-        $CIFile = fopen("/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt","w");
+        $CIFile = fopen($pathName."/crontabs/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen("/var/www/html/branches/branch2/crontabs/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen($pathName."/crontabs/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
 
-        $sanityDateFile = fopen("/var/www/html/branches/branch2/crontabs/QASanityLastReleaseDate.txt","w+");
+        $sanityDateFile = fopen($pathName."/crontabs/QASanityLastReleaseDate.txt","w+");
         fwrite($sanityDateFile,date("Y-m-d H:i:s"));
         fclose($sanityDateFile);
     }

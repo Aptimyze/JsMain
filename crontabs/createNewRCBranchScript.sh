@@ -9,9 +9,9 @@ branchToCheckout=$2;
 #get to the required directory
 cd /var/www/$branch;
 
-nextDayDate="$(date --date='1 day' +'%Y-%m-%d')"; #make sure that branches are made in Y-m-d format
+nextDayDate="Asia/Kolkata $(date --date='1 day' +'%Y-%m-%d %z')"; #make sure that branches are made in Y-m-d format
 todayDate="$(date +'%Y-%m-%d')";
-# printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
+#printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
 
 #file that contains name of last released branch
 lastReleasedBranch=$(</var/www/$branch/crontabs/lastReleasedBranch.txt);
@@ -43,7 +43,7 @@ git push origin $branchToCheckout;
 
 if [ "$dateDiff" != "0" ] 
 	then	
-	git merge --no-ff "RC@$todayDate"; #lastDaYBranch to be merged and not the lastReleasebranch
+	git pull origin "RC@$todayDate";
 	git push origin QASanityReleaseNew;
 fi
 

@@ -1,14 +1,21 @@
 <?php
 /*
 This script is used to create the LIVE tag which then goes live and would contain information regarding which JIRA's are merged in the release going live.
-Parameter passed : "QASanityReleaseNew" or "CIRelease"
+Parameter passed : 
+1)$branchName : "QASanityReleaseNew" or "CIRelease"
+2)pathName : (e.g.: /var/www/testj09)
 */
 
 $branchName = $argv[1];
+$pathName = $argv[2];
+
+//setting defualt time zone
+date_default_timezone_set('Asia/Kolkata');
 
 if($branchName == "QASanityReleaseNew")
 {
-	$SanityMergedFileName = "/var/www/html/branches/branch2/crontabs/QASanityMergedBranches.txt"; //need to change this to the url finally decided.
+	$SanityMergedFileName = $pathName."/crontabs/QASanityMergedBranches.txt"; 
+
 	//To get files arr by reading the entire file
 	$MergedBranchesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -16,7 +23,8 @@ if($branchName == "QASanityReleaseNew")
 }
 elseif($branchName == "CIRelease")
 {
-	$CIMergedFileName = "/var/www/html/branches/branch2/crontabs/CIMergedBranches.txt"; //need to change this to the url finally decided.
+	$CIMergedFileName =  $pathName."/crontabs/CIMergedBranches.txt"; 
+
 	$MergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 	$tagName = "TAG_HF@".date("Y-m-d_H:i:s");
 }
@@ -32,13 +40,13 @@ $releaseDescription = implode(",", $MergedBranchesArr);
 
 $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
-	);
+	); //token used is of username: vidushi@naukri.com
 
 $paramArr = array("tag_name"=>$tagName,"ref"=>$branchName,"release_description"=>$releaseDescription);
 
 $response = sendCurlGETRequest($urlToHit,$paramArr,"",$headerArr,"POST");
 
-// LOGIC TO FIND TAGS
+// LOGIC TO FIND TAGS TO BE USED IN DASHBOARD
 /*$response = sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
 $i=0;
 foreach ($response as $key => $value) 
@@ -53,7 +61,7 @@ foreach ($response as $key => $value)
 
 //print_R($tagArr);die;
 function sendCurlGETRequest($urlToHit,$postParams,$timeout='',$headerArr="",$requestType="")
-{    //print_R($postParams);die;
+{    
 	if(!$timeout)
 		$timeout = 50000;
 	$ch = curl_init($urlToHit);    

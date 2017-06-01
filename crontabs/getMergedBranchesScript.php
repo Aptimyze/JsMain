@@ -2,7 +2,7 @@
 /*
 	This script is created to get the branhes merged on given number of days from a given target branch. We are uing three parameters currently in running the script.	
 	1) target branch (QASanityReleaseNew,CIRelease)	
-	2) pathName (e.g.: /var/www/testjs12/)
+	2) pathName (e.g.: /var/www/testjs12)
 	It will calculate the number of branches merged and store it in a file.
 */
 
@@ -11,6 +11,9 @@ $targetBranch = $argv[1];
 $pathName = $argv[2];
 
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=50&state=merged";
+
+//setting defualt time zone
+date_default_timezone_set('Asia/Kolkata');
 
 $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				

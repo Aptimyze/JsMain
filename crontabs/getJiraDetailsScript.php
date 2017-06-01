@@ -2,7 +2,7 @@
 //This script reads the JIRA IDs from the QASanityMergedBranches.txt and CIMergedBranches.txt
 /* the arguments passed in this script are:
 	1) $targetBranch : QASanityReleaseNew/CIRelease
-	2)$pathName : /var/www/testjs09/
+	2)$pathName : /var/www/testjs09
 */
 
 $targetBranch = $argv[1];
