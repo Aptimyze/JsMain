@@ -3739,6 +3739,7 @@ EditApp = function(){
           var statusCode = parseInt(result.responseStatusCode);
           if (statusCode === 0) {
             showHideEditSection(sectionId,"hide");
+            showHideCriticalSection(sectionId);
             editAppObject.needToUpdate = true;
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
@@ -3858,11 +3859,10 @@ EditApp = function(){
         $(sectionEdit).addClass(dispNone);
         $(document).scrollTop($(mainSection).offset().top);
       }
-      if(sectionId.toLowerCase() == "critical"){
-              $(mainSection).find('.js-editBtn').addClass(dispNone);
-      }
     }
-    
+    showHideCriticalSection= function(sectionId){
+            $('#section-'+sectionId).find('.js-editBtn').addClass(dispNone);
+    }
     /*
      * updateFieldUI
      * @param {type} fieldObject
