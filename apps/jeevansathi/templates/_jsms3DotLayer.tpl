@@ -160,7 +160,7 @@
                             </ul>
                         </div>
                         <div class="reportAbuseScreen">
-                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">

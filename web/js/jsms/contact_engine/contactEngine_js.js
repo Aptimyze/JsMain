@@ -88,7 +88,7 @@ el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
-$("#js-otherReasonsLayer").removeClass('dispnone');
+$("#js-otherReasonsLayer").removeClass('dispnone').val('');
 } 
 
 mainReasonAbuse=$(this).text();
@@ -105,8 +105,7 @@ if(RAOtherReasons)
 { 
 	reason=$("#js-otherReasonsLayer").val();
    
-	if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
-  else if(reason.length < 25){ShowTopDownError(["Please elaborate your reason"],3000);return;}
+	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
 }
 else {
 if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
