@@ -267,6 +267,7 @@ class NEWJS_FILTER extends TABLE{
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
+        return false;
 	}
   
   /**

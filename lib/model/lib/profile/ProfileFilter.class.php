@@ -284,7 +284,7 @@ class ProfileFilter
     {
         $bResult = $this->getDBConnection()->insertRecord($iProfileId, $arrRecordData);
         
-        if(true === $bResult) {
+        if(1 == $bResult) {
             ProfileCacheLib::getInstance()->insertInCache($iProfileId, $arrRecordData, __CLASS__);
         }
         return $bResult;
