@@ -41,7 +41,7 @@ class MyJsMobileAppV1
 	        $profilePicObj = $pictureService->getProfilePic();
 
 		if($profilePicObj)
-			$myPic = $profilePicObj->getThumbailUrl();
+			$myPic = $profilePicObj->getProfilePic120Url();
 		//die('hjhj');
         if(!$myPic)
 		{
