@@ -36,7 +36,7 @@ $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
 
 if(is_array($FilesArr) && !empty($FilesArr))
 {
-	foreach($SanityFilesArr as $key=>$value)
+	foreach($FilesArr as $key=>$value)
 	{
 		$response = sendCurlGETRequest($setVersionUrl.$value,"","",$headerArr,"GET");
 		$jiraDescriptionArr[$value]["status"] = $response->fields->status->name;
