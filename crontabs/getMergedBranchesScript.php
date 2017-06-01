@@ -30,7 +30,6 @@ $lastReleasedBranchFileName = $pathName."/crontabs/lastReleasedBranch.txt";
 //To get files arr by reading the entire file
 $SanityFilesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-
 $CIFilesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $QASanityReleaseBranchesArr = array();
@@ -84,8 +83,7 @@ elseif($targetBranch == $targetBranchQA)
 {
 	$SanitylastReleaseDateFileName = $pathName."/crontabs/QASanityLastReleaseDate.txt";
 
-	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
+	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);	
 	$sanityLastReleaseDate = $sanityLastReleaseDateArr[0];
 	$response = sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
 	foreach($response as $key=>$value)
@@ -93,8 +91,7 @@ elseif($targetBranch == $targetBranchQA)
 		$updatedAtDate = explode(".",$value->updated_at);
 		$updatedDate = str_replace("T"," ", $updatedAtDate[0]);
 
-	//echo("updateDate:".$updatedDate."\n greater than requiredDate:".$sanityLastReleaseDate."\n less than current date:".$currentDateTime);die;
-
+	// echo("updateDate:".$updatedDate."\n greater than requiredDate:".$sanityLastReleaseDate."\n less than current date:".$currentDateTime);die;
 		if($updatedDate > $sanityLastReleaseDate && $updatedDate < $currentDateTime)
 		{	
 			if($value->target_branch == $targetBranchQA)
