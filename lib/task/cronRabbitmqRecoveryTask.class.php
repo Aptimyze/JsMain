@@ -219,7 +219,7 @@ EOF;
   
   private function checkRestart($command){
     if($command == MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND){
-      $inactiveHours = array("00","01","02","10","11","12","13","14");
+      $inactiveHours = array("10","11","12","13","14");
       $currentHr = date("H");
       if(in_array($currentHr, $inactiveHours)){
           return false;

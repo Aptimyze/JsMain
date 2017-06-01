@@ -31,4 +31,7 @@ myTmpStorage.storeUserData('_familyData',JSON.stringify(~$familyJsonData|decodev
 myTmpStorage.storeUserData('familyIncomeDep',JSON.stringify(~$familyIncomeDep|decodevar`));
 ~/if`
 delete myTmpStorage;
+~if $sourcename && $groupname`
+	~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>'','mtongue'=>'','city'=>''])`
+~/if`
 </script>
