@@ -39,6 +39,7 @@ $releaseBranch = "";
 $targetBranchQA = "QASanityReleaseNew";
 $targetBranchCI = "CIRelease";
 $currentDateTime = date("Y-m-d H:i:s");
+$timeAppend = "16:30:00";
 
 if($targetBranch == $targetBranchCI)
 {	
@@ -86,14 +87,22 @@ elseif($targetBranch == $targetBranchQA)
 
 	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);	
 	$sanityLastReleaseDate = $sanityLastReleaseDateArr[0];
+	
+	$now = time();
+	$sanityReleaseTime = strtotime($sanityLastReleaseDate);
+	$dateDiff = floor(($now - $sanityReleaseTime) / (60 * 60 * 24));
+	
+	$requiredDate = date("Y-m-d",strtotime("-".++$dateDiff." day"));
+	$requiredDate = $requiredDate." ".$timeAppend;
+
 	$response = sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
 	foreach($response as $key=>$value)
 	{
 		$updatedAtDate = explode(".",$value->updated_at);
 		$updatedDate = str_replace("T"," ", $updatedAtDate[0]);
 
-	// echo("updateDate:".$updatedDate."\n greater than requiredDate:".$sanityLastReleaseDate."\n less than current date:".$currentDateTime);die;
-		if($updatedDate > $sanityLastReleaseDate && $updatedDate < $currentDateTime)
+	//echo("updateDate:".$updatedDate."\n greater than requiredDate:".$requiredDate."\n less than current date:".$currentDateTime);die;
+		if($updatedDate > $requiredDate && $updatedDate < $currentDateTime)
 		{	
 			if($value->target_branch == $targetBranchQA)
 			{
