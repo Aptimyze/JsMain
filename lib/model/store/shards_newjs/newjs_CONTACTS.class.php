@@ -1262,5 +1262,66 @@ public function getSendersPending($chunkStr)
                 }
 
 	}	
+    
+    /**
+     * 
+     * @param type $senderId
+     * @param type $startDate
+     */
+    public function getCountOfContactInitiated($senderId, $date)
+    {
+      if(!($senderId)) {
+        throw new jsException("","PROFILEID IS BLANK IN getCountOfContactInitiated() OF newjs.CONTACTS.class.php");
+      }
+      
+      if(!($date)) {
+        throw new jsException("","Date IS BLANK IN getCountOfContactInitiated() OF newjs.CONTACTS.class.php");
+      }
+      try{
+        $sql = "SELECT COUNT(*) AS CNT FROM newjs.CONTACTS WHERE SENDER = :SENDER AND TIME >= :TIME";
+        $res=$this->db->prepare($sql);
+
+        $res->bindValue(":SENDER", $senderId, PDO::PARAM_INT);
+        $res->bindValue(":TIME", $date, PDO::PARAM_STR);
+        $res->execute();
+        $row = $res->fetch(PDO::FETCH_ASSOC);
+        $val = $row['CNT'];
+        return $val;
+      } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
+    
+    /**
+     * 
+     * @param type $receiverId
+     * @param type $date
+     * @return type
+     * @throws jsException
+     */
+    public function getCountOfContactAccepted($receiverId, $date)
+    {
+      if(!($receiverId)) {
+        throw new jsException("","PROFILEID IS BLANK IN getCountOfContactAccepted() OF newjs.CONTACTS.class.php");
+      }
+      
+      if(!($date)) {
+        throw new jsException("","Date IS BLANK IN getCountOfContactInitiated() OF newjs.CONTACTS.class.php");
+      }
+      
+      try{
+        $sql = "SELECT COUNT(*) AS CNT FROM newjs.CONTACTS  WHERE RECEIVER=:RECEIVER and TYPE='A' AND TIME >= :TIME";
+        $res=$this->db->prepare($sql);
+
+        $res->bindValue(":RECEIVER", $receiverId, PDO::PARAM_INT);
+        $res->bindValue(":TIME", $date, PDO::PARAM_STR);
+        $res->execute();
+        $row = $res->fetch(PDO::FETCH_ASSOC);
+        $val = $row['CNT'];
+        return $val;
+      } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
 }
 ?>
