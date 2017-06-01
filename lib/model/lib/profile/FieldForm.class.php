@@ -180,7 +180,7 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-        if(count($criticalInfoFieldArr) && 0){
+        if(count($criticalInfoFieldArr)){
                 $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
                 $editedFields = array_keys($criticalInfoFieldArr);
                 $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields));
