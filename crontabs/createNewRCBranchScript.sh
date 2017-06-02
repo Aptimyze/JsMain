@@ -12,7 +12,7 @@ cd /var/www/$branch;
 nextDayDate="$(date --date='1 day' +'%Y-%m-%d')"; #make sure that branches are made in Y-m-d format
 todayDate="$(date +'%Y-%m-%d')";
 
-#printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
+printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
 
 #file that contains name of last released branch
 lastReleasedBranch=$(</var/www/lastReleasedBranch.txt);
@@ -48,5 +48,5 @@ if [ "$dateDiff" != "0" ]
 	git push origin QASanityReleaseNew;
 fi
 
-# #create next day branch from QASanityReleaseNew
-# git branch "RC@$nextDayDate" QASanityReleaseNew;
+#create next day branch from QASanityReleaseNew
+git branch "RC@$nextDayDate" QASanityReleaseNew;
