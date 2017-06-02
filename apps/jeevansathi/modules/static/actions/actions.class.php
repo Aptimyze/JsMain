@@ -1014,6 +1014,17 @@ public function executeAppredirect(sfWebRequest $request)
 	  else if($k)
 	  {
 			$output = $this->getFieldMapData($k);
+                        if($k == "mstatus_edit" || $k=="mstatus_muslim_edit"){
+				$output = $this->getFieldMapData("mstatus");
+                                if($k == "mstatus_edit"){
+                                        foreach($output[0] as $k=>$v){
+                                                $kys = array_keys($v);
+                                                if(in_array("M", $kys)){
+                                                        unset($output[0][$k]);
+                                                }
+                                        }
+                                }
+                          }
 			if($k=="reg_city_jspc")
 			{
 				$outData = $output;
