@@ -120,8 +120,7 @@ function showOverLayer(json,attr)
 		});
 	
 	if(cntArr)
-	{
-				
+	{	
 		if(json[arr[0]][arr[1]].OnClick.length==1)
 		{
 				setTimeout(function(){
@@ -409,7 +408,7 @@ function getPlaceholder(key)
 	return text;
 }
 function UpdateOverlayTags(string,json,indexPos)
-{     
+{
         string=string.replace(/\{\{dindex\}\}/,"dindexpos=\""+indexPos+"\"");
 	if(json.action==2 ||json.action==3)
 	{
@@ -464,10 +463,15 @@ function UpdateOverlayTags(string,json,indexPos)
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
+                
 		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
-		string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
+                if(json.staticData != ""){
+                        string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.staticData+"'");
+                }else{
+                        string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
+                }
 		
 		
 		if(json.dependant)

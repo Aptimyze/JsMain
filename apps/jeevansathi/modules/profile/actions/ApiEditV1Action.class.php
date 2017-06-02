@@ -54,10 +54,8 @@ class ApiEditV1Action extends sfActions
 }
                         }
                         $myProfileArr["showEdit"] = 0;
-                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
-                        $editedCritical = $infoChngObj->editedCriticalInfo($this->loginProfile->getPROFILEID());unset($infoChngObj);
                         $myProfileArr["cannot_edit_section"] = array();
-                        if($editedCritical===false){
+                        if(CriticalEditedBefore::canEdit($this->loginProfile->getPROFILEID())===true){
                                 $myProfileArr["cannot_edit_section"][] = "Critical";
                         }
 			$apiResponseHandlerObj->setHttpArray($ResponseOut);

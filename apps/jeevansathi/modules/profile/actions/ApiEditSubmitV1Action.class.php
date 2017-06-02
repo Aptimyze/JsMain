@@ -52,6 +52,14 @@ class ApiEditSubmitV1Action extends sfActions
 			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
 		}		
 		unset($this->editFieldNameArr['STATE_RES']);
+                if($this->editFieldNameArr['DAY']!='' &&is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['MONTH']!='' && is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['YEAR'] && is_numeric($this->editFieldNameArr['YEAR']))
+		{
+			$this->editFieldNameArr['DTOFBIRTH']=date("Y-m-d",mktime(0,0,0,$this->editFieldNameArr['MONTH'],$this->editFieldNameArr['DAY'],$this->editFieldNameArr['YEAR']));
+		}
+		unset($this->editFieldNameArr['MONTH']);
+		unset($this->editFieldNameArr['DAY']);
+		unset($this->editFieldNameArr['YEAR']);
+                //print_r($this->editFieldNameArr);die;
                 if(!empty($_FILES)){
                         foreach($_FILES as $f1){
                                 foreach($f1 as $fKey=>$fVal){
@@ -98,7 +106,7 @@ class ApiEditSubmitV1Action extends sfActions
                 
 		if(is_array($this->editFieldNameArr))
 		{
-                        if($this->verifyCriticalInfoEdit() === true){
+                        if($this->verifyCriticalInfoEdit() === false){
                                 $errorArr["ERROR"]="Cannot edit Critical Information again";
                                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                                 $apiResponseHandlerObj->setResponseBody($errorArr);
@@ -289,10 +297,9 @@ class ApiEditSubmitV1Action extends sfActions
                                 $criticalInfoedited=1;
                 }
                 if($criticalInfoedited == 1){
-                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
-                        return $infoChngObj->editedCriticalInfo($this->loginProfile->getPROFILEID());
+                        return CriticalEditedBefore::canEdit($this->loginProfile->getPROFILEID());
                 }else{
-                        return false;
+                        return true;
                 }
         }
 }

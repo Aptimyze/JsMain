@@ -790,3 +790,32 @@ function updateNative(json,realJson,indexPos)
   UpdateSection.call(this,json,realJson,indexPos);
 	return;
 }
+function UpdateDobSection(json,realJson,indexPos)
+{
+	var dateMap = {'day':1,"month":2,"year":3}
+	var originalValue = realJson.OnClick[0].value;
+	var dateArr = originalValue.split(",");
+        var ele=$(this).find("div[data=1]");
+        var labelArr=new Array();
+        var valueArr=new Array();
+        $i=0;
+        $.each(json,function(k,v)
+        {
+		var index= dateMap[k]-1;
+                var inValueArr=new Array();
+                var inLabelArr=new Array();
+                $.each(v,function(key,value){
+                        if(value=='' || value==undefined)
+                        {
+				value = dateArr[index];
+                                json[k][value]=value;
+				key = value;
+                        }
+                        inValueArr[index]=valueArr[index]=value;
+                        inLabelArr[index]=labelArr[index]=key;
+                });
+                CommonOverlayEditUpdate(inValueArr.join(""),k.toUpperCase());
+        });
+        var joinStr=" ";
+        CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
+}

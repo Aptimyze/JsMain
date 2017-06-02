@@ -23,6 +23,9 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$this->underScreening="under Screening";
 		$this->setApiScreeningFields();
 	}
+        public function getApiCriticalInfo(){
+                return true;
+        }
 	/** @function
 	 * @returns key value array of Life style section of app
 	 * */
@@ -529,17 +532,32 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//gender
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),$this->nonEditable);
 		
-		//date of birth
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),$this->nonEditable);
-		
 		//mstatus
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
+                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
+                $canEdit = false;
+                $canEditType = $this->nonEditable;
+                if($editedCritical===true){
+                        $canEdit = true;
+                        $canEditType = $this->dropdown;
+                }
+                if($this->profile->getRELIGION() == 2){
+                        $key = "MSTATUS_MUSLIM_EDIT";
+                }else{
+                        $key = "MSTATUS_EDIT";
+                }
+		//date of birth
+                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEditType,"",0,"","","",array(),"",$key);
 		
                 $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		
 		
+		$basicArr["critical"][outerSectionName]="Critical Fields";
+		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";
+		$basicArr["critical"][outerSectionKey]="critical";
+		$basicArr["critical"][singleKey]=0;
 		$basicArr["Ethnicity"][outerSectionName]="Ethnicity";
 		$basicArr["Ethnicity"][outerSectionKey]="Ethnicity";
 		$basicArr["Ethnicity"][singleKey]=0;
@@ -1131,7 +1149,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="") {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="",$staticData = "") {
 	//	$arr["sectionName"]=$sectionName;
 	//	$arr["sectionValue"]=$sectionValue;
 		$arr["key"]=$key;
@@ -1147,6 +1165,11 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$arr["showSettings"]=$showSettings;
 		$arr["settingData"]=$settingData;
 		$arr["verifyStatus"]=$verifyStatus;
+                if($staticData !=""){
+                        $arr["staticData"]=$staticData;
+                }else{
+                        $arr["staticData"]="";
+                }
 		return $arr;
 
 	}
