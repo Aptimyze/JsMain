@@ -4,7 +4,7 @@
  * This class verifies conditions and calls the third party api to fetch guna scores 
  * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
-
+//guna score for testing
 class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
