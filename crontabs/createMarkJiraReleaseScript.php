@@ -3,11 +3,9 @@
 This script is used to create versions for jira ids.
 The following parameters are required:
 1) $branchName : "QASanityReleaseNew" or "CIRelease"
-2) $pathName : e.g.: /var/www/CI_Files/testjs09
 */
 
 $branchName = $argv[1]; //This specifies whether the branch to be taken into account is QASanityReleaseNew or CIRelease
-$pathName = $argv[2];
 
 $hotFixBlock = false;
 $releaseBlock = false;
