@@ -12,7 +12,7 @@ class gunaScore
 		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
-      $searchIdArr = array();
+      $searchIdArr = array(); //this comment has been added for testing
       $this->gunaForPD = 0;
       $this->profileId = $profileId;
       if(strpos($profilechecksumStr, ',') !== false)
