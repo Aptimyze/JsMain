@@ -140,6 +140,7 @@ class gunaScore
     elseif(!$fresult)
     {
       //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
+      //This send mail function has to be replaced by Redis key
     }
     if(is_array($fresult))
     {
