@@ -2,7 +2,7 @@
 /*
 	This script is created to get the branhes merged on given number of days from a given target branch. We are uing three parameters currently in running the script.	
 	1) target branch (QASanityReleaseNew,CIRelease)	
-	2) pathName (e.g.: /var/www/testjs12)
+	2) pathName (e.g.: /var/www/CI_Files/testjs12)
 	It will calculate the number of branches merged and store it in a file.
 */
 
@@ -19,12 +19,12 @@ $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
 	); //Token used is of the username : vidushi@naukri.com
 
-$SanityMergedFileName = "/var/www/QASanityMergedBranches.txt";
+$SanityMergedFileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
 
-$CIMergedFileName = "/var/www/CIMergedBranches.txt";
+$CIMergedFileName = "/var/www/CI_Files/CIMergedBranches.txt";
 
 //last released branch name is stored in this file
-$lastReleasedBranchFileName = "/var/www/lastReleasedBranch.txt"; 
+$lastReleasedBranchFileName = "/var/www/CI_Files/lastReleasedBranch.txt"; 
 
 
 //To get files arr by reading the entire file
@@ -43,7 +43,7 @@ $timeAppend = "16:30:00";
 
 if($targetBranch == $targetBranchCI)
 {	
-	$CIlastReleaseDateFileName = "/var/www/CIReleaseLastReleaseDate.txt";
+	$CIlastReleaseDateFileName = "/var/www/CI_Files/CIReleaseLastReleaseDate.txt";
 	$CILastReleaseDateArr = file($CIlastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 	$CILastReleaseDate = $CILastReleaseDateArr[0];
@@ -83,7 +83,7 @@ if($targetBranch == $targetBranchCI)
 }
 elseif($targetBranch == $targetBranchQA)
 {
-	$SanitylastReleaseDateFileName = "/var/www/QASanityLastReleaseDate.txt";
+	$SanitylastReleaseDateFileName = "/var/www/CI_Files/QASanityLastReleaseDate.txt";
 
 	$sanityLastReleaseDateArr = file($SanitylastReleaseDateFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);	
 	$sanityLastReleaseDate = $sanityLastReleaseDateArr[0];

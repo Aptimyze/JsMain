@@ -7,7 +7,7 @@ branch=$1;
 branchToCheckout=$2;
 
 #get to the required directory
-cd /var/www/$branch;
+cd /var/www/CI_Files/$branch;
 
 nextDayDate="$(date --date='1 day' +'%Y-%m-%d')"; #make sure that branches are made in Y-m-d format
 todayDate="$(date +'%Y-%m-%d')";
@@ -15,7 +15,7 @@ todayDate="$(date +'%Y-%m-%d')";
 printf "Current date in dd/mm/yyyy format %s\n" "$nextDayDate";
 
 #file that contains name of last released branch
-lastReleasedBranch=$(</var/www/lastReleasedBranch.txt);
+lastReleasedBranch=$(</var/www/CI_Files/lastReleasedBranch.txt);
 
 #date of last release
 lastReleasedBranchDate=${lastReleasedBranch:3};

@@ -3,7 +3,7 @@
 This script is used to create versions for jira ids.
 The following parameters are required:
 1) $branchName : "QASanityReleaseNew" or "CIRelease"
-2) $pathName : e.g.: /var/www/testjs09
+2) $pathName : e.g.: /var/www/CI_Files/testjs09
 */
 
 $branchName = $argv[1]; //This specifies whether the branch to be taken into account is QASanityReleaseNew or CIRelease
@@ -27,13 +27,13 @@ if($branchName == "CIRelease")
 {
     $parameter = "hotFix";
     $hotFixBlock = true;
-    $fileName = "/var/www/CIMergedBranches.txt";
+    $fileName = "/var/www/CI_Files/CIMergedBranches.txt";
 }
 elseif($branchName == "QASanityReleaseNew")
 {
     $parameter = "release";
     $releaseBlock = true;
-    $fileName = "/var/www/QASanityMergedBranches.txt";
+    $fileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
 }
 else
 {
@@ -91,26 +91,26 @@ if(is_array($file) && !empty($file))
      */
     if($branchName == "CIRelease")
     {
-        $CIFile = fopen("/var/www/CIMergedBranches.txt","w");
+        $CIFile = fopen("/var/www/CI_Files/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen("/var/www/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen("/var/www/CI_Files/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
     }
     elseif($branchName == "QASanityReleaseNew")
     {
-        $SanityFile = fopen("/var/www/QASanityMergedBranches.txt","w");
+        $SanityFile = fopen("/var/www/CI_Files/QASanityMergedBranches.txt","w");
         fclose($SanityFile);
 
-        $CIFile = fopen("/var/www/CIMergedBranches.txt","w");
+        $CIFile = fopen("/var/www/CI_Files/CIMergedBranches.txt","w");
         fclose($CIFile);
 
-        $CIDateFile = fopen("/var/www/CIReleaseLastReleaseDate.txt","w+");        
+        $CIDateFile = fopen("/var/www/CI_Files/CIReleaseLastReleaseDate.txt","w+");        
         fwrite($CIDateFile, date("Y-m-d H:i:s"));
         fclose($CIDateFile);
 
-        $sanityDateFile = fopen("/var/www/QASanityLastReleaseDate.txt","w+");
+        $sanityDateFile = fopen("/var/www/CI_Files/QASanityLastReleaseDate.txt","w+");
         fwrite($sanityDateFile,date("Y-m-d H:i:s"));
         fclose($sanityDateFile);
     }

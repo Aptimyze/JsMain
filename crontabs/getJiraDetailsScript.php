@@ -2,7 +2,7 @@
 //This script reads the JIRA IDs from the QASanityMergedBranches.txt and CIMergedBranches.txt
 /* the arguments passed in this script are:
 	1) $targetBranch : QASanityReleaseNew/CIRelease
-	2)$pathName : /var/www/testjs09
+	2)$pathName : /var/www/CI_Files/testjs09
 */
 
 $targetBranch = $argv[1];
@@ -10,11 +10,13 @@ $targetBranch = $argv[1];
 
 if($targetBranch == "QASanityReleaseNew")
 {
-	$FileName = "/var/www/QASanityMergedBranches.txt";
+	$FileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
+	$jiraDetailsFileName = "/var/www/CI_Files/QASanitJiraDetails.txt";
 }
 elseif($targetBranch == "CIRelease")
 {
-	$FileName = "/var/www/CIMergedBranches.txt";
+	$FileName = "/var/www/CI_Files/CIMergedBranches.txt";
+	$jiraDetailsFileName = "/var/www/CI_Files/CIJiraDetails.txt";
 }
 else
 {
@@ -43,7 +45,14 @@ if(is_array($FilesArr) && !empty($FilesArr))
 		$jiraDescriptionArr[$value]["assignee"] = $response->fields->assignee->name;
 		$jiraDescriptionArr[$value]["description"] = $response->fields->summary;	
 	}
-	print_R($jiraDescriptionArr);die;
+	
+	//to write the last released branch into a file(filename)
+	if($file = fopen($jiraDetailsFileName, "w+"))
+	{
+		fwrite($file, print_R($jiraDescriptionArr,true));
+	}
+
+	die("Data saved to file ");
 }
 else
 {
