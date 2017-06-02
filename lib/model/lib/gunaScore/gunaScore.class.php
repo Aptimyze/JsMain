@@ -9,7 +9,7 @@ class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
-		 */
+		 */ //testing11
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $searchIdArr = array();
