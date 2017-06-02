@@ -998,8 +998,8 @@ class CommonFunction
 
 			// TODO:
 			$deviceName = "device";
-			$city = "city";
-			$country = "country";
+			$city = $_SERVER["GEOIP_CITY_NAME"];
+			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
 
 			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
 			$tpl = $top8Mailer->setProfileId($profileid);
