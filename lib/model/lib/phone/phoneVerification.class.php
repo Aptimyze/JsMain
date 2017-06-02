@@ -127,6 +127,7 @@ public function phoneUpdateProcess($message)
                 $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
                 
                 $memcacheObj->lpush($key,$profileid);
+                $this->sendToProductMetricQueue();
 
 			}
 
@@ -206,11 +207,9 @@ public function sendMailerAfterVerification($noOfTimesVerified) {
 			$activated =$this->profileObject->getACTIVATED();
 			$profileid=$this->profileObject->getPROFILEID();
 
-			
 			if($noOfTimesVerified==0 && $activated=="Y")
                         {
 			CommonFunction::sendWelcomeMailer($profileid);
-                        $this->sendToProductMetricQueue();
                         }
                         
 }
@@ -446,7 +445,6 @@ public function contact_archive($field="",$val="")
                         $producerObj->sendMessage($updateSeenData);
                 }
             } catch (Exception $e) {
-        
                         }
     }
 

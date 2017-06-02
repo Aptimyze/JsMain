@@ -50,7 +50,7 @@ $fieldsArray="PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTO
 			$currentdpp=$dbApDppFilterArchive->fetchCurrentDPP(3809620,'',$whrStr);	
 			print_r($currentDPP);
 			*/
-			$dbFilters= new NEWJS_FILTER();
+			$dbFilters= new ProfileFilter();
 			//$whrStr="AGE='N', MSTATUS='N', RELIGION='N', COUNTRY_RES='N', MTONGUE='N',CASTE='N',CITY_RES='N',INCOME='N',COUNT=COUNT+1, HARDSOFT='N'";
 					
 				//	$result=$dbFilters->updateFilters(336,$whrStr);

@@ -267,6 +267,7 @@ class NEWJS_FILTER extends TABLE{
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
+        return false;
 	}
   
   /**
@@ -347,12 +348,14 @@ class NEWJS_FILTER extends TABLE{
   			$prep->bindValue(":PROFILEID".$key, $pid['PROFILEID'], PDO::PARAM_INT);
   		}
   		$prep->execute();
+                return true;
       JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
   	}
   	catch(PDOException $e)
   	{
   		throw new jsException($e);
   	}
+        return false;
   }
 
 

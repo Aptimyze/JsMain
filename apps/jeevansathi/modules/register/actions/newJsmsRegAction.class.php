@@ -10,6 +10,7 @@ class newJsmsRegAction extends sfAction
 
                 //Source variables:// Page1 tracking
                 $this->source           = $request->getParameter('source');
+		$this->sourcename = $this->source;
                 $newsource              = $request->getParameter("newsource");
                 $tieup_source           = $request->getParameter("tieup_source");
                 //$hit_source             = $request->getParameter("hit_source");
@@ -54,7 +55,7 @@ class newJsmsRegAction extends sfAction
 
                 //Assign GroupName/pixel code
                 $this->assignGroupName();
-
+		$this->groupname = $this->GROUPNAME;
                 //canonical URL:
 	        $can_url="/register/page1";
                 $this->getResponse()->setCanonical(sfConfig::get("app_site_url").$can_url);

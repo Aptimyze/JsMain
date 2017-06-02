@@ -1024,7 +1024,7 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 100) == 1) //this needs to be changed as per requirement. Currently setting it to 1%users
+    		if(($profileId % 20) == 1) //this needs to be changed as per requirement. Currently setting it to 5%users
     		{
     			return true;
     		}
