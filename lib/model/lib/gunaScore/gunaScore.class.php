@@ -4,7 +4,7 @@
  * This class verifies conditions and calls the third party api to fetch guna scores 
  * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
-
+//guna score for testing
 class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
@@ -12,7 +12,7 @@ class gunaScore
 		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
-      $searchIdArr = array();
+      $searchIdArr = array(); //this comment has been added for testing
       $this->gunaForPD = 0;
       $this->profileId = $profileId;
       if(strpos($profilechecksumStr, ',') !== false)
