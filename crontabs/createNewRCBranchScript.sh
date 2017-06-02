@@ -7,7 +7,7 @@ branch=$1;
 branchToCheckout=$2;
 
 #get to the required directory
-cd /var/www/CI_Files/$branch;
+cd /var/www/$branch;
 
 nextDayDate="$(date --date='1 day' +'%Y-%m-%d')"; #make sure that branches are made in Y-m-d format
 todayDate="$(date +'%Y-%m-%d')";
@@ -49,4 +49,5 @@ if [ "$dateDiff" != "0" ]
 fi
 
 #create next day branch from QASanityReleaseNew
-git branch "RC@$nextDayDate" QASanityReleaseNew;
+git checkout -b "RC@$nextDayDate" QASanityReleaseNew;
+git push origin "RC@$nextDayDate";

@@ -14,7 +14,7 @@ date_default_timezone_set('Asia/Kolkata');
 
 if($branchName == "QASanityReleaseNew")
 {
-	$SanityMergedFileName = "/var/www/QASanityMergedBranches.txt"; 
+	$SanityMergedFileName = "/var/www/CI_Files/QASanityMergedBranches.txt"; 
 
 	//To get files arr by reading the entire file
 	$MergedBranchesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -23,7 +23,7 @@ if($branchName == "QASanityReleaseNew")
 }
 elseif($branchName == "CIRelease")
 {
-	$CIMergedFileName =  "/var/www/CIMergedBranches.txt"; 
+	$CIMergedFileName =  "/var/www/CI_Files/CIMergedBranches.txt"; 
 
 	$MergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 	$tagName = "TAG_HF@".date("Y-m-d_H:i:s");
