@@ -386,7 +386,8 @@ return 0;
                       
                     break;
                      case '21': 
-
+        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
                     if($strDPPCaste != '' && $strDPPCaste != NULL && $strDPPCaste!="Doesn't Matter")
@@ -400,8 +401,9 @@ return 0;
       $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
                       $show=1;
                     }
-                          
+                    }      
                     break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -476,6 +478,11 @@ break;
                     
                     'A' => '96'
                     
+                        ),
+                    '21' => array(
+                    
+                    'A' => '99',
+                    'I' => '5.3'
                         )
 
           );
