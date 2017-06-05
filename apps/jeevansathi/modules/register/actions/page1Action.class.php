@@ -297,6 +297,9 @@ class page1Action extends sfAction {
         $this->subhead2 = $request->getParameter('sh2');
         $this->image = $request->getParameter('image');
         $this->page_id = $request->getParameter('p');
+        $this->sourcename = $request->getParameter('source');
+        $pageVar=RegistrationFunctions::assignGroupName($this->sourcename);
+        $this->groupname = $pageVar['GROUPNAME'];
         $this->setLayout(false);
         $this->setTemplate("custompageform");
       }

@@ -116,7 +116,7 @@ class CriticalActionLayerTracking
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
       if (!$layer) 
         { 
-            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,86400);
+            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,21600);
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
@@ -154,10 +154,13 @@ return 0;
     $isApp=MobileCommon::isApp();
         switch ($layerToShow) {
           case '1': 
+            if(strtotime('-30 days') < strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
                     $picObj= new PictureService($profileObj);
                     $havePhoto= $picObj->isProfilePhotoPresent();
                     if ($havePhoto == null)
                       $show=1;
+                    }
                     break;
           case '2': if ($profileObj->getFAMILYINFO()=='')
                       $show=1;
@@ -258,7 +261,9 @@ return 0;
                       
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                          {        
+                          {
+                            JsMemcache::getInstance()->incrCount("DPP_CAL_0");
+                              
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
                             {    
@@ -273,6 +278,7 @@ return 0;
                               {
                                 if(is_array($value['data']))                                  
                                 {      
+                                  JsMemcache::getInstance()->incrCount("DPP_CAL_1");
                                   $show = 0;
                                   break;
                                 }
@@ -385,6 +391,7 @@ return 0;
                       
                       
                     break;
+
                      case '21': 
         if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
@@ -402,6 +409,16 @@ return 0;
                       $show=1;
                     }
                     }      
+                      break;
+
+                    case '22': 
+                    if(strtotime('-30 days') >= strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
+                    $picObj= new PictureService($profileObj);
+                    $havePhoto= $picObj->isProfilePhotoPresent();
+                    if ($havePhoto == null)
+                      $show=1;
+                    }
                     break;
 
           default : return false;

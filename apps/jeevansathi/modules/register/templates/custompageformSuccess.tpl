@@ -539,6 +539,9 @@ label {
 			</noscript>
 		<!-- Ends Here -->
 	~/if`
+~if $sourcename neq ''`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~/if`
 <script type="text/javascript">
 var crazyegg=0;
 function crazyEggUserVar(){

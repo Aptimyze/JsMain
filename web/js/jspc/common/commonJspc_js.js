@@ -5,7 +5,7 @@ var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '<div class="txtc padnew20">'+
         '<div class="fontreg f18 color11 disp_ib vertSup">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
         '<div class="f13 color2 fontreg lh21 pad1530">'+
-        '<div><b>Please Note:</b> You are being redirected from <b>Jeevansathi.com</b> to <b>Idfy.com</b>, a website not affiliated to Jeevansathi. The verification of prospects is not being carried out by Jeevansathi or any of its agents/associates.<br></div>'+
+        '<div><b>Please Note:</b> You are leaving the networks of the website <b>Jeevansathi.com</b> to a third party website <b>Idfy.com</b>, (regulated by its own privacy policy), a website not affiliated to Info Edge (India) Limited. The verification of prospects is not being carried out by Jeevansathi.com or any of its agents/associates.<br></div>'+
         '<div>Here’s how it works:</div>'+
         '<table class="txtList mt15">'+
         '<tr>'+
@@ -451,77 +451,80 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
+    console.log(data);
     if (data) { 
+        var maxCount = 100;
+        var maxWrapStr = "99+";
         if (parseInt(data.TOTAL_NEW)) {
             $("#totalBellCountParent").css('display', 'table');
-            if (data.TOTAL_NEW < 10) {
+            if (data.TOTAL_NEW < maxCount) {
                 $("#totalBellCount").text(data.TOTAL_NEW);
             } else {
-                $("#totalBellCount").text("9+");
+                $("#totalBellCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.NEW_MATCHES)) {
             $("#justJoinedCountParent").css('display', 'block');
-            if (data.NEW_MATCHES < 10) {
+            if (data.NEW_MATCHES < maxCount) {
                 $("#justJoinedCount").text(data.NEW_MATCHES);
             } else {
-                $("#justJoinedCount").text("9+");
+                $("#justJoinedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.MESSAGE_NEW)) {
             $("#messagesCountParent").css('display', 'block');
-            if (data.MESSAGE_NEW < 10) {
+            if (data.MESSAGE_NEW < maxCount) {
                 $("#messagesCount").text(data.MESSAGE_NEW);
             } else {
-                $("#messagesCount").text("9+");
+                $("#messagesCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.PHOTO_REQUEST_NEW)) {
             $("#photoRequestsCountParent").css('display', 'block');
-            if (parseInt(data.PHOTO_REQUEST_NEW) < 10) {
+            if (parseInt(data.PHOTO_REQUEST_NEW) < maxCount) {
                 $("#photoRequestsCount").text(parseInt(data.PHOTO_REQUEST_NEW));
             } else {
-                $("#photoRequestsCount").text("9+");
+                $("#photoRequestsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.AWAITING_RESPONSE_NEW)) {
             $("#interestsReceivedCountParent").css('display', 'block');
-            if (data.AWAITING_RESPONSE_NEW < 10) {
+            if (data.AWAITING_RESPONSE_NEW < maxCount) {
                 $("#interestsReceivedCount").text(data.AWAITING_RESPONSE_NEW);
             } else {
-                $("#interestsReceivedCount").text("9+");
+                $("#interestsReceivedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.ACC_ME_NEW)) {
             $("#membersAcceptedMeCountParent").css('display', 'block');
-            if (data.ACC_ME_NEW < 10) {
+            if (data.ACC_ME_NEW < maxCount) {
                 $("#membersAcceptedMeCount").text(data.ACC_ME_NEW);
             } else {
-                $("#membersAcceptedMeCount").text("9+");
+                $("#membersAcceptedMeCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DAILY_MATCHES_NEW)) {
             $("#membersDailyMatchesCountParent").css('display', 'block');
-            if (data.DAILY_MATCHES_NEW < 10) {
+            if (data.DAILY_MATCHES_NEW < maxCount) {
                 $("#membersDailyMatchesCount").text(data.DAILY_MATCHES_NEW);
             } else {
-                $("#membersDailyMatchesCount").text("9+");
+                $("#membersDailyMatchesCount").text(maxWrapStr);
             }
         }
 	if (parseInt(data.FILTERED_NEW)) {
             $("#membersFilteredInterestCountParent").css('display', 'block');
-            if (data.FILTERED_NEW < 10) {
+            if (data.FILTERED_NEW < maxCount) {
                 $("#FilteredInterstsCount").text(data.FILTERED_NEW);
             } else {
-                $("#FilteredInterstsCount").text("9+");
+                $("#FilteredInterstsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DEC_ME_NEW)) {
             $("#membersDeclinedMeCountParent").css('display', 'block');
-            if (data.DEC_ME_NEW < 10) {
+            if (data.DEC_ME_NEW < maxCount) {
                 $("#DeclinedMeCount").text(data.DEC_ME_NEW);
             } else {
-                $("#DeclinedMeCount").text("9+");
+                $("#DeclinedMeCount").text(maxWrapStr);
             }
         } 
     }

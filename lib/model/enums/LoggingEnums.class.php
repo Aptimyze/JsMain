@@ -84,6 +84,7 @@ class LoggingEnums
     const CONSUMER_NAME = 'Rabbitmq-Consumer';
     const PHISHING_URL = 'phishingUrl';
     const COOL_M_LOGIN = 'LOG';
+    const NEW_LOGIN_TRACK = 'LoginAlert';
 
     public static $MappingNames = array(
         // JSC module names

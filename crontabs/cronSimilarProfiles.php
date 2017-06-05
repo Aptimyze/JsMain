@@ -125,11 +125,11 @@ $sql = "INSERT INTO $databaseName.SUGGESTED_PROFILEIDS_2_$gender SELECT PROFILEI
 		if(is_numeric($shard1Port) && is_numeric($masterPort))
 		{
 			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -P $shard1Port $databaseName;");
-			passthru("$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -P $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard3HostName -P $shard1Port $databaseName");
+			passthru("$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -P $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard1HostName -P $shard1Port $databaseName");
 			//echo $x;die;
 		}
 		else
-			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName;$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -S $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard3HostName -S $shard1Port $databaseName");
+			passthru(" echo \"truncate table $tablename \" | $mysqlPath -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName;$mysqldumpPath -t -u $masterUserName -p$masterPassword -h $masterHostName -S $masterPort $databaseName $tablename --skip-add-locks | $mysqlPath -t -u $shard1UserName -p$shard1Password -h $shard1HostName -S $shard1Port $databaseName");
 
 			//die("**");
 		if(is_numeric($shard2Port) && is_numeric($masterPort))
@@ -153,6 +153,8 @@ $sql = "INSERT INTO $databaseName.SUGGESTED_PROFILEIDS_2_$gender SELECT PROFILEI
 			echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 		}
 	}
+        
+        echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 
 	$sql = "TRUNCATE TABLE $databaseName.TEMP_CONTACTS_CACHE_LEVEL1_$gender ";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
@@ -177,11 +179,35 @@ for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 
 
 		disable_keys($myDb,$databaseName,"SUGGESTED_PROFILEIDS_1_$gender");
+                if($debug) 
+		{ 
+                    $sql = "Select count(*) AS COUNT from $databaseName.SUGGESTED_PROFILEIDS_1_$gender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in SUGGESTED_PROFILEIDS_1_$gender =".$countDe."\n";
+                }
+                
 
 	$sql = "DELETE FROM $databaseName.SUGGESTED_PROFILEIDS_1_$gender WHERE PROFILEID % 3 <> $serverId ";
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
 
 		enable_keys($myDb,$databaseName,"SUGGESTED_PROFILEIDS_1_$gender");
+                
+                if($debug) 
+		{ 
+                    $sql = "Select count(*) AS COUNT from $databaseName.SUGGESTED_PROFILEIDS_1_$gender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in SUGGESTED_PROFILEIDS_1_$gender after del=".$countDe."\n";
+                
+                    $sql = "Select count(*) AS COUNT from $databaseName.SUGGESTED_PROFILEIDS_2_$gender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in SUGGESTED_PROFILEIDS_2_$gender =".$countDe."\n";
+                }
 
 		disable_keys($myDb,$databaseName,"SUGGESTED_PROFILEIDS_2_$gender");
 
@@ -189,6 +215,14 @@ for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
 
 		enable_keys($myDb,$databaseName,"SUGGESTED_PROFILEIDS_2_$gender");
+                if($debug) 
+		{ 
+                    $sql = "Select count(*) AS COUNT from $databaseName.SUGGESTED_PROFILEIDS_2_$gender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in SUGGESTED_PROFILEIDS_2_$gender after del=".$countDe."\n";
+                }
 
 	$sql = "TRUNCATE TABLE $databaseName.TEMP_CONTACTS_CACHE_LEVEL1_$gender ";
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
@@ -197,24 +231,47 @@ for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
 
 		disable_keys($myDb,$databaseName,"TEMP_CONTACTS_CACHE_LEVEL1_$gender");
+                echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 
 	$sql = "INSERT IGNORE INTO $databaseName.TEMP_CONTACTS_CACHE_LEVEL1_$gender (SENDER, RECEIVER, TIME)(SELECT SENDER, RECEIVER, TIME FROM $databaseName.SUGGESTED_PROFILEIDS_1_$gender S JOIN newjs.CONTACTS C ON C.SENDER = S.PROFILEID WHERE C.TYPE='A') UNION (SELECT RECEIVER AS SENDER, SENDER AS RECEIVER, TIME FROM $databaseName.SUGGESTED_PROFILEIDS_1_$gender S JOIN newjs.CONTACTS C ON C.RECEIVER = S.PROFILEID) ORDER BY TIME DESC";
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
 
 
 		enable_keys($myDb,$databaseName,"TEMP_CONTACTS_CACHE_LEVEL1_$gender");
+                
+                if($debug) 
+		{ 
+                    $sql = "Select count(*) AS COUNT from $databaseName.TEMP_CONTACTS_CACHE_LEVEL1_$gender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in TEMP_CONTACTS_CACHE_LEVEL1_$gender =".$countDe."\n";
+                }
+                echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 
 		//reduce the no of results for each profileid to 50 based on time
 	$sql = "DELETE FROM $databaseName.TEMP_CONTACTS_CACHE_LEVEL1_$gender WHERE SNO>$no_of_level_1_contacts ";
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
 
 		disable_keys($myDb,$databaseName,"TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender");
+                echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 
 	$sql = "INSERT IGNORE INTO $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender (SENDER, RECEIVER, TIME,TYPE) (SELECT SENDER, RECEIVER, TIME, TYPE FROM $databaseName.SUGGESTED_PROFILEIDS_2_$gender S JOIN newjs.CONTACTS C ON C.RECEIVER = S.PROFILEID WHERE C.FILTERED <> 'Y') UNION (SELECT RECEIVER AS SENDER, SENDER AS RECEIVER, TIME, TYPE FROM $databaseName.SUGGESTED_PROFILEIDS_2_$gender S JOIN newjs.CONTACTS C ON C.SENDER = S.PROFILEID WHERE C.TYPE = 'A') ORDER BY TIME DESC";
 		mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
-
+                
 
 		enable_keys($myDb,$databaseName,"TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender");
+                
+                if($debug) 
+		{ 
+                    $sql = "Select count(*) AS COUNT from $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender";
+                    $res = mysqlquerydebug($sql,$myDb) or mysql_error_mail(mysql_error($myDb));
+                    $rowDe=mysql_fetch_assoc($res);
+                    $countDe = $rowDe['COUNT']; 
+                    echo "\ncount in TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender =".$countDe."\n";
+                }
+                
+                echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 
 		//reduce no of results for each profileid to 40 based on time
 	$sql = "DELETE FROM $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_$oppositeGender WHERE SNO>$no_of_level_2_contacts ";
@@ -231,7 +288,7 @@ for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 
 	}
 }
-
+echo "\n".date("Y-m-d --- H:i:s")."\n"; 
 for($i=1;$i<=2;$i++)
 {
 	foreach($genderArr as $gender)
@@ -294,9 +351,11 @@ $alter3="ALTER TABLE $databaseName.$temporaryTable DROP PRIMARY KEY";
 
 $sql = "INSERT IGNORE INTO $databaseName.$temporaryTable(SENDER,RECEIVER,CONSTANT_VALUE) SELECT SENDER,RECEIVER,CONSTANT_VALUE FROM $tableName ORDER BY TIME DESC";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
-
+        
+echo "\n".date("Y-m-d --- H:i:s")."\n";
 $sql="DELETE FROM $databaseName.$temporaryTable WHERE SNO>$no_of_level_2_contacts";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
+echo "\n".date("Y-m-d --- H:i:s")."\n";
 
 $sql="ALTER TABLE $databaseName.$temporaryTable  CHANGE SNO SNO INT(11) DEFAULT NULL";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
@@ -324,6 +383,8 @@ foreach($tableArr as $tableName)
 	if($row=mysql_fetch_assoc($res))
 	{
 		$count = $row['COUNT'];
+                if($debug)
+                    echo "\n count in $table1 =".$count."\n";
 	}
 	if($count < $minimum_no_of_results_required_for_rename)
 	{
