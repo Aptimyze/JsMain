@@ -1268,6 +1268,12 @@ class DetailedViewApi
 			elseif($this->m_arrOut['dpp_state'])
 				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
                 }
+        $this->m_arrOut['dpp_diet'] = $jPartnerObj->getDecoratedPARTNER_DIET();
+       $this->m_arrOut['dpp_smoke'] = $jPartnerObj->getDecoratedPARTNER_SMOKE();
+       $this->m_arrOut['dpp_drink'] = $jPartnerObj->getDecoratedPARTNER_DRINK();
+       $this->m_arrOut['dpp_complexion']=$jPartnerObj->getDecoratedPARTNER_COMP();
+       $this->m_arrOut['dpp_btype'] = $jPartnerObj->getDecoratedPARTNER_BTYPE();
+       $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();
 	}
 	/**
 	 * getDecorated_Photo
