@@ -26,7 +26,7 @@ elseif($branchName == "CIRelease")
 	$CIMergedFileName =  "/var/www/CI_Files/CIMergedBranches.txt"; 
 
 	$MergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-	$tagName = "TAG_HF@".date("Y-m-d_H:i:s");
+	$tagName = "SAMPLE_TAG_HF@".date("Y-m-d_H-i-s");
 }
 else
 {
@@ -44,8 +44,9 @@ $headerArr = array(
 
 $paramArr = array("tag_name"=>$tagName,"ref"=>$branchName,"release_description"=>$releaseDescription);
 
-$response = sendCurlGETRequest($urlToHit,$paramArr,"",$headerArr,"POST");
 
+$response = sendCurlGETRequest($urlToHit,$paramArr,"",$headerArr,"POST");
+print_R($response->name);die;
 // LOGIC TO FIND TAGS TO BE USED IN DASHBOARD
 /*$response = sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
 $i=0;
