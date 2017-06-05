@@ -50,4 +50,5 @@ fi
 
 #create next day branch from QASanityReleaseNew
 git checkout -b "RC@$nextDayDate" QASanityReleaseNew;
+git pull origin QASanityReleaseNew;
 git push origin "RC@$nextDayDate";
