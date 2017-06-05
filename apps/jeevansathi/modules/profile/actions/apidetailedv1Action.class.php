@@ -238,10 +238,10 @@ class apidetailedv1Action extends sfAction
         //Create Object as per Android or iOS App , by default consider as Android App
         
         $objDetailedDisplay = new DetailedViewApi($this);
-        //if(MobileCommon::isIOSApp())//If iOS App Then 
-        //{
+        if(MobileCommon::isIOSApp())//If iOS App Then 
+        {
             $objDetailedDisplay = new JsmsView($this);            
-        //}
+        }
         if(MobileCommon::isDesktop())//If Desktop
         {
             $forEdit = $request->getParameter("forEdit");
