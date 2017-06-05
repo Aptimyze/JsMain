@@ -66,7 +66,7 @@ EOF;
                                         }
                                 }
                                 if($type == "DELTA"){
-                                        $deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
+                                        $deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_master');
                                         $profilesArr = $deletedHiddenProfilesObj->getProfiles();
                                         if($profilesArr)
                                         {
