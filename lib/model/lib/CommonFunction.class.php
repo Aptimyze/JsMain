@@ -845,15 +845,18 @@ class CommonFunction
     	return $decoratedOccGroups;
     }
 
-    public static function getContactLimitDates()
+    public static function getContactLimitDates($profileObj = '')
 	{
-		$loginProfile = LoggedInProfile::getInstance();
+		$loginProfile = $profileObj;
+
+		if($profileObj == '')
+			$loginProfile = LoggedInProfile::getInstance();
+
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
 		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 		{
 			$verifyDate = $loginProfile->getENTRY_DT();
 		}
-
 		$x = date('Y-m-d',strtotime($verifyDate));
 		$y = date('Y-m-d');
 
@@ -871,9 +874,13 @@ class CommonFunction
 		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
 	}
 
-	public static function getLimitEndingDate($errlimit)
+	public static function getLimitEndingDate($errlimit, $profileObj = '')
 	{
-		$loginProfile = LoggedInProfile::getInstance();
+		$loginProfile = $profileObj;
+
+		if($profileObj == '')
+			$loginProfile = LoggedInProfile::getInstance();
+
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
 		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 		{
@@ -954,11 +961,70 @@ class CommonFunction
         return $label;
     }
 
+    public static function loginTrack($registrationid, $profileid)
+	{
+		if( ! isset($registrationid) || ! isset($profileid) )
+			return ;
+
+		// APP_LOGINTRACKING
+		$appType = MobileCommon::isApp();
+		$loginTrack = new MIS_APP_LOGINTRACKING();
+		if(!$loginTrack->getRecord($registrationid, $profileid))
+		{
+			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
+			// send mail
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK));
+			CommonFunction::SendEmailNewLogin($profileid);
+		}
+	}
+
+	public static function SendEmailNewLogin($profileid)
+	{
+		return ;
+		if(!isset($profileid))
+			return ;
+
+		try
+		{
+			$channel = "Browser";
+			if(MobileCommon::isAndroidApp())
+			{
+				$channel = "Android App";
+			}
+			else if(MobileCommon::isIOSApp())
+			{
+				$channel = "Ios App";
+			}
+
+			// TODO:
+			$deviceName = "device";
+			$city = $_SERVER["GEOIP_CITY_NAME"];
+			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
+
+			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
+			$tpl = $top8Mailer->setProfileId($profileid);
+			// TODO : change subject
+			$subject = "new Login related subject here";
+			$tpl->setSubject($subject);
+			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
+			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
+			$tpl->getSmarty()->assign("resetPasswordUrl",$forgotPasswordUrl);
+			$tpl->getSmarty()->assign("channel", $channel);
+			$tpl->getSmarty()->assign("deviceName", $deviceName);
+			$tpl->getSmarty()->assign("city", $city);
+			$tpl->getSmarty()->assign("country", $country);
+			// send mail
+			// $top8Mailer->send();
+		} catch (Exception $e) {
+			throw new jsException($e);
+		}
+	}
+
     public static function getFlagForIdfy($profileId)
     {
     	if($profileId)
     	{
-    		if(($profileId % 4) == 5) //this needs to be changed as per requirement
+    		if(($profileId % 20) == 1) //this needs to be changed as per requirement. Currently setting it to 5%users
     		{
     			return true;
     		}

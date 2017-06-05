@@ -31,7 +31,7 @@ class ApiEditFilterV1Action extends sfActions
 		$this->loginProfile = LoggedInProfile::getInstance();
     if($this->loginProfile->getAGE()== "")
       $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
-		$dbFilter=new NEWJS_FILTER();
+		$dbFilter=new ProfileFilter();
 		$dbFilterArr=$dbFilter->fetchEntry($this->loginProfile->getPROFILEID());
 		if(is_array($dbFilterArr))
 		{

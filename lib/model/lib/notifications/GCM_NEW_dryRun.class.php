@@ -22,7 +22,7 @@ class GCM_NEW_dryRun {
 	}
 	$fields['dry_run'] =true;
 
-        $headers = NotificationEnums::$GcmAppHeaders;
+	$headers = JsConstants::$GcmAppHeaders;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);

@@ -22,7 +22,11 @@ private static $featuredProfileCount= 1;
         public function setVariables($params){
 		if(is_array($params) && array_key_exists("request",$params)){
 			$actionObject = $params["actionObject"];
-			$actionObject->_SEARCH_RESULTS_PER_PAGE = SearchConfig::$profilesPerPageOnApp;
+			if(sfContext::getInstance()->getRequest()->getParameter('androidMyjsNew')==1)
+				$actionObject->_SEARCH_RESULTS_PER_PAGE = SearchConfig::$profilesOnMyjsOnApp;
+			else
+                $actionObject->_SEARCH_RESULTS_PER_PAGE = SearchConfig::$profilesPerPageOnApp;
+			
 		}
 		else
 			throw new JsException("", "Params with request required in SearchJSAPP.class.php");
@@ -95,7 +99,10 @@ private static $featuredProfileCount= 1;
         */
         public function getNoOfResults()
         {        
-                 return SearchConfig::$profilesPerPageOnApp;
+			if(sfContext::getInstance()->getRequest()->getParameter('androidMyjsNew')==1)
+				return SearchConfig::$profilesOnMyjsOnApp;
+			else
+                return SearchConfig::$profilesPerPageOnApp;
         }
         
         /**

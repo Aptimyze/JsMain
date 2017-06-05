@@ -125,8 +125,8 @@ if (authenticated($cid)) {
             $incentiveBDSLObj = new incentive_BACKEND_DISCONT_SENT_LOG();
             $incentiveBDSLObj->insertLinkDetails($name, addslashes(stripslashes($USERNAME)), $profileid, $SERVICE, $currencyType, $price, $discountPrice);
 
-            if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {
-                $SITE_URL = 'http://www.jeevansathi.com';
+            if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://crm.jeevansathi.com') {
+                $SITE_URL = 'https://www.jeevansathi.com';
             } else {
                 $SITE_URL = JsConstants::$siteUrl;
             }

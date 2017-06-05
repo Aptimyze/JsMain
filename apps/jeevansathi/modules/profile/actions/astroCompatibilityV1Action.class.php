@@ -20,6 +20,8 @@ class astroCompatibilityV1Action extends sfActions
 		$this->loginData = $request->getAttribute("loginData");		
 		//parameters obtained from api
 		$otherProfilechecksum = $request->getParameter("otherProfilechecksum");
+		$subscription = $this->loginData["SUBSCRIPTION"];
+		
 		$profilechecksumArr = explode("i",$otherProfilechecksum);
 		$otherProfileId = $profilechecksumArr[1];
 		$sendMail = $request->getParameter("sendMail");
@@ -88,10 +90,10 @@ class astroCompatibilityV1Action extends sfActions
 		}
 		else
 		{
-			if($sendMail)
+			if($sendMail  && $subscription)
 			{
 				$astroObj = new astroReport();
-				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);				
+				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);						
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
@@ -99,7 +101,6 @@ class astroCompatibilityV1Action extends sfActions
 				else
 				{
 					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
-					
 					if($count >= "100")
 					{
 						$successArr["MESSAGE"] = "Actual Report Sent";
@@ -117,14 +118,22 @@ class astroCompatibilityV1Action extends sfActions
 						{
 							$urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$otherUsername.":".$astroDataOther['MOON_DEGREES_FULL'].":".$astroDataOther['MARS_DEGREES_FULL'].":".$astroDataOther['VENUS_DEGREES_FULL'].":".$astroDataOther['LAGNA_DEGREES_FULL'].":".$astroDataSelf['MOON_DEGREES_FULL'].":".$astroDataSelf['MARS_DEGREES_FULL'].":".$astroDataSelf['VENUS_DEGREES_FULL'].":".$astroDataSelf['LAGNA_DEGREES_FULL'].":".$this->loginData['USERNAME'];
 						}						
-						$file=PdfCreation::PdfFile($urlToVedic);	
-						$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
-						$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
-						$astroObj->addDataForActualReport($loggedInProfileId);
-						if($count == "0")
+						$file=PdfCreation::PdfFile($urlToVedic);					
+						if($file)
 						{
-							$astroObj->setExpiryTime($loggedInProfileId);
+							$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
+							$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
+							$astroObj->addDataForActualReport($loggedInProfileId);
+							if($count == "0")
+							{
+								$astroObj->setExpiryTime($loggedInProfileId);
+							}
 						}
+						else
+						{
+							$successArr = $astroObj->sendAstroMail(1850,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId,"noData");
+						}	
+						
 					}
 				}
 				

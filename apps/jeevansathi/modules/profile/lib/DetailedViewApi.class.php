@@ -258,7 +258,9 @@ class DetailedViewApi
                 }
                 unset($nameOfUserObj);
         if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
-        	$this->m_arrOut['sameGender']=1;
+        	$this->m_arrOut['sameGender']=1;        
+    	else
+        	$this->m_arrOut['sameGender']=0;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		
@@ -1432,7 +1434,11 @@ class DetailedViewApi
 		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
 		{
-		    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        if(MObileCommon::isApp()=="A")
+                                    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        else
+                                    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+
 		}
 	}
 	}

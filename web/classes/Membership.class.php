@@ -84,6 +84,15 @@ class Membership
     private $dol_conv_bill;
     private $assisted_arr = array();
     private $discount_percent;
+    private $mtongue;
+    
+    function setMTongue($mtongue) {
+        $this->mtongue = $mtongue;
+    }
+    
+    function getMTongue() {
+        return $this->mtongue;
+    }
 
     function setBillid($billid) {
         $this->billid = $billid;
@@ -799,7 +808,8 @@ class Membership
 
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+        $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
     }
     
@@ -851,6 +861,19 @@ class Membership
             $paramsStr .= ", TAX_RATE";
             $valuesStr .= ",'$this->tax_rate'";
         }
+
+        //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+        if($this->mtongue==""){
+            $jprofileObj = new JPROFILE();
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $paramsStr .= ",MTONGUE";
+            $mtongue = $jprofileDetail['MTONGUE'];
+            $valuesStr .= ",'$mtongue'";
+        }else{
+            $paramsStr .= ",MTONGUE";
+            $valuesStr .= ",'$this->mtongue'";
+        }
+        //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
 
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
@@ -1291,7 +1314,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
 
             //add entry in EXCLUSIVE_MEMBERS TABLE
             $this->addExclusiveMemberEntry();
@@ -2487,7 +2510,19 @@ class Membership
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+            //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
+        else{
+            //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
+        }
+        
+    }
+    
+    public function sendMailForPaidUser($msg,$subject){
+        $to = "nitishpost@gmail.com";
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>

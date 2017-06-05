@@ -106,7 +106,7 @@ EOF;
     private function sendDryGCM($registration_ids){
         $message = array("pushId"=>5,"message"=>"Product Update","type"=>"app","value"=>"PROD");
         $fields = array('registration_ids' => $registration_ids,'data' => $message,'dry_run' => true);
-        $headers = NotificationEnums::$GcmAppHeaders;;
+	$headers = JsConstants::$GcmAppHeaders;
         try{
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'https://android.googleapis.com/gcm/send');

@@ -244,6 +244,10 @@ EOF;
       }
       $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate;
       $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
+      $monitoringKey = "MA_N_".date('Y-m-d');
+      if(!JsMemcache::getInstance()->get($monitoringKey)){
+          JsMemcache::getInstance()->set($monitoringKey,date('Y-m-d H:i:s'),79200);
+      }
       JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
   }
   

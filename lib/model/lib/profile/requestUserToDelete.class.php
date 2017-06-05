@@ -56,7 +56,7 @@ class requestUserToDelete
         $tpl->getSmarty()->assign("emailType", 1);
     	}
     	else{
-        $subject = "Are you already married/engaged? Please delete your profile on Jeevansathi";
+        $subject = "Have you already found a match?";
         $tpl->getSmarty()->assign("emailType", 2);
     	}
         
