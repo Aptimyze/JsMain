@@ -27,6 +27,7 @@ class ProfileEnums
         public static $sendInstantMessagesForFields = array("CASTE"=>"Caste","PHONE_MOB"=>"Phone Number","EMAIL"=>"Email","CITY_RES"=>"City","MTONGUE"=>"Mother Tongue","INCOME"=>"Income","EDU_LEVEL_NEW"=>"Highest Education","OCCUPATION"=>"Occupation","MANGLIK"=>"Manglik");
 
         public static $matchAlertMailerStypeArr = array("BN1","BN2","BN3","BN4","BN5");
+        public static $removeFromDppTickArr = array("dpp_special_case","dpp_appearance","dpp_lifestyle");
 
 }
 ?>

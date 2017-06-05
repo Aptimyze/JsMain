@@ -301,6 +301,7 @@ class apidetailedv1Action extends sfAction
         		}
         	}        	
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);
+			
 			if($this->loginProfile->getPROFILEID())
 			{
 				$out["dpp_Ticks"]["matching"] = $this->getTotalAndMatchingDppCount($out["dpp_Ticks"]);
@@ -488,12 +489,15 @@ class apidetailedv1Action extends sfAction
 
 	//this function uses dpp array and tick array to make a new dppTickArray which is then added to the $out
 	public function dppMatching($dppArray,$tickArray)
-	{
+	{		
 		$dppTickArray = array();
 		foreach($dppArray as $key=>$value)
 		{
 			$tickKey = ProfileEnums::$dppTickFields[$key];
-			$dppTickArray[$key]["VALUE"] = $value;
+			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
+			{
+				$dppTickArray[$key]["VALUE"] = $value;
+			}		
 			if($tickArray[$tickKey] && $value)
 			{
 				$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
