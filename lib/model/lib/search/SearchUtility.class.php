@@ -301,15 +301,12 @@ class SearchUtility
 				{
 					$searchParamsSetter['COUNTRY_RES']='';
 					$searchParamsSetter['STATE']='';
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
 				}
                                 elseif($cluster == 'COUNTRY_RES'){
 					$searchParamsSetter['STATE']='';
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster == 'STATE'){
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster=='OCCUPATION_GROUPING')
 					$searchParamsSetter['OCCUPATION']='';
@@ -452,14 +449,14 @@ class SearchUtility
 					$ncrS = FieldMap::getFieldLabel('delhiNcrStates','',1);
 					$temp = implode(",",$ncrS);
 					$clusterVal = str_replace("NCR","NCR,".$temp,$clusterVal);
-					$city = $SearchParamtersObj->getCITY_INDIA();
+					$city = $SearchParamtersObj->getCITY_RES();
 					if($city && $city!='DONT_MATTER')
 						$city = $city.",".implode(",",$ncrC);
 					else
 						$city = implode(",",$ncrC);
 
 					$city = $this->str_to_array_unique($city);
-					$searchParamsSetter['CITY_INDIA']=$city;
+					$searchParamsSetter['CITY_RES']=$city;
 				}
 				if($cluster=='HANDICAPPED')
 				{
@@ -468,7 +465,7 @@ class SearchUtility
 				/**
 				* If METRO is choosen in state then we need to map all city correspoinding to it
 				*/
-				if(strstr($clusterVal,'METRO') && $cluster=='CITY_INDIA')
+				if(strstr($clusterVal,'METRO') && $cluster=='CITY_RES')
 				{
 					$delmetro = FieldMap::getFieldLabel('allMetros','',1);									     
 					$temp = implode(",",$delmetro);	
@@ -564,16 +561,22 @@ class SearchUtility
                                         $selectedVAl = explode(",",$clusterVal);
                                         if(!in_array(51, $selectedVAl)){
                                                 $searchParamsSetter['STATE']='';
-                                                $searchParamsSetter['CITY_INDIA']='';
                                                 $searchParamsSetter['CITY_RES']='';
                                         }
+                                }
+                                if($cluster=='STATE'){
+                                        $searchParamsSetter['CITY_RES']='';
                                 }
 				$searchParamsSetter[$cluster]=$clusterVal;
 			}
 		}
 		//print_r($searchParamsSetter); die;
 //die;
-		$SearchParamtersObj->setter($searchParamsSetter);
+                if($cluster == "CITY_RES"){
+                        $SearchParamtersObj->setter($searchParamsSetter,2);
+                }else{
+                        $SearchParamtersObj->setter($searchParamsSetter);
+                }
 		//return $SearchParamtersObj;
 	}
 	
