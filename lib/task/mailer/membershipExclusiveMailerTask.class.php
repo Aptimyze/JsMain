@@ -24,12 +24,7 @@ EOF;
         // Gets array of dummy marked profiles out of original profiles array
         $premiumUsersObj = new jsadmin_PremiumUsers('newjs_slave');
         $profileDummyArr = $premiumUsersObj->filterDummyProfiles($profileArr);
-        foreach ($profileArr as $key => $val) {
-            if (in_array($val, $profileDummyArr)) {
-                // Unsets profiles which are marked as dummy from original array
-                unset($profileArr[$key]);
-            }
-        }
+        $profileArr= array_diff($profileArr, $profileDummyArr);
         // Sanitization of final array after removal of dummy profiles
         $profileArrFinal = array_values(array_filter(array_unique($profileArr)));
         // Clear Memory
