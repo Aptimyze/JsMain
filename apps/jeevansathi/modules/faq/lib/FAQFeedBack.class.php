@@ -142,10 +142,16 @@ class FAQFeedBack
 				} catch (Exception $e) {
 					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
-				
+			
 				//End
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
+
+				if(stristr($categoryNew, 'Already married/engaged') || stristr($categoryNew,'User is already married / engaged'))
+				{	
+				$ReportAbuseMailObj = new ReportInvalid();
+				$ReportAbuseMailObj->sendExtraNotification($loginProfile->getPROFILEID(),$otherProfileId,1);						
+				}
 
 				//////////////////////////////////////////////////
 
@@ -278,7 +284,7 @@ class FAQFeedBack
 				
 				$this->m_bValidForm = true;
 
-				$this->InsertFeedBack();								
+				$this->InsertFeedBack();		
 
 			if($this->m_szCategory!=FeedbackEnum::CAT_ABUSE)
 			{	
