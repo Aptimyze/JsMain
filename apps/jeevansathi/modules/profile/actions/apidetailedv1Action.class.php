@@ -494,6 +494,10 @@ class apidetailedv1Action extends sfAction
 		foreach($dppArray as $key=>$value)
 		{
 			$tickKey = ProfileEnums::$dppTickFields[$key];
+			if($key==ProfileEnums::HAVE_CHILD_KEY)
+			{
+				$tickKey = "HAVECHILD";
+			}
 			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
 			{
 				$dppTickArray[$key]["VALUE"] = $value;
