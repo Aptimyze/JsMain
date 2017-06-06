@@ -421,6 +421,20 @@ return 0;
                     }
                     break;
 
+                  case '23': 
+                      
+                      //if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))) 
+                  $nativePlaceObj = new JProfile_NativePlace($profileid);
+                  $nativePlaceObj->extractInfo($profileid);
+                      if($nativePlaceObj->IsRecordExist())
+                      {
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
