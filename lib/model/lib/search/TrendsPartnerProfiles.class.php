@@ -111,7 +111,7 @@ class TrendsPartnerProfiles extends PartnerProfile {
                                         $setArray[$val] = $this->jpartnerData[0][$val];
                                 }
                                 eval('$suggArr =$suggestionObj->getDppSuggestions("",'.$key.',$valArray,"",$this->loggedInProfileObj);');
-                                print_r($suggArr);die;
+                                
                                 if(isset($suggArr["data"])){
                                         foreach($suggArr["data"] as $k=>$data){
                                                 $setArray[$k] = $data;

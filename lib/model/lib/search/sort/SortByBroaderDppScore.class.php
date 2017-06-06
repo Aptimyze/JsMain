@@ -82,6 +82,10 @@ class SortByBroaderDppScore extends SortByTrendsScore {
 
         public function getSortString() {
                 $counter = 0;
+                $dppSortString[$counter] = "LAST_LOGIN_SCORE";
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
+                
                 $memObject = JsMemcache::getInstance();
                 // Get jpartner data
                 $jpartnerData = $memObject->get('SEARCH_JPARTNER_' . $this->loggedInProfileObj->getPROFILEID());
@@ -101,9 +105,6 @@ class SortByBroaderDppScore extends SortByTrendsScore {
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
                 
-                $dppSortString[$counter] = "LAST_LOGIN_SCORE";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
                 unset($this->jpartnerData);
                 //reverse dpp sort
                 $dppSortString[$counter] = parent::getReverseDppSort();
