@@ -149,8 +149,8 @@ class FAQFeedBack
 
 				if(stristr($categoryNew, 'Already married/engaged') || stristr($categoryNew,'User is already married / engaged'))
 				{	
-				$ReportAbuseMailObj = new ReportInvalid();
-				$ReportAbuseMailObj->sendExtraNotification($loginProfile->getPROFILEID(),$otherProfileId,1);						
+				$ReportAbuseMailObj = new requestUserToDelete();
+				$ReportAbuseMailObj->sendMailForDeletion($otherProfileId,'0');
 				}
 
 				//////////////////////////////////////////////////
