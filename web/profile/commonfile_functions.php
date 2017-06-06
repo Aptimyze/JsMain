@@ -374,7 +374,7 @@ $js_arr[]=array("mini_reg_revamp_js" => "3");
 $js_arr[]=array("regPage5_js" => "5");
 $js_arr[]=array("mobselectType_js" => "3");
 $js_arr[]=array("html5_js" => "4");
-$js_arr[]=array("reg_page1_js" => "10");
+$js_arr[]=array("reg_page1_js"  => "11");
 $js_arr[]=array("jsmb_page1_js" => "4");
 $js_arr[]=array("jsmb_page2_js" => "3");
 $js_arr[]=array("jsmb_page3_js" => "6");
@@ -504,7 +504,7 @@ $js_arr[]=array("helpWidget_js" => "22");
 $js_arr[]=array("advance_search" => "2");
 $js_arr[]=array("jsms/search/overlayLayerJsms" => "4");
 $js_arr[]=array("jsms/search/savesearch_js" => "9");
-$js_arr[]=array("sugar/sugar_registration_page1_new_js" => "4");
+$js_arr[]=array("sugar/sugar_registration_page1_new_js"  => "5");
 $js_arr[]=array("app_promo" => "4");
 $js_arr[]=array("sugar/registration_page1_new" => "4");
 $js_arr[]=array("registration_pg2" => "4");
@@ -638,6 +638,7 @@ $js_arr[]=array("jspc/photoUpload/fbPage_js" => "2");
 $js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js" => "3");
 $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js" => "3");
 $js_arr[]=array("sathiForLife_js" => "9");
+$js_arr[]=array("sugar/sugar_registration_new_page_js"   => "1");
 return $js_arr;
 }
 function getJavascript(){
