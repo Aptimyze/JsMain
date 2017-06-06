@@ -501,10 +501,10 @@ class apidetailedv1Action extends sfAction
 			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
 			{
 				$dppTickArray[$key]["VALUE"] = $value;
-			}		
-			if($tickArray[$tickKey] && $value)
-			{
-				$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+				if($tickArray[$tickKey] && $value)
+				{
+					$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+				}
 			}		
 		}
 		return $dppTickArray;
