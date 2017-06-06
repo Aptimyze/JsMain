@@ -1,0 +1,5 @@
+type=command
+dependencies=cronSimilarProfilesMasterStart
+command=${php5} ${docRoot}/crontabs/cronSimilarProfilesShards.php 2
+retries=3
+retry.backoff=60000
