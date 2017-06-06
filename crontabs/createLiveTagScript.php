@@ -26,7 +26,7 @@ elseif($branchName == "CIRelease")
 	$CIMergedFileName =  "/var/www/CI_Files/CIMergedBranches.txt"; 
 
 	$MergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-	$tagName = "SAMPLE_TAG_HF@".date("Y-m-d_H-i-s");
+	$tagName = "TAG_HF@".date("Y-m-d_H-i-s");
 }
 else
 {
