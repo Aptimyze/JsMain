@@ -3,9 +3,11 @@
 class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
-	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
-	{				//print_R($trendsArr);print_R($type);print_R($valArr);die;
-		$loggedInProfileObj = LoggedInProfile::getInstance();
+	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="",$loggedInProfileObj = "")
+	{				//echo "<pre>";print_R($trendsArr);print_R($type);print_R($valArr);
+                if($loggedInProfileObj == ""){
+                        $loggedInProfileObj = LoggedInProfile::getInstance();
+                }
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
@@ -27,7 +29,7 @@ class dppSuggestions
 		{
 			$valueArr["data"] = $this->getHindiAllSuggestions($valArr);
 		}
-		if(is_array($trendsArr))
+		if(is_array($trendsArr) && !empty($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
@@ -420,7 +422,7 @@ class dppSuggestions
 	}
 
 	public function getSuggestionForAge($type,$valArr)
-	{		
+        {
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
 		if($this->gender == "F")
 		{
