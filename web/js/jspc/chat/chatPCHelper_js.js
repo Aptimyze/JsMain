@@ -2040,10 +2040,16 @@ $(document).ready(function () {
                 data: inputParams,
                 beforeSend: function (xhr) {},
                 success: function (response) {
-                    if(response["header"]["status"] == 400){
-                        var msg = response["data"]["buttondetails"]["infomsglabel"];
-                        if(msg == undefined){
+                    if(response["header"]["status"] == 400 && response["data"] != undefined){
+                        var msg;
+                        if(response["data"]["buttondetails"]==undefined){
                             msg = objJsChat._rosterDeleteChatBoxMsg;
+                        }
+                        else{
+                            msg = response["data"]["buttondetails"]["infomsglabel"];
+                            if(msg == undefined){
+                                msg = objJsChat._rosterDeleteChatBoxMsg;
+                            }
                         }
                         if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
                             $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');

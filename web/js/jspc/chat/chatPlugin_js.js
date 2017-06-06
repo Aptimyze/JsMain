@@ -2263,7 +2263,7 @@ JsChat.prototype = {
         }
     },
     //append chat history in chat box
-    _appendChatHistory: function (selfJID, otherJID, communication,requestType,canChatMore) {
+    _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
@@ -2349,10 +2349,12 @@ JsChat.prototype = {
                 //console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
-            if(typeof canChatMore != "undefined" && canChatMore == "false"){
+            var selfJID = getConnectedUserJID();
+            curElem.rosterDeleteChatBoxReponse(selfJID,other_id);
+            /*if(typeof canChatMore != "undefined" && canChatMore == "false"){
                 //console.log("set as free");
                 curElem._disableChatTextArea(other_id);
-            }
+            }*/
             setTimeout(function(){
                 if(requestType == "first_history"){
                     curElem.preventSiteScroll(other_id);
