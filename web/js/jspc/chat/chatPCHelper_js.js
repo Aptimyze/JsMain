@@ -607,7 +607,7 @@ function getChatHistory(apiParams,key) {
                             }
                             manageHistoryLoader(bare_to_jid,"hide");
                             //call plugin function to append history in div
-                            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], response["data"]["items"],key,response["canChat"]);
+                            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], response["data"]["items"],key);
                             //objJsChat.storeMessagesInLocalHistory(apiParams["from"].split('@')[0],apiParams["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
                         }
                         else{
@@ -2020,7 +2020,7 @@ $(document).ready(function () {
         });
        }
        
-       objJsChat.rosterDeleteChatBoxReponse = function(from,to){
+       objJsChat.rosterDeleteChatBoxReponse = function(from,to,key){
            var headerData = {"Content-Type": "application/json"};
            var inputParams = JSON.stringify({
             "msg":"chatCheck",
@@ -2051,8 +2051,15 @@ $(document).ready(function () {
                                 msg = objJsChat._rosterDeleteChatBoxMsg;
                             }
                         }
-                        if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
-                            $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                        if(key==undefined || key!="canChatMore"){
+                            if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
+                                $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                            }
+                        }
+                        else if(key=="canChatMore" && response["data"]["buttondetails"]["infomsglabel"]=="Only paid members can start the chat"){
+                            console.log("disabled chat box");
+                            //$('chat-box[user-id="' + to + '"]').attr("data-paidInitiated","false");
+                            $('chat-box[user-id="' + to + '"] textarea').prop("disabled", true);   
                         }
                     }
                 },

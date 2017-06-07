@@ -2350,7 +2350,7 @@ JsChat.prototype = {
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
             var selfJID = getConnectedUserJID();
-            curElem.rosterDeleteChatBoxReponse(selfJID,other_id);
+            curElem.rosterDeleteChatBoxReponse(selfJID,other_id,"canChatMore");
             /*if(typeof canChatMore != "undefined" && canChatMore == "false"){
                 //console.log("set as free");
                 curElem._disableChatTextArea(other_id);
