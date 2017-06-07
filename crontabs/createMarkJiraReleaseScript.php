@@ -1,82 +1,67 @@
 <?php
 /*
-Script for creating versions and marking release in Jira
-Assumptions:
-The script loops line by line to the merging output
-The content of the block 
-"MISSING FROM QASanityReleaseNew........"" to "----------------------"
-and
-"MISSING FROM CIRelease........"" to "----------------------"
-is considered into hotfix and regular release respectively.
-For each block The first text within [] is taken to be the JIRA ids of the Jiras that are merged
-Each distinct group is used to create the version for corresponding block
-and for each JIRA id then the API is hit to mark release.
-
-In case a new group is added add it to the array $groups
-Change the fileName variable to the name of the file from which data is to be read
-$hotFix      : Array containg keys of distinct groups for which the release is to be made for hot fix
-$release     : Array containign keys of distinct groups for which the release is to be made for regular release
-$hotFixJira  : Array of all JIRA ids for hotfix
-$releaseJira : Array of all JIRA ids for regular release
-Three params:
-hotfix / release/ all
+This script is used to create versions for jira ids.
+The following parameters are required:
+1) $branchName : "QASanityReleaseNew" or "CIRelease"
 */
-$parameter = $argv[1];
-$missingFromQASanityPattern  = "MISSING FROM QASanityReleaseNew";
-$missingFromCIReleasePattern = "MISSING FROM CIRelease";
-$breakDelimieter = "---------------------------------------------------------------------";
+
+$branchName = $argv[1]; //This specifies whether the branch to be taken into account is QASanityReleaseNew or CIRelease
+
 $hotFixBlock = false;
 $releaseBlock = false;
 $groups = array('JSC'=>array("name"=>"JSC","id"=>10013),'JSM'=>array("name"=>"JSM","id"=>10015),'JSI'=>array("name"=>"JSI","id"=>10014)); //Any other group needs to be added here
 $createVersionUrl = "https://jsba99.atlassian.net/rest/api/2/version";
 $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
 
+//setting defualt time zone
+date_default_timezone_set('Asia/Kolkata');
+
 $headerArr = array(
 				'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
 				'Content-Type:application/json'
 				);
 
-$fileName = "ci.txt";
+if($branchName == "CIRelease")
+{
+    $parameter = "hotFix";
+    $hotFixBlock = true;
+    $fileName = "/var/www/CI_Files/CIMergedBranches.txt";
+}
+elseif($branchName == "QASanityReleaseNew")
+{
+    $parameter = "release";
+    $releaseBlock = true;
+    $fileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
+}
+else
+{
+    die("Please provide a valid input parameter");
+}
+$file = file($fileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-if ($file = fopen($fileName, "r")) {
-    while(!feof($file)) {
-        $line = fgets($file);
-        //Check to determine the first block of hotfix. Here hotFixBlock variable is set to true and it remains true until the break delimeter is excountered
-        if(strpos($line,$missingFromQASanityPattern) !== FALSE){
-        	$hotFixBlock = true;
+if(is_array($file) && !empty($file))
+{
+    if($branchName == "QASanityReleaseNew")
+    {
+        $releaseJira = $file;
+    }
+    else
+    {
+        $hotFixJira = $file;
+    }
+
+    foreach($file as $key=>$value)
+    {        
+        if($hotFixBlock == true)
+        {                          
+            $projectName = substr($value,0,3);
+            $hotFix[$projectName] = "1";
         }
 
-        //Check to determine the second block of regular release. Here releaseBlock variable is set to true and it remains true until the break delimeter is excountered
-        if(strpos($line,$missingFromCIReleasePattern) !== FALSE){
-        	$releaseBlock = true;
-        }
-
-        if($hotFixBlock == true){
-        	//This code is executed if the line being iterated currently is in the hotfix block
-        	unset($result);
-        	//Get the Jira Projects for which the release is to be created in $result[1] and specific jira ids in $result[0]
-        	$result = getJiraProjectAndIds($line);
-        	if(is_array($result)){
-	        	$hotFixJira[] = $result[0];
-	        	$hotFix[$result[1]] = "1";
-	        }
-        }
-
-        if($releaseBlock == true){
-        	//This code is executed if the line being iterated currently is in the regular release block
-        	unset($result);
-        	//Get the Jira Projects for which the release is to be created in $result[1] and specific jira ids in $result[0]
-        	$result = getJiraProjectAndIds($line);
-        	if(is_array($result)){
-	        	$releaseJira[] = $result[0];
-	        	$release[$result[1]] = "1";
-	        }
-        }
-
-        //Check for when the break delimeter is encountered and the $hotFixBlock and $releaseBlock is set to false
-        if(strpos($line,$breakDelimieter) !== FALSE){
-        	$hotFixBlock = false;
-        	$releaseBlock = false;
+        if($releaseBlock == true)
+        {                                    
+            $projectName = substr($value,0,3);
+            $release[$projectName] = "1";
         }
     }
 
@@ -84,7 +69,7 @@ if ($file = fopen($fileName, "r")) {
     if($parameter == "hotfix" || $parameter == "all")
         createRelease($hotFix,"HF");
 
-	//For Creating regulat Release Versions
+    //For Creating regulat Release Versions
     if($parameter == "release" || $parameter == "all")
         createRelease($release,"RC");
 
@@ -92,13 +77,44 @@ if ($file = fopen($fileName, "r")) {
     if($parameter == "hotfix" || $parameter == "all")
         markVersion($hotFixJira,"HF");
 
-	//For marking regular release Versions
+    //For marking regular release Versions
     if($parameter == "release" || $parameter == "all")
         markVersion($releaseJira,"RC");    
 
+    
+    /*
+    this part is used to ensure that previous data in files is deleted and time is udpated in the time file.
+    1) for CIRelease: The mergedBranches file is truncated and the lastReleaseDate file is set to the current time
+     2) for QASanityReleaseNew: The mergedBranches file for both CI and QA is truncated and the lastReleaseDate for both is updated.
+     */
+    if($branchName == "CIRelease")
+    {
+        $CIFile = fopen("/var/www/CI_Files/CIMergedBranches.txt","w");
+        fclose($CIFile);
+
+        $CIDateFile = fopen("/var/www/CI_Files/CIReleaseLastReleaseDate.txt","w+");        
+        fwrite($CIDateFile, date("Y-m-d H:i:s"));
+        fclose($CIDateFile);
+    }
+    elseif($branchName == "QASanityReleaseNew")
+    {
+        $SanityFile = fopen("/var/www/CI_Files/QASanityMergedBranches.txt","w");
+        fclose($SanityFile);
+
+        $CIFile = fopen("/var/www/CI_Files/CIMergedBranches.txt","w");
+        fclose($CIFile);
+
+        $CIDateFile = fopen("/var/www/CI_Files/CIReleaseLastReleaseDate.txt","w+");        
+        fwrite($CIDateFile, date("Y-m-d H:i:s"));
+        fclose($CIDateFile);
+
+        $sanityDateFile = fopen("/var/www/CI_Files/QASanityLastReleaseDate.txt","w+");
+        fwrite($sanityDateFile,date("Y-m-d H:i:s"));
+        fclose($sanityDateFile);
+    }
     //print_r(array($hotFix,$release,$hotFixJira,$releaseJira));
-    fclose($file);
 }
+
 
 function markVersion($releaseJira,$releaseText){
 	global $setVersionUrl;
@@ -117,23 +133,6 @@ function markVersion($releaseJira,$releaseText){
 	}
 }
 
-function getJiraProjectAndIds($line){
-	global $groups;
-	unset($matches);
-	//This preg matches the first text encountered in square brackets i.e. []
-	if(preg_match("/\[([^\]]*)\]/", $line, $matches)){
-		//Sub string for first three letters to get the project
-		$subString = substr($line, 1,3);
-		//Check whether the text in square brackets is actually a jira id or some other text
-    	if(array_key_exists($subString, $groups)){
-    		//Adding it to two different arrays. One for unique jira ids and the other to get the project
-    		//$result[0] = $matches[1];
-            $result[0] = substr($matches[1], 0,8);
-    		$result[1] = $subString;
-    	}
-	}
-	return $result;
-}
 
 function createRelease($releaseArr,$releaseText){
 	global $groups;

@@ -304,6 +304,107 @@
 			</table>
 			~/if`
 		</table>
+                ~else if $flag eq '1' and $viewmode eq 'C'`
+		<table width=100% border=0 align="center">
+			~if $dflag eq '1'`
+			<tr class="formhead">
+				<td colspan=100% align="center">&nbsp;Month : ~$dmonth` Year : ~$dyear`</td>
+			</tr>
+			~elseif $qflag eq '1'`
+			<tr class="formhead">
+				<td colspan=14 align="center">&nbsp;Financial Year ~$qyear`-~$qyearp1`</td>
+			</tr>
+			~elseif $mflag eq '1'`
+			<tr class="formhead">
+				<td colspan=14 align="center">&nbsp;Financial Year ~$myear`-~$myearp1`</td>
+			</tr>
+			~/if`
+		</table>
+		<br>
+		<table width=100% border=0 align="center" cellspacing="4" cellpadding=5>
+			<tr class="label">
+				<td colspan=100% align="center">&nbsp;Branch : ~$branch`</td>
+			</tr>
+			~if $mflag eq '1'`
+			<table width="150%" align="center" border=0 cellspacing=4 cellpadding=5>
+				<tr class="label">
+                                    <td align="center">&nbsp;<strong>TC from subscription sales after Service tax</strong></td>
+					~section name=mon loop=$mmarr`
+					<td width=6% align="center">&nbsp;~$mmarr[mon]`</td>
+					~/section`
+					<td width=6% align="center">&nbsp;Total</td>
+				</tr>
+                                ~for $i=0 to 10`
+				<tr class="label">
+					<td align="center"><strong>&nbsp;~$mtongueDisplayStr[$i]` </strong></td>
+					~section name=mon loop=$mmarr`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i][mon]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i]['total']`</strong></td>
+				</tr>
+                                 ~/for`
+                                <tr class="label">
+					<td align="center"><strong>&nbsp;Total </strong></td>
+					~section name=mon loop=$mmarr`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal[mon]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal['total']`</strong></td>
+				</tr>
+			</table>
+			~elseif $qflag eq '1'`
+			<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+				<tr class="label">
+					<td align="center" width=15%>&nbsp;<strong>TC from subscription sales after Service tax</strong></td>
+					~section name=qtr loop=$qtrarr`
+					<td width=6% align="center">&nbsp;~$qtrarr[qtr]`</td>
+					~/section`
+					<td width=6% align="center">&nbsp;Total</td>
+				</tr>
+                                ~for $i=0 to 10`
+				<tr class="label">
+					<td align="center"><strong>&nbsp; ~$mtongueDisplayStr[$i]`</strong></td>
+					~section name=qtr loop=$qtrarr`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i][qtr]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i]['total']`</strong></td>
+				</tr>
+                                 ~/for`
+                                <tr class="label">
+					<td align="center"><strong>&nbsp;Total </strong></td>
+					~section name=qtr loop=$qtrarr`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal[qtr]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal['total']`</strong></td>
+				</tr>
+			</table>
+			~elseif $dflag eq '1'`
+			<table width="150%" align="center" border=0 cellspacing=2 cellpadding=5>
+				<tr class="label">
+					<td align="center" width=6%>&nbsp;<strong>TC from subscription sales after Service tax</strong></td>
+					~section name=dd loop=$ddarr`
+					<td align="center">&nbsp;~$ddarr[dd]`</td>
+					~/section`
+					<td width=6% align="center">&nbsp;Total</td>
+				</tr>
+                                ~for $i=0 to 10`
+				<tr class="label">
+					<td align="center"><strong>&nbsp;~$mtongueDisplayStr[$i]`</strong></td>
+					~section name=mon loop=$ddarr`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i][mon]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$totalCollFromSubsSalesAfterTax[$i]['total']`</strong></td>
+				</tr>
+                                ~/for`
+                                 <tr class="label">
+					<td align="center"><strong>&nbsp;Total </strong></td>
+					~section name=day loop=$ddarr`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal[day]`</strong></td>
+					~/section`
+					<td width=6% align="center"><strong>&nbsp;~$finalTotal['total']`</strong></td>
+				</tr>
+			</table>
+			~/if`
+		</table>
 		~elseif $flag eq '1' and $viewmode eq 'O'`
 		~if $bflag eq 'N'`
 		~if $mflag eq '1'`
@@ -888,7 +989,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='D'> Day Wise <br><br></td>
+					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="vtype" type="radio" value='D'> Day Wise </td>
 					<td colspan=2>
 						<select name="dmonth">
 							~section name=mon loop=$mmarr`
@@ -903,11 +1004,19 @@
 					</td>
 				</tr>
 				<tr>
-					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="viewmode" type="radio" value='O' checked="checked"> Old View <br><br></td>
-					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="viewmode" type="radio" value='N'> New View <br><br></td>
-					<td><br><br>* New View does not have Payment Mode / Executive Wise  <br>
-					* New view will by default show data for ALL Branches
+					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="viewmode" type="radio" value='O' checked="checked"> Old View </td>
+					<td><br><br>&nbsp;&nbsp;&nbsp;<input name="viewmode" type="radio" value='N'> New View </td>
+                                        <td><br><br>&nbsp;&nbsp;&nbsp;<input name="viewmode" type="radio" value='C'> Community-Wise View </td>
+                                       
+                                </tr>
+                                <tr>
+                                         <td><br><br>&nbsp;&nbsp;&nbsp;<br><br></td>
+					<td><br><br>* New View & Community View does not have Payment Mode / Executive Wise  <br>
+					* New view & Community View will by default show data for ALL Branches
 					<br><br></td>
+                                        <td><br><br>* Community view is based on the community of the user AT THE TIME OF BILLING except for billings done before 5 June 2017
+                                        <br>* Billings done before 5 June 2017 will have the community as per their selected community as on 5 June 2017
+					<br><br>
 				</tr>
 				<tr>
 					<input type="hidden" name="checksum" value=~$CHECKSUM`>

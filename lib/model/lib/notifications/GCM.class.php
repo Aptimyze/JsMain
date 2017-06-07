@@ -39,7 +39,7 @@ class GCM {
 	}
 	//print_r("sending to gcm");
 	//print_r($fields);
-        $headers = NotificationEnums::$GcmAppHeaders;
+	$headers = JsConstants::$GcmAppHeaders;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -144,7 +144,7 @@ class GCM {
 			$fields['time_to_live'] = intval($details['TTL']);
 			$fields['delay_while_idle'] = true;
 		}
-		$headers = NotificationEnums::$GcmAppHeaders;
+		$headers = JsConstants::$GcmAppHeaders;
 
 		$this->curlArr[$this->pendingCurlRequestCount] = curl_init();
 		curl_setopt($this->curlArr[$this->pendingCurlRequestCount], CURLOPT_URL, $url);

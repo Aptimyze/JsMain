@@ -2156,24 +2156,24 @@ class MembershipHandler
             if (is_array($profileIDArr) && $profileIDArr) {
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
-                $jprofleSlaveObj = new JPROFILE("newjs_slave");
+                $jprofleSlaveObj = new JPROFILE("crm_slave");
                 $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER,HEIGHT", $whereCondition);
                 unset($jprofleSlaveObj);
 
                 //get names of profiles
-                $incentiveObj    = new incentive_NAME_OF_USER("newjs_slave");
+                $incentiveObj    = new incentive_NAME_OF_USER("crm_slave");
                 $profileNamesArr = $incentiveObj->getName($profileIDArr);
                 unset($incentiveObj);
 
                 //get names of agents to whom profiles are allotted
-                $mainAdminObj   = new incentive_MAIN_ADMIN("newjs_slave");
+                $mainAdminObj   = new incentive_MAIN_ADMIN("crm_slave");
                 $jsadminDetails = $mainAdminObj->getArray(array("PROFILEID" => implode(",", $profileIDArr)), "", "", "ALLOTED_TO AS SALES_PERSON,PROFILEID", "", "PROFILEID");
                 unset($mainAdminObj);
 
                 //get billing details of profiles via billid's
                 $billIdArr = array_map(function ($arr) {return $arr['BILL_ID'];}, $allocationDetails);
                 if (is_array($billIdArr) && $billIdArr) {
-                    $billingObj     = new BILLING_SERVICE_STATUS("newjs_slave");
+                    $billingObj     = new BILLING_SERVICE_STATUS("crm_slave");
                     $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr), "PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT", "%X%");
                     unset($billingObj);
                 }
@@ -2587,4 +2587,31 @@ class MembershipHandler
             JsMemcache::getInstance()->remove("FreeToP_$profileid");
         }
     }
+
+    // Automated Outbound Call for Membership
+    public function checkEligibleForMemCall($profileid){
+	$minScore 	=91;
+	$maxScore 	=100;
+        $displayPage 	=1;
+        $device 	="desktop";
+        $ignoreShowOnlineCheck =false;
+	$result 	=array();	
+
+    	$mainAdminPoolObj = new incentive_MAIN_ADMIN_POOL('newjs_masterRep');	
+       	$eligible =$mainAdminPoolObj->getEligibileProfile($profileid, $minScore, $maxScore);     		
+	if($eligible){
+		$userObj = new memUser($profileid);
+		$userObj->setMemStatus();
+		$type =$userObj->getUserType();	
+		if($type==2){
+			list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+			list($allMainMem, $minPriceArr) = $this->getMembershipDurationsAndPrices($userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
+			$result =$minPriceArr['P'];
+			unset($result['PRICE_RS_TAX']);
+			return $result;
+		}
+	}
+	return false;
+    }
+
 }

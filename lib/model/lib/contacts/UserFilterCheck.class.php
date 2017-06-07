@@ -627,7 +627,7 @@ class UserFilterCheck
 	 */
 	public static function getFilterParameters($profileid)
 	{
-		$filtObj=new NEWJS_FILTER();
+		$filtObj=new ProfileFilter();
 		$row=$filtObj->fetchEntry($profileid);
 		if(is_array($row))
 		{

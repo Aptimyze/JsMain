@@ -157,11 +157,6 @@ class viewSimilarProfileAction extends sfActions
                 $modResult =  array(1);
                 if(JsConstants::$vspServer != 'live' || !in_array($loggedinMod,$modResult)){
                     $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
-                    $viewSimilarProfileObj->getViewSimilarCriteria();
-                    if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
-                            $this->similarPageShow=1;
-                    else
-                            $this->similarPageShow=0;
                 }
                 else
                     $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile,$removeFilters=1);
@@ -208,8 +203,13 @@ class viewSimilarProfileAction extends sfActions
                         $this->similarPageShow=1;
                     }
                   }
-                else 
+                else{ 
                     $profileidsort=$viewSimilarProfileObj->getViewSimilarCriteria();
+                    if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
+                            $this->similarPageShow=1;
+                    else
+                            $this->similarPageShow=0;
+                }
 		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
 		$responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj,$results_orAnd_cluster,$clustersToShow,$currentPage,$cachedSearch,$this->loginProfile);

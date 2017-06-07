@@ -998,8 +998,8 @@ class CommonFunction
 
 			// TODO:
 			$deviceName = "device";
-			$city = "city";
-			$country = "country";
+			$city = $_SERVER["GEOIP_CITY_NAME"];
+			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
 
 			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
 			$tpl = $top8Mailer->setProfileId($profileid);
@@ -1024,7 +1024,7 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 100) == 1) //this needs to be changed as per requirement. Currently setting it to 1%users
+    		if(($profileId % 10) == 1) //this needs to be changed as per requirement. Currently setting it to 10%users
     		{
     			return true;
     		}
