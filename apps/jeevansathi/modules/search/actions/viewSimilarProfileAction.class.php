@@ -245,9 +245,9 @@ class viewSimilarProfileAction extends sfActions
 		}
 		$resultsArray = $resultsArraySort;
 		$this->finalResultsArray = $resultsArray;
-                $dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
+                /*$dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
                 $noOfResultsToStore = min(count($this->finalResultsArray),25);
-                JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);
+                JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);*/
 		if(!$responseObj->getTotalResults())
 			$this->similarPageShow=0;
 		//To be used for search eoi
