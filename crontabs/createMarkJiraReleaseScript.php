@@ -32,6 +32,8 @@ elseif($branchName == "QASanityReleaseNew")
     $parameter = "release";
     $releaseBlock = true;
     $fileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
+    $CIFileName = "/var/www/CI_Files/CIMergedBranches.txt";
+    $CIArr = file($CIFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 }
 else
 {
@@ -43,7 +45,15 @@ if(is_array($file) && !empty($file))
 {
     if($branchName == "QASanityReleaseNew")
     {
-        $releaseJira = $file;
+        $releaseJiraArr = $file;
+        if(is_array($CIArr) && !empty($CIArr))
+        {
+            $releaseJira = array_merge($releaseJiraArr,$CIArr);
+        }
+        else
+        {
+            $releaseJira = $releaseJiraArr;
+        }
     }
     else
     {
