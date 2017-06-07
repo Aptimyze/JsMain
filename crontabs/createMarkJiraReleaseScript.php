@@ -23,7 +23,7 @@ $headerArr = array(
 
 if($branchName == "CIRelease")
 {
-    $parameter = "hotFix";
+    $parameter = "hotfix";
     $hotFixBlock = true;
     $fileName = "/var/www/CI_Files/CIMergedBranches.txt";
 }
@@ -32,6 +32,8 @@ elseif($branchName == "QASanityReleaseNew")
     $parameter = "release";
     $releaseBlock = true;
     $fileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
+    $CIFileName = "/var/www/CI_Files/CIMergedBranches.txt";
+    $CIArr = file($CIFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 }
 else
 {
@@ -43,7 +45,15 @@ if(is_array($file) && !empty($file))
 {
     if($branchName == "QASanityReleaseNew")
     {
-        $releaseJira = $file;
+        $releaseJiraArr = $file;
+        if(is_array($CIArr) && !empty($CIArr))
+        {
+            $releaseJira = array_merge($releaseJiraArr,$CIArr);
+        }
+        else
+        {
+            $releaseJira = $releaseJiraArr;
+        }
     }
     else
     {
@@ -64,7 +74,7 @@ if(is_array($file) && !empty($file))
             $release[$projectName] = "1";
         }
     }
-
+        
     //For Creating Hotfix Versions
     if($parameter == "hotfix" || $parameter == "all")
         createRelease($hotFix,"HF");
@@ -123,7 +133,7 @@ function markVersion($releaseJira,$releaseText){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = "$releaseText@".date('d')."-".date('m')."-".date('y');
+			$versionName = "$releaseText@".date("Y-m-d");
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
@@ -142,7 +152,7 @@ function createRelease($releaseArr,$releaseText){
 		//Iterate for all the jira ids
 		foreach($releaseArr as $key => $val){
 			$params = json_encode(array("description"=>"Release",
-							"name"=>"$releaseText@".date('d')."-".date('m')."-".date('y'),
+							"name"=>"$releaseText@".date("Y-m-d"),
 							"archived"=> false,
 							"released"=> false,
 							"releaseDate"=> date('Y-m-d'),

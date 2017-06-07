@@ -15,11 +15,18 @@ date_default_timezone_set('Asia/Kolkata');
 if($branchName == "QASanityReleaseNew")
 {
 	$SanityMergedFileName = "/var/www/CI_Files/QASanityMergedBranches.txt"; 
+	$CIMergedFileName =  "/var/www/CI_Files/CIMergedBranches.txt";
+	$CIMergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
+	if(is_array($CIMergedBranchesArr) && !empty($CIMergedBranchesArr))
+	{
+		$CIMergedBranches = implode(",", $CIMergedBranchesArr);	
+	}
+	
 	//To get files arr by reading the entire file
 	$MergedBranchesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-	$tagName = "TAG_RC@".date("Y-m-d_H:i:s");
+	$tagName = "TAG_RC@".date("Y-m-d_H-i-s");
 }
 elseif($branchName == "CIRelease")
 {
@@ -37,12 +44,19 @@ else
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/repository/tags?";
 
 $releaseDescription = implode(",", $MergedBranchesArr);
+if($branchName == "QASanityReleaseNew")
+{
+	if($CIMergedBranches)
+	{
+		$releaseDescription.=",".$CIMergedBranches;
+	}
+}
 
 $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
 	); //token used is of username: vidushi@naukri.com
 
-$paramArr = array("tag_name"=>$tagName,"ref"=>$branchName,"release_description"=>$releaseDescription);
+$paramArr = array("tag_name"=>$tagName,"ref"=>"CIRelease","release_description"=>$releaseDescription); //ref should be CIRelease
 
 
 $response = sendCurlGETRequest($urlToHit,$paramArr,"",$headerArr,"POST");
