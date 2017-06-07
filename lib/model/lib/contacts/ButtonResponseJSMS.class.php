@@ -522,9 +522,8 @@ Class ButtonResponseJSMS
 			//var_dump($viewer);
 			//var_dump($type);die;
 
-			
+                        $params["isIgnored"] = $params["IGNORED"];
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
-
 			if($params["IGNORED"] == 1){
 			
 			$buttons["buttons"]["3"]["label"]="Unblock";
