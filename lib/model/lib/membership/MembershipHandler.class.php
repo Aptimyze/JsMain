@@ -2156,24 +2156,24 @@ class MembershipHandler
             if (is_array($profileIDArr) && $profileIDArr) {
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
-                $jprofleSlaveObj = new JPROFILE("newjs_slave");
+                $jprofleSlaveObj = new JPROFILE("crm_slave");
                 $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER,HEIGHT", $whereCondition);
                 unset($jprofleSlaveObj);
 
                 //get names of profiles
-                $incentiveObj    = new incentive_NAME_OF_USER("newjs_slave");
+                $incentiveObj    = new incentive_NAME_OF_USER("crm_slave");
                 $profileNamesArr = $incentiveObj->getName($profileIDArr);
                 unset($incentiveObj);
 
                 //get names of agents to whom profiles are allotted
-                $mainAdminObj   = new incentive_MAIN_ADMIN("newjs_slave");
+                $mainAdminObj   = new incentive_MAIN_ADMIN("crm_slave");
                 $jsadminDetails = $mainAdminObj->getArray(array("PROFILEID" => implode(",", $profileIDArr)), "", "", "ALLOTED_TO AS SALES_PERSON,PROFILEID", "", "PROFILEID");
                 unset($mainAdminObj);
 
                 //get billing details of profiles via billid's
                 $billIdArr = array_map(function ($arr) {return $arr['BILL_ID'];}, $allocationDetails);
                 if (is_array($billIdArr) && $billIdArr) {
-                    $billingObj     = new BILLING_SERVICE_STATUS("newjs_slave");
+                    $billingObj     = new BILLING_SERVICE_STATUS("crm_slave");
                     $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr), "PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT", "%X%");
                     unset($billingObj);
                 }

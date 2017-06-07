@@ -6,10 +6,45 @@
 <style>
 DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
 </style>
-
+<script>
+    function formValidation(){
+        //var diff =  Math.floor(( Date.parse(str2) - Date.parse(str1) ) / 86400000); 
+        var fromdate=document.f1.fromday.value;
+        var frommon=document.f1.frommonth.value; 
+        var fromyear=document.f1.fromyear.value;
+        var todate=document.f1.todate.value;
+        var tomon=document.f1.tomonth.value; 
+        var toyear=document.f1.toyear.value; 
+        var st_date=fromyear + "-" + frommon + "-" + fromdate + " 00:00:00";
+	var end_date=toyear + "-" + tomon + "-" + todate +" 23:59:59";
+        var diff =  Math.floor(( Date.parse(end_date) - Date.parse(st_date) ) / 86400000); 
+        if(diff>31){
+            alert("Date Range Selected Cannot be more than 31 days");
+            return false;
+        }
+        if(st_date>end_date){
+            alert("Invalid Date Range Selected");
+            return false;
+        }
+        
+    }
+    function defaultSelect(){
+        document.f1.fromyear.selectedIndex = 13;
+        document.f1.toyear.selectedIndex = 13;
+        var d = new Date();
+        var m = d.getMonth();
+        document.f1.frommonth.selectedIndex = m;
+        document.f1.tomonth.selectedIndex = m;
+        var dt = d.getDate();
+        document.f1.todate.selectedIndex = dt-1;
+    }
+</script>
 </head>
-<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-
+~if $flag eq '1'`
+<body  bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+~else`
+<body onload="defaultSelect();" bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+~/if`
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tbody>
 <tr>
@@ -237,34 +272,57 @@ ght="63" usemap="#Map" border="0"></td>
 	<td align=center>&nbsp;~$totcommArr.totperamt`</td>
 	</tr>
 	</table>
-
 ~else`
-	<form method=post action="paid_n_percentages.php">
+	<form name= "f1" method=post action="paid_n_percentages.php" onsubmit="return formValidation()">
+            <h4 align ="center">Tickets and Sales distribution - Gender, Posted By, Currency, City, Country-wise, Community-wise</h4>
 	<table width=80% border=0 align="center" cellpadding=5>
-	<tr>
+        <tr>
 	<td >
-	<select name="day">
-                <option value="">--Select--</option>
+            Select From Date:</td><td>
+	Day:<select name="fromday">
         ~section name=dd loop=$ddarr`
                 <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
         ~/section`
         </select> - 
-	<select name="month">
+	Month:<select name="frommonth">
         ~section name=mon loop=$mmarr`
                 <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
         ~/section`
         </select> - 
-	<select name="year">
+	Year:<select name="fromyear">
         ~section name=yr loop=$yyarr`
                 <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
         ~/section`
-        </select>&nbsp;Month - Year
+        </select>
 	</td>
-	</tr>
+        </tr>
+        <tr>
+	<td >
+        Select To Date:</td><td>
+	Day:<select name="todate">
+        ~section name=dd loop=$ddarr`
+                <option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+        ~/section`
+        </select> - 
+	Month:<select name="tomonth">
+        ~section name=mon loop=$mmarr`
+                <option value=~$mmarr[mon]`>~$mmarr[mon]`</option>
+        ~/section`
+        </select> - 
+	Year:<select name="toyear">
+        ~section name=yr loop=$yyarr`
+                <option value=~$yyarr[yr]`>~$yyarr[yr]`</option>
+        ~/section`
+        </select>
+	</td>
+        </tr>
 	<tr>
 	<input type="hidden" name="cid" value=~$cid`>
 	<td ><input type="submit" name="CMDGo" value="     Go     "></td>
 	</tr>
+        <tr><td></td><td>
+            *Note:It may take upto 2 mintues to fetch data for complete month*</td>
+        </tr>
 	</table>
 	</form>
 ~/if`

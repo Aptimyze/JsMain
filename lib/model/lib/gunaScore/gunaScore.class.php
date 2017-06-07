@@ -9,7 +9,7 @@ class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
-		 */
+		 */ //testing11
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $searchIdArr = array(); //this comment has been added for testing
@@ -140,6 +140,7 @@ class gunaScore
     elseif(!$fresult)
     {
       //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
+      //This send mail function has to be replaced by Redis key
     }
     if(is_array($fresult))
     {
@@ -167,5 +168,5 @@ class gunaScore
       }
     }
     return($gunaData);
-  }
+  } //last line comment for testing1
 }

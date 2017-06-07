@@ -9,10 +9,7 @@ class jsValidatorJamaat extends sfValidatorBase
   
   protected function doClean($value)
   {
-if(MobileCommon::isApp())
-{
-        return $value;
-}
+      
     $clean = (string) $value;
   	$caste = $this->getOption('caste');
   	if($clean)
@@ -27,8 +24,6 @@ if(MobileCommon::isApp())
 			throw new sfValidatorError($this,'Please provide a valid value of jamaat for '.FieldMap::getFieldLabel('caste',$caste));
 		}
 	}
-        else if($caste == '152')
-            throw new sfValidatorError($this,'Jamaat is mandatory for '.FieldMap::getFieldLabel('caste',$caste));
       return $clean;
   }
   
