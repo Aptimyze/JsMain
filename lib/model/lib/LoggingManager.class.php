@@ -357,6 +357,11 @@ class LoggingManager
 			$logData[LoggingEnums::PHISHING_URL] = $logArray[LoggingEnums::PHISHING_URL];	
 		}
 
+		if(isset($logArray[LoggingEnums::DEVICEID]))
+		{
+			$logData[LoggingEnums::DEVICEID] = $logArray[LoggingEnums::DEVICEID];
+		}
+
 		return $logData;
 	}
 
