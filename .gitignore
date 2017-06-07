@@ -9,4 +9,6 @@ web/uploads/SearchLogs/*
 log/*
 .idea
 .eclipse
+web/spa/node_modules/*
+web/spa/dist-dev/*
 .gitConfig/*

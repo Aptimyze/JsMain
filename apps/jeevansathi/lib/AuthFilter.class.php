@@ -40,6 +40,11 @@ class AuthFilter extends sfFilter {
             }
 		}
 		// End hindi switch code !
+		if( MobileCommon::isNewMobileSite() && (strpos($request->getUri(), 'api') === false) ) {
+			$specificDomain = explode('/',$request->getUri());
+			header("Location:".$SITE_URL."/spa/dist-dev/index.html#".$specificDomain[3]);
+			die;	
+		}
 		
 		if ($matchPointCID = $request->getParameter("matchPointCID")) {
 			$flag = 1; //to check if user is logged in
