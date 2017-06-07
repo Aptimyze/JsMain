@@ -304,6 +304,12 @@ Class ButtonResponseJSMS
 				$buttonPrimary = self::getUploadPhotoButton();
 				$responseArray["buttons"]["primary"][0] = $buttonPrimary;
 			}
+                        
+                        if(is_array($responseArray["buttons"]["others"]))
+                        foreach ($responseArray["buttons"]["others"] as $key => $value) {
+                            if($key!=0)
+                                $responseArray["buttons"]["others"][$key]['secondary'] = 'true';
+                        }
 		}
 		else
 		{
