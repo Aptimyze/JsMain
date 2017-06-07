@@ -51,6 +51,7 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
 	global $ddlShardSlaveUser;
         global $slave_activeServers;
         global $shardSlave112;
+        global $shardedServers;
         if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
         elseif($master_or_slave=='slave112')
@@ -63,6 +64,8 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
                 return 'viewLogDDL';
         elseif($master_or_slave=='shardDDL')
                 return $ddlShardUser[$activeServerId];
+    elseif($master_or_slave=='shardServer')
+                return $shardedServers[$activeServerId];
 	elseif($master_or_slave=='shardSlaveDDL')
                 return $ddlShardSlaveUser[$activeServerId];
         else

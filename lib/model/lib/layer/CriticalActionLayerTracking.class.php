@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  { 
+  {
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -391,6 +391,26 @@ return 0;
                       
                       
                     break;
+
+                     case '21': 
+        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        {
+                     $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
+                    $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
+                    if($strDPPCaste != '' && $strDPPCaste != NULL && $strDPPCaste!="Doesn't Matter")
+                    {
+                      $layerDppCaste = explode(',',$strDPPCaste);
+      foreach ($layerDppCaste as $key => $value) {
+        $tempArr[$key] = explode(':', $value)[1]; 
+      }
+      $layerDppCaste = implode(',', $tempArr);
+      $layerDppCaste = trim($layerDppCaste);
+      $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
+                      $show=1;
+                    }
+                    }      
+                      break;
+
                     case '22': 
                     if(strtotime('-30 days') >= strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
                     {
@@ -426,6 +446,7 @@ return 0;
   case in_array($highestDegree, explode(',',$fieldArray['ug'])):
     return false;
   break;
+  
 
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
@@ -474,6 +495,11 @@ break;
                     
                     'A' => '96'
                     
+                        ),
+                    '21' => array(
+                    
+                    'A' => '99',
+                    'I' => '5.3'
                         )
 
           );

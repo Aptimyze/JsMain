@@ -72,7 +72,7 @@ class NotificationEnums
 
       public static $monitorScheduledKeyArr =array('JUST_JOIN'=>'13-18','PENDING_EOI'=>'13-18','MATCH_OF_DAY'=>'13-18','MATCHALERT'=>'4-22');
       			
-      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT","FILTERED_EOI"));
+      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT","FILTERED_EOI","CONTACTS_VIEWED_BY"));
 
       //config for logged out notifications
       public static $loggedOutNotifications = array("LOGIN_REGISTER");

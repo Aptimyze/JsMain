@@ -4,7 +4,7 @@ class TestingDataCreation
 {
         public static function addHardFilter($loggedIn,$other)
         {
-                $filterObj = new NEWJS_FILTER;
+                $filterObj = new ProfileFilter;
                 $filterObj->setAllFilters($other);
         }
 	public static function updateContactDate($loggedIn,$other,$folder)
