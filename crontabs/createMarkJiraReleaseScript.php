@@ -23,7 +23,7 @@ $headerArr = array(
 
 if($branchName == "CIRelease")
 {
-    $parameter = "hotFix";
+    $parameter = "hotfix";
     $hotFixBlock = true;
     $fileName = "/var/www/CI_Files/CIMergedBranches.txt";
 }
@@ -64,7 +64,7 @@ if(is_array($file) && !empty($file))
             $release[$projectName] = "1";
         }
     }
-
+        
     //For Creating Hotfix Versions
     if($parameter == "hotfix" || $parameter == "all")
         createRelease($hotFix,"HF");
