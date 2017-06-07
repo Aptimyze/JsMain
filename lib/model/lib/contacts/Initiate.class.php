@@ -806,7 +806,7 @@ public function getNegativeScoreForUser()
 		curl_setopt($ch,CURLOPT_POST,true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
 		curl_exec($ch);
-		echo $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 		if($httpcode == 201)
 		{
@@ -855,7 +855,7 @@ public function getNegativeScoreForUser()
 
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_exec($ch);
-			echo $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 			if($httpcode == 201 || $httpcode == 200)
 			{
