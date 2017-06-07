@@ -123,7 +123,7 @@ function markVersion($releaseJira,$releaseText){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = "$releaseText@".date('d')."-".date('m')."-".date('y');
+			$versionName = "$releaseText@".date("Y-m-d");
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
@@ -142,7 +142,7 @@ function createRelease($releaseArr,$releaseText){
 		//Iterate for all the jira ids
 		foreach($releaseArr as $key => $val){
 			$params = json_encode(array("description"=>"Release",
-							"name"=>"$releaseText@".date('d')."-".date('m')."-".date('y'),
+							"name"=>"$releaseText@".date("Y-m-d"),
 							"archived"=> false,
 							"released"=> false,
 							"releaseDate"=> date('Y-m-d'),

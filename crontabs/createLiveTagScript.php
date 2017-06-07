@@ -19,7 +19,7 @@ if($branchName == "QASanityReleaseNew")
 	//To get files arr by reading the entire file
 	$MergedBranchesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-	$tagName = "TAG_RC@".date("Y-m-d_H:i:s");
+	$tagName = "TAG_RC@".date("Y-m-d_H-i-s");
 }
 elseif($branchName == "CIRelease")
 {
@@ -42,7 +42,7 @@ $headerArr = array(
 	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
 	); //token used is of username: vidushi@naukri.com
 
-$paramArr = array("tag_name"=>$tagName,"ref"=>$branchName,"release_description"=>$releaseDescription);
+$paramArr = array("tag_name"=>$tagName,"ref"=>"CIRelease","release_description"=>$releaseDescription); //ref should be CIRelease
 
 
 $response = sendCurlGETRequest($urlToHit,$paramArr,"",$headerArr,"POST");
