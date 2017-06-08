@@ -6,6 +6,7 @@ import { validateEmail } from "../../common/components/commonValidations"
 import {signin} from "../actions/LoginActions"
 import { ErrorConstant } from "../../common/constants/ErrorConstants";
 import Loader from "../../common/components/Loader";
+import AppPromo from "../../common/components/AppPromo";
 
 class LoginPage extends React.Component {
 
@@ -15,12 +16,19 @@ class LoginPage extends React.Component {
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
-            showLoader: false
+            showLoader: false,
+            showPromo: false
         };
     }
 
     componentDidMount() {
+        let _this = this;
         document.getElementById("LoginPage").style.height = window.innerHeight+"px"; 
+        setTimeout(function(){ 
+            _this.setState ({
+                showPromo : true
+            });  
+        }, 1200); 
     } 
 
     componentWillReceiveProps(nextProps)
@@ -95,6 +103,12 @@ class LoginPage extends React.Component {
         }
     }
 
+    removePromoLayer() {
+        this.setState ({
+            showPromo : false
+        });  
+    }
+
     render() {
         var errorView;
         if(this.state.insertError)          
@@ -106,6 +120,12 @@ class LoginPage extends React.Component {
         if(this.state.showLoader)          
         {
           loaderView = <Loader show="page"></Loader>;
+        }
+
+        var promoView;
+        if(this.state.showPromo)
+        {
+            promoView = <AppPromo removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
         var formInput = <div id ="formInput">
@@ -154,6 +174,7 @@ class LoginPage extends React.Component {
 
         return (
             <div id="LoginPage">
+                {promoView}
                 {errorView}
                 {loaderView}
                 <div className="fullheight" id="mainContent">
