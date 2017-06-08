@@ -5,6 +5,10 @@
 cache/jeevansathi/*
 cache/operations/*
 web/smarty/templates_c/*
+web/spa/node_modules/*
+web/spa/dist/*
+web/spa/webpack.config.js
+web/spa/package.json
 web/uploads/SearchLogs/*
 log/*
 .idea

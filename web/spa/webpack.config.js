@@ -14,9 +14,9 @@ if(process.env.NODE_ENV === 'production')
    publicPathConfig = '/spa/dist/';
  }
  else {
-   DIST_DIR = path.resolve(__dirname,"dist-dev");
+   DIST_DIR = path.resolve(__dirname,"dist");
    fileNameConfig = "[name].bundle.js";
-   publicPathConfig = '/spa/dist-dev/';
+   publicPathConfig = '/spa/dist/';
 
  }
 config = {
@@ -37,7 +37,7 @@ config = {
      filename: fileNameConfig,
    }),
    new HtmlWebpackPlugin({
-       template: path.join(__dirname, 'template.html'),
+       template: path.join(SRC_DIR, 'template.html'),
        filename: path.join(DIST_DIR, 'index.html'),
        inject: 'body',
    }),
