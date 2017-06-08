@@ -18,6 +18,17 @@ class CriticalInfoChangeDocUploadService
                 $docPath = $this->performUpload($docsData, $profileId);
                 $verificationDocumentsObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
                 $result = $verificationDocumentsObj->insert($profileId, $docPath);
+                if($result){
+                        $editData = $verificationDocumentsObj->editedCriticalInfo($profileId);
+                        $docid = $editData["ID"];
+                        $moduleName = IMAGE_SERVER_MODULE_NAME_ENUM::getEnum('CRITICAL_INFO_DIVORCED_DOC');
+                        $status = IMAGE_SERVER_STATUS_ENUM::$onAppServer;
+                        $moduleType = "DOCUMENT_PATH";
+                        $imageServerLogObj = new ImageServerLog();
+                        $result = $imageServerLogObj->insertBulk($moduleName,$docid,$moduleType,$status);
+                        unset($imageServerLogObj);
+                        unset($verificationDocumentsObj);
+                }
 		return $result;	
 	}
 
@@ -121,13 +132,9 @@ class CriticalInfoChangeDocUploadService
 	public function edit($paramArr,$docId,$pid="")
 	{
 		if($docId =="")
-                        throw new jsException("No docid passed in edit in ProfileDocumentVerificationService.class.php");
-                $jsadminProfileVerificationDocumentsObj = new VERIFICATION_DOCUMENTS();
-                foreach($paramArr as $key=>$value)
-		{
-			$param[$docId]=$value;
-		}
-		$result = $jsadminProfileVerificationDocumentsObj->multipleDocumentIdUpdate($param,"PROOF_VAL");
+                        throw new jsException("No docid passed in edit in CriticalInfoChangeDocUploadService.class.php");
+                $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
+		$result = $criticalInfoObj->updateById($pid,$docId,$paramArr["DOCUMENT_PATH"]);
 		return $result;
 
 	}

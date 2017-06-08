@@ -35,6 +35,17 @@ class newjs_CRITICAL_INFO_CHANGED_DOCS extends TABLE {
                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $res->bindValue(":DOCUMENT_PATH", $documentPath, PDO::PARAM_STR);
                 $res->execute();
+                return true;
+        }
+        public function updateById($profileid,$id, $documentPath) {
+                
+                $sql = "UPDATE newjs.CRITICAL_INFO_CHANGED_DOCS SET DOCUMENT_PATH = :DOCUMENT_PATH WHERE ID= :ID AND PROFILEID = :PROFILEID";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $res->bindValue(":ID", $id, PDO::PARAM_INT);
+                $res->bindValue(":DOCUMENT_PATH", $documentPath, PDO::PARAM_STR);
+                $res->execute();
+                return true;
         }
 
 }

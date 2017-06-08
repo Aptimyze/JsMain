@@ -12,10 +12,12 @@
     <div id="" class="pos_fix layersZ setshare prfbg6 disp-none confirmationBox" style="width:700px;">
     	<div class="crit_p2 txtc">
         	<div class="f17 fontreg pt50">Are you sure you want to submit? </div>
-            <div class="pt15 fontlig f15 opa80 mauto crit_wid1">
-            	We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully 
-            	before submitting        
-        	</div>  
+                        <div class="pt15 fontlig f15 opa80 mauto crit_wid1 msg1 disp-none">
+                                <b>Please note:</b> We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts. You will not be able to edit any of your basic details any further after you click ‘Okay’.       
+                        </div>  
+                        <div class="pt15 fontlig f15 opa80 mauto crit_wid1 msg2 disp-none">
+                        <b>Please note:</b> We will intimate your accepted members, interests received and interests sent that there is a change in your basic details. You will not be able to edit any of your basic details any further after you click ‘Okay’.       
+                        </div>  
         	<div class="clearfix crit_wid2 mauto pt19">
         		<button class="bg_pink crit_cm1 btn-popup-cnfrm fontreg cursp">Confirm</button>
             	<button class="crit_grey1 crit_cm1 btn-popup-cancel fontreg cursp">Canecl</button>

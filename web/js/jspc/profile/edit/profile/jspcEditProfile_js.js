@@ -5151,7 +5151,22 @@ EditApp = function(){
       $('.js-save').unbind('click').on('click',function(event){
                 var currId = $(this).attr("id");
                 if(currId =="saveBtncritical"){
-                        //onSectionSave(this.id.split('saveBtn')[1]);
+                                // condition to show msg on the popup 
+                                var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
+                                var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
+                                var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
+                                var Mstatus = editedFields[CRITICAL]['MSTATUS'];
+                                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                                var firstDate = new Date(Dob[0],Dob[2],Dob[1]);
+                                var secondDate = new Date(prevDob[0],prevDob[2],prevDob[1]);
+                                var showClass = "msg2";
+                                var hideClass = "msg1";
+                                var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+                                if(diffDays >= 730 || (prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
+                                        showClass = "msg1";
+                                        hideClass = "msg2";
+                                }
+                                // condition to show msg on the popup end
                                 $("#commonOverlay").fadeIn("fast",function(){
                                 $("#commonOverlay").on('click',function(){
                                     $(".confirmationBox").fadeOut("fast",function(){
@@ -5170,6 +5185,8 @@ EditApp = function(){
                                         });
                                 });
                                 $(".confirmationBox").fadeIn("fast"); 
+                                $("."+showClass).removeClass("disp-none"); 
+                                $("."+hideClass).addClass("disp-none"); 
                         });
                 }else{
                         onSectionSave(this.id.split('saveBtn')[1]);

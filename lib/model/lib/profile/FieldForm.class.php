@@ -62,6 +62,8 @@ class FieldForm extends sfForm
 	  $this->formValues=$this->getValues();
           $sendSMSToPhone = $this->loggedInObj->getPHONE_MOB();
           $prevManglikStatus = $this->loggedInObj->getMANGLIK();
+          $prevMstatus = $this->loggedInObj->getMSTATUS();
+          $prevDob = $this->loggedInObj->getDTOFBIRTH();
           $fieldsEdited = array();
           $sendSMS = ProfileEnums::$sendInstantMessagesForFields;
 	  foreach($this->formValues as $field_name=>$value){
@@ -191,6 +193,12 @@ class FieldForm extends sfForm
                 }
                 if(isset($criticalInfoFieldArr["MSTATUS"]) && $criticalInfoFieldArr["MSTATUS"] == "D"){
                         unset($jprofileFieldArr["MSTATUS"]);
+                }
+                $producerObj = new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $updateSeenProfileData = array("process"=>"UPDATE_CRITICAL_INFO_PROFILE",'data'=>array('body'=>array('profileid'=>$this->loggedInObj->getPROFILEID(),"PREV_MSTATUS"=>$prevMstatus,"MSTATUS"=>$criticalInfoFieldArr["MSTATUS"],"PREV_DTOFBIRTH"=>$prevDob,"DTOFBIRTH"=>$criticalInfoFieldArr["DTOFBIRTH"])));
+                        $producerObj->sendMessage($updateSeenProfileData);
                 }
         }
 		//Native Place Update
