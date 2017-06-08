@@ -884,7 +884,7 @@ Abstract class ApiAuthentication
 		{
 			@setcookie($cookieName, json_encode(array($username)), time() + $expiryTime, "/", $this->domain);
 			// send mail
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
 			CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
 		}
 		else
@@ -895,7 +895,7 @@ Abstract class ApiAuthentication
 				array_push($cookieData, $username);
 				@setcookie($cookieName, json_encode($cookieData), time() + $expiryTime, "/", $this->domain);
 				// send mail
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK));
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
 				CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
 			}
 		}
