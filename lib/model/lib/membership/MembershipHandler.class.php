@@ -1872,7 +1872,7 @@ class MembershipHandler
         return $output;
     }
 
-    public function checkIfUserIsPaidAndNotWithinRenew($profileid, $userType = "")
+    public function checkIfUserIsPaidAndNotWithinRenew($profileid, $userType = "",$source="")
     {
         if (empty($userType) && !empty($profileid)) {
             $userObj = new memUser($profileid);
@@ -1887,7 +1887,7 @@ class MembershipHandler
             $profileObj      = LoggedInProfile::getInstance();
             $activatedStatus = $profileObj->getACTIVATED();
         }
-        if ($userType != 5 && $activatedStatus == 'Y') {
+        if ($userType != 5 && (($source=="hamburger" && $activatedStatus != 'D') || $activatedStatus == 'Y')){
             return 1;
         } else {
             return 0;
