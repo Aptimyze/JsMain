@@ -362,6 +362,11 @@ class LoggingManager
 			$logData[LoggingEnums::DEVICEID] = $logArray[LoggingEnums::DEVICEID];
 		}
 
+		if(isset($logArray[LoggingEnums::DETAILS]))
+		{
+			$logData[LoggingEnums::DETAILS] = $logArray[LoggingEnums::DETAILS];
+		}
+
 		return $logData;
 	}
 
