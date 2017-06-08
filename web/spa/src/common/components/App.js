@@ -1,3 +1,8 @@
+require ('../style/common.css')
+require ('../style/appPromo.css')
+require ('../style/errorBar.css')
+require ('../style/fonts.css')
+require ('../style/mediaQuery.css')
 import React from 'react';
 import asyncComponent from './asyncComponent';
 import {getRoutePath} from './UrlDecoder';
