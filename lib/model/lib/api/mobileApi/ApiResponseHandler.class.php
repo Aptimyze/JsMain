@@ -219,6 +219,13 @@ class ApiResponseHandler
 
 		//set flag for android xmppBackgroundConnectionTimeout
 		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
+		$appPromotion = false;
+		if(MobileCommon::isNewMobileSite())
+		{
+			$request = sfContext::getInstance()->getRequest();
+			$appPromotion =  JsConstants::$AndroidPromotion && !$request->getAttribute('AppLoggedInUser') && !MobileCommon::isAppWebView() && ($request->getParameter("iosWebview") != 1) ;
+		}
+		$output["appPromotion"] = $appPromotion;
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
