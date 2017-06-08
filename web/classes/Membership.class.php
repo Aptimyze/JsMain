@@ -1401,7 +1401,6 @@ class Membership
                     $msg .= "Profile Allotted To: $this->execName<br>";
                     $msg .= "Approved By: $this->supervisor<br><br>";
                     $msg .= "<br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
-                    die($msg);
                     //error_log("ankita msg-".$msg);
                     if (JsConstants::$whichMachine == 'prod') {
                         SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
