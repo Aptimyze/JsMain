@@ -1,5 +1,4 @@
-require ('../style/login1.css')
-require ('../style/login2.css')
+require ('../style/login.css')
 import React from "react";
 import { connect } from "react-redux";
 import TopError from "../../common/components/TopError"
