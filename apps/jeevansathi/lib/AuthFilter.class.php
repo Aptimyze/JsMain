@@ -42,7 +42,7 @@ class AuthFilter extends sfFilter {
 		// End hindi switch code !
 		if( MobileCommon::isNewMobileSite() && (strpos($request->getUri(), 'api') === false) ) {
 			$specificDomain = explode('/',$request->getUri());
-			header("Location:".$SITE_URL."/spa/dist-dev/index.html#".$specificDomain[3]);
+			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[3]);
 			die;	
 		}
 		

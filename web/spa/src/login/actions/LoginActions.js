@@ -19,7 +19,6 @@ export  function signin(email,password)
         type:'SET_CHECKSUM',
         payload: response.AUTHCHECKSUM
       });
-      dispatch(push('/myjs'));
     })
     .catch( (error) => {
       console.warn('Actions - fetchJobs - recreived error: ', error)

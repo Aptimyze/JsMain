@@ -24,6 +24,15 @@ class LoginPage extends React.Component {
         document.getElementById("LoginPage").style.height = window.innerHeight+"px";
     } 
 
+    componentWillReceiveProps(nextProps)
+    {
+       if ( nextProps.profileCheckSum )
+       {
+            this.props.history.push('/myjs');     
+       }
+    }
+
+
     showError(inputString) {
         let _this = this;
         this.setState ({
@@ -51,7 +60,8 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstant("EnterPass"));
         } else {
-             this.setState ({
+            this.props.doLogin(emailVal,passVal);
+            this.setState ({
                 showLoader : true
             })
         }
