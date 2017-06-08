@@ -699,6 +699,15 @@
         $scope.fields[horoscopeFieldIndex].show = false;
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
+	var sectIndex = 4;
+      if($scope.fields[religionFieldIndex].userDecision == 2)
+	{
+	$scope.fields[sectIndex].required = "false";
+	}
+	else
+	{
+	$scope.fields[sectIndex].required = "true";
+	}
     }
     $scope.initMuslimCaste =function()
     {
