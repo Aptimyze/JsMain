@@ -7,7 +7,10 @@
 		public static $FILEBEAT_INDEX = 'filebeat-';
 		public static $CONSUMER_INDEX = 'consumer-';
 		public static $OPENFIRE_INDEX = 'openfire-';
+		public static $COOLMETRIC_INDEX = 'coolmatric-';
 
+
+		public static $COOLMETRIC_TREND_INDEX = 'coolmetrictrends';
 
 		public static $ERROR_TREND_INDEX = 'errortrends';
 		public static $STARTING_DAYS_BEFORE = 1;
