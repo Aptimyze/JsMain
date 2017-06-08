@@ -107,6 +107,7 @@ class LoginPage extends React.Component {
         this.setState ({
             showPromo : false
         });  
+        document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
     render() {
