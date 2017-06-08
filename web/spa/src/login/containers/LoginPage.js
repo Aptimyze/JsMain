@@ -21,17 +21,21 @@ class LoginPage extends React.Component {
     }
 
     componentDidMount() {
-        document.getElementById("LoginPage").style.height = window.innerHeight+"px";
+        document.getElementById("LoginPage").style.height = window.innerHeight+"px"; 
     } 
 
     componentWillReceiveProps(nextProps)
     {
-       if ( nextProps.profileCheckSum )
-       {
+       if ( nextProps.profileCheckSum ) {
             this.props.history.push('/myjs');     
        }
+       else {
+            this.setState ({
+                showLoader : false
+            })
+            this.showError(nextProps.responseMessage);
+       }
     }
-
 
     showError(inputString) {
         let _this = this;
@@ -200,7 +204,8 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       profileCheckSum: state.profileCheckSum
+       profileCheckSum: state.profileCheckSum,
+       responseMessage: state.responseMessage
     }
 }
 

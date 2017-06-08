@@ -1,12 +1,14 @@
 const LoginReducer = (state={
-	profileCheckSum: ''
+	profileCheckSum: '',
+	responseMessage: ''
 },action) => {
 	switch(action.type)
 	{
 		case "SET_CHECKSUM":
 		state = {
 			...state,
-			profileCheckSum:action.payload,
+			profileCheckSum:action.payload.AUTHCHECKSUM,
+			responseMessage: action.payload.responseMessage
 		}
 		break;
 	}

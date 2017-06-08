@@ -1,5 +1,4 @@
-import * as CONSTANTS from '../../common/constants/apiConstants';
-// import axios from 'axios';
+import * as CONSTANTS from '../../common/constants/apiConstants'
 import React from 'react';
 import {push} from 'react-router-redux';  
 
@@ -17,7 +16,7 @@ export  function signin(email,password)
     .then( (response) => {
       dispatch({
         type:'SET_CHECKSUM',
-        payload: response.AUTHCHECKSUM
+        payload: response
       });
     })
     .catch( (error) => {
