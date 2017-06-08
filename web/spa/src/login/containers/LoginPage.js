@@ -185,7 +185,6 @@ class LoginPage extends React.Component {
 
                                             <div className="txtc pad2">
                                                 <a href="#" className="f16 white fontlig">हिंदी में</a>
-                                                <a href="#" className="f16 white fontlig">{this.props.profileCheckSum}</a>
                                             </div>
                                         </div>
                                     </div>

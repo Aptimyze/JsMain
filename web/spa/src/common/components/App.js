@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
   .then(module => module.default), { name: 'LoginPage' });
-const MyjsPage = asyncComponent(() => import('./../../login/containers/MyjsPage')
+const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
 
 
