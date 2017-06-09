@@ -29,7 +29,7 @@ if($("#CriticalActionlayerId").val()=='18'){
 //        }
     } );
     $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() {
+    $("#occClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
@@ -84,7 +84,123 @@ if($("#CriticalActionlayerId").val()=='18'){
         $("#occList").removeClass("dn");
         }
 
-        }  
+        }
+
+if($("#CriticalActionlayerId").val()=='20'){
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#occMidDiv").css("height",window.innerHeight - 50);
+        $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        }); 
+    }
+
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occClickDiv").on("click", function() {
+        if(typeof listArray == 'undefined')
+        {      $.ajax({
+                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        listArray = res;
+                        appendStateData(listArray);
+                    },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+            }
+            else appendStateData(listArray);
+                $("#listDiv").removeClass("dn");
+        });
+
+    $("#cityClickDiv").on("click", function() {  console.log(listArray);
+            callCity(listArray);
+            $("#cityListDiv").removeClass("dn");
+    });
+
+     appendStateData = function(allRes) {  
+        $("#occList").html('');
+        $("#citySelect").html('Select your City');
+        res = allRes.state_res;
+
+        stateMap = {};
+         var stateIndex=1;
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+                $.each(elem1, function(index2, elem2) {
+                    $("#occList").append('<li occCode = "'+index2+'">' + elem2 + '</li>');
+                    stateMap[stateIndex++] = index2;
+                    console.log(stateIndex+'---'+index2);
+            });
+        });
+      });      
+
+        $("#occList li").each(function(index, element) {
+            $(this).bind("click", function() {
+
+                $("#occSelect").html($(this).html());
+                $("#occSelect").attr('occCode',$(this).attr('occCode'));
+                $("#listDiv").addClass("dn");
+                $('#searchOcc').val("");
+                $("#occList").html("");
+                    
+                    $("#contText").hide();
+                    $("#cityClickDiv").removeClass("dn");
+                    $("#occuText").focus();
+                
+                $("#occupationSubmit").show();
+            });
+        });
+        $("#ListLoader").addClass("dn");
+        $("#occList").removeClass("dn");
+
+        }
+
+        callCity = function(allRes) {
+
+        $("#cityList").html('');
+        var cityIndexFromMap  = $("#occSelect").attr('occCode');
+        
+        
+        cityMap = {};
+        cityIndex = 2;
+        
+        occuSelected = 0;
+         $.each(allRes.city_res_jspc, function(index, elem) {
+           if(index == cityIndexFromMap){
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
+                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
+                  
+                
+                });
+        });
+          }                                                                                                                                                                                                                                             
+              });      
+        $("#cityList li").each(function(index, element) {
+            $(this).bind("click", function() {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+                $("#citySelect").html($(this).html());
+                $("#citySelect").attr('cityCode',$(this).attr('cityCode'));
+                $("#cityListDiv").addClass("dn");
+                $("#cityList").html("");
+                    occuSelected = 0;
+                    $("#contText").hide();
+                
+                $("#occupationSubmit").show();
+            });
+        });
+        $("#cityListLoader").addClass("dn");
+        $("#cityList").removeClass("dn");
+        }
+
+        }
+
+
+
 else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
@@ -99,7 +215,8 @@ else {
     
     
     }
-} )
+} 
+)
     var CALButtonClicked=0;
     
         function validateUserName(name){        
@@ -181,6 +298,41 @@ else {
                         }
 
                     }
+
+                if(layerId==20)
+                    {   
+                    if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
+                        {
+                            
+                             var stateCode = $("#occSelect").attr('occCode');
+                             var cityCode  = $("#citySelect").attr('cityCode');
+                            dataOcc = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+                        }
+                        else{
+
+                                showError("Please enter City");
+                                CALButtonClicked=0;
+                                return;
+
+
+                        }
+
+                    }
+
 
 
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
