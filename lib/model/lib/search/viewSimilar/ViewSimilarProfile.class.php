@@ -45,11 +45,12 @@ class ViewSimilarProfile {
                 $ignoredProfileObj = new IgnoredProfiles();
                 // contacts viewed
                 $contactsViewed = $similarProfileObj->getViewedProfiles($viewedGender, $viewed);
-                
-                $shardToAppend = ($viewed%3)+1;
+         
+                //track no of contacts for each profile
+                /*$shardToAppend = ($viewed%3)+1;
                 $dateHourToAppend = date('m-d', time());
                 $noOfResultsToStore = sizeof($contactsViewed);
-                JsMemcache::getInstance()->hIncrBy("ECP_CL_CONTACTS_COUNT_".$shardToAppend,$dateHourToAppend."__".$noOfResultsToStore,1);
+                JsMemcache::getInstance()->hIncrBy("ECP_CL_CONTACTS_COUNT_".$shardToAppend,$dateHourToAppend."__".$noOfResultsToStore,1);*/
                 
                 // ENOUGH contacts viewed check
                 if (sizeof($contactsViewed) >= $suggAlgoMinimumNoOfContactsRequired) {

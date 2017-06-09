@@ -475,10 +475,11 @@ ul.descplist li:nth-child(1), ul.descplist li:nth-child(2) {
 .srpght11 {
         height:11px
 }
+
 .noti1 {
-        width:19px;
-        height:19px;
-        border-radius:20px
+    width: 21px;
+    height: 21px;
+    border-radius: 20px
 }
 .saveddetail ul {
         list-style-type:none;

@@ -28,7 +28,7 @@ if(authenticated($cid) || $JSIndicator)
 			$relarr[$j]=$RELATIONSHIP[$j+1];
 		}
 
-		if($fromday && $today)
+		if($fromday && $todate)
 		{
 			$st_date=$fromyear."-".$frommonth."-".$fromday." 00:00:00";
 			$end_date=$toyear."-".$tomonth."-".$todate." 23:59:59";

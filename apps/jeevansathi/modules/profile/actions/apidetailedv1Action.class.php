@@ -240,7 +240,7 @@ class apidetailedv1Action extends sfAction
         $objDetailedDisplay = new DetailedViewApi($this);
         if(MobileCommon::isIOSApp())//If iOS App Then 
         {
-            $objDetailedDisplay = new JsmsView($this);
+            $objDetailedDisplay = new JsmsView($this);            
         }
         if(MobileCommon::isDesktop())//If Desktop
         {
@@ -302,10 +302,17 @@ class apidetailedv1Action extends sfAction
         	}        	
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);			
         }*/
-		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
-		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
+        if($this->loginProfile->getPROFILEID() == $this->profile->getPROFILEID())
+		{
 			$out['show_gunascore'] = "n";
 		}
+		else
+		{
+			$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
+		}		
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
+			$out['show_gunascore'] = "n";
+		}	
                 $out['show_vsp'] = true;
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
