@@ -33,7 +33,6 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-        console.log('page');
     }
 
     showError(inputString) {
@@ -99,7 +98,6 @@ class ProfilePage extends React.Component {
                     </div> 
                     <PhotoView></PhotoView> 
                 </div>
-                <div>{this.props.response}</div>
             </div>
         );
     }
