@@ -1,19 +1,26 @@
 import React from "react";
+import { getAndroidVersion, getIosVersion } from "../../common/components/commonFunctions"
 
 export default class AppPromo extends React.Component {	
 	constructor(props) {
   		super();
+  		let urlString = "";
+  		if(getAndroidVersion()) {
+  			urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
+  		} else if(getIosVersion()) {
+  			urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
+  		}
 	    this.state = {
-	        appHref : ""
+	        appHref : urlString
 	    };
     }
 
     componentDidMount() {
     	let _this = this;
-	    setTimeout(function(){ 
+    	setTimeout(function(){ 
 	       document.getElementById("appPromo").classList.remove("ham_minu20");
 	       document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
-	    }, 10);  
+	    }, 10); 
     }	
 
     closeLayer() {
