@@ -87,7 +87,7 @@
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
 				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad19"> 
-				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
+				'~$data.upgradeMembershipContent.upgradeOCBBenefits`' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
 				</div>
