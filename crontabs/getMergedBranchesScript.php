@@ -10,7 +10,7 @@
 $targetBranch = $argv[1];
 //$pathName = $argv[2];
 
-$urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=50&state=merged";
+$urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=200&state=merged";
 
 //setting defualt time zone
 date_default_timezone_set('Asia/Kolkata');

@@ -1851,12 +1851,11 @@ class MembershipAPIResponseHandler {
     public function generateHamburgerMessageResponse() {
         $serviceName = $this->activeServiceName;
         if ($this->profileid) {
-            $validityCheck = $this->memHandlerObj->checkIfUserIsPaidAndNotWithinRenew($this->profileid, $this->userType);
+            $validityCheck = $this->memHandlerObj->checkIfUserIsPaidAndNotWithinRenew($this->profileid, $this->userType,"hamburger");
         } 
         else {
             $validityCheck = 1;
         }
-
         $todays_dt = date('Y-m-d H:i:s');
         $vdodObj = new VariableDiscount();
         
