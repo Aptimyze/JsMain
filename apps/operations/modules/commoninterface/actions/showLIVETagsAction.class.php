@@ -35,12 +35,21 @@ class showLIVETagsAction extends sfActions
 			if($updatedDate > $june1Date)
 			{
 				$this->tagArr[$i]["tagName"] = $value->name;
-                $tagNameArr = explode("@",$value->name);
-                if($tagNameArr[1])
+                if(strpos($value->name,"@")!==false)
                 {
-                    $tagDate = explode("_",$tagNameArr[1]);
-                    $tagTime = str_replace("-", ":", $tagDate[1]);
-                }                
+                    $tagNameArr = explode("@",$value->name);    
+                    if($tagNameArr[1])
+                    {
+                        $tagDate = explode("_",$tagNameArr[1]);
+                        $tagTime = str_replace("-", ":", $tagDate[1]);
+                    }
+                }
+                elseif(strpos($value->name,"#")!==false)
+                {
+                    $tagNameArr = explode("#",$value->name);
+                    $tagDate = strtotime($tagNameArr[1]);                    
+                    $tagTime = date("Y-m-d H:i:s",$tagDate);                    
+                }
                     
 				$this->tagArr[$i]["description"] = $value->release->description;
 				$this->tagArr[$i]["dateTime"] = $tagDate[0]." ".$tagTime;
