@@ -123,9 +123,9 @@ class ProfilePage extends React.Component {
                             <div className="clr"></div>
                         </div>
                     </div>
-                    <AboutTab msg={this.props.responseMessage}></AboutTab>
-                    <FamilyTab></FamilyTab>
-                    <DppTab></DppTab>
+                    <AboutTab myInfo={this.props.myInfo}></AboutTab>
+                    <FamilyTab familyInfo={this.props.familyInfo}></FamilyTab>
+                    <DppTab dppInfo={this.props.dppInfo}></DppTab>
                 </div>
             </div>
         );
@@ -134,7 +134,10 @@ class ProfilePage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       responseMessage: state.ProfileReducer.responseMessage
+       responseMessage: state.ProfileReducer.responseMessage,
+       myInfo: state.ProfileReducer.myInfo,
+       familyInfo: state.ProfileReducer.familyInfo,
+       dppInfo: state.ProfileReducer.dppInfo
     }
 }
 
