@@ -10,6 +10,7 @@ class ViewAllPhotos
 
 	public function setCommonVariables($param,$contactTypeWithLoggedinProfile='')
 	{
+		
 		if(!$this->profileObj->getHAVEPHOTO())
 			$this->profileObj->getDetail("","","HAVEPHOTO"); ///--------test -------
 	
@@ -145,6 +146,7 @@ class ViewAllPhotos
                                 }
                         }
                 }
+        PictureFunctions::setHeaders();
 		$size = getimagesize($this->frontPicUrl);
 		if($size[0]<463)
 			$size[0]=463;

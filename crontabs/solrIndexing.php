@@ -147,6 +147,7 @@ function curlPostJsonData($profiles) {
                         $urlToHit = $solrUrl.$append;
                         $ch = curl_init($urlToHit);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+                        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
                         curl_setopt($ch, CURLOPT_POST, 1);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $profiles);
@@ -155,6 +156,9 @@ function curlPostJsonData($profiles) {
                         curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout * 10);
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                         $output = curl_exec($ch);
+                        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+						$headerStr = substr($output, 0, $header_size);
+						$output = substr($output, $header_size);
                         $unserialzedOutput = json_decode($output);
                         if ($unserialzedOutput->responseHeader->status != 0) {
                                 file_put_contents($fileName, "Solr Error::: ".$output."\n\n", FILE_APPEND);
@@ -185,13 +189,18 @@ function curlPostCommitData() {
                 if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
                         $urlToHit = $solrUrl.$append;
                         $ch = curl_init($urlToHit);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
+                        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+						curl_setopt($ch, CURLOPT_HEADER, $header);
+						curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
                         curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
                         curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout * 10);
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                         $output = curl_exec($ch);
+                        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+						$headerStr = substr($output, 0, $header_size);
+						$output = substr($output, $header_size);
                         $unserialzedOutput = json_decode($output);
                         if ($unserialzedOutput->responseHeader->status != 0) {
                                 $errorMsg[] = $unserialzedOutput->error->msg. " IN COMMIT";
