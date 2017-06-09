@@ -14,7 +14,7 @@ export  function profileDetail()
     .then(response => response.json())
     .then( (response) => {
       dispatch({
-        type:'SHOW_ABOUTME',
+        type:'SHOW_INFO',
         payload: response
       });
     })

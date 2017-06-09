@@ -33,11 +33,12 @@ class ProfilePage extends React.Component {
                 showPromo : true
             });  
         }, 1200); */  
-        this.props.showProfile();
+        this.props.showProfile();   
     } 
 
     componentWillReceiveProps(nextProps)
     {
+        // console.log(nextProps.responseMessage);
     }
 
     showError(inputString) {
@@ -103,7 +104,7 @@ class ProfilePage extends React.Component {
                                     <i id="backBtn" className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
-                                    ZZZY0739
+                                    ZZZY0739 
                                 </div>
                                 <div className="posabs vpro_pos1">
                                     <i className="vpro_sprite vpro_comHisIcon cursp"></i>
@@ -122,7 +123,7 @@ class ProfilePage extends React.Component {
                             <div className="clr"></div>
                         </div>
                     </div>
-                    <AboutTab></AboutTab>
+                    <AboutTab msg={this.props.responseMessage}></AboutTab>
                     <FamilyTab></FamilyTab>
                     <DppTab></DppTab>
                 </div>
@@ -133,10 +134,9 @@ class ProfilePage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       response: state.response
+       responseMessage: state.ProfileReducer.responseMessage
     }
 }
-
 
 const mapDispatchToProps = (dispatch) => {
     return{

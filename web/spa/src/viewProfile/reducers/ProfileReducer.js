@@ -1,12 +1,12 @@
 const ProfileReducer = (state={
-	response: ''
+	responseMessage: ''
 },action) => {
 	switch(action.type)
 	{
-		case "SHOW_ABOUTME":
+		case "SHOW_INFO":
 		state = {
 			...state,
-			response: action.payload
+			responseMessage: action.payload.responseMessage
 		}
 		break;
 	}
