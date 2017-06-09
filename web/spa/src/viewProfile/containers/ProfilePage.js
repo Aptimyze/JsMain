@@ -38,7 +38,12 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-        // console.log(nextProps.responseMessage);
+        // console.log(nextProps);
+        /*if(nextProps.appPromotion == true) {
+            this.setState ({
+                showPromo : true
+            });   
+        }*/
     }
 
     showError(inputString) {
@@ -88,7 +93,7 @@ class ProfilePage extends React.Component {
         var promoView;
         if(this.state.showPromo)
         {
-            promoView = <AppPromo removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
         return (
