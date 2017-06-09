@@ -2057,7 +2057,7 @@ $(document).ready(function () {
                             }
                         }
                         else if(key=="canChatMore" && response["data"]["buttondetails"]["infomsglabel"]=="Only paid members can start the chat"){
-                            console.log("disabled chat box");
+                            //console.log("disabled chat box");
                             //$('chat-box[user-id="' + to + '"]').attr("data-paidInitiated","false");
                             $('chat-box[user-id="' + to + '"] textarea').prop("disabled", true);   
                         }
