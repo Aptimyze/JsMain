@@ -1,5 +1,5 @@
 import React from "react";
-import { getAndroidVersion, getIosVersion } from "../../common/components/commonFunctions"
+import { getAndroidVersion, getIosVersion, getCookieData, writeCookie } from "../../common/components/commonFunctions"
 
 export default class AppPromo extends React.Component {	
 	constructor(props) {
@@ -11,21 +11,31 @@ export default class AppPromo extends React.Component {
   			urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
   		}
 	    this.state = {
-	        appHref : urlString
+	        appHref : urlString,
+	        parentComp: props.parentComp
 	    };
     }
 
     componentDidMount() {
     	let _this = this;
-    	setTimeout(function(){ 
-	       document.getElementById("appPromo").classList.remove("ham_minu20");
-	       document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
-	    }, 10); 
+    	if(this.state.parentComp == "LoginPage") {
+    		let AppPromo = true;
+    		if(getCookieData("AppPromo")) {
+    			AppPromo = false;
+    		} 
+    		if(AppPromo == true) {
+    			setTimeout(function(){ 
+			       document.getElementById("AppPromo").classList.remove("ham_minu20");
+			       document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
+	    		}, 10);
+	    		writeCookie("AppPromo","jeevansathi",3); 
+    		}
+    	} 
     }	
 
     closeLayer() {
     	let _this = this;
-    	document.getElementById("appPromo").classList.add("ham_minu20");
+    	document.getElementById("AppPromo").classList.add("ham_minu20");
 	    document.getElementById("mainContent").classList.remove("ham_plus20");
 	    setTimeout(function(){ 
 	       _this.props.removePromoLayer();
@@ -34,7 +44,7 @@ export default class AppPromo extends React.Component {
   
     render() {
 	    return (
-	        <div ref="appPromo" id="appPromo" className = "ham_b20_n ham_minu20 newocbbg1 fullwid" >   	            	
+	        <div ref="AppPromo" id="AppPromo" className = "ham_b20_n ham_minu20 newocbbg1 fullwid" >   	            	
 	           	<div className = "padAppPromo clearfix">
 	           	    <div className = "fl pt20">            	
 	           	    	<div onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            
