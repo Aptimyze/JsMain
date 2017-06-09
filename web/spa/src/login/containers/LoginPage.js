@@ -126,7 +126,7 @@ class LoginPage extends React.Component {
         var promoView;
         if(this.state.showPromo)
         {
-            promoView = <AppPromo removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+            promoView = <AppPromo parentComp="LoginPage" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
         var formInput = <div id ="formInput">
