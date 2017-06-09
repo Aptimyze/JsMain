@@ -4,6 +4,9 @@ import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import TopError from "../../common/components/TopError";
 import PhotoView from "../../common/components/PhotoView";
+import AboutTab from"../components/AboutTab";
+import FamilyTab from"../components/FamilyTab";
+import DppTab from"../components/DppTab";
 export default class ProfilePage extends React.Component {
 
     constructor(props) {
@@ -13,18 +16,20 @@ export default class ProfilePage extends React.Component {
             errorMessage: "",
             timeToHide: 3000,
             showLoader: false,
-            showPromo: false
+            showPromo: false,
+            tabArray: ["About","Family","Dpp"]
         };
     }
 
     componentDidMount() {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
-        setTimeout(function(){ 
+        document.getElementById("photoParent").style.height = window.innerWidth +"px";
+        /*setTimeout(function(){ 
             _this.setState ({
                 showPromo : true
             });  
-        }, 1200); 
+        }, 1200); */
     } 
 
     componentWillReceiveProps(nextProps)
@@ -50,6 +55,16 @@ export default class ProfilePage extends React.Component {
             showPromo : false
         });  
         document.getElementById("mainContent").classList.remove("ham_b100");
+    }
+
+    showTab(elem) {
+        for(let i=0; i<this.state.tabArray.length; i++) {
+            document.getElementById(this.state.tabArray[i]+"Header").classList.remove("vpro_selectTab");
+            document.getElementById(this.state.tabArray[i]+"Tab").classList.add("dn");
+        }
+        document.getElementById(elem+"Header").classList.add("vpro_selectTab");
+        document.getElementById(elem+"Tab").classList.remove("dn");
+
     }
 
     render() {
@@ -92,7 +107,20 @@ export default class ProfilePage extends React.Component {
                             </div>
                         </div>
                     </div> 
-                    <PhotoView></PhotoView> 
+                    <div id="photoParent" className="fullwid scrollhid">
+                        <PhotoView></PhotoView> 
+                    </div>
+                    <div id="tab" className="fullwid tabBckImage posabs mtn39">
+                        <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
+                            <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  him </div>
+                            <div id="FamilyHeader" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
+                            <div id="DppHeader" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
+                            <div className="clr"></div>
+                        </div>
+                    </div>
+                    <AboutTab></AboutTab>
+                    <FamilyTab></FamilyTab>
+                    <DppTab></DppTab>
                 </div>
             </div>
         );
