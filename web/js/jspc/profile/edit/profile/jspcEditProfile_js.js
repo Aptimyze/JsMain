@@ -3582,6 +3582,10 @@ updateEduLevelChanges =function(eduLevelVal)
 			showHideField(jamaatFieldObject,"hide",true);
 		}
 	}
+	else
+	{
+			showHideField(jamaatFieldObject,"hide",true);
+	}
     }
     /*
      * onCountryChange
