@@ -309,3 +309,30 @@ else {
 
         }
 
+       function sendAltVerifyMail()
+       {
+                 $.ajax({
+                    url: '/api/v1/profile/sendEmailVerLink?emailType=2',
+                    headers: { 'X-Requested-By': 'jeevansathi' },       
+                    type: 'POST',
+                    success: function(response) {
+                      if(response.responseStatusCode == 1)
+                      {
+                      showError("Something went wrong");
+                      CALButtonClicked=0;
+                      return;   
+                      }
+                 
+                $("#altEmailAskVerify").hide();
+            msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                 $("#altEmailMsg").text(msg);
+                 $("#confirmationSentAltEmail").show();
+                   return; 
+                    }
+                });              
+
+                
+
+
+
+       }

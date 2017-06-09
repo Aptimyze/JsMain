@@ -996,7 +996,6 @@ function criticalLayerButtonsAction(clickAction,button) {
                         
                       }
 
-
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking?"+calTracking;
@@ -1007,6 +1006,10 @@ function criticalLayerButtonsAction(clickAction,button) {
                     });
                     if(layerId!=13 || button!='B1')
                         closeCurrentLayerCommon();
+                    if(layerId == 14)
+                    {
+                      $("#alternateEmailSentLayer").hide();
+                    }
                     if(clickAction=='RCB')
                     {
                         toggleRequestCallBackOverlay(1, 'RCB_CAL');
@@ -1228,3 +1231,22 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 			});
     }
 
+   function sendAltVerifyMail()
+   {
+                showCommonLoader();
+                var ajaxData={'emailType':'2'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {   
+                      msg ="A link has been sent to your email Id "+altEmail+', click on the link to verify your email';
+                        $("#altEmailConfirmText").text(msg);
+                        $("#criticalAction-layer").hide();
+                        $("#alternateEmailSentLayer").show();
+                        hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+
+   }

@@ -452,6 +452,14 @@ class staticActions extends sfActions
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
           $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
    }
+   if($this->layerId == 14)
+   {  
+    $profileObject = LoggedInProfile::getInstance('newjs_master');
+                        $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+    $this->altEmail = $numArray['0']['ALT_EMAIL'];
+   }
+
     $this->setTemplate("criticalActionLayer");
   }
 
