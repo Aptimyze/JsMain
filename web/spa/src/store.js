@@ -1,7 +1,8 @@
 import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import LoginReducer from "./login/reducers/LoginReducer";
+import ProfileReducer from "./viewProfile/reducers/ProfileReducer";
 
-const store = createStore(LoginReducer,{},applyMiddleware(thunk));
+const store = createStore(combineReducers({LoginReducer,ProfileReducer}),{},applyMiddleware(thunk));
 
 export default store;

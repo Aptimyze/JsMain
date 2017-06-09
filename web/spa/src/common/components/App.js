@@ -18,6 +18,8 @@ const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPag
   .then(module => module.default), { name: 'LoginPage' });
 const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
+const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
+  .then(module => module.default), { name: 'ProfilePage' });
 
 
        
@@ -30,6 +32,7 @@ const App = () => (
 						<Route exact path="/" component={LoginPage}/>
 						<Route path='/login' component={LoginPage}/>
 						<Route path='/myjs' component={MyjsPage} />
+            <Route path='/viewProfile' component={ProfilePage} />
 					</div>
 				</Router>
 			</div>
