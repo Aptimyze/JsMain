@@ -65,14 +65,23 @@ class AboutTab extends React.Component {
     		</div>;
     	}
 
+        var plan_to_work;
+        if(this.props.about.plan_to_work) 
+        {   
+            plan_to_work = <div>
+                <i className="vpro_sprite vpro_pin"></i>
+                <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_abroad" >
+                    {this.props.about.plan_to_work}
+                </div>
+            </div>;
+        }
+
     	var abroad;
-    	if(this.props.about.earning) 
+    	if(this.props.about.abroad) 
     	{
     		abroad = <div>
-    			<div className="fl">
-    				<i className="vpro_sprite vpro_pin"></i>
-    			</div>
-				<div className="fontlig padl5 fl vpro_wordwrap" id="vpro_abroad" >
+    			<i className="vpro_sprite vpro_pin"></i>
+				<div className="fontlig dispibl padl5 vpro_wordwrap vtop vtop" id="vpro_abroad" >
 					{this.props.about.abroad}
 				</div>
     		</div>;
@@ -91,6 +100,7 @@ class AboutTab extends React.Component {
 	  			{work_status}
 	  			{earning}
 	  			<div className="clearfix">
+                    {plan_to_work}
 	  				{abroad}
 	  			</div>
 	  		</div>;
@@ -103,37 +113,42 @@ class AboutTab extends React.Component {
     	}
 
     	var post_grad;
-    	if(this.props.about.post_grad.deg || this.props.about.post_grad.name)
-    	{
-    		post_grad = <div>
-    			<div className="f12 color1">Post Graduation</div>
-          		<div className="fontlig pb15">
-          			<span id="vpro_post_grad_deg">
-          				{this.props.about.post_grad.deg}
-          			</span><br/>
-              		<span id="vpro_post_grad_name">
-              			{this.props.about.post_grad.name}
-              		</span>
-              	</div>
-            </div>;
-    	}
+        if(this.props.about.post_grad) {
+            if(this.props.about.post_grad.deg || this.props.about.post_grad.name)
+            {
+                post_grad = <div>
+                    <div className="f12 color1">Post Graduation</div>
+                    <div className="fontlig pb15">
+                        <span id="vpro_post_grad_deg">
+                            {this.props.about.post_grad.deg}
+                        </span><br/>
+                        <span id="vpro_post_grad_name">
+                            {this.props.about.post_grad.name}
+                        </span>
+                    </div>
+                </div>;
+            }    
+        }
+    	
 
     	var under_grad;
-    	if(this.props.about.under_grad.deg || this.props.about.under_grad.name)
-    	{
-    		under_grad = <div>
-    			<div className="f12 color1">Under Graduation</div>
-          		<div className="fontlig pb15">
-          			<span id="vpro_under_grad_deg">
-          				{this.props.about.under_grad.deg}
-          			</span><br/>
-              		<span id="vpro_under_grad_name">
-              			{this.props.about.under_grad.name}
-              		</span>
-              	</div>
-            </div>;
-    	}
-
+        if(this.props.about.under_grad) {
+            if(this.props.about.under_grad.deg || this.props.about.under_grad.name)
+            {   
+                under_grad = <div>
+                    <div className="f12 color1">Under Graduation</div>
+                    <div className="fontlig pb15">
+                        <span id="vpro_under_grad_deg">
+                            {this.props.about.under_grad.deg}
+                        </span><br/>
+                        <span id="vpro_under_grad_name">
+                            {this.props.about.under_grad.name}
+                        </span>
+                    </div>
+                </div>;
+            }    
+        }
+    	
     	var school;
     	if(this.props.about.school) 
     	{
@@ -185,7 +200,7 @@ class AboutTab extends React.Component {
     	var rashi;
     	if(this.props.about.more_astro.rashi) {
     		rashi =  <div className="clearfix">
-                <div className="fontlig fl vpro_wordwrap" id="vpro_more_astro_rashi" >
+                <div className="fontlig vpro_wordwrap" id="vpro_more_astro_rashi" >
                 	{this.props.about.more_astro.rashi}
                 </div>
             </div>;
@@ -194,7 +209,7 @@ class AboutTab extends React.Component {
     	var nakshatra;
     	if(this.props.about.more_astro.nakshatra) {
     		nakshatra =  <div className="clearfix">
-                <div className="fontlig fl vpro_wordwrap" id="vpro_more_astro_nakshatra" >
+                <div className="fontlig vpro_wordwrap" id="vpro_more_astro_nakshatra" >
                 	{this.props.about.more_astro.nakshatra}
                 </div>
             </div>;
@@ -224,10 +239,8 @@ class AboutTab extends React.Component {
     	if(this.props.about.more_astro.horo_match) 
     	{
     		horo_match = <div className="clearfix pt10">
-                <div className="fl">
-                	<i className="vpro_sprite vpro_pin"></i>
-                </div>
-                <div className="fontlig padl5 fl vpro_wordwrap" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
+                <i className="vpro_sprite vpro_pin"></i>
+                <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
                 </div>
             </div>
     	}
@@ -442,7 +455,7 @@ class AboutTab extends React.Component {
 	  					<span className="f18" id="vpro_username" >{this.props.about.username}</span>&nbsp;&nbsp;
 	  					<span className="f11 color13" id="vpro_last_active" >{this.props.about.last_active}</span> 
   					</div>
-  					<div className="fr color2 f14 pt5 fontrobbold" id="vpro_subscription">{this.props.about.subscription_icon}</div>
+  					<div className="fr color2 f14 pt5 fontrobbold" id="vpro_subscription">{this.props.about.subscription_text}</div>
   					<div className="clr hgt10"></div>
   					<ul className="vpro_info fontlig">
 	  					<li className="wid49p" id="vpro_age" >
