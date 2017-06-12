@@ -13,9 +13,12 @@ export default class MyjsPage extends React.Component {
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
-								<div className="fullwid bg1">
-										<MyjsHeadHTML/>
-								</div>
+							 <MyjsHeadHTML/>
+								<EditBar/>
+
+
+
+
 							</div>
 					</div>
 			</div>

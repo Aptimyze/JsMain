@@ -1,7 +1,3 @@
-.myjstop1 {
-  top: -6px
-}
-
 .wrap-box {
   width: 100%;
   overflow: hidden;
@@ -315,3 +311,8 @@ body {
   width: 20px;
   height: 20px
 }
+.myjsEditbar{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;}
+.myjsWid1{width:250%;}
+.myjstop1 { top: -3px; left:5px}
+ul.shownotiful{margin: 0;padding:0; list-style-type: none}
+ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;}
