@@ -49,7 +49,7 @@ export default class AppPromo extends React.Component {
   
     render() {
 	    return (
-	        <div ref="AppPromo" id="AppPromo" className = "ham_b20_n ham_minu20 newocbbg1 fullwid" >   	            	
+	        <div id="AppPromo" className="ham_b20_n ham_minu20 newocbbg1 fullwid">   	            	
 	           	<div className = "padAppPromo clearfix">
 	           	    <div className = "fl pt20">            	
 	           	    	<div onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            
