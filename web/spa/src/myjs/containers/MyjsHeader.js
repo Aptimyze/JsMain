@@ -19,18 +19,7 @@ export class ShowNotificationLayer extends React.Component {
 
       <div>
 
-        <ul className="shownotiful bg4" id="notificationBellView">
-          <li>
-            <div className="fullwid clearfix posrel txtc">
-
-            </div>
-          </li>
-
-          <li>
-
-          </li>
-
-        </ul>
+      
 
       </div>
 
