@@ -35,19 +35,16 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-
         console.log("next",nextProps);
         this.setState ({
             dataLoaded : true,
             picUrl: nextProps.pic.url
         });  
-        /*if(nextProps.appPromotion == true) {
+        if(nextProps.appPromotion == true) {
             this.setState ({
                 showPromo : true
             });   
-        }*/
-       // }
-
+        }
     }
 
     showError(inputString) {
@@ -104,7 +101,7 @@ class ProfilePage extends React.Component {
         if(this.state.dataLoaded)
         {   
             AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
-            FamilyView = <FamilyTab myInfo={this.props.myInfo}></FamilyTab>;
+            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
             DppView = <DppTab dpp={this.props.DppInfo}></DppTab>;
             if(this.props.AboutInfo.name_of_user) 
             {

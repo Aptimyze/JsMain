@@ -1,11 +1,9 @@
 import React from 'react';
-import * as CONSTANTS from '../../common/constants/apiConstants'
 
 class AboutTab extends React.Component {
 	constructor(props) {
         super();
         console.log(props);
-        //props.about.special_case = "handicapped";
     }
     render() {
     	var have_child = "";
