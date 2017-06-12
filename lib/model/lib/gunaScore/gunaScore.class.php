@@ -2,14 +2,13 @@
 /*
  * Class gunaScore 
  * This class verifies conditions and calls the third party api to fetch guna scores 
- * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score11
+ * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
-//guna score for testing
 class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
-		 */ //testing11
+		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $searchIdArr = array(); //this comment has been added for testing
@@ -130,18 +129,21 @@ class gunaScore
   {	
     $gunaData = array();
     $compstring = implode(",",$compstring);
-    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;  
+    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;
+
+    $memObject=JsMemcache::getInstance();
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
 
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
+      $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
     }
     elseif(!$fresult)
     {
-      //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
-      //This send mail function has to be replaced by Redis key
+      $memObject->incrCount("gunaBlank_".date("Y-m-d")); 
     }
+    unset($memObject);
     if(is_array($fresult))
     {
       foreach($fresult as $key=>$val)
@@ -168,5 +170,5 @@ class gunaScore
       }
     }
     return($gunaData);
-  } //last line comment for testing1
+  }
 }
