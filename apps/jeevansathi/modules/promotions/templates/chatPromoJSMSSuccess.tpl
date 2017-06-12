@@ -9,12 +9,12 @@
                     <li>Chat with real time online matches and get instant response. </li>                    
                 </ul> 
                 <p class="fontreg f14 pt10 pb20">All this and much more !!</p>    	
-            	<a class="closeCP pt20" href=""></a>
+            	<a class="closeCP pt20" href="" onclick="trackJsEventGA('PROMOTION MS', 'Chat Promo MS Close','','')"></a>
                 <div>
               	<img src="/images/chatPromoImg1.png" class="txtc"/>
                 </div>
                 
-                <button class="bg7 white fontreg f16" onclick="goToPlayStore()">Download APP</button>
+                <button class="bg7 white fontreg f16" onclick="goToPlayStore();trackJsEventGA('PROMOTION MS', 'Chat Promo MS Download','','')">Download APP</button>
             
             </div>
         
