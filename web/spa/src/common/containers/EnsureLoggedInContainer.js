@@ -6,6 +6,8 @@ import asyncComponent from '../components/asyncComponent';
 // import MyjsPage from '../../myjs/containers/MyjsPage';
 const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
+const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
+  .then(module => module.default), { name: 'ProfilePage' });
 import {
   Route,
 } from "react-router-dom";
@@ -13,6 +15,7 @@ import {
 class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
+
         if ( !this.props.AUTHCHECKSUM )
         {
             console.log('Profile checksum is not set.');
