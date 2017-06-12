@@ -33,40 +33,45 @@ const hash = getRoutePath(window.location.href);
 
 class App extends React.Component
 {
+
   componentDidMount() {
     var response;
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
-    console.log("Response is: ")
-    console.log('AUTHCHECKSUM');
     this.props.siginFromCookie(response);  
   }
+
+  componentWillReceiveProps(nextProps)
+  {
+
+  }
   render() {
+    console.log("I am in app.js");
     return (<div>
-    <Router>
+      <Router>
       <div>
-        <Route path='/login' component={LoginPage}/>
-        <Route path='/myjs' component={MyjsPage}/>
-        <Route path='/viewProfile' component={ProfilePage} />
+      <Route path="/" component={EnsureLoggedInContainer}/>
+      <Route path='/viewProfile' component={ProfilePage} />
+      <Route path='/login' component={LoginPage}/>
       </div>
-    </Router>
-  </div>);
+      </Router>
+      </div>);
   }
 }
 
-const mapStateToProps = (state,ownProps) => {
+const mapStateToProps = (state) => {
   return{
-    isLoggedIn : state.isLoggedIn,
-  }
+   AUTHCHECKSUM: state.AUTHCHECKSUM,
+ }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return{
-        siginFromCookie: (response) => {
-            dispatch(siginFromCookie(response));
-        }
+  return{
+    siginFromCookie: (response) => {
+      dispatch(siginFromCookie(response));
     }
+  }
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

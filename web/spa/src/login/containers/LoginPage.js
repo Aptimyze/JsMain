@@ -7,6 +7,8 @@ import {signin} from "../actions/LoginActions"
 import { ErrorConstant } from "../../common/constants/ErrorConstants";
 import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
+import { withRouter } from 'react-router';
+
 
 class LoginPage extends React.Component {
 
@@ -29,6 +31,7 @@ class LoginPage extends React.Component {
                 showPromo : true
             });  
         }, 1200); 
+        console.log("I am in componentDidMount loginpage.");
         console.log(this.props.AUTHCHECKSUM);
         if ( this.props.AUTHCHECKSUM ) {
             this.props.history.push('/myjs');     
@@ -37,7 +40,7 @@ class LoginPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("In nextProps.");
+        console.log("I am in componentWillReceiveProps loginpage.");
         console.log(nextProps);
        if ( nextProps.AUTHCHECKSUM ) {
             this.props.history.push('/myjs');     
@@ -231,8 +234,8 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       AUTHCHECKSUM: state.AUTHCHECKSUM,
-       responseMessage: state.responseMessage
+       AUTHCHECKSUM: state.LoginReducer.AUTHCHECKSUM,
+       responseMessage: state.LoginReducer.responseMessage
     }
 }
 

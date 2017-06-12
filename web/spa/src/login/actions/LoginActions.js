@@ -1,4 +1,5 @@
-import * as CONSTANTS from '../../common/constants/apiConstants'
+import * as CONSTANTS from '../../common/constants/apiConstants';
+
 import React from 'react';
 import {push} from 'react-router-redux';  
 import Cookies from 'universal-cookie';
@@ -8,7 +9,7 @@ export  function signin(email,password)
 {
   return dispatch =>
   {
-    fetch( API_CONSTANTS.API_SERVER +'/api/v1/api/login?email='+email+'&password='+password, {
+    fetch( CONSTANTS.API_SERVER +'/api/v1/api/login?email='+email+'&password='+password, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

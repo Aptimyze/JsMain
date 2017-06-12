@@ -23,13 +23,14 @@ class EnsureLoggedInContainer extends React.Component
     render() {
         if ( this.props.AUTHCHECKSUM )
         {
-
-            return <div>
+            return <div>                    
                     <Route path='/myjs' component={MyjsPage} />
+                    <Route path='/viewProfile' component={ProfilePage} />
                     </div>;
         }
         else
         {
+            
            return null;
         }
     }
@@ -38,7 +39,7 @@ class EnsureLoggedInContainer extends React.Component
 }
 const mapStateToProps = (state,ownProps) => {
     return{
-        AUTHCHECKSUM : state.AUTHCHECKSUM,
+        AUTHCHECKSUM : state.LoginReducer.AUTHCHECKSUM,
     }
 }
 
