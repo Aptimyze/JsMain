@@ -324,7 +324,7 @@ function validateAndSend(){
          {
            if($(".js-otheroccInp input").val().trim()=='')                   
            { 
-           $("#secondReq").show();
+           $("#secondReq").removeClass('vishid');
            $(".js-otheroccInp input").addClass('occ-bdr2');
            return;
            }
@@ -407,7 +407,7 @@ function validateAndSend(){
           </div>
          <!-- start: in case no occupation found -->
          <div class="pt25 vishid js-otheroccInp">
-           <p id = 'secondReq' class="f12 disp-none color5 txtr">Required</p>
+           <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
            <div id = "cityBox"> 
             <select id="city" data-placeholder="Enter your City" class="chosen-select-width">
                      </select> 
@@ -503,7 +503,7 @@ function validateAndSend(){
        $(selector).chosen(config[selector]);
      }
     $("#cityBox").removeClass('chosen-container-err');
-    $('#secondReq').addClass('disp-none');
+    $('#secondReq').addClass('vishid');
     $('#city').trigger("chosen:updated");
 
    }
@@ -539,7 +539,7 @@ function validateAndSend(){
          }
          else if( $('#city').val() == 1 )
          { 
-      $('#secondReq').removeClass('disp-none');
+      $('#secondReq').removeClass('vishid');
        $('#cityBox').addClass('chosen-container-err');
            return;   
         }
