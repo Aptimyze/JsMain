@@ -2,7 +2,7 @@
 <script >
 
     $(document).ready( function(){
-        trackJsEventGA('PROMOTION MS','Chat Promo MS Display','','');
+        trackJsEventGA('CHAT PROMOTION','Display','MS','');
     }
 
         );
@@ -19,12 +19,12 @@
                     <li>Chat with real time online matches and get instant response. </li>                    
                 </ul> 
                 <p class="fontreg f14 pt10 pb20">All this and much more !!</p>    	
-            	<a class="closeCP pt20" href="" onclick="trackJsEventGA('PROMOTION MS', 'Chat Promo MS Close','','')"></a>
+            	<a class="closeCP pt20" href="" onclick="trackJsEventGA('CHAT PROMOTION', 'Close','MS','')"></a>
                 <div>
               	<img src="/images/chatPromoImg1.png" class="txtc"/>
                 </div>
                 
-                <button class="bg7 white fontreg f16" onclick="goToPlayStore();trackJsEventGA('PROMOTION MS', 'Chat Promo MS Download','','')">Download APP</button>
+                <button class="bg7 white fontreg f16" onclick="goToPlayStore();trackJsEventGA('CHAT PROMOTION', 'Download','MS','')">Download APP</button>
             
             </div>
         

@@ -2,7 +2,7 @@
 <script >
 
     $(document).ready( function(){
-        trackJsEventGA('PROMOTION PC','Chat Promo PC Display','','');
+        trackJsEventGA('CHAT PROMOTION','Display','PC','');
     }
 
         );
@@ -12,13 +12,13 @@
         <div class="setshare pos-abs" style="width:1000px">
             <!--start:layer content-->
             <div class="fullwid clearfix pos-rel">
-                <a href="" class="closeCP" onclick="trackJsEventGA('PROMOTION PC','Chat Promo PC Close','','');"></a>
+                <a href="" class="closeCP" onclick="trackJsEventGA('CHAT PROMOTION','Close','PC','');"></a>
                 
                 <!--start:left-->
                 <div class="fl color11 wid40p">
                     <p class=" f26 fontreg cp1">Jeevansathi Chat now on Android!</p>
                     <p class="f19 lh30 fontlig pt30">Now enjoy Chatting with your matches on the go. Receive notifications as soon as someone messages you or sends you an interest</p>
-                    <button class="mt40 bg_pink colrw f24 fontreg brdr-0 bgnone lh63 wid300 txtc" onclick="goToPlayStore();trackJsEventGA('PROMOTION PC', 'Chat Promo PC Download','','');">Download APP</button>
+                    <button class="mt40 bg_pink colrw f24 fontreg brdr-0 bgnone lh63 wid300 txtc" onclick="goToPlayStore();trackJsEventGA('CHAT PROMOTION', 'Download','PC','');">Download APP</button>
                 </div>
                 <!--end:left-->
                 <!--start:right-->
