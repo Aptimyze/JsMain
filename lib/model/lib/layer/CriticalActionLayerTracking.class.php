@@ -422,13 +422,15 @@ return 0;
                     break;
 
                     case '23' :
-                        //    if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
-        
+                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                  {
                     $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
-                    if($familyBasedOutOfObj->getCompletionStatus())
+                    if(!$familyBasedOutOfObj->getCompletionStatus())
                     {
                       $show=1;
                     }
+
+                  }  
                      break;
 
           default : return false;
@@ -510,6 +512,10 @@ break;
                     
                     'A' => '99',
                     'I' => '5.3'
+                        ),
+                    '23' => array(
+                      
+                    'I' => '5.4'
                         )
 
           );
