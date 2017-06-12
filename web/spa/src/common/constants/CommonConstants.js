@@ -1,0 +1,2 @@
+export const SET_AUTHCHECKSUM =  'SET_AUTHCHECKSUM';
+export const AUTHCHECKSUM =  'AUTHCHECKSUM';

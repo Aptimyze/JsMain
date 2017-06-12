@@ -1,12 +1,14 @@
 import * as CONSTANTS from '../../common/constants/apiConstants'
 import React from 'react';
 import {push} from 'react-router-redux';  
+import Cookies from 'universal-cookie';
+
 
 export  function signin(email,password)
 {
   return dispatch =>
   {
-    fetch( CONSTANTS.API_SERVER +'/api/v1/api/login?email='+email+'&password='+password, {
+    fetch( API_CONSTANTS.API_SERVER +'/api/v1/api/login?email='+email+'&password='+password, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -15,7 +17,7 @@ export  function signin(email,password)
     .then(response => response.json())
     .then( (response) => {
       dispatch({
-        type:'SET_CHECKSUM',
+        type:'SET_AUTHCHECKSUM',
         payload: response
       });
     })
@@ -23,4 +25,17 @@ export  function signin(email,password)
       console.warn('Actions - fetchJobs - recreived error: ', error)
     })
   } 
+}
+
+
+export function siginFromCookie(response)
+{
+  return dispatch =>
+  {
+    dispatch({
+        type:'SET_AUTHCHECKSUM',
+        payload: response,
+    });
+  }
+
 }

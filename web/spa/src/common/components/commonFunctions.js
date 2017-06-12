@@ -28,3 +28,20 @@ export const getAndroidVersion = (inputUa) => {
 	}
 	return false;
 }
+export const getCookieData = ( name ) => {
+    let pairs = document.cookie.split("; "),
+    count = pairs.length, parts;
+    for (let i=0; i<pairs.length; i++) {
+    	if(pairs[i].split("=")[0] == name) {
+    		return pairs[i].split("=")[1];
+    	}
+    }
+    return false;
+}
+export const writeCookie = (key, value, hours) => {
+  	let date = new Date();
+	date.setTime(date.getTime()+(hours*60*60*1000));
+	window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+    return value;
+  }
+

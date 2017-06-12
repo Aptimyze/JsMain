@@ -29,11 +29,17 @@ class LoginPage extends React.Component {
                 showPromo : true
             });  
         }, 1200); 
+        console.log(this.props.AUTHCHECKSUM);
+        if ( this.props.AUTHCHECKSUM ) {
+            this.props.history.push('/myjs');     
+       }   
     } 
 
     componentWillReceiveProps(nextProps)
     {
-       if ( nextProps.profileCheckSum ) {
+        console.log("In nextProps.");
+        console.log(nextProps);
+       if ( nextProps.AUTHCHECKSUM ) {
             this.props.history.push('/myjs');     
        }
        else {
@@ -126,7 +132,7 @@ class LoginPage extends React.Component {
         var promoView;
         if(this.state.showPromo)
         {
-            promoView = <AppPromo removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+            promoView = <AppPromo parentComp="LoginPage" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
         var formInput = <div id ="formInput">
@@ -225,7 +231,7 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       profileCheckSum: state.profileCheckSum,
+       AUTHCHECKSUM: state.AUTHCHECKSUM,
        responseMessage: state.responseMessage
     }
 }
