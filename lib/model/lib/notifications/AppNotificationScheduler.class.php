@@ -31,6 +31,7 @@ class AppNotificationScheduler extends NotificationScheduler
 	  if(in_array($this->notificationKey, NotificationEnums::$notificationTempLogArr)){
 	        $tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
 	        $logProfiles = $tempObj->getProfiles($currentScript);
+	      
 	  }
 
 	  $appProfilesHandlerObj = new AppProfilesHandler;
@@ -45,6 +46,7 @@ class AppNotificationScheduler extends NotificationScheduler
 		  if(is_array($appProfiles))
 		  {
 			  $notificationData = $this->notificationObj->getNotificationData($appProfiles,$this->notificationKey,'','',$logProfiles,$currentScript);
+
 			  $this->schedule($notificationData);
 		  }
 		  else
@@ -76,6 +78,7 @@ class AppNotificationScheduler extends NotificationScheduler
 			  	$insertData[$k]['REG_ID']="";
 			  }
 		      $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
+		      $insertData[$k]['IOS_PHOTO_URL']=$v['IOS_PHOTO_URL'];
 			  if($v['NOTIFICATION_KEY']=='VD')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
@@ -88,7 +91,7 @@ class AppNotificationScheduler extends NotificationScheduler
 			  	$this->insert($dataSet);
 				unset($dataSet);*/		
 		  }
-		  //print_r($insertData);
+		  
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
 	  }

@@ -39,6 +39,7 @@ EOF;
 	 */
 	public function execute($arguments = array(), $options = array())
 	{
+		
 		$PICTURE_FOR_SCREEN_NEW = new PICTURE_FOR_SCREEN_NEW;
 		if($arguments["profileId"]>0)
 			$param["PROFILEID"]=$arguments["profileId"];
@@ -56,6 +57,7 @@ EOF;
 					{
 						$source = PictureFunctions::getCloudOrApplicationCompleteUrl($temp1);
 						$dest = PictureFunctions::getCloudOrApplicationCompleteUrl($temp1,true);
+						PictureFunctions::setHeaders();
 						copy($source,$dest);
 						foreach(JsConstants::$photoServerShardingEnums as $server)
 						{

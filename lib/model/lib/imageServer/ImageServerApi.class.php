@@ -66,6 +66,7 @@ class ImageServerApi
         */
 	public function generateUploadRequest($pid,$url,$extension='',$type='')
 	{
+		PictureFunctions::setHeaders();
 		if(is_array($extension) && array_key_exists("archive",$extension))
                 {
                         $archive="Y";
