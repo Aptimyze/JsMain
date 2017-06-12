@@ -15,6 +15,7 @@ class photoScreeningService
         const AUTO_REMINDER_MAIL_MAX_COUNT = 2;
         public function __construct($profileObj='')
         {
+				
                 if($profileObj)
                         $this->profileObj=$profileObj;	
         }
@@ -287,6 +288,7 @@ class photoScreeningService
   	*/
 	public function fileValidate($formArr)
 	{
+		PictureFunctions::setHeaders();
 		if($formArr["action"] == "uploadAppPhoto")
 		{
 			if($formArr["whichCase"]==1)
@@ -1033,6 +1035,7 @@ class photoScreeningService
   	*/
 	public function performUpload($picId,$temp,$type,$format,$profileId)
 	{
+		PictureFunctions::setHeaders();
 		$profileObj = Operator::getInstance('newjs_master',$profileId);
 		$pictureServiceObj=new PictureService($profileObj);
                 $screenedPicObj = new ScreenedPicture;
@@ -1307,6 +1310,7 @@ class photoScreeningService
 	*/
 	public function uploadAppPhoto($formArr)
 	{
+		PictureFunctions::setHeaders();
 		$nonScreenedPicObj = new NonScreenedPicture;
 		$screenedPicObj = new ScreenedPicture;
 
@@ -1897,7 +1901,7 @@ class photoScreeningService
           @return 1 for No error else 0 for Error
          */
         public function insertApprovedPhotoDetails($paramArr) {
-
+				PictureFunctions::setHeaders();
                 $screenedPicObj = new ScreenedPicture();
                 $nonScreenedPicObj = new NonScreenedPicture();
                 
@@ -2081,6 +2085,7 @@ class photoScreeningService
 	*/	
 	public function processUpload($formArr,$ops=false,$filesGlobArr='')
         {
+			PictureFunctions::setHeaders();
                 $photoFileServiceObj = new photoFileService();
 		if(!$ops)
 			$output = $photoFileServiceObj->fileValidate($formArr);
@@ -2225,6 +2230,7 @@ class photoScreeningService
 	}
         public function rotationOfImage($pictureRotation)
 	{ 
+				PictureFunctions::setHeaders();
                 $pictureServiceObj = new PictureService($this->profileObj,'SCREENING');
                 $photoDetails = $pictureServiceObj->getNonScreenedPhotos('album');
                 foreach($photoDetails as $pic=>$picObj ){
@@ -2304,7 +2310,7 @@ class photoScreeningService
                 return 0;
 	}
         public function rotateImage($filename,$degrees, $format) {
-
+			PictureFunctions::setHeaders();
 		if(!$format)
 			$format = PictureFunctions::getImageFormatType($filename);
                 if($degrees>0)
@@ -2329,6 +2335,7 @@ class photoScreeningService
 
         public function watermarkOnImage($picName,$SaveLink,$format,$watermarkOrNot)
         { 
+			PictureFunctions::setHeaders();
                 if(in_array($picName,ProfilePicturesTypeEnum::$WATERMARK)){
                         if ($watermarkOrNot%ProfilePicturesTypeEnum::$PICTURE_WATERMARK[array_flip(ProfilePicturesTypeEnum::$WATERMARK)[$picName]] == 0) {
                                 $pictureServiceObj = new PictureService($this->profileObj);
@@ -2341,6 +2348,7 @@ class photoScreeningService
                 }
         }
         public function updateImageDimensions($newPicId,$url){
+				PictureFunctions::setHeaders();
                 $size = getimagesize($url);
                 $mobAppPicSizeObj = new PICTURE_MobAppPicSize();
                 $mobAppPicSizeObj->updateImageSize($newPicId,$size);
@@ -2360,6 +2368,7 @@ class photoScreeningService
 	*/
 	public function movePhotosFromMailToNonScreened($name,$mailId)
 	{
+		PictureFunctions::setHeaders();
 		$updateScreeningStatus = new SCREEN_PHOTOS_FROM_MAIL();
 		$profileId = $this->profileObj->getPROFILEID();
                 $updateScreeningStatus->updateScreeningStatus($name, $mailId, $profileId);		

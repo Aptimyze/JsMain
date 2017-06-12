@@ -60,7 +60,8 @@ EOF;
 		if($currentScript!=11)		
 			successfullDie("");
 */
-
+		
+		PictureFunctions::setHeaders();
 		$this->UpdateForCorruptPrevent();
 		$pictureObj = new NonScreenedPicture();
 		$faceDetectionObj = new PhotoFaceDetection();
@@ -90,6 +91,7 @@ EOF;
 					$imageT = PictureFunctions::getImageFormatType($value["OriginalPicUrl"]);	
 					if($copy)
 					{
+						
 						$origPic =$pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["OriginalPicUrl"],$pid,$value["PROFILEID"],$imageT,'nonScreened');
 						copy($value["OriginalPicUrl"],$origPic);
 					}

@@ -41,6 +41,13 @@ private function checkRabbitmqServerStatus($serverid,$api_url)
 	protected function execute($arguments = array(), $options = array())
 	{
     sfContext::createInstance($this->configuration);
+    $notificationKey ='PROFILE_VISITOR';
+  $instantNotificationObj =new InstantAppNotification($notificationKey);
+  $instantNotificationObj->sendNotification(1,76601,"visited");
+  die;
+    $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(1,76601);
+        die;
 	    // SET BASIC CONFIGURATION
 
     /*$fileName1 = "/home/ankita/Desktop/rabbitTimeNonPeak.log";

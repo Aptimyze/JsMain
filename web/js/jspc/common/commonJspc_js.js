@@ -58,7 +58,7 @@ var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '</table>'+
         
         '</div>'+
-        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
+        '<a href="http://jeevansathi.idfy.com" target="blank"><div id="trackIdfy" class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
         '</div>'+
         '</div>'+
         '<div id="closeBtn" class="disp_ib vTop cursp closeBtnNew"><i class="sprite2 closeSprite"></i></div>';
@@ -129,6 +129,14 @@ $(document).ready(function (e) {
         $(this).off("click").on("click",function(){
             $("#commonOverlay").removeClass("disp-none");   
             $("#commonOverlay").html(idfyStr);
+            $("#trackIdfy").off("click").on("click",function () {                
+                $.myObj.ajax({
+                    type: 'POST',
+                    url: "/api/v1/common/trackIdfy",
+                    success: function (response) {                        
+                    }
+                });
+            });
             $("#closeBtn").off("click").on("click",function(){
                 $("#commonOverlay").addClass("disp-none");
             }); 
