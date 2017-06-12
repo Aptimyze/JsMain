@@ -132,16 +132,21 @@ class gunaScore
     $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;
 
     $memObject=JsMemcache::getInstance();
+    $startTime = microtime(true);
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
+    $endTime = microtime(true)-$startTime;
 
+    $this->logApiResponeTime($memObject,$endTime);
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
       $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
+      $memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
     }
     elseif(!$fresult)
     {
-      $memObject->incrCount("gunaBlank_".date("Y-m-d")); 
+      $memObject->incrCount("gunaBlank_".date("Y-m-d"));
+      $memObject->setExpiryTime("gunaBlank_".date("Y-m-d"),"604800"); //7 days 
     }
     unset($memObject);
     if(is_array($fresult))
@@ -170,5 +175,29 @@ class gunaScore
       }
     }
     return($gunaData);
+  }
+
+  public function logApiResponeTime($memObject,$endTime)
+  {    
+    if($endTime< 0.1)
+    {
+      $memObject->incrCount("gunaCall_LT_0.1");
+      $memObject->setExpiryTime("gunaCall_LT_0.1","604800"); //7 days 
+    }
+    elseif($endTime >=0.1 && $endTime < 0.5)
+    {
+      $memObject->incrCount("gunaCall_GT_0.1_LT_0.5");
+      $memObject->setExpiryTime("gunaCall_GT_0.1_LT_0.5","604800"); //7 days 
+    }
+    elseif($endTime >=0.5 && $endTime < 1.0)
+    {
+      $memObject->incrCount("gunaCall_GT_0.5_LT_1.0");
+      $memObject->setExpiryTime("gunaCall_GT_0.5_LT_1.0","604800"); //7 days  
+    }
+    elseif($endTime > 1.0)
+    {
+      $memObject->incrCount("gunaCall_GT_1");
+      $memObject->setExpiryTime("gunaCall_GT_1","604800"); //7 days 
+    }
   }
 }
