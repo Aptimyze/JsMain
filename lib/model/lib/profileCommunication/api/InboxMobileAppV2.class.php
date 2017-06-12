@@ -923,7 +923,8 @@ class InboxMobileAppV2
 	            if(!MobileCommon::isDesktop())
 					$buttonObj = new ButtonResponseJSMS(LoggedInProfile::getInstance('newjs_master'),$profileObject,$page);
 				$ignoreButton = array();
-                if($infoKey=="IGNORED_PROFILES" && !MobileCommon::isDesktop())
+				// die(print_r($infoKey));
+                if($infoKey=="IGNORED_PROFILES" && !MobileCommon::isDesktop() && !MobileCommon::isMobile())
 				{
 					
 					$ignoreButton["buttons"]["primary"][] = $buttonObj->getIgnoreButton("","",1,1);
