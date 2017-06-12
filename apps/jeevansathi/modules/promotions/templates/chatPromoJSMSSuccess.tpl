@@ -1,14 +1,4 @@
 <body>
-<script >
-
-    $(document).ready( function(){
-        trackJsEventGA('CHAT PROMOTION','Display','MS','');
-    }
-
-        );
-
-</script>
-
 	<div id="chatPormoMS">
     	<div class="fullwid fullheight cpbg1 posrel">
         	<div class="posabs setshare txtc color7 wid94p" id="PLayer"> 

@@ -7,7 +7,7 @@
             $('#PLayer').parent().removeClass('fullheight').css('height',(pht+100));
         }     
         $('#chatPormoMS').css('height',Phgt);
-        
+        trackJsEventGA('CHAT PROMOTION','Display','MS','');
     })
 
     function goToPlayStore()

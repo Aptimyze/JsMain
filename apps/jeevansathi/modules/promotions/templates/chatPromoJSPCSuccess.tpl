@@ -1,13 +1,4 @@
 <body>
-<script >
-
-    $(document).ready( function(){
-        trackJsEventGA('CHAT PROMOTION','Display','PC','');
-    }
-
-        );
-
-</script>
     <div id="chatPromoPc" class="fullwid promobg1 fullhgt pos-rel">
         <div class="setshare pos-abs" style="width:1000px">
             <!--start:layer content-->
