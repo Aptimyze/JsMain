@@ -1,8 +1,11 @@
 const ProfileReducer = (state={
 	responseMessage: '',
-	myInfo: '',
-	familyInfo: '',
-	dppInfo: ''
+	appPromotion: '',
+	aboutInfo: [],
+	familyInfo: [],
+	dppInfo: [],
+	pic: [],
+	lifestyle: []
 },action) => {
 	switch(action.type)
 	{
@@ -10,9 +13,12 @@ const ProfileReducer = (state={
 		state = {
 			...state,
 			responseMessage: action.payload.responseMessage,
-			myInfo: action.payload.about.myinfo,
-			familyInfo: action.payload.family.myfamily,
-			dppInfo: action.payload.dpp.about_partner
+			appPromotion: action.payload.appPromotion,
+			aboutInfo: action.payload.about,
+			familyInfo: action.payload.family,
+			dppInfo: action.payload.dpp,
+			pic: action.payload.pic,
+			lifestyle: action.payload.lifestyle
 		}
 		break;
 	}

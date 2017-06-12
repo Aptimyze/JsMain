@@ -27,23 +27,21 @@ class ProfilePage extends React.Component {
     componentDidMount() {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
-        /*setTimeout(function(){ 
-            _this.setState ({
-                showPromo : true
-            });  
-        }, 1200); */  
+        document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
         this.props.showProfile();   
     } 
 
     componentWillReceiveProps(nextProps)
     {
-        // console.log(nextProps);
+
+        console.log("next",nextProps);
         /*if(nextProps.appPromotion == true) {
             this.setState ({
                 showPromo : true
             });   
         }*/
+       // }
+
     }
 
     showError(inputString) {
@@ -140,9 +138,12 @@ class ProfilePage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        responseMessage: state.ProfileReducer.responseMessage,
-       myInfo: state.ProfileReducer.myInfo,
+       aboutInfo: state.ProfileReducer.aboutInfo,
        familyInfo: state.ProfileReducer.familyInfo,
-       dppInfo: state.ProfileReducer.dppInfo
+       dppInfo: state.ProfileReducer.dppInfo,
+       appPromotion : state.ProfileReducer.appPromotion,
+       pic: state.ProfileReducer.pic,
+       lifestyle: state.ProfileReducer.lifestyle
     }
 }
 
