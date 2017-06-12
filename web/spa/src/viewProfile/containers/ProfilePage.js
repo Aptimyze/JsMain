@@ -20,25 +20,31 @@ class ProfilePage extends React.Component {
             timeToHide: 3000,
             showLoader: false,
             showPromo: false,
-            tabArray: ["About","Family","Dpp"]
+            tabArray: ["About","Family","Dpp"],
+            dataLoaded: false,
+            picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
         };
     }
 
     componentDidMount() {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
-        /*setTimeout(function(){ 
-            _this.setState ({
-                showPromo : true
-            });  
-        }, 1200); */  
+        document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
         this.props.showProfile();   
     } 
 
     componentWillReceiveProps(nextProps)
     {
-        // console.log(nextProps.responseMessage);
+        console.log("next",nextProps);
+        this.setState ({
+            dataLoaded : true,
+            picUrl: nextProps.pic.url
+        });  
+        if(nextProps.appPromotion == true) {
+            this.setState ({
+                showPromo : true
+            });   
+        }
     }
 
     showError(inputString) {
@@ -88,7 +94,23 @@ class ProfilePage extends React.Component {
         var promoView;
         if(this.state.showPromo)
         {
-            promoView = <AppPromo removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+        }
+
+        var AboutView,FamilyView,DppView,Header = "View Profile";
+        if(this.state.dataLoaded)
+        {   
+            AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
+            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
+            DppView = <DppTab dpp={this.props.DppInfo}></DppTab>;
+            if(this.props.AboutInfo.name_of_user) 
+            {
+                Header = this.props.AboutInfo.name_of_user;
+            } else
+            {
+                 Header = this.props.AboutInfo.username;
+            }
+
         }
 
         return (
@@ -104,7 +126,7 @@ class ProfilePage extends React.Component {
                                     <i id="backBtn" className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
-                                    ZZZY0739 
+                                    {Header} 
                                 </div>
                                 <div className="posabs vpro_pos1">
                                     <i className="vpro_sprite vpro_comHisIcon cursp"></i>
@@ -113,7 +135,7 @@ class ProfilePage extends React.Component {
                         </div>
                     </div> 
                     <div id="photoParent" className="fullwid scrollhid">
-                        <PhotoView></PhotoView> 
+                        <PhotoView src={this.state.picUrl}></PhotoView> 
                     </div>
                     <div id="tab" className="fullwid tabBckImage posabs mtn39">
                         <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
@@ -123,9 +145,9 @@ class ProfilePage extends React.Component {
                             <div className="clr"></div>
                         </div>
                     </div>
-                    <AboutTab myInfo={this.props.myInfo}></AboutTab>
-                    <FamilyTab familyInfo={this.props.familyInfo}></FamilyTab>
-                    <DppTab dppInfo={this.props.dppInfo}></DppTab>
+                    {AboutView}
+                    {FamilyView}
+                    {DppView}
                 </div>
             </div>
         );
@@ -135,9 +157,12 @@ class ProfilePage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        responseMessage: state.ProfileReducer.responseMessage,
-       myInfo: state.ProfileReducer.myInfo,
-       familyInfo: state.ProfileReducer.familyInfo,
-       dppInfo: state.ProfileReducer.dppInfo
+       AboutInfo: state.ProfileReducer.aboutInfo,
+       FamilyInfo: state.ProfileReducer.familyInfo,
+       DppInfo: state.ProfileReducer.dppInfo,
+       appPromotion : state.ProfileReducer.appPromotion,
+       pic: state.ProfileReducer.pic,
+       LifestyleInfo: state.ProfileReducer.lifestyle
     }
 }
 

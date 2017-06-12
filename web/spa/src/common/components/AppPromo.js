@@ -30,7 +30,12 @@ export default class AppPromo extends React.Component {
 	    		}, 10);
 	    		writeCookie("AppPromo","jeevansathi",3); 
     		}
-    	} 
+    	} else if(this.state.parentComp == "others") {
+    		setTimeout(function(){ 
+			    document.getElementById("AppPromo").classList.remove("ham_minu20");
+			    document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
+	    	}, 10);
+    	}
     }	
 
     closeLayer() {
@@ -44,7 +49,7 @@ export default class AppPromo extends React.Component {
   
     render() {
 	    return (
-	        <div ref="AppPromo" id="AppPromo" className = "ham_b20_n ham_minu20 newocbbg1 fullwid" >   	            	
+	        <div id="AppPromo" className="ham_b20_n ham_minu20 newocbbg1 fullwid">   	            	
 	           	<div className = "padAppPromo clearfix">
 	           	    <div className = "fl pt20">            	
 	           	    	<div onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            

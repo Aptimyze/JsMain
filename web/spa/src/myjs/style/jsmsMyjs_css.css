@@ -1,0 +1,320 @@
+.wrap-box {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transform: translatez(0)
+}
+
+.swrapper {
+  max-width: 100%;
+  margin: 0px auto;
+  position: relative
+}
+
+body {
+  background-color: #e4e4e4 !important
+}
+
+#profileDetailSection::-webkit-scrollbar {
+  display: none
+}
+
+.bellicon {
+  background-position: -125px -23px;
+  width: 20px;
+  height: 20px
+}
+
+.srchicon {
+  background-position: -156px -24px;
+  width: 20px;
+  height: 19px
+}
+
+.wcircle {
+  background-position: -67px -54px;
+  width: 20px;
+  height: 19px
+}
+
+.camera {
+  background-position: -95px -54px;
+  width: 27px;
+  height: 22px
+}
+
+.basicdetail {
+  background-position: -93px -91px;
+  width: 28px;
+  height: 22px
+}
+
+.ppl1 {
+  background-position: -4px -14px;
+  width: 26px;
+  height: 22px
+}
+
+.heart {
+  background-position: -179px -119px;
+  width: 66px;
+  height: 54px
+}
+
+.myjs_arow1 {
+  background-position: 32px -54px;
+  padding-right: 12px
+}
+
+.pos1 {
+  top: -10px;
+  left: 5px
+}
+
+.pos2 {
+  top: 2px;
+  left: 6px
+}
+
+.pos3 {
+  top: 0;
+  right: 0
+}
+
+.pos_3 {
+  top: 3px;
+  left: 3px
+}
+
+.row {
+  display: table
+}
+
+.cell {
+  display: table-cell
+}
+
+.vtop {
+  vertical-align: top
+}
+
+.vmid {
+  vertical-align: middle
+}
+
+.brdr50p {
+  border-radius: 50%
+}
+
+.attr ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0
+}
+
+.attr ul li {
+  font-size: 14px;
+  color: #515050;
+  font-family: "Roboto Light"
+}
+
+.circle1 {
+  border: 1px solid #d9475c;
+  padding: 4px
+}
+
+.zoomin {
+  -moz-perspective: 1000;
+  -webkit-perspective: 1000;
+  -ms-perspective: 1000;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -webkit-transform: scale(2.0);
+  -moz-transform: scale(2.0);
+  -ms-transform: scale(2.0);
+  -webkit-transition: all 0.3s ease-in;
+  -moz-transition: all 0.3s ease-in;
+  -ms-transition: all 0.3s ease-in
+}
+
+.pie {
+  width: 62px;
+  height: 62px;
+  background: #e4e4e4;
+  border-radius: 100%;
+  position: absolute;
+  margin: 0px
+}
+
+.pie1 {
+  clip: rect(0px, 62px, 62px, 31px);
+  -o-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg)
+}
+
+.pie2 {
+  clip: rect(0px, 31px, 62px, 0px);
+  -o-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg)
+}
+
+.hold {
+  width: 62px;
+  height: 62px;
+  position: absolute;
+  z-index: 1;
+  margin: 0px
+}
+
+.hold1 {
+  clip: rect(0px, 62px, 62px, 31px)
+}
+
+.hold2 {
+  clip: rect(0px, 31px, 62px, 0px)
+}
+
+.bg {
+  width: 60px;
+  height: 60px;
+  background-color: #e4e4e4;
+  border-radius: 100%;
+  border: 1px solid #d9475c;
+  position: absolute;
+  margin-left: 1px;
+  margin-top: 1px
+}
+
+.image {
+  width: 52px;
+  height: 52px;
+  margin-top: 5px;
+  margin-left: 5px;
+  z-index: 3;
+  position: relative;
+  border-radius: 100%;
+  float: left
+}
+
+.pl_a {
+  padding-left: 10px
+}
+
+.myjs_pad1 {
+  padding: 8px 0px
+}
+
+.myjs_load1 {
+  background-position: -190px -128px;
+  width: 47px;
+  height: 45px
+}
+
+.myjs_kundli {
+  background-position: -326px -6px;
+  width: 30px;
+  height: 22px
+}
+
+.myjs_career {
+  background-position: -326px -33px;
+  width: 30px;
+  height: 25px
+}
+
+.myjs_details {
+  background-position: -311px -63px;
+  width: 24px;
+  height: 28px
+}
+
+.myjs_edu {
+  background-position: -339px -62px;
+  width: 24px;
+  height: 29px
+}
+
+.myjs_ehi {
+  background-position: -314px -97px;
+  width: 24px;
+  height: 29px
+}
+
+.myjs_lifestyle {
+  background-position: -309px -62px;
+  width: 24px;
+  height: 29px
+}
+
+.myjs_family {
+  background-position: -314px -127px;
+  width: 51px;
+  height: 29px
+}
+
+.oval {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  border: none;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  font: normal 100%/normal Arial, Helvetica, sans-serif;
+  color: rgba(0, 0, 0, 1);
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: #fff;
+  padding: 0 4px
+}
+
+.wid497p {
+  width: 49.7%
+}
+
+.myjs_f30 {
+  font-size: 30px
+}
+
+.lifestyle_2 {
+  background-position: -364px -59px;
+  width: 27px;
+  height: 31px
+}
+
+.hgt156 {
+  height: 156px
+}
+
+.btm0 {
+  bottom: 0px
+}
+
+.padActi {
+  padding: 25px 10px 10px 10px
+}
+
+.newBgBand {
+  background-image: url('../../img/loginbg.jpg');
+  background-position: -200px -200px
+}
+
+.boxshadow_new {
+  -webkit-box-shadow: -1px -13px 33px -9px rgba(153, 153, 153, 0.96);
+  -moz-box-shadow: -1px -13px 33px -9px rgba(153, 153, 153, 0.96);
+  box-shadow: -1px -13px 33px -9px rgba(153, 153, 153, 0.96)
+}
+
+.loaderSmallIcon {
+  width: 20px;
+  height: 20px
+}
+.myjsEditbar{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;}
+.myjsWid1{width:250%;}
+.myjstop1 { top: -3px; left:5px}
+.myjsedit1{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;}
+.myjsc1{width:60px; height:60px;}
+ul.shownotiful{margin: 0;padding:0; list-style-type: none}
+ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;}

@@ -5,7 +5,7 @@ export  function profileDetail()
 {
   return dispatch =>
   {
-    fetch( CONSTANTS.API_SERVER +'/api/v1/profile/detail?checksum=f4d39b4b20a6571c557ba0a4bac68667i99408443&profilechecksum=f4d39b4b20a6571c557ba0a4bac68667i99408443', {
+    fetch( CONSTANTS.API_SERVER +'/api/v1/profile/detail?profilechecksum=0b61993c873f90e1c62ad22c120152e8i9397643', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

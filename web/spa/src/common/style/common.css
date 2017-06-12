@@ -759,7 +759,7 @@ i {
 	font-style: normal;
 }
 .mainsp {
-	background-image:url(https://static.jeevansathi.com/images/jsms/commonImg/main-sprite_new_1.png);
+	background-image:url('../../img/main-sprite_new_1.png');
 	background-repeat:no-repeat
 }
 .icons1 {
@@ -787,7 +787,7 @@ i {
 	height: 26px;
 }
 .asrp_row4 {
-	background: url(https://static.jeevansathi.com/images/jsms/commonImg/main-sprite_new_1.png) no-repeat -38px -59px;
+	background: url('../../img/main-sprite_new_1.png') no-repeat -38px -59px;
 	width: 26px;
 	height: 11px;
 	display: inline-block;

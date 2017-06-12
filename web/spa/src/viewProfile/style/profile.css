@@ -154,7 +154,6 @@ transform: translate3d(15%, 0px, 0px);
 box-shadow:10px 0px 100px 10px rgb(2,161,250);
 }
 .vpro_wordwrap{
-width: 90%;
 word-wrap: break-word;
 }
 .vpro_wordwrap2{
