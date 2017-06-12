@@ -876,6 +876,9 @@ Abstract class ApiAuthentication
 	*/ 
     public function setLoginTrackingCookie($loginData)
 	{
+		if(MobileCommon::isApp())
+			return ;
+
 		$username = $loginData["USERNAME"];
 		$cookieName = "loginTracking";
 		$expiryTime = 31536000; // Approx 1 year
