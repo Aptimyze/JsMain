@@ -21,7 +21,8 @@ class ProfilePage extends React.Component {
             showLoader: false,
             showPromo: false,
             tabArray: ["About","Family","Dpp"],
-            dataLoaded: false
+            dataLoaded: false,
+            picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
         };
     }
 
@@ -37,7 +38,8 @@ class ProfilePage extends React.Component {
 
         console.log("next",nextProps);
         this.setState ({
-            dataLoaded : true
+            dataLoaded : true,
+            picUrl: nextProps.pic.url
         });  
         /*if(nextProps.appPromotion == true) {
             this.setState ({
@@ -98,12 +100,20 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-        var AboutView,FamilyView,DppView;
+        var AboutView,FamilyView,DppView,Header = "View Profile";
         if(this.state.dataLoaded)
         {   
             AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
             FamilyView = <FamilyTab myInfo={this.props.myInfo}></FamilyTab>;
-            DppView = <DppTab myInfo={this.props.myInfo}></DppTab>;
+            DppView = <DppTab dpp={this.props.DppInfo}></DppTab>;
+            if(this.props.AboutInfo.name_of_user) 
+            {
+                Header = this.props.AboutInfo.name_of_user;
+            } else
+            {
+                 Header = this.props.AboutInfo.username;
+            }
+
         }
 
         return (
@@ -119,7 +129,7 @@ class ProfilePage extends React.Component {
                                     <i id="backBtn" className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
-                                    ZZZY0739 
+                                    {Header} 
                                 </div>
                                 <div className="posabs vpro_pos1">
                                     <i className="vpro_sprite vpro_comHisIcon cursp"></i>
@@ -128,7 +138,7 @@ class ProfilePage extends React.Component {
                         </div>
                     </div> 
                     <div id="photoParent" className="fullwid scrollhid">
-                        <PhotoView></PhotoView> 
+                        <PhotoView src={this.state.picUrl}></PhotoView> 
                     </div>
                     <div id="tab" className="fullwid tabBckImage posabs mtn39">
                         <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">

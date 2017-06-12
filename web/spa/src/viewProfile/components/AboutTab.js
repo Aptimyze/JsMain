@@ -1,4 +1,5 @@
 import React from 'react';
+import * as CONSTANTS from '../../common/constants/apiConstants'
 
 class AboutTab extends React.Component {
 	constructor(props) {
@@ -183,6 +184,98 @@ class AboutTab extends React.Component {
     		</div>;
     	}
 
+    	var rashi;
+    	if(this.props.about.more_astro.rashi) {
+    		rashi =  <div className="clearfix">
+                <div className="fontlig fl vpro_wordwrap" id="vpro_more_astro_rashi" >
+                	{this.props.about.more_astro.rashi}
+                </div>
+            </div>;
+    	}
+
+    	var nakshatra;
+    	if(this.props.about.more_astro.nakshatra) {
+    		nakshatra =  <div className="clearfix">
+                <div className="fontlig fl vpro_wordwrap" id="vpro_more_astro_nakshatra" >
+                	{this.props.about.more_astro.nakshatra}
+                </div>
+            </div>;
+    	}
+
+    	var downloadHoroscope;
+    	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
+    	{
+    		downloadHoroscope = <div>
+    			????<br/>
+    			<a href = "#">
+    				<button className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
+    				<button className="fontlig lh40 astroBtn1 fr  js-freeAstroComp wid48p">Get Astro Report</button>
+    			</a>
+    		</div>
+    	}
+
+    	var horoscope;
+    	if(this.props.about.sameGender != 1) 
+    	{
+    		horoscope = <div className="clearfix pb20 pt20">
+    		 {downloadHoroscope}
+    		</div>;
+    	}
+
+    	var horo_match
+    	if(this.props.about.more_astro.horo_match) 
+    	{
+    		horo_match = <div className="clearfix pt10">
+                <div className="fl">
+                	<i className="vpro_sprite vpro_pin"></i>
+                </div>
+                <div className="fontlig padl5 fl vpro_wordwrap" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
+                </div>
+            </div>
+    	}
+
+    	var more_astro;
+    	if(this.props.about.more_astro) 
+    	{
+    		more_astro = <div>
+    			<div className="f12 color1">More</div>
+            	<div className="fontlig pb15">
+            	{rashi}
+            	{nakshatra}
+            	{horoscope}
+            	{horo_match}
+            	<div className="clearfix vpro_dn" id="gunaScore">
+                </div>
+            	</div>
+    		</div>;
+    	}
+
+    	var muslim_m;
+    	if(this.props.about.muslim_m) 
+    	{
+    		muslim_m = "?????";
+    	}
+
+
+    	var Religious;
+    	if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m) 
+    	{
+    		Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
+    			<div className="fl">
+    				<i className="vpro_sprite vpro_kund"></i>
+    			</div>
+     			<div className="fl color2 f14 vpro_padlTop">Religious Beliefs</div>
+     			<div className="clr hgt10"></div>
+     			{muslim_m}
+     			<div className="fontlig pb15" id="vpro_more_sikh">
+     				{this.props.about.sikh_m}
+     			</div>
+     			<div className="fontlig pb15" id="vpro_more_christian">
+     				{this.props.about.christian_m}
+     			</div>
+     		</div>;
+    	}
+
     	var kundliSection;
     	if(this.props.about.city_country || this.props.about.date_time || this.props.about.more_astro) 
     	{
@@ -194,7 +287,151 @@ class AboutTab extends React.Component {
       			<div className="clr hgt10"></div>
       			{city_country}
       			{date_time}
-      			
+      			{more_astro}
+    		</div>;
+    	}
+
+    	var lifestyle;
+    	if(this.props.life.lifestyle)
+    	{
+    		lifestyle = <div>
+    			<div className="f12 color1">Habits</div>
+				<div className="fontlig pb15" id="vpro_lifestyle" >
+					{this.props.life.lifestyle}
+				</div>
+			</div>
+    	}
+
+    	var res_status;
+    	if(this.props.life.res_status)
+    	{
+    		res_status = <div>
+    			<div className="f12 color1">Residential Status</div>
+				<div className="fontlig pb15" id="vpro_res_status" >
+					{this.props.life.res_status}
+				</div>
+			</div>
+    	}
+
+    	var assets;
+    	if(this.props.life.assets)
+    	{
+    		assets = <div>
+    			<div className="f12 color1">Assets</div>
+				<div className="fontlig pb15" id="vpro_res_assets" >
+					{this.props.life.assets}
+				</div>
+			</div>
+    	}
+    	var skills;
+    	if(this.props.life.i_cook)
+    	{
+    		skills = <div>
+    			<div className="f12 color1">Skills</div>  
+				<div className="fontlig pb15">
+					<div id="i_cook">{this.props.life.skills_i_cook}</div> 
+				</div>
+			</div>
+    	}
+
+    	var hobbies;
+    	if(this.props.life.hobbies)
+    	{
+    		hobbies = <div>
+    			<div className="f12 color1">Hobbies</div>
+				<div className="fontlig pb15" id="vpro_hobbies">
+					{this.props.life.hobbies}
+				</div>
+    		</div>;
+    	}
+
+    	var interest;
+    	if(this.props.life.interest)
+    	{
+    		interest = <div>
+    			<div className="f12 color1">Interests</div>
+				<div className="fontlig pb15" id="vpro_interest">
+					{this.props.life.interest}
+				</div>
+    		</div>;
+    	}
+
+    	var dress_style;
+    	if(this.props.life.dress_style)
+    	{
+    		dress_style = <div>
+    			<div className="f12 color1">Dress style</div>
+				<div className="fontlig pb15" id="vpro_dress_style">
+					{this.props.life.dress_style}
+				</div>
+    		</div>;
+    	}
+
+		var fav_tv_show;
+    	if(this.props.life.fav_tv_show)
+    	{
+    		fav_tv_show = <div>
+    			<div className="f12 color1">Favorite TV shows</div>
+				<div className="fontlig pb15" id="vpro_fav_tv_show">
+					{this.props.life.fav_tv_show}
+				</div>
+    		</div>;
+    	}    
+    	
+    	var fav_book;
+    	if(this.props.life.fav_book)
+    	{
+    		fav_book = <div>
+    			<div className="f12 color1">Favorite books</div>
+				<div className="fontlig pb15" id="vpro_fav_book">
+					{this.props.life.fav_book}
+				</div>
+    		</div>;
+    	}    
+
+    	var fav_movies;
+    	if(this.props.life.fav_movies)
+    	{
+    		fav_movies = <div>
+    			<div className="f12 color1">Favorite Movies</div>
+				<div className="fontlig pb15" id="vpro_fav_movies">
+					{this.props.life.fav_movies}
+				</div>
+    		</div>;
+    	}    
+
+    	var fav_cuisine;
+    	if(this.props.life.fav_cuisine)
+    	{
+    		fav_cuisine = <div>
+    			<div className="f12 color1">Favorite cuisine</div>
+				<div className="fontlig pb15" id="vpro_fav_cuisine">
+					{this.props.life.fav_cuisine}
+				</div>
+    		</div>;
+    	}   
+
+    	var LifestyleSection;
+    	if(this.props.life || this.props.life.assets || this.props.life.skills_speaks || this.props.life.skills_i_cook || this.props.life.hobbies || this.props.life.interest || this.props.life.dress_style || this.props.life.fav_tv_show || this.props.life.fav_book || this.props.life.fav_movies || this.props.life.fav_cuisine)
+    	{
+    		LifestyleSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
+    			<div className="fl">
+    				<i className="vpro_sprite vpro_lstyle"></i>
+    			</div>
+	  			<div className="fl color2 f14 vpro_padlTop" id="vpro_lifestyleSection">Lifestyle</div>
+	  			<div className="clr hgt10"></div>
+	  			{lifestyle}
+	  			{res_status}
+	  			{assets}
+	  			{skills}
+	  			{hobbies}
+	  			{interest}
+	  			{dress_style}
+	  			{fav_tv_show}
+	  			{fav_book}
+	  			{fav_movies}
+	  			{fav_cuisine}
+	  			<div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>
     		</div>;
     	}
 
@@ -248,6 +485,8 @@ class AboutTab extends React.Component {
   				{occupationSection}
   				{educationSection}
   				{kundliSection}
+  				{Religious}
+  				{LifestyleSection}
 
 			</div>
     	);
