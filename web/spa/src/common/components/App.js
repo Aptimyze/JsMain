@@ -39,7 +39,7 @@ class App extends React.Component
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
-    this.props.siginFromCookie(response);  
+    this.props.siginFromCookie(response);
   }
 
   componentWillReceiveProps(nextProps)
