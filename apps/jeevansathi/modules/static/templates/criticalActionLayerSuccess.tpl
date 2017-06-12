@@ -443,6 +443,7 @@ function validateAndSend(){
             function callCity(res){
                         var listArray = res;
                         appendCityData(listArray);
+                        //$('#city_chosen').removeClass('chosen-container-err');
                         loadChosen(); 
                     }                
         
@@ -477,8 +478,8 @@ function validateAndSend(){
 
         $.each(res.city_res_jspc, function(index, elem) {
            if(index == keyName){
-            $.each(elem[0], function(index1, elem1) {  console.log(index1);
-              $.each(elem1, function(index2, elem2){  console.log(elem2);
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
                 if(index2!=43) //  omitting 'others' option
                     $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
                   cityMap[cityIndex++] = index2;
@@ -501,8 +502,8 @@ function validateAndSend(){
 
      for (var selector in config) {
        $(selector).chosen(config[selector]);
-     }
-    $("#cityBox").removeClass('chosen-container-err');
+     }  
+    $('#city_chosen').removeClass('chosen-container-err');
     $('#secondReq').addClass('vishid');
     $('#city').trigger("chosen:updated");
 
@@ -518,6 +519,8 @@ function validateAndSend(){
 
    function statefunc(res){
       $('#occList').on("change",function(){
+        $("#occList_chosen").removeClass('chosen-container-err');
+        $('#city_chosen').removeClass('chosen-container-err');
            callCity(res);
           $('#city').val('');
              $('.js-otheroccInp').addClass('visb');
@@ -528,19 +531,24 @@ function validateAndSend(){
  var setscript=document.createElement('script');
  setscript.type='text/javascript';
  setscript.src="~sfConfig::get('app_img_url')`/min/?f=~$chosenJs`";
+
+
  
  window.onload = function(){
+  $("#city").change( function(){$('#secondReq').addClass('vishid');
+    $('#city_chosen').removeClass('chosen-container-err');});
   callState();
    $('#city-sub').click(function(){ 
          if( $('#occList').val() == 1)
          {
-           showOccSelErr('showErr');
+           $('.js-req1').removeClass('disp-none');
+           $("#occList_chosen").addClass('chosen-container-err');
            return;
          }
          else if( $('#city').val() == 1 )
          { 
       $('#secondReq').removeClass('vishid');
-       $('#cityBox').addClass('chosen-container-err');
+       $('#city_chosen').addClass('chosen-container-err');
            return;   
         }
 
