@@ -963,7 +963,8 @@ class CommonFunction
 
     public static function loginTrack($registrationid, $profileid)
 	{
-		if( ! isset($registrationid) || ! isset($profileid) )
+
+		if( ! isset($registrationid) || ! isset($profileid) || $profileid == null)
 			return ;
 
 		// APP_LOGINTRACKING
