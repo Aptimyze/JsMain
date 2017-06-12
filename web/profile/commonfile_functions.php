@@ -635,8 +635,8 @@ $js_arr[]=array("/web/billing/billing" => "5");
 $js_arr[]=array("operations_validate2" => "7");
 $js_arr[]=array("jsms/settings/mobHideProfile_js" => "19");
 $js_arr[]=array("jspc/photoUpload/fbPage_js" => "2");
-$js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js" => "3");
-$js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js" => "3");
+$js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js"  => "4");
+$js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js"  => "4");
 $js_arr[]=array("sathiForLife_js" => "9");
 return $js_arr;
 }
