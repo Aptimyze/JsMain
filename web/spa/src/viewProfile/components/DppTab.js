@@ -2,7 +2,7 @@ import React from 'react';
 
 const DppTab = (props) => (
     <div id="DppTab" className="dn">
-		{props.dppInfo}
+		dpp
 	</div>
 );
 

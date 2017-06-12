@@ -20,30 +20,32 @@ class ProfilePage extends React.Component {
             timeToHide: 3000,
             showLoader: false,
             showPromo: false,
-            tabArray: ["About","Family","Dpp"]
+            tabArray: ["About","Family","Dpp"],
+            dataLoaded: false
         };
     }
 
     componentDidMount() {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
-        /*setTimeout(function(){ 
-            _this.setState ({
-                showPromo : true
-            });  
-        }, 1200); */  
+        document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
         this.props.showProfile();   
     } 
 
     componentWillReceiveProps(nextProps)
     {
-        // console.log(nextProps);
+
+        console.log("next",nextProps);
+        this.setState ({
+            dataLoaded : true
+        });  
         /*if(nextProps.appPromotion == true) {
             this.setState ({
                 showPromo : true
             });   
         }*/
+       // }
+
     }
 
     showError(inputString) {
@@ -96,6 +98,14 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
+        var AboutView,FamilyView,DppView;
+        if(this.state.dataLoaded)
+        {   
+            AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
+            FamilyView = <FamilyTab myInfo={this.props.myInfo}></FamilyTab>;
+            DppView = <DppTab myInfo={this.props.myInfo}></DppTab>;
+        }
+
         return (
             <div id="ProfilePage">
                 {promoView}
@@ -128,9 +138,9 @@ class ProfilePage extends React.Component {
                             <div className="clr"></div>
                         </div>
                     </div>
-                    <AboutTab myInfo={this.props.myInfo}></AboutTab>
-                    <FamilyTab familyInfo={this.props.familyInfo}></FamilyTab>
-                    <DppTab dppInfo={this.props.dppInfo}></DppTab>
+                    {AboutView}
+                    {FamilyView}
+                    {DppView}
                 </div>
             </div>
         );
@@ -140,9 +150,12 @@ class ProfilePage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        responseMessage: state.ProfileReducer.responseMessage,
-       myInfo: state.ProfileReducer.myInfo,
-       familyInfo: state.ProfileReducer.familyInfo,
-       dppInfo: state.ProfileReducer.dppInfo
+       AboutInfo: state.ProfileReducer.aboutInfo,
+       FamilyInfo: state.ProfileReducer.familyInfo,
+       DppInfo: state.ProfileReducer.dppInfo,
+       appPromotion : state.ProfileReducer.appPromotion,
+       pic: state.ProfileReducer.pic,
+       LifestyleInfo: state.ProfileReducer.lifestyle
     }
 }
 
