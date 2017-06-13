@@ -640,9 +640,10 @@ $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js" => "3");
 $js_arr[]=array("sathiForLife_js" => "9");
 $js_arr[]=array(" /web/spa/src/login/containers/LoginPage"   => "1");
 $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
-$js_arr[]=array(" /web/spa/src/common/components/CookieHelper"    => "2");
-$js_arr[]=array("/web/spa/src/common/components/App"    => "2");
+$js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
+$js_arr[]=array("/web/spa/src/common/components/App"     => "3");
 $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"   => "1");
+$js_arr[]=array(" /web/spa/src/common/components/App"   => "1");
 return $js_arr;
 }
 function getJavascript(){

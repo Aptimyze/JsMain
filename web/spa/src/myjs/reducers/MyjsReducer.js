@@ -1,6 +1,6 @@
 
 const MyjsReducer = (state={
-	apiData: ''
+	apiData: '',fetched:false
 },action) => {console.log('action in reducer');
 	console.log(action);
 	switch(action.type)
@@ -8,7 +8,9 @@ const MyjsReducer = (state={
 			case 'SET_MYJS_DATA':
 		state = {
 			...state,
-			apiData:action.payload
+			apiData:action.payload,
+			fetched : true
+
 		}
 		break;
 	}

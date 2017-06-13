@@ -318,3 +318,23 @@ body {
 .myjsc1{width:60px; height:60px;}
 ul.shownotiful{margin: 0;padding:0; list-style-type: none}
 ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;}
+
+
+.editBarStyle{
+  width:250%
+}
+.editBarStyle1={
+    width:16%
+}
+.editBarStyle2={
+  transform: rotate(-133.2deg)
+}
+.editBarStyle3={
+  transform: rotate(-180deg)
+}
+.editBarStyle4={
+    width:10.75%
+}
+.editBarStyle5={
+  height:35px
+}

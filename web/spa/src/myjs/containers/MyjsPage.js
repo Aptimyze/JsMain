@@ -1,5 +1,5 @@
 import React from "react";
-import MyjsHeadHTML from "./MyjsHeader";
+import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "./MyjsEditBar";
 import AcceptCount from './MyjsAcceptcount';
 import ProfileVisitor from './MyjsProfileVisitor'
@@ -13,21 +13,30 @@ require ('../style/jsmsMyjs_css.css');
 export  class MyjsPage extends React.Component {
 	constructor(props) {
   		super();
-			this.setState({
-				apiSent :false
+			this.state=
+			{				apiSent :false
 
 
-			})
-			this.props.hitApi();console.log('apisenr');
+			}
+
   	}
+
+
+		componentDidMount(){
+			this.props.hitApi();
+			this.setState({
+				apiSent:true
+			})
+
+		}
   	render() {
+
 		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
-							 <MyjsHeadHTML/>
-							 <EditBar/>
-							 <AcceptCount/>
+							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched} />;
+							<AcceptCount/>
 							 <ProfileVisitor/>
 
 
@@ -36,7 +45,7 @@ export  class MyjsPage extends React.Component {
 
 							</div>
 					</div>
-					<button onClick = {this.props.printProp.bind(this)}>click</button>
+					<button onClick = {this.printProp.bind(this)}>click</button>
 			</div>
 		);
 	}
