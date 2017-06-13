@@ -9,7 +9,7 @@ export default class Loader extends React.Component {
     var view;
     if(this.props.show == "page")          
     {
-      view = <div className="loader simple dark image"></div>;
+      view = <div className="loader simple dark loaderimage"></div>;
     } else if (this.props.show == "div") {
       view = <img src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif" />;
     } 
