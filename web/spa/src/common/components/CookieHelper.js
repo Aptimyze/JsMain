@@ -9,5 +9,5 @@ export function getCookie(key)
 export function setCookie(key,value)
 {
 	const cookies = new Cookies();
-	return cookies.set(key,value);
+	return cookies.set(key,value,{ path: '/' });
 }
