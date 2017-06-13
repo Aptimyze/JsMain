@@ -27,7 +27,8 @@ export class ShowCount extends React.Component{
 export default class MyjsHeadHTML extends React.Component
 {
 
-  constructor(props) {
+  constructor(props) 
+  {
     super(props);
     console.log('in constructor');
     console.log(props);
@@ -38,6 +39,7 @@ export default class MyjsHeadHTML extends React.Component
 
   }
 
+
   componentWillReceiveProps(nextProps)
   {
       console.log("next",nextProps);
@@ -47,19 +49,16 @@ export default class MyjsHeadHTML extends React.Component
 
   }
 
-
- toggleBellView()
- {
-   let currentView  = document.getElementById('notificationBellView').style.display;
-   let newView = currentView=='block' ? 'none' : 'block';
-   document.getElementById('notificationBellView').style.display=newView;
- }
+   toggleBellView()
+   {
+     let currentView  = document.getElementById('notificationBellView').style.display;
+     let newView = currentView=='block' ? 'none' : 'block';
+     document.getElementById('notificationBellView').style.display=newView;
+   }
 
 
 
   render(){
-
-
       return(
         <div>
           <div className="fullwid bg1 pad1">

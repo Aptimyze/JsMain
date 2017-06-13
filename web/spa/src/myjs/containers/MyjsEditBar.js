@@ -1,23 +1,5 @@
 import React from "react";
 
-let divStyle={
-  "width":"250%"
-}
-let divStyle1={
-    "width":"16%"
-}
-let divStyle2={
-  "transform": "rotate(-133.2deg)"
-}
-let divStyle3={
-  "transform": "rotate(-180deg)"
-}
-let divStyle4={
-    "width":"10.75%"
-}
-let divStyle5={
-  "height":"35px"
-}
 
 export default class EditBar extends React.Component {
 

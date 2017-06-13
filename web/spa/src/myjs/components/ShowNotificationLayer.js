@@ -20,10 +20,15 @@ export default class ShowNotificationLayer extends React.Component {
     }
   render(){
    if(!this.props.fetched)
-   return (<div></div>);
-    // this.props.bellResponseFinal;console.log(obj);
+{
+  console.log('palasjhllllllll');return <div></div>;
+} 
+else
+{
+  console.log('fasdfas');return <div></div>;
+}   // this.props.bellResponseFinal;console.log(obj);
     return(
-                <div className = "bg4 dn" id = "notificationBellView" > <a href="/search/perform?justJoinedMatches=1">
+                <div className = "bg4" id = "notificationBellView" > <a href="/search/perform?justJoinedMatches=1">
                   <div className="fullwid fontthin f14 color3 pad18 brdr1">
                     <div className="fl wid92p">
                       <div className="fullwid txtc">Just Joined Matches</div>
