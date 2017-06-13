@@ -40,7 +40,7 @@ else
 
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/repository/tags?";
 
-$tagName = "JSR#".date("YmdHi"); //tagName of the format(JSR#yearMonthDateHourMinutes)
+$tagName = "JSR@".date("YmdHi"); //tagName of the format(JSR#yearMonthDateHourMinutes)
 
 	//to write the tagName into a file(filename)
 	if($file = fopen("/var/www/CI_Files/tageName.txt", "w+")) //changed the mode form "a" to "w+". Check again
