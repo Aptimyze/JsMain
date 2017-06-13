@@ -17,8 +17,8 @@ class InstantAppNotification
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
 
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT');
-	$this->instantNotificationForMQ =array('MATCHALERT');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG','MATCHALERT',"UPGRADE_MEMBERSHIP");
+	$this->instantNotificationForMQ =array('MATCHALERT',"UPGRADE_MEMBERSHIP");
   }
 
   // Push Notification to MQ
@@ -95,11 +95,13 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
 				$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
 				$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
-                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG' || $notificationData['NOTIFICATION_KEY'] == "CHAT_EOI_MSG" || $notificationData['NOTIFICATION_KEY'] == "MESSAGE_RECEIVED"){
+                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG' || $notificationData['NOTIFICATION_KEY'] == "CHAT_EOI_MSG" || $notificationData['NOTIFICATION_KEY'] == "MESSAGE_RECEIVED" || $notificationData['NOTIFICATION_KEY'] == 'UPGRADE_MEMBERSHIP'){
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['NOTIFICATION_MESSAGE_TITLE'];
-                    $profileDetails[$selfProfile]['CHAT_ID']=$extraParams['CHAT_ID'];
-                    $profileDetails[$selfProfile]['OTHER_PROFILEID']=$notificationData['OTHER_PROFILEID'];
-                    $profileDetails[$selfProfile]['OTHER_USERNAME']=$notificationData['OTHER_USERNAME'];
+                    if($notificationData['NOTIFICATION_KEY'] != 'UPGRADE_MEMBERSHIP'){
+                        $profileDetails[$selfProfile]['CHAT_ID']=$extraParams['CHAT_ID'];
+                        $profileDetails[$selfProfile]['OTHER_PROFILEID']=$notificationData['OTHER_PROFILEID'];
+                        $profileDetails[$selfProfile]['OTHER_USERNAME']=$notificationData['OTHER_USERNAME'];
+                    }
                 }
                 else
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];

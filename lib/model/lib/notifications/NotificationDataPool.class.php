@@ -589,5 +589,67 @@ class NotificationDataPool
             unset($chatMsgInstantNotObj);
         }
     }
+    
+    public function getMembershipUpgradeNotificationData($profileid,$details){
+        if($profileid){
+            $upgradeData = $this->getUpgradedMembershipDetails($profileid);
+            if($upgradeData && is_array($upgradeData)){
+                $dataAccumulated[0]['MEM_NAME'] = $upgradeData["upgradeMainMemName"];
+                if($upgradeData["upgradeMainMemName"] == "eValue"){
+                    $message = "Let even free members see your contact details. Upgrade to eValue for just Rs.".$upgradeData["upgradeExtraPay"];
+                }
+                else if($upgradeData["upgradeMainMemName"] == "eAdvantage"){
+                    $message = "Get highlighted in Searches, Match of day section, Daily recommendations and in notifications. Upgrade to eAdvantage for just Rs.".$upgradeData["upgradeExtraPay"];
+                }
+                else if($upgradeData["upgradeMainMemName"] == "JS Exclusive"){
+                    $message = "Let a dedicated Relationship Manager help you find a match. Upgrade to JS Exclusive for just Rs. ".$upgradeData["upgradeExtraPay"];
+                }
+                $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
+                $dataAccumulated[0]['SELF'] = $details[$profileid];
+                return $dataAccumulated;
+            }
+        }
+    }
+    
+    public function getUpgradedMembershipDetails($profileid){
+        if($profileid){
+            include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+            $this->memHandlerObj = new MembershipHandler();
+            $this->currency = "RS";
+            $this->userObj = new memUser($profileid);
+            $this->userObj->setMemStatus();
+            $this->userObj->setCurrency($this->currency);
+            $purchasesObj = new BILLING_PURCHASES();
+            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
+            if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
+                $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
+                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
+                //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
+            }
+            else{
+                $this->memID = @strtoupper($purchaseDetails);
+                $this->lastPurchaseDiscount = 0;
+                //$this->lastPurchaseBillid = null;
+            }
+            
+            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
+            
+            if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+                $this->upgradeMem = "MAIN";
+                
+                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
+
+                $this->displayPage = 1;$this->device = "desktop";$ignoreShowOnlineCheck = false;
+
+                list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
+
+                $apiResponseHandlerObj = new MembershipAPIResponseHandler();
+                $response = $apiResponseHandlerObj->generateUpgradeMemResponse("", "cron",$this);
+                $response["memPurchasedDate"] = $this->subStatus[0]["ACTIVATED_ON"];
+                
+                return $response;
+            }
+        }
+    }
 }
 ?>
