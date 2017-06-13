@@ -3,7 +3,6 @@ import React from 'react';
 export default class BasicInfo extends React.Component {
 	constructor(props) {
         super();
-        console.log("basic",props);
     }
     render() {
     	var have_child = "";

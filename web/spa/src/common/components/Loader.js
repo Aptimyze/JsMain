@@ -3,7 +3,6 @@ import React from "react";
 export default class Loader extends React.Component {	
 	constructor(props) {
   	super();
-	  console.log(props)
   }
   render() {
     var view;

@@ -1,16 +1,9 @@
 import React from "react";
 
 export default class PhotoView extends React.Component {
-
     constructor(props) {
         super();
-        console.log(props)
     }
-
-    componentDidMount() {
-    
-    } 
-     
     render() {
         return (
             <div id="PhotoView" className="posrel">

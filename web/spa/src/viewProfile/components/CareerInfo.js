@@ -3,7 +3,6 @@ import React from 'react';
 export default class CareerInfo extends React.Component {
 	constructor(props) {
         super();
-        console.log("career",props);
     }
     render() {
     		var mycareer; 

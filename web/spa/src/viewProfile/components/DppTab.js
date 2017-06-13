@@ -3,7 +3,6 @@ import React from 'react';
 class DppTab extends React.Component {
 	constructor(props) {
         super();
-        console.log("dpp",props);
         this.state = {
             selfPicUrl : props.about.selfThumbnail || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
             partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif"
@@ -46,7 +45,15 @@ class DppTab extends React.Component {
             HisHer = "His";
             self_gender = "She";
         }
+        var matchingCount = "";
+        if(this.props.dpp_Ticks.matching) {
+            matchingCount = this.props.dpp_Ticks.matching.matchingCount;
+        }
 
+        var totalCount = "";
+        if(this.props.dpp_Ticks.matching) {
+            totalCount = this.props.dpp_Ticks.matching.totalCount;
+        }
         var matching_header;
         if(this.props.dpp_Ticks) 
         {
@@ -54,8 +61,8 @@ class DppTab extends React.Component {
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
-                    <span className="js-matching">{this.props.dpp_Ticks.matching.matchingCount}</span> of 
-                    <span className="js-total">{this.props.dpp_Ticks.matching.totalCount}</span> matchings
+                    <span className="js-matching">{matchingCount}</span> of 
+                    <span className="js-total">{totalCount}</span> matchings
                 </div>
                 <div className="clearfix pt10 pb10">
                     <div className="fl wid24p txtc">

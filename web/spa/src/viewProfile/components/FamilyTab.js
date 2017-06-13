@@ -3,7 +3,6 @@ import React from 'react';
 class FamilyTab extends React.Component {
 	constructor(props) {
         super();
-        console.log("family",props);
         props.family.sibling_info = props.family.sibling_info.replace(/(?:\n)/g, '<br />');
     }
     render() {

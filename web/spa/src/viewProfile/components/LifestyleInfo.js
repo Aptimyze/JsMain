@@ -3,7 +3,6 @@ import React from 'react';
 export default class LifestyleInfo extends React.Component {
 	constructor(props) {
         super();
-        console.log("LifestyleInfo",props);
     }
     render() {
 
