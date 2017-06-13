@@ -23,9 +23,7 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
             if ($count > 0) {
                 if ($profileid != 0) {
                     $sqlUpdate = "UPDATE billing.DROPOFF_SOURCE_TRACKING SET PAGE=:PAGE WHERE PROFILEID=:PROFILEID AND SOURCE=:SOURCE AND ENTRY_DT>=:FIVE_MINS_DT";
-                } else {
-                    $sqlUpdate = "UPDATE billing.DROPOFF_SOURCE_TRACKING SET PAGE=:PAGE WHERE PROFILEID=0 AND SOURCE=:SOURCE AND ENTRY_DT>=:FIVE_MINS_DT";
-                }
+                 
                 $prepUpdate = $this->db->prepare($sqlUpdate);
                 if ($profileid) {
                     $prepUpdate->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
@@ -34,6 +32,7 @@ class billing_DROPOFF_SOURCE_TRACKING extends TABLE
                 $prepUpdate->bindValue(":SOURCE", $fromSource, PDO::PARAM_STR);
                 $prepUpdate->bindValue(":FIVE_MINS_DT", $dt_5mins, PDO::PARAM_STR);
                 $prepUpdate->execute();
+		}
             } else {
                 if ($profileid != 0) {
                     $sqlInsert = "INSERT INTO billing.DROPOFF_SOURCE_TRACKING(PROFILEID,PAGE,ENTRY_DT,SOURCE,COUNTRY) VALUES(:PROFILEID,:PAGE,:ENTRY_DT,:SOURCE,:COUNTRY)";

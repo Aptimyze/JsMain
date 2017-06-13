@@ -703,8 +703,9 @@ class commonActions extends sfActions
             
             
             $nameArr=array('DISPLAY'=>$namePrivacy);
-            $name_pdo = new incentive_NAME_OF_USER();
-            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            //lib has been used in case of direct call to store. Lib ensures that caching functionality is also implemented.
+            $name_pdo = new NameOfUser();
+            $name_pdo->updateName($loginData['PROFILEID'],$nameArr);
             
         }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)

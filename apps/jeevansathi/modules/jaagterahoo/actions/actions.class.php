@@ -24,28 +24,62 @@ class jaagterahooActions extends sfActions
         $pObj = LoggedInProfile::getInstance("newjs_master",'');
         if($pObj->getPROFILEID()!="9061321")
                 die("wrong url");
+	$this->getParticularData = $request->getParameter('getParticularData');
 	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
-
-	$HaProxy = new HaProxy();
-	$this->marGayeServers =  $HaProxy->validate();
-
-	$this->thirdPartyCheckSolr = ThirdPartyService::checkSolr();
-	$this->checkGuna = ThirdPartyService::checkGuna();
-	$this->checkRedis = ThirdPartyService::checkRedis();
-	$this->checkRabbit = ThirdPartyService::checkRabbitMq();
-	$this->checkServices  = ThirdPartyService::callJavaServices();
-	$this->checkServices['Guna'] = $this->checkGuna;
-	$this->checkServices['Redis'] = $this->checkRedis;
-	$this->checkServices['Rabbit'] = $this->checkRabbit;
-	
-	foreach($this->checkServices as $k=>$v)
+	$this->onlyIssues = $request->getParameter('onlyIssues');
+	if($this->getParticularData ==''|| $this->getParticularData=="HAPROXY" )
 	{
-		$this->checkServices[$k]['responseTime']=round($this->checkServices[$k]['responseTime'],3);
+		$HaProxy = new HaProxy();
+		$this->marGayeServers =  json_encode($HaProxy->validate());
+		if($this->getParticularData!='')
+		{
+			echo $this->marGayeServers;die;
+		}
 	}
-	$serverStatusObj = new ServerStatus;
-	$this->serverstatus = $serverStatusObj->getStatus();
-
-	$mysqlStatusObj = new MysqlStatus;
-	$this->mysqlStatus = $mysqlStatusObj->getStatus();
+	if($this->getParticularData ==''|| $this->getParticularData=="SOLR")
+	{
+		$this->thirdPartyCheckSolr = json_encode(ThirdPartyService::checkSolr());
+                if($this->getParticularData!='')
+		{
+			echo $this->thirdPartyCheckSolr;die;
+		}
+	}
+	if($this->getParticularData ==''|| $this->getParticularData=="THIRD_SERVICES" )
+	{
+		$this->checkGuna = ThirdPartyService::checkGuna();
+		$this->checkRedis = ThirdPartyService::checkRedis();
+		$this->checkRabbit = ThirdPartyService::checkRabbitMq();
+		$this->checkServices  = ThirdPartyService::callJavaServices();
+		$this->checkServices['Guna'] = $this->checkGuna;
+		$this->checkServices['Redis'] = $this->checkRedis;
+		$this->checkServices['Rabbit'] = $this->checkRabbit;
+		foreach($this->checkServices as $k=>$v)
+		{
+			$this->checkServices[$k]['responseTime']=round($this->checkServices[$k]['responseTime'],3);
+		}
+		$this->checkServices = json_encode($this->checkServices);
+		if($this->getParticularData!='')
+		{
+			echo $this->checkServices;die;
+		}
+	}
+	if($this->getParticularData ==''|| $this->getParticularData =='SERVER_STATUS')
+	{
+		$serverStatusObj = new ServerStatus;
+		$this->serverstatus = json_encode($serverStatusObj->getStatus());
+		if($this->getParticularData!='')
+		{
+			echo $this->serverstatus;die;
+		}
+	}
+	if($this->getParticularData ==''|| $this->getParticularData =='MYSQL_STATUS')
+	{
+		$mysqlStatusObj = new MysqlStatus;
+		$this->mysqlStatus = json_encode($mysqlStatusObj->getStatus());
+		if($this->getParticularData!='')
+		{
+			echo $this->mysqlStatus;die;
+		}
+	}
   }
 }

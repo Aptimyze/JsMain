@@ -37,7 +37,7 @@ EOF;
         $photoMailerObj = new PICTURE_ADD_PHOTO_MAILER("newjs_masterRep");
     
     //Truncate table Data       
-    $photoMailerDDLObj = new PICTURE_ADD_PHOTO_MAILER('newjs_masterDDL');
+    $photoMailerDDLObj = new PICTURE_ADD_PHOTO_MAILER('newjs_master');
     $photoMailerDDLObj->truncatePhotoMailerData();
 
     //date condition of users to whom mail is to be sent.

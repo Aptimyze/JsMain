@@ -83,6 +83,12 @@ class ApiCALayerV1Action extends sfActions
             $layerData['symbol'] = $request->getParameter('SYMBOL');
      		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for';
 	    }
+
+	     if($layerToShow==21)
+        {
+	    $layerData['PREFERENCES'] = $request->getParameter('DPP_CASTE_BAR') ;
+	    }
+
 		$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;
                 $this->m_arrOut['NAME_PRIVACY']=$namePrivacy ? $namePrivacy : NULL;

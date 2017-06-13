@@ -58,6 +58,8 @@ class getFieldValues {
       break;
       case "casteMuslim" : $fieldArr[0] = $this->muslimCaste();
       break;
+      case "jamaat" : $fieldArr[0] = $this->getJamaat();
+      break;
       case "subcaste" : $fieldArr = $this->getMtongueValues();
       break;
       case "manglik" : $fieldArr = RegistrationEnums:: $defaultFieldVal["manglik"];
@@ -357,6 +359,18 @@ private function orderForLabelGrid($label)
    */
   private function muslimCaste() {
     $casteArr=FieldMap::getFieldLabel("sect_muslim",'',1);
+    $k=0;
+    foreach($casteArr as $kk=>$v)
+            $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));
+    
+    return $arr;
+  }
+  
+  /*
+   * Function to get values of fields for jamaat values
+   */
+  private function getJamaat() {
+    $casteArr=FieldMap::getFieldLabel("jamaat",'',1);
     $k=0;
     foreach($casteArr as $kk=>$v)
             $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));

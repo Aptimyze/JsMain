@@ -131,10 +131,10 @@ class ShortURL {
 		else if ($receivedMonth == $Month && $receivedDate <= $Date) $validURL = 1;
 
 		try {
-			if ($M1 != $actual_M1) throw new Exception("Mismatching in M1 bit : URL has been changed " . $M1 . " " . $actual_M1);
-			if ($D1 != $actual_D1) throw new Exception("Mismatching in the D1 bit : URL has been changed ");
+			if ($M1 != $actual_M1) return false; //throw new Exception("Mismatching in M1 bit : URL has been changed " . $M1 . " " . $actual_M1);
+			if ($D1 != $actual_D1) return false; //throw new Exception("Mismatching in the D1 bit : URL has been changed ");
 
-			if ($validURL == 0) throw new Exception("Expired ShortURL : {$url}");
+			if ($validURL == 0) return false;//throw new Exception("Expired ShortURL : {$url}");
 		} catch (Exception $e) {
 			LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, $e, array('moduleName' => 'ShortURL'));
 			return false;

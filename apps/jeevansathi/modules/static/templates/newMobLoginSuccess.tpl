@@ -148,7 +148,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 			   </div>      
 
 			  <div class="txtc pad2"><a href="#" onclick=convertIntoHomePage("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
-			   <!--end:div-->
+	   <!--end:div-->
 			</div>
 	   </form>
 		</div>

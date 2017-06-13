@@ -84,6 +84,40 @@ class Membership
     private $dol_conv_bill;
     private $assisted_arr = array();
     private $discount_percent;
+    private $mtongue;
+    private $serviceName;
+    private $execName;
+    private $supervisor;
+    
+    function setExecName($execName) {
+        $this->execName = $execName;
+    }
+    
+    function getExecName() {
+        return $this->execName;
+    }
+    function setSupervisor($supervisor) {
+        $this->supervisor = $supervisor;
+    }
+    
+    function getSupervisor() {
+        return $this->supervisor;
+    }
+    
+    function setServiceName($serviceName) {
+        $this->serviceName = $serviceName;
+    }
+    
+    function getServiceName() {
+        return $this->serviceName;
+    }
+    function setMTongue($mtongue) {
+        $this->mtongue = $mtongue;
+    }
+    
+    function getMTongue() {
+        return $this->mtongue;
+    }
 
     function setBillid($billid) {
         $this->billid = $billid;
@@ -806,7 +840,8 @@ class Membership
 
         //Field for identifying the team to which sales belong
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+        $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
     }
     
@@ -859,6 +894,19 @@ class Membership
             $valuesStr .= ",'$this->tax_rate'";
         }
 
+        //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+        if($this->mtongue==""){
+            $jprofileObj = new JPROFILE();
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $paramsStr .= ",MTONGUE";
+            $mtongue = $jprofileDetail['MTONGUE'];
+            $valuesStr .= ",'$mtongue'";
+        }else{
+            $paramsStr .= ",MTONGUE";
+            $valuesStr .= ",'$this->mtongue'";
+        }
+        //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
         /**
@@ -869,6 +917,8 @@ class Membership
         if(empty($supervisor)){
             $supervisor = 'rohan.m';
         }
+        $this->execName = $execName;
+        $this->supervisor = $supervisor;
         $servicesObj = new Services();
         $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
         $serArr = $servicesObj->getServiceName($this->serviceid);
@@ -876,6 +926,7 @@ class Membership
             $services_names[] = $val['NAME'];
         }
         $serName = implode(",", $services_names);
+        $this->serviceName=$serName;
         $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
@@ -1298,7 +1349,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
 
             //add entry in EXCLUSIVE_MEMBERS TABLE
             $this->addExclusiveMemberEntry();
@@ -1319,7 +1370,6 @@ class Membership
         $serviceObj  = new billing_SERVICES();
         $servObj = new Services();
         $mainMembership = array_shift(@explode(",", $this->serviceid));
-        
         if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
         } else {
             $mainMembership = null;
@@ -1341,7 +1391,6 @@ class Membership
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true,$upgradeMem,$apiTempObj);
-            
             if ($total > $this->amount) {
                 $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
                 $actDisc = $iniAmt - $this->amount;
@@ -1352,10 +1401,16 @@ class Membership
         		if($actDiscPerc>=$siteDiscPerc)
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
-                    $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
-                    //error_log("ankita msg-".$msg);
-                    if (JsConstants::$whichMachine != 'prod') {
-                        SendMail::send_email('ankita.g@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
+                    $msg  = "'{$this->username}' has been given a discount greater than visible on site, <br>";
+                    $msg .= "Total Gross Value of Products Sold: $this->curtype $total /- <br>";
+                    $msg .= "Products billed: $this->serviceName <br>";
+                    $msg .= "Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br>";
+                    $msg .= "Profile Allotted To: $this->execName<br>";
+                    $msg .= "Approved By: $this->supervisor<br><br>";
+                    $msg .= "<br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
+                    
+                    if (JsConstants::$whichMachine == 'prod') {
+                        SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
         		}
             }
@@ -2487,7 +2542,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
-        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_masterDDL');
+        $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_master');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
             $result = $autoIncReceiptidObj->getLastInsertedRow();
@@ -2514,7 +2569,19 @@ class Membership
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
+            //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
+        else{
+            //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
+        }
+        
+    }
+    
+    public function sendMailForPaidUser($msg,$subject){
+        $to = "nitishpost@gmail.com";
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>

@@ -42,6 +42,7 @@ class ImageManipulator
      */
     public function setImageString($file)
     {
+		PictureFunctions::setHeaders();
         if (is_resource($this->image)) {
             imagedestroy($this->image);
         }
@@ -73,6 +74,7 @@ class ImageManipulator
      */
     public function resample($width, $height, $replaceImageFlag = true, $constrainProportions = true)
     {
+		PictureFunctions::setHeaders();
         if (!is_resource($this->image)) {
             throw new RuntimeException('No image set in ImageManipulator');
         }
@@ -105,6 +107,7 @@ class ImageManipulator
      */
     public function crop($originalFile,$x1, $y1, $w, $h,$pathProvided=true)
     {
+		PictureFunctions::setHeaders();
         if($pathProvided==true)
             $this->setImageString($originalFile);
         else
@@ -127,6 +130,7 @@ class ImageManipulator
      */
     public function resize($originalFile,$newDimensionArr,$pathProvided=true)
     {
+		PictureFunctions::setHeaders();
         if($pathProvided==true)
             $this->setImageString($originalFile);
         else
@@ -148,6 +152,7 @@ class ImageManipulator
      */
     public function _replace($res)
     {
+		PictureFunctions::setHeaders();
         if (!is_resource($res)) {
             throw new UnexpectedValueException('Invalid resource in ImageManipulator');
         }
@@ -172,6 +177,7 @@ class ImageManipulator
         try
         {
             $pictureFunobj = new PictureFunctions();
+            PictureFunctions::setHeaders();
             $pictureFunobj->storeResizedImage($file,$saveUrl,$type);
             unset($pictureFunobj);
             chmod($saveUrl,0777);

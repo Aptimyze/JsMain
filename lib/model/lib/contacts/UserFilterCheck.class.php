@@ -260,7 +260,7 @@ class UserFilterCheck
                     $ignoreFilter = $ignFilterStatus;
                 else{
                     $ignoreObj = new IgnoredProfiles("newjs_master");
-                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
+                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID(),ignoredProfileCacheConstants::BYME);
                 }
 		if($ignoreFilter)
 		{	$data= "Ignored By the Reciever";
@@ -627,7 +627,7 @@ class UserFilterCheck
 	 */
 	public static function getFilterParameters($profileid)
 	{
-		$filtObj=new NEWJS_FILTER();
+		$filtObj=new ProfileFilter();
 		$row=$filtObj->fetchEntry($profileid);
 		if(is_array($row))
 		{

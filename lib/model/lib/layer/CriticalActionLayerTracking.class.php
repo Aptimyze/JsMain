@@ -74,7 +74,6 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   { 
-   
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -120,7 +119,7 @@ class CriticalActionLayerTracking
 
       if (!$layer) 
         { 
-            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,86400);
+            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,21600);
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
@@ -164,10 +163,13 @@ return 0;
 
         switch ($layerToShow) {
           case '1': 
+            if(strtotime('-30 days') < strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
                     $picObj= new PictureService($profileObj);
                     $havePhoto= $picObj->isProfilePhotoPresent();
                     if ($havePhoto == null)
                       $show=1;
+                    }
                     break;
           case '2': if ($profileObj->getFAMILYINFO()=='')
                       $show=1;
@@ -268,7 +270,9 @@ return 0;
                       
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                          {        
+                          {
+                            JsMemcache::getInstance()->incrCount("DPP_CAL_0");
+                              
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
                             {    
@@ -283,6 +287,7 @@ return 0;
                               {
                                 if(is_array($value['data']))                                  
                                 {      
+                                  JsMemcache::getInstance()->incrCount("DPP_CAL_1");
                                   $show = 0;
                                   break;
                                 }
@@ -411,6 +416,36 @@ return 0;
 
                       }                      
                     break;
+
+                     case '21': 
+        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        {
+                     $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
+                    $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
+                    if($strDPPCaste != '' && $strDPPCaste != NULL && $strDPPCaste!="Doesn't Matter")
+                    {
+                      $layerDppCaste = explode(',',$strDPPCaste);
+      foreach ($layerDppCaste as $key => $value) {
+        $tempArr[$key] = explode(':', $value)[1]; 
+      }
+      $layerDppCaste = implode(',', $tempArr);
+      $layerDppCaste = trim($layerDppCaste);
+      $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
+                      $show=1;
+                    }
+                    }      
+                      break;
+
+                    case '22': 
+                    if(strtotime('-30 days') >= strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
+                    $picObj= new PictureService($profileObj);
+                    $havePhoto= $picObj->isProfilePhotoPresent();
+                    if ($havePhoto == null)
+                      $show=1;
+                    }
+                    break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -437,6 +472,7 @@ return 0;
   case in_array($highestDegree, explode(',',$fieldArray['ug'])):
     return false;
   break;
+  
 
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
@@ -490,6 +526,11 @@ break;
                     
                     'A' => '96'
                     
+                        ),
+                    '21' => array(
+                    
+                    'A' => '99',
+                    'I' => '5.3'
                         )
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])

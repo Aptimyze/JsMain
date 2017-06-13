@@ -158,7 +158,7 @@
                     
                    <li><a href="/inbox/11/1" bind-slide=1 class="white">Declined Members</a></li>
                     
-                   <!-- <li><a href="#" bind-slide=1 class="white">Ignored Members</a></li>-->
+                    <li><a href="/inbox/20/1" bind-slide=1 class="white">Blocked/Ignored Members</a></li>
                     
                     
                   </ul>

@@ -42,4 +42,4 @@ Disallow:   /om.php
 Disallow:   /j2.php
 
 Sitemap: http://www.jeevansathi.com/sitemap_index.xml
-
+Sitemap: https://www.jeevansathi.com/new-sitemap_index.xml

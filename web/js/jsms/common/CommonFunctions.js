@@ -707,6 +707,14 @@ function updateMemTimer(){
 
 (function(){
   $(document).ready(function() {
+    if(typeof trackingProfile != "undefined" && trackingProfile!=""){
+        var url = window.location.hostname;
+        var profile = readCookie('hinditracking');
+        if((url.indexOf("hindi") != -1 )&& (profile!=trackingProfile) && (trackingProfile!="")){
+            createCookieExpireMidnight("hinditracking",trackingProfile);
+            trackJsEventGA('jsms', 'hindi',trackingProfile);
+        }
+    }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
         setInterval(function(){
             var online = hostReachable();

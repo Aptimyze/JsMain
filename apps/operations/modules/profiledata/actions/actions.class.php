@@ -33,8 +33,8 @@ class ProfileDataActions extends sfActions
 	{
 		$response = $this->getResponse();
 		//$site_url=sfConfig::get("app_site_url");
-		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://www.jeevansathi.com'){
-			$site_url = 'http://crm.jeevansathi.com';
+		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://www.jeevansathi.com'){
+			$site_url = 'https://crm.jeevansathi.com';
 		} else {
 			$site_url = JsConstants::$siteUrl;
 		}
@@ -55,8 +55,8 @@ class ProfileDataActions extends sfActions
 	}
 	public function executePdf(sfWebRequest $request)
 	{
-		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://www.jeevansathi.com'){
-			$site_url = 'http://crm.jeevansathi.com';
+		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://www.jeevansathi.com'){
+			$site_url = 'https://crm.jeevansathi.com';
 		} else {
 			$site_url = JsConstants::$siteUrl;
 		}
@@ -335,6 +335,20 @@ class ProfileDataActions extends sfActions
                 }
 	}
 		
-	
+	/**
+   * 
+   * @param sfWebRequest $request
+   * @return type
+   */ 
+  public function executeChatDetail(sfWebRequest $request)
+	{
+		$objChatDetail = new ChatDetail($this->profileid);
+    $this->arrDetails = $objChatDetail->getDetails();
 
+    if ($request->getParameter("useSfViewNone") == 1) {
+      echo json_encode($this->arrDetails);
+      return sfView::NONE;
+      die;
+    }
+  }
 }

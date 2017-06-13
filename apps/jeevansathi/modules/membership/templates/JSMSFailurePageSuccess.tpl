@@ -62,8 +62,8 @@
 
 <!--start:main body--> 
 <!--start:continue button-->
-<div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` f16 fontlig cursp posfix btmo" style="overflow: hidden;">
-  <a href="~sfConfig::get('app_site_url')`/profile/mainmenu.php" style="display: block;" class="white f15 fontreg pinkRipple rv2_pad9">~$data.proceed_text`</a>
+<div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` f16 fontlig cursp posfix btmo" style="overflow: hidden;">~sfConfig::get('app_site_url')`
+  <a href="~sfConfig::get('app_site_url')`/profile/mainmenu.php" style="display: block;" class="white f15 fontreg pinkRipple rv2_pad9" id="goHomeid">~$data.proceed_text`</a>
 </div>  
 <!--end:continue button-->
 </div>
@@ -107,6 +107,10 @@
     setInterval(function(){
       autoPopulateFreshdeskDetails(username,email);
     },100);
+    if("~$data.device eq 'Android_app'`"){
+        var host = window.location.hostname;
+        $("#goHomeid").attr('href','http://'+host+'/profile/mainmenu.php');
+    }
     setTimeout(function(){
       autoPopupFreshdesk(username,email);
     }, 90000);

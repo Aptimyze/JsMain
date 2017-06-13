@@ -279,7 +279,7 @@ class crmInterfaceActions extends sfActions
         $this->durPerc                                                                                 = floor(100 / (count($this->serviceDurations) + 1));
         // Check if Discount Offer is active
         $discountOfferLogObj = new billing_DISCOUNT_OFFER_LOG();
-        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_masterDDL');
+        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_master');
         $discountOfferID     = $discountOfferLogObj->checkDiscountOffer();
         if ($discountOfferID) {
             $this->successMsg = "Discount offer is Currently Active";
@@ -618,8 +618,8 @@ class crmInterfaceActions extends sfActions
         $this->cid               = $request->getParameter('cid');
         $this->name              = $request->getParameter('name');
         $testDiscountLookupObj   = new test_DISCOUNT_LOOKUP_UPLOAD('newjs_local111');
-        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_masterDDL');
-        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_masterDDL');
+        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_master');
+        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_master');
 
         $records = $testDiscountLookupObj->getRecords();
         if ($records) {

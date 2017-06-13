@@ -97,6 +97,7 @@ class DetailActionLib
 	 */
 	public static function LogThisAction($actionObject)
 	{
+		return;
 		//Insert a entry in View Log///////////////////////////////////////////////////////////////
 		if($actionObject->loginProfile->getPROFILEID())
 		{	
@@ -291,11 +292,11 @@ class DetailActionLib
 			else
 			{
 				$ignore=new IgnoredProfiles();
-				if($ignore->ifIgnored($sender,$receiver))
+				if($ignore->ifIgnored($sender,$receiver,ignoredProfileCacheConstants::BYME))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender,ignoredProfileCacheConstants::BYME))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }
@@ -403,6 +404,40 @@ class DetailActionLib
 	 */
 	public static function alterSeenTable($actionObject)
 	{
+
+                if($actionObject->loginProfile->getPROFILEID())
+                {
+
+                        $privacy=$actionObject->loginProfile->getPRIVACY();
+                        $producerObj = new Producer();
+                        //Privacy is not C for login user 
+                        if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
+                        {
+                                if($producerObj->getRabbitMQServerConnected())
+                                    $triggerOrNot = "inTrigger";
+                                else
+				{
+				    $vlt=new VIEW_LOG_TRIGGER();
+                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+				}
+                        }
+                        elseif($producerObj->getRabbitMQServerConnected())
+                            $triggerOrNot="notInTrigger";
+
+                        if($producerObj->getRabbitMQServerConnected()){
+				$viewLogData['triggerOrNot'] = $triggerOrNot;
+				$viewLogData['VIEWER'] = $actionObject->loginProfile->getPROFILEID();
+				$viewLogData['VIEWED'] = $actionObject->profile->getPROFILEID();
+//                            $producerObj->sendMessage($queueData);
+                        }
+                        else
+			{
+			    if(!$vlt)
+				$vlt=new VIEW_LOG_TRIGGER();
+			    $vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+			}
+
+
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$actionObject->getRequest();
@@ -461,11 +496,15 @@ class DetailActionLib
 			}
 			else
 			{
-				$producerObj = new Producer();
 				if($producerObj->getRabbitMQServerConnected())
 				{
-					$updateSeenProfileData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>array('fromSym'=>$fromSym,'type'=>$type,'mypid'=>$mypid,'updatecontact'=>$updatecontact,'profileid'=>$profileid)));
-					$producerObj->sendMessage($updateSeenProfileData);
+					$updateSeenProfileData['fromSym'] = $fromSym;
+					$updateSeenProfileData['type'] = $type;
+					$updateSeenProfileData['mypid'] = $mypid;
+					$updateSeenProfileData['updatecontact'] = $updatecontact;
+					$updateSeenProfileData['profileid'] = $profileid;
+					
+			//		$producerObj->sendMessage($updateSeenProfileData);
 				}
 				else
 				{
@@ -473,6 +512,24 @@ class DetailActionLib
 				}
 			}
 		}
+		if($producerObj->getRabbitMQServerConnected())
+		{
+			if(is_array($viewLogData))
+			{
+				$body['VIEW_LOG']=$viewLogData;
+			}
+			if(is_array($updateSeenProfileData))
+			{
+				$body['UPDATE_SEEN']=$updateSeenProfileData;
+			}
+			if(is_array($body))
+			{
+			$finalQueueData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>$body));
+			$producerObj->sendMessage($finalQueueData);
+			}
+		}
+                }
+		
 	}
 	
 	/**

@@ -2,12 +2,18 @@
 class PictureFunctions
 {
 	
+	public static function setHeaders(){
+		ini_set('user_agent','JsInternal');	
+		header('Content-Type: image/jpeg'); 
+	}
+	
 	/*This function is used to get image format of image
 	@param imageUrl: image url
 	@return imageType: image format type
 	*/
 	public static function getImageFormatType($imageUrl,$flag="")
 	{
+		PictureFunctions::setHeaders();
 		$imageInfo = getimagesize($imageUrl);
 		
 		switch($imageInfo["mime"])
@@ -73,6 +79,7 @@ class PictureFunctions
 	
 	public function maintain_ratio_canvas($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$type_of_image,$click='1')
 	{
+		PictureFunctions::setHeaders();
 		$filename = $pic_name;		
 		if($type_of_image == "image/png")
 			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
@@ -139,6 +146,7 @@ class PictureFunctions
 
 	public function maintain_ratio_profile_thumb($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$final_width,$final_height,$type_of_image)
 	{
+		PictureFunctions::setHeaders();
 		$filename = $pic_name;
 		if($type_of_image == "image/png")
 			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
@@ -182,6 +190,7 @@ class PictureFunctions
 
 	public function generate_image_for_canvas($new_filename,$max_height,$max_width,$type_of_image,$click="1")
 	{		
+		PictureFunctions::setHeaders();
 		$filename1 = $new_filename;
 
 		$hmargin=0;
@@ -324,6 +333,7 @@ class PictureFunctions
 
 	public function createWatermark($filename_path,$type_of_pic,$format)
 	{
+		PictureFunctions::setHeaders();
 		if ($type_of_pic == "main")
 			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_1.gif";
 		else
@@ -385,6 +395,7 @@ class PictureFunctions
 	*/
 	public function moveImage($source,$dest)
 	{
+		PictureFunctions::setHeaders();
 		//$success = move_uploaded_file($source, $dest);		
 		$success = copy($source, $dest);		
 		return $success;
@@ -396,6 +407,7 @@ class PictureFunctions
 	*/
 	public function moveImageFromRemoteLocationToLocalDisk($src,$dest)
 	{
+		PictureFunctions::setHeaders();
 		$picture = CommonUtility::sendCurlPostRequest($src,0);
 		$fh = fopen($dest, 'w+');
 		fwrite($fh, $picture);
@@ -448,6 +460,7 @@ class PictureFunctions
 	*/
 	public static function rotateImage($filename_path,$angle,$format)
 	{
+		PictureFunctions::setHeaders();
 		$destination_path = $filename_path;
 
                 if($format == "image/gif" || $format == "image/GIF")
@@ -556,6 +569,7 @@ class PictureFunctions
 	 */	
 	public function createImage($Path)
 	{
+		PictureFunctions::setHeaders();
 		$szType = $this->getImageFormatType($Path,"1");
 		
 		if($szType == "gif")
@@ -583,6 +597,7 @@ class PictureFunctions
 	 */	
 	public function storeResizedImage($new_image,$StoragePath,$type)
 	{
+		PictureFunctions::setHeaders();
 
 		if($type == "gif")
 		{

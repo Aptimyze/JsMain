@@ -9,7 +9,7 @@
               <td></td>
             </tr>
             <tr>
-              <td width="22"><img src="http://ieplads.com/mailers/2014/jeevansathi/NEOI1may/images/spacer.gif" width="20" height="1" vspace="0" hspace="0" align="left"></td>
+              <td width="22"><img src="https://ieplads.com/mailers/2014/jeevansathi/NEOI1may/images/spacer.gif" width="20" height="1" vspace="0" hspace="0" align="left"></td>
               <td width="110" height="140" valign="top" colspan="2"><table cellpadding="0" cellspacing="0" align="left"><tr><td valign="top"><a href="(LINK)PHOTO_ALBUM:profileid=~$profileid`,receiver_id=~$profile_id`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$profile_id`,photo_type=search(/PHOTO)" align="left" width="100" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a></td></tr></table><table border="0" cellspacing="2" align="left" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
                   <tr>
                   	<td width="10" rowspan="7"></td>

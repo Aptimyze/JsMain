@@ -22,6 +22,7 @@ class NotificationFunctions
                 else if($isAppType=='I')
                         $osType = "IOS";
 
+        CommonFunction::loginTrack($registrationid, $profileid);
 		$registrationIdObj = new MOBILE_API_REGISTRATION_ID;
 		$valArr['REG_ID']=$registrationid;
 		$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
@@ -58,7 +59,7 @@ class NotificationFunctions
 		return $registrationIdData[0]['NOTIFICATION_STATUS'];
 	}
         public static function registrationIdInsert($profileid='',$registrationid,$appVersion='',$osVersion='',$deviceBrand='',$deviceModel=''){
-        	if($profileid){
+        	/*if($profileid){
         	        $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
         	        $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
         	        $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
@@ -66,7 +67,7 @@ class NotificationFunctions
         	        $alarmTimeObj = new MOBILE_API_ALARM_TIME;
         	        $alarmTimeObj->replace($alarmTime);
         	        $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$profileid]);
-        	}
+        	}*/
         	NotificationFunctions::manageGcmRegistrationid($registrationid,$profileid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
         }
 

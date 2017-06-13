@@ -389,6 +389,23 @@ class BILLING_PURCHASES extends TABLE
         return $profiles;
     }
 
+    public function fetchJsBoostBillingPool($entryDt)
+    {
+        try
+        {
+            $sql  = "SELECT DISTINCT(BILLID) AS BILLID FROM billing.PURCHASES WHERE ENTRY_DT >= :ENTRY_DT AND SERVEFOR LIKE '%J%' AND SERVEFOR LIKE '%N%' ORDER BY ENTRY_DT ASC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $profiles[] = $result['BILLID'];
+            }
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
+
     public function getUpsellEligibleProfiles($prevDateTime, $currtDateTime)
     {
         try

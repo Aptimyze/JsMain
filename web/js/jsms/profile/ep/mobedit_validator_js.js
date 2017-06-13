@@ -154,6 +154,14 @@ function StateCityRequired(json){
 		return true;
 	return false;	
 }
+function jamaatRequired(json){
+	if(json[1].value=="152" && json[2].value=='')
+	{
+		jsonError[jsonError.length]="Provide a valid jamaat";
+		return false;
+	}
+	return true;
+}
 // mobile or landline number should be there
 jQuery.validator.addMethod("landlineOrMobileNumber", function(value,element) {
 	if(($('#PHONE_MOB').val()=="" && $('#PHONE_RES').val()==""))
