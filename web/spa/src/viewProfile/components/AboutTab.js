@@ -7,7 +7,6 @@ import LifestyleInfo from "./LifestyleInfo";
 class AboutTab extends React.Component {
 	constructor(props) {
         super();
-        console.log(props);
     }
     render() {
     	return (

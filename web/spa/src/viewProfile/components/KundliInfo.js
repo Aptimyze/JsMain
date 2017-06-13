@@ -3,7 +3,6 @@ import React from 'react';
 export default class KundliInfo extends React.Component {
 	constructor(props) {
         super();
-        console.log("kundli",props);
     }
     render() {
     	var city_country;
