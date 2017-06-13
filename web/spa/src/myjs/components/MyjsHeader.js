@@ -64,8 +64,7 @@ constructor(props) {
                   </div>
               </div>
           </div>
-          <button onClick={this.printProp.bind(this)}>print props</button>
-          <ShowNotificationLayer bellResponseFinal={this.props.bellResponse}/>
+          <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched={this.props.fetched}/>
 
         </div>
       )

@@ -35,9 +35,8 @@ export  class MyjsPage extends React.Component {
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
-							 <MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT}/>
-							 <EditBar/>
-							 <AcceptCount/>
+							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched} />;
+							<AcceptCount/>
 							 <ProfileVisitor/>
 
 

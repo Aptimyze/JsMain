@@ -10,9 +10,17 @@ export default class ShowNotificationLayer extends React.Component {
       console.log(JSON.parse(JSON.stringify(this.props)));
     }
 
+    returnBlankIfZero(value){
+      if(!value)return '';
+      return (<div className="fr wid8p">
+                      <div className="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">{value}</div>
+                 </div>)
+                 ;
+
+    }
   render(){
-    var obj = JSON.parse(JSON.stringify(this.props));
-   console.log('newss');console.log(obj);
+   if(!this.props.fetched)
+   return (<div></div>);
     // this.props.bellResponseFinal;console.log(obj);
     return(
                 <div className = "bg4 dn" id = "notificationBellView" > <a href="/search/perform?justJoinedMatches=1">
@@ -20,9 +28,7 @@ export default class ShowNotificationLayer extends React.Component {
                     <div className="fl wid92p">
                       <div className="fullwid txtc">Just Joined Matches</div>
                     </div>
-                    <div className="fr wid8p">
-                      <div className="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">{obj.bellResponseFinal.NEW_MATCHES}</div>
-                    </div>
+                    {this.returnBlankIfZero(this.props.NEW_MATCHES)}
                     <div className="clr"></div>
                   </div>
                 </a>
@@ -31,11 +37,15 @@ export default class ShowNotificationLayer extends React.Component {
                     <div className="fl wid92p">
                       <div className="fullwid txtc">Messages</div>
                     </div>
+                    {this.returnBlankIfZero(this.props.MESSAGE_NEW)}
+
                   <div className="clr"></div>
                   </div>
                </a>
                       <a href="/inbox / 9 / 1 ">	<div className=" fullwid fontthin f14 color3 pad18 brdr1 ">
                  <div className = "fl wid92p" > <div className="fullwid txtc">Photo Requests</div> < /div>
+                 {this.returnBlankIfZero(this.props.PHOTO_REQUEST_NEW)}
+
                       <div className="clr"></div > </div> < /a>
 
                       <a href="/inbox / 1 / 1 ">
