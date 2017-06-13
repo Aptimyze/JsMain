@@ -25,25 +25,24 @@ class LoginPage extends React.Component {
 
     componentDidMount() {
         let _this = this;
-        document.getElementById("LoginPage").style.height = window.innerHeight+"px"; 
-        setTimeout(function(){ 
+        document.getElementById("LoginPage").style.height = window.innerHeight+"px";
+        setTimeout(function(){
             _this.setState ({
                 showPromo : true
-            });  
-        }, 1200); 
-        console.log("I am in componentDidMount loginpage.");
+            });
+        }, 1200);
         console.log(this.props.AUTHCHECKSUM);
         if ( this.props.AUTHCHECKSUM ) {
-            this.props.history.push('/myjs');     
-       }   
-    } 
+            this.props.history.push('/myjs');
+       }
+    }
 
     componentWillReceiveProps(nextProps)
     {
         console.log("I am in componentWillReceiveProps loginpage.");
         console.log(nextProps);
        if ( nextProps.AUTHCHECKSUM ) {
-            this.props.history.push('/myjs');     
+            this.props.history.push('/myjs');
        }
        else {
             this.setState ({
@@ -58,13 +57,13 @@ class LoginPage extends React.Component {
         this.setState ({
                 insertError : true,
                 errorMessage : inputString
-        })    
-        setTimeout(function(){ 
+        })
+        setTimeout(function(){
             _this.setState ({
                 insertError : false,
                 errorMessage : ""
-            })     
-        }, this.state.timeToHide+100);  
+            })
+        }, this.state.timeToHide+100);
     }
 
     doLogin() {
@@ -74,7 +73,7 @@ class LoginPage extends React.Component {
             this.showError(ErrorConstant("ValidEmail"));
             document.getElementById("emailErr1").classList.remove("dn");
         } else if(emailVal.length == 0 && passVal.length == 0) {
-            this.showError(ErrorConstant("LoginDetails"));   
+            this.showError(ErrorConstant("LoginDetails"));
         } else if(emailVal.length == 0) {
             this.showError(ErrorConstant("EnterEmail"));
         } else if(passVal.length == 0) {
@@ -90,7 +89,7 @@ class LoginPage extends React.Component {
     handlePasswordChange(e) {
         if(e.target.value.length != 0) {
             document.getElementById("showHide").classList.remove("dn");
-        } else {    
+        } else {
             document.getElementById("showHide").classList.add("dn");
         }
     }
@@ -98,7 +97,7 @@ class LoginPage extends React.Component {
     handleEmailChange(e) {
         if(e.target.value.length != 0) {
             document.getElementById("emailErr1").classList.add("dn");
-        } 
+        }
     }
 
     showPass(e) {
@@ -115,19 +114,19 @@ class LoginPage extends React.Component {
     removePromoLayer() {
         this.setState ({
             showPromo : false
-        });  
+        });
         document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
     render() {
         var errorView;
-        if(this.state.insertError)          
+        if(this.state.insertError)
         {
           errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
         }
-        
+
         var loaderView;
-        if(this.state.showLoader)          
+        if(this.state.showLoader)
         {
           loaderView = <Loader show="page"></Loader>;
         }
@@ -163,7 +162,7 @@ class LoginPage extends React.Component {
                                 </div>
                                 <div className="clr"></div>
                             </div>
-                        </div>; 
+                        </div>;
 
         var buttonView = <div id = "buttonView">
                             <div className="posrel scrollhid">
@@ -199,14 +198,14 @@ class LoginPage extends React.Component {
                                         <img className="loginLogo" src="https://static.jeevansathi.com/images/jsms/commonImg/mainLogoNew.png" />
                                     </div>
                                     <div>
-                                        
+
                                         {formInput}
-                                        
+
                                         <div id="afterCaptcha" className="txtc pad12">
                                             <a href="/static/forgotPassword" className="white f14 fontlig">Forgot Password</a>
                                         </div>
                                         <div className="abs_c fwid_c mt20">
-                                            
+
                                             {buttonView}
 
                                             <div id="appLinkAndroid" className="txtc pad2 dn">
@@ -249,22 +248,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(LoginPage)
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

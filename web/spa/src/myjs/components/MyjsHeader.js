@@ -1,50 +1,40 @@
 import React from "react";
+import ShowNotificationLayer from "../components/ShowNotificationLayer";
+require ('../../common/style/common.css');
 
 
-export class ShowNotificationLayer extends React.Component {
-  render(){
-    return(
-      // <div className="bg4" >
-      //
-      //   <a href="/search/perform?justJoinedMatches=1">
-      //     <div className="fullwid fontthin f14 color3 pad18 brdr1 clearfix">
-      //       <div className="fl wid92p">
-      //         <div className="fullwid txtc">Just Joined Matches</div>
-      //       </div>
-      //       <div className="fr wid8p">
-      //         <div className="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">27</div>
-      //       </div>
-      //     </div>
-      //   </a>
-
-      <div>
-
-      
-
-      </div>
-
-
-
-
-
-
-//</div>
-    )
-  }
-
+export default class MyjsHeadHTML extends React.Component
+{
+  toggleBellView()
+ {
+ let currentView  = document.getElementById('notificationBellView').style.display;
+ let newView = currentView=='block' ? 'none' : 'block';
+ document.getElementById('notificationBellView').style.display=newView;
 
 }
+constructor(props) {
+    super();
 
-export default class MyjsHeadHTML extends React.Component{
+
+  }
 
   setNotificationView(){
 
 
   }
+
+  printProp(){
+    console.log('printporp');
+    console.log(this.props)
+  }
   render(){
       return(
         <div>
           <div className="fullwid bg1 pad1">
+
+
+
+
               <div className="rem_pad1 clearfix">
                   <div className="fl wid20p">
                     <div id="hamburgerIcon">
@@ -57,7 +47,7 @@ export default class MyjsHeadHTML extends React.Component{
                     <div className="fullwid">
                       <div className="fl padr15 posrel">
                           <div id="notificationView" className="posrel" onClick={this.setNotificationView}>
-                            <i className="mainsp bellicon"></i>
+                            <i className="mainsp bellicon" onClick ={this.toggleBellView.bind(this)}></i>
                             <div className="posabs myjstop1">
                               <div className="disptbl oval">
                                 <div className="dispcell vertmid color6 f11 txtc">33</div>
@@ -74,7 +64,8 @@ export default class MyjsHeadHTML extends React.Component{
                   </div>
               </div>
           </div>
-          <ShowNotificationLayer/>
+          <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched={this.props.fetched}/>
+
         </div>
       )
     }
