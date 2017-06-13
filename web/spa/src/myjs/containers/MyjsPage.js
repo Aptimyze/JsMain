@@ -51,8 +51,9 @@ export  class MyjsPage extends React.Component {
 	}
 
 	printProp(){
-console.log('myujs');
+		console.log('myujs');
 		console.log(this.props);
+	
 	}
 }
 
