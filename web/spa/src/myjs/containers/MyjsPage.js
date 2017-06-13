@@ -81,7 +81,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         hitApi: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL));
+            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST'));
         }
     }
 }
