@@ -59,7 +59,7 @@
               </tr>
               <tr>
                       <td><br /><font color="#000000">
-                      <b>Device</b>  ~$channel` on ~$deviceName`
+                      <b>Device</b> ~$deviceName`
                       <br><b>Location*</b> ~$city`, ~$country`
                       </font></td>
               </tr>
