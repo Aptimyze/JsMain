@@ -136,9 +136,9 @@ class gunaScore
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
     $endTime = microtime(true)-$startTime;
 
-    $this->logApiResponeTime($memObject,$endTime);
     if($fresult)
     {
+      $this->logApiResponeTime($memObject,$endTime);
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
       $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
       $memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
@@ -194,10 +194,25 @@ class gunaScore
       $memObject->incrCount("gunaCall_GT_0.5_LT_1.0");
       $memObject->setExpiryTime("gunaCall_GT_0.5_LT_1.0","604800"); //7 days  
     }
-    elseif($endTime > 1.0)
+    elseif($endTime >=1.0 && $endTime < 1.5)
     {
-      $memObject->incrCount("gunaCall_GT_1");
-      $memObject->setExpiryTime("gunaCall_GT_1","604800"); //7 days 
+      $memObject->incrCount("gunaCall_GT_1_LT_1.5");
+      $memObject->setExpiryTime("gunaCall_GT_1_LT_1.5","604800"); //7 days 
+    }
+    elseif($endTime >= 1.5 && $endTime < 2.0)
+    {
+      $memObject->incrCount("gunaCall_GT_1.5_LT_2");
+      $memObject->setExpiryTime("gunaCall_GT_1.5_LT_2","604800"); //7 days 
+    }
+    elseif($endTime >=2.0 && $endTime <3.0)
+    {
+      $memObject->incrCount("gunaCall_GT_2_LT_3");
+      $memObject->setExpiryTime("gunaCall_GT_2_LT_3","604800");//7 days 
+    }
+    elseif($endTime >=3.0)
+    {
+      $memObject->incrCount("gunaCall_GT_3");
+      $memObject->setExpiryTime("gunaCall_GT_3","604800"); //7 days 
     }
   }
 }

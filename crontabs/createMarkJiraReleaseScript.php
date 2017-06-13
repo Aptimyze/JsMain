@@ -58,6 +58,7 @@ if(is_array($file) && !empty($file))
         {
             $releaseJira = $releaseJiraArr;
         }
+        $file = $releaseJira;
     }
     else
     {
@@ -137,7 +138,8 @@ function markVersion($releaseJira,$tagName){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = $tagName;
+			$value = substr($value,0,8);
+            $versionName = $tagName;
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
