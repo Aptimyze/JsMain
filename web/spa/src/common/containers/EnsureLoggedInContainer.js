@@ -18,7 +18,7 @@ class EnsureLoggedInContainer extends React.Component
 
         if ( !this.props.AUTHCHECKSUM )
         {
-            console.log('Profile checksum is not set.');
+            this.props.history.prevUrl = this.props.location.pathname;
             this.props.history.push('/login');
         }
     }
@@ -26,7 +26,8 @@ class EnsureLoggedInContainer extends React.Component
     render() {
         if ( this.props.AUTHCHECKSUM )
         {
-            return <div>                    
+            return <div>
+                    <Route exact path="/" component={MyjsPage}/>
                     <Route path='/myjs' component={MyjsPage} />
                     <Route path='/viewProfile' component={ProfilePage} />
                     </div>;

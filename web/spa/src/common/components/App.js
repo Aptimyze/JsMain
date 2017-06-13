@@ -25,8 +25,7 @@ const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
-// const EnsureLoggedInContainer = asyncComponent(() => import('../containers/EnsureLoggedInContainer')
-//   .then(module => module.default), { name: 'EnsureLoggedInContainer' });
+
 
 
 const hash = getRoutePath(window.location.href);
@@ -35,12 +34,10 @@ class App extends React.Component
 {
 
   componentWillMount() {
-    console.log("Signing in from cookie.");
     var response;
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
-    console.log(response);
     this.props.siginFromCookie(response);
   }
 
@@ -49,7 +46,6 @@ class App extends React.Component
 
   }
   render() {
-    console.log("I am in app.js");
     return (<div>
       <Router>
       <div>

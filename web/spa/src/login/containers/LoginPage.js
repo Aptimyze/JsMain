@@ -31,7 +31,6 @@ class LoginPage extends React.Component {
                 showPromo : true
             });
         }, 1200);
-        console.log(this.props.AUTHCHECKSUM);
         if ( this.props.AUTHCHECKSUM ) {
             this.props.history.push('/myjs');
        }
@@ -39,10 +38,16 @@ class LoginPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("I am in componentWillReceiveProps loginpage.");
-        console.log(nextProps);
+
        if ( nextProps.AUTHCHECKSUM ) {
-            this.props.history.push('/myjs');
+            if ( (this.props.history.prevUrl).indexOf('/login/') === -1 )
+            {
+                this.props.history.push(this.props.history.prevUrl);
+            }
+            else
+            {
+                this.props.history.push('/myjs');
+            }
        }
        else {
             this.setState ({
