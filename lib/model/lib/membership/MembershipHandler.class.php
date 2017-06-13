@@ -2453,6 +2453,8 @@ class MembershipHandler
                 $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
                 if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
                     $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
+                    $payDetData['APPLE_COMMISSION'] = $payDetData['APPLE_COMMISSION']*(-1);
+                    $payDetData['FRANCHISEE_COMMISSION'] = $payDetData['FRANCHISEE_COMMISSION']*(-1);
                 }
                 $this->negativeTransaction($payDetData);
                 unset($payDetData);
