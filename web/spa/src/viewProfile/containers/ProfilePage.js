@@ -24,13 +24,13 @@ class ProfilePage extends React.Component {
             dataLoaded: false,
             picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
         };
+        props.showProfile();   
     }
 
     componentDidMount() {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
         document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
-        this.props.showProfile();   
     } 
 
     componentWillReceiveProps(nextProps)
@@ -102,7 +102,15 @@ class ProfilePage extends React.Component {
         {   
             AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-            DppView = <DppTab dpp={this.props.DppInfo}></DppTab>;
+            
+            if(this.props.dpp_Ticks) 
+            {
+                DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
+            } else
+            {
+                DppView = <DppTab about={this.props.AboutInfo}  dpp={this.props.DppInfo}></DppTab>;
+            }
+
             if(this.props.AboutInfo.name_of_user) 
             {
                 Header = this.props.AboutInfo.name_of_user;
@@ -162,7 +170,8 @@ const mapStateToProps = (state) => {
        DppInfo: state.ProfileReducer.dppInfo,
        appPromotion : state.ProfileReducer.appPromotion,
        pic: state.ProfileReducer.pic,
-       LifestyleInfo: state.ProfileReducer.lifestyle
+       LifestyleInfo: state.ProfileReducer.lifestyle,
+       dpp_Ticks: state.ProfileReducer.dpp_Ticks
     }
 }
 

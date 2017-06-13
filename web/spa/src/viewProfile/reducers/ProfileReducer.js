@@ -5,7 +5,8 @@ const ProfileReducer = (state={
 	familyInfo: [],
 	dppInfo: [],
 	pic: [],
-	lifestyle: []
+	lifestyle: [],
+	dpp_Ticks: []
 },action) => {
 	switch(action.type)
 	{
@@ -18,7 +19,8 @@ const ProfileReducer = (state={
 			familyInfo: action.payload.family,
 			dppInfo: action.payload.dpp,
 			pic: action.payload.pic,
-			lifestyle: action.payload.lifestyle
+			lifestyle: action.payload.lifestyle,
+			dpp_Ticks:action.payload.dpp_Ticks
 		}
 		break;
 	}
