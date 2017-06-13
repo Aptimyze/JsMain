@@ -5,7 +5,21 @@ export const validateEmail =(email)=>  {
     return re.test(email);
     }
 
+export const validateInput = (type, value) =>{
 
+	switch (type)
+	{
+		case 'EMAIL':
+		return validateEmail(value);
+		break;
+
+
+	}
+
+
+
+
+}
 
 export const f1 =()=>
 {
