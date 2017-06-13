@@ -37,6 +37,10 @@ $ddlShardSlaveUser[0]= 'shard1SlaveDDL';
 $ddlShardSlaveUser[1]= 'shard2SlaveDDL';
 $ddlShardSlaveUser[2]= 'shard3SlaveDDL';
 
+$shardSlaveUser[0]= 'shard1Slave';
+$shardSlaveUser[1]= 'shard2Slave';
+$shardSlaveUser[2]= 'shard3Slave';
+
 /**
 * This function is used to map serverId to ServerName. Server name is required for connection.
 * @param string $master_or_slave master or slave(mis/cron) database to select
