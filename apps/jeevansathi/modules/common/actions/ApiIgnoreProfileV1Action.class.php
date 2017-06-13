@@ -99,8 +99,25 @@ class ApiIgnoreProfileV1Action extends sfActions
                                         $ignoreCount--;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
 					$page["source"] = $request->getParameter("pageSource");
+                                        $page['IGNORED'] = 0;
+                                        
 					$buttonObj = new ButtonResponse($this->loginProfile,$this->ignoreProfile,$page);
-					$button = $buttonObj->getButtonArray();
+                                        if(MobileCommon::isNewMobileSite())
+                                        {
+                                            if((new NEWJS_BOOKMARKS())->isBookmarked($profileID,$ignoredProfileid))
+                                                $page['isBookmarked']=1;
+                                            else 
+                                            $page['isBookmarked']=0;
+                                            $button = $buttonObj->getNewButtonArray($page);
+                                            $tempButton = $button;
+                                            $button['buttons']=null;
+                                            $button['buttons']['primary'][0] = $tempButton['buttons'][0];
+                                            $button['buttons']['others'] = $tempButton['buttons'];
+                                            
+                                        }
+                                        else
+                                            $button = $buttonObj->getButtonArray();
+                                     //   print_r($button);print_r($button);die;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;                                     
 					if(empty($button["buttons"]))
 					{
