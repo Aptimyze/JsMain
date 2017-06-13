@@ -88,7 +88,7 @@
         <div class="fullwid pos_rel clearfix">
           <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="jamaat" tabindex="0" id="jamaat_box">
             <label class="lblreg pos_abs js-jamaat js-list pos1_lbl1" id="jamaat_label" data-attr="jamaat">Jamaat</label>
-            <div id="jamaat_value" data-type="gridDropdown" data-required=true  data-validate=true   data-fieldtype="jamaat" data-toSave ="jamaat" data-columns="3" data-search="true">
+            <div id="jamaat_value" data-type="gridDropdown" data-required=false  data-validate=true   data-fieldtype="jamaat" data-toSave ="jamaat" data-columns="3" data-search="true">
               <input autocomplete="off" class="reg_wid2 fr brdr-0 f15 fontlig" id="jamaat-inputBox_set" tabindex="-1"/>
               <div id="jamaat-gridDropdown_set"></div>
             </div>
@@ -106,7 +106,7 @@
         <div class="fullwid pos_rel clearfix">
           <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="casteMuslim" tabindex="0" id="casteMuslim_box">
             <label class="lblreg pos_abs js-casteMuslim js-list pos1_lbl1" id="casteMuslim_label" data-attr="casteMuslim">Caste</label>
-            <div id="casteMuslim_value" data-type="gridDropdown" data-required=true  data-validate=true   data-fieldtype="casteMuslim" data-toSave ="castemuslim" data-columns="3" data-search="true">
+            <div id="casteMuslim_value" data-type="gridDropdown" data-required=false  data-validate=true   data-fieldtype="casteMuslim" data-toSave ="castemuslim" data-columns="3" data-search="true">
               <input autocomplete="off" class="reg_wid2 fr brdr-0 f15 fontlig" id="casteMuslim-inputBox_set" tabindex="-1"/>
               <div id="casteMuslim-gridDropdown_set"></div>
             </div>
