@@ -41,14 +41,19 @@ class App extends React.Component
     this.props.siginFromCookie(response);
   }
 
-  componentWillReceiveProps(nextProps)
-  {
 
-  }
   render() {
-    return (<div>
+      var redirectToHashUrl;
+      if ( hash )
+      {
+        redirectToHashUrl = <Redirect to={hash}/>;
+      }
+    return (
+
+      <div>
       <Router>
       <div>
+      {redirectToHashUrl}
       <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/viewProfile' component={ProfilePage} />
       <Route path='/login' component={LoginPage}/>
