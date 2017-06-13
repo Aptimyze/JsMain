@@ -159,6 +159,8 @@ function checkForError($pic,$picType="")
 		$noError=1;
 		if($pic)
 		{
+			ini_set('user_agent','JsInternal');	
+			header('Content-Type: image/jpeg'); 
 			$size= getimagesize($pic);
 			if(is_array($size))
 			{
