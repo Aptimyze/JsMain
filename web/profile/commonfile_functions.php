@@ -643,7 +643,7 @@ $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
 $js_arr[]=array("/web/spa/src/common/components/App"     => "3");
 $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"   => "1");
-$js_arr[]=array(" /web/spa/src/common/components/App"   => "1");
+$js_arr[]=array(" /web/spa/src/common/components/App"    => "2");
 return $js_arr;
 }
 function getJavascript(){
