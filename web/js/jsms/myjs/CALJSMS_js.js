@@ -116,7 +116,7 @@ if($("#CriticalActionlayerId").val()=='20'){
                 $("#listDiv").removeClass("dn");
         });
 
-    $("#cityClickDiv").on("click", function() {  console.log(listArray);
+    $("#cityClickDiv").on("click", function() {
             callCity(listArray);
             $("#cityListDiv").removeClass("dn");
     });
@@ -134,7 +134,7 @@ if($("#CriticalActionlayerId").val()=='20'){
                 $.each(elem1, function(index2, elem2) {
                     $("#occList").append('<li occCode = "'+index2+'">' + elem2 + '</li>');
                     stateMap[stateIndex++] = index2;
-                    console.log(stateIndex+'---'+index2);
+                    
             });
         });
       });      
