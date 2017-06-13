@@ -50,6 +50,7 @@ class PhotoFaceDetection
 	
 	public function cropPicture($pic,$faceCoord,$pictureType,$savePicUrl,$imageFormatType)
 	{
+		PictureFunctions::setHeaders();
 		// Constants as per product reqirements
 		$sizes = $this->getSizesToCrop($pictureType);
 		$MAX_FACE = $sizes["MAX_FACE"];
@@ -179,6 +180,7 @@ class PhotoFaceDetection
 	*/
 	public function getPictureCoordinates($picturePath)
 	{
+		PictureFunctions::setHeaders();
 		$logicPath = JsConstants::$faceDetectionFile."/facedetect";
 		$cascadePath = JsConstants::$faceDetectionCascadePath."/haarcascades/haarcascade_frontalface_alt.xml";
 

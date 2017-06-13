@@ -111,6 +111,7 @@ class postSendReminderv2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
@@ -167,6 +168,7 @@ class postSendReminderv2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
 					$responseArray["footerbutton"]["label"]  = "View Memebrship Plans";
 					$responseArray["footerbutton"]["value"] = "";

@@ -2,14 +2,13 @@
 /*
  * Class gunaScore 
  * This class verifies conditions and calls the third party api to fetch guna scores 
- * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score11
+ * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
-//guna score for testing
 class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
 		 * and accordingly fetches and returns the gunaScoreArr  
-		 */ //testing11
+		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
       $searchIdArr = array(); //this comment has been added for testing
@@ -130,18 +129,26 @@ class gunaScore
   {	
     $gunaData = array();
     $compstring = implode(",",$compstring);
-    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;  
-    $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
+    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;
 
+    $memObject=JsMemcache::getInstance();
+    $startTime = microtime(true);
+    $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
+    $endTime = microtime(true)-$startTime;
+
+    $this->logApiResponeTime($memObject,$endTime);
     if($fresult)
     {
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
+      $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
+      $memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
     }
     elseif(!$fresult)
     {
-      //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
-      //This send mail function has to be replaced by Redis key
+      $memObject->incrCount("gunaBlank_".date("Y-m-d"));
+      $memObject->setExpiryTime("gunaBlank_".date("Y-m-d"),"604800"); //7 days 
     }
+    unset($memObject);
     if(is_array($fresult))
     {
       foreach($fresult as $key=>$val)
@@ -168,5 +175,29 @@ class gunaScore
       }
     }
     return($gunaData);
-  } //last line comment for testing1
+  }
+
+  public function logApiResponeTime($memObject,$endTime)
+  {    
+    if($endTime< 0.1)
+    {
+      $memObject->incrCount("gunaCall_LT_0.1");
+      $memObject->setExpiryTime("gunaCall_LT_0.1","604800"); //7 days 
+    }
+    elseif($endTime >=0.1 && $endTime < 0.5)
+    {
+      $memObject->incrCount("gunaCall_GT_0.1_LT_0.5");
+      $memObject->setExpiryTime("gunaCall_GT_0.1_LT_0.5","604800"); //7 days 
+    }
+    elseif($endTime >=0.5 && $endTime < 1.0)
+    {
+      $memObject->incrCount("gunaCall_GT_0.5_LT_1.0");
+      $memObject->setExpiryTime("gunaCall_GT_0.5_LT_1.0","604800"); //7 days  
+    }
+    elseif($endTime > 1.0)
+    {
+      $memObject->incrCount("gunaCall_GT_1");
+      $memObject->setExpiryTime("gunaCall_GT_1","604800"); //7 days 
+    }
+  }
 }

@@ -119,10 +119,14 @@ class SearchUtility
 					{
 						$showArrCluster=1;
 						$showArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
+						if($showArr=="")
+						{
+							$showArr = '0 0';
+						}											
 					}
 					elseif($SearchParamtersObj->getVIEWED()==$this->notViewed)
-						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
-				}
+						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);					
+				}			
 				if( ($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER() || $SearchParamtersObj->getKUNDLI_DATE_CLUSTER())&& $pid)
 				{
 					$alreadyInShowStr = $SearchParamtersObj->getProfilesToShow();
@@ -192,8 +196,9 @@ class SearchUtility
 								$showArr= implode(" ",$matArr);
 						}
 					}
-					else
+					else{
 						$showArr = '0 0';
+					}
 				}
                                 //remove profiles for AP cron
                                 if($notInArray)
@@ -239,7 +244,7 @@ class SearchUtility
 			$cluster = $solr_labels[$request->getParameter("appCluster")];
 			if($request->getParameter("dollar")==1)
 				$cluster=$cluster."_DOL";
-			$clusterVal = $request->getParameter("appClusterVal");
+			$clusterVal = $request->getParameter("appClusterVal");		
 			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
                             if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;

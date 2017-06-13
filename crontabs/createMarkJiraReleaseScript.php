@@ -20,10 +20,14 @@ $headerArr = array(
 				'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
 				'Content-Type:application/json'
 				);
+//get tagName which will be the release version
+$tageNameFile = "/var/www/CI_Files/tageName.txt";
+$tagNameArr = file($tageNameFile , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$tagName = $tagNameArr[0];
 
 if($branchName == "CIRelease")
 {
-    $parameter = "hotFix";
+    $parameter = "hotfix";
     $hotFixBlock = true;
     $fileName = "/var/www/CI_Files/CIMergedBranches.txt";
 }
@@ -32,6 +36,8 @@ elseif($branchName == "QASanityReleaseNew")
     $parameter = "release";
     $releaseBlock = true;
     $fileName = "/var/www/CI_Files/QASanityMergedBranches.txt";
+    $CIFileName = "/var/www/CI_Files/CIMergedBranches.txt";
+    $CIArr = file($CIFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 }
 else
 {
@@ -43,7 +49,15 @@ if(is_array($file) && !empty($file))
 {
     if($branchName == "QASanityReleaseNew")
     {
-        $releaseJira = $file;
+        $releaseJiraArr = $file;
+        if(is_array($CIArr) && !empty($CIArr))
+        {
+            $releaseJira = array_merge($releaseJiraArr,$CIArr);
+        }
+        else
+        {
+            $releaseJira = $releaseJiraArr;
+        }
     }
     else
     {
@@ -64,22 +78,22 @@ if(is_array($file) && !empty($file))
             $release[$projectName] = "1";
         }
     }
-
+        
     //For Creating Hotfix Versions
     if($parameter == "hotfix" || $parameter == "all")
-        createRelease($hotFix,"HF");
+        createRelease($hotFix,$tagName);
 
     //For Creating regulat Release Versions
     if($parameter == "release" || $parameter == "all")
-        createRelease($release,"RC");
+        createRelease($release,$tagName);
 
     //For marking HotFix Versions
     if($parameter == "hotfix" || $parameter == "all")
-        markVersion($hotFixJira,"HF");
+        markVersion($hotFixJira,$tagName);
 
     //For marking regular release Versions
     if($parameter == "release" || $parameter == "all")
-        markVersion($releaseJira,"RC");    
+        markVersion($releaseJira,$tagName);    
 
     
     /*
@@ -116,14 +130,14 @@ if(is_array($file) && !empty($file))
 }
 
 
-function markVersion($releaseJira,$releaseText){
+function markVersion($releaseJira,$tagName){
 	global $setVersionUrl;
 	global $headerArr;
 	if(is_array($releaseJira)){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = "$releaseText@".date('d')."-".date('m')."-".date('y');
+			$versionName = $tagName;
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
@@ -134,7 +148,7 @@ function markVersion($releaseJira,$releaseText){
 }
 
 
-function createRelease($releaseArr,$releaseText){
+function createRelease($releaseArr,$tagName){
 	global $groups;
 	global $createVersionUrl;
 	global $headerArr;
@@ -142,7 +156,7 @@ function createRelease($releaseArr,$releaseText){
 		//Iterate for all the jira ids
 		foreach($releaseArr as $key => $val){
 			$params = json_encode(array("description"=>"Release",
-							"name"=>"$releaseText@".date('d')."-".date('m')."-".date('y'),
+							"name"=>$tagName,
 							"archived"=> false,
 							"released"=> false,
 							"releaseDate"=> date('Y-m-d'),

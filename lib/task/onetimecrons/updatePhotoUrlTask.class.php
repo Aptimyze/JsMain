@@ -77,11 +77,17 @@ print_r($this->donePictureIds);
 
         $ch=curl_init();
         curl_setopt($ch,CURLOPT_URL,$completeUrl);
-        curl_setopt($ch,CURLOPT_HEADER,1);
+        $header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.9";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
         curl_setopt($ch,CURLOPT_NOBODY,true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_exec($ch);
         $result=curl_getinfo($ch);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$headerStr = substr($result, 0, $header_size);
+		$result = substr($result, $header_size);
         curl_close ($ch);
 
         return $result;

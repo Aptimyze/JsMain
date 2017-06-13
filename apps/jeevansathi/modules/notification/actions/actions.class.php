@@ -74,7 +74,7 @@ class notificationActions extends sfActions
                 $producerObj->sendMessage($msgdata);
         }
 	else{*/
-        CommonFunction::loginTrack($registrationid, $profileid);
+        // CommonFunction::loginTrack($registrationid, $profileid);
 		NotificationFunctions::registrationIdInsert($profileid,$registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
 	//}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

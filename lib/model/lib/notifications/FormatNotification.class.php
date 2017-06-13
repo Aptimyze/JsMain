@@ -9,7 +9,10 @@ class FormatNotification
 {
     public static function formater($details, $localNotification='') 
     {
-	$dataArray = array("MESSAGE"=>$details['MESSAGE'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'PROFILE_CHECKSUM'=>$details['PROFILE_CHECKSUM'],"COLLAPSE_STATUS"=>$details['COLLAPSE_STATUS'],"TITLE"=>$details['TITLE'],"PHOTO_URL"=>$details['PHOTO_URL'],"USERNAME"=>$details['USERNAME'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID']);
+        if(empty($details['IOS_PHOTO_URL'])){
+            $details['IOS_PHOTO_URL'] = "D";
+        }
+	$dataArray = array("MESSAGE"=>$details['MESSAGE'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'PROFILE_CHECKSUM'=>$details['PROFILE_CHECKSUM'],"COLLAPSE_STATUS"=>$details['COLLAPSE_STATUS'],"TITLE"=>$details['TITLE'],"PHOTO_URL"=>$details['PHOTO_URL'],"IOS_PHOTO_URL"=>$details['IOS_PHOTO_URL'],"USERNAME"=>$details['USERNAME'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID']);
 	if($localNotification) 
 		$dataArray['SENT']=$details['SENT'];
 	if($details['IMG_URL'])
