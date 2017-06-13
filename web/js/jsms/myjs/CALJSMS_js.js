@@ -124,6 +124,7 @@ if($("#CriticalActionlayerId").val()=='20'){
      appendStateData = function(allRes) {  
         $("#occList").html('');
         $("#citySelect").html('Select your City');
+        allRes = JSON.parse(allRes);
         res = allRes.state_res;
 
         stateMap = {};
@@ -164,7 +165,7 @@ if($("#CriticalActionlayerId").val()=='20'){
         $("#cityList").html('');
         var cityIndexFromMap  = $("#occSelect").attr('occCode');
         
-        
+        allRes = JSON.parse(allRes);
         cityMap = {};
         cityIndex = 2;
         
