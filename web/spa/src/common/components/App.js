@@ -34,11 +34,13 @@ const hash = getRoutePath(window.location.href);
 class App extends React.Component
 {
 
-  componentDidMount() {
+  componentWillMount() {
+    console.log("Signing in from cookie.");
     var response;
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
+    console.log(response);
     this.props.siginFromCookie(response);
   }
 
