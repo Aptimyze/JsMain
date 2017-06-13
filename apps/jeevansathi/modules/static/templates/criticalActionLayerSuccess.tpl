@@ -443,7 +443,6 @@ function validateAndSend(){
             function callCity(res){
                         var listArray = res;
                         appendCityData(listArray);
-                        //$('#city_chosen').removeClass('chosen-container-err');
                         loadChosen(); 
                     }                
         
@@ -507,14 +506,6 @@ function validateAndSend(){
     $('#secondReq').addClass('vishid');
     $('#city').trigger("chosen:updated");
 
-   }
-
-   function showOccSelErr(param){
-     if(param=='showErr')
-     {
-       $('.js-req1').removeClass('disp-none');
-       $('#stateBox').addClass('chosen-container-err');
-     }      
    }
 
    function statefunc(res){
