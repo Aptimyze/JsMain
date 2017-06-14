@@ -38,7 +38,7 @@ class App extends React.Component
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
-    this.props.MyProfile.  = getCookie('AUTHCHECKSUM');
+    this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
   }
 
 
@@ -54,9 +54,9 @@ class App extends React.Component
       <Router>
       <div>
       {redirectToHashUrl}
+      <Route path='/login' component= {LoginPage}/>
       <Route path='/viewProfile' component={ProfilePage} />
       <Route path="/" component={EnsureLoggedInContainer}/>
-      <Route path='/login' component={LoginPage}/>
       </div>
       </Router>
       </div>);
