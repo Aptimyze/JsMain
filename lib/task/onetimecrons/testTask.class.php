@@ -25,11 +25,89 @@ class testTask extends sfBaseTask
 		[php symfony CRM:test|INFO]
 EOF;
 	}
-
+private function checkRabbitmqServerStatus($serverid,$api_url)
+  {
+    $server_credentials='FIRST_SERVER';
+    $rabbitmq_mgmnt_port=JsConstants::$rabbitmqManagementPort;
+    $rabbitmq_host="10.10.18.104";
+    $rabbitmq_user="admin";
+    $rabbitmq_pswd="admin";
+    $rabbitmq_creds="$rabbitmq_user:$rabbitmq_pswd";
+    $rabbitmq_base_url="http://{$rabbitmq_host}:{$rabbitmq_mgmnt_port}";    
+    $rest_url="{$rabbitmq_base_url}{$api_url}";
+    $response=RabbitmqHelper::curlToRabbitmqAPI($rest_url,$rabbitmq_creds);
+    return $response;
+  }
 	protected function execute($arguments = array(), $options = array())
 	{
+    sfContext::createInstance($this->configuration);
+    $notificationKey ='PROFILE_VISITOR';
+  $instantNotificationObj =new InstantAppNotification($notificationKey);
+  $instantNotificationObj->sendNotification(1,76601,"visited");
+  die;
+    $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(1,76601);
+        die;
 	    // SET BASIC CONFIGURATION
-	   
+
+    /*$fileName1 = "/home/ankita/Desktop/rabbitTimeNonPeak.log";
+    $fileName2 = "/home/ankita/Desktop/rabbitTimePeak.log";
+    $contents1 = file_get_contents($fileName1);
+    $contents2 = file_get_contents($fileName2);
+    $logArr1 = explode("\n", $contents1);
+    $logArr2 = explode("\n", $contents2);
+    $avgTimeNonPeak = 0;
+    $avgTimePeak = 0;
+    foreach ($logArr1 as $key1 => $value1) {
+      $avgTimeNonPeak += $value1;
+    }
+    foreach ($logArr2 as $key2 => $value2) {
+      $avgTimePeak += $value2;
+    }
+    $avgTimeNonPeak = round($avgTimeNonPeak/count($logArr1),3);
+    $avgTimePeak = round($avgTimePeak/count($logArr2),3);
+    var_dump("non peak--".$avgTimeNonPeak);
+    var_dump("peak--".$avgTimePeak);die;*/
+
+    $producerObj = new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+    {
+      echo "connected";
+      //$notificationData = array("notificationKey"=>"EOI","selfUserId" => 99401121,"otherUserId" => 1); 
+      //$producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+    }
+    unset($producerObj);
+    die();
+
+	   $alarmApi_url="/api/nodes";
+      $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
+      echo "3451122";die;
+     
+      if(is_array($resultAlarm))
+      {
+       foreach($resultAlarm as $row)
+        {          
+          if($row->mem_used >= 0)
+          {
+            
+            $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
+            RabbitmqHelper::sendAlert($str,"default");
+            
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name,"rabbitmq");
+          }
+          
+          if(($row->disk_free - $row->disk_free_limit) < MessageQueues::SAFE_LIMIT)
+          {
+            JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
+            $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
+            
+            RabbitmqHelper::sendAlert($str,"default");
+          }
+          else
+            JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
+        }
+      }
+      die;
     $user = $arguments["user"];
     if($user){
       //$memHandlerObj = new MembershipHandler(false);

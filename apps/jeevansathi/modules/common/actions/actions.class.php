@@ -703,8 +703,9 @@ class commonActions extends sfActions
             
             
             $nameArr=array('DISPLAY'=>$namePrivacy);
-            $name_pdo = new incentive_NAME_OF_USER();
-            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            //lib has been used in case of direct call to store. Lib ensures that caching functionality is also implemented.
+            $name_pdo = new NameOfUser();
+            $name_pdo->updateName($loginData['PROFILEID'],$nameArr);
             
         }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
@@ -737,6 +738,14 @@ class commonActions extends sfActions
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
         }
+
+        if($calObject['LAYERID']== 14)
+       {  
+        $profileObject = LoggedInProfile::getInstance('newjs_master');
+                            $contactNumOb=new ProfileContact();
+                            $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+        $this->altEmailUser = $numArray['0']['ALT_EMAIL'];
+       }
                 
 		if($calObject['LAYERID']==1)
 			$this->showPhoto='1';
@@ -744,6 +753,16 @@ class commonActions extends sfActions
 			$this->showPhoto='0';
         $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;         
         $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+        if($calObject['LAYERID']==19)
+        {
+        $this->discountPercentage = $request->getParameter('DISCOUNT_PERCENTAGE');
+        $this->discountSubtitle  = $request->getParameter('DISCOUNT_SUBTITLE');
+        $this->startDate  = $request->getParameter('START_DATE');
+        $this->oldPrice = $request->getParameter('OLD_PRICE');
+        $this->newPrice = $request->getParameter('NEW_PRICE');
+        $this->time = floor($request->getParameter('LIGHTNING_CAL_TIME')/60);
+        $this->symbol = $request->getParameter('SYMBOL');
+        }
         $this->setTemplate('CALJSMS');
 
     }

@@ -19,6 +19,7 @@ class MessageQueues
   CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
   CONST UPDATE_CRITICAL_INFO_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
+  CONST PRODUCT_METRIC_QUEUE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
@@ -34,7 +35,7 @@ class MessageQueues
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE"); //queues not to be considered for msg upper limit alert
-  CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
+  CONST SAFE_LIMIT = 500000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
   CONST PASSIVE = false;      //If set, the server will reply with Declare-Ok if the queue already exists with the same name, and raise an error if queue with the given name doesnt exist.
@@ -85,6 +86,7 @@ class MessageQueues
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   CONST UPDATE_VIEW_LOG_STARTCOMMAND = "symfony cron:cronConsumeUpdateViewLogQueue"; //Command to start VIEW LOG consuming cron
   CONST  CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronConsumeLoggingQueue"; //Command to start cron:cronConsumeQueueMessageTask
+  CONST  CRON_PRODUCT_METRIC_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronExecuteProductMetricLogging"; //Command to start cron:cronConsumeQueueMessageTask
 
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
@@ -148,6 +150,14 @@ class MessageQueues
   const DELAYED_INSTANT_MAIL = 'DelayedMailQueue';
   const DELAYED_MAIL_PROCESS = 'DELAYED_MAIL';
   const INSTANT_MAIL_DELAY_TTL = 300;//5 mins in secs
+  
+  
+  const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
+  const PRODUCT_METRICS = "PRODUCT_METRICS";
+
+  public static $logConnectionTime = 0;
+  
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
 }
 
 ?>

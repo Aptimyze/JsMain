@@ -159,10 +159,91 @@ class LightningDeal
                 $params["DISCOUNT"] = max($val["P_MAX"],$val["C_MAX"],$val["NCP_MAX"],$val["X_MAX"]) + 5;
                 $params["STATUS"] = "N";
                 $params["ENTRY_DT"] = date('Y-m-d H:i:s');
+                $params["DEAL_DATE"] = date('Y-m-d');
+                $params["DISCOUNT"] = min($params["DISCOUNT"],80);
                 $lightningDiscObj->insertInLightningDealDisc($params);
             }
             unset($lightningDiscObj);
         }
 	}
+    
+    /*Get lightning deal eligibility for  CAL and data*/
+    public function getLightningDealCalData($request){
+        $loginData = $request->getAttribute("loginData");
+        $profileid = $loginData["PROFILEID"];
+        if($profileid && CommonFunction::getMembershipName($profileid) == "Free"){
+            $dateGreaterThan = date('Y-m-d H:i:s', strtotime('-1 day', strtotime(date('Y-m-d H:i:s'))));
+            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+            $data = $lightningObj->getLightningDealDiscountData($profileid,$dateGreaterThan);
+            
+            $memHandlerObj = new MembershipHandler();
+            $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);
+            $currentMaxDisc = $hamburgerMsg["maxDiscount"];
+            if($data && ($data['STATUS'] == 'V' || $currentMaxDisc <= $data["DISCOUNT"])){
+                $memHandlerObj = new MembershipHandler();
+                list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
+                $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
+                $minDiscountedPrice = $minActualPrice*((100-$data["DISCOUNT"])/100);
+                if($currency == 'RS')
+                    $symbol = '&#8377;';
+                else if ($currency == 'DOL')
+                    $symbol = '$';
+                $result['line1'] = "Don't miss this rare opportunity!";
+                $result['line2'] = $data["DISCOUNT"]."% OFF";
+                $result['line3'] = "on all memberships";
+                $result['line4'] = "Plan starts @$symbol{strikeoutPrice} $symbol$minDiscountedPrice";
+                $result['strikeoutPrice'] = $minActualPrice;
+                $result['discountedPrice'] = $minDiscountedPrice;
+                $result['currencySymbol'] = $symbol;
+                if($data['STATUS'])
+                    $result['STATUS'] = $data['STATUS'];
+                if($data['EDATE'])
+                    $result['EDATE'] = $data['EDATE'];
+                return $result;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    
+    /*Activate Lighning Deal*/
+    public function activateLightningDealForProfile($profileid){
+        if($profileid){
+            $lightningDuration = VariableParams::$lightningDealDuration;
+            $params["PROFILEID"] = $profileid;
+            $params["SDATE"] = date('Y-m-d H:i:s');
+            $params["EDATE"] = date('Y-m-d H:i:s', strtotime("$lightningDuration minutes",  strtotime($params["SDATE"])));
+            $params["STATUS"] = "V";
+            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+            $lightningObj->activateLightningDeal($params);
+            return $params["EDATE"];
+        }
+    }
+    
+    /*Get lightning deal eligibility and data, activate offer and clear membership cache*/
+    public function lightningDealCalAndOfferActivate($request){
+        $data = $this->getLightningDealCalData($request);
+        if($data && $data['STATUS'] == 'V' && (strtotime($data['EDATE']) < strtotime(date('Y-m-d H:i:s'))))
+            return false;
+        if($data){
+            $loginData = $request->getAttribute("loginData");
+            $profileid = $loginData["PROFILEID"];
+            if($data['STATUS'] == 'V')
+                $endTime = $data['EDATE'];
+            else
+                $endTime = $this->activateLightningDealForProfile($profileid);
+            $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
+            $memHandler = new MembershipHandler();
+            $memHandler->clearMembershipCacheForProfile($profileid); 
+            MyJsMobileAppV1::deleteMyJsCache(array($profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
+        }
+        return $data;
+    }
 }
 ?>

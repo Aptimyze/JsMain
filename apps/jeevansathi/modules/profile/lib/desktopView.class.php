@@ -97,6 +97,8 @@ class desktopView extends DetailedViewApi
           $szSectValue = $objProfile->getDecoratedSect();
           $szCasteLabel = 'Sect';
           $szSectLabel  = 'Caste';
+	  $relinfo = (array)$objProfile->getReligionInfo();
+	  $jamaat = $relinfo['JAMAAT'];
         break;
         case 3://Christain
           $szCasteValue = $objProfile->getDecoratedCaste();
@@ -123,16 +125,28 @@ class desktopView extends DetailedViewApi
         $this->m_arrOut['edit_caste'] = $szCasteValue . ($szSectValue === null ? "" : ", " );
         $this->m_arrOut['edit_sect']  = ($szSectValue === null ? "" : $szSectValue);
       }
+	if($objProfile->getReligion()=="2")
+		$this->m_arrOut['jamaat']=($jamaat)===null?"-":$jamaat;
+	$this->m_arrOut['caste_val']=$objProfile->getCaste();
       
       //Name Work
-      $name_pdo = new incentive_NAME_OF_USER();
+      //Caching
+      $nameOfUserOb=new NameOfUser();
+      $this->m_arrOut['name'] = ApiViewConstants::getNullValueMarker();        
+      $nameOfUserArr = $nameOfUserOb->getNameData($objProfile->getPROFILEID());
+      $szName = $nameOfUserArr[$objProfile->getPROFILEID()]["NAME"];
+      if(strlen($szName)) {
+        $this->m_arrOut['name'] = $szName;
+      }
+      unset($nameOfUserOb);
+      /*$name_pdo = new incentive_NAME_OF_USER();
       $this->m_arrOut['name'] = ApiViewConstants::getNullValueMarker();
       
       $szName = $name_pdo->getName($objProfile->getPROFILEID());
       if(strlen($szName)) {
         $this->m_arrOut['name'] = $szName;
       }
-      unset($name_pdo);
+      unset($name_pdo);*/
       
       include_once (sfConfig::get("sf_web_dir") . "/profile/ntimes_function.php");
       //In case of viewing own page, to see the count of profile visitors.

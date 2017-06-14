@@ -47,11 +47,16 @@ class ProcessHandler
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
                               break;
       case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
       case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
-                              ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
+                          // the variable onlylogging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
+
+                              if($body['onlyLogging']==0)
+                                  ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus);
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;
@@ -292,12 +297,21 @@ try{
  }
  public function updateSeenProfile($typeInfo,$body)
  {
-	$fromSym=$body['fromSym'];
-	$type = $body['type'];
-	$mypid = $body['mypid'];
-	$updatecontact = $body['updatecontact'];
-	$profileid = $body['profileid']; 
-	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+	if(array_key_exists("UPDATE_SEEN",$body))
+	{
+		$updateSeenData = $body["UPDATE_SEEN"];
+		$fromSym=$updateSeenData['fromSym'];
+		$type = $updateSeenData['type'];
+		$mypid = $updateSeenData['mypid'];
+		$updatecontact = $updateSeenData['updatecontact'];
+		$profileid = $updateSeenData['profileid']; 
+		include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+	}
+	if(array_key_exists("VIEW_LOG",$body))
+	{
+		$viewLogData = $body['VIEW_LOG'];
+		$this->updateViewLogTable($viewLogData,$viewLogData['triggerOrNot']);
+	}
  }
  public function updateCriticalInfo($body)
  {
@@ -478,12 +492,14 @@ public function logDiscount($body,$type){
         $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
         $seperator = "#";
         $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+
         if($preSetCache){
             $explodedVal = explode($seperator,$preSetCache);
             $notificationParams["COUNT"] = $explodedVal[0];
             $notificationParams["OTHER_PROFILE"] = $explodedVal[1];
             $notificationParams["OTHER_PROFILE_URL"] = $explodedVal[2];
             $lastLoginDt = $explodedVal[3];
+            $notificationParams["OTHER_PROFILE_IOS_URL"] = $explodedVal[4];
             $notificationKey = "MATCHALERT";
             $condition = $instantNotificationObj->notificationObj->checkNotificationOnLastLogin($notificationKey,$lastLoginDt);
             if($condition){

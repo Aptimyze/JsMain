@@ -38,13 +38,6 @@ class postEOIv2Action extends sfAction
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
 
-						/** caching unset **/
-						$request->setParameter("caching",1);
-						$ifApiCached = SearchUtility::cachedSearchApi('del',$request,$this->loginProfile->getPROFILEID());
-						$ifApiCached = SearchUtility::cachedSearchApi('del',$request,$this->Profile->getPROFILEID());
-						$ifApiCached = InboxUtility::cachedInboxApi('del',$request,$this->Profile->getPROFILEID());
-						$ifApiCached = InboxUtility::cachedInboxApi('del',$request,$this->loginProfile->getPROFILEID());
-						/** caching unset **/
                                       
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
@@ -145,7 +138,8 @@ class postEOIv2Action extends sfAction
 				{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top']; 
+					$MembershipMessage = $data2['hamburger_message']['top'];
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					if($this->contactHandlerObj->getPageSource()=="search")
 					{
 						$responseArray["errmsglabel"]= "Upgrade to send personalized messages or initiate chat";
@@ -250,7 +244,8 @@ class postEOIv2Action extends sfAction
 				{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top']; 
+					$MembershipMessage = $data2['hamburger_message']['top'];                     
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";

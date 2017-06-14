@@ -148,6 +148,71 @@ function validateAndSend(){
         <!--end:layer 1-->
         </div> 
 </div>
+
+~elseif $layerId == '19'`
+<script>    
+ function showTimerForLightningCal(lightningCALTime) {
+ if(!lightningCALTime) return;
+ var timerSeconds=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerMinutes=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerHrs=lightningCALTime;
+ calTimerTime=new Date();
+ calTimerTime.setHours(timerHrs);
+ calTimerTime.setMinutes(timerMinutes);
+ calTimerTime.setSeconds(timerSeconds);
+ calTimer=setInterval('updateCalTimer()',1000);
+ }
+ 
+ 
+ function updateCalTimer(){
+   var h = calTimerTime.getHours();
+   var s = calTimerTime.getSeconds();
+   var m = calTimerTime.getMinutes();
+   if (!m && !s && !h) {
+      clearInterval(calTimer);
+      }
+   
+     calTimerTime.setSeconds(s-1);
+     h=h+memTimerExtraDays*24;
+     
+     m = formatTime(m);
+     s = formatTime(s);
+     h = formatTime(h);
+	
+ 
+   $("#calExpiryMnts").html(m);
+   $("#calExpirySec").html(s);
+     }
+</script>
+    
+    
+  <div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;"> 
+    <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+        <div class="disp-cell vmid fontlig color11">
+            <div class="wid470 mauto">
+                <p class="f24">~$titleText`</p>
+                <p class="f28 pt20">~$discountPercentage`</p>
+        <p class="f24">~$discountSubtitle`</p>
+                <p class="pt20 f20">~$startDate`&nbsp<span class="txtstr color12"><span >~$symbol`</span>~$oldPrice`&nbsp</span>  <span>~$symbol`</span>~$newPrice`&nbsp</p>
+                <p class="f16 pt20">Hurry! Offer valid for</p>
+                <ul class="time">
+                  <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
+                    <li class=""><span id = "calExpirySec">00</span><span>S</span></li>
+                </ul>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+        <div class="clearfix">
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
+        </div>
+</div>
+
 ~elseif $layerId == '18'`
  
  <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
@@ -364,6 +429,39 @@ function validateAndSend(){
  document.head.appendChild(setscript);
  
    </script>
+~elseif $layerId == '14'`
+<script>
+var altEmail = '~$altEmail`';</script>
+
+<div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
+        <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+            <div class="disp-cell vmid fontlig color11">
+                <div class="wid470 mauto">
+                    <p class="f28">~$titleText`</p>
+                    <p class="f14 pt25 lh22">~$contentText`</p>
+                </div>            
+            </div>
+        </div>
+        <div class="clearfix">
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="sendAltVerifyMail()" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
+        </div>
+    </div>
+            <div id="alternateEmailSentLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 80px;margin-top: 40px">
+        <div class="bordrBtmGrey" style="height: 35px">
+        <div class="phnvp4 f17 fontreg color11 phnvbdr4" style="margin-top: -38px;margin-left: 5%">Email Verification</div>
+        </div>
+        <div class="color11">
+        <!--start:div-->
+        <div class="phnvwid3 mauto pt40 pb27 fontlig">
+        <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
+        </div>
+        <button id='CALButtonB4'  onclick="criticalLayerButtonsAction('~$action1`','B1')" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
+        </div>
+        <!--end:layer 1-->
+        </div>
+
+
 ~elseif $layerId != '9'`
 <div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
         <div class="calhgt1 calbg1 fullwid disp-tbl txtc">

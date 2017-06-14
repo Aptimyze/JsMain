@@ -924,9 +924,9 @@ class ErrorHandler
 	{
 		$error ="";
 		$ignoreObj = new IgnoredProfiles();
-		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID()))
+		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
 			$error = Messages::getMessage(Messages::I_IGNORE_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewed()->getUSERNAME()));
-		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID()))
+		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
 			$error = Messages::getMessage(Messages::IGNORED_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewer()->getUSERNAME()));
 		return $error;
 	}

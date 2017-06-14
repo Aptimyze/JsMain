@@ -3,13 +3,12 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
 	}
-        if (window.location.protocol == "https:")
-            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 	</script>
 	~include_http_metas`
 	~include_metas`

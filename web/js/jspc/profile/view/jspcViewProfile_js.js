@@ -181,7 +181,7 @@ function closeWeTalkForYou(){
         $.myObj.ajax({
           showError: false, 
           method: "POST",
-          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum,
+          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum+'&sameGender='+sameGender,
           data : ({dataType:"json"}),
           async:true,
           timeout:20000,
@@ -460,7 +460,9 @@ function showReportAbuseLayer(){
 	var jObject=$("#reportAbuse-layer");
 	jObject.find('.js-username').html(finalResponse.about.username);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
-
+  $("#reportAbuseList").mCustomScrollbar({
+ theme: "light",
+});
 $('.js-overlay').unbind();
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportAbuse-layer').fadeIn(300,"linear",function(){})}); 
 closeReportAbuseLayer=function() {
@@ -583,24 +585,38 @@ jQuery.myObj.ajax(ajaxConfig);
 
 function reportAbuse(ele){
 var reason='';
-var layerObj=$("#reportAbuse-layer");
-if(layerObj.find("#otherOptionBtn").is(':checked')) {
-	var reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
-	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
-}
+var mainReason = '';
+var layerObj=$("#reportAbuse-layer");  
+var isValid = false;
+    layerObj.find("#reportAbuseList li").each(function(){
+      if($(this).hasClass('selected')) { 
+        mainReason = $(this).find(".reason").html();
+        if($(this).hasClass("openBox")) {
+         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val();
+        if(!reason || reason.length < 25) {
+            $(this).find('#errorText').removeClass('disp-none');
+            isValid = true;
+        }
+      }
+    }
+    })
+    if(isValid == true) {
+      return;
+    }
 $('.js-overlay').unbind('click');
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
 var layerObj=$("#reportAbuse-layer");
 var ajaxConfig=new Object();
 if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
-if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
-if(!reason||!selfUname || !otherUser) return;
+if(!mainReason) mainReason=layerObj.find(".selected").eq(0).text().trim();
+if(!mainReason||!selfUname || !otherUser) return;
 showCommonLoader();
 var feed={};
 reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
+feed.mainReason=mainReason;
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';

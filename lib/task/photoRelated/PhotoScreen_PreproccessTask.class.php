@@ -110,9 +110,8 @@ EOF;
 	{
 		
 		  if(CommonUtility::hideFeaturesForUptime())
-                        successfullDie();
-
-		$LockingService = new LockingService;
+                      successfullDie();
+        $LockingService = new LockingService;
 		ini_set('memory_limit','1024M');	
 		ini_set("gd.jpeg_ignore_warning", 1);
 		error_reporting(E_ALL & ~E_NOTICE);
@@ -243,8 +242,7 @@ EOF;
 
 		$this->szMainPicUrl_ForDb = $this->m_objNonScreenedPicture->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR['MainPicUrl'],$iPicId,$iProfileId,$szType);
 		$bStatus  = $this->m_objPicFunction->moveImage($szMainPicUrls,$this->szOriginalPicUrl_ForActualStorage);
-		chmod($szMainPicUrls,0777);
-		chmod($this->szOriginalPicUrl_ForActualStorage,0777);
+		
 		if($this->m_bDebug)
 		{
 			$this->logSection("MoveOriginalPic : Old MainPicUrl : ",$szMainPicUrls);
@@ -345,7 +343,7 @@ EOF;
 		{
 			$image = imagecreatefromjpeg($szPath);
 		}
-		chmod($szPath,0777);	
+		
 		return $image;
 	}
 

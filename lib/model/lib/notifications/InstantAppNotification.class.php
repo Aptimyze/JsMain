@@ -39,7 +39,7 @@ class InstantAppNotification
   // Function to send Notification
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$extraParams=array(), $rabbitMq='')
   {
-    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 9){
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 10){
         return;
     }
 
@@ -86,6 +86,7 @@ class InstantAppNotification
 				$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
 			}
 			$notificationData = $notificationDetails[0];
+
 			if(is_array($notificationData))
 			{
 				$profileDetails[$selfProfile]['FREQUENCY']=$notificationData['FREQUENCY'];
@@ -106,10 +107,10 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
 				$profileDetails[$selfProfile]['MSG_ID']=$notificationData['MSG_ID'];
 
-                          	if($notificationData['PHOTO_URL']=="O")
-                          	{
-	                               	$profileObj = new Profile('',$otherProfile);
-	                               	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
+                if($notificationData['PHOTO_URL']=="O")
+                {
+                   	$profileObj = new Profile('',$otherProfile);
+                   	$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
 					$havePhoto =$profileObj->getHAVEPHOTO();
 					if($havePhoto=='Y')
 					{
@@ -118,13 +119,19 @@ class InstantAppNotification
 						if($profilePicObj)
 							$thumbNail = $profilePicObj->getThumbailUrl();
 					}
-                          	}
-                          	if($thumbNail)
+                }
+                if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	elseif($notificationData['PHOTO_URL']!='')
+                else if($notificationData['PHOTO_URL']!='')
 					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
 				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
+				if($notificationData['IOS_PHOTO_URL']!=''){
+					$profileDetails[$selfProfile]['IOS_PHOTO_URL'] =$notificationData['IOS_PHOTO_URL'];
+				}
+				else{
+					$profileDetails[$selfProfile]['IOS_PHOTO_URL'] ="D";
+				}
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])
 					$profileDetails[$selfProfile]['PROFILE_CHECKSUM']=$notificationData['OTHER_PROFILE_CHECKSUM'];
@@ -139,6 +146,7 @@ class InstantAppNotification
                     			if($notificationData['NOTIFICATION_KEY'] == 'MATCHALERT'){
                         			$profileDetails[$selfProfile]['COUNT']=$extraParams["COUNT"];
                         			$profileDetails[$selfProfile]['PHOTO_URL']=$extraParams["OTHER_PROFILE_URL"];
+                        			$profileDetails[$selfProfile]['IOS_PHOTO_URL']=$extraParams["OTHER_PROFILE_IOS_URL"];
                     			}	
 					$profileDetails[$selfProfile]['SENT']='P';
 					$scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
@@ -149,6 +157,7 @@ class InstantAppNotification
 				if($notificationData['NOTIFICATION_KEY']=='CSV_UPLOAD'){
 					$profileDetails[$selfProfile]['IMG_URL']=$exUrl;
 				}
+				
 				$notificationSenderObj->sendNotifications($profileDetails,$regIds);
 			}
 		}
@@ -211,7 +220,7 @@ class InstantAppNotification
 
   public function sendMatchAlertNotification($notificationParams=array())
   {
-    $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"]));
+    $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"],"OTHER_PROFILE_IOS_URL"=>$notificationParams["OTHER_PROFILE_IOS_URL"]));
   }
 
 }

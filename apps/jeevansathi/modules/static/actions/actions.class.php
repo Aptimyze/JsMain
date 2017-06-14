@@ -456,6 +456,27 @@ class staticActions extends sfActions
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
           $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
    }
+
+   if($this->layerId == 14)
+   {  
+    $profileObject = LoggedInProfile::getInstance('newjs_master');
+                        $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+    $this->altEmail = $numArray['0']['ALT_EMAIL'];
+   }
+
+    if($this->layerId==19)
+     {    
+
+            $this->discountPercentage = $request->getParameter('discountPercentage');
+            $this->discountSubtitle  = $request->getParameter('discountSubtitle');
+            $this->startDate  = $request->getParameter('startDate');
+            $this->oldPrice = $request->getParameter('oldPrice');
+            $this->newPrice = $request->getParameter('newPrice');
+            $this->time = floor($request->getParameter('time')/60);
+            $this->symbol = $request->getParameter('symbol');
+     }
+    
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -1147,8 +1168,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
-
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type","jamaat");
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);
 

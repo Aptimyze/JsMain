@@ -183,14 +183,20 @@ class SearchApiStrategyV1
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
 		$this->output["pageTitle"] = SearchTitleAndTextEnums::getTitle($params);
 		$this->output["result_count"] = SearchTitleAndTextEnums::getHeading($params);
-                $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
+        $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
+        $this->output["gaTracking"] = SearchTitleAndTextEnums::getGATracking($params);
 		$this->output["noresultmessage"] = SearchTitleAndTextEnums::getMessageResult($params);
 		$this->output["searchBasedParam"] = $params["SearchType"]?$params["SearchType"]:null;
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		
-		$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		if($request->getParameter("androidMyjsNew")==1){
+			$this->photoType= 'ProfilePic120Url';
+		}
+		else
+		{
+			$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
+		}
 		/* trac#4249 : at the end*/
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{

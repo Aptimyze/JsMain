@@ -31,7 +31,9 @@ $this->addOptions(array(
 
 	public function execute($arguments = array(), $options = array())
 	{
-		if(!sfContext::hasInstance())
+		if(!CommonUtility::runFeatureInDaytime())
+            successfullDie();
+        if(!sfContext::hasInstance())
         	sfContext::createInstance($this->configuration);
 
 		$totalScript = $arguments["totalScript"]; // total no of scripts

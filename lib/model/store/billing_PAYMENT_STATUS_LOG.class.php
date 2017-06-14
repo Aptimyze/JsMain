@@ -25,16 +25,17 @@ class billing_PAYMENT_STATUS_LOG extends TABLE{
 		}
 	}
 
-	public function insertEntry($orderid,$status,$gateway,$msg)
+	public function insertEntry($orderid,$status,$gateway,$msg,$profileid=0)
 	{
 		try
 		{
-			$sql="INSERT into billing.PAYMENT_STATUS_LOG (ORDERID,STATUS,GATEWAY,MSG,ENTRY_DT) values (:ORDERID,:STATUS,:GATEWAY,:MSG,NOW())";
+			$sql="INSERT into billing.PAYMENT_STATUS_LOG (ORDERID,STATUS,GATEWAY,MSG,ENTRY_DT,PROFILEID) values (:ORDERID,:STATUS,:GATEWAY,:MSG,NOW(),:PROFILEID)";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":ORDERID",$orderid,PDO::PARAM_STR);
 			$prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
 			$prep->bindValue(":GATEWAY",$gateway,PDO::PARAM_STR);
 			$prep->bindValue(":MSG",$msg,PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
 			$prep->execute();
 		}
 		catch(PDOException $e)

@@ -1215,6 +1215,11 @@ case 'P_OCCUPATION_GROUPING':
 					$field->setFieldType("text");
 					$field->setConstraintClass("mstatus_proof");
 					$field->setTableName("CRITICAL_INFO_CHANGED_DOCS:DOCUMENT_PATH");
+                        case 'JAMAAT':
+					$field = new Field('','JAMAAT');
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("jamaat");
+                                        $field->setTableName("JP_MUSLIM:JAMAAT");
 				break;
 }
 

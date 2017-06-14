@@ -32,6 +32,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 		$apiResponseHandlerObj->setHttpArray($this->m_iResponseStatus);
 		$apiResponseHandlerObj->setResponseBody($this->m_arrOut);	
+		$apiResponseHandlerObj->setUserActionState(2);
 		$apiResponseHandlerObj->generateResponse();
 		
 		if($request->getParameter('INTERNAL')==1){
@@ -98,8 +99,25 @@ class ApiIgnoreProfileV1Action extends sfActions
                                         $ignoreCount--;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
 					$page["source"] = $request->getParameter("pageSource");
+                                        $page['IGNORED'] = 0;
+                                        
 					$buttonObj = new ButtonResponse($this->loginProfile,$this->ignoreProfile,$page);
-					$button = $buttonObj->getButtonArray();
+                                        if(MobileCommon::isNewMobileSite())
+                                        {
+                                            if((new NEWJS_BOOKMARKS())->isBookmarked($profileID,$ignoredProfileid))
+                                                $page['isBookmarked']=1;
+                                            else 
+                                            $page['isBookmarked']=0;
+                                            $button = $buttonObj->getNewButtonArray($page);
+                                            $tempButton = $button;
+                                            $button['buttons']=null;
+                                            $button['buttons']['primary'][0] = $tempButton['buttons'][0];
+                                            $button['buttons']['others'] = $tempButton['buttons'];
+                                            
+                                        }
+                                        else
+                                            $button = $buttonObj->getButtonArray();
+                                     //   print_r($button);print_r($button);die;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;                                     
 					if(empty($button["buttons"]))
 					{
@@ -114,7 +132,8 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
 					//changed to library call
-					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID);
+
+					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID,ignoredProfileCacheConstants::BYME);
 
 					if(!$isIgnored) {
 						$this->contactObj = new Contacts($this->loginProfile, $this->ignoreProfile);
@@ -220,7 +239,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 				}
 				case self::STATUS : 
 				{
-					$bStatus = ($ignore_Store_Obj->ifIgnored($profileID,$ignoredProfileid))?1:0;
+					$bStatus = ($ignore_Store_Obj->ifIgnored($profileID,$ignoredProfileid,ignoredProfileCacheConstants::BYME))?1:0;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array('status'=>"$bStatus");
 					break;
@@ -232,6 +251,10 @@ class ApiIgnoreProfileV1Action extends sfActions
 					return false;
 				}
 			}
+			// del myjs cache
+			SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$profileID);
+    		InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$profileID);
+					
 		}
 		else
 		{

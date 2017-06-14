@@ -1,4 +1,6 @@
 
+var calTimerTime,calTimer;
+
 $(document).ready(function() {
 
 if($("#CriticalActionlayerId").val()=='18'){
@@ -88,7 +90,13 @@ if($("#CriticalActionlayerId").val()=='18'){
 else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
-        }  
+        }
+else if($("#CriticalActionlayerId").val()=='19')
+{
+    $('body').css('background-color','#09090b');
+showTimerForLightningCal(1800);
+}
+
 else {
         $('body').css('background-color','#09090b');
         if($("#submitName").length && $("#submitName").offset().top-$("#skipBtn").offset().top-70 >0)
@@ -292,9 +300,10 @@ else {
 							}
                         });
                         var url = JSON.stringify(sendObj).split('"').join("%22");
-						 $.ajax({
+						 $.myObj.ajax({
 							url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,
 							type: 'POST',
+                            channel : 'mobile',
 							success: function(response) {
 								criticalLayerButtonsAction('','B1');
 							},
@@ -307,4 +316,74 @@ else {
             }, 500);
 
         }
+
+
+       function sendAltVerifyMail()
+       {
+                 $.ajax({
+                    url: '/api/v1/profile/sendEmailVerLink?emailType=2',
+                    headers: { 'X-Requested-By': 'jeevansathi' },       
+                    type: 'POST',
+                    success: function(response) {
+                      if(response.responseStatusCode == 1)
+                      {
+                      showError("Something went wrong");
+                      CALButtonClicked=0;
+                      return;   
+                      }
+                 
+                $("#altEmailAskVerify").hide();
+            msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                 $("#altEmailMsg").text(msg);
+                 $("#confirmationSentAltEmail").show();
+                   return; 
+                    }
+                });              
+
+                
+
+
+
+       }
+
+
+function showTimerForLightningCal(lightningCALTime) {
+if(!lightningCALTime) return;
+var expiryTime=new Date(lightningCALTime);
+var timerSeconds=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerMinutes=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerHrs=lightningCALTime;
+calTimerTime=new Date();
+calTimerTime.setHours(timerHrs);
+calTimerTime.setMinutes(timerMinutes);
+calTimerTime.setSeconds(timerSeconds);
+calTimer=setInterval('updateCalTimer()',1000);
+}
+
+
+function updateCalTimer(){
+  var h = calTimerTime.getHours();
+  var s = calTimerTime.getSeconds();
+  var m = calTimerTime.getMinutes();
+  if (!m && !s && !h) {
+     clearInterval(calTimer);
+     }
+  
+    calTimerTime.setSeconds(s-1);
+    
+    
+    m = formatTime(m);
+    s = formatTime(s);
+    h = formatTime(h);
+//  $("#calExpiryHrs").html(h);
+  $("#calExpiryMnts").html(m);
+  $("#calExpirySec").html(s);
+    }
+
+    function formatTime(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
 

@@ -8,7 +8,7 @@
 <body>
 <table border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #8c8983; max-width:600px;">
   <tr>
-    <td width="600" align="center" bgcolor="#151106"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/banner.jpg" width="100%" alt="Jeevansathi.com Jeevansathi Exclusive – more personalized,
+    <td width="600" align="center" bgcolor="#151106"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/banner.jpg" width="100%" alt="Jeevansathi.com Jeevansathi Exclusive – more personalized,
 more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ffffff; font-family:Tahoma, Geneva; font-size:37px;" ></td>
   </tr>
   <tr>
@@ -54,27 +54,27 @@ more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ff
             <td></td>
             <td><table border="0" cellspacing="0" cellpadding="0" style="max-width:502px;">
               <tr>
-                <td width="24" valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td width="24" valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
                 <td width="454" style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Understand your profile and search requirements in detail</td>
                 <td width="24"></td>
               </tr>
               <tr>
-                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="5" border="0" align="left" /></td>
+                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="5" border="0" align="left" /></td>
                 <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Search profiles and send them to you discreetly, through the mode of your convenience</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
                 <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Discuss the profiles sent with you while constantly refining the criteria listed</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
                 <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Further call prospects to gauge their interest levels in your profile</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
                 <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Setup meetings between you and the prospects to discuss things further</td>
                 <td></td>
               </tr>

@@ -1,8 +1,10 @@
 <!--start:header-->
 <div class="fullwid bg10 pad18">
   <div class="posrel txtc">
+    <h1>
     <div class="color5 fontthin f19">~$levelObj->getH1Tag()`<span id="brideGroom"> Matrimonial</span></div>
     <a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide="2"><i class="mainsp comH_close posabs comH_pos1"></i></a></div>
+    </h1>
 </div>
 <!--end:header--> 
 <!--start:list div-->

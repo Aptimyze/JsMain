@@ -23,7 +23,7 @@ var editValArr={};
 editValArr["YOURINFO"]=new Array("YOURINFO");
 editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS","RELATION");
 editValArr["critical"] = new Array("DTOFBIRTH","MSTATUS","MSTATUS_PROOF");
-editValArr["Ethnicity"]=new Array("RELIGION","CASTE","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
+editValArr["Ethnicity"]=new Array("RELIGION","CASTE","JAMAAT","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
 editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
 editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
 editValArr["SpecialCases"]=new Array("HANDICAPPED","NATURE_HANDICAP","THALASSEMIA","HIV");
@@ -218,9 +218,10 @@ function appendData(obj) {
                 var url = JSON.stringify(sendObj).split('"').join("%22");
 			closeDppCal();
 	      showLoader();
-                $.ajax({
+                $.myObj.ajax({
                     url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData=' + url,
                     type: 'POST',
+                    channel : 'mobile',
                     success: function(response) {
 			      showLoader();
 			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";

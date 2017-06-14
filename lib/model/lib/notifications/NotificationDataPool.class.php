@@ -381,7 +381,9 @@ class NotificationDataPool
   }
   
   
-    public function getNotificationImage($icon, $iconProfileid){
+    public function getNotificationImage($icon, $iconProfileid,$notificationChannel=""){
+        
+        $iosIcon = $icon;
         if($icon == 'P' && $iconProfileid){
             $profile=new Profile();
             $profile->getDetail($iconProfileid,"PROFILEID");
@@ -393,23 +395,41 @@ class NotificationDataPool
                 $profilePicObj = $pictureServiceObj->getProfilePic();
                 if($profilePicObj){
                     $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$this->gender,true);
+                    if($notificationChannel == "APP_NOTIFICATION"){
+                        $iosPhotoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic450Url(),'ProfilePic450Url','',$this->gender,true);
+                    }
+                    else{
+                        $iosPhotoArray = null;
+                    }
                     if($photoArray[label] != '' || $photoArray["url"] == null)
                        $icon = 'D';
                     else
                        $icon = $photoArray['url'];
+                    if(!is_array($iosPhotoArray) || $iosPhotoArray[label] != '' || $iosPhotoArray["url"] == null)
+                       $iosIcon = 'D';
+                    else
+                       $iosIcon = $iosPhotoArray['url'];
                 }
                 else{
                     $icon = 'D';
+                    $iosIcon = 'D';
                 }
             }
             else{
                 $icon = 'D';
+                $iosIcon = 'D';
             }
         }
         else{
             $icon = 'D';
+            $iosIcon = 'D';
         }
-        return $icon;
+        if($notificationChannel == "APP_NOTIFICATION"){
+            return array("AND"=>$icon,"IOS"=>$iosIcon);
+        }
+        else{
+            return $icon;
+        }
     }
     
     public function getInterestReceivedForDuration($profileid, $stDate, $endDate){
@@ -417,8 +437,10 @@ class NotificationDataPool
 		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
         $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
         //Remove blocked profiles. Those that have been blocked by the sender
-        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
-		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        //$ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		//$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        $ignoreProfileObj = new IgnoredProfiles("newjs_slave");
+        $ignoredProfiles = $ignoreProfileObj->ifProfilesIgnored($data["IGNORED_STRING"],$data['SELF']);
         if($ignoredProfiles){
             foreach($ignoredProfiles as $key => $val){
                 unset($data['SENDER'][$val]);

@@ -71,10 +71,34 @@ class Producer
 	private function serverConnection($serverId)
 	{
 		try {
+			$startLogTime = microtime(true);
 			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
+			$endLogTime = microtime(true);
+
+			if(MQ::$logConnectionTime == 1){
+				$diff = $endLogTime-$startLogTime;
+				$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
+				if(file_exists($errorLogPath)==false)
+	      			exec("touch"." ".$logPath,$output);
+				error_log(round($diff,4)."\n",3,$logPath);
+			}
 			$this->setRabbitMQServerConnected(1);
 			return true;
 		} catch (Exception $e) {
+			//logging the counter for rabbitmq connection timeout in redis
+			if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
+				$memcacheObj = JsMemcache::getInstance();
+				if($memcacheObj){
+					$cachekey = "rmqtimeout_".date("Y-m-d");
+					$cacheValue = $memcacheObj->get($cachekey,null,0,0);
+					if(empty($cacheValue)==false){
+						$memcacheObj->incrCount($cachekey);
+					}
+					else{
+						$memcacheObj->set($cachekey,1,86400,0,'X');
+					}
+				}
+			}
 			return false;
 		}
 	}
@@ -140,6 +164,8 @@ class Producer
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
 			
       $this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+       			$this->channel->queue_declare(MQ::PRODUCT_METRIC_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
 			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
@@ -289,6 +315,11 @@ class Producer
         case MQ::DELAYED_MAIL_PROCESS:
           $this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min,MQ::DELAYED_INSTANT_MAIL);
           break;
+
+        case MQ::PRODUCT_METRICS:
+                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PRODUCT_METRIC_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+        break;
+ 
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

@@ -103,17 +103,20 @@ EOF;
       //checks whether rabbitmq has raised either the memory alarm or disk alarm.
       $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
+
       JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,false);
       JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,false);
       if(is_array($resultAlarm))
       {
        foreach($resultAlarm as $row)
         {          
-          if(($row->mem_limit - $row->mem_used) < MessageQueues::SAFE_LIMIT)
+          if($row->mem_used >= MessageQueues::SAFE_LIMIT)
           {
             JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
             RabbitmqHelper::sendAlert($str,"default");
+            
+            CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name,"rabbitmq");
           }
           else
           {
@@ -124,6 +127,7 @@ EOF;
           {
             JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
             $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
+            
             RabbitmqHelper::sendAlert($str,"default");
           }
           else
@@ -215,7 +219,7 @@ EOF;
   
   private function checkRestart($command){
     if($command == MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND){
-      $inactiveHours = array("00","01","02","10","11","12","13","14");
+      $inactiveHours = array("10","11","12","13","14");
       $currentHr = date("H");
       if(in_array($currentHr, $inactiveHours)){
           return false;
@@ -244,7 +248,7 @@ EOF;
     
     if($arguments["server"] == "72"){
         $this->consumerToCountMapping = array(
-                                    MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT,
+                                  MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT,
                                   MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
@@ -272,6 +276,7 @@ EOF;
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
+                                  MessageQueues::CRON_PRODUCT_METRIC_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::PRODUCT_METRIC_QUEUE_CONSUMER_COUNT,
                                     );
     }
     $this->callRabbitmqServerApi("FIRST_SERVER");

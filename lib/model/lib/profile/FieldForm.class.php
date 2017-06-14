@@ -728,6 +728,7 @@ class FieldForm extends sfForm
                         }
 			//EDIT LOG
 			$this->editLog($editLogArr);
+			$this->loggedInObj->resetReligionInfo();
 		}
 
 	  return 1;

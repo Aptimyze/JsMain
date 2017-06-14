@@ -1,6 +1,6 @@
 <?php
 	include_once("connect.inc");
-	$SITE_URL ='http://crm.jeevansathi.com';
+	$SITE_URL ='https://crm.jeevansathi.com';
 	if($from_dialer_phone=='Y')
 	{
 		if(isset($_COOKIE["CRM_LOGIN"]))

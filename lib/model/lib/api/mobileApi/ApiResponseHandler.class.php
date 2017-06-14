@@ -16,6 +16,7 @@ class ApiResponseHandler
 	private $cache_flag=true;
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
+	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
 	private $androidChat;
 	private $membershipSubscription;
@@ -76,6 +77,29 @@ class ApiResponseHandler
 	//getter for androidChatLocalStorage flag
 	public function getAndroidChatLocalStorageFlag(){
 		$this->androidChatLocalStorage = JsConstants::$androidChatNew["flushLocalStorage"];
+		/**/
+		$memcacheInstance = JsMemcache::getInstance();
+		$specificProfile = $memcacheInstance->get("flushAndChatProfiles",null,0,0);
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		if(!empty($profileObj)){
+			$pid=$profileObj->getPROFILEID();
+			unset($profileObj);
+			
+			if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
+
+				if(strpos($specificProfile, ",".$pid.",")!==false){
+					$this->androidChatLocalStorage = true;
+					$specificProfile = str_replace( ",".$pid.",",",", $specificProfile);
+					if($specificProfile==","){
+						$memcacheInstance->remove("flushAndChatProfiles");
+					}
+					else{
+						$memcacheInstance->set("flushAndChatProfiles",$specificProfile,86400,0,'X');
+					}
+				}
+			}
+		}
+		/**/
 		return $this->androidChatLocalStorage;
 	}
 
@@ -107,6 +131,8 @@ class ApiResponseHandler
 
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
+	public function setUserActionState($userActionState){$this->userActionState = $userActionState;}
+	public function getUserActionState(){return $this->userActionState;}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -174,6 +200,8 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+		$output["userActionState"]=$this->userActionState;
+		$output["apiTimeTracking"]=floatval((microtime(true)-sfContext::getInstance()->getRequest()->getParameter("startScriptTime")));
 
 		//android chat on/off flag
 		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");

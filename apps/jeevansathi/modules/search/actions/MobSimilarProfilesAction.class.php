@@ -55,8 +55,9 @@ class MobSimilarProfilesAction extends sfActions
                 
                 $this->firstResponse=$jsonResponse;
 		$ResponseArr = json_decode($jsonResponse,true);
-                $dateHourToAppend = date('Y-m-d-H', time());
-                 JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT",$dateHourToAppend."_".MobileCommon::getChannel(),$ResponseArr["no_of_results"]);
+                /*$dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
+                $noOfResultsToStore = min($ResponseArr["no_of_results"],25);
+                JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);*/
 		 if($ResponseArr["no_of_results"]==0 && $request->getParameter("fromViewSimilarActionMobile")){
                         $url=JsConstants::$siteUrl.'/myjs/jsmsPerform';
                         header('Location: '.$url);die;

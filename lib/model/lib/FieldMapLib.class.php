@@ -215,7 +215,7 @@ case "solr_clusters":
 "24"=>"HAVEPHOTO",
 "25"=>"HAVECHILD",
 "26"=>"STATE",
-"27"=>"CITY_INDIA",
+"27"=>"CITY_RES",
 "28"=>"COUNTRY_RES",
 "29"=>"PROFILE_ADDED",
 "30"=>"MATCHALERTS_DATE_CLUSTER",
@@ -10113,6 +10113,16 @@ break;
                 //$arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","PU01","PU10","OR01");
                 $arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","UP47","MH12","MH28");
                 break;
+
+case "jamaat":
+
+    $arr=array(
+"1" => "Ahle Hadees",
+"2" => "Barelvi",
+"3" => "Deobandi",
+"4" => "Sufi",
+"5" => "Tablighi Jamaat"
+);
 default:
 
 				break;

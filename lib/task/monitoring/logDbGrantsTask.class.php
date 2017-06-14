@@ -28,20 +28,29 @@ EOF;
                                 if ($res) {
                                         while ($row = @mysql_fetch_assoc($res)) {
                                                 $arrayValue = array_values($row);
-                                                $arrayValue = explode("TO",$arrayValue[0]);
-                                                $serverArray[$serverName][] = $arrayValue[0];
+                                                $arrayValue = explode("TO",$arrayValue[0]);                                                
+                                                $grantValue = explode("ON",$arrayValue[0]);
+                                                $onTable = explode(".",$grantValue[1]);
+                                                $serverArray[$serverName]["grantStr"][] = $grantValue[0];
+                                                $serverArray[$serverName]["grantVal"][] = trim(trim($onTable[0]),'`')." ".trim(trim($onTable[1]),'`');
                                         }
+                                        asort($serverArray[$serverName]["grantVal"]);
                                 }
                                 unset($db);
                         }
                 }
                 ksort($serverArray);
-                $fileName = sfConfig::get("sf_upload_dir") . "/SearchLogs/dbGrants".date("Ymd").".txt";
                 $grantStr = "";
                 foreach($serverArray as $key=>$grantStringArr){
-                        $grantString = implode(" \n ",$grantStringArr);
+                        $grantString = array();
+                        foreach($grantStringArr["grantVal"] as $ky=>$str1){
+                                $str1 = str_replace(" ",".",$str1);
+                                $grantString[] =  $serverArray[$key]["grantStr"][$ky]." ON ".$str1;
+                        }
+                        $grantString = implode(" \n ",$grantString);
                         $grantStr .= $key.":: \n ".$grantString."\n\n";
                 }
+                $fileName = sfConfig::get("sf_upload_dir") . "/SearchLogs/dbGrants".date("Ymd").".txt";
                 file_put_contents($fileName,$grantStr);
         }
 

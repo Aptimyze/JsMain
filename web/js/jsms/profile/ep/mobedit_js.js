@@ -14,7 +14,7 @@ var hamburgerObj={};
 var overlayObj={};
 var NOT_FILLED_IN="Not filled in";
 var outerMessageContact= {'':'Show to all','Y':'Show to all','N':'Hidden','C':'Show on interest'};
-
+var selectedListValue;
 
 	function overlaySet(){
             
@@ -254,6 +254,7 @@ function SaveSub(json,attr)
 	var isValid=true;
 	var updatedJson="";
 	var isValidStateCity;
+	var isValidJamaat=true;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
@@ -263,8 +264,11 @@ function SaveSub(json,attr)
 	}
 	else
 		isValidStateCity = true;
-		
-	if(isValid && isValidStateCity){
+	if(validatorFormId=="Ethnicity")
+	{
+		isValidJamaat = jamaatRequired(key);
+	}
+	if(isValid && isValidStateCity && isValidJamaat){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{
@@ -498,8 +502,6 @@ function UpdateOverlayTags(string,json,indexPos)
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
-                
-		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
                 if(json.staticData != ""){
@@ -560,6 +562,7 @@ function UpdateOverlayTags(string,json,indexPos)
             		if ( OnClickArray[key].key == showSettingText)
             		{
             			string=string.replace(/\{\{contactPrivacySettingText\}\}/g,outerMessageContact[OnClickArray[key].value]);
+            			selectedListValue = OnClickArray[key].value;
             		}
             	}
             }
@@ -638,7 +641,6 @@ function UpdateOverlayTags(string,json,indexPos)
 			}
 		}
 		else{
-			string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 			textInputOverlay=$("#textInputOverlay").html();
 			textInputOverlay=textInputOverlay.replace(/json_key/g,json.key);
 			textInputOverlay=textInputOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
@@ -1445,7 +1447,6 @@ function onHoroscopeButtonClick()
 function setContactOverlayClick()
 {
 	var clickedId;
-	var selectedListValue;
 
 	$(".contact_icon").each(function(index, element) {
         $(this).on("click", function(){

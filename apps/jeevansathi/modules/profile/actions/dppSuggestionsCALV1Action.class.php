@@ -37,6 +37,7 @@ class dppSuggestionsCALV1Action extends sfActions
 			
 		//getDppDataArr is used to format the data in the required format.
 		$dppDataArr = $this->getDppDataArr($decodedData);		
+		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loginProfile->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -54,7 +55,7 @@ class dppSuggestionsCALV1Action extends sfActions
 					foreach($val as $key1=>$val1)
 					{									
 						$type = $val["type"];				
-						if($key1 == "data")
+						if($key1 == "data" && $val1[0] != "DM")
 						{	
 							$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
 						}					
@@ -63,7 +64,6 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 
-		
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);									
@@ -73,6 +73,27 @@ class dppSuggestionsCALV1Action extends sfActions
 			$finalArr = $this->getFormattedArrForMobileSite($finalArr);
 		}
 		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;				
+                if(MobileCommon::isApp()=="A")
+                {
+			$haveData = false;
+			foreach($finalArr['dppData'] as $k=>$v)
+			{
+				if(array_key_exists("data",$v))
+				{
+					$haveData = true;
+					break;
+				}
+			}
+			if($haveData == false)
+				unset($finalArr);
+                        $finalArr1['dppSuggObject']=$finalArr;
+                        unset($finalArr);
+                        $finalArr = $finalArr1;
+                        unset($finalArr1);
+                        $finalArr['BUTTON1_URL_ANDROID']="/common/criticalActionLayerTracking?button=B1";
+                        $finalArr['BUTTON2_URL_ANDROID']="/common/criticalActionLayerTracking?&button=B2";
+
+                }
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

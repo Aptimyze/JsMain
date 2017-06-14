@@ -456,7 +456,7 @@ class Jpartner
 			$paramArray["LHEIGHT"]=$this->LHEIGHT;
 			$paramArray["HHEIGHT"]=$this->HHEIGHT;
 			$paramArray["PARTNER_CITYRES"]=$this->PARTNER_CITYRES;
-                        $paramArray["CITY_INDIA"]=$this->CITY_INDIA;
+                       // $paramArray["CITY_INDIA"]=$this->CITY_INDIA;
 			$paramArray["PARTNER_COUNTRYRES"]=$this->PARTNER_COUNTRYRES;
 			$paramArray["PARTNER_MSTATUS"]=$this->PARTNER_MSTATUS;
 			$paramArray["LINCOME"]=$this->LINCOME;
@@ -652,8 +652,7 @@ class Jpartner
 					$http_msg=print_r($_SERVER,true);
 					mail("lavesh.rawat@jeevansathi.com,neha.verma@jeevansathi.com,nehaverma.dce@gmail.com,lavesh.rawat@gmail.com","Gender Same in Jpartner from Insert","$this->PROFILEID,DPP :$this->DPP:$http_msg");
 				}
-
-				$sql="INSERT INTO $this->table (PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,NHANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,STATE,CITY_INDIA,OCCUPATION_GROUPING) VALUES('$this->PROFILEID','$this->GENDER','$this->CHILDREN','$this->LAGE' ,'$this->HAGE' , '$this->LHEIGHT' , '$this->HHEIGHT' , \"$this->HANDICAPPED\" , \"$this->NHANDICAPPED\", '$this->DPP' , \"$this->CASTE_MTONGUE\" ,\"$this->PARTNER_BTYPE\" ,\"$this->PARTNER_CASTE\" ,\"$this->PARTNER_CITYRES\" ,\"$this->PARTNER_COUNTRYRES\" , \"$this->PARTNER_DIET\",\"$this->PARTNER_DRINK\" ,\"$this->PARTNER_ELEVEL_NEW\" , \"$this->PARTNER_INCOME\" , \"$this->PARTNER_MANGLIK\",\"$this->PARTNER_MSTATUS\" ,\"$this->PARTNER_MTONGUE\" , \"$this->PARTNER_NRI_COSMO\",\"$this->PARTNER_OCC\" ,\"$this->PARTNER_RELATION\",\"$this->PARTNER_RES_STATUS\",\"$this->PARTNER_SMOKE\",\"$this->PARTNER_COMP\",\"$this->PARTNER_RELIGION\",\"$this->PARTNER_NAKSHATRA\",now(),\"$this->LINCOME\",\"$this->HINCOME\",\"$this->LINCOME_DOL\",\"$this->HINCOME_DOL\",\"$this->STATE\",\"$this->CITY_INDIA\",\"$this->OCCUPATION_GROUPING\")";	
+				$sql="INSERT INTO $this->table (PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,NHANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,STATE,OCCUPATION_GROUPING) VALUES('$this->PROFILEID','$this->GENDER','$this->CHILDREN','$this->LAGE' ,'$this->HAGE' , '$this->LHEIGHT' , '$this->HHEIGHT' , \"$this->HANDICAPPED\" , \"$this->NHANDICAPPED\", '$this->DPP' , \"$this->CASTE_MTONGUE\" ,\"$this->PARTNER_BTYPE\" ,\"$this->PARTNER_CASTE\" ,\"$this->PARTNER_CITYRES\" ,\"$this->PARTNER_COUNTRYRES\" , \"$this->PARTNER_DIET\",\"$this->PARTNER_DRINK\" ,\"$this->PARTNER_ELEVEL_NEW\" , \"$this->PARTNER_INCOME\" , \"$this->PARTNER_MANGLIK\",\"$this->PARTNER_MSTATUS\" ,\"$this->PARTNER_MTONGUE\" , \"$this->PARTNER_NRI_COSMO\",\"$this->PARTNER_OCC\" ,\"$this->PARTNER_RELATION\",\"$this->PARTNER_RES_STATUS\",\"$this->PARTNER_SMOKE\",\"$this->PARTNER_COMP\",\"$this->PARTNER_RELIGION\",\"$this->PARTNER_NAKSHATRA\",now(),\"$this->LINCOME\",\"$this->HINCOME\",\"$this->LINCOME_DOL\",\"$this->HINCOME_DOL\",\"$this->STATE\",\"$this->OCCUPATION_GROUPING\")";	
 				$mysqlObj->executeQuery($sql,$myDb);
 				$this->partnerProfileUpdated=1;
 			}
@@ -669,7 +668,7 @@ class Jpartner
 					$http_msg=print_r($_SERVER,true);
 					mail("lavesh.rawat@jeevansathi.com,neha.verma@jeevansathi.com,nehaverma.dce@gmail.com,lavesh.rawat@gmail.com","Gender Same in Jpartner from Update","$this->PROFILEID,DPP :$this->DPP:$http_msg");
 				}                
-				$sql="UPDATE $this->table SET GENDER='$this->GENDER' , CHILDREN=\"$this->CHILDREN\" , LAGE='$this->LAGE' , HAGE='$this->HAGE' , LHEIGHT='$this->LHEIGHT' , HHEIGHT='$this->HHEIGHT' , HANDICAPPED=\"$this->HANDICAPPED\" , NHANDICAPPED=\"$this->NHANDICAPPED\", DPP='$this->DPP' , CASTE_MTONGUE=\"$this->CASTE_MTONGUE\" , PARTNER_BTYPE=\"$this->PARTNER_BTYPE\" , PARTNER_CASTE=\"$this->PARTNER_CASTE\" , PARTNER_CITYRES=\"$this->PARTNER_CITYRES\" , PARTNER_COUNTRYRES=\"$this->PARTNER_COUNTRYRES\" , PARTNER_DIET=\"$this->PARTNER_DIET\" , PARTNER_DRINK=\"$this->PARTNER_DRINK\" ,PARTNER_ELEVEL_NEW=\"$this->PARTNER_ELEVEL_NEW\" , PARTNER_INCOME=\"$this->PARTNER_INCOME\" , PARTNER_MANGLIK=\"$this->PARTNER_MANGLIK\" , PARTNER_MSTATUS=\"$this->PARTNER_MSTATUS\" , PARTNER_MTONGUE=\"$this->PARTNER_MTONGUE\" , PARTNER_NRI_COSMO=\"$this->PARTNER_NRI_COSMO\", PARTNER_OCC=\"$this->PARTNER_OCC\" , PARTNER_RELATION=\"$this->PARTNER_RELATION\",PARTNER_RES_STATUS=\"$this->PARTNER_RES_STATUS\",PARTNER_SMOKE=\"$this->PARTNER_SMOKE\",PARTNER_COMP=\"$this->PARTNER_COMP\", PARTNER_RELIGION=\"$this->PARTNER_RELIGION\", PARTNER_NAKSHATRA=\"$this->PARTNER_NAKSHATRA\",LINCOME='$this->LINCOME',HINCOME='$this->HINCOME',LINCOME_DOL='$this->LINCOME_DOL',HINCOME_dOL='$this->HINCOME_DOL' , STATE=\"$this->STATE\", CITY_INDIA=\"$this->CITY_INDIA\", OCCUPATION_GROUPING=\"$this->OCCUPATION_GROUPING\" WHERE PROFILEID=$this->PROFILEID";
+				$sql="UPDATE $this->table SET GENDER='$this->GENDER' , CHILDREN=\"$this->CHILDREN\" , LAGE='$this->LAGE' , HAGE='$this->HAGE' , LHEIGHT='$this->LHEIGHT' , HHEIGHT='$this->HHEIGHT' , HANDICAPPED=\"$this->HANDICAPPED\" , NHANDICAPPED=\"$this->NHANDICAPPED\", DPP='$this->DPP' , CASTE_MTONGUE=\"$this->CASTE_MTONGUE\" , PARTNER_BTYPE=\"$this->PARTNER_BTYPE\" , PARTNER_CASTE=\"$this->PARTNER_CASTE\" , PARTNER_CITYRES=\"$this->PARTNER_CITYRES\" , PARTNER_COUNTRYRES=\"$this->PARTNER_COUNTRYRES\" , PARTNER_DIET=\"$this->PARTNER_DIET\" , PARTNER_DRINK=\"$this->PARTNER_DRINK\" ,PARTNER_ELEVEL_NEW=\"$this->PARTNER_ELEVEL_NEW\" , PARTNER_INCOME=\"$this->PARTNER_INCOME\" , PARTNER_MANGLIK=\"$this->PARTNER_MANGLIK\" , PARTNER_MSTATUS=\"$this->PARTNER_MSTATUS\" , PARTNER_MTONGUE=\"$this->PARTNER_MTONGUE\" , PARTNER_NRI_COSMO=\"$this->PARTNER_NRI_COSMO\", PARTNER_OCC=\"$this->PARTNER_OCC\" , PARTNER_RELATION=\"$this->PARTNER_RELATION\",PARTNER_RES_STATUS=\"$this->PARTNER_RES_STATUS\",PARTNER_SMOKE=\"$this->PARTNER_SMOKE\",PARTNER_COMP=\"$this->PARTNER_COMP\", PARTNER_RELIGION=\"$this->PARTNER_RELIGION\", PARTNER_NAKSHATRA=\"$this->PARTNER_NAKSHATRA\",LINCOME='$this->LINCOME',HINCOME='$this->HINCOME',LINCOME_DOL='$this->LINCOME_DOL',HINCOME_dOL='$this->HINCOME_DOL' , STATE=\"$this->STATE\", OCCUPATION_GROUPING=\"$this->OCCUPATION_GROUPING\" WHERE PROFILEID=$this->PROFILEID";
                 $mysqlObj->executeQuery($sql,$myDb);
 	
 				if($mysqlObj->affectedRows())
@@ -752,7 +751,7 @@ class Jpartner
 			$partner_lincome_dol = $myrow['LINCOME_DOL'];
 			$partner_hincome_dol = $myrow['HINCOME_DOL'];
             $partner_state = $myrow['STATE'];
-            $city_india = $myrow['CITY_INDIA'];
+           // $city_india = $myrow['CITY_INDIA'];
             $occupation_grouping = $myrow['OCCUPATION_GROUPING']; // CHECK
 
 		}
@@ -872,10 +871,10 @@ class Jpartner
         {
             $comments.="<br><b>"." STATE : "."</b><br>"."Changed From "."<b>".$partner_state."</b><br>"." To "."<b>".$this->STATE."</b>";
         }
-        if($city_india !=$this->CITY_INDIA)
+       /* if($city_india !=$this->CITY_INDIA)
         {
-            $comments.="<br><b>"." CITY_INDIA : "."</b><br>"."Changed From "."<b>".$city_india."</b><br>"." To "."<b>".$this->CITY_INDIA."</b>";
-        }
+            $comments.="<br><b>"." STATE : "."</b><br>"."Changed From "."<b>".$partner_state."</b><br>"." To "."<b>".$this->STATE."</b>";
+        }*/
         if($occupation_grouping !=$this->OCCUPATION_GROUPING)
         {
             $comments.="<br><b>"." OCCUPATION_GROUPING : "."</b><br>"."Changed From "."<b>".$occupation_grouping."</b><br>"." To "."<b>".$this->OCCUPATION_GROUPING."</b>";

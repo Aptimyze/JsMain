@@ -51,6 +51,11 @@ class ApiEditSubmitV1Action extends sfActions
 		{
 			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
 		}		
+                if(array_key_exists("CASTE",$this->editFieldNameArr) && in_array($this->editFieldNameArr['CASTE'],array(151,243)))
+                {
+                        $this->editFieldNameArr['JAMAAT']='';
+                }
+
 		unset($this->editFieldNameArr['STATE_RES']);
                 if($this->editFieldNameArr['DAY']!='' &&is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['MONTH']!='' && is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['YEAR'] && is_numeric($this->editFieldNameArr['YEAR']))
 		{

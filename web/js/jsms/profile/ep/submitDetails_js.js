@@ -68,11 +68,11 @@ var saveDetail=(function(){
                 });
                 var eData = {};
                 eData.editFieldArr = editFieldArr;
-        $.ajax({
+        $.myObj.ajax({
           url: fileType === 1?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
           type: 'POST',
           datatype: 'json',
-          headers: { 'X-Requested-By': 'jeevansathi' },       
+          channel:'mobile',
           cache: true,
           async: true,
           contentType: fileType === 1?false:"application/x-www-form-urlencoded",
@@ -140,10 +140,11 @@ saveDetail.prototype.submitDpp= function()
         if(this.flag==0)
         {
 			showLoader();
-        $.ajax({
+        $.myObj.ajax({
           url: "/api/v1/profile/dppsubmit",
           type: 'POST',
           datatype: 'json',
+          channel : 'mobile',
           cache: true,
           async: true,
           data: {editFieldArr : editFieldArr},

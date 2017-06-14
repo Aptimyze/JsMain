@@ -119,7 +119,12 @@ class myjsActions extends sfActions
     //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
-
+    $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
+    
+    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew"))
+      $oldMyjsApi=false;
+    else
+      $oldMyjsApi=true;
     $module = "MYJSAPP";
     $stSecondTime = microtime(TRUE);
     
@@ -206,25 +211,55 @@ class myjsActions extends sfActions
         $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
 
         $stSixthTime = microtime(TRUE);
+
         $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
         $bIsCached = true;
+      ////cal layer added by palash            
+      $stCALTime = microtime(TRUE);
+      ob_start();
+      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+      $layerData = ob_get_contents();
+      ob_end_clean();
+      if($this->bEnableProfiler) {
+        //CAL Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
+      }
+      $layerData = json_decode($layerData, true);
+
+//////////////////////////////////
+
+         //If we want to get fresh data for membership 
         
-        //MyJS is Not Cached
-        if (!$appV1DisplayJson) {
-          $bIsCached = false;
-          $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
-          $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+        
+
+        if($oldMyjsApi){
+          $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
+          $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+          $bIsCached = true;
+        
+          //MyJS is Not Cached
+          if (!$appV1DisplayJson) {
+            $bIsCached = false;
+            $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
+            $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
+            JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
+          }
         }
-        
-        //If we want to get fresh data for membership 
+        else{
+            $profileArray=$appV1obj->getProfileInfo($profileInfo);
+            if($profileArray[strtolower("MY_PROFILE")])
+              $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
+    
+            $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
+        }
         //use it wisely
         if($this->bInvalidateMemberShipCache) {
           $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
         }
         
+       
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
@@ -237,8 +272,10 @@ class myjsActions extends sfActions
       }
 
       //Bell Count
-      $stBELLTime = microtime(TRUE);
-      $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      if($oldMyjsApi){
+        $stBELLTime = microtime(TRUE);
+        $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      }
       
       if($this->bEnableProfiler) {
         //BELL Count Time taken
@@ -247,23 +284,13 @@ class myjsActions extends sfActions
       if (MobileCommon::isApp() == "I") {
         $appV1DisplayJson['membership_message'] = NULL;
       }
-
-      ////cal layer added by palash            
-      $stCALTime = microtime(TRUE);
-      ob_start();
-      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-      $layerData = ob_get_contents();
-      ob_end_clean();
-      if($this->bEnableProfiler) {
-        //CAL Time taken
-        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
-      }
-      $layerData = json_decode($layerData, true);
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
+      $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
+
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-
+      $respObj->setUserActionState(1);
       $respObj->setResponseBody($appV1DisplayJson);
     } else {
       $respObj->setHttpArray($output);
@@ -303,9 +330,11 @@ class myjsActions extends sfActions
        $chatPromoToShow = $promoObj->showPromo("chatPromo",$pid,$this->loginProfile);
         if($chatPromoToShow == true)
         {
-          $this->forward("promotions", "chatPromoJSMS");
+          $this->setModuleActionName($request,"promotions","chatPromoJSMS");
+          sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSMS");
+          die;
         }
-
+  
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -333,7 +362,7 @@ class myjsActions extends sfActions
                 
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
-           	    {
+           	    {  
            	    	$request->setAttribute('calObject',$this->apiData['calObject']);
            	    	$request->setAttribute('gender',$this->loginProfile->getGENDER());
 
@@ -342,7 +371,6 @@ class myjsActions extends sfActions
 	            }
 	            $this->apiData['gender']=$this->loginProfile->getGENDER();
               	$this->apiData['membership_message_link']=$this->getMembershipLink($this->apiData['membership_message']['pageId']);	
-
               			
 ///// block for adding desired partner option in profile completion slider in mobile
 
@@ -357,7 +385,7 @@ class myjsActions extends sfActions
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage','Y');
 
-         
+                   $this->currentTime = date('Y-m-d H:i:s');
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
@@ -384,7 +412,9 @@ class myjsActions extends sfActions
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
     {
-      $this->forward("promotions", "chatPromoJSPC");
+      $this->setModuleActionName($request,"promotions","chatPromoJSPC");
+      sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSPC");
+      die;
     }
 
 		$this->gender=$this->loginProfile->getGENDER();
@@ -443,10 +473,6 @@ class myjsActions extends sfActions
     		 $this->expirySubscription = date('d M Y', $yrdata);;
 		}
 
-		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-		$this->MembershipMessage = $data2['hamburger_message']; 
-		//PROFILE COMPLETIION 
-		$this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 		
 		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
@@ -525,16 +551,26 @@ class myjsActions extends sfActions
 		//name of user
 		$nameOfUserOb=new incentive_NAME_OF_USER();
 		$this->nameOfUser=$nameOfUserOb->getName($this->profileid);
-	
+
 //--------------- Critical Action Layer section ------------
 	    ob_start();
     	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
     	$layerData = ob_get_contents();
-    	ob_end_clean();
+    	ob_end_clean(); 
     	$layerData=json_decode($layerData,true);
+
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
+
 		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
+
+    if($this->CALayerShow == 19)
+    {
+    $this->lightningCALData = $calObject;  
+    }
 //--------------- Critical Action Layer section ends ------------
+    $data2 = $memHandlerObj->fetchHamburgerMessage($request);
+    $this->MembershipMessage = $data2['hamburger_message']; 
+    $this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
 				
 // ---------------consent message variable
 		$this->showConsentMsg=$request->getParameter('showConsentMsg');
@@ -579,7 +615,8 @@ class myjsActions extends sfActions
 			}
 			else
 				$this->videoLinkLayer='N';
-
+        
+        $this->currentTime = date('Y-m-d H:i:s');
 		//enable JPSC notifications layer depending on user earlier registered or not
        	$notificationObj = new NotificationConfigurationFunc();
         $this->showEnableNotificationsLayer = $notificationObj->showEnableNotificationLayer($this->profileid);
@@ -667,4 +704,13 @@ return $staticCardArr;
 		$respObj->generateResponse();
 		die;
 	}
+
+  private function setModuleActionName($request,$moduleName,$actionName)
+  {
+    $request->setParameter("module",$moduleName);
+    $request->setParameter("action",$actionName);
+    $request->setParameter("moduleName",$moduleName);
+    $request->setParameter("actionName",$actionName);
+  }
+
 }
