@@ -42,7 +42,7 @@ EOF;
 			$reportName= $arguments["reportType"]; // reportType
 			if(!$reportName || !$server)
 				SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com","No reportname or server given in cron:AzkabanCronsReport","Azkaban Crons Report ".date('y-m-d h:i:s'));
-			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS();
+			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS("crm_slave");
 			$db = $this->serverDb[$server];
 			$response = $azkabanExecutionFlows->getExecutionStatus($db, $this->reportType[$reportName]);
 			if(is_array($response))
