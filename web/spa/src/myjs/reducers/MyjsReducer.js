@@ -1,4 +1,3 @@
-
 const MyjsReducer = (state={
 	apiData: '',fetched:false
 },action) => {
@@ -9,7 +8,6 @@ const MyjsReducer = (state={
 			...state,
 			apiData:action.payload,
 			fetched : true
-
 		}
 		break;
 	}

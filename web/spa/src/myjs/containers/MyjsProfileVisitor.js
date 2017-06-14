@@ -1,10 +1,17 @@
 import React from "react";
 
 
-export default class ProfileVisitor extends React.Component{
+export default class MyjsProfileVisitor extends React.Component{
+  constructor(props) {
+        console.log('MyjsProfileVisitor');
+        console.log(props);
+        super();
+  }
   render(){
-    return(
-
+    if(!this.props.fetched) {
+      return <div></div>;
+    } 
+    return(      
       <div className="setWidth mt10" id="visitorPresent">
 
         <div className="pad1 bg4">

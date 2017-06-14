@@ -1074,7 +1074,7 @@ animation:opac90 2s;
 .loader{position:fixed;width:0%;height:0%;}
 .loader.simple{width:100%;height:100%;z-index:10000}
 .loader.simple.dark{opacity:.6;background:white}
-.loader.simple.dark.image{
+.loader.simple.dark.loaderimage{
 background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/loader.gif);
 background-repeat: no-repeat;
 background-position: center;
