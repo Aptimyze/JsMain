@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import TopError from "../../common/components/TopError"
 import { validateEmail } from "../../common/components/commonValidations"
 import {signin} from "../actions/LoginActions"
-import { ErrorConstant } from "../../common/constants/ErrorConstants";
+import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import { withRouter } from 'react-router';
@@ -75,14 +75,14 @@ class LoginPage extends React.Component {
         let emailVal = document.getElementById("email").value;
         let passVal = document.getElementById("password").value;
         if(emailVal.length != 0 && validateEmail(emailVal) == false) {
-            this.showError(ErrorConstant("ValidEmail"));
+            this.showError(ErrorConstantsMapping("ValidEmail"));
             document.getElementById("emailErr1").classList.remove("dn");
         } else if(emailVal.length == 0 && passVal.length == 0) {
-            this.showError(ErrorConstant("LoginDetails"));
+            this.showError(ErrorConstantsMapping("LoginDetails"));
         } else if(emailVal.length == 0) {
-            this.showError(ErrorConstant("EnterEmail"));
+            this.showError(ErrorConstantsMapping("EnterEmail"));
         } else if(passVal.length == 0) {
-	       this.showError(ErrorConstant("EnterPass"));
+	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
             this.props.doLogin(emailVal,passVal);
             this.setState ({
