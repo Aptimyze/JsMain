@@ -40,8 +40,16 @@ class showLIVETagsAction extends sfActions
                     $tagNameArr = explode("@",$value->name);    
                     if($tagNameArr[1])
                     {
-                        $tagDate = explode("_",$tagNameArr[1]);
-                        $tagTime = str_replace("-", ":", $tagDate[1]);
+                        if(strpos($tagNameArr[1],"_")!==false)
+                        {
+                            $tagDate = explode("_",$tagNameArr[1]);
+                            $tagTime = str_replace("-", ":", $tagDate[1]);
+                        }
+                        else
+                        {
+                            $tagDate = strtotime($tagNameArr[1]);                  
+                            $tagTime = date("Y-m-d H:i:s",$tagDate);
+                        }
                     }
                 }
                 elseif(strpos($value->name,"#")!==false)
