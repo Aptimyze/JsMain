@@ -265,6 +265,53 @@
             </div>
         </div>
     
+  ~elseif $calObject.LAYERID ==14`
+  <script>
+var altEmailUser = '~$altEmailUser`';
+  </script>
+
+      <div style="background-color: #09090b;"><div id = "altEmailAskVerify">
+  <div  class="posrel pad18Incomplete">
+  <div class="br50p txtc" style='height:80px;'>
+  <!-- This is the check for Photo -->
+      ~if $showPhoto eq '1'`
+  <!-- This is the check for Gender -->    
+      ~if $gender eq 'M'`   <!-- Gender equal M -->
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
+        ~else`      <!-- Gender otherwise -->
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+        ~/if`
+      ~/if`
+    </div>
+     
+  </div>
+   
+  <div class="txtc">   
+  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE` </div>
+  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
+  </div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="sendAltVerifyMail()">~$calObject.BUTTON1`</div>
+  </div>
+  <!--end:div-->
+  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc; padding-top: 12%;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
+
+  </div>
+  <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
+  <div class="fontlig">
+      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
+    <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1')"  class="pad_new app_clrw f16 txtc">OK</div>    
+    </div>
+  
+</div>
+  
+  
+  
+  </div>
+
     
     
   

@@ -318,6 +318,35 @@ else {
         }
 
 
+       function sendAltVerifyMail()
+       {
+                 $.ajax({
+                    url: '/api/v1/profile/sendEmailVerLink?emailType=2',
+                    headers: { 'X-Requested-By': 'jeevansathi' },       
+                    type: 'POST',
+                    success: function(response) {
+                      if(response.responseStatusCode == 1)
+                      {
+                      showError("Something went wrong");
+                      CALButtonClicked=0;
+                      return;   
+                      }
+                 
+                $("#altEmailAskVerify").hide();
+            msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                 $("#altEmailMsg").text(msg);
+                 $("#confirmationSentAltEmail").show();
+                   return; 
+                    }
+                });              
+
+                
+
+
+
+       }
+
+
 function showTimerForLightningCal(lightningCALTime) {
 if(!lightningCALTime) return;
 var expiryTime=new Date(lightningCALTime);
@@ -357,3 +386,4 @@ function updateCalTimer(){
     if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
 }
+
