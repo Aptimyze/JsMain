@@ -70,7 +70,7 @@
 <div id="confirmOverLayer" class="overlay_1_e page transition top_1 dn">
   <div id="PromptSectionName" class="dp">
 	<div style="position:relative" >
-    <div class="txtc pt10">
+    <div class="txtc pad-all10">
     <i id="nonEditablePic" class="mainsp phn1 dn"></i>
         <div id="TEXT1_ID" class="f14 color3 pt7 fontlig">TEXT1</div>
         <div id="TEXT2_ID" class="f14 color3 pt4 fontlig pb20">TEXT2</div>
@@ -111,7 +111,7 @@
                 <input type="file" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
         </form>
         
-                <div id="default_key" class="f17 fontthin upload-btn-jsms" value ="json_value" data=1 style="display:inline;">json_label_val</div>
+                <div id="default_key" class="f16 fontthin upload-btn-jsms" value ="json_value" data=1 style="display:inline;">json_label_val</div>
                 <div id="default_label_key" class="f17 fontthin pad2" value ="json_value" data=1 style="display:inline;" >jpg/pdf only</div>        
         
     </div>
