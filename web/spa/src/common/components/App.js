@@ -38,7 +38,7 @@ class App extends React.Component
     response = {
       'AUTHCHECKSUM' : getCookie('AUTHCHECKSUM'),
     };
-    this.props.siginFromCookie(response);
+    this.props.MyProfile.  = getCookie('AUTHCHECKSUM');
   }
 
 
@@ -54,8 +54,8 @@ class App extends React.Component
       <Router>
       <div>
       {redirectToHashUrl}
-      <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/viewProfile' component={ProfilePage} />
+      <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/login' component={LoginPage}/>
       </div>
       </Router>
@@ -65,7 +65,7 @@ class App extends React.Component
 
 const mapStateToProps = (state) => {
   return{
-   AUTHCHECKSUM: state.AUTHCHECKSUM,
+   MyProfile: state.LoginReducer.MyProfile,
  }
 }
 
