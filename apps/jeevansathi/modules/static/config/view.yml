@@ -278,3 +278,9 @@ jsmsVerificationStaticPageSuccess:
    javascripts: [jsms/common/verificationIcon_js]
    layout: jsmsMobLayout
 
+uploadDocSuccess:
+    metas:
+      title: Upload Document-Jeevansathi
+    stylesheets: [-*,jsms/login/newMobLogin_css]
+    javascripts: [-*,jsms/login/uploadDocument_js]
+    layout: jsmsMobLayout

@@ -4,17 +4,22 @@ class CriticalEditedBefore
     public function __construct()
     {
     }
-	public static function canEdit($profileid)
+	public static function canEdit($profileid,$docOnly = false)
 	{
 		$infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
-                if($infoChngObj->editedCriticalInfo($profileid) === true)
+                $data = $infoChngObj->editedCriticalInfo($profileid,$docOnly);
+                unset($infoChngObj);
+                if(!empty($data))
 		{
-                        unset($infoChngObj);
+                        if($docOnly == true){
+                                if(strstr($data["EDITED_FIELDS"], "MSTATUS")){
+                                        return true;
+                                }
+                        }
 			return false;
 		}
 		else
 		{
-                        unset($infoChngObj);
 			return true;
 		}
 	}

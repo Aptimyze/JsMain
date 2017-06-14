@@ -6,16 +6,19 @@ class newjs_CRITICAL_INFO_CHANGED extends TABLE {
                 parent::__construct($dbname);
         }
 
-        public function editedCriticalInfo($profileId) {
+        public function editedCriticalInfo($profileId,$returnData=false) {
                 try {
                         if ($profileId == "") {
                                 throw new jsException($e);
                         }
-                        $sql = "SELECT PROFILEID FROM newjs.CRITICAL_INFO_CHANGED WHERE PROFILEID=:PROFILEID";
+                        $sql = "SELECT PROFILEID,EDITED_FIELDS FROM newjs.CRITICAL_INFO_CHANGED WHERE PROFILEID=:PROFILEID";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
                         $prep->execute();
                         if ($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                                if($returnData == true){
+                                        return $result;
+                                }
                                 return true;
                         }
                         return false;

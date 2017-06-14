@@ -138,5 +138,19 @@ class CriticalInfoChangeDocUploadService
 		return $result;
 
 	}
+	public function updateStatus($pid="",$status)
+	{
+		if($pid =="")
+                        throw new jsException("No profileid passed in edit in CriticalInfoChangeDocUploadService.class.php");
+                $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
+		$result = $criticalInfoObj->updateStatus($pid,$status);
+		return $result;
+
+	}
+        public function allottProfile($dt){
+                $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
+		$result = $criticalInfoObj->allottProfile($dt);
+		return $result;
+        }
 }
 ?>

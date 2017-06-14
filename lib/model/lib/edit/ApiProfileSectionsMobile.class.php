@@ -15,6 +15,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	private $dropdown=2;
 	private $nonEditable=3;
 	private $textArea=4;
+	private $fileArea=6;
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
 		$dbHobbies = new JHOBBYCacheLib();
@@ -548,6 +549,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//date of birth
                 $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
 		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEditType,"",0,"","","",array(),"",$key);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Upload Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
 		
                 $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();

@@ -53,3 +53,8 @@ CALJSMSSuccess:
 
 _notificationLayerJSPC:
  has_layout:  false 
+ 
+uploadDocumentProofSuccess:
+  javascripts: [jspc/settings/settings,jspc/settings/jspc_visibility,jspc/login/uploadDoc_js]
+  stylesheets: [jspc/settings/settings]
+  layout: jspcLayout

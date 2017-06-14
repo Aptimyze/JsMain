@@ -983,4 +983,34 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         $respObj->generateResponse();
         die;
     }
+    public function executeUploadDocumentProof(sfWebRequest $request)
+    {
+                if ($request->getParameter("submitForm")) {
+                        $editFieldNameArr["MSTATUS"] = $_POST["MSTATUS"];
+                        $editFieldNameArr["MSTATUS_PROOF"] = $_FILES["MSTATUS_PROOF"];
+                        $request->setParameter("editFieldArr",$editFieldNameArr);
+                        $request->setParameter("docOnly",true);
+                        $request->setParameter("internally",true);
+                        $_SERVER["HTTP_X_REQUESTED_BY"] = true;
+                        ob_start();
+                        sfContext::getInstance()->getController()->getPresentationFor('profile','ApiEditSubmitV1');
+                        $returnDocumentUpload = ob_get_contents(); 
+                        ob_end_clean();
+                        $this->done = true;
+                        if (MobileCommon::isMobile()) {
+                                if (MobileCommon::isNewMobileSite()) {
+                                       sfContext::getInstance()->getController()->redirect('/'); 
+                                }
+                        }
+                }else{
+                        if (MobileCommon::isMobile()) {
+                                if (MobileCommon::isNewMobileSite()) {
+                                    $this->forward("static", "uploadDoc", 0);
+                                } else {
+                                    $this->forward("static", "uploadDoc", 0);
+                                }
+
+                        }
+                }
+    }
 }

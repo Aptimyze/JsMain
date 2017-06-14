@@ -8,7 +8,7 @@ class CriticalInformationMailer
 	private $skipProfiles;
         private $mailerType = array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","INTEREST_SENT");
 
-	public function __construct($profileid,$formData)
+	public function __construct($profileid,$formData= array())
 	{
 		$this->profileid = $profileid;
 		$this->formData = $formData;
@@ -81,5 +81,24 @@ class CriticalInformationMailer
 		$condition["ORDER"] = "TIME";
 		return $condition;
 	}
+        public function sendSuccessFailMailer($status){
+                $longURL = "";
+                if($status == "Y"){
+                        $email_sender = new EmailSender(MailerGroup::CRITICAL_INFO_EMAIL,1852);
+                }else{
+                        $email_sender = new EmailSender(MailerGroup::CRITICAL_INFO_EMAIL,1853);
+                                include_once JsConstants::$docRoot . "/classes/authentication.class.php";
+                                $protect   = new protect();
+                                $checksum  = md5($this->profileid) . "i" . $this->profileid;
+                                $echecksum = $protect->js_encrypt($checksum);
+                                $longURL   = sfConfig::get('app_site_url')."/common/uploadDocumentProof?" . "&echecksum=" . $echecksum . "&checksum=" . $checksum;
+                }
+                $tpl = $email_sender->setProfileId($this->profileid);
+                $smartyObj = $tpl->getSmarty();
+                $fields["MSTATUS"] = array("field"=>"Marital Status","oldVal"=>FieldMap::getFieldLabel("marital_status","N"),"newVal"=>FieldMap::getFieldLabel("marital_status","D"));
+                $smartyObj->assign("fields",$fields);
+                $smartyObj->assign("hereLink",$longURL);
+                $email_sender->send();
+        }
 
 }

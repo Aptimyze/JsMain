@@ -48,25 +48,39 @@ var saveDetail=(function(){
     saveDetail.prototype.submitReal=function()
     {
 		editFieldArr=this.editFieldArray;
+        var fileType = 0;
         for(akey in editFieldArr)
         {   
+            if(typeof editFieldArr[akey] === "object" && typeof editFieldArr[akey].name != "undefined"){
+                 fileType = 1;   
+            }
             if(akey == '')
                 this.flag=1;
         }
         if(this.flag==0)
         {
 			//showLoader();
+                var editData = new FormData();
+                $.each(editFieldArr, function(key, value)
+                {
+                      editData.append('editFieldArr['+key+']', value);
+
+                });
+                var eData = {};
+                eData.editFieldArr = editFieldArr;
         $.ajax({
-          url: "/api/v1/profile/editsubmit",
+          url: fileType === 1?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
           type: 'POST',
           datatype: 'json',
           headers: { 'X-Requested-By': 'jeevansathi' },       
           cache: true,
           async: true,
-          data: {editFieldArr : editFieldArr},
+          contentType: fileType === 1?false:"application/x-www-form-urlencoded",
+          data: fileType === 1?editData:eData,
+          processData: fileType === 1?false:true,
           success: function(result) {
 
-				if(CommonErrorHandling(result)||(result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && (result.error[0].indexOf("banned")!=-1 || result.error[0].indexOf("country")!=-1)))
+				if(CommonErrorHandling(result)||(result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && (result.error[0].indexOf("critical")!=-1 || result.error[0].indexOf("banned")!=-1 || result.error[0].indexOf("country")!=-1)))
 				{
 					if(result.hasOwnProperty("error") && result.error)
 					{

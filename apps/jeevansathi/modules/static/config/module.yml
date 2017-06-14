@@ -72,3 +72,5 @@ all:
     enable_login: on
   hideDuration:
     enable_login: on
+  uploadDoc:
+    enable_login: off

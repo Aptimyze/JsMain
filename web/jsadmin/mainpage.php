@@ -211,6 +211,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/userview.php?name=$user&cid=$cid\">View assigned profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=new\">Screen New Profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=edit\">Screen Edit Profiles</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/screening/screenDocument?source=edit?name=$user&cid=$cid&val=edit\">Screen Divorced Document Proof</a>";
         }
 	if(in_array('DP', $priv) || in_array('MG', $priv) || in_array('P', $priv) || in_array('SLHDO', $priv)) {
 		$linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";

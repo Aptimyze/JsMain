@@ -321,6 +321,18 @@ try{
                 $deleteInterest = 1;
         }
         if($deleteInterest == 1){
+                $producerObj=new Producer();
+		if($producerObj->getRabbitMQServerConnected())
+		{
+			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+			$producerObj->sendMessage($sendMailData);
+                }else
+		{
+			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+                        $cmd = JsConstants::$php5path." -q ".$path;
+                        passthru($cmd);
+		}
+    
         }else{
                 $maileobj = new CriticalInformationMailer($profileid,$body);
                 $maileobj->sendMailer(); 

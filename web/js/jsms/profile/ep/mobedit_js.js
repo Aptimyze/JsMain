@@ -100,6 +100,27 @@ function showOverLayer(json,attr)
 		
 	});
 	$("#SaveSub").bind(clickEventType,function(){
+                var arr=attr.split(",");
+                if(arr[1]=="critical")
+                {
+                        editFieldArr=submitObj.editFieldArray;
+                        var prevDob = storeJson["DTOFBIRTH"].split(",");
+                        var prevMstatus = storeJson["MSTATUS"];
+                        var Mstatus = editFieldArr['MSTATUS'];
+                        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                        var firstDate = new Date(editFieldArr["YEAR"],editFieldArr["MONTH"],editFieldArr["DAY"]);
+                        var secondDate = new Date(prevDob[2],prevDob[1],prevDob[0]);
+                        var msg1 = "We will intimate your accepted members, interests received and interests sent that there is a change in your basic details.";
+                        var msg2 = "You will not be able to edit any of your basic details any further after you click ‘Okay’.";
+                        var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+                        
+                        if(diffDays >= 730 || (prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
+                                msg1 =  "We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts.";
+                                msg2 = "You will not be able to edit any of your basic details any further after you click ‘Okay’";
+                        }
+                        updateAndShowConfirmOverlay(json,attr,arr[1],msg1,msg2);
+                        return false;
+                }
 		SaveSub(json,attr);
 	});
         
@@ -198,6 +219,11 @@ function showOverLayer(json,attr)
         
     }
         
+}
+function ConfirmSub(key,label)
+{
+        updateAndShowCancelOverlay(json,attr);
+	setTimeout(function(){setOverlayLocation();},animationtimer);
 }
 function CancelSub(json,attr)
 {
@@ -410,6 +436,14 @@ function getPlaceholder(key)
 function UpdateOverlayTags(string,json,indexPos)
 {
         string=string.replace(/\{\{dindex\}\}/,"dindexpos=\""+indexPos+"\"");
+        if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"");
+	}     
+	else
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
+	}
 	if(json.action==2 ||json.action==3)
 	{
 		divOverlay=$("#divOverlay").html();
@@ -427,6 +461,7 @@ function UpdateOverlayTags(string,json,indexPos)
 		if(json.action==3){
 			string=string.replace(/\{\{backGroundColor\}\}/g,"bg3");
 			string=string.replace(/\{\{displayArrow\}\}/g,"lock");
+                        //string=string.replace(/\{\{displayDiv\}\}/g,"dn");
 		}
 	}
         if(json.action==1)
@@ -484,6 +519,9 @@ function UpdateOverlayTags(string,json,indexPos)
 		var dcallback="UpdateSection";
 		if(json.callBack)
 			dcallback=json.callBack;
+                if(json.key == "MSTATUS" || json.key == "DTOFBIRTH"){
+                        storeJson[json.key] = json.value;
+                }
 		//console.log(dhide+" "+dselect+" "+json.dependant);	
 		string=string.replace(/\{\{dhide\}\}/g,"dhide='"+dhide+"'");
 		string=string.replace(/\{\{dselect\}\}/g,"dselect='"+dselect+"'");
@@ -618,9 +656,24 @@ function UpdateOverlayTags(string,json,indexPos)
 			string=string.replace(/\{\{underScreening\}\}/g,underScreenStr);
 		string=string.replace(/\{\{underScreening\}\}/g,"");
 		string=string.replace(/\{\{displayArrow\}\}/g,"dn");
+	}else if(json.action==6)
+	{
+		fileOverlay=$("#fileOverlay").html();
+		fileOverlay=fileOverlay.replace(/json_key/g,json.key);
+                fileOverlay=fileOverlay.replace(/OverlayID/g,"Overlay"+json.key);
+                fileOverlay=fileOverlay.replace(/default_val/g,"default"+json.key);
+                fileOverlay=fileOverlay.replace(/file_key/g,"file_key"+json.key);
+                fileOverlay=fileOverlay.replace(/default_key/g,"default_key"+json.key);
+                fileOverlay=fileOverlay.replace(/default_label_key/g,"default_label_key"+json.key);
+                fileOverlay=fileOverlay.replace(/json_label_val/g,json.label_val)
+                fileOverlay=fileOverlay.replace(/dcallback_fn/g,json.callBack+"(this);");
+		string=string.replace(/\{\{inputDiv\}\}/g,fileOverlay);
+		string=string.replace(/\{\{displayArrow\}\}/g,"dn");
+		string=string.replace(/\{\{displayDiv\}\}/g,"dn");
+		string=string.replace(/\{\{backGroundColor\}\}/g,"back-Gray");
 	}
 	string=string.replace(/\{\{backGroundColor\}\}/g,"bg4");
-	if(json.action==1)
+	if(json.action==1 || json.action==6)
             string=string.replace(/\{\{HS\}\}/g,"display:none");
         else
             string=string.replace(/\{\{displayArrow\}\}/g,"arow1");
@@ -662,6 +715,91 @@ function updateAndShowCancelOverlay(json,attr)
     bCallCreateHoroscope = false;
 		FlushChangedJson();
 		RemoveCancelOverLayer();
+		RemoveOverLayer();
+	});
+	
+}
+function RemoveConfirmOverLayer()
+{
+	$("#ed_slider").removeClass("dn");
+	ConfirmOverLayerAnimation(1);
+	
+}
+function ConfirmOverLayerAnimation(close)
+{
+	if(close)
+	{
+		$("#confirmOverLayer").removeClass("top_2").addClass('top_3');
+		setTimeout(function(){
+			$("#confirmOverLayer").addClass("dn").removeClass("top_3").css("margin-top","").addClass("top_1");
+			hideCancelBackgroundDiv();
+			},animationtimer3s);
+	}
+	else
+	{
+		var height=$("#confirmOverLayer").outerHeight();
+		var sh=Math.floor(($(window).height()-height)/2);
+		
+		$("#confirmOverLayer").removeClass("dn");
+		setTimeout(function(){
+			$("#confirmOverLayer").removeClass("top_1").css("margin-top",sh).addClass("top_2");
+			},10);
+	}
+	
+}
+function CommonOverlayDisplaySettingsConfirm(tabName,SectionName,background,action)
+{
+		$("#"+tabName).addClass("CancelOverlay");
+		$("#"+SectionName).addClass("CancelOverlay");
+		if(background){
+			$("#cancelOverLayBackGround").css("min-height",screen.height);
+			$("#cancelOverLayBackGround").addClass("web_dialog_overlay");
+			$("#cancelOverLayBackGround").removeClass("dn");
+		}
+		ConfirmOverLayerAnimation();
+		
+		//$("#"+tabName).css("top",(screen.height/3));
+		//setTimeout(function(){},animationtimer3s);		
+		//setTimeout(function(){$("#"+tabName).removeClass("right_1");},animationtimer3s);
+		
+		setTimeout(function(){$("#ed_slider").addClass("dn");},animationtimer);
+		if(action=="error")
+		{
+			$("#TEXT2_ID").remove();
+			$("#TAB2_ID").remove();
+			$("#Action2").remove();
+			$("#TAB1_ID").removeClass("wid49p");
+			$("#TAB1_ID").addClass("fullwid");
+			$("#validation_error").removeClass("dn");
+		}
+}
+function updateAndShowConfirmOverlay(json,attr,sectionName,text1,text2)
+{	
+	var tempHtml=$("#confirmOverLayer").html();
+	tempHtml=tempHtml.replace(/PromptSectionName/g,sectionName+"_confirmSection");	
+	tempHtml=tempHtml.replace(/TEXT1/g,text1);
+	tempHtml=tempHtml.replace(/TEXT2/g,text2);
+	tempHtml=tempHtml.replace(/TAB1_NAME/g,"Save");
+	tempHtml=tempHtml.replace(/TAB2_NAME/g,"Discard");
+	tempHtml=tempHtml.replace(/Action1/g,"saveAfterConfirmOverlay");
+	tempHtml=tempHtml.replace(/Action2/g,"discardAfterConfirmOverlay");
+	$("#confirmOverLayer").html(tempHtml);
+	
+	CommonOverlayDisplaySettingsConfirm("confirmOverLayer","overLayCancelSection",1,"cancel");
+	
+	$("#saveAfterConfirmOverlay").unbind(clickEventType);
+	$("#discardAfterConfirmOverlay").unbind(clickEventType);
+	$("#saveAfterConfirmOverlay").bind(clickEventType,function(){
+
+		RemoveConfirmOverLayer();
+		SaveSub(json,attr);		
+		FlushChangedJson();
+		
+	});
+	$("#discardAfterConfirmOverlay").bind(clickEventType,function(){
+    bCallCreateHoroscope = false;
+		FlushChangedJson();
+		RemoveConfirmOverLayer();
 		RemoveOverLayer();
 	});
 	

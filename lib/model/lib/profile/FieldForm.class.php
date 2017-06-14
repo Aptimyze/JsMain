@@ -183,9 +183,16 @@ class FieldForm extends sfForm
 		  }
 	  }
         if(count($criticalInfoFieldArr)){
-                $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
-                $editedFields = array_keys($criticalInfoFieldArr);
-                $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields));
+                $request=sfContext::getInstance()->getRequest();
+                $insert = 1;
+                if($request->getParameter("docOnly") == 1){
+                        $insert = 0;
+                }
+                if($insert == 1){
+                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                        $editedFields = array_keys($criticalInfoFieldArr);
+                        $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields));
+                }
                 unset($infoChngObj);
                 if(isset($criticalInfoFieldArr["DOCUMENT_PATH"])){
                         $docObj = new CriticalInfoChangeDocUploadService();

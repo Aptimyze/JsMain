@@ -401,9 +401,19 @@ function UpdateSection(json,realJson,indexPos)
 		if(k=="p_sect")
 			k="p_caste";
 		
+                if((typeis=="mstatus_edit" || typeis=="mstatus_muslim_edit")){
+                        if(inValueArr[0] != "D"){
+                                submitObj.pop('MSTATUS_PROOF');
+                                $('#file_keyMSTATUS_PROOF').val("");
+                                $("#default_label_keyMSTATUS_PROOF").html('jpg/pdf only');
+                                $("#MSTATUS_PROOF_TOP").addClass('dn');
+                        }else{
+                                $("#MSTATUS_PROOF_TOP").removeClass('dn');
+                        }
+                        k = "mstatus";
+                }
 		CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
 	});
-
 	
 	//For caste,sect append religion.
 	if(typeis=="caste" || typeis=="sect")
@@ -789,6 +799,26 @@ function updateNative(json,realJson,indexPos)
 	
   UpdateSection.call(this,json,realJson,indexPos);
 	return;
+}
+function updateProofLabel(thisObject){
+        var fileLabelId = $(thisObject).attr("labelKey");
+        var file = thisObject.files[0];
+        if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
+        } else {
+            $("#"+fileLabelId).html('jpg/pdf only');
+            ShowTopDownError(["Invalid file format"]);
+            submitObj.pop('MSTATUS_PROOF');
+            return false;
+        }
+        if(file.size > 5242880) {
+                $("#"+fileLabelId).html('jpg/pdf only');
+                ShowTopDownError(["File size exceeds limit (5MB)"]);
+                submitObj.pop('MSTATUS_PROOF');
+                return false;
+        } else {
+               $("#"+fileLabelId).html(file.name);
+               CommonOverlayEditUpdate(file,"MSTATUS_PROOF");
+        }
 }
 function UpdateDobSection(json,realJson,indexPos)
 {

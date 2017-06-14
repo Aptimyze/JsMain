@@ -63,7 +63,7 @@
     <td><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="20"></td>
-    <td>Please resubmit the proofs here.</td>
+    <td>Please resubmit the proofs <a href="~$hereLink`">here</a>.</td>
   </tr>
 </table></td>
   </tr>

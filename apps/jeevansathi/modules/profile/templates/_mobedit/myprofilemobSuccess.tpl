@@ -66,6 +66,29 @@
 <div id="cancelOverLayer" class="overlay_1_e page transition top_1 dn">
   ~include_partial("profile/mobedit/cancelOverlay")`
 </div>
+
+<div id="confirmOverLayer" class="overlay_1_e page transition top_1 dn">
+  <div id="PromptSectionName" class="dp">
+	<div style="position:relative" >
+    <div class="txtc pt10">
+    <i id="nonEditablePic" class="mainsp phn1 dn"></i>
+        <div id="TEXT1_ID" class="f14 color3 pt7 fontlig">TEXT1</div>
+        <div id="TEXT2_ID" class="f14 color3 pt4 fontlig pb20">TEXT2</div>
+    </div>
+    <div style="border-top:1px solid #dbdbdb">
+    	<div class="fullwid">
+        	<div id="TAB1_ID" class="fl txtc pad2 wid49p brdr2">
+            	<div id="Action1" class="fontthin f17 color2">TAB1_NAME</div>
+            </div>
+            <div id="TAB2_ID" class="fl txtc pad2 wid49p">
+		<div id="Action2" class="fontthin f17 color2">TAB2_NAME</div>           	
+            </div>
+            <div class="clr"></div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
 <input type="hidden" id="listShow" value="~$checkalbum`">
 	<div id="overLayer" class="page transition right_1 dn">
 ~include_partial("profile/mobedit/overlay")`
@@ -80,6 +103,17 @@
     <div overlaydiv="1" class="fl wid91p">
         <div id="default_val"><div id="default_key" class="f17 fontthin pad2 brdr3" value ="json_value" data=1 >json_label_val</div></div>
         <div id="OverlayID" name="overlayOption">{{overlayoptions}}</div>
+    </div>
+</div>
+<div id="fileOverlay" class="pad8 dn">
+    <div overlaydiv="1" class="fl wid91p">
+        <form  id="submitForm" action="" method="post" enctype="multipart/form-data">
+                <input type="file" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
+        </form>
+        
+                <div id="default_key" class="f17 fontthin upload-btn-jsms" value ="json_value" data=1 style="display:inline;">json_label_val</div>
+                <div id="default_label_key" class="f17 fontthin pad2" value ="json_value" data=1 style="display:inline;" >jpg/pdf only</div>        
+        
     </div>
 </div>
 <div id="textAreaOverlay" class="dn" >

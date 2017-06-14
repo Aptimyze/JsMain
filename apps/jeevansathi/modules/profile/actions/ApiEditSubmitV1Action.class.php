@@ -106,14 +106,14 @@ class ApiEditSubmitV1Action extends sfActions
                 
 		if(is_array($this->editFieldNameArr))
 		{
-                        if($this->verifyCriticalInfoEdit() === false){
-                                $errorArr["ERROR"]="Cannot edit Critical Information again";
+                        if($this->verifyCriticalInfoEdit($request) === false){
+                                $errorArr["error"]="Cannot edit Critical Information again";
                                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                                 $apiResponseHandlerObj->setResponseBody($errorArr);
                                 ValidationHandler::getValidationHandler("","Cannot edit Critical Information again");
                                 $apiResponseHandlerObj->generateResponse();
-                                die("out");       
-                        }
+                                die;
+                       }
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);
                         
 			$nonEditableField=$this->form->editableFieldsValidation($this->editFieldNameArr,$this->incomplete);
@@ -288,7 +288,7 @@ class ApiEditSubmitV1Action extends sfActions
 
     $memcacheObj->lpush($key,$profileId);
   }
-        public function verifyCriticalInfoEdit(){
+        public function verifyCriticalInfoEdit($request){
                 $editableCriticalArr=EditProfileEnum::$editableCriticalArr;
                 $criticalInfoedited=0;
                 foreach($this->editFieldNameArr as $key=>$val)
@@ -297,7 +297,7 @@ class ApiEditSubmitV1Action extends sfActions
                                 $criticalInfoedited=1;
                 }
                 if($criticalInfoedited == 1){
-                        return CriticalEditedBefore::canEdit($this->loginProfile->getPROFILEID());
+                        return CriticalEditedBefore::canEdit($this->loginProfile->getPROFILEID(),$request->getParameter("docOnly"));
                 }else{
                         return true;
                 }
