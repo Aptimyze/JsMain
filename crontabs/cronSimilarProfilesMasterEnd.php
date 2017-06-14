@@ -15,7 +15,7 @@ ini_set('default_socket_timeout',259200); // 3 days
 ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
-$db=connect_ddl();
+$db=connect_db();
 mysql_select_db("viewSimilar",$db);
 
 mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=30000",$db);
