@@ -119,7 +119,7 @@ $css_arr[]=array("jsms/myjs/jsmsMyjs_css"     => "24");
 $css_arr[]=array("jsms/phone/phoneVerification_css"   => "5");
 $css_arr[]=array("jsms/photo/photoswipe"   => "4");
 $css_arr[]=array("jsms/common/fonts" => "3");
-$css_arr[]=array("jsms/common/commoncss"     => "67");
+$css_arr[]=array("jsms/common/commoncss"      => "68");
 $css_arr[]=array("jsms/common/mediaquery" => "6");
 $css_arr[]=array("jsms/search/srpcss"   => "20");
 $css_arr[]=array("jsms/photo/photoup" => "2");
