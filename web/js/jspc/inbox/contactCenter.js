@@ -12,6 +12,7 @@ var matchedStr,data,newData;
 * @param : thisElementID(line id),HorizontalTabID
 */
 function setActiveHorizontalLine(thisElementID,HorizontalTabInfoID) {
+	//console.log("here");
 	var HorizontalTabID = $("#HorizontalTab"+HorizontalTabInfoID).attr("data-id");
 	var left = parseInt(HorizontalTabID) * 200;
 	$(thisElementID).css("left",left+"px");
