@@ -36,7 +36,14 @@ class deepLinking
 
 			$this->date =  date("Y-m-d H:i:s", strtotime("-1 week"));
 			$conditionValue = $this->verifyDeepLinkingConditions();
-			$loggedInData = $this->loggedInUserCondition($this->loggedInProfileId);
+			if (JsConstants::$hideUnimportantFeatureAtPeakLoad <= 1) 
+			{
+				$loggedInData = $this->loggedInUserCondition($this->loggedInProfileId);	
+			}
+			else
+			{
+				$loggedInData = 1;
+			}
 			if($conditionValue && $loggedInData)
 			{
 				$isIosDeep = 1;
