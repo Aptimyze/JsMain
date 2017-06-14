@@ -11,7 +11,13 @@ export  function commonApiCall(callUrl,data,reducer,method)
   return dispatch =>
   {
     let aChsum = getCookie('AUTHCHECKSUM');
-    fetch( CONSTANTS.API_SERVER +callUrl + '?AUTHCHECKSUM='+aChsum, // PLEASE ENSURE THIS DOESNT GO LIVE AS WE CANNOT EXPOSE ACHSUM IN THE URL FIELD, THIS HAS TO GO IN THE COOKIE ITSELF WHICH WILL BE RESOLVED WITH PRODUCTION BUILD AUTOMATICALLY
+    let checkSumURL = '';
+    if ( aChsum )
+    {
+      checkSumURL = '?AUTHCHECKSUM='+aChsum;
+    }
+
+    fetch( CONSTANTS.API_SERVER +callUrl + checkSumURL, // PLEASE ENSURE THIS DOESNT GO LIVE AS WE CANNOT EXPOSE ACHSUM IN THE URL FIELD, THIS HAS TO GO IN THE COOKIE ITSELF WHICH WILL BE RESOLVED WITH PRODUCTION BUILD AUTOMATICALLY
       {
       method: callMethod,
       headers: {
@@ -21,8 +27,10 @@ export  function commonApiCall(callUrl,data,reducer,method)
     })
     .then(response => response.json())
     .then( (response) => {
-      setCookie('AUTHCHECKSUM',response.AUTHCHECKSUM);
-
+      if ( response.AUTHCHECKSUM )
+      {
+        setCookie('AUTHCHECKSUM',response.AUTHCHECKSUM);
+      }
       dispatch({
         type: reducer,
         payload: response

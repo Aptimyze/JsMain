@@ -8,7 +8,8 @@ const LoginReducer = (state={
 		case 'SET_AUTHCHECKSUM':
 		if ( action.payload.AUTHCHECKSUM )
 		{
-        	setCookie('AUTHCHECKSUM',action.payload.AUTHCHECKSUM);
+			console.log("Setting authchecksum.");
+        	// setCookie('AUTHCHECKSUM',action.payload.AUTHCHECKSUM);
 		}
 		state = {
 			...state,

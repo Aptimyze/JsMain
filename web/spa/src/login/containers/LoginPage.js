@@ -3,12 +3,11 @@ import React from "react";
 import { connect } from "react-redux";
 import TopError from "../../common/components/TopError"
 import { validateEmail } from "../../common/components/commonValidations"
-import {signin} from "../actions/LoginActions"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import { withRouter } from 'react-router';
-
+import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 
 class LoginPage extends React.Component {
 
@@ -247,7 +246,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         doLogin: (email,password) => {
-            dispatch(signin(email,password));
+            let call_url = '/api/v1/api/login?email='+email+'&password='+password;
+            dispatch(commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET'));
         }
     }
 }

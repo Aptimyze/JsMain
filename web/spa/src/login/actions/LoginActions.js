@@ -1,32 +1,8 @@
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import commonApiCall from '../../common/components/ApiResponseHandler.js';
 import React from 'react';
 import {push} from 'react-router-redux';  
 import Cookies from 'universal-cookie';
-
-
-export  function signin(email,password)
-{
-  return dispatch =>
-  {
-    fetch( CONSTANTS.API_SERVER +'/api/v1/api/login?email='+email+'&password='+password, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-    })
-    .then(response => response.json())
-    .then( (response) => {
-      dispatch({
-        type:'SET_AUTHCHECKSUM',
-        payload: response
-      });
-    })
-    .catch( (error) => {
-      console.warn('Actions - fetchJobs - recreived error: ', error)
-    })
-  } 
-}
-
 
 export function siginFromCookie(response)
 {
