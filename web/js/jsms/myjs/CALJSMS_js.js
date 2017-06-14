@@ -93,12 +93,11 @@ if($("#CriticalActionlayerId").val()=='20'){
     {
         $(window).resize(function()
         {
-        $("#occMidDiv").css("height",window.innerHeight - 50);
-        $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        $("#cityMidDiv").css("height",window.innerHeight - 50);
         }); 
     }
 
-    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#cityMidDiv").css("height",window.innerHeight - 50);
     $("#occClickDiv").on("click", function() {
         if(typeof listArray == 'undefined')
         {      $.ajax({
@@ -124,7 +123,7 @@ if($("#CriticalActionlayerId").val()=='20'){
     });
 
      appendStateData = function(allRes) {  
-        $("#occList").html('');
+        $("#stateList").html('');
         $("#citySelect").html('Select your City');
         allRes = JSON.parse(allRes);
         res = allRes.state_res;
@@ -134,38 +133,36 @@ if($("#CriticalActionlayerId").val()=='20'){
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
                 $.each(elem1, function(index2, elem2) {
-                    $("#occList").append('<li occCode = "'+index2+'">' + elem2 + '</li>');
+                    $("#stateList").append('<li stateCode = "'+index2+'">' + elem2 + '</li>');
                     stateMap[stateIndex++] = index2;
                     
             });
         });
       });      
 
-        $("#occList li").each(function(index, element) {
+        $("#stateList li").each(function(index, element) {
             $(this).bind("click", function() {
 
-                $("#occSelect").html($(this).html());
-                $("#occSelect").attr('occCode',$(this).attr('occCode'));
-                $("#listDiv").addClass("dn");
-                $('#searchOcc').val("");
-                $("#occList").html("");
+                $("#stateSelect").html($(this).html());
+                $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
+                $("#stateListDiv").addClass("dn");
+                $("#stateList").html("");
                     
                     $("#contText").hide();
                     $("#cityClickDiv").removeClass("dn");
-                    $("#occuText").focus();
                 
-                $("#occupationSubmit").show();
+                $("#stateCitySubmit").show();
             });
         });
         $("#ListLoader").addClass("dn");
-        $("#occList").removeClass("dn");
+        $("#stateList").removeClass("dn");
 
         }
 
         callCity = function(allRes) {
 
         $("#cityList").html('');
-        var cityIndexFromMap  = $("#occSelect").attr('occCode');
+        var cityIndexFromMap  = $("#stateSelect").attr('stateCode');
         
         allRes = JSON.parse(allRes);
         cityMap = {};
@@ -193,7 +190,7 @@ if($("#CriticalActionlayerId").val()=='20'){
                     occuSelected = 0;
                     $("#contText").hide();
                 
-                $("#occupationSubmit").show();
+                $("#cityStateSubmit").show();
             });
         });
         $("#cityListLoader").addClass("dn");
@@ -313,21 +310,24 @@ else {
                     if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
                         {
                             
-                             var stateCode = $("#occSelect").attr('occCode');
+                             var stateCode = $("#stateSelect").attr('stateCode');
                              var cityCode  = $("#citySelect").attr('cityCode');
-                            dataOcc = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
+                            dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
                             $.ajax({
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
                             dateType : 'json',
-                            data: dataOcc,
+                            data: dataStateCity,
                             success: function(response) {
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
                             },
                             error: function(response) {
+                                    
+                                showError('Something went wrong');
+
                                 }
                             });
                         }

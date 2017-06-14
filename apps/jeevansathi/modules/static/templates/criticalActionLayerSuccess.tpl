@@ -469,14 +469,14 @@ var altEmail = '~$altEmail`';</script>
       
      <style type='text/css' >
              .chosenDropWid {width: 230px; padding:10px 6px !important; }
-       .occL-wid{width:560px;}
-       .occL-p1{padding: 25px 30px}
-       .occL-p2{padding: 13px 9px}
-       .occ-bdr1{border-bottom: 1px solid #e2e2e2}
-       .occ-bdr2{border: 1px solid #d9475c}
+       .cityL-wid{width:560px;}
+       .cityL-p1{padding: 25px 30px}
+       .cityL-p2{padding: 13px 9px}
+       .city-bdr1{border-bottom: 1px solid #e2e2e2}
+       .city-bdr2{border: 1px solid #d9475c}
        .chosen-container-single .chosen-search input[type="text"]{display: none}
        .chosen-container{border: 1px solid #e2e2e2;padding:10px 0;}
-       .occ-pos1{right:0;top:0}
+       .city-pos1{right:0;top:0}
        .dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
        .dpp-pos5 {top: -14px;left: 40px;}
  
@@ -486,24 +486,24 @@ var altEmail = '~$altEmail`';</script>
  
      </style> 
  
- <div id='criticalAction-layer' class="occL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
+ <div id='criticalAction-layer' class="cityL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
    <div class="f17 fontreg color11">
      <!-- start:header -->
-     <div class="occ-bdr1 occL-p1">
+     <div class="city-bdr1 cityL-p1">
        ~$titleText`
      </div>
      <!-- end:header -->
-     <div class="occL-p1">
+     <div class="cityL-p1">
        <p class="opa80">~$contentText`</p>
        <br />
        <p class="opa80">~$subText`</p>
        <!-- start:div for chosen -->
        <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
-         <p class="f12 color5 pos-abs disp-none occ-pos1 js-req1">Required</p> <div id = "stateBox">   
-         <select id="occList" data-placeholder="Enter your State" class="chosen-select-width">
+         <p class="f12 color5 pos-abs disp-none city-pos1 js-req1">Required</p> <div id = "stateBox">   
+         <select id="cityList" data-placeholder="Enter your State" class="chosen-select-width">
                      </select>
           </div>
-         <!-- start: in case no occupation found -->
+         <!-- start: in case of no City found -->
          <div class="pt25 vishid js-otheroccInp">
            <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
            <div id = "cityBox"> 
@@ -546,16 +546,16 @@ var altEmail = '~$altEmail`';</script>
         
 
      appendStateData = function(res) {
-        $("#occList").html('');
+        $("#cityList").html('');
         occuSelected = 0;
         stateMap = {};
         var stateIndex=1;
-        $("#occList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+        $("#cityList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
 
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
               $.each(elem1, function(index2, elem2) {
-                    $("#occList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
+                    $("#cityList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
                 stateMap[stateIndex++] = index2;
                 });
         });
@@ -567,7 +567,7 @@ var altEmail = '~$altEmail`';</script>
         $("#stateBox").removeClass('chosen-container-err'); 
         $('.js-req1').addClass('disp-none');
         $("#city").html('');
-        var indexV = $('#occList option:selected').val();
+        var indexV = $('#cityList option:selected').val();
         var keyName = stateMap[indexV];
         cityMap = {};
         cityIndex = 1;
@@ -607,8 +607,8 @@ var altEmail = '~$altEmail`';</script>
    }
 
    function statefunc(res){
-      $('#occList').on("change",function(){
-        $("#occList_chosen").removeClass('chosen-container-err');
+      $('#cityList').on("change",function(){
+        $("#cityList_chosen").removeClass('chosen-container-err');
         $('#city_chosen').removeClass('chosen-container-err');
            callCity(res);
           $('#city').val('');
@@ -628,10 +628,10 @@ var altEmail = '~$altEmail`';</script>
     $('#city_chosen').removeClass('chosen-container-err');});
   callState();
    $('#city-sub').click(function(){ 
-         if( $('#occList').val() == 1)
+         if( $('#cityList').val() == 1)
          {
            $('.js-req1').removeClass('disp-none');
-           $("#occList_chosen").addClass('chosen-container-err');
+           $("#cityList_chosen").addClass('chosen-container-err');
            return;
          }
          else if( $('#city').val() == 1 )
@@ -643,7 +643,7 @@ var altEmail = '~$altEmail`';</script>
 
        else {  
                             $(".js-otheroccInp input").val('');
-                            var stateCode = stateMap[$("#occList").val()];
+                            var stateCode = stateMap[$("#cityList").val()];
                             var cityCode = cityMap[$("#city").val()];
                             
                             dataCity = {'editFieldArr[COUNTRY_RES]':51 , 'editFieldArr[CITY_RES]':cityCode,'editFieldArr[STATE_RES]':stateCode};
