@@ -44,15 +44,30 @@ export default class KundliInfo extends React.Component {
             </div>;
     	}
 
+        var AstroReport;
+        if(!this.props.about.NO_ASTRO && this.props.about.sameGender != 1)
+        {   
+            var classAsign = "";
+            if(this.props.about.COMPATIBILITY_SUBSCRIPTION == "N" && this.props.about.paidMem == "Y") {
+                classAsign = "js-astroCompMem";
+            } else if(this.props.about.COMPATIBILITY_SUBSCRIPTION == "N") {
+                classAsign = "js-freeAstroComp";
+            } else if(this.props.about.COMPATIBILITY_SUBSCRIPTION != "N") {
+                classAsign = "js-astroMem";
+            }
+
+            AstroReport = <button className={classAsign + " fontlig lh40 astroBtn1 fr wid48p"}>Get Astro Report</button>
+        }
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
     	{
-    		downloadHoroscope = <div>
-    			????<br/>
-    			<a href = "#">
-    				<button className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
-    				<button className="fontlig lh40 astroBtn1 fr  js-freeAstroComp wid48p">Get Astro Report</button>
-    			</a>
+            var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+"ddea8d50a80534cd52d8f3eb72257ce2i8294390"+"&randValue=890&GENDER="+this.props.about.gender;
+        
+            downloadHoroscope = <div>
+    			<a href = {urlString}>
+                    <button className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
+                </a>
+                {AstroReport}
     		</div>
     	}
 
