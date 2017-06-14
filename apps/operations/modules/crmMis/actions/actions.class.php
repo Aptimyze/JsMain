@@ -2649,22 +2649,25 @@ class crmMisActions extends sfActions
                 $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
-                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
-                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
-                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
-                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
-                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
-                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
-                	if (!empty($allBillids)){
-                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
-                	} else {
-                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
-                	}
-                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
+                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT");
+                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100)){
+	                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
+	                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
+	                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
+	                	if (!empty($allBillids)){
+	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
+	                	} else {
+	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
+	                	}
+	                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
+	                }
                 }
                 // Set data for view 
                 $this->misData = array();
