@@ -22,7 +22,7 @@ $serverId = $argv[1];
 $mysqlObj=new Mysql;
 
 //$myDbName=$ddlShardSlaveUser[$serverId];
-$myDbName=$shardSlaveUser[$serverId];
+$myDbName=$slave_activeServers[$serverId];
 $myDb=$mysqlObj->connect("$myDbName");
 
 foreach($genderArr as $gender)
