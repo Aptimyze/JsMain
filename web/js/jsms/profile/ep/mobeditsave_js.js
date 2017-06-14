@@ -403,7 +403,7 @@ function UpdateSection(json,realJson,indexPos)
 			k="p_caste";
 		
                 if((typeis=="mstatus_edit" || typeis=="mstatus_muslim_edit")){
-                        if(inValueArr[0] != "D"){
+                        if(inValueArr[0] != "D" || storeJson["MSTATUS"] =="D"){
                                 submitObj.pop('MSTATUS_PROOF');
                                 $('#file_keyMSTATUS_PROOF').val("");
                                 $("#default_label_keyMSTATUS_PROOF").html('jpg/pdf only');
@@ -412,8 +412,14 @@ function UpdateSection(json,realJson,indexPos)
                                 $("#MSTATUS_PROOF_TOP").removeClass('dn');
                         }
                         k = "mstatus";
+                        if(storeJson["MSTATUS"] =="D" && inValueArr[0] == "D"){
+                                submitObj.pop('MSTATUS');
+                        }else{
+                                CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
+                        }
+                }else{
+                        CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
                 }
-		CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
 	});
 	
 	//For caste,sect append religion.

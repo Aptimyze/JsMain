@@ -217,7 +217,7 @@
                           <p class="color12 pt15 fontlig" id='caste_sect_labelView'>~$arrOutDisplay.about.caste_sect_label`</p>
                           <p class="pt2 fontlig" >
                             <span id="edit_casteView">~$arrOutDisplay.about.edit_caste`</span>
-                            <span id="edit_sectView" ~if $arrOutDisplay.about.edit_sect eq $notFilledInText`                                class="color5"   ~/if`  > ~$arrOutDisplay.about.edit_sect`</span>
+                            <span id="edit_sectView" ~if $arrOutDisplay.about.edit_sect eq $notFilledInText` class="color5"   ~/if`> ~$arrOutDisplay.about.edit_sect`</span>
                           </p>
                         </li>
                         ~/if`
@@ -228,12 +228,12 @@
                           ~else`
                           <p class="pt2 color5 fontlig" id='posted_byView'>~$notFilledInText`</p>
                           ~/if`
+                          
                         </li>
                         ~if $editApiResponse.Details.MSTATUS.value neq N`
                         <li id="li-havechild">
                         ~else`
                         <li id="li-havechild" class="disp-none">
-                        ~/if`
                           <p class="color12 pt15 fontlig">Have Children?</p>
                           <p class="pt2 fontlig" >
                             <span id="have_childView" 
@@ -245,6 +245,7 @@
                             </span>
                           </p>
                         </li>
+                        
                         ~/if`
                         ~if $editApiResponse.Details.RELIGION.value eq 2`
                         <li id="jamaatlistitem">

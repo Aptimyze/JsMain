@@ -4217,7 +4217,7 @@ updateEduLevelChanges =function(eduLevelVal)
             var mstatusField = editAppObject[CRITICAL]['MSTATUS'];
             storeFieldChangeValue(mstatusField,mstatusVal);
             $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
-            if(mstatusVal == "D"){
+            if(mstatusVal == "D" && editAppObject[CRITICAL]['MSTATUS'].value != "D"){
                         $('#mstatus_proofParent').removeClass(dispNone);
                         requiredFieldStore.add(mstatusProofField);
             }else{
