@@ -2,7 +2,7 @@ import React from "react";
 import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "./MyjsEditBar";
 import AcceptCount from './MyjsAcceptcount';
-import ProfileVisitor from './MyjsProfileVisitor'
+import MyjsProfileVisitor from './MyjsProfileVisitor'
 import {MyjsApi} from "../actions/MyjsApiAction";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
@@ -22,35 +22,21 @@ export  class MyjsPage extends React.Component {
 			}
 
   	}
-		componentWillReceiveProps(nextProps)
-		{
-			console.log("props recieved",nextProps);
-		}
-
-		componentDidMount(){
-
+	componentDidMount(){
 			this.props.hitApi();
-
-
 			this.setState({
 				apiSent:true
 			})
+		}		
 
-		}
   	render() {
-
-		return(
+  		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
 							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched} />
 							<AcceptCount/>
-							 <ProfileVisitor/>
-
-
-
-
-
+							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
 							</div>
 					</div>
 					<button onClick = {this.printProp.bind(this)}>click</button>
@@ -65,14 +51,8 @@ export  class MyjsPage extends React.Component {
 	}
 }
 
-
-
-
 const mapStateToProps = (state) => {
-
-
-
-
+	console.log(state);
     return{
        reducerData: state.MyjsReducer
     }

@@ -32,7 +32,7 @@ class ProfilePage extends React.Component {
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
         document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
     } 
-
+    
     componentWillReceiveProps(nextProps)
     {
         console.log("next",nextProps);
@@ -45,6 +45,15 @@ class ProfilePage extends React.Component {
                 showPromo : true
             });   
         }
+        window.addEventListener('scroll', (event) => {
+            let tabElem = document.getElementById("tab");
+            if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
+                tabElem.classList.add("posFixTop");
+            } 
+            if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
+                tabElem.classList.remove("posFixTop");
+            }
+        });
     }
 
     showError(inputString) {
