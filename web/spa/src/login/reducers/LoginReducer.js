@@ -1,20 +1,13 @@
 import {setCookie} from "../../common/components/CookieHelper";
 const LoginReducer = (state={
-	AUTHCHECKSUM: '',
-	responseMessage: ''
+	MyProfile:{}
 },action) => {
 	switch(action.type)
 	{
 		case 'SET_AUTHCHECKSUM':
-		if ( action.payload.AUTHCHECKSUM )
-		{
-			console.log("Setting authchecksum.");
-        	// setCookie('AUTHCHECKSUM',action.payload.AUTHCHECKSUM);
-		}
 		state = {
 			...state,
-			AUTHCHECKSUM:action.payload.AUTHCHECKSUM,
-			responseMessage: action.payload.responseMessage
+			MyProfile:action.payload,
 		}
 		break;
 	}

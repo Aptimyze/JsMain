@@ -31,16 +31,16 @@ class LoginPage extends React.Component {
                 showPromo : true
             });
         }, 1200);
-        if ( this.props.AUTHCHECKSUM && getCookie('AUTHCHECKSUM')) {
+        if ( this.props.MyProfile.AUTHCHECKSUM && getCookie('AUTHCHECKSUM')) {
             this.props.history.push('/myjs');
        }
     }
 
     componentWillReceiveProps(nextProps)
     {
-
-       if ( nextProps.AUTHCHECKSUM ) {
-            if ( (this.props.history.prevUrl).indexOf('/login/') === -1 )
+        console.log(nextProps);
+       if ( nextProps.MyProfile.AUTHCHECKSUM ) {
+            if ( (this.props.history.prevUrl) && (this.props.history.prevUrl).indexOf('/login/') === -1 )
             {
                 this.props.history.push(this.props.history.prevUrl);
             }
@@ -53,7 +53,7 @@ class LoginPage extends React.Component {
             this.setState ({
                 showLoader : false
             })
-            this.showError(nextProps.responseMessage);
+            this.showError(nextProps.MyProfile.responseMessage);
        }
     }
 
@@ -237,9 +237,10 @@ class LoginPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log("IN reducer");
+    console.log(state.LoginReducer.MyProfile);
     return{
-       AUTHCHECKSUM: state.LoginReducer.AUTHCHECKSUM,
-       responseMessage: state.LoginReducer.responseMessage
+       MyProfile: state.LoginReducer.MyProfile,
     }
 }
 

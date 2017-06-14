@@ -16,7 +16,7 @@ class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
 
-        if ( !this.props.AUTHCHECKSUM )
+        if ( !this.props.MyProfile.AUTHCHECKSUM )
         {
             this.props.history.prevUrl = this.props.location.pathname;
             this.props.history.push('/login');
@@ -24,12 +24,11 @@ class EnsureLoggedInContainer extends React.Component
     }
 
     render() {
-        if ( this.props.AUTHCHECKSUM )
+        if ( this.props.MyProfile.AUTHCHECKSUM )
         {
             return <div>
                     <Route exact path="/" component={MyjsPage}/>
                     <Route path='/myjs' component={MyjsPage} />
-                    <Route path='/viewProfile' component={ProfilePage} />
                     </div>;
         }
         else
@@ -43,7 +42,7 @@ class EnsureLoggedInContainer extends React.Component
 }
 const mapStateToProps = (state,ownProps) => {
     return{
-        AUTHCHECKSUM : state.LoginReducer.AUTHCHECKSUM,
+        MyProfile : state.LoginReducer.MyProfile,
     }
 }
 
