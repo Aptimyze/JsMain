@@ -90,7 +90,8 @@ class postAcceptv2Action extends sfAction
 				if(!$request->getParameter("myjs")){
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top']; 
+					$MembershipMessage = $data2['hamburger_message']['top'];
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["errmsglabel"]= "Upgrade your membership to send personalized messages or initiate chat";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";

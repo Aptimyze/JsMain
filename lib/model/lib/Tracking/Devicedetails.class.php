@@ -151,21 +151,36 @@
 
 		public static function deviceInfo()
 		{
-			$deviceInfo = '';
+			$request = sfContext::getInstance()->getRequest();
 
-			$browserDetails = Devicedetails::getBrowser();
-			
-			$deviceInfo .= $browserDetails['name'].' version '.$browserDetails['version'];
-
-			$sysInfo = Devicedetails::systemInfo();
-
-			if($sysInfo["device"] == 'MOBILE')
+			if($_SERVER["HTTP_USER_AGENT"] == "JsAndroid")
 			{
-				$deviceInfo .= ' on '.Devicedetails::mobiledevice();
+				$deviceBrand = $request->getParameter('DEVICE_BRAND');
+				$deviceModel = $request->getParameter('DEVICE_MODEL');
+		        $deviceInfo = 'Android App on '.$deviceBrand .' - '. $deviceModel;
+			}
+			elseif ($_SERVER["HTTP_USER_AGENT"] == "JsApple")
+			{
+				$deviceInfo = 'IOS App';
 			}
 			else
 			{
-				$deviceInfo .= ' on '.$browserDetails['platform'];	
+				$deviceInfo = '';
+
+				$browserDetails = Devicedetails::getBrowser();
+
+				$deviceInfo .= $browserDetails['name'].' version '.$browserDetails['version'];
+
+				$sysInfo = Devicedetails::systemInfo();
+
+				if($sysInfo["device"] == 'MOBILE')
+				{
+					$deviceInfo .= ' on '.Devicedetails::mobiledevice();
+				}
+				else
+				{
+					$deviceInfo .= ' on '.$browserDetails['platform'];
+				}
 			}
 
 			return $deviceInfo;

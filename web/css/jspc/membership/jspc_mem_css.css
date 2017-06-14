@@ -1832,3 +1832,7 @@ ul.memul li:nth-last-child(1) {
     -moz-opacity: 0;
 }
 .customMem-checkbox.selected {background-position:1px -12px;}
+ul.time{list-style-type:none;}
+ul.time li{display:inline-block;font-size:20px}
+ul.time li span{font-size:15px}
+.inscol:after{ content:":"; padding-left:10px}
