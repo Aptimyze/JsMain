@@ -27,8 +27,7 @@ export  function commonApiCall(callUrl,data,reducer,method)
     })
     .then(response => response.json())
     .then( (response) => {
-      if ( response.AUTHCHECKSUM )
-      {
+      if ( response.AUTHCHECKSUM ){
         setCookie('AUTHCHECKSUM',response.AUTHCHECKSUM);
       }
       dispatch({

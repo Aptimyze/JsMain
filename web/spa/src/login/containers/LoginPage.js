@@ -8,6 +8,7 @@ import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import { withRouter } from 'react-router';
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
+import {getCookie} from '../../common/components/CookieHelper';
 
 class LoginPage extends React.Component {
 
@@ -30,7 +31,7 @@ class LoginPage extends React.Component {
                 showPromo : true
             });
         }, 1200);
-        if ( this.props.AUTHCHECKSUM ) {
+        if ( this.props.AUTHCHECKSUM && getCookie('AUTHCHECKSUM')) {
             this.props.history.push('/myjs');
        }
     }

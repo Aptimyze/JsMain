@@ -1,7 +1,15 @@
 import React from "react";
 
 export default class AcceptCount extends React.Component {
+  constructor(props) {
+        console.log('Acceptances');
+        console.log(props);
+        super();
+  }
   render(){
+    if(!this.props.fetched) {
+      return <div></div>;
+    }
     return(
       <div className="bg4 pad1" id="acceptanceCountSection">
         <div className="fullwid pad2">

@@ -6,7 +6,8 @@ import MyjsProfileVisitor from './MyjsProfileVisitor'
 import {MyjsApi} from "../actions/MyjsApiAction";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
-import * as CONSTANTS from '../../common/constants/apiConstants'
+import * as CONSTANTS from '../../common/constants/apiConstants';
+import { removeCookie } from '../../common/components/CookieHelper';
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -27,15 +28,23 @@ export  class MyjsPage extends React.Component {
 			this.setState({
 				apiSent:true
 			})
+		}
+
+	componentWillReceiveProps(nextProps){
+		if(nextProps.reducerData.apiData.responseStatusCode == 9){
+			removeCookie('AUTHCHECKSUM');
+			this.props.history.push('/login');
 		}		
+	}
 
   	render() {
   		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
-							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched} />
-							<AcceptCount/>
+							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
+							<EditBar fetched={this.props.reducerData.fetched}/>
+							<AcceptCount fetched={this.props.reducerData.fetched}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
 							</div>
 					</div>
@@ -45,7 +54,7 @@ export  class MyjsPage extends React.Component {
 	}
 
 	printProp(){
-		console.log('myujs');
+		console.log('myjs');
 		console.log(this.props);
 	
 	}
