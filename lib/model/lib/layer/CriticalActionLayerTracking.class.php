@@ -73,14 +73,15 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  { 
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
-
+            
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
+
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -102,25 +103,29 @@ class CriticalActionLayerTracking
             /* make sure no layer opens before one day */
 
         if($maxEntryDt)
-        {
+        {  
           if ( (time() - strtotime($maxEntryDt)) <= 60*60*24) 
           {
             return 0;
           }
           
         }
+  
 // in the order of priority
         for ($i=1;;$i++)
         { 
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+
       if (!$layer) 
         { 
             JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,21600);
             return 0;
         }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
-          return $layer;
+      {   
+           return $layer;
+      }
 
         }
 
@@ -134,8 +139,10 @@ return 0;
    * @return- layerid to display layer 
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
-  { 
+  {
 
+
+ 
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -143,15 +150,17 @@ return 0;
          /*check for diffTime then check whether it is the same layer that was shown last or next layer
          *for both, same or changed layer compare diffTime with their respective values in table if diffTime is less than any of them return null
          */
+
     $compareTime=$layerInfo['MINIMUM_INTERVAL'];
     if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
-    if( (time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
-          return false;
-            
+    if((time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
+         return false;
+       
     $profileid = $profileObj->getPROFILEID();
     $show=0;
     $request=sfContext::getInstance()->getRequest();
     $isApp=MobileCommon::isApp();
+
         switch ($layerToShow) {
           case '1': 
             if(strtotime('-30 days') < strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
@@ -388,8 +397,24 @@ return 0;
                           $show=1;
                            
                       }
-                      
-                      
+                      break;
+                    case '19': 
+                              
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
+                      $lightningCALObj = new LightningDeal();
+                      $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
+                      if($lightningCALData != false){
+                        $request->setParameter('DISCOUNT_PERCENTAGE',$lightningCALData['line2']);
+                        $request->setParameter('DISCOUNT_SUBTITLE',$lightningCALData['line3']);
+                        $request->setParameter('START_DATE','Plan starts @');
+                        $request->setParameter('OLD_PRICE',$lightningCALData['strikeoutPrice']);
+                        $request->setParameter('NEW_PRICE',$lightningCALData['discountedPrice']);
+                        $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
+                        $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
+                        $show=1;                      
+                      }
+
+                      }                      
                     break;
 
                      case '21': 
@@ -426,6 +451,7 @@ return 0;
         /*check if this layer is to be displayed
          * and then check no. of times the layer has been shown and then compare it with value of max times in the table
          */
+        
         if($show)
           return true;
         else 
@@ -491,6 +517,11 @@ break;
                     'I' => '4.5'
                     
                         ),
+
+                '19' => array(
+                  'A' => '97',
+                  ),
+
                           '18' => array(
                     
                     'A' => '96'
@@ -501,7 +532,6 @@ break;
                     'A' => '99',
                     'I' => '5.3'
                         )
-
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;

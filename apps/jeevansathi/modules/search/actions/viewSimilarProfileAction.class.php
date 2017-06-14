@@ -112,6 +112,7 @@ class viewSimilarProfileAction extends sfActions
 		$memHandlerObj = new MembershipHandler();
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$this->MembershipMessage = $data2['hamburger_message']['top'];
+        $this->MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 		//print_r($this->MembershipMessage);die; 
 
 		//validation Handler

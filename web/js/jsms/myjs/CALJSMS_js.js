@@ -1,4 +1,6 @@
 
+var calTimerTime,calTimer;
+
 $(document).ready(function() {
 
 if($("#CriticalActionlayerId").val()=='18'){
@@ -88,7 +90,13 @@ if($("#CriticalActionlayerId").val()=='18'){
 else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
-        }  
+        }
+else if($("#CriticalActionlayerId").val()=='19')
+{
+    $('body').css('background-color','#09090b');
+showTimerForLightningCal(1800);
+}
+
 else {
         $('body').css('background-color','#09090b');
         if($("#submitName").length && $("#submitName").offset().top-$("#skipBtn").offset().top-70 >0)
@@ -309,6 +317,7 @@ else {
 
         }
 
+
        function sendAltVerifyMail()
        {
                  $.ajax({
@@ -336,3 +345,45 @@ else {
 
 
        }
+
+
+function showTimerForLightningCal(lightningCALTime) {
+if(!lightningCALTime) return;
+var expiryTime=new Date(lightningCALTime);
+var timerSeconds=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerMinutes=lightningCALTime%60;
+lightningCALTime=Math.floor(lightningCALTime/60);
+var timerHrs=lightningCALTime;
+calTimerTime=new Date();
+calTimerTime.setHours(timerHrs);
+calTimerTime.setMinutes(timerMinutes);
+calTimerTime.setSeconds(timerSeconds);
+calTimer=setInterval('updateCalTimer()',1000);
+}
+
+
+function updateCalTimer(){
+  var h = calTimerTime.getHours();
+  var s = calTimerTime.getSeconds();
+  var m = calTimerTime.getMinutes();
+  if (!m && !s && !h) {
+     clearInterval(calTimer);
+     }
+  
+    calTimerTime.setSeconds(s-1);
+    
+    
+    m = formatTime(m);
+    s = formatTime(s);
+    h = formatTime(h);
+//  $("#calExpiryHrs").html(h);
+  $("#calExpiryMnts").html(m);
+  $("#calExpirySec").html(s);
+    }
+
+    function formatTime(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+

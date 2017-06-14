@@ -35,7 +35,6 @@
 										'P_GENDER'=>'GENDER',
                                         'P_HAVECHILD'=>'CHILDREN',
                                         'P_STATE'=>'STATE',
-                                        'CITY_INDIA'=>'CITY_INDIA',
 										'P_OCCUPATION_GROUPING'=>'OCCUPATION_GROUPING', //added this. Check if key or value needs to be changed
  										);
 	public static $FormatColums = array(
@@ -57,7 +56,6 @@
 									'P_CITY',
                                     'P_HAVECHILD',
                                     'P_STATE',
-                                    'CITY_INDIA',
                                     'P_OCCUPATION_GROUPING',
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(

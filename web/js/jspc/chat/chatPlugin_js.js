@@ -1380,6 +1380,9 @@ JsChat.prototype = {
                             finalStr += text[i];
                         }
                     }
+                    if(text.charCodeAt(text.length-1) != 10) {
+                        finalStr += text[text.length-1];
+                    }
                     //console.log(finalStr);
                     text = finalStr;
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();

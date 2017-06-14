@@ -2,7 +2,7 @@
 
 var t1=null;
 var profileCompletionCount=pc_temp1=limit=pc_temp2=0;
-var memTimer,memTimerTime,memTimerExtraDays=0;
+var memTimer,memTimerTime,memTimerExtraDays=0,calTimerTime,calTimer;
          
 var timeI=""; var timeE=""; var timeD="";
 var MyjsRequestCounter=0;
@@ -606,13 +606,24 @@ if(CALayerShow!='0')
   {
       
     var layer=$("#CALayerShow").val();
+    var discount_percentage=$("#DiscountPercentage").val();
+    var discount_subtitle=$("#DiscountSubtitle").val();
+    var start_date=$("#StartDate").val();
+    var old_price=$("#OldPrice").val();
+    var new_price=$("#NewPrice").val();
+    var time = $("#TimeForLightning").val();
+    var symbol = $("#Symbol").val();
     var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer};
+ var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time,'symbol':symbol};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
+      if(CALayerShow==19)
+{        var time = $("#TimeForLightning").val();
+  showTimerForLightningCal(time);
+}
   if(CALayerShow==9) 
       $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
   else
@@ -782,6 +793,31 @@ function videoLinkRequest()
 
 }
 
+function modifyMemMsgForLightningDeal(){
+    var flag = false;
+    if($('#jspcMemMsg span:first').html() == "FLASH DEAL"){
+        $('#jspcMemMsg span:first').addClass('f16').removeClass('f26');
+        var txt = $("#memExtraDiv").html();
+        $("#memExtraDiv").html('');
+        var memText = txt.split(" ");
+        $("#memExtraDiv").append("<span class=''></span><span class=''></span>");
+        var s1 = '';var s2='';
+        for(var i=0;i<3;i++){
+            s1+=memText[i]+" ";
+        }
+        for(var i=3;i<memText.length;i++){
+            s2+=memText[i]+" ";
+        }
+        $("#memExtraDiv span:nth-child(1)").html(s1);
+        $("#memExtraDiv span:nth-child(2)").html(s2);
+        $("#memExtraDiv span:nth-child(1)").addClass('f30 fontmed');
+        flag = true;
+        $("#lightningTimer").show();
+        showTimerForLightningMemberShipPlan("jspcMyjs");
+    }
+    return flag;
+}
+
 
 $(document).ready(function() {
 if($("#showConsentMsgId").val()=='Y')
@@ -806,9 +842,12 @@ else {
   {
     videoLinkRequest(profileid);
   });
-
+    
+    var responseFlag = modifyMemMsgForLightningDeal();
+    if(!responseFlag)
       showTimerForMemberShipPlan();
 	profile_completion(iPCS);
+    
 	if(showFTU){
 		var desiredPartnersObj = new desiredPartnerMatches();
 		desiredPartnersObj.pre();
@@ -1250,3 +1289,4 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
                 jQuery.myObj.ajax(ajaxConfig);
 
    }
+

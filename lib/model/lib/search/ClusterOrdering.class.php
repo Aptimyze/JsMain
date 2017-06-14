@@ -515,7 +515,7 @@ class ClusterOrdering
                         	$orderingArr[8] = $max+1;
 			}
                 }
-		if(!$this->SearchParamtersObj->getCITY_INDIA() && !$this->SearchParamtersObj->getCOUNTRY_RES())
+		if(!$this->SearchParamtersObj->getCITY_RES() && !$this->SearchParamtersObj->getCOUNTRY_RES())
                 {
 			if($orderingArr[12])
 			{

@@ -76,6 +76,7 @@ class ContactDetailsV1Action extends sfAction
 		$memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top']; 
+        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 		if ($priArr[0]["CONTACT_DETAIL"]["VISIBILITY"] == "Y" && !$this->contactEngineObj->errorHandlerObj->getErrorMessage()) {
 			$responseArray                       = $this->getContactDetailsInArray($this->contactEngineObj);
 			$source=CommonFunction::getViewContactDetailFlag($this->contactEngineObj->contactHandler);
