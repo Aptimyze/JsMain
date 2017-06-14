@@ -273,10 +273,13 @@ var altEmailUser = '~$altEmailUser`';
       <div style="background-color: #09090b;"><div id = "altEmailAskVerify">
   <div  class="posrel pad18Incomplete">
   <div class="br50p txtc" style='height:80px;'>
+  <!-- This is the check for Photo -->
       ~if $showPhoto eq '1'`
-      ~if $gender eq 'M'`   
+  <!-- This is the check for Gender -->    
+      ~if $gender eq 'M'`   <!-- Gender equal M -->
         <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
-        ~else`<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+        ~else`      <!-- Gender otherwise -->
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
         ~/if`
       ~/if`
     </div>
