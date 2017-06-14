@@ -180,7 +180,7 @@ $css_arr[]=array("jspc/membership/jspc_mem_custom_select" => "2");
 $css_arr[]=array("jspc/photoUpload/photoup_css" => "10");
 $css_arr[]=array("jspc/photoUpload/cropper" => "2");
 $css_arr[]=array("jspc/photoUpload/main" => "2");
-$css_arr[]=array("jspc/inbox/contactCenter"     => "8");
+$css_arr[]=array("jspc/inbox/contactCenter"      => "9");
 $css_arr[]=array("jspc/success_story/successStory" => "2");
 $css_arr[]=array("jspc/contactus/contactus_css" => "2");
 $css_arr[]=array("jspc/profile/view/jspcViewProfile_css" => "36");
