@@ -2668,6 +2668,7 @@ class crmMisActions extends sfActions
 	                	}
 	                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
 	                }
+	                unset($purchaseDetails);
                 }
                 // Set data for view 
                 $this->misData = array();
