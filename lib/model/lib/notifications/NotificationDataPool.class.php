@@ -637,7 +637,7 @@ class NotificationDataPool
             if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
                 $this->upgradeMem = "MAIN";
                 
-                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
+                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L",3,"","MAIN"); //3 is for default value
 
                 $this->displayPage = 1;$this->device = "desktop";$ignoreShowOnlineCheck = false;
 
