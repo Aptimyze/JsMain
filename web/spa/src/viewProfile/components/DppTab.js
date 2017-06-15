@@ -1,16 +1,22 @@
 import React from 'react';
+import {getCookie} from '../../common/components/CookieHelper';
 
 class DppTab extends React.Component {
 	constructor(props) {
         super();
+        let loginStatus = false;
+        if(getCookie("AUTHCHECKSUM")) {
+            loginStatus = true;
+        }
         this.state = {
             selfPicUrl : props.about.selfThumbnail || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
-            partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif"
+            partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif",
+            loginStatus
         };
     }
 
     getStatusMark(type) {
-        if(this.props.dpp_Ticks) {
+        if(this.props.dpp_Ticks && this.state.loginStatus) {
             if(this.props.dpp_Ticks[type].STATUS == "gnf") {
                 return <div className="fr wid27p txtc VPmt5">
                     <div className="checkmarkVP"></div>
@@ -55,7 +61,7 @@ class DppTab extends React.Component {
             totalCount = this.props.dpp_Ticks.matching.totalCount;
         }
         var matching_header;
-        if(this.props.dpp_Ticks) 
+        if(this.props.dpp_Ticks && this.state.loginStatus) 
         {
             matching_header = <div className="clearfix f13 fontlig">
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
