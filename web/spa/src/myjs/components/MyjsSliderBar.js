@@ -20,10 +20,14 @@ var slides3={
 
 export default class MyjsSlider extends React.Component {
   constructor(props) {
+    console.log('Interest Recieved');
     super(props);
   }
   render(){
-
+    console.log(this.props.listing);
+     if(!this.props.fetched) {
+      return <div></div>;
+    }
     return(
       <div>
         <div id="matchalertPresent" className="setWidth sliderc1">
@@ -31,7 +35,7 @@ export default class MyjsSlider extends React.Component {
 
               <div className="fullwid pb10 clearfix">
                   <div className="fl color7">
-                    <span className="f17 fontlig">{this.props.title}</span>&nbsp;<span id="matchAlert_count" className="opa50 f14">418</span>
+                    <span className="f17 fontlig">{this.props.title}</span>&nbsp;<span id="matchAlert_count" className="opa50 f14">{this.props.listing.new_count}</span>
                   </div>
                   <div className="fr pt5">
                     <a href="/inbox/7/1" className="f14 color7 opa50 icons1 myjs_arow1">View all </a>

@@ -49,8 +49,8 @@ export  class MyjsPage extends React.Component {
 							<EditBar fetched={this.props.reducerData.fetched}/>
 							<AcceptCount fetched={this.props.reducerData.fetched}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
-							<MyjsSlider title={this.state.DR} />
-							<MyjsSlider title={this.state.IR} />
+							<MyjsSlider title={this.state.DR} fetched={this.props.reducerData.fetched}/>
+							<MyjsSlider title={this.state.IR} listing={this.props.reducerData.apiData.interest_received} fetched={this.props.reducerData.fetched}/>
 
 							</div>
 					</div>
