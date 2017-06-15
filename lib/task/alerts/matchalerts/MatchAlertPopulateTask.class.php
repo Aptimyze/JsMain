@@ -96,5 +96,7 @@ EOF;
                  */
                 $matchalerts_MATCHALERTS_TO_BE_SENT->updateTrends();
                 $matchalerts_MATCHALERTS_TO_BE_SENT->resetTrendsIfOldLogicSet();
+                $matchalerts_MATCHALERTS_TO_BE_SENT->insertFromTempTable();
+                $matchalerts_MATCHALERTS_TO_BE_SENT->truncateTempTable();
 	}
 }

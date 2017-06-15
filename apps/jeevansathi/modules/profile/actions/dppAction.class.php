@@ -27,6 +27,7 @@ class dppAction extends sfAction {
                     $this->UpdateScore($request);
                     //Update regcount
                     $this->UpdateRegCount();
+                    $this->SendMatchAlertsCount();
                     //redirect to home page
                     $this->redirect("/social/addPhotos?fromReg=1");
                 }
@@ -444,6 +445,17 @@ class dppAction extends sfAction {
 
         $dbObj = new MIS_REG_COUNT;
         $dbObj->updateEntryRegPage("PAGE5", $status, LoggedInProfile::getInstance()->getPROFILEID());
+    }
+    private function SendMatchAlertsCount() {
+
+        $pid = LoggedInProfile::getInstance()->getPROFILEID();
+        $matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT();
+        $data = $matchalerts_MATCHALERTS_TO_BE_SENT->fetchLastRecord();
+        if($data){
+                $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable("main", $pid);
+        }else{
+                $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable("temp", $pid);
+        }
     }
     private function UpdateScore($request) {
         $loginProfile = LoggedInProfile::getInstance();
