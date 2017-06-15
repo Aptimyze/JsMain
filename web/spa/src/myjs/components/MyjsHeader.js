@@ -48,7 +48,7 @@ export default class MyjsHeadHTML extends React.Component
    setNotificationView()
    {
      let currentView  = document.getElementById('notificationBellView');
-     currentView.classList.toggle('dispnone');    
+     currentView.classList.toggle('dispnone');
      let element = document.getElementById('darkSection');
      element.classList.toggle('tapoverlay');
    }

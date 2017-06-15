@@ -31,10 +31,9 @@ export default class ShowNotificationLayer extends React.Component {
   render(){
   	if(!this.props.fetched){
   		return <div></div>;
-	} 
+	}
      return(
         <div className = "bg4 dispnone" id = "notificationBellView">
-
           <a href="/search/perform?justJoinedMatches=1">
             <div className="fullwid fontthin f14 color3 pad18 brdr1 clearfix">
               <div className="fl wid92p">
@@ -43,7 +42,6 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('NEW_MATCHES')}
             </div>
           </a>
-
           <a href = "/inbox/4/1" >
             <div className="fullwid fontthin f14 color3 pad18 brdr1 clearfix">
               <div className="fl wid92p">
@@ -52,7 +50,6 @@ export default class ShowNotificationLayer extends React.Component {
                 {this.returnBlankIfZero('MESSAGE_NEW')}
             </div>
            </a>
-
           <a href="/inbox / 9 / 1 ">
             <div className=" fullwid fontthin f14 color3 pad18 brdr1 clearfix ">
               <div className = "fl wid92p" >
@@ -61,7 +58,6 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('PHOTO_REQUEST_NEW')}
             </div>
           </a>
-
           <a href="/inbox / 1 / 1 ">
             <div className = "fullwid fontthin f14 color3 pad18 brdr1 clearfix" >
               <div className="fl wid92p">
@@ -70,7 +66,6 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('AWAITING_RESPONSE_NEW')}
             </div>
           </a>
-
           <a href="/inbox/2/1">
             <div className="fullwid fontthin f14 color3 pad18 brdr1 clearfix">
               <div className="fl wid92p">
@@ -79,7 +74,6 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('ACC_ME_NEW')}
             </div>
           </a>
-
           <a href = "/inbox/10/1" >
             <div className="fullwid fontthin f14 color3 pad18 brdr1 clearfix">
               <div className="fl wid92p">
@@ -88,7 +82,6 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('DEC_ME_NEW')}
             </div>
           </a>
-
           <a href="/inbox / 12 / 1 ">
             <div className = "fullwid fontthin f14 color3 pad18 brdr1 clearfix" >
               <div className="fl wid92p">
