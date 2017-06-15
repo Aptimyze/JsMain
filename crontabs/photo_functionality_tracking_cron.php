@@ -87,7 +87,7 @@ if(is_array($MAIL_PICTURE_NOT_SCREENED_IN_3_DAYS))
 
 if(isset($notScreenedMsg))
 {  
-	mail("lavesh.rawat@jeevansathi.com,akashkumardce@gmail.com,reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 5 Days ","$notScreenedMsg","Reply-To: lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
+	mail("reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 5 Days ","$notScreenedMsg","Reply-To: sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
 }
 
 // Check for Image from mail ended
