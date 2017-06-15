@@ -36,7 +36,14 @@ class deepLinking
 
 			$this->date =  date("Y-m-d H:i:s", strtotime("-1 week"));
 			$conditionValue = $this->verifyDeepLinkingConditions();
-			$loggedInData = $this->loggedInUserCondition($this->loggedInProfileId);
+			if (JsConstants::$hideUnimportantFeatureAtPeakLoad <= 1) 
+			{
+				$loggedInData = $this->loggedInUserCondition($this->loggedInProfileId);	
+			}
+			else
+			{
+				$loggedInData = 0; //this is set to 0 which will ensure that deeplinking doesn't happen for users. This needs to be changed after the problem is sorted.
+			}
 			if($conditionValue && $loggedInData)
 			{
 				$isIosDeep = 1;
