@@ -6,17 +6,17 @@ import React from "react";
 export default class ShowNotificationLayer extends React.Component {
   constructor(props) {
       super(props);
-      this.state={
-        statusupdate: false
-      }
+      // this.state={
+      //   statusupdate: false
+      // }
     }
-    componentWillReceiveProps(nextProps)
-    {
-      //console.log("next",nextProps);
-      this.setState({
-        statusupdate: true
-      })
-    }
+    // componentWillReceiveProps(nextProps)
+    // {
+    //   console.log("next",nextProps);
+    //   this.setState({
+    //     statusupdate: true
+    //   })
+    // }
     returnBlankIfZero(value){
       if(!this.props.layerCount.fetched) return '';
       else if(this.props.layerCount.bellResponse[value]==0) return '';
@@ -29,9 +29,9 @@ export default class ShowNotificationLayer extends React.Component {
 
     }
   render(){
-  	if(!this.props.fetched){
+  	if(!this.props.layerCount.fetched){
   		return <div></div>;
-	}
+	   }
      return(
         <div className = "bg4 dispnone" id = "notificationBellView">
           <a href="/search/perform?justJoinedMatches=1">

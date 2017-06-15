@@ -27,25 +27,8 @@ export default class MyjsHeadHTML extends React.Component
   constructor(props)
   {
     super(props);
-
-    this.state={
-      dataUpdates: false
-    }
-
-
   }
-
-
-  componentWillReceiveProps(nextProps)
-  {
-    //  console.log("next",nextProps);
-      this.setState({
-        dataUpdates: true
-      })
-
-  }
-
-   setNotificationView()
+  setNotificationView()
    {
      let currentView  = document.getElementById('notificationBellView');
      currentView.classList.toggle('dispnone');
@@ -85,6 +68,7 @@ export default class MyjsHeadHTML extends React.Component
                 </div>
             </div>
             <ShowNotificationLayer layerCount={this.props}  />
+            <div id="darkSection" className="posabs"></div>
 
         </div>
 
