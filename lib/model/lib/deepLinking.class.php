@@ -42,7 +42,7 @@ class deepLinking
 			}
 			else
 			{
-				$loggedInData = 1;
+				$loggedInData = 0; //this is set to 0 which will ensure that deeplinking doesn't happen for users. This needs to be changed after the problem is sorted.
 			}
 			if($conditionValue && $loggedInData)
 			{
