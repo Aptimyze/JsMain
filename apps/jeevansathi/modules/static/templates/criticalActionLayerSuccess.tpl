@@ -11,6 +11,7 @@
     var user = email.substr(0,start);
     var len = user.length;
     var domain = email.substr(start+1,diff).toLowerCase();
+    var chosenUpdateEvent = "chosen:updated";
     var emailVerified ={};
     if(jQuery.inArray(domain.toLowerCase(),invalidDomainArr) !=  -1)
         return false;
@@ -286,7 +287,7 @@ function validateAndSend(){
         },1);
            });
 
-            function callOccupation(){
+            function callOccupation(){ 
                     $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
                     type: "GET",
@@ -388,7 +389,7 @@ function validateAndSend(){
          {
            if($(".js-otheroccInp input").val().trim()=='')                   
            { 
-           $("#secondReq").show();
+           $("#secondReq").removeClass('vishid');
            $(".js-otheroccInp input").addClass('occ-bdr2');
            return;
            }
@@ -429,6 +430,7 @@ function validateAndSend(){
  document.head.appendChild(setscript);
  
    </script>
+
 ~elseif $layerId == '14'`
 <script>
 var altEmail = '~$altEmail`';</script>
@@ -461,6 +463,217 @@ var altEmail = '~$altEmail`';</script>
         <!--end:layer 1-->
         </div>
 
+   ~elseif $layerId == '20'`
+
+ <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
+      
+     <style type='text/css' >
+             .chosenDropWid {width: 230px; padding:10px 6px !important; }
+       .cityL-wid{width:560px;}
+       .cityL-p1{padding: 25px 30px}
+       .cityL-p2{padding: 13px 9px}
+       .city-bdr1{border-bottom: 1px solid #e2e2e2}
+       .city-bdr2{border: 1px solid #d9475c}
+       .chosen-container-single .chosen-search input[type="text"]{display: none}
+       .chosen-container{border: 1px solid #e2e2e2;padding:10px 0;}
+       .city-pos1{right:0;top:0}
+       .dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
+       .dpp-pos5 {top: -14px;left: 40px;}
+ 
+       /* add this  below class dynamically once you recived the error on .chosen-container */
+       .chosen-container-err{border:1px solid #d9475c;}
+       .chosen-container-single .chosen-default{color:#34495e;}
+ 
+     </style> 
+ 
+ <div id='criticalAction-layer' class="cityL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
+   <div class="f17 fontreg color11">
+     <!-- start:header -->
+     <div class="city-bdr1 cityL-p1">
+       ~$titleText`
+     </div>
+     <!-- end:header -->
+     <div class="cityL-p1">
+       <p class="opa80">~$contentText`</p>
+       <br />
+       <p class="opa80">~$subText`</p>
+       <!-- start:div for chosen -->
+       <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
+         <p class="f12 color5 pos-abs disp-none city-pos1 js-req1">Required</p> <div id = "stateBox">   
+         <select id="cityList" data-placeholder="Enter your State" class="chosen-select-width">
+                     </select>
+          </div>
+         <!-- start: in case of no City found -->
+         <div class="pt25 vishid js-otheroccInp">
+           <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
+           <div id = "cityBox"> 
+            <select id="city" data-placeholder="Enter your City" class="chosen-select-width">
+                     </select> 
+                     </div>    
+         </div>
+         <!-- end: in case no occupation found -->
+       </div>
+       <button id="city-sub"  class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">Submit</button>
+       <!-- end:div for chosen -->
+ 
+     </div>
+   </div>
+ 
+   </div>
+   <script type="text/javascript">
+
+            function callState(){  
+                    $.ajax({
+                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        res = JSON.parse(res);
+                        var listArray = res.state_res;
+                        appendStateData(listArray);
+                        loadChosen(); statefunc(res);
+                          },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+     }
+
+            function callCity(res){
+                        var listArray = res;
+                        appendCityData(listArray);
+                        loadChosen(); 
+                    }                
+        
+
+     appendStateData = function(res) {
+        $("#cityList").html('');
+        occuSelected = 0;
+        stateMap = {};
+        var stateIndex=1;
+        $("#cityList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+              $.each(elem1, function(index2, elem2) {
+                    $("#cityList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
+                stateMap[stateIndex++] = index2;
+                });
+        });
+          });
+       }
+
+        
+        appendCityData = function(res) {  
+        $("#stateBox").removeClass('chosen-container-err'); 
+        $('.js-req1').addClass('disp-none');
+        $("#city").html('');
+        var indexV = $('#cityList option:selected').val();
+        var keyName = stateMap[indexV];
+        cityMap = {};
+        cityIndex = 1;
+        $("#city").append('<option class="textTru chosenDropWid" id="notFound1" value="'+(cityIndex++)+'"></option>');
+
+        $.each(res.city_res_jspc, function(index, elem) {
+           if(index == keyName){
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
+                if(index2!=43) //  omitting 'others' option
+                    $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                  cityMap[cityIndex++] = index2;
+                });
+        });
+          }
+              });
+        }
+
+   function loadChosen(){
+     var config = {
+       '.chosen-select'           : {},
+       '.chosen-select-deselect'  : {allow_single_deselect:true},
+       '.chosen-select-no-single' : {disable_search_threshold:10},
+       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+       '.chosen-select-width'     : {width:"100%"},
+       '.chosen-select-no-search' : {disable_search:true,width:"100%"},
+       '.chosen-select-width-right':{width:"100%"}
+     }
+
+     for (var selector in config) {
+       $(selector).chosen(config[selector]);
+     }  
+    $('#city_chosen').removeClass('chosen-container-err');
+    $('#secondReq').addClass('vishid');
+    $('#city').trigger("chosen:updated");
+
+   }
+
+   function statefunc(res){
+      $('#cityList').on("change",function(){
+        $("#cityList_chosen").removeClass('chosen-container-err');
+        $('#city_chosen').removeClass('chosen-container-err');
+           callCity(res);
+          $('#city').val('');
+             $('.js-otheroccInp').addClass('visb');
+
+     });
+    }
+ 
+ var setscript=document.createElement('script');
+ setscript.type='text/javascript';
+ setscript.src="~sfConfig::get('app_img_url')`/min/?f=~$chosenJs`";
+
+
+ 
+ window.onload = function(){
+  $("#city").change( function(){$('#secondReq').addClass('vishid');
+    $('#city_chosen').removeClass('chosen-container-err');});
+  callState();
+   $('#city-sub').click(function(){ 
+         if( $('#cityList').val() == 1)
+         {
+           $('.js-req1').removeClass('disp-none');
+           $("#cityList_chosen").addClass('chosen-container-err');
+           return;
+         }
+         else if( $('#city').val() == 1 )
+         { 
+      $('#secondReq').removeClass('vishid');
+       $('#city_chosen').addClass('chosen-container-err');
+           return;   
+        }
+
+       else {  
+                            $(".js-otheroccInp input").val('');
+                            var stateCode = stateMap[$("#cityList").val()];
+                            var cityCode = cityMap[$("#city").val()];
+                            
+                            dataCity = {'editFieldArr[COUNTRY_RES]':51 , 'editFieldArr[CITY_RES]':cityCode,'editFieldArr[STATE_RES]':stateCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataCity,
+                            success: function(response) {
+                                 criticalLayerButtonsAction('~$action1`','B1');
+
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+           return;
+       }
+
+        
+        criticalLayerButtonsAction('~$action1`','B1');
+     });
+   
+
+ }
+ document.head.appendChild(setscript);
+ 
+   </script>
 
 ~elseif $layerId != '9'`
 <div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
