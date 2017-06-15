@@ -240,6 +240,7 @@
 
 
 ~elseif $calObject.LAYERID eq '20'`
+<div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
         <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
         <div id="stateCityMidDiv" style='padding-top:20%;' class="posrel midDiv white">
             <div class="pb10 fontlig f19 txtc">~$calObject.TITLE`</div>

@@ -98,7 +98,7 @@ if($("#CriticalActionlayerId").val()=='20'){
     }
 
     $("#cityMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() {
+    $("#stateClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
                     url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
@@ -108,13 +108,13 @@ if($("#CriticalActionlayerId").val()=='20'){
                         appendStateData(listArray);
                     },
                     error: function(res) {
-                        $("#listDiv").addClass("dn");
+                        $("#stateListDiv").addClass("dn");
                         ShowTopDownError(["Something went wrong"]);
                     }
                 });
             }
             else appendStateData(listArray);
-                $("#listDiv").removeClass("dn");
+                $("#stateListDiv").removeClass("dn");
         });
 
     $("#cityClickDiv").on("click", function() {
@@ -124,8 +124,9 @@ if($("#CriticalActionlayerId").val()=='20'){
 
      appendStateData = function(allRes) {  
         $("#stateList").html('');
-        $("#citySelect").html('Select your City');
+        $("#citySelect").html('Select your City');  
         allRes = JSON.parse(allRes);
+
         res = allRes.state_res;
 
         stateMap = {};
@@ -139,10 +140,9 @@ if($("#CriticalActionlayerId").val()=='20'){
             });
         });
       });      
-
-        $("#stateList li").each(function(index, element) {
-            $(this).bind("click", function() {
-
+   
+        $("#stateList li").each(function(index, element) { 
+            $(this).bind("click", function() { 
                 $("#stateSelect").html($(this).html());
                 $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
                 $("#stateListDiv").addClass("dn");
@@ -153,6 +153,7 @@ if($("#CriticalActionlayerId").val()=='20'){
                 
                 $("#stateCitySubmit").show();
             });
+
         });
         $("#ListLoader").addClass("dn");
         $("#stateList").removeClass("dn");
@@ -190,7 +191,7 @@ if($("#CriticalActionlayerId").val()=='20'){
                     occuSelected = 0;
                     $("#contText").hide();
                 
-                $("#cityStateSubmit").show();
+                $("#stateCitySubmit").show();
             });
         });
         $("#cityListLoader").addClass("dn");
@@ -332,7 +333,6 @@ else {
                             });
                         }
                         else{
-
                                 showError("Please enter City");
                                 CALButtonClicked=0;
                                 return;
@@ -362,7 +362,6 @@ else {
               $( "#validation_error" ).text(msg);
               $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
               $( "#validation_error" ).slideUp( "slow", function() {});
-
 
         }
 
