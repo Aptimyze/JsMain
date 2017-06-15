@@ -239,6 +239,46 @@
 
 
 
+~elseif $calObject.LAYERID eq '20'`
+<div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
+        <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
+        <div id="stateCityMidDiv" style='padding-top:20%;' class="posrel midDiv white">
+            <div class="pb10 fontlig f19 txtc">~$calObject.TITLE`</div>
+             <div class="pad0840 txtc fontlig f16">~$calObject.TEXT`</div>
+           <div class="pad0840 txtc fontlig f16">~$calObject.SUBTEXT`</div>
+            <div id="stateClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
+                <div id="stateSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select your State</div>
+                <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
+            </div>
+            <div id="contText" class="fontlig f15 mt10 txtc">Select to continue</div>
+              <div id="cityClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25 dn">
+                <div id="citySelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select your City</div>
+                <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div id="stateListDiv" class="listDivInner bg4 scrollhid dn" style= '-webkit-overflow-scrolling: touch;'>
+        <div id="ListLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
+        <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
+        <ul id="stateList" class="occList color11 fontlig f18 dn">
+        </ul>
+    </div>
+
+        <div id="cityListDiv" class="listDivInner bg4 scrollhid dn" style= '-webkit-overflow-scrolling: touch;'>
+        <div id="cityListLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
+        <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
+        <ul id="cityList" class="occList color11 fontlig f18 dn">
+        </ul>
+    </div>
+
+    <div id="foot" class="posfix fullwid bg7 btmo">
+        <div class="scrollhid posrel">
+            <input type="submit" id="stateCitySubmit" class="dispnone fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="OK">
+        </div>
+    </div>
+
+
 
 ~elseif $calObject.LAYERID eq '16'`
 
@@ -265,6 +305,53 @@
             </div>
         </div>
     
+  ~elseif $calObject.LAYERID ==14`
+  <script>
+var altEmailUser = '~$altEmailUser`';
+  </script>
+
+      <div style="background-color: #09090b;"><div id = "altEmailAskVerify">
+  <div  class="posrel pad18Incomplete">
+  <div class="br50p txtc" style='height:80px;'>
+  <!-- This is the check for Photo -->
+      ~if $showPhoto eq '1'`
+  <!-- This is the check for Gender -->    
+      ~if $gender eq 'M'`   <!-- Gender equal M -->
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
+        ~else`      <!-- Gender otherwise -->
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+        ~/if`
+      ~/if`
+    </div>
+     
+  </div>
+   
+  <div class="txtc">   
+  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE` </div>
+  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
+  </div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="sendAltVerifyMail()">~$calObject.BUTTON1`</div>
+  </div>
+  <!--end:div-->
+  <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc; padding-top: 12%;' class="pdt15 pb10 txtc white f14">~$calObject.BUTTON2`</div>
+
+  </div>
+  <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
+  <div class="fontlig">
+      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
+    <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1')"  class="pad_new app_clrw f16 txtc">OK</div>    
+    </div>
+  
+</div>
+  
+  
+  
+  </div>
+
     
     
   

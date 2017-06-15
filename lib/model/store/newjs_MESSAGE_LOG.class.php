@@ -805,6 +805,14 @@ public function updateMessageLogDetails($msgCommObj)
 								$output[$row["PROFILEID"]][] = $row;
 						}
 					}
+					else if(!$inSql && is_array($inArray) && count($inArray)>0)
+					{
+						 while($row = $res->fetch(PDO::FETCH_ASSOC))
+						{
+							if(in_array($row["PROFILEID"],$inArray))
+								$output[$row["PROFILEID"]][] = $row;
+						}
+					}
 					else
 					{
 						while($row = $res->fetch(PDO::FETCH_ASSOC))
