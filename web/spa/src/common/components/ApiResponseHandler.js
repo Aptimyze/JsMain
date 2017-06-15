@@ -12,9 +12,11 @@ export  function commonApiCall(callUrl,data,reducer,method)
   {
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
-    if ( aChsum )
+    if ( aChsum && callUrl.indexOf("?") == -1)
     {
       checkSumURL = '?AUTHCHECKSUM='+aChsum;
+    } else {
+      checkSumURL = '&AUTHCHECKSUM='+aChsum;
     }
 
     fetch( CONSTANTS.API_SERVER +callUrl + checkSumURL, // PLEASE ENSURE THIS DOESNT GO LIVE AS WE CANNOT EXPOSE ACHSUM IN THE URL FIELD, THIS HAS TO GO IN THE COOKIE ITSELF WHICH WILL BE RESOLVED WITH PRODUCTION BUILD AUTOMATICALLY
