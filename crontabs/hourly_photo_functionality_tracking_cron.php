@@ -65,8 +65,8 @@ if($searchPicError)
 	$mail_msg.="\n\n Search PIC URLS - ";
 	$mail_msg.=print_r($searchPicError,true);
 }
-if($mail_msg)
-	mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","Picture Proper funtioning Report ","$mail_msg");
+//if($mail_msg)
+	// mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","Picture Proper funtioning Report ","$mail_msg");
 
 function checkForError($pic,$picType="")
 {
