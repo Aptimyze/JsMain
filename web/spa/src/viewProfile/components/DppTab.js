@@ -31,6 +31,22 @@ class DppTab extends React.Component {
         }
         
     }
+    showCompleteText(e) {
+        e.target.classList.add("dispnone");
+        e.target.nextSibling.classList.remove("dispnone");
+    }
+    stackData(str) {
+        if(str.length > 50) {
+           return <div>
+                <span>{str.substring(0, 50)}</span>
+                <span onClick={(e) => this.showCompleteText(e)} className="moreBtn color1"> ...more</span>
+                <div className="dispnone">{str.substring(50, str.length)}</div>
+            </div>;
+        } else {
+            return str;
+        }
+
+    }
 
     render() {
 
@@ -139,14 +155,14 @@ class DppTab extends React.Component {
                 {this.getStatusMark("dpp_manglik")}
             </div>
         }
-
+        
         var dpp_religion;
         if(this.props.dpp.dpp_religion)
         {
             dpp_religion = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Religion</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_religion">{this.props.dpp.dpp_religion}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_religion">{this.stackData(this.props.dpp.dpp_religion)}</div>
                 </div>
                 {this.getStatusMark("dpp_religion")}
             </div>
@@ -158,7 +174,7 @@ class DppTab extends React.Component {
             dpp_mtongue = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Mother Tongue</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_mtongue">{this.props.dpp.dpp_mtongue}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_mtongue">{this.stackData(this.props.dpp.dpp_mtongue)}</div>
                 </div>
                 {this.getStatusMark("dpp_mtongue")}
             </div>
@@ -170,7 +186,7 @@ class DppTab extends React.Component {
             dpp_caste = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Caste</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_caste">{this.props.dpp.dpp_caste}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_caste">{this.stackData(this.props.dpp.dpp_caste)}</div>
                 </div>
                 {this.getStatusMark("dpp_caste")}
             </div>
@@ -182,7 +198,7 @@ class DppTab extends React.Component {
             dpp_city = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">City</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_city">{this.props.dpp.dpp_city}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_city">{this.stackData(this.props.dpp.dpp_city)}</div>
                 </div>
                 {this.getStatusMark("dpp_city")}
             </div>
@@ -194,7 +210,7 @@ class DppTab extends React.Component {
             dpp_country = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Country</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_country">{this.props.dpp.dpp_country}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_country">{this.stackData(this.props.dpp.dpp_country)}</div>
                 </div>
                 {this.getStatusMark("dpp_country")}
             </div>
@@ -206,7 +222,7 @@ class DppTab extends React.Component {
             dpp_edu_level = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Education Level</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_edu_level">{this.props.dpp.dpp_edu_level}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_edu_level">{this.stackData(this.props.dpp.dpp_edu_level)}</div>
                 </div>
                 {this.getStatusMark("dpp_edu_level")}
             </div>
@@ -218,7 +234,7 @@ class DppTab extends React.Component {
             dpp_occupation = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Occupation</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_occupation">{this.props.dpp.dpp_occupation}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_occupation">{this.stackData(this.props.dpp.dpp_occupation)}</div>
                 </div>
                 {this.getStatusMark("dpp_occupation")}
             </div>
@@ -230,7 +246,7 @@ class DppTab extends React.Component {
             dpp_earning = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Earning</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_occupation">{this.props.dpp.dpp_earning}</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_occupation">this.stackData({this.props.dpp.dpp_earning})</div>
                 </div>
                 {this.getStatusMark("dpp_earning")}
             </div>
