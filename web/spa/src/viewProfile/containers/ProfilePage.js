@@ -26,9 +26,10 @@ class ProfilePage extends React.Component {
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
             picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto",
-            showHistory: false
+            showHistory: false,
+            profilechecksum: "ff316970209a2dfd3ea91bf29b1f791ei117296"
         };
-        props.showProfile();   
+        props.showProfile(this.state.profilechecksum);   
     }
 
     componentDidMount() {
@@ -122,7 +123,7 @@ class ProfilePage extends React.Component {
         var AboutView,FamilyView,DppView,Header = "View Profile";
         if(this.state.dataLoaded)
         {   
-            AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
+            AboutView = <AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
 
@@ -192,14 +193,15 @@ const mapStateToProps = (state) => {
        pic: state.ProfileReducer.pic,
        LifestyleInfo: state.ProfileReducer.lifestyle,
        dpp_Ticks: state.ProfileReducer.dpp_Ticks,
-       profileId: state.ProfileReducer.profileId
+       profileId: state.ProfileReducer.profileId,
+       show_gunascore:state.ProfileReducer.show_gunascore
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: () => {
-            let call_url = "/api/v1/profile/detail?profilechecksum=8a92bb4861888403f0f2569042555ebei136460";
+        showProfile: (profilechecksum) => {
+            let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum;
             dispatch(commonApiCall(call_url,{},'SHOW_INFO','GET'));
         }
     }
