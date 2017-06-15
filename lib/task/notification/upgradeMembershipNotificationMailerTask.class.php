@@ -32,13 +32,13 @@ EOF;
         $greaterOffset = max($mailerOffsetInDays,$notificationOffsetInDays);
         $greaterThanDate = date('Y-m-d',strtotime("-$greaterOffset days",  strtotime(date('Y-m-d'))))." 00:00:00";
         
-        $purchasesObj = new BILLING_PURCHASES(); // connection
+        $purchasesObj = new BILLING_PURCHASES("newjs_slave");
         $data = $purchasesObj->getPaidProfiledWithinRange($greaterThanDate);
         
         $segregatedData = $this->segerateDataForNotificationMail($data,$mailerOffsetInDays,$notificationOffsetInDays);
         
         $this->sendMemUpgradeNotification(array_keys($segregatedData["NOTIFICATION"]));
-        $this->sendMemUpgradeMailer($segregatedData["MAILER"]);
+        $this->sendMemUpgradeMailer(array_keys($segregatedData["MAILER"]));
         
     }
     
