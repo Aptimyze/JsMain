@@ -6,7 +6,9 @@ const ProfileReducer = (state={
 	dppInfo: [],
 	pic: [],
 	lifestyle: [],
-	dpp_Ticks: []
+	dpp_Ticks: [],
+	historyData: [],
+	profileId: ''
 },action) => {
 	switch(action.type)
 	{
@@ -20,9 +22,15 @@ const ProfileReducer = (state={
 			dppInfo: action.payload.dpp,
 			pic: action.payload.pic,
 			lifestyle: action.payload.lifestyle,
-			dpp_Ticks:action.payload.dpp_Ticks
+			dpp_Ticks:action.payload.dpp_Ticks,
+			profileId:action.payload.page_info.profilechecksum
 		}
 		break;
+		case "SHOW_HISTORY_INFO":
+		state = {
+			...state,
+			historyData:action.payload
+		}
 	}
 	return state;
 }
