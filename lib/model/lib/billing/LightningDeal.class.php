@@ -226,6 +226,9 @@ class LightningDeal
     
     /*Get lightning deal eligibility and data, activate offer and clear membership cache*/
     public function lightningDealCalAndOfferActivate($request){
+        if(!VariableParams::$lightningDealOfferConfig["activeOfferFlag"]){
+            return false;
+        }
         $data = $this->getLightningDealCalData($request);
         if($data && $data['STATUS'] == 'V' && (strtotime($data['EDATE']) < strtotime(date('Y-m-d H:i:s'))))
             return false;
