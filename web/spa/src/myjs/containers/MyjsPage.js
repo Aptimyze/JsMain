@@ -1,6 +1,6 @@
 import React from "react";
 import MyjsHeadHTML from "../components/MyjsHeader";
-import EditBar from "./MyjsEditBar";
+import EditBar from "../components/MyjsEditBar";
 import AcceptCount from './MyjsAcceptcount';
 import MyjsProfileVisitor from './MyjsProfileVisitor'
 import {MyjsApi} from "../actions/MyjsApiAction";
@@ -29,7 +29,6 @@ export  class MyjsPage extends React.Component {
 				apiSent:true
 			})
 		}
-
 	componentWillReceiveProps(nextProps){
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
@@ -43,21 +42,18 @@ export  class MyjsPage extends React.Component {
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
 							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
+							
 							<EditBar fetched={this.props.reducerData.fetched}/>
 							<AcceptCount fetched={this.props.reducerData.fetched}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
+
 							</div>
 					</div>
-					<button onClick = {this.printProp.bind(this)}>click</button>
+
 			</div>
 		);
 	}
 
-	printProp(){
-		console.log('myjs');
-		console.log(this.props);
-	
-	}
 }
 
 const mapStateToProps = (state) => {
