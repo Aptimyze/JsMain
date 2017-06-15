@@ -609,7 +609,7 @@ $js_arr[]=array("jspc/common/urlHandling"   => "16");
 $js_arr[]=array("jspc/success_story/imagefit" => "2");
 $js_arr[]=array("jspc/contactus/contactus_js"   => "4");
 $js_arr[]=array("jspc/success_story/successScroll" => "2");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"     => "121");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"      => "122");
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"         => "77");
 $js_arr[]=array("jspc/success_story/foggy"   => "4");
 $js_arr[]=array("jspc/success_story/resizeIe"   => "4");
