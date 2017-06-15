@@ -10,7 +10,7 @@ while(1)
         foreach($serverstatus as $serverid=>$serverData)
         {
                 $str.= $serverid."::".$serverData['idle']."\n";
-                if($serverData['flag']==2)
+                if($serverData['flag']==0)
                 {
                         $issue = 1;
                 }
