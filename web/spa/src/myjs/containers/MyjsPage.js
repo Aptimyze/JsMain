@@ -29,7 +29,6 @@ export  class MyjsPage extends React.Component {
 				apiSent:true
 			})
 		}
-
 	componentWillReceiveProps(nextProps){
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
@@ -56,7 +55,7 @@ export  class MyjsPage extends React.Component {
 	printProp(){
 		console.log('myjs');
 		console.log(this.props);
-	
+
 	}
 }
 
