@@ -32,15 +32,28 @@ export default class MyjsHeadHTML extends React.Component
    {
      let currentView  = document.getElementById('notificationBellView');
      currentView.classList.toggle('dispnone');
+
+     console.log(currentView.className.indexOf('dispnone'));
+
      let element = document.getElementById('darkSection');
      element.classList.toggle('tapoverlay');
+
+     if(currentView.className.indexOf('dispnone')===-1)
+     {
+       document.getElementById("mainContent").style.height = window.innerHeight+"px";
+       document.getElementById("mainContent").style.overflow = "hidden";
+     }
+     else
+     {
+       document.getElementById("mainContent").style.overflow = "auto";
+     }
    }
 
 
 
   render(){
       return(
-          <div>
+          <div className="posrel">
             <div className="fullwid bg1 pad1">
                 <div className="rem_pad1 clearfix">
                     <div className="fl wid20p">
