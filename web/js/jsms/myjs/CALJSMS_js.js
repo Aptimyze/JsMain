@@ -310,7 +310,7 @@ else {
                     {   
                     if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
                         {
-                            
+                            showLoader();
                              var stateCode = $("#stateSelect").attr('stateCode');
                              var cityCode  = $("#citySelect").attr('cityCode');
                             dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
@@ -321,12 +321,13 @@ else {
                             dateType : 'json',
                             data: dataStateCity,
                             success: function(response) {
+                                hideLoader();
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
                             },
                             error: function(response) {
-                                    
+                                 hideLoader();   
                                 showError('Something went wrong');
 
                                 }
@@ -539,3 +540,14 @@ function updateCalTimer(){
     return i;
 }
 
+function showLoader()
+{
+    setTimeout(function(){$("#ed_slider").addClass("dn");},100);
+    stopTouchEvents(1,1,1);
+}
+
+function hideLoader()
+{
+    setTimeout(function(){$("#ed_slider").removeClass("dn");},100);
+    startTouchEvents(1,1,1);
+}
