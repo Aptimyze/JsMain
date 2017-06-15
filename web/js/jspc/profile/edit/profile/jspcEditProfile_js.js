@@ -1888,13 +1888,13 @@ EditApp = function(){
                         delete editedFields[CRITICAL][fieldObject.key];
                 }
                 fieldDOM.find('span.js-decVal').html(dateString);
+                fieldDOM.find('.js-decVal').removeClass(dispNone);
+                fieldDOM.find('.boxType').addClass(dispNone);
+                fieldDOM.find('.js-subBoxList').addClass(dispNone);
+                $("#daysub").parent().attr("style","display:none");
+                $("#monthsub").parent().attr("style","display:none");
+                $("#yearsub").parent().attr("style","display:none");
         }
-        fieldDOM.find('.js-decVal').removeClass(dispNone);
-        fieldDOM.find('.boxType').addClass(dispNone);
-        fieldDOM.find('.js-subBoxList').addClass(dispNone);
-        $("#daysub").parent().attr("style","display:none");
-        $("#monthsub").parent().attr("style","display:none");
-        $("#yearsub").parent().attr("style","display:none");
       }
       
       var onClick2 = function(event){
@@ -1915,7 +1915,7 @@ EditApp = function(){
       fieldDOM.find('.js-boxContent .boxType').on('click',clickFn);
       
       //MyBlur
-      fieldDOM.on('focusout',onBlur);
+      fieldDOM.on('blur',onBlur);
         createDateList();
         createMonthList();
         createYearList();
