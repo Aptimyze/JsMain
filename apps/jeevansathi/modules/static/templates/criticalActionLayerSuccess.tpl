@@ -527,6 +527,7 @@ var altEmail = '~$altEmail`';</script>
                     url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
                     type: "GET",
                     success: function(res) {
+                        res = JSON.parse(res);
                         var listArray = res.state_res;
                         appendStateData(listArray);
                         loadChosen(); statefunc(res);
