@@ -198,7 +198,10 @@ class phoneActions extends sfActions
 		}
 
 		}
-	
+			$verifiedLogObj= new PHONE_VERIFIED_LOG();
+			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
+			$noOfTimesVerified=$row['COUNT'];
+	$result['fromReg'] = ($noOfTimesVerified == 0) ? 'Y' : 'N';
 	$result['FLAG']=$phoneVerified;
 	$result['PHOTO']= null;
 	if($phoneVerified=="Y")
