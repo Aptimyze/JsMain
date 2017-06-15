@@ -239,9 +239,13 @@ class LightningDeal
             $data['endTimeInSec'] = strtotime($endTime) - strtotime(date('Y-m-d H:i:s'));
             $memHandler = new MembershipHandler();
             $memHandler->clearMembershipCacheForProfile($profileid); 
-            MyJsMobileAppV1::deleteMyJsCache(array($profileid));
+            $appApiVersion = $request->getParameter('API_APP_VERSION');
             $memCacheObject = JsMemcache::getInstance();
-            $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
+            if (isset($appApiVersion) && is_numeric($appApiVersion)){
+                $memCacheObject->delete($profileid."_MEM_OCB_MESSAGE_API".$appApiVersion);
+            }
+            MyJsMobileAppV1::deleteMyJsCache(array($profileid));            
+            $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileid . '_MESSAGE_BANNER');
         }
         return $data;
     }
