@@ -16,6 +16,8 @@ class ViewSimilarProfile {
                                             "JSMS"=>"MobileAppPicUrl",
                                             "IOS"=>"MobileAppPicUrl",
                                             "APP"=>"MobileAppPicUrl");
+        
+        private $reverseParamsMapping = array('PARTNER_MSTATUS'=>'','PARTNER_CITYRES','PARTNER_COUNTRYRES','PARTNER_HANDICAPPED','PARTNER_RELIGION','PARTNER_CASTE','LPARTNER_LAGE','HPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','HPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_HHEIGHT','PARTNER_ELEVEL_NEW','PARTNER_INCOME');
         /**
          * Function to find similar profile IDs
          * @param: $profileObj Profile Object of viwed profile
@@ -78,9 +80,10 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
 						$viewedAge = $profileObj->getAGE();
 
 						$AgeViewed =  $this->AgeInterval($viewedOppositeGender,$viewedAge,$viewerAge);
-						$lAge=$AgeViewed['lAge'];
-						$hAge=$AgeViewed['hAge'];
-                        $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $lAge, $hAge);
+                                                $whereParams = $this->getWhereParamsForReverseDpp($viewedOppositeGender,$loginProfile);
+                                                $whereParams['lage']=$AgeViewed['lAge'];
+						$whereParams['hage']=$AgeViewed['hAge'];
+                        $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams);
                         $suggestedProf = $resultTemp['suggestedProf'];
                         $constantVal = $resultTemp['constantVal'];
 						$priority = $resultTemp['priority'];
@@ -209,8 +212,8 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
             }
            	else {
            		$viewedAgeMax = $viewedAge + 5;
-                $Age['lAge'] = min($viewedAgeMax,$viewerAge);
-                $Age['hAge'] = max($viewedAge + 5,$viewerAge);
+                $Age['lAge'] = min($viewedAge,$viewerAge);
+                $Age['hAge'] = max($viewedAgeMax,$viewerAge);
             }
             return $Age;
         }
@@ -294,6 +297,25 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $paramArr["MANGLIK"] = '';
                                 $paramArr["MSTATUS"] = $result['MSTATUS'];
                                 $paramArr["IS_VSP"] = 1;
+                                
+                                if(SearchConfig::$VspWithoutSolr){
+                                    $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master', $viewer);
+                                    if($paramArr["GENDER"]=='M'){
+                                        $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
+                                    }
+                                    else{
+                                        $reverseParams = SearchConfig::$reverseParamsMaleLoggedIn;
+                                    }
+
+                                    $reverseCriteria = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
+                                    $reverseCriteria->getSearchCriteria();
+                                    foreach($reverseParams as $k=>$v)
+                                    {
+                                        eval('$tempVal = $reverseCriteria->get'.$v.'();');
+                                        if($tempVal)
+                                            eval('$paramArr['.$v.']='.$tempVal.';');
+                                    }
+                                }
 
                                 $results = $this->suggestedAlgoSearch($paramArr, $viewer);
                         if ($results)
@@ -387,6 +409,17 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $SearchUtilityObj = new SearchUtility;
                         $noAwaitingContacts = 1;
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master', $pid);
+                        
+
+                        $SearchParametersObj->setWhereParams(SearchConfig::$searchWhereParameters.",".SearchConfig::$membersLookingForMeWhereParameters);
+                        $SearchParametersObj->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters);
+
+                        $ageToSet = $this->AgeInterval($loggedInProfileObj->getGENDER(),$profileObj->getAGE(),$loggedInProfileObj->getAGE());    
+                        $SearchParametersObj->setLAGE($ageToSet['lAge']);
+                        $SearchParametersObj->setHAGE($ageToSet['hAge']);
+                        
+                        //Call VSP from different URL
+                        $SearchParametersObj->setIS_VSP(1);
                         $SearchUtilityObj->removeProfileFromSearch($SearchParametersObj, 'spaceSeperator', $loggedInProfileObj, '', $noAwaitingContacts);
                 }
 
@@ -511,6 +544,27 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
             if(MobileCommon::isDesktop())
                 $jspcVSPArray["defaultImage"] = PictureFunctions::getNoPhotoJSMS($gender,ViewSimilarProfile::$defaultPicSize["PC"]);
             return $jspcVSPArray;
+        }
+        
+        
+        private function getWhereParamsForReverseDpp($viewerGender,$loggedInProfileObj){
+            if($viewerGender == 'M')
+                $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
+            else
+                $reverseParams = SearchConfig::$reverseParamsMaleLoggedIn;
+            
+            $reverseCriteria = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
+            $reverseCriteria->getSearchCriteria();
+            foreach($reverseParams as $k=>$v)
+            {
+                    eval('$tempVal = $reverseCriteria->get'.$v.'();');
+                    if($tempVal){
+                            $tempVal = str_replace(',99999', '', $tempVal);
+                            $whereParams[$v]= "'".$tempVal."'";
+                    }
+            }
+            
+            return $whereParams;
         }
 
 }

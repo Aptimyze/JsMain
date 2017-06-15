@@ -185,6 +185,81 @@ class SearchBasedOnParameters extends SearchParamters
                 {
                        	$this->setIS_VSP(1);
                 }
-	}
+                if($paramArr["PARTNER_MTONGUE"]){
+                    $this->PARTNER_MTONGUE = $paramArr["PARTNER_MTONGUE"];
+                }
+                if($paramArr["PARTNER_CASTE"]){
+                    $this->PARTNER_CASTE = $paramArr["PARTNER_CASTE"];
+                }
+                if($paramArr["PARTNER_RELIGION"]){
+                    $this->PARTNER_RELIGION = $paramArr["PARTNER_RELIGION"];
+                }
+                if($paramArr["PARTNER_CASTE"]){
+                    $this->PARTNER_CASTE = $paramArr["PARTNER_CASTE"];
+                }
+                if($paramArr["PARTNER_COUNTRYRES"]){
+                    $this->PARTNER_COUNTRYRES = $paramArr["PARTNER_COUNTRYRES"];
+                }
+                if($paramArr["PARTNER_BTYPE"]){
+                    $this->PARTNER_BTYPE = $paramArr["PARTNER_BTYPE"];
+                }
+                if($paramArr["PARTNER_COMP"]){
+                    $this->PARTNER_COMP = $paramArr["PARTNER_COMP"];
+                }
+                if($paramArr["PARTNER_ELEVEL_NEW"]){
+                    $this->PARTNER_ELEVEL_NEW = $paramArr["PARTNER_ELEVEL_NEW"];
+                }
+                if($paramArr["PARTNER_INCOME"]){
+                    $this->PARTNER_INCOME = $paramArr["PARTNER_INCOME"];
+                }
+                if($paramArr["PARTNER_OCC"]){
+                    $this->PARTNER_OCC = $paramArr["PARTNER_OCC"];
+                }
+                if($paramArr["LPARTNER_LAGE"]){
+                    $this->LPARTNER_LAGE = $paramArr["LPARTNER_LAGE"];
+                }
+                if($paramArr["HPARTNER_LAGE"]){
+                    $this->HPARTNER_LAGE = $paramArr["HPARTNER_LAGE"];
+                }
+                if($paramArr["LPARTNER_HAGE"]){
+                    $this->LPARTNER_HAGE = $paramArr["LPARTNER_HAGE"];
+                }
+                if($paramArr["HPARTNER_HAGE"]){
+                    $this->HPARTNER_HAGE = $paramArr["HPARTNER_HAGE"];
+                }
+                if($paramArr["LPARTNER_LHEIGHT"]){
+                    $this->LPARTNER_LHEIGHT = $paramArr["LPARTNER_LHEIGHT"];
+                }
+                if($paramArr["HPARTNER_LHEIGHT"]){
+                    $this->HPARTNER_LHEIGHT = $paramArr["HPARTNER_LHEIGHT"];
+                }
+                if($paramArr["LPARTNER_HHEIGHT"]){
+                    $this->LPARTNER_HHEIGHT = $paramArr["LPARTNER_HHEIGHT"];
+                }
+                if($paramArr["HPARTNER_HHEIGHT"]){
+                    $this->HPARTNER_HHEIGHT = $paramArr["HPARTNER_HHEIGHT"];
+                }
+                if($paramArr["PARTNER_MSTATUS"]){
+                    $this->PARTNER_MSTATUS = $paramArr["PARTNER_MSTATUS"];
+                }
+                if($paramArr["PARTNER_CITYRES"]){
+                    $this->PARTNER_CITYRES = $paramArr["PARTNER_CITYRES"];
+                }
+                if($paramArr["PARTNER_DRINK"]){
+                    $this->PARTNER_DRINK = $paramArr["PARTNER_DRINK"];
+                }
+                if($paramArr["PARTNER_SMOKE"]){
+                    $this->PARTNER_SMOKE = $paramArr["PARTNER_SMOKE"];
+                }
+                if($paramArr["PARTNER_DIET"]){
+                    $this->PARTNER_DIET = $paramArr["PARTNER_DIET"];
+                }
+                if($paramArr["PARTNER_HANDICAPPED"]){
+                    $this->PARTNER_HANDICAPPED = $paramArr["PARTNER_HANDICAPPED"];
+                }
+                if($paramArr["PARTNER_MANGLIK"]){
+                    $this->PARTNER_MANGLIK = $paramArr["PARTNER_MANGLIK"];
+                }
+        }
 }
 ?>

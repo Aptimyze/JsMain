@@ -41,7 +41,7 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
          * @param $viewedOppositeGender : Opposite gender of profiled viewed
          * @param $viewedContactsStr : viewed profile contact string i.e string of profile IDs being contacted
          */
-        public function getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $lAge, $hAge) {
+        public function getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams) {
                 try {
 			$lAge=0;$hAge=100;
                         $viewedContactsStr = explode(",", $viewedContactsStr);
@@ -55,11 +55,43 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 $inStatement.=$j . ":VIEWEDSTR" . $i;
                                 $i++;
                         }
+                        $whereString = "";
+                        foreach ($whereParams as $key=>$value){
+                            if($key == 'lage')
+                                $whereString .= " AND AGE>=:".$key;
+                            else if($key == 'hage')
+                                $whereString .= " AND AGE<=:".$key;
+                            else if($key == 'LPARTNER_LAGE')
+                                $whereString .= " AND PARTNER_LAGE>=:".$key;
+                            else if($key == 'HPARTNER_LAGE')
+                                $whereString .= " AND PARTNER_LAGE<=:".$key;
+                            else if($key == 'LPARTNER_HAGE')
+                                $whereString .= " AND PARTNER_HAGE>=:".$key;
+                            else if($key == 'HPARTNER_HAGE')
+                                $whereString .= " AND PARTNER_HAGE<=:".$key;
+                            else if($key == 'LPARTNER_LHEIGHT')
+                                $whereString .= " AND PARTNER_LHEIGHT>=:".$key;
+                            else if($key == 'HPARTNER_LHEIGHT')
+                                $whereString .= " AND PARTNER_LHEIGHT<=:".$key;
+                            else if($key == 'LPARTNER_HHEIGHT')
+                                $whereString .= " AND PARTNER_HHEIGHT>=:".$key;
+                            else if($key == 'HPARTNER_HHEIGHT')
+                                $whereString .= " AND PARTNER_HHEIGHT<=:".$key;
+                            else{
+                                $whereString .= " AND (".$key." IN(:".$key.") || ".$key."='')";
+                            }
+                            $value = "'".str_replace(",","','" , $value)."'";
+                        }
                         $i = 0;
-                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") AND AGE >= :lowerAge AND AGE <=:higherAge";
+                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") $whereString";
+                        //echo $sql;die;
                         $prep = $this->db->prepare($sql);
-                        $prep->bindValue(":lowerAge",$lAge,PDO::PARAM_INT); 
-                        $prep->bindValue(":higherAge",$hAge,PDO::PARAM_INT);
+                        foreach ($whereParams as $key=>$value){
+                            if(in_array($key,array('lage','hage','PARTNER_LAGE','PARTNER_HAGE','PARTNER_LHEIGHT','PARTNER_HHEIGHT')))
+                                $prep->bindValue(":".$key,$value,PDO::PARAM_INT);
+                            else
+                                $prep->bindValue(":".$key,$value,PDO::PARAM_STR);
+                        }
                         foreach ($viewedContactsStr as $key => $value) {
                                 $prep->bindValue(":VIEWEDSTR" . $i, $value, PDO::PARAM_LOB);
                                 $i++;

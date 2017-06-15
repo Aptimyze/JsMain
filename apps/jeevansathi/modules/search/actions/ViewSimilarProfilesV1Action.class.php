@@ -7,6 +7,9 @@
  * @subpackage search
  * @author     Prashant Pal
  */
+
+include_once(JsConstants::$docRoot."/profile/algoSuggestedProfiles.php");
+
 class ViewSimilarProfilesV1Action extends sfActions {
 
         const No_search_results_1 = "There are no profiles similar to ";
@@ -88,16 +91,36 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     }
                                     else 
                                     {
-                                          $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
-                                          if(MobileCommon::isDesktop() || MobileCommon::isAndroidApp())
-                                            $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria();
-                                          else
-                                            $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria("","ios");
+                                          if(SearchConfig::$VspWithoutSolr){
+                                                if(!MobileCommon::isDesktop() && !MobileCommon::isAndroidApp()){
+                                                    $profileidsort = $memObject->get('similar-'.$this->Profile->getPROFILEID().$pid);
+                                                }
+                                                $viewSimilarLibObj = new ViewSimilarProfile;
+                                                $profileidsort=$viewSimilarLibObj->getSimilarProfiles($this->Profile,$loggedInProfileObj,"fromViewSimilar");
+                                          }
+                                          else{
+                                                $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
+                                                if(MobileCommon::isDesktop() || MobileCommon::isAndroidApp())
+                                                  $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria();
+                                                else
+                                                  $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria("","ios");
+                                          }
                                     }
                                 }
                                 else{
-                                   $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
-                                  $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria($request->getParameter('searchid'),"ios");
+                                    if(SearchConfig::$VspWithoutSolr){
+                                        $db = connect_db();
+                                        if($request->getParameter('searchid'));
+                                           $includeCaste = checkIfCasteSpecified($searchId,$db);
+                                        $viewSimilarLibObj = new ViewSimilarProfile;
+                                        $loggedIn=2;
+                                        $includeAwaitingContacts = 0;
+                                        $profileidsort = $viewSimilarLibObj->getSimilarProfilesFromSearch($loggedIn,$viewedProfileID,$viewedGender,$db,$includeCaste,$includeAwaitingContacts);
+                                    }
+                                    else{
+                                        $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
+                                        $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria($request->getParameter('searchid'),"ios");
+                                    }
                                   
                                 }
                                 $searchEngine = 'solr';
