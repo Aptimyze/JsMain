@@ -183,7 +183,8 @@ class SearchApiStrategyV1
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
 		$this->output["pageTitle"] = SearchTitleAndTextEnums::getTitle($params);
 		$this->output["result_count"] = SearchTitleAndTextEnums::getHeading($params);
-                $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
+        $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
+        $this->output["gaTracking"] = SearchTitleAndTextEnums::getGATracking($params);
 		$this->output["noresultmessage"] = SearchTitleAndTextEnums::getMessageResult($params);
 		$this->output["searchBasedParam"] = $params["SearchType"]?$params["SearchType"]:null;
 		$this->output["diffGenderSearch"] = null;

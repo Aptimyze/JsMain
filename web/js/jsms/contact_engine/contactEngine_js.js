@@ -50,7 +50,13 @@ function hideReportAbuse(){
 }
 
 function reportAbuse(index) {
-$("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    if(typeof(buttonSt)!='undefined' )
+        $("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    else {
+        var tempPhoto = $("#idd"+index+ " a img").attr('src');
+        $("#photoReportAbuse").attr("src", tempPhoto);
+
+            }
 $('.RAcorrectImg,#commonOverlayTop').hide();
 //$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
@@ -78,45 +84,48 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 
 selectedReportAbuse="";
 RAOtherReasons=0;
-mainReasonAbuse = "";
+
 
 $(".reportAbuseOption").unbind().bind('click',function () {
 
-if($(this).attr('id')=='js-otherReasons' || $(this).attr('id')!='notOpen')
+if($(this).attr('id')=='js-otherReasons')
 {
 el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
-$("#js-otherReasonsLayer").removeClass('dispnone').val('');
-} 
-
-mainReasonAbuse=$(this).text();
-
+}
+else 
+{
+	selectedReportAbuse=$(this).text();RAOtherReasons=0;
+}
 $('.RAcorrectImg').hide();
 $(this).find('.RAcorrectImg').show();
 });
+
+
+
+
 
 $("#reportAbuseSubmit").unbind().bind('click',function() {
 
 var reason="";
 
 if(RAOtherReasons)
-{ 
+{
 	reason=$("#js-otherReasonsLayer").val();
    
-	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
+	if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
 }
 else {
-if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
+	reason=selectedReportAbuse;
+if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
 reason=$.trim(reason);
-mainReasonAbuse = $.trim(mainReasonAbuse);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.mainReason = mainReasonAbuse;
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
@@ -313,14 +322,33 @@ params["profilechecksum"] =input.val();
     }   
     
 function bindPrimeButtonClick(index)
-{      
+{
 	if(disablePrimary[index]==false)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
-          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
+      else  if(params["actionName"]=="IGNORE")
+      {
+          if(!profile_index[index] || !profile_index[index]['IGNORE']) {
+            if(!profile_index[index]) 
+              profile_index[index] = [];
+            var paramstr = $("#tracking"+index).val();
+            profile_index[index]['IGNORE'] = paramstr.split('=')[1];
+          }
+           
+
+          var paramsArr = {
+            blockArr: {
+              profilechecksum : $("#buttonInput"+index).val(),
+              action          : profile_index[index]['IGNORE']
+            }
+          };
+          disableOthers[index] = false;
+          performAction("IGNORE", paramsArr, index,true,1);
+          return false;
+      }
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
@@ -353,7 +381,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 		if(action=="REPORT_ABUSE"){
 		$('#'+action+"_"+index).bind("click",function(){
 				
-			reportAbuse();
+			reportAbuse(index);
 			
 			});
 		return;
@@ -485,6 +513,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
 			$("#loaderOverlay").show();
 		}
 		stopTouchEvents();
+                $(window).scrollTop('0px');
                 $("#contactLoader").show();
   }
     
@@ -517,7 +546,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       {                     
                             
                             if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
-                            else afterAction(result,action,index);
+                            else afterAction(result,action,index,isPrime);
       }
     }
   });
@@ -558,7 +587,7 @@ function afterActionMyjs(index,action,Params){
 }
 
 
-function afterAction(result,action, index){
+function afterAction(result,action, index,isPrime){
 	$("#selIndexId").val(index);
 	if($("#mainContent").length){
 		if(action!='MESSAGE')
@@ -567,10 +596,17 @@ function afterAction(result,action, index){
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
     if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
-	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
+        historyStoreObj.push(browserBackCommonOverlay,"#pushce");  
+    var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
+    if(ignoreFromPrime)
+    {
+        result.button_after_action.buttons = result.button_after_action.buttons.others;
+        result.buttondetails.button = result.buttondetails.buttons.primary[0];
+        
+    }
+    if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
-		if(result.actiondetails.errmsglabel!=null)
+		if(typeof result.actiondetails !='undefined' && result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
       var headerLabel = result.actiondetails.headerlabel;

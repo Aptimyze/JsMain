@@ -193,6 +193,7 @@ class WriteMessagev2Action extends sfAction
 			$memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top'];
+        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 			$arr["cansend"] = "false";
 			$arr["button"]["label"]  = "View Membership Plans";
 			$arr["button"]["value"] = "";

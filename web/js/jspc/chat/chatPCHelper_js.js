@@ -1225,6 +1225,9 @@ function checkAuthentication(timer,loginType) {
                             },timer);
                         }
                         else{
+                            if(typeof loggedInJspcUser != "undefined" && loggedInJspcUser!=""){
+                                trackJsEventGA('jspc', 'chatLogin',loggedInJspcUser);
+                            }
                             auth = 'false';
                             invokePluginLoginHandler("failure");
                             if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){

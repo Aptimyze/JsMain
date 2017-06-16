@@ -18,6 +18,7 @@
                         <div class="disp-tbl">
                             <div class="disp-cell f24 profileName"></div>
                             <div class="disp-cell f14 opa50 pl10 userLoginStatus"></div>
+                            <div class="disp-cell f14 colr5 pl10 subscription"></div>
                             <div class="disp-cell f18 mod_p1 gunascore"></div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">

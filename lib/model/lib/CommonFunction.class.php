@@ -963,7 +963,8 @@ class CommonFunction
 
     public static function loginTrack($registrationid, $profileid)
 	{
-		if( ! isset($registrationid) || ! isset($profileid) )
+
+		if( ! isset($registrationid) || ! isset($profileid) || $profileid == null)
 			return ;
 
 		// APP_LOGINTRACKING
@@ -973,7 +974,7 @@ class CommonFunction
 		{
 			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
 			// send mail
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $registrationid));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $registrationid, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
 			CommonFunction::SendEmailNewLogin($profileid);
 		}
 	}
@@ -996,25 +997,24 @@ class CommonFunction
 				$channel = "Ios App";
 			}
 
-			// TODO:
-			$deviceName = "device";
+			$deviceName = Devicedetails::deviceInfo();
 			$city = $_SERVER["GEOIP_CITY_NAME"];
 			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
 
 			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
 			$tpl = $top8Mailer->setProfileId($profileid);
 			// TODO : change subject
-			$subject = "new Login related subject here";
+			$subject = "New Login Attempt";
 			$tpl->setSubject($subject);
 			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
 			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
 			$tpl->getSmarty()->assign("resetPasswordUrl",$forgotPasswordUrl);
-			$tpl->getSmarty()->assign("channel", $channel);
+			// $tpl->getSmarty()->assign("channel", $channel);
 			$tpl->getSmarty()->assign("deviceName", $deviceName);
 			$tpl->getSmarty()->assign("city", $city);
 			$tpl->getSmarty()->assign("country", $country);
 			// send mail
-			// $top8Mailer->send();
+			$top8Mailer->send();
 		} catch (Exception $e) {
 			throw new jsException($e);
 		}
