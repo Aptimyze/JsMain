@@ -28,6 +28,12 @@ class billingVariables
     const NET_OFF_TAX_RATE = "0.130435";
     //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
+    
+    const GST = "18";
+    const SGST = "9";
+    const CGST = "9";
+    const IGST = "18";
+    const BILLING_STATE = "UP";
 }
 
 class memDiscountTypes 
