@@ -515,7 +515,7 @@ class MembershipAPIResponseHandler {
         
         //fetch the upgrade membership content based on eligibilty and channel
         if(in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request);
+            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request,"",$this);
             if(is_array($output["upgradeMembershipContent"]) && is_array($output)){
                 $output["title"] = "Upgrade to ".$output["upgradeMembershipContent"]["upgradeMainMemName"];
             }
@@ -566,51 +566,57 @@ class MembershipAPIResponseHandler {
     * sets the display content for upgrade membership section in apiObj
     * @inputs : $request
     */
-    public function generateUpgradeMemResponse($request,$fromSource=""){
-        if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['ORIG_SERVICEID']);
-            if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['SHOW_ONLINE'] == 'Y'){
+    public function generateUpgradeMemResponse($request,$fromSource="",$thisObj){
+        if($thisObj && $thisObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $upgradableMemArr = $thisObj->memHandlerObj->setUpgradableMemberships($thisObj->subStatus[0]['ORIG_SERVICEID']);
+            if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['SHOW_ONLINE'] == 'Y'){
 
                 //type of upgrade
                 $output["type"] = "MAIN";
                 //serviceid of upgrade mem without duration
                 $output["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
                 //name of upgrade service
-                $output["upgradeMainMemName"] = $this->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
-                if($this->currency == "RS"){
+                $output["upgradeMainMemName"] = $thisObj->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
+                if($thisObj->currency == "RS"){
                     $output["upgradeCurrency"] = "₹";
                 }
                 else{
                     $output["upgradeCurrency"] = "$";
                 }
-                
-                $output["upgradeOCBBenefits"] = $this->memApiFuncs->getOCBUpgradeBenefits($upgradableMemArr["upgradeMem"]);
+                if($fromSource != "cron"){
+                    $output["upgradeOCBBenefits"] = $this->memApiFuncs->getOCBUpgradeBenefits($upgradableMemArr["upgradeMem"]);
+                }
                 //formatting output for ocb banner or hamburger text
                 if($fromSource == "Hamburger" || $fromSource == "MyjsOCB"){
-                    $output["upgradeOfferExpiry"] = date('Y-m-d',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    $output["upgradeOfferExpiry"] = date('Y-m-d',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
                     //extra amount to be paid for upgrade
-                    $output["upgradeExtraPay"] = number_format($this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 0, '.', ',');
+
+                    $output["upgradeExtraPay"] = number_format($thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 0, '.', ','); 
+
+
                 }
                 else{                           //response for upgrade page  
                     //duration of upgrade service
                     $output["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
                     //total contacts to view for upgarde mem
-                    $output["upgradeTotalContacts"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
+                    $output["upgradeTotalContacts"] = $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
                     //additional benefits with upgrade compared to current mem
-                    $output["upgradeAdditionalBenefits"] = $this->memApiFuncs->getAdditionalUpgradeBenefits($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
+                    if($fromSource != "cron"){
+                        $output["upgradeAdditionalBenefits"] = $thisObj->memApiFuncs->getAdditionalUpgradeBenefits($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
+                    }
 
                     $formattedUpgradeMemName = ($output["upgradeMainMem"] != "X" ? ucfirst(strtolower($output["upgradeMainMemName"])) : $output["upgradeMainMemName"]);
-                    $formattedCurrentMemName = ($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($this->activeServiceName)) : $this->activeServiceName);
+                    $formattedCurrentMemName = ($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($thisObj->activeServiceName)) : $thisObj->activeServiceName);
                     //extra compared facts for upgarde
                     $output["upgardeComparedFacts"] = array(
                                     $formattedUpgradeMemName." members are contacted more than ".$formattedCurrentMemName,
                                     $formattedUpgradeMemName." members get more screen views",
                                     );
                     //expiry date for upgarde discount
-                    $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
-                    $output["jsmsupgradeOfferExpiry"] = date('jS M, Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    $output["upgradeOfferExpiry"] = date('M d Y',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    $output["jsmsupgradeOfferExpiry"] = date('jS M, Y',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
                     //extra amount to be paid for upgrade
-                    $output["upgradeExtraPay"] = number_format($this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 2, '.', ','); 
+                    $output["upgradeExtraPay"] = number_format($thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 2, '.', ','); 
                 }
             }
         }
@@ -1792,6 +1798,7 @@ class MembershipAPIResponseHandler {
             $bottom = json_decode(json_encode($overrideMsg['bottom']) , true);
             $pageId = $overrideMsg['pageId'];
         } 
+
         else if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0) || $this->lightningDealActive == 1)) {
             if($this->lightningDealActive == '1'){
                 $startingPlanData = $this->generateMembershipPlansStartingRange();
@@ -1809,7 +1816,8 @@ class MembershipAPIResponseHandler {
                 $valid = "Valid for";
             }
             else if($this->upgradeActive == '1'){
-                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB");
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB",$this);
+
                 if(is_array($upgardeMemResponse)){
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
                     $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
@@ -1925,6 +1933,7 @@ class MembershipAPIResponseHandler {
         
         $todays_dt = date('Y-m-d H:i:s');
         $vdodObj = new VariableDiscount();
+
         if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0) || $this->lightningDealActive == 1)) {
             if($this->lightningDealActive == '1'){
                 $response = $this->generateLightningDealResponse($request, "Hamburger",$startingPlanData);
@@ -1940,7 +1949,8 @@ class MembershipAPIResponseHandler {
                 $expiryDate = $response['expiryDate'];
             }
             else if($this->upgradeActive == '1'){
-                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger");
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger",$this);
+
                 if(is_array($upgardeMemResponse)){
                     $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
                     $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));

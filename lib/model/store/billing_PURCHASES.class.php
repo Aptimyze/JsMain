@@ -812,4 +812,19 @@ class BILLING_PURCHASES extends TABLE
             throw new jsException($e);
         }
     }
+    
+    public function getPaidProfiledWithinRange($startDate){
+        try{
+            $sql = "SELECT PROFILEID, SERVICEID, EMAIL, ENTRY_DT, MEM_UPGRADE FROM billing.PURCHASES WHERE ENTRY_DT > :START_DATE AND STATUS = 'DONE' ORDER BY ENTRY_DT ASC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE", $startDate, PDO::PARAM_STR);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                $result[$row["PROFILEID"]][] = $row;
+            }
+            return $result;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
