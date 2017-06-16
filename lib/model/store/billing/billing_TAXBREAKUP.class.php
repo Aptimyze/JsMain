@@ -13,7 +13,7 @@ BILLID INT( 11 ) NOT NULL DEFAULT  '0',
 PROFILEID INT( 11 ) NOT NULL DEFAULT  '0',
 SGST DOUBLE NOT NULL DEFAULT  '0',
 IGST DOUBLE NOT NULL DEFAULT  '0',
-UTGST DOUBLE NOT NULL DEFAULT  '0',
+COUNTRY_RES INT(3) NOT NULL DEFAULT  '0',
 CGST DOUBLE NOT NULL DEFAULT  '0',
 CITY_RES VARCHAR( 4 ) ,
 ENTRY_DT DATETIME NOT NULL DEFAULT  '0000-00-00 00:00:00',
@@ -24,9 +24,10 @@ PRIMARY KEY ( ID )
         parent::__construct($dbname);
         $this->ID_BIND_TYPE = "INT";
         $this->BILLID_BIND_TYPE = "INT";
+        $this->PROFILEID_BIND_TYPE = "INT";
         $this->SGST_BIND_TYPE = "STR";
         $this->IGST_BIND_TYPE = "STR";
-        $this->CUR_TYPE_BIND_TYPE = "STR";
+        $this->COUNTRY_RES_BIND_TYPE = "INT";
         $this->CGST_BIND_TYPE = "STR";
         $this->CITY_RES_BIND_TYPE = "STR";
         $this->ENTRY_DT_BIND_TYPE = "STR";
