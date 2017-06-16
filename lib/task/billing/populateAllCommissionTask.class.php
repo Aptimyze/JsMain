@@ -53,6 +53,7 @@ EOF;
 		$endDt = date('Y-m-d H:i:s', time());
 
 		$billingPaymentDetailObj = new BILLING_PAYMENT_DETAIL();
+                $billingPaymentDetailsNewObj = new billing_PAYMENT_DETAIL_NEW();
 		$profilesArr = $billingPaymentDetailObj->getProfilesWithinDateRange($startDt, $endDt);
 
 		//echo "Picked Profiles"; print_r($profilesArr); echo "\n\n";
@@ -91,8 +92,10 @@ EOF;
                                         $franComm = ($franchiseeCommissionPercentage/100)*($details['AMOUNT'] - ((billingVariables::NET_OFF_TAX_RATE)*$details['AMOUNT']) - $appleComm);
                                         $franComm = round($franComm, 2);
                                 }
-
+                                //Update apple commission and franchisee commission in Payment Details
 				$billingPaymentDetailObj->updateComissions($details['PROFILEID'],$details['BILLID'],$appleComm,$franComm,$appleFlag,$newAmt);
+                                //Update apple commission and franchisee commission in Payment Details new
+                                $billingPaymentDetailsNewObj->updateComissions($details['PROFILEID'],$details['BILLID'],$appleComm,$franComm,$appleFlag,$newAmt);
                                 unset($appleFlag);
                                 unset($newAmt);
 				//End: JSC-2668: Apple Commission fix to calculate correct net amount 

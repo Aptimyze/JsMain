@@ -25,15 +25,12 @@ if($branchName == "QASanityReleaseNew")
 	
 	//To get files arr by reading the entire file
 	$MergedBranchesArr = file($SanityMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-	$tagName = "TAG_RC@".date("Y-m-d_H-i-s");
 }
 elseif($branchName == "CIRelease")
 {
 	$CIMergedFileName =  "/var/www/CI_Files/CIMergedBranches.txt"; 
 
 	$MergedBranchesArr = file($CIMergedFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-	$tagName = "TAG_HF@".date("Y-m-d_H-i-s");
 }
 else
 {
@@ -43,7 +40,16 @@ else
 
 $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/repository/tags?";
 
+$tagName = "JSR@".date("YmdHi"); //tagName of the format(JSR#yearMonthDateHourMinutes)
+
+	//to write the tagName into a file(filename)
+	if($file = fopen("/var/www/CI_Files/tageName.txt", "w+")) //changed the mode form "a" to "w+". Check again
+	{
+		fwrite($file, $tagName."\n");
+	}
+
 $releaseDescription = implode(",", $MergedBranchesArr);
+
 if($branchName == "QASanityReleaseNew")
 {
 	if($CIMergedBranches)

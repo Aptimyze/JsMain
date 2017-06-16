@@ -19,6 +19,15 @@
     var paidBenefits = new Array();
     var vasPrice = new Array();
     var openedCount = "~$data.openedCount`";
+    var lightDiscText = "~$data.lightningDealContent.discText`";
+    var priceStrike = "~$data.lightningDealContent.priceStrike`";
+    var discPrice = "~$data.lightningDealContent.discPrice`";
+    var lightningDealExpiryInSec = "~$data.lightningDealContent.diffSecond`";
+    ~if $data.lightningDealContent`
+        var lightningTop = "~$data.lightningDealContent.top`";
+        var lightningMiddle = "~$data.lightningDealContent.middle`";
+        var lightningBottom = "~$data.lightningDealContent.bottom`";
+    ~/if`
     var filteredVasServices = "~$data.filteredVasServices`";
     var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
     ~if $data.serviceContent` 

@@ -30,6 +30,7 @@ class processCropperV1Action extends sfActions
 			$appImageHeight = $cropBoxDimensionsArr['fh'];
 			unset($cropBoxDimensionsArr['fw']);
 			unset($cropBoxDimensionsArr['fh']);
+			PictureFunctions::setHeaders();
 			list($imageOrigWidth, $imageOrigHeight) = getimagesize($cropImageSource);
 
 			$factorWidth = $imageOrigWidth/$appImageWidth;

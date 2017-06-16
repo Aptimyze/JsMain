@@ -215,7 +215,7 @@ case "solr_clusters":
 "24"=>"HAVEPHOTO",
 "25"=>"HAVECHILD",
 "26"=>"STATE",
-"27"=>"CITY_INDIA",
+"27"=>"CITY_RES",
 "28"=>"COUNTRY_RES",
 "29"=>"PROFILE_ADDED",
 "30"=>"MATCHALERTS_DATE_CLUSTER",

@@ -132,6 +132,7 @@ class UploadPhoto extends PictureService
 	}
 	public function mobileUploadOrientation($image)
 	{
+		PictureFunctions::setHeaders();
 		$imageHeaderInfo = exif_read_data($image["tmp_name"]);
 
 		if(array_key_exists($imageHeaderInfo["Orientation"],PictureStaticVariablesEnum::$orientationToAngle))
@@ -256,6 +257,7 @@ class UploadPhoto extends PictureService
 	}
 	public function copypicLinkImage($src,$content)
 	{
+		PictureFunctions::setHeaders();
 		return file_put_contents($src,$content);
 	}
 	public function importUploadTracking($uploadSource,$successfullFiles='')
@@ -339,6 +341,7 @@ class UploadPhoto extends PictureService
 	}
 	public function copyPic($image,$nonScreenedPicObj)
 	{
+		PictureFunctions::setHeaders();
 		$actualType = $this->getActualType($image['type']);		
                 $picInfoArr = $this->getPicCopyData($nonScreenedPicObj,$actualType);                                
                 if(!move_uploaded_file($image['tmp_name'], $picInfoArr['SRC']))
@@ -381,6 +384,7 @@ class UploadPhoto extends PictureService
 
 	public function copyCroppedPic($image,$nonScreenedPicObj,$picId)
 	{
+		PictureFunctions::setHeaders();
 		$picInfoArr = $this->getCroppedPicCopyData($image,$nonScreenedPicObj,$picId);
 		if(!move_uploaded_file($image['tmp_name'], $picInfoArr['DEST']))
                 {
@@ -401,6 +405,7 @@ class UploadPhoto extends PictureService
 
 	public static function getImageType($fileName)
 	{
+		PictureFunctions::setHeaders();
 		$imageType = exif_imagetype($fileName);  //php function to return image size
 		return $imageType;
 
@@ -430,6 +435,7 @@ class UploadPhoto extends PictureService
 
 	public static function convertPngToJpeg($filename)
 	{		
+		PictureFunctions::setHeaders();
 		$destFilename = str_replace(".png",".jpeg",$filename);
 		$image = imagecreatefrompng($filename);		
     	imagejpeg($image,$destFilename);

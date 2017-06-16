@@ -45,7 +45,8 @@ class memDiscountTypes
         11 => 'Cash Discount',
         12 => 'No Discount',
         14 => 'Coupon Code Discount',
-        15 => 'Main Membership Upgrade Discount'
+        15 => 'Main Membership Upgrade Discount',
+        16 => 'Lightning Deal Discount'
     );
 }
 
@@ -76,6 +77,8 @@ class VariableParams
                                         "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 30,
                                         "pool2FilterPercent" => 10,
+                                        "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
+                                        "activeOfferFlag" => false
                                         );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
@@ -660,6 +663,8 @@ class VariableParams
     public static $jsExclusiveComboAddon = array('J');
     
     public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
+    
+    public static $lightningDealDuration = '30'; //in minutes;
 }
 class discountType
 {
@@ -668,6 +673,7 @@ class discountType
     const SPECIAL_DISCOUNT = "SPECIAL";
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
+    const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
 }
 class mainMem
 {

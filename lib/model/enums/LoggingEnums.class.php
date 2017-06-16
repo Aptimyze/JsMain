@@ -86,6 +86,7 @@ class LoggingEnums
     const COOL_M_LOGIN = 'LOG';
     const NEW_LOGIN_TRACK = 'LoginAlert';
     const DEVICEID = 'Registration id';
+    const DETAILS = 'Detail';
 
     public static $MappingNames = array(
         // JSC module names

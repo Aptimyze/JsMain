@@ -5,16 +5,18 @@ class MysqlStatus
 	static $thresholdValue = array("master"=>300,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>100,"shard2Slave"=>100,"shard3Slave"=>100);
         public function __construct()
         {
-		$this->serverConfig[]=array("master",MysqlDbConstants::$master["HOST"],MysqlDbConstants::$master["USER"],MysqlDbConstants::$master["PASS"],MysqlDbConstants::$master["PORT"],"threshold"=>self::$thresholdValue['master']);
-		$this->serverConfig[]=array("shard1",MysqlDbConstants::$shard1["HOST"],MysqlDbConstants::$shard1["USER"],MysqlDbConstants::$shard1["PASS"],MysqlDbConstants::$shard1["PORT"],"threshold"=>self::$thresholdValue['shard1']);
-		$this->serverConfig[]=array("shard2",MysqlDbConstants::$shard2["HOST"],MysqlDbConstants::$shard2["USER"],MysqlDbConstants::$shard2["PASS"],MysqlDbConstants::$shard2["PORT"],"threshold"=>self::$thresholdValue['shard2']);
-		$this->serverConfig[]=array("shard3",MysqlDbConstants::$shard3["HOST"],MysqlDbConstants::$shard3["USER"],MysqlDbConstants::$shard3["PASS"],MysqlDbConstants::$shard3["PORT"],"threshold"=>self::$thresholdValue['shard3']);
-		$this->serverConfig[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],MysqlDbConstants::$shard1Slave["USER"],MysqlDbConstants::$shard1Slave["PASS"],MysqlDbConstants::$shard1Slave["PORT"],"threshold"=>self::$thresholdValue['shard1Slave']);
-		$this->serverConfig[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],MysqlDbConstants::$shard2Slave["USER"],MysqlDbConstants::$shard2Slave["PASS"],MysqlDbConstants::$shard2Slave["PORT"],"threshold"=>self::$thresholdValue['shard2Slave']);
-		$this->serverConfig[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],MysqlDbConstants::$shard3Slave["USER"],MysqlDbConstants::$shard3Slave["PASS"],MysqlDbConstants::$shard3Slave["PORT"],"threshold"=>self::$thresholdValue['shard3Slave']);
-		$this->serverConfig[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],MysqlDbConstants::$viewSimilar["USER"],MysqlDbConstants::$viewSimilar["PASS"],MysqlDbConstants::$viewSimilar["PORT"],"threshold"=>self::$thresholdValue['viewSimilar']);
-		$this->serverConfig[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],MysqlDbConstants::$bmsSlave["USER"],MysqlDbConstants::$bmsSlave["PASS"],MysqlDbConstants::$bmsSlave["PORT"],"threshold"=>self::$thresholdValue['bmsSlave']);
-		$this->serverConfig[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],MysqlDbConstants::$alertsSlave["USER"],MysqlDbConstants::$alertsSlave["PASS"],MysqlDbConstants::$alertsSlave["PORT"],"threshold"=>self::$thresholdValue['alertsSlave']);
+		$user = "js_db_monitor";
+		$password = "jsdbm0n1t0R";
+		$this->serverConfig[]=array("master",MysqlDbConstants::$master["HOST"],$user,$password,MysqlDbConstants::$master["PORT"],"threshold"=>self::$thresholdValue['master']);
+		$this->serverConfig[]=array("shard1",MysqlDbConstants::$shard1["HOST"],$user,$password,MysqlDbConstants::$shard1["PORT"],"threshold"=>self::$thresholdValue['shard1']);
+		$this->serverConfig[]=array("shard2",MysqlDbConstants::$shard2["HOST"],$user,$password,MysqlDbConstants::$shard2["PORT"],"threshold"=>self::$thresholdValue['shard2']);
+		$this->serverConfig[]=array("shard3",MysqlDbConstants::$shard3["HOST"],$user,$password,MysqlDbConstants::$shard3["PORT"],"threshold"=>self::$thresholdValue['shard3']);
+		$this->serverConfig[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],$user,$password,MysqlDbConstants::$shard1Slave["PORT"],"threshold"=>self::$thresholdValue['shard1Slave']);
+		$this->serverConfig[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],$user,$password,MysqlDbConstants::$shard2Slave["PORT"],"threshold"=>self::$thresholdValue['shard2Slave']);
+		$this->serverConfig[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],$user,$password,MysqlDbConstants::$shard3Slave["PORT"],"threshold"=>self::$thresholdValue['shard3Slave']);
+		$this->serverConfig[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],$user,$password,MysqlDbConstants::$viewSimilar["PORT"],"threshold"=>self::$thresholdValue['viewSimilar']);
+		$this->serverConfig[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],$user,$password,MysqlDbConstants::$bmsSlave["PORT"],"threshold"=>self::$thresholdValue['bmsSlave']);
+		$this->serverConfig[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],$user,$password,MysqlDbConstants::$alertsSlave["PORT"],"threshold"=>self::$thresholdValue['alertsSlave']);
 	}
 	public function getStatus()
 	{

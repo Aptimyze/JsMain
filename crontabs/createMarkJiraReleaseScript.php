@@ -20,6 +20,10 @@ $headerArr = array(
 				'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
 				'Content-Type:application/json'
 				);
+//get tagName which will be the release version
+$tageNameFile = "/var/www/CI_Files/tageName.txt";
+$tagNameArr = file($tageNameFile , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$tagName = $tagNameArr[0];
 
 if($branchName == "CIRelease")
 {
@@ -54,6 +58,7 @@ if(is_array($file) && !empty($file))
         {
             $releaseJira = $releaseJiraArr;
         }
+        $file = $releaseJira;
     }
     else
     {
@@ -77,19 +82,19 @@ if(is_array($file) && !empty($file))
         
     //For Creating Hotfix Versions
     if($parameter == "hotfix" || $parameter == "all")
-        createRelease($hotFix,"HF");
+        createRelease($hotFix,$tagName);
 
     //For Creating regulat Release Versions
     if($parameter == "release" || $parameter == "all")
-        createRelease($release,"RC");
+        createRelease($release,$tagName);
 
     //For marking HotFix Versions
     if($parameter == "hotfix" || $parameter == "all")
-        markVersion($hotFixJira,"HF");
+        markVersion($hotFixJira,$tagName);
 
     //For marking regular release Versions
     if($parameter == "release" || $parameter == "all")
-        markVersion($releaseJira,"RC");    
+        markVersion($releaseJira,$tagName);    
 
     
     /*
@@ -126,14 +131,15 @@ if(is_array($file) && !empty($file))
 }
 
 
-function markVersion($releaseJira,$releaseText){
+function markVersion($releaseJira,$tagName){
 	global $setVersionUrl;
 	global $headerArr;
 	if(is_array($releaseJira)){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = "$releaseText@".date("Y-m-d");
+			$value = substr($value,0,8);
+            $versionName = $tagName;
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
@@ -144,7 +150,7 @@ function markVersion($releaseJira,$releaseText){
 }
 
 
-function createRelease($releaseArr,$releaseText){
+function createRelease($releaseArr,$tagName){
 	global $groups;
 	global $createVersionUrl;
 	global $headerArr;
@@ -152,7 +158,7 @@ function createRelease($releaseArr,$releaseText){
 		//Iterate for all the jira ids
 		foreach($releaseArr as $key => $val){
 			$params = json_encode(array("description"=>"Release",
-							"name"=>"$releaseText@".date("Y-m-d"),
+							"name"=>$tagName,
 							"archived"=> false,
 							"released"=> false,
 							"releaseDate"=> date('Y-m-d'),
