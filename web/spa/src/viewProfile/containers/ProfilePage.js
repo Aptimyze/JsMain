@@ -5,10 +5,13 @@ import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import TopError from "../../common/components/TopError";
 import PhotoView from "../../common/components/PhotoView";
-import {profileDetail} from "../actions/ProfileActions";
 import AboutTab from"../components/AboutTab";
 import FamilyTab from"../components/FamilyTab";
 import DppTab from"../components/DppTab";
+import CommHistory from "./CommHistory";
+import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
+
+
 
 class ProfilePage extends React.Component {
 
@@ -22,9 +25,11 @@ class ProfilePage extends React.Component {
             showPromo: false,
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
-            picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
+            picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto",
+            showHistory: false,
+            profilechecksum: "ff316970209a2dfd3ea91bf29b1f791ei117296"
         };
-        props.showProfile();   
+        props.showProfile(this.state.profilechecksum);   
     }
 
     componentDidMount() {
@@ -35,7 +40,6 @@ class ProfilePage extends React.Component {
     
     componentWillReceiveProps(nextProps)
     {
-        console.log("next",nextProps);
         this.setState ({
             dataLoaded : true,
             picUrl: nextProps.pic.url
@@ -86,6 +90,16 @@ class ProfilePage extends React.Component {
         document.getElementById(elem+"Tab").classList.remove("dn");
 
     }
+    initHistory() {
+        this.setState({
+            showHistory:true
+        });
+    }
+    closeHistoryTab() {
+        this.setState({
+            showHistory:false
+        });
+    }
 
     render() {
         var errorView;
@@ -109,16 +123,9 @@ class ProfilePage extends React.Component {
         var AboutView,FamilyView,DppView,Header = "View Profile";
         if(this.state.dataLoaded)
         {   
-            AboutView = <AboutTab life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
+            AboutView = <AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-            
-            if(this.props.dpp_Ticks) 
-            {
-                DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
-            } else
-            {
-                DppView = <DppTab about={this.props.AboutInfo}  dpp={this.props.DppInfo}></DppTab>;
-            }
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
 
             if(this.props.AboutInfo.name_of_user) 
             {
@@ -129,12 +136,17 @@ class ProfilePage extends React.Component {
             }
 
         }
+        var historyView;
+        if(this.state.showHistory) {
+            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
+        }
 
         return (
             <div id="ProfilePage">
                 {promoView}
                 {errorView}
                 {loaderView}
+                {historyView}
                 <div className="fullheight" id="mainContent">
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
@@ -145,7 +157,7 @@ class ProfilePage extends React.Component {
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
                                     {Header} 
                                 </div>
-                                <div className="posabs vpro_pos1">
+                                <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
                                     <i className="vpro_sprite vpro_comHisIcon cursp"></i>
                                 </div>
                             </div>
@@ -180,14 +192,17 @@ const mapStateToProps = (state) => {
        appPromotion : state.ProfileReducer.appPromotion,
        pic: state.ProfileReducer.pic,
        LifestyleInfo: state.ProfileReducer.lifestyle,
-       dpp_Ticks: state.ProfileReducer.dpp_Ticks
+       dpp_Ticks: state.ProfileReducer.dpp_Ticks,
+       profileId: state.ProfileReducer.profileId,
+       show_gunascore:state.ProfileReducer.show_gunascore
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: () => {
-            dispatch(profileDetail());
+        showProfile: (profilechecksum) => {
+            let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum;
+            dispatch(commonApiCall(call_url,{},'SHOW_INFO','GET'));
         }
     }
 }

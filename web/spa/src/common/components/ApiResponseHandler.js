@@ -12,9 +12,11 @@ export  function commonApiCall(callUrl,data,reducer,method)
   {
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
-    if ( aChsum )
+    if ( aChsum && callUrl.indexOf("?") == -1)
     {
       checkSumURL = '?AUTHCHECKSUM='+aChsum;
+    } else {
+      checkSumURL = '&AUTHCHECKSUM='+aChsum;
     }
     axios({
     method: callMethod,

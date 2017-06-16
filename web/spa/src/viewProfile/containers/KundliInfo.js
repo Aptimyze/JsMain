@@ -1,8 +1,35 @@
 import React from 'react';
+import {connect} from "react-redux";
+import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
+import {getCookie} from '../../common/components/CookieHelper';
 
-export default class KundliInfo extends React.Component {
+
+class KundliInfo extends React.Component {
 	constructor(props) {
         super();
+    }
+    componentDidMount() {
+        if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
+            this.props.getGuna(this.props.profilechecksum);   
+        } 
+    }
+    componentWillReceiveProps(nextProps)
+    {
+        let htmlStr = "<div class='fl'><i class='vpro_sprite vpro_pin'></i></div>",colorClass,szHisHer;
+        if(nextProps.gunaScore.responseMessage == "Successful" && nextProps.gunaScore.SCORE) {
+            if(nextProps.gunaScore.SCORE >18) {
+                colorClass = "greenText";
+            } else {
+                colorClass = "redText";
+            }
+            if(this.props.about.gender = "Female") {
+                szHisHer = "her";
+            } else {
+                szHisHer = "his";
+            }
+            htmlStr += "<div class='fontlig padl5 fl vpro_wordwrap'> Your guna score with " + szHisHer+ " is        <span class='"+colorClass+"'>" + nextProps.gunaScore.SCORE+ "/36   </span></div>";
+            document.getElementById("gunaScore").innerHTML = htmlStr;
+        }
     }
     render() {
     	var city_country;
@@ -99,7 +126,7 @@ export default class KundliInfo extends React.Component {
             	{nakshatra}
             	{horoscope}
             	{horo_match}
-            	<div className="clearfix vpro_dn" id="gunaScore">
+            	<div className="clearfix" id="gunaScore">
                 </div>
             	</div>
     		</div>;
@@ -154,3 +181,20 @@ export default class KundliInfo extends React.Component {
     	);
     }
 }
+
+const mapStateToProps = (state) => {
+    return{
+       gunaScore: state.ProfileReducer.gunaScore,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        getGuna: (profilechecksum) => {
+            let call_url = "/api/v1/profile/gunascore?oprofile="+profilechecksum;
+            dispatch(commonApiCall(call_url,{},'SHOW_GUNA','GET'));
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(KundliInfo)
