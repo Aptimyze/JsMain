@@ -1,6 +1,5 @@
 <IfModule mod_rewrite.c>
 
-Header set Access-Control-Allow-Origin "http://localjs.com:8081"
 Header add Access-Control-Allow-Credentials "true"
 RewriteEngine on
 RewriteOptions inherit
