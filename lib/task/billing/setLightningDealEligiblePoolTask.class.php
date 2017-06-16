@@ -9,7 +9,7 @@
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
-	private $debug = 1;
+	private $debug = 0;
 	protected function configure()
 	{
 		$this->addOptions(array(
