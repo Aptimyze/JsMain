@@ -567,6 +567,7 @@ public function executeMatchOtp(sfWebRequest $request)
 		case 'Y':	
 		$response['matched']='true';
 		$response['trialsOver']='N';
+		$response['fromReg'] = $request->getParameter('fromReg')=='Y' ? 'Y' : 'N';
 		break;
 
 		case 'N':
