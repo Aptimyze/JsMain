@@ -130,25 +130,17 @@ class gunaScore
     $gunaData = array();
     $compstring = implode(",",$compstring);
     $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;
-
-    $memObject=JsMemcache::getInstance();
+    
     $startTime = microtime(true);
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
     $endTime = microtime(true)-$startTime;
 
     if($fresult)
     {
-      $this->logApiResponeTime($memObject,$endTime);
-      $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
-      $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
-      $memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
+      //$this->logApiResponeTime($memObject,$endTime);  commenting this since tracking not required
+      $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));      
     }
-    elseif(!$fresult)
-    {
-      $memObject->incrCount("gunaBlank_".date("Y-m-d"));
-      $memObject->setExpiryTime("gunaBlank_".date("Y-m-d"),"604800"); //7 days 
-    }
-    unset($memObject);
+
     if(is_array($fresult))
     {
       foreach($fresult as $key=>$val)
