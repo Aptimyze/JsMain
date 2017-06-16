@@ -319,10 +319,13 @@ die;
                 curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-		$headerStr = substr($output, 0, $header_size);
-		$output = substr($output, $header_size);
-		
+           if(!$headerArr)
+           {
+		        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+				$headerStr = substr($output, 0, $header_size);
+				$output = substr($output, $header_size);
+			}
+				
 	    return $output;
                 /*
                 header('Content-Type: text/xml');
@@ -359,9 +362,13 @@ die;
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
+             
+               if(!$headerArr)
+               {
                 $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 				$headerStr = substr($output, 0, $header_size);
 				$output = substr($output, $header_size);
+			}
 		return $output;
 	}
 

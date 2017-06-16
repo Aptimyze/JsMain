@@ -90,6 +90,7 @@ class ContactDetailsV2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$dataPlan = $data2["startingPlan"];
 					unset($responseArray);
 					$responseArray["errmsglabel"] 			= "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -182,6 +183,7 @@ class ContactDetailsV2Action extends sfAction
 						$memHandlerObj = new MembershipHandler();
 						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 						$MembershipMessage = $data2['hamburger_message']['top'];
+                        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				
 						$responseArray["bottommsg2"]       = "Upgrade to eValue to make your phone/email visible to all matching profiles";
 						$responseArray["bottommsg"]       = "View Membership Plans";
@@ -435,6 +437,7 @@ class ContactDetailsV2Action extends sfAction
 				$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 				$dataPlan = $data2["startingPlan"];
 				$MembershipMessage = $data2['hamburger_message']['top'];
+                $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				$responseArray["errmsglabel"]     = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["footerbutton"]["label"]  = "View Membership Plans";

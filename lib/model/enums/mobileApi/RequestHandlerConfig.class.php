@@ -113,6 +113,7 @@ class RequestHandlerConfig
 		"common" => array("AddBookmark" => array("v1" => "AddBookmarkv1", "v3" => "AddBookmarkv1"), "ignoreprofile" => array("v1" => "ApiIgnoreProfileV1", "v3" => "ApiIgnoreProfileV1"), "engagementcount" => array("v2" => "GetEngagementCountv1"), "caLayer" => array("v1" => "ApiCALayerV1", "v2" => "ApiCALayerV1", "v3" => "ApiCALayerV1"), "criticalActionLayerTracking" => array("v1" => "", "v2" => "", "v3" => "criticalActionLayerTracking"), "verificationData" => array("v1" => "ApiVerificationDataV1", "v2" => "", "v3" => "ApiVerificationDataV1"), "trackRCB" => array("v1" => "TrackRCBV1", "v3" => "TrackRCBV1"), "requestCallbackLayer" => array("v1" => "ApiRequestCallbackV1", "v2" => "ApiRequestCallbackV1", "v3" => "ApiRequestCallbackV1"),
 			"checkPassword" => array("v1" => "checkPasswordV1"),
 			"logOtherUrl" => array("v1" => "logOtherUrlV1"),
+			"trackIdfy" => array("v1"=>"apiTrackIdfyProfilesV1"),
 			),
 		"inbox" => array("perform" => array("v1" => "performV1", "v2" => "performV2", "v3" => "performV2")),
 		"phone" => array("display" => array("v1" => "displayV1", "v2" => "displayV1", "v3" => "displayV1"),
