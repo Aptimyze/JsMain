@@ -29,9 +29,9 @@ export default class ShowNotificationLayer extends React.Component {
 
     }
   render(){
-  	if(!this.props.layerCount.fetched){
-  		return <div></div>;
-	   }
+  	// if(!this.props.layerCount.fetched){
+  	// 	return <div></div>;
+	  //  }
      return(
         <div className = "bg4 dispnone" id = "notificationBellView">
           <a href="/search/perform?justJoinedMatches=1">
