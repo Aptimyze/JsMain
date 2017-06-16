@@ -159,7 +159,7 @@ $css_arr[]=array("jspc/myjs/myjs"     => "42");
 $css_arr[]=array("jspc/common/fontsJspc_css"  => "3");
 $css_arr[]=array("jspc/common/headerFooterJspc_css"     => "21");
 $css_arr[]=array("jspc/search/scrollbar"  => "3");
-$css_arr[]=array("jspc/search/srpcss"     => "14");
+$css_arr[]=array("jspc/search/srpcss"      => "15");
 $css_arr[]=array("jspc/search/jslider"  => "3");
 $css_arr[]=array("jspc/common/cssRangeSlider"  => "4");
 $css_arr[]=array("jspc/search/rangeslider"  => "3");

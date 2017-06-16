@@ -1,0 +1,7 @@
+use MOBILE_API;
+INSERT INTO MOBILE_API.`APP_NOTIFICATIONS` VALUES (50, 'UPGRADE_MEMBERSHIP', '{MESSAGE_RECEIVED}', 6, 'AND', 'Y', 'I', '', 0, 'SINGLE', 'Y', 86400, 'A', 'A', 'Upgrade to {MEM_NAME}', 'D');
+
+use jeevansathi_mailer;
+INSERT INTO jeevansathi_mailer.`EMAIL_TYPE` VALUES (1875, 1854, 'upgradeToeValue.tpl', NULL, 'revamp_footer.tpl', NULL, 27, 1, 'info@jeevansathi.com ', 'Upgrade membership to eValue', 'D', NULL, NULL, NULL, 'Jeevansathi Info', NULL, NULL, NULL, NULL, 'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
+INSERT INTO jeevansathi_mailer.`EMAIL_TYPE` VALUES (1876, 1855, 'upgradeToeAdvantage.tpl', NULL, 'revamp_footer.tpl', NULL, 27, 1, 'info@jeevansathi.com', 'Upgrade membership to eAdvantage', 'D', NULL, NULL, NULL, 'Jeevansathi Info', NULL, NULL, NULL, NULL, 'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
+INSERT INTO jeevansathi_mailer.`EMAIL_TYPE` VALUES (1877, 1856, 'upgradeToJSExclusive.tpl', NULL, 'revamp_footer.tpl', NULL, 27, 1, 'info@jeevansathi.com', 'Upgrade membership to JS Exclusive', 'D', NULL, NULL, NULL, 'Jeevansathi Info', NULL, NULL, NULL, NULL, 'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
