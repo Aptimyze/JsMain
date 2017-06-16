@@ -2,6 +2,7 @@ function dropdown() {
     $(".dropdown dt").click(function () {
         $(".dropdown dd ul").toggle();
     });
+    
     $(".dropdown dd ul li").click(function () {
         var text = $(this).html();
         $(".dropdown dt span").html(text);

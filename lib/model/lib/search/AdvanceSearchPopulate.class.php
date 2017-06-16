@@ -633,7 +633,9 @@ class AdvanceSearchPopulate
 							$cities = array_diff($cities,$cityList);
 							$cities[]=$state;
 							
-						}
+						}else{
+                                                        $cities[]=$state;    
+                                                }
 	          
 					}
 				}

@@ -177,6 +177,7 @@ class socialActions extends sfActions
 			}
 			$currentPicKeywords = implode(", ",$current_Pic_Keywords);	//Join keyword names separated by ,
 		}
+	PictureFunctions::setHeaders();	
 	$size = getimagesize($mainPicUrl);
 	echo $mainPicUrl."**-**".$title."**-**".$currentPicKeywords."**-**".$picId."**-**".$pic_keywords."**-**".$pics_count."**-**".$profile_pic_id."**-**".$picType."**-**".$size[0]."**-**".$size[1];
 	die;										//Kill the script as it is an AJAX Request
@@ -704,6 +705,7 @@ class socialActions extends sfActions
 				$timeMainPic = time();
                                 $pictureObj = new NonScreenedPicture();
                                 $origPic = JsConstants::$docRoot."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
+                                PictureFunctions::setHeaders();
                                 copy($this->mainPicUrl,$origPic);
                                 $this->mainPicUrl = JsConstants::$siteUrl."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
                         }

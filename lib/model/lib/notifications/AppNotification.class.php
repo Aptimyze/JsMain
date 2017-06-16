@@ -489,10 +489,22 @@ public function microtime_float()
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
 				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
-				  if($notificationKey=='MATCHALERT')	
-				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
-				  else
-			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
+				  if($notificationKey=='MATCHALERT'){	
+				  		$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
+				  		$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] ="D";
+				  }
+				  else{
+		                $photoData = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID'],"APP_NOTIFICATION");
+		                if(is_array($photoData)){
+		                	$completeNotificationInfo[$counter]["PHOTO_URL"] = $photoData["AND"];
+		                	$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] = $photoData["IOS"];
+		                }
+		                else{
+		                	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";
+			  				$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] ="D";	
+		                }
+			      }
+			           
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
 				  //$completeNotificationInfo[$counter]['MSG_ID']=time().rand(0,99);
 				  $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);

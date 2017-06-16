@@ -33,6 +33,7 @@ class NotificationSender
             $notificationLogEtnObj = new MOBILE_API_NOTIFICATION_LOG_ETN;
     		foreach($profileDetails as $identifier=>$details)
     		{
+
                 $osType = "";
                 if(!in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                     $profileid = $identifier;
@@ -42,7 +43,9 @@ class NotificationSender
                 }
     			if(!isset($details))
     				continue;
-                if(!is_array($regIds)){       
+
+                if(!is_array($regIds)){ 
+                    /*add notification image support in case logged out notifications or upgrade app is extended for IOS channel*/    
                     if(in_array($profileDetails[$identifier]["NOTIFICATION_KEY"], NotificationEnums::$loggedOutNotifications)){
                        $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['NOTIFICATION_KEY'],$profileDetails[$identifier]['REG_ID']); 
                     }
@@ -57,6 +60,7 @@ class NotificationSender
     			{
     				if(is_array($regIds[$identifier]["AND"]) && ($profileDetails[$identifier]['OS_TYPE'] == "AND" || $profileDetails[$identifier]['OS_TYPE'] == "ALL" ))
     				{
+
     					$osType = "AND";
                         if($details['NOTIFICATION_KEY']=='ATN')
                             $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
@@ -75,15 +79,18 @@ class NotificationSender
     				}
     				if(is_array($regIds[$identifier]["IOS"]) && ($profileDetails[$identifier]['OS_TYPE'] == "IOS" || $profileDetails[$identifier]['OS_TYPE'] == "ALL" ) )
                     {
+
     					$osType = "IOS";
-                        $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
+                        //$details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
     					if($details['NOTIFICATION_KEY']=='ATN')
                             $notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         if($details['NOTIFICATION_KEY']=='ETN')
                             $notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         $notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
                         $engineObject = $this->notificationEngineFactoryObj->geNotificationEngineObject($osType);
-                        $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
+                        
+                        $engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid,$regIds[$identifier]['IOS_NOTIFICATION_IMAGE']);
+
                     }
     			}
     			// logging of Notification Messages 
@@ -140,8 +147,10 @@ class NotificationSender
 
     	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
     	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
+        
     	if(is_array($registrationIdData))
     	{
+            $iosCounter = 0;
     		foreach($registrationIdData as $k=>$v){
     			$os_type 	=$v['OS_TYPE'];
     			$appVersion 	=$v['APP_VERSION'];
@@ -150,7 +159,19 @@ class NotificationSender
                         $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
                 }
     			elseif(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos)){
-                    $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+                    if($os_type == 'IOS'){
+                         $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][$iosCounter]=$v['REG_ID'];
+                        if($appVersion>=NotificationEnums::$IosNotificationImageCheck['APP_VERSION'] && $v['OS_VERSION']>=NotificationEnums::$IosNotificationImageCheck['OS_VERSION']){
+                            $regIdArr[$v['PROFILEID']]['IOS_NOTIFICATION_IMAGE'][$iosCounter] = 'Y';
+                        }
+                        else{
+                            $regIdArr[$v['PROFILEID']]['IOS_NOTIFICATION_IMAGE'][$iosCounter] = 'N';
+                        }
+                        ++$iosCounter;
+                    }
+                    else{
+                        $regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+                    }
                 }
     		}
     		return $regIdArr;
