@@ -124,13 +124,18 @@ class SearchParamters
 		$this->rangeParams = SearchConfig::$searchRangeParameters;
 	}
 
-	public function setter($arrayValuePair)
+	public function setter($arrayValuePair,$nomapping=0)
 	{
 		foreach($arrayValuePair as $k=>$v)
 		{
                         $functionName = 'set'.$k;
-			if(method_exists($this,$functionName))
-                                $this->{"set" . $k}($v);
+			if(method_exists($this,$functionName)){
+                                if($k == "CITY_RES"){
+                                        $this->{"set" . $k}($v,'',$nomapping);
+                                }else{
+                                        $this->{"set" . $k}($v);
+                                }
+                        }
 		}
 	}
 
@@ -363,7 +368,9 @@ class SearchParamters
 		{
                 	if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
 		 	       $this->setCityForState();
-		}
+		}elseif($noMapping == 2){
+                                $this->setStateForCityCluster();
+                }
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
 	public function setCITY_RES_SELECTED($CITY_RES) 
@@ -1177,7 +1184,23 @@ class SearchParamters
         public function getDisplayCity(){return $this->displayCity;}
         public function getDisplayState(){return $this->displayState;}
 	/* Getter and Setter public functions*/
-        
+        public function setStateForCityCluster(){
+                $city_arr = explode(",",$this->getCITY_RES());
+                $state_arr = explode(",",$this->getSTATE());
+                if($city_arr)
+                {
+                    foreach ($city_arr as $k=>$cityVal){
+                        if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
+                            $state_from_city =  $this->cityStateConversion($cityVal);
+                                $state_arr = array_merge($state_arr,$state_from_city);
+                            $state_arr = array_unique($state_arr);
+                        }
+                    }
+
+                }
+                if(is_array($state_arr))
+                    $this->setSTATE(implode(",",$state_arr),1);
+        }
         public function setCityForState(){
             
             $city_arr = explode(",",$this->getCITY_RES());
@@ -1188,6 +1211,7 @@ class SearchParamters
 		if(!$this->displayState)
 			$this->displayState = $this->getSTATE();
             
+            $stateCityArray = array();
             if($state_arr){
                 foreach ($state_arr as $k=>$stateVal){
                     if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
@@ -1199,6 +1223,15 @@ class SearchParamters
                     }
 
                 }
+                if($stateCityArray){
+                        foreach($stateCityArray as $key=>$cityArr){
+                                if(array_intersect($city_arr,$cityArr)){
+                                        unset($stateCityArray[$key]);
+                                }else{
+                                        $city_arr = array_merge($city_arr,$cityArr);
+                                }
+                        }
+                }
             }
             
 
@@ -1207,7 +1240,7 @@ class SearchParamters
                 foreach ($city_arr as $k=>$cityVal){
                     if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
                         $state_from_city =  $this->cityStateConversion($cityVal);
-                        if(is_array($state_arr)){
+                        if(is_array($state_arr) && is_array($state_from_city)){
                                 $state_arr = array_merge($state_arr,$state_from_city);
                                 $state_arr = array_unique($state_arr);
                         }
@@ -1222,12 +1255,12 @@ class SearchParamters
                     $this->setSTATE($state_arr,1);
             if(is_array($city_arr))
             {
-                    $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
+                   // $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
                     $this->setCITY_RES(implode(",",array_unique($city_arr)),1);
             }
             else
             {
-                    $this->setCITY_INDIA($city_arr);
+                    //$this->setCITY_INDIA($city_arr);
                     $this->setCITY_RES($city_arr,1);
             }
         }

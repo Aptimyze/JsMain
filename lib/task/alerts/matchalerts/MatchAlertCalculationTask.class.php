@@ -160,6 +160,7 @@ EOF;
         private function setLowDppFlag($memObject,$profileid,$dppCount){
                 if($dppCount < $this->LowDppLimit){
                         $memObject->set('MA_LOWDPP_FLAG_'.$profileid,1,$this->LowDppCountCachetime);
+                        $memObject->incrCount('MA_LOWDPP_FLAG_COUNT');
                 }else{
                         $memObject->remove('MA_LOWDPP_FLAG_'.$profileid);
                 }       

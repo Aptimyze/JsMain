@@ -168,6 +168,10 @@ class billing_SERVICES extends TABLE
     
     public function fetchAllServiceDetails($serviceid_str) {
     	try {
+            $convertCToNCP = false;
+            if(in_array('J', VariableParams::$mainMemBasedVasFiltering['NCP']) && !strstr($serviceid_str, 'NCP') && strstr($serviceid_str, 'C') && strstr($serviceid_str, 'J')){
+                $convertCToNCP = true;
+            }
         	$serviceIdArr = explode(",", $serviceid_str);
         	foreach ($serviceIdArr as $key => $val) {
         		$str[] = ":SERVICEID$key";
@@ -176,11 +180,28 @@ class billing_SERVICES extends TABLE
             $sql = "SELECT * from billing.SERVICES WHERE SERVICEID IN ({$newStr})";
             $resSelectDetail = $this->db->prepare($sql);
             foreach ($serviceIdArr as $key => $val) {
-            	$resSelectDetail->bindValue(":SERVICEID$key", trim($val,"'"), PDO::PARAM_STR);
+                $serviceIdStr1 = trim($val,"'");
+                if($convertCToNCP == true && strstr($serviceIdStr1,'C')){
+                    $serviceIdStr1 = str_replace("C", "NCP", $serviceIdStr1);
+                }
+            	$resSelectDetail->bindValue(":SERVICEID$key", $serviceIdStr1, PDO::PARAM_STR);
             }
             $resSelectDetail->execute();
+            $counter = 0;
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
-                $res[] = $rowSelectDetail;
+                $res[$counter] = $rowSelectDetail;
+                if($convertCToNCP == true && strstr($rowSelectDetail["SERVICEID"], "NCP")){
+                    if(!empty($rowSelectDetail["SERVICEID"])){
+                        $res[$counter]['SERVICEID'] = str_replace('NCP', 'C', $rowSelectDetail["SERVICEID"]);
+                    }
+                    if(!empty($rowSelectDetail["NAME"])){
+                        $res[$counter]['NAME'] = str_replace('eAdvantage', 'e-Value Pack', $rowSelectDetail["NAME"]);
+                    }
+                    if(!empty($rowSelectDetail["SORTBY"])){
+                        $res[$counter]['SORTBY'] = 50;
+                    }
+                }
+                ++$counter;
             }
             return $res;
         }

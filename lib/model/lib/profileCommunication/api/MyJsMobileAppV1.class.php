@@ -41,7 +41,7 @@ class MyJsMobileAppV1
 	        $profilePicObj = $pictureService->getProfilePic();
 
 		if($profilePicObj)
-			$myPic = $profilePicObj->getThumbailUrl();
+			$myPic = $profilePicObj->getProfilePic120Url();
 		//die('hjhj');
         if(!$myPic)
 		{
@@ -334,6 +334,12 @@ $className = get_class($this);
       if($valArr['extra']){
       	$memMessage['membership_message'][myjsCachingEnums::EXTRA_PART] = $valArr['extra'];
       }
+      if($valArr['valid']){
+          $memMessage['membership_message'][myjsCachingEnums::VALID] = $valArr['valid'];
+      }
+      if($valArr['expiryDate']){
+          $memMessage['membership_message'][myjsCachingEnums::EXPIRY_DATE] = $valArr['expiryDate'];
+      }
     }
     else {
       $memHandlerObj = new MembershipHandler();
@@ -345,6 +351,8 @@ $className = get_class($this);
         $arr[myjsCachingEnums::BOTTOM_PART] = '';
         $arr[myjsCachingEnums::PAGEID] = '';
         $arr[myjsCachingEnums::EXTRA_PART] = '';
+        $arr[myjsCachingEnums::VALID] = '';
+        $arr[myjsCachingEnums::EXPIRY_DATE] = '';
 
         if ($memMessage['membership_message'] == NULL) {
           $arr[myjsCachingEnums::IS_NULL] = 1;

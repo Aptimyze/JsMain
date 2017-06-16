@@ -97,7 +97,9 @@ class Accept extends ContactEvent
     {
         $sender = $this->contactHandler->getViewer();
         $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'ACCEPTCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'ACCEPTCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'whichChannel'=>$channel,'currentTime'=>$date,'type'=>'ACC') ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         if (CommonFunction::isPaid($sender->getSUBSCRIPTION()))
         {

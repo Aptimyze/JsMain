@@ -389,6 +389,23 @@ class BILLING_PURCHASES extends TABLE
         return $profiles;
     }
 
+    public function fetchJsBoostBillingPool($entryDt)
+    {
+        try
+        {
+            $sql  = "SELECT DISTINCT(BILLID) AS BILLID FROM billing.PURCHASES WHERE ENTRY_DT >= :ENTRY_DT AND SERVEFOR LIKE '%J%' AND SERVEFOR LIKE '%N%' ORDER BY ENTRY_DT ASC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $profiles[] = $result['BILLID'];
+            }
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
+
     public function getUpsellEligibleProfiles($prevDateTime, $currtDateTime)
     {
         try
@@ -551,6 +568,21 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
+    public function getBillDetails($billid,$columns=""){
+        try {
+            $sql  = "SELECT BILLID,".$columns." FROM billing.PURCHASES WHERE BILLID=:BILLID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[$result['BILLID']] = $result;
+            }
+            return $output;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
     public function getProfilesWithinDateRange($start_dt, $end_dt)
     {
         try {
@@ -661,7 +693,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt) - 30 * 24 * 60 * 60); // expiry - 30 days
-            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT AND STATUS='DONE'";
+            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
             $prep  = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -682,7 +714,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt) - 30 * 24 * 60 * 60); // expiry - 30 days <-> expiry
-            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT AND STATUS='DONE'";
+            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
             $prep    = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -704,7 +736,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt) + 10 * 24 * 60 * 60); // expiry <-> expiry + 10 days
-            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE AND STATUS='DONE'";
+            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
             $prep  = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -726,7 +758,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt) + 10 * 24 * 60 * 60); // expiry + 10 days
-            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE AND STATUS='DONE'";
+            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
             $prep    = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);

@@ -92,6 +92,9 @@ class Initiate extends ContactEvent{
   private $tasksThruQueue;
 
   private $producerObj;
+
+
+
   /**#@-*/
 
   /**
@@ -354,19 +357,49 @@ class Initiate extends ContactEvent{
       $isFiltered = $this->_makeEntryInContactsOnce();
 
 
-      try {
-        //send instant JSPC/JSMS notification
-		$this->sendDataOfQueue(
-				'CHATROSTERS', 'INITIATE',
-				array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N"));
-      } catch (Exception $e) {
-        throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-      }
+	    try {
+		    //send instant JSPC/JSMS notification
+		    if(JsConstants::$directRosterUpdate) {
+			    if($this->checkAndCreateOFUser($this->viewer->getPROFILEID()))
+			    {
+				    $this->updateRoster($this->viewer, $this->viewed, "intsent");
+			    }
+			    if ($this->contactHandler->getContactObj()->getFILTERED() == "Y")
+				    $roster = "NOTINUSE";
+			    else
+				    $roster = "intrec";
+			    if($this->checkAndCreateOFUser($this->viewed->getPROFILEID()))
+			    {
+				    $this->updateRoster($this->viewed, $this->viewer, $roster);
+			    }
+		    }
+		    else
+		    {
+			    $this->sendDataOfQueue(
+				    'CHATROSTERS', 'INITIATE',
+				    array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N"));
+		    }
+	    } catch (Exception $e) {
+		    throw new jsException("Something went wrong while creating Roster -" . $e);
+	    }
 
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
-      
+      else {
+             try {
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $this->sendDataOfQueue(
+            'MAIL', 'INITIATECONTACT',
+				array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>1 ));
+      } catch (Exception $e) {
+        
+      }
+
+          
+      }
+       
        $viewedEntryDate = $this->viewed->getENTRY_DT();
        $now = date("Y-m-d");
        $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
@@ -399,10 +432,12 @@ class Initiate extends ContactEvent{
 		$sender = $this->viewer;
 		$receiver = $this->viewed;
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
+                // the variable only logging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',
-				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ))
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>0 ))
 		)
 		{
 			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
@@ -619,12 +654,15 @@ class Initiate extends ContactEvent{
       }
       else{
                 if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
+                {
+                    
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
                 $this->viewed->getPROFILEID(),
                 $this->_getEOIMailerDraft(),
                 "N");
+                }
         return false;
       }
     }
@@ -738,5 +776,99 @@ public function getNegativeScoreForUser()
 		  }
       return false;
     }
+
+	private function updateRoster($profile,$otherprofile,$roster)
+	{
+		$profileid = $profile->getPROFILEID();
+		$otherprofileid = $otherprofile->getPROFILEID();
+		$otherusername = $otherprofile->getUSERNAME();
+		$md5 = MD5($otherprofileid);
+		$uname = $otherusername."|".$md5;
+		$string = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+			<rosterItem>
+ 			<jid>".$otherprofileid."@".JsConstants::$openfireConfigInternal['SERVER_NAME']."</jid>
+ 			<nickname>".$uname."</nickname>
+ 			<subscriptionType>3</subscriptionType>
+ 			<groups>  
+ 				<group>".$roster."</group>
+ 			</groups>
+ 			</rosterItem>";
+		$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $profileid ."/roster";
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$headers = array();
+		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+		$headers[] = 'Content-Type: application/xml';
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch,CURLOPT_POST,true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
+		curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		if($httpcode == 201)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	private function checkAndCreateOFUser($profileid)
+	{
+		$pass = md5($profileid);
+		$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $profileid;
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$headers = array();
+		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+		$headers[] = 'Content-Type: application/json';
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if ($httpcode == 200) {
+			return true;
+		} else {
+			$string = "{\"username\": \"" . $profileid . "\",\"password\": \"" . $pass . "\",\"properties\": {\"property\": [{\"@key\": \"createroster\",\"@value\": \"true\"}]}}";
+			$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users";
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
+
+			$headers = array();
+			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+			$headers[] = 'Content-Type: application/json';
+
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_exec($ch);
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			if($httpcode == 201 || $httpcode == 200)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+	}
+
+
 
 } // end of Initiate Class.

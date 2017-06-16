@@ -225,17 +225,17 @@ class PageForm extends sfForm
 		  $id=$mobRegObj->insert($mobile_reg);
 	}
 	  if(count($religionArr)){
-		  $religionArr[PROFILEID]=$profileid;
+		  $religionArr[PROFILEID]=$id;
 		  include_once(sfConfig::get("sf_web_dir") . "/profile/functions_edit_profile.php");
 		  edit_nonHindu_religion($religionArr,"newjs.".$religion_table,$religion_log_table);
 	  }
 	  if(count($nativePlaceArr)){
-			$nativePlaceArr[PROFILEID]=$profileid;
+			$nativePlaceArr[PROFILEID]=$id;
 			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
-				$nativePlaceObj->UpdateRecord($profileid,$nativePlaceArr);
+				$nativePlaceObj->UpdateRecord($loggedInObj->getPROFILEID(),$nativePlaceArr);
 			}
 	  }
            if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!='')){

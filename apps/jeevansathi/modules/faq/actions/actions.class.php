@@ -71,9 +71,16 @@ class faqActions extends sfActions
             $success=true;
         }
 
-        $objNameStore = new incentive_NAME_OF_USER;
+        //$objNameStore = new incentive_NAME_OF_USER;
         $loginProfile=LoggedInProfile::getInstance();
-    $this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());
+        $profileid = $loginProfile->getPROFILEID();
+        //$this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());
+
+        //added this for caching
+        $nameOfUserOb=new NameOfUser();        
+        $nameOfUserArr = $nameOfUserOb->getNameData($profileid);
+        $this->NAME = $nameOfUserArr[$profileid]["NAME"];
+        unset($nameOfUserOb);
         $feedBackForm = new FeedBackForm(0);
         $this->form = $feedBackObj->getForm();
         $this->tracepath = $feedBackObj->getTracePath();

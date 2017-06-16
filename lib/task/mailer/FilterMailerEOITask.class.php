@@ -39,16 +39,41 @@ EOF;
 	            $Contactsobj = new newjs_CONTACTS($dbName);
 	            $chunkstr="RECEIVER%".$this->noOfActiveServers."=".$serverId;
 	            $profilemail=$Contactsobj->getFilterContacts($serverId,$chunkstr);
+
 	            foreach ($profilemail as $key => $value) {			            		
 				    $usercode = explode(',',$value);
+				    $usercode = $this->skipProfiles($usercode,$key);
 				    $count=count($usercode);
 				    if(count($usercode)>10)
 				        $usercode = array_slice($usercode, 0, 10);
 				    $usercode = implode(',',$usercode);
-				    if($key!=0)
+				    if($key!=0 && $count >= 1)
 					$mailerEOIFilterObj->InsertFilterEOI($key,$usercode,$count);
 	        }
 	    }
+	}
+
+		public function skipProfiles($arranged,$key)
+	{
+            
+            $memcacheServiceObj = new ProfileMemcacheService($key);
+
+            if($key && $memcacheServiceObj->isGroupUpdated(47))
+            {
+            $skipProfiles = $memcacheServiceObj->get("IGNORED");
+            }
+            else
+            {	
+            $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
+        	$skipProfiles = $skipProfileObj->listIgnoredProfile($key);
+        	}
+
+			if(is_array($skipProfiles))
+				$temp=array_diff($arranged,$skipProfiles); 
+			else
+				$temp=$arranged;      
+            ProfileMemcache::unsetInstance($key);            
+		return $temp;
 	}
 }
 

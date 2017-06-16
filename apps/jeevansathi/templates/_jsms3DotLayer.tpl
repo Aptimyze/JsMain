@@ -82,24 +82,75 @@
                         <div class="selectOptions reportAbuseScreen fl" id="js-reportAbuseMainScreen" style="height:100%;">
                             <i class="mainsp arow_new dispibl"></i>
                             <ul class="f16 fontthin white">
-                                <li class="white fullwid dispibl dashedBorder pad18">Please tell us why you are reporting this profile </li>
+                                <li class="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. </li>
 
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt1">
                                 	<div class="fullwid posrel">
-                                		Looks like fake profile
+                                		One or more of Profile Details are incorrect
                                 		 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
                                 	</div>
                                 </li>
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt2">
                                 	<div class="fullwid posrel">
-                                	Inappropriate content
+                                	Photo on profile doesn't belong to the person
                                 	 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
                                 	</div>
                                 </li>
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt3">
                                 	<div class="fullwid posrel">
-                                	Spam <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	User is using abusive/indecent language <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
                                 	</div>
+                                </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt4">
+                                    <div class="fullwid posrel">
+                                        User is stalking me with messages/calls
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt5">
+                                    <div class="fullwid posrel">
+                                        User is asking for money
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt6">
+                                    <div class="fullwid posrel">
+                                        User has no intent to marry
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt7">
+                                    <div class="fullwid posrel">
+                                        User is already married / engaged
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "notOpen">
+                                    <div class="fullwid posrel">
+                                        User is not picking up phone calls
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                 </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt9">
+                                    <div class="fullwid posrel">
+                                        Person on Phone denied owning this profile
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                 </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "notOpen">
+                                    <div class="fullwid posrel">
+                                        User's phone is switched off/not reachable
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+                                 </li>
+                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt11">
+                                    <div class="fullwid posrel">
+                                        User's phone is invalid
+                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct" ></i>
+                                    </div>
                                 </li>
                                 <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id="js-otherReasons">
                                 	<div class="fullwid posrel">
@@ -109,7 +160,7 @@
                             </ul>
                         </div>
                         <div class="reportAbuseScreen">
-                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
@@ -280,7 +331,6 @@
             <div class="txtc">
                 <div id="photoIDDiv" class="photoDiv">
 
-                <img id="profilePhoto" class="srp_box2 mr6" src="http://mediacdn.jeevansathi.com/1255/13/25113359-1411734648.jpeg">
                 </div>
                 <div class="pad2 f16 fontlig" id="newErrMsg"></div>
                 <div class="pad20 f16 fontlig mt15" id="membershipheading"></div>

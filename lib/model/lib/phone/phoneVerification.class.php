@@ -127,6 +127,7 @@ public function phoneUpdateProcess($message)
                 $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
                 
                 $memcacheObj->lpush($key,$profileid);
+                $this->sendToProductMetricQueue();
 
 			}
 
@@ -206,9 +207,11 @@ public function sendMailerAfterVerification($noOfTimesVerified) {
 			$activated =$this->profileObject->getACTIVATED();
 			$profileid=$this->profileObject->getPROFILEID();
 
-			
 			if($noOfTimesVerified==0 && $activated=="Y")
+                        {
 			CommonFunction::sendWelcomeMailer($profileid);
+                        }
+                        
 }
 
 
@@ -428,5 +431,21 @@ public function contact_archive($field="",$val="")
 	$http_msg=print_r($_SERVER,true);
 	mail("palashc2011@gmail.com,niteshsethi1987@gmail.com","rabbit mq server issue in PhoneVerification Duplication check","rabbit mq server issue in PhoneVerification Duplication check");
   }
+
+  
+    private function sendToProductMetricQueue(){
+        
+            try{
+                $producerObj=new Producer();
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $updateSeenData = array('process' =>MessageQueues::PRODUCT_METRICS,'data'=>array('type'=>'REG','whichChannel' =>$channel,'currentTime'=>$date ), 'redeliveryCount'=>0 );
+                        $producerObj->sendMessage($updateSeenData);
+                }
+            } catch (Exception $e) {
+                        }
+    }
 
 }

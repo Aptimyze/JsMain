@@ -265,12 +265,15 @@ class dppSuggestions
 		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);	
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{			
-			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);			
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);		
+			if(!is_array($trendsArr))
+				$trendsArr= Array('0'=>'0');
 			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
-		{        		
+		{      
+			unset($trendsArr['0']);  		
 			return $trendsArr;        		
 		}
 	}

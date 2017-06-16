@@ -76,18 +76,40 @@
 	<!--end:overlay2-->
 	<!--end:header-->
 	<div class="rv2_bg1" id="jsmsLandingContent">
-		~if $data.dividerText && !$data.upgradeMembershipContent`
+		~if $data.dividerText && !($data.upgradeMembershipContent || $data.lightningDealContent)`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
 			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
 		</div>
 		<!--end:offer div-->
 		~/if`
+        ~if $data.lightningDealContent`
+        <!--start:offer div-->
+            <div class="rv2_pad5" style="padding-top:10px;">
+                <div id="dividerText" class="bg3 posrel fontreg f18 color2 rv2_pad16"> 
+                    <p class="f16 pt10">~$data.lightningDealContent.top|decodevar`</p>
+                    <p class="f20 pt5">~$data.lightningDealContent.discText|decodevar`<span class='fontlig f14'>on all memberships</span></p>
+                    <p class="fontlig f16 pt5">Plans starts @ <span class='strike color8 opa70'> ~$data.lightningDealContent.priceStrike`</span>  ~$data.lightningDealContent.discPrice`</p>
+                    <i class="posabs rv2_sprtie1 setoffb setoffbl rv2_offb_left"></i> 
+                    <i class="posabs rv2_sprtie1 setoffbr rv2_offb_right"></i> 
+                    <!--start:timer div-->
+                    <div class="posabs" style="right:14px; top:13px">
+                        <p class="f14 color7 pl38">Valid for</p>
+                         <ul class="time color7">
+                             <li class="inscol"><span id='jsmsLandingM'></span><span>M</span></li>
+                             <li><span id='jsmsLandingS'></span><span>S</span></li>
+                            </ul>
+                    </div>
+                    <!--end:timer div-->
+               </div>
+            </div>
+        <!--end:offer div-->
+        ~/if`
 		~if $data.upgradeMembershipContent`
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
 				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad19"> 
-				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
+				'~$data.upgradeMembershipContent.upgradeOCBBenefits`' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
 				</div>
@@ -415,6 +437,7 @@
 	var AndroidPromotion = 0;
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
+    var lightningDealExpiryInSec = "~$data.lightningDealContent.diffSecond`";
 	$(document).ready(function(){
         eraseCookie('backendLink');
         if(!checkEmptyOrNull(readCookie('expCheck'))){
@@ -731,7 +754,14 @@
 				eraseCookie('backState');
 				eraseCookie('couponID');
 				eraseCookie('device');
-				window.location.href = "/profile/mainmenu.php";
+                if("~$data.device eq 'Android_app'`"){
+                    var host = window.location.hostname;
+                    $("#continueBtn a").attr('href','http://'+host+'/profile/mainmenu.php');
+                    window.location.href = 'http://'+host+'/profile/mainmenu.php';
+                }
+                else{
+                    window.location.href = "/profile/mainmenu.php";
+                }
 			} else {
 				window.history.back();
 			}
@@ -768,5 +798,6 @@
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
 		}, 90000);
+        showTimerForLightningMemberShipPlan("jsmsLanding");
 	});
 </script>

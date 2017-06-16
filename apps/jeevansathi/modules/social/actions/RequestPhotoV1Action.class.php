@@ -33,12 +33,12 @@ class RequestPhotoV1Action extends sfActions
                                 
                                 $ignoredProfileObj = new IgnoredProfiles();
                                 
-                                if($ignoredProfileObj->ifIgnored($profileid,$senderProfileObj->getPROFILEID())){
+                                if($ignoredProfileObj->ifIgnored($profileid,$senderProfileObj->getPROFILEID(),ignoredProfileCacheConstants::BYME)){
                                         $output="blocked";
                                         $blockedError = PhotoMessagesEnum::PHOTO_REQUEST_POG_BLOCKED_PG;
                                         $headerMsg = PhotoMessagesEnum::PHOTO_REQUEST_BLOCKED;
                                 }
-                                elseif($ignoredProfileObj->ifIgnored($senderProfileObj->getPROFILEID(),$profileid)){
+                                elseif($ignoredProfileObj->ifIgnored($senderProfileObj->getPROFILEID(),$profileid,ignoredProfileCacheConstants::BYME)){
                                         $output="blocked";
                                         $blockedError = PhotoMessagesEnum::PHOTO_REQUEST_PG_BLOCKED_POG;
                                         $headerMsg = PhotoMessagesEnum::PHOTO_REQUEST_BLOCKED;

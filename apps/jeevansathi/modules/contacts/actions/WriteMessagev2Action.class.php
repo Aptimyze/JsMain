@@ -51,6 +51,17 @@ class WriteMessagev2Action extends sfAction
 						$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID());
 						$chatLogObj = new NEWJS_CHAT_LOG($dbName);
 						$msgDetailsArr = $messageLogObj->getMessageHistoryPagination($this->loginProfile->getPROFILEID(),$profileid,$limit,$msgId);
+            
+            //Parser Message
+            foreach($msgDetailsArr as $key => $msgArr) {
+              if($msgArr["SENDER"] == $this->loginProfile->getPROFILEID()) {
+                $msgDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->loginProfile, $msgArr['MESSAGE']);
+              } else {
+                $msgDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->Profile, $msgArr['MESSAGE']);
+              }
+            }
+            
+            //var_Dump($msgDetailsArr);die;
 						$chatDetailsArr = $chatLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid,$limit,$chatId);
 						//print_r($chatDetailsArr);
 						//print_r($msgDetailsArr);die;
@@ -182,6 +193,7 @@ class WriteMessagev2Action extends sfAction
 			$memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top'];
+        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 			$arr["cansend"] = "false";
 			$arr["button"]["label"]  = "View Membership Plans";
 			$arr["button"]["value"] = "";
@@ -243,6 +255,45 @@ class WriteMessagev2Action extends sfAction
 		return array_change_key_case($display,CASE_LOWER);
 		
 	}
+  
+   /* This function is used to check if message is personalized or not*/
+    private function getPersonalizedMessageOnly($profileObj,$message)
+    {
+			
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_FREE);
+			
+			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
+			if(!in_array($messageCmp,$presetMessage))
+			{
+				if(strpos($message,"||")!==false || strpos($message,"--")!==false)
+				{
+					$messageArr=explode("||",$message);
+					$eoiMsgCount = count($messageArr);
+					$i=0;
+					
+					for($j=0;$j<$eoiMsgCount;$j++)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						if($i==0)
+							$eoiMessages=$splitmessage[0];
+						else
+							$eoiMessages.="\n".$splitmessage[0];
+						$i++;							
+					}
+					if($eoiMessages)
+						$message=$eoiMessages;
+					else
+						$message="";
+				}
+				//$message= nl2br($message);
+				$message =addslashes(htmlspecialchars_decode($message));
+			}
+			else
+				$message = null;
+		
+			return $message;
+		}
 	
 }
 

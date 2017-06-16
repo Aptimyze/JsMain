@@ -819,6 +819,7 @@ class InboxMobileAppV2
 					
 					eval('$profile[$count][strtolower($field)] =$tupleObj->get' . $field . '();');
 				}
+                                $profile[$count]['last_message']= $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['last_message']);
                                 $profile[$count]['last_message'] = addslashes(htmlspecialchars_decode($profile[$count]['last_message']));
                                 
                                $profile[$count]["time"] = $tupleObj->getDecoratedTime();
@@ -922,7 +923,8 @@ class InboxMobileAppV2
 	            if(!MobileCommon::isDesktop())
 					$buttonObj = new ButtonResponseJSMS(LoggedInProfile::getInstance('newjs_master'),$profileObject,$page);
 				$ignoreButton = array();
-                if($infoKey=="IGNORED_PROFILES" && !MobileCommon::isDesktop())
+				// die(print_r($infoKey));
+                if($infoKey=="IGNORED_PROFILES" && !MobileCommon::isDesktop() && !MobileCommon::isMobile())
 				{
 					
 					$ignoreButton["buttons"]["primary"][] = $buttonObj->getIgnoreButton("","",1,1);
@@ -1389,7 +1391,10 @@ class InboxMobileAppV2
 					else
 						$message="";
 				}
-				$message= nl2br($message);
+				if ( MobileCommon::isDesktop() )
+				{
+					$message= nl2br($message);
+				}
 				$message =addslashes(htmlspecialchars_decode($message));
 			}
 			else

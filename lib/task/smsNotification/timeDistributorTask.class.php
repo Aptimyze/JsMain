@@ -26,6 +26,7 @@ $this->addOptions(array(
 
   protected function execute($arguments = array(), $options = array())
   {
+	die('notRequired');
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 	$this->alarmMinTime = NotificationEnums::$alarmMinTime;
