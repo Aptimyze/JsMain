@@ -16,10 +16,30 @@ class OutboundEventConsumer {
   private $channel;
   private $messsagePending;
   private $serverid;
+  
+  
+  /**
+   *
+   * @var type 
+   */
   private $memHandlerObj;
+  
+  /**
+   *
+   * @var type 
+   */
   private $jProfileObj;
+  
+  /**
+   *
+   * @var type 
+   */
   private $bDebugInfo = true;
-  const PROFILE_DETAILS = "PROFILEID,ACTIVATED,SUBSCRIPTION,ISD,PHONE_MOB,MOB_STATUS,LANDL_STATUS,PHONE_WITH_STD,COUNTRY_RES";
+  
+  /**
+   * 
+   */
+  const PROFILE_DETAILS = "PROFILEID,ACTIVATED,SUBSCRIPTION,ISD,PHONE_MOB,MOB_STATUS,LANDL_STATUS,PHONE_WITH_STD,COUNTRY_RES,MTONGUE";
   /**
    *
    * Constructor for instantiating object of Consumer class
@@ -102,10 +122,9 @@ class OutboundEventConsumer {
    * @access public
    * @param $msg
    */
-  //public function processMessage(AMQPMessage $msg) { // TODO 
-  public function processMessage($msg) {
-    //$msgdata = json_decode($msg->body, true); //TODO 
-    $msgdata = json_decode($msg, true);
+  public function processMessage(AMQPMessage $msg) {
+    $msgdata = json_decode($msg->body, true); 
+    
     $process = $msgdata['process'];
     $redeliveryCount = $msgdata['redeliveryCount'];
     $type = $msgdata['data']['type'];
@@ -150,38 +169,44 @@ class OutboundEventConsumer {
     $iPgId = $arrData['PG_ID'];
     $iPogId = $arrData['POG_PROFILEID_ID'];
 
-    $profileInfo = array("PROFILEID"=>$iPgId);
+    $arrInfo = array("PROFILEID"=>$iPgId);
     //Get in Data 
     if(false === $this->isValidTime()) {
       //TODO Add Logging If Required
-      $this->logThis("Time Window Checks Failed", $enEventType, $profileInfo);
+      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $this->logThis("Time Window Checks Failed", $enEventType, $arrInfo);
       return ;
     }
     
     //Ever Paid Check
     $userDetails = $this->userCheckAndDetails($enEventType, $iPgId);
     if(false === $userDetails) {
-      $this->logThis("User Checks Failed", $enEventType, $profileInfo);
+      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $this->logThis("User Checks Failed", $enEventType, $arrInfo);
       return ;
     }
     
     //Outbound Call happened in Last 
      if(false === $this->outBoundCallStatus($iPgId)) {
-      $this->logThis("Outbound call check failed", $enEventType, $profileInfo);
+      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $this->logThis("Outbound call check failed", $enEventType, $arrInfo);
       return ;
     }
     
-    $memberShipDetails = $this->checkAnalyticScore($enEventType, $iPgId) ;
-    if(false === $memberShipDetails) {
-      $this->logThis("Analytic Score check failed", $enEventType, $profileInfo);
+    
+    $memberShipValue = $this->getMinMemberShipValue($enEventType, $iPgId) ;
+    if(false === $memberShipValue) {
+      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $this->logThis("Analytic Score check failed", $enEventType, $arrInfo);
       return ;
     }
     
-    //TODO Get Verified Phone Numbers
+    //Get Verified Phone Numbers
     $verifiedNumber = $this->getVerifiedPhone($userDetails);
     
     if(false === $verifiedNumber) {
-      $this->logThis("Phone check failed", $enEventType, $profileInfo);
+      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $this->logThis("Verified Phone check failed", $enEventType, $arrInfo);
       return ;
     }
     
@@ -191,7 +216,7 @@ class OutboundEventConsumer {
     /**
      * 
      */
-    //TODO check LandingFlowId
+    //check LandingFlowId
     switch ($enEventType) {
       case OutBoundEventEnums::VIEW_CONTACT:
         $landingFlowId = "132130";
@@ -209,20 +234,39 @@ class OutboundEventConsumer {
         break;
       default:
         //TODO Add some logging
-        $this->logThis("Unsupported Event", $enEventType, $ProfileInfo);
+        $arrInfo['STATUS'] = "API_NOT_CALLED";
+        $this->logThis("Unsupported Event", $enEventType, $arrInfo);
         return ;
         break;
     }
     $landingFlowId = "136074"; 
-    $this->callThirdPartyApi("08010619996", "08039510994", $landingFlowId);
+    $callerId = '08039510994';
+    $response = $this->callThirdPartyApi("08010619996", $callerId, $landingFlowId, $memberShipValue);
+    
+    if(false !== $response) {
+      $this->logThisApiCall($iPgId, $verifiedNumber, $enEventType, $callerId, $landingFlowId, $response);
+    }
+    $this->logThis("Success", $enEventType, $arrInfo);
   }
 
   /**
    * 
    * @param type $iProfileId
-   * @param type $withInLastDays
+   * @param type $withInLastDays : In days
    */
-  private function outBoundCallStatus($iProfileId, $withInLastDays="3 days") {
+  private function outBoundCallStatus($iProfileId, $withInLastDays = OutBoundEventEnums::OUTBOUND_CALL_NOT_HAPPENED_IN_LAST_DAYS) {
+    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS;
+    $lastRecordData = $storeObj->getLastRecord($iProfileId);
+    
+    if($lastRecordData) {
+      $datetime1 = new DateTime(date('Y-m-d H:i:s'));
+      $datetime2 = new DateTime($lastRecordData["DATE_TIME"]);
+      
+      $interval = $datetime1->diff($datetime2);
+      if($interval->days <= $withInLastDays) {
+        return false;
+      }
+    }
     return true;
   }
   
@@ -234,10 +278,15 @@ class OutboundEventConsumer {
   private function userCheckAndDetails($enEventType, $iProfileId) {
     
     //Currently for Event Check for Free User Only
-    //TODO Check Deleted User Case
     $userDetail = $this->jProfileObj->get($iProfileId, "PROFILEID", self::PROFILE_DETAILS);
     
     if(0 === strlen($userDetail["SUBSCRIPTION"])) {
+      return false;
+    }
+    
+    //Mother Tongue
+    $allHindiMtongue = FieldMap::getFieldLabel("allHindiMtongues", '',1);
+    if(false === in_array($userDetail['MTONGUE'],$allHindiMtongue)) {
       return false;
     }
     
@@ -249,8 +298,7 @@ class OutboundEventConsumer {
    * @param type $enEventType
    * @param type $iProfileID
    */
-  private function checkAnalyticScore($enEventType, $iProfileID) {
-    return true;
+  private function getMinMemberShipValue($enEventType, $iProfileID) {
     return $this->memHandlerObj->checkEligibleForMemCall($iProfileID);
   }
   
@@ -280,7 +328,7 @@ class OutboundEventConsumer {
    * @param type $CallerId
    * @param type $landingFlowId
    */
-  private function callThirdPartyApi($toUser, $CallerId, $landingFlowId) {
+  private function callThirdPartyApi($toUser, $CallerId, $landingFlowId, $minMemberShipValue) {
     $apiId = OutBoundEventEnums::THIRD_PARTY_API_ID;
     $apiAuthToken = OutBoundEventEnums::THIRD_PARTY_API_AUTH_TOKEN;
 
@@ -296,10 +344,11 @@ class OutboundEventConsumer {
         //'TimeLimit' => "<time-in-seconds> (optional)",
         //'TimeOut' => "<time-in-seconds (optional)>",
         'CallType' => "trans", //Can be "trans" for transactional and "promo" for promotional content
-        'Url' => $landingUrl
+        'Url' => $landingUrl,
+        'CustomField' => $minMemberShipValue
     );
     
-    var_dump($post_data);die(X);
+    //var_dump($post_data);die(X);
    
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_VERBOSE, 1);
@@ -310,13 +359,17 @@ class OutboundEventConsumer {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
     
+    $stTime = microtime();
     $http_result = curl_exec($ch);
     $error = curl_error($ch);
     $http_code = curl_getinfo($ch ,CURLINFO_HTTP_CODE);
-
+    
     curl_close($ch);
-
-var_dump($http_result);
+    
+    $endTime = microtime();
+    //TODO : Parse Http Result
+    $apiResponse = $this->parseXML($http_result);
+    return $apiResponse;
   }
   
   /**
@@ -346,12 +399,54 @@ var_dump($http_result);
     return $userVerifiedNumber;
   }
   
-  private function logThis($msg, $enEventType, $ProfileInfo)
+  /**
+   * 
+   * @param type $msg
+   * @param type $enEventType
+   * @param type $profileInfo
+   */
+  private function logThis($msg, $enEventType, $arrInfo)
   {
     if($this->bDebugInfo) {
-      echo "\n<br\>",$enEventType,$msg,$ProfileInfo,"\n<br\>";
+      echo "\n<br\>",$enEventType,$msg,print_r($arrInfo,true),"\n<br\>";
     }
     
+  }
+  
+  /**
+   * 
+   * @param type $szCalledUserId
+   * @param type $szPhoneNumber
+   * @param type $szEventType
+   * @param type $szCallerId
+   * @param type $szLandingFlowId
+   * @param type $apiResponse
+   */
+  private function logThisApiCall($szCalledUserId, $szPhoneNumber, $szEventType, $szCallerId, $szLandingFlowId, $apiResponse) 
+  {  
+  
+    $now = date('Y-m-d H:i:s');
+    $arrRecordData = array(
+       "CALLED_USER_ID" => $szCalledUserId,
+       "PHONE_NUMBER" => $szPhoneNumber,
+       "EVENT_TYPE" => $szEventType,
+       "CALLER_ID" => $szCallerId,
+       "LANDING_FLOW_ID" => $szLandingFlowId,
+       "RESPONSE_FROM_THIRD_PARTY" => $apiResponse,
+       "DATE_TIME" => $now
+      ); 
+    
+    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
+    $storeObj->insertRecord($arrRecordData);
+  }
+  
+  /**
+   * 
+   * @param type $xmlString
+   * @return type
+   */
+  private function parseXML($xmlString) {
+    return $xmlString;
   }
 }
 

@@ -2127,4 +2127,38 @@ if($k=="state_res")
             }
             return $Arr;
         }
+  
+  /**
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeMembershipPlanAudioV1(sfWebRequest $request)
+  {
+    $arrData = $request->getParameter("CustomField");
+    
+    //Right Now contains membershipValue
+    $memberShipValue = $arrData;
+    
+    //Thoushand
+    $arrOut[]  = intVal($memberShipValue / 1000);
+    $memberShipValue = $memberShipValue%1000;
+    $arrOut[] = "1000";
+    
+    // Hundred
+    $arrOut[]  = intVal($memberShipValue / 100);
+    $memberShipValue = $memberShipValue%100;
+    $arrOut[] = "100";
+    
+    if($memberShipValue > 0) {
+      $arrOut[] = $memberShipValue;
+    }
+    
+    /**
+     * 
+     */
+    foreach($arrOut as $val) {
+      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"<br/>";
+    }
+    die();
+  }
 }

@@ -21,4 +21,10 @@ class OutBoundEventEnums
   
   const THIRD_PARTY_API_ID = "jeevansathi";
   const THIRD_PARTY_API_AUTH_TOKEN = "d82ea09300058f6b2cd3b9effe4c267bf7df8c86";
+  
+  const AUDIO_FORMAT = ".wav";
+  const AUDIO_FILE_BASE_PATH = "/audio/outbound";
+  const AUDIO_NUMBER_PATH = "/numbers";
+  
+  const OUTBOUND_CALL_NOT_HAPPENED_IN_LAST_DAYS = "3"; //days 
 }

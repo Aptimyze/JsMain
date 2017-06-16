@@ -144,7 +144,10 @@ class RequestHandlerConfig
 			"popChat" => array("v1" => "popChat"),
 			"communicationSync" => array("v1" => "communicationSync"),
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
-		)
+		),
+        "static" => array(
+          "membershippitch" => array("v1" => "MembershipPlanAudioV1"),  
+        ),
 	);
 
 	public static $moduleActionHamburgerArray = array(
