@@ -31,9 +31,8 @@ export default class MyjsHeadHTML extends React.Component
   setNotificationView()
    {
      let currentView  = document.getElementById('notificationBellView');
+     console.log(currentView);
      currentView.classList.toggle('dispnone');
-
-     console.log(currentView.className.indexOf('dispnone'));
 
      let element = document.getElementById('darkSection');
      element.classList.toggle('tapoverlay');
@@ -48,9 +47,6 @@ export default class MyjsHeadHTML extends React.Component
        document.getElementById("mainContent").style.overflow = "auto";
      }
    }
-
-
-
   render(){
       return(
           <div className="posrel">

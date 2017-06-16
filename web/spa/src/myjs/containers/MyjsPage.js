@@ -2,7 +2,7 @@ import React from "react";
 import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "../components/MyjsEditBar";
 import MyjsSlider from "../components/MyjsSliderBar";
-import AcceptCount from './MyjsAcceptcount';
+import AcceptCount from '../components/MyjsAcceptcount';
 import MyjsProfileVisitor from './MyjsProfileVisitor'
 import {MyjsApi} from "../actions/MyjsApiAction";
 import { connect } from "react-redux";
@@ -70,10 +70,9 @@ export  class MyjsPage extends React.Component {
 							<div className="" id="pcontainer">
 							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
 							<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
-							<AcceptCount fetched={this.props.reducerData.fetched}/>
+							<AcceptCount fetched={this.props.reducerData.fetched} acceptance={this.props.reducerData.apiData.all_acceptance} justjoined={this.props.reducerData.apiData.just_joined_matches}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
 							<MyjsSlider fetched={this.props.reducerData.fetched} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
-							<MyjsSlider title={this.state.IR} />
 
 							</div>
 					</div>
