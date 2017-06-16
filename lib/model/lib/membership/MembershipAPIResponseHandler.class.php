@@ -588,7 +588,9 @@ class MembershipAPIResponseHandler {
                     //total contacts to view for upgarde mem
                     $output["upgradeTotalContacts"] = $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
                     //additional benefits with upgrade compared to current mem
-                    //$output["upgradeAdditionalBenefits"] = $thisObj->memApiFuncs->getAdditionalUpgradeBenefits($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
+                    if($fromSource != "cron"){
+                        $output["upgradeAdditionalBenefits"] = $thisObj->memApiFuncs->getAdditionalUpgradeBenefits($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
+                    }
 
                     $formattedUpgradeMemName = ($output["upgradeMainMem"] != "X" ? ucfirst(strtolower($output["upgradeMainMemName"])) : $output["upgradeMainMemName"]);
                     $formattedCurrentMemName = ($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($thisObj->activeServiceName)) : $thisObj->activeServiceName);
