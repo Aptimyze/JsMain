@@ -2,7 +2,7 @@ import * as CONSTANTS from '../../common/constants/apiConstants'
 import React from 'react';
 import {push} from 'react-router-redux';
 import {getCookie,setCookie} from "../../common/components/CookieHelper";
-
+import axios from "axios";
 
 export  function commonApiCall(callUrl,data,reducer,method)
 {
@@ -16,23 +16,22 @@ export  function commonApiCall(callUrl,data,reducer,method)
     {
       checkSumURL = '?AUTHCHECKSUM='+aChsum;
     }
+    axios({
+    method: callMethod,
+    url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
+    data: '',
+    headers: { 
+      'Accept': 'application/json',
+      'withCredentials':true
+    },
+  }).then( (response) => {
 
-    fetch( CONSTANTS.API_SERVER +callUrl + checkSumURL, // PLEASE ENSURE THIS DOESNT GO LIVE AS WE CANNOT EXPOSE ACHSUM IN THE URL FIELD, THIS HAS TO GO IN THE COOKIE ITSELF WHICH WILL BE RESOLVED WITH PRODUCTION BUILD AUTOMATICALLY
-      {
-      method: callMethod,
-      headers: {
-        'Accept': 'application/json',
-      }      
-
-    })
-    .then(response => response.json())
-    .then( (response) => {
-      if ( response.AUTHCHECKSUM ){
-        setCookie('AUTHCHECKSUM',response.AUTHCHECKSUM);
+      if ( response.data.AUTHCHECKSUM ){
+        setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
       }
       dispatch({
         type: reducer,
-        payload: response
+        payload: response.data
       });
     })
     .catch( (error) => {
