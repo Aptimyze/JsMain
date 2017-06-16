@@ -648,6 +648,8 @@ $js_arr[]=array(" /web/spa/src/common/components/App"      => "4");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
 $js_arr[]=array("/web/spa/dist/0"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/ApiResponseHandler"   => "1");
+$js_arr[]=array(" /web/spa/node_modules/axios/dist/axios.min"   => "1");
+$js_arr[]=array(" /web/spa/node_modules/axios/dist/axios"   => "1");
 return $js_arr;
 }
 function getJavascript(){
