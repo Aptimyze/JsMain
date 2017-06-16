@@ -4,7 +4,6 @@ import EditBar from "../components/MyjsEditBar";
 import MyjsSlider from "../components/MyjsSliderBar";
 import AcceptCount from '../components/MyjsAcceptcount';
 import MyjsProfileVisitor from './MyjsProfileVisitor'
-import {MyjsApi} from "../actions/MyjsApiAction";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
@@ -19,18 +18,11 @@ export  class MyjsPage extends React.Component {
   		super();
 			this.state=
 			{
-				apiSent :false,
-				dataLoaded:false,
-				DR:"Daily Recommendations",
-				IR:"Interests Received"
 			}
 
   	}
 	componentDidMount(){
 			this.props.hitApi();
-			this.setState({
-				apiSent:true
-			})
 		}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
