@@ -72,7 +72,7 @@ export  class MyjsPage extends React.Component {
 							<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
 							<AcceptCount fetched={this.props.reducerData.fetched}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
-							<MyjsSlider title={this.state.DR} />
+							<MyjsSlider fetched={this.props.reducerData.fetched} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
 							<MyjsSlider title={this.state.IR} />
 
 							</div>
