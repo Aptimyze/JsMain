@@ -9,6 +9,8 @@ import AppPromo from "../../common/components/AppPromo";
 import { withRouter } from 'react-router';
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import {getCookie} from '../../common/components/CookieHelper';
+import {SITE_KEY,VERIFY_URL} from "../../common/constants/CaptchConstants";
+import {LOGIN_ATTEMPT_COOKIE} from "../../common/constants/CommonConstants";
 
 class LoginPage extends React.Component {
 
@@ -19,7 +21,8 @@ class LoginPage extends React.Component {
             errorMessage: "",
             timeToHide: 3000,
             showLoader: false,
-            showPromo: false
+            showPromo: false,
+            showCaptchDiv: false
         };
     }
 
@@ -31,6 +34,14 @@ class LoginPage extends React.Component {
                 showPromo : true
             });
         }, 1200);
+
+        if ( document.cookie.indexOf(LOGIN_ATTEMPT_COOKIE) !== -1 )
+        {
+            this.setState ({
+                showCaptchDiv : true
+            })
+        }
+
         if ( this.props.MyProfile.AUTHCHECKSUM && getCookie('AUTHCHECKSUM')) {
             this.props.history.push('/myjs');
        }
@@ -38,6 +49,7 @@ class LoginPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
+        console.log("I am receiving nextProps.");
         console.log(nextProps);
        if ( nextProps.MyProfile.AUTHCHECKSUM ) {
             if ( (this.props.history.prevUrl) && (this.props.history.prevUrl).indexOf('/login/') === -1 )
@@ -50,6 +62,14 @@ class LoginPage extends React.Component {
             }
        }
        else {
+
+            if ( document.cookie.indexOf(LOGIN_ATTEMPT_COOKIE) !== -1 )
+            {
+                this.setState ({
+                    showCaptchDiv : true
+                })
+            }
+
             this.setState ({
                 showLoader : false
             })
@@ -74,6 +94,17 @@ class LoginPage extends React.Component {
     doLogin() {
         let emailVal = document.getElementById("email").value;
         let passVal = document.getElementById("password").value;
+        let g_recaptcha_response;
+        let captcha;
+            console.log("g_recaptcha_response is: ");
+        if ( document.getElementById("g-recaptcha-response") )
+        {
+            console.log("Inside LOGIN_ATTEMPT_COOKIE.");
+            g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
+            captcha = 1;
+        }
+        console.log(g_recaptcha_response);
+
         if(emailVal.length != 0 && validateEmail(emailVal) == false) {
             this.showError(ErrorConstantsMapping("ValidEmail"));
             document.getElementById("emailErr1").classList.remove("dn");
@@ -84,7 +115,8 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
-            this.props.doLogin(emailVal,passVal);
+            console.log("Parameters are: ")
+            this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha);
             this.setState ({
                 showLoader : true
             })
@@ -172,7 +204,7 @@ class LoginPage extends React.Component {
         var buttonView = <div id = "buttonView">
                             <div className="posrel scrollhid">
                                 <div id="loginButton" className="bg7 fullwid txtc pad2">
-                                    <div onClick={() => this.doLogin()} className="white f18 fontlig">Login</div>
+                                    <div onClick={() => this.doLogin()} className="white f18 <fon></fon>tlig">Login</div>
                                 </div>
                             </div>
                             <div className="bg10 fullwid mt5">
@@ -185,6 +217,12 @@ class LoginPage extends React.Component {
                                 <div className="clr"></div>
                             </div>
                         </div>;
+        // var captchDiv = <div className="captchaDiv pad3"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
+        var captchDiv ='';
+        if(this.state.showCaptchDiv)
+        {
+            captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;            
+        }
 
         return (
             <div id="LoginPage">
@@ -210,7 +248,7 @@ class LoginPage extends React.Component {
                                             <a href="/static/forgotPassword" className="white f14 fontlig">Forgot Password</a>
                                         </div>
                                         <div className="abs_c fwid_c mt20">
-
+                                            {captchDiv}
                                             {buttonView}
 
                                             <div id="appLinkAndroid" className="txtc pad2 dn">
@@ -247,8 +285,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        doLogin: (email,password) => {
+        doLogin: (email,password,g_recaptcha_response,captcha) => {
+
             let call_url = '/api/v1/api/login?email='+email+'&password='+password;
+            if ( g_recaptcha_response && captcha )
+            {
+                console.log("appending g_recaptcha_response & captcha");
+                call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
+            }
+
+            console.log("Call url is: "+call_url);
+
             dispatch(commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET'));
         }
     }
