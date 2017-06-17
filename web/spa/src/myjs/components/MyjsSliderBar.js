@@ -25,9 +25,10 @@ export default class MyjsSlider extends React.Component {
   }
   render(){
     console.log(this.props.listing);
-     if(!this.props.fetched) {
+     if(!this.props.listing.tuples.length) {
       return <div></div>;
     }
+
     return(
       <div>
         <div id="matchalertPresent" className="setWidth sliderc1">
