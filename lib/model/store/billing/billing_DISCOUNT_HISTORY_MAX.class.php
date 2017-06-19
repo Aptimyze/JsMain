@@ -11,10 +11,10 @@ class billing_DISCOUNT_HISTORY_MAX extends TABLE{
     public function updateDiscountHistoryMax($paramsArr){
         if(is_array($paramsArr)){
             try{
-                $sql = "REPLACE INTO billing.DISCOUNT_HISTORY_MAX (PROFILEID, LAST_LOGIN_DATE, P, C, NCP, X) VALUES (:PROFILEID, :LAST_LOGIN_DATE, :P, :C, :NCP, :X) ON DUPLICATE KEY UPDATE P=:P, C=:C, NCP=:NCP, X=:X";
+                $sql = "INSERT INTO billing.DISCOUNT_HISTORY_MAX (PROFILEID, LAST_LOGIN_DATE, P, C, NCP, X) VALUES (:PROFILEID, :LAST_LOGIN_DATE, :P, :C, :NCP, :X) ON DUPLICATE KEY UPDATE P=:P, C=:C, NCP=:NCP, X=:X";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_STR);
-                $prep->bindValue(":LAST_LOGIN_DATE",LAST_LOGIN_DATE('Y-m-d'),PDO::PARAM_STR);
+                $prep->bindValue(":LAST_LOGIN_DATE",date('Y-m-d'),PDO::PARAM_STR);
                 $prep->bindValue(":P",$paramsArr["P"],PDO::PARAM_INT);
                 $prep->bindValue(":C",$paramsArr["C"],PDO::PARAM_INT);
                 $prep->bindValue(":NCP",$paramsArr["NCP"],PDO::PARAM_INT);
