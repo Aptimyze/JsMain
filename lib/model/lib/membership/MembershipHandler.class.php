@@ -2647,12 +2647,26 @@ class MembershipHandler
             $servDisc['C'] = 0;
             $servDisc['NCP'] = 0;
             $servDisc['X'] = 0;
+            $maxDiscount = 0;
+        }
+        else{
+            $maxDiscount = $servDisc['P'];
+            if($maxDiscount<$servDisc['C']){
+                $maxDiscount = $servDisc['C'];
+            }
+            if($maxDiscount<$servDisc['NCP']){
+                $maxDiscount = $servDisc['NCP'];
+            }
+            if($maxDiscount<$servDisc['X']){
+                $maxDiscount = $servDisc['X'];
+            }
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
         unset($disHistObj);
+        error_log("ankita updateDiscountHistoryMax");
         $discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
-        $discMaxObj->updateDiscountHistoryMax($servDisc);
+        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"]));
         unset($discMaxObj);
         unset($nonZero);
     }
