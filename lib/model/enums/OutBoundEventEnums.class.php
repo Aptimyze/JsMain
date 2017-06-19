@@ -27,4 +27,6 @@ class OutBoundEventEnums
   const AUDIO_NUMBER_PATH = "/numbers";
   
   const OUTBOUND_CALL_NOT_HAPPENED_IN_LAST_DAYS = "3"; //days 
+  const OUTBOUND_EVENT_STATUS_SUCCESS = 1;
+  const OUTBOUND_EVENT_STATUS_APINOTCALLED = 2;
 }

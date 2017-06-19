@@ -172,8 +172,7 @@ class OutboundEventConsumer {
     $arrInfo = array("PROFILEID"=>$iPgId);
     //Get in Data 
     if(false === $this->isValidTime()) {
-      //TODO Add Logging If Required
-      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
       $this->logThis("Time Window Checks Failed", $enEventType, $arrInfo);
       return ;
     }
@@ -181,14 +180,14 @@ class OutboundEventConsumer {
     //Ever Paid Check and Mtongue Check and Activation Check
     $userDetails = $this->userCheckAndDetails($enEventType, $iPgId);
     if(false === $userDetails) {
-      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
       $this->logThis("User Checks Failed", $enEventType, $arrInfo);
       return ;
     }
     
     //Outbound Call happened in Last 
      if(false === $this->outBoundCallStatus($iPgId)) {
-      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
       $this->logThis("Outbound call check failed", $enEventType, $arrInfo);
       return ;
     }
@@ -196,7 +195,7 @@ class OutboundEventConsumer {
     //Check analytic score and get Minimun Memebership plan to pitch user
     $memberShipValue = $this->getMinMemberShipValue($enEventType, $iPgId) ;
     if(false === $memberShipValue) {
-      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
       $this->logThis("Analytic Score check failed", $enEventType, $arrInfo);
       return ;
     }
@@ -205,11 +204,12 @@ class OutboundEventConsumer {
     $verifiedNumber = $this->getVerifiedPhone($userDetails);
     
     if(false === $verifiedNumber) {
-      $arrInfo['STATUS'] = "API_NOT_CALLED";
+      $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
       $this->logThis("Verified Phone check failed", $enEventType, $arrInfo);
       return ;
     }
     
+    // TODO: No status in arr?
     $verifiedNumber = "0".$verifiedNumber;
     $this->logThis("Verified Number of user : ", $enEventType, $verifiedNumber);
     
@@ -234,7 +234,7 @@ class OutboundEventConsumer {
         break;
       default:
         //TODO Add some logging
-        $arrInfo['STATUS'] = "API_NOT_CALLED";
+        $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_APINOTCALLED;
         $this->logThis("Unsupported Event", $enEventType, $arrInfo);
         return ;
         break;
@@ -247,6 +247,7 @@ class OutboundEventConsumer {
     if(false !== $response) {
       $this->logThisApiCall($iPgId, $verifiedNumber, $enEventType, $callerId, $landingFlowId, $response);
     }
+    $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_SUCCESS;
     $this->logThis("Success", $enEventType, $arrInfo);
   }
 
@@ -412,20 +413,17 @@ class OutboundEventConsumer {
       echo "\n<br\>",$enEventType,$msg,print_r($arrInfo,true),"\n<br\>";
     }
 
-    // Log when api not called
-    if($arrInfo["STATUS"] == "API_NOT_CALLED")
-    {
-      $now = date('Y-m-d H:i:s');
-      $arrRecordData = array(
-          "REASON" => $msg,
-          "PGID" => $arrInfo["PROFILEID"],
-          "EVENT_TYPE" => $enEventType,
-          "DATE_TIME" => $now,
-        );
+    $now = date('Y-m-d H:i:s');
+    $arrRecordData = array(
+        "REASON" => $msg,
+        "PGID" => $arrInfo["PROFILEID"],
+        "EVENT_TYPE" => $enEventType,
+        "STATUS" => $arrInfo["STATUS"],
+        "DATE_TIME" => $now,
+      );
 
-      $storeObj = new OUTBOUND_FAILURE_LOGS();
-      $storeObj->insertRecord($arrRecordData);
-    }
+    $storeObj = new OUTBOUND_FAILURE_LOGS();
+    $storeObj->insertRecord($arrRecordData);
 
   }
   
