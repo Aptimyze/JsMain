@@ -1,0 +1,15 @@
+use billing;
+
+CREATE TABLE billing.`DISCOUNT_HISTORY_MAX` (
+ `ID` int(11) NOT NULL AUTO_INCREMENT,
+ `PROFILEID` int(11) NOT NULL,
+ `DATE` date NOT NULL,
+ `P` tinyint(3) NOT NULL,
+ `C` tinyint(3) NOT NULL,
+ `NCP` tinyint(3) NOT NULL,
+ `X` tinyint(3) NOT NULL,
+ PRIMARY KEY (`ID`),
+ UNIQUE KEY `PROFILE_DATE` (`PROFILEID`,`DATE`),
+ KEY `PROFILEID` (`PROFILEID`),
+ KEY `DATE` (`DATE`)
+) ENGINE=InnoDB;
