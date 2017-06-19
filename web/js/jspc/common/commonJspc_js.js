@@ -459,7 +459,7 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
-    console.log(data);
+    // console.log(data);
     if (data) { 
         var maxCount = 100;
         var maxWrapStr = "99+";

@@ -72,6 +72,13 @@
 		<td align=center>~$totData.tsrc`</td>
 	</tr>
 	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Conversion % Upto E-10</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.convPercUptoE10`</td>
+		~/foreach`
+		<td align=center>~$totData.convPercUptoE10`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
 		<td align=center class=formhead>Conversion %</td>
 		~foreach from=$misData key=k item=v`		
 			<td align=center>~$v.convPerc`</td>
