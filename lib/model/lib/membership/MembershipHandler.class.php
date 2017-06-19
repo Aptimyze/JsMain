@@ -2658,7 +2658,7 @@ class MembershipHandler
         unset($disHistObj);
         
         $discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
-        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"]));
+        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"],"LAST_LOGIN_DATE"=>date("Y-m-d"),"MAX_DISCOUNT_DATE"=>date("Y-m-d")));
         unset($discMaxObj);
         unset($nonZero);
     }
