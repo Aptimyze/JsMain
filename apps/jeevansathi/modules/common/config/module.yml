@@ -37,4 +37,6 @@ all:
   logOtherUrlV1:
     enable_login: off
   uploadDocumentProof:
-    enable_login: off
+    enable_login: on
+  uploadDoc:
+    enable_login: on

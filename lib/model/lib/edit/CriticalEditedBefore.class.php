@@ -20,7 +20,11 @@ class CriticalEditedBefore
 		}
 		else
 		{
-			return true;
+                        if($docOnly == true){
+                                return false;
+                        }else{
+                                return true;
+                        }
 		}
 	}
 }

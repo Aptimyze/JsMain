@@ -13,9 +13,7 @@ class CriticalInformationMailer
 		$this->profileid = $profileid;
 		$this->formData = $formData;
 	}
-
-	public function sendMailer()
-	{
+        public function getName(){
                 $loggedInProfileObj = LoggedInProfile::getInstance();
                 $loggedInProfileObj->getDetail($this->profileid,"PROFILEID","*");
                 $InouObj = new NameOfUser();
@@ -26,6 +24,9 @@ class CriticalInformationMailer
                         $name = $name[$this->profileid]["NAME"];
                 }
                 unset($loggedInProfileObj);unset($InouObj);
+                return $name;
+        }
+        public function getFields(){
                 $fieldList = array();
                 $fields = array();
                 if(isset($this->formData["MSTATUS"]) && $this->formData["MSTATUS"] !=""){
@@ -36,6 +37,17 @@ class CriticalInformationMailer
                         $fieldList[] = "Date of Birth";
                         $fields["DTOFBIRTH"] = array("field"=>"Date of Birth","oldVal"=>$this->formData["PREV_DTOFBIRTH"],"newVal"=>$this->formData["DTOFBIRTH"]);
                 }
+                return array("fields"=>$fields,"fieldList"=>$fieldList);
+        }
+	public function sendMailer()
+	{
+                if(!$this->profileid){
+                        return true;
+                }
+                $name = $this->getName();
+                $fieldData = $this->getFields();
+                $fieldList = $fieldData["fieldList"];
+                $fields = $fieldData["fields"];
                 $fieldLables = preg_replace('~,(?!.*,)~', 'and', implode(" , ",$fieldList));
 		$skipArray = $this->getSkipProfiles();
                 $email_sender = new EmailSender(MailerGroup::CRITICAL_INFO_EMAIL,1851);
@@ -55,17 +67,18 @@ class CriticalInformationMailer
                                         $email_sender->send();
                                 }
                         }
+                        unset($infoTypeAdapter);
+                        unset($conditions);
                 }
 	}
 
 	public function getSkipProfiles()
 	{
-
-		$memcacheServiceObj = new ProfileMemcacheService($this->profileid);
-		$memcacheServiceObj->setSKIP_PROFILES();
-		$skipConditionArray = SkipArrayCondition::$default;
-                $skipProfileObj     = SkipProfile::getInstance($this->profileid);
-                $this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+                $this->skipProfiles       = SkipProfile::getInstance($this->profileid)->getSkipProfiles(SkipArrayCondition::$default);
+                if(!$this->skipProfiles || empty($this->skipProfiles) || $this->skipProfiles == null){
+                        $memcacheServiceObj = new ProfileMemcacheService($this->profileid);
+                        $memcacheServiceObj->setSKIP_PROFILES();
+                }
 		return $this->skipProfiles;
 	}
 

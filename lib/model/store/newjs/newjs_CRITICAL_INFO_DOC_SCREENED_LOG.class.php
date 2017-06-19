@@ -11,7 +11,7 @@ class CRITICAL_INFO_DOC_SCREENED_LOG extends TABLE {
          * */
         public function insert($profileid, $assignedTo,$status,$documentPath) {
                 
-                $sql = "REPLACE INTO newjs.CRITICAL_INFO_DOC_SCREENED_LOG(PROFILEID, ASSIGNED_TO, ALLOTED_TIME, SCREENED_STATUS, DOCUMENT_PATH) VALUES (:PROFILEID, :ASSIGNED_TO, now(), :SCREENED_STATUS, :DOCUMENT_PATH )";
+                $sql = "INSERT INTO newjs.CRITICAL_INFO_DOC_SCREENED_LOG(PROFILEID, ASSIGNED_TO, ALLOTED_TIME, SCREENED_STATUS, DOCUMENT_PATH) VALUES (:PROFILEID, :ASSIGNED_TO, now(), :SCREENED_STATUS, :DOCUMENT_PATH )";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $res->bindValue(":ASSIGNED_TO", $assignedTo, PDO::PARAM_STR);

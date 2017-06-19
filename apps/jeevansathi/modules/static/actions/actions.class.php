@@ -285,10 +285,6 @@ class staticActions extends sfActions
             if((!$this->d||!$this->h)&&($d!=1))
                 {header("Location: $SITE_URL/");die;}
         }
-        public function executeUploadDoc(sfWebRequest $request) 
-        {
-            
-        }
         public function executeChangePass(sfWebRequest $request) {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();

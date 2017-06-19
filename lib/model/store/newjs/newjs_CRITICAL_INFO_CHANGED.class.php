@@ -33,7 +33,7 @@ class newjs_CRITICAL_INFO_CHANGED extends TABLE {
          * */
         public function insert($profileid, $fields) {
                 
-                $sql = "REPLACE INTO newjs.CRITICAL_INFO_CHANGED(PROFILEID, EDITED_FIELDS, DATE) VALUES (:PROFILEID, :EDITED_FIELDS, NOW())";
+                $sql = "INSERT INTO newjs.CRITICAL_INFO_CHANGED(PROFILEID, EDITED_FIELDS, DATE) VALUES (:PROFILEID, :EDITED_FIELDS, NOW())";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $res->bindValue(":EDITED_FIELDS", $fields, PDO::PARAM_STR);

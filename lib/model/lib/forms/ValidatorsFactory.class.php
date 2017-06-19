@@ -57,6 +57,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			break;
                 case 'jamaat':
                         return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
+                        break;
                 case 'sectMuslim':
                         return new jsValidatorSectMuslim(array('religion'=>$form_values['religion'],'required'=>false),array('required' => $defaultMsg));
                         break;

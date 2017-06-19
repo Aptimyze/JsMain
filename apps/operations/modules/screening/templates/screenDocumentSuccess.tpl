@@ -15,6 +15,7 @@
    <input type=hidden name="cid" value="~$cid`">
    <input type=hidden name="username" value="~$name`">   
    <input type=hidden name="docPath" value="~$documentPath`">   
+   <input type=hidden name="prevMstatus" value="~$prevMstatus`">   
 
    
    <table width=760 align="CENTER" cellspacing="0px;">

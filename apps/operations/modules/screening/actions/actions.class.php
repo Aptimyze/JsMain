@@ -44,21 +44,23 @@ class screeningActions extends sfActions {
                 $objDoc = new ProfileDivorcedDocumentScreening();
                 $profileObj = new Operator;
                 $fetchProfileAllocatinArr = $objDoc->fetchProfileToAllot($this->name);
+                $infoArr = array();
                 if($fetchProfileAllocatinArr)
                 {
                         $pid = $fetchProfileAllocatinArr["PROFILEID"];
-                        $profileObj->getDetail($pid,"PROFILEID",'USERNAME');
+                        $profileObj->getDetail($pid,"PROFILEID",'USERNAME,MSTATUS');
                         $this->username = $profileObj->getUSERNAME();	
+                        $this->prevMstatus = $profileObj->getMSTATUS();	
                         if(!$fetchProfileAllocatinArr["updateAllotTime"])
-                                $dontUpdateAllocationTime=1;
+				$objDoc->allotProfile($pid,$this->name);
+                        
+                        $infoObj = new CriticalInfoChangeDocUploadService();
+                        $infoArr = $infoObj->getDocumentsList($pid);
+                        $this->profileid = $pid;
+                }else{
+                        $this->noProfileFound = 1;
                 }
                 
-                if(!$dontUpdateAllocationTime)
-				$objDoc->allotProfile($pid,$this->name);
-                
-                $infoObj = new CriticalInfoChangeDocUploadService();
-                $infoArr = $infoObj->getDocumentsList($pid);
-		$this->profileid = $pid;
                 if (!empty($infoArr)) {
                         $this->documentURL = PictureFunctions::getCloudOrApplicationCompleteUrl($infoArr["DOCUMENT_PATH"]);
                         $urlOri = PictureFunctions::getCloudOrApplicationCompleteUrl($infoArr["DOCUMENT_PATH"],true);
@@ -101,7 +103,7 @@ class screeningActions extends sfActions {
                 $objDoc = new ProfileDivorcedDocumentScreening();
                 $objDoc->del($pid,$name);
                 
-                $mailer = new CriticalInformationMailer($pid);
+                $mailer = new CriticalInformationMailer($pid,array("MSTATUS"=>"D","PREV_MSTATUS"=>$_POST["prevMstatus"]));
                 $mailer->sendSuccessFailMailer($status);
                 $this->redirect('/operations.php/screening/screenDocument?name='.$name.'&cid='.$_POST["cid"]);
         }

@@ -115,7 +115,7 @@ class ApiEditSubmitV1Action extends sfActions
                                 $errorArr["error"]="Cannot edit Critical Information again";
                                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                                 $apiResponseHandlerObj->setResponseBody($errorArr);
-                                ValidationHandler::getValidationHandler("","Cannot edit Critical Information again");
+                                ValidationHandler::getValidationHandler("",$errorArr["error"]);
                                 $apiResponseHandlerObj->generateResponse();
                                 die;
                        }

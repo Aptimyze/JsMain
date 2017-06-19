@@ -7,7 +7,8 @@
 */
 class CriticalInfoChangeDocUploadService
 {
-	/*This function is used to insert documennts id db.
+        private $uploadUrl = "/CriticalInformation/";
+        /*This function is used to insert documennts id db.
 	* @param profile : profile object 
 	* @param execName : name of executive who uploaded the documents
 	* @param docs : array of documents to be inserted
@@ -52,8 +53,9 @@ class CriticalInfoChangeDocUploadService
 	public function performUpload($docs,$profileId)
 	{
                 $prefix = rand(0,100000);
-                $saveUrl = $this->getSaveUrlDoc($profileId,$docs["name"],$prefix);
-                $displayUrl = $this->getDisplayUrlDoc($profileId,$docs["name"],$prefix);
+                $doctypeNid= $this->getDocEncryptedUrl($profileId,$prefix,$docs["name"]);
+                $saveUrl = $this->getSaveUrlDoc($doctypeNid["URL"],$doctypeNid["type"]);
+                $displayUrl = $this->getDisplayUrlDoc($doctypeNid["URL"],$doctypeNid["type"]);
                 $pictureFunctionsObj = new PictureFunctions();
                 $result = $pictureFunctionsObj->moveImage($docs["tmp_name"],$saveUrl);
                 chmod($saveUrl,0777);
@@ -70,12 +72,13 @@ class CriticalInfoChangeDocUploadService
 	* @return saveUrl : url where image need to be saved
 	*/
 
-	public function getSaveUrlDoc($profileId,$type="",$pre)
+	public function getSaveUrlDoc($docUrlId,$type)
         {
-                $uploadDir = sfConfig::get("sf_upload_dir")."/CriticalInformation/";
-                if(!is_dir($uploadDir)){
-                    mkdir($uploadDir);
-                }
+                $saveUrl=sfConfig::get("sf_upload_dir").$this->uploadUrl.$docUrlId.$type;
+                return $saveUrl;
+        }
+
+        public function getDocEncryptedUrl($profileId,$pre,$type=""){
                 $displayUrl = "";
                 $type = explode('.',$type);
                 if(!$type)
@@ -84,11 +87,9 @@ class CriticalInfoChangeDocUploadService
                         $type=".".$type[1];
 
                 $docUrlId=$this->docEncyption($profileId,$pre);
-                $saveUrl=sfConfig::get("sf_upload_dir")."/CriticalInformation/".$docUrlId.$type;
-                return $saveUrl;
+                return array("URL"=>$docUrlId,"type"=>$type);
+                
         }
-
-
 	/*This function is used to get file path to be stored in database
         * @param docId : document id to be saved
         * @param profileId : profile id
@@ -96,16 +97,8 @@ class CriticalInfoChangeDocUploadService
         * @return displayUrl : url need to be stored
         */
 
-	public function getDisplayUrlDoc($profileId,$type="",$pre)
+	public function getDisplayUrlDoc($docUrlId,$type)
         {
-                $displayUrl = "";
-                $type = explode('.',$type);
-                if(!$type)
-                        $type=".jpg";
-                else
-                        $type=".".$type[1];
-
-                $docUrlId=$this->docEncyption($profileId,$pre);
                 $displayUrl="JS/uploads/CriticalInformation/".$docUrlId.$type;
                 return $displayUrl;
         }
@@ -131,8 +124,8 @@ class CriticalInfoChangeDocUploadService
 	*/ 
 	public function edit($paramArr,$docId,$pid="")
 	{
-		if($docId =="")
-                        throw new jsException("No docid passed in edit in CriticalInfoChangeDocUploadService.class.php");
+		if($docId =="" || $pid == "")
+                        throw new jsException("No docid or pid passed in edit in CriticalInfoChangeDocUploadService.class.php");
                 $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
 		$result = $criticalInfoObj->updateById($pid,$docId,$paramArr["DOCUMENT_PATH"]);
 		return $result;
@@ -140,8 +133,8 @@ class CriticalInfoChangeDocUploadService
 	}
 	public function updateStatus($pid="",$status)
 	{
-		if($pid =="")
-                        throw new jsException("No profileid passed in edit in CriticalInfoChangeDocUploadService.class.php");
+		if($pid =="" || $status == "")
+                        throw new jsException("No profileid oe status passed in edit in CriticalInfoChangeDocUploadService.class.php");
                 $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
 		$result = $criticalInfoObj->updateStatus($pid,$status);
 		return $result;

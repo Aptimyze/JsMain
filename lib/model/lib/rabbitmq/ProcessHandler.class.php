@@ -316,22 +316,22 @@ try{
  public function updateCriticalInfo($body)
  {
 	$prevMstatus=  $body['PREV_MSTATUS'];
-	$Mstatus=  $body['MSTATUS'];
+	$mstatus=  $body['MSTATUS'];
 	$prevDob = $body['PREV_DTOFBIRTH'];
-	$Dob = $body['DTOFBIRTH'];
+	$dob = $body['DTOFBIRTH'];
 	$profileid = $body['profileid']; 
         $deleteInterest = 0;
-	if($Dob && $prevDob){
+	if($dob && $prevDob){
                 $createDate = new DateTime($prevDob);
                 $date = $createDate->format('Y-m-d');
-                $todayDate = new DateTime($Dob);
+                $todayDate = new DateTime($dob);
                 $actionDate = new DateTime($date);
                 $diff = $actionDate->diff($todayDate);
                 if ($diff->y >= 2) {
                         $deleteInterest = 1;
                 }
         }
-        if(($prevMstatus == "N" && $Mstatus == "M") || $prevMstatus == "M" && $Mstatus == "N"){
+        if(($prevMstatus == "N" && $mstatus == "M") || $prevMstatus == "M" && $mstatus == "N"){
                 $deleteInterest = 1;
         }
         if($deleteInterest == 1){

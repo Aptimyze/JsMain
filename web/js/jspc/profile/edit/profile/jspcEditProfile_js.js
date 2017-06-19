@@ -2905,7 +2905,6 @@ EditApp = function(){
         
       try{
         var i=0;
-        console.log(data);
         //Loop the data section 
         $.each(data,function(key1,data1)
         {
@@ -3823,9 +3822,9 @@ updateEduLevelChanges =function(eduLevelVal)
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (result.viewApi.contact && editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
               showAlternateConfirmLayer($("#my_alt_emailView"));
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (result.viewApi.contact && editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
               showAlternateConfirmLayer($("#my_emailView"));
               
         },
@@ -5236,19 +5235,28 @@ updateEduLevelChanges =function(eduLevelVal)
                 var currId = $(this).attr("id");
                 if(currId =="saveBtncritical"){
                                 // condition to show msg on the popup 
-                                var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
-                                var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
-                                var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
-                                var Mstatus = editedFields[CRITICAL]['MSTATUS'];
-                                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-                                var firstDate = new Date(Dob[0],Dob[2],Dob[1]);
-                                var secondDate = new Date(prevDob[0],prevDob[2],prevDob[1]);
+                                var diffDays = 0;
+                                if(editAppObject[CRITICAL]['DTOFBIRTH'] && editedFields[CRITICAL]['DTOFBIRTH']){
+                                        var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
+                                        var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
+                                        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                                        var firstDate = new Date(Dob[0],Dob[2],Dob[1]);
+                                        var secondDate = new Date(prevDob[0],prevDob[2],prevDob[1]);
+                                        var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+                                }
                                 var showClass = "msg2";
                                 var hideClass = "msg1";
-                                var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
-                                if(diffDays >= 730 || (prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
+                                if(diffDays >= 730){
                                         showClass = "msg1";
                                         hideClass = "msg2";
+                                }     
+                                if(hideClass != "msg2" && editAppObject[CRITICAL]['MSTATUS'] && editedFields[CRITICAL]['MSTATUS']){
+                                        var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
+                                        var Mstatus = editedFields[CRITICAL]['MSTATUS'];
+                                        if((prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
+                                                showClass = "msg1";
+                                                hideClass = "msg2";
+                                        }
                                 }
                                 // condition to show msg on the popup end
                                 $("#commonOverlay").fadeIn("fast",function(){

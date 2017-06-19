@@ -1023,12 +1023,7 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
                         }
                 }else{
                         if (MobileCommon::isMobile()) {
-                                if (MobileCommon::isNewMobileSite()) {
-                                    $this->forward("static", "uploadDoc", 0);
-                                } else {
-                                    $this->forward("static", "uploadDoc", 0);
-                                }
-
+                                $this->setTemplate("uploadDoc");
                         }
                 }
     }

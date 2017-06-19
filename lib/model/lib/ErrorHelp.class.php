@@ -20,6 +20,7 @@ class ErrorHelp{
 		//public static $ERR_HEIGHT='<div class="err_msg">Please select a height.</div>';
 		public static $ERR_DOB=array(1=>array('id'=>"err_gender",'msg'=>'Please choose a gender.'));
 		public static $ERR_DOB_MINAGE=array("minAge"=>'Please select valid minimum age.');
+		public static $ERR_DOB_MAXAGE=array("maxAge"=>'Please select valid maximum age.');
 		public static $ERR_COUNTRY_RES=array(1=>array('id'=>"err_country_res",'msg'=>'Please provide a location.'));
 		//public static $ERR_CITY_RES='<div class="err_msg">Please select a city.</div>';
 		//public static $ERR_HAVECHILD=array(1=>array('id'=>'haveChild_required','msg'=>"<div class=\"err_msg\">Please Select Have Children</div>"));
