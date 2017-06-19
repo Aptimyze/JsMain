@@ -28,15 +28,15 @@ class LightningDeal
 		$pool1 = array();
 
 		//use billing.DISCOUNT_HISTORY to get last logged in pool within offset time
-        $discTrackingObj = new billing_DISCOUNT_HISTORY("crm_slave");
-        $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCount($offsetDate);
+        $discTrackingObj = new billing_DISCOUNT_HISTORY_MAX("crm_slave");
+        $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCountMax($offsetDate);
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
             if($this->debug == 1){
                 error_log("pool1 generation: ".$start."-".($start+$this->sqlSelectLimit-1)."\n",3,$this->logFilePath);
             }
             $startQueryTime = microtime(true);
-        	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
+        	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesMaxAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
      		$endQueryTime = microtime(true);
             if($this->debug==1)
                 error_log("diff- ".($endQueryTime-$startQueryTime)."\n",3,$this->logFilePath);

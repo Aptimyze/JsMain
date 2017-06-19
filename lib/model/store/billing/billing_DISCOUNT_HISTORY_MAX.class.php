@@ -24,5 +24,54 @@ class billing_DISCOUNT_HISTORY_MAX extends TABLE{
             }
         }
     }
+
+    public function getLastLoginProfilesAfterDateCountMax($lastLoginDt){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select count(distinct PROFILEID) as cnt from billing.DISCOUNT_HISTORY_MAX where ";
+            $sql .= "DATE>=:DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":LAST_LOGIN_DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            if($result = $res->fetch(PDO::FETCH_ASSOC))
+                return $result['cnt'];
+            return 0;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getLastLoginProfilesMaxAfterDate($profileStr="",$lastLoginDt,$limit="",$offset=""){   
+        if(!$lastLoginDt)
+                throw new jsException("","date blank passed");
+        try
+        {
+            $sql = "select DISTINCT(PROFILEID) AS PROFILEID,MAX_DISCOUNT from billing.DISCOUNT_HISTORY_MAX where ";
+            if(!empty($profileStr)){
+                $sql .= "PROFILEID IN($profileStr) AND ";
+            }
+            $sql .= "LAST_LOGIN_DATE>=:LAST_LOGIN_DATE ORDER BY LAST_LOGIN_DATE DESC";
+            if($limit!=""){
+                if(empty($offset)){
+                    $offset = 0;
+                }
+                $sql .= " LIMIT $offset,$limit";
+            }
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":LAST_LOGIN_DATE",$lastLoginDt,PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                if(!($result['MAX_DISCOUNT'] == 0))
+                    $profilesArr[$result['PROFILEID']] = $result;
+            }
+            return $profilesArr;
+        }
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
 }
 ?>
