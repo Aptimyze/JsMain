@@ -7,6 +7,7 @@ class CriticalInformationMailer
 	private $profileid;
 	private $skipProfiles;
         private $mailerType = array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","INTEREST_SENT");
+        private $formData = array();
 
 	public function __construct($profileid,$formData= array())
 	{
@@ -108,7 +109,7 @@ class CriticalInformationMailer
                 }
                 $tpl = $email_sender->setProfileId($this->profileid);
                 $smartyObj = $tpl->getSmarty();
-                $fields["MSTATUS"] = array("field"=>"Marital Status","oldVal"=>FieldMap::getFieldLabel("marital_status","N"),"newVal"=>FieldMap::getFieldLabel("marital_status","D"));
+                $fields["MSTATUS"] = array("field"=>"Marital Status","oldVal"=>FieldMap::getFieldLabel("marital_status",$this->formData["PREV_MSTATUS"]),"newVal"=>FieldMap::getFieldLabel("marital_status","D"));
                 $smartyObj->assign("fields",$fields);
                 $smartyObj->assign("hereLink",$longURL);
                 $email_sender->send();
