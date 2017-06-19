@@ -25,7 +25,7 @@ export default class MyjsSlider extends React.Component {
   }
   render(){
     console.log(this.props.listing);
-     if(!this.props.listing.tuples.length) {
+     if(!this.props.listing.tuples) {
       return <div></div>;
     }
 
