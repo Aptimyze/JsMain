@@ -182,7 +182,7 @@ class LightningDeal
             $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
             foreach($finalPool as $key => $val){
                 $params["PROFILEID"] = $val["PROFILEID"];
-                $params["DISCOUNT"] = max($val["P_MAX"],$val["C_MAX"],$val["NCP_MAX"],$val["X_MAX"]) + 5;
+                $params["DISCOUNT"] = $val['MAX_DISCOUNT'] + 5;
                 $params["STATUS"] = "N";
                 $params["ENTRY_DT"] = date('Y-m-d H:i:s');
                 $params["DEAL_DATE"] = date('Y-m-d');
