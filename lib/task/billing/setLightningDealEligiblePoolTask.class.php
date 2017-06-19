@@ -38,7 +38,7 @@ EOF;
         $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
-        //print_r($eligiblePool);die;
+      
         //store eligible pool
         $dealObj->storeDealEligiblePool($eligiblePool);
         unset($dealObj);
