@@ -37,7 +37,7 @@ if (isset($data) || $JSIndicator) {
         $mmarr = array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
         $qtrarr = array('Apr-Jun', 'Jul-Sep', 'Oct-Dec', 'Jan-Mar');
         //Start:Changed to fix : Amount should be amount(70%)+apple(30%) if apple commission is not null: On 2-May-2017//
-        $appleCondition="(if(billing.$tableName.APPLE_COMMISSION>0,billing.$tableName.APPLE_COMMISSION+billing.$tableName.AMOUNT,billing.$tableName.AMOUNT))";
+        $appleCondition="(if(billing.$tableName.APPLE_COMMISSION != 0,billing.$tableName.APPLE_COMMISSION+billing.$tableName.AMOUNT,billing.$tableName.AMOUNT))";
         //End:Changed to fix : Amount should be amount(70%)+apple(30%) if apple commission is not null: On 2-May-2017//
         if ($vtype == 'Q') {
             $yr1 = $qyear;
