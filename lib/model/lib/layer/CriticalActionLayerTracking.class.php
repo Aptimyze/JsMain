@@ -444,6 +444,20 @@ return 0;
                     }
                     break;
 
+
+                    case '23' :
+                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                  {
+                    $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
+                    if(!$familyBasedOutOfObj->getCompletionStatus())
+                    {
+                      $show=1;
+                    }
+
+                  }  
+                     break;
+
+
                   case '20':
 
                       if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
@@ -454,6 +468,7 @@ return 0;
                       
                       
                     break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -540,6 +555,12 @@ break;
                     'A' => '99',
                     'I' => '5.3'
                         ),
+
+                    '23' => array(
+                    'A' => '96',  
+                    'I' => '5.4'
+                        ),
+
                   '20' => array(  
                     'A' => '99',
                     'I' => '5.4'
