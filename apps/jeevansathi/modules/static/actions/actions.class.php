@@ -446,12 +446,21 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
-    if($this->layerId==18)
+    if($this->layerId==18 || $this->layerId==20)
     {
           include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
           $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
    }
+
+   if($this->layerId == 14)
+   {  
+    $profileObject = LoggedInProfile::getInstance('newjs_master');
+                        $contactNumOb=new ProfileContact();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+    $this->altEmail = $numArray['0']['ALT_EMAIL'];
+   }
+
     if($this->layerId==19)
      {    
 
