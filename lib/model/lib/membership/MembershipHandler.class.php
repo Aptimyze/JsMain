@@ -2650,16 +2650,8 @@ class MembershipHandler
             $maxDiscount = 0;
         }
         else{
-            $maxDiscount = $servDisc['P'];
-            if($maxDiscount<$servDisc['C']){
-                $maxDiscount = $servDisc['C'];
-            }
-            if($maxDiscount<$servDisc['NCP']){
-                $maxDiscount = $servDisc['NCP'];
-            }
-            if($maxDiscount<$servDisc['X']){
-                $maxDiscount = $servDisc['X'];
-            }
+            $maxDiscount = 0;
+            $maxDiscount = max($servDisc['P'],$servDisc['NCP'],$servDisc['X'],$servDisc['C']);
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
