@@ -8,7 +8,7 @@
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
-	private $debug = 0;
+	private $debug = 1;
 	private $logFilePath = "\tmp\lightningDeal.txt";
 
 	protected function configure()
