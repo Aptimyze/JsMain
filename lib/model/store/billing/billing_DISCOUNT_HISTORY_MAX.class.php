@@ -64,8 +64,7 @@ class billing_DISCOUNT_HISTORY_MAX extends TABLE{
             $res->bindValue(":LAST_LOGIN_DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();
             while($result = $res->fetch(PDO::FETCH_ASSOC)){
-                if(!($result['MAX_DISCOUNT'] == 0))
-                    $profilesArr[$result['PROFILEID']] = $result;
+                $profilesArr[$result['PROFILEID']] = $result;
             }
             return $profilesArr;
         }
