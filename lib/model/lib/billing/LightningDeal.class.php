@@ -33,7 +33,7 @@ class LightningDeal
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
             if($this->debug == 1){
-                error_log("pool1 generation: ".$start."-".$start+$this->sqlSelectLimit-1,3,$this->logFilePath);
+                error_log("pool1 generation: ".$start."-".($start+$this->sqlSelectLimit-1),3,$this->logFilePath);
             }
         	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
      		
