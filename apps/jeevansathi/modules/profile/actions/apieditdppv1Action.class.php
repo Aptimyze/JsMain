@@ -374,14 +374,14 @@ class apieditdppv1Action extends sfAction
 				{
 					$arrOut["P_STATE"] = "";
 				}
-					$arrOut['CITY_INDIA'] = NULL;
+					//$arrOut['CITY_INDIA'] = NULL;
 			}
 			else if($key == "P_COUNTRY")
 			{
 				$this->m_bDppUpdate = true;
 				if(strpos($val,'51') !== false)
 				{
-						$arrOut['CITY_INDIA'] = NULL;
+						//$arrOut['CITY_INDIA'] = NULL;
 				}
 				$arrOut["P_COUNTRY"] = $val;
 			}

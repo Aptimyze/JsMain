@@ -4,12 +4,13 @@
 	1. Pick all currently free users who have logged-in in the last 30 days (pool 1). 
 	2. Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed) (pool 2).
 	3. Pick n number of users from pool2 where n is 10% of the number of users in pool 1.
-* @author : Ankita
 */
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
-	private $debug = 0;
+	private $debug = 1;
+	private $logFilePath = "";
+
 	protected function configure()
 	{
 		$this->addOptions(array(
@@ -28,13 +29,13 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		//ini_set('max_execution_time',0);
-    	//ini_set('memory_limit',-1);
+		ini_set('max_execution_time',0);
+    	ini_set('memory_limit',-1);
 		if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-
-        $dealObj = new LightningDeal($this->debug);
+        $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDeal.txt';
+        $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
 

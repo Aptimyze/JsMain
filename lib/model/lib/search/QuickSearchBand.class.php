@@ -150,7 +150,7 @@ class QuickSearchBand extends SearchParamters
 			if($tempCity)
 			{
 				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
-				$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+				//$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
                                 $tempCountry[] = 51;
 				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}

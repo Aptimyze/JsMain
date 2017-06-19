@@ -114,10 +114,22 @@ class MembershipApiFunctions
             }
          
             
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
 
-            if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
-                if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
+            if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1 || $lightningDealActive == 1) {
+                if ($lightningDealActive == 1) {
+                    if(!empty($lightningDealDiscountPercent)){
+                        $discPerc = $lightningDealDiscountPercent;
+                    }
+                    else{
+                        $discPercArr = $memHandlerObj->getLightningDealDiscount($apiObj->profileid,$apiObj->device);
+                        if(is_array($discPercArr)) 
+                            $discPerc = $discPercArr["DISCOUNT"];
+                        else
+                            $discPerc = 0;
+                    }
+                }
+                else if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
                     $discPerc = $renewalPercent;
                 } 
                 else if ($specialActive == 1) {
@@ -147,7 +159,7 @@ class MembershipApiFunctions
                         $discPerc = $perc;
                     }
                 }
-                if ($fest == 1 && $mainMem == "X" && $specialActive != 1 && $renewalActive != 1) {
+                if ($fest == 1 && $mainMem == "X" && $specialActive != 1 && $renewalActive != 1 && $lightningDealActive!=1) {
                     $discPerc = 0;
                 }
             }
@@ -357,6 +369,13 @@ class MembershipApiFunctions
         $newData = array();
         $vasDesc = VariableParams::$newApiVasNamesAndDescription;
         $memHandlerObj = new MembershipHandler();
+        if($apiObj->lightningDealDiscountPercent){
+            $lightningDealDisc = $apiObj->lightningDealDiscountPercent;
+        }
+        else{
+            $lightningDealDisc = 0;
+        }
+      
         $vdDisc = $memHandlerObj->getSpecialDiscountForAllDurations($apiObj->profileid);
         $mainDisc = $memHandlerObj->getDiscountOffer($apiObj->mainMem . $apiObj->mainMemDur);
         foreach ($apiObj->vas_data as $key => & $value) {
@@ -406,8 +425,14 @@ class MembershipApiFunctions
                     $priceArr['standard_price'] = "" . round($vv['PRICE'], 2);
                     $priceArr['orig_price'] = $priceArr['standard_price'];
                     $priceArr['orig_price_formatted'] = number_format($priceArr['standard_price'], 2, '.', ',');
-                    if (($apiObj->specialActive == 1 || $apiObj->discountActive == 1 || $apiObj->renewalActive == 1 || $apiObj->fest == 1) && ($backendDiscount == 0) && $apiObj->device != "iOS_app") {
-                        if ($apiObj->specialActive == 1) {
+                    if (($apiObj->specialActive == 1 || $apiObj->discountActive == 1 || $apiObj->renewalActive == 1 || $apiObj->fest == 1 || $apiObj->lightningDealActive == 1) && ($backendDiscount == 0) && $apiObj->device != "iOS_app") {
+                        if ($apiObj->lightningDealActive == 1) {
+                            $temp = ($vv['PRICE'] - ($vv['PRICE'] * ($lightningDealDisc / 100)));
+                            $priceArr['price'] = "" . round($temp, 2);
+                            $temp = ($priceArr['standard_price'] - $priceArr['price']);
+                            $priceArr['discount_given'] = "" . round($temp, 2);
+                        }
+                        else if ($apiObj->specialActive == 1) {
                             $temp = ($vv['PRICE'] - ($vv['PRICE'] * ($vdDisc[$apiObj->mainMem][$apiObj->mainMemDur] / 100)));
                             $priceArr['price'] = "" . round($temp, 2);
                             $temp = ($priceArr['standard_price'] - $priceArr['price']);
@@ -658,7 +683,7 @@ class MembershipApiFunctions
         else{
             $memHandlerObj = new MembershipHandler();
         }
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
     
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
@@ -677,6 +702,9 @@ class MembershipApiFunctions
         $apiObj->code = $code;
         $apiObj->upgradePercentArr = $upgradePercentArr;
         $apiObj->upgradeActive = $upgradeActive;
+        $apiObj->lightningDealDiscountPercent = $lightningDealDiscountPercent;
+        $apiObj->lightning_deal_discount_expiry = $lightning_deal_discount_expiry;
+        $apiObj->lightningDealActive = $lightningDealActive;
     }
     
     public function getDurationAndPrices($mainMem, $mostPopular, $apiObj) {

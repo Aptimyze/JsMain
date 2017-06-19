@@ -516,3 +516,9 @@ box-shadow: 0px 2px 5px 0px rgba(99,93,99,1);}
 .errCL1{
   color: #d9475c;
 }
+
+#lightningTimer ul.time{list-style-type:none;}
+#lightningTimer ul.time li{display:inline-block;font-size:25px}
+#lightningTimer ul.time li > span:nth-child(2){font-size:11px}
+#lightningTimer .inscol:after{ content:":"; padding-left:5px}
+

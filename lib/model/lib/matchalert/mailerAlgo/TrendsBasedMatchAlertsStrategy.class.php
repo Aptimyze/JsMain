@@ -13,8 +13,8 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	public function __construct($loggedInProfileObj,$limit,$type)
 	{
                 $this->sort = SearchSortTypesEnums::SortByLoginDate;
-                if($type == MailerConfigVariables::$TrendsLoggedinWithTrendsScoreSort){
-                        $this->sort = SearchSortTypesEnums::SortByTrendsScore;
+                if($type == MailerConfigVariables::$BroaderDppSort){
+                        $this->sort = SearchSortTypesEnums::SortByBroaderDppScore;
                 }else{
                         $this->logProfile = 1;
                 }
@@ -32,7 +32,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	public function getMatches($notInProfiles = array(),$matchesSetting='')
 	{
                 $this->TrendsProfileObj = new TrendsPartnerProfiles($this->loggedInProfileObj);
-                $this->TrendsProfileObj->getDppCriteria($this->sort, $this->limit);
+                $this->TrendsProfileObj->getTrendsCriteria($this->sort, $this->limit);
                 
 		$SearchServiceObj = new SearchService($this->searchEngine,$this->outputFormat,0);
 		$SearchUtilityObj =  new SearchUtility;

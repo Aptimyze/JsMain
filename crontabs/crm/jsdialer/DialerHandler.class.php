@@ -49,7 +49,7 @@ class DialerHandler
         public function getInDialerEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
                 return $eligible_array;
@@ -57,7 +57,7 @@ class DialerHandler
         public function getInDialerInEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
                 return $ignore_array;
@@ -65,7 +65,7 @@ class DialerHandler
 	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
@@ -73,7 +73,7 @@ class DialerHandler
 	public function getRenewalInEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
 		return $ignore_array;
@@ -190,11 +190,11 @@ class DialerHandler
 
 			if(in_array($proid,$ignore_array)){
 				if($renewal){
-					if($dialStatus!='9')
+					if($dialStatus!='0' && $dialStatus!='9')
 						$updateArr[] ="Dial_Status=0";
 				}
 				else{
-					if($dialStatus!='9' && $dialStatus!='3')
+					if($dialStatus!='0' && $dialStatus!='9')
 						$updateArr[] ="Dial_Status=0";
 				}
 				if(array_key_exists($proid,$discount_profiles))
@@ -258,9 +258,9 @@ class DialerHandler
 				}
 				if($jp_condition_arr1){
 					if($renewal==1)
-						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority!='10'";
 					else
-						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=6";
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority<='6'";
 					mssql_query($query2,$this->db_dialer) or $this->logError($query2,$campaign_name,$this->db_dialer,1);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
 					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE-PRIORITY')";
@@ -283,6 +283,7 @@ class DialerHandler
 	public function data_comparision_renewal($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles)
 	{
 		$profileid = $dialer_data["profileid"];
+		$dialStatus     = $dialer_data["dial_status"];
 		$update_str =array();
 
 		//DISCOUNT_PERCENT
@@ -315,7 +316,7 @@ class DialerHandler
 		{
 			if($alloted_to){
 				$update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
-				if($dialer_data["dial_status"]!='9')
+				if($dialStatus!=3 && $dialStatus!=9)
 					$update_str[]="Dial_Status='2'";
 			}
 			else{
@@ -326,33 +327,38 @@ class DialerHandler
 				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
-				if($dialer_data["dial_status"]!='9')
+				if($dialStatus!=3 && $dialStatus!=9)
 					$update_str[] ="Dial_Status='1'";
 			}
 		}
-		elseif($dialer_data['allocated']!='' && $dialer_data['dial_status']!='2' && $dialer_data["dial_status"]!='9'){
+		elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='3' && $dialStatus!='9'){
 			$update_str[] ="Dial_Status='2'";
 		}
-		elseif(!$alloted_to && $dialer_data['dial_status']!='1' && $dialer_data["dial_status"]!='9'){
+		elseif(!$alloted_to && $dialStatus!='1' && $dialStatus!='3' && $dialStatus!='9'){
 			$update_str[] ="Dial_Status='1'";
 		}
 
 		//INITIAL PRIORITY UPDATE 
-		$priority=0;
-                if($alloted_to==''){
-                        if($score>=81 && $score<=100)
-                                $priority='2';
-                        elseif($score>=41 && $score<=80)
-                                $priority='1';
-                        else
-                                $priority='0';
-                }
-		if($priority!=$dialer_data['initialPriority']){
-			$update_str[] 	="old_priority='$priority'";
+		if($dialStatus!='3'){
+			$priority=0;
+	                if($alloted_to==''){
+	                        if($score>=81 && $score<=100)
+	                                $priority='2';
+	                        elseif($score>=41 && $score<=80)
+	                                $priority='1';
+	                        else
+	                                $priority='0';
+	                }
+			if($priority!=$dialer_data['initialPriority']){
+				$update_str[] 	="old_priority='$priority'";
+			}
 		}
 		if(count($update_str)>0){
 			$update_str1 =@implode(",",$update_str);
-			$update_strPri  ="*priority='$priority'";
+			$update_strPri ='';
+			if($dialStatus!='3'){
+				$update_strPri  ="*priority='$priority'";
+			}
 			$update_str1 =$update_str1.$update_strPri;
 			unset($update_str);
 			return $update_str1;
@@ -418,21 +424,26 @@ class DialerHandler
 		}
 
                 //INITIAL PRIORITY UPDATE 
-                $priority=0;
-	        if($alloted_to==''){
-                	if($score>=81 && $score<=100)
-                	        $priority='2';
-                	elseif($score>=41 && $score<=80)
-                	        $priority='1';
-                	else
-                	        $priority='0';
-        	}
-	        if($priority!=$dialer_data['initialPriority']){
-			$update_str[]   ="old_priority='$priority'";	
- 	       	}
+		if($dialStatus!='3'){
+	                $priority=0;
+		        if($alloted_to==''){
+	                	if($score>=81 && $score<=100)
+	                	        $priority='2';
+	                	elseif($score>=41 && $score<=80)
+	                	        $priority='1';
+	                	else
+	                	        $priority='0';
+	        	}
+	        	if($priority!=$dialer_data['initialPriority']){
+				$update_str[]   ="old_priority='$priority'";	
+ 	       		}
+		}
 	       	if(count($update_str)>0){
 			$update_str1 =@implode(",",$update_str);
-			$update_strPri  ="*priority='$priority'";
+			$update_strPri ='';
+			if($dialStatus!='3'){
+				$update_strPri  ="*priority='$priority'";
+			}
 			$update_str1 =$update_str1.$update_strPri;
 			unset($update_str);
 			return $update_str1;		
