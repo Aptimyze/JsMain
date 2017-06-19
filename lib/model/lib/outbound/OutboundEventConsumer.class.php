@@ -219,12 +219,12 @@ class OutboundEventConsumer {
     //check LandingFlowId
     switch ($enEventType) {
       case OutBoundEventEnums::VIEW_CONTACT:
-        $landingFlowId = "132130";
+        $landingFlowId = "136659";
 
         break;
       
       case OutBoundEventEnums::INTEREST_ACCEPTED:
-        $landingFlowId = "132129";
+        $landingFlowId = "136663";
 
         break;
       
@@ -239,6 +239,7 @@ class OutboundEventConsumer {
         return ;
         break;
     }
+    // TODO: to be commented
     $landingFlowId = "136074"; 
     $callerId = '08039510994';
     $response = $this->callThirdPartyApi("08010619996", $callerId, $landingFlowId, $memberShipValue);
@@ -461,7 +462,11 @@ class OutboundEventConsumer {
    * @return type
    */
   private function parseXML($xmlString) {
-    return $xmlString;
+    $xmlObj = simplexml_load_string($xmlString, "SimpleXMLElement");
+    $json = json_encode($xmlObj);
+    $array = json_decode($json,TRUE);
+    $response  = $array["Call"]["Status"].' - '.$array["Call"]["StartTime"];
+    return $response;
   }
 }
 
