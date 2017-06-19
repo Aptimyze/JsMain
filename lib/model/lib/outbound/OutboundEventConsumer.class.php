@@ -422,7 +422,7 @@ class OutboundEventConsumer {
         "DATE_TIME" => $now,
       );
 
-    $storeObj = new OUTBOUND_FAILURE_LOGS();
+    $storeObj = new OUTBOUND_STATUS_LOGS();
     $storeObj->insertRecord($arrRecordData);
 
   }
