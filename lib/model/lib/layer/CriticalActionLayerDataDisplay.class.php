@@ -468,14 +468,13 @@ BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "Y",
 ),
-   
 23=>array(LAYERID=>"23",
 PRIORITY=>"2",
 TIMES=>"1",
 MINIMUM_INTERVAL=>"336",
 TITLE=>"Where is your Family based out of?",
 BUTTON1=>"OK",
-BUTTON2=>"",
+BUTTON2=>"close",
 ACTION1=>"close",
 ACTION2=>"close",
 JSMS_ACTION1=>"/",
@@ -491,9 +490,6 @@ BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N",
 ),
-
-
-
 );
 if ($label) {
    if ($value) {
