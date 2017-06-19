@@ -60,7 +60,7 @@ EOF;
     foreach($FilesArr as $key=>$value)
     {
       $response = $this->sendCurlGETRequest($setVersionUrl.$value,"","",$headerArr,"GET");
-      $jiraDescriptionStr .= $value." : ".$response->fields->summary."\nAssignee: ".$response->fields->assignee->name."\n\n";
+      $jiraDescriptionStr .= $value." : ".$response->fields->summary."<br>Assignee: ".$response->fields->assignee->name."<br><br>";
     }
 
     //to write the last released branch into a file(filename)
