@@ -105,7 +105,7 @@ class TopSearchBandPopulate
                                         if($v=="CASTE")
                                                 $field[$k] = "CASTE_DISPLAY";
                                         if($v=="CITY")
-                                                $field[$k] = "CITY_INDIA";
+                                                $field[$k] = "CITY_RES";
                                         if($v=="CITY_RES")
                                                 $field[$k] = "COUNTRY_RES";
                                 }
@@ -143,8 +143,8 @@ class TopSearchBandPopulate
                                 $param["MTONGUE"] = $searchObj->getMTONGUE();
                         if($searchObj->getCOUNTRY_RES())
                                 $param["COUNTRY_RES"] = $searchObj->getCOUNTRY_RES();
-                        if($searchObj->getCITY_INDIA())
-                                $param["CITY_INDIA"] = $searchObj->getCITY_INDIA();
+                        //if($searchObj->getCITY_INDIA())
+                        //       $param["CITY_INDIA"] = $searchObj->getCITY_INDIA();
                         if($searchObj->getCITY_RES())
                                 $param["CITY_RES"] = $searchObj->getCITY_RES();
                         if($searchObj->getSTATE())
@@ -229,8 +229,8 @@ class TopSearchBandPopulate
                 {
 									
                         if($this->isNewApp == 1){
-                                if($param["CITY_INDIA"])
-                                        $this->selectedCity_Country .= $param["CITY_INDIA"].",";
+                                //if($param["CITY_INDIA"])
+                                        //$this->selectedCity_Country .= $param["CITY_INDIA"].",";
                                 if($param["CITY_RES"])
                                         $this->selectedCity_Country .= $param["CITY_RES"].",";
                                 if($param["STATE"])
@@ -240,9 +240,9 @@ class TopSearchBandPopulate
                                 
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }else{
-                                if($param["CITY_INDIA"])
-                                        $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
-                                elseif($param["CITY_RES"])
+                                //if($param["CITY_INDIA"])
+                                        //$this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
+                                if($param["CITY_RES"])
                                         $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
                                 elseif($param["STATE"])
                                         $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
@@ -255,8 +255,8 @@ class TopSearchBandPopulate
                 }
 		else
 		{
-			if(in_array($param["CITY_INDIA"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_INDIA"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_INDIA"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
-				$this->selectedCity_Country[] = $param["CITY_INDIA"];
+			//if(in_array($param["CITY_RES"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_RES"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_RES"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
+				//$this->selectedCity_Country[] = $param["CITY_INDIA"];
 			
                         if(in_array($param["CITY_RES"],TopSearchBandConfig::$cities) || self::if_two_string_contains_same_values($param["CITY_RES"],TopSearchBandConfig::$mumbaiRegion) || self::if_two_string_contains_same_values($param["CITY_RES"],implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1))))
 				$this->selectedCity_Country[] = $param["CITY_RES"];

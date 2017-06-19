@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  { 
+  {
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -140,8 +140,6 @@ return 0;
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
   {
-
-
  
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
@@ -446,6 +444,16 @@ return 0;
                     }
                     break;
 
+                  case '20':
+
+                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
+                      {  
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -531,12 +539,27 @@ break;
                     
                     'A' => '99',
                     'I' => '5.3'
-                        )
+                        ),
+                  '20' => array(  
+                    'A' => '99',
+                    'I' => '5.4'
+                        )        
+
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
        return false;
       
+      
+  }
+
+    public static function checkConditionForCityCAL($profileObj){
+   
+      $cityRes =$profileObj->getCITY_RES();
+      if($profileObj->getCOUNTRY_RES() == 51 && $cityRes == '0'){
+        return true;
+       } 
+       return false;
       
   }
 }
