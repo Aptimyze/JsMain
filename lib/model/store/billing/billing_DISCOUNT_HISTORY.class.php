@@ -95,7 +95,8 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();
             while($result = $res->fetch(PDO::FETCH_ASSOC)){
-                $profilesArr[$result['PROFILEID']] = $result;
+                if(!($result["P_MAX"]==0 && $result["C_MAX"] && $result["NCP_MAX"]==0 && $result["X_MAX"]==0))
+                    $profilesArr[$result['PROFILEID']] = $result;
             }
             return $profilesArr;
         }

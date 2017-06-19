@@ -30,6 +30,7 @@ class LightningDeal
 		//use billing.DISCOUNT_HISTORY to get last logged in pool within offset time
         $discTrackingObj = new billing_DISCOUNT_HISTORY_MAX("crm_slave");
         $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCountMax($offsetDate);
+       
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
             if($this->debug == 1){
@@ -112,7 +113,12 @@ class LightningDeal
             error_log("final pool generation started"."\n",3,$this->logFilePath);
         }
 		if(is_array($pool1)){
-			$n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
+            if(count($pool1)<$this->dealConfig["pool2FilterPercent"]){
+                $n = count($pool1);
+            }
+            else{
+			    $n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
+            }
 			if(is_array($pool2) && $n>0){
 				$finalPool = array_slice($pool2, 0,$n);
 			}
@@ -132,7 +138,7 @@ class LightningDeal
 		try{
 			/*Pool 1-all currently free users who have logged-in in the last 30 days*/
 			$pool1 = $this->fetchDealPool1();
-
+            
 			/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
 			if(is_array($pool1)){
 				$pool2 = $this->fetchDealPool2($pool1);
