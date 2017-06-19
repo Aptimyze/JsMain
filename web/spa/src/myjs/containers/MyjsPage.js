@@ -6,6 +6,7 @@ import AcceptCount from '../components/MyjsAcceptcount';
 import MyjsProfileVisitor from './MyjsProfileVisitor'
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
+import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
 
@@ -64,10 +65,15 @@ export  class MyjsPage extends React.Component {
 							<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
 							<AcceptCount fetched={this.props.reducerData.fetched} acceptance={this.props.reducerData.apiData.all_acceptance} justjoined={this.props.reducerData.apiData.just_joined_matches}/>
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
-							<MyjsSlider fetched={this.props.reducerData.fetched} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
+							<div id="interestReceivedPresent" className="setWidth sliderc1">
+									<div className="pad1">
+											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
+										</div>
+						</div>
 
-							</div>
-					</div>
+
+			</div>
+	</div>
 
 			</div>
 		);
