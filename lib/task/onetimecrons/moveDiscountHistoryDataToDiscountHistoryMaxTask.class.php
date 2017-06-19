@@ -56,11 +56,11 @@ EOF;
             $lastLoginDate = NULL;
             foreach($data as $key => $val){
                 $currentMaxDiscount = max($val["P"],$val["C"],$val["NCP"],$val["X"]);
-                if($currentMaxDiscount > $maxDiscount){
+                if($currentMaxDiscount >= $maxDiscount){
                     $maxDiscount = $currentMaxDiscount;
                     $maxDiscountDate = $val["DATE"];
                 }
-                if(strtotime($val["DATE"]) > strtotime($lastLoginDate)){
+                if(strtotime($val["DATE"]) >= strtotime($lastLoginDate)){
                     $lastLoginDate = $val["DATE"];
                 }
             }
