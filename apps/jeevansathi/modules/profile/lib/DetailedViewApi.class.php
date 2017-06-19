@@ -380,6 +380,11 @@ class DetailedViewApi
             		$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
             		$this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
             	}
+            	if($this->m_actionObject->PIC120_URL)
+            	{
+            		$pic120Array = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->PIC120_URL,'ProfilePic120Url','',$this->m_objProfile->getGender());
+            		$this->m_arrOut['profilePic120Url'] = $pic120Array['url'];
+            	}
             }
 
             //thumbnail for self
