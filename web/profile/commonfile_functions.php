@@ -639,7 +639,7 @@ $js_arr[]=array("jspc/photoUpload/fbPage_js" => "2");
 $js_arr[]=array("jspc/promotions/chatPromo/chatPromo_js" => "3");
 $js_arr[]=array("jsms/promotions/chatPromo/chatPromo_js" => "3");
 $js_arr[]=array("sathiForLife_js" => "9");
-$js_arr[]=array(" /web/spa/src/login/containers/LoginPage"   => "1");
+$js_arr[]=array(" /web/spa/src/login/containers/LoginPage"    => "2");
 $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
 $js_arr[]=array("/web/spa/src/common/components/App"     => "3");
@@ -647,7 +647,7 @@ $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"    => 
 $js_arr[]=array(" /web/spa/src/common/components/App"       => "5");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
 $js_arr[]=array("/web/spa/dist/0"   => "1");
-$js_arr[]=array("/web/spa/src/common/components/ApiResponseHandler"   => "1");
+$js_arr[]=array("/web/spa/src/common/components/ApiResponseHandler"    => "2");
 $js_arr[]=array(" /web/spa/node_modules/axios/dist/axios.min"   => "1");
 $js_arr[]=array(" /web/spa/node_modules/axios/dist/axios"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/ApiResponseHandler"   => "1");
