@@ -31,7 +31,7 @@ if($("#CriticalActionlayerId").val()=='18'){
 //        }
     } );
     $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() {
+    $("#occClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
@@ -86,7 +86,122 @@ if($("#CriticalActionlayerId").val()=='18'){
         $("#occList").removeClass("dn");
         }
 
-        }  
+        }
+
+if($("#CriticalActionlayerId").val()=='20'){
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#cityMidDiv").css("height",window.innerHeight - 50);
+        }); 
+    }
+
+    $("#cityMidDiv").css("height",window.innerHeight - 50);
+    $("#stateClickDiv").on("click", function() { 
+        if(typeof listArray == 'undefined')
+        {      $.ajax({
+                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        listArray = res;
+                        appendStateData(listArray);
+                    },
+                    error: function(res) {
+                        $("#stateListDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+            }
+            else appendStateData(listArray);
+                $("#stateListDiv").removeClass("dn");
+        });
+
+    $("#cityClickDiv").on("click", function() {
+            callCity(listArray);
+            $("#cityListDiv").removeClass("dn");
+    });
+
+     appendStateData = function(allRes) {  
+        $("#stateList").html('');
+        $("#citySelect").html('Select your City');  
+        allRes = JSON.parse(allRes);
+
+        res = allRes.state_res;
+
+        stateMap = {};
+         var stateIndex=1;
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+                $.each(elem1, function(index2, elem2) {
+                    $("#stateList").append('<li stateCode = "'+index2+'">' + elem2 + '</li>');
+                    stateMap[stateIndex++] = index2;
+                    
+            });
+        });
+      });      
+   
+        $("#stateList li").each(function(index, element) { 
+            $(this).bind("click", function() { 
+                $("#stateSelect").html($(this).html());
+                $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
+                $("#stateListDiv").addClass("dn");
+                $("#stateList").html("");
+                    
+                    $("#contText").hide();
+                    $("#cityClickDiv").removeClass("dn");
+                
+                $("#stateCitySubmit").show();
+            });
+
+        });
+        $("#ListLoader").addClass("dn");
+        $("#stateList").removeClass("dn");
+
+        }
+
+        callCity = function(allRes) {
+
+        $("#cityList").html('');
+        var cityIndexFromMap  = $("#stateSelect").attr('stateCode');
+        
+        allRes = JSON.parse(allRes);
+        cityMap = {};
+        cityIndex = 2;
+        
+        occuSelected = 0;
+         $.each(allRes.city_res_jspc, function(index, elem) {
+           if(index == cityIndexFromMap){
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
+                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
+                  
+                
+                });
+        });
+          }                                                                                                                                                                                                                                             
+              });      
+        $("#cityList li").each(function(index, element) {
+            $(this).bind("click", function() {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+                $("#citySelect").html($(this).html());
+                $("#citySelect").attr('cityCode',$(this).attr('cityCode'));
+                $("#cityListDiv").addClass("dn");
+                $("#cityList").html("");
+                    occuSelected = 0;
+                    $("#contText").hide();
+                
+                $("#stateCitySubmit").show();
+            });
+        });
+        $("#cityListLoader").addClass("dn");
+        $("#cityList").removeClass("dn");
+        }
+
+        }
+
+
+
 else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
@@ -107,7 +222,8 @@ else {
     
     
     }
-} )
+} 
+)
     var CALButtonClicked=0;
     
         function validateUserName(name){        
@@ -190,6 +306,44 @@ else {
 
                     }
 
+                if(layerId==20)
+                    {   
+                    if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
+                        {
+                            showLoader();
+                             var stateCode = $("#stateSelect").attr('stateCode');
+                             var cityCode  = $("#citySelect").attr('cityCode');
+                            dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataStateCity,
+                            success: function(response) {
+                                hideLoader();
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                 hideLoader();   
+                                showError('Something went wrong');
+
+                                }
+                            });
+                        }
+                        else{
+                                showError("Please enter City");
+                                CALButtonClicked=0;
+                                return;
+
+
+                        }
+
+                    }
+
+
 
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
         CALButtonClicked=0;
@@ -209,7 +363,6 @@ else {
               $( "#validation_error" ).text(msg);
               $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
               $( "#validation_error" ).slideUp( "slow", function() {});
-
 
         }
 
@@ -318,6 +471,35 @@ else {
         }
 
 
+       function sendAltVerifyMail()
+       {
+                 $.ajax({
+                    url: '/api/v1/profile/sendEmailVerLink?emailType=2',
+                    headers: { 'X-Requested-By': 'jeevansathi' },       
+                    type: 'POST',
+                    success: function(response) {
+                      if(response.responseStatusCode == 1)
+                      {
+                      showError("Something went wrong");
+                      CALButtonClicked=0;
+                      return;   
+                      }
+                 
+                $("#altEmailAskVerify").hide();
+            msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                 $("#altEmailMsg").text(msg);
+                 $("#confirmationSentAltEmail").show();
+                   return; 
+                    }
+                });              
+
+                
+
+
+
+       }
+
+
 function showTimerForLightningCal(lightningCALTime) {
 if(!lightningCALTime) return;
 var expiryTime=new Date(lightningCALTime);
@@ -356,4 +538,16 @@ function updateCalTimer(){
     function formatTime(i) {
     if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
+}
+
+function showLoader()
+{
+    setTimeout(function(){$("#ed_slider").addClass("dn");},100);
+    stopTouchEvents(1,1,1);
+}
+
+function hideLoader()
+{
+    setTimeout(function(){$("#ed_slider").removeClass("dn");},100);
+    startTouchEvents(1,1,1);
 }

@@ -24,6 +24,8 @@ class MailerConfigVariables
         public static $TrendsLoggedinWithTrendsScoreSort = 4; // TRENDS Loggedin in last 15days sort by trends score
         public static $TrendsNotLoggedinWithLoginDateSort = 5; // TRENDS not Loggedin in last 15days sort by login timestamp
         
+        public static $BroaderDppSort = 6; // TRENDS Loggedin in last 15days sort by trends score
+        
 	/*
 	This function returns the number of days from 01-01-2005 to today. Used in matches generation logic
 	@return - no of days

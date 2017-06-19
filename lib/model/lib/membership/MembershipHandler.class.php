@@ -2735,5 +2735,17 @@ class MembershipHandler
 	}
 	return false;
     }
+    
+    public function getMembershipAutoLoginLink($profileid,$source){
+        if($profileid){
+            include(JsConstants::$docRoot."/classes/authentication.class.php");
+            $protect_obj = new protect;
+            $profilechecksum = md5($profileid)."i".$profileid;
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+            $echecksum = $protect_obj->js_encrypt($profilechecksum,$profileObj->getEMAIL());
+            $autoLoginLink = JsConstants::$siteUrl."/membership/jspc?CMGFRMMMMJS=1&checksum=$profilechecksum&profilechecksum=$profilechecksum&echecksum=$echecksum&enable_auto_loggedin=1&from_source=$source";
+            return $autoLoginLink;
+        }
+    }
 
 }

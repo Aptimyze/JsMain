@@ -242,8 +242,8 @@ class SearchService
 				*/
 				{
 					$ncr = FieldMap::getFieldLabel('delhiNcrCities','',1);
-					if(is_array($res["CITY_INDIA"]))
-					foreach($res["CITY_INDIA"] as $k3=>$v3)
+					if(is_array($res["CITY_RES"]))
+					foreach($res["CITY_RES"] as $k3=>$v3)
 					{
 						if(in_array($k3,$ncr))
 							$res["STATE"]["NCR"]+=$v3; 
@@ -252,7 +252,7 @@ class SearchService
 						unset($res["STATE"]["DE00"]);
 					arsort($res["STATE"]);
 				}
-				elseif($v1=='CITY_INDIA')
+				elseif($v1=='CITY_RES')
 				/**
 				* In This case we need to show "All Metros" option as well.
 				*/
@@ -260,13 +260,13 @@ class SearchService
 					if($SearchParamtersObj->getSTATE()=='' && !$moreClusterSoring)
 					{
 						$delmetro = FieldMap::getFieldLabel('allMetros','',1);
-						if(is_array($res["CITY_INDIA"]))
-						foreach($res["CITY_INDIA"] as $k3=>$v3)
+						if(is_array($res["CITY_RES"]))
+						foreach($res["CITY_RES"] as $k3=>$v3)
 						{
 							if(in_array($k3,$delmetro))
-								$res["CITY_INDIA"]["METRO"]+=$v3; 
+								$res["CITY_RES"]["METRO"]+=$v3; 
 						}
-						arsort($res["CITY_INDIA"]);
+						arsort($res["CITY_RES"]);
 					}
 				}
 
@@ -767,8 +767,8 @@ class SearchService
 				*/
 				{
 					$ncr = FieldMap::getFieldLabel('delhiNcrCities','',1);
-					if(is_array($res["CITY_INDIA"]))
-					foreach($res["CITY_INDIA"] as $k3=>$v3)
+					if(is_array($res["CITY_RES"]))
+					foreach($res["CITY_RES"] as $k3=>$v3)
 					{
 						if(in_array($k3,$ncr))
 							$res["STATE"]["NCR"]+=$v3; 
@@ -777,7 +777,7 @@ class SearchService
 						unset($res["STATE"]["DE00"]);
 					arsort($res["STATE"]);
 				}
-				elseif($v1=='CITY_INDIA')
+				elseif($v1=='CITY_RES')
 				/**
 				* In This case we need to show "All Metros" option as well.
 				*/
@@ -785,13 +785,13 @@ class SearchService
 					if($SearchParamtersObj->getSTATE()=='' && !$moreClusterSoring)
 					{
 						$delmetro = FieldMap::getFieldLabel('allMetros','',1);
-						if(is_array($res["CITY_INDIA"]))
-						foreach($res["CITY_INDIA"] as $k3=>$v3)
+						if(is_array($res["CITY_RES"]))
+						foreach($res["CITY_RES"] as $k3=>$v3)
 						{
 							if(in_array($k3,$delmetro))
-								$res["CITY_INDIA"]["METRO"]+=$v3; 
+								$res["CITY_RES"]["METRO"]+=$v3; 
 						}
-						arsort($res["CITY_INDIA"]);
+						arsort($res["CITY_RES"]);
 					}
 				}
 

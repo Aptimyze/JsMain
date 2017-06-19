@@ -58,7 +58,7 @@ class NotificationSender
                 }
     			if(is_array($regIds))
     			{
-    				if(is_array($regIds[$identifier]["AND"]))
+    				if(is_array($regIds[$identifier]["AND"]) && ($profileDetails[$identifier]['OS_TYPE'] == "AND" || $profileDetails[$identifier]['OS_TYPE'] == "ALL" ))
     				{
 
     					$osType = "AND";
@@ -77,7 +77,7 @@ class NotificationSender
                             $engineObject->sendMultipleParallelNotification($regIds[$identifier]["AND"], $details,$profileid);
                         }
     				}
-    				if(is_array($regIds[$identifier]["IOS"]))
+    				if(is_array($regIds[$identifier]["IOS"]) && ($profileDetails[$identifier]['OS_TYPE'] == "IOS" || $profileDetails[$identifier]['OS_TYPE'] == "ALL" ) )
                     {
 
     					$osType = "IOS";
