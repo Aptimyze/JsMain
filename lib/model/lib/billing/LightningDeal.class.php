@@ -19,7 +19,7 @@ class LightningDeal
 	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
 	public function fetchDealPool1(){
         if($this->debug == 1){
-            error_log("pool1 generation started",3,$this->logFilePath);
+            error_log("pool1 generation started"."\n",3,$this->logFilePath);
         }
         $lastLoggedInOffset = $this->dealConfig["lastLoggedInOffset"] - 1;
         $todayDate = date("Y-m-d");
@@ -33,7 +33,7 @@ class LightningDeal
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
             if($this->debug == 1){
-                error_log("pool1 generation: ".$start."-".($start+$this->sqlSelectLimit-1),3,$this->logFilePath);
+                error_log("pool1 generation: ".$start."-".($start+$this->sqlSelectLimit-1)."\n",3,$this->logFilePath);
             }
         	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
      		
@@ -62,7 +62,7 @@ class LightningDeal
         if($this->debug == 1){
 	        //echo "after last 30 days login and currently free filter,pool 1.."."\n";
 	        //print_r($pool1);
-            error_log("pool1 generation end",3,$this->logFilePath);
+            error_log("pool1 generation end"."\n",3,$this->logFilePath);
 	    }
 	    return $pool1;
 	}
@@ -70,7 +70,7 @@ class LightningDeal
 	/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
 	public function fetchDealPool2($pool1=null){
         if($this->debug == 1){
-            error_log("pool2 generation started",3,$this->logFilePath);
+            error_log("pool2 generation started"."\n",3,$this->logFilePath);
         }
 		if(is_array($pool1) && count($pool1) > 0){
 			$pool1Pids = array_keys($pool1);
@@ -98,7 +98,7 @@ class LightningDeal
 	        print_r($pool2);
 	    }*/
         if($this->debug == 1){
-            error_log("pool2 generation end",3,$this->logFilePath);
+            error_log("pool2 generation end"."\n",3,$this->logFilePath);
         }
 		return $pool2;
 	}
@@ -106,7 +106,7 @@ class LightningDeal
 	/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
 	public function fetchDealFinalPool($pool1=null,$pool2=null){
         if($this->debug == 1){
-            error_log("final pool generation started",3,$this->logFilePath);
+            error_log("final pool generation started"."\n",3,$this->logFilePath);
         }
 		if(is_array($pool1)){
 			$n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
@@ -120,7 +120,7 @@ class LightningDeal
 	        print_r($finalPool);
 	    }*/
         if($this->debug == 1){
-            error_log("final pool generation end",3,$this->logFilePath);
+            error_log("final pool generation end"."\n",3,$this->logFilePath);
         }
 		return $finalPool;
 	}
@@ -172,7 +172,7 @@ class LightningDeal
 
 	public function storeDealEligiblePool($finalPool=null){
         if($this->debug == 1){
-            error_log("store deal eligible pool",3,$this->logFilePath);
+            error_log("store deal eligible pool"."\n",3,$this->logFilePath);
         }
 		if(is_array($finalPool)){
             //print_r($finalPool);
