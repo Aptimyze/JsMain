@@ -2664,7 +2664,7 @@ class MembershipHandler
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
         unset($disHistObj);
-        error_log("ankita updateDiscountHistoryMax");
+        
         $discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
         $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"]));
         unset($discMaxObj);
