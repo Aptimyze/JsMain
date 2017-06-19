@@ -72,3 +72,5 @@ all:
     enable_login: on
   hideDuration:
     enable_login: on
+  membershipPlanAudioV1:
+    enable_login: off
