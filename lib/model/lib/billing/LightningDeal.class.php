@@ -35,8 +35,11 @@ class LightningDeal
             if($this->debug == 1){
                 error_log("pool1 generation: ".$start."-".($start+$this->sqlSelectLimit-1)."\n",3,$this->logFilePath);
             }
+            $startQueryTime = microtime(true);
         	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
-     		
+     		$endQueryTime = microtime(true);
+            if($this->debug==1)
+                error_log("diff- ".($endQueryTime-$startQueryTime)."\n",3,$this->logFilePath);
 		    if(is_array($lastLoggedInArr) && count($lastLoggedInArr) > 0){
 		    	//use billing.SERVICE_STATUS to get currently paid pool from $lastLoggedInArr
 		    	$lastLoggedInProfiles = array_keys($lastLoggedInArr);
