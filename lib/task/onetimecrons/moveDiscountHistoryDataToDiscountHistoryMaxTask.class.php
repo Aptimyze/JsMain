@@ -35,15 +35,16 @@ EOF;
             sfContext::createInstance($this->configuration);
         }
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDealOneTime.txt';
-        error_log("Getting Distinct Profileids"."\n",3,$this->logFilePath);
+        $currentTime = date("Y-m-d H:i:s");
+        error_log("Getting Distinct Profileids\nTime:$currentTime"."\n",3,$this->logFilePath);
         $lessThanDate = "2017-06-18";
         $discHistObj = new billing_DISCOUNT_HISTORY("newjs_slave");
         $distinctProfileidArr = $discHistObj->getDistinctProfileIds($lessThanDate); //order by profileid for logging?
-        error_log("Distinct Profileids fetched"."\n",3,$this->logFilePath);
+        error_log("Distinct Profileids fetched\nTime:$currentTime"."\n",3,$this->logFilePath);
         
         $count = count($distinctProfileidArr);
-        
-        error_log("Total Unique Profiles:$count"."\n",3,$this->logFilePath);
+        $currentTime = date("Y-m-d H:i:s");
+        error_log("Total Unique Profiles:$count\nTime:$currentTime"."\n",3,$this->logFilePath);
         $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
         $updatedCount = 0;
         print_r($distinctProfileidArr);
@@ -70,7 +71,8 @@ EOF;
             $discHistMaxObj->updateDiscountHistoryMax($paramsArr);
             $updatedCount++;
         }
-        error_log("Total Updated:$updatedCount"."\n",3,$this->logFilePath);
+        $currentTime = date("Y-m-d H:i:s");
+        error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
 	}
 }
 ?>
