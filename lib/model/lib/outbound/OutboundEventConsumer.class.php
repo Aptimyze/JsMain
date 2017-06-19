@@ -410,7 +410,22 @@ class OutboundEventConsumer {
     if($this->bDebugInfo) {
       echo "\n<br\>",$enEventType,$msg,print_r($arrInfo,true),"\n<br\>";
     }
-    
+
+    // Log when api not called
+    if($arrInfo["STATUS"] == "API_NOT_CALLED")
+    {
+      $now = date('Y-m-d H:i:s');
+      $arrRecordData = array(
+          "REASON" => $msg,
+          "PGID" => $arrInfo["PROFILEID"],
+          "EVENT_TYPE" => $enEventType,
+          "DATE_TIME" => $now,
+        );
+
+      $storeObj = new OUTBOUND_FAILURE_LOGS();
+      $storeObj->insertRecord($arrRecordData);
+    }
+
   }
   
   /**
