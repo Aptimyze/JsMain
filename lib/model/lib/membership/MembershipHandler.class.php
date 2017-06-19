@@ -2650,6 +2650,10 @@ class MembershipHandler
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
+        unset($disHistObj);
+        $discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        $discMaxObj->updateDiscountHistoryMax($servDisc);
+        unset($discMaxObj);
         unset($nonZero);
     }
 
