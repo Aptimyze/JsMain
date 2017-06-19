@@ -2667,9 +2667,19 @@ class MembershipHandler
             $servDisc['C'] = 0;
             $servDisc['NCP'] = 0;
             $servDisc['X'] = 0;
+            $maxDiscount = 0;
+        }
+        else{
+            $maxDiscount = 0;
+            $maxDiscount = max($servDisc['P'],$servDisc['NCP'],$servDisc['X'],$servDisc['C']);
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
+        unset($disHistObj);
+        
+        /*$discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"],"LAST_LOGIN_DATE"=>date("Y-m-d"),"MAX_DISCOUNT_DATE"=>date("Y-m-d")));
+        unset($discMaxObj);*/
         unset($nonZero);
     }
 
