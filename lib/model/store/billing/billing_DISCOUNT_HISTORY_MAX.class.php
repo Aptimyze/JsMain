@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Store of table billing.DISCOUNT_HISTORY_MAX to store the log of the discount visible to the logged in user.
+ * Store of table billing.DISCOUNT_HISTORY_MAX to store the log of max discount over period of 1 month visible to the logged in user.
  *
  */
 class billing_DISCOUNT_HISTORY_MAX extends TABLE{
@@ -12,7 +11,7 @@ class billing_DISCOUNT_HISTORY_MAX extends TABLE{
     public function updateDiscountHistoryMax($paramsArr){
         if(is_array($paramsArr)){
             try{
-                $sql = "INSERT INTO billing.DISCOUNT_HISTORY_MAX (PROFILEID, LAST_LOGIN_DATE, P, C, NCP, X) VALUES (:PROFILEID, :LAST_LOGIN_DATE, :P, :C, :NCP, :X) ON DUPLICATE KEY UPLAST_LOGIN_DATE P=:P, C=:C, NCP=:NCP, X=:X";
+                $sql = "REPLACE INTO billing.DISCOUNT_HISTORY_MAX (PROFILEID, LAST_LOGIN_DATE, P, C, NCP, X) VALUES (:PROFILEID, :LAST_LOGIN_DATE, :P, :C, :NCP, :X) ON DUPLICATE KEY UPDATE P=:P, C=:C, NCP=:NCP, X=:X";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_STR);
                 $prep->bindValue(":LAST_LOGIN_DATE",LAST_LOGIN_DATE('Y-m-d'),PDO::PARAM_STR);
