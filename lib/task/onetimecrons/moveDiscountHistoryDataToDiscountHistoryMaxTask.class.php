@@ -37,7 +37,6 @@ EOF;
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDealOneTime.txt';
         error_log("Getting Distinct Profileids"."\n",3,$this->logFilePath);
         $lessThanDate = "2017-06-18";
-        $lessThanDate = "2017-06-20";
         $discHistObj = new billing_DISCOUNT_HISTORY("newjs_slave");
         $distinctProfileidArr = $discHistObj->getDistinctProfileIds($lessThanDate); //order by profileid for logging?
         error_log("Distinct Profileids fetched"."\n",3,$this->logFilePath);
@@ -68,7 +67,6 @@ EOF;
             $paramsArr["MAX_DISCOUNT"] = $maxDiscount;
             $paramsArr["MAX_DISCOUNT_DATE"] = $maxDiscountDate;
             $paramsArr["LAST_LOGIN_DATE"] = $lastLoginDate;
-            print_r($paramsArr);
             $discHistMaxObj->updateDiscountHistoryMax($paramsArr);
             $updatedCount++;
         }
