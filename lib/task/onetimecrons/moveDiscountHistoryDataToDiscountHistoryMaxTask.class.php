@@ -47,7 +47,7 @@ EOF;
         error_log("Total Unique Profiles:$count\nTime:$currentTime"."\n",3,$this->logFilePath);
         $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
         $updatedCount = 0;
-        print_r($distinctProfileidArr);
+        //print_r($distinctProfileidArr);
         foreach($distinctProfileidArr as $profileid){
             unset($paramsArr);
             $data = $discHistObj->getDetailsForProfileid($profileid);
