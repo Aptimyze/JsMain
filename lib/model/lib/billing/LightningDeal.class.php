@@ -9,14 +9,18 @@ class LightningDeal
 	private $dealConfig;
 	private $debug;
 
-	public function __construct($debug=0){
+	public function __construct($debug=0,$logFilePath=""){
 		$this->dealConfig = VariableParams::$lightningDealOfferConfig;
 		$this->debug = $debug;
-		$this->sqlSelectLimit = 500;
+		$this->sqlSelectLimit = 5000;
+        $this->logFilePath = $logFilePath;
 	}
 
 	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
 	public function fetchDealPool1(){
+        if($this->debug == 1){
+            error_log("pool1 generation started",3,$this->logFilePath);
+        }
         $lastLoggedInOffset = $this->dealConfig["lastLoggedInOffset"] - 1;
         $todayDate = date("Y-m-d");
 		$offsetDate = date("Y-m-d",strtotime("$todayDate -".$lastLoggedInOffset." days"));
@@ -28,6 +32,9 @@ class LightningDeal
         $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCount($offsetDate);
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
         while($start<$totalCount){
+            if($this->debug == 1){
+                error_log("pool1 generation: ".$start."-".$start+$this->sqlSelectLimit-1,3,$this->logFilePath);
+            }
         	$lastLoggedInArr = $discTrackingObj->getLastLoginProfilesAfterDate("",$offsetDate,$this->sqlSelectLimit,$start);
      		
 		    if(is_array($lastLoggedInArr) && count($lastLoggedInArr) > 0){
@@ -53,14 +60,18 @@ class LightningDeal
         unset($serviceStObj);
         unset($discTrackingObj);
         if($this->debug == 1){
-	        echo "after last 30 days login and currently free filter,pool 1.."."\n";
-	        print_r($pool1);
+	        //echo "after last 30 days login and currently free filter,pool 1.."."\n";
+	        //print_r($pool1);
+            error_log("pool1 generation end",3,$this->logFilePath);
 	    }
 	    return $pool1;
 	}
 
 	/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
 	public function fetchDealPool2($pool1=null){
+        if($this->debug == 1){
+            error_log("pool2 generation started",3,$this->logFilePath);
+        }
 		if(is_array($pool1) && count($pool1) > 0){
 			$pool1Pids = array_keys($pool1);
 			$lastViewedOffset = $this->dealConfig["lastLightningDiscountViewedOffset"] - 1;
@@ -82,15 +93,21 @@ class LightningDeal
 			unset($lastViewedPool);
 			unset($pool1Pids);
 		}
-		if($this->debug == 1){
+		/*if($this->debug == 1){
 	        echo "after last 30 days lightning discount activated and viewed filter,pool 2.."."\n";
 	        print_r($pool2);
-	    }
+	    }*/
+        if($this->debug == 1){
+            error_log("pool2 generation end",3,$this->logFilePath);
+        }
 		return $pool2;
 	}
 
 	/*Final Pool: Pick n number of users from pool in point 2 where n is 10% of the number of users in pool 1*/
 	public function fetchDealFinalPool($pool1=null,$pool2=null){
+        if($this->debug == 1){
+            error_log("final pool generation started",3,$this->logFilePath);
+        }
 		if(is_array($pool1)){
 			$n = round(($this->dealConfig["pool2FilterPercent"] * count($pool1))/100);
 			if(is_array($pool2) && $n>0){
@@ -98,10 +115,13 @@ class LightningDeal
 			}
 		}
 		
-		if($this->debug == 1){
+		/*if($this->debug == 1){
 	        echo "final pool with n= ".$n." count..."."\n";
 	        print_r($finalPool);
-	    }
+	    }*/
+        if($this->debug == 1){
+            error_log("final pool generation end",3,$this->logFilePath);
+        }
 		return $finalPool;
 	}
 
@@ -143,16 +163,19 @@ class LightningDeal
                 $result[$val] = $pool1[$val];
             }
         }
-        if($this->debug == 1){
+        /*if($this->debug == 1){
 	        echo "\nfinal pool with discount \n";
 	        print_r($result);
-	    }
+	    }*/
         return $result;
     }
 
 	public function storeDealEligiblePool($finalPool=null){
+        if($this->debug == 1){
+            error_log("store deal eligible pool",3,$this->logFilePath);
+        }
 		if(is_array($finalPool)){
-            print_r($finalPool);
+            //print_r($finalPool);
             $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
             foreach($finalPool as $key => $val){
                 $params["PROFILEID"] = $val["PROFILEID"];
@@ -212,6 +235,7 @@ class LightningDeal
     
     /*Activate Lighning Deal*/
     public function activateLightningDealForProfile($profileid){
+        
         if($profileid){
             $lightningDuration = VariableParams::$lightningDealDuration;
             $params["PROFILEID"] = $profileid;
