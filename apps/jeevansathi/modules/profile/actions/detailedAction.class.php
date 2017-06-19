@@ -324,7 +324,7 @@ class detailedAction extends sfAction
   						$resultValue = $deepLinkingObj->getDeepLinkingHeader($request);
   						$this->headerURLDeepLinking = $resultValue;  		
   					}
-  					$this->matchAlertTracking($request->getParameter("stype"));
+  					//$this->matchAlertTracking($request->getParameter("stype"));
   					$this->setJsmsViewProfileLayout();
   		    }  
             else
@@ -1286,7 +1286,7 @@ class detailedAction extends sfAction
                             $this->STYPE="WO";
             }
             $this->responseTracking = urlencode($this->responseTracking);
-            $this->matchAlertTracking($request->getParameter("stype"));
+            //$this->matchAlertTracking($request->getParameter("stype"));
 
              //JSB9 Tracking
             $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
