@@ -178,7 +178,7 @@ class OutboundEventConsumer {
       return ;
     }
     
-    //Ever Paid Check
+    //Ever Paid Check and Mtongue Check and Activation Check
     $userDetails = $this->userCheckAndDetails($enEventType, $iPgId);
     if(false === $userDetails) {
       $arrInfo['STATUS'] = "API_NOT_CALLED";
@@ -193,7 +193,7 @@ class OutboundEventConsumer {
       return ;
     }
     
-    
+    //Check analytic score and get Minimun Memebership plan to pitch user
     $memberShipValue = $this->getMinMemberShipValue($enEventType, $iPgId) ;
     if(false === $memberShipValue) {
       $arrInfo['STATUS'] = "API_NOT_CALLED";
