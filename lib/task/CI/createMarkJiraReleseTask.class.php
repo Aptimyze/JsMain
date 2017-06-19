@@ -69,7 +69,9 @@ elseif($branchName == "QASanityReleaseNew")
   $CIFileName = "/var/www/CI_Files/CIMergedBranches.txt";
   $CIArr = file($CIFileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
   $QAJiraDetails = "/var/www/CI_Files/QASanitJiraDetails.txt";
-  $jiraDetailsStr = file_get_contents($QAJiraDetails);  
+  $jiraDetailsStr = file_get_contents($QAJiraDetails);
+  $CIJiraDetails = "/var/www/CI_Files/CIJiraDetails.txt";
+  $jiraDetailsStr .="<br><br>".file_get_contents($CIJiraDetails);  
 }
 else
 {
