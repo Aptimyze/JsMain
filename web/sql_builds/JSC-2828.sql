@@ -1,0 +1,2 @@
+ALTER TABLE billing.PURCHASES ADD MTONGUE tinyint(3);
+

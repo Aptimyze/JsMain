@@ -323,7 +323,7 @@ label {
  	        <li id="jamaat" style="display:~if $form['jamaat']->hasError()`inline~else`none~/if`;">
  				<div id="jamaat_submit_err_label" >
  					<span id="jamaat_section"> 
- 						<label id="jamaat_label" class="l1">Jamaat<u>*</u> :</label>
+ 						<label id="jamaat_label" class="l1">Jamaat :</label>
  						
  							~$form['jamaat']->render(['class'=>'sel_lng','tabindex'=>14])`
  							
@@ -342,7 +342,7 @@ label {
 				<br>
 				<div id="sectMuslim_submit_err_label" >
 					<span id="sectMuslim_section"> 
-						<label id="sectMuslim_label" class="l1">Caste<u>*</u> :</label>
+						<label id="sectMuslim_label" class="l1">Caste :</label>
 						
                                         ~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
 
@@ -539,6 +539,9 @@ label {
 			</noscript>
 		<!-- Ends Here -->
 	~/if`
+~if $sourcename neq ''`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~/if`
 <script type="text/javascript">
 var crazyegg=0;
 function crazyEggUserVar(){

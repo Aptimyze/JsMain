@@ -28,17 +28,16 @@ if(authenticated($cid) || $JSIndicator)
 			$relarr[$j]=$RELATIONSHIP[$j+1];
 		}
 
-		if($day)
+		if($fromday && $todate)
 		{
-			$st_date=$year."-".$month."-".$day." 00:00:00";
-			$end_date=$year."-".$month."-".$day." 23:59:59";
+			$st_date=$fromyear."-".$frommonth."-".$fromday." 00:00:00";
+			$end_date=$toyear."-".$tomonth."-".$todate." 23:59:59";
 		}
 		else
 		{
-			$st_date=$year."-".$month."-01 00:00:00";
-			$end_date=$year."-".$month."-31 23:59:59";
-		}
-
+			$st_date=$fromyear."-".$frommonth."-01 00:00:00";
+			$end_date=$toyear."-".$tomonth."-31 23:59:59";
+                }
 		// total amount of all paid members
 		$sql="SELECT sum(if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT)) as amt FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND AMOUNT!=0";
 		$res=mysql_query_decide($sql,$db) or die(mysql_error_js());

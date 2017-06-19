@@ -1038,6 +1038,10 @@ input:focus {
     padding-left: 12px;
 }
 
+.pl14{
+    padding-left: 14px;
+}
+
 .pl15 {
     padding-left: 15px;
 }
@@ -1726,8 +1730,8 @@ input:focus {
 }
 
 .noti1 {
-    width: 19px;
-    height: 19px;
+    width: 21px;
+    height: 21px;
     border-radius: 20px
 }
 
@@ -2368,6 +2372,12 @@ line-height:25px;
     padding: 14px 27px;
     width: 100%;}
 
+
+ul.time{list-style-type:none;}
+ul.time li{display:inline-block;font-size:25px}
+ul.time li span:nth-child(2){font-size:20px}
+.inscol:after{ content:":"; padding-left:5px}
+
 /*adding css for idfy*/
 
 
@@ -2485,3 +2495,4 @@ line-height:25px;
     right: 20px;
 }
 .vertSup{    vertical-align: super;}
+

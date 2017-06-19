@@ -30,20 +30,13 @@
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
-			// LoggingEnums::HOMEPAGE => array(
-			// 	LoggingEnums::LOGGING => true,
-			// 	LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-			// 	LoggingEnums::DIRECTORY => false,
-			// 	LoggingEnums::STACKTRACE => false,
-			// 	LoggingEnums::SERVER_PARAM => false
-			// 	),
-			// LoggingEnums::STATIC_MODULE => array(
-			// 	LoggingEnums::LOGGING => true,
-			// 	LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-			// 	LoggingEnums::DIRECTORY => false,
-			// 	LoggingEnums::STACKTRACE => false,
-			// 	LoggingEnums::SERVER_PARAM => false
-			// 	),
+			LoggingEnums::NEW_LOGIN_TRACK => array(
+				LoggingEnums::LOGGING => true,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
+				LoggingEnums::DIRECTORY => true,
+				LoggingEnums::STACKTRACE => false,
+				LoggingEnums::SERVER_PARAM => false
+				),
 			// LoggingEnums::EX500 => array(
    //             LoggingEnums::LOGGING => true,
    //             LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,

@@ -353,7 +353,14 @@ class crmAllocationActions extends sfActions
 			if($this->username && !$this->errorUsername){
 				$this->errorCriteria 	=$agentBucketHandlerObj->checkLocationCriteriaForAllotment($this->username,$this->agentName);	
 				if(!$this->errorCriteria)
-					$this->errorPaid 	=$agentAllocDetailsObj->checkPaidProfile($this->profileid);		
+					$this->errorPaid 	=$agentAllocDetailsObj->checkPaidProfile($this->profileid);
+                                //Going to check if paid profile is within 30 days of expiry
+                                if($this->errorPaid){
+                                    //JSC-2904:Allow CRM agents to take allocation of paid users (due for renewal in less than 30 days)
+                                    $this->errorPaid =  $agentAllocDetailsObj->checkExpiry($this->profileid);
+                                    $this->errorExpiry = $this->erroPaid;
+                                }
+                                            
 			}
 			if($this->errorUsername || $this->errorEmail || $this->errorCriteria || $this->errorPaid)
 				$this->error ='Y';

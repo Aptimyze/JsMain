@@ -47,11 +47,16 @@ class ProcessHandler
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
                               break;
       case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
       case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
-                              ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
+                          // the variable onlylogging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
+
+                              if($body['onlyLogging']==0)
+                                  ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus);
+                              LoggingManager::getInstance()->writeToFileForCoolMetric($body);                              
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;
@@ -447,12 +452,14 @@ public function logDiscount($body,$type){
         $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
         $seperator = "#";
         $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+
         if($preSetCache){
             $explodedVal = explode($seperator,$preSetCache);
             $notificationParams["COUNT"] = $explodedVal[0];
             $notificationParams["OTHER_PROFILE"] = $explodedVal[1];
             $notificationParams["OTHER_PROFILE_URL"] = $explodedVal[2];
             $lastLoginDt = $explodedVal[3];
+            $notificationParams["OTHER_PROFILE_IOS_URL"] = $explodedVal[4];
             $notificationKey = "MATCHALERT";
             $condition = $instantNotificationObj->notificationObj->checkNotificationOnLastLogin($notificationKey,$lastLoginDt);
             if($condition){

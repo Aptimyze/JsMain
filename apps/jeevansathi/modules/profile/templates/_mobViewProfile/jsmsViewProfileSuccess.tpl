@@ -59,6 +59,7 @@ var commHistoryJson = null;
 var contactEngineChannel = "VDP";
 var szHisHer = "~$szHisHer`";
 var isGunnaCallRequire = '~$gunaCallRequires`';
+var sameGender = "~$arrOutDisplay.about.sameGender`";
 ~if isset($BREADCRUMB)`
 	var backLink =  '~$BREADCRUMB|decodevar`';
 ~else if $myPreView eq 1`

@@ -7,6 +7,10 @@
     var showMatchOfTheDay=~$showMatchOfTheDay`;
     var pageMyJs=~$pageMyJs`;   
     var myJsCacheTime = 60000;//in microseconds
+    ~if $apiData.membership_message.expiryDate neq ''`
+        var membershipPlanExpiry = "~$apiData.membership_message.expiryDate`";
+        var current = "~$currentTime`";
+    ~/if`
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -202,6 +206,20 @@
 <a href="~$IMG_URL`~$apiData.membership_message_link`">
     <div class="posrel pt20 pb20 newBgBand">
     <div class="posrel fullwid" style="top:0px; left:0px;">
+        ~if $apiData.membership_message.expiryDate neq ''`
+            <!--start:timer div-->
+            <div class="posabs white" style="right:14px; top:0">
+                <p class="f14 pl38 pb4">Valid for</p>
+                 <ul class="time">
+                     <li class="inscol"><span id='myjsM' style="font-size: 16px"></span><span>M</span></li>
+                        <li class=""><span id='mysjsS' style="font-size: 16px"></span><span>S</span></li>
+                    </ul>
+                 <div class="txtr pt5">
+                    <i class="mainsp" style="background-position: -323px -168px;width: 17px;height: 27px;"></i>
+                 </div>
+            </div>
+            <!--end:timer div-->
+        ~/if`
     	<div class="clearfix" style="padding:0 30px 0;">
         	<div class="fl fontlig wid88p">
             	<div class="f24 white">~$apiData.membership_message.top|decodevar`</div>
@@ -211,7 +229,9 @@
                 <div class="f14 white">~$apiData.membership_message.bottom|decodevar`</div>
             </div>
             <div class="fr wid10p">
-            	<div style="padding-top:26px"><i class="mainsp" style="background-position: -323px -168px;width: 17px;height: 27px;"></i></div>
+                ~if $apiData.membership_message.expiryDate eq ''`
+                    <div style="padding-top:26px"><i class="mainsp" style="background-position: -323px -168px;width: 17px;height: 27px;"></i></div>
+                ~/if`
             </div>
         
         </div>

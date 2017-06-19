@@ -83,6 +83,8 @@ class Consumer
 						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
 					);
       $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
+
+
     } 
     catch (Exception $exception) 
     {

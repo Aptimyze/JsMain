@@ -229,7 +229,6 @@ function SaveSub(json,attr)
 	var isValid=true;
 	var updatedJson="";
 	var isValidStateCity;
-	var isValidJamaat=true;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
@@ -239,11 +238,7 @@ function SaveSub(json,attr)
 	}
 	else
 		isValidStateCity = true;
-	if(validatorFormId=="Ethnicity")
-	{
-		isValidJamaat = jamaatRequired(key);
-	}
-	if(isValid && isValidStateCity && isValidJamaat){
+	if(isValid && isValidStateCity){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{
@@ -413,7 +408,15 @@ function getPlaceholder(key)
 	return text;
 }
 function UpdateOverlayTags(string,json,indexPos)
-{     
+{
+	if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"");
+	}     
+	else
+	{
+		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
+	}
         string=string.replace(/\{\{dindex\}\}/,"dindexpos=\""+indexPos+"\"");
 	if(json.action==2 ||json.action==3)
 	{
@@ -468,7 +471,6 @@ function UpdateOverlayTags(string,json,indexPos)
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
-		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
 		string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
@@ -601,7 +603,6 @@ function UpdateOverlayTags(string,json,indexPos)
 			}
 		}
 		else{
-			string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
 			textInputOverlay=$("#textInputOverlay").html();
 			textInputOverlay=textInputOverlay.replace(/json_key/g,json.key);
 			textInputOverlay=textInputOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");

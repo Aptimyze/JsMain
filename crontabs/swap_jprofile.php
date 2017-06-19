@@ -36,7 +36,7 @@ $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();
 
-$db=connect_ddl();
+$db=connect_db();
 mysql_query("set session wait_timeout=10000",$db);
 
 /*

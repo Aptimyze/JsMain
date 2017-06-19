@@ -50,7 +50,13 @@ function hideReportAbuse(){
 }
 
 function reportAbuse(index) {
-$("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    if(typeof(buttonSt)!='undefined' )
+        $("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    else {
+        var tempPhoto = $("#idd"+index+ " a img").attr('src');
+        $("#photoReportAbuse").attr("src", tempPhoto);
+
+            }
 $('.RAcorrectImg,#commonOverlayTop').hide();
 //$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
@@ -316,14 +322,33 @@ params["profilechecksum"] =input.val();
     }   
     
 function bindPrimeButtonClick(index)
-{      
+{
 	if(disablePrimary[index]==false)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
-          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
+      else  if(params["actionName"]=="IGNORE")
+      {
+          if(!profile_index[index] || !profile_index[index]['IGNORE']) {
+            if(!profile_index[index]) 
+              profile_index[index] = [];
+            var paramstr = $("#tracking"+index).val();
+            profile_index[index]['IGNORE'] = paramstr.split('=')[1];
+          }
+           
+
+          var paramsArr = {
+            blockArr: {
+              profilechecksum : $("#buttonInput"+index).val(),
+              action          : profile_index[index]['IGNORE']
+            }
+          };
+          disableOthers[index] = false;
+          performAction("IGNORE", paramsArr, index,true,1);
+          return false;
+      }
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
@@ -356,7 +381,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 		if(action=="REPORT_ABUSE"){
 		$('#'+action+"_"+index).bind("click",function(){
 				
-			reportAbuse();
+			reportAbuse(index);
 			
 			});
 		return;
@@ -488,6 +513,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
 			$("#loaderOverlay").show();
 		}
 		stopTouchEvents();
+                $(window).scrollTop('0px');
                 $("#contactLoader").show();
   }
     
@@ -520,7 +546,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       {                     
                             
                             if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
-                            else afterAction(result,action,index);
+                            else afterAction(result,action,index,isPrime);
       }
     }
   });
@@ -561,7 +587,7 @@ function afterActionMyjs(index,action,Params){
 }
 
 
-function afterAction(result,action, index){
+function afterAction(result,action, index,isPrime){
 	$("#selIndexId").val(index);
 	if($("#mainContent").length){
 		if(action!='MESSAGE')
@@ -570,10 +596,17 @@ function afterAction(result,action, index){
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
     if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
-	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
+        historyStoreObj.push(browserBackCommonOverlay,"#pushce");  
+    var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
+    if(ignoreFromPrime)
+    {
+        result.button_after_action.buttons = result.button_after_action.buttons.others;
+        result.buttondetails.button = result.buttondetails.buttons.primary[0];
+        
+    }
+    if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
-		if(result.actiondetails.errmsglabel!=null)
+		if(typeof result.actiondetails !='undefined' && result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
       var headerLabel = result.actiondetails.headerlabel;

@@ -9,7 +9,7 @@
         $profileObj[0] = Profile::getInstance('newjs_master',$viewedId);
         $profileObj[0]->getDetail("","","PHOTO_DISPLAY,PRIVACY,HAVEPHOTO,GENDER,AGE");
 	$pictureDisplayLogic = FieldMap::getFieldLabel('photo_display_logic', '', 1);
-//	$filterObj = new NEWJS_FILTER();
+//	$filterObj = new ProfileFilter();
 	$db = JsDbSharding::getShardNo('2');
 	$jpartner = new newjs_JPARTNER($db);
 	$contactsObj = new newjs_CONTACTS($db);

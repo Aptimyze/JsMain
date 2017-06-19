@@ -258,7 +258,9 @@ class DetailedViewApi
                 }
                 unset($nameOfUserObj);
         if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
-        	$this->m_arrOut['sameGender']=1;
+        	$this->m_arrOut['sameGender']=1;        
+    	else
+        	$this->m_arrOut['sameGender']=0;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		
@@ -379,8 +381,29 @@ class DetailedViewApi
             		$this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
             	}
             }
-        }
 
+            //thumbnail for self
+            if($viewerProfile)
+            {
+            	$selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();            	
+            	if($selfHavePhoto != "N")
+            	{
+            		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
+            		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+            		$this->ProfilePicUrl='';
+            		if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+            		{
+            			$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
+            			$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+            		}
+            	}      
+            	else
+            	{
+            		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
+            	}
+            	$this->m_arrOut["selfThumbnail"] = $this->thumbnailPic;
+            }
+        }
 	}
 	
 	/**
@@ -1245,6 +1268,12 @@ class DetailedViewApi
 			elseif($this->m_arrOut['dpp_state'])
 				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
                 }
+        $this->m_arrOut['dpp_diet'] = $jPartnerObj->getDecoratedPARTNER_DIET();
+       $this->m_arrOut['dpp_smoke'] = $jPartnerObj->getDecoratedPARTNER_SMOKE();
+       $this->m_arrOut['dpp_drink'] = $jPartnerObj->getDecoratedPARTNER_DRINK();
+       $this->m_arrOut['dpp_complexion']=$jPartnerObj->getDecoratedPARTNER_COMP();
+       $this->m_arrOut['dpp_btype'] = $jPartnerObj->getDecoratedPARTNER_BTYPE();
+       $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();
 	}
 	/**
 	 * getDecorated_Photo
