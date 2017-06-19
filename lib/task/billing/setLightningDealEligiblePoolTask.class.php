@@ -9,7 +9,7 @@
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
 	private $debug = 1;
-	private $logFilePath = "\tmp\lightningDeal.txt";
+	private $logFilePath = "";
 
 	protected function configure()
 	{
@@ -34,7 +34,7 @@ EOF;
 		if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-
+        $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDeal.txt';
         $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
