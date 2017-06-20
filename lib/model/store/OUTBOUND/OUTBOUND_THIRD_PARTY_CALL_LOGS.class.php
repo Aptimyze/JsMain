@@ -109,6 +109,20 @@ class OUTBOUND_THIRD_PARTY_CALL_LOGS extends TABLE {
     }
   }
 
+  public function updateCallResponse($callSid, $apiresponse)
+  {
+    try {
+      $sql = "UPDATE OUTBOUND.THIRD_PARTY_CALL_LOGS SET RESPONSE_FROM_THIRD_PARTY = '".$apiresponse."' WHERE CALLSID = '".$callSid."'";
+      $pdoStatement = $this->db->prepare($sql);
+
+      $pdoStatement->execute();
+
+      return true;
+    } catch (Exception $e) {
+      throw new jsException($e);
+    }
+  }
+
 }
 
 ?>

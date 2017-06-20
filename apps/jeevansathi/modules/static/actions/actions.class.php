@@ -2183,4 +2183,18 @@ if($k=="state_res")
     }
     die();
   }
+
+  public function executeOutboundCallStatusV1(sfWebRequest $request)
+  {
+    $CallSid = $request->getPostParameter('CallSid');
+    $Status = $request->getPostParameter('Status');
+    $RecordingUrl = $request->getPostParameter('RecordingUrl');
+    $DateUpdated = $request->getPostParameter('DateUpdated');
+
+    $totalResponse = 'Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl;
+
+    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
+    $storeObj->updateCallResponse($CallSid, $totalResponse);
+    die(x);
+  }
 }

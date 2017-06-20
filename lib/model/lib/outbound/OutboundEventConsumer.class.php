@@ -244,8 +244,8 @@ class OutboundEventConsumer {
     $callerId = '08039510994';
     $response = $this->callThirdPartyApi("08010619996", $callerId, $landingFlowId, $memberShipValue);
     
-    if(false !== $response) {
-      $this->logThisApiCall($iPgId, $verifiedNumber, $enEventType, $callerId, $landingFlowId, $response);
+    if(false !== $response['response']) {
+      $this->logThisApiCall($iPgId, $verifiedNumber, $enEventType, $callerId, $landingFlowId, $response['response'], $response['sid']);
     }
     $arrInfo['STATUS'] = OutBoundEventEnums::OUTBOUND_EVENT_STATUS_SUCCESS;
     $this->logThis("Success", $enEventType, $arrInfo);
@@ -340,6 +340,8 @@ class OutboundEventConsumer {
 
     $landingUrl = "http://my.exotel.in/exoml/start/{$landingFlowId}";
 
+    $callBackUrl = JsConstants::$siteUrl."/api/v1/static/outboundcallstatus";
+
     $post_data = array(
         'From' => $toUser,
         'CallerId' => $CallerId, //"<Your-Exotel-virtual-number>",
@@ -347,6 +349,7 @@ class OutboundEventConsumer {
         //'TimeOut' => "<time-in-seconds (optional)>",
         'CallType' => "trans", //Can be "trans" for transactional and "promo" for promotional content
         'Url' => $landingUrl,
+        'StatusCallback' => $callBackUrl,
         'CustomField' => $minMemberShipValue
     );
     
@@ -436,7 +439,7 @@ class OutboundEventConsumer {
    * @param type $szLandingFlowId
    * @param type $apiResponse
    */
-  private function logThisApiCall($szCalledUserId, $szPhoneNumber, $szEventType, $szCallerId, $szLandingFlowId, $apiResponse) 
+  private function logThisApiCall($szCalledUserId, $szPhoneNumber, $szEventType, $szCallerId, $szLandingFlowId, $apiResponse, $callSid) 
   {  
   
     $now = date('Y-m-d H:i:s');
@@ -447,7 +450,8 @@ class OutboundEventConsumer {
        "CALLER_ID" => $szCallerId,
        "LANDING_FLOW_ID" => $szLandingFlowId,
        "RESPONSE_FROM_THIRD_PARTY" => $apiResponse,
-       "DATE_TIME" => $now
+       "DATE_TIME" => $now,
+       "CALLSID" => $callSid,
       ); 
     
     $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
@@ -463,8 +467,9 @@ class OutboundEventConsumer {
     $xmlObj = simplexml_load_string($xmlString, "SimpleXMLElement");
     $json = json_encode($xmlObj);
     $array = json_decode($json,TRUE);
+    $callSid = $array["Call"]["Sid"];
     $response  = $array["Call"]["Status"].' - '.$array["Call"]["StartTime"];
-    return $response;
+    return array("response" =>$response,"sid"=>$callSid);
   }
 }
 

@@ -147,7 +147,8 @@ class RequestHandlerConfig
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
 		),
         "static" => array(
-          "membershippitch" => array("v1" => "MembershipPlanAudioV1"),  
+          "membershippitch" => array("v1" => "MembershipPlanAudioV1"),
+          "outboundcallstatus" => array("v1" => "OutboundCallStatusV1") 
         ),
 	);
 
