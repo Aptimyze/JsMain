@@ -85,9 +85,26 @@ class Membership
     private $assisted_arr = array();
     private $discount_percent;
     private $mtongue;
+    private $city_res;
+    private $country_res;
     private $serviceName;
     private $execName;
     private $supervisor;
+ 
+    function setCountry_res($country_res) {
+        $this->country_res = $country_res;
+    }
+    function getCountry_res() {
+        return $this->country_res;
+    }
+    
+    function setCity_res($city_res) {
+        $this->city_res = $city_res;
+    }
+    
+    function getCity_res() {
+        return $this->city_res;
+    }
     
     function setExecName($execName) {
         $this->execName = $execName;
@@ -703,7 +720,9 @@ class Membership
         } else {
             $this->generateBill($memUpgrade);
         }
-        
+        //Start:JSC-2925:Changes for GST
+        $this->logTaxBreakup();
+        //End:JSC-2925:Changes for GST
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateReceiptParams();
         }
@@ -839,10 +858,14 @@ class Membership
         }
 
         //Field for identifying the team to which sales belong
+        //Getting MTONGUE for storing in purchases
+        //Getting CITY_RES for storing in TAXBREAKUP and calculating tax
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE,CITY_RES,COUNTRY_RES');
         $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+        $this->city_res = $myrow_sales['CITY_RES'];
+        $this->country_res = $myrow_sales['COUNTRY_RES'];
     }
     
     function generateBill($memUpgrade = "NA") {
@@ -2583,5 +2606,30 @@ class Membership
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
+    
+    //Start:JSC-2925:Changes for GST
+    public function logTaxBreakup(){
+            $taxBreakupObj = new billing_TAXBREAKUP();
+            $paramsStr = "PROFILEID, BILLID, ENTRY_DT, CITY_RES, COUNTRY_RES";
+            $valuesStr = "'$this->profileid','$this->billid',now(),'$this->city_res','$this->country_res'";
+            
+            //Check for country to decide tax
+           if($this->country_res=="51"){
+                //Levy CGST + SGST in case of same state
+                if((($this->city_res=="" || empty($this->city_res)) || strstr($this->city_res, billingVariables::BILLING_STATE))){
+                    $paramsStr .= ", CGST, SGST";
+                    $cgstRate = billingVariables::CGST;
+                    $sgstRate = billingVariables::SGST;
+                    $valuesStr .= ", '$cgstRate', '$sgstRate'";
+                }//Levy IGST in case of other state and state is not empty
+                else if($this->city_res!="" && !empty($this->city_res)){
+                    $paramsStr .= ", IGST";
+                    $igstRate = billingVariables::IGST;
+                    $valuesStr .= ", '$igstRate'";
+                }
+            }
+            $taxBreakupObj->insertRecord($paramsStr,$valuesStr);
+    }
+    //End:JSC-2925:Changes for GST
 }
 ?>

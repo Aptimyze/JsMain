@@ -1602,7 +1602,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
-           
+
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1 || $lightningDealActive == 1) {
                 if($lightningDealActive == 1){
@@ -2004,9 +2004,10 @@ class MembershipHandler
         $endDate      = $vdDatesArr['EDATE'];
         $activationDt = $vdDatesArr['ENTRY_DT'];
         $todayDate    = date("Y-m-d");
+	$statusVd     = $vdDatesArr['STATUS'];
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
-        if (strtotime($startDate) == strtotime($todayDate)) {
+	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid) {
 
@@ -2410,20 +2411,39 @@ class MembershipHandler
     }
 
     public function calculateNewRenewalDiscountBasedOnPreviousTransaction($profileid, $discount_calc, $purDet) {
-        $billServObj    = new billing_SERVICES('newjs_slave');
-        $servDetailsArr = $billServObj->getServiceDetailsArr();
-        // Start - Logic to change renewal based on previous discount
-        $prevServPur = explode(",", $purDet['SERVICEID']);
+//Start: JSC-2938: Changes for actual billing amount
+//Old logic was fetching total amount from services table. So if price of service changes, wrong discount was being calculated.
+//New logic will fetch total amount from purchases(discount) + payment_details(amount) for actual amount that was billed 
+//
+//      //Start: ===Commentted for JSC-2938
+//      $billServObj    = new billing_SERVICES('newjs_slave');
+//      $servDetailsArr = $billServObj->getServiceDetailsArr();
+//      // Start - Logic to change renewal based on previous discount
+//      $prevServPur = explode(",", $purDet['SERVICEID']);
+//      $prevDiscAmt = $purDet['DISCOUNT'];
+//      if ($prevDiscAmt != 0) {
+//            $currency    = $purDet['CUR_TYPE'];
+//            foreach ($prevServPur as $val) {
+//                if ($currency == "RS") {
+//                    $prevTotAmt += $servDetailsArr[$val]['desktop_RS'];
+//                } else {
+//                    $prevTotAmt += $servDetailsArr[$val]['desktop_DOL'];
+//                }
+//            }
+//      //End: ===Commentted for JSC-29J38
+//      //Start: ===Logic to change renewal based on previous discount
         $prevDiscAmt = $purDet['DISCOUNT'];
         if ($prevDiscAmt != 0) {
-            $currency    = $purDet['CUR_TYPE'];
-            foreach ($prevServPur as $val) {
-                if ($currency == "RS") {
-                    $prevTotAmt += $servDetailsArr[$val]['desktop_RS'];
-                } else {
-                    $prevTotAmt += $servDetailsArr[$val]['desktop_DOL'];
-                }
-            }
+            $paymentDetailsObj = new BILLING_PAYMENT_DETAIL();
+            $billid = $purDet['BILLID'];
+            $billidArr = Array($purDet['BILLID']);
+            $details = $paymentDetailsObj->getAllDetailsForBillidArr($billidArr);
+            //print_r("Details: ". $details."\n");print_r($details);
+            
+            $prevAmt = $details[$billid]['AMOUNT'];
+            //Sum of amount in paymentdetails(which is after discount) and discount amount in purchases 
+            $prevTotAmt = $prevAmt + $prevDiscAmt;
+        //End: JSC-2938: Changes for getting actual billing amount
             $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
 	    if($prevDisc>=100){
 		$prevDisc =0;
@@ -2691,7 +2711,7 @@ class MembershipHandler
             $memCacheObject->remove($profileid . "_MEM_OCB_MESSAGE_API17");
             $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
             $memCacheObject->remove($profileid . "_MEM_SUBSTATUS_ARRAY");
-        }
+}
     }
     
     public function modifyResponseForLightningDeal($data,$source=''){

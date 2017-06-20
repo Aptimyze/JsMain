@@ -1024,11 +1024,14 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 10) == 1) //this needs to be changed as per requirement. Currently setting it to 10%users
-    		{
+    		$loggedInObj = LoggedInProfile::getInstance();
+    		$subscription = $loggedInObj->getSUBSCRIPTION();
+    		if($subscription != "" && ($profileId % 5) == 1)
+    		{    			
     			return true;
     		}
-    		return false;    		
+    		return false;
+    		    		
     	}    	
     	return false;
     }

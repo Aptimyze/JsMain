@@ -28,6 +28,12 @@ class billingVariables
     const NET_OFF_TAX_RATE = "0.130435";
     //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
+    
+    const GST = "18";
+    const SGST = "9";
+    const CGST = "9";
+    const IGST = "18";
+    const BILLING_STATE = "UP";
 }
 
 class memDiscountTypes 
@@ -78,7 +84,7 @@ class VariableParams
                                         "lastLightningDiscountViewedOffset" => 30,
                                         "pool2FilterPercent" => 10,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                        "activeOfferFlag" => true
+                                        "activeOfferFlag" => false
                                         );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
