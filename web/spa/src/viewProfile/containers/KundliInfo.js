@@ -99,7 +99,7 @@ class KundliInfo extends React.Component {
     	}
 
     	var horoscope;
-    	if(this.props.about.sameGender != 1) 
+    	if(this.props.about.sameGender != 1 && this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == "")) 
     	{
     		horoscope = <div className="clearfix pb20 pt20">
     		 {downloadHoroscope}
@@ -132,32 +132,6 @@ class KundliInfo extends React.Component {
     		</div>;
     	}
 
-    	var muslim_m;
-    	if(this.props.about.muslim_m) 
-    	{
-    		muslim_m = "?????";
-    	}
-
-
-    	var Religious;
-    	if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m) 
-    	{
-    		Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
-    			<div className="fl">
-    				<i className="vpro_sprite vpro_kund"></i>
-    			</div>
-     			<div className="fl color2 f14 vpro_padlTop">Religious Beliefs</div>
-     			<div className="clr hgt10"></div>
-     			{muslim_m}
-     			<div className="fontlig pb15" id="vpro_more_sikh">
-     				{this.props.about.sikh_m}
-     			</div>
-     			<div className="fontlig pb15" id="vpro_more_christian">
-     				{this.props.about.christian_m}
-     			</div>
-     		</div>;
-    	}
-
     	var kundliSection;
     	if(this.props.about.city_country || this.props.about.date_time || this.props.about.more_astro) 
     	{
@@ -172,6 +146,47 @@ class KundliInfo extends React.Component {
       			{more_astro}
     		</div>;
     	}
+
+        var muslim_m;
+        if(this.props.about.muslim_m) 
+        {  
+            let htmlStr = "<div id='vpro_muslim_m'>", muslimData = this.props.about.muslim_m, keyArray = Object.keys(muslimData);
+            for(var i=0; i<keyArray.length; i++) {
+                htmlStr += '<div class="f12 color1">'+keyArray[i]+'</div>';
+                htmlStr += '<div class="fontlig pb15">'+muslimData[keyArray[i]]+'</div>';
+            }
+            htmlStr += "</div>";
+            muslim_m = <div dangerouslySetInnerHTML={{__html: htmlStr}} />
+        }
+
+        var sikh_m;
+        if(this.props.about.sikh_m) {
+            sikh_m = <div className="fontlig pb15" id="vpro_more_sikh">
+                    {this.props.about.sikh_m}
+                </div>;
+        }
+
+        var christian_m;
+        if(this.props.about.christian_m) {
+            christian_m = <div className="fontlig pb15" id="vpro_more_christian">
+                    {this.props.about.christian_m}
+                </div>
+        }
+
+        var Religious;
+        if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m) 
+        {
+            Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
+                <div className="fl">
+                    <i className="vpro_sprite vpro_kund"></i>
+                </div>
+                <div className="fl color2 f14 vpro_padlTop">Religious Beliefs</div>
+                <div className="clr hgt10"></div>
+                {muslim_m}
+                {sikh_m}
+                {christian_m}
+            </div>;
+        }
     	
     	return(
     		<div>
@@ -191,7 +206,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         getGuna: (profilechecksum) => {
-            let call_url = "/api/v1/profile/gunascore?oprofile="+profilechecksum;
+            let call_url = "/api/v1/social/requestPhoto?profilechecksum="+profilechecksum;
             dispatch(commonApiCall(call_url,{},'SHOW_GUNA','GET'));
         }
     }

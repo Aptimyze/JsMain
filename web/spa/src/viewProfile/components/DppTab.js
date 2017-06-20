@@ -68,13 +68,16 @@ class DppTab extends React.Component {
             self_gender = "She";
         }
         var matchingCount = "";
-        if(this.props.dpp_Ticks.matching) {
-            matchingCount = this.props.dpp_Ticks.matching.matchingCount;
+        if(this.props.dpp_Ticks) {
+            if(this.props.dpp_Ticks.matching) {
+                matchingCount = this.props.dpp_Ticks.matching.matchingCount;
+            }    
         }
-
         var totalCount = "";
-        if(this.props.dpp_Ticks.matching) {
-            totalCount = this.props.dpp_Ticks.matching.totalCount;
+        if(this.props.dpp_Ticks) {
+            if(this.props.dpp_Ticks.matching) {
+                totalCount = this.props.dpp_Ticks.matching.totalCount;
+            }
         }
         var matching_header;
         if(this.props.dpp_Ticks && this.state.loginStatus) 
@@ -326,7 +329,7 @@ class DppTab extends React.Component {
 
     	return(
     		<div id="DppTab" className="dn">
-				<div className="pad5 bg4 fontlig color3 clearfix f14">
+				<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}
                     {dpp_height}
