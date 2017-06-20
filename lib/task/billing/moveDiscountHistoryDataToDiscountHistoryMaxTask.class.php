@@ -95,6 +95,7 @@ EOF;
         if($this->debug == 1){
             error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
         }
+        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed");
 	}
     
     public function sendAlertMail($to,$msgBody,$subject){
