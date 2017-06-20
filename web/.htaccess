@@ -1,5 +1,4 @@
 <IfModule mod_rewrite.c>
-
 Header add Access-Control-Allow-Credentials "true"
 RewriteEngine on
 RewriteOptions inherit

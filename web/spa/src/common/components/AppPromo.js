@@ -1,5 +1,6 @@
 import React from "react";
-import { getAndroidVersion, getIosVersion, getCookieData, writeCookie } from "../../common/components/commonFunctions"
+import { getAndroidVersion, getIosVersion} from "../../common/components/commonFunctions"
+import {getCookie,setCookie} from "../../common/components/CookieHelper";
 
 export default class AppPromo extends React.Component {	
 	constructor(props) {
@@ -20,7 +21,7 @@ export default class AppPromo extends React.Component {
     	let _this = this;
     	if(this.state.parentComp == "LoginPage") {
     		let AppPromo = true;
-    		if(getCookieData("AppPromo")) {
+    		if(getCookie("AppPromo")) {
     			AppPromo = false;
     		} 
     		if(AppPromo == true) {
@@ -28,7 +29,7 @@ export default class AppPromo extends React.Component {
 			       document.getElementById("AppPromo").classList.remove("ham_minu20");
 			       document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
 	    		}, 10);
-	    		writeCookie("AppPromo","jeevansathi",3); 
+	    		setCookie("AppPromo","jeevansathi",3); 
     		}
     	} else if(this.state.parentComp == "others") {
     		setTimeout(function(){ 

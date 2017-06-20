@@ -3,12 +3,14 @@ import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "../components/MyjsEditBar";
 import MyjsSlider from "../components/MyjsSliderBar";
 import AcceptCount from '../components/MyjsAcceptcount';
-import MyjsProfileVisitor from './MyjsProfileVisitor'
+import ProfileVisitor from '../components/MyjsProfileVisitor';
+import InterestExp from '../components/MyjsInterestExp';
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
+import Loader from "../../common/components/Loader";
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -44,6 +46,10 @@ export  class MyjsPage extends React.Component {
 		}
 
 	componentWillReceiveProps(nextProps){
+		this.setState ({
+                showLoader : false
+            })
+		
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
 			this.props.history.push('/login');
@@ -64,11 +70,11 @@ export  class MyjsPage extends React.Component {
 			// test for each property
 			for (var i in props) {
 					if (div.style[props[i]] !== undefined) {
-						var cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+						var cssPrefix = props[i].replace('Perspective', '');
 							this.setState({
 								cssProps:{
 									cssPrefix : cssPrefix,
-									animProp : '-' + cssPrefix + '-transform'
+									animProp :cssPrefix + 'Transform'
 								}
 					});
 			}
@@ -93,8 +99,6 @@ export  class MyjsPage extends React.Component {
 											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received} showPD={this.getStateValue} />
 										</div>
 						</div>
-
-
 			</div>
 	</div>
 

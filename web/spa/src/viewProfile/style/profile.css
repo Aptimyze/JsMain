@@ -236,4 +236,19 @@ padding: 10px 15px ;
 .VPimg{width:60px; height: 60px; border-radius: 30px}
 .greenText{color: green}
 .redText{color: red}
-
+.galleryCamera{    background-position: -4px -292px;
+    width: 25px;
+    height: 20px;}
+.bgTransGrey{background: rgba(45,60,70,0.5);}
+.srp_pad1 {
+    padding: 5px 10px;
+}
+.srp_pos3 {
+    top: 90px;
+    right: 20px;
+}
+.verified {
+    background-position: -55px -311px;
+    width: 28px;
+    height: 35px;
+}

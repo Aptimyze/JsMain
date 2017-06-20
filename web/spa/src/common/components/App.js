@@ -25,7 +25,8 @@ const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
-
+const PhotoAlbumPage = asyncComponent(() => import('./../../photoAlbum/containers/PhotoAlbumPage')
+  .then(module => module.default), { name: 'PhotoAlbumPage' });
 
 
 const hash = getRoutePath(window.location.href);
@@ -52,9 +53,10 @@ class App extends React.Component
       <Router>
       <div>
       {redirectToHashUrl}
+      <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/login' component= {LoginPage}/>
       <Route path='/viewProfile' component={ProfilePage} />
-      <Route path="/" component={EnsureLoggedInContainer}/>
+      <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />
       </div>
       </Router>
       </div>);
