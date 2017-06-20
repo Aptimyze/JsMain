@@ -1,17 +1,19 @@
 require ('../style/profile.css')
+
 import React from "react";
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+
 import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import TopError from "../../common/components/TopError";
-import PhotoView from "../../common/components/PhotoView";
+import PhotoView from "../../common/containers/PhotoView";
 import AboutTab from"../components/AboutTab";
 import FamilyTab from"../components/FamilyTab";
 import DppTab from"../components/DppTab";
 import CommHistory from "./CommHistory";
-import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
-
-
+import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
+import {getCookie} from '../../common/components/CookieHelper';
 
 class ProfilePage extends React.Component {
 
@@ -25,10 +27,16 @@ class ProfilePage extends React.Component {
             showPromo: false,
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
-            picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto",
             showHistory: false,
-            profilechecksum: "ff316970209a2dfd3ea91bf29b1f791ei117296"
+            profilechecksum: "f0acc30e3f8794558209b01c0bee23d3i6467012",
+            gender: "M"
         };
+        if(localStorage.getItem('GENDER') == "F") {
+            this.setState({
+                gender: "F",
+                //picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
+            });
+        }
         props.showProfile(this.state.profilechecksum);   
     }
 
@@ -39,10 +47,17 @@ class ProfilePage extends React.Component {
     } 
     
     componentWillReceiveProps(nextProps)
-    {
+    {   
+        if(!nextProps.pic.url) {
+            if(this.state.gender == "M") {
+               nextProps.pic.url = "http://test.jeevansathi.com/images/picture/450x600_f.png?noPhoto"
+            } else {
+                nextProps.pic.url = "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
+            }
+        }
         this.setState ({
             dataLoaded : true,
-            picUrl: nextProps.pic.url
+            pic: nextProps.pic
         });  
         if(nextProps.appPromotion == true) {
             this.setState ({
@@ -102,6 +117,16 @@ class ProfilePage extends React.Component {
     }
 
     render() {
+        var himHer = "him";
+        if(this.state.gender == "M") {
+            himHer = "her";
+        }
+        var historyIcon;
+        if(getCookie("AUTHCHECKSUM")) {
+            historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
+                <i className="vpro_sprite vpro_comHisIcon cursp"></i>
+            </div>;
+        }
         var errorView;
         if(this.state.insertError)          
         {
@@ -120,13 +145,17 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-        var AboutView,FamilyView,DppView,Header = "View Profile";
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
         if(this.state.dataLoaded)
         {   
             AboutView = <AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
+
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
+
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
 
+            photoView = <PhotoView verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.props.pic}></PhotoView>; 
+                   
             if(this.props.AboutInfo.name_of_user) 
             {
                 Header = this.props.AboutInfo.name_of_user;
@@ -157,18 +186,18 @@ class ProfilePage extends React.Component {
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
                                     {Header} 
                                 </div>
-                                <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
-                                    <i className="vpro_sprite vpro_comHisIcon cursp"></i>
-                                </div>
+                                {historyIcon}
                             </div>
                         </div>
                     </div> 
-                    <div id="photoParent" className="fullwid scrollhid">
-                        <PhotoView src={this.state.picUrl}></PhotoView> 
-                    </div>
+                    <Link to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                        <div id="photoParent" className="fullwid scrollhid">
+                            {photoView}
+                        </div>
+                    </Link>
                     <div id="tab" className="fullwid tabBckImage posabs mtn39">
                         <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
-                            <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  him </div>
+                            <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
                             <div id="FamilyHeader" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
                             <div id="DppHeader" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
                             <div className="clr"></div>

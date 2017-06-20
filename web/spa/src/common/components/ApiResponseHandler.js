@@ -14,6 +14,7 @@ export  function commonApiCall(callUrl,data,reducer,method)
     let checkSumURL = '';
     if ( aChsum )
     {
+
       if ( callUrl.indexOf("?") == -1 )
       {
         checkSumURL = '?AUTHCHECKSUM='+aChsum;
@@ -32,7 +33,6 @@ export  function commonApiCall(callUrl,data,reducer,method)
       'withCredentials':true
     },
   }).then( (response) => {
-      console.log(response);
       if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
         setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 

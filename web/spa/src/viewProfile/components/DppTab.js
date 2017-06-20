@@ -3,7 +3,9 @@ import {getCookie} from '../../common/components/CookieHelper';
 
 class DppTab extends React.Component {
 	constructor(props) {
+        console.log("dpp",props)
         super();
+        console.log(props)
         let loginStatus = false;
         if(getCookie("AUTHCHECKSUM")) {
             loginStatus = true;
@@ -68,13 +70,16 @@ class DppTab extends React.Component {
             self_gender = "She";
         }
         var matchingCount = "";
-        if(this.props.dpp_Ticks.matching) {
-            matchingCount = this.props.dpp_Ticks.matching.matchingCount;
+        if(this.props.dpp_Ticks) {
+            if(this.props.dpp_Ticks.matching) {
+                matchingCount = this.props.dpp_Ticks.matching.matchingCount;
+            }    
         }
-
         var totalCount = "";
-        if(this.props.dpp_Ticks.matching) {
-            totalCount = this.props.dpp_Ticks.matching.totalCount;
+        if(this.props.dpp_Ticks) {
+            if(this.props.dpp_Ticks.matching) {
+                totalCount = this.props.dpp_Ticks.matching.totalCount;
+            }
         }
         var matching_header;
         if(this.props.dpp_Ticks && this.state.loginStatus) 
