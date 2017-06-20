@@ -99,7 +99,7 @@ class KundliInfo extends React.Component {
     	}
 
     	var horoscope;
-    	if(this.props.about.sameGender != 1) 
+    	if(this.props.about.sameGender != 1 && this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == "")) 
     	{
     		horoscope = <div className="clearfix pb20 pt20">
     		 {downloadHoroscope}

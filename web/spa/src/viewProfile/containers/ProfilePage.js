@@ -178,7 +178,7 @@ class ProfilePage extends React.Component {
                 {errorView}
                 {loaderView}
                 {historyView}
-                <div className="fullheight" id="mainContent">
+                <div className="fullheight bg4" id="mainContent">
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">

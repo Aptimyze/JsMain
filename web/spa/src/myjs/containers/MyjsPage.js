@@ -3,7 +3,8 @@ import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "../components/MyjsEditBar";
 import MyjsSlider from "../components/MyjsSliderBar";
 import AcceptCount from '../components/MyjsAcceptcount';
-import MyjsProfileVisitor from './MyjsProfileVisitor'
+import ProfileVisitor from '../components/MyjsProfileVisitor';
+import InterestExp from '../components/MyjsInterestExp';
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
@@ -47,11 +48,11 @@ export  class MyjsPage extends React.Component {
 			// test for each property
 			for (var i in props) {
 					if (div.style[props[i]] !== undefined) {
-						var cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+						var cssPrefix = props[i].replace('Perspective', '');
 							this.setState({
 								cssProps:{
 									cssPrefix : cssPrefix,
-									animProp : '-' + cssPrefix + '-transform'
+									animProp :cssPrefix + 'Transform'
 								}
 					});
 			}
@@ -67,16 +68,17 @@ export  class MyjsPage extends React.Component {
   		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
-							<div className="" id="pcontainer">
-							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
-							<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
-							<AcceptCount fetched={this.props.reducerData.fetched} acceptance={this.props.reducerData.apiData.all_acceptance} justjoined={this.props.reducerData.apiData.just_joined_matches}/>
-							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
-							<div id="interestReceivedPresent" className="setWidth sliderc1">
-									<div className="pad1">
-											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
-										</div>
-						</div>
+								<div className="" id="pcontainer">
+								<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
+								<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
+								<AcceptCount fetched={this.props.reducerData.fetched} acceptance={this.props.reducerData.apiData.all_acceptance} justjoined={this.props.reducerData.apiData.just_joined_matches}/>
+
+								<InterestExp fetched={this.props.reducerData.fetched} int_exp_list={this.props.reducerData.apiData.interest_expiring}  />
+
+
+
+								<ProfileVisitor fetched={this.props.reducerData.fetched} responseMessage={this.props.reducerData.apiData.responseMessage} visitor={this.props.reducerData.apiData.visitors}/>
+
 
 
 
