@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom"; 
 
 var slides1={
   "whiteSpace": "nowrap",
@@ -24,12 +25,7 @@ export default class MyjsSlider extends React.Component {
     super(props);
   }
 
-  loadPD(){
-         // this.props.showPD(true);
-  }
-
   render(){
-    console.log(this.props.listing);
     if(!this.props.listing.tuples) {
       return <div></div>;
     }
@@ -56,8 +52,8 @@ export default class MyjsSlider extends React.Component {
                         <img className="srp_box2 contactLoader posabs dispnone top65" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
 
                         <div className="bg4 overXHidden" id="hideOnAction">
-                            <div id="detailedProfileRedirect" onClick={()=>this.loadPD()}>
-                            // "/profile/viewprofile.php?profilechecksum=35bdf5156711174170753bd3b9aeaaffi16331617&amp;responseTracking=undefined&amp;total_rec=16&amp;actual_offset=1&amp;contact_id=13171207_MATCH_ALERT">
+                            <Link to={"/viewProfile?profilechecksum="+this.props.listing.tuples[0].profilechecksum}>
+                            <div id="detailedProfileRedirect">
                               <div className="pad16 scrollhid hgt140">
                               <div className="overXHidden fullheight">
                                 <div className="whitewid200p overflowWrap">
@@ -93,9 +89,9 @@ export default class MyjsSlider extends React.Component {
                               </div>
                             </div>
 
-
+                            
                             </div>
-
+                            </Link>
                         </div>
 
 

@@ -3,7 +3,7 @@ import MyjsHeadHTML from "../components/MyjsHeader";
 import EditBar from "../components/MyjsEditBar";
 import MyjsSlider from "../components/MyjsSliderBar";
 import AcceptCount from '../components/MyjsAcceptcount';
-import ProfileVisitor from '../components/MyjsProfileVisitor';
+import MyjsProfileVisitor from '../components/MyjsProfileVisitor';
 import InterestExp from '../components/MyjsInterestExp';
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
@@ -21,25 +21,9 @@ export  class MyjsPage extends React.Component {
   		super();
 			this.state=
 			{
-				showPD1: false
 			}
 
   	}
-
-  	getStateValue(val){
-  			console.log('h1');
-  			console.log(val);
-  			return val;
-   	}
-
-   	loadPDPage(){   		
-   		this.setState({
-   			showPD1: this.getStateValue()
-   		});
-   		// this.props.reducerData.showPD = this.getStateValue();
-   		// console.log('dsdsds');
-   		// return this.props.reducerData.showPD;
-   	}
 
   	componentDidMount(){
 			this.props.hitApi();
@@ -54,7 +38,6 @@ export  class MyjsPage extends React.Component {
 			removeCookie('AUTHCHECKSUM');
 			this.props.history.push('/login');
 		}			
-		this.loadPDPage();
 	}
 
 	componentWillMount(){
@@ -96,7 +79,7 @@ export  class MyjsPage extends React.Component {
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
 							<div id="interestReceivedPresent" className="setWidth sliderc1">
 									<div className="pad1">
-											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received} showPD={this.getStateValue} />
+											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}/>
 										</div>
 						</div>
 			</div>
