@@ -4,6 +4,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 class DppTab extends React.Component {
 	constructor(props) {
         super();
+        console.log(props)
         let loginStatus = false;
         if(getCookie("AUTHCHECKSUM")) {
             loginStatus = true;

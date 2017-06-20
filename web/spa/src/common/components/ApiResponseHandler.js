@@ -2,7 +2,7 @@ import * as CONSTANTS from '../../common/constants/apiConstants'
 import React from 'react';
 import {push} from 'react-router-redux';
 import {getCookie,setCookie} from "../../common/components/CookieHelper";
-
+import axios from "axios";
 
 export  function commonApiCall(callUrl,data,reducer,method)
 {
@@ -12,29 +12,39 @@ export  function commonApiCall(callUrl,data,reducer,method)
   {
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
-    if ( aChsum && callUrl.indexOf("?") == -1)
+    if ( aChsum )
     {
-      checkSumURL = '?AUTHCHECKSUM='+aChsum;
-    } else {
-      checkSumURL = '&AUTHCHECKSUM='+aChsum;
-    }
 
-    fetch( CONSTANTS.API_SERVER +callUrl + checkSumURL, // PLEASE ENSURE THIS DOESNT GO LIVE AS WE CANNOT EXPOSE ACHSUM IN THE URL FIELD, THIS HAS TO GO IN THE COOKIE ITSELF WHICH WILL BE RESOLVED WITH PRODUCTION BUILD AUTOMATICALLY
+      if ( callUrl.indexOf("?") == -1 )
       {
-      method: callMethod,
-      headers: {
-        'Accept': 'application/json',
-      }      
+        checkSumURL = '?AUTHCHECKSUM='+aChsum;
+      } 
+      else 
+      {
+        checkSumURL = '&AUTHCHECKSUM='+aChsum;
+      }
+    }
+    axios({
+    method: callMethod,
+    url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
+    data: '',
+    headers: { 
+      'Accept': 'application/json',
+      'withCredentials':true
+    },
+  }).then( (response) => {
+      if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
+        setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
-    })
-    .then(response => response.json())
-    .then( (response) => {
-      if ( response.AUTHCHECKSUM ){
-        setCookie('AUTHCHECKSUM',response.AUTHCHECKSUM);
+        if ( response.data.GENDER && response.data.USERNAME )
+        {
+          localStorage.setItem('GENDER',response.data.GENDER);
+          localStorage.setItem('USERNAME',response.data.USERNAME);
+        }
       }
       dispatch({
         type: reducer,
-        payload: response
+        payload: response.data
       });
     })
     .catch( (error) => {

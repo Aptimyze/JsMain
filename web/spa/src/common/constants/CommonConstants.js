@@ -1,2 +1,6 @@
 export const SET_AUTHCHECKSUM =  'SET_AUTHCHECKSUM';
 export const AUTHCHECKSUM =  'AUTHCHECKSUM';
+export const LOGIN_ATTEMPT_COOKIE =  'loginAttemptNew';
+export const DISPLAY_PROPS = {windowWidth : window.innerWidth};
+window.addEventListener('resize',()=>{DISPLAY_PROPS.windowWidth = window.innerWidth;});
+
