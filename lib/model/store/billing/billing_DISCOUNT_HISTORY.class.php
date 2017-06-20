@@ -95,7 +95,7 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
             $res->execute();
             while($result = $res->fetch(PDO::FETCH_ASSOC)){
-                if(! ($result['P_MAX'] == 0 && $result['C_MAX'] == 0 && $result['NCP_MAX'] == 0 && $result['X_MAX'] == 0) )
+                if(!($result["P_MAX"]==0 && $result["C_MAX"]==0 && $result["NCP_MAX"]==0 && $result["X_MAX"]==0))
                     $profilesArr[$result['PROFILEID']] = $result;
             }
             return $profilesArr;
@@ -104,4 +104,38 @@ class billing_DISCOUNT_HISTORY extends TABLE{
             throw new jsException($e);
         }
     }
+    
+    public function getDistinctProfileIds($lessThanDate,$greaterThanDate = ""){
+        if(!($lessThanDate || $greaterThanDate)){
+            throw new jsException("","No date Passed in getDistinctProfileIds");
+        }
+        $sql = "SELECT DISTINCT PROFILEID FROM billing.DISCOUNT_HISTORY WHERE DATE <=:END_DATE";
+        if($greaterThanDate ){
+            $sql.=" AND DATE >= :START_DATE";
+        }
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":END_DATE",$lessThanDate,PDO::PARAM_STR);
+        if($greaterThanDate ){
+            $res->bindValue(":START_DATE",$greaterThanDate,PDO::PARAM_STR);
+        }
+        $res->execute();
+        while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                $output[]=$result["PROFILEID"];
+        }
+        return $output;
+    }
+    
+    public function getDetailsForProfileid($profileid){
+        if($profileid){
+            $sql = "SELECT * FROM billing.DISCOUNT_HISTORY WHERE PROFILEID = :PROFILEID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":PROFILEID",intval($profileid),PDO::PARAM_INT);
+            $res->execute();
+            while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                $result[] = $row;
+            }
+            return $result;
+        }
+    }
+            
 }
