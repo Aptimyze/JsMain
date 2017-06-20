@@ -107,7 +107,7 @@ class billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG extends TABLE{
 			throw new jsException($e);
 		}
 	}
-	public function insertVdSmsSchedule($entry_dt_arr, $no_of_times){
+	public function insertVdNotificationSchedule($entry_dt_arr, $no_of_times){
 		try
 		{
 			foreach($entry_dt_arr as $k => $entry_dt) {

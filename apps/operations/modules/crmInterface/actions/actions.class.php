@@ -210,9 +210,9 @@ class crmInterfaceActions extends sfActions
         $formArr   = $request->getParameterHolder()->getAll();
         $this->cid = $formArr['cid'];
 
-        $vdSmsLogObj = new billing_VARIABLE_DISCOUNT_SMS_LOG();
-        if ($vdSmsLogObj->isStatusY()) {
-            $this->errorMsg0 = "SMS is already scheduled.";
+        $vdNotificationLogObj = new billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG();
+        if ($vdNotificationLogObj->isStatusY()) {
+            $this->errorMsg0 = "VD Notification is already scheduled.";
         } else {
             if ($formArr['frequency']) {
                 $this->frequency    = $formArr['frequency'];
@@ -224,7 +224,6 @@ class crmInterfaceActions extends sfActions
                 }
             }
             if ($formArr['isDone']) {
-
                 $dateArr = $formArr['selectedDateArr'];
                 for ($j = 0; $j < count($dateArr); $j++) {
                     if ($dateArr[$j] > $dateArr[$j + 1]) {
@@ -244,12 +243,12 @@ class crmInterfaceActions extends sfActions
 
                         $selectedDateArr[$k] = date('Y-m-d', strtotime($dd));
                     }
-                    $vdSmsLogObj->insertVdSmsSchedule($selectedDateArr, $formArr['frequency']);
+                    $vdNotificationLogObj->insertVdNotificationSchedule($selectedDateArr, $formArr['frequency']);
                     $this->successMsg = "Updated successfully ...";
                 }
             }
         }
-        unset($vdSmsLogObj);
+        unset($vdNotificationLogObj);
     }
 
     // Schedule VD Mailer
