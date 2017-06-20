@@ -17,9 +17,6 @@ class VerifiedVisit extends React.Component {
         props.showVerifiedData(props.profilechecksum);   
     }
 
-    componentDidMount() {
-    } 
-    
     componentWillReceiveProps(nextProps)
     {   
         if(nextProps.documentsVerified) {
@@ -30,6 +27,10 @@ class VerifiedVisit extends React.Component {
         this.setState({
             dataLoaded: true
         });
+    }
+    navigateStatic(e) {
+        e.preventDefault();
+        window.location.href = "https://www.jeevansathi.com/static/jsmsVerificationStaticPage";
     }
     closeOverlay(e) {
         e.preventDefault();
@@ -59,7 +60,7 @@ class VerifiedVisit extends React.Component {
                         <div className="f15 fb color11">Profile is verified by visit
                         </div>
                     <div className="loadStaticPage">
-                        <div className="f13 color2 pt10">What is this?</div>
+                        <div onClick={(e) => this.navigateStatic(e)} className="f13 color2 pt10">What is this?</div>
                     </div>
                     {docsData}
                 </div>
