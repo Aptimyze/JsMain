@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony billing:moveDiscountHistoryDataToDiscountHistoryMax
+command=${php5} ${docRoot}/symfony billing:moveDiscountHistoryDataToDiscountHistoryMaxTask
