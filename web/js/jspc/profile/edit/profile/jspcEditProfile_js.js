@@ -5269,7 +5269,7 @@ updateEduLevelChanges =function(eduLevelVal)
                                 if(hideClass != "msg2" && editedFields.hasOwnProperty(CRITICAL) && editedFields[CRITICAL].hasOwnProperty("MSTATUS") ){
                                         var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
                                         var Mstatus = editedFields[CRITICAL]['MSTATUS'];
-                                        if((prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
+                                        if((prevMstatus == "N" && Mstatus != "N") || prevMstatus != "N" && Mstatus == "N"){
                                                 showClass = "msg1";
                                                 hideClass = "msg2";
                                         }

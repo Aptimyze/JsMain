@@ -331,7 +331,7 @@ try{
                         $deleteInterest = 1;
                 }
         }
-        if(($prevMstatus == "N" && $mstatus == "M") || $prevMstatus == "M" && $mstatus == "N"){
+        if(($prevMstatus == "N" && $mstatus != "N") || $prevMstatus != "N" && $mstatus == "N"){
                 $deleteInterest = 1;
         }
         if($deleteInterest == 1){
