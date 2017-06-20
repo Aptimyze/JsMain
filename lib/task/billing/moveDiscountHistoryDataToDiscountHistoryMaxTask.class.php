@@ -42,6 +42,7 @@ EOF;
         $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
         $discHistMaxObj->truncateTable();
         
+        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "Discount History Max table truncated", "Discount History Max table truncated");
         if($this->debug == 1){
             error_log("Discount History Max Table truncated.\nGetting Distinct Profileids\nTime:$currentTime"."\n",3,$this->logFilePath);
         }
@@ -95,5 +96,11 @@ EOF;
             error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
         }
 	}
+    
+    public function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+    }
 }
 ?>
