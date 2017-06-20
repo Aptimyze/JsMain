@@ -2173,12 +2173,13 @@ if($k=="state_res")
     if($memberShipValue > 0) {
       $arrOut[] = $memberShipValue;
     }
-    
+    // content type required is text/plain
+    header("Content-type: text/plain");
     /**
      * 
      */
     foreach($arrOut as $val) {
-      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"<br/>";
+      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"\n";
     }
     die();
   }
