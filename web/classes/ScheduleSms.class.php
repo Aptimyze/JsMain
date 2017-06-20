@@ -1574,7 +1574,7 @@ class ScheduleSms
             	$vdDiscountSmsLog 	=new billing_VARIABLE_DISCOUNT_SMS_LOG();
 
                 $variableDiscountObj 	=new VariableDiscount();
-                error_log("ankita confirm what to pass in input,profileid");
+                
                 $durationArr =$variableDiscountObj->getActiveDurations();
 
 		$smsLogDetails	=$vdDiscountSmsLog->getFrequencyAndTimes($entry_dt);		
