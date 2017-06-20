@@ -51,9 +51,6 @@ export default class ProfileVisitor extends React.Component{
         super();
   }
   render(){
-    console.log('visitor');
-    console.log(this.props);
-    console.log(this.props.visitor.tuples);
     if(!this.props.fetched)
     {
 
@@ -79,6 +76,6 @@ export default class ProfileVisitor extends React.Component{
       </div>
 
     );
-myjsp1
+
   }
 }
