@@ -74,5 +74,15 @@ class billing_DISCOUNT_HISTORY_MAX extends TABLE{
             throw new jsException($e);
         }
     }
+    
+    public function truncateTable(){
+        try{
+            $sql = "TRUNCATE TABLE billing.DISCOUNT_HISTORY_MAX";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
 ?>
