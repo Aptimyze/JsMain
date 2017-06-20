@@ -6,9 +6,12 @@ export class MyjsShowVisitors extends React.Component{
       "width":"60px",
       "height":"60px"
     }
+    console.log('visitor');
+    console.log(this.props.tuplesvalues.length);
 
 
     let count = (this.props.tuplesvalues.length<=3)?this.props.tuplesvalues.length: 3;
+
 
       let VisitorsListing;
 
@@ -16,7 +19,7 @@ export class MyjsShowVisitors extends React.Component{
     {
       VisitorsListing=    <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
           <div className="bg7 txtc disptbl" style={style1}>
-            <div className="dispcell fontlig f18 white lh0 vertmid">+46</div>
+            <div className="dispcell fontlig f18 white lh0 vertmid">+{this.props.totalvisitors-3}</div>
           </div>
         </a></div>
 
@@ -48,19 +51,15 @@ export class MyjsShowVisitors extends React.Component{
 
 }
 
-export default class MyjsProfileVisitor extends React.Component{
+export default class ProfileVisitor extends React.Component{
   constructor(props) {
         super();
   }
   render(){
-    console.log('MyjsProfileVisitor');
-    //console.log(this.props);
-    // console.log(this.props.visitor.new_count);
-    //console.log(!this.props.visitor.tuples);
     if(!this.props.fetched)
     {
 
-      return (<div>1</div>);
+      return (<div></div>);
     }
     return (
       <div className="setWidth mt10" id="visitorPresent">
@@ -68,15 +67,15 @@ export default class MyjsProfileVisitor extends React.Component{
           <div className="fullwid pt15 pb10">
             <div className="f17 fontlig color7">Profile Visitors</div>
           </div>
-          <div className="pad16">
+          <div className="myjsp1">
             <div className="fullwid">
-              <MyjsShowVisitors tuplesvalues={this.props.visitor.tuples}/>
+              <MyjsShowVisitors tuplesvalues={this.props.visitor.tuples} totalvisitors={this.props.visitor.new_count}/>
             </div>
           </div>
         </div>
       </div>
 
     );
-
+myjsp1
   }
 }
