@@ -35,6 +35,8 @@ EOF;
             sfContext::createInstance($this->configuration);
         }
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDeal.txt';
+        shell_exec("echo '' > ".$this->logFilePath."");
+        
         $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
