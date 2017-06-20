@@ -6,11 +6,11 @@ export class ShowExpiryList extends React.Component {
   constructor(props) {
     super();
   }
-  
+
   render(){
     let countTuple = (this.props.tuples.length<=3)?this.props.tuples.length: 3;
     //let dim =   Math.round(((window.innerWidth-30)/4)-20);
-  //  let setdim = {width:"60px" , height:"60px" };
+  let setdim = {width:"60px" , height:"60px" };
       let IntExpListing;
     if(this.props.tuples.length>4)
     {
