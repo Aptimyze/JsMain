@@ -84,27 +84,23 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 
 selectedReportAbuse="";
 RAOtherReasons=0;
-
+mainReasonAbuse = "";
 
 $(".reportAbuseOption").unbind().bind('click',function () {
 
-if($(this).attr('id')=='js-otherReasons')
+if($(this).attr('id')=='js-otherReasons' || $(this).attr('id')!='notOpen')
 {
 el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
+$("#js-otherReasonsLayer").removeClass('dispnone').val('');
 }
-else 
-{
-	selectedReportAbuse=$(this).text();RAOtherReasons=0;
-}
+
+mainReasonAbuse=$(this).text();
 $('.RAcorrectImg').hide();
 $(this).find('.RAcorrectImg').show();
 });
-
-
-
 
 
 $("#reportAbuseSubmit").unbind().bind('click',function() {
@@ -115,17 +111,18 @@ if(RAOtherReasons)
 {
 	reason=$("#js-otherReasonsLayer").val();
    
-	if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
 }
 else {
-	reason=selectedReportAbuse;
-if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+	if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
 reason=$.trim(reason);
+mainReasonAbuse = $.trim(mainReasonAbuse);
 //feed.message:as sdf sd f
 feed.category='Abuse';
+feed.mainReason = mainReasonAbuse;
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
