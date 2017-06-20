@@ -8,12 +8,17 @@ export class ShowExpiryList extends React.Component {
   }
 
   render(){
-    let countTuple = (this.props.tuples.length<=3)?this.props.tuples.length: 3;
-    //let dim =   Math.round(((window.innerWidth-30)/4)-20);
-  let setdim = {width:"60px" , height:"60px" };
-      let IntExpListing;
-    if(this.props.tuples.length>4)
-    {
+    console.log('expire');
+    console.log(this.props.tuples);
+
+
+
+
+   let countTuple = (this.props.tuples.length<=3)?this.props.tuples.length: 3;
+   let setdim = {width:"60px" , height:"60px" };
+   let IntExpListing;
+   if(this.props.tuples.length>4)
+   {
       IntExpListing=    <div className="mar05 dispibl">
         <div className="row mar05 bg7 brdr50p posrel outerCircleDiv" style={setdim}>
           <div className="cell vmid white fullwid f23 fontlig txtc">
@@ -26,8 +31,6 @@ export class ShowExpiryList extends React.Component {
     {
       IntExpListing = <div></div>;
     }
-
-
     return(
         <div>
           {this.props.tuples.slice(0,countTuple).map(function(tuple){
@@ -57,11 +60,17 @@ export class ShowExpiryList extends React.Component {
 
 export default class InterestExp extends React.Component{
   render(){
+    console.log(this.props.int_exp_list);
+
 
     if(!this.props.fetched)
     {
 
-      return (<div></div>);
+      return (<div className="fetchfalse"></div>);
+    }
+    else if(this.props.int_exp_list===undefined)
+    {
+        return (<div className="noData"></div>);
     }
     return(
       <div className="mt15 bg4">
@@ -69,13 +78,6 @@ export default class InterestExp extends React.Component{
         <div className="pad015">
           <div className="fullwid">
             <ShowExpiryList tuples={this.props.int_exp_list.tuples} totalcount={this.props.int_exp_list.view_all_count} />
-
-
-
-
-
-
-
           </div>
         </div>
 
