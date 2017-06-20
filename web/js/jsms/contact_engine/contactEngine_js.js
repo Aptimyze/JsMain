@@ -109,7 +109,7 @@ var reason="";
 
 if(RAOtherReasons)
 {
-	reason=$("#js-otherReasonsLayer").val();
+	reason=$("#js-otherReasonsLayer").val().trim();
    
 	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
 }
