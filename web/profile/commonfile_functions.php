@@ -652,6 +652,7 @@ $js_arr[]=array(" /web/spa/node_modules/axios/dist/axios.min"   => "1");
 $js_arr[]=array(" /web/spa/node_modules/axios/dist/axios"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/ApiResponseHandler"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/UrlDecoder"   => "1");
+$js_arr[]=array("/web/spa/src/myjs/containers/MyjsPage"   => "1");
 return $js_arr;
 }
 function getJavascript(){

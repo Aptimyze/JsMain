@@ -9,6 +9,7 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
+import Loader from "../../common/components/Loader";
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -16,16 +17,19 @@ require ('../style/jsmsMyjs_css.css');
 
 export  class MyjsPage extends React.Component {
 	constructor(props) {
-  		super();
-			this.state=
-			{
-			}
-
-  	}
+        super();
+        this.state = {
+            showLoader: true,
+        };
+    }
 	componentDidMount(){
 			this.props.hitApi();
 		}
 	componentWillReceiveProps(nextProps){
+		this.setState ({
+                showLoader : false
+            })
+		
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
 			this.props.history.push('/login');
@@ -55,8 +59,11 @@ export  class MyjsPage extends React.Component {
 }
 
   	render() {
-			if(!this.props.reducerData.fetched)
-			return (<div></div>);
+  			if(this.state.showLoader)
+	        {
+	          return (<div><Loader show="page"></Loader></div>)
+	        }
+
   		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
