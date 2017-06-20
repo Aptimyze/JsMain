@@ -10,7 +10,7 @@ class AboutTab extends React.Component {
     }
     render() {
     	return (
-		    <div id="AboutTab" className="fullheight">
+		    <div id="AboutTab">
 				  <BasicInfo about = {this.props.about}/>
           <CareerInfo about = {this.props.about}/>
   				<KundliInfo show_gunascore={this.props.show_gunascore} profilechecksum={this.props.profilechecksum} about = {this.props.about}/>
