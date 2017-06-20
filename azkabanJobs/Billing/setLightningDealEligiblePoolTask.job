@@ -1,2 +1,3 @@
 type=command
+dependencies=moveDiscountHistoryDataToDiscountHistoryMaxTask
 command=${php5} ${docRoot}/symfony billing:setLightningDealEligiblePool

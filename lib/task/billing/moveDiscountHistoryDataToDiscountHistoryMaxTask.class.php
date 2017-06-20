@@ -18,12 +18,12 @@ class moveDiscountHistoryDataToDiscountHistoryMaxTask extends sfBaseTask
 		));
 
 		$this->namespace        = 'billing';
-		$this->name             = 'moveDiscountHistoryDataToDiscountHistoryMax';
+		$this->name             = 'moveDiscountHistoryDataToDiscountHistoryMaxTask';
 		$this->briefDescription = 'fetch the eligible pool of lightning deal and store it for further use';
 		$this->detailedDescription = <<<EOF
-		The [moveDiscountHistoryDataToDiscountHistoryMax|INFO] task does things.
+		The [moveDiscountHistoryDataToDiscountHistoryMaxTask|INFO] task does things.
 		Call it with:
-		[php symfony billing:moveDiscountHistoryDataToDiscountHistoryMax|INFO]
+		[php symfony billing:moveDiscountHistoryDataToDiscountHistoryMaxTask|INFO]
 EOF;
 	}
 
