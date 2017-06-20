@@ -1,0 +1,82 @@
+import React from "react";
+
+export class MyjsShowVisitors extends React.Component{
+  render(){
+    let style1={
+      "width":"60px",
+      "height":"60px"
+    }
+
+
+    let count = (this.props.tuplesvalues.length<=3)?this.props.tuplesvalues.length: 3;
+
+      let VisitorsListing;
+
+    if(this.props.tuplesvalues.length>4)
+    {
+      VisitorsListing=    <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
+          <div className="bg7 txtc disptbl" style={style1}>
+            <div className="dispcell fontlig f18 white lh0 vertmid">+46</div>
+          </div>
+        </a></div>
+
+    }
+    else {
+      VisitorsListing = <div></div>;
+    }
+
+
+    return(
+        <div className="fullwid clearfix">
+          {this.props.tuplesvalues.slice(0,count).map(function(tuple){
+            return (
+                <div className="fl pl_a" key={tuple.profilechecksum}>
+                  <a href='/profile/viewprofile.php?'>
+                    <img src='https://mediacdn.jeevansathi.com/1143/5/22865082-1402480972.jpeg'/>
+                  </a>
+                </div>
+
+            )
+          })}
+          {VisitorsListing}
+
+        </div>
+      )
+
+
+  }
+
+}
+
+export default class MyjsProfileVisitor extends React.Component{
+  constructor(props) {
+        super();
+  }
+  render(){
+    console.log('MyjsProfileVisitor');
+    //console.log(this.props);
+    // console.log(this.props.visitor.new_count);
+    //console.log(!this.props.visitor.tuples);
+    if(!this.props.fetched)
+    {
+
+      return (<div>1</div>);
+    }
+    return (
+      <div className="setWidth mt10" id="visitorPresent">
+        <div className="pad1 bg4">
+          <div className="fullwid pt15 pb10">
+            <div className="f17 fontlig color7">Profile Visitors</div>
+          </div>
+          <div className="pad16">
+            <div className="fullwid">
+              <MyjsShowVisitors tuplesvalues={this.props.visitor.tuples}/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    );
+
+  }
+}
