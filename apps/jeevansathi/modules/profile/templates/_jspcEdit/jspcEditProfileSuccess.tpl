@@ -20,7 +20,7 @@
                         </div>  
         	<div class="clearfix crit_wid2 mauto pt19">
         		<button class="bg_pink crit_cm1 btn-popup-cnfrm fontreg cursp">Confirm</button>
-            	<button class="crit_grey1 crit_cm1 btn-popup-cancel fontreg cursp">Canecl</button>
+            	<button class="crit_grey1 crit_cm1 btn-popup-cancel fontreg cursp">Cancel</button>
         	</div>
          </div> 
     </div>    

@@ -481,6 +481,29 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$basicArr[YOURINFO][outerSectionKey]="AboutMe";
 		$basicArr[YOURINFO][singleKey]=0;
 		$basicArr[YOURINFO][OnClick][]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),"",$this->getApiScreeningField("YOURINFO"),$this->textArea);
+                
+		//mstatus
+                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
+                $canEdit = false;
+                $canEditType = $this->nonEditable;
+                if($editedCritical===true){
+                        $canEdit = true;
+                        $canEditType = $this->dropdown;
+                }
+                if($this->profile->getRELIGION() == 2){
+                        $key = "MSTATUS_MUSLIM_EDIT";
+                }else{
+                        $key = "MSTATUS_EDIT";
+                }
+		//date of birth
+                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEditType,"",0,"","","",array(),"",$key);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Divorce Decree Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
+		$basicArr["critical"][outerSectionName]="Critical Fields";
+		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";
+		$basicArr["critical"][outerSectionKey]="critical";
+		$basicArr["critical"][singleKey]=0;
+                
 		//username
 		$nameOfUserObj = new NameOfUser;
                 $nameData = $nameOfUserObj->getNameData($this->profile->getPROFILEID());
@@ -532,33 +555,12 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//gender
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),$this->nonEditable);
 		
-		//mstatus
-                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
-                $canEdit = false;
-                $canEditType = $this->nonEditable;
-                if($editedCritical===true){
-                        $canEdit = true;
-                        $canEditType = $this->dropdown;
-                }
-                if($this->profile->getRELIGION() == 2){
-                        $key = "MSTATUS_MUSLIM_EDIT";
-                }else{
-                        $key = "MSTATUS_EDIT";
-                }
-		//date of birth
-                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
-		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEditType,"",0,"","","",array(),"",$key);
-		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Upload Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
+		
 		
                 $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
 		
-		
-		$basicArr["critical"][outerSectionName]="Critical Fields";
-		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";
-		$basicArr["critical"][outerSectionKey]="critical";
-		$basicArr["critical"][singleKey]=0;
 		$basicArr["Ethnicity"][outerSectionName]="Ethnicity";
 		$basicArr["Ethnicity"][outerSectionKey]="Ethnicity";
 		$basicArr["Ethnicity"][singleKey]=0;

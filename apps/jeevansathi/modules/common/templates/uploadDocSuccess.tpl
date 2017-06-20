@@ -15,7 +15,7 @@
     <div class="pad18 clearfix frm_ele">
       <div class="fl wid88p">
         <input type="file" name="MSTATUS_PROOF" id="MSTATUS_PROOF" labelkey="MSTATUS_PROOF" style="width:0px;height:0px;position:absolute;" mstatuschange="">
-        <div id="keyMSTATUS_PROOF" class="f17 fontthin upload-btn-jsms"style="display:inline;">Upload Proof</div>
+        <div id="keyMSTATUS_PROOF" class="f17 fontthin upload-btn-jsms"style="display:inline;">Divorce Decree</div>
         <div id="label_keyMSTATUS_PROOF" class="f17 fontthin pad2" style="display:inline;">jpg/pdf only</div>
       </div>
     </div>

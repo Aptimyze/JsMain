@@ -17,14 +17,8 @@ class CriticalInformationMailer
         public function getName(){
                 $loggedInProfileObj = LoggedInProfile::getInstance();
                 $loggedInProfileObj->getDetail($this->profileid,"PROFILEID","*");
-                $InouObj = new NameOfUser();
-                $name = $InouObj->getNameData($this->profileid);
-                if(empty($name) && !is_array($name)){
-                        $name =  $loggedInProfileObj->getUSERNAME();
-                }else{
-                        $name = $name[$this->profileid]["NAME"];
-                }
-                unset($loggedInProfileObj);unset($InouObj);
+                $name =  $loggedInProfileObj->getUSERNAME();
+                unset($loggedInProfileObj);
                 return $name;
         }
         public function getFields(){

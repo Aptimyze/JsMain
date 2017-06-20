@@ -48,7 +48,7 @@
         ~foreach from=$fields item=src`
                 <tr>
                         <td width="20"></td>
-                        <td>~$src.field`: Changed from ~$src.oldVal` to ~$src.newVal`</td>
+                        <td>~$src.field`: Request to change from ~$src.oldVal` to ~$src.newVal`</td>
                         <td width="20"></td>
                 </tr>
         ~/foreach`

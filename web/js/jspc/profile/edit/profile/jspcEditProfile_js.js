@@ -635,7 +635,7 @@ EditApp = function(){
     cookNoteTextBeforeSubmitButton = function(domElement,sectionId,configObject){
                 var parentAttr    = {class:"clearfix pt30",id:sectionId+'section-bottom'};
                 var labelAttr     = {class:"fl pt11 edpcolr3 ",text:''};
-                var spanAttr     = {class:"",text:'We will not allow any change in Gender, Date of Birth, Marital Status or Religion after you submit this form. So please reconfirm the details carefully before submitting.'};
+                var spanAttr     = {class:"",text:'We will not allow any change in Date of Birth and Marital Status after you submit this form. So please reconfirm the details carefully before submitting.'};
                 var divAttr     = {class:"outline-none js-bottomText fl edpwid3 edpbrad1 f13 pos-rel",text:''};
                 
                 var parentDiv = $("<div />",parentAttr);
@@ -1297,7 +1297,7 @@ EditApp = function(){
       if(sectionId == CRITICAL){
               var parentAttr    = {class:"clearfix fontlig pt30",id:fieldObject.key.toLowerCase()+'Parent'};
               var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
-              var btnAttr     = {class:"bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()};
+              var btnAttr     = {class:"bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Divorce Decree',id:'idBtn_'+fieldObject.key.toLowerCase()};
               var fieldDivAttr  = {class:"fl edpwid3 edpbrad1 cursp pos-rel outline-none"}
       }else{
                 var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
@@ -1325,10 +1325,9 @@ EditApp = function(){
       }
             
       var fieldDivDom = $("<div />",fieldDivAttr);
-      
       var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
       if(sectionId == CRITICAL){
-                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:errorText}));
+                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:"Please provide valid value for Divorce Decree"}));
       }else{
                 fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
       }
@@ -4214,7 +4213,12 @@ updateEduLevelChanges =function(eduLevelVal)
     onMstatusChange = function(mstatusVal,fieldID){
             var mstatusProofField = editAppObject[CRITICAL]['MSTATUS_PROOF'];
             var mstatusField = editAppObject[CRITICAL]['MSTATUS'];
-            storeFieldChangeValue(mstatusField,mstatusVal);
+            var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
+            if(prevMstatus != mstatusVal){
+                storeFieldChangeValue(mstatusField,mstatusVal);
+            }else{
+                delete editedFields[CRITICAL][mstatusField.key];
+            }
             $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
             if(mstatusVal == "D" && editAppObject[CRITICAL]['MSTATUS'].value != "D"){
                         $('#mstatus_proofParent').removeClass(dispNone);
@@ -5234,9 +5238,21 @@ updateEduLevelChanges =function(eduLevelVal)
       $('.js-save').unbind('click').on('click',function(event){
                 var currId = $(this).attr("id");
                 if(currId =="saveBtncritical"){
+                                for(var key in requiredArray['critical']){
+                                        var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
+                                        parentDOM.find('.js-errorLabel').removeClass(dispNone);
+                                      }
+
+
+                                //Check Any Error Lable is visible or not
+                                var validationCheck = '#criticalEditForm' +' .js-errorLabel:not(.disp-none)';   
+                                if($(validationCheck).length !== 0 && $(validationCheck).length !== "0"){
+                                  $(document).scrollTop($(validationCheck).offset().top);
+                                  return;
+                                }
                                 // condition to show msg on the popup 
                                 var diffDays = 0;
-                                if(editAppObject[CRITICAL]['DTOFBIRTH'] && editedFields[CRITICAL]['DTOFBIRTH']){
+                                if(editAppObject[CRITICAL]['DTOFBIRTH'] && editedFields.hasOwnProperty(CRITICAL) && editedFields[CRITICAL].hasOwnProperty("DTOFBIRTH")){
                                         var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
                                         var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
                                         var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
@@ -5250,7 +5266,7 @@ updateEduLevelChanges =function(eduLevelVal)
                                         showClass = "msg1";
                                         hideClass = "msg2";
                                 }     
-                                if(hideClass != "msg2" && editAppObject[CRITICAL]['MSTATUS'] && editedFields[CRITICAL]['MSTATUS']){
+                                if(hideClass != "msg2" && editedFields.hasOwnProperty(CRITICAL) && editedFields[CRITICAL].hasOwnProperty("MSTATUS") ){
                                         var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
                                         var Mstatus = editedFields[CRITICAL]['MSTATUS'];
                                         if((prevMstatus == "N" && Mstatus == "M") || prevMstatus == "M" && Mstatus == "N"){
@@ -5258,6 +5274,10 @@ updateEduLevelChanges =function(eduLevelVal)
                                                 hideClass = "msg2";
                                         }
                                 }
+                                if(editedFields.hasOwnProperty("critical") === false || (editedFields.hasOwnProperty("critical") === true && !editedFields[CRITICAL].hasOwnProperty("DTOFBIRTH") && !editedFields[CRITICAL].hasOwnProperty("MSTATUS"))){
+                                        showHideEditSection("critical","hide");
+                                        return;
+                                      }
                                 // condition to show msg on the popup end
                                 $("#commonOverlay").fadeIn("fast",function(){
                                 $("#commonOverlay").on('click',function(){

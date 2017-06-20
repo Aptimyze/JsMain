@@ -39,7 +39,7 @@
   </tr>
   <tr>
     <td width="20"></td>
-    <td>This is to inform you that ~$namePG` has edited ~$fieldList` on Jeevansathi. Following changes were made:</td>
+    <td>You are receiving this Email because ~$namePG` has either sent you an interest or received an interest from you. This is to inform you that ~$namePG` has edited ~$fieldList` on Jeevansathi. Following changes were made:</td>
     <td width="20"></td>
   </tr>
  <tr>

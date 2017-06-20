@@ -32,7 +32,7 @@
                                 <div class="">
                                 	<input id="MSTATUS_PROOF" name="MSTATUS_PROOF" type="file" class="hgt30IE color12 fullwid brdr-0 outwhi lh40 pl20 wid90p f15 fontlig disp-none">
                                         <div class="pos-rel">
-                                                <div class="bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib" type="file" placeholder="Not filled in" id="idBtn_id_proof_val" autocomplete="off">Attach</div>
+                                                <div class="bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib" type="file" placeholder="Not filled in" id="idBtn_id_proof_val" autocomplete="off">Divorce Decree</div>
                                                 <div class="f14 disp_ib color5 padl15 vertM dispib textTru wid40p" id="idlabel_id_proof_val">jpg/pdf only</div>                                                       
                                         </div>
                                 </div>                                
