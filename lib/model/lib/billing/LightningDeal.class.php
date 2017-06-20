@@ -28,7 +28,7 @@ class LightningDeal
 		$pool1 = array();
 
 		//use billing.DISCOUNT_HISTORY to get last logged in pool within offset time
-        $discTrackingObj = new billing_DISCOUNT_HISTORY_MAX("crm_slave");
+        $discTrackingObj = new billing_DISCOUNT_HISTORY_MAX();
         $totalCount = $discTrackingObj->getLastLoginProfilesAfterDateCountMax($offsetDate);
        
         $serviceStObj = new billing_SERVICE_STATUS("crm_slave");
