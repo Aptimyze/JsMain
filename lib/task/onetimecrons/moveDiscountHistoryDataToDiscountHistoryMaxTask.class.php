@@ -35,6 +35,8 @@ EOF;
             sfContext::createInstance($this->configuration);
         }
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDealOneTime.txt';
+        shell_exec("echo '' > ".$this->logFilePath."");
+
         $currentTime = date("Y-m-d H:i:s");
         
         $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
