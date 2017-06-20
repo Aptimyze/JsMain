@@ -37,7 +37,7 @@ EOF;
 			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS("crm_slave");
 			$cur_time = time();
 			$time_24hours = ($cur_time - (60*60*24))*1000; // it is given to get 24 hour report
-			$sizeInBytes=500000; // 500kb
+			$sizeInBytes=10000; // 500kb
 			
 			foreach($this->serverDb as $server=>$db)
 			{
@@ -50,6 +50,7 @@ EOF;
 			
 			
 				$mailContent= "\n<br>Report of heavy log Crons on DBs (more than 500 kb):<br>" ;
+				if(is_array($result)){
 				foreach($result as $db=>$flows)
 				{
 					$mailContent.= "\n<br> On DB ".$db."<br>";
@@ -64,7 +65,7 @@ EOF;
                     
 				//SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban DB Increased Report ".date('y-m-d h:i:s'));
                                
-			
+			}
 		}
 		catch(exception $e)
 		{
