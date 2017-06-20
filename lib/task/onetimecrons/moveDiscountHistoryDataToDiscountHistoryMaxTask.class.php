@@ -36,43 +36,62 @@ EOF;
         }
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDealOneTime.txt';
         $currentTime = date("Y-m-d H:i:s");
-        error_log("Getting Distinct Profileids\nTime:$currentTime"."\n",3,$this->logFilePath);
-        $lessThanDate = "2017-06-18";
+        
+        $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        $discHistMaxObj->truncateTable();
+        
+        if($this->debug == 1){
+            error_log("Discount History Max Table truncated.\nGetting Distinct Profileids\nTime:$currentTime"."\n",3,$this->logFilePath);
+        }
+        
+        $todayDate = date("Y-m-d");
+        $lessThanDate = date("Y-m-d",strtotime("$todayDate -1 days"));
+        
         $discHistObj = new billing_DISCOUNT_HISTORY("newjs_slave");
-        $distinctProfileidArr = $discHistObj->getDistinctProfileIds($lessThanDate); //order by profileid for logging?
-        error_log("Distinct Profileids fetched\nTime:$currentTime"."\n",3,$this->logFilePath);
+        $distinctProfileidArr = $discHistObj->getDistinctProfileIds($lessThanDate);
+        
+        if($this->debug == 1){
+            error_log("Distinct Profileids fetched\nTime:$currentTime"."\n",3,$this->logFilePath);
+        }
         
         $count = count($distinctProfileidArr);
         $currentTime = date("Y-m-d H:i:s");
-        error_log("Total Unique Profiles:$count\nTime:$currentTime"."\n",3,$this->logFilePath);
-        $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        if($this->debug == 1){
+            error_log("Total Unique Profiles:$count\nTime:$currentTime"."\n",3,$this->logFilePath);
+        }
+        
         $updatedCount = 0;
         //print_r($distinctProfileidArr);
         foreach($distinctProfileidArr as $profileid){
-            unset($paramsArr);
+            unset($paramsArr,$data);
             $data = $discHistObj->getDetailsForProfileid($profileid);
             $maxDiscount = -1;
             $maxDiscountDate = NULL;
             $lastLoginDate = NULL;
-            foreach($data as $key => $val){
-                $currentMaxDiscount = max($val["P"],$val["C"],$val["NCP"],$val["X"]);
-                if($currentMaxDiscount >= $maxDiscount){
-                    $maxDiscount = $currentMaxDiscount;
-                    $maxDiscountDate = $val["DATE"];
+            if($data){
+                foreach($data as $key => $val){
+                    $currentMaxDiscount = max($val["P"],$val["C"],$val["NCP"],$val["X"]);
+                    if($currentMaxDiscount >= $maxDiscount){
+                        $maxDiscount = $currentMaxDiscount;
+                        $maxDiscountDate = $val["DATE"];
+                    }
+                    if(strtotime($val["DATE"]) >= strtotime($lastLoginDate)){
+                        $lastLoginDate = $val["DATE"];
+                    }
                 }
-                if(strtotime($val["DATE"]) >= strtotime($lastLoginDate)){
-                    $lastLoginDate = $val["DATE"];
-                }
+            
+                $paramsArr["PROFILEID"] = $profileid;
+                $paramsArr["MAX_DISCOUNT"] = $maxDiscount;
+                $paramsArr["MAX_DISCOUNT_DATE"] = $maxDiscountDate;
+                $paramsArr["LAST_LOGIN_DATE"] = $lastLoginDate;
+                $discHistMaxObj->updateDiscountHistoryMax($paramsArr);
             }
-            $paramsArr["PROFILEID"] = $profileid;
-            $paramsArr["MAX_DISCOUNT"] = $maxDiscount;
-            $paramsArr["MAX_DISCOUNT_DATE"] = $maxDiscountDate;
-            $paramsArr["LAST_LOGIN_DATE"] = $lastLoginDate;
-            $discHistMaxObj->updateDiscountHistoryMax($paramsArr);
             $updatedCount++;
         }
         $currentTime = date("Y-m-d H:i:s");
-        error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
+        if($this->debug == 1){
+            error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
+        }
 	}
 }
 ?>
