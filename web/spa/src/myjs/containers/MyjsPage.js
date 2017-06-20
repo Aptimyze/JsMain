@@ -19,21 +19,42 @@ export  class MyjsPage extends React.Component {
   		super();
 			this.state=
 			{
+				showPD1: false
 			}
 
   	}
-	componentDidMount(){
+
+  	getStateValue(val){
+  			console.log('h1');
+  			console.log(val);
+  			return val;
+   	}
+
+   	loadPDPage(){   		
+   		this.setState({
+   			showPD1: this.getStateValue()
+   		});
+   		// this.props.reducerData.showPD = this.getStateValue();
+   		// console.log('dsdsds');
+   		// return this.props.reducerData.showPD;
+   	}
+
+  	componentDidMount(){
 			this.props.hitApi();
 		}
+
 	componentWillReceiveProps(nextProps){
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
 			this.props.history.push('/login');
-		}
+		}			
+		this.loadPDPage();
 	}
+
 	componentWillMount(){
 			this.CssFix();
 	}
+
 	CssFix()
 	{
 			// create our test div element
@@ -55,6 +76,8 @@ export  class MyjsPage extends React.Component {
 }
 
   	render() {
+  			if(this.state.showPD1)
+  				return(<div></div>);
 			if(!this.props.reducerData.fetched)
 			return (<div></div>);
   		return(
@@ -67,7 +90,7 @@ export  class MyjsPage extends React.Component {
 							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
 							<div id="interestReceivedPresent" className="setWidth sliderc1">
 									<div className="pad1">
-											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}  />
+											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received} showPD={this.getStateValue} />
 										</div>
 						</div>
 

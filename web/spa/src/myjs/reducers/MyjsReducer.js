@@ -1,5 +1,5 @@
 const MyjsReducer = (state={
-	apiData: '',fetched:false
+	apiData: '',fetched:false, showPD:false
 },action) => {
 	switch(action.type)
 	{

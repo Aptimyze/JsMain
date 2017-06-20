@@ -39,7 +39,7 @@ export default class ShowNotificationLayer extends React.Component {
               <div className="fl wid92p">
                 <div className="fullwid txtc">Just Joined Matches</div>
               </div>
-              {this.returnBlankIfZero('NEW_MATCHES')}
+              // {this.returnBlankIfZero('NEW_MATCHES')}
             </div>
           </a>
           <a href = "/inbox/4/1" >

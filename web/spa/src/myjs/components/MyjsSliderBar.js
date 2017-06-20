@@ -23,12 +23,16 @@ export default class MyjsSlider extends React.Component {
     console.log('Interest Recieved');
     super(props);
   }
+
+  loadPD(){
+         // this.props.showPD(true);
+  }
+
   render(){
-    console.log(this.props.listing);
-     if(!this.props.listing.tuples) {
+    if(!this.props.listing.tuples) {
       return <div></div>;
     }
-
+    else{
     return(
       <div>
         <div id="matchalertPresent" className="setWidth sliderc1">
@@ -51,9 +55,9 @@ export default class MyjsSlider extends React.Component {
                         <img className="srp_box2 contactLoader posabs dispnone top65" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
 
                         <div className="bg4 overXHidden" id="hideOnAction">
-                            <a id="detailedProfileRedirect" href="/profile/viewprofile.php?profilechecksum=35bdf5156711174170753bd3b9aeaaffi16331617&amp;responseTracking=undefined&amp;total_rec=16&amp;actual_offset=1&amp;contact_id=13171207_MATCH_ALERT">
-
-                            <div className="pad16 scrollhid hgt140">
+                            <div id="detailedProfileRedirect" onClick={()=>this.loadPD()}>
+                            // "/profile/viewprofile.php?profilechecksum=35bdf5156711174170753bd3b9aeaaffi16331617&amp;responseTracking=undefined&amp;total_rec=16&amp;actual_offset=1&amp;contact_id=13171207_MATCH_ALERT">
+                              <div className="pad16 scrollhid hgt140">
                               <div className="overXHidden fullheight">
                                 <div className="whitewid200p overflowWrap">
                                   <div className="fl">
@@ -89,7 +93,7 @@ export default class MyjsSlider extends React.Component {
                             </div>
 
 
-                            </a>
+                            </div>
 
                         </div>
 
@@ -109,5 +113,6 @@ export default class MyjsSlider extends React.Component {
         </div>
       </div>
     )
+  }
   }
 }
