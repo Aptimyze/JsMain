@@ -501,7 +501,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/services" => "6");
 $js_arr[]=array("jsms/angular/registration/scripts/directives" => "27");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"      => "57");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"   => "35");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"          => "100");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"           => "101");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"       => "49");
 $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"    => "65");
