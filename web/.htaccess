@@ -1,6 +1,4 @@
 <IfModule mod_rewrite.c>
-Header set Access-Control-Allow-Origin "http://localhost:8080"
-Header add Access-Control-Allow-Headers "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, withCredentials"
 Header add Access-Control-Allow-Credentials "true"
 RewriteEngine on
 RewriteOptions inherit

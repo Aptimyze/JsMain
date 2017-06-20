@@ -644,7 +644,7 @@ $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
 $js_arr[]=array("/web/spa/src/common/components/App"     => "3");
 $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"    => "2");
-$js_arr[]=array(" /web/spa/src/common/components/App"       => "5");
+$js_arr[]=array(" /web/spa/src/common/components/App"        => "6");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
 $js_arr[]=array("/web/spa/dist/0"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/ApiResponseHandler"    => "2");
@@ -653,6 +653,7 @@ $js_arr[]=array(" /web/spa/node_modules/axios/dist/axios"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/ApiResponseHandler"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/UrlDecoder"   => "1");
 $js_arr[]=array("/web/spa/src/myjs/containers/MyjsPage"   => "1");
+$js_arr[]=array(" /web/spa/src/common/components/AppPromo"   => "1");
 return $js_arr;
 }
 function getJavascript(){

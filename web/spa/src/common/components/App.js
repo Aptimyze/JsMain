@@ -53,10 +53,10 @@ class App extends React.Component
       <Router>
       <div>
       {redirectToHashUrl}
+      <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/login' component= {LoginPage}/>
       <Route path='/viewProfile' component={ProfilePage} />
       <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />
-      <Route exact path="/" component={EnsureLoggedInContainer}/>
       </div>
       </Router>
       </div>);

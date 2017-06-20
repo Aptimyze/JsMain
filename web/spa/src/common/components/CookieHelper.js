@@ -1,17 +1,24 @@
-import Cookies from 'universal-cookie';
+export const getCookie = (key) =>
+{
+	let pairs = document.cookie.split("; "),
+    count = pairs.length, parts;
+    for (let i=0; i<pairs.length; i++) {
+    	if(pairs[i].split("=")[0] == key) {
+    		return pairs[i].split("=")[1];
+    	}
+    }
+    return false;
+}
 
-export function getCookie(key)
+export const setCookie = (key,value,hours=1) =>
 {
-	const cookies = new Cookies();
-	return cookies.get(key,{ path: '/' });
+	let date = new Date();
+	date.setTime(date.getTime()+(hours*60*60*1000));
+	window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+    return value;
 }
-export function setCookie(key,value)
+
+export const removeCookie = (key) =>
 {
-	const cookies = new Cookies();
-	return cookies.set(key,value,{ path: '/' });
-}
-export function removeCookie(key)
-{
-	const cookies = new Cookies();
-	cookies.remove(key,{ path: '/' });
+	 document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
