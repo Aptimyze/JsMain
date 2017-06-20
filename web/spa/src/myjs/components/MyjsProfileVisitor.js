@@ -6,14 +6,9 @@ export class MyjsShowVisitors extends React.Component{
       "width":"60px",
       "height":"60px"
     }
-    console.log('visitor');
-    console.log(this.props.tuplesvalues.length);
-
 
     let count = (this.props.tuplesvalues.length<=3)?this.props.tuplesvalues.length: 3;
-
-
-      let VisitorsListing;
+    let VisitorsListing;
 
     if(this.props.tuplesvalues.length>4)
     {
@@ -59,8 +54,13 @@ export default class ProfileVisitor extends React.Component{
     if(!this.props.fetched)
     {
 
-      return (<div></div>);
+      return (<div className="fetchfalse Myjs-visitor"></div>);
     }
+    else if(this.props.visitor.tuples===null)
+    {
+        return (<div className="noData Myjs-visitor"></div>);
+    }
+
     return (
       <div className="setWidth mt10" id="visitorPresent">
         <div className="pad1 bg4">
@@ -76,6 +76,6 @@ export default class ProfileVisitor extends React.Component{
       </div>
 
     );
-myjsp1
+
   }
 }
