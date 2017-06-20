@@ -74,6 +74,10 @@ class CriticalInfoChangeDocUploadService
 
 	public function getSaveUrlDoc($docUrlId,$type)
         {
+                $uploadDir = sfConfig::get("sf_upload_dir")."/CriticalInformation/";
+                 if(!is_dir($uploadDir)){
+                     mkdir($uploadDir);
+                 }
                 $saveUrl=sfConfig::get("sf_upload_dir").$this->uploadUrl.$docUrlId.$type;
                 return $saveUrl;
         }

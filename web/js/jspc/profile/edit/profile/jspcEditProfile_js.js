@@ -1767,8 +1767,14 @@ EditApp = function(){
       var inputData = [];
       var onClick = function(event){
         fieldDOM.find('.js-errorLabel').addClass(dispNone);
-        if(event.target && event.target.tagName === "LI"){
-                var val = event.target.getAttribute("value");
+        
+        if(event.target && (event.target.tagName === "LI" || (event.target.tagName === "SPAN" && event.target.getAttribute("class") == "dropdown_span"))){
+                if(event.target.tagName == "SPAN"){
+                        var valID = event.target.getAttribute("id");
+                        var val = $("#"+valID).parent().attr("value");
+                }else{
+                        var val = event.target.getAttribute("value");
+                }
                 hideShowList(event,fieldObject.key.toLowerCase());
                 if(val == "D"){
                        highlightLI(fieldObject.key.toLowerCase(),"day","S");
@@ -2854,7 +2860,7 @@ EditApp = function(){
               }
               var spanId = label.toLowerCase();
               if(i < maxAllowed){
-                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="" class = "dropdown_span">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
                 cssClassOnLI = ""
               }
               
@@ -4221,6 +4227,8 @@ updateEduLevelChanges =function(eduLevelVal)
             }
             $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
             if(mstatusVal == "D" && editAppObject[CRITICAL]['MSTATUS'].value != "D"){
+                        $('#mstatus_proof').val("");
+                        $("#idlabel_mstatus_proof").html('jpg/pdf only');
                         $('#mstatus_proofParent').removeClass(dispNone);
                         requiredFieldStore.add(mstatusProofField);
             }else{
