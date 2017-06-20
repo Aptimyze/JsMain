@@ -36,7 +36,7 @@ EOF;
         }
         $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDeal.txt';
         shell_exec("echo '' > ".$this->logFilePath."");
-        
+        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "Lightning Deal cron started", "Lightning Deal cron started");
         $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
@@ -57,5 +57,11 @@ EOF;
         $discHistObj->truncateTable($offsetDate);
         unset($discHistObj);
 	}
+    
+    public function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+    }
 }
 ?>
