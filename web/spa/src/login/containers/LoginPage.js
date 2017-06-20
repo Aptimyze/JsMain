@@ -50,9 +50,9 @@ class LoginPage extends React.Component {
     componentWillReceiveProps(nextProps)
     {
         console.log("I am receiving nextProps.");
-        console.log(nextProps);
+        console.log(this.props.history.prevUrl);
        if ( nextProps.MyProfile.AUTHCHECKSUM ) {
-            if ( (this.props.history.prevUrl) && (this.props.history.prevUrl).indexOf('/login/') === -1 )
+            if ( (this.props.history.prevUrl) && ((this.props.history.prevUrl).indexOf('/login/') === -1) && ((this.props.history.prevUrl).indexOf('/spa/dist/index.html') === -1)  )
             {
                 this.props.history.push(this.props.history.prevUrl);
             }

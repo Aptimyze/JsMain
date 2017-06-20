@@ -12,11 +12,16 @@ export  function commonApiCall(callUrl,data,reducer,method)
   {
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
-    if ( aChsum && callUrl.indexOf("?") == -1)
+    if ( aChsum )
     {
-      checkSumURL = '?AUTHCHECKSUM='+aChsum;
-    } else {
-      checkSumURL = '&AUTHCHECKSUM='+aChsum;
+      if ( callUrl.indexOf("?") == -1 )
+      {
+        checkSumURL = '?AUTHCHECKSUM='+aChsum;
+      } 
+      else 
+      {
+        checkSumURL = '&AUTHCHECKSUM='+aChsum;
+      }
     }
     axios({
     method: callMethod,
@@ -28,7 +33,7 @@ export  function commonApiCall(callUrl,data,reducer,method)
     },
   }).then( (response) => {
       console.log(response);
-      if ( response.data.AUTHCHECKSUM ){
+      if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
         setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
         if ( response.data.GENDER && response.data.USERNAME )
