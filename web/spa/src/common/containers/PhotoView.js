@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import {getCookie} from '../components/CookieHelper';
 import {commonApiCall} from "../components/ApiResponseHandler.js";
 import TopError from "../components/TopError";
+import VerifiedVisit from "../../verifiedVisit/containers/verifiedVisit"
 
 class PhotoView extends React.Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class PhotoView extends React.Component {
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
+            showVerified: false
         };
     }
     componentWillReceiveProps(nextProps) {
@@ -56,6 +58,17 @@ class PhotoView extends React.Component {
             }
         }
         
+    }
+    showVerification(e) {
+        e.preventDefault();
+        this.setState({
+            showVerified: true   
+        });
+    }
+    closeOverlay() {
+        this.setState({
+            showVerified: false   
+        });   
     }
     render() {
         var errorView;
@@ -111,7 +124,7 @@ class PhotoView extends React.Component {
             verificationView =  <div className="posabs srp_pos3 searchNavigation showDetails" id="id1">
                 <div id="album1">
                     <div className="bg13 opa50 txtc white opa70 fontreg crBoxIcon">
-                        <div className="pt8"> 
+                        <div className="pt8" onClick={(e) => this.showVerification(e)}> 
                             <i className="mainsp verified"></i> 
                         </div>
                     </div>
@@ -125,10 +138,16 @@ class PhotoView extends React.Component {
             loaderView = <Loader show="div"></Loader>;
         }
 
+        var verifyLayer;
+        if(this.state.showVerified == true) {
+            verifyLayer = <VerifiedVisit closeOverlay={()=>this.closeOverlay()} profilechecksum={this.props.profilechecksum}></VerifiedVisit>
+        }
+
 
         return (
             <div id="PhotoView" className="posrel">
                 {errorView}
+                {verifyLayer}
                 <div id="picContent">
                     <img id="profilePic" className="vpro_w100Per" src={this.props.picData.url} />    
                     <div className="posabs fullwid vpro_40PerTop fullheight txtc">
