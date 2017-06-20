@@ -3,7 +3,9 @@ import React from 'react';
 class FamilyTab extends React.Component {
 	constructor(props) {
         super();
-        props.family.sibling_info = props.family.sibling_info.replace(/(?:\n)/g, '<br />');
+        if(props.family.sibling_info) {
+             props.family.sibling_info = props.family.sibling_info.replace(/(?:\n)/g, '<br />');
+        }
     }
     render() {
 
@@ -177,7 +179,7 @@ class FamilyTab extends React.Component {
     	}
 
     	return(
-    		<div id="FamilyTab" className="dn pad5 bg4 fontlig color3 clearfix f14">
+    		<div id="FamilyTab" className="dn pad5 bg4 fontlig color3 clearfix f14 fullheight">
 				{FamilyData}
 			</div>
     	);

@@ -33,8 +33,7 @@ class ProfilePage extends React.Component {
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.setState({
-                gender: "F",
-                //picUrl: "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
+                gender: "F"
             });
         }
         props.showProfile(this.state.profilechecksum);   
@@ -48,16 +47,19 @@ class ProfilePage extends React.Component {
     
     componentWillReceiveProps(nextProps)
     {   
-        if(!nextProps.pic.url) {
+        let picData;
+        if(!nextProps.pic) {
             if(this.state.gender == "M") {
-               nextProps.pic.url = "http://test.jeevansathi.com/images/picture/450x600_f.png?noPhoto"
+               picData = {url: "https://static.jeevansathi.com/images/picture/450x600_f.png?noPhoto"};
             } else {
-                nextProps.pic.url = "http://test.jeevansathi.com/images/picture/450x600_m.png?noPhoto"
+                picData = {url: "https://static.jeevansathi.com/images/picture/450x600_m.png?noPhoto"};
             }
+        } else {
+            picData = nextProps.pic;
         }
         this.setState ({
             dataLoaded : true,
-            pic: nextProps.pic
+            pic: picData
         });  
         if(nextProps.appPromotion == true) {
             this.setState ({
@@ -154,7 +156,7 @@ class ProfilePage extends React.Component {
 
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
 
-            photoView = <PhotoView verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.props.pic}></PhotoView>; 
+            photoView = <PhotoView verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView>; 
                    
             if(this.props.AboutInfo.name_of_user) 
             {

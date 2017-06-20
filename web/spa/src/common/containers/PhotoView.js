@@ -9,7 +9,6 @@ import TopError from "../components/TopError";
 class PhotoView extends React.Component {
     constructor(props) {
         super();
-        console.log(props)
         this.state = {
             showLoader: false,
             insertError: false,
@@ -94,6 +93,16 @@ class PhotoView extends React.Component {
                     </div>
                 </div>
             </div>
+        } else if(this.props.picData.label) {
+            actionIcon = <div className="posabs fullwid vpro_40PerTop">
+                <div className="disptbl">
+                    <div className="dispcell txtc">
+                        <div id="label1"  className="white fontthin f18 lh30 dispbl txtc bgTransGrey srp_pad1">
+                            {this.props.picData.label}   
+                        </div>
+                    </div>
+                </div>
+            </div> 
         }
 
         var verificationView;

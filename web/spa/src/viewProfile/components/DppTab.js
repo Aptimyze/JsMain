@@ -3,9 +3,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 
 class DppTab extends React.Component {
 	constructor(props) {
-        console.log("dpp",props)
         super();
-        console.log(props)
         let loginStatus = false;
         if(getCookie("AUTHCHECKSUM")) {
             loginStatus = true;
@@ -330,8 +328,8 @@ class DppTab extends React.Component {
         }
 
     	return(
-    		<div id="DppTab" className="dn">
-				<div className="pad5 bg4 fontlig color3 clearfix f14">
+    		<div id="DppTab" className="dn fullheight">
+				<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}
                     {dpp_height}
