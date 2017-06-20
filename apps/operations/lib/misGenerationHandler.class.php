@@ -401,7 +401,8 @@ class misGenerationhandler
                     $net_off_tax_rate = billingVariables::NET_OFF_TAX_RATE;
                 }
                 elseif($ts_new4<=$ts_dt){
-                    $net_off_tax_rate =0.330435;
+                    //$net_off_tax_rate =0.330435;
+		      $net_off_tax_rate =0.130435;	
                 }
                 elseif($ts_new3<=$ts_dt)
                 {
