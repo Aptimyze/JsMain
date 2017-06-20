@@ -981,7 +981,6 @@ class CommonFunction
 
 	public static function SendEmailNewLogin($profileid)
 	{
-		return ;
 		if(!isset($profileid))
 			return ;
 
