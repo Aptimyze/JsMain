@@ -21,24 +21,23 @@ class ScoringLib {
         $memCacheKey = "AS_". $profileid;
         $analyticScore = $memcacheObj->get($memCacheKey);
         if($analyticScore == ''){//Key not set, fetch from db and set the key with TTL
-            //print_r("Key not set, fetching from db");
             $mainAdminPoolObj = new incentive_MAIN_ADMIN_POOL();
             $analyticScore = $mainAdminPoolObj->getAnalyticScore($profileid);
+            $memcacheObj->set("$memCacheKey", $analyticScore, 86400);
+            return $analyticScore;
             //Calculate TTL
             //Set TTL such that ResetScore from redis at 6:00PM when cron executes to calculate new score
-            $timenow = date("H:i:s");
-            $timelater =  date('18:00:00');
+            //$timenow = date("H:i:s");
+            //$timelater =  date('H:i:s',strtotime("+1 day"));
             //print_r("\nTimeNow: ". $timenow);
             //print_r("\nTimeLater: ". $timelater);
-            $ttl = strtotime($timelater) - strtotime($timenow);
+            //$ttl = strtotime($timelater) - strtotime($timenow);
             //print_r("\n TTL1: ". $ttl."\n");
-            if($ttl<=0){
-                $ttl = 86400 + $ttl;
-            }
+            //if($ttl<=0){
+            //    $ttl = 86400 + $ttl;
+            //}
             //print_r("\nTTL2: ". $ttl . "\n");
-            $memcacheObj->set("$memCacheKey", $analyticScore, $ttl);
         }
-        //print_r("Outside");
         return $analyticScore;
         
     }
