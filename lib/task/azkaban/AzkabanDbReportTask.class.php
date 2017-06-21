@@ -49,7 +49,7 @@ EOF;
 			
 			
 			
-				$mailContent= "\n<br>Report of heavy log Crons on DBs (more than 500 kb):<br>" ;
+				$mailContent= "\n<br>Report of heavy log Crons on DBs (more than 10 kb):<br>" ;
 				if(is_array($result)){
 				foreach($result as $db=>$flows)
 				{
@@ -61,7 +61,7 @@ EOF;
 					}
 					$mailContent.= "\n</table>";
 				}
-				SendMail::send_email("reshu.rajput@jeevansathi.com",$mailContent,"Azkaban DB Increased Report ".date('y-m-d h:i:s'));
+				SendMail::send_email("reshu.rajput@gmail.com",$mailContent,"Azkaban DB Increased Report ".date('y-m-d h:i:s'));
                     
 				//SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban DB Increased Report ".date('y-m-d h:i:s'));
                                
