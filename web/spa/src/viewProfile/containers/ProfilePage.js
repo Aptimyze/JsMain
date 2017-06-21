@@ -122,6 +122,7 @@ class ProfilePage extends React.Component {
     imageLoad() {
         document.getElementById("showAbout").classList.remove("dn"); 
         document.getElementById("showPhoto").classList.remove("dn");
+        document.getElementById("preLoader").classList.add("dn");
     }
 
     render() {
@@ -133,7 +134,7 @@ class ProfilePage extends React.Component {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         }
 
-        AboutViewTemp = <div className="timeline-wrapper">
+        AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
             <div className="timeline-item">
                 <div id="animated-background" className="animated-background">
                     <div className="background-masker div1"></div>
