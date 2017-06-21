@@ -14,8 +14,6 @@ class MysqlStatus
 		$this->serverConfig[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],$user,$password,MysqlDbConstants::$shard1Slave["PORT"],"threshold"=>self::$thresholdValue['shard1Slave']);
 		$this->serverConfig[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],$user,$password,MysqlDbConstants::$shard2Slave["PORT"],"threshold"=>self::$thresholdValue['shard2Slave']);
 		$this->serverConfig[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],$user,$password,MysqlDbConstants::$shard3Slave["PORT"],"threshold"=>self::$thresholdValue['shard3Slave']);
-		$this->serverConfig[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],$user,$password,MysqlDbConstants::$viewSimilar["PORT"],"threshold"=>self::$thresholdValue['viewSimilar']);
-		$this->serverConfig[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],$user,$password,MysqlDbConstants::$bmsSlave["PORT"],"threshold"=>self::$thresholdValue['bmsSlave']);
 		$this->serverConfig[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],$user,$password,MysqlDbConstants::$alertsSlave["PORT"],"threshold"=>self::$thresholdValue['alertsSlave']);
 	}
 	public function getStatus()
