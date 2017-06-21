@@ -30,13 +30,14 @@ class ProfilePage extends React.Component {
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
             showHistory: false,
-            profilechecksum: "f0acc30e3f8794558209b01c0bee23d3i6467012",
-            gender: "M"
+            profilechecksum: profilechecksum || "f0acc30e3f8794558209b01c0bee23d3i6467012",
+            gender: "M",
+            defaultPicData: ""
         };
-        if ( profilechecksum )
+        /*if ( profilechecksum )
         {
             this.state.profilechecksum = profilechecksum;
-        }
+        }*/
 
         if(localStorage.getItem('GENDER') == "F") {
             this.setState({
@@ -55,6 +56,15 @@ class ProfilePage extends React.Component {
         document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
         document.getElementById("animated-background").style.height = backHeight + "px";
+        if(this.state.gender == "M") {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"       
+            })
+        } else {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"       
+            })   
+        }
     } 
     
     componentWillReceiveProps(nextProps)
@@ -140,8 +150,10 @@ class ProfilePage extends React.Component {
         if(this.state.gender == "M") {
             himHer = "her";
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+            
         } else {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
+             
         }
 
         AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
@@ -171,7 +183,7 @@ class ProfilePage extends React.Component {
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
         if(this.state.dataLoaded)
         {
-            photoView = <div id="showPhoto" className="dn"><PhotoView imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>; 
+            photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>; 
                    
             if(this.props.AboutInfo.name_of_user) 
             {
