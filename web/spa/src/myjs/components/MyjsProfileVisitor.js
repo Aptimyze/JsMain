@@ -6,10 +6,8 @@ export class MyjsShowVisitors extends React.Component{
       "width":"60px",
       "height":"60px"
     }
-
     let count = (this.props.tuplesvalues.length<=3)?this.props.tuplesvalues.length: 3;
     let VisitorsListing;
-
     if(this.props.tuplesvalues.length>4)
     {
       VisitorsListing=    <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
@@ -22,8 +20,6 @@ export class MyjsShowVisitors extends React.Component{
     else {
       VisitorsListing = <div></div>;
     }
-
-
     return(
         <div className="fullwid clearfix">
           {this.props.tuplesvalues.slice(0,count).map(function(tuple){
@@ -33,11 +29,9 @@ export class MyjsShowVisitors extends React.Component{
                     <img src='https://mediacdn.jeevansathi.com/1143/5/22865082-1402480972.jpeg'/>
                   </a>
                 </div>
-
             )
           })}
           {VisitorsListing}
-
         </div>
       )
 
@@ -51,17 +45,7 @@ export default class ProfileVisitor extends React.Component{
         super();
   }
   render(){
-    if(!this.props.fetched)
-    {
-
-      return (<div className="fetchfalse Myjs-visitor"></div>);
-    }
-    else if(this.props.visitor.tuples===null)
-    {
-        return (<div className="noData Myjs-visitor"></div>);
-    }
-
-    return (
+    return(
       <div className="setWidth mt10" id="visitorPresent">
         <div className="pad1 bg4">
           <div className="fullwid pt15 pb10">
@@ -69,13 +53,14 @@ export default class ProfileVisitor extends React.Component{
           </div>
           <div className="myjsp1">
             <div className="fullwid">
-              <MyjsShowVisitors tuplesvalues={this.props.visitor.tuples} totalvisitors={this.props.visitor.new_count}/>
+              <MyjsShowVisitors tuplesvalues={this.props.responseMessage.tuples} totalvisitors={this.props.responseMessage.new_count}/>
             </div>
           </div>
         </div>
       </div>
+    )
 
-    );
+
 
   }
 }

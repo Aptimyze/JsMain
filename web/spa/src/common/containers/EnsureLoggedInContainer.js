@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from "react-redux";
 import {withRouter} from "react-router";
 import asyncComponent from '../components/asyncComponent';
+import {LOGGED_OUT_PAGE} from "../../common/constants/CommonConstants";
 
 // import MyjsPage from '../../myjs/containers/MyjsPage';
 const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
@@ -15,8 +16,7 @@ import {
 class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
-
-        if ( !this.props.MyProfile.AUTHCHECKSUM )
+        if ( !this.props.MyProfile.AUTHCHECKSUM && !LOGGED_OUT_PAGE.includes(this.props.location.pathname) )
         {
             this.props.history.prevUrl = this.props.location.pathname;
             this.props.history.push('/login');
