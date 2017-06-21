@@ -34,11 +34,11 @@ window.addEventListener("resize",function()
                     end: {x: 0, y: 0}
                 };
                 var _this = this;
-                parent.addEventListener('touchstart', _this.onTouchStart.bind(_this),{passive:false});
+                this.parent.addEventListener('touchstart', _this.onTouchStart.bind(_this),{passive:false});
             // bind a "touchmove" event to tMyjsSliderBindinghe viewport
-                parent.addEventListener('touchmove', _this.onTouchMove.bind(_this),{passive:false});
+                this.parent.addEventListener('touchmove', _this.onTouchMove.bind(_this),{passive:false});
                 // bind a "touchend" event to the viewport
-                parent.addEventListener('touchend', _this.onTouchEnd.bind(_this),{passive:false});
+                this.parent.addEventListener('touchend', _this.onTouchEnd.bind(_this),{passive:false});
             }
             onTouchStart(e)
             {

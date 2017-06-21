@@ -31,7 +31,7 @@ export default class MyjsSlider extends React.Component {
   }
 
   alterCssStyle(transform,transitionDuration){
-        var styleObj = [];console.log('alsterrrr');console.log(transitionDuration);
+        var styleObj = [];
         styleObj['-' + this.props.cssProps.cssPrefix + '-transition-duration'] = transitionDuration + 'ms';
         var propValue = 'translate3d(-' + transform + 'px, 0, 0)';
         styleObj[this.props.cssProps.animProp] =  propValue;
@@ -44,10 +44,8 @@ export default class MyjsSlider extends React.Component {
   }
 
   componentDidMount(){  let _this = this;
-    console.log('didmount');
- //setInterval(function(){console.log(_this.state.sliderStyle);},1000);
 
-    if(this.state.sliderBound)return;console.log('didmount');
+    if(this.state.sliderBound)return;
     this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this),this.props.cssProps);
     this.obj.initTouch();
     this.setState({sliderBound: true});
@@ -55,19 +53,18 @@ export default class MyjsSlider extends React.Component {
   }
 
   render(){
-    console.log(this.props.listing);
     if(!this.props.listing.tuples) {
       return <div></div>;
     }
     return(
       <div>
-        <div className="pad1">
+        <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7"> <span className="f17 fontlig">{this.props.listing.title}</span>&nbsp;<span id='matchAlert_count' className="opa50 f14">{this.props.listing.view_all_count}</span> </div>
             <div className="fr pt5"> <a href="/inbox/7/1" className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
             <div className="clr"></div>
           </div>
-        <img src="~sfConfig::get('app_img_url')`/images/jsms/commonImg/loader.gif" style={{'position': 'relative','margin': '0px auto','display': 'block'}} />
+        <Loader loaderStyles={{'position': 'relative','margin': '0px auto','display': 'none'}} />
 
             <div className="swrapper" id="swrapper">
                 <div className="wrap-box" id="wrapbox_{this.props.listingName}">
@@ -77,11 +74,11 @@ export default class MyjsSlider extends React.Component {
 
            <div key={index} className="mr10 dispibl ml0 posrel wid300" id="" ><input className="proChecksum" type="hidden" value="{tuple.profilechecksum}"></input><img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
              <div className="bg4 overXHidden" id="hideOnAction">
-               <a id="detailedProfileRedirect" href="#">
+               <Link  to={`/profile/viewProfile?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.view_all_count}&actual_offset=${index}&contact_id=${this.props.listing.contact_id}`}>
                  <div className="pad16 scrollhid hgt140">
                    <div className="overXHidden fullheight">
                      <div className="whitewid200p overflowWrap">
-                       <div className="fl"><img className="tuple_image hgtwid110" src="{tuple.photo.url}" /> </div>
+                       <div className="fl"><img className="tuple_image hgtwid110" src={tuple.photo.url} /> </div>
                        <div className="fl pl_a" style={{'width':'48%'}}>
                          <div className="f14 color7">
                            <div className="username textTru">{tuple.name_of_user ? tuple.name_of_user : tuple.username}</div>
@@ -100,14 +97,13 @@ export default class MyjsSlider extends React.Component {
                      </div>
                    </div>
                  </div>
-               </a>
+               </Link>
                <div className="brdr8 fullwid hgt60">
                  <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" ><input className="inputProChecksum" type="hidden" value="{elem.profilechecksum}"></input><span className="f15 color2 fontreg">Send Interest</span></div>
                  <div className="clr"></div>
                </div>
              </div>
            </div>
-         </Link>
          ))}
          <div className="clr"></div>
          </div>
