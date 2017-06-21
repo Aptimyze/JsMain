@@ -467,9 +467,17 @@ class OutboundEventConsumer {
     $xmlObj = simplexml_load_string($xmlString, "SimpleXMLElement");
     $json = json_encode($xmlObj);
     $array = json_decode($json,TRUE);
-    $callSid = $array["Call"]["Sid"];
-    $response  = $array["Call"]["Status"].' - '.$array["Call"]["StartTime"];
-    return array("response" =>$response,"sid"=>$callSid);
+    if($array["Call"])
+    {
+      $callSid = $array["Call"]["Sid"];
+      $response  = $array["Call"]["Status"].' - '.$array["Call"]["StartTime"];
+      return array("response" => $response, "sid" => $callSid);
+    }
+    elseif($array["RestException"])
+    {
+      $response = $array["RestException"]["Status"].' - '.$array["RestException"]["Message"];
+      return array("response" => $response);
+    }
   }
 }
 
