@@ -18,8 +18,7 @@ export default class ShowNotificationLayer extends React.Component {
     //   })
     // }
     returnBlankIfZero(value){
-      if(!this.props.layerCount.fetched) return '';
-      else if(this.props.layerCount.bellResponse[value]==0) return '';
+      if(this.props.layerCount.bellResponse[value]==0) return '';
       return(
         <div className="fr wid8p">
           <div className="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">{this.props.layerCount.bellResponse[value]}</div>
