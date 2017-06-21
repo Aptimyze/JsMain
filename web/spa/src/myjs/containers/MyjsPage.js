@@ -50,12 +50,12 @@ export  class MyjsPage extends React.Component {
   		super();
 			this.state=
 			{
-
 			}
 
   	}
 
   	componentDidMount(){
+  			console.log("I am in componentDidMount.");
 			this.props.hitApi();
 		}
 

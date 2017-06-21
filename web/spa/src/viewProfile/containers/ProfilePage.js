@@ -35,13 +35,11 @@ class ProfilePage extends React.Component {
         };
         if ( profilechecksum )
         {
-            this.state.profilechecksum = profilechecksum;
-        }
+           this.state.profilechecksum = profilechecksum;
+       }
 
         if(localStorage.getItem('GENDER') == "F") {
-            this.setState({
-                gender: "F"
-            });
+            this.state.gender =  "F";
         }
         props.showProfile(this.state.profilechecksum);   
     }
