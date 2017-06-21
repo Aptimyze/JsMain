@@ -286,7 +286,7 @@ class CommonUtility
         /**
         * General Utility function to send post curl request.
         */
-        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
+        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="",$cookieValue='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
@@ -318,6 +318,12 @@ die;
 	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
                 curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		if($cookieValue!=''){
+				curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIE, 'cookiename='.$cookieValue);
+        }
+
                 $output = curl_exec($ch);
            if(!$headerArr)
            {
