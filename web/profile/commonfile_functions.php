@@ -642,7 +642,7 @@ $js_arr[]=array("sathiForLife_js" => "9");
 $js_arr[]=array(" /web/spa/src/login/containers/LoginPage"    => "2");
 $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
-$js_arr[]=array("/web/spa/src/common/components/App"     => "3");
+$js_arr[]=array("/web/spa/src/common/components/App"      => "4");
 $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"     => "3");
 $js_arr[]=array(" /web/spa/src/common/components/App"        => "6");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
@@ -656,7 +656,7 @@ $js_arr[]=array("/web/spa/src/myjs/containers/MyjsPage"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/AppPromo"   => "1");
 $js_arr[]=array(" /web/spa/src/viewProfile/containers/ProfilePage"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/UrlDecoder"   => "1");
-$js_arr[]=array(" /web/spa/src/common/constants/CommonConstants"   => "1");
+$js_arr[]=array(" /web/spa/src/common/constants/CommonConstants"    => "2");
 return $js_arr;
 }
 function getJavascript(){
