@@ -37,10 +37,77 @@ export class CheckDataPresent extends React.Component{
 						}
 						return(<MyjsProfileVisitor responseMessage={this.props.data}/>);
 			default:
-					return <div>nodata</div>
+					return (<div>nodata</div>);
 
 		}
 	}
+}
+export class NodataBlock extends React.Component{
+	render(){
+					if(!this.props.fetched)
+			 		{
+			 			return (<div className="nodatafetch"></div>)
+			 		}
+					let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
+
+					if(this.props.data.interest_received.tuples===null){
+						noDataHtml1= <span id="awaitingResponseAbsent" key="int_rec" >
+												 <div className="pad1">
+													 <div className="fullwid pt15 pb10">
+														 <div className="f17 fontlig color7">{this.props.data.interest_received.title}</div>
+													 </div>
+													 <div className="pb20" id="eoiAbsent">
+														 <div className="bg8">
+															 <div className="pad14 txtc">
+																 <div className="fontlig f14 color8">
+																	 Members Who Showed Interest In Your Profile Will Appear Here
+																 </div>
+															 </div>
+														 </div>
+													 </div>
+												 </div>
+											 </span>
+				 }
+				 if(this.props.data.visitors.tuples===null){
+						 noDataHtml2= <span id="visitorAbsent" key="novisitor">
+						 							<div className="pad1">
+														<div className="fullwid pt15 pb10">
+															<div className="f17 fontlig color7">{this.props.data.visitors.title}</div>
+														</div>
+														<div className="pb20" id="eoiAbsent">
+															<div className="bg8">
+																<div className="pad14 txtc">
+																	<div className="fontlig f14 color8">
+																		Members Who Visited Your Profile Will Appear Here
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</span>
+					}
+					if(this.props.data.match_alert.tuples===null){
+						noDataHtml3= <span id="matchalertAbsent" key="nomatchalert">
+												 <div className="pad1">
+													 <div className="fullwid pt15 pb10">
+														 <div className="f17 fontlig color7">{this.props.data.match_alert.title}</div>
+													 </div>
+													 <div className="pb20" id="eoiAbsent">
+														 <div className="bg8">
+															 <div className="pad14 txtc">
+																 <div className="fontlig f14 color8">
+																	Members Matching Your Desired Partner Profile Will Appear Here
+																 </div>
+															 </div>
+														 </div>
+													 </div>
+												 </div>
+											 </span>
+					}
+
+			   noDataHtml =[noDataHtml1,noDataHtml2,noDataHtml3]
+			   return (<div>{noDataHtml}</div>);
+		}
 }
 
 
@@ -91,27 +158,37 @@ export  class MyjsPage extends React.Component {
 }
 
   	render() {
+
   			if(!this.props.myjsData.fetched)
 	        {
 	          return (<div><Loader show="page"></Loader></div>)
 	        }
 
+
+
+
   		return(
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 								<div className="" id="pcontainer">
-								<MyjsHeadHTML bellResponse={this.props.myjsData.apiData.BELL_COUNT} fetched={this.props.myjsData.fetched}/>
-								<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
-								<AcceptCount fetched={this.props.myjsData.fetched} acceptance={this.props.myjsData.apiData.all_acceptance} justjoined={this.props.myjsData.apiData.just_joined_matches}/>
+									<MyjsHeadHTML bellResponse={this.props.myjsData.apiData.BELL_COUNT} fetched={this.props.myjsData.fetched}/>
+									<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+									<AcceptCount fetched={this.props.myjsData.fetched} acceptance={this.props.myjsData.apiData.all_acceptance} justjoined={this.props.myjsData.apiData.just_joined_matches}/>
 
 
-							<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"int_exp"} data={this.props.myjsData.apiData.interest_expiring}/>
+								<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"int_exp"} data={this.props.myjsData.apiData.interest_expiring}/>
 
-							<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"prf_visit"} data={this.props.myjsData.apiData.visitors}/>
+								<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"prf_visit"} data={this.props.myjsData.apiData.visitors}/>
 
-								<MyjsSlider cssProps={this.state.cssProps}  fetched={this.props.myjsData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiData.interest_received} listingName = 'interest_received' />
+
+									<MyjsSlider cssProps={this.state.cssProps}  fetched={this.props.myjsData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiData.interest_received} listingName = 'interest_received' />
+
+
+
+
+									<NodataBlock fetched={this.props.myjsData.fetched} data={this.props.myjsData.apiData}/>
+								</div>
 							</div>
-						</div>
 			</div>
 		);
 	}
