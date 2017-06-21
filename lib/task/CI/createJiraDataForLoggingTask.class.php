@@ -47,10 +47,9 @@ EOF;
     else
     {
       $comparisonDate = date("Y-m-d 00:00:00");
-    }      
-    
+    }          
       // this gets the tag array
-    $response = $this->sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");      
+    $response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");      
     
     //to get tags for the required date
     foreach ($response as $key => $value) 
@@ -78,7 +77,7 @@ EOF;
         {            
           if(strpos($value,"RC@") === false) //RC@ jira's not requried
           {
-            $response = $this->sendCurlGETRequest($jiraUrl.$value,"","",$jiraHeaderArr,"GET");
+            $response = CommonFunction::sendCurlGETRequest($jiraUrl.$value,"","",$jiraHeaderArr,"GET");
             
             $this->jiraDetails[$value]["ReleaseName"]= $response->fields->fixVersions[0]->name;
             $this->jiraDetails[$value]["ReleaseDate"]= $response->fields->fixVersions[0]->releaseDate;
@@ -122,28 +121,5 @@ EOF;
     $jiraObj = new Jira_JiraDetails("newjs_masterRep");
     $jiraObj->insertRecords($this->jiraDetails);
     unset($jiraObj);
-  }
-  public function sendCurlGETRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
-  {
-    if(!$timeout)
-      $timeout = 50000;
-    $ch = curl_init($urlToHit);    
-    if($headerArr)
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-    else
-      curl_setopt($ch, CURLOPT_HEADER, 0);
-    if($postParams)
-      curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    if($postParams)
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);  
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-    curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-    curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    $output = curl_exec($ch); 
-    return json_decode($output);
-  }
+  }  
 }
