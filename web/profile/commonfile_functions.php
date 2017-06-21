@@ -654,6 +654,8 @@ $js_arr[]=array(" /web/spa/src/common/components/ApiResponseHandler"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/UrlDecoder"   => "1");
 $js_arr[]=array("/web/spa/src/myjs/containers/MyjsPage"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/AppPromo"   => "1");
+$js_arr[]=array(" /web/spa/src/viewProfile/containers/ProfilePage"   => "1");
+$js_arr[]=array("/web/spa/src/common/components/UrlDecoder"   => "1");
 return $js_arr;
 }
 function getJavascript(){
