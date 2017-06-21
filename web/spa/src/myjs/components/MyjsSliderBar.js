@@ -12,20 +12,15 @@ var slides1={
   "transitionDuration": "0.5s",
   "transform": "translate3d(0px, 0px, 0px)"
 }
-var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','width':'200%'};
-var slides2={
-  "width": "329.6px"
-}
-var slides3={
-  "width": "48%"
-}
+var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
 
 export default class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
     this.state={
       'sliderBound' :false,
-      'sliderStyle' :{'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','width':'200%'}
+      'sliderStyle' :sliderTupleStyle,
+      tupleWidth : {'width' : window.innerWidth}
 
     }
   }
@@ -33,23 +28,26 @@ export default class MyjsSlider extends React.Component {
   alterCssStyle(transform,transitionDuration){
         var styleObj = [];
         styleObj['-' + this.props.cssProps.cssPrefix + '-transition-duration'] = transitionDuration + 'ms';
-        var propValue = 'translate3d(-' + transform + 'px, 0, 0)';
+        var propValue = 'translate3d(' + transform + 'px, 0, 0)';
         styleObj[this.props.cssProps.animProp] =  propValue;
+      //  var _this = this.
         this.setState({
           'sliderStyle' : {
             ...sliderTupleStyle,
-            ...styleObj
+            ...styleObj,
           }
          });
   }
 
-  componentDidMount(){  let _this = this;
+  componentDidMount(){
 
     if(this.state.sliderBound)return;
-    this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this),this.props.cssProps);
+    this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this));
     this.obj.initTouch();
-    this.setState({sliderBound: true});
-    //,sliderStyle: {...this.state.sliderStyle,this.obj.cssStyle}
+    this.setState({
+              sliderBound: true,
+              tupleWidth : {'width' : this.obj.transformX-10}
+                  });
   }
 
   render(){
@@ -71,7 +69,7 @@ export default class MyjsSlider extends React.Component {
          <div id={this.props.listingName+"_tuples"}   style={this.state.sliderStyle}>
            {this.props.listing.tuples.map( (tuple,index) => (
 
-           <div key={index} className="mr10 dispibl ml0 posrel wid300" id="" ><input className="proChecksum" type="hidden" value="{tuple.profilechecksum}"></input><img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
+           <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" ><input className="proChecksum" type="hidden" value="{tuple.profilechecksum}"></input><img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
              <div className="bg4 overXHidden" id="hideOnAction">
                <Link  to={`/profile/viewProfile?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.view_all_count}&actual_offset=${index}&contact_id=${this.props.listing.contact_id}`}>
                  <div className="pad16 scrollhid hgt140">

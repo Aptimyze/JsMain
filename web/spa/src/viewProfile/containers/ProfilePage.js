@@ -79,7 +79,7 @@ class ProfilePage extends React.Component {
             picData = nextProps.pic;
         }
         this.setState ({
-            //dataLoaded : true,
+            dataLoaded : true,
             pic: picData
         });
         if(nextProps.appPromotion == true) {

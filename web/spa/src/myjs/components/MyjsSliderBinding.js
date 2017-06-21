@@ -1,6 +1,6 @@
 
 export default class MyjsSliderBinding  {
-  constructor(parent,apiObject,props,sliderStyleFunction,animProp)
+  constructor(parent,apiObject,props,sliderStyleFunction)
   {
     this.parent = parent;
     this.apiObject = apiObject;
@@ -8,21 +8,21 @@ export default class MyjsSliderBinding  {
     this.el = parent;
     this.tuple_ratio = 80;
     this.slider = {"threshold": 80, "working": false, "movement": true, "transform": 0, "index": 0, "maxindex": 0};
-    this.animProp = animProp;
     this.windowWidth = window.innerWidth;
     this.transformX = (this.tuple_ratio * this.windowWidth) / 100 + 10;
     this.elementWidth = this.transformX - 10;
-    this.transformX_corr = ((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.offsetLeft;
+    this.transformX_corr = ((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.getBoundingClientRect().left;
     this._index = 0;
     this.sliderStyleFunction = sliderStyleFunction;
     var _this=this;
+
 // dynamic variables
 window.addEventListener("resize",function()
 {
     _this.windowWidth = window.innerWidth;
     _this.transformX = (_this.tuple_ratio * _this.windowWidth) / 100 + 10;
     _this.elementWidth = _this.transformX - 10;
-    _this.transformX_corr = ((_this.tuple_ratio * 3 - 100) * _this.windowWidth)/200 + 10+_this.el.offsetLeft;
+    _this.transformX_corr = ((_this.tuple_ratio * 3 - 100) * _this.windowWidth)/200 + 10+_this.el.getBoundingClientRect().left;
 });
   }
 
@@ -52,7 +52,6 @@ window.addEventListener("resize",function()
             {
 
                 var orig = e;//.originalEvent;
-                console.log(e);
                 var xMovement = Math.abs(orig.changedTouches[0].pageX - this.touch.start.x);
                 var yMovement = Math.abs(orig.changedTouches[0].pageY - this.touch.start.y);
                 var change = orig.changedTouches[0].pageX - this.touch.start.x;
@@ -63,22 +62,15 @@ window.addEventListener("resize",function()
                     yMovement = 1;
                 if (xMovement > yMovement * 3)
                 {
-                    //this.touch.
-                    console.log(this.touch.originalPos.left);
-                    change = this.touch.originalPos.left + change;console.log('move',change);
+                    change = this.touch.originalPos.left + change;
+                    this.transitionDuration = 0;
                     this.alterCssStyle(change,this._index);
                 }
                 e.preventDefault();
 
             }
             alterCssStyle(transform,index){
-        //      this.sliderStyleFunction(transform,this.transitionDuration);
-//        var styleObj = [];console.log('alsterrrr');
-  //      styleObj['-' + animProp.cssPrefix + '-transition-duration'] = this.transitionDuration + 'ms';
-              var propValue = 'translate3d(-' + transform + 'px, 0, 0)';
-              this.parent.style['-' + this.animProp.cssPrefix + '-transition-duration'] = this.transitionDuration + 'ms' ;
-              this.parent.style[this.animProp.animProp] = propValue ;
-
+              this.sliderStyleFunction(transform,this.transitionDuration);
               this._index = index;
             }
             onTouchEnd(e)
@@ -93,7 +85,6 @@ window.addEventListener("resize",function()
 
                 if (!distance) return;
                 var timeDiff = this.timeEnd - this.timeStart;
-                //value = this.touch.originalPos.left;
                 var absD = Math.abs(distance);
                 if (timeDiff <= 500)
                     this.transitionDuration = (this.transformX / absD - 1) * (timeDiff);
@@ -107,8 +98,8 @@ window.addEventListener("resize",function()
                 else
                     this.gotoSlide(this._index);
                     var tupleLength = this.apiObject.tuples.length;
-                if (this._index >=  tupleLength/ 2) if (tupleLength<100)
-                    this.props.onnewtuples();
+                // if (this._index >=  tupleLength/ 2) if (tupleLength<100)
+                //     this.props.onnewtuples();
                 e.preventDefault();
             }
             NextSlide()
@@ -124,9 +115,7 @@ window.addEventListener("resize",function()
                     var transform = 0;
                 else
                     var transform = this.transformX * (index - 1) + this.transformX_corr;
-                this.alterCssStyle(transform,index);
-
-                //setSliderLocation(this._index);
+                this.alterCssStyle('-'+transform,index);
             }
 
             PrevSlide()
@@ -140,8 +129,8 @@ window.addEventListener("resize",function()
                 if (index != 0)
                     var transform = this.transformX * (index - 1) + this.transformX_corr;
                 else
-                    var transform = 0;console.log('prev',transform);
-                this.alterCssStyle(transform,index);
+                    var transform = 0;
+                this.alterCssStyle('-'+transform,index);
             }
             gotoSlide(index)
             {
@@ -160,8 +149,7 @@ window.addEventListener("resize",function()
                 if (index != 0)
                     transform = this.transformX * (index - 1) + this.transformX_corr;
                 else
-                    transform = 0;console.log('goto',transform);
-                this.alterCssStyle(transform,index);
-                //setSliderLocation(index);
+                    transform = 0;
+                this.alterCssStyle('-'+transform,index);
             }
         }
