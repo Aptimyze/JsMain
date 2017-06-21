@@ -70,6 +70,9 @@ class PhotoView extends React.Component {
             showVerified: false   
         });   
     }
+    handleImageLoaded() {
+        this.props.imageLoad();
+    }
     render() {
         var errorView;
         if(this.state.insertError)          
@@ -149,7 +152,7 @@ class PhotoView extends React.Component {
                 {errorView}
                 {verifyLayer}
                 <div id="picContent">
-                    <img id="profilePic" className="vpro_w100Per" src={this.props.picData.url} />    
+                    <img id="profilePic" onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />    
                     <div className="posabs fullwid vpro_40PerTop fullheight txtc">
                         {loaderView}
                     </div>

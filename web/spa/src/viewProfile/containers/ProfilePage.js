@@ -53,6 +53,8 @@ class ProfilePage extends React.Component {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
         document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
+        var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+        document.getElementById("animated-background").style.height = backHeight + "px";
     } 
     
     componentWillReceiveProps(nextProps)
@@ -60,9 +62,9 @@ class ProfilePage extends React.Component {
         let picData;
         if(!nextProps.pic) {
             if(this.state.gender == "M") {
-               picData = {url: "https://static.jeevansathi.com/images/picture/450x600_f.png?noPhoto"};
+               picData = {url: "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"};
             } else {
-                picData = {url: "https://static.jeevansathi.com/images/picture/450x600_m.png?noPhoto"};
+                picData = {url: "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"};
             }
         } else {
             picData = nextProps.pic;
@@ -127,12 +129,69 @@ class ProfilePage extends React.Component {
             showHistory:false
         });
     }
+    imageLoad() {
+        document.getElementById("showAbout").classList.remove("dn"); 
+        document.getElementById("showPhoto").classList.remove("dn");
+        document.getElementById("preLoader").classList.add("dn");
+    }
 
     render() {
-        var himHer = "him";
+        var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
+            photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+        } else {
+            photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         }
+
+        AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
+            <div className="timeline-item">
+                <div id="animated-background" className="animated-background">
+                    <div className="background-masker div1"></div>
+                    <div className="background-masker div2"></div>
+                    <div className="background-masker div3"></div>
+                    <div className="background-masker div4"></div>
+                    <div className="background-masker div5"></div>
+                    <div className="background-masker div6"></div>
+                    <div className="background-masker div7"></div>
+                    <div className="background-masker div8"></div>
+                    <div className="background-masker div9"></div>
+                    <div className="background-masker div10"></div>
+                    <div className="background-masker div11"></div>
+                    <div className="background-masker div12"></div>
+                    <div className="background-masker div13"></div>
+                    <div className="background-masker div14"></div>
+                    <div className="background-masker div15"></div>
+                    <div className="background-masker div16"></div>
+                    <div className="background-masker div17"></div>
+                </div>
+            </div>
+        </div>;
+
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
+        if(this.state.dataLoaded)
+        {
+            photoView = <div id="showPhoto" className="dn"><PhotoView imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>; 
+                   
+            if(this.props.AboutInfo.name_of_user) 
+            {
+                Header = this.props.AboutInfo.name_of_user;
+            } else
+            {
+                 Header = this.props.AboutInfo.username;
+            }   
+            AboutView = <div id="showAbout" className="dn"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
+
+            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
+
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>; 
+        //setTimeout(function(){
+        //document.getElementById("showAbout").classList.remove("dn"); 
+        //},100)   
+            } 
+        
+        
+        
         var historyIcon;
         if(getCookie("AUTHCHECKSUM")) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -157,26 +216,7 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
-        if(this.state.dataLoaded)
-        {   
-            AboutView = <AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab>;
-
-            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-
-            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;    
-
-            photoView = <PhotoView verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView>; 
-                   
-            if(this.props.AboutInfo.name_of_user) 
-            {
-                Header = this.props.AboutInfo.name_of_user;
-            } else
-            {
-                 Header = this.props.AboutInfo.username;
-            }
-
-        }
+        
         var historyView;
         if(this.state.showHistory) {
             historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
@@ -205,6 +245,7 @@ class ProfilePage extends React.Component {
                     <Link to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
+                            {photoViewTemp}
                         </div>
                     </Link>
                     <div id="tab" className="fullwid tabBckImage posabs mtn39">
@@ -216,6 +257,7 @@ class ProfilePage extends React.Component {
                         </div>
                     </div>
                     {AboutView}
+                    {AboutViewTemp}
                     {FamilyView}
                     {DppView}
                 </div>
