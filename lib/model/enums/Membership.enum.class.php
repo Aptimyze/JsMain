@@ -84,7 +84,7 @@ class VariableParams
                                         "lastLightningDiscountViewedOffset" => 30,
                                         "pool2FilterPercent" => 10,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                        "activeOfferFlag" => false
+                                        "activeOfferFlag" => true
                                         );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
