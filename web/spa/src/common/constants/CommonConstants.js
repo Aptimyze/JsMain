@@ -3,4 +3,4 @@ export const AUTHCHECKSUM =  'AUTHCHECKSUM';
 export const LOGIN_ATTEMPT_COOKIE =  'loginAttemptNew';
 export const DISPLAY_PROPS = {windowWidth : window.innerWidth};
 window.addEventListener('resize',()=>{DISPLAY_PROPS.windowWidth = window.innerWidth;});
-export const LOGGED_OUT_PAGE = ['/viewProfile/'];
+export const LOGGED_OUT_PAGE = ['/profile/viewprofile.php/'];

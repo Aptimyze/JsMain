@@ -217,6 +217,7 @@ $css_arr[]=array("promotions/chatPromo/chatPromoMS_css" => "6");
 $css_arr[]=array("promotions/chatPromo/chatPromoPC_css" => "4");
 $css_arr[]=array("sathiForLife_css" => "10");
 $css_arr[]=array("/web/spa/dist/0"   => "1");
+$css_arr[]=array(" /web/spa/src/common/constants/apiConstants"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -642,7 +643,7 @@ $js_arr[]=array("sathiForLife_js" => "9");
 $js_arr[]=array(" /web/spa/src/login/containers/LoginPage"    => "2");
 $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
-$js_arr[]=array("/web/spa/src/common/components/App"     => "3");
+$js_arr[]=array("/web/spa/src/common/components/App"      => "4");
 $js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"     => "3");
 $js_arr[]=array(" /web/spa/src/common/components/App"        => "6");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
@@ -656,7 +657,9 @@ $js_arr[]=array("/web/spa/src/myjs/containers/MyjsPage"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/AppPromo"   => "1");
 $js_arr[]=array(" /web/spa/src/viewProfile/containers/ProfilePage"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/UrlDecoder"   => "1");
-$js_arr[]=array(" /web/spa/src/common/constants/CommonConstants"   => "1");
+$js_arr[]=array(" /web/spa/src/common/constants/CommonConstants"    => "2");
+$js_arr[]=array(" /web/spa/src/common/constants/apiConstants"   => "1");
+$js_arr[]=array(" /web/spa/src/common/components/Loader"   => "1");
 return $js_arr;
 }
 function getJavascript(){
