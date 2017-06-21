@@ -23,7 +23,7 @@ class cronExecuteOutboundConsumerTask extends sfBaseTask
         $this->briefDescription = 'reads no. of instances of rabbitmq OutboundQueue from MessageQueues.enum.class.php to be run and executes that many instances of cronProfileCacheConsumerTask.';
         $this->detailedDescription = <<<EOF
      The [ProfileCache:cronExecuteProfileCacheConsumer|INFO] reads no. of instances of rabbitmq OutboundQueue from MessageQueues.enum.class.php to be run and executes that many instances of cronOutboundConsumerTask:
-     [php symfony cron:cronExecuteNotificationConsumer] 
+     [php symfony Outbound:cronExecuteOutboundConsumer] 
 EOF;
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
