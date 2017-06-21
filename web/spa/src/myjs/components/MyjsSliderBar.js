@@ -58,7 +58,7 @@ export default class MyjsSlider extends React.Component {
     }
     return(
       <div>
-        <div className="pad1">
+        <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7"> <span className="f17 fontlig">{this.props.listing.title}</span>&nbsp;<span id='matchAlert_count' className="opa50 f14">{this.props.listing.view_all_count}</span> </div>
             <div className="fr pt5"> <a href="/inbox/7/1" className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
@@ -77,7 +77,7 @@ export default class MyjsSlider extends React.Component {
                  <div className="pad16 scrollhid hgt140">
                    <div className="overXHidden fullheight">
                      <div className="whitewid200p overflowWrap">
-                       <div className="fl"><img className="tuple_image hgtwid110" src="{tuple.photo.url}" /> </div>
+                       <div className="fl"><img className="tuple_image hgtwid110" src={tuple.photo.url} /> </div>
                        <div className="fl pl_a" style={{'width':'48%'}}>
                          <div className="f14 color7">
                            <div className="username textTru">{tuple.name_of_user ? tuple.name_of_user : tuple.username}</div>
