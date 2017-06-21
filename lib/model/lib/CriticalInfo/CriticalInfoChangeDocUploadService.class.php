@@ -144,9 +144,9 @@ class CriticalInfoChangeDocUploadService
 		return $result;
 
 	}
-        public function allottProfile($dt){
+        public function allottProfile(){
                 $criticalInfoObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
-		$result = $criticalInfoObj->allottProfile($dt);
+		$result = $criticalInfoObj->allottProfile();
 		return $result;
         }
 }

@@ -44,24 +44,17 @@ class CRITICAL_INFO_DOC_ASSIGNED extends TABLE
 	* @param user screening user
 	* @return array containing alloted alloted user info
         **/
-        public function userAllottedProfiles($time,$case,$user='')
+        public function userAllottedProfiles($user='')
         {
+                if(!$user || $user == ""){
+                        throw new jsException($e);
+                }
                 try
                 {
-                	$sql="SELECT PROFILEID,ALLOTED_TIME,ASSIGNED_TO FROM newjs.CRITICAL_INFO_DOC_ASSIGNED WHERE 1 ";
-			if($user)
-				$sql.="AND ASSIGNED_TO=:USER ";
-			if($case=='greater')
-				$sql.="AND ALLOTED_TIME >= :TIME ";
-			elseif($case=='less')
-				$sql.="AND ALLOTED_TIME < :TIME ";
-
+                	$sql="SELECT PROFILEID,ALLOTED_TIME,ASSIGNED_TO FROM newjs.CRITICAL_INFO_DOC_ASSIGNED WHERE ASSIGNED_TO=:USER ";
                 	$res=$this->db->prepare($sql);
-			if($user)
-        	        	$res->bindValue(":USER", $user, PDO::PARAM_STR);
-                	$res->bindValue(":TIME", $time, PDO::PARAM_STR);
+                        $res->bindValue(":USER", $user, PDO::PARAM_STR);
 	                $res->execute();
-	
         	        if($row = $res->fetch(PDO::FETCH_ASSOC))
                 	        return $row;
 	                else

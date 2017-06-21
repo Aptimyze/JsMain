@@ -7,9 +7,6 @@
 */
 class ProfileDivorcedDocumentScreening
 {
-	private $maxTimeToScreenAfterAllocation = 30; // in minutes
-	private $minTimeToScreenAfterUpdate = 30; //in minutes
-
 	/**
 	* This function allocates a profile to screening user.
 	* @param pid profileid to be assigned.
@@ -28,29 +25,14 @@ class ProfileDivorcedDocumentScreening
 	*/
 	public function fetchProfileToAllot($name)
 	{
-		$date = new DateTime();
-		$date->sub(new DateInterval('PT'.$this->maxTimeToScreenAfterAllocation.'M'));
-		$time = $date->format('Y-m-d H:i:s');
-
 		/* profile which have been allotted to a specific screening user and havent been screened yet and has not crossed maximum time. */
 		$CRITICAL_INFO_DOC_ASSIGNED = new CRITICAL_INFO_DOC_ASSIGNED;
-		$infoArr = $CRITICAL_INFO_DOC_ASSIGNED->userAllottedProfiles($time,'greater',$name);
-		$updateAllotTime = NULL;
-
-		if(is_null($infoArr))
-		/* profile which have been allotted to screening user(including loggedin) and havent been screened yet in a max time */
-		{
-			$infoArr = $CRITICAL_INFO_DOC_ASSIGNED->userAllottedProfiles($time,'less');
-			$updateAllotTime = 1;
-		}
+		$infoArr = $CRITICAL_INFO_DOC_ASSIGNED->userAllottedProfiles($name);
 		if(is_null($infoArr))
 		/* allot profile to user based on oldest 1st. */
 		{
-			$date = new DateTime();
-			$date->sub(new DateInterval('PT'.$this->minTimeToScreenAfterUpdate.'M'));
-			$time = $date->format('Y-m-d H:i:s');
 			$PROFILE_VERIFICATION_DOCUMENTS = new CriticalInfoChangeDocUploadService;
-			$infoArr = $PROFILE_VERIFICATION_DOCUMENTS->allottProfile($time);
+			$infoArr = $PROFILE_VERIFICATION_DOCUMENTS->allottProfile();
 			$updateAllotTime = 1;
 		}
 		if(is_array($infoArr))
