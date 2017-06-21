@@ -6,14 +6,7 @@ export class ShowExpiryList extends React.Component {
   constructor(props) {
     super();
   }
-
   render(){
-    console.log('expire');
-    console.log(this.props.tuples);
-
-
-
-
    let countTuple = (this.props.tuples.length<=3)?this.props.tuples.length: 3;
    let setdim = {width:"60px" , height:"60px" };
    let IntExpListing;
@@ -44,16 +37,8 @@ export class ShowExpiryList extends React.Component {
             )
           })}
           {IntExpListing}
-
-
         </div>
       )
-
-
-
-
-
-
   }
 
 }
@@ -61,17 +46,6 @@ export class ShowExpiryList extends React.Component {
 export default class InterestExp extends React.Component{
   render(){
     console.log(this.props.int_exp_list);
-
-
-    if(!this.props.fetched)
-    {
-
-      return (<div className="fetchfalse"></div>);
-    }
-    else if(this.props.int_exp_list===undefined)
-    {
-        return (<div className="noData"></div>);
-    }
     return(
       <div className="mt15 bg4">
         <div className="f17 fontlig color7 padd22">Interests Expiring this week</div>

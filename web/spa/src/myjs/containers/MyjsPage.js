@@ -16,11 +16,41 @@ require ('../style/jsmsMyjs_css.css');
 
 
 
+export class CheckDataPresent extends React.Component{
+	render(){
+	 if(!this.props.fetched)
+		{
+			return (<div className="nodatafetch"></div>)
+		}
+		switch (this.props.blockname) {
+			case "int_exp":
+						if(this.props.data===undefined)
+						{
+							  return (<div className="noData Intexp"></div>);
+						}
+						return(<InterestExp int_exp_list={this.props.data}  />);
+						break;
+			case "prf_visit":
+						if(this.props.data.tuples===null)
+						{
+							return (<div className="noData prfvisit"></div>);
+						}
+						return(<MyjsProfileVisitor responseMessage={this.props.data}/>);
+			default:
+					return <div>nodata</div>
+
+		}
+	}
+}
+
+
+
 export  class MyjsPage extends React.Component {
 	constructor(props) {
   		super();
 			this.state=
 			{
+
 			}
 
   	}
@@ -33,11 +63,11 @@ export  class MyjsPage extends React.Component {
 		this.setState ({
                 showLoader : false
             })
-		
+
 		if(nextProps.reducerData.apiData.responseStatusCode == 9){
 			removeCookie('AUTHCHECKSUM');
 			this.props.history.push('/login');
-		}			
+		}
 	}
 
 	componentWillMount(){
@@ -65,7 +95,7 @@ export  class MyjsPage extends React.Component {
 }
 
   	render() {
-  			if(this.state.showPD1)
+			if(this.state.showPD1)
   				return(<div></div>);
 			if(!this.props.reducerData.fetched)
 			return (<div></div>);
@@ -73,10 +103,18 @@ export  class MyjsPage extends React.Component {
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
+
 							<MyjsHeadHTML bellResponse={this.props.reducerData.apiData.BELL_COUNT} fetched={this.props.reducerData.fetched}/>
+
 							<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.reducerData.apiData.my_profile} fetched={this.props.reducerData.fetched}/>
+
+
 							<AcceptCount fetched={this.props.reducerData.fetched} acceptance={this.props.reducerData.apiData.all_acceptance} justjoined={this.props.reducerData.apiData.just_joined_matches}/>
-							<MyjsProfileVisitor responseMessage={this.props.reducerData.apiData.responseMessage} fetched={this.props.reducerData.fetched}/>
+
+							<CheckDataPresent fetched={this.props.reducerData.fetched} blockname={"int_exp"} data={this.props.reducerData.apiData.interest_expiring}/>
+
+							<CheckDataPresent fetched={this.props.reducerData.fetched} blockname={"prf_visit"} data={this.props.reducerData.apiData.visitors}/>
+
 							<div id="interestReceivedPresent" className="setWidth sliderc1">
 									<div className="pad1">
 											<MyjsSlider fetched={this.props.reducerData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.reducerData.apiData.interest_received}/>
