@@ -360,9 +360,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
                 }
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,"Y",$canEDit);
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","   " ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
-                if($this->profile->getMSTATUS() != 'N'){
+                //if($this->profile->getMSTATUS() != 'N'){
                     $criricalArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
-                }
+                //}
                 return $criricalArr;
         }
 	/** @function
@@ -391,9 +391,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"Y");
                 
                 //HaveChild
-                if($this->profile->getMSTATUS() != 'N'){
+                //if($this->profile->getMSTATUS() != 'N'){
                     $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
-                }
+                //}
                 
                 //Posted By
                 $szRelation = $this->profile->getDecoratedRELATION();

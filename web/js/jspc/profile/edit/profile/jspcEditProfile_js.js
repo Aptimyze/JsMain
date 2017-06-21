@@ -417,11 +417,11 @@ EditApp = function(){
               }
               
               
-              if(sectionArr[j].key == "MSTATUS" && sectionArr[j].value == "N"){
-                        if(editAppObject.hasOwnProperty("basic") !== false && editAppObject["basic"].hasOwnProperty("HAVECHILD")!== false){
-                                delete editAppObject["basic"]["HAVECHILD"];
-                        }
-              }
+//              if(sectionArr[j].key == "MSTATUS" && sectionArr[j].value == "N"){
+//                        if(editAppObject.hasOwnProperty("basic") !== false && editAppObject["basic"].hasOwnProperty("HAVECHILD")!== false){
+//                                delete editAppObject["basic"]["HAVECHILD"];
+//                        }
+//              }
 
             }
         }   
@@ -3247,6 +3247,11 @@ EditApp = function(){
         if(behaviourMap.hasOwnProperty(fieldMapKey)){
           $('#'+fieldObject.key.toLowerCase()).addClass(behaviourMap[fieldMapKey]);
         }
+        if(fieldKey == "HAVECHILD"){
+                if( false !== editAppObject["critical"].hasOwnProperty("MSTATUS")  && editAppObject["critical"]["MSTATUS"].value =="N"){
+                        $("#havechildParent").hide();
+                }
+        }
       }
       if(sectionId == CRITICAL){
         cookNoteTextBeforeSubmitButton(editSectionFormDOM,sectionId);
@@ -5925,7 +5930,6 @@ updateEduLevelChanges =function(eduLevelVal)
     updateView = function(viewApiResponse){
       updateLastUpdated(viewApiResponse);
       var iterateOnResponse = function(section){
-                
         for(var key in section){
         if(key=="jamaat")
         {
@@ -5936,6 +5940,17 @@ updateEduLevelChanges =function(eduLevelVal)
                 else
                 {
                         $("#jamaatlistitem").hide();
+                }
+        }
+        if(key=="m_status")
+        {
+                if(section['m_status'].toLowerCase()=="never married")
+                {
+                        $("#havechildParent").hide();
+                }
+                else
+                {
+                        $("#havechildParent").show();
                 }
         }
           var viewId = '#'+key.toLowerCase()+'View';
