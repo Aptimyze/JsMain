@@ -191,7 +191,11 @@ class FieldForm extends sfForm
                 if($insert == 1){
                         $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
                         $editedFields = array_keys($criticalInfoFieldArr);
-                        $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields));
+                        $screenedStatus = "Y";
+                        if(isset($criticalInfoFieldArr["MSTATUS"]) && $criticalInfoFieldArr["MSTATUS"] == "D"){
+                                $screenedStatus = "N";
+                        }
+                        $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields),$screenedStatus);
                 }
                 unset($infoChngObj);
                 if(isset($criticalInfoFieldArr["DOCUMENT_PATH"])){

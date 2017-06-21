@@ -483,21 +483,34 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$basicArr[YOURINFO][OnClick][]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),"",$this->getApiScreeningField("YOURINFO"),$this->textArea);
                 
 		//mstatus
-                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
-                $canEdit = false;
-                $canEditType = $this->nonEditable;
-                if($editedCritical===true){
-                        $canEdit = true;
-                        $canEditType = $this->dropdown;
-                }
+//                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
+//                $canEdit = false;
+//                $canEditType = $this->nonEditable;
+//                if($editedCritical===true){
+//                        $canEdit = true;
+//                        $canEditType = $this->dropdown;
+//                }
                 if($this->profile->getRELIGION() == 2){
                         $key = "MSTATUS_MUSLIM_EDIT";
                 }else{
                         $key = "MSTATUS_EDIT";
                 }
+                
+                $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                $data = $infoChngObj->editedCriticalInfo($this->profile->getPROFILEID(),true);
+                $screened = 0;
+                $canEdit = true;
+                $canEditType = $this->dropdown;
+                if($data){
+                        $canEdit = false;
+                        $canEditType = $this->nonEditable;
+                        if($data["SCREENED_STATUS"] == "N"){
+                                $screened = 1;
+                        }
+                }
 		//date of birth
                 $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
-		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEditType,"",0,"","","",array(),"",$key);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$canEditType,"",0,"","","",array(),"",$key);
 		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Divorce Decree Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
 		$basicArr["critical"][outerSectionName]="Critical Fields";
 		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";

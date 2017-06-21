@@ -389,6 +389,9 @@ function UpdateOverlayLayer(attr)
 	
 	$("#overLayer").html("");
 	$("#overLayer").html(tempHtml);
+        if(tabKey == "critical"){
+                $("#overLayer").find("#overlayContent").append('<div class="fullwid bg4 " id="bottom_TOP" dindexpos="1"><div class="pad1"><div class="pad2"><div class="fl wid94p "><div id="MSTATUSlabel" class="color3 f14 fontlig pb12">We will not allow any change in <span style="font-weight: 400;"> Date of Birth or Marital Status</span> after you submit this form. So please reconfirm the details carefully before submitting.</div></div></div></div></div>');
+        }
 	//$("#overLayer").css("min-height",$(window).height()).css("background","white");
 	$("#overLayer").css("background","white");
 	$('#'+tabKey).submit(function() {
@@ -462,6 +465,10 @@ function UpdateOverlayTags(string,json,indexPos)
 		
 		string=string.replace(/\{\{inputDiv\}\}/g,divOverlay);
 		
+                if(json.key == "MSTATUS" && json.screenBit != 0){
+                        string=string.replace(/\{\{underScreening\}\}/g,"(awaiting proof validation)");
+                        string=string.replace(/\{\{underScreening\}\}/g,"");
+                }
 		if(json.action==3){
 			string=string.replace(/\{\{backGroundColor\}\}/g,"bg3");
 			string=string.replace(/\{\{displayArrow\}\}/g,"lock");
@@ -498,6 +505,8 @@ function UpdateOverlayTags(string,json,indexPos)
 	string=string.replace(/\{\{divid\}\}/g,json.key+"_TOP");
 	if(json.action==2)
 	{
+                
+                
 		//json.key="country";
 		//json.dependant="city";
 		var dhide="single";

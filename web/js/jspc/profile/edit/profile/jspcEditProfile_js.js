@@ -846,7 +846,9 @@ EditApp = function(){
       var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
       var fieldDivAttr  = {class:"fl edpbrd3 edpwid3 edpbrad1 cursp pos-rel outline-none js-boxField",id:fieldObject.key.toLowerCase(),tabindex:"0"};
       var decValAttr    = {class:"fl lh40 edpwid3 edpbrad1 js-decVal"};
-      
+      if(fieldObject.key.toLowerCase() == "mstatus"){
+              var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
+      }
       if(typeof configObject != "undefined"){
         /*Loop and replace in default One*/
       }
@@ -892,7 +894,12 @@ EditApp = function(){
       var boxContentDOM = $("<div />",{class:"js-boxContent"});      
       boxContentDOM.append(optionString)
       fieldDivDom.append(boxContentDOM);
-      
+      if(fieldObject.key.toLowerCase() == "mstatus"){
+        if(fieldObject.isUnderScreen === false){
+            underScreenAttr.class += " disp-none";
+          }   
+          fieldDivDom.append($("<p />",underScreenAttr));
+  }
       //Add Some Sides UI Element
       if(sidesUIMap.indexOf(fieldObject.key) != -1){
         cookoutSidesUIElement(fieldObject,fieldDivDom);
@@ -3802,10 +3809,12 @@ updateEduLevelChanges =function(eduLevelVal)
           var statusCode = parseInt(result.responseStatusCode);
           if (statusCode === 0) {
             showHideEditSection(sectionId,"hide");
-            showHideCriticalSection(sectionId);
             editAppObject.needToUpdate = true;
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
+            if(sectionId == "critical" && editedFields[sectionId].hasOwnProperty("MSTATUS") && editedFields[sectionId]["MSTATUS"] == "D"){
+                    $(".mstatusUndScnMsg").removeClass("disp-none");
+            }
             delete editedFields[sectionId];
             //update self name in chat header
             if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
@@ -3813,6 +3822,9 @@ updateEduLevelChanges =function(eduLevelVal)
                 setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");
               }
             }
+            if(sectionId == "critical"){
+                showHideCriticalSection(sectionId);
+                }       
           }
           else if(statusCode === 1 &&  result.hasOwnProperty('error'))
           {
@@ -5907,7 +5919,6 @@ updateEduLevelChanges =function(eduLevelVal)
       var iterateOnResponse = function(section){
                 
         for(var key in section){
-
         if(key=="jamaat")
         {
                 if(section['caste_val']=="152")

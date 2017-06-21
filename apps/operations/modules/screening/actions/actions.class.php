@@ -100,6 +100,8 @@ class screeningActions extends sfActions {
                 $logObj = new CRITICAL_INFO_DOC_SCREENED_LOG();
                 $logObj->insert($pid, $name, $status, $documentPath);
                 
+                $changedFieldsObj = new newjs_CRITICAL_INFO_CHANGED();
+                $changedFieldsObj->updateStatus($pid, "Y");
                 $objDoc = new ProfileDivorcedDocumentScreening();
                 $objDoc->del($pid,$name);
                 

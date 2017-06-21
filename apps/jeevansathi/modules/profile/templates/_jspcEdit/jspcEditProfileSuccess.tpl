@@ -153,7 +153,7 @@
                   <div class="prfp5 noMultiSelect" id="section-critical">
                     <div class="clearfix"> <i class="fl critical-field"></i>
                       <div class="fl colr5 pl8 f17 pt2" >Critical Fields <span class="f14 color11 opa60">- Can be edited only once in lifetime</span></div>
-                        <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections disp-none" data-section-id="critical">Edit</a> </div>
+                        <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections ~if ($editApiResponse.cannot_edit_section.C) neq "Critical"` disp-none ~/if`" data-section-id="critical">Edit</a> </div>
                     </div>
                     <div class="pl30 prflist1 fontlig js-criticalView">
                       <ul class="clearfix fontreg">
@@ -162,7 +162,7 @@
                           <p class="pt2 fontlig"><span id="ageView">~$arrOutDisplay.about.age`</span> <span id="dtofbirthView">(~$arrOutDisplay.about.formatted_dob`)</span></p>
                         </li>
                         <li>
-                          <p class="color12 pt15 fontlig">Marital Status</p>
+                          <p class="color12 pt15 fontlig">Marital Status <span class="~if $editApiResponse.Critical.MSTATUS.screenBit neq 1` disp-none ~/if` js-undSecMsg mstatusUndScnMsg"> <span class="disp_ib color5 f13" > Awaiting proof validation</span></span></p>
                           <p class="pt2 fontlig" >
                             <span id="m_statusView">~$arrOutDisplay.about.m_status`</span>
                           </p>
