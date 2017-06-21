@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 
 import Loader from "../../common/components/Loader";
+import {getParameterByName} from '../../common/components/UrlDecoder';
 import AppPromo from "../../common/components/AppPromo";
 import TopError from "../../common/components/TopError";
 import PhotoView from "../../common/containers/PhotoView";
@@ -18,6 +19,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 class ProfilePage extends React.Component {
 
     constructor(props) {
+        let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         super();
         this.state = {
             insertError: false,
@@ -31,12 +33,20 @@ class ProfilePage extends React.Component {
             profilechecksum: "f0acc30e3f8794558209b01c0bee23d3i6467012",
             gender: "M"
         };
+        if ( profilechecksum )
+        {
+            this.state.profilechecksum = profilechecksum;
+        }
+
         if(localStorage.getItem('GENDER') == "F") {
             this.setState({
                 gender: "F"
             });
         }
         props.showProfile(this.state.profilechecksum);   
+    }
+    componentWillMount() {
+        
     }
 
     componentDidMount() {
