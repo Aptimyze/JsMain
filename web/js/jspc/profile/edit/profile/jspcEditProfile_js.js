@@ -68,6 +68,7 @@ EditApp = function(){
                               "ADDR_PROOF_TYPE":"Required",
                               "ID_PROOF_TYPE":"Required",
                               "SAME_EMAIL":"Same Email",
+                              "MSTATUS_PROOF":"Please attach Divorced Decree",
                             };
     //Section List
     var BASIC             = "basic";
@@ -269,6 +270,7 @@ EditApp = function(){
             for(var j=0;j<sectionArr.length;j++){
               var inAnySection = false;
               var sectionNameArr = [];
+              
               if(sectionArr[j].key == "RELIGION")
                   userReligion = sectionArr[j].value;
           
@@ -413,7 +415,13 @@ EditApp = function(){
                   field.key = orgKey;
                 }
               }
-
+              
+              
+              if(sectionArr[j].key == "MSTATUS" && sectionArr[j].value == "N"){
+                        if(editAppObject.hasOwnProperty("basic") !== false && editAppObject["basic"].hasOwnProperty("HAVECHILD")!== false){
+                                delete editAppObject["basic"]["HAVECHILD"];
+                        }
+              }
 
             }
         }   
@@ -1334,7 +1342,7 @@ EditApp = function(){
       var fieldDivDom = $("<div />",fieldDivAttr);
       var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
       if(sectionId == CRITICAL){
-                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:"Please provide valid value for Divorce Decree"}));
+                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:errorText}));
       }else{
                 fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
       }

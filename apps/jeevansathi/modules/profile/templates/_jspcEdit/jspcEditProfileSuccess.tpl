@@ -234,6 +234,7 @@
                         <li id="li-havechild">
                         ~else`
                         <li id="li-havechild" class="disp-none">
+                        ~/if`
                           <p class="color12 pt15 fontlig">Have Children?</p>
                           <p class="pt2 fontlig" >
                             <span id="have_childView" 
@@ -245,8 +246,6 @@
                             </span>
                           </p>
                         </li>
-                        
-                        ~/if`
                         ~if $editApiResponse.Details.RELIGION.value eq 2`
                         <li id="jamaatlistitem">
                           <p class="color12 pt15 fontlig">Jamaat</p>
