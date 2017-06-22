@@ -14,20 +14,21 @@ import {
   Route,
   browserHistory,
   Redirect,
-  Link
+  Link,
+  Switch
 } from "react-router-dom";
-const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
-  .then(module => module.default), { name: 'LoginPage' });
-
 import EnsureLoggedInContainer from '../containers/EnsureLoggedInContainer';
 
+const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
+  .then(module => module.default), { name: 'LoginPage' });
 const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
 const PhotoAlbumPage = asyncComponent(() => import('./../../photoAlbum/containers/PhotoAlbumPage')
   .then(module => module.default), { name: 'PhotoAlbumPage' });
-
+const PageNotFound = asyncComponent(() => import('./PageNotFound')
+  .then(module => module.default), { name: 'PageNotFound' });
 
 const hash = getRoutePath(window.location.href);
 
@@ -48,7 +49,6 @@ class App extends React.Component
         redirectToHashUrl = <Redirect to={hash}/>;
       }
     return (
-
       <div>
       <Router>
       <div>

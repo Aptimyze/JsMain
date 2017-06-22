@@ -9,8 +9,13 @@ const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
   .then(module => module.default), { name: 'MyjsPage' });
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
+const PageNotFound = asyncComponent(() => import('./../components/PageNotFound')
+  .then(module => module.default), { name: 'PageNotFound' });
+const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
+  .then(module => module.default), { name: 'LoginPage' });
+
 import {
-  Route,
+  Route,Switch
 } from "react-router-dom";
 
 class EnsureLoggedInContainer extends React.Component
@@ -27,14 +32,17 @@ class EnsureLoggedInContainer extends React.Component
         if ( this.props.MyProfile.AUTHCHECKSUM )
         {
             return <div>
+                    <Switch>
                     <Route exact path="/" component={MyjsPage}/>
                     <Route path='/myjs' component={MyjsPage} />
-                    </div>;
+                    <Route path='/viewProfile' component={ProfilePage} />
+                    <Route component={PageNotFound} />
+                    </Switch>
+                    </div>
         }
         else
         {
-            
-           return null;
+             return null;         
         }
     }
 
