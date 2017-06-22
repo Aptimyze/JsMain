@@ -4,6 +4,9 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
+        ~if $sf_request->getParameter('showAndBeyond')`
+        <script type="text/javascript" src="//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js" async></script>
+        ~/if`
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{

@@ -1034,5 +1034,20 @@ class CommonFunction
     	}    	
     	return false;
     }
+    
+    public static function showAndBeyondPixel($profileId)
+    {
+    	if($profileId%9==1)
+    	{
+                $loggedInObj = LoggedInProfile::getInstance();
+                $subscription = $loggedInObj->getSUBSCRIPTION();
+                if($subscription==''){
+                    $analyticScore = ScoringLib::getAnalyticScore($profileId);
+                    if($analyticScore >= 0 && $analyticScore <=30)
+    			return true;
+                }   		
+    	}    	
+    	return false;
+    }
 }
 ?>
