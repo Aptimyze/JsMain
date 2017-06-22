@@ -644,7 +644,7 @@ $js_arr[]=array(" /web/spa/src/login/containers/LoginPage"    => "2");
 $js_arr[]=array("/web/spa/src/login/actions/LoginActions"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/CookieHelper"      => "4");
 $js_arr[]=array("/web/spa/src/common/components/App"      => "4");
-$js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"     => "3");
+$js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"      => "4");
 $js_arr[]=array(" /web/spa/src/common/components/App"        => "6");
 $js_arr[]=array("/web/spa/dist/0.bundle"   => "1");
 $js_arr[]=array("/web/spa/dist/0"   => "1");
@@ -660,6 +660,7 @@ $js_arr[]=array("/web/spa/src/common/components/UrlDecoder"   => "1");
 $js_arr[]=array(" /web/spa/src/common/constants/CommonConstants"    => "2");
 $js_arr[]=array(" /web/spa/src/common/constants/apiConstants"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/Loader"   => "1");
+$js_arr[]=array(" /web/spa/src/myjs/components/MyjsSliderBar"   => "1");
 return $js_arr;
 }
 function getJavascript(){
