@@ -91,13 +91,11 @@ window.addEventListener("resize",function()
                 else
                     this.transitionDuration = 500;
                 if (absD >= this.slider.threshold) {
-
-
                     distance < 0 ? this.NextSlide() : this.PrevSlide();
                 }
                 else
                     this.gotoSlide(this._index);
-                    var tupleLength = this.apiObject.tuples.length;
+                    // var tupleLength = this.apiObject.tuples.length;
                 // if (this._index >=  tupleLength/ 2) if (tupleLength<100)
                 //     this.props.onnewtuples();
                 e.preventDefault();
@@ -105,9 +103,9 @@ window.addEventListener("resize",function()
             NextSlide()
             {
                 var index = this._index + 1;
-                if (index > this.apiObject.tuples.length)
+                if ((index+1) > this.apiObject.tuples.length)
                 {
-                    index = this.apiObject.tuples.length;
+                    index = this.apiObject.tuples.length-1;
                     this.transitionDuration = 500;
                 }
                 var transform;
