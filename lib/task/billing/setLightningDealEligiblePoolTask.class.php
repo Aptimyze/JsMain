@@ -4,12 +4,13 @@
 	1. Pick all currently free users who have logged-in in the last 30 days (pool 1). 
 	2. Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed) (pool 2).
 	3. Pick n number of users from pool2 where n is 10% of the number of users in pool 1.
-* @author : Ankita
 */
 
 class setLightningDealEligiblePoolTask extends sfBaseTask
 {
-	private $debug = 0;
+	private $debug = 1;
+	private $logFilePath = "";
+
 	protected function configure()
 	{
 		$this->addOptions(array(
@@ -28,31 +29,39 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		//ini_set('max_execution_time',0);
-    	//ini_set('memory_limit',-1);
+		ini_set('max_execution_time',0);
+    	ini_set('memory_limit',-1);
 		if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-
-        $dealObj = new LightningDeal($this->debug);
+        $this->logFilePath = JsConstants::$docRoot.'/uploads/lightningDeal.txt';
+        shell_exec("echo '' > ".$this->logFilePath."");
+        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "Lightning Deal cron started", "Lightning Deal cron started");
+        $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
-
+      
         //store eligible pool
         $dealObj->storeDealEligiblePool($eligiblePool);
         unset($dealObj);
 
-        //truncate billing.DISCOUNT_HISTORY table
+        
         $todayDate = date("Y-m-d");
         $today1Date = date("Y-m-d",strtotime("$todayDate -1 days"));
 		$offsetDate = date("Y-m-d",strtotime("$todayDate -".VariableParams::$lightningDealOfferConfig["lastLoggedInOffset"]." days"));
         $discHistObj = new billing_DISCOUNT_HISTORY();
+
         //backup daily data to billing.DISCOUNT_HISTORY_BACKUP
         $discHistObj->backupDailyData($today1Date);
-
-        //uncomment ankita later
+        //truncate 30 days older entries from billing.DISCOUNT_HISTORY
         $discHistObj->truncateTable($offsetDate);
         unset($discHistObj);
 	}
+    
+    public function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+    }
 }
 ?>

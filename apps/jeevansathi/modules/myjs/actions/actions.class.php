@@ -10,20 +10,20 @@
  */
 class myjsActions extends sfActions
 {
-
+  
   private $arrProfiler = array();
   private $bEnableProfiler = false;
-
+  
   /**
    * This variable will be use to invalidate the Membership cache
-   * @var type
+   * @var type 
    */
   private $bInvalidateMemberShipCache = false;
-
+  
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
-  	*
+  	* 
   	*/
 	private function getMembershipLink($pageId){
   	$arr=array('16'=>'/inbox/16/1',
@@ -38,14 +38,14 @@ class myjsActions extends sfActions
   	*
   	* @param sfRequest $request A request object
   	*/
-
+   
 	public function executeIndex(sfWebRequest $request)
   	{
 		$module= "MYJS";
 		$profileCommunication = new ProfileCommunication();
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
     $pid=$loggedInProfileObj->getPROFILEID();
-
+    
     //Handle Logout Case
     if(is_null($loggedInProfileObj) || is_null($pid)) {
       $this->forward("static", "logoutPage");
@@ -57,7 +57,7 @@ class myjsActions extends sfActions
 		if($infoTypeId)
 		{
 			$json=1;
-			$infoType = ProfileInformationModuleMap::getInfoTypeById($module,$infoTypeId);
+			$infoType = ProfileInformationModuleMap::getInfoTypeById($module,$infoTypeId);	
 			$infoTypenav = array($infoType=>$pageNo);
 			unset($infoTypeId);
 			unset($infoType);
@@ -71,7 +71,7 @@ class myjsActions extends sfActions
 			foreach($this->displayObj as $k=>$v)
 			{
 				//print_r($v);die;
-				//print_r(json_encode($v));
+				//print_r(json_encode($v));	
 				//die;
 			}
 		}
@@ -99,7 +99,7 @@ class myjsActions extends sfActions
 			{
 				$pictureUploadLink="M";  // for more photo link
 			}
-			else
+			else 
 				$pictureUploadLink="NA"; // for no link
 		}
 		$this->pictureUploadLink = $pictureUploadLink;
@@ -114,25 +114,25 @@ class myjsActions extends sfActions
  /**
   * Mobile Api version 1.0 action class
   */
-  public function executePerformV1(sfWebRequest $request) {
-    //for logging
-    //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit");
+  public function executePerformV1(sfWebRequest $request) {    
+    //for logging       
+    //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
     $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
-
+    
     if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew"))
       $oldMyjsApi=false;
     else
       $oldMyjsApi=true;
     $module = "MYJSAPP";
     $stSecondTime = microtime(TRUE);
-
+    
     $inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
     $respObj = ApiResponseHandler::getInstance();
     $inputValidateObj->validateRequestMyJsData($request);
     $output = $inputValidateObj->getResponse();
-
+    
     $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
     $pid = $loggedInProfileObj->getPROFILEID();
 
@@ -142,29 +142,29 @@ class myjsActions extends sfActions
 			$respObj->generateResponse();
 			die;
     }
-
+    
     if($this->bEnableProfiler) {
       //Validation Time taken
       $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSecondTime, 'Request Validation Time Taken : ', $moduleName);
     }
-
+        
     if ($output["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"]) {
-
+      
       $stThirdTime = microtime(TRUE);
-
+      
       $profileCommunication = new ProfileCommunication();
-
+      
       //  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
       $infoTypeId = $request->getParameter("infoTypeId");
       $pageNo = $request->getParameter("pageNo");
       $params["profileList"] = $request->getParameter("profileList");
       $params["showExpiring"] = $request->getParameter("showExpiring");
-
+      
       if($this->bEnableProfiler) {
         //Basic Object Initalization
         $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stThirdTime, 'Basic Object Initalization Time Taken : ', $moduleName);
       }
-
+      
       $stFourthTime = microtime(TRUE);
       if ((MobileCommon::isApp() == "I") || MobileCommon::isNewMobileSite()) {
         $Apptype = "IOS";
@@ -201,25 +201,44 @@ class myjsActions extends sfActions
         $completionObj = ProfileCompletionFactory::getInstance("API", $loggedInProfileObj, null);
         $profileInfo["COMPLETION"] = $completionObj->getProfileCompletionScore();
         $profileInfo["INCOMPLETE"] = $completionObj->GetAPIResponse("MYJS");
-
+        
         if($this->bEnableProfiler) {
           //Pic & PCS Call
           $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFifthTime, 'Pic & PCS Call Time Taken : ', $moduleName);
         }
-
+ 
         $selfPhoto = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
         $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
 
         $stSixthTime = microtime(TRUE);
-         //If we want to get fresh data for membership
 
+        $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
+        $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
+        $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+        $bIsCached = true;
+      ////cal layer added by palash            
+      $stCALTime = microtime(TRUE);
+      ob_start();
+      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+      $layerData = ob_get_contents();
+      ob_end_clean();
+      if($this->bEnableProfiler) {
+        //CAL Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
+      }
+      $layerData = json_decode($layerData, true);
 
+//////////////////////////////////
+
+         //If we want to get fresh data for membership 
+        
+        
 
         if($oldMyjsApi){
           $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
           $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
           $bIsCached = true;
-
+        
           //MyJS is Not Cached
           if (!$appV1DisplayJson) {
             $bIsCached = false;
@@ -232,21 +251,21 @@ class myjsActions extends sfActions
             $profileArray=$appV1obj->getProfileInfo($profileInfo);
             if($profileArray[strtolower("MY_PROFILE")])
               $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
-
+    
             $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
         }
         //use it wisely
         if($this->bInvalidateMemberShipCache) {
           $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
         }
-
-
+        
+       
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
           if($bIsCached) {
             $msg1 = "[Cached]";
-          }
+          } 
           $msg = "MyJS Display Call $msg1 Time Taken : ";
           $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSixthTime, $msg, $moduleName);
         }
@@ -257,7 +276,7 @@ class myjsActions extends sfActions
         $stBELLTime = microtime(TRUE);
         $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
       }
-
+      
       if($this->bEnableProfiler) {
         //BELL Count Time taken
         $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stBELLTime, 'BELL Count Details Time Taken : ', $moduleName);
@@ -265,20 +284,10 @@ class myjsActions extends sfActions
       if (MobileCommon::isApp() == "I") {
         $appV1DisplayJson['membership_message'] = NULL;
       }
-
-      ////cal layer added by palash
-      $stCALTime = microtime(TRUE);
-      ob_start();
-      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-      $layerData = ob_get_contents();
-      ob_end_clean();
-      if($this->bEnableProfiler) {
-        //CAL Time taken
-        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
-      }
-      $layerData = json_decode($layerData, true);
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
+      $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
+
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $respObj->setUserActionState(1);
@@ -289,13 +298,13 @@ class myjsActions extends sfActions
     unset($output);
     unset($inputValidateObj);
     $respObj->generateResponse();
-
+    
     if($this->bEnableProfiler) {
       //Total Time taken
       $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFirstTime, 'Total Time taken : ', $moduleName);
       CommonFunction::logIntoProfiler($moduleName, $this->arrProfiler);
     }
-
+    
     if (MobileCommon::isApp() == null)
       return sfView::NONE;
     die;
@@ -303,14 +312,14 @@ class myjsActions extends sfActions
 
   public function executeJsmsPerform(sfWebRequest $request)
 	{			//myjs jsms action hit for logging
-        $this->pageMyJs = 1;
-
-        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action");
+        $this->pageMyJs = 1; 
+        
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
         $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
         $this->loginData=$request->getAttribute("loginData");
         $this->profile=Profile::getInstance();
         $this->loginProfile=LoggedInProfile::getInstance('newjs_master');
-
+                
         $pid = $this->loginProfile->getPROFILEID();
         //Handle Logout Case
         if(is_null($this->loginProfile) || is_null($pid)) {
@@ -325,7 +334,7 @@ class myjsActions extends sfActions
           sfContext::getInstance()->getController()->forward("promotions", "chatPromoJSMS");
           die;
         }
-
+  
         $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
@@ -347,13 +356,13 @@ class myjsActions extends sfActions
 
                 $output = ob_get_contents();
                 ob_end_clean();
-
+                
            	    $this->apiData=json_decode($output,true);
-                $this->jsonData = $output;
-
+                $this->jsonData = $output;                
+                
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
-           	    {
+           	    {  
            	    	$request->setAttribute('calObject',$this->apiData['calObject']);
            	    	$request->setAttribute('gender',$this->loginProfile->getGENDER());
 
@@ -361,23 +370,22 @@ class myjsActions extends sfActions
            	    	die;
 	            }
 	            $this->apiData['gender']=$this->loginProfile->getGENDER();
-              	$this->apiData['membership_message_link']=$this->getMembershipLink($this->apiData['membership_message']['pageId']);
-
-
+              	$this->apiData['membership_message_link']=$this->getMembershipLink($this->apiData['membership_message']['pageId']);	
+              			
 ///// block for adding desired partner option in profile completion slider in mobile
 
-              		$tempDpp['url']='/profile/viewprofile.php?ownview=1#Dpp';
-              		$tempDpp['cssClass']='dppHeart';
-              		$tempDpp['title']='Desired Partner';
+              		$tempDpp['url']='/profile/viewprofile.php?ownview=1#Dpp';	
+              		$tempDpp['cssClass']='dppHeart';	
+              		$tempDpp['title']='Desired Partner';	
 //////////////////////////////////////////
 
               		$length=count($this->apiData['my_profile']['incomplete']);
-              		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;
+              		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;	
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage','Y');
 
-
+                   $this->currentTime = date('Y-m-d H:i:s');
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
@@ -394,12 +402,12 @@ class myjsActions extends sfActions
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcMYJSUrl);
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$this->profileid=$this->loginProfile->getPROFILEID();
-
+    
     //Handle Logout Case
     if(is_null($this->loginProfile) || is_null($this->profileid)) {
       $this->forward("static", "logoutPage");
     }
-
+ 
     $promoObj = new PromoLib();
     $chatPromoToShow = $promoObj->showPromo("chatPromo",$this->profileid,$this->loginProfile);
     if($chatPromoToShow == true)
@@ -413,23 +421,23 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
         $this->loadLevel = JsConstants::$hideUnimportantFeatureAtPeakLoad;
 
-
+	
 		if (empty($this->profilePic))
 			$this->profilePic="N";
 		$this->username = $this->loginProfile->getUSERNAME();
-
-		//New Membership
+		
+		//New Membership 
 		$memHandlerObj = new MembershipHandler();
 		$this->membershipStatus = $memHandlerObj->getRealMembershipName($this->profileid);
-
+			
 		if($this->profilePic!="N"){
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj){
-			if($this->profilePic=='U')
+			if($this->profilePic=='U')	
 				$picUrl = $profilePicObj->getThumbail96Url();
 			else
 				$picUrl = $profilePicObj->getProfilePic120Url();
@@ -438,17 +446,17 @@ class myjsActions extends sfActions
                    $this->photoUrl = PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
             else
                    $this->photoUrl = $photoArray['url'];
-
+				
 			$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
 			}
-
+			
 		}
    		else{
 			$this->photoUrl=$this->ThumbailUrl=PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
 		}
 		$this->otherthumbnail = PictureService::getRequestOrNoPhotoUrl("noPhoto","ProfilePic120Url",$this->gender=="F"?"M":"F");
 		$this->otherPhotoUrl = PictureService::getRequestOrNoPhotoUrl("noPhoto","ProfilePic235Url",$this->gender=="F"?"M":"F");
-
+		
 		$memHandlerObj = new MembershipHandler();
 		$userObj = new memUser($this->profileid);
 		$purchasesObj = new BILLING_PURCHASES();
@@ -465,12 +473,8 @@ class myjsActions extends sfActions
     		 $this->expirySubscription = date('d M Y', $yrdata);;
 		}
 
-		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-		$this->MembershipMessage = $data2['hamburger_message'];
-		//PROFILE COMPLETIION
-		$this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
-
-
+		
+		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
 		$this->iPCS = $cScoreObject->getProfileCompletionScore();
 		$noOfLinks=3;
@@ -478,8 +482,8 @@ class myjsActions extends sfActions
 		$this->arrLinkDetails = $cScoreObject->GetLink('MyJS');
 		$this->arrAPI= $cScoreObject->GetAPIResponse();
 		$this->apiData=json_decode($output,true);
-
-
+		
+		
 		//FTU
 		//USING ENTRY DATE TO COMPARE WITH CURRENT TIME AND SET FLAG
 		$currentTime=time();
@@ -503,10 +507,10 @@ class myjsActions extends sfActions
 		$this->computeImportantSection = 0;
 		$this->showFtu = 0;
 		if(($currentTime - $registrationTime)/(3600)<24){
-			$this->engagementCount= BellCounts::getFTUCountDetails($this->profileid);
+			$this->engagementCount= BellCounts::getFTUCountDetails($this->profileid); 
 			if($this->engagementCount["TOTAL"] == 0){
-	// Data for Important Field Section in FTU template starts
-		if($this->computeImportantSection == 1){
+	// Data for Important Field Section in FTU template starts	
+		if($this->computeImportantSection == 1){			 
 		$this->FTUdata = array();
 		$this->FTUdata['gender'] = $this->loginProfile->getDecoratedGender();
 		$this->FTUdata['maritalStatus'] = $this->loginProfile->getDecoratedMaritalStatus();
@@ -540,10 +544,10 @@ class myjsActions extends sfActions
 		else
 			$this->schedule_visit_widget = 0;
 		$personalVerif = $this->schedule_visit_widget && !($this->scheduleVisitCount) ? '1' : '0';
-
-
+	
+		
 		$this->staticCardArr = $this->getStaticCardDetails($personalVerif,$this->loginProfile->getSUBSCRIPTION(),$this->membershipStatus);
-
+		
 		//name of user
 		$nameOfUserOb=new incentive_NAME_OF_USER();
 		$this->nameOfUser=$nameOfUserOb->getName($this->profileid);
@@ -552,12 +556,22 @@ class myjsActions extends sfActions
 	    ob_start();
     	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
     	$layerData = ob_get_contents();
-    	ob_end_clean();
+    	ob_end_clean(); 
     	$layerData=json_decode($layerData,true);
-        $calObject=$layerData['calObject']?$layerData['calObject']:null;
-		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
-//--------------- Critical Action Layer section ends ------------
 
+        $calObject=$layerData['calObject']?$layerData['calObject']:null;
+
+		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
+
+    if($this->CALayerShow == 19)
+    {
+    $this->lightningCALData = $calObject;  
+    }
+//--------------- Critical Action Layer section ends ------------
+    $data2 = $memHandlerObj->fetchHamburgerMessage($request);
+    $this->MembershipMessage = $data2['hamburger_message']; 
+    $this->membershipPlanExpiry=$this->MembershipMessage['expiry'];
+				
 // ---------------consent message variable
 		$this->showConsentMsg=$request->getParameter('showConsentMsg');
 //--------------------------------------------------------
@@ -566,24 +580,24 @@ class myjsActions extends sfActions
 ///// -----------------help Screen variable
 
 		if(CommonConstants::showHelpScreensJSPC && $this->showConsentMsg!='Y' && $this->CALayerShow=='0')
-		{
+		{		
 			$this->showHelpScreen=JsMemcache::getInstance()->get($this->profileid."_showHelpScreen");
 			if(!$this->showHelpScreen)
 			{
 			$helpScreenObj= new newjs_HELP_SCREEN();
-
-			if($helpScreenObj->doesExist($this->profileid))
-			$this->showHelpScreen='N';
-
-			else
-			{
+		
+			if($helpScreenObj->doesExist($this->profileid)) 
+			$this->showHelpScreen='N'; 
+		
+			else 
+			{ 
 				$this->showHelpScreen='Y';
 				$helpScreenObj->insertOneTimeEntry($this->profileid);
 			}
-
+		
 			JsMemcache::getInstance()->set($this->profileid."_showHelpScreen",'N');
 			}
-		}
+		} 
 
 		else $this->showHelpScreen='N';
 
@@ -592,16 +606,17 @@ class myjsActions extends sfActions
 			if(!$this->videoLinkLayer)
 			{
 				$videoLinkObj= new NEWJS_VIDEO_LINK();
-
-				if($videoLinkObj->doesExist($this->profileid))
-					$this->videoLinkLayer='N';
-
-				else
+			
+				if($videoLinkObj->doesExist($this->profileid)) 
+					$this->videoLinkLayer='N'; 
+			
+				else 
 					$this->videoLinkLayer='Y';
 			}
 			else
 				$this->videoLinkLayer='N';
-
+        
+        $this->currentTime = date('Y-m-d H:i:s');
 		//enable JPSC notifications layer depending on user earlier registered or not
        	$notificationObj = new NotificationConfigurationFunc();
         $this->showEnableNotificationsLayer = $notificationObj->showEnableNotificationLayer($this->profileid);
@@ -617,11 +632,11 @@ class myjsActions extends sfActions
 	public function executeVideolink(sfWebRequest $request)
 
 	{
-
-
+		
+		
 			$videoLinkObj= new NEWJS_VIDEO_LINK();
 				$profileid=$request->getParameter("profileid");
-
+				
 				$videoLinkObj->insertOneTimeEntry($profileid);
 			JsMemcache::getInstance()->set($profileid."_videoLinkLayer",'N');
 			echo "success";die;
@@ -668,14 +683,14 @@ $staticCardArr[$counter]['msg']='Have queries? Feel free to contact us right awa
 $staticCardArr[$counter]['url']='/profile/contact.php';
 $counter++;
 
-$staticCardArr[$counter]['head']='Protect Yourself';
+$staticCardArr[$counter]['head']='Protect Yourself'; 
 $staticCardArr[$counter]['msg']='Tips for a safe and secure partner search experience';
 $staticCardArr[$counter]['url']='/static/page/fraudalert';
 
 return $staticCardArr;
 
 
-	}
+	} 
 
 	public function executeClosematchOfDayV1(sfWebRequest $request)
 	{

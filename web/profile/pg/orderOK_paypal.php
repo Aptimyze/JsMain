@@ -36,10 +36,17 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $post_vars);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, false);
+
+$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+curl_setopt($ch, CURLOPT_HEADER, $header);
+//curl_setopt($ch, CURLOPT_HEADER, false);
+
 curl_setopt($ch, CURLOPT_USERAGENT, 'cURL/PHP');
 
 $fp = curl_exec($ch);
+
+$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$fp = substr($fp, $header_size);
 
 $dup =  false;
 

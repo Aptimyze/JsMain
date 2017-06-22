@@ -963,7 +963,8 @@ class CommonFunction
 
     public static function loginTrack($registrationid, $profileid)
 	{
-		if( ! isset($registrationid) || ! isset($profileid) )
+
+		if( ! isset($registrationid) || ! isset($profileid) || $profileid == null)
 			return ;
 
 		// APP_LOGINTRACKING
@@ -980,7 +981,6 @@ class CommonFunction
 
 	public static function SendEmailNewLogin($profileid)
 	{
-		return ;
 		if(!isset($profileid))
 			return ;
 
@@ -1023,11 +1023,14 @@ class CommonFunction
     {
     	if($profileId)
     	{
-    		if(($profileId % 10) == 1) //this needs to be changed as per requirement. Currently setting it to 10%users
-    		{
+    		$loggedInObj = LoggedInProfile::getInstance();
+    		$subscription = $loggedInObj->getSUBSCRIPTION();
+    		if($subscription != "" && ($profileId % 5) == 1)
+    		{    			
     			return true;
     		}
-    		return false;    		
+    		return false;
+    		    		
     	}    	
     	return false;
     }

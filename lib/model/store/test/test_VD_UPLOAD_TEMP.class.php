@@ -13,6 +13,8 @@ class test_VD_UPLOAD_TEMP extends TABLE{
     */
     public function fetchSelectedRecords($fields="*",$limit,$offset)
     {
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
         try
         {
             $sql = "SELECT ".$fields." FROM test.VD_UPLOAD_TEMP LIMIT ".$limit." OFFSET ".$offset;

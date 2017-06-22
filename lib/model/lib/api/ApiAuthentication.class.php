@@ -876,17 +876,18 @@ Abstract class ApiAuthentication
 	*/ 
     public function setLoginTrackingCookie($loginData)
 	{
+		if(MobileCommon::isApp())
+			return ;
+
 		$username = $loginData["USERNAME"];
 		$cookieName = "loginTracking";
 		$expiryTime = 31536000; // Approx 1 year
-
-		$regId = "regid : ".sfContext::getInstance()->getRequest()->getParameter("registrationid");
 
 		if(!isset($_COOKIE[$cookieName]))
 		{
 			@setcookie($cookieName, json_encode(array($username)), time() + $expiryTime, "/", $this->domain);
 			// send mail
-			//LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $regId, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
 			CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
 		}
 		else
@@ -897,7 +898,7 @@ Abstract class ApiAuthentication
 				array_push($cookieData, $username);
 				@setcookie($cookieName, json_encode($cookieData), time() + $expiryTime, "/", $this->domain);
 				// send mail
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $regId, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
 				CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
 			}
 		}

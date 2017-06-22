@@ -20,7 +20,7 @@ ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
 
-$db=connect_ddl();
+$db=connect_db();
 $debug = 1;
 mysql_select_db("viewSimilar",$db);
 

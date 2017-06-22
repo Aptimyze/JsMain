@@ -129,14 +129,14 @@ $(document).ready(function (e) {
         $(this).off("click").on("click",function(){
             $("#commonOverlay").removeClass("disp-none");   
             $("#commonOverlay").html(idfyStr);
-            $("#trackIdfy").off("click").on("click",function () {                
+            /*$("#trackIdfy").off("click").on("click",function () {                
                 $.myObj.ajax({
                     type: 'POST',
                     url: "/api/v1/common/trackIdfy",
                     success: function (response) {                        
                     }
                 });
-            });
+            });*/
             $("#closeBtn").off("click").on("click",function(){
                 $("#commonOverlay").addClass("disp-none");
             }); 
@@ -459,7 +459,7 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
-    console.log(data);
+    // console.log(data);
     if (data) { 
         var maxCount = 100;
         var maxWrapStr = "99+";
@@ -669,6 +669,7 @@ function showLayerCommon(layerId) {
             })
         });
     });
+
 }
 
 function closeCurrentLayerCommon(extraFunction) {
@@ -854,4 +855,74 @@ function inviewCheck()
             return $.inviewport(a, {threshold : 0});
         }
     });
+}
+
+function showTimerForLightningMemberShipPlan(source) {
+    if(source == "jsmsMyjs" || source == "jspcMyjs"){
+        var cT = new Date(current);
+        var eT = new Date(membershipPlanExpiry);
+        lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
+    }
+    if(!lightningDealExpiryInSec) 
+        return;
+    var currentTime=new Date(); 
+    var expiryDate=new Date();
+    expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
+    if(expiryDate<currentTime) return;
+    var timeDiffInSeconds=(expiryDate-currentTime)/1000;
+    if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
+    var temp=timeDiffInSeconds;
+    var timerSeconds=temp%60;
+    temp=Math.floor(temp/60);
+    var timerMinutes=temp%60;
+    temp=Math.floor(temp/60);
+    var timerHrs=temp;
+    memTimerExtraDays=Math.floor(timerHrs/24);
+    memTimerTime=new Date();
+    memTimerTime.setHours(timerHrs);
+    memTimerTime.setMinutes(timerMinutes);
+    memTimerTime.setSeconds(timerSeconds);
+    src = source;
+    memTimer=setInterval('updateMemTimerLightning()',1000);
+}
+
+
+function formatTimeLightning(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+function updateMemTimerLightning(){
+  var h = memTimerTime.getHours();
+  var s = memTimerTime.getSeconds();
+  var m = memTimerTime.getMinutes();
+  if (!m && !s && !h) {
+    if(!memTimerExtraDays) clearInterval(memTimer);
+    else memTimerExtraDays--;
+  }
+  
+    memTimerTime.setSeconds(s-1);
+    h=h+memTimerExtraDays*24;
+    
+    m = formatTimeLightning(m);
+    s = formatTimeLightning(s);
+    h = formatTimeLightning(h);
+    
+    if(src == "jsmsLanding"){
+        $("#jsmsLandingM").html(m);
+        $("#jsmsLandingS").html(s);
+    }
+    else if (src == "jsmsMyjs"){
+        $("#myjsM").html(m);
+        $("#mysjsS").html(s);
+    }
+    else if( src == "jspcLanding"){
+        $("#jspcLandingM").html(m);
+        $("#jspcLandingS").html(s);
+    }
+    else if( src == "jspcMyjs"){
+        $("#jspcMyjsM").html(m);
+        $("#jspcMyjsS").html(s);
+    }
 }

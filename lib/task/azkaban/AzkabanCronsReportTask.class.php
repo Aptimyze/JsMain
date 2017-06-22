@@ -10,7 +10,7 @@ class AzkabanCronsReportTask extends sfBaseTask
 {
  	protected function configure()
   	{
-		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72");
+		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72",82=>"azkaban3",63=>"azkaban63");
 		$this->reportType = array(1=>"failed",2=>"longPreparing",3=>"executing");
 		$this->addArguments(array(
         		new sfCommandArgument('server', sfCommandArgument::REQUIRED, 'My argument'),
@@ -42,7 +42,7 @@ EOF;
 			$reportName= $arguments["reportType"]; // reportType
 			if(!$reportName || !$server)
 				SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com","No reportname or server given in cron:AzkabanCronsReport","Azkaban Crons Report ".date('y-m-d h:i:s'));
-			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS();
+			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS("crm_slave");
 			$db = $this->serverDb[$server];
 			$response = $azkabanExecutionFlows->getExecutionStatus($db, $this->reportType[$reportName]);
 			if(is_array($response))
