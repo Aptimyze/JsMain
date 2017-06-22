@@ -8,6 +8,7 @@ class viewSimilarConfig
 	public static $suggAlgoNoOfResults = 15; //total no of results to be shown for a profile
 	public static $suggAlgoNoOfResults_Mobile = 25; //total no of results to be shown for a profile
 	public static $suggAlgoNoOfResultsNoFilter = 100; //total no of results to be send for a profile to search
+        public static $suggAlgoNoOfResultsInOneCall = 25;
 	public static $suggAlgoNoOfResultsToBeShownAtATime=5; //max no of results to be shown at a time //changes for this variable to made in modules/profile/config/module.yml
 	public static $suggAlgoNoOfResultsToBeShownAtATime_Mobile = 20; //total no of results to be shown for a profile
 	public static $suggAlgoNoOfResultsToBeFetched=16; //no of results to be fetched from search, so that viewed and inactivated profiles can be removed
@@ -86,6 +87,11 @@ class viewSimilarConfig
         	return $arr;
         }
 
-
+        public static function VspWithoutSolr($profileId){
+            if($profileId%3<1)
+                return true;
+            else
+                return false;
+        }
 }
 ?>

@@ -62,36 +62,45 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             else if($key == 'hage')
                                 $whereString .= " AND AGE<=:".$key;
                             else if($key == 'LPARTNER_LAGE')
-                                $whereString .= " AND PARTNER_LAGE>=:".$key;
+                                $whereString .= " AND (PARTNER_LAGE>=:".$key;
                             else if($key == 'HPARTNER_LAGE')
-                                $whereString .= " AND PARTNER_LAGE<=:".$key;
+                                $whereString .= " AND PARTNER_LAGE<=:".$key." || PARTNER_LAGE = '')";
                             else if($key == 'LPARTNER_HAGE')
-                                $whereString .= " AND PARTNER_HAGE>=:".$key;
+                                $whereString .= " AND (PARTNER_HAGE>=:".$key;
                             else if($key == 'HPARTNER_HAGE')
-                                $whereString .= " AND PARTNER_HAGE<=:".$key;
+                                $whereString .= " AND PARTNER_HAGE<=:".$key." || PARTNER_HAGE = '')";
                             else if($key == 'LPARTNER_LHEIGHT')
-                                $whereString .= " AND PARTNER_LHEIGHT>=:".$key;
+                                $whereString .= " AND (PARTNER_LHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_LHEIGHT')
-                                $whereString .= " AND PARTNER_LHEIGHT<=:".$key;
+                                $whereString .= " AND PARTNER_LHEIGHT<=:".$key." || PARTNER_LHEIGHT = '')";
                             else if($key == 'LPARTNER_HHEIGHT')
-                                $whereString .= " AND PARTNER_HHEIGHT>=:".$key;
+                                $whereString .= " AND (PARTNER_HHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_HHEIGHT')
-                                $whereString .= " AND PARTNER_HHEIGHT<=:".$key;
+                                $whereString .= " AND PARTNER_HHEIGHT<=:".$key." || PARTNER_HHEIGHT = '')" ;
                             else{
-                                $whereString .= " AND (".$key." IN(:".$key.") || ".$key."='')";
+                                $valArray = explode(" ",$value);
+                                $whereString.= "AND (";
+                                $i=0;
+                                foreach($valArray as $k1=>$v1)
+                                    $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") AND ";
+                                $whereString = substr($whereString, 0, -5);
+                                $whereString .= " || ".$key."='')";
                             }
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
                         $i = 0;
                         $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") $whereString";
-                        //echo $sql;die;
                         $prep = $this->db->prepare($sql);
                         foreach ($whereParams as $key=>$value){
-                            if(in_array($key,array('lage','hage','PARTNER_LAGE','PARTNER_HAGE','PARTNER_LHEIGHT','PARTNER_HHEIGHT')))
+                            if(in_array($key,array('lage','hage','LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
                                 $prep->bindValue(":".$key,$value,PDO::PARAM_INT);
-                            else
-                                $prep->bindValue(":".$key,$value,PDO::PARAM_STR);
-                        }
+                            else{
+                                $valArray = explode(" ",$value);
+                                $c=0;
+                                foreach($valArray as $k1=>$v1)
+                                    $prep->bindValue(":".$key.$c++,$v1,PDO::PARAM_STR);
+                            }
+                        }//die;
                         foreach ($viewedContactsStr as $key => $value) {
                                 $prep->bindValue(":VIEWEDSTR" . $i, $value, PDO::PARAM_LOB);
                                 $i++;

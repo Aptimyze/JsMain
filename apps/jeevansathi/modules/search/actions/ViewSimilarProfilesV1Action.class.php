@@ -91,7 +91,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     }
                                     else 
                                     {
-                                          if(SearchConfig::$VspWithoutSolr){
+                                          if(viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
                                                 if(!MobileCommon::isDesktop() && !MobileCommon::isAndroidApp()){
                                                     $profileidsort = $memObject->get('similar-'.$this->Profile->getPROFILEID().$pid);
                                                 }
@@ -108,14 +108,14 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     }
                                 }
                                 else{
-                                    if(SearchConfig::$VspWithoutSolr){
+                                    if(viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
                                         $db = connect_db();
                                         if($request->getParameter('searchid'));
                                            $includeCaste = checkIfCasteSpecified($searchId,$db);
                                         $viewSimilarLibObj = new ViewSimilarProfile;
                                         $loggedIn=2;
                                         $includeAwaitingContacts = 0;
-                                        $profileidsort = $viewSimilarLibObj->getSimilarProfilesFromSearch($loggedIn,$viewedProfileID,$viewedGender,$db,$includeCaste,$includeAwaitingContacts);
+                                        $profileidsort = $viewSimilarLibObj->getSimilarProfilesFromSearch($loggedIn,$viewedProfileID,$viewedGender,$includeCaste,$includeAwaitingContacts,  viewSimilarConfig::$suggAlgoNoOfResultsInOneCall);
                                     }
                                     else{
                                         $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
@@ -125,14 +125,20 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 }
                                 $searchEngine = 'solr';
                                 $outputFormat = 'array';
-                                if(MobileCommon::isDesktop())
-		                  $viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
-                                else
-		                  $viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResults_Mobile);
-                                $SearchServiceObj = new SearchService($searchEngine, $outputFormat, $showAllClustersOptions);
-                                $responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj, $results_orAnd_cluster, $clustersToShow, $currentPage, $cachedSearch, $loggedInProfileObj);
-                                $SearchDisplayObj = new SearchDisplay('', $photoDisplayType);
-                                $resultsArray = $SearchDisplayObj->searchPageTemplateInfo($this->isMobile, $loggedInProfileObj, $responseObj);
+                                if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
+                                    if(MobileCommon::isDesktop())
+                                      $viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
+                                    else
+                                      $viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResults_Mobile);
+                                    $SearchServiceObj = new SearchService($searchEngine, $outputFormat, $showAllClustersOptions);
+                                    $responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj, $results_orAnd_cluster, $clustersToShow, $currentPage, $cachedSearch, $loggedInProfileObj);
+                                    $SearchDisplayObj = new SearchDisplay('', $photoDisplayType);
+                                    $resultsArray = $SearchDisplayObj->searchPageTemplateInfo($this->isMobile, $loggedInProfileObj, $responseObj);
+                                }
+                                else{
+                                    $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$pid,1);
+                                }
+                                
                                 $profileidsort = explode(" ", $profileidsort);
 
                                 $paramArray = array("searchBasedParam" => null,
@@ -170,11 +176,20 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                                     $resultsArray[$k]["CONTACT_STATUS"] = 'N';
                                     }
                                 }
-                                $contactButtonObj = new SearchApiStrategyV1($responseObj);
                                 if(MobileCommon::isAndroidApp())
                                     $fromVspAndroid=1;
-                              	if($resultsArray)
+                                if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
+                                    $contactButtonObj = new SearchApiStrategyV1($responseObj);
+                                    if($resultsArray)
                                 	$button = $contactButtonObj->setSearchResults($loggedInProfileObj, "", "", $resultsArray,'',$fromVspAndroid);
+                                }
+                                else{      
+                                    $i=0;
+                                    foreach($resultsArray as $key=>$val){
+                                        if(MobileCommon::isAndroidApp())
+                                            $button[$i++] = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton())));
+                                    }
+                                }
                                 $i = 0;
                                 $nameOfUserObj = new NameOfUser;
                                 $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());

@@ -205,31 +205,47 @@ class viewSimilarProfileAction extends sfActions
                     }
                   }
                 else{ 
-                    $profileidsort=$viewSimilarProfileObj->getViewSimilarCriteria();
-                    if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
-                            $this->similarPageShow=1;
-                    else
-                            $this->similarPageShow=0;
+                    if(viewSimilarConfig::VspWithoutSolr($this->Profile->getPROFILEID())){
+                        $viewSimilarLibObj = new ViewSimilarProfile;
+                        $profileidsort=$viewSimilarLibObj->getSimilarProfiles($this->Profile,$this->loginProfile,"fromViewSimilar");
+                        if(count($profileidsort)>0)
+                                $this->similarPageShow=1;
+                        else
+                                $this->similarPageShow=1;
+                    }
+                    else{
+                        $profileidsort=$viewSimilarProfileObj->getViewSimilarCriteria();
+                        if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
+                                $this->similarPageShow=1;
+                        else
+                                $this->similarPageShow=0;
+                    }
                 }
-		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
-		$viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
-		$responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj,$results_orAnd_cluster,$clustersToShow,$currentPage,$cachedSearch,$this->loginProfile);
-         //print_r($responseObj);die;
-        //search template info array
-		if(MobileCommon::isDesktop())
-		{
-			$SearchDisplayObj = new SearchApiDisplay();
-			$resultsArray = $SearchDisplayObj->searchPageDisplayInfo($this->isMobile,$this->loginProfile,$responseObj,'','','','ProfilePic450Url');
-			//print_r($resultsArray);die;
-		}
-		else
-		{
-			$SearchDisplayObj = new SearchDisplay();
-			$resultsArray = $SearchDisplayObj->searchPageTemplateInfo($this->isMobile,$this->loginProfile,$responseObj);
-		}
-		
+                if(!viewSimilarConfig::VspWithoutSolr($this->Profile->getPROFILEID())){
+                    $SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
+                    $viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
+                    $responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj,$results_orAnd_cluster,$clustersToShow,$currentPage,$cachedSearch,$this->loginProfile);
+             //print_r($responseObj);die;
+            //search template info array
+                    if(MobileCommon::isDesktop())
+                    {
+                            $SearchDisplayObj = new SearchApiDisplay();
+                            $resultsArray = $SearchDisplayObj->searchPageDisplayInfo($this->isMobile,$this->loginProfile,$responseObj,'','','','ProfilePic450Url');
+                            //print_r($resultsArray);die;
+                    }
+                    else
+                    {
+                            $SearchDisplayObj = new SearchDisplay();
+                            $resultsArray = $SearchDisplayObj->searchPageTemplateInfo($this->isMobile,$this->loginProfile,$responseObj);
+                    }
+                }
+                else{
+                    $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$this->loginProfile->getPROFILEID(),1);
+                    $profileidsort = implode(" ",$profileidsort);
+                }
+                
 		$profileidsort=explode(" ",$profileidsort);
-
+                
 		$l=0;
 		foreach($profileidsort as $v)	
 		{
@@ -249,8 +265,9 @@ class viewSimilarProfileAction extends sfActions
                 /*$dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
                 $noOfResultsToStore = min(count($this->finalResultsArray),25);
                 JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);*/
-		if(!$responseObj->getTotalResults())
+		if((viewSimilarConfig::VspWithoutSolr($this->Profile->getPROFILEID()) && count($resultsArray) == 0) || ($responseObj && !$responseObj->getTotalResults())){
 			$this->similarPageShow=0;
+                }
 		//To be used for search eoi
 		$this->loginProfile=$this->loginProfile;
 		$state=str_split(strtolower($this->loginProfile->getPROFILE_STATE()->getFTOStates()->getSubState()));
