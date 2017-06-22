@@ -45,7 +45,11 @@ config = {
      filename: '[name].style.css',
      allChunks: true
    }),
-   // new CleanWebpackPlugin(['dist'])
+   new webpack.LoaderOptionsPlugin({
+     options: {
+      disableDotRule: true
+     }
+   })
  ],
 
  module:{

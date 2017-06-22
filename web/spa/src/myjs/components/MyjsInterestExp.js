@@ -29,9 +29,9 @@ export class ShowExpiryList extends React.Component {
           {this.props.tuples.slice(0,countTuple).map(function(tuple){
             return (
                 <div className="mar05 dispibl" key={tuple.profilechecksum}>
-                  <div className="row mar05 bg7 brdr50p posrel outerCircleDiv">
+                  <div className="row mar05 brdr50p posrel outerCircleDiv">
                     <a href=''>
-                      <img src="https://mediacdn.jeevansathi.com/1143/5/22865082-1402480972.jpeg" className="cell vmid brdr50p innerCircleDiv" style={setdim}/></a>
+                      <img src={tuple.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></a>
                   </div>
                 </div>
             )

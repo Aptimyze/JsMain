@@ -2,16 +2,13 @@ import React from "react";
 
 export class MyjsShowVisitors extends React.Component{
   render(){
-    let style1={
-      "width":"60px",
-      "height":"60px"
-    }
+
     let count = (this.props.tuplesvalues.length<=3)?this.props.tuplesvalues.length: 3;
     let VisitorsListing;
     if(this.props.tuplesvalues.length>4)
     {
       VisitorsListing=    <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
-          <div className="bg7 txtc disptbl" style={style1}>
+          <div className="bg7 txtc disptbl myjsdim1">
             <div className="dispcell fontlig f18 white lh0 vertmid">+{this.props.totalvisitors-3}</div>
           </div>
         </a></div>
@@ -26,7 +23,7 @@ export class MyjsShowVisitors extends React.Component{
             return (
                 <div className="fl pl_a" key={tuple.profilechecksum}>
                   <a href='/profile/viewprofile.php?'>
-                    <img src='https://mediacdn.jeevansathi.com/1143/5/22865082-1402480972.jpeg'/>
+                    <img className="myjsdim1" src={tuple.photo.url}/>
                   </a>
                 </div>
             )

@@ -41,8 +41,11 @@ class AuthFilter extends sfFilter {
 		}
 		// End hindi switch code !
 		if( MobileCommon::isNewMobileSite() && (strpos($request->getUri(), 'api') === false) ) {
-			$specificDomain = explode('/',$request->getUri());
-			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[3]);
+			$specificDomain = str_replace('http://', '', $request->getUri());
+			$specificDomain = explode('/',$specificDomain,2);
+			// $pieces = explode('/', $specificDomain, 2);
+			// print_r($pieces);
+			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
 			die;	
 		}
 		
