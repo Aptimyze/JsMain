@@ -35,7 +35,6 @@ class EnsureLoggedInContainer extends React.Component
                     <Switch>
                     <Route exact path="/" component={MyjsPage}/>
                     <Route path='/myjs' component={MyjsPage} />
-                    <Route path='/profile/viewprofile.php' component={ProfilePage} />
                     <Route component={PageNotFound} />
                     </Switch>
                     </div>
