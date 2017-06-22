@@ -27,7 +27,7 @@ class EnsureLoggedInContainer extends React.Component
         if ( this.props.MyProfile.AUTHCHECKSUM )
         {
             return <div>
-                    <Route path="/" component={MyjsPage}/>
+                    <Route exact path="/" component={MyjsPage}/>
                     <Route path='/myjs' component={MyjsPage} />
                     </div>;
         }
