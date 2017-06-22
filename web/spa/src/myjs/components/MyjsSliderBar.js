@@ -38,18 +38,28 @@ export default class MyjsSlider extends React.Component {
           }
          });
   }
+componentDidUpdate(){
+  this.bindSlider();
+
+
+
+}
 
   componentDidMount(){
-
-    if(this.state.sliderBound)return;
-    this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this));
-    this.obj.initTouch();
-    this.setState({
-              sliderBound: true,
-              tupleWidth : {'width' : this.obj.transformX-10}
-                  });
+    this.bindSlider();
   }
+bindSlider(){
+  if(!this.props.listing.tuples || (this.state.sliderBound || !this.props.fetched))return;
 
+  this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this));
+  this.obj.initTouch();
+  this.setState({
+            sliderBound: true,
+            tupleWidth : {'width' : this.obj.transformX-10}
+                });
+
+
+}
   render(){
     if(!this.props.listing.tuples) {
       return <div></div>;
