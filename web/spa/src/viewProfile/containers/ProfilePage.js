@@ -144,6 +144,10 @@ class ProfilePage extends React.Component {
         document.getElementById("preLoader").classList.add("dn");
     }
 
+    goBack() {
+        this.props.history.goBack();
+    }
+
     render() {
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
@@ -241,7 +245,7 @@ class ProfilePage extends React.Component {
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">
-                                <div className="posabs ot_pos1">
+                                <div onClick={() => this.goBack()} className="posabs ot_pos1">
                                     <i id="backBtn" className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
