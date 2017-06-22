@@ -321,7 +321,7 @@ die;
 		if($cookieValue!=''){
 				curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookies.txt');
 				curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/cookies.txt');
-				curl_setopt($ch, CURLOPT_COOKIE, 'cookiename='.$cookieValue);
+				curl_setopt($ch, CURLOPT_COOKIE, 'pconnid='.$cookieValue);
         }
 
                 $output = curl_exec($ch);
