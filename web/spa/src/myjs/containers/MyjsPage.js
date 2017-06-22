@@ -18,13 +18,17 @@ require ('../style/jsmsMyjs_css.css');
 
 export class CheckDataPresent extends React.Component{
 	render(){
+
 	 if(!this.props.fetched)
 		{
 			return (<div className="nodatafetch"></div>)
 		}
+
 		switch (this.props.blockname) {
 			case "int_exp":
-						if(this.props.data===undefined)
+						console.log('expired list');
+						console.log(this.props);
+						if( (this.props.data===undefined)  || (this.props.data.tuples===null))
 						{
 							  return (<div className="noData Intexp"></div>);
 						}
@@ -146,7 +150,7 @@ export  class MyjsPage extends React.Component {
 			// test for each property
 			for (var i in props) {
 					if (div.style[props[i]] !== undefined) {
-							var cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+							var cssPrefix = props[i].replace('Perspective', '');
 							this.setState({
 								cssProps:{
 									cssPrefix : cssPrefix,
@@ -167,22 +171,22 @@ export  class MyjsPage extends React.Component {
 		  <div id="mainContent">
 				  <div className="perspective" id="perspective">
 								<div className="" id="pcontainer">
+
 									<MyjsHeadHTML bellResponse={this.props.myjsData.apiData.BELL_COUNT} fetched={this.props.myjsData.fetched}/>
+
 									<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+
 									<AcceptCount fetched={this.props.myjsData.fetched} acceptance={this.props.myjsData.apiData.all_acceptance} justjoined={this.props.myjsData.apiData.just_joined_matches}/>
 
+									<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"int_exp"} data={this.props.myjsData.apiData.interest_expiring}/>
 
-								<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"int_exp"} data={this.props.myjsData.apiData.interest_expiring}/>
-
-								<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"prf_visit"} data={this.props.myjsData.apiData.visitors}/>
+									<CheckDataPresent fetched={this.props.myjsData.fetched} blockname={"prf_visit"} data={this.props.myjsData.apiData.visitors}/>
 
 
 									<MyjsSlider cssProps={this.state.cssProps}  fetched={this.props.myjsData.fetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiData.interest_received} listingName = 'interest_received' />
 
-
-
-
 									<NodataBlock fetched={this.props.myjsData.fetched} data={this.props.myjsData.apiData}/>
+
 								</div>
 							</div>
 			</div>

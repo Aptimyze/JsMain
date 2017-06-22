@@ -71,7 +71,7 @@ class PhotoView extends React.Component {
         });   
     }
     handleImageLoaded() {
-        this.props.imageLoad();
+        this.props.imageLoaded();
     }
     handleImageError() {
         document.getElementById("profilePic").src = this.props.defaultPhoto;   

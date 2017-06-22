@@ -52,11 +52,14 @@ class App extends React.Component
       <div>
       <Router>
       <div>
+      <Switch>
       {redirectToHashUrl}
-      <Route path="/" component={EnsureLoggedInContainer}/>
       <Route path='/login' component= {LoginPage}/>
       <Route path='/profile/viewprofile.php' component={ProfilePage} />
       <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />
+      <Route path="/" component={EnsureLoggedInContainer}/>
+      <Route component={PageNotFound} />
+      </Switch>
       </div>
       </Router>
       </div>);
