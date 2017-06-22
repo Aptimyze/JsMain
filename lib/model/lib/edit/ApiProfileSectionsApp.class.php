@@ -344,21 +344,23 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	}
 	
 	public function getApiCriticalInfo() {
-                //date of birth
-		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),"Y");
 		
 		//mstatus
                 $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
                 $data = $infoChngObj->editedCriticalInfo($this->profile->getPROFILEID(),true);
                 $screened = 0;
                 $canEDit = 1;
+                $edit ="Y";
                 if($data){
                         if($data["SCREENED_STATUS"] == "N"){
                                 $screened = 1;
                         }
                         $canEDit = 0;
+                        $edit ="N";
                 }
-		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,"Y",$canEDit);
+                //date of birth
+		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$edit,$canEDit);
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","   " ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
                 //if($this->profile->getMSTATUS() != 'N'){
                     $criricalArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
