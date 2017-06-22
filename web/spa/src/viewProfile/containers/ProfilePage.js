@@ -67,8 +67,7 @@ class ProfilePage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps)
-    {   console.log("next",nextProps)
-        let picData;
+    {   let picData;
         if(!nextProps.pic) {
             if(this.state.gender == "M") {
                picData = {url: "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"};
@@ -138,7 +137,8 @@ class ProfilePage extends React.Component {
             showHistory:false
         });
     }
-    imageLoad() {
+
+    imageLoaded() {
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
         document.getElementById("preLoader").classList.add("dn");
@@ -179,27 +179,7 @@ class ProfilePage extends React.Component {
             </div>
         </div>;
 
-        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
-        if(this.state.dataLoaded)
-        {
-            photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>;
-
-            if(this.props.AboutInfo.name_of_user)
-            {
-                Header = this.props.AboutInfo.name_of_user;
-            } else
-            {
-                 Header = this.props.AboutInfo.username;
-            }
-            AboutView = <div id="showAbout" className="dn"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
-
-            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-
-            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
-            setTimeout(function(){
-              document.getElementById("showAbout").classList.remove("dn");
-            },1000)
-          }
+        
 
 
 
@@ -227,10 +207,28 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-
         var historyView;
         if(this.state.showHistory) {
             historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
+        }
+
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
+        if(this.state.dataLoaded)
+        {
+            photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
+
+            if(this.props.AboutInfo.name_of_user)
+            {
+                Header = this.props.AboutInfo.name_of_user;
+            } else
+            {
+                 Header = this.props.AboutInfo.username;
+            }
+            AboutView = <div id="showAbout" className="dn"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
+
+            FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
+
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
         }
 
         return (
