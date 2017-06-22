@@ -592,7 +592,7 @@ var isValid = false;
       if($(this).hasClass('selected')) { 
         mainReason = $(this).find(".reason").html();
         if($(this).hasClass("openBox")) {
-         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val();
+         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
         if(!reason || reason.length < 25) {
             $(this).find('#errorText').removeClass('disp-none');
             isValid = true;
