@@ -30,33 +30,44 @@ class ProfilePage extends React.Component {
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
             showHistory: false,
-            profilechecksum: "f0acc30e3f8794558209b01c0bee23d3i6467012",
-            gender: "M"
+            profilechecksum: profilechecksum || "f0acc30e3f8794558209b01c0bee23d3i6467012",
+            gender: "M",
+            defaultPicData: ""
         };
         if ( profilechecksum )
         {
            this.state.profilechecksum = profilechecksum;
-       }
+        }
+
 
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this.state.profilechecksum);   
+        props.showProfile(this.state.profilechecksum);
     }
     componentWillMount() {
-        
+
     }
 
     componentDidMount() {
         let _this = this;
-        document.getElementById("ProfilePage").style.height = window.innerHeight+"px"; 
-        document.getElementById("photoParent").style.height = window.innerWidth +"px"; 
+        document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
+        document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
         document.getElementById("animated-background").style.height = backHeight + "px";
-    } 
-    
+        if(this.state.gender == "M") {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
+            })
+        } else {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+            })
+        }
+    }
+
     componentWillReceiveProps(nextProps)
-    {   
+    {   console.log("next",nextProps)
         let picData;
         if(!nextProps.pic) {
             if(this.state.gender == "M") {
@@ -70,17 +81,17 @@ class ProfilePage extends React.Component {
         this.setState ({
             dataLoaded : true,
             pic: picData
-        });  
+        });
         if(nextProps.appPromotion == true) {
             this.setState ({
                 showPromo : true
-            });   
+            });
         }
         window.addEventListener('scroll', (event) => {
             let tabElem = document.getElementById("tab");
             if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
                 tabElem.classList.add("posFixTop");
-            } 
+            }
             if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
                 tabElem.classList.remove("posFixTop");
             }
@@ -92,19 +103,19 @@ class ProfilePage extends React.Component {
         this.setState ({
                 insertError : true,
                 errorMessage : inputString
-        })    
-        setTimeout(function(){ 
+        })
+        setTimeout(function(){
             _this.setState ({
                 insertError : false,
                 errorMessage : ""
-            })     
-        }, this.state.timeToHide+100);  
+            })
+        }, this.state.timeToHide+100);
     }
 
     removePromoLayer() {
         this.setState ({
             showPromo : false
-        });  
+        });
         document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
@@ -128,7 +139,7 @@ class ProfilePage extends React.Component {
         });
     }
     imageLoad() {
-        document.getElementById("showAbout").classList.remove("dn"); 
+        document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
         document.getElementById("preLoader").classList.add("dn");
     }
@@ -138,8 +149,10 @@ class ProfilePage extends React.Component {
         if(this.state.gender == "M") {
             himHer = "her";
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+
         } else {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
+
         }
 
         AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
@@ -169,27 +182,27 @@ class ProfilePage extends React.Component {
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
         if(this.state.dataLoaded)
         {
-            photoView = <div id="showPhoto" className="dn"><PhotoView imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>; 
-                   
-            if(this.props.AboutInfo.name_of_user) 
+            photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoad={()=>this.imageLoad()} verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}></PhotoView></div>;
+
+            if(this.props.AboutInfo.name_of_user)
             {
                 Header = this.props.AboutInfo.name_of_user;
             } else
             {
                  Header = this.props.AboutInfo.username;
-            }   
+            }
             AboutView = <div id="showAbout" className="dn"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
 
-            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>; 
-        //setTimeout(function(){
-        //document.getElementById("showAbout").classList.remove("dn"); 
-        //},100)   
-            } 
-        
-        
-        
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+            setTimeout(function(){
+              document.getElementById("showAbout").classList.remove("dn");
+            },1000)
+          }
+
+
+
         var historyIcon;
         if(getCookie("AUTHCHECKSUM")) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -197,13 +210,13 @@ class ProfilePage extends React.Component {
             </div>;
         }
         var errorView;
-        if(this.state.insertError)          
+        if(this.state.insertError)
         {
           errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
         }
-        
+
         var loaderView;
-        if(this.state.showLoader)          
+        if(this.state.showLoader)
         {
           loaderView = <Loader show="page"></Loader>;
         }
@@ -214,7 +227,7 @@ class ProfilePage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-        
+
         var historyView;
         if(this.state.showHistory) {
             historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
@@ -230,16 +243,16 @@ class ProfilePage extends React.Component {
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">
-                                <div className="posabs ot_pos1"> 
+                                <div className="posabs ot_pos1">
                                     <i id="backBtn" className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
-                                    {Header} 
+                                    {Header}
                                 </div>
                                 {historyIcon}
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <Link to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
