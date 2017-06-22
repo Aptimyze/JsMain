@@ -206,7 +206,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         getGuna: (profilechecksum) => {
-            let call_url = "/api/v1/social/requestPhoto?profilechecksum="+profilechecksum;
+            let call_url = "/api/v1/profile/gunascore?oprofile="+profilechecksum;
             dispatch(commonApiCall(call_url,{},'SHOW_GUNA','GET'));
         }
     }
