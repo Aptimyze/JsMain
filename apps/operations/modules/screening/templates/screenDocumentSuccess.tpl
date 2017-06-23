@@ -35,8 +35,8 @@
                 </td>
 
                 <td  style="border-right: solid 4px #B0CBE2;border-top: solid 4px #B0CBE2; width:210px;" id="profilephoto" align="left">
-                        <input name="docVerified" id="Approve"  class="approve ProfileType" value='APPROVE' type="radio"> Approve
-                        <input name="docVerified" id="Delete"  class="deleteType ProfileType" value='Decline' type="radio"> Decline
+                        <input name="docVerified" id="Approve"  class="approve ProfileType" value='APPROVE' type="radio" required> Approve
+                        <input name="docVerified" id="Delete"  class="deleteType ProfileType" value='Decline' type="radio" required> Decline
                 </td>
         </tr>
         <tr class="deleteReasonHide">

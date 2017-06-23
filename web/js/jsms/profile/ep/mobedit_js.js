@@ -103,6 +103,17 @@ function showOverLayer(json,attr)
                 var arr=attr.split(",");
                 if(arr[1]=="critical")
                 {
+                        var whereToSubmit=submitObj.has_value();
+                        if(!whereToSubmit)
+                        {
+                                return false;
+                        }
+                        isValid=$("#"+validatorFormId).valid();
+                        if(!isValid){
+                                ShowTopDownError(jsonError);
+                                jsonError=[];
+                                return false;
+                        }
                         editFieldArr=submitObj.editFieldArray;
                         var prevDob = storeJson["DTOFBIRTH"].split(",");
                         var prevMstatus = storeJson["MSTATUS"];

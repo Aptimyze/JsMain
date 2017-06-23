@@ -415,7 +415,11 @@ function UpdateSection(json,realJson,indexPos)
                         if(storeJson["MSTATUS"] =="D" && inValueArr[0] == "D"){
                                 submitObj.pop('MSTATUS');
                         }else{
-                                CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
+                                if(storeJson["MSTATUS"] == inValueArr[0]){
+                                        submitObj.pop('MSTATUS');
+                                }else{
+                                        CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
+                                }
                         }
                 }else{
                         CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
@@ -871,6 +875,7 @@ function UpdateDobSection(json,realJson,indexPos)
         var ele=$(this).find("div[data=1]");
         var labelArr=new Array();
         var valueArr=new Array();
+        var valueCheckArr=new Array();
         $i=0;
         $.each(json,function(k,v)
         {
@@ -884,11 +889,37 @@ function UpdateDobSection(json,realJson,indexPos)
                                 json[k][value]=value;
 				key = value;
                         }
+                        if(value <10){
+                                valueCheckArr[index] = "0"+value;
+                        }else{
+                                valueCheckArr[index] = value;
+                        }
                         inValueArr[index]=valueArr[index]=value;
                         inLabelArr[index]=labelArr[index]=key;
                 });
                 CommonOverlayEditUpdate(inValueArr.join(""),k.toUpperCase());
         });
+        var dayVal = labelArr[0];
+        if(dayVal == 2 || dayVal == 22){
+                labelArr[0] +="nd ";
+        }else{
+                if(dayVal == 1 || dayVal == 21 || dayVal == 31){
+                        labelArr[0] +="st";
+                }else{
+                        if(dayVal == 3 || dayVal == 23){
+                                labelArr[0] +="rd";
+                        }else{
+                                labelArr[0] +="th";
+                        }
+                }
+        }
         var joinStr=" ";
+        var valStr = valueCheckArr.join(",");
+        if(valStr == storeJson["DTOFBIRTH"]){
+                $.each(json,function(k,v)
+                {
+                        submitObj.pop(k.toUpperCase());
+                });
+        }
         CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
 }

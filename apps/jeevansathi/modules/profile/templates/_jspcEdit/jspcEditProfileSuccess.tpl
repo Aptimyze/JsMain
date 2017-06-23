@@ -159,7 +159,7 @@
                       <ul class="clearfix fontreg">
                         <li>
                           <p class="color12 pt15 fontlig">Age</p>
-                          <p class="pt2 fontlig"><span id="ageView">~$arrOutDisplay.about.age`</span> <span id="dtofbirthView">(~$arrOutDisplay.about.formatted_dob`)</span></p>
+                          <p class="pt2 fontlig"><span id="ageView">~$arrOutDisplay.about.age`</span> <span id="dtofbirthView">~$arrOutDisplay.Critical.dtofbirth`</span></p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Marital Status <span class="~if $editApiResponse.Critical.MSTATUS.screenBit neq 1` disp-none ~/if` js-undSecMsg mstatusUndScnMsg"> <span class="disp_ib color5 f13" > Awaiting proof validation</span></span></p>
