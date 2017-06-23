@@ -66,7 +66,6 @@ public static function createLead($phoneno)
         curl_setopt($handle, CURLOPT_HEADER, $header);
         curl_setopt($handle,CURLOPT_USERAGENT,"JsInternal");
 		curl_setopt($handle,CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($handle, CURLOPT_HEADER, 1);
 		curl_setopt($handle,CURLOPT_MAXREDIRS, 5);
 		curl_setopt($handle,CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($handle,CURLOPT_CONNECTTIMEOUT, 20);
