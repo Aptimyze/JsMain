@@ -137,6 +137,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 }
                                 else{
                                     $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$pid,1);
+                                    $profileidsort = implode(" ",$profileidsort);
                                 }
                                 
                                 $profileidsort = explode(" ", $profileidsort);
@@ -187,7 +188,9 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     $i=0;
                                     foreach($resultsArray as $key=>$val){
                                         if(MobileCommon::isAndroidApp())
-                                            $button[$i++] = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton())));
+                                            $button[$i++] = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton(array('stype'=>$paramArray["stype"])))));
+                                        else
+                                            $button[$i++] = ButtonResponse::buttonDetailsMerge(array("buttons"=>array(ButtonResponse::getInitiateButton(array('primary'=>'true','stype'=>$paramArray["stype"])))));
                                     }
                                 }
                                 $i = 0;

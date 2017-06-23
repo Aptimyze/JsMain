@@ -711,6 +711,7 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
+                
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -727,6 +728,9 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
+                if($page['primary'])  
+                    $button["primary"] = 'true';
+
 		$button = self::buttonMerge($button);
 		return $button;
 	}
