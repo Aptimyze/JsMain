@@ -449,7 +449,7 @@ $js_arr[]=array("mouseClickTracking_js"   => "5");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js"   => "45");
 $js_arr[]=array("jsms/profile/ep/hamburger_js"   => "49");
 $js_arr[]=array("jsms/profile/ep/mobedit_js"             => "71");
-$js_arr[]=array("jsms/profile/ep/mobeditview_js"    => "89");
+$js_arr[]=array("jsms/profile/ep/mobeditview_js"     => "90");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"   => "11");
 $js_arr[]=array("jsms/common/disableScroll_js"   => "7");
 $js_arr[]=array("jsms/utility/sessionStorage_js"   => "10");
