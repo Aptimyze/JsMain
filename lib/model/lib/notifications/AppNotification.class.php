@@ -275,6 +275,7 @@ public function microtime_float()
 			$applicableProfiles=array();			
 			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
+			//print_r($applicableProfiles);die;
 			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
 		  case "MEM_EXPIRE":
@@ -487,7 +488,6 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT'){	
 				  		$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
@@ -516,43 +516,46 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
-		  //print_r($completeNotificationInfo);die;
+		  
 		  return $completeNotificationInfo;
 	  }
   }
   public function generateNotification($notificationId, $notificationKey,$dataPerNotification)
   {
 	  $notifications = $this->getNotifications();
-	  //print_r($notifications);
+	
 	  $variableValues = array();
 	  if(is_array($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE']) && $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'])
 		{  
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
+
         //For variable Title
-	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP'){	
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP' || $notificationKey == "MEM_DISCOUNT"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
 	  if($variableValues || in_array($notificationKey,NotificationEnums::$staticContentNotification))
 	  {
+	  	
 		  if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['flagPosition']=="STATIC")
 			$finalNotificationMessage = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC'],$variableValues);
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP'){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP' || $notificationKey=="MEM_DISCOUNT"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else
                         	$finalNotificationMessageTitle = $this->mergeNotification($variableValuesTitle, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUPI_TITLE']['STATIC']);
 		  }
-	
+		
 		  $completeNotificationInfo["USERNAME"] = $this->getVariableValue("USERNAME_SELF", $dataPerNotification);
 		  $completeNotificationInfo = $notifications[$notificationKey][$notificationId];
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
+
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
           if($dataPerNotification['OTHER_PROFILEID']){
             $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
@@ -560,7 +563,7 @@ public function microtime_float()
           if($dataPerNotification['OTHER_USERNAME']){
             $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
           }
-		  // print_r($completeNotificationInfo);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }
@@ -737,23 +740,24 @@ public function microtime_float()
 			if($cashDiscountStartDate == $todayDate)
 				$cashDiscountActive =true;		
 		} 
+
 		if(is_array($profilesArr)){	
 		        $profilesStr           	=implode(",",$profilesArr);
-	               	$discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
+	            $discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
 			if(is_array($discountDetArr)){	
 				foreach($discountDetArr as $profileid=>$value){
 					$vdProfiles[]           =$profileid;
 					if($value['SDATE']!=$todayDate)
 						continue;
 					$discount		=$value['DISCOUNT'];
-					$messageArr 		=$memHandlerObj->getOCBTextMessage($profileid, 'VD', $discount, $value['EDATE']); 
+					$messageArr 		=$memHandlerObj->getOCBTextMessage($profileid, 'VD_NOTIFICATION', $discount, $value['EDATE']); 
+					$dataArr['TITLE'] = $messageArr["top"];
 					$dataArr['DISCOUNT']    =$discount;
 					$dataArr['UPTO']        =$messageArr['discountText'];
-					$dataArr['MESSAGE']	=str_replace($replaceStr,'',$messageArr['top'].", ".$messageArr['bottom']);
+					$dataArr['MESSAGE']	    =$messageArr['bottom'];
 					$dataArr['PROFILEID']   =$profileid; 			
 					$applicableProfiles[$profileid] =$dataArr;					
 				}
-				//print_r($applicableProfiles);die;
 			}
 			unset($discountDetArr);
 		}
@@ -781,16 +785,18 @@ public function microtime_float()
         	        	}
 			}	
 			$cashDiscount 		=$vdObj->getCashDiscount();
+
 			$cashDiscountExpDt 	=$cashDiscountArray['END_DT'];
 			$messageArr     	=$memHandlerObj->getOCBTextMessage('1', 'CASH', $cashDiscount,$cashDiscountExpDt);
 			$message		=str_replace($replaceStr,'',$messageArr['top'].", ".$messageArr['bottom']);
-			$dataArr		=array('DISCOUNT'=>$cashDiscount,'UPTO'=>$messageArr['discountText'],'MESSAGE'=>$message);
+			$dataArr		=array('DISCOUNT'=>$cashDiscount,'UPTO'=>$messageArr['discountText'],'MESSAGE'=>$message,"TITLE"=>"Special Offer For You");
+			
 			foreach($profilesArrNew as $key=>$profileid){
 				$dataArr['PROFILEID']   =$profileid;
 				$applicableProfiles[$profileid] =$dataArr;
 			}
 		}
-		//print_r($applicableProfiles);die;
+		//print_r($applicableProfiles);
 		return $applicableProfiles;
 	}
   }	
