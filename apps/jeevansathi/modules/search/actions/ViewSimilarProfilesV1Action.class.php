@@ -189,8 +189,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     foreach($resultsArray as $key=>$val){
                                         if(MobileCommon::isAndroidApp())
                                             $button[$i++] = ButtonResponseApi::buttonDetailsMerge(array("buttons"=>array(ButtonResponseApi::getInitiateButton(array('stype'=>$paramArray["stype"])))));
-                                        else
-                                            $button[$i++] = ButtonResponse::buttonDetailsMerge(array("buttons"=>array(ButtonResponse::getInitiateButton(array('primary'=>'true','stype'=>$paramArray["stype"])))));
+                                        else{
+                                            $button[$i] = ButtonResponse::buttonDetailsMerge(array("buttons"=>array(ButtonResponse::getInitiateButton(array('primary'=>'true','stype'=>$paramArray["stype"])))));
+                                            if(MobileCommon::isIOSApp())
+                                                $button[$i][buttons][primary][0] = $button[$i][buttons][0];
+                                            $i++;
+                                        }
                                     }
                                 }
                                 $i = 0;

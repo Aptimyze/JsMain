@@ -155,7 +155,6 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                 }
                 //TRACK FOR hit on algo
                 $this->trackSimilarProfilesAlgo('wapConfirmation');
-                $finalScores= array(612797,2494926,1866373);
                 if(sizeof($finalScores)==0)
                         $this->trackZeroResultsForSimilar($viewer,$viewed);
                 else                

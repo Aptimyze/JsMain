@@ -69,7 +69,7 @@ class VspFormatResponse{
             "VERIFY_ACTIVATED_DT" => "",
             "VERIFICATION_SEAL" => "VERIFICATIONSEAL",
             "VERIFICATION_STATUS" => "",
-            "PHOTO" => "",
+            "PHOTO" => "ProfilePic120Url",
             "ALBUM_COUNT" => "PHOTO_COUNT"
     );
     
