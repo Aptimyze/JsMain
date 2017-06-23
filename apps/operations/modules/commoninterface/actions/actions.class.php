@@ -286,9 +286,9 @@ class commoninterfaceActions extends sfActions
     else
     	return false;
   }
-  /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
+  /*Transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
   * @param: $params
-  * MINI-VD 
+  * MINI-VD Function
   */
   private function transferVDRecords($params)
   {
@@ -316,7 +316,7 @@ class commoninterfaceActions extends sfActions
 
   /* function executeUploadVD
   * @param: request Object
-  * MINI-VD STEP-1 
+ * MINI-VD STEP-0 
   */
   public function executeUploadVD(sfWebRequest $request)
   {
@@ -345,7 +345,7 @@ class commoninterfaceActions extends sfActions
   /* function executeUpdateVDRecords
   * uploads data from table to VD tables
   * @param: request Object
-  * MINI-VD STEP-2
+  * MINI-VD STEP-1
   */
   public function executeUpdateVDRecords(sfWebRequest $request)
   {
@@ -354,7 +354,8 @@ class commoninterfaceActions extends sfActions
 	if(in_array("IA",$privilage))
 	{
 		//Start -transfer records from client table to temp table
-		$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
+		//$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
+		$params["limit"] =1000000;
 		$this->transferVDRecords($params);
 		//End -transfer records        
 

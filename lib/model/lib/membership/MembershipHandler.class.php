@@ -2771,7 +2771,7 @@ class MembershipHandler
     
     public function getMembershipAutoLoginLink($profileid,$source){
         if($profileid){
-            include(JsConstants::$docRoot."/classes/authentication.class.php");
+            include_once(JsConstants::$docRoot."/classes/authentication.class.php");
             $protect_obj = new protect;
             $profilechecksum = md5($profileid)."i".$profileid;
             $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
