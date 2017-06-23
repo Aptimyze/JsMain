@@ -72,8 +72,8 @@
 	<div style="position:relative" >
     <div class="txtc pad-all10">
     <i id="nonEditablePic" class="mainsp phn1 dn"></i>
-        <div id="TEXT1_ID" class="f14 color3 pt7 fontlig">TEXT1</div>
-        <div id="TEXT2_ID" class="f14 color3 pt4 fontlig pb20">TEXT2</div>
+        <div id="TEXT1_ID" class="f14 color3 pt7 fontlig text1Confirm">TEXT1</div>
+        <div id="TEXT2_ID" class="f14 color3 pt4 fontlig pb20 text2Confirm">TEXT2</div>
     </div>
     <div style="border-top:1px solid #dbdbdb">
     	<div class="fullwid">
