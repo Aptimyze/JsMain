@@ -40,7 +40,7 @@ class billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG extends TABLE{
 			if(!empty($row)){
 				return array($row['FREQUENCY'],$row['NO_OF_TIMES']);
 			}
-			return;
+			return null;
 		}
 		catch(Exception $e)
 		{
