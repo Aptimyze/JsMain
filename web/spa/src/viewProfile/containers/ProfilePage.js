@@ -233,6 +233,11 @@ class ProfilePage extends React.Component {
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
 
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+            setTimeout(function(){
+                document.getElementById("showAbout").classList.remove("dn");
+            }, 100);
+            
+        
         }
 
         return (
