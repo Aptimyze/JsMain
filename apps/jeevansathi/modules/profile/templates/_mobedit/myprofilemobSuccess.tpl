@@ -108,7 +108,7 @@
 <div id="fileOverlay" class="pad8 dn">
     <div overlaydiv="1" class="fl wid91p">
         <form  id="submitForm" action="" method="post" enctype="multipart/form-data">
-                <input type="file" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
+                <input type="file" class="dn" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
         </form>
         
                 <div id="default_key" class="f16 fontthin upload-btn-jsms" value ="json_value" data=1 style="display:inline;">json_label_val</div>
