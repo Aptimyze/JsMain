@@ -8,7 +8,7 @@
 
 class VspFormatResponse{
     
-    const vspResponseArray = array("OFFSET" => "",
+    private static $vspResponseArray = array("OFFSET" => "",
             "HEIGHT" => "",
             "DECORATED_HEIGHT" => "HEIGHT" ,
             "USERNAME" => "USERNAME",
@@ -85,7 +85,7 @@ class VspFormatResponse{
     
     public function formatTupleResponse($pValue){
         $pValue = (array)$pValue;
-        foreach(self::vspResponseArray as $key=>$val){
+        foreach(self::$vspResponseArray as $key=>$val){
             if($val!=""){    
                 if($key == "BOOKMARKED"){
                     if($pValue[$val] == 1)
