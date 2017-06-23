@@ -150,7 +150,7 @@ export  class MyjsPage extends React.Component {
 			// test for each property
 			for (var i in props) {
 					if (div.style[props[i]] !== undefined) {
-							var cssPrefix = props[i].replace('Perspective', '');
+							var cssPrefix = props[i].replace('Perspective', '').toLowerCase();
 							this.setState({
 								cssProps:{
 									cssPrefix : cssPrefix,
