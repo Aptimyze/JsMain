@@ -923,3 +923,6 @@ function UpdateDobSection(json,realJson,indexPos)
         }
         CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
 }
+function triggerFileClick(){
+        $('#file_keyMSTATUS_PROOF').click();
+}

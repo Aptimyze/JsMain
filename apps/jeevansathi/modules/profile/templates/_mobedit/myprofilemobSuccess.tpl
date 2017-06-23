@@ -105,17 +105,26 @@
         <div id="OverlayID" name="overlayOption">{{overlayoptions}}</div>
     </div>
 </div>
+    
+    
 <div id="fileOverlay" class="pad8 dn">
     <div overlaydiv="1" class="fl wid91p">
-        <form  id="submitForm" action="" method="post" enctype="multipart/form-data">
-                <input type="file" class="dn" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
-        </form>
-        
-                <div id="default_key" class="f16 fontthin upload-btn-jsms" value ="json_value" data=1 style="display:inline;">json_label_val</div>
-                <div id="default_label_key" class="f17 fontthin pad2" value ="json_value" data=1 style="display:inline;" >jpg/pdf only</div>        
+            <div class="fullwid clearfix">
+                    <div class="fl" style="width:65%">
+                        <form  id="submitForm" action="" method="post" enctype="multipart/form-data">
+                                <input type="file" class="dn" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
+                        </form>
+                        <div id="default_key" class="f16 fontthin upload-btn-jsms" onClick="triggerFileClick();" value ="json_value" data=1>json_label_val</div>
+                    </div>
+                    <div class="fl" style="width:34%">
+                        <div id="default_label_key" class="f17 fontthin textTru" value ="json_value" data=1 >jpg/pdf only</div>  
+                    </div>
+            </div>
         
     </div>
 </div>
+    
+    
 <div id="textAreaOverlay" class="dn" >
 <textarea id="json_key" class="fullwid f17 fontthin color3o minhgt300" placeholder="json_label_placeholder" name="json_key" onKeyUp="keyfunctionShow"  >json_label_val</textarea>
 </div>

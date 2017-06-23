@@ -49,9 +49,7 @@ editValArr["Religion"]=new Array("P_RELIGION","P_CASTE","P_SECT","P_MTONGUE","P_
 editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION_GROUPING","P_INCOME_RS","P_INCOME_DOL");
 editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P_BTYPE","P_CHALLENGED","P_NCHALLENGED");
  $("document").ready(function() {
-$("#default_keyMSTATUS_PROOF").on("click",function(){
-   $("#file_keyMSTATUS_PROOF").trigger("click");
-});
+
  	getFieldsOnCal();
     setTimeout(function() {
 		if($('#listShow').val()==1)
