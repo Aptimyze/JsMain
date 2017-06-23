@@ -730,11 +730,23 @@ public function microtime_float()
 		$cashDiscountActive	=false;
 		$replaceStr		=array('<','>','/','strong');
 		$memHandlerObj 		=new MembershipHandler();
-		$vdObj 			=new VariableDiscount();
 		$discountOfferLogObj 	=new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
 		$renewalDisObj 		=new billing_RENEWAL_DISCOUNT('newjs_masterRep');
 		$cashDiscountArray	=$discountOfferLogObj->getActiveOfferDetails();
+		$vdObj 			=new VariableDiscount();
 
+		//check whether vd notifications have been scheduled for current date
+		$entryDt = date("Y-m-d");
+		$flatCount = 0;
+        $uptoCount = 0;
+		$vdDiscountNotLog 	=new billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG();
+		
+		$vdScheduled = $vdDiscountNotLog->checkVDStatus($entryDt);
+
+		if($vdScheduled){
+			$vdDiscountNotLog->updateStartTime($entryDt);
+		}
+		
 		if(is_array($cashDiscountArray)){
 			$cashDiscountStartDate =$cashDiscountArray['START_DT'];
 			if($cashDiscountStartDate == $todayDate)
@@ -743,7 +755,9 @@ public function microtime_float()
 
 		if(is_array($profilesArr)){	
 		        $profilesStr           	=implode(",",$profilesArr);
-	            $discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
+		        if($vdScheduled){
+	            	$discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
+	            }
 			if(is_array($discountDetArr)){	
 				foreach($discountDetArr as $profileid=>$value){
 					$vdProfiles[]           =$profileid;
@@ -754,6 +768,13 @@ public function microtime_float()
 					$dataArr['TITLE'] = $messageArr["top"];
 					$dataArr['DISCOUNT']    =$discount;
 					$dataArr['UPTO']        =$messageArr['discountText'];
+
+					if($dataArr['UPTO'] == "flat"){
+						++$flatCount;
+					}
+					else if($dataArr['UPTO'] == "upto"){
+						++$uptoCount;
+					}
 					$dataArr['MESSAGE']	    =$messageArr['bottom'];
 					$dataArr['PROFILEID']   =$profileid; 			
 					$applicableProfiles[$profileid] =$dataArr;					
@@ -761,6 +782,7 @@ public function microtime_float()
 			}
 			unset($discountDetArr);
 		}
+
 		if($cashDiscountActive){
 			$profilesStr =implode(",",$profilesArr);
 			$renewalProfiles =$renewalDisObj->getRenewalProfiles($profilesStr);		
@@ -796,7 +818,11 @@ public function microtime_float()
 				$applicableProfiles[$profileid] =$dataArr;
 			}
 		}
-		//print_r($applicableProfiles);
+		if($vdScheduled){	
+			$vdDiscountNotLog->updateEndTime($entryDt,$flatCount,$uptoCount);
+		}
+		unset($vdDiscountNotLog);
+		
 		return $applicableProfiles;
 	}
   }	
