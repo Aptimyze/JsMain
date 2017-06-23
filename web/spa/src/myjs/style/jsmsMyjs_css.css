@@ -314,7 +314,7 @@ body {
 .myjsEditbar{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;}
 .myjsWid1{width:250%;}
 .myjstop1 { top: -3px; left:5px}
-.myjsedit1{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;}
+.myjsedit1{overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;-webkit-overflow-scrolling: touch;}
 .myjsc1{width:60px; height:60px;}
 ul.shownotiful{margin: 0;padding:0; list-style-type: none}
 ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;}
