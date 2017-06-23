@@ -121,7 +121,7 @@ class ContactDetailsV1Action extends sfAction
 
 					if($MembershipMessage)
 					{
-						$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
+						$responseArray["offer"]["membershipOfferMsg1"] = "EXCLUSIVE OFFER FOR YOU!";
 						$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
 					}
 					else if($dataPlan)
@@ -428,7 +428,7 @@ class ContactDetailsV1Action extends sfAction
 
 				if($MembershipMessage)
 				{
-					$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
+					$responseArray["offer"]["membershipOfferMsg1"] = "EXCLUSIVE OFFER FOR YOU!";
 					$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
 				}
 				else if($dataPlan)
