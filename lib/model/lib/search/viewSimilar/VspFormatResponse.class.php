@@ -73,16 +73,6 @@ class VspFormatResponse{
             "ALBUM_COUNT" => "PHOTO_COUNT"
     );
     
-    
-    public function __construct(){
-        
-        
-    }
-    
-    public function formatSolrResponse(){
-        
-    }
-    
     public function formatTupleResponse($pValue){
         $pValue = (array)$pValue;
         foreach(self::$vspResponseArray as $key=>$val){
@@ -92,6 +82,10 @@ class VspFormatResponse{
                        $pValue[$val] = 'Y';
                     else
                        $pValue[$val] = 'N';
+                }
+                if($key == "DECORATED_CASTE"){
+                       $explodedCaste = explode(":",$pValue[$val]);
+                       $pValue[$val] = $explodedCaste[1];
                 }
                 $returnArray[$key] = $pValue[$val];
             }

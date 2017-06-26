@@ -87,10 +87,8 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $whereParams['lage']=$AgeViewed['lAge'];
                         $whereParams['hage']=$AgeViewed['hAge'];
                         
-                        if(viewSimilarConfig::VspWithoutSolr($viewed))
                             $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams);
-                        else
-                            $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams['lage'], $whereParams['hage']);
+                            
                         $suggestedProf = $resultTemp['suggestedProf'];
                         $constantVal = $resultTemp['constantVal'];
 						$priority = $resultTemp['priority'];
@@ -214,13 +212,13 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         {
         	if($viewedOppositeGender == MALE){                
         		$viewerAgeMin = $viewerAge - 5;
-                $Age['lAge'] = min($viewerAgeMin,$viewedAge);
-                $Age['hAge'] = max($viewedAge,$viewerAge);
+                $Age['lAge'] = (int)min($viewerAgeMin,$viewedAge);
+                $Age['hAge'] = (int)max($viewedAge,$viewerAge);
             }
            	else {
            		$viewedAgeMax = $viewedAge + 5;
-                $Age['lAge'] = min($viewedAge,$viewerAge);
-                $Age['hAge'] = max($viewedAgeMax,$viewerAge);
+                $Age['lAge'] = (int)min($viewedAge,$viewerAge);
+                $Age['hAge'] = (int)max($viewedAgeMax,$viewerAge);
             }
             return $Age;
         }
@@ -343,7 +341,8 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $finalUserList["VIEW_SIMILAR"][$Pvalue] = array("PROFILEID" => $Pvalue);
                         }
                 }
-                
+                if(sizeof($userList) == 0)
+                    return array();
                 $profileObj = LoggedInProfile::getInstance('newjs_master');
                 $tupleService = new TupleService();
                 $tupleService->setLoginProfileObj($profileObj);
@@ -562,7 +561,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         
         
         private function getWhereParamsForReverseDpp($viewerGender,$loggedInProfileObj){
-            if($viewerGender == 'MALE')
+            if($viewerGender == 'FEMALE')
                 $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
             else
                 $reverseParams = SearchConfig::$reverseParamsMaleLoggedIn;
