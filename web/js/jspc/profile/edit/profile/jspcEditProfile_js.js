@@ -8,6 +8,7 @@
  */
 var retryAttempt = 0;
 var EditApp = {};
+var callBlur = 0;
 EditApp = function(){
 
   try{
@@ -963,8 +964,7 @@ EditApp = function(){
       
       var optionString = "";
       var hideTheField = false;
-      
-      optionString =  prepareDateBoxOptionDropDown(fieldObject,3);
+      optionString =  prepareDateBoxOptionDropDown(fieldObject,3,fieldObject.value.split("-"));
       var boxContentDOM = $("<div />",{class:"js-boxContent"});      
       boxContentDOM.append(optionString);
       var i = 0;
@@ -1782,9 +1782,8 @@ EditApp = function(){
       var inputData = [];
       var onClick = function(event){
         fieldDOM.find('.js-errorLabel').addClass(dispNone);
-        
-        if(event.target && (event.target.tagName === "LI" || (event.target.tagName === "SPAN" && event.target.getAttribute("class") == "dropdown_span"))){
-                if(event.target.tagName == "SPAN"){
+        if(event.target && (event.target.tagName === "LI" || (event.target.tagName === "SPAN" && event.target.getAttribute("class") == "dropdown_span") || (event.target.tagName === "I" && (event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2")))){
+                if(event.target.tagName == "SPAN" || event.target.tagName == "I"){
                         var valID = event.target.getAttribute("id");
                         var val = $("#"+valID).parent().attr("value");
                 }else{
@@ -1865,6 +1864,9 @@ EditApp = function(){
                 return(dropHtml);
       }
       var onBlur  = function(event){
+              if(callBlur == 0){
+                      return true;
+              }
         var dayVal = parseInt($("#day_value").attr("rel"));
         var monthVal = $("#month_value").attr("rel");
         var yearVal = parseInt($("#year_value").attr("rel"));
@@ -1905,16 +1907,18 @@ EditApp = function(){
                 if(fieldObject.value != dateSelected){
                         storeFieldChangeValue(fieldObject,dateSelected);
                 }else{
-                        delete editedFields[CRITICAL][fieldObject.key];
+                        if(editedFields.hasOwnProperty(CRITICAL) === true && editedFields[CRITICAL].hasOwnProperty(fieldObject.key.toUpperCase()) === true){
+                                delete editedFields[CRITICAL][fieldObject.key.toUpperCase()];
+                        }
                 }
                 fieldDOM.find('span.js-decVal').html(dateString);
+        }
                 fieldDOM.find('.js-decVal').removeClass(dispNone);
                 fieldDOM.find('.boxType').addClass(dispNone);
                 fieldDOM.find('.js-subBoxList').addClass(dispNone);
                 $("#daysub").parent().attr("style","display:none");
                 $("#monthsub").parent().attr("style","display:none");
                 $("#yearsub").parent().attr("style","display:none");
-        }
       }
       
       var onClick2 = function(event){
@@ -2831,7 +2835,7 @@ EditApp = function(){
      * @param {type} fieldObject
      * @returns {String}
      */
-    prepareDateBoxOptionDropDown = function(fieldObject,maxAllowed){
+    prepareDateBoxOptionDropDown = function(fieldObject,maxAllowed,LiValues){
         var optionString = '<ul class="hor_list lh40 boxType disp-none">';
         var cssClassOnLI = "";/*Class on LI DOM*/
         var subOptionString = '<ul class="rlist" >';
@@ -2873,9 +2877,14 @@ EditApp = function(){
                 //var lastWidth = maxWidth - ((maxWidthPerEle-1)*(maxElement-1));
                 styleAttr = " style=\"width:"+(maxWidthPerEle)+"px\"";
               }
+              var elementIndex = 2-i;
+              if(elementIndex == 1){
+                      LiValues[elementIndex] = LiValues[elementIndex].replace(/^0+/, '');
+                      LiValues[elementIndex] = dataMonthArray[LiValues[elementIndex]];
+              }
               var spanId = label.toLowerCase();
               if(i < maxAllowed){
-                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="" class = "dropdown_span">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="'+LiValues[elementIndex]+'" class = "dropdown_span">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
                 cssClassOnLI = ""
               }
               
@@ -3986,7 +3995,7 @@ updateEduLevelChanges =function(eduLevelVal)
         optionString = prepareBoxOptionDropDown(data,fieldObject);
       }
       else if ( fieldObject.type === DATE_TYPE ){
-        optionString = prepareDateBoxOptionDropDown(fieldObject,3);
+        optionString = prepareDateBoxOptionDropDown(fieldObject,3,fieldObject.value);
       }
       
       fieldObject.value=tempValue;
@@ -6934,6 +6943,14 @@ function resetCreateHoroscope(){
 $(document).ready(function() {
   updateProfileCompletionScore(profileCompletionValue);
   EditApp.init();
+  $('body').on('click',function(event){
+        if($(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2"){
+                callBlur = 0;
+        }else{
+                callBlur = 1;
+                $("#dtofbirth").trigger("blur");
+        }
+  });
   $('body').on('focus', '.chosen-container-single input', function(event) {
     if (!$(this).closest('.chosen-container').hasClass('chosen-container-active')){
       $(this).closest('.chosen-container').trigger('mousedown');
