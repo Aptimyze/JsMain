@@ -80,7 +80,17 @@ EOF;
             curl_setopt($tuCurl, CURLOPT_FILE, $fp);
             curl_setopt($tuCurl, CURLOPT_TIMEOUT, 120);
             curl_setopt($tuCurl, CURLOPT_CONNECTTIMEOUT, 0);
+
+            $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+            curl_setopt($tuCurl, CURLOPT_HEADER, $header);
+            curl_setopt($tuCurl, CURLOPT_USERAGENT,"JsInternal");    
+
             $tuData = curl_exec($tuCurl);
+
+            // remove header from curl Response 
+            $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
+            $tuData = substr($tuData, $header_size);
+
             curl_close($tuCurl);
 			/**
 			 * send mail alert in case of problem in fetching mis data

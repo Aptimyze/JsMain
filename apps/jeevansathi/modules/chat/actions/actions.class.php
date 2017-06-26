@@ -72,6 +72,7 @@ class chatActions extends sfActions
 				$headers[] = 'Accept: application/json';
 
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_USERAGENT,"JsInternal");
 
 				$curlResult = curl_exec($ch);
 				curl_close($ch);
