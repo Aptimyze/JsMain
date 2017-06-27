@@ -10,6 +10,7 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
+import { redirectToLogin } from '../../common/components/RedirectRouter';
 import Loader from "../../common/components/Loader";
 
 require ('../style/jsmsMyjs_css.css');
@@ -125,16 +126,18 @@ export  class MyjsPage extends React.Component {
 
   	}
 
-  	componentDidMount(){
-  			console.log("I am in componentDidMount.");
-			this.props.hitApi();
-		}
+  	componentDidMount()
+  	{
+		this.props.hitApi();
+	}
 
-	componentWillReceiveProps(nextProps){
+	componentWillReceiveProps(nextProps)
+	{
+		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
+
 		this.setState ({
-                showLoader : false
-            })
-
+			showLoader : false
+		})
 	}
 
 	componentWillMount(){
