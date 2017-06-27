@@ -399,11 +399,19 @@ var hamHtml="",slider1,slider2;
 
                                         $(id).parent().css("width",100/cnt+"%").css("float","left").css("height",height).css("overflow","auto").css("position","relative");
                                 var indh=$(id).children().first().outerHeight();
+                                //alert(indh);
                                 if(indh<=0)
                                         indh=40;
+                                if(getIosVersion()){
+                                        indh=41;
+                                }
                                 var hgt=$(id).children().first().height();
                                 if(hgt<=0)
                                         hgt=20;
+                                
+                                if(getIosVersion()){
+                                        hgt=21;
+                                }
                                 var width=$(id).children().first().width();
                                 var showP=Math.abs(Math.ceil(height/indh));
                                 var up,down;
@@ -420,9 +428,12 @@ var hamHtml="",slider1,slider2;
                                         $(id).append("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");
                                 //$("#HAM_OPTION_1").parent().scrollTop(indh*up);       
                                 var topPos=$($(id).children()[up]).position().top;
+                                
                                 this.topPos=topPos;
                                 this.topPos=topPos=indh*up;
+                                //alert("U:"+up+" TOP:::: "+$($(id).children()[up]).position().top+" :::::Final :::::"+topPos+" ::: INDH"+indh);
                                 var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px;border-right:2px solid #2c3137'></div>";
+                                //alert(di);
                                 $(id).parent().prepend(di);
 
                                 $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
