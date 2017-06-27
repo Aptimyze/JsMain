@@ -5450,15 +5450,20 @@ updateEduLevelChanges =function(eduLevelVal)
       $('.js-forAbout').unbind('keydown').on('keydown',function(event){
         whiteListingKeys(event,"forAbout")
       });
-      $('#daysub').on('clickt',function(event){
+      $('#daysub').on('click',function(event){
               clickCallBack("day",event,$(this).attr("rel"));
       });
       $('#cancelBtncritical').on('click',function(event){
                 inputData = {};
+                var dob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
                 $("#day_value").html("Day");
                 $("#month_value").html("Month");
                 $("#year_value").html("Year");
-                $("#day_value,#month_value,#year_value").attr("rel","");
+                $("#day_value").attr("rel",dob[2]);
+                dob[1] = dob[1].replace(/^0+/, '');
+                dob[1] = dataMonthArray[dob[1]];
+                $("#month_value").attr("rel",dob[1]);
+                $("#year_value").attr("rel",dob[0]);
                 $.each(criticalSectionArray,function(key,data)
                 {
                         if(dateTypeFields.indexOf(data) !== -1){
