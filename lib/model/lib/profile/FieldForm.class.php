@@ -187,6 +187,8 @@ class FieldForm extends sfForm
                 $insert = 1;
                 if($request->getParameter("docOnly") == 1){
                         $insert = 0;
+                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                        $infoChngObj->updateStatus($this->loggedInObj->getPROFILEID(),"N");
                 }
                 if($insert == 1){
                         $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
