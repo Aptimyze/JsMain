@@ -5450,7 +5450,7 @@ updateEduLevelChanges =function(eduLevelVal)
       $('.js-forAbout').unbind('keydown').on('keydown',function(event){
         whiteListingKeys(event,"forAbout")
       });
-      $('#daysub').on('mousedown',function(event){
+      $('#daysub').on('clickt',function(event){
               clickCallBack("day",event,$(this).attr("rel"));
       });
       $('#cancelBtncritical').on('click',function(event){
@@ -6944,7 +6944,7 @@ $(document).ready(function() {
   updateProfileCompletionScore(profileCompletionValue);
   EditApp.init();
   $('body').on('click',function(event){
-        if($(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2"){
+        if($(event.target).hasClass("js-boxContent") || $(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2"){
                 callBlur = 0;
         }else{
                 callBlur = 1;
