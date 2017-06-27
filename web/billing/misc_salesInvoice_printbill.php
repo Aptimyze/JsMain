@@ -11,7 +11,13 @@ if(authenticated($cid) || ($receiptid && $billid))
 	}
 	elseif($invoiceType=='JS'){
 		$membershipObj = new Membership;
-		$bill=$membershipObj->printbill($receiptid,$billid);	
+                $timeNow = date("Y-m-d h:m:s");
+                if($timeNow>=billingVariables::TAX_LIVE_DATE){
+                    $bill=$membershipObj->printGSTbill($receiptid,$billid);
+                    print_r($timeNow. "True");
+                }else{
+                    $bill=$membershipObj->printbill($receiptid,$billid);
+                }
 	}
 	echo $bill;
 }
