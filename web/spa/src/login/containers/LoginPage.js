@@ -11,6 +11,7 @@ import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import {getCookie} from '../../common/components/CookieHelper';
 import {SITE_KEY,VERIFY_URL} from "../../common/constants/CaptchConstants";
 import {LOGIN_ATTEMPT_COOKIE} from "../../common/constants/CommonConstants";
+import * as CONSTANTS from '../../common/constants/apiConstants';
 
 class LoginPage extends React.Component {
 
@@ -290,8 +291,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         doLogin: (email,password,g_recaptcha_response,captcha) => {
-
-            let call_url = '/api/v1/api/login?email='+email+'&password='+password;
+            let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password;
             if ( g_recaptcha_response && captcha )
             {
                 console.log("appending g_recaptcha_response & captcha");
