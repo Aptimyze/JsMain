@@ -40,14 +40,27 @@ class AuthFilter extends sfFilter {
             }
 		}
 		// End hindi switch code !
-		if( MobileCommon::isNewMobileSite() && (strpos($request->getUri(), 'api') === false) ) {
-			$specificDomain = str_replace('http://', '', $request->getUri());
-			$specificDomain = explode('/',$specificDomain,2);
-			// $pieces = explode('/', $specificDomain, 2);
-			// print_r($pieces);
-			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
-			die;	
+
+		/*SPA*/
+		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum');
+		$spa = 0;
+		$specificDomain = str_replace('http://', '', $request->getUri());
+		$specificDomain = explode('/',$specificDomain,2);
+		if($specificDomain[1] == '')
+			$spa = 1;
+		else {
+			foreach ($spaUrls as $url) {
+		    	if (strpos($specificDomain[1], $url) !== FALSE) {
+		        	$spa = 1;
+		        	break;
+		    	}
+		    }
 		}
+		if( MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
+			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
+			die;
+		}
+		/*SPA*/
 		
 		if ($matchPointCID = $request->getParameter("matchPointCID")) {
 			$flag = 1; //to check if user is logged in
