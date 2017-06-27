@@ -10,7 +10,7 @@ class AzkabanCronsReportTask extends sfBaseTask
 {
  	protected function configure()
   	{
-		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72");
+		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72",82=>"azkaban3",63=>"azkaban63");
 		$this->reportType = array(1=>"failed",2=>"longPreparing",3=>"executing");
 		$this->addArguments(array(
         		new sfCommandArgument('server', sfCommandArgument::REQUIRED, 'My argument'),
