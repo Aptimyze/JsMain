@@ -22,7 +22,7 @@ class userCurrency
 }
 class billingVariables
 {
-    /*Comment Below Block of code for GST on 1st July 2017  
+    /*Comment Below Block of code for GST on 1st July 2017  */
     const TAX_RATE = "15";
     const SWACHH_TAX_RATE = "0.5";
     const KRISHI_KALYAN_TAX_RATE = 0.5;
@@ -33,7 +33,7 @@ class billingVariables
     const TAX_LIVE_DATE = '2017-06-30 14:30:00';
     /*Comment Above Block of code for GST on 1st July 2017*/
     
-    /*Uncomment below code block for GST on 1st July 2017*/
+    /*Uncomment below code block for GST on 1st July 2017
     const TAX_RATE = "18";
     const SWACHH_TAX_RATE = "0";
     const KRISHI_KALYAN_TAX_RATE = 0;
