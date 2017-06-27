@@ -13,13 +13,13 @@
     <!--start:changed succesfully -->   
 <div class="pb400 pt50 fontlig txtc color11">
 <div class="pb30 pt30 mauto wid70p">
-<p>You have successfully reset your uploaded your document,</p>
-<p class="pt5"><a class="colr5" href="~sfConfig::get('app_site_url')`/static/logoutPage">Click here</a> to access your account.</p>
+<p>You have successfully uploaded your document,</p>
+<p class="pt5"><a class="colr5" href="~sfConfig::get('app_site_url')`/">Click here</a> to access your account.</p>
 </div>
 </div>
 ~else`
 	<div id="UploadDocumentJspc" class="uplaodDocContent">
-                <p class="pt30 pb30 txtc fontlig color11 f15">Upload Document Proof</p>
+                <p class="pt30 pb30 txtc fontlig color11 f15">Upload Divorce Decree</p>
             	<div class="setwid5 mauto pb30">                	
                     <div class="fullwid bg-white">
                     	<form action="/common/uploadDocumentProof?submitForm=1" method="POST" id="uploadDocForm" enctype="multipart/form-data">
