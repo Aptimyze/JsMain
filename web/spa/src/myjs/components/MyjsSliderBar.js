@@ -27,7 +27,7 @@ export default class MyjsSlider extends React.Component {
 
   alterCssStyle(transform,transitionDuration){
         var styleObj = [];
-        styleObj['-' + this.props.cssProps.cssPrefix + '-transition-duration'] = transitionDuration + 'ms';
+        styleObj[this.props.cssProps.cssPrefix + 'TransitionDuration'] = transitionDuration + 'ms';
         var propValue = 'translate3d(' + transform + 'px, 0, 0)';
         styleObj[this.props.cssProps.animProp] =  propValue;
       //  var _this = this.
