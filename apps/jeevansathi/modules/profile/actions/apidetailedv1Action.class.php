@@ -160,7 +160,7 @@ class apidetailedv1Action extends sfAction
 		//Now Create OutPut Array
 		$arrOut = $this->BakeMyView();
 		$arrOut['USERNAME']=$this->profile->getUSERNAME();
-
+		
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
     	{
@@ -240,7 +240,7 @@ class apidetailedv1Action extends sfAction
         $objDetailedDisplay = new DetailedViewApi($this);
         if(MobileCommon::isIOSApp())//If iOS App Then 
         {
-            $objDetailedDisplay = new JsmsView($this);
+            $objDetailedDisplay = new JsmsView($this);            
         }
         if(MobileCommon::isDesktop())//If Desktop
         {
@@ -288,28 +288,43 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        /*if(MobileCommon::isAndroidApp())
+        if(MobileCommon::isAndroidApp())
         {
         	$tickArr = array();
 
         	if($this->loginProfile->getPROFILEID())
-        	{        		
+        	{      
 				//Green label for desired partner profile section of viewed profile.
         		if($this->profile->getJpartner()!=null)
         		{
         			$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
         		}
         	}        	
-			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);			
-        }*/
-		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
-		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
+			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);
+			
+			if($this->loginProfile->getPROFILEID())
+			{
+				$out["dpp_Ticks"]["matching"] = $this->getTotalAndMatchingDppCount($out["dpp_Ticks"]);
+			}
+        }
+        //tick array part ends
+
+        //this has been added to ensure that guna score flag for preview profile is "n"
+        if($this->loginProfile->getPROFILEID() == $this->profile->getPROFILEID())
+		{
 			$out['show_gunascore'] = "n";
 		}
+		else
+		{
+			$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
+		}		
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
+			$out['show_gunascore'] = "n";
+		}	
                 $out['show_vsp'] = true;
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
-		}
+		}		
 		return $out;
 	}
 
@@ -484,15 +499,47 @@ class apidetailedv1Action extends sfAction
 
 	//this function uses dpp array and tick array to make a new dppTickArray which is then added to the $out
 	public function dppMatching($dppArray,$tickArray)
-	{
+	{		
 		$dppTickArray = array();
 		foreach($dppArray as $key=>$value)
 		{
 			$tickKey = ProfileEnums::$dppTickFields[$key];
-			$dppTickArray[$key]["VALUE"] = $value;
-			$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+			if($key==ProfileEnums::HAVE_CHILD_KEY)
+			{
+				$tickKey = "HAVECHILD";
+			}
+			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
+			{
+				$dppTickArray[$key]["VALUE"] = $value;
+				if($tickArray[$tickKey] && $value)
+				{
+					$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
+				}
+			}		
 		}
 		return $dppTickArray;
+	}
+
+	public function getTotalAndMatchingDppCount($ticksArr)
+	{
+		$totalCount = 0;
+		$matchingCount = 0;
+		$countArr = array();
+		foreach($ticksArr as $key=>$value)
+		{
+			if($value["VALUE"])
+			{
+				$totalCount++;
+				if($value["STATUS"] == "gnf")
+				{
+					$matchingCount++;
+				}
+			}
+				
+		}
+		$countArr["totalCount"] =$totalCount;
+		$countArr["matchingCount"] =$matchingCount;
+		return $countArr;
 	}
 } 
 ?>

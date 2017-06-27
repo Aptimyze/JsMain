@@ -116,7 +116,7 @@ class MultipleUserFilter
 
 	public static function getFilterParameters($profileIdArr,$dbname="")
 	{
-		$filterObj=new NEWJS_FILTER($dbname);
+		$filterObj=new ProfileFilter($dbname);
 		$results = $filterObj->fetchFilterDetailsForMultipleProfiles($profileIdArr);
 		if(is_array($results))
 		{

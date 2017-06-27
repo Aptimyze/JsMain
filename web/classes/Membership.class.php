@@ -84,6 +84,57 @@ class Membership
     private $dol_conv_bill;
     private $assisted_arr = array();
     private $discount_percent;
+    private $mtongue;
+    private $city_res;
+    private $country_res;
+    private $serviceName;
+    private $execName;
+    private $supervisor;
+ 
+    function setCountry_res($country_res) {
+        $this->country_res = $country_res;
+    }
+    function getCountry_res() {
+        return $this->country_res;
+    }
+    
+    function setCity_res($city_res) {
+        $this->city_res = $city_res;
+    }
+    
+    function getCity_res() {
+        return $this->city_res;
+    }
+    
+    function setExecName($execName) {
+        $this->execName = $execName;
+    }
+    
+    function getExecName() {
+        return $this->execName;
+    }
+    function setSupervisor($supervisor) {
+        $this->supervisor = $supervisor;
+    }
+    
+    function getSupervisor() {
+        return $this->supervisor;
+    }
+    
+    function setServiceName($serviceName) {
+        $this->serviceName = $serviceName;
+    }
+    
+    function getServiceName() {
+        return $this->serviceName;
+    }
+    function setMTongue($mtongue) {
+        $this->mtongue = $mtongue;
+    }
+    
+    function getMTongue() {
+        return $this->mtongue;
+    }
 
     function setBillid($billid) {
         $this->billid = $billid;
@@ -669,7 +720,9 @@ class Membership
         } else {
             $this->generateBill($memUpgrade);
         }
-        
+        //Start:JSC-2925:Changes for GST
+        $this->logTaxBreakup();
+        //End:JSC-2925:Changes for GST
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateReceiptParams();
         }
@@ -689,6 +742,13 @@ class Membership
             $memHandlerObj = new MembershipHandler(false);
             $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
+        }
+
+        //mark availed status for lightning deal discount
+        if($this->discount_type == 16){
+            $lightningDealObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+            $lightningDealObj->updateLightningDealStatus($this->profileid,"A",date("Y-m-d H:i:s"));
+            unset($lightningDealObj);
         }
 
         //flush myjs cache after success payment
@@ -798,9 +858,14 @@ class Membership
         }
 
         //Field for identifying the team to which sales belong
+        //Getting MTONGUE for storing in purchases
+        //Getting CITY_RES for storing in TAXBREAKUP and calculating tax
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE,CITY_RES,COUNTRY_RES');
+        $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+        $this->city_res = $myrow_sales['CITY_RES'];
+        $this->country_res = $myrow_sales['COUNTRY_RES'];
     }
     
     function generateBill($memUpgrade = "NA") {
@@ -852,6 +917,19 @@ class Membership
             $valuesStr .= ",'$this->tax_rate'";
         }
 
+        //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+        if($this->mtongue==""){
+            $jprofileObj = new JPROFILE();
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $paramsStr .= ",MTONGUE";
+            $mtongue = $jprofileDetail['MTONGUE'];
+            $valuesStr .= ",'$mtongue'";
+        }else{
+            $paramsStr .= ",MTONGUE";
+            $valuesStr .= ",'$this->mtongue'";
+        }
+        //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
+
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
         /**
@@ -862,6 +940,8 @@ class Membership
         if(empty($supervisor)){
             $supervisor = 'rohan.m';
         }
+        $this->execName = $execName;
+        $this->supervisor = $supervisor;
         $servicesObj = new Services();
         $transObj = new billing_TRACK_TRANSACTION_DISCOUNT_APPROVAL();
         $serArr = $servicesObj->getServiceName($this->serviceid);
@@ -869,6 +949,7 @@ class Membership
             $services_names[] = $val['NAME'];
         }
         $serName = implode(",", $services_names);
+        $this->serviceName=$serName;
         $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
         $finAmt = round($iniAmt - $this->discount, 2);
         $discPerc = round((($iniAmt - $finAmt)/$iniAmt) * 100, 2);
@@ -1291,7 +1372,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
 
             //add entry in EXCLUSIVE_MEMBERS TABLE
             $this->addExclusiveMemberEntry();
@@ -1312,7 +1393,6 @@ class Membership
         $serviceObj  = new billing_SERVICES();
         $servObj = new Services();
         $mainMembership = array_shift(@explode(",", $this->serviceid));
-        
         if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
         } else {
             $mainMembership = null;
@@ -1334,7 +1414,6 @@ class Membership
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true,$upgradeMem,$apiTempObj);
-            
             if ($total > $this->amount) {
                 $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
                 $actDisc = $iniAmt - $this->amount;
@@ -1345,8 +1424,14 @@ class Membership
         		if($actDiscPerc>=$siteDiscPerc)
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
-                    $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
-                    //error_log("ankita msg-".$msg);
+                    $msg  = "'{$this->username}' has been given a discount greater than visible on site, <br>";
+                    $msg .= "Total Gross Value of Products Sold: $this->curtype $total /- <br>";
+                    $msg .= "Products billed: $this->serviceName <br>";
+                    $msg .= "Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br>";
+                    $msg .= "Profile Allotted To: $this->execName<br>";
+                    $msg .= "Approved By: $this->supervisor<br><br>";
+                    $msg .= "<br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
+                    
                     if (JsConstants::$whichMachine == 'prod') {
                         SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com");
                     }
@@ -2141,6 +2226,24 @@ class Membership
         else return 0;
     }
 
+    function getLightningDealDiscount($profile,$device="desktop") {
+        if(empty($device)){
+            $device = "desktop";
+        }
+        if(!in_array($device,VariableParams::$lightningDealOfferConfig["channelsAllowed"])){
+            return 0;
+        }
+        $today = date('Y-m-d H:i:s');
+        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
+        $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
+        if (is_array($row) && $row['DISCOUNT']) {
+            $data['DISCOUNT'] = $row['DISCOUNT'];
+            $data['EDATE'] = $row['EDATE'];
+            return $data;
+        } 
+        else return 0;
+    }
+
     public function getDiscountDetailsForProfile($profileid, $memID)
     {
         $vd_exist = $this->getSpecialDiscount($profileid);
@@ -2289,8 +2392,8 @@ class Membership
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
         }else {
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
-        
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
+           
             // Existing codes for setting discount type in billing.ORDERS
             // 10 - Backend Discount Link
             // 1 - Renewal Discount
@@ -2326,6 +2429,8 @@ class Membership
                 }
             } else if($upgradeActive == "1"){
                 $discount_type = 15;
+            } else if($lightningDealActive == "1"){
+                $discount_type = 16;
             } else {
                 $discount_type = 12;
             }
@@ -2501,5 +2606,30 @@ class Membership
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
+    
+    //Start:JSC-2925:Changes for GST
+    public function logTaxBreakup(){
+            $taxBreakupObj = new billing_TAXBREAKUP();
+            $paramsStr = "PROFILEID, BILLID, ENTRY_DT, CITY_RES, COUNTRY_RES";
+            $valuesStr = "'$this->profileid','$this->billid',now(),'$this->city_res','$this->country_res'";
+            
+            //Check for country to decide tax
+           if($this->country_res=="51"){
+                //Levy CGST + SGST in case of same state
+                if((($this->city_res=="" || empty($this->city_res)) || strstr($this->city_res, billingVariables::BILLING_STATE))){
+                    $paramsStr .= ", CGST, SGST";
+                    $cgstRate = billingVariables::CGST;
+                    $sgstRate = billingVariables::SGST;
+                    $valuesStr .= ", '$cgstRate', '$sgstRate'";
+                }//Levy IGST in case of other state and state is not empty
+                else if($this->city_res!="" && !empty($this->city_res)){
+                    $paramsStr .= ", IGST";
+                    $igstRate = billingVariables::IGST;
+                    $valuesStr .= ", '$igstRate'";
+                }
+            }
+            $taxBreakupObj->insertRecord($paramsStr,$valuesStr);
+    }
+    //End:JSC-2925:Changes for GST
 }
 ?>

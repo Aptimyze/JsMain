@@ -486,7 +486,7 @@ class membershipActions extends sfActions
                 unset($allMainMem['P']['P1']);
             }*/
 
-            $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
+            $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj,"NA",'old_mobile_website');
             $discountType       = $discountTypeArr['TYPE'];
             $this->discountType = $discountType;
             if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
@@ -650,7 +650,7 @@ class membershipActions extends sfActions
         }
 
         $allMainMem         = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
-        $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
+        $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj,"NA","old_mobile_website");
         $discountType       = $discountTypeArr['TYPE'];
         $this->discountType = $discountType;
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
@@ -907,7 +907,7 @@ class membershipActions extends sfActions
 
         $this->instaContacts = $allMainMem[$mainMem][$subMem]["CALL"];
         $this->fest          = $memHandlerObj->getFestiveFlag();
-        $discountTypeArr     = $memHandlerObj->getDiscountInfo($userObj);
+        $discountTypeArr     = $memHandlerObj->getDiscountInfo($userObj,"NA","old_mobile_website");
         $discountType        = $discountTypeArr['TYPE'];
         $this->discountType  = $discountType;
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {

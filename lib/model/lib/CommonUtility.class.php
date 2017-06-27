@@ -281,10 +281,12 @@ class CommonUtility
 			return $can_url;
 	}
 
+        
+       
         /**
         * General Utility function to send post curl request.
         */
-        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
+        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="",$cookieValue='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
@@ -296,12 +298,17 @@ $postParams1.="&fl=*,".$y[0];
 echo "<br><br><br>".$urlToHit."?".$postParams1;echo "<br><br>\n\n";
 die;
 */
-//echo "<br><br><br>".$urlToHit."?".$postParams;echo "<br><br>\n\n";//die;
-                $ch = curl_init($urlToHit);
+//echo "<br><br><br>".$urlToHit."?".$postParams;echo "<br><br>\n\n";die;
+        $ch = curl_init($urlToHit);
 		if($headerArr)
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-		else
-                	curl_setopt($ch, CURLOPT_HEADER, 0);
+	else{
+				$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+				curl_setopt($ch, CURLOPT_HEADER, $header);
+        }
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		
 		if($postParams)
 	                curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -311,7 +318,20 @@ die;
 	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
                 curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		if($cookieValue!=''){
+				curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIE, 'pconnid='.$cookieValue);
+        }
+
                 $output = curl_exec($ch);
+           if(!$headerArr)
+           {
+		        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+				$headerStr = substr($output, 0, $header_size);
+				$output = substr($output, $header_size);
+			}
+				
 	    return $output;
                 /*
                 header('Content-Type: text/xml');
@@ -326,13 +346,18 @@ die;
         */
         public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
+			
 	        if(!$timeout)
 		        $timeout = 50000;
 		     $ch = curl_init($urlToHit);
 		    if($headerArr)
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-			else
-                curl_setopt($ch, CURLOPT_HEADER, 0);
+			else{
+				$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+				curl_setopt($ch, CURLOPT_HEADER, $header);
+			}
+        
+			curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
                
                 
                 curl_setopt($ch, CURLOPT_POST, 0);
@@ -343,6 +368,13 @@ die;
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
+             
+               if(!$headerArr)
+               {
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+				$headerStr = substr($output, 0, $header_size);
+				$output = substr($output, $header_size);
+			}
 		return $output;
 	}
 
@@ -435,6 +467,7 @@ die;
 	}
 	public static function UploadImageCheck($fname)
 	{
+		PictureFunctions::setHeaders();
 		if (isset($_FILES[$fname]) )
 		{
 			$file = $_FILES[$fname]['tmp_name'];
@@ -488,7 +521,7 @@ die;
 	}
 	public static function UploadPic($id,$where,$photoContent)
 	{
-
+			PictureFunctions::setHeaders();
 			$site_url=sfConfig::get("app_site_url");
 			$web_dir=sfConfig::get("sf_web_dir");
 			$symRoot=
@@ -523,6 +556,12 @@ die;
 	public static function isUrlExistsUsingCurl($url)
 	{
 		$handle = curl_init($url);
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.5";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+             
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		
 		curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
 		$response = curl_exec($handle);
 
@@ -769,9 +808,13 @@ die;
 			$timeout = 10000;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.5";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+                
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
@@ -779,6 +822,9 @@ die;
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 		$result = curl_exec($ch);
+		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$headerStr = substr($result, 0, $header_size);
+		$result = substr($result, $header_size);
 		$result = json_decode($result);
 		curl_close($ch);
 
@@ -940,7 +986,6 @@ die;
 	}
 
 	public static function hideFeaturesForUptime(){
-		
 		if(in_array(date('H'),array("10","11","12","13")))
 		{
 			return 1;

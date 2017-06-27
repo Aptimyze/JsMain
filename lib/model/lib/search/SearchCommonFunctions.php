@@ -178,8 +178,13 @@ class SearchCommonFunctions
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults()==viewSimilarConfig::$suggAlgoNoOfResults_Mobile)
 			return $SearchParametersObj->getNoOfResults();
                 
-                if(MobileCommon::isApp()=='A' && (!$SearchParametersObj ||  !$SearchParametersObj->getIS_VSP()))
-                    return SearchConfig::$profilesPerPageOnApp;
+                if(MobileCommon::isApp()=='A' && (!$SearchParametersObj ||  !$SearchParametersObj->getIS_VSP())){
+					if(sfContext::getInstance()->getRequest()->getParameter('androidMyjsNew')==1)
+						return SearchConfig::$profilesOnMyjsOnApp;
+					else
+						return SearchConfig::$profilesPerPageOnApp;
+                    
+                }
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults())

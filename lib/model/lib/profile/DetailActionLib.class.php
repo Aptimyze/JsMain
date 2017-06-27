@@ -209,6 +209,7 @@ class DetailActionLib
 		$actionObject->stopAlbumView=$return[2];
 		$actionObject->IsMainPic = $return[3];
 		$actionObject->THUMB_URL = $return['THUMB_URL'];
+		$actionObject->PIC120_URL = $return['PIC120_URL'];
 		$actionObject->PIC_MSG = ($bOwnProfile)?null:$actionObject->PHOTO['label'];
 		$actionObject->PIC_URL = $actionObject->PHOTO['url'];
 		$actionObject->PIC_ACTION = ($bOwnProfile)?null:$actionObject->PHOTO['action'];
@@ -292,11 +293,11 @@ class DetailActionLib
 			else
 			{
 				$ignore=new IgnoredProfiles();
-				if($ignore->ifIgnored($sender,$receiver))
+				if($ignore->ifIgnored($sender,$receiver,ignoredProfileCacheConstants::BYME))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender,ignoredProfileCacheConstants::BYME))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }

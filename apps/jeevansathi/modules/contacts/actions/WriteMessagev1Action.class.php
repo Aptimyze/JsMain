@@ -166,6 +166,7 @@ class WriteMessagev1Action extends sfAction
 			$memHandlerObj = new MembershipHandler();
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 			$MembershipMessage = $data2['hamburger_message']['top']; 
+            $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 			$arr["cansend"] = "false";
 			if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 			{

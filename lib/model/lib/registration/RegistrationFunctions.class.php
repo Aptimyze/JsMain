@@ -229,7 +229,7 @@ class RegistrationFunctions
       $arrFilter['HARDSOFT'] = $hardSoft;
       $arrFilter['COUNT'] = $count;
 
-      $dbObj = new NEWJS_FILTER;
+      $dbObj = new ProfileFilter;
       $dbObj->insertRecord(LoggedInProfile::getInstance()->getPROFILEID(), $arrFilter);
     }
         public static function getPrefilledDataForUser($loginProfileObj,$pageId) {

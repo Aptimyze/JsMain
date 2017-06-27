@@ -1374,32 +1374,6 @@ function validate(obj,to_validate_field)
 				}
 			}
 		}
-                else if(field_name == "jamaat")
-		{
-			if(religion_val == "2" && docF.caste.value == "152" && docF.jamaat.value == "")
-			{
-				error_fields[err_i] = field_name + "_submit_err";
-                                err_i++;
-			}
-			else
-			{
-                                correct_fields[cor_i] = field_name + "_submit_err";
-                                cor_i++;
-			}
-		}
-                else if(field_name == "casteMuslim")
-		{
-			if(religion_val == "2" && docF.casteMuslim.value=="")
-			{
-				error_fields[err_i] = field_name + "_submit_err";
-					err_i++;
-			}
-			else
-			{
-                                correct_fields[cor_i] = field_name + "_submit_err";
-                                cor_i++;
-			}
-		}
 		else if(field_name == "income")
 		{
 			if(docF.income.value == "")			

@@ -72,7 +72,7 @@ class VisitorsSearch extends SearchParamters
                 $this->setGENDER($gender);
             $forwardCriteria = PredefinedSearchFactory::getSetterBy('PartnerProfile',$this->loggedInProfileObj);
             $forwardCriteria->getDppCriteria();
-                $filtersObj = new NEWJS_FILTER();
+                $filtersObj = new ProfileFilter();
                 $filters = $filtersObj->fetchEntry($this->pid);
                 
                 if($filters['CITY_RES']=='Y' && $filters['COUNTRY_RES']!='Y')

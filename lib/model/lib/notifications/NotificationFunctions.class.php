@@ -22,6 +22,7 @@ class NotificationFunctions
                 else if($isAppType=='I')
                         $osType = "IOS";
 
+        CommonFunction::loginTrack($registrationid, $profileid);
 		$registrationIdObj = new MOBILE_API_REGISTRATION_ID;
 		$valArr['REG_ID']=$registrationid;
 		$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
