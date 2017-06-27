@@ -96,7 +96,9 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                                     $profileidsort = $memObject->get('similar-'.$this->Profile->getPROFILEID().$pid);
                                                 }
                                                 $viewSimilarLibObj = new ViewSimilarProfile;
-                                                $profileidsort=$viewSimilarLibObj->getSimilarProfiles($this->Profile,$loggedInProfileObj,"fromViewSimilar");
+                                                if(!$profileidsort){
+                                                    $profileidsort=$viewSimilarLibObj->getSimilarProfiles($this->Profile,$loggedInProfileObj,"fromViewSimilar");
+                                                }
                                           }
                                           else{
                                                 $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
