@@ -41,7 +41,7 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
          * @param $viewedOppositeGender : Opposite gender of profiled viewed
          * @param $viewedContactsStr : viewed profile contact string i.e string of profile IDs being contacted
          */
-        public function getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams) {
+        public function getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams,$ignoredContactedProfiles = array()) {
                 try {
 			$lAge=0;$hAge=100;
                         $viewedContactsStr = explode(",", $viewedContactsStr);
@@ -53,6 +53,16 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                         $j = ",";
                                 }
                                 $inStatement.=$j . ":VIEWEDSTR" . $i;
+                                $i++;
+                        }
+                        $i = 0;
+                        $inStatement2 = "";
+                        $j = "";
+                        foreach ($ignoredContactedProfiles as $key => $value) {
+                                if ($i != 0) {
+                                        $j = ",";
+                                }
+                                $inStatement2.=$j . ":CONTACTEDSTR" . $i;
                                 $i++;
                         }
                         $whereString = "";
@@ -89,7 +99,7 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
                         $i = 0;
-                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") $whereString";
+                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") AND RECEIVER NOT IN (" . $inStatement2 . ") $whereString";
                         $prep = $this->db->prepare($sql);
                         foreach ($whereParams as $key=>$value){
                             if(in_array($key,array('lage','hage','LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
@@ -104,6 +114,11 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                         foreach ($viewedContactsStr as $key => $value) {
                                 $prep->bindValue(":VIEWEDSTR" . $i, $value, PDO::PARAM_LOB);
                                 $i++;
+                        }
+                        $o = 0;
+                        foreach ($ignoredContactedProfiles as $key => $value) {
+                                $prep->bindValue(":CONTACTEDSTR" . $o, $value, PDO::PARAM_LOB);
+                                $o++;
                         }
                         $prep->execute();
                         while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {

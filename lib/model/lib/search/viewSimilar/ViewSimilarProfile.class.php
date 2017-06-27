@@ -87,6 +87,12 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $whereParams['lage']=$AgeViewed['lAge'];
                         $whereParams['hage']=$AgeViewed['hAge'];
                         
+                        if(viewSimilarConfig::VspWithoutSolr($viewed)){
+                            $profileListObj = new IgnoredContactedProfiles();
+                            $ignoredContactedProfiles = $profileListObj->getProfileList($viewer);
+                            $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams,$ignoredContactedProfiles);
+                        }
+                        else
                             $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams);
                             
                         $suggestedProf = $resultTemp['suggestedProf'];
@@ -303,7 +309,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $paramArr["MSTATUS"] = $result['MSTATUS'];
                                 $paramArr["IS_VSP"] = 1;
                                 
-                                if(viewSimilarConfig::VspWithoutSolr($viewed)){
+                                if(viewSimilarConfig::VspWithoutSolr($viewed) && $viewer){
                                     $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master', $viewer);
                                     if($paramArr["GENDER"]=='M'){
                                         $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;

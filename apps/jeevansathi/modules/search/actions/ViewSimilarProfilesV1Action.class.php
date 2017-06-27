@@ -8,8 +8,6 @@
  * @author     Prashant Pal
  */
 
-include_once(JsConstants::$docRoot."/profile/algoSuggestedProfiles.php");
-
 class ViewSimilarProfilesV1Action extends sfActions {
 
         const No_search_results_1 = "There are no profiles similar to ";
@@ -111,13 +109,16 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 }
                                 else{
                                     if(viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
-                                        $db = connect_db();
-                                        if($request->getParameter('searchid'));
-                                           $includeCaste = checkIfCasteSpecified($searchId,$db);
+                                        /*if($request->getParameter('searchid')){
+                                            $searchLoggerObj = new SearchLogger();
+                                            $includeCaste = $searchLoggerObj->getSearchCriteria($request->getParameter('searchid'), '', $checkIfCasteIncluded = 1);
+                                        }
                                         $viewSimilarLibObj = new ViewSimilarProfile;
                                         $loggedIn=2;
                                         $includeAwaitingContacts = 0;
-                                        $profileidsort = $viewSimilarLibObj->getSimilarProfilesFromSearch($loggedIn,$viewedProfileID,$viewedGender,$includeCaste,$includeAwaitingContacts,  viewSimilarConfig::$suggAlgoNoOfResultsInOneCall);
+                                        $profileidsort = $viewSimilarLibObj->getSimilarProfilesFromSearch($loggedIn,$viewedProfileID,$viewedGender,$includeCaste,$includeAwaitingContacts,  viewSimilarConfig::$suggAlgoNoOfResultsInOneCall);*/
+                                        $viewSimilarLibObj = new ViewSimilarProfile;
+                                        $profileidsort = array();
                                     }
                                     else{
                                         $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
