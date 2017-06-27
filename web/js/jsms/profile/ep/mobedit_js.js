@@ -114,6 +114,13 @@ function showOverLayer(json,attr)
                                 jsonError=[];
                                 return false;
                         }
+                        var validatedDate = validateDate();
+                        if(validatedDate === false){
+                                jsonError[0]="Please provide a valid date of birth";
+                                ShowTopDownError(jsonError);
+                                jsonError=[];
+                                return false;
+                        }
                         editFieldArr=submitObj.editFieldArray;
                         var prevDob = storeJson["DTOFBIRTH"].split(",");
                         var prevMstatus = storeJson["MSTATUS"];
@@ -1522,6 +1529,33 @@ function setContactOverlayClick()
 		$("#contactOverlay").addClass("dn");
 		$('#'+(clickedId+'label').replace('SHOW','')).find('.contact_icon > div')[0].innerText = outerMessageContact[selectedListValue]; 
 	});
+}
+function validateDate(){
+        var DTOFBIRTH = $('#DTOFBIRTH').attr("value");
+        if(DTOFBIRTH != ""){
+                var dtofbirthArr = DTOFBIRTH.split(",");
+                var yearVal = dtofbirthArr[2];
+                var monthIntVal = dtofbirthArr[1];
+                var dayVal = dtofbirthArr[0];
+                        var bInValidDate = false;
+                        var correspondingDate = new Date(yearVal,parseInt(monthIntVal)-1,dayVal);
+                        if(correspondingDate.getDate() !== parseInt(dayVal))
+                                bInValidDate = true;
+
+                        var M = parseInt(correspondingDate.getMonth())+1;
+                        if(M !== parseInt(monthIntVal))
+                                bInValidDate = true;
+
+                        if(correspondingDate.getFullYear() !== parseInt(yearVal))
+                                bInValidDate = true;
+                        
+                        if(bInValidDate){
+                                return false;     
+                        }
+                        return true;
+        }else{
+                return true;
+        }
 }
 
 

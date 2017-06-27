@@ -22,8 +22,12 @@
   </div>
   <!--end:div-->
   </form>
+  <div class="dn errmsg">~$msg`</div>
   <script>
-          var done = "Y";
+          var done = "N";
+          ~if $done`
+                var done = "Y";
+                ~/if`
   </script>
   <style>
   .back-Gray{background-color: #e4e4e4;}

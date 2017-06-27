@@ -6,6 +6,7 @@ class CriticalInformationMailer
 {
 	private $profileid;
 	private $skipProfiles;
+	private $hisHer = 'her';
         private $mailerType = array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","INTEREST_SENT");
         private $formData = array();
 
@@ -18,6 +19,9 @@ class CriticalInformationMailer
                 $loggedInProfileObj = LoggedInProfile::getInstance();
                 $loggedInProfileObj->getDetail($this->profileid,"PROFILEID","*");
                 $name =  $loggedInProfileObj->getUSERNAME();
+                if($loggedInProfileObj->getGENDER() == "M"){
+                        $this->hisHer = "his";
+                }
                 unset($loggedInProfileObj);
                 return $name;
         }
@@ -57,6 +61,7 @@ class CriticalInformationMailer
                                         $tpl = $email_sender->setProfileId($key);
                                         $smartyObj = $tpl->getSmarty();
                                         $smartyObj->assign("fieldList",$fieldLables);
+                                        $smartyObj->assign("hisHerfieldList",$this->hisHer." ".$fieldLables);
                                         $smartyObj->assign("fields",$fields);
                                         $smartyObj->assign("namePG",$name);
                                         $email_sender->send();

@@ -117,6 +117,8 @@ class ApiEditSubmitV1Action extends sfActions
                                 $apiResponseHandlerObj->setResponseBody($errorArr);
                                 ValidationHandler::getValidationHandler("",$errorArr["error"]);
                                 $apiResponseHandlerObj->generateResponse();
+                                if($request->getParameter('internally'))
+                                        return sfView::NONE;
                                 die;
                        }
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);

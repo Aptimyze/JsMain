@@ -11,6 +11,7 @@ $(document).ready(function()
                         $("#idlabel_id_proof_val").html("jpg/pdf only");
                         $("#saveBtn").removeClass("bg_pink").addClass("applied1");
                         $("#topError").html(errorMes).addClass('visb');
+                        $("#MSTATUS_PROOF").val("");
 			setTimeout(function(){
 			 $("#topError").html("").removeClass('visb');
 			 errorMes="";
@@ -27,6 +28,7 @@ $(document).ready(function()
                 var errorMes = ValidateDoc(MSTATUS_PROOF);
                 if(errorMes)
                 {
+                        $("#MSTATUS_PROOF").val("");
                         $("#idlabel_id_proof_val").html("jpg/pdf only");
                         $("#topError").html(errorMes).addClass('visb');
                         setTimeout(function(){
@@ -44,14 +46,17 @@ function ValidateDoc(thisObj){
         var errorMes = "";
         if(typeof MSTATUS_PROOF.files == 'undefined' || typeof MSTATUS_PROOF.files[0] == 'undefined' || MSTATUS_PROOF.files[0] == null){
                 errorMes="Invalid file";
+                return errorMes;
         }
         var file = MSTATUS_PROOF.files[0];
         if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
         } else {
                 errorMes="Please upload only jpg/pdf file";
+                return errorMes;
         }
         if(file.size > 5242880) {
                 errorMes="File size should be less than 5MB";
+                return errorMes;
         }
         return errorMes;
 }

@@ -47,4 +47,7 @@ VALUES (
 
 INSERT INTO EMAIL_TYPE (ID, MAIL_ID, TPL_LOCATION, HEADER_TPL, FOOTER_TPL, TEMPLATE_EX_LOCATION, MAIL_GROUP, CUSTOM_CRITERIA, SENDER_EMAILID, DESCRIPTION, MEMBERSHIP_TYPE, GENDER, PHOTO_PROFILE, REPLY_TO_ENABLED, FROM_NAME, REPLY_TO_ADDRESS, MAX_COUNT_TO_BE_SENT, REQUIRE_AUTOLOGIN, FTO_FLAG, PRE_HEADER, PARTIALS) VALUES (1874, 1853, 'criticalInfoDocUploadFailed.tpl', NULL, 'revamp_footer.tpl', NULL, 47, 1, 'info@jeevansathi.com  ', '', NULL, NULL, NULL, NULL, 'Jeevansathi Info', NULL, NULL, NULL, NULL, 'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
 INSERT INTO EMAIL_TYPE (ID, MAIL_ID, TPL_LOCATION, HEADER_TPL, FOOTER_TPL, TEMPLATE_EX_LOCATION, MAIL_GROUP, CUSTOM_CRITERIA, SENDER_EMAILID, DESCRIPTION, MEMBERSHIP_TYPE, GENDER, PHOTO_PROFILE, REPLY_TO_ENABLED, FROM_NAME, REPLY_TO_ADDRESS, MAX_COUNT_TO_BE_SENT, REQUIRE_AUTOLOGIN, FTO_FLAG, PRE_HEADER, PARTIALS) VALUES (1873, 1852, 'criticalInfoDocUploadSuccess.tpl', NULL, 'revamp_footer.tpl', NULL, 47, 1, 'info@jeevansathi.com  ', '', NULL, NULL, NULL, NULL, 'Jeevansathi Info', NULL, NULL, NULL, NULL, 'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox', '');
-        
+
+INSERT INTO `MAILER_SUBJECT` VALUES (1853, 'D', 'Changes to Basic Details requested by you could not be made', 'Changes to Basic Details requested by you could not be made');
+INSERT INTO `MAILER_SUBJECT` VALUES (1852, 'D', 'Changes to Basic Details requested by you have been made', 'Changes to Basic Details requested by you have been made');
+INSERT INTO `MAILER_SUBJECT` VALUES (1851, 'D', '~$namePG` has changed ~$hisHerfieldList`', 'Critical info changed');

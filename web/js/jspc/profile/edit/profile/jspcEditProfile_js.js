@@ -1824,8 +1824,8 @@ EditApp = function(){
         var createYearList = function () {
                 var d = new Date();
                 var n = d.getFullYear();
-                var sub = 20;
-                var subStart = 19;
+                var sub = 19;
+                var subStart = 18;
                 if(editAppObject[BASIC]['GENDER'].value == "M"){
                         sub = 22;
                         subStart = 21;
@@ -1906,6 +1906,31 @@ EditApp = function(){
                 dateSelected = yearVal+"-"+monthIntVal+"-"+dayVal;
                 if(fieldObject.value != dateSelected){
                         storeFieldChangeValue(fieldObject,dateSelected);
+                        var bInValidDate = false;
+                        var correspondingDate = new Date(yearVal,parseInt(monthIntVal)-1,dayVal);
+                        if(correspondingDate.getDate() !== parseInt(dayVal))
+                                bInValidDate = true;
+
+                        var M = parseInt(correspondingDate.getMonth())+1;
+                        if(M !== parseInt(monthIntVal))
+                                bInValidDate = true;
+
+                        if(correspondingDate.getFullYear() !== parseInt(yearVal))
+                                bInValidDate = true;
+                        
+                        if(bInValidDate){
+                                var dtOfBirthObj = editAppObject[CRITICAL]["DTOFBIRTH"];
+                                var errorMsg = "Please provide a valid date of birth";
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').text(errorMsg);
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').removeClass(dispNone);
+                                requiredFieldStore.add(dtOfBirthObj);       
+                        }else{
+                                var dtOfBirthObj = editAppObject[CRITICAL]["DTOFBIRTH"];
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').text("");
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').addClass(dispNone);
+                                requiredFieldStore.remove(dtOfBirthObj);  
+                        }
+                        
                 }else{
                         if(editedFields.hasOwnProperty(CRITICAL) === true && editedFields[CRITICAL].hasOwnProperty(fieldObject.key.toUpperCase()) === true){
                                 delete editedFields[CRITICAL][fieldObject.key.toUpperCase()];
