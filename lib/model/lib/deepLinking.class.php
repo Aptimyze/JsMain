@@ -10,7 +10,7 @@ class deepLinking
 	 const LANDING_SCREEN = "viewProfile";
 	 const OS_TYPE = "IOS";
 	 const APP_VERSION = "2.2";
-	 const WEBSITE_VERSION = "'I'";
+	 const WEBSITE_VERSION = "I";
 
 	 /*
 	 * function to check if all the required conditions are met to redirect the user to App and accordingly send the header or the return value
@@ -30,13 +30,13 @@ class deepLinking
 		if(!$this->loggedInProfileId)
 			return;
 		$isIosDeep = JsMemcache::getInstance()->get("iosDeepLinking_".$this->loggedInProfileId);
-
+		
 		if(!$isIosDeep && MobileCommon::isIOSPhone())
 		{
 
 			$this->date =  date("Y-m-d H:i:s", strtotime("-1 week"));
 			$conditionValue = $this->verifyDeepLinkingConditions();
-			if (JsConstants::$hideUnimportantFeatureAtPeakLoad <= 1) 
+			if (JsConstants::$hideUnimportantFeatureAtPeakLoad <= 9) 
 			{
 				$loggedInData = $this->loggedInUserCondition($this->loggedInProfileId);	
 			}
@@ -49,14 +49,15 @@ class deepLinking
 				$isIosDeep = 1;
 			}
 		}
-		if($isIosDeep==1)
+
+		if($isIosDeep == 1)
 		{
-			$SITE_URL = str_replace("http:","",sfConfig::get('app_site_url'));
+			$SITE_URL = str_replace("http:","",sfConfig::get('app_site_url'));	//ios wanted this to be removed
 			$trackingId = $this->fetchApiData($request);
 			$profilechecksum=$request->getParameter('profilechecksum');
 			$stype = $request->getParameter('stype');
 			JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,1);				
-			$headerURL = 'comjeevansathi:'.$SITE_URL.'?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'","username":"'.$this->loggedInUsername.'","gender":"'.$this->loggedInGender.'"}';
+			$headerURL = 'comjeevansathi:?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'","username":"'.$this->loggedInUsername.'","gender":"'.$this->loggedInGender.'"}';		
 			return($headerURL);
 		}
 		JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,2);		
@@ -76,11 +77,10 @@ class deepLinking
 	}
 
 	public function loggedInUserCondition($loggedInProfileId)
-	{	
-		$loggedInProfileId = "'".$loggedInProfileId."'";
-		$loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
-		$loggedInIDArr = $loginTrackingObj->getLastLoginProfilesForDate($loggedInProfileId,$this->date,self::WEBSITE_VERSION);
-		if($loggedInIDArr)
+	{			
+		$loginTrackingObj = new MOBILE_API_APP_LOGIN_PROFILES('newjs_slave');
+		$response = $loginTrackingObj->getLastLoginProfilesForDate($loggedInProfileId,$this->date,self::WEBSITE_VERSION);		
+		if($response)
 		{
 		 	return 1;
 		}
