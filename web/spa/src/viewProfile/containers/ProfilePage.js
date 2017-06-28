@@ -15,6 +15,7 @@ import DppTab from"../components/DppTab";
 import CommHistory from "./CommHistory";
 import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
 import {getCookie} from '../../common/components/CookieHelper';
+import GA from "../../common/components/GA"
 
 class ProfilePage extends React.Component {
 
@@ -95,6 +96,13 @@ class ProfilePage extends React.Component {
                 tabElem.classList.remove("posFixTop");
             }
         });
+        var _this = this;
+        //calling tracking event
+        /*setTimeout(function(){
+            console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
+        },3000); 
+        */
+        
     }
 
     showError(inputString) {
@@ -242,6 +250,7 @@ class ProfilePage extends React.Component {
 
         return (
             <div id="ProfilePage">
+                <GA ref="GAchild" />
                 {promoView}
                 {errorView}
                 {loaderView}

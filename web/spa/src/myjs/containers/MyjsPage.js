@@ -5,12 +5,14 @@ import MyjsSlider from "../components/MyjsSliderBar";
 import AcceptCount from '../components/MyjsAcceptcount';
 import MyjsProfileVisitor from '../components/MyjsProfileVisitor';
 import InterestExp from '../components/MyjsInterestExp';
+import NodataBlock from '../components/MyjsNodataBlock';
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
 import { redirectToLogin } from '../../common/components/RedirectRouter';
+import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 
@@ -49,73 +51,7 @@ export class CheckDataPresent extends React.Component{
 		}
 	}
 }
-export class NodataBlock extends React.Component{
-	render(){
-					if(!this.props.fetched)
-			 		{
-			 			return (<div className="nodatafetch"></div>)
-			 		}
-					let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
 
-					if(this.props.data.interest_received.tuples===null){
-						noDataHtml1= <span id="awaitingResponseAbsent" key="int_rec" >
-												 <div className="pad1">
-													 <div className="fullwid pt15 pb10">
-														 <div className="f17 fontlig color7">{this.props.data.interest_received.title}</div>
-													 </div>
-													 <div className="pb20" id="eoiAbsent">
-														 <div className="bg8">
-															 <div className="pad14 txtc">
-																 <div className="fontlig f14 color8">
-																	 Members Who Showed Interest In Your Profile Will Appear Here
-																 </div>
-															 </div>
-														 </div>
-													 </div>
-												 </div>
-											 </span>
-				 }
-				 if(this.props.data.visitors.tuples===null){
-						 noDataHtml2= <span id="visitorAbsent" key="novisitor">
-						 							<div className="pad1">
-														<div className="fullwid pt15 pb10">
-															<div className="f17 fontlig color7">{this.props.data.visitors.title}</div>
-														</div>
-														<div className="pb20" id="eoiAbsent">
-															<div className="bg8">
-																<div className="pad14 txtc">
-																	<div className="fontlig f14 color8">
-																		Members Who Visited Your Profile Will Appear Here
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</span>
-					}
-					if(this.props.data.match_alert.tuples===null){
-						noDataHtml3= <span id="matchalertAbsent" key="nomatchalert">
-												 <div className="pad1">
-													 <div className="fullwid pt15 pb10">
-														 <div className="f17 fontlig color7">{this.props.data.match_alert.title}</div>
-													 </div>
-													 <div className="pb20" id="eoiAbsent">
-														 <div className="bg8">
-															 <div className="pad14 txtc">
-																 <div className="fontlig f14 color8">
-																	Members Matching Your Desired Partner Profile Will Appear Here
-																 </div>
-															 </div>
-														 </div>
-													 </div>
-												 </div>
-											 </span>
-					}
-
-			   noDataHtml =[noDataHtml1,noDataHtml2,noDataHtml3]
-			   return (<div>{noDataHtml}</div>);
-		}
-}
 
 
 
@@ -175,7 +111,7 @@ export  class MyjsPage extends React.Component {
   		return(
 		  <div id="mainContent">
 		  	<MetaTagComponents page="MyjsPage"/>
-
+		  		<GA ref="GAchild" />
 				  <div className="perspective" id="perspective">
 								<div className="" id="pcontainer">
 
