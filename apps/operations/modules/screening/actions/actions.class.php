@@ -51,7 +51,7 @@ class screeningActions extends sfActions {
                         $profileObj->getDetail($pid,"PROFILEID",'USERNAME,MSTATUS');
                         $this->username = $profileObj->getUSERNAME();	
                         $this->prevMstatus = $profileObj->getMSTATUS();	
-                        if(!$fetchProfileAllocatinArr["updateAllotTime"])
+                        if($fetchProfileAllocatinArr["updateAllotTime"])
 				$objDoc->allotProfile($pid,$this->name);
                         
                         $infoObj = new CriticalInfoChangeDocUploadService();
