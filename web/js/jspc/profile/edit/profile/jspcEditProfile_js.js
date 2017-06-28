@@ -1313,7 +1313,7 @@ EditApp = function(){
               var parentAttr    = {class:"clearfix fontlig pt30",id:fieldObject.key.toLowerCase()+'Parent'};
               var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
               var btnAttr     = {class:"bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Divorce Decree',id:'idBtn_'+fieldObject.key.toLowerCase()};
-              var fieldDivAttr  = {class:"fl edpwid3 edpbrad1 cursp pos-rel outline-none"}
+              var fieldDivAttr  = {class:"fl edpwid3 edpbrad1 pos-rel outline-none"}
       }else{
                 var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
                 var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
@@ -1322,7 +1322,7 @@ EditApp = function(){
       }
       
       var textAreaAttr     = {class:"color11 fontlig f15 brdr-0 bgnone outline-none wh0 disp-none",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
-       var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase()}
+       var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase(),style:"cursor:text"}
       
       if(debugInfo){
         var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
@@ -5327,9 +5327,10 @@ updateEduLevelChanges =function(eduLevelVal)
                                         var secondDate = new Date(prevDob[0],prevDob[2],prevDob[1]);
                                         var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
                                 }
+                                
                                 var showClass = "msg2";
                                 var hideClass = "msg1";
-                                if(diffDays >= 730){
+                                if(diffDays > 730){
                                         showClass = "msg1";
                                         hideClass = "msg2";
                                 }     

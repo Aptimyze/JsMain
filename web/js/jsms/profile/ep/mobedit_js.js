@@ -129,15 +129,16 @@ function showOverLayer(json,attr)
                         var firstDate = new Date(editFieldArr["YEAR"],editFieldArr["MONTH"],editFieldArr["DAY"]);
                         var secondDate = new Date(prevDob[2],prevDob[1],prevDob[0]);
                         var msg1 = "We will intimate your accepted members, interests received and interests sent that there is a change in your basic details.";
-                        var msg2 = "You will not be able to edit any of your basic details any further after you click ‘Okay’.";
+                        var msg2 = "You will not be able to edit any of these basic details any further after you click ‘Save’.";
+                        
                         var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
-                        if(diffDays >= 730){
+                        if(diffDays > 730){
                                 msg1 =  "We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts.";
-                                msg2 = "You will not be able to edit any of your basic details any further after you click ‘Okay’";
+                                msg2 = "You will not be able to edit any of your basic details any further after you click ‘Save’";
                         }
                         if(typeof Mstatus != "undefined" && ((prevMstatus == "N" && Mstatus != "N") || (prevMstatus != "N" && Mstatus == "N"))){
                                 msg1 =  "We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts.";
-                                msg2 = "You will not be able to edit any of your basic details any further after you click ‘Okay’";
+                                msg2 = "You will not be able to edit any of these basic details any further after you click ‘Save’";
                         }
                         updateAndShowConfirmOverlay(json,attr,arr[1],msg1,msg2);
                         return false;

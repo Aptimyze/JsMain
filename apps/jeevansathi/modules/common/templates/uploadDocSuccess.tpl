@@ -13,10 +13,14 @@
   <!--start:div-->  
   <div class="fullwid  brdr1 back-Gray">
     <div class="pad18 clearfix frm_ele">
-      <div class="fl wid88p">
-        <input type="file" name="MSTATUS_PROOF" id="MSTATUS_PROOF" labelkey="MSTATUS_PROOF" style="width:0px;height:0px;position:absolute;" mstatuschange="">
-        <div id="keyMSTATUS_PROOF" class="f17 fontthin upload-btn-jsms"style="display:inline;">Divorce Decree</div>
-        <div id="label_keyMSTATUS_PROOF" class="f17 fontthin pad2" style="display:inline;">jpg/pdf only</div>
+      <div class="fl wid91p">
+        <div class="fl" style="width:65%">
+                <input type="file" name="MSTATUS_PROOF" id="MSTATUS_PROOF" labelkey="MSTATUS_PROOF" style="width:0px;height:0px;position:absolute;" mstatuschange="">
+                <div id="keyMSTATUS_PROOF" class="f17 fontthin upload-btn-jsms"style="display:inline;">Divorce Decree</div>
+        </div>
+        <div class="fl" style="width:34%">
+                <div id="label_keyMSTATUS_PROOF" class="f17 fontthin textTru" >jpg/pdf only</div>
+        </div>
       </div>
     </div>
   </div>

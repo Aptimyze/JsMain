@@ -187,7 +187,7 @@ var proofError = {"docRequired":"Please attach Divorced Decree","invalidDoc":"In
 var NumberErrorNo = '';
 jQuery.validator.addMethod("MstatusChange", function(value,element) {
 	var MSTATUS = $('#MSTATUS').attr("value");
-        if(MSTATUS == "D"){
+        if(MSTATUS == "D" && storeJson["MSTATUS"] != "D"){
                 var MSTATUS_PROOF = $('#file_keyMSTATUS_PROOF')[0];
                 if(typeof MSTATUS_PROOF.files == 'undefined' || typeof MSTATUS_PROOF.files[0] == 'undefined' || MSTATUS_PROOF.files[0] == null){
                         NumberErrorNo =  "docRequired";
@@ -418,6 +418,7 @@ function validator(tabKey){
 				  MstatusChange : true,
 				  messages:
 				  {
+                                  
 				  } 
 		}); 
 	}
