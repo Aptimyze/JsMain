@@ -32,8 +32,10 @@ if($_REQUEST[email]){
 				$link=$SITE_URL."/sugarcrm/custom/crons/create_sugar_lead.php?email=$email&last_name=$email&gender_c=$gender_c&source_c=17&posted_by_c=0&viewed_profileid_c=$viewed_profileid&from_dp_banner=1";
 				$handle = curl_init();
 				curl_setopt($handle,CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($handle, CURLOPT_HEADER, 1);
-				curl_setopt($handle,CURLOPT_MAXREDIRS, 5);
+				$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+				curl_setopt($handle, CURLOPT_HEADER, $header);
+				curl_setopt($handle,CURLOPT_USERAGENT,"JsInternal");
+               	curl_setopt($handle,CURLOPT_MAXREDIRS, 5);
 				curl_setopt($handle,CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($handle,CURLOPT_CONNECTTIMEOUT, 20);
 				curl_setopt($handle, CURLOPT_URL,$link);
