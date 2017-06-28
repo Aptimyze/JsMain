@@ -714,11 +714,12 @@ $js_arr[]=array("calendar_js"    => "2");
 $js_arr[]=array("autoSuggest_js"    => "2");
 $js_arr[]=array("/JSNotificationExtension/JSnotification/client"    => "2");
 $js_arr[]=array(" /web/spa/src/common/components/App"   => "1");
-$js_arr[]=array(" /web/spa/src/login/containers/LoginPage"    => "2");
+$js_arr[]=array(" /web/spa/src/login/containers/LoginPage"     => "3");
 $js_arr[]=array("/web/spa/src/common/constants/apiConstants"   => "1");
 $js_arr[]=array(" /web/spa/src/myjs/containers/MyjsPage"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/RedirectRouter"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/MetaTagComponents"   => "1");
+$js_arr[]=array(" /web/spa/src/common/components/GA"   => "1");
 return $js_arr;
 }
 function getJavascript(){
