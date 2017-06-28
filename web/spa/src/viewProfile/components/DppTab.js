@@ -86,7 +86,7 @@ class DppTab extends React.Component {
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
-                    <span className="js-matching">{matchingCount}</span> of 
+                    <span className="js-matching">{matchingCount}</span> of&nbsp; 
                     <span className="js-total">{totalCount}</span> matchings
                 </div>
                 <div className="clearfix pt10 pb10">

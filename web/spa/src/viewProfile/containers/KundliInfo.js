@@ -7,6 +7,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 class KundliInfo extends React.Component {
 	constructor(props) {
         super();
+        console.log("props",props.profilechecksum)
     }
     componentDidMount() {
         if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
@@ -88,7 +89,7 @@ class KundliInfo extends React.Component {
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
     	{
-            var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+"ddea8d50a80534cd52d8f3eb72257ce2i8294390"+"&randValue=890&GENDER="+this.props.about.gender;
+            var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
         
             downloadHoroscope = <div>
     			<a href = {urlString}>

@@ -30,11 +30,11 @@ class CommHistory extends React.Component {
     		for(var i=0; i< data.length; i++) {
     			if(data[i].ismine == true) {
     				htmlString += "<div class='vpro_padl'>";
-    				htmlString += "<div class='fontlig f14 white txtr padr15'>"+data[i].header+"<span class='dispbl f12 color1  pt5'> "+data[i].message+" "+data[i].time+"</span></div></div>";
+    				htmlString += "<div class='fontlig f14 white txtr padr15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
     			}
 				else {
 					htmlString += "<div class='vpro_padr'>";
-					htmlString += "<div class='fontlig f14 white txtl padl15'>"+data[i].header+"<span class='dispbl f12 color1  pt5'> "+data[i].message+" "+data[i].time+"</span></div></div>";
+					htmlString += "<div class='fontlig f14 white txtl padl15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
 				}  
 				htmlString+= "<div class='vpro_padr'><div class='brdr4'></div></div>"
     		}
@@ -71,13 +71,12 @@ class CommHistory extends React.Component {
 								</div>
 							</div>
 						</div>
-						<div className="hgt35"></div>
 						<div id="commHistoryScroller">
 							
 						</div>
 					</div>
-					<img src="https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" className="classimg1 vpro_pos1 posabs" />
 				</div>
+                <img src="https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" className="classimg1 vpro_pos1 posfix z100" />
 			</div>
 		);
 	}
