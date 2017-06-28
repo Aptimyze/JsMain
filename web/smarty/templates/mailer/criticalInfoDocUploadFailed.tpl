@@ -8,87 +8,79 @@
 <body>
 <table style="max-width:600px; min-width:240px; border:1px solid #dcdcdc;"  border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-<td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
-~$PREHEADER`
-</td>
-</tr>
-  <tr>
-    <td style="border-bottom:1px solid #ededed"><table cellspacing="0" cellpadding="0" border="0" width="100%">
-        <tr>
-          <td width="373" height="52" style="padding-left:10px;"><div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"></div></td>
-          <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
-              <tr>
-                <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a></td>
-              </tr>
-            </table></td>
+                <td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">~$PREHEADER`</td>
         </tr>
-      </table></td>
-  </tr>
-  <tr>
-  <td height="10"></td>
-  </tr>
-  <tr>
-  <td>
-  <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="20"></td>
-    <td valign="middle" height="35">
-   Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,
-</td>
-    <td width="20" height="25"></td>
-  </tr>
-  <tr>
-    <td width="20"></td>
-    <td>Following changes in Basic Details could NOT be made on your profile, as one or more of the proofs you have uploaded have been found to be invalid.</td>
-    <td width="20"></td>
-  </tr>
- <tr>
-  <td height="10"></td>
-  </tr>
-        ~foreach from=$fields item=src`
-                <tr>
-                        <td width="20"></td>
-                        <td>~$src.field`: Request to change from ~$src.oldVal` to ~$src.newVal`</td>
-                        <td width="20"></td>
-                </tr>
-        ~/foreach`
-</table>
+        <tr>
+                <td style="border-bottom:1px solid #ededed">
+                   <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                      <td width="373" height="52" style="padding-left:10px;"><div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"></div></td>
+                      <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
+                          <tr>
+                            <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table>
+                </td>
+        </tr>
+        <tr>
+        <td height="10"></td>
+        </tr>
+        <tr>
+              <td>
+                    <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                            <td width="20"></td><td valign="middle" height="35">Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,</td><td width="20" height="25"></td>
+                    </tr>
+                    <tr>
+                            <td width="20"></td><td>Following changes in Basic Details could NOT be made on your profile, as one or more of the proofs you have uploaded have been found to be invalid.</td><td width="20"></td>
+                    </tr>
+                    <tr>
+                            <td height="10" colspan=""></td>
+                    </tr>
+                    ~foreach from=$fields item=src`
+                    <tr>
+                            <td width="20"></td>
+                            <td>~$src.field`: Request to change from ~$src.oldVal` to ~$src.newVal`</td>
+                            <td width="20"></td>
+                    </tr>
+                    ~/foreach`
+                    </table>
 
-  </td>	
-  </tr> 
-<tr>
-  <td height="20"></td>
-  </tr>
-<tr>
-    <td><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="20"></td>
-    <td>Please resubmit the proofs <a href="~$hereLink`">here</a>.</td>
-  </tr>
-</table></td>
-  </tr>
- <tr>
- <tr>
-  <td height="20"></td>
-  </tr>  
-  <tr>
+              </td>	
+        </tr> 
+        <tr>
+                <td height="20"></td>
+        </tr>
+        <tr>
+                <td>
+                        <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                                <td width="20"></td>
+                                <td>Please resubmit the proofs <a href="~$hereLink`">here</a>.</td>
+                        </tr>
+                        </table>
+                </td>
+        </tr>
+        <tr>
+                <td height="20"></td>
+        </tr>  
+        <tr>
    
-    	<td valign="top"><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="20"></td>
-    <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;">Warm Regards,<br>
-                          <b style="color:#c4161c;">Jeevansathi</b><span style="font-size:1px;"> </span><b color="#00000">.com Team</b></td>
-  </tr>
-</table>
-</td>
-    
-  </tr>
+                <td valign="top">
+                        <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                        <td width="20"></td>
+                                        <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;">Warm Regards,<br><b style="color:#c4161c;">Jeevansathi</b><span style="font-size:1px;"> </span><b color="#00000">.com Team</b></td>
+                                </tr>
+                        </table>
+                </td>
+        </tr>
   
-  <tr>
-    
-    	<td height="40"></td>
-   
-  </tr>
+        <tr>
+                <td height="40"></td>
+        </tr>
   
   <tr>
  
