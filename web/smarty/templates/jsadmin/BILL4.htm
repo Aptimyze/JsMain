@@ -152,7 +152,7 @@
 					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($v.MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$v.NAME_DUR`&nbsp;</P></TD>
 					<TD class="tr2 td8 txtc"><P class="p1 ft6">998431&nbsp;</P></TD>
                                         <TD class="tr2 td9 txtc"><P class="p1 ft6">~$v.S_DATE`&nbsp;</P></TD>
-					<TD class="tr2 td10 txtc"><P class="p1 ft6">~$v.E_DATE`&nbsp;</P></TD>
+					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$v.E_DATE`&nbsp;</P></TD>
 				</TR>
 				~/if`
 				~/foreach`
@@ -164,7 +164,7 @@
 					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($SERVICES[index].MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$SERVICES[index].NAME_DUR`&nbsp;</P></TD>
 					<TD class="tr2 td8 txtc"><P class="p1 ft6">998431&nbsp;</P></TD>
                                         <TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[index].S_DATE`&nbsp;</P></TD>
-					<TD class="tr2 td10 txtc"><P class="p1 ft6">~$SERVICES[index].E_DATE`&nbsp;</P></TD>
+					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[index].E_DATE`&nbsp;</P></TD>
 				</TR>
                 ~/if`
 				~/section`
@@ -181,7 +181,7 @@
 					<TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$discount_exTax_rs`.~$discount_exTax_paise`</P></TD>
 				</TR>
                                 ~/if`
-				~if $type eq 'RS'`
+				~if $exportFlag eq 0`
                                         <TR>
                                             <TD class="tr1 td10"><P class="p1 ft2">Taxable Amount</P></TD>
                                             <TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$taxableValue_rs`.~$taxableValue_paise`</P></TD>

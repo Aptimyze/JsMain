@@ -911,16 +911,12 @@ class Membership
             $paramsStr .= ", MEM_UPGRADE";
             $valuesStr .= ",'$memUpgrade'";
         }
-        // TAX FOR RS ONLY
-        if ($this->curtype == 'RS') {
-            $paramsStr .= ", TAX_RATE";
-            $valuesStr .= ",'$this->tax_rate'";
-        }
+        
 
         //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
-        if($this->mtongue==""){
+        if($this->mtongue==""|| $this->country_res==""){
             $jprofileObj = new JPROFILE();
-            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE, COUNTRY_RES');
             $paramsStr .= ",MTONGUE";
             $mtongue = $jprofileDetail['MTONGUE'];
             $valuesStr .= ",'$mtongue'";
@@ -930,6 +926,12 @@ class Membership
         }
         //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
 
+        // TAX FOR RS ONLY
+        if ($this->curtype == 'RS'|| (($this->curtype=='DOL')&&($this->country_res=='51'))) {
+            $paramsStr .= ", TAX_RATE";
+            $valuesStr .= ",'$this->tax_rate'";
+        }
+        
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
         /**
@@ -3075,7 +3077,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
-        $hr = date('H'); $min = date('i'); $sec = date('s');
+        $fullDate = date('Y-m-d H:i:s');
         $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_master');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
@@ -3084,8 +3086,7 @@ class Membership
                 $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
             }
         }
-        else if($fullYr == "2017" && $mn == "06" && $dt =="30"){
-            
+        else if($fullYr == "2017" && $mn == "07" && $dt =="01"){
             $result = $autoIncReceiptidObj->getLastInsertedRow();
             //Truncate table for GST
             if($result["ENTRY_DT"]<billingVariables::TAX_LIVE_DATE){
@@ -3102,8 +3103,13 @@ class Membership
             $receiptId = $yr.($yr+1)."-";
         for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
         $receiptId.=$id;
+        if($fullDate>billingVariables::TAX_LIVE_DATE){
+            $finalReceiptid = "JS09-".$receiptId;
+        }
+        else{
+            $finalReceiptid = "JS-".$receiptId;
+        }
         
-        $finalReceiptid = "JS09-".$receiptId;
         return $finalReceiptid;
     }
     
