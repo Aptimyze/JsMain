@@ -3,7 +3,7 @@ include("../jsadmin/connect.inc");
 include("../profile/comfunc.inc");
 include_once("comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
-
+include_once($_SERVER['DOCUMENT_ROOT']."../lib/model/store/billing_PAYMENT_DETAILS.class.php");
 if(authenticated($cid) || ($receiptid && $billid))
 {
 	if($invoiceType=='M'){
@@ -11,8 +11,10 @@ if(authenticated($cid) || ($receiptid && $billid))
 	}
 	elseif($invoiceType=='JS'){
 		$membershipObj = new Membership;
-                $timeNow = date("Y-m-d h:m:s");
-                if($timeNow>=billingVariables::TAX_LIVE_DATE){
+                $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
+                $myrow1 = $billingPaymentDetObj->fetchPrintBillDataForReceiptId($receiptid);
+                $billDate = $myrow1['ENTRY_DT'];
+                if($billDate>=billingVariables::TAX_LIVE_DATE){
                     $bill=$membershipObj->printGSTbill($receiptid,$billid);
                 }else{
                     $bill=$membershipObj->printbill($receiptid,$billid);

@@ -3075,6 +3075,7 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
+        $hr = date('H'); $min = date('i'); $sec = date('s');
         $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_master');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
@@ -3084,9 +3085,10 @@ class Membership
             }
         }
         else if($fullYr == "2017" && $mn == "06" && $dt =="30"){
+            
             $result = $autoIncReceiptidObj->getLastInsertedRow();
             //Truncate table for GST
-            if($result["ENTRY_DT"]<"2017-06-31 14:30:00"){
+            if($result["ENTRY_DT"]<billingVariables::TAX_LIVE_DATE){
                 $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
             }
         }
