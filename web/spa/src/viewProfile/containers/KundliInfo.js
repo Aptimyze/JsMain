@@ -7,7 +7,6 @@ import {getCookie} from '../../common/components/CookieHelper';
 class KundliInfo extends React.Component {
 	constructor(props) {
         super();
-        console.log("props",props.profilechecksum)
     }
     componentDidMount() {
         if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
