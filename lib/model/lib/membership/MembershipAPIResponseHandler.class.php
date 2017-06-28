@@ -510,7 +510,8 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
             'pageOneVas'=>$this->pageOneVas,
             'preSelectLandingVas'=>$preSelectVasGlobal,
-            'disableVasDiscount'=>$disableVasDiscount 
+            'disableVasDiscount'=>$disableVasDiscount,
+            'date'=>date('Y-m-d H:i:s')
         );
         
         //fetch the upgrade membership content based on eligibilty and channel
