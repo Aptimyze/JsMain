@@ -29,7 +29,7 @@
         </tr>
         <tr>
               <td>
-                    <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                    <table style="max-width:600px; min-width:240px;" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                             <td width="20"></td><td valign="middle" height="35">Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,</td><td width="20" height="25"></td>
                     </tr>

@@ -13,7 +13,8 @@
 </td>
 </tr>
   <tr>
-    <td style="border-bottom:1px solid #ededed"><table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <td style="border-bottom:1px solid #ededed">
+            <table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
           <td width="373" height="52" style="padding-left:10px;"><div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"></div></td>
           <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
@@ -29,7 +30,7 @@
   </tr>
   <tr>
   <td>
-  <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+  <table style="max-width:600px; min-width:240px;" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="20"></td>
     <td valign="middle" height="35">
@@ -61,7 +62,8 @@
   </tr>  
   <tr>
    
-    	<td valign="top"><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+    	<td valign="top">
+                <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="20"></td>
     <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;">Warm Regards,<br>

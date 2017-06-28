@@ -28,7 +28,7 @@
                                 <input type="hidden" name="MSTATUS" id="MSTATUS" value="D">
                         	<div class="setp2 fontlig">
                             	<!--start:field 1-->
-                                <p id="topError" class="color5 f12 txtc vishid sethgt1">~$uploadValidDocument`</p>
+                                <p class="color5 f12 txtc pb10 topErrorErr">~$msg`</p>
                                 <div class="">
                                 	<input id="MSTATUS_PROOF" name="MSTATUS_PROOF" type="file" class="hgt30IE color12 fullwid brdr-0 outwhi lh40 pl20 wid90p f15 fontlig disp-none">
                                         <div class="pos-rel">

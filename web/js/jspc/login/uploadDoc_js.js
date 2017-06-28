@@ -10,15 +10,12 @@ $(document).ready(function()
                 if(errorMes != ""){
                         $("#idlabel_id_proof_val").html("jpg/pdf only");
                         $("#saveBtn").removeClass("bg_pink").addClass("applied1");
-                        $("#topError").html(errorMes).addClass('visb');
+                        $(".topErrorErr").html(errorMes).addClass('visb');
                         $("#MSTATUS_PROOF").val("");
-			setTimeout(function(){
-			 $("#topError").html("").removeClass('visb');
-			 errorMes="";
-			},2000);
                 }else{
                         $("#idlabel_id_proof_val").html(MSTATUS_PROOF.files[0].name);
                         $("#saveBtn").removeClass("applied1").addClass("bg_pink");
+                        $(".topErrorErr").html("")
                 }
 	});
 
@@ -30,13 +27,10 @@ $(document).ready(function()
                 {
                         $("#MSTATUS_PROOF").val("");
                         $("#idlabel_id_proof_val").html("jpg/pdf only");
-                        $("#topError").html(errorMes).addClass('visb');
-                        setTimeout(function(){
-                         $("#topError").html("").removeClass('visb');
-                         errorMes="";
-                        },2000);
+                        $(".topErrorErr").html(errorMes).addClass('visb');
                 }else{
                         $("#uploadDocForm").submit();
+                        $(".topErrorErr").html("");
                 }
         });
 });

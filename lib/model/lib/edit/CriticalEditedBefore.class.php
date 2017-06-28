@@ -12,7 +12,9 @@ class CriticalEditedBefore
                 if(!empty($data))
 		{
                         if($docOnly == true){
-                                if(strstr($data["EDITED_FIELDS"], "MSTATUS")){
+                                $infoChngObj = new newjs_CRITICAL_INFO_CHANGED_DOCS();
+                                $dataDoc = $infoChngObj->editedCriticalInfo($profileid);
+                                if(strstr($data["EDITED_FIELDS"], "MSTATUS") && $dataDoc["SCREENED_STATUS"] =="F"){
                                         return true;
                                 }
                         }

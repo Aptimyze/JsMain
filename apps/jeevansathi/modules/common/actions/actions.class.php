@@ -1020,10 +1020,11 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
                         $a = json_decode($returnDocumentUpload,true);
                         if($a["responseStatusCode"] != 0){
                                 $this->msg = $a["error"];
+                                $this->done = false;
                         }else{
                                 $this->msg = "Document Uploaded successfully";
+                                $this->done = true;
                         }
-                        $this->done = true;
                         if (MobileCommon::isMobile()) {
                                 $this->setTemplate("uploadDoc");
                         }

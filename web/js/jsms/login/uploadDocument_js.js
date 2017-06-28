@@ -1,9 +1,11 @@
 var change_color=0;
 $(document).ready(function()
 {
-        if(done == "Y"){
+        if(done == "Y" || (done == "N" && $(".errmsg").html() != "")){
                 ShowTopDownError([$(".errmsg").html()]);
-                setTimeout(function(){ window.location.href= "/"; }, 2000);
+                if(done == "Y"){
+                        setTimeout(function(){ window.location.href= "/"; }, 2000);
+                }
                 
         }
         $("#MSTATUS_PROOF").on("change",function(event){
