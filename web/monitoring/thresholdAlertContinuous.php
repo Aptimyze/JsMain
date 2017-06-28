@@ -89,7 +89,9 @@ function clearCache(){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
+	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+	curl_setopt($ch, CURLOPT_HEADER, $header);
     $store = curl_exec($ch);
     //curl_setopt($ch, CURLOPT_URL, $fetchPagePath);
 
@@ -107,6 +109,9 @@ function clearCache(){
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+    curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+	curl_setopt($ch, CURLOPT_HEADER, $header);
     //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
     $data = curl_exec($ch);
     //print_r($data);

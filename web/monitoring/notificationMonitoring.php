@@ -48,9 +48,11 @@ function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
         $timeout = 50000;
     $ch = curl_init($urlToHit);
 	if($headerArr)
-		curl_setopt($ch, CURLOPT_HTTPHEADER, 0);
-	else
-    	curl_setopt($ch, CURLOPT_HEADER, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+	else{
+		$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+    		curl_setopt($ch, CURLOPT_HEADER, $header);
+	}
 	if($postParams)
         curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -61,6 +63,10 @@ function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
     curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     $output = curl_exec($ch);
+
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $output = substr($output, $header_size);
+
     return $output;
 
 }
