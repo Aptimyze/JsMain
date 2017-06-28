@@ -9,7 +9,8 @@ if(authenticated($cid) || ($receiptid && $billid))
 		$bill=misc_rev_sales_printbill($receiptid,$saleid,$saleType);
 	}
 	elseif($invoiceType=='JS'){
-                $bill=$membershipObj->printbill($receiptid,$billid);
+               $membershipObj = new Membership;
+               $bill=$membershipObj->printbill($receiptid,$billid);
 	}
 	echo $bill;
 }

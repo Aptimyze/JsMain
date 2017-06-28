@@ -249,7 +249,6 @@ if(isset($data))
 					$overseas='Y';
 			}
 			$address = addslashes(stripslashes($address));
-                        $membership_details["entry_dt"] = $entry_dt;
 			$membership_details["serviceid"] = $service_selected;
 			$membership_details["profileid"] = $profileid;
 			$membership_details["username"] = $username;
