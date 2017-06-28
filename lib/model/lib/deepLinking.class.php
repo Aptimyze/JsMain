@@ -78,7 +78,7 @@ class deepLinking
 
 	public function loggedInUserCondition($loggedInProfileId)
 	{			
-		$loginTrackingObj = new MOBILE_API_APP_LOGIN_PROFILES('newjs_slave');
+		$loginTrackingObj = new MOBILE_API_APP_LOGIN_PROFILES('newjs_masterRep');
 		$response = $loginTrackingObj->getLastLoginProfilesForDate($loggedInProfileId,$this->date,self::WEBSITE_VERSION);		
 		if($response)
 		{
