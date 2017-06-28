@@ -9,6 +9,8 @@
  */
 class GenerateOutboundEvent {
 
+  const ENABLE_GENERATE_EVENT = true;
+
   /**
    * @var Object
    */ 
@@ -62,9 +64,12 @@ class GenerateOutboundEvent {
   * @param type $iPogProfileID
   */
   public function generate($enEventType, $iPgProfileID, $iPogProfileID = null) {
-    //Add into MQ
-    $this->enqueue($enEventType, $iPgProfileID, $iPogProfileID);
-    //TO Do Log this event
+    if ( GenerateOutboundEvent::ENABLE_GENERATE_EVENT )
+    {
+      //Add into MQ
+      $this->enqueue($enEventType, $iPgProfileID, $iPogProfileID);
+      //TO Do Log this event
+    }
   }
 
   /**

@@ -239,8 +239,7 @@ class OutboundEventConsumer {
         return ;
         break;
     }
-    // TODO: to be commented
-    $landingFlowId = "136074"; 
+
     $callerId = '08039510994';
     $response = $this->callThirdPartyApi("08010619996", $callerId, $landingFlowId, $memberShipValue);
     
