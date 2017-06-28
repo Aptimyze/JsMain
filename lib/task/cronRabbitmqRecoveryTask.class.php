@@ -264,6 +264,11 @@ EOF;
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT
 				);
     }
+    elseif($arguments["server"] == "82"){
+        $this->consumerToCountMapping = array(
+                                  MessageQueues::UPDATEMATCHALERTSREG_STARTCOMMAND=>MessageQueues::UPDATE_MATCHALERT_REG_COUNT
+				);
+    }
     else{
         $this->consumerToCountMapping = array(
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,

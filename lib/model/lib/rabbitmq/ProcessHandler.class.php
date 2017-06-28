@@ -313,6 +313,23 @@ try{
 		$this->updateViewLogTable($viewLogData,$viewLogData['triggerOrNot']);
 	}
  }
+ public function sendMatchAlertsReg($body)
+ {
+        $profileId = $body["profileid"];
+        $memObject = JsMemcache::getInstance();
+        $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
+        unset($memObject);
+        $table = "main";
+        if($tableEmpty == 1){
+                $table = "temp";
+        }
+        $matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT();
+        $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable($table, $profileId,'1');  
+        unset($matchalerts_MATCHALERTS_TO_BE_SENT);
+        $php5 = JsConstants::$php5path;
+        $cronDocRoot = JsConstants::$cronDocRoot;
+        passthru("$php5 $cronDocRoot/symfony alert:MatchAlertCalculation $profileId 0 1");
+ }
  public function updateMatchAlertsLaseSeen($body)
  {
 	$seenOn = $body['seen_date'];

@@ -58,9 +58,9 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 		{
 			$result = NULL;
 			$sql = "SELECT PROFILEID , HASTRENDS,PERSONAL_MATCHES,MATCH_LOGIC FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE PROFILEID%:TOTAL_SCRIPT=:SCRIPT AND IS_CALCULATED=:STATUS";
-                        if($FROM_REG){
-                            $sql .=    " AND FROM_REG=:FROM_REG";
-                        }
+                        
+                        $sql .=    " AND FROM_REG=:FROM_REG";
+                        
                         $sql .=    " ORDER BY LAST_LOGIN_DT DESC";
                         
 			if($limit)
@@ -68,9 +68,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
                         $prep->bindValue(":SCRIPT",$currentScript,PDO::PARAM_INT);
-                        if($FROM_REG){
-                                $prep->bindValue(":FROM_REG",$FROM_REG,PDO::PARAM_STR);
-                        }
+                        $prep->bindValue(":FROM_REG",$FROM_REG,PDO::PARAM_STR);
                         $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
                         if($limit)
                                   $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
@@ -219,8 +217,12 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
                         throw new jsException($e);
                 }
         }
-        public function insertIntoMatchAlertsTempTable($table,$PROFILEID)
+        public function insertIntoMatchAlertsTempTable($table,$PROFILEID,$fromReg = "1")
         {
+                if($PROFILEID == NULL || !$PROFILEID || $PROFILEID == 0){
+                        jsException::nonCriticalError("PROFILEID IS BLANK in insertIntoMatchAlertsTempTable");
+                        return true;
+                }
                 try
                 {
                         $tbl_name ="matchalerts.MATCHALERTS_TO_BE_SENT";
@@ -230,7 +232,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 			$sql="INSERT IGNORE INTO $tbl_name(PROFILEID,LAST_LOGIN_DT,FROM_REG) VALUES(:PROFILEID,now(),:FROM_REG)";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$PROFILEID,PDO::PARAM_INT);
-                        $prep->bindValue(":FROM_REG",1,PDO::PARAM_INT);
+                        $prep->bindValue(":FROM_REG",$fromReg,PDO::PARAM_STR);
         		$prep->execute();
                 }
                 catch (PDOException $e)

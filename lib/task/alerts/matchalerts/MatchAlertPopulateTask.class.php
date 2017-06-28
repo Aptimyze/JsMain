@@ -24,7 +24,8 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-
+                $memObject=JsMemcache::getInstance();
+                $memObject->set('MATCHALERT_POPULATE_EMPTY',1,3600);
 		$matchalerts_MAILER = new matchalerts_MAILER;
 		/** 
 		* start the process one all mailers have been fired 
@@ -90,7 +91,7 @@ EOF;
 		$conditionNew = "(ACTIVATED='Y' OR ACTIVATED = 'N') AND ";
 		$conditionNew .= "(((jp.ENTRY_DT >= DATE_SUB( now( ) , INTERVAL 15 DAY )) || (jp.ENTRY_DT < DATE_SUB( now( ) , INTERVAL 15 DAY )) && (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y' || jpc.ALT_MOB_STATUS = 'Y')) && ((jp.LAST_LOGIN_DT >= DATE_SUB( now( ) , INTERVAL $interval) $intervalAddCon)))";
 		$matchalerts_MATCHALERTS_TO_BE_SENT->populateTables($conditionNew);
-                
+                $memObject->remove('MATCHALERT_POPULATE_EMPTY');
                 /*
                  * Update HASTRENDS column
                  */

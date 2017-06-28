@@ -128,6 +128,7 @@ public function phoneUpdateProcess($message)
                 
                 $memcacheObj->lpush($key,$profileid);
                 $this->sendToProductMetricQueue();
+                 $this->sendMatchAlerts($profileid);
 
 			}
 
@@ -446,6 +447,25 @@ public function contact_archive($field="",$val="")
                 }
             } catch (Exception $e) {
                         }
+    }
+    private function sendMatchAlerts($profileid) {
+        $producerObj = new Producer();
+        if($producerObj->getRabbitMQServerConnected())
+        {
+                $updateSeenProfileData = array("process"=>"MATCHALERTS_REG",'data'=>array('body'=>array('profileid'=>$profileid)));
+                $producerObj->sendMessage($updateSeenProfileData);
+        }else{
+                $memObject = JsMemcache::getInstance();
+                $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
+                unset($memObject);
+                $table = "main";
+                if($tableEmpty == 1){
+                        $table = "temp";
+                }
+                $matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT();
+                $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable($table, $profileid,'0');  
+                unset($matchalerts_MATCHALERTS_TO_BE_SENT);
+        }
     }
 
 }

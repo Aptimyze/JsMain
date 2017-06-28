@@ -145,6 +145,9 @@ class Producer
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
+			$this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
 			$this->channel->queue_declare(MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
                         $this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
@@ -235,6 +238,9 @@ class Producer
 					break;
 				case "UPDATE_SEEN_PROFILE":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "MATCHALERTS_REG":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "MATCHALERTS_LAST_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
