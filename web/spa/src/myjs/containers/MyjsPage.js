@@ -12,7 +12,7 @@ import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
 import { redirectToLogin } from '../../common/components/RedirectRouter';
-
+import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 
 require ('../style/jsmsMyjs_css.css');
@@ -108,6 +108,7 @@ export  class MyjsPage extends React.Component {
 	        }
   		return(
 		  <div id="mainContent">
+		  		<GA ref="GAchild" />
 				  <div className="perspective" id="perspective">
 								<div className="" id="pcontainer">
 
