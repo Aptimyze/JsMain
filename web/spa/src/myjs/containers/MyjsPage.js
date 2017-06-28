@@ -12,6 +12,8 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import { removeCookie } from '../../common/components/CookieHelper';
 import { redirectToLogin } from '../../common/components/RedirectRouter';
 import Loader from "../../common/components/Loader";
+import MetaTagComponents from '../../common/components/MetaTagComponents';
+
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -172,6 +174,8 @@ export  class MyjsPage extends React.Component {
 	        }
   		return(
 		  <div id="mainContent">
+		  	<MetaTagComponents page="MyjsPage"/>
+
 				  <div className="perspective" id="perspective">
 								<div className="" id="pcontainer">
 
