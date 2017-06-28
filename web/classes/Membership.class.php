@@ -1512,448 +1512,6 @@ class Membership
         $jsadminPswrdsObj = new jsadmin_PSWRDS();
         $newjsContactUsObj = new NEWJS_CONTACT_US();
         $jProfileObj =new JPROFILE('newjs_slave');
-        
-        if ($this->billid) {
-            $billid = $this->billid;
-        }
-        if ($this->receiptid) {
-            $receiptid = $this->receiptid;
-        }
-        if (!$this->dol_conv_bill) {
-            $myrow = $billingPurObj->fetchAllDataForBillid($billid);
-            $this->dol_conv_bill = $myrow['DOL_CONV_BILL'];
-        }
-
-        $ordrDeviceObj = new billing_ORDERS_DEVICE();
-        $this->device = $ordrDeviceObj->getOrderDeviceFromBillid($billid);
-        if(empty($this->device) || $this->device == ''){
-        	$this->device = 'desktop';
-        }
-
-        if ($this->dol_conv_bill == 'Y') {
-            if (!$this->serviceid) $this->serviceid = $myrow['SERVICEID'];
-            $serviceids = explode(',', $this->serviceid);
-            $sids = "'".implode("','", $serviceids)."'";
-            $serviceDetailsArr = $billingServObj->fetchAllServiceDetails($sids);
-            foreach ($serviceDetailsArr as $key=>$myrow) {
-                $dol_conv_price[$myrow['SERVICEID']] = round(($myrow[$this->device.'_DOL'] * $this->DOL_CONV_RATE), 2);
-            }
-        }
-        
-        $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
-        $paymentDetailArr = $billingPaymentDetObj->fetchAllDataForReceiptId($receiptid);
-        $billdate = $paymentDetailArr['ENTRY_DT'];
-        $invoiceNo = $paymentDetailArr['INVOICE_NO'];
-        if (!$billid) {
-            $billid = $paymentDetailArr['BILLID'];
-        }
-
-        $billyear = (date('m', strtotime($billdate))<'04') ? date('y',strtotime('-1 year')) : date('y');
-        $inv_dt_arr = explode(" ", $billdate);
-        list($inv_year, $inv_month, $inv_day) = explode("-", $inv_dt_arr[0]);
-        $inv_date = my_format_date($inv_day, $inv_month, $inv_year);
-        
-        $billid_toassign = $billyear;
-        $d = $billid_toassign + 1;
-        if ($d < 10) $d = "0" . $d;
-        
-        $billid_toassign.= $d;
-        $i = 0;
-
-        $printBillDataArr = $billingPurObj->fetchPrintBillDataForBillid($billid);
-	$this->profileid =$printBillDataArr[0]['PROFILEID'];
-	$jProfileArr = $jProfileObj->get($this->profileid,'PROFILEID','COUNTRY_RES,CITY_RES');
-
-        $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
-        $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
-        $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
-        //Start:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
-        //$smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
-        $ser_name = $serviceObj->get_servicename(substr($purDetRow['SERVICEID'],0,4));
-        $smarty->assign("eAdvantageServiceName", $ser_name);
-        //End:JSC-2632Changed to display complete service name and duration of membership plan in invoice 
-        $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
-        unset($purDetRow);
-
-        foreach ($printBillDataArr as $key=>$myrow) {
-            $saleBy = $myrow['WALKIN'];
-            $overseas = $myrow['OVERSEAS'];
-            $order_dt = $myrow['ENTRY_DT'];
-            $start_dt = $myrow['START_DATE'];
-            $exp_dt = $myrow['END_DATE'];
-            $sid = $myrow['SERVICEID'];
-            $pid = $myrow['PROFILEID'];
-            $username = $myrow['USERNAME'];
-            $address = $myrow['ADDRESS'];
-            $city = $myrow['CITY'];
-            $pin = $myrow['PIN'];
-            $email = $myrow['EMAIL'];
-            $tax_rate = $myrow['TAX_RATE'];
-            $cur_type = $myrow['CUR_TYPE'];
-	    $entryBy =$myrow['ENTRYBY'];
-            $memUpgrage = $myrow['MEM_UPGRADE'];
-	    if($entryBy=='ONLINE')
-		$ipCountry =$myrow['COUNTRY'];
-	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
-	    $resCity =$jProfileArr['CITY_RES'];
-	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);	
-	    if($resCountryVal==51 && $resCity){	
-		$stateRes =substr($resCity,0,2);
-	    	$stateRes =FieldMap::getFieldLabel('state_india',$stateRes);
-                $resCountry =$stateRes." , ".$resCountry;
-	    }
-	
-            if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied
-                $otherTaxes = billingVariables::SWACHH_TAX_RATE + billingVariables::KRISHI_KALYAN_TAX_RATE;
-                $service_tax_content ="Service Tax @ ".($tax_rate-$otherTaxes)."%";
-				$swachh_content = "Swachh Bharat Cess @ ".billingVariables::SWACHH_TAX_RATE."%";
-                $smarty->assign("swachh_content",$swachh_content);
-                $krishi_content = "Krishi Kalyan Cess @ ".billingVariables::KRISHI_KALYAN_TAX_RATE."%";
-                $smarty->assign("krishi_content",$krishi_content);
-            } else if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh')){ // this will occur only for billings occurring with swachh tax applied
-				$service_tax_content ="Service Tax @ ".($tax_rate-billingVariables::SWACHH_TAX_RATE)."%";
-				$swachh_content = "Swachh Bharat Cess @ ".billingVariables::SWACHH_TAX_RATE."%";
-                $smarty->assign("swachh_content",$swachh_content);
-			} else {
-				$service_tax_content ="Service Tax @ "."$tax_rate".$myrow['SERVICE_TAX_CONTENT']."%";
-			}
-			$name = $myrow['NAME'];
-            $services[] = $sid;
-            
-            $order_date = date("d-M-Y", JSstrToTime($order_dt));
-            $start_dt = date("d-M-Y", JSstrToTime($start_dt));
-            $exp_dt = date("d-M-Y", JSstrToTime($exp_dt));
-            
-            $ser_name = $serviceObj->get_servicename($myrow['SERVICEID']);
-            $cost = round(($myrow[$this->device.'_RS'] * 100 / ($tax_rate + 100)), 2);
-            if ($this->dol_conv_bill == 'Y') {
-                $cost = $dol_conv_price[$sid];
-            }
-            $discount = $myrow['DISCOUNT'];
-            $discount_tp = $myrow['DISCOUNT_TYPE'];
-            
-            list($cost_rs, $cost_paise) = explode(".", $cost);
-            if ($cost_paise == '') $cost_paise = '00';
-            elseif (strlen($cost_paise) == 1) $cost_paise.= '0';
-            
-            $servicecost_total+= $cost;
-            if ($serviceObj->getServiceType($myrow['SERVICEID']) == 'C') {
-                $qty = $serviceObj->getCount($myrow['SERVICEID']);
-                $cost = $cost / $qty;
-                $start_dt = '';
-                $exp_dt = '';
-                $ser_name_dur = $ser_name;
-                $ser_name_arr = explode('-', $ser_name);
-                $ser_name = $ser_name_arr['0'];
-            } 
-            else {
-                $qty = "1";
-                $ser_name_dur = $ser_name;
-            }
-            $ser[] = array("NUM" => $i + 1, "NAME" => $ser_name, "MEM_UPGRADE" => $memUpgrage, "NAME_DUR" => $ser_name_dur, "QTY" => $qty, "COST" => $cost, "COST_RS" => $cost_rs, "COST_PAISE" => $cost_paise, "S_DATE" => $start_dt, "E_DATE" => $exp_dt);
-            $i++;
-        }
-        unset($i);
-        $service_str = implode(',', $services);
-        $this->serviceid = $service_str;
-        $services_count = count($ser);
-        $smarty->assign("services_count", $services_count);
-        
-        $membership_details = $this->membership_details($myrow['SERVICEID']);
-        $smarty->assign("membership_details", $membership_details);
-        $smarty->assign("main_ser_id", $myrow['SERVICEID']);
-        
-        $serviceid_arr = @explode(",", $this->serviceid);
-        for ($i = 0; $i < count($serviceid_arr); $i++) $service_type[] = get_service_type($serviceid_arr[$i]);
-
-        if (@in_array("P", $service_type)) $billid_toassign.= "-F";
-        if (@in_array("D", $service_type)) $billid_toassign.= "-D";
-        if (@in_array("C", $service_type)) $billid_toassign.= "-C";
-        if (strlen($this->serviceid) == 2) {
-            if (strstr($sid, '2')) $billid_toassign.= "02";
-            if (strstr($sid, '3')) $billid_toassign.= "03";
-            if (strstr($sid, '4')) $billid_toassign.= "04";
-            if (strstr($sid, '5')) $billid_toassign.= "05";
-            if (strstr($sid, '6')) $billid_toassign.= "06";
-        } 
-        else $billid_toassign.= "12";
-        
-        $no_zero = 6 - strlen($billid);
-        for ($i = 0; $i < $no_zero; $i++) $billid_toassign.= "0";
-            $billid_toassign.= $billid;
-        
-        //$discount=$myrow['DISCOUNT'];
-        list($discount_rs, $discount_paise) = explode(".", $discount);
-        if ($discount_paise == '') $discount_paise = '00';
-        elseif (strlen($discount_paise) == 1) $discount_paise.= '0';
-        if ($discount_tp == 1) $discount_type = "Renewal";
-        elseif ($discount_tp == 2) $discount_type = "General";
-        elseif ($discount_tp == 3) $discount_type = "Complementary";
-        elseif ($discount_tp == 4) $discount_type = "Referral";
-        elseif ($discount_tp == 5) $discount_type = "Special";
-        elseif ($discount_tp == 6) $discount_type = "Festive";
-        elseif ($discount_tp == 7) $discount_type = "Renewal and Festive";
-        elseif ($discount_tp == 8) $discount_type = "Voucher code";
-        elseif ($discount_tp == 9) $discount_type = "Special and Festive";
-        
-        $smarty->assign("saleBy", $saleBy);
-        $smarty->assign("overseas", $overseas);
-        $smarty->assign("order_date", $order_date);
-        $smarty->assign("name", $name);
-        $smarty->assign("address", $address);
-        $smarty->assign("pin", $pin);
-        $smarty->assign("receiptid", $receiptid);
-        $smarty->assign("custno", $pid);
-        $smarty->assign("discount_rs", $discount_rs);
-        $smarty->assign("discount_paise", $discount_paise);
-        $smarty->assign("discount", $discount);
-        $smarty->assign("discount_type", $discount_type);
-        $smarty->assign("username", $username);
-        $smarty->assign("date", $inv_date);
-        $smarty->assign("service_tax_content", $service_tax_content);
-
-        $smarty->assign("city", $city);
-
-        $myrow1 = $billingPaymentDetObj->fetchPrintBillDataForReceiptId($receiptid);
-        
-        $bill_date = date("d-M-Y", JSstrToTime($myrow1['ENTRY_DT']));
-        $smarty->assign("bill_date", $bill_date);
-        
-        list($rec_dt, $rec_time) = explode(" ", $myrow1['ENTRY_DT']);
-        $r_dt = explode("-", $rec_dt);
-        $r_dt1 = '';
-        for ($i = count($r_dt), $k = 0; $i >= 0; $i--, $k++) $r_dt1.= $r_dt[$i] . "-";
-            $rdt = substr($r_dt1, 1, (strlen($r_dt1) - 2));
-        $cd_dt = explode("-", $myrow1['CD_DT']);
-        $cd_dt1 = '';
-        for ($i = count($cd_dt), $k = 0; $i >= 0; $i--, $k++) $cd_dt1.= $cd_dt[$i] . "-";
-            $cddt = substr($cd_dt1, 1, (strlen($cd_dt1) - 2));
-        $smarty->assign("mode", $myrow1['MODE']);
-        $smarty->assign("type", $myrow1['TYPE']);
-        $smarty->assign("cdnum", $myrow1['CD_NUM']);
-        $smarty->assign("cddt", $cddt);
-        $smarty->assign("receipt_date", $rdt);
-        $smarty->assign("cdcity", $myrow1['CD_CITY']);
-        
-        $feevalue = $myrow1['AMOUNT'];
-        
-        //$branch=$myrow1['DEPOSIT_BRANCH'];
-        if ($saleBy != 'ONLINE') {
-            $saleBy = trim($saleBy);
-            $center = $jsadminPswrdsObj->getSubCenter($saleBy);
-            $row_add = $newjsContactUsObj->fetchPrintBillData($center);
-            $address_br = $row_add['ADDRESS'];
-            $phone_br = $row_add['PHONE'];
-            $mobile_br = $row_add['MOBILE'];
-        }
-        if ($saleBy == 'ONLINE' || $address_br == '') {
-            $address_br1 = 'Head office : B - 8, Sector - 132, Noida - 201301';
-            $phone_br = '120-3082000';
-        }
-        if ($address_br != '') $address_br1 = "Branch office : $address_br";
-        
-        // Address breakup
-        $cnt = 0;
-        $j = 0;
-        $address_words_cnt = @explode(",", $address_br1);
-        $one_row_cnt = round(count($address_words_cnt) / 4) + 1;
-        foreach ($address_words_cnt as $key => $val) {
-            if ($cnt == $one_row_cnt) {
-                $cnt = 0;
-                $j++;
-            }
-            $addressArr[$j].= $val . " ";
-            $cnt++;
-        }
-        $address_br1_1 = $addressArr[0];
-        $address_br1_2 = $addressArr[1];
-        $address_br1_3 = $addressArr[2];
-        $address_br1_4 = $addressArr[3];
-        $smarty->assign("address_br1_1", $address_br1_1);
-        $smarty->assign("address_br1_2", $address_br1_2);
-        $smarty->assign("address_br1_3", $address_br1_3);
-        $smarty->assign("address_br1_4", $address_br1_4);
-        
-        $smarty->assign("address_br", $address_br);
-        $smarty->assign("address_br1", $address_br1);
-        $smarty->assign("phone_br", $phone_br);
-        $smarty->assign("mobile_br", $mobile_br);
-        $smarty->assign("feevalue", $feevalue);
-	$smarty->assign("ipCountry", $ipCountry);
-        $smarty->assign("resCountry", $resCountry);
-        
-        // Cost value from payment without tax
-        $feevalue_exTax = round(($feevalue * 100 / ($tax_rate + 100)), 2);
-        list($feevalue_exTax_rs, $feevalue_exTax_paise) = explode(".", $feevalue_exTax);
-        if ($feevalue_exTax_paise == '') $feevalue_exTax_paise = '00';
-        elseif (strlen($feevalue_exTax_paise) == 1) $feevalue_exTax_paise.= '0';
-        $smarty->assign("costvalue_exTax", $feevalue_exTax);
-        $smarty->assign("costvalue_exTax_rs", $feevalue_exTax_rs);
-        $smarty->assign("costvalue_exTax_paise", $feevalue_exTax_paise);
-        //$smarty->assign("costvalue", $feevalue_exTax);
-        list($feevalue_incTax_rs, $feevalue_incTax_paise) = explode(".", $feevalue);
-        if($feevalue_incTax_paise == '') $feevalue_incTax_paise = '00';
-        elseif (strlen($feevalue_incTax_paise) == 1) $feevalue_incTax_paise.= '0';
-        $smarty->assign("costvalue_rs", $feevalue_incTax_rs);
-        $smarty->assign("costvalue_paise", $feevalue_incTax_paise);
-        
-        // Sale amount value without tax
-        list($scost_rs, $scost_paise) = explode(".", $servicecost_total);
-        if ($scost_paise == '') $scost_paise = '00';
-        elseif (strlen($scost_paise) == 1) $scost_paise.= '0';
-        $smarty->assign("SUBTOTAL1", $servicecost_total);
-        $smarty->assign("SUBTOTAL1_RS", $scost_rs);
-        $smarty->assign("SUBTOTAL1_PS", $scost_paise);
-        $servicecostvalue1 = $servicecost_total - $discount;
-        if ($discount > 0) {
-            // Sale amount value after discount
-            list($servicecostvalue1_rs, $servicecostvalue1_paise) = explode(".", $servicecostvalue1);
-            if ($servicecostvalue1_paise == '') $servicecostvalue1_paise = '00';
-            elseif (strlen($servicecostvalue1_paise) == 1) $servicecostvalue1_paise.= '0';
-            
-            $smarty->assign("SUBTOTAL2", $servicecostvalue1);
-            $smarty->assign("SUBTOTAL2_rs", $servicecostvalue1_rs);
-            $smarty->assign("SUBTOTAL2_paise", $servicecostvalue1_paise);
-        }
-        $smarty->assign("TAX", "Y");
-        $smarty->assign("TAX_RATE", $tax_rate);
-        if (($tax_rate != '' || $tax_rate != 0)) {
-            // Sale amount tax calculation
-            $tax_ratevalue = round((($tax_rate / 100) * $servicecostvalue1), 2);
-            $servicecostvalue = round($servicecostvalue1 + $tax_ratevalue);
-            list($servicecostvalue_rs, $servicecostvalue_paise) = explode(".", $servicecostvalue);
-            if ($servicecostvalue_paise == '') $servicecostvalue_paise = '00';
-            elseif (strlen($servicecostvalue_paise) == 1) $servicecostvalue_paise.= '0';
-            
-            // Sale amount without tax
-            if (strtotime($myrow1['ENTRY_DT']) > strtotime(date("2015-05-10 00:00:00"))) {
-                $servicecostvalue_exTax = round(($feevalue * 100 / ($tax_rate + 100)), 2);
-            } 
-            else {
-                $servicecostvalue_exTax = round(($servicecostvalue * 100 / ($tax_rate + 100)), 2);
-            }
-            list($servicecostvalue_exTax_rs, $servicecostvalue_exTax_paise) = explode(".", $servicecostvalue_exTax);
-            if ($servicecostvalue_exTax_paise == '') $servicecostvalue_exTax_paise = '00';
-            elseif (strlen($servicecostvalue_exTax_paise) == 1) $servicecostvalue_exTax_paise.= '0';
-            $smarty->assign("servicecostvalue_exTax", $servicecostvalue_exTax);
-            $smarty->assign("servicecostvalue_exTax_rs", $servicecostvalue_exTax_rs);
-            $smarty->assign("servicecostvalue_exTax_paise", $servicecostvalue_exTax_paise);
-            
-            // Sale amount tax
-            list($tax_ratevalue_rs, $tax_ratevalue_paise) = explode(".", $tax_ratevalue);
-            if ($tax_ratevalue_paise == '') $tax_ratevalue_paise = '00';
-            elseif (strlen($tax_ratevalue_paise) == 1) $tax_ratevalue_paise.= '0';
-            
-            $smarty->assign("TAX_RATEVALUE_rs", $tax_ratevalue_rs);
-            $smarty->assign("TAX_RATEVALUE_paise", $tax_ratevalue_paise);
-        } 
-        
-        // Cost value tax calculation distribution
-        if (($tax_rate != '' || $tax_rate != 0)) {
-            if(isset($swachh_content) && isset($krishi_content)){
-                $tempTaxRate = $tax_rate-billingVariables::SWACHH_TAX_RATE-billingVariables::KRISHI_KALYAN_TAX_RATE;
-                $tax_ratevalue1=round((($tempTaxRate/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs1,$tax_ratevalue_paise1)=explode(".",$tax_ratevalue1);
-                
-                $tax_ratevalue_swachh1=round(((billingVariables::SWACHH_TAX_RATE/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs_swachh1,$tax_ratevalue_paise_swachh1)=explode(".",$tax_ratevalue_swachh1);
-	        	if($tax_ratevalue_paise_swachh1 == '')
-                    $tax_ratevalue_paise_swachh1= '00';
-	            elseif(strlen($tax_ratevalue_paise_swachh1)== 1)
-                    $tax_ratevalue_paise_swachh1 .= '0';
-	        	$smarty->assign("TAX_RATEVALUE_SWACHH_rs1",$tax_ratevalue_rs_swachh1);
-	        	$smarty->assign("TAX_RATEVALUE_SWACHH_paise1",$tax_ratevalue_paise_swachh1);
-                
-                $tax_ratevalue_krishi=round(((billingVariables::KRISHI_KALYAN_TAX_RATE/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs_krishi,$tax_ratevalue_paise_krishi)=explode(".",$tax_ratevalue_krishi);
-	        	if($tax_ratevalue_paise_krishi == '')
-                    $tax_ratevalue_paise_krishi= '00';
-	            elseif(strlen($tax_ratevalue_paise_krishi)== 1)
-                    $tax_ratevalue_paise_krishi .= '0';
-	        	$smarty->assign("TAX_RATEVALUE_KRISHI_rs1",$tax_ratevalue_rs_krishi);
-	        	$smarty->assign("TAX_RATEVALUE_KRISHI_paise1",$tax_ratevalue_paise_krishi);
-            }
-            else if(isset($swachh_content)){ // calculating swachh bharat tax seperately
-				$tempTaxRate = $tax_rate-billingVariables::SWACHH_TAX_RATE;
-	        	$tax_ratevalue1=round((($tempTaxRate/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs1,$tax_ratevalue_paise1)=explode(".",$tax_ratevalue1);
-	        	$tax_ratevalue_swachh1=round(((billingVariables::SWACHH_TAX_RATE/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs_swachh1,$tax_ratevalue_paise_swachh1)=explode(".",$tax_ratevalue_swachh1);
-	        	if($tax_ratevalue_paise_swachh1 == '')
-	           	$tax_ratevalue_paise_swachh1= '00';
-	            elseif(strlen($tax_ratevalue_paise_swachh1)== 1)
-	            $tax_ratevalue_paise_swachh1 .= '0';
-	        	$smarty->assign("TAX_RATEVALUE_SWACHH_rs1",$tax_ratevalue_rs_swachh1);
-	        	$smarty->assign("TAX_RATEVALUE_SWACHH_paise1",$tax_ratevalue_paise_swachh1);
-	    	} else {
-	    		$tax_ratevalue1=round((($tax_rate/100)*$feevalue_exTax),2);
-	        	list($tax_ratevalue_rs1,$tax_ratevalue_paise1)=explode(".",$tax_ratevalue1);
-	    	}
-	        if($tax_ratevalue_paise1 == '')
-	       	$tax_ratevalue_paise1= '00';
-	        elseif(strlen($tax_ratevalue_paise1)== 1)
-	       	$tax_ratevalue_paise1 .= '0';
-	        $smarty->assign("TAX_RATEVALUE_rs1",$tax_ratevalue_rs1);
-	        $smarty->assign("TAX_RATEVALUE_paise1",$tax_ratevalue_paise1);
-        }
-        
-        $servicecost_rs = convert($servicecostvalue_rs);
-        if ($servicecost_paise != '' && $servicecost_paise != '00' && $servicecost_paise != '0') {
-            if ($myrow1['TYPE'] == "RS") $servicecost_paise = convert($servicecostvalue_paise) . "paise";
-            elseif ($myrow1['TYPE'] == "DOL") $servicecost_paise = convert($servicecostvalue_paise) . "cents";
-            $servicecost = $servicecost_rs . "and " . $servicecost_paise . " only";
-        } 
-        else $servicecost = convert($servicecostvalue_rs) . " only";
-        
-        // Display nothing if start or end date is greater than 2099
-        foreach ($ser as $key=>&$val) {
-            list($dd,$mm,$yy) = explode("-", $val['S_DATE']);
-            list($dd1,$mm1,$yy1) = explode("-", $val['E_DATE']);
-            if ($yy >= '2099') {
-                $val['S_DATE'] = "-";
-            }
-            if ($yy1 >= '2099') {
-                $val['E_DATE'] = "-";
-            }
-        }
-
-        // Service cost net with tax
-        $smarty->assign("servicecostvalue", $servicecostvalue);
-        $smarty->assign("servicecostvalue_rs", $servicecostvalue_rs);
-        $smarty->assign("servicecostvalue_paise", $servicecostvalue_paise);
-        $smarty->assign("servicecost", $servicecost);
-        $smarty->assign("SERVICES", $ser);
-        $smarty->assign("countServices", count($ser));
-        $smarty->assign("accountid", $pid);
-        $smarty->assign("billid", $invoiceNo);
-
-        $cost_rs = convert($feevalue_incTax_rs);
-        if ($feevalue_incTax_paise != '' && $feevalue_incTax_paise != '00' && $feevalue_incTax_paise != '0') {
-            if ($myrow1['TYPE'] == "RS") $cost_paise = convert($feevalue_incTax_paise) . "paise";
-            elseif ($myrow1['TYPE'] == "DOL") $cost_paise = convert($feevalue_incTax_paise) . "cents";
-            $cost = $cost_rs . "and " . $cost_paise . " only";
-        } 
-        else $cost = convert($feevalue_incTax_rs) . " only";
-        
-        $smarty->assign("cost", $cost);
-        $output = $smarty->fetch("../jsadmin/BILL3.htm");
-        
-        //echo $output;die;
-        if ($output == "ERROR") {
-            echo "ERROR";
-            exit;
-        }
-        return $output;
-    }
-    
-    function printGSTbill($receiptid = "", $billid = "") {
-        global $smarty;
-        $serviceObj = new Services;
-        $billingPurObj = new BILLING_PURCHASES();
-        $billingServObj = new billing_SERVICES();
-        $jsadminPswrdsObj = new jsadmin_PSWRDS();
-        $newjsContactUsObj = new NEWJS_CONTACT_US();
-        $jProfileObj =new JPROFILE('newjs_slave');
 
         if ($this->billid) {
             $billid = $this->billid;
@@ -2006,19 +1564,20 @@ class Membership
 	$this->profileid =$printBillDataArr[0]['PROFILEID'];
 	$jProfileArr = $jProfileObj->get($this->profileid,'PROFILEID','COUNTRY_RES,CITY_RES');
         //For GST
-        $taxBreakupObj = new billing_TAXBREAKUP();
-        $taxData = $taxBreakupObj->getRecordForBillid($billid);
-        $cgstApplied = $taxData['CGST'];
-        $igstApplied = $taxData['IGST'];
-        $sgstApplied = $taxData['SGST'];
-        if($cgstApplied == 0 && $igstApplied == 0 && $sgstApplied == 0){
-            $smarty->assign("exportFlag", 1);
-        }else{
-            $smarty->assign("exportFlag", 0);
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $taxBreakupObj = new billing_TAXBREAKUP();
+            $taxData = $taxBreakupObj->getRecordForBillid($billid);
+            $cgstApplied = $taxData['CGST'];
+            $igstApplied = $taxData['IGST'];
+            $sgstApplied = $taxData['SGST'];
+            if ($cgstApplied == 0 && $igstApplied == 0 && $sgstApplied == 0) {
+                $smarty->assign("exportFlag", 1);
+            } else {
+                $smarty->assign("exportFlag", 0);
+            }
+            $cityResTax = $taxData['CITY_RES'];
+            $countryResTax = $taxData['COUNTRY_RES'];
         }
-        $cityResTax = $taxData['CITY_RES'];
-        $countryResTax = $taxData['COUNTRY_RES'];
-        
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
         $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
@@ -2053,19 +1612,23 @@ class Membership
 	    $resCity =$jProfileArr['CITY_RES'];
 	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);
             //For GST
-            $resCountryTextTax = FieldMap::getFieldLabel('country',$countryResTax);
-            $billingAddress =  $resCountryTextTax; 
+            if($billdate>billingVariables::TAX_LIVE_DATE){
+                $resCountryTextTax = FieldMap::getFieldLabel('country',$countryResTax);
+                $billingAddress =  $resCountryTextTax;
+            }
 	    if($resCountryVal==51 && $resCity){	
 		$stateRes =substr($resCity,0,2);
 	    	$stateRes =FieldMap::getFieldLabel('state_india',$stateRes);
                 $resCountry =$stateRes." , ".$resCountry;
                 
                 //For GST
-                $cityResText = FieldMap::getFieldLabel('city_india',$cityResTax);
-                $stateResTax =substr($cityResTax,0,2);
-	    	$stateResTaxText =FieldMap::getFieldLabel('state_india',$stateResTax);
-                $billingAddress = $cityResText . ", ".$stateResTaxText .", " . $resCountryTextTax;  
-	    }
+                if ($billdate > billingVariables::TAX_LIVE_DATE) {
+                    $cityResText = FieldMap::getFieldLabel('city_india', $cityResTax);
+                    $stateResTax = substr($cityResTax, 0, 2);
+                    $stateResTaxText = FieldMap::getFieldLabel('state_india', $stateResTax);
+                    $billingAddress = $cityResText . ", " . $stateResTaxText . ", " . $resCountryTextTax;
+                }
+            }
             
 	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied
@@ -2165,7 +1728,11 @@ class Membership
         $smarty->assign("overseas", $overseas);
         $smarty->assign("order_date", $order_date);
         $smarty->assign("name", $name);
-        $smarty->assign("address", $billingAddress);
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $smarty->assign("address", $billingAddress);
+        }else{
+            $smarty->assign("address", $address);
+        }
         $smarty->assign("pin", $pin);
         $smarty->assign("receiptid", $receiptid);
         $smarty->assign("custno", $pid);
@@ -2200,53 +1767,66 @@ class Membership
         $smarty->assign("receipt_date", $rdt);
         $smarty->assign("cdcity", $myrow1['CD_CITY']);
         
-        //Start: For GST
         $feevalue = $myrow1['AMOUNT'];
-        $listPrice = $feevalue + $discount;
-        $listPrice_exTax = round(($listPrice * 100 / ($tax_rate + 100)), 2);
-        list($listPrice_exTax_rs, $listPrice_exTax_paise) = explode(".", $listPrice_exTax);
-        if ($listPrice_exTax_paise == '') $listPrice_exTax_paise = '00';
-        elseif (strlen($listPrice_exTax_paise) == 1) $listPrice_exTax_paise.= '0';
         
-        $discount_exTax = round(($discount * 100 / ($tax_rate + 100)), 2);
-        list($discount_exTax_rs, $discount_exTax_paise) = explode(".", $discount_exTax);
-        if ($discount_exTax_paise == '') $discount_exTax_paise = '00';
-        elseif (strlen($discount_exTax_paise) == 1) $discount_exTax_paise.= '0';
-        
-        $taxableValue = $listPrice_exTax - $discount_exTax;
-        list($taxableValue_rs, $taxableValue_paise) = explode(".", $taxableValue);
-        if ($taxableValue_paise == '') $taxableValue_paise = '00';
-        elseif (strlen($taxableValue_paise) == 1) $taxableValue_paise.= '0';
-        
-        $cgstAmount = round((($cgstApplied/100) * $taxableValue),2);
-        list($cgstAmount_rs, $cgstAmount_paise) = explode(".", $cgstAmount);
-        if ($cgstAmount_paise == '') $cgstAmount_paise = '00';
-        elseif (strlen($cgstAmount_paise) == 1) $cgstAmount_paise.= '0';
-        
-        $sgstAmount = round((($sgstApplied/100) * $taxableValue),2);
-        list($sgstAmount_rs, $sgstAmount_paise) = explode(".", $sgstAmount);
-        if ($sgstAmount_paise == '') $sgstAmount_paise = '00';
-        elseif (strlen($sgstAmount_paise) == 1) $sgstAmount_paise.= '0';
-        
-        $igstAmount = round((($igstApplied/100) * $taxableValue),2);
-        list($igstAmount_rs, $igstAmount_paise) = explode(".", $igstAmount);
-        if ($igstAmount_paise == '') $igstAmount_paise = '00';
-        elseif (strlen($igstAmount_paise) == 1) $igstAmount_paise.= '0';
-        
-        $smarty->assign("listPrice_exTax_rs", $listPrice_exTax_rs);
-        $smarty->assign("listPrice_exTax_paise", $listPrice_exTax_paise);
-        $smarty->assign("discount_exTax_rs", $discount_exTax_rs);
-        $smarty->assign("discount_exTax_paise", $discount_exTax_paise);
-        $smarty->assign("taxableValue_rs", $taxableValue_rs);
-        $smarty->assign("taxableValue_paise", $taxableValue_paise);
-        $smarty->assign("cgstAmount_rs", $cgstAmount_rs);
-        $smarty->assign("cgstAmount_paise", $cgstAmount_paise);
-        $smarty->assign("sgstAmount_rs", $sgstAmount_rs);
-        $smarty->assign("sgstAmount_paise", $sgstAmount_paise);
-        $smarty->assign("igstAmount_rs", $igstAmount_rs);
-        $smarty->assign("igstAmount_paise", $igstAmount_paise);
-        
-        
+        //Start: For GST
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $listPrice = $feevalue + $discount;
+            $listPrice_exTax = round(($listPrice * 100 / ($tax_rate + 100)), 2);
+            list($listPrice_exTax_rs, $listPrice_exTax_paise) = explode(".", $listPrice_exTax);
+            if ($listPrice_exTax_paise == '')
+                $listPrice_exTax_paise = '00';
+            elseif (strlen($listPrice_exTax_paise) == 1)
+                $listPrice_exTax_paise .= '0';
+
+            $discount_exTax = round(($discount * 100 / ($tax_rate + 100)), 2);
+            list($discount_exTax_rs, $discount_exTax_paise) = explode(".", $discount_exTax);
+            if ($discount_exTax_paise == '')
+                $discount_exTax_paise = '00';
+            elseif (strlen($discount_exTax_paise) == 1)
+                $discount_exTax_paise .= '0';
+
+            $taxableValue = $listPrice_exTax - $discount_exTax;
+            list($taxableValue_rs, $taxableValue_paise) = explode(".", $taxableValue);
+            if ($taxableValue_paise == '')
+                $taxableValue_paise = '00';
+            elseif (strlen($taxableValue_paise) == 1)
+                $taxableValue_paise .= '0';
+
+            $cgstAmount = round((($cgstApplied / 100) * $taxableValue), 2);
+            list($cgstAmount_rs, $cgstAmount_paise) = explode(".", $cgstAmount);
+            if ($cgstAmount_paise == '')
+                $cgstAmount_paise = '00';
+            elseif (strlen($cgstAmount_paise) == 1)
+                $cgstAmount_paise .= '0';
+
+            $sgstAmount = round((($sgstApplied / 100) * $taxableValue), 2);
+            list($sgstAmount_rs, $sgstAmount_paise) = explode(".", $sgstAmount);
+            if ($sgstAmount_paise == '')
+                $sgstAmount_paise = '00';
+            elseif (strlen($sgstAmount_paise) == 1)
+                $sgstAmount_paise .= '0';
+
+            $igstAmount = round((($igstApplied / 100) * $taxableValue), 2);
+            list($igstAmount_rs, $igstAmount_paise) = explode(".", $igstAmount);
+            if ($igstAmount_paise == '')
+                $igstAmount_paise = '00';
+            elseif (strlen($igstAmount_paise) == 1)
+                $igstAmount_paise .= '0';
+
+            $smarty->assign("listPrice_exTax_rs", $listPrice_exTax_rs);
+            $smarty->assign("listPrice_exTax_paise", $listPrice_exTax_paise);
+            $smarty->assign("discount_exTax_rs", $discount_exTax_rs);
+            $smarty->assign("discount_exTax_paise", $discount_exTax_paise);
+            $smarty->assign("taxableValue_rs", $taxableValue_rs);
+            $smarty->assign("taxableValue_paise", $taxableValue_paise);
+            $smarty->assign("cgstAmount_rs", $cgstAmount_rs);
+            $smarty->assign("cgstAmount_paise", $cgstAmount_paise);
+            $smarty->assign("sgstAmount_rs", $sgstAmount_rs);
+            $smarty->assign("sgstAmount_paise", $sgstAmount_paise);
+            $smarty->assign("igstAmount_rs", $igstAmount_rs);
+            $smarty->assign("igstAmount_paise", $igstAmount_paise);
+        }
         //End: For GST
         //$branch=$myrow1['DEPOSIT_BRANCH'];
         if ($saleBy != 'ONLINE') {
@@ -2447,7 +2027,12 @@ class Membership
         else $cost = convert($feevalue_incTax_rs) . " only";
         
         $smarty->assign("cost", $cost);
-        $output = $smarty->fetch("../jsadmin/BILL4.htm");
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $output = $smarty->fetch("../jsadmin/BILL4.htm");
+        }
+        else{
+            $output = $smarty->fetch("../jsadmin/BILL3.htm");
+        }
         
         //echo $output;die;
         if ($output == "ERROR") {

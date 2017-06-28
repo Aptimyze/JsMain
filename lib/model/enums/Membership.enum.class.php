@@ -42,7 +42,7 @@ class billingVariables
     const SERVICE_TAX_CONTENT = "(Inclusive of GST)";
     const TAX_TEXT = "GST";
     const TAX_TEXT_SB = " ";
-    const TAX_LIVE_DATE = '2017-06-28 00:00:00';
+    const TAX_LIVE_DATE = '2017-07-01 00:00:00';
      
      //*/
     

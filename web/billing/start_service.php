@@ -213,12 +213,11 @@ if(isset($data))
 			if($curtype == "DOL") { //to be checked
 				$dol_conv_rate = $DOL_CONV_RATE;
 			}
-			$sql="SELECT NAME, GENDER, ADDRESS, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, ENTRY_DT FROM billing.PURCHASES WHERE PROFILEID='$profileid' order by ENTRY_DT desc limit 1";
+			$sql="SELECT NAME, GENDER, ADDRESS, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE FROM billing.PURCHASES WHERE PROFILEID='$profileid' order by ENTRY_DT desc limit 1";
 			$res=mysql_query_decide($sql,$db_slave) or logError_sums($sql,0);
 			if(mysql_num_rows($res)>0)
 			{
 				$row = mysql_fetch_array($res);
-                                $entry_dt = $row['ENTRY_DT'];
 				$custname = addslashes($row['NAME']);
 				$gender = $row['GENDER'];
 				$address = $row['ADDRESS'];
@@ -306,11 +305,7 @@ if(isset($data))
 			$subject = "Bill for your subscription";
 			$msg = $memObj->membership_mail();
                         //$timeNow = date("Y-m-d h:m:s");
-                        if($membership_details["entry_dt"]>=billingVariables::TAX_LIVE_DATE){
-                            $bill = $memObj->printGSTbill($memObj->getReceiptid(),$memObj->getBillid());
-                        }else{
-                            $bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
-                        }
+                        $bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
 
 			$sql="SELECT EMAIL from newjs.JPROFILE where PROFILEID='$profileid'";
 			$result=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());
