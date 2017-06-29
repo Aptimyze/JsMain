@@ -68,7 +68,7 @@
         <div class="mainwid container">
             <!--start:top navigation-->
             <div class="pt35">
-                ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1])`
+                ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1,"registerSource"=>$registerSource])`
             </div>
             <!--end:top navigation-->
             <p class="txtc fontreg f30 colrw comp3 pb15 txtshadow">Happily ever after is not a fairy tale. It's a choice.</p>
@@ -81,7 +81,7 @@
             <p>100% screening of profiles before they start appearing in your search results</p>
             <p class="pb24">'Verified Seal' added to members who we have met in person and collected their documents on ID, education, income etc. </p>
             <div class="mauto wid280">
-                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=~if $registerationSource`~$registerationSource`~else`L2_MT_242~/if`&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
+                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=~if $registerSource`~$registerSource`~else`L2_MT_242~/if`&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
             </div>
         </div>
         <!--start:pink bg-->

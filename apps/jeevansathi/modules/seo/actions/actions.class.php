@@ -175,9 +175,9 @@ class seoActions extends sfActions
         $this->breadCrumbObj = $this->levelObj->createBreadCrumb();
         
         //parameter added for google dynamic search ads
-        $this->registerationSource = $request->getParameter("adnetwork");
-        if(empty($this->registerationSource)){
-            $this->registerationSource = null;
+        $this->registerSource = $request->getParameter("adnetwork");
+        if(empty($this->registerSource)){
+            $this->registerSource = null;
         }
         
         $page_source = $this->levelObj->getPageSource();
