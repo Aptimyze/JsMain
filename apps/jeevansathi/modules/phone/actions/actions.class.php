@@ -198,10 +198,7 @@ class phoneActions extends sfActions
 		}
 
 		}
-			$verifiedLogObj= new PHONE_VERIFIED_LOG();
-			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
-			$noOfTimesVerified=$row['COUNT'];
-	$result['fromReg'] = ($noOfTimesVerified == 0) ? 'Y' : 'N';
+	$result['fromReg'] =  'N';
 	$result['FLAG']=$phoneVerified;
 	$result['PHOTO']= null;
 	if($phoneVerified=="Y")
@@ -211,6 +208,11 @@ class phoneActions extends sfActions
 		$result['PHOTO']=$pictureServiceObj->isProfilePhotoPresent();
 		if($result['PHOTO']!='Y')
 			$result['PHOTO']= "N";
+                        $verifiedLogObj= new PHONE_VERIFIED_LOG();
+                        $row=$verifiedLogObj->getNoOfTimesVerified($profileid);
+                        $noOfTimesVerified=$row['COUNT'];
+			$result['fromReg'] = ($noOfTimesVerified == 1) ? 'Y' : 'N';
+
 	}
 
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
