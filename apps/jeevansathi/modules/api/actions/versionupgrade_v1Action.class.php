@@ -17,8 +17,8 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-			"Introducing Online Chat 
-			Safer,  more secure Jeevansathi"            
+			"See Recent Searches and Profile Views 
+			Get FLASH DEALS for Membership upgrades"            
         );
 	public function execute($request)
 	{	
