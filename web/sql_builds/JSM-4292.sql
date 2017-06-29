@@ -1,0 +1,18 @@
+create database Jira;
+
+use Jira;
+
+	CREATE TABLE `JiraDetails` (
+ `JIRA_ID` varchar(12) NOT NULL DEFAULT '',
+ `RELEASE_NAME` varchar(20) NOT NULL,
+ `RELEASE_DATE` date NOT NULL,
+ `STORY_POINTS` tinyint(2) NOT NULL,
+ `ASSIGNEE` varchar(20) NOT NULL,
+ `SUMMARY` varchar(200) NOT NULL,
+ `EPIC` varchar(80) NOT NULL,
+ `SPRINT_NAME` varchar(40) DEFAULT NULL,
+ `SPRINT_STARTDATE` date NOT NULL,
+ `SPRINT_ENDDATE` date NOT NULL,
+ PRIMARY KEY (`JIRA_ID`),
+ UNIQUE KEY `JIRA_ID` (`JIRA_ID`)
+) ENGINE=MYISAM;
