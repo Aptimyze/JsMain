@@ -14,6 +14,7 @@ import {LOGIN_ATTEMPT_COOKIE} from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import GA from "../../common/components/GA";
+import PropTypes from 'prop-types';
 
 class LoginPage extends React.Component {
 
@@ -52,11 +53,6 @@ class LoginPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("I am receiving nextProps.");
-
-        console.log(this.props.history.prevUrl);
-
-        console.log(nextProps);
 
        if ( nextProps.MyProfile.AUTHCHECKSUM ) {
             if ( (this.props.history.prevUrl) && ((this.props.history.prevUrl).indexOf('/login/') === -1) && ((this.props.history.prevUrl).indexOf('/spa/dist/index.html') === -1)  )
@@ -284,13 +280,15 @@ class LoginPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("IN reducer");
-    console.log(state.LoginReducer.MyProfile);
     return{
        MyProfile: state.LoginReducer.MyProfile,
     }
 }
 
+LoginPage.propTypes = {
+   MyProfile: PropTypes.object,
+   doLogin: PropTypes.func
+}
 
 const mapDispatchToProps = (dispatch) => {
     return{
@@ -298,11 +296,8 @@ const mapDispatchToProps = (dispatch) => {
             let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password;
             if ( g_recaptcha_response && captcha )
             {
-                console.log("appending g_recaptcha_response & captcha");
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-
-            console.log("Call url is: "+call_url);
 
             dispatch(commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET'));
         }
