@@ -176,7 +176,10 @@ class seoActions extends sfActions
         
         //parameter added for google dynamic search ads
         $this->registerationSource = $request->getParameter("adnetwork");
-
+        if(empty($this->registerationSource)){
+            $this->registerationSource = null;
+        }
+        
         $page_source = $this->levelObj->getPageSource();
         
         if (strtoupper($this->levelObj->getParentType()) == 'CASTE') $this->MORE_WIDTH = '1';
