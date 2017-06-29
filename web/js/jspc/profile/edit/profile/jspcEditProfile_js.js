@@ -5323,8 +5323,8 @@ updateEduLevelChanges =function(eduLevelVal)
                                         var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
                                         var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
                                         var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-                                        var firstDate = new Date(Dob[0],Dob[2],Dob[1]);
-                                        var secondDate = new Date(prevDob[0],prevDob[2],prevDob[1]);
+                                        var firstDate = new Date(parseInt(Dob[0]),parseInt(Dob[1])-1,parseInt(Dob[2]));
+                                        var secondDate = new Date(parseInt(prevDob[0]),parseInt(prevDob[1])-1,parseInt(prevDob[2]));
                                         var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
                                 }
                                 
