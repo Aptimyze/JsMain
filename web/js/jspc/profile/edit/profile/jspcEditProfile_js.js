@@ -6980,7 +6980,7 @@ $(document).ready(function() {
   updateProfileCompletionScore(profileCompletionValue);
   EditApp.init();
   $('body').on('click',function(event){
-        if($(event.target).hasClass("js-boxContent") || $(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2"){
+        if($(event.target).hasClass("js-boxContent") || $(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2" || event.target.getAttribute("id") == "dtofbirth"){
                 callBlur = 0;
         }else{
                 callBlur = 1;
