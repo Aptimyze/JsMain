@@ -2,17 +2,29 @@ import React from 'react';
 import {connect} from "react-redux";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import {getCookie} from '../../common/components/CookieHelper';
-
+import * as CONSTANTS from '../../common/constants/apiConstants';
+import axios from "axios";
 
 class KundliInfo extends React.Component {
 	constructor(props) {
         super();
+        this.state = {
+            showAstroLayer:false
+        };
     }
+
     componentDidMount() {
         if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
             this.props.getGuna(this.props.profilechecksum);   
         } 
     }
+
+    closeAstroLayer() {
+        this.setState({
+            showAstroLayer:false
+        });        
+    }
+
     componentWillReceiveProps(nextProps)
     {
         let htmlStr = "<div class='fl'><i class='vpro_sprite vpro_pin'></i></div>",colorClass,szHisHer;
@@ -31,6 +43,27 @@ class KundliInfo extends React.Component {
             document.getElementById("gunaScore").innerHTML = htmlStr;
         }
     }
+
+    initAstro(type) {
+        this.setState({
+            showAstroLayer:true,
+            astroType: type
+        });
+        let call_url = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+this.props.profilechecksum+"&sendMail=1&sampleReport=1&username="+this.props.username;
+        if(getCookie('AUTHCHECKSUM')){
+           call_url += "&AUTHCHECKSUM="+getCookie('AUTHCHECKSUM');
+        }
+        axios({
+            method: "POST",
+            url: CONSTANTS.API_SERVER +call_url,
+            data: '',
+            headers: { 
+              'Accept': 'application/json',
+              'withCredentials':true
+            },
+        });
+    }
+
     render() {
     	var city_country;
     	if(this.props.about.city_country) 
@@ -76,14 +109,14 @@ class KundliInfo extends React.Component {
         {   
             var classAsign = "";
             if(this.props.about.COMPATIBILITY_SUBSCRIPTION == "N" && this.props.about.paidMem == "Y") {
-                classAsign = "js-astroCompMem";
+                classAsign = "astroCompMem";
             } else if(this.props.about.COMPATIBILITY_SUBSCRIPTION == "N") {
-                classAsign = "js-freeAstroComp";
+                classAsign = "freeAstroComp";
             } else if(this.props.about.COMPATIBILITY_SUBSCRIPTION != "N") {
-                classAsign = "js-astroMem";
+                classAsign = "astroMem";
             }
 
-            AstroReport = <button className={classAsign + " fontlig lh40 astroBtn1 fr wid48p"}>Get Astro Report</button>
+            AstroReport = <button  onClick={() => this.initAstro(classAsign)} className={classAsign + " fontlig lh40 astroBtn1 fr wid48p"}>Get Astro Report</button>
         }
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
@@ -187,9 +220,48 @@ class KundliInfo extends React.Component {
                 {christian_m}
             </div>;
         }
+
+        var astroLayer,astroButton,astroText;
+        if(this.state.showAstroLayer == true) {
+            if(this.state.astroType == "astroCompMem") {
+                astroButton = <div>
+                    <a className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                        Buy Astro Compatibility
+                    </a>
+                </div>;
+                astroText = <div className="astrob1 js-textAstro">
+                    A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.
+                </div>;
+            } else if(this.state.astroType == "freeAstroComp") {
+                astroButton = <div>
+                    <a className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                        Upgrade Membership
+                    </a>
+                </div>;
+                astroText = <div className="astrob1 js-textAstro">
+                    A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.
+                </div>;
+            } else {
+                astroButton = <div className = "astrob1 js-textAstro"  onClick={() => this.closeAstroLayer()}>
+                    OK
+                </div>;
+                astroText = <div className="astrob1 js-textAstro">
+                    Astro compatibility report with this member has been sent to your registered Email ID.
+                </div>;
+            }
+            astroLayer = <div>
+                <div id="astroReportLayer" onClick={() => this.closeAstroLayer()}className="overlayAstro js-astroReportLayer">
+                </div>
+                <div className="setcenter fontlig f18 js-astroTextButton">
+                    {astroText}
+                    {astroButton}
+                </div>
+            </div>
+        }
     	
     	return(
     		<div>
+                {astroLayer}
     			{kundliSection}
   				{Religious}
     		</div>
