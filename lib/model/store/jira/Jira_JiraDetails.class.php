@@ -10,11 +10,11 @@ class Jira_JiraDetails extends TABLE
 	{
 		try
 		{
-			$sql = "INSERT into Jira.JiraDetails(JIRA_ID,RELEASE_NAME,RELEASE_DATE,STORY_POINTS,ASSIGNEE,SUMMARY,EPIC,SPRINT_NAME,SPRINT_STARTDATE,SPRINT_ENDDATE) VALUES ";
+			$sql = "INSERT into Jira.JiraDetails(JIRA_ID,TYPE,RELEASE_NAME,RELEASE_DATE,STORY_POINTS,ASSIGNEE,SUMMARY,EPIC,SPRINT_NAME,SPRINT_STARTDATE,SPRINT_ENDDATE) VALUES ";
 			$i=0;
 			foreach($jiraArr as $key=>$values)
 			{
-				$paramArr[] = "(:JIRA_ID".$i.",:RELEASE_NAME".$i.",:RELEASE_DATE".$i.",:STORY_POINTS".$i.",:ASSIGNEE".$i.",:SUMMARY".$i.",:EPIC".$i.",:SPRINT_NAME".$i.",:SPRINT_STARTDATE".$i.",:SPRINT_ENDDATE".$i.")";
+				$paramArr[] = "(:JIRA_ID".$i.",:TYPE".$i.",:RELEASE_NAME".$i.",:RELEASE_DATE".$i.",:STORY_POINTS".$i.",:ASSIGNEE".$i.",:SUMMARY".$i.",:EPIC".$i.",:SPRINT_NAME".$i.",:SPRINT_STARTDATE".$i.",:SPRINT_ENDDATE".$i.")";
 				$i++;				
 			}
 			$sql = $sql.implode(",",$paramArr);
@@ -25,6 +25,7 @@ class Jira_JiraDetails extends TABLE
 			{
 				$res->bindValue(":JIRA_ID".$i,$key, PDO::PARAM_STR);
 				$res->bindValue(":RELEASE_NAME".$i,$value["ReleaseName"], PDO::PARAM_STR);
+				$res->bindValue(":TYPE".$i,$value["type"], PDO::PARAM_STR);
 				$res->bindValue(":RELEASE_DATE".$i,$value["ReleaseDate"], PDO::PARAM_STR);
 				$res->bindValue(":STORY_POINTS".$i,$value["StoryPoints"], PDO::PARAM_STR);
 				$res->bindValue(":ASSIGNEE".$i,$value["assignee"], PDO::PARAM_STR);

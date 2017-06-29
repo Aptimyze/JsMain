@@ -47,8 +47,9 @@ EOF;
     else
     {
       $comparisonDate = date("Y-m-d 00:00:00");
-    }          
-      // this gets the tag array
+    }    
+      
+    // this gets the tag array
     $response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");      
     
     //to get tags for the required date
@@ -61,7 +62,7 @@ EOF;
         $this->tagArr[$value->name] = $value->release->description;         
       }        
     }
-
+    
     $jiraArr = array();
 
     //to take one tag at a time, use the jira's in the desrciption to find data and store in table.
@@ -79,12 +80,13 @@ EOF;
           {
             $response = CommonFunction::sendCurlGETRequest($jiraUrl.$value,"","",$jiraHeaderArr,"GET");
             
+            $this->jiraDetails[$value]["type"]= $response->fields->issuetype->name;
             $this->jiraDetails[$value]["ReleaseName"]= $response->fields->fixVersions[0]->name;
             $this->jiraDetails[$value]["ReleaseDate"]= $response->fields->fixVersions[0]->releaseDate;
             $this->jiraDetails[$value]["StoryPoints"]= $response->fields->customfield_10004;
             $this->jiraDetails[$value]["assignee"]= $response->fields->assignee->name;
             $this->jiraDetails[$value]["summary"]= $response->fields->summary;
-            $this->jiraDetails[$value]["Epic"]= $response->fields->customfield_10007;
+            $this->jiraDetails[$value]["Epic"]= $response->fields->customfield_10007;          
             $sprintData = explode(",",$response->fields->customfield_10006[0]);
             if(is_array($sprintData) && !empty($sprintData))
             {
