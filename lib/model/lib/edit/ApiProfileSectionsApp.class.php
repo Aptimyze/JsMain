@@ -386,16 +386,20 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
+                $canEdit = "Y";
+                if(MobileCommon::isApp()){//For Android and iOS its exist for both
+                     $canEdit = "N";
+                }
 		//date of birth
-		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),"N");
+		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$canEdit);
 		
 		//mstatus
-		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEdit);
                 
                 //HaveChild
-                //if($this->profile->getMSTATUS() != 'N'){
+                if($canEdit == "Y" || $this->profile->getMSTATUS() != 'N'){
                     $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
-                //}
+                }
                 
                 //Posted By
                 $szRelation = $this->profile->getDecoratedRELATION();
