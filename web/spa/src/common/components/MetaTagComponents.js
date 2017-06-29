@@ -1,10 +1,10 @@
 import React from 'react';
 import { Helmet } from "react-helmet";
 var data = require('./../constants/MetaTags.json');
+import PropTypes from 'prop-types';
 
 
 const MetaTagComponents = (props) => {
-	console.log(data[props.page]['title']+"undefineddsa");
 	return (<Helmet>
 			if (data[props.page]['title'] !== 'undefined' )
 			{
@@ -19,6 +19,10 @@ const MetaTagComponents = (props) => {
 		        <meta name="keywords" content={data[props.page]['keywords']}/>
 	        }
 	    </Helmet>);
+}
+
+MetaTagComponents.propTypes = {
+   page: PropTypes.string.isRequired,
 }
 
 export default MetaTagComponents;
