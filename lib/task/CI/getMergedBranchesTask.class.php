@@ -67,7 +67,7 @@ EOF;
 	//considering that CIRelease goes live very frequently, the pagination limit has been reduced and kept to the default 20.
     	$urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?state=merged";
 
-    	$response = $this->sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
+    	$response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
 
     	foreach($response as $key=>$value)
     	{
@@ -111,7 +111,7 @@ EOF;
     	$requiredDate = date("Y-m-d",strtotime("-".++$dateDiff." day"));
     	$requiredDate = $requiredDate." ".$timeAppend;
 
-    	$response = $this->sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
+    	$response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
     	foreach($response as $key=>$value)
     	{
     		$updatedAtDate = explode(".",$value->updated_at);
@@ -133,12 +133,12 @@ EOF;
     	}
 
 	//loop to remove same branches in CI and QASanity and also to remove RC branch which was merged back to QASanityReleaseNew
-    if(is_array($QASanityReleaseBranchesArr) && !empty($QASanityReleaseBranchesArr))
-    {
-    	foreach($QASanityReleaseBranchesArr as $key=>$value)
-    	{
-    		if($CIBranchesArr[$key])
-    		{		
+        if(is_array($QASanityReleaseBranchesArr) && !empty($QASanityReleaseBranchesArr))
+        {
+         foreach($QASanityReleaseBranchesArr as $key=>$value)
+         {
+          if($CIBranchesArr[$key])
+          {		
 				unset($QASanityReleaseBranchesArr[$key]);		//removed those from QASanity arr which existes both in CIRelease and QASanity.
 			}
 			if(strpos($key,"RC@")!==false)
@@ -189,26 +189,4 @@ else
 	die("Please enter a valid branch name");
 }
 }
-function sendCurlGETRequest($urlToHit,$postParams,$timeout='',$headerArr="",$requestType="")
-{
-    //print_r($urlToHit);die;
-	if(!$timeout)
-		$timeout = 50000;
-	$ch = curl_init($urlToHit);    
-	if($headerArr)
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-	else
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_POST, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-	curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-	curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-	curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-	$output = curl_exec($ch);
-	return json_decode($output);
-}
-
 }
