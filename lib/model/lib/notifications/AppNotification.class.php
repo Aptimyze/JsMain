@@ -101,7 +101,7 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             		//$applicableProfilesArr = array_keys($applicableProfiles);
             		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			//unset($applicableProfilesArr);
