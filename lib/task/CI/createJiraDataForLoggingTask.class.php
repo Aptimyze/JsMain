@@ -86,7 +86,7 @@ EOF;
             $this->jiraDetails[$value]["StoryPoints"]= $response->fields->customfield_10004;
             $this->jiraDetails[$value]["assignee"]= $response->fields->assignee->name;
             $this->jiraDetails[$value]["summary"]= $response->fields->summary;
-            $this->jiraDetails[$value]["Epic"]= $response->fields->customfield_10007;          
+            $this->jiraDetails[$value]["Epic"]= jiraEpicEnums::$epicNames[$response->fields->customfield_10007];          
             $sprintData = explode(",",$response->fields->customfield_10006[0]);
             if(is_array($sprintData) && !empty($sprintData))
             {
