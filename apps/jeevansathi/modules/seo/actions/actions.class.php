@@ -174,6 +174,9 @@ class seoActions extends sfActions
         
         $this->breadCrumbObj = $this->levelObj->createBreadCrumb();
         
+        //parameter added for google dynamic search ads
+        $this->registerationSource = $request->getParameter("adnetwork");
+
         $page_source = $this->levelObj->getPageSource();
         
         if (strtoupper($this->levelObj->getParentType()) == 'CASTE') $this->MORE_WIDTH = '1';
