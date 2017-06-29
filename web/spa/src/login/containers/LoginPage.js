@@ -12,6 +12,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import {SITE_KEY,VERIFY_URL} from "../../common/constants/CaptchConstants";
 import {LOGIN_ATTEMPT_COOKIE} from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import MetaTagComponents from '../../common/components/MetaTagComponents';
 import GA from "../../common/components/GA";
 
 class LoginPage extends React.Component {
@@ -232,6 +233,7 @@ class LoginPage extends React.Component {
 
         return (
             <div id="LoginPage">
+                <MetaTagComponents page="LoginPage"/>
                 <GA ref="GAchild" />
                 {promoView}
                 {errorView}
