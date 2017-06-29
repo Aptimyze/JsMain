@@ -510,7 +510,8 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
             'pageOneVas'=>$this->pageOneVas,
             'preSelectLandingVas'=>$preSelectVasGlobal,
-            'disableVasDiscount'=>$disableVasDiscount 
+            'disableVasDiscount'=>$disableVasDiscount,
+            'date'=>date('Y-m-d H:i:s')
         );
         
         //fetch the upgrade membership content based on eligibilty and channel
@@ -835,7 +836,7 @@ class MembershipAPIResponseHandler {
         else
             $sub_dur = $this->mainMemDur;
         
-       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         $this->couponParams = $this->memApiFuncs->getCouponCodeDetails($this);
         
@@ -1197,7 +1198,7 @@ class MembershipAPIResponseHandler {
         	$sub_dur = '';	
         }
         
-        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT. billingVariables::TAX_TEXT_SB;
         
         $this->apply_coupon_text = NULL;
         $this->custVAS = null;
@@ -1398,7 +1399,7 @@ class MembershipAPIResponseHandler {
         );
         
         $title = 'Select Payment Method';
-        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         if ($this->currency == "RS") {
             $callUs = array(

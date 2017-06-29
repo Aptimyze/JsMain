@@ -46,4 +46,22 @@ PRIMARY KEY ( ID )
             throw new jsException($ex);
         }
     }
+        public function getRecordForBillid($billid){
+        if (empty($billid)) {
+            throw new jsException("Error processing getRecordForBillid in billing.TAXBREAKUP,billid is empty");
+        }
+        try{
+            $sql = "SELECT * FROM billing.TAXBREAKUP WHERE BILLID = :BILLID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output = $result;
+            }
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+
+        return $output;
+    }
 }
