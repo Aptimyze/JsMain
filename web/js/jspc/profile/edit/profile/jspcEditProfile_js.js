@@ -5647,8 +5647,11 @@ updateEduLevelChanges =function(eduLevelVal)
         
         var errorBorderClass = 'brdr-1';
         var normalBorderClass = 'edpbrd3';
-        
         //For Open Text Field
+        if(fieldObject.type === DATE_TYPE){
+                
+                $(fieldId).find(".js-errorLabel").addClass(dispNone);
+        }
         if(fieldObject.type === OPEN_TEXT_TYPE){
           var value = fieldObject.decValue;
           
