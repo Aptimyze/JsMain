@@ -211,7 +211,7 @@ class OutboundEventConsumer {
     
     // TODO: No status in arr?
     $verifiedNumber = "0".$verifiedNumber;
-    $this->logThis("Verified Number of user : ", $enEventType, $verifiedNumber);
+    $this->logThis("Verified Number of user : ".$verifiedNumber, $enEventType, $arrInfo);
     
     /**
      * 
