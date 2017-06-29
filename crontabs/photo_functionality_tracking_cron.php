@@ -160,7 +160,8 @@ function checkForError($pic,$picType="")
 		if($pic)
 		{
 			ini_set('user_agent','JsInternal');	
-			header('Content-Type: image/jpeg'); 
+			header('Content-Type: image/jpeg');
+			PictureFunctions::getCloudOrApplicationCompleteUrl($pic); 
 			$size= getimagesize($pic);
 			if(is_array($size))
 			{
