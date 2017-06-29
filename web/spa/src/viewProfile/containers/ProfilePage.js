@@ -46,9 +46,7 @@ class ProfilePage extends React.Component {
         }
         props.showProfile(this.state.profilechecksum);
     }
-    componentWillMount() {
-
-    }
+    
 
     componentDidMount() {
         let _this = this;
@@ -104,21 +102,7 @@ class ProfilePage extends React.Component {
         */
         
     }
-
-    showError(inputString) {
-        let _this = this;
-        this.setState ({
-                insertError : true,
-                errorMessage : inputString
-        })
-        setTimeout(function(){
-            _this.setState ({
-                insertError : false,
-                errorMessage : ""
-            })
-        }, this.state.timeToHide+100);
-    }
-
+    
     removePromoLayer() {
         this.setState ({
             showPromo : false
