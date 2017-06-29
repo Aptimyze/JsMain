@@ -81,7 +81,7 @@
             <p>100% screening of profiles before they start appearing in your search results</p>
             <p class="pb24">'Verified Seal' added to members who we have met in person and collected their documents on ID, education, income etc. </p>
             <div class="mauto wid280">
-                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=L2_MT_242&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
+                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=~if $registerationSource && $registerationSource neq ''`~$registerationSource`~else`L2_MT_242~/if`&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
             </div>
         </div>
         <!--start:pink bg-->
