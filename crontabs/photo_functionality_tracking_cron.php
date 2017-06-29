@@ -7,6 +7,7 @@ Script to send notification to photo developers abt improper functioning of phot
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include_once($docRoot."/crontabs/connect.inc");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 //date_default_timezone_set('UTC');
 
 $dbS=connect_slave();
@@ -93,7 +94,8 @@ if(isset($notScreenedMsg))
 // Check for Image from mail ended
 
 //--------------------------3rd chk------------------------------
-$sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW WHERE UPDATED_TIMESTAMP BETWEEN '$start_dt' AND '$end_dt'";
+$sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW WHERE UPDATED_TIMESTAMP BETWEEN '$start_dt 00:00:00' AND '$end_dt 23:59:59'";
+
 //echo $sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW LIMIT 5";//TEMP
 $res=mysql_query($sql,$dbS) or die(mysql_error());
 while($row=mysql_fetch_assoc($res))
@@ -161,8 +163,8 @@ function checkForError($pic,$picType="")
 		{
 			ini_set('user_agent','JsInternal');	
 			header('Content-Type: image/jpeg');
-			PictureFunctions::getCloudOrApplicationCompleteUrl($pic); 
-			$size= getimagesize($pic);
+			$pic1 = PictureFunctions::getCloudOrApplicationCompleteUrl($pic);
+			$size= getimagesize($pic1);
 			if(is_array($size))
 			{
 				if($size[2]>0) 
