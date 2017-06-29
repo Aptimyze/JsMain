@@ -281,7 +281,7 @@ class OutboundEventConsumer {
     //Currently for Event Check for Free User Only
     $userDetail = $this->jProfileObj->get($iProfileId, "PROFILEID", self::PROFILE_DETAILS);
     
-    if(0 === strlen($userDetail["SUBSCRIPTION"])) {
+    if(0 !== strlen($userDetail["SUBSCRIPTION"])) {
       return false;
     }
     
