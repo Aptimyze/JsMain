@@ -31,13 +31,21 @@ class EnsureLoggedInContainer extends React.Component
     render() {
         if ( this.props.MyProfile.AUTHCHECKSUM )
         {
-            return <div>
-                    <Switch>
-                    <Route exact path="/" component={MyjsPage}/>
-                    <Route path='/myjs' component={MyjsPage} />
-                    <Route component={PageNotFound} />
-                    </Switch>
-                    </div>
+            if(this.props.location.state)
+            {
+                window.location.href = this.props.location.state;
+                return null;
+            }
+            else
+            {
+                return <div>
+                        <Switch>
+                        <Route exact path="/" component={MyjsPage}/>
+                        <Route path='/myjs' component={MyjsPage} />
+                        <Route component={PageNotFound} />
+                        </Switch>
+                        </div>
+            }
         }
         else
         {
