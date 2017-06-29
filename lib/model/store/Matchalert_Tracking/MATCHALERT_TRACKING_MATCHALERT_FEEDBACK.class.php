@@ -78,7 +78,8 @@ class MATCHALERT_TRACKING_MATCHALERT_FEEDBACK extends TABLE
 		catch (PDOException $e)
 		{
 			//add mail/sms
-			throw new jsException($e);
+			jsException::nonCriticalError("Feedback not submitted");
+                        return true;
 		}
 	}
 
