@@ -284,6 +284,9 @@ class myjsActions extends sfActions
       if (MobileCommon::isApp() == "I") {
         $appV1DisplayJson['membership_message'] = NULL;
       }
+      if($this->apiData['membership_message'])
+        $this->apiData['membership_message']['membership_message_link']=$this->getMembershipLink($this->apiData['membership_message']['pageId']);	
+
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
       $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
