@@ -5500,11 +5500,13 @@ updateEduLevelChanges =function(eduLevelVal)
                         }
                 });
       });
-      $('#monthsub').on('mousedown',function(event){
+      $('#monthsub').on('click',function(event){
               clickCallBack("month",event,$(this).attr("rel"));
       });
-      $('#yearsub').on('mousedown',function(event){
+      $('#yearsub').on('click',function(event){
               clickCallBack("year",event,$(this).attr("rel"));
+              callBlur = 1; 
+             $("#dtofbirth").trigger("blur");
       });
     }
     function clickCallBack (selectField,eve,sectionId) {
