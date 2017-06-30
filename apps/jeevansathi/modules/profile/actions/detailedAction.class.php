@@ -322,9 +322,9 @@ class detailedAction extends sfAction
   					{
   						$deepLinkingObj = new deepLinking();
   						$resultValue = $deepLinkingObj->getDeepLinkingHeader($request);
-  						$this->headerURLDeepLinking = $resultValue;
-  						$this->matchAlertTracking($request->getParameter("stype"));
+  						$this->headerURLDeepLinking = $resultValue;  		
   					}
+  					//$this->matchAlertTracking($request->getParameter("stype"));
   					$this->setJsmsViewProfileLayout();
   		    }  
             else
@@ -1286,7 +1286,7 @@ class detailedAction extends sfAction
                             $this->STYPE="WO";
             }
             $this->responseTracking = urlencode($this->responseTracking);
-            $this->matchAlertTracking($request->getParameter("stype"));
+            //$this->matchAlertTracking($request->getParameter("stype"));
 
              //JSB9 Tracking
             $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
@@ -1355,13 +1355,22 @@ class detailedAction extends sfAction
 
     private function matchAlertTracking($stype)
     {
-    	if($this->fromMatchAlertMailer && in_array($stype,ProfileEnums::$matchAlertMailerStypeArr))
-    	{    
+    	if(in_array($stype,ProfileEnums::$matchAlertMailerStypeArr))
+    	{
     		$channel = MobileCommon::getChannel();
-    		$key = "MatchAlertTracking_".$channel."_".date("Y-m-d");
     		$memCacheObj = JsMemcache::getInstance();
-  			$memCacheObj->incrCount($key);					
-    	}  				
+    		if($this->fromMatchAlertMailer)
+    		{        			
+    			$key = "MatchAlertTracking_".$channel."_".date("Y-m-d");   
+    		}
+    		else
+    		{
+    			$key = "MatchAlertTrackingNotFromMailer_".$channel."_".date("Y-m-d");
+    		}
+    		$memCacheObj->incrCount($key);
+    		unset($memCacheObj);
+    	}
+    	  				
     }
 
 }

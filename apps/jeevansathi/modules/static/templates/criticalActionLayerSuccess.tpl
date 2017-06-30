@@ -11,6 +11,7 @@
     var user = email.substr(0,start);
     var len = user.length;
     var domain = email.substr(start+1,diff).toLowerCase();
+    var chosenUpdateEvent = "chosen:updated";
     var emailVerified ={};
     if(jQuery.inArray(domain.toLowerCase(),invalidDomainArr) !=  -1)
         return false;
@@ -148,6 +149,71 @@ function validateAndSend(){
         <!--end:layer 1-->
         </div> 
 </div>
+
+~elseif $layerId == '19'`
+<script>    
+ function showTimerForLightningCal(lightningCALTime) {
+ if(!lightningCALTime) return;
+ var timerSeconds=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerMinutes=lightningCALTime%60;
+ lightningCALTime=Math.floor(lightningCALTime/60);
+ var timerHrs=lightningCALTime;
+ calTimerTime=new Date();
+ calTimerTime.setHours(timerHrs);
+ calTimerTime.setMinutes(timerMinutes);
+ calTimerTime.setSeconds(timerSeconds);
+ calTimer=setInterval('updateCalTimer()',1000);
+ }
+ 
+ 
+ function updateCalTimer(){
+   var h = calTimerTime.getHours();
+   var s = calTimerTime.getSeconds();
+   var m = calTimerTime.getMinutes();
+   if (!m && !s && !h) {
+      clearInterval(calTimer);
+      }
+   
+     calTimerTime.setSeconds(s-1);
+     h=h+memTimerExtraDays*24;
+     
+     m = formatTime(m);
+     s = formatTime(s);
+     h = formatTime(h);
+	
+ 
+   $("#calExpiryMnts").html(m);
+   $("#calExpirySec").html(s);
+     }
+</script>
+    
+    
+  <div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;"> 
+    <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+        <div class="disp-cell vmid fontlig color11">
+            <div class="wid470 mauto">
+                <p class="f24">~$titleText`</p>
+                <p class="f28 pt20">~$discountPercentage`</p>
+        <p class="f24">~$discountSubtitle`</p>
+                <p class="pt20 f20">~$startDate`&nbsp<span class="txtstr color12"><span >~$symbol`</span>~$oldPrice`&nbsp</span>  <span>~$symbol`</span>~$newPrice`&nbsp</p>
+                <p class="f16 pt20">Hurry! Offer valid for</p>
+                <ul class="time">
+                  <li class="inscol"><span id = "calExpiryMnts">~$time`</span><span>M</span></li>
+                    <li class=""><span id = "calExpirySec">00</span><span>S</span></li>
+                </ul>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+        <div class="clearfix">
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
+        </div>
+</div>
+
 ~elseif $layerId == '18'`
  
  <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
@@ -221,7 +287,7 @@ function validateAndSend(){
         },1);
            });
 
-            function callOccupation(){
+            function callOccupation(){ 
                     $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
                     type: "GET",
@@ -323,7 +389,7 @@ function validateAndSend(){
          {
            if($(".js-otheroccInp input").val().trim()=='')                   
            { 
-           $("#secondReq").show();
+           $("#secondReq").removeClass('vishid');
            $(".js-otheroccInp input").addClass('occ-bdr2');
            return;
            }
@@ -364,6 +430,251 @@ function validateAndSend(){
  document.head.appendChild(setscript);
  
    </script>
+
+~elseif $layerId == '14'`
+<script>
+var altEmail = '~$altEmail`';</script>
+
+<div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
+        <div class="calhgt1 calbg1 fullwid disp-tbl txtc">
+            <div class="disp-cell vmid fontlig color11">
+                <div class="wid470 mauto">
+                    <p class="f28">~$titleText`</p>
+                    <p class="f14 pt25 lh22">~$contentText`</p>
+                </div>            
+            </div>
+        </div>
+        <div class="clearfix">
+            ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="sendAltVerifyMail()" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
+            <button id='CALButtonB2'  id='closeButtonCALayer' onclick="criticalLayerButtonsAction('~$action2`','B2');" class="cursp ~if $button1Text eq ''`bg_pink calwid1~else` bg6 calwid2 ~/if` f18 colrw txtc fontreg lh61 brdr-0 fl">~$button2Text`</button>
+        </div>
+    </div>
+            <div id="alternateEmailSentLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 80px;margin-top: 40px">
+        <div class="bordrBtmGrey" style="height: 35px">
+        <div class="phnvp4 f17 fontreg color11 phnvbdr4" style="margin-top: -38px;margin-left: 5%">Email Verification</div>
+        </div>
+        <div class="color11">
+        <!--start:div-->
+        <div class="phnvwid3 mauto pt40 pb27 fontlig">
+        <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
+        </div>
+        <button id='CALButtonB4'  onclick="criticalLayerButtonsAction('~$action1`','B1')" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
+        </div>
+        <!--end:layer 1-->
+        </div>
+
+   ~elseif $layerId == '20'`
+
+ <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
+      
+     <style type='text/css' >
+             .chosenDropWid {width: 230px; padding:10px 6px !important; }
+       .cityL-wid{width:560px;}
+       .cityL-p1{padding: 25px 30px}
+       .cityL-p2{padding: 13px 9px}
+       .city-bdr1{border-bottom: 1px solid #e2e2e2}
+       .city-bdr2{border: 1px solid #d9475c}
+       .chosen-container-single .chosen-search input[type="text"]{display: none}
+       .chosen-container{border: 1px solid #e2e2e2;padding:10px 0;}
+       .city-pos1{right:0;top:0}
+       .dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
+       .dpp-pos5 {top: -14px;left: 40px;}
+ 
+       /* add this  below class dynamically once you recived the error on .chosen-container */
+       .chosen-container-err{border:1px solid #d9475c;}
+       .chosen-container-single .chosen-default{color:#34495e;}
+ 
+     </style> 
+ 
+ <div id='criticalAction-layer' class="cityL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
+   <div class="f17 fontreg color11">
+     <!-- start:header -->
+     <div class="city-bdr1 cityL-p1">
+       ~$titleText`
+     </div>
+     <!-- end:header -->
+     <div class="cityL-p1">
+       <p class="opa80">~$contentText`</p>
+       <br />
+       <p class="opa80">~$subText`</p>
+       <!-- start:div for chosen -->
+       <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
+         <p class="f12 color5 pos-abs disp-none city-pos1 js-req1">Required</p> <div id = "stateBox">   
+         <select id="cityList" data-placeholder="Enter your State" class="chosen-select-width">
+                     </select>
+          </div>
+         <!-- start: in case of no City found -->
+         <div class="pt25 vishid js-otheroccInp">
+           <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
+           <div id = "cityBox"> 
+            <select id="city" data-placeholder="Enter your City" class="chosen-select-width">
+                     </select> 
+                     </div>    
+         </div>
+         <!-- end: in case no occupation found -->
+       </div>
+       <button id="city-sub"  class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">Submit</button>
+       <!-- end:div for chosen -->
+ 
+     </div>
+   </div>
+ 
+   </div>
+   <script type="text/javascript">
+
+            function callState(){  
+                    $.ajax({
+                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    type: "GET",
+                    success: function(res) {
+                        res = JSON.parse(res);
+                        var listArray = res.state_res;
+                        appendStateData(listArray);
+                        loadChosen(); statefunc(res);
+                          },
+                    error: function(res) {
+                        $("#listDiv").addClass("dn");
+                        ShowTopDownError(["Something went wrong"]);
+                    }
+                });
+     }
+
+            function callCity(res){
+                        var listArray = res;
+                        appendCityData(listArray);
+                        loadChosen(); 
+                    }                
+        
+
+     appendStateData = function(res) {
+        $("#cityList").html('');
+        occuSelected = 0;
+        stateMap = {};
+        var stateIndex=1;
+        $("#cityList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+
+        $.each(res, function(index, elem) {
+            $.each(elem, function(index1, elem1) {
+              $.each(elem1, function(index2, elem2) {
+                    $("#cityList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
+                stateMap[stateIndex++] = index2;
+                });
+        });
+          });
+       }
+
+        
+        appendCityData = function(res) {  
+        $("#stateBox").removeClass('chosen-container-err'); 
+        $('.js-req1').addClass('disp-none');
+        $("#city").html('');
+        var indexV = $('#cityList option:selected').val();
+        var keyName = stateMap[indexV];
+        cityMap = {};
+        cityIndex = 1;
+        $("#city").append('<option class="textTru chosenDropWid" id="notFound1" value="'+(cityIndex++)+'"></option>');
+
+        $.each(res.city_res_jspc, function(index, elem) {
+           if(index == keyName){
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
+                if(index2!=43) //  omitting 'others' option
+                    $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                  cityMap[cityIndex++] = index2;
+                });
+        });
+          }
+              });
+        }
+
+   function loadChosen(){
+     var config = {
+       '.chosen-select'           : {},
+       '.chosen-select-deselect'  : {allow_single_deselect:true},
+       '.chosen-select-no-single' : {disable_search_threshold:10},
+       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+       '.chosen-select-width'     : {width:"100%"},
+       '.chosen-select-no-search' : {disable_search:true,width:"100%"},
+       '.chosen-select-width-right':{width:"100%"}
+     }
+
+     for (var selector in config) {
+       $(selector).chosen(config[selector]);
+     }  
+    $('#city_chosen').removeClass('chosen-container-err');
+    $('#secondReq').addClass('vishid');
+    $('#city').trigger("chosen:updated");
+
+   }
+
+   function statefunc(res){
+      $('#cityList').on("change",function(){
+        $("#cityList_chosen").removeClass('chosen-container-err');
+        $('#city_chosen').removeClass('chosen-container-err');
+           callCity(res);
+          $('#city').val('');
+             $('.js-otheroccInp').addClass('visb');
+
+     });
+    }
+ 
+ var setscript=document.createElement('script');
+ setscript.type='text/javascript';
+ setscript.src="~sfConfig::get('app_img_url')`/min/?f=~$chosenJs`";
+
+
+ 
+ window.onload = function(){
+  $("#city").change( function(){$('#secondReq').addClass('vishid');
+    $('#city_chosen').removeClass('chosen-container-err');});
+  callState();
+   $('#city-sub').click(function(){ 
+         if( $('#cityList').val() == 1)
+         {
+           $('.js-req1').removeClass('disp-none');
+           $("#cityList_chosen").addClass('chosen-container-err');
+           return;
+         }
+         else if( $('#city').val() == 1 )
+         { 
+      $('#secondReq').removeClass('vishid');
+       $('#city_chosen').addClass('chosen-container-err');
+           return;   
+        }
+
+       else {  
+                            $(".js-otheroccInp input").val('');
+                            var stateCode = stateMap[$("#cityList").val()];
+                            var cityCode = cityMap[$("#city").val()];
+                            
+                            dataCity = {'editFieldArr[COUNTRY_RES]':51 , 'editFieldArr[CITY_RES]':cityCode,'editFieldArr[STATE_RES]':stateCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataCity,
+                            success: function(response) {
+                                 criticalLayerButtonsAction('~$action1`','B1');
+
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+           return;
+       }
+
+        
+        criticalLayerButtonsAction('~$action1`','B1');
+     });
+   
+
+ }
+ document.head.appendChild(setscript);
+ 
+   </script>
+
 ~elseif $layerId != '9'`
 <div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
         <div class="calhgt1 calbg1 fullwid disp-tbl txtc">

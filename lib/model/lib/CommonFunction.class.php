@@ -961,17 +961,153 @@ class CommonFunction
         return $label;
     }
 
+    public static function loginTrack($registrationid, $profileid)
+	{
+
+		if( ! isset($registrationid) || ! isset($profileid) || $profileid == null)
+			return ;
+
+		// APP_LOGINTRACKING
+		$appType = MobileCommon::isApp();
+		$loginTrack = new MIS_APP_LOGINTRACKING();
+		if(!$loginTrack->getRecord($registrationid, $profileid))
+		{
+			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
+			// send mail
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $registrationid, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
+			CommonFunction::SendEmailNewLogin($profileid);
+		}
+	}
+
+	public static function SendEmailNewLogin($profileid)
+	{
+		if(!isset($profileid))
+			return ;
+
+		try
+		{
+			$channel = "Browser";
+			if(MobileCommon::isAndroidApp())
+			{
+				$channel = "Android App";
+			}
+			else if(MobileCommon::isIOSApp())
+			{
+				$channel = "Ios App";
+			}
+
+			$deviceName = Devicedetails::deviceInfo();
+			$city = $_SERVER["GEOIP_CITY_NAME"];
+			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
+
+			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
+			$tpl = $top8Mailer->setProfileId($profileid);
+			// TODO : change subject
+			$subject = "New Login Attempt";
+			$tpl->setSubject($subject);
+			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
+			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
+			$tpl->getSmarty()->assign("resetPasswordUrl",$forgotPasswordUrl);
+			// $tpl->getSmarty()->assign("channel", $channel);
+			$tpl->getSmarty()->assign("deviceName", $deviceName);
+			$tpl->getSmarty()->assign("city", $city);
+			$tpl->getSmarty()->assign("country", $country);
+			// send mail
+			$top8Mailer->send();
+		} catch (Exception $e) {
+			throw new jsException($e);
+		}
+	}
+
     public static function getFlagForIdfy($profileId)
     {
     	if($profileId)
     	{
-    		if(($profileId % 100) == 1) //this needs to be changed as per requirement. Currently setting it to 1%users
-    		{
+    		$loggedInObj = LoggedInProfile::getInstance();
+    		$subscription = $loggedInObj->getSUBSCRIPTION();
+    		if($subscription != "" && ($profileId % 5) == 1)
+    		{    			
     			return true;
     		}
-    		return false;    		
+    		return false;
+    		    		
     	}    	
     	return false;
     }
+    
+    public static function showAndBeyondPixel($profileId)
+    {
+    	if($profileId%9==1)
+    	{
+                $loggedInObj = LoggedInProfile::getInstance();
+                $subscription = $loggedInObj->getSUBSCRIPTION();
+                if($subscription==''){
+                    $analyticScore = ScoringLib::getAnalyticScore($profileId);
+                    if($analyticScore >= 0 && $analyticScore <=30)
+    			return true;
+                }   		
+    	}    	
+    	return false;
+    }
+
+    //this has been added to common functions since we need a particular output for CI files
+    public static function sendCurlGETRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
+  {
+    if(!$timeout)
+      $timeout = 50000;
+    $ch = curl_init($urlToHit);    
+    if($headerArr)
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+  else
+  {
+  	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+  	curl_setopt($ch, CURLOPT_HEADER, $header);
+  }
+
+  	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+    if($postParams)
+      curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    if($postParams)
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);  
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+    curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
+    curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $output = curl_exec($ch); 
+    return json_decode($output);
+  }
+
+  public static function sendCurlPostRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
+	{
+    //print_r($urlToHit);
+		if(!$timeout)
+			$timeout = 50000;
+		$ch = curl_init($urlToHit);
+		if($headerArr)
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+		else
+		{
+			$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+			curl_setopt($ch, CURLOPT_HEADER, $header);
+        }
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		if($postParams)
+			curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if($postParams)
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
+		if($requestType == "PUT")
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$output = curl_exec($ch);
+		return $output;
+	}
 }
 ?>

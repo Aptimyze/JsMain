@@ -72,7 +72,7 @@ class NotificationEnums
 
       public static $monitorScheduledKeyArr =array('JUST_JOIN'=>'13-18','PENDING_EOI'=>'13-18','MATCH_OF_DAY'=>'13-18','MATCHALERT'=>'4-22');
       			
-      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT"));
+      public static $multiCurlReqConfig = array("threshold"=>50,"sendMultipleParallelNotification"=>true,"notificationKey"=>array("MATCH_OF_DAY","JUST_JOIN","PENDING_EOI","MEM_DISCOUNT","FILTERED_EOI","CONTACTS_VIEWED_BY"));
 
       //config for logged out notifications
       public static $loggedOutNotifications = array("LOGIN_REGISTER");
@@ -84,4 +84,7 @@ class NotificationEnums
       public static $timeCriteriaNotification = array('EOI','EOI_REMINDER','PHOTO_REQUEST');
 
       public static $notificationTempLogArr =array('JUST_JOIN');	
+
+      //>=this app version in IOS, notification image will be displayed
+      public static $IosNotificationImageCheck = array('APP_VERSION'=>5.3,'OS_VERSION'=>10);
 }

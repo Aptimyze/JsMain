@@ -74,7 +74,8 @@ class PreWriteMessagev2Action extends sfAction
 		{
 			$memHandlerObj = new MembershipHandler();
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-			$MembershipMessage = $data2['hamburger_message']['top']; 
+			$MembershipMessage = $data2['hamburger_message']['top'];              
+            $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 			//$MembershipMessage = "get 30% off";
 			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
 			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)

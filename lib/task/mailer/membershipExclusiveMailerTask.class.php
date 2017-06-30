@@ -17,8 +17,23 @@ class membershipExclusiveMailerTask extends sfBaseTask
 		[php symfony mailer:membershipExclusiveMailer|INFO]
 EOF;
 	}
+    //Start:JSC-2649: Remove dummy profiles from mailer
+    public function returnFilteredProfilesAfterDummyExclusion($profileArr) {
+        // Exclude Dummy Marked profiles from the list of incoming profiles
+        // Bulk Function, makes single call to jsadmin_PremiumUsers Table
+        // Gets array of dummy marked profiles out of original profiles array
+        $premiumUsersObj = new jsadmin_PremiumUsers('newjs_slave');
+        $profileDummyArr = $premiumUsersObj->filterDummyProfiles($profileArr);
+        $profileArr= array_diff($profileArr, $profileDummyArr);
+        // Sanitization of final array after removal of dummy profiles
+        $profileArrFinal = array_values(array_filter(array_unique($profileArr)));
+        // Clear Memory
+        unset($profileArr, $profileDummyArr);
+        return $profileArrFinal;
+    }
+    //End:JSC-2649: Remove dummy profiles from mailer
 
-	protected function execute($arguments = array(), $options = array())
+       protected function execute($arguments = array(), $options = array())
 	{
 	    	// SET BASIC CONFIGURATION
 		if(!sfContext::hasInstance()){
@@ -27,6 +42,8 @@ EOF;
 		$mailId ='1797';
 		$mmObj = new MembershipMailer();
 		$profilesArr =$mmObj->getJsExclusiveProfiles();
+                //JSC-2649:Going to remove dummy profiles from complete profiles array
+                $profilesArr = $this->returnFilteredProfilesAfterDummyExclusion($profilesArr);
 		if(count($profilesArr)>0){
 			$jprofileObj = new JPROFILE('newjs_slave');
 			$subsArr = $jprofileObj->getAllSubscriptionsArr($profilesArr);

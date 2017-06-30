@@ -4,7 +4,6 @@
  * This class verifies conditions and calls the third party api to fetch guna scores 
  * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
-
 class gunaScore
 {		
 		/*This function is called by the gunaScoreApi and it verifies conditions and 
@@ -12,7 +11,7 @@ class gunaScore
 		 */
     public function getGunaScore($profileId,$caste,$profilechecksumStr,$gender,$haveProfileArr='',$shutDownConnections='')
     {	
-      $searchIdArr = array();
+      $searchIdArr = array(); //this comment has been added for testing
       $this->gunaForPD = 0;
       $this->profileId = $profileId;
       if(strpos($profilechecksumStr, ',') !== false)
@@ -130,17 +129,18 @@ class gunaScore
   {	
     $gunaData = array();
     $compstring = implode(",",$compstring);
-    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;  
+    $url = gunaScoreConstants::THIRDPARTYURL.$logged_astro_details."&".$compstring;
+    
+    $startTime = microtime(true);
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
+    $endTime = microtime(true)-$startTime;
 
     if($fresult)
     {
-      $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
+      //$this->logApiResponeTime($memObject,$endTime);  commenting this since tracking not required
+      $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));      
     }
-    elseif(!$fresult)
-    {
-      //SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","Guna score third party api call returned null for PROFILEID:".$this->profileId," Guna score response NULL");   
-    }
+
     if(is_array($fresult))
     {
       foreach($fresult as $key=>$val)
@@ -167,5 +167,44 @@ class gunaScore
       }
     }
     return($gunaData);
+  }
+
+  public function logApiResponeTime($memObject,$endTime)
+  {    
+    if($endTime< 0.1)
+    {
+      $memObject->incrCount("gunaCall_LT_0.1");
+      $memObject->setExpiryTime("gunaCall_LT_0.1","604800"); //7 days 
+    }
+    elseif($endTime >=0.1 && $endTime < 0.5)
+    {
+      $memObject->incrCount("gunaCall_GT_0.1_LT_0.5");
+      $memObject->setExpiryTime("gunaCall_GT_0.1_LT_0.5","604800"); //7 days 
+    }
+    elseif($endTime >=0.5 && $endTime < 1.0)
+    {
+      $memObject->incrCount("gunaCall_GT_0.5_LT_1.0");
+      $memObject->setExpiryTime("gunaCall_GT_0.5_LT_1.0","604800"); //7 days  
+    }
+    elseif($endTime >=1.0 && $endTime < 1.5)
+    {
+      $memObject->incrCount("gunaCall_GT_1_LT_1.5");
+      $memObject->setExpiryTime("gunaCall_GT_1_LT_1.5","604800"); //7 days 
+    }
+    elseif($endTime >= 1.5 && $endTime < 2.0)
+    {
+      $memObject->incrCount("gunaCall_GT_1.5_LT_2");
+      $memObject->setExpiryTime("gunaCall_GT_1.5_LT_2","604800"); //7 days 
+    }
+    elseif($endTime >=2.0 && $endTime <3.0)
+    {
+      $memObject->incrCount("gunaCall_GT_2_LT_3");
+      $memObject->setExpiryTime("gunaCall_GT_2_LT_3","604800");//7 days 
+    }
+    elseif($endTime >=3.0)
+    {
+      $memObject->incrCount("gunaCall_GT_3");
+      $memObject->setExpiryTime("gunaCall_GT_3","604800"); //7 days 
+    }
   }
 }

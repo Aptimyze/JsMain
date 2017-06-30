@@ -101,7 +101,7 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             		//$applicableProfilesArr = array_keys($applicableProfiles);
             		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			//unset($applicableProfilesArr);
@@ -467,6 +467,13 @@ public function microtime_float()
                   }
               }
               break;
+        case "UPGRADE_MEMBERSHIP":
+                $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
+			$poolObj = new NotificationDataPool();
+			$dataAccumulated = $poolObj->getMembershipUpgradeNotificationData($appProfiles["SELF"],$details);
+			// print_r($dataAccumulated);
+			unset($poolObj);
+			break;
 	  }
 	  $completeNotificationInfo = array();
 	  $counter = 0;
@@ -482,10 +489,22 @@ public function microtime_float()
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
 				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
-				  if($notificationKey=='MATCHALERT')	
-				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
-				  else
-			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
+				  if($notificationKey=='MATCHALERT'){	
+				  		$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
+				  		$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] ="D";
+				  }
+				  else{
+		                $photoData = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID'],"APP_NOTIFICATION");
+		                if(is_array($photoData)){
+		                	$completeNotificationInfo[$counter]["PHOTO_URL"] = $photoData["AND"];
+		                	$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] = $photoData["IOS"];
+		                }
+		                else{
+		                	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";
+			  				$completeNotificationInfo[$counter]["IOS_PHOTO_URL"] ="D";	
+		                }
+			      }
+			           
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
 				  //$completeNotificationInfo[$counter]['MSG_ID']=time().rand(0,99);
 				  $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);
@@ -512,7 +531,7 @@ public function microtime_float()
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
         //For variable Title
-	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP'){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
@@ -523,7 +542,7 @@ public function microtime_float()
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP'){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else

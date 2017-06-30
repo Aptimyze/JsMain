@@ -12,7 +12,7 @@ if(feedBackVal == 'Y')
 }
 else
 {
-	window.setInterval(function () {
+	var timer = window.setInterval(function () {
 		var count = parseInt($("#desiredRedirectTimer").text());
 		if ( !isNaN(count) && count > 0  )
 		{
@@ -21,6 +21,7 @@ else
 		}
 		else
 		{
+			window.clearInterval(timer);
 			window.location.href ="~$SITE_URL`/profile/dpp#Dpp";
 		}
 	},1000);

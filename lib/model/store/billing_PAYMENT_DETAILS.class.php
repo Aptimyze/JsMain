@@ -77,7 +77,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     
     public function getPaidProfiles($receiptId) {
         try {
-            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND RECEIPTID>:RECEIPTID";
+            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,if(TYPE='DOL',APPLE_COMMISSION*DOL_CONV_RATE,APPLE_COMMISSION) AS APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND RECEIPTID>:RECEIPTID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":RECEIPTID", $receiptId, PDO::PARAM_INT);
             $prep->execute();
@@ -94,7 +94,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     public function getPaymentDetails($profileid, $entryDate) {
         try {
             $profilesArr = array();
-            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND PROFILEID=:PROFILEID AND ENTRY_DT>=:ENTRY_DT";
+            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,if(TYPE='DOL',APPLE_COMMISSION*DOL_CONV_RATE,APPLE_COMMISSION) AS APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND PROFILEID=:PROFILEID AND ENTRY_DT>=:ENTRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":ENTRY_DT", $entryDate, PDO::PARAM_STR);
@@ -353,14 +353,14 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr) {
+    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr,$net_off_tax_ratio) {
         try {
             $billidStr = implode(",", $billidArr);
             $sql = "SELECT if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT, BILLID FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr) AND STATUS='DONE' AND AMOUNT>0";
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $output += $result['AMOUNT']*(1-billingVariables::NET_OFF_TAX_RATE);
+                $output += $result['AMOUNT']*(1-$net_off_tax_ratio);
             }
             return round($output,2);
         }
