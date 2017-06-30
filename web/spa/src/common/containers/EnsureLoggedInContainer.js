@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {withRouter} from "react-router";
 import asyncComponent from '../components/asyncComponent';
 import {LOGGED_OUT_PAGE} from "../../common/constants/CommonConstants";
+import {SPA_PAGE} from "../../common/constants/CommonConstants";
 
 // import MyjsPage from '../../myjs/containers/MyjsPage';
 const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
@@ -21,7 +22,7 @@ import {
 class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
-        if ( !this.props.MyProfile.AUTHCHECKSUM && !LOGGED_OUT_PAGE.includes(this.props.location.pathname) )
+        if ( !this.props.MyProfile.AUTHCHECKSUM && !LOGGED_OUT_PAGE.includes(this.props.location.pathname) && SPA_PAGE.includes(this.props.location.pathname))
         {
             this.props.history.prevUrl = this.props.location.pathname;
             this.props.history.push('/login');
@@ -47,10 +48,15 @@ class EnsureLoggedInContainer extends React.Component
                         </div>
             }
         }
-        else
+        else if(!SPA_PAGE.includes(this.props.location.pathname))
         {
-             return null;         
+            console.log('dasdasdas');
+               return <div>
+                        <Route component={PageNotFound} />
+                       </div>  
         }
+        else
+            return null;
     }
 
 
