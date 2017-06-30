@@ -6,16 +6,14 @@ export const validateEmail =(email)=>  {
     }
 
 export const validateInput = (type, value) =>{
-
+	var re;
 	switch (type)
 	{
-		case 'EMAIL':
-		return validateEmail(value);
+		case 'phone':
+			re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
 		break;
-
-
 	}
-
+	return re.test(value)
 
 
 

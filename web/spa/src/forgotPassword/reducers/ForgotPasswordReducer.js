@@ -3,7 +3,7 @@ const ForgotPasswordReducer = (state={
 },action) => {
 	switch(action.type)
 	{
-		case 'SET_AUTHCHECKSUM':
+		case 'SEND_FORGOT_LINK':
 		state = {
 			...state,
 			forgotData:action.payload

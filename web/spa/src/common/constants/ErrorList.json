@@ -3,5 +3,7 @@
 	"LoginDetails": "Provide your login details",
 	"EnterEmail": "Provide your email ID",
 	"EnterPass": "Provide your password",
-	"Default": "Something went wrong"
+	"Default": "Something went wrong",
+	"ValidEmailnPass": "Provide a valid email address or phone number",
+	"EnterEmailnPass": "Provide your email address or phone number"
 }
