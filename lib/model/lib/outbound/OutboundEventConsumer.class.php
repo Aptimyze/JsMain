@@ -264,7 +264,7 @@ class OutboundEventConsumer {
       $datetime2 = new DateTime($lastRecordData["DATE_TIME"]);
       
       $interval = $datetime1->diff($datetime2);
-      if($interval->days <= $withInLastDays) {
+      if($interval->days < $withInLastDays) {
         return false;
       }
     }
