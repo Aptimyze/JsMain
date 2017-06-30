@@ -21,6 +21,12 @@
                             <ul class="f16 fontthin white">
                                 <li class="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid </li>
 
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="6">
+                                    <div class="fullwid posrel">
+                                    The number does not exist <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+
                                 <li id = "reasonCodeOption" class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
                                 	<div class="fullwid posrel">
                                 		Switched off / Not reachable
@@ -33,15 +39,17 @@
                                 	 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
                                 	</div>
                                 </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
+                                    <div class="fullwid posrel">
+                                    Not picking up <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                    </div>
+                                </li>
+
+
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
                                 	<div class="fullwid posrel">
                                 	 Already married / engaged <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                	</div>
-                                </li>
-
-                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
-                                	<div class="fullwid posrel">
-                                	Not picking up <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
                                 	</div>
                                 </li>
 

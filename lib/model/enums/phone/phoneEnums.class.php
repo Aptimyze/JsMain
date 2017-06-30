@@ -11,7 +11,7 @@ class phoneEnums
 public static $OTPMessageForDeletion  = "Use {OTP} as the code to delete your profile (This message will be checked for PAT !)";
 
 //This mapping array is used to add reason and other reason incase of a user marks a phone number invalid.
-	public static $mappingArrayReportInvalid = array("Switched off / Not reachable","Not an account holder's phone"," Already married/engaged"," Not picking up","Other");
+	public static $mappingArrayReportInvalid = array("Switched off / Not reachable","Not an account holder's phone"," Already married/engaged"," Not picking up","Other","The number does not exist");
 
 }
 
