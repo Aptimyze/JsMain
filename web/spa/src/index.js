@@ -4,9 +4,11 @@ import { Provider } from "react-redux";
 import App from "./common/components/App";
 import store from "./store";
 
-render(
-  <Provider store={store}>
-  	<App />
-  </Provider>,
-  document.getElementById('app')
-)
+if(document.getElementById("app")) {
+	render(
+	  <Provider store={store}>
+	  	<App />
+	  </Provider>,
+	  document.getElementById('app')
+	)
+}
