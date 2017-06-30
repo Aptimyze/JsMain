@@ -396,12 +396,6 @@ class OutboundEventConsumer {
     
     if($userDetail['MOB_STATUS'] == "Y") {
       $userVerifiedNumber = $userDetail['PHONE_MOB'];
-    } else if ($userDetail['LANDL_STATUS'] == "Y") {
-      $userVerifiedNumber = $userDetail['PHONE_WITH_STD'];
-    } else {
-      $objContact = new ProfileContact();
-      $contactDetails = $objContact->getProfileContacts($iProfileID);
-      $userVerifiedNumber = ($contactDetails['ALT_MOB_STATUS']) == "Y" ? $contactDetails["ALT_MOBILE"] : false; 
     }
     
     return $userVerifiedNumber;
