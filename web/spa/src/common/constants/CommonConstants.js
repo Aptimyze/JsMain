@@ -4,3 +4,4 @@ export const LOGIN_ATTEMPT_COOKIE =  'loginAttemptNew';
 export const DISPLAY_PROPS = {windowWidth : window.innerWidth};
 window.addEventListener('resize',()=>{DISPLAY_PROPS.windowWidth = window.innerWidth;});
 export const LOGGED_OUT_PAGE = ['/profile/viewprofile.php/','/PageNotFound'];
+export const SPA_PAGE = ['/','/profile/viewprofile.php/','/PageNotFound','/login','/myjs/','/social/MobilePhotoAlbum','/static/forgotPassword'];
