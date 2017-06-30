@@ -15,6 +15,7 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import GA from "../../common/components/GA";
 import PropTypes from 'prop-types';
+import {Link} from "react-router-dom";
 
 class LoginPage extends React.Component {
 
@@ -250,7 +251,7 @@ class LoginPage extends React.Component {
                                         {formInput}
 
                                         <div id="afterCaptcha" className="txtc pad12">
-                                            <a href="/static/forgotPassword" className="white f14 fontlig">Forgot Password</a>
+                                            <Link to={"/static/forgotPassword"} className="white f14 fontlig">Forgot Password</Link>
                                         </div>
                                         <div className="abs_c fwid_c mt20">
                                             {captchDiv}
