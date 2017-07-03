@@ -70,7 +70,9 @@ function mysql_error_mail($msg='')
 function mysqlquerydebug($sql,$db)
 {
 	global $debug;
-	if($debug==1)
+	if($debug==1){
 		echo $sql."\n\n";
+                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/VspCronLogs.txt",date("Y-m-d --- H:i:s")."\n".$sql."\n\n",FILE_APPEND);
+        }
 	return mysql_query($sql,$db);
 }
