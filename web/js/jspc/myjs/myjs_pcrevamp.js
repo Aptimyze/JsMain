@@ -1165,8 +1165,11 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             {
               username = profiles[i].username;
             }
-
             jObject.find('.profileName').html(username);
+            if(typeof profiles[i].subscription_text != 'undefined')
+            {
+              jObject.find('.subscription').html(profiles[i].subscription_text);
+            }           
 
             jObject.find('.profileName').attr('profileChecksum',profileChecksum);
             jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);

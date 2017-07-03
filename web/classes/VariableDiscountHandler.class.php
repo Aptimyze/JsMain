@@ -93,12 +93,9 @@ class VariableDiscountHandler
                 $endDate                =$lastVdGivenDetails['EDATE'];
                 $activationDt           =$lastVdGivenDetails['ENTRY_DT'];
 
-                /*$todayDate              = date("Y-m-d");
-		$timeVal		= date('H');
-		$timeArr		= array("18","19","20","21","22","23","24");
-                if((strtotime($startDate) != strtotime($todayDate)) && (!in_array($timeVal, $timeArr)))
+                $todayDate              = date("Y-m-d");
+                if(strtotime($startDate) != strtotime($todayDate))
 			return;
-		*/
 
                 $sql1 ="select * from billing.VARIABLE_DISCOUNT_POOL_TECH";
                 $res1 =mysql_query_decide($sql1,$this->myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql1.mysql_error($this->myDb)));

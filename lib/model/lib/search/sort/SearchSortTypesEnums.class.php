@@ -24,5 +24,6 @@ class SearchSortTypesEnums
         const FullDppWithReverseFlag = 'DR'; 
         const SortByLoginDate = 'LT';
         const SortByVisitorsTimestamp = 'VT';
+        const SortByBroaderDppScore = 'BD'; 
 }
 ?>
