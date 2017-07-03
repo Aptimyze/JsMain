@@ -864,6 +864,7 @@ function handleIntroCallsListVisibility(flag)
 }*/
 
 $(document).ready(function() {
+		console.log("testing");
 		//show loader
 		showCCLoader('Show');
 		
