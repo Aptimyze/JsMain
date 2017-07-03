@@ -1425,5 +1425,9 @@ public static $rupeeIncomeArr = array("15" => "No Income","2" => "Rs. 0 - 1 Lakh
 public static $OnClickLabel = "OnClick";
 public static $hindiAllLabel = "Hindi- All";
 public static $typeArr = array("CITY","MTONGUE");
+public static $religionValuesForDppSuggestion = array("1"=>"Hindu","4"=>"Sikh","9"=>"Jain");
+public static $sikhReligionValue = "4";
+public static $hinduReligionValue = "1";
+public static $jainReligionValue = "9";
 }
 

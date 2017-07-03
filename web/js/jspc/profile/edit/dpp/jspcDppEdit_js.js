@@ -1139,7 +1139,7 @@ var _parentCatogary = [{
   "sub": ["city","age"]
 }, {
   "parent": "religion",
-  "sub": ["caste", "mtongue"]
+  "sub": ["religion","caste", "mtongue"]
 }, {
   "parent": "education",
   "sub": ["education","income"]
