@@ -209,4 +209,6 @@ class SearchConfig
         public static function getSearchDb($params = array()){
                 return self::$searchDbName;
         }
+
+    public static $viewedMaxLimit = 5000; //setting limit for viewed and not viewed cluster
 }
