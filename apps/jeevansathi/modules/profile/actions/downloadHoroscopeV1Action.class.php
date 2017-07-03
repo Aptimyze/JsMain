@@ -41,10 +41,9 @@ class downloadHoroscopeV1Action extends sfActions
 			$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$viewUsername."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$sameGender;		
 			$file=PdfCreation::PdfFile($url);		
 			PdfCreation::setResponse("horoscope_".$viewUsername.".pdf",$file);
-			
 			//Removing this tracking 
-			/*$horoscopeDownloadTrackingObj = new NEWJS_HOROSCOPE_DOWNLOAD_TRACKING("newjs_master");
-			$horoscopeDownloadTrackingObj->insertDownloadTracking($today,$channel,$username,$viewUsername);*/
+			$horoscopeDownloadTrackingObj = new NEWJS_HOROSCOPE_DOWNLOAD_TRACKING("newjs_master");
+			$horoscopeDownloadTrackingObj->insertDownloadTracking($today,$channel,$username,$viewUsername);
 		}
 		
 		return sfView::NONE;
