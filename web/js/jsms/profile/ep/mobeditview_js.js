@@ -260,7 +260,9 @@ var mobEditPage=(function(){
           cache: true,
           async: true,
           success: function(result) {
-			  
+                if(result.cannot_edit_section){
+                        storeJson["canEdit"] = result.cannot_edit_section;
+                }
 		if(CommonErrorHandling(result))
 		{
 			result=formatJsonOutput(result);

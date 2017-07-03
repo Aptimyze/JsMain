@@ -501,17 +501,20 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
                 $screened = 0;
                 $canEdit = true;
                 $canEditType = $this->dropdown;
+                $canEditVal = 1;
                 if($data){
                         $canEdit = false;
+                        $canEditVal = 0;
                         $canEditType = $this->nonEditable;
                         if($data["SCREENED_STATUS"] == "N"){
                                 $screened = 1;
                         }
                 }
 		//date of birth
-                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection");
-		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$canEditType,"",0,"","","",array(),"",$key);
+                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection","","","",$canEditVal);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$canEditType,"",0,"","","",array(),$canEditVal,$key);
 		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Divorce Decree Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
+                
 		$basicArr["critical"][outerSectionName]="Critical Fields";
 		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";
 		$basicArr["critical"][outerSectionKey]="critical";

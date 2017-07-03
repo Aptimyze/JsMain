@@ -411,7 +411,7 @@ function UpdateOverlayLayer(attr)
 	
 	$("#overLayer").html("");
 	$("#overLayer").html(tempHtml);
-        if(tabKey == "critical"){
+        if(tabKey == "critical" && $.inArray("Critical",storeJson["canEdit"]) !== -1){
                 $("#overLayer").find("#overlayContent").append('<div class="fullwid bg4 " id="bottom_TOP" dindexpos="1"><div class="pad1"><div class="pad2"><div class="fl wid94p "><div id="MSTATUSlabel" class="color3 f14 fontlig pb12">We will not allow any change in <span style="font-weight: 400;"> Date of Birth or Marital Status</span> after you submit this form. So please reconfirm the details carefully before submitting.</div></div></div></div></div>');
         }
 	//$("#overLayer").css("min-height",$(window).height()).css("background","white");
@@ -482,7 +482,11 @@ function UpdateOverlayTags(string,json,indexPos)
 				
 		divOverlay=checkForLabelVal(divOverlay,json);
 		if(json.action==3){
-			divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","showNonEditableOverLayer(1)");		
+                        if(json.key == "DTOFBIRTH" || json.key == "MSTATUS"){
+                                divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","");
+                        }else{
+                                divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","showNonEditableOverLayer(1)");		
+                        }
 		}
 		
 		string=string.replace(/\{\{inputDiv\}\}/g,divOverlay);
@@ -1171,7 +1175,7 @@ function showNonEditableOverLayer(toShow)
 		var tempHtml=overLayCancelHtml;
 		tempHtml=tempHtml.replace(/PromptSectionName/g,"overLayNonEditableSection");	
 		tempHtml=tempHtml.replace(/TEXT1/g,"This field is read-only");
-		tempHtml=tempHtml.replace(/TEXT2/g,"Call us for change(s) in Gender,<BR> Date of Birth, Marital Status or Religion");
+		tempHtml=tempHtml.replace(/TEXT2/g,"Call us for change(s) in Gender or Religion");
 		tempHtml=tempHtml.replace(/TAB1_NAME/g,"Dismiss");
 		tempHtml=tempHtml.replace(/TAB2_NAME/g,"<a href='tel:18004196299' title='call' alt='call' class='fontthin f17 color2'>Call</a>");
 		tempHtml=tempHtml.replace(/Action1/g,"dismissNonEditableOverlay");

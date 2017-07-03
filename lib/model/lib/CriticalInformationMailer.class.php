@@ -30,7 +30,11 @@ class CriticalInformationMailer
                 $fields = array();
                 if(isset($this->formData["MSTATUS"]) && $this->formData["MSTATUS"] !=""){
                         $fieldList[] = "Marital Status";
-                        $fields["MSTATUS"] = array("field"=>"Marital Status","oldVal"=>FieldMap::getFieldLabel("marital_status",$this->formData["PREV_MSTATUS"]),"newVal"=>FieldMap::getFieldLabel("marital_status",$this->formData["MSTATUS"]));
+                        $awaitingValidation = "";
+                        if($this->formData["MSTATUS"] == "D"){
+                                $awaitingValidation = " (Awaiting proof validation)";
+                        }
+                        $fields["MSTATUS"] = array("field"=>"Marital Status","oldVal"=>FieldMap::getFieldLabel("marital_status",$this->formData["PREV_MSTATUS"]),"newVal"=>FieldMap::getFieldLabel("marital_status",$this->formData["MSTATUS"]).$awaitingValidation);
                 }
                 if(isset($this->formData["DTOFBIRTH"]) && $this->formData["DTOFBIRTH"] !=""){
                         $fieldList[] = "Date of Birth";
