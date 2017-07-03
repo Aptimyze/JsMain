@@ -20,11 +20,45 @@ export const getAndroidVersion = (inputUa) => {
 		if(typeof(parseFloat(match[1]))=='number') {
 			let androidVersion=match[1].substring(0,3);
 	   			if(androidVersion>2.3) {
-	   				return true;	
-	   			}	
+	   				return true;
+	   			}
 		} else if(match == null) {
 			return true;
-		}	
+		}
 	}
 	return false;
+}
+
+
+export const removeClass = (ele,className) => {
+	var array=[];
+	if(Object.prototype.toString.call( someVar ) !== '[object Array]')
+	 	array[0] = ele;
+	else array = ele;
+	var re = new RegExp(" "+className+" ","g");
+		for(i=0;i<array.length;i++){
+    array[i].className = array[i].className.replace(re,' ');
+}
+}
+export const addClass = (ele,className) => {
+var array=[];
+if(Object.prototype.toString.call( someVar ) !== '[object Array]')
+ 	array[0] = ele;
+else array = ele;
+	for(i=0;i<array.length;i++){
+  array[i].className = array[i].className + " "+className;
+	}
+}
+
+export const $i = (id) => {
+
+return document.getElementById(id);
+
+}
+
+
+export const $c = (className) => {
+
+return document.getElementsByClassName(className);
+
 }
