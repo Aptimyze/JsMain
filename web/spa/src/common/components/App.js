@@ -31,6 +31,8 @@ const PageNotFound = asyncComponent(() => import('./PageNotFound')
   .then(module => module.default), { name: 'PageNotFound' });
 const ForgotPassword = asyncComponent(() => import('./../../forgotPassword/containers/forgotPasswordPage')
   .then(module => module.default), { name: 'ForgotPassword' });
+const calJSMS = asyncComponent(() => import('./../../common/containers/calJSMS')
+    .then(module => module.default), { name: 'calJSMS' });
 
 const hash = getRoutePath(window.location.href);
 
@@ -60,6 +62,7 @@ class App extends React.Component
       <Route path='/profile/viewprofile.php' component={ProfilePage} />
       <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />
       <Route path="/static/forgotPassword" component={ForgotPassword}/>
+      <Route path="/CAL" component={calJSMS}/>
       <Route path="/" component={EnsureLoggedInContainer}/>
       <Route component={PageNotFound} />
       </Switch>
