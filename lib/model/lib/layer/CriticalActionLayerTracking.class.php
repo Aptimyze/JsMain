@@ -420,7 +420,7 @@ return 0;
                     break;
 
                      case '21': 
-        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();

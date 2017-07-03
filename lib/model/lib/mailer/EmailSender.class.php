@@ -24,7 +24,7 @@ class EmailSender{
   {
     $this->mail_group=$mail_group;
     $this->custom_criteria=$custom_criteria;
-    $this->mail_id=$mail_id;
+    $this->mail_id=$mail_id;    
     $this->no_mail_id=true;
     $this->_pool = new Cache(LRUObjectCache::getInstance());
     $this->_profileArray = null;
@@ -285,9 +285,8 @@ class EmailSender{
       $message = $this->email_tpl->getMessage();
       	$subject = $this->email_tpl->getProcessedSubject();
 
-	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID());
-	$canSend = $canSendObj->canSendIt();
-
+	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID(),$this->mail_id);
+	$canSend = $canSendObj->canSendIt();  
 	$this->deliveryStatus = $canSendObj->getDeliveryStatus();
 	  if(empty($this->emailAttachment)){
       	$this->emailAttachment= '';
