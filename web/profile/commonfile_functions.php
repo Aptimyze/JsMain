@@ -590,7 +590,7 @@ $js_arr[]=array("jspc/common/colorbox"   => "4");
 $js_arr[]=array("jspc/common/phoneVeriLayers_js"   => "20");
 $js_arr[]=array("jspc/membership/jspc_mem_custom_scrollbar" => "2");
 $js_arr[]=array("jspc/membership/jspc_mem_slider" => "2");
-$js_arr[]=array("jspc/membership/jspc_mem_js"     => "47");
+$js_arr[]=array("jspc/membership/jspc_mem_js"      => "48");
 $js_arr[]=array("jspc/membership/upgrade_mem_js"   => "23");
 $js_arr[]=array("jspc/membership/jspc_mem_sweetalert"   => "5");
 $js_arr[]=array("jspc/membership/jspc_mem_scrollpane" => "2");
