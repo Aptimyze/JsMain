@@ -251,21 +251,23 @@ class myjsActions extends sfActions
             $profileArray=$appV1obj->getProfileInfo($profileInfo);
             if($profileArray[strtolower("MY_PROFILE")])
               $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
-    
+
             $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
         }
         //use it wisely
         if($this->bInvalidateMemberShipCache) {
           $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo,true);
         }
-        
-       
+        if(MobileCommon::isNewMobileSite()){
+        $appV1DisplayJson['jsb9Key'] = Jsb9Enum::jsMobMYJSUrl;
+        }
+
         if($this->bEnableProfiler) {
           //Display Call
           $msg1 = "[Not-Cached]";
           if($bIsCached) {
             $msg1 = "[Cached]";
-          } 
+          }
           $msg = "MyJS Display Call $msg1 Time Taken : ";
           $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSixthTime, $msg, $moduleName);
         }

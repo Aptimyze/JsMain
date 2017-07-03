@@ -30,31 +30,34 @@ class ApiCALayerV1Action extends sfActions
 		{
 			//Set Error Message and return false
 			$this->m_iResponseStatus = ResponseHandlerConfig::$LOGOUT_PROFILE;
-			
+
 		}
-		else 
-		{	
+		else
+		{
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$totalAwaiting=(new ProfileMemcacheService($this->loginProfile))->get('AWAITING_RESPONSE');
-        
+
         $layerToShow = false;
         //As Per Peek Level Unset Some Listing Across Channels
         if(JsConstants::$hideUnimportantFeatureAtPeakLoad <=4) {
             $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
         }
-		
+
 		//print_r($layerToShow); die;
 		if(!$layerToShow) {
 			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$apiResponseHandlerObj->setResponseBody(array('calObject'=>null));	
+			$apiResponseHandlerObj->setResponseBody(array('calObject'=>null));
 
 			$apiResponseHandlerObj->generateResponse();
 			return sfView::NONE;
 			die;
-			
+
 		}
 		$layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+								if($layerToShow==1){
+									$layerData['genderPhoto'] = $this->loginProfile->getGENDER()=='M' ? StaticPhotoUrls::noPhotoMaleJSMS : StaticPhotoUrls::noPhotoFemaleJSMS;
+								}
                 if($layerToShow==9)
                 {
                     $profileId=$this->loginProfile->getPROFILEID();

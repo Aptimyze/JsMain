@@ -7,7 +7,8 @@ const MyjsReducer = (state={
 		state = {
 			...state,
 			apiData:action.payload,
-			fetched : true
+			fetched : true,
+			jsb9Track : true
 		}
 		break;
 	}
