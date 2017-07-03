@@ -1029,7 +1029,8 @@ return {
   onMaritalChange   : onMarital,
   updateCastOption  : updateCastOption,
   updateRangeUI     : disableFieldsOption,
-  initFields        : initFields  
+  initFields        : initFields,
+  updateCastOption  : updateCastOption  
 }
 }();
 
@@ -1133,7 +1134,7 @@ function handleBack() {
   
 };
 
-var _dppType = ["city", "caste", "mtongue", "education"];
+var _dppType = ["religion","city", "caste", "mtongue", "education"];
 var _parentCatogary = [{
   "parent": "basic",
   "sub": ["city","age"]
@@ -1369,6 +1370,9 @@ var _parentCatogary = [{
                   changeSuggestion(htmlStr, "add"); 
                   dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
                   dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
+                  if(parentText == "religion") {
+                    dppAppEvents.updateCastOption(currentValArr); 
+                  }
 
                   if($('#dpp-p_'+parentText).val()!=null)
                  {
