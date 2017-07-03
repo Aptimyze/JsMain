@@ -1462,6 +1462,10 @@ class MembershipAPIResponseHandler {
         if ($this->currency == "DOL") {
             $cashChequePickup = NULL;
         }
+
+        if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+            $cashChequePickup = NULL;
+        }
         
         if ($this->currency == "DOL") {
             $proceedText = "You Pay USD " . number_format($totalCartPrice, 2, '.', ',') . "";
@@ -1469,7 +1473,7 @@ class MembershipAPIResponseHandler {
         else {
             $proceedText = "Continue";
         }
-        
+       
         $output = array(
             'title' => $title,
             'currency' => $this->currency,
