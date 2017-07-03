@@ -1,5 +1,4 @@
 function dropdown() {
-    console.log("testing");
     $(".dropdown dt").click(function () {
         $(".dropdown dd ul").toggle();
     });

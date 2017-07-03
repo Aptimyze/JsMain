@@ -867,7 +867,7 @@ $(document).ready(function() {
 		//console.log("testing");
 		//show loader
 		showCCLoader('Show');
-		//console.log("testing");
+		console.log("testing");
 		
 		//set horizontal tab ids of Requests vertical tab
 		setHorizontalTabsForRequests(activeRequestTypeID,'true');  //true set for reloadflag param
