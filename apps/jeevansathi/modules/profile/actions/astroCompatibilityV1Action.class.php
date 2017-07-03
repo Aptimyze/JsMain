@@ -35,7 +35,7 @@ class astroCompatibilityV1Action extends sfActions
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiResponseHandlerObj->generateResponse();
-			die;
+			return SfView::NONE;			
 		}
 
 		//if gender of two profiles is same
@@ -45,7 +45,7 @@ class astroCompatibilityV1Action extends sfActions
 			$successArr["MESSAGE"]  = "Astro Compatibility cannot be matched with the same gender";
 			$apiResponseHandlerObj->setResponseBody($successArr);
 			$apiResponseHandlerObj->generateResponse();
-			die;
+			return SfView::NONE;
 		}
 
 		//if sample astro Report is to be sent
@@ -72,7 +72,7 @@ class astroCompatibilityV1Action extends sfActions
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiResponseHandlerObj->setResponseBody($successArr);
 			$apiResponseHandlerObj->generateResponse();
-			die;
+			return SfView::NONE;
 		}
 
 		$profileIdArr = array("0"=>$loggedInProfileId,"1"=>$otherProfileId);
@@ -86,7 +86,7 @@ class astroCompatibilityV1Action extends sfActions
 			$successArr["MESSAGE"]  = "No Astro Details Found";
 			$apiResponseHandlerObj->setResponseBody($successArr);
 			$apiResponseHandlerObj->generateResponse();
-			die;
+			return SfView::NONE;
 		}
 		else
 		{
@@ -141,7 +141,8 @@ class astroCompatibilityV1Action extends sfActions
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 				$apiResponseHandlerObj->setResponseBody($successArr);
 				$apiResponseHandlerObj->generateResponse();
-				die;
+				return SfView::NONE;
+				
 			}
 		}
 

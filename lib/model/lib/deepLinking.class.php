@@ -57,7 +57,7 @@ class deepLinking
 			$profilechecksum=$request->getParameter('profilechecksum');
 			$stype = $request->getParameter('stype');
 			JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,1);				
-			$headerURL = 'comjeevansathi:?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'","username":"'.$this->loggedInUsername.'","gender":"'.$this->loggedInGender.'"}';		
+			$headerURL = 'comjeevansathi://?{"profilechecksum":"'.$profilechecksum.'","trackingId":"'.$trackingId.'","landingScreen":"'.self::LANDING_SCREEN.'","stype":"'.$stype.'","authchecksum":"'.$authchecksum.'","username":"'.$this->loggedInUsername.'","gender":"'.$this->loggedInGender.'"}';		
 			return($headerURL);
 		}
 		JsMemcache::getInstance()->set("iosDeepLinking_".$this->loggedInProfileId,2);		
