@@ -24,7 +24,7 @@ class failedPaymentInDialerTask extends sfBaseTask
 The [failedPaymentInDialer|INFO] task does things.
 Call it with:
 
-  [php symfony csvGeneration:failedPaymentInDialer|INFO]
+  [php symfony failedPaymentInDialer|INFO]
 EOF;
   }
 
@@ -43,7 +43,7 @@ EOF;
 	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE();
 	$csvStartDt =$lastHandledDtObj->getHandledDate($processId);
 
-        $startDt =date("Y-m-d H:i:s", time()-100*60);
+        $startDt =date("Y-m-d H:i:s", time()-10*60);
         $endDt 	 =date("Y-m-d H:i:s", time()-05*60);
 	$processObj->setStartDate($startDt);
 	$processObj->setEndDate($endDt);
@@ -54,7 +54,6 @@ EOF;
 
 	$csvHandler->removeOldProfiles($processObj);
 	$profiles =$csvHandler->fetchProfiles($processObj);
-        $csvHandler->storeTemporaryProfiles($processObj,$profiles);
 	// pre-filter logic
 	if(count($profiles)>0)
 		$profiles =$csvHandler->preFilter($processObj, $profiles);

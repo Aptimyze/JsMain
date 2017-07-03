@@ -24,7 +24,7 @@ class renewalProcessInDialerTask extends sfBaseTask
 The [renewalProcessInDialer|INFO] task does things.
 Call it with:
 
-  [php symfony renewalProcessInDialer|INFO]
+  [php symfony csvGeneration:renewalProcessInDialer|INFO]
 EOF;
   }
 
@@ -41,11 +41,12 @@ EOF;
        	$largeFileData  =$csvHandler->fetchLargeFileData();
        	$processObj->setLeadIdSuffix($largeFileData['LEAD_ID_SUFFIX']);
 	$profiles =$csvHandler->fetchProfiles($processObj);
-
+        
 	// pre-filter logic
-	if(count($profiles)>0)
-		$profiles =$csvHandler->preFilter($processObj, $profiles);
-
+	if(count($profiles)>0){
+            $csvHandler->storeTemporaryProfiles($processObj,$profiles);
+            $profiles =$csvHandler->preFilter($processObj, $profiles);
+        }
 	if(count($profiles)>0){
 		foreach($profiles as $key=>$data){
 			$profileid =$data['PROFILEID'];
