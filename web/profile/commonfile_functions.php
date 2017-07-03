@@ -578,7 +578,7 @@ $js_arr[]=array("jspc/search/common/commonSlider"   => "4");
 $js_arr[]=array("jspc/search/searchSliders"   => "4");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"   => "4");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat" => "2");
-$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"   => "61");
+$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"    => "62");
 $js_arr[]=array("jspc/utility/chosen/chosen_jquery" => "32");
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism" => "2");
 $js_arr[]=array("jspc/logout/hpjs"   => "6");
