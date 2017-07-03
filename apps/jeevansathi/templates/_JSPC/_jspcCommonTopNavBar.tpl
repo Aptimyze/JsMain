@@ -721,7 +721,7 @@ window.onload=function(){
         </div>
         <!--end:middle-->
         <!--start:registration-->
-        <div tabindex="1" class="fr hpbg1 hpwid3 lh63 txtc disp-tbl"> <a class="disp-cell vmid fontreg f14 colrw" href="/profile/registration_new.php?source=gnb">REGISTER FREE</a> </div>
+        <div tabindex="1" class="fr hpbg1 hpwid3 lh63 txtc disp-tbl"> <a class="disp-cell vmid fontreg f14 colrw" href="/profile/registration_new.php?source=~if $registerSource`~$registerSource`~else`gnb~/if`">REGISTER FREE</a> </div>
         <!--end:registration-->
     </div>
 </div>
