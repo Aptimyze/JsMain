@@ -62,7 +62,7 @@ EOF;
 				}
 				if($reportName==1)
 				{
-					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
+					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,nitesh.s@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
 				}
 				elseif($reportName==2)
 				{
