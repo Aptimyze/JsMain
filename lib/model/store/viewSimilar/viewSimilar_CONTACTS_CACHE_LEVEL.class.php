@@ -99,7 +99,10 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
                         $i = 0;
-                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") AND RECEIVER NOT IN (" . $inStatement2 . ") $whereString";
+                        $sql = "SELECT SQL_CACHE SENDER,RECEIVER,CONSTANT_VALUE,PRIORITY FROM viewSimilar.CONTACTS_CACHE_LEVEL2_" . $viewedOppositeGender . " WHERE SENDER IN (" . $inStatement . ") ";
+                        if($inStatement2 != '')
+                            $sql .= "AND RECEIVER NOT IN (" . $inStatement2 . ")";
+                        $sql .= $whereString;
                         $prep = $this->db->prepare($sql);
                         foreach ($whereParams as $key=>$value){
                             if(in_array($key,array('lage','hage','LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
