@@ -379,14 +379,16 @@
                 <div class="pl12 pt20">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
                     <ul id ="reasonCode" class="listnone reportlist fontlig f15 pt10 color2">
+                    <li>
+                          <input type="radio"  name="report_profile" value = '6'>The number does not exist</li>
                       <li>
                           <input type="radio"  name="report_profile" value = '1'>Switched off / Not reachable</li>
                           <li>
                           <input type="radio"   name="report_profile" value = '2'>Not an account holder's phone</li>
                            <li>
-                          <input type="radio"   name="report_profile" value = '3'>Already married / engaged</li>
+                          <input type="radio"   name="report_profile" value = '4'>Not picking up</li>
                             <li>
-                          <input type="radio"  name="report_profile" value = '4'>Not picking up</li>
+                          <input type="radio"  name="report_profile" value = '3'>Already married / engaged</li>
                              <li>
                           <input id='otherOptionBtn' type="radio"  name="report_profile" value = '5'>Others
                         <div id='otherOptionMsgBox' class='disp-none' >

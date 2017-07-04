@@ -87,7 +87,17 @@
 	    curl_setopt($curl, CURLOPT_URL,$rabbitmq_url);
 	    curl_setopt($curl,CURLOPT_RETURNTRANSFER,True);
 	    curl_setopt($curl, CURLOPT_USERPWD,$rabbitmq_creds);
+
+        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        curl_setopt($curl, CURLOPT_HEADER, $header);
+        curl_setopt($curl, CURLOPT_USERAGENT,"JsInternal");    
+
 	    $response= curl_exec($curl);
+
+            // remove header from curl Response 
+            $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+            $response = substr($response, $header_size);
+
 	    curl_close($curl);
 	    $response =json_decode($response); 
 		//print_r($response);die;

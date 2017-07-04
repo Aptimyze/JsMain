@@ -1846,6 +1846,19 @@ class MembershipHandler
                     $bottom = "if you upgrade your membership before <strong>" . date("d M", strtotime($expiry_date)) . "</strong> !";
                 }
                 break;
+            case 'VD_NOTIFICATION':
+                $discountVD = $vdodObj->getDiscountDetails($profileid);
+                $maxVDDisc  = $discountVD['MAX_DISCOUNT'];
+                $flat       = $discountVD['FLAT_DISCOUNT'];
+                $discPerc   = $maxVDDisc;
+                if ($flat) {
+                    $discountDisplayText = 'flat';
+                } else {
+                    $discountDisplayText = 'upto';
+                }
+                $top = "Get ".$discountDisplayText." ".$discPerc."% OFF on all Jeevansathi Plans";
+                $bottom = "Congratulations! You are selected for special discounts of ".$discountDisplayText." ".$discPerc."% by Jeevansathi. Offer valid till ".date("d M", strtotime($expiry_date)).". Tap to avail offer.";
+                break;
             case 'CASH':
                 $discountDisplayText = $vdodObj->getCashDiscountDispText($profileid, 'small');
                 $top                 = "Get " . $discountDisplayText . " " . $discPerc . "% OFF";
