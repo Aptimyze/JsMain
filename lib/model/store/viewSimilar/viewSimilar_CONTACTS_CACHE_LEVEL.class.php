@@ -72,21 +72,21 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             else if($key == 'hage')
                                 $whereString .= " AND AGE<=:".$key;
                             else if($key == 'LPARTNER_LAGE')
-                                $whereString .= " AND (PARTNER_LAGE>=:".$key;
+                                $whereString .= " AND ((PARTNER_LAGE>=:".$key;
                             else if($key == 'HPARTNER_LAGE')
-                                $whereString .= " AND PARTNER_LAGE<=:".$key." || PARTNER_LAGE = '')";
+                                $whereString .= " AND PARTNER_LAGE<=:".$key.") || PARTNER_LAGE = '' || PARTNER_LAGE IS NULL)";
                             else if($key == 'LPARTNER_HAGE')
-                                $whereString .= " AND (PARTNER_HAGE>=:".$key;
+                                $whereString .= " AND ((PARTNER_HAGE>=:".$key;
                             else if($key == 'HPARTNER_HAGE')
-                                $whereString .= " AND PARTNER_HAGE<=:".$key." || PARTNER_HAGE = '')";
+                                $whereString .= " AND PARTNER_HAGE<=:".$key.") || PARTNER_HAGE = ''  || PARTNER_HAGE IS NULL)";
                             else if($key == 'LPARTNER_LHEIGHT')
-                                $whereString .= " AND (PARTNER_LHEIGHT>=:".$key;
+                                $whereString .= " AND ((PARTNER_LHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_LHEIGHT')
-                                $whereString .= " AND PARTNER_LHEIGHT<=:".$key." || PARTNER_LHEIGHT = '')";
+                                $whereString .= " AND PARTNER_LHEIGHT<=:".$key.") || PARTNER_LHEIGHT = '' || PARTNER_LHEIGHT IS NULL)";
                             else if($key == 'LPARTNER_HHEIGHT')
-                                $whereString .= " AND (PARTNER_HHEIGHT>=:".$key;
+                                $whereString .= " AND ((PARTNER_HHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_HHEIGHT')
-                                $whereString .= " AND PARTNER_HHEIGHT<=:".$key." || PARTNER_HHEIGHT = '')" ;
+                                $whereString .= " AND PARTNER_HHEIGHT<=:".$key.") || PARTNER_HHEIGHT = '' || PARTNER_HHEIGHT IS NULL)" ;
                             else{
                                 $valArray = explode(" ",$value);
                                 $whereString.= "AND (";
@@ -94,7 +94,7 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 foreach($valArray as $k1=>$v1)
                                     $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") AND ";
                                 $whereString = substr($whereString, 0, -5);
-                                $whereString .= " || ".$key."='')";
+                                $whereString .= " || ".$key."='' || ".$key." IS NULL)";
                             }
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
