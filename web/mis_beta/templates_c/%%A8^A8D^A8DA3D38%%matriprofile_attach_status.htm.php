@@ -103,7 +103,7 @@
 </tr>
 <tr>
         <td>CC:</td>
-        <td><input type="text" name="cc1" size="40"></td><td>,matri1profile@jeevansathi.com<input type="hidden" name="cc2" value="tanu.gupta@jeevansathi.com"><input type="hidden" name="id" value="<?php echo $this->_tpl_vars['id']; ?>
+        <td><input type="text" name="cc1" size="40"></td><td>,matri1profile@jeevansathi.com<input type="hidden" name="cc2" value="nitesh.s@jeevansathi.com"><input type="hidden" name="id" value="<?php echo $this->_tpl_vars['id']; ?>
 "><input type="hidden" name="username" value="<?php echo $this->_tpl_vars['username']; ?>
 ">
 <input type="hidden" name="exec_email" value="<?php echo $this->_tpl_vars['exec_email']; ?>
