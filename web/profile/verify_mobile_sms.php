@@ -3,7 +3,7 @@ include_once "connect.inc";
 include_once(JsConstants::$docRoot."/ivr/jsivrFunctions.php");
 connect_db();
 $cc='esha.jain@jeevansathi.com';
-$to='tanu.gupta@jeevansathi.com';
+$to='nitesh.s@jeevansathi.com';
 $subject="verify_mobile_sms.php track mail";
 
 $emailMsg='The api mention is being called. The message : '.$msg.' is received from the number '.$mobile.'.<br/><br/>Warm Regards';
