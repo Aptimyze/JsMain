@@ -26,7 +26,7 @@ class showLIVETagsAction extends sfActions
     	$june1Date = "2017-06-01 00:00:00";
 
     	// LOGIC TO FIND TAGS TO BE USED IN DASHBOARD
-    	$response = $this->sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
+    	$response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");
     	$i=0;
     	foreach ($response as $key => $value) 
     	{    		
@@ -70,29 +70,5 @@ class showLIVETagsAction extends sfActions
             unset($tagTime);
     	}
     	array_multisort($timeArr, SORT_DESC, $this->tagArr);
-    }
-
-    function sendCurlGETRequest($urlToHit,$postParams,$timeout='',$headerArr="",$requestType="")
-    {    
-    	if(!$timeout)
-    		$timeout = 50000;
-    	$ch = curl_init($urlToHit);    
-    	if($headerArr)
-    		curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-    	else
-    		curl_setopt($ch, CURLOPT_HEADER, 0);
-    	if($postParams)
-    		curl_setopt($ch, CURLOPT_POST, 1);
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    	if($postParams)
-    		curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);	
-    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-    	curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-    	curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-    	curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
-    	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    	$output = curl_exec($ch);	
-    	return json_decode($output);
     }
 }

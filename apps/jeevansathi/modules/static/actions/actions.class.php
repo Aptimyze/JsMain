@@ -555,8 +555,8 @@ public function executeCALRedirection($request){
 		else
 			$this->fromSignout=0;
 		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
-				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
-				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Free Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimony site. 10Lac+ Profiles, 3-level profile check, Search by caste and community, Privacy control & Register FREE! ‘Be Found’ Now");
 			}
 		else{
 			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");

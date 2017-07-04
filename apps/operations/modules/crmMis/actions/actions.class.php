@@ -2502,7 +2502,8 @@ class crmMisActions extends sfActions
                 //print_r($agents);die;
                 //var_dump($start_date);
                 //var_dump($end_date);
-
+                $misGenerationhandlerObj = new misGenerationhandler();
+                $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 if (!empty($agents)) {
                 	//fetch dialer allocated profiles
                 	$dailyAllotObj = new CRM_DAILY_ALLOT("newjs_slave");
@@ -2554,7 +2555,7 @@ class crmMisActions extends sfActions
                     	foreach ($profileid as $kk=>$billidArr1) {
                         	$this->misData[$agent]['paid'] += count($billidArr1);
                         	if (!empty($billidArr1)) {
-                            	$this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1);
+                            	$this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1,$net_off_tax_ratio);
                         	}
                         }
                     }
@@ -2647,6 +2648,8 @@ class crmMisActions extends sfActions
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
                 $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
+                $misGenerationhandlerObj = new misGenerationhandler();
+                $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT");
@@ -2662,7 +2665,7 @@ class crmMisActions extends sfActions
 	                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
 	                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
 	                	if (!empty($allBillids)){
-	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
+	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids,$net_off_tax_ratio);
 	                	} else {
 	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
 	                	}

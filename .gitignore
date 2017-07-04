@@ -10,3 +10,4 @@ log/*
 .idea
 .eclipse
 .gitConfig/*
+web/robots.txt
