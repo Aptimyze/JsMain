@@ -2252,7 +2252,10 @@ class MembershipHandler
 
         if (is_array($allocationDetails) && $allocationDetails) {
             
-            $profileIDArr = array_column($allocationDetails,'PROFILEID');
+            $profileIDArr = array_map(function($arr){ 
+                                    return $arr['PROFILEID'];
+                                },$allocationDetails);
+            
             if(is_array($profileIDArr)){
                 $profileIDArr = array_unique($profileIDArr);
             }
