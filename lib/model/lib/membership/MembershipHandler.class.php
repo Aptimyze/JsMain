@@ -2249,8 +2249,14 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
+
         if (is_array($allocationDetails) && $allocationDetails) {
-            $profileIDArr = array_keys($allocationDetails);
+            
+            $profileIDArr = array_column($allocationDetails,'PROFILEID');
+            if(is_array($profileIDArr)){
+                $profileIDArr = array_unique($profileIDArr);
+            }
+            
             if (is_array($profileIDArr) && $profileIDArr) {
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
@@ -2269,18 +2275,20 @@ class MembershipHandler
                 unset($mainAdminObj);
 
                 //get billing details of profiles via billid's
-                $billIdArr = array_map(function ($arr) {return $arr['BILL_ID'];}, $allocationDetails);
+                $billIdArr = array_keys($allocationDetails);
+
                 if (is_array($billIdArr) && $billIdArr) {
                     $billingObj     = new BILLING_SERVICE_STATUS("crm_slave");
                     $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr), "PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT", "%X%");
                     unset($billingObj);
                 }
             }
-            foreach ($allocationDetails as $profileid => $value) {
+            foreach ($allocationDetails as $billid => $value) {
+                $profileid = $value["PROFILEID"];
                 if ($profileDetails[$profileid]) {
-                    $allocationDetails[$profileid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$profileid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
+                    $allocationDetails[$billid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$billid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
                 } else {
-                    unset($allocationDetails[$profileid]);
+                    unset($allocationDetails[$billid]);
                 }
 
             }
@@ -2288,6 +2296,7 @@ class MembershipHandler
             unset($jsadminDetails);
             unset($profileNamesArr);
         }
+        
         return $allocationDetails;
     }
 
@@ -2317,7 +2326,7 @@ class MembershipHandler
         if ($billingDetails) {
             $billingDetails = exclusiveMemberList::mapColumnsToActualValues($billingDetails, array("SERVICEID"));
         }
-
+        
         //merge all details
         if (is_array($billingDetails) && is_array($jsadminDetails)) {
             $allocationDetails = array_merge($allocationDetails, $profileDetails, $billingDetails, $jsadminDetails);
@@ -2328,7 +2337,6 @@ class MembershipHandler
         } else {
             $allocationDetails = array_merge($allocationDetails, $profileDetails);
         }
-
         return $allocationDetails;
 
     }

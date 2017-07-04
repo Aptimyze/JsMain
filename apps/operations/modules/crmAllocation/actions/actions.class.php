@@ -833,6 +833,7 @@ class crmAllocationActions extends sfActions
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
+  
   	//active tab
   	$this->tabChosenDetails = exclusiveMemberList::$TYPE_TABID_MAPPING[$type];
   	//horizontal tab details

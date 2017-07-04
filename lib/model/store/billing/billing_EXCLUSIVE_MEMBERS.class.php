@@ -57,7 +57,7 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
         $res->execute();
         while($result=$res->fetch(PDO::FETCH_ASSOC))
         {
-            $rows[$result["PROFILEID"]] = $result;
+            $rows[$result["BILL_ID"]] = $result;
         }
         return $rows;
     }
