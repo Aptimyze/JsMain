@@ -122,7 +122,7 @@ if($finalMessage!="")
 	else
 		$sub=$finalMessage." weekend Limit Crossed";
 
-	send_email("nitesh.s@jeevansathi.com,tanu.gupta@jeevansathi.com,jsprod@jeevansathi.com",$sub,$sub,"noreply@jeevansathi.com","","","","","");
+	send_email("nitesh.s@jeevansathi.com,nitesh.s@jeevansathi.com,jsprod@jeevansathi.com",$sub,$sub,"noreply@jeevansathi.com","","","","","");
 }
 
 ?>
