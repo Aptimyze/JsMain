@@ -129,14 +129,14 @@ $(document).ready(function (e) {
         $(this).off("click").on("click",function(){
             $("#commonOverlay").removeClass("disp-none");   
             $("#commonOverlay").html(idfyStr);
-            $("#trackIdfy").off("click").on("click",function () {                
+            /*$("#trackIdfy").off("click").on("click",function () {                
                 $.myObj.ajax({
                     type: 'POST',
                     url: "/api/v1/common/trackIdfy",
                     success: function (response) {                        
                     }
                 });
-            });
+            });*/
             $("#closeBtn").off("click").on("click",function(){
                 $("#commonOverlay").addClass("disp-none");
             }); 

@@ -101,7 +101,7 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
-			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             		//$applicableProfilesArr = array_keys($applicableProfiles);
             		//$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			//unset($applicableProfilesArr);
@@ -275,6 +275,7 @@ public function microtime_float()
 			$applicableProfiles=array();			
 			$poolObj = new NotificationDataPool();
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
+			//print_r($applicableProfiles);die;
 			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
 		  case "MEM_EXPIRE":
@@ -467,6 +468,13 @@ public function microtime_float()
                   }
               }
               break;
+        case "UPGRADE_MEMBERSHIP":
+                $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
+			$poolObj = new NotificationDataPool();
+			$dataAccumulated = $poolObj->getMembershipUpgradeNotificationData($appProfiles["SELF"],$details);
+			// print_r($dataAccumulated);
+			unset($poolObj);
+			break;
 	  }
 	  $completeNotificationInfo = array();
 	  $counter = 0;
@@ -480,7 +488,6 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT'){	
 				  		$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
@@ -509,43 +516,46 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
-		  //print_r($completeNotificationInfo);die;
+		  
 		  return $completeNotificationInfo;
 	  }
   }
   public function generateNotification($notificationId, $notificationKey,$dataPerNotification)
   {
 	  $notifications = $this->getNotifications();
-	  //print_r($notifications);
+	
 	  $variableValues = array();
 	  if(is_array($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE']) && $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'])
 		{  
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
+
         //For variable Title
-	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP' || $notificationKey == "MEM_DISCOUNT"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
 	  if($variableValues || in_array($notificationKey,NotificationEnums::$staticContentNotification))
 	  {
+	  	
 		  if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['flagPosition']=="STATIC")
 			$finalNotificationMessage = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC'],$variableValues);
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG" || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED" || $notificationKey == 'UPGRADE_MEMBERSHIP' || $notificationKey=="MEM_DISCOUNT"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else
                         	$finalNotificationMessageTitle = $this->mergeNotification($variableValuesTitle, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUPI_TITLE']['STATIC']);
 		  }
-	
+		
 		  $completeNotificationInfo["USERNAME"] = $this->getVariableValue("USERNAME_SELF", $dataPerNotification);
 		  $completeNotificationInfo = $notifications[$notificationKey][$notificationId];
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
+
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
           if($dataPerNotification['OTHER_PROFILEID']){
             $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
@@ -553,7 +563,7 @@ public function microtime_float()
           if($dataPerNotification['OTHER_USERNAME']){
             $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
           }
-		  // print_r($completeNotificationInfo);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }
@@ -720,36 +730,59 @@ public function microtime_float()
 		$cashDiscountActive	=false;
 		$replaceStr		=array('<','>','/','strong');
 		$memHandlerObj 		=new MembershipHandler();
-		$vdObj 			=new VariableDiscount();
 		$discountOfferLogObj 	=new billing_DISCOUNT_OFFER_LOG('newjs_masterRep');
 		$renewalDisObj 		=new billing_RENEWAL_DISCOUNT('newjs_masterRep');
 		$cashDiscountArray	=$discountOfferLogObj->getActiveOfferDetails();
+		$vdObj 			=new VariableDiscount();
 
+		//check whether vd notifications have been scheduled for current date
+		$entryDt = date("Y-m-d");
+		$flatCount = 0;
+        $uptoCount = 0;
+		$vdDiscountNotLog 	=new billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG();
+		
+		$vdScheduled = $vdDiscountNotLog->checkVDStatus($entryDt);
+
+		if($vdScheduled){
+			$vdDiscountNotLog->updateStartTime($entryDt);
+		}
+		
 		if(is_array($cashDiscountArray)){
 			$cashDiscountStartDate =$cashDiscountArray['START_DT'];
 			if($cashDiscountStartDate == $todayDate)
 				$cashDiscountActive =true;		
 		} 
+
 		if(is_array($profilesArr)){	
 		        $profilesStr           	=implode(",",$profilesArr);
-	               	$discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
+		        if($vdScheduled){
+	            	$discountDetArr        	=$vdObj->getVDProfilesActivatedForDate($profilesStr);
+	            }
 			if(is_array($discountDetArr)){	
 				foreach($discountDetArr as $profileid=>$value){
 					$vdProfiles[]           =$profileid;
 					if($value['SDATE']!=$todayDate)
 						continue;
 					$discount		=$value['DISCOUNT'];
-					$messageArr 		=$memHandlerObj->getOCBTextMessage($profileid, 'VD', $discount, $value['EDATE']); 
+					$messageArr 		=$memHandlerObj->getOCBTextMessage($profileid, 'VD_NOTIFICATION', $discount, $value['EDATE']); 
+					$dataArr['TITLE'] = $messageArr["top"];
 					$dataArr['DISCOUNT']    =$discount;
 					$dataArr['UPTO']        =$messageArr['discountText'];
-					$dataArr['MESSAGE']	=str_replace($replaceStr,'',$messageArr['top'].", ".$messageArr['bottom']);
+
+					if($dataArr['UPTO'] == "flat"){
+						++$flatCount;
+					}
+					else if($dataArr['UPTO'] == "upto"){
+						++$uptoCount;
+					}
+					$dataArr['MESSAGE']	    =$messageArr['bottom'];
 					$dataArr['PROFILEID']   =$profileid; 			
 					$applicableProfiles[$profileid] =$dataArr;					
 				}
-				//print_r($applicableProfiles);die;
 			}
 			unset($discountDetArr);
 		}
+
 		if($cashDiscountActive){
 			$profilesStr =implode(",",$profilesArr);
 			$renewalProfiles =$renewalDisObj->getRenewalProfiles($profilesStr);		
@@ -774,16 +807,22 @@ public function microtime_float()
         	        	}
 			}	
 			$cashDiscount 		=$vdObj->getCashDiscount();
+
 			$cashDiscountExpDt 	=$cashDiscountArray['END_DT'];
 			$messageArr     	=$memHandlerObj->getOCBTextMessage('1', 'CASH', $cashDiscount,$cashDiscountExpDt);
 			$message		=str_replace($replaceStr,'',$messageArr['top'].", ".$messageArr['bottom']);
-			$dataArr		=array('DISCOUNT'=>$cashDiscount,'UPTO'=>$messageArr['discountText'],'MESSAGE'=>$message);
+			$dataArr		=array('DISCOUNT'=>$cashDiscount,'UPTO'=>$messageArr['discountText'],'MESSAGE'=>$message,"TITLE"=>"Special Offer For You");
+			
 			foreach($profilesArrNew as $key=>$profileid){
 				$dataArr['PROFILEID']   =$profileid;
 				$applicableProfiles[$profileid] =$dataArr;
 			}
 		}
-		//print_r($applicableProfiles);die;
+		if($vdScheduled){	
+			$vdDiscountNotLog->updateEndTime($entryDt,$flatCount,$uptoCount);
+		}
+		unset($vdDiscountNotLog);
+		
 		return $applicableProfiles;
 	}
   }	

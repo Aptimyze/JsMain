@@ -11,6 +11,8 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 	{
 		try	 	
 		{	
+			if($profileid=="" || $profileid==NULL || $email=="" || $email==NULL)
+				return false;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
 			$sql="UPDATE newjs.EMAIL_CHANGE_LOG SET STATUS = 'Y', VERIFY_DATE='$timeNow' WHERE PROFILEID = :PROFILEID AND EMAIL=:EMAIL ORDER BY CHANGE_DATE DESC LIMIT 1";
 			$prep=$this->db->prepare($sql);
@@ -28,7 +30,8 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
 	{  
 		try
 		{
-			
+			if($profileid=="" || $profileid==NULL || $email=="" || $email==NULL)
+				return false;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
 			$sql = "INSERT INTO newjs.EMAIL_CHANGE_LOG(PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,'$timeNow',:EMAIL,'N')";
 			$prep = $this->db->prepare($sql);
@@ -47,7 +50,8 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
         public function getLastEntry($profileid)
         {
                 try{
-                        
+                	if($profileid=="" || $profileid==NULL)
+						return false;                        
                                 $sql = "SELECT ID,EMAIL FROM newjs.EMAIL_CHANGE_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
                                 $res=$this->db->prepare($sql);
                                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);

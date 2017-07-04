@@ -112,6 +112,7 @@ public function phoneUpdateProcess($message)
 
 			if($noOfTimesVerified == '0')
 			{
+		sfContext::getInstance()->getRequest()->setParameter('fromReg','Y');
                 $memcacheObj = JsMemcache::getInstance();
 
                 $minute = date("i");

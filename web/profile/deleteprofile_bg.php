@@ -524,8 +524,8 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 		mysql_query($sql,$db) or ($skip=1);
 		if (!$skip) {
 			if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
-				$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
-				sendCurlDeleteRequest($url);
+				//$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
+				//sendCurlDeleteRequest($url);
 
 			} 
 				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
@@ -559,12 +559,18 @@ function sendCurlDeleteRequest($url)
 	curl_setopt($ch, CURLOPT_URL,$url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
+    $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+    curl_setopt($ch, CURLOPT_HEADER, $header);
+    curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	
 	curl_setopt($ch, CURLOPT_TIMEOUT, 500);
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 	$result = curl_exec($ch);
+    
+    $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    $result = substr($result, $header_size);
 	$result = json_decode($result);
 	curl_close($ch);
 

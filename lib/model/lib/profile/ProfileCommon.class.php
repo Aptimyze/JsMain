@@ -605,7 +605,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 					$PHOTO=$album[0]->getMobileAppPicUrl();
                                 
                                 $szThumbnailURL = $album[0]->getThumbailUrl();
-                                
+                                $ProfilePic120Url = $album[0]->getProfilePic120Url();
 				$ALBUM_CNT=count($album);
 			}		
 		}
@@ -625,6 +625,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		$ret[1]=$ALBUM_CNT;
 		$ret[2]=$stopAlbumView;
     $ret['THUMB_URL']=$szThumbnailURL;
+    $ret['PIC120_URL']=$ProfilePic120Url;
         return $ret;
 
 	}

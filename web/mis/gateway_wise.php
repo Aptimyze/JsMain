@@ -57,9 +57,9 @@ if(authenticated($checksum))
 		$temp_gateway = $gateway;
 
 		if($gateway!='ALL')
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,if(APPLE_COMMISSION>0,pd.AMOUNT+pd.APPLE_COMMISSION,pd.AMOUNT) as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PURCHASES as pur,billing.$tableName as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,if(APPLE_COMMISSION != 0,pd.AMOUNT+pd.APPLE_COMMISSION,pd.AMOUNT) as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PURCHASES as pur,billing.$tableName as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
 		else
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,if(APPLE_COMMISSION>0,pd.AMOUNT+pd.APPLE_COMMISSION,pd.AMOUNT) as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.$tableName as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,if(APPLE_COMMISSION != 0,pd.AMOUNT+pd.APPLE_COMMISSION,pd.AMOUNT) as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.$tableName as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
                 
 		//print $sql.PHP_EOL;
 		// print $dateFlag;

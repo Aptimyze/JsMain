@@ -472,6 +472,37 @@ class IncomeMapping
                 }
                 return($lowerArray);
         }
+        public function getImmediateLowerIncome($key,$currentValue){
+                $incomeSortByArr=FieldMap::getFieldLabel($key,'',1);
+                $higherArray = array();
+                foreach($incomeSortByArr as $key=>$inc){
+                        if($key == $currentValue){
+                                break;
+                        }else{
+                                 $higherArray[] = $key;
+                        }
+                }
+                if(count($higherArray)>0)
+                        return(end($higherArray));
+                
+                return "";
+        }
+        public function getImmediateHigherIncome($key,$currentValue){
+                $incomeSortByArr=FieldMap::getFieldLabel($key,'',1);
+                krsort($incomeSortByArr);
+                $higherArray = array();
+                foreach($incomeSortByArr as $key=>$inc){
+                        if($key == $currentValue){
+                                break;
+                        }else{
+                                 $higherArray[] = $key;
+                        }
+                }
+                if(count($higherArray)>0)
+                        return(end($higherArray));
+                
+                return "";
+        }
         /**
          * This function removes no income index from income array if array size is greater than 1
          * @param type $incomeArr array of incomes

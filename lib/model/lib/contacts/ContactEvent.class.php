@@ -8,7 +8,7 @@
  * This class decide first checks for errors, then perform pre or post action according to the phase of the event.</p>
  * @package   jeevansathi
  * @subpackage   contacts
- * @author    Tanu Gupta <tanu.gupta@jeevansathi.com>
+ * @author    Tanu Gupta <nitesh.s@jeevansathi.com>
  * @copyright 2012 Tanu Gupta
  * @link      http://devjs.infoedge.com/mediawiki/index.php/FTO
  */

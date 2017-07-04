@@ -29,13 +29,13 @@ $shardSlave112[0]='112Slave_shard1';// 3309
 $shardSlave112[1]='112Slave_shard2'; // 3306
 $shardSlave112[2]='112Slave_shard3'; // 3307
 
-$ddlShardUser[0]= 'shard1DDL';
+/*$ddlShardUser[0]= 'shard1DDL';
 $ddlShardUser[1]= 'shard2DDL';
 $ddlShardUser[2]= 'shard3DDL';
 
 $ddlShardSlaveUser[0]= 'shard1SlaveDDL';
 $ddlShardSlaveUser[1]= 'shard2SlaveDDL';
-$ddlShardSlaveUser[2]= 'shard3SlaveDDL';
+$ddlShardSlaveUser[2]= 'shard3SlaveDDL';*/
 
 /**
 * This function is used to map serverId to ServerName. Server name is required for connection.
@@ -56,18 +56,18 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
                 return $activeServers[$activeServerId];
         elseif($master_or_slave=='slave112')
                 return $shardSlave112[$activeServerId];
-        elseif($master_or_slave=='masterDDL')
-                return 'masterDDL';
-	elseif($master_or_slave=='alertsDDL')
-                return 'alertsDDL';
-	elseif($master_or_slave=='viewLogDDL')
-                return 'viewLogDDL';
-        elseif($master_or_slave=='shardDDL')
-                return $ddlShardUser[$activeServerId];
-    elseif($master_or_slave=='shardServer')
+        //elseif($master_or_slave=='masterDDL')
+        //        return 'masterDDL';
+	//elseif($master_or_slave=='alertsDDL')
+        //        return 'alertsDDL';
+	//elseif($master_or_slave=='viewLogDDL')
+        //        return 'viewLogDDL';
+        //elseif($master_or_slave=='shardDDL')
+        //        return $ddlShardUser[$activeServerId];
+    	elseif($master_or_slave=='shardServer')
                 return $shardedServers[$activeServerId];
-	elseif($master_or_slave=='shardSlaveDDL')
-                return $ddlShardSlaveUser[$activeServerId];
+	//elseif($master_or_slave=='shardSlaveDDL')
+        //        return $ddlShardSlaveUser[$activeServerId];
         else
                 return $slave_activeServers[$activeServerId];
 }
