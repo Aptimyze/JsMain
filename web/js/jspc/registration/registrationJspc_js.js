@@ -2311,8 +2311,10 @@ function showDegreeFields()
                             clearPgDegree();
                         }
 			$("#college").show();
-                        if($("#otherUgDegreeInput").css('display')=='none')
+                /*
+		        if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addMoreUgDegree").show();
+		*/
 			$("#pg_college").hide();
 			$("#degree_ug").hide();
 			$("#degree_pg").hide();
@@ -2330,12 +2332,16 @@ function showDegreeFields()
 			$("#addMoreUgDegree").hide();
 			$("#pg_college").show();
 			$("#degree_ug").show();
+/*
                         if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addUg").show();
+*/
 			$("#degree_pg").hide();
                         $("#addPg").hide();
+/*
                         if($("#otherPgDegreeInput").css('display')=='none')
                             $("#addMorePgDegree").show();
+*/
                         inputData['degree_pg'] = inputData['edu_level_new'];
 			return;
 		}
@@ -2347,10 +2353,12 @@ function showDegreeFields()
 			$("#pg_college").show();
 			$("#degree_ug").show();
 			$("#degree_pg").show();
+/*
                         if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addUg").show();
                         if($("#otherPgDegreeInput").css('display')=='none')
                             $("#addPg").show();
+*/
 			$("#addMorePgDegree").hide();
 			return;
 		}
