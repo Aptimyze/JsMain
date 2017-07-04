@@ -207,9 +207,19 @@ class MessageCommunication
 		{
 			$this->SENDER = $profileid;
 			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();
-			$this->ID = $messagePostParameters["messageid"]?$messagePostParameters["messageid"]:$_GET["messageid"];
+			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+			if(MobileCommon::isAPP()=="A" && ($appVersion==101|| $appVersion==100)
+			{
+				$this->ID = sfContext::getInstance()->getRequest()->getParameter("messageid");//$messagePostParameters["messageid"]?$messagePostParameters["messageid"]:$_GET["messageid"];
+				$this->MESSAGE =htmlentities(urldecode(sfContext::getInstance()->getRequest()->getParameter("draft")))?htmlentities(urldecode(sfContext::getInstance()->getRequest()->getParameter("draft"))):htmlentities($_GET["chatMessage"]);
+			}
+			else
+			{
+				$this->ID = $messagePostParameters["messageid"]?$messagePostParameters["messageid"]:$_GET["messageid"];
+				$this->MESSAGE = htmlentities($messagePostParameters["draft"])?htmlentities($messagePostParameters["draft"]):htmlentities($_GET["chatMessage"]);
+			
+			}
 			$this->setValue();
-			$this->MESSAGE = htmlentities($messagePostParameters["draft"])?htmlentities($messagePostParameters["draft"]):htmlentities($_GET["chatMessage"]);
 			$this->IS_MSG = MessageCommunication::YES;	
 			$this->UPDATE = true;
 		}
