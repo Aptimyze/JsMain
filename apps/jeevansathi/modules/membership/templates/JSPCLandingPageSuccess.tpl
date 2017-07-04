@@ -828,7 +828,11 @@
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
                     </div>
+                    ~if $data.date gt '2017-07-01 00:00:00'`
+                    <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% GST</div>
+                    ~else`
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
+                    ~/if`
                 </div>
                 <!--end:total-->
             </div>
