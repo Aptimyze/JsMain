@@ -2707,6 +2707,7 @@ class Membership
         else{
             //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
         }
+	JsMemcache::getInstance()->set("MemPurchase_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
         
     }
     
