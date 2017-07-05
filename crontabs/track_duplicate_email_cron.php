@@ -14,7 +14,7 @@ connect_db();
 //$to='esha.jain@jeevansathi.com';
 
 $to='rohit.manghnani@jeevansathi.com';
-$cc='tanu.gupta@brijj.com, esha.jain@jeevansathi.com';
+$cc='nitesh.s@jeevansathi.com, esha.jain@jeevansathi.com';
 $subject="Track duplicate emails";
 
 $MAX_LIMIT_IP=1;

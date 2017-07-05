@@ -1102,5 +1102,11 @@ die;
 
 		echo $result;
 	}
+    
+    public static function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+    }
 }
 ?>
