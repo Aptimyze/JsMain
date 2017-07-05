@@ -71,7 +71,7 @@ Class DppAutoSuggest
 	* @return Jpartner Obj
 	 * @fieldsArray array of fields needed to be set for a user
 	 */
-	function insertJpartnerDPP($fieldsArray)
+	function insertJpartnerDPP($fieldsArray,$casteNoBar="")
 	{
 		$fieldsIdArray=DppAutoSuggestEnum::$FIELD_ID_ARRAY;
 		foreach($fieldsIdArray as $key=>$value)
@@ -86,7 +86,7 @@ Class DppAutoSuggest
 					elseif($value=="HANDICAPPED" ) $functionName="setHANDICAPPED";
 					elseif($value=="EDU_LEVEL_NEW") $functionName="setPartner_ELEVEL_NEW";
 					
-					$AutoSuggestValue= DppAutoSuggestValue::getAutoSuggestValue($value,$key,$this->profileObj);
+					$AutoSuggestValue= DppAutoSuggestValue::getAutoSuggestValue($value,$key,$this->profileObj,$casteNoBar);
 					if(is_array($AutoSuggestValue))
 					{
 						if($value=="INCOME")

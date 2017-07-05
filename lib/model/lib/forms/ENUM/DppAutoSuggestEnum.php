@@ -1425,5 +1425,6 @@ public static $rupeeIncomeArr = array("15" => "No Income","2" => "Rs. 0 - 1 Lakh
 public static $OnClickLabel = "OnClick";
 public static $hindiAllLabel = "Hindi- All";
 public static $typeArr = array("CITY","MTONGUE");
+public static $religionAutoSuggestForCasteNoBar = "'1','9'";
 }
 
