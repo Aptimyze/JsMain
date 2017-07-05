@@ -903,7 +903,11 @@ class MembershipAPIResponseHandler {
             $request->setParameter('mainMembership', $this->mainMem . $this->mainMemDur);
             $request->setParameter('vasImpression', $this->selectedVas);
             $paymentOptionsData = $this->generatePaymentOptionsPageResponse($request, $chequeData);
-            if ($this->currency == 'RS') {
+            
+            if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+                $output['payAtBranchesData'] = NULL;
+            }
+            else if ($this->currency == 'RS') {
                 $branchData = $this->generatePayAtBranchesPageResponse();
                 $output['payAtBranchesData'] = $branchData;
             }
