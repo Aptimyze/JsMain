@@ -28,6 +28,8 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
     */
     public function fetchAllRecords($fields="*",$limit,$offset,$entryDate)
     {
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
         try
         {
             $sql = "SELECT ".$fields." FROM billing.VARIABLE_DISCOUNT_TEMP WHERE EDATE>=:EDATE LIMIT ".$limit." OFFSET ".$offset;
@@ -47,6 +49,8 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
     }
     public function fetchActiveRecords($entryDate)
     {
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
         try
         {
             $sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt left join billing.VARIABLE_DISCOUNT vd on vdt.PROFILEID=vd.PROFILEID WHERE vdt.EDATE >=:TODAY AND vd.PROFILEID IS NULL"; 

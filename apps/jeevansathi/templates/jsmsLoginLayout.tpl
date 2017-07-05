@@ -77,7 +77,7 @@ function loadJS() {
 		~if $sf_request->getAttribute('AppLoggedInUser')`
 			var AppLoggedInUser=~$sf_request->getAttribute('AppLoggedInUser')`;
 		~else`
-			var AppLoggedInUser=0;
+			var AppLoggedInUser=1;
 		~/if`
 		var appPromoPerspective=0;
 		var DualHamburger=1;

@@ -1034,5 +1034,80 @@ class CommonFunction
     	}    	
     	return false;
     }
+    
+    public static function showAndBeyondPixel($profileId)
+    {
+    	if($profileId%9==5)
+    	{
+                $loggedInObj = LoggedInProfile::getInstance();
+                $subscription = $loggedInObj->getSUBSCRIPTION();
+                if($subscription==''){
+                    $analyticScore = ScoringLib::getAnalyticScore($profileId);
+                    if($analyticScore >= 0 && $analyticScore <=30)
+    			return true;
+                }   		
+    	}    	
+    	return false;
+    }
+
+    //this has been added to common functions since we need a particular output for CI files
+    public static function sendCurlGETRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
+  {
+    if(!$timeout)
+      $timeout = 50000;
+    $ch = curl_init($urlToHit);    
+    if($headerArr)
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+  else
+  {
+  	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+  	curl_setopt($ch, CURLOPT_HEADER, $header);
+  }
+
+  	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+    if($postParams)
+      curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    if($postParams)
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);  
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+    curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
+    curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $output = curl_exec($ch); 
+    return json_decode($output);
+  }
+
+  public static function sendCurlPostRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
+	{
+    //print_r($urlToHit);
+		if(!$timeout)
+			$timeout = 50000;
+		$ch = curl_init($urlToHit);
+		if($headerArr)
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+		else
+		{
+			$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+			curl_setopt($ch, CURLOPT_HEADER, $header);
+        }
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		if($postParams)
+			curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if($postParams)
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
+		if($requestType == "PUT")
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$output = curl_exec($ch);
+		return $output;
+	}
 }
 ?>

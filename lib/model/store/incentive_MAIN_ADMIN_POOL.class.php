@@ -335,7 +335,7 @@ class incentive_MAIN_ADMIN_POOL extends TABLE
                 }
                 catch(PDOException $e)
                 {
-                                throw new jsException($e);
+                                jsException::nonCriticalError($e);
                 }
         }
 	public function getProfileDetails($profileArr){

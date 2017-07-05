@@ -332,10 +332,14 @@ return 0;
                     
                     break; 
                     case '15': 
+                    //This variable is introduced as we had to switch off this CAL for some duration (due to low numbers)
+                      $switchForCAL = 0;
+                      if($switchForCAL){
                       $screening=$profileObj->getSCREENING();
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
+                      }
                     break;  
 
                     case '16':                      
@@ -416,7 +420,7 @@ return 0;
                     break;
 
                      case '21': 
-        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();

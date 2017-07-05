@@ -802,6 +802,9 @@ public function getNegativeScoreForUser()
 		$headers = array();
 		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
 		$headers[] = 'Content-Type: application/xml';
+        $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch,CURLOPT_POST,true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
@@ -831,9 +834,10 @@ public function getNegativeScoreForUser()
 		$headers = array();
 		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
 		$headers[] = 'Content-Type: application/json';
-
+        $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 		curl_exec($ch);
 		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if ($httpcode == 200) {
@@ -852,8 +856,10 @@ public function getNegativeScoreForUser()
 			$headers = array();
 			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
 			$headers[] = 'Content-Type: application/json';
-
+            $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+            
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 			curl_exec($ch);
 			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);

@@ -114,6 +114,8 @@ abstract class Notification
               return $details["MESSAGE_RECEIVED"];
           case "MESSAGE":
 	      return $details["SELF"]["MESSAGE"];	
+        case "TITLE":
+        return $details["SELF"]["TITLE"]; 
 	  case "EDATE":
 		return $details["SELF"]['EDATE'];
 	  case "UPTO":
