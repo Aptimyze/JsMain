@@ -1466,9 +1466,13 @@ class MembershipAPIResponseHandler {
         if ($this->currency == "DOL") {
             $cashChequePickup = NULL;
         }
-
+        
         if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
             $cashChequePickup = NULL;
+            $hidePayAtBranchesOption = true;
+        }
+        else{
+            $hidePayAtBranchesOption = false;
         }
         
         if ($this->currency == "DOL") {
@@ -1498,6 +1502,7 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'userProfile' => $this->profileid,
             'upgradeMem' => $this->upgradeMem,
+            'hidePayAtBranchesOption'=>$hidePayAtBranchesOption,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
