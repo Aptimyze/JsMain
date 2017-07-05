@@ -239,7 +239,7 @@
 
 
 
-~elseif $calObject.LAYERID eq '20'`
+~elseif ($calObject.LAYERID eq '20' or $calObject.LAYERID eq '23')`
 <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
         <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
         <div id="stateCityMidDiv" style='padding-top:20%;' class="posrel midDiv white">
@@ -254,6 +254,12 @@
               <div id="cityClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25 dn">
                 <div id="citySelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select your City</div>
                 <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
+            </div>
+                        <div id="inputDiv" class="mt30 txtc dn">
+                <div class="fontlig f15 white">Enter your city to continue</div>
+                <div id="cityInputDiv" class="wid90p mar15auto bg4 hgt75 pad25">
+                    <input type="text" class="fullwid fl fontlig f18" placeholder="Enter City" id="occuText" />
+                </div>
             </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+<script>    var CALID = '~$layerId`'; </script>
 
 ~if $layerId == '13'`<script>
     var primaryEmail = '~$primaryEmail`';
@@ -463,7 +464,7 @@ var altEmail = '~$altEmail`';</script>
         <!--end:layer 1-->
         </div>
 
-   ~elseif $layerId == '20'`
+   ~elseif $layerId == '20' || $layerId == '23'`
 
  <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
       
@@ -500,7 +501,7 @@ var altEmail = '~$altEmail`';</script>
        <!-- start:div for chosen -->
        <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
          <p class="f12 color5 pos-abs disp-none city-pos1 js-req1">Required</p> <div id = "stateBox">   
-         <select id="cityList" data-placeholder="Enter your State" class="chosen-select-width">
+         <select id="stateList" data-placeholder="Enter your State" class="chosen-select-width">
                      </select>
           </div>
          <!-- start: in case of no City found -->
@@ -511,6 +512,14 @@ var altEmail = '~$altEmail`';</script>
                      </select> 
                      </div>    
          </div>
+                  <!-- start: in case no occupation found -->
+                  ~if $layerId == '23'`
+         <div id='otherCityInput' class="pt25  vishid ">
+           <p id = 'thirdReq' class="f12 disp-none color5 txtr pb5">Required</p>      
+           <input  class="wid96p fontlig color11 occL-p2 f16" placeholder="Enter Your City" type="text"/>
+ 
+         </div>
+        ~/if`
          <!-- end: in case no occupation found -->
        </div>
        <button id="city-sub"  class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">Submit</button>
@@ -524,7 +533,7 @@ var altEmail = '~$altEmail`';</script>
 
             function callState(){  
                     $.ajax({
-                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    url: "/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json",
                     type: "GET",
                     success: function(res) {
                         if(typeof res == 'string')
@@ -548,16 +557,21 @@ var altEmail = '~$altEmail`';</script>
         
 
      appendStateData = function(res) {
-        $("#cityList").html('');
+        $("#stateList").html('');
         occuSelected = 0;
         stateMap = {};
         var stateIndex=1;
-        $("#cityList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+        $("#stateList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+        if(CALID==23)
+        {
+          $("#stateList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex)+'">Outside India</option>');
+          stateMap[stateIndex++] = "-1";
+        }
 
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
               $.each(elem1, function(index2, elem2) {
-                    $("#cityList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
+                    $("#stateList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
                 stateMap[stateIndex++] = index2;
                 });
         });
@@ -569,23 +583,39 @@ var altEmail = '~$altEmail`';</script>
         $("#stateBox").removeClass('chosen-container-err'); 
         $('.js-req1').addClass('disp-none');
         $("#city").html('');
-        var indexV = $('#cityList option:selected').val();
+        var indexV = $('#stateList option:selected').val();
+
         var keyName = stateMap[indexV];
         cityMap = {};
         cityIndex = 1;
         $("#city").append('<option class="textTru chosenDropWid" id="notFound1" value="'+(cityIndex++)+'"></option>');
+        if(keyName=='-1')
+        {
 
-        $.each(res.city_res_jspc, function(index, elem) {
-           if(index == keyName){
-            $.each(elem[0], function(index1, elem1) {  
-              $.each(elem1, function(index2, elem2){  
-                if(index2!=43) //  omitting 'others' option
-                    $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
-                  cityMap[cityIndex++] = index2;
-                });
-        });
-          }
+              $.each(res.country_res[0], function(index, elem) {
+                $.each(elem, function(index2, elem2){  
+                    if(index2!='-1' && index2!='51')
+                    {
+                          $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                        cityMap[cityIndex++] = index2;
+                    } 
+                      });
               });
+                
+        }
+        else {
+              $.each(res.city_res_jspc, function(index, elem) {
+               if(index == keyName){
+                $.each(elem[0], function(index1, elem1) {  
+                  $.each(elem1, function(index2, elem2){  
+                        $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                      cityMap[cityIndex++] = index2;
+                    });
+                });
+              }
+                  });
+
+        }
         }
 
    function loadChosen(){
@@ -609,14 +639,43 @@ var altEmail = '~$altEmail`';</script>
    }
 
    function statefunc(res){
-      $('#cityList').on("change",function(){
-        $("#cityList_chosen").removeClass('chosen-container-err');
+      $('#stateList').on("change",function(){
+        var indexV = $('#stateList option:selected').val();
+        var keyName = stateMap[indexV];
+        if(keyName!='-1') {
+          $("#city").attr('data-placeholder','Enter Your City');
+        }
+        else 
+          $("#city").attr('data-placeholder','Enter Your Country');
+
+        $('#otherCityInput').removeClass('visb');
+        $("#stateList_chosen").removeClass('chosen-container-err');
         $('#city_chosen').removeClass('chosen-container-err');
            callCity(res);
           $('#city').val('');
-             $('.js-otheroccInp').addClass('visb');
+          $('.js-otheroccInp').addClass('visb');
 
      });
+      if(CALID=='23')
+      {
+      $('#city').on("change",function(){
+        var indexV = $('#stateList option:selected').val();
+        var keyName = stateMap[indexV];
+        $("#otherCityInput").val('');
+        if(keyName!='-1') {
+        var indexC = $('#city option:selected').val();
+        var keyNameCity = cityMap[indexC];
+         if(keyNameCity=='0'){
+           $('#otherCityInput').addClass('visb');
+           $("#thirdReq").hide();
+         }
+         else 
+          $('#otherCityInput').removeClass('visb');
+      }
+        else $('#otherCityInput').removeClass('visb');
+
+         });
+      }
     }
  
  var setscript=document.createElement('script');
@@ -626,14 +685,18 @@ var altEmail = '~$altEmail`';</script>
 
  
  window.onload = function(){
+
   $("#city").change( function(){$('#secondReq').addClass('vishid');
     $('#city_chosen').removeClass('chosen-container-err');});
   callState();
    $('#city-sub').click(function(){ 
-         if( $('#cityList').val() == 1)
+        var stateCode = stateMap[$("#stateList").val()];
+        var cityCode = cityMap[$("#city").val()];
+
+         if( $('#stateList').val() == 1)
          {
            $('.js-req1').removeClass('disp-none');
-           $("#cityList_chosen").addClass('chosen-container-err');
+           $("#stateList_chosen").addClass('chosen-container-err');
            return;
          }
          else if( $('#city').val() == 1 )
@@ -642,12 +705,21 @@ var altEmail = '~$altEmail`';</script>
        $('#city_chosen').addClass('chosen-container-err');
            return;   
         }
+        else if (CALID==23 && stateCode!='-1' && $("#otherCityInput").val().trim()=='' && cityCode=='0' )
+        {
+            $("#thirdReq").show();
+            return;   
+
+        }
 
        else {  
                             $(".js-otheroccInp input").val('');
-                            var stateCode = stateMap[$("#cityList").val()];
-                            var cityCode = cityMap[$("#city").val()];
-                            
+                            if(CALID==23){
+
+                            dataCity = stateCode!='-1' : {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': $("#cityInputDiv input").val() } : {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
+
+                            }
+                            else 
                             dataCity = {'editFieldArr[COUNTRY_RES]':51 , 'editFieldArr[CITY_RES]':cityCode,'editFieldArr[STATE_RES]':stateCode};
                             $.ajax({
                             url: '/api/v1/profile/editsubmit',
