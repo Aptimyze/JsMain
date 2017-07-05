@@ -269,7 +269,7 @@ if($send)
                 $sendingMailResponse=$shareProfileLibObj->getsendMailCriteria($profileid,$shareProfileStoreObj);
                 if($sendingMailResponse["RESPONSE"]=="YES"){
                                /*include_once "../crm/func_sky.php";
-				$Cc="tanu.gupta@jeevansathi.com";
+				$Cc="nitesh.s@jeevansathi.com";
 				send_mail($femail[$i],$Cc,$Bcc,$msg,"A profile from Jeevansathi.com",$email);*/
 				//send_email("dhiman_nikhil@yahoo.com,nikcomestotalk@gmail.com,dhiman_nikhil@yahoo.com",$msg,"A profile from Jeevansathi.com",$email);
 				send_email($femail[$i],$msg,$name." has shared a profile with you","info@jeevansathi.com","","","","","","",1,$email);
