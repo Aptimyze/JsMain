@@ -21,6 +21,7 @@ class ProfilePage extends React.Component {
 
     constructor(props) {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
+        let responseTracking = getParameterByName(window.location.href,"responseTracking");
         super();
         this.state = {
             insertError: false,
@@ -31,20 +32,18 @@ class ProfilePage extends React.Component {
             tabArray: ["About","Family","Dpp"],
             dataLoaded: false,
             showHistory: false,
-            profilechecksum: profilechecksum || "f0acc30e3f8794558209b01c0bee23d3i6467012",
+            profilechecksum: profilechecksum || "",
             gender: "M",
-            defaultPicData: ""
+            defaultPicData: "",
+            responseTracking:responseTracking
         };
-        if ( profilechecksum )
-        {
-           this.state.profilechecksum = profilechecksum;
-        }
-
 
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this,this.state.profilechecksum);
+
+        props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
+
     }
 
 
@@ -53,7 +52,7 @@ class ProfilePage extends React.Component {
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-        document.getElementById("animated-background").style.height = backHeight + "px";
+            document.getElementById("animated-background").style.height = backHeight + "px";
         if(this.state.gender == "M") {
             this.setState({
                defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
@@ -65,41 +64,102 @@ class ProfilePage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps)
-    {   let picData;
-        if(!nextProps.pic) {
-            if(this.state.gender == "M") {
-               picData = {url: "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"};
-            } else {
-                picData = {url: "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"};
-            }
-        } else {
-            picData = nextProps.pic;
-        }
-        this.setState ({
-            dataLoaded : true,
-            pic: picData
-        });
-        if(nextProps.appPromotion == true) {
-            this.setState ({
-                showPromo : true
+    setNextPrevLink() {
+        let listingArray = ["match_of_the_day","match_alert","interest_received","interest_expiring"];
+        if(this.props.myjsData.apiData != "") {
+            let parentObj,nextObj,prevObj;
+            for (var i=0; i< listingArray.length; i++) {
+                if(this.props.myjsData.apiData[listingArray[i]].contact_id == this.state.contact_id) {
+                    parentObj = this.props.myjsData.apiData[listingArray[i]];
+                    if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
+                        nextObj = parentObj.tuples[parseInt(this.state.actual_offset)+1];
+                        this.state.nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&contact_id="+this.state.contact_id;
+                        this.state.nextprofilechecksum = nextObj.profilechecksum;
+                    }
+                    if(parseInt(this.state.actual_offset) != 0){
+                        prevObj = parentObj.tuples[parseInt(this.state.actual_offset)-1];
+                        this.state.prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&contact_id="+this.state.contact_id;
+                        this.state.prevprofilechecksum = prevObj.profilechecksum
+                    }
+                }
+            } 
+            let startX,endX,_this=this;
+            document.getElementById("ProfilePage").addEventListener('touchstart', function(e){
+                startX = e.changedTouches[0].clientX;
             });
+            document.getElementById("ProfilePage").addEventListener('touchmove', function(e){
+                endX = e.changedTouches[0].clientX;
+            });
+            document.getElementById("ProfilePage").addEventListener('touchend', function(e){
+                if(endX-startX > 200 && _this.state.nextUrl) {
+                    _this.setState ({
+                        dataLoaded : false
+                    });
+                    _this.props.history.push(_this.state.nextUrl);
+                    _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
+                } else if(startX-endX > 200 && _this.state.prevUrl) {
+                    _this.setState ({
+                        dataLoaded : false
+                    });
+                    _this.props.history.push(_this.state.prevUrl);
+                    _this.props.showProfile(_this,_this.state.prevprofilechecksum,_this.state.responseTracking);
+                } 
+            }); 
         }
-        window.addEventListener('scroll', (event) => {
-            let tabElem = document.getElementById("tab");
-            if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
-                tabElem.classList.add("posFixTop");
+
+    }
+
+    componentWillReceiveProps(nextProps)
+    {   
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum) {
+
+            let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
+            let contact_id = getParameterByName(window.location.href,"contact_id");
+            let actual_offset = getParameterByName(window.location.href,"actual_offset");
+            let total_rec = getParameterByName(window.location.href,"total_rec");
+            let responseTracking = getParameterByName(window.location.href,"responseTracking");
+            this.setState({
+                profilechecksum: profilechecksum || "",
+                contact_id: contact_id,
+                actual_offset: actual_offset,
+                total_rec:total_rec,
+                responseTracking:responseTracking,
+            },this.setNextPrevLink);
+            let picData;
+            if(!nextProps.pic) {
+                if(this.state.gender == "M") {
+                   picData = {url: "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"};
+                } else {
+                    picData = {url: "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"};
+                }
+            } else {
+                picData = nextProps.pic;
             }
-            if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
-                tabElem.classList.remove("posFixTop");
+            this.setState ({
+                dataLoaded : true,
+                pic: picData
+            });
+            if(nextProps.appPromotion == true) {
+                this.setState ({
+                    showPromo : true
+                });
             }
-        });
-        var _this = this;
-        //calling tracking event
-        /*setTimeout(function(){
-            console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
-        },3000); 
-        */
+            window.addEventListener('scroll', (event) => {
+                let tabElem = document.getElementById("tab");
+                if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
+                    tabElem.classList.add("posFixTop");
+                }
+                if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
+                    tabElem.classList.remove("posFixTop");
+                }
+            });
+            var _this = this;
+            //calling tracking event
+            /*setTimeout(function(){
+                console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
+            },3000); 
+            */
+        }
         
     }
     
@@ -132,9 +192,9 @@ class ProfilePage extends React.Component {
     }
 
     imageLoaded() {
+        console.log("yessss2")
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
-        document.getElementById("preLoader").classList.add("dn");
     }
 
     goBack() {
@@ -151,35 +211,6 @@ class ProfilePage extends React.Component {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         }
-
-        AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
-            <div className="timeline-item">
-                <div id="animated-background" className="animated-background">
-                    <div className="background-masker div1"></div>
-                    <div className="background-masker div2"></div>
-                    <div className="background-masker div3"></div>
-                    <div className="background-masker div4"></div>
-                    <div className="background-masker div5"></div>
-                    <div className="background-masker div6"></div>
-                    <div className="background-masker div7"></div>
-                    <div className="background-masker div8"></div>
-                    <div className="background-masker div9"></div>
-                    <div className="background-masker div10"></div>
-                    <div className="background-masker div11"></div>
-                    <div className="background-masker div12"></div>
-                    <div className="background-masker div13"></div>
-                    <div className="background-masker div14"></div>
-                    <div className="background-masker div15"></div>
-                    <div className="background-masker div16"></div>
-                    <div className="background-masker div17"></div>
-                </div>
-            </div>
-        </div>;
-
-
-
-
-
         var historyIcon;
         if(getCookie("AUTHCHECKSUM")) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -211,7 +242,7 @@ class ProfilePage extends React.Component {
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
         if(this.state.dataLoaded)
-        {
+        {console.log("yess")
             photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
             if(this.props.AboutInfo.name_of_user)
@@ -221,16 +252,39 @@ class ProfilePage extends React.Component {
             {
                  Header = this.props.AboutInfo.username;
             }
-            AboutView = <div id="showAbout" className="dn"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
+            AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
 
-            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;        
+        } else {
+            AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
+                <div className="timeline-item">
+                    <div id="animated-background" className="animated-background">
+                        <div className="background-masker div1"></div>
+                        <div className="background-masker div2"></div>
+                        <div className="background-masker div3"></div>
+                        <div className="background-masker div4"></div>
+                        <div className="background-masker div5"></div>
+                        <div className="background-masker div6"></div>
+                        <div className="background-masker div7"></div>
+                        <div className="background-masker div8"></div>
+                        <div className="background-masker div9"></div>
+                        <div className="background-masker div10"></div>
+                        <div className="background-masker div11"></div>
+                        <div className="background-masker div12"></div>
+                        <div className="background-masker div13"></div>
+                        <div className="background-masker div14"></div>
+                        <div className="background-masker div15"></div>
+                        <div className="background-masker div16"></div>
+                        <div className="background-masker div17"></div>
+                    </div>
+                </div>
+            </div>;
             setTimeout(function(){
-                document.getElementById("showAbout").classList.remove("dn");
-            }, 100);
-            
-        
+                var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+                document.getElementById("animated-background").style.height = backHeight + "px";
+            },100);
         }
 
         return (
@@ -289,14 +343,16 @@ const mapStateToProps = (state) => {
        LifestyleInfo: state.ProfileReducer.lifestyle,
        dpp_Ticks: state.ProfileReducer.dpp_Ticks,
        profileId: state.ProfileReducer.profileId,
-       show_gunascore:state.ProfileReducer.show_gunascore
+       show_gunascore:state.ProfileReducer.show_gunascore,
+       fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
+       myjsData: state.MyjsReducer 
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: (containerObj,profilechecksum) => {
-            let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum;
+        showProfile: (containerObj,profilechecksum,responseTracking) => {
+            let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum+"&responseTracking="+responseTracking;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         }
     }

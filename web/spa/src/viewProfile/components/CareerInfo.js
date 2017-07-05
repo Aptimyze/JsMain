@@ -135,7 +135,7 @@ export default class CareerInfo extends React.Component {
     	}
     	
     	var educationSection;
-    	if(this.props.about.myedu || this.props.about.post_grad.deg || this.props.about.post_grad.name || this.props.about.under_grad.deg || this.props.about.under_grad.name || this.props.about.school) 
+    	if(this.props.about.myedu || this.props.about.post_grad || this.props.about.under_grad || this.props.about.school) 
     	{
     		educationSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
     			<div className="fl">

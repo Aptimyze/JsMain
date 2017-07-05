@@ -1,11 +1,18 @@
 const AlbumReducer = (state={
-	photoAlbumData : []
+	photoAlbumData : [],
+	photoAction : []
 },action) => {
 	switch(action.type)
 	{	case "GET_GALLERY":
 		state = {
 			...state,
 			photoAlbumData: action.payload
+		}
+		break;
+		case "PHOTO_ACTION":
+		state = {
+			...state,
+			photoAction: action.payload
 		}
 		break;
 	}
