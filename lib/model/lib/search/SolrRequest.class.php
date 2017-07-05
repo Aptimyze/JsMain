@@ -434,8 +434,7 @@ class SolrRequest implements RequestHandleInterface
                                 $this->filters[]="&fq={!tag=country_res,city_res,state}CITY_RES:($solrFormatValueCity)";
                         }
                 }
-		
-	
+                
 		// value where for ends here
 		if($textQuery && is_array($textQuery))
 		{
@@ -511,6 +510,11 @@ class SolrRequest implements RequestHandleInterface
 			$this->filters[]="&fq=-HANDICAPPED:(".str_replace(","," ",$this->searchParamtersObj->getHANDICAPPED_IGNORE()).")";
                 if($this->searchParamtersObj->getOCCUPATION_IGNORE())
 			$this->filters[]="&fq=-OCCUPATION:(".str_replace(","," ",$this->searchParamtersObj->getOCCUPATION_IGNORE()).")";
+                
+                if($this->searchParamtersObj->getKNOWN_COLLEGE_IGNORE()){
+			$this->filters[]="&fq=-KNOWN_COLLEGE:(".str_replace(","," ",$this->searchParamtersObj->getKNOWN_COLLEGE_IGNORE()).")";
+                }
+                
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches

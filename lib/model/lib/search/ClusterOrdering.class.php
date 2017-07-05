@@ -57,6 +57,7 @@ class ClusterOrdering
 				else
 					$orderingArr[9] = 0;*/
 				$orderingArr[10] = 8;
+                                $orderingArr[32] = 8.1;
 				if($mobileOrTablet)
 					$orderingArr[11] = 0;
 				else
@@ -142,6 +143,7 @@ class ClusterOrdering
                                 else
                                         $orderingArr[9] = 0;*/
 				$orderingArr[10] = 11;
+                                $orderingArr[32] = 11.1;
 				if($mobileOrTablet)
 					$orderingArr[11] = 0;
 				else
@@ -231,6 +233,7 @@ class ClusterOrdering
                                 else
                                         $orderingArr[9] = 0;*/
 				$orderingArr[10] = 8;
+                                $orderingArr[32] = 8.1;
 				if($mobileOrTablet)
 					$orderingArr[11] = 0;
 				else
@@ -332,6 +335,7 @@ class ClusterOrdering
                                 else
                                         $orderingArr[9] = 0;*/
 				$orderingArr[10] = 7;
+                                $orderingArr[32] = 7.1;
 				if($mobileOrTablet)
 					$orderingArr[11] = 0;
 				else

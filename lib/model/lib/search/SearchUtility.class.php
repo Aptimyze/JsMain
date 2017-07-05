@@ -235,7 +235,7 @@ class SearchUtility
         */
 	public function getSearchCriteriaAfterClusterApplication($request,$addRemoveCluster,$SearchParamtersObj)
 	{
-		
+            
 		$searchParamsSetter['SEARCH_TYPE']= $this->stypeCluster;
 
 		if($request->getParameter("appCluster"))
@@ -282,7 +282,6 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
-                
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')
@@ -333,6 +332,10 @@ class SearchUtility
 				}
 			}
 		}
+                else if($clusterVal == 'Any' && $cluster=='KNOWN_COLLEGE'){
+                    $searchParamsSetter['KNOWN_COLLEGE'] = '';
+                    $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = '000';
+                }
 		else
 		{
 			if(!is_array($list_of_clusters) || (is_array($list_of_clusters) && !in_array($cluster,$list_of_clusters)) )
