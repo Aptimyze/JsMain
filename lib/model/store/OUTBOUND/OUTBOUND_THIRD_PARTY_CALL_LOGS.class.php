@@ -108,13 +108,23 @@ class OUTBOUND_THIRD_PARTY_CALL_LOGS extends TABLE {
       throw new jsException($e);
     }
   }
-
+  
+  /**
+   * 
+   * @param type $callSid
+   * @param type $apiresponse
+   * @return boolean
+   * @throws jsException
+   */
   public function updateCallResponse($callSid, $apiresponse)
   {
     try {
-      $sql = "UPDATE OUTBOUND.THIRD_PARTY_CALL_LOGS SET RESPONSE_FROM_THIRD_PARTY = '".$apiresponse."' WHERE CALLSID = '".$callSid."'";
+      $sql = "UPDATE OUTBOUND.THIRD_PARTY_CALL_LOGS SET RESPONSE_FROM_THIRD_PARTY = CONCAT(RESPONSE_FROM_THIRD_PARTY, :API_RESP) WHERE CALLSID = :CALL_SID";
       $pdoStatement = $this->db->prepare($sql);
-
+      
+      $pdoStatement->bindValue( ":API_RESP", $apiresponse);
+      $pdoStatement->bindValue( ":CALL_SID", $callSid);
+      
       $pdoStatement->execute();
 
       return true;
@@ -124,5 +134,4 @@ class OUTBOUND_THIRD_PARTY_CALL_LOGS extends TABLE {
   }
 
 }
-
 ?>

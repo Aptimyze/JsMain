@@ -2186,13 +2186,26 @@ if($k=="state_res")
 
   public function executeOutboundCallStatusV1(sfWebRequest $request)
   {
+    $getParameters = array(
+        "CallSid","From","To","Direction","DialCallDuration","StartTime","EndTime","CallType","digits","RecordingUrl","CustomField","flow_id","DialCallStatus","ForwardedFrom","ProcessStatus","CurrentTime"
+    );
+    
     $CallSid = $request->getPostParameter('CallSid');
     $Status = $request->getPostParameter('Status');
     $RecordingUrl = $request->getPostParameter('RecordingUrl');
     $DateUpdated = $request->getPostParameter('DateUpdated');
 
-    $totalResponse = 'Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl;
-
+    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl;
+    
+    
+    if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
+      foreach($getParameters as $key) {
+        $arrOut[] = " $key : " . $request->getParameter($key);
+      }
+      
+      $totalResponse = implode(", ", $arrOut);
+    }
+    
     $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
     $storeObj->updateCallResponse($CallSid, $totalResponse);
     die(x);

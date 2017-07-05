@@ -211,7 +211,7 @@ class OutboundEventConsumer {
     
     // TODO: No status in arr?
     $verifiedNumber = "0".$verifiedNumber;
-    $this->logThis("Verified Number of user : ".$verifiedNumber, $enEventType, $arrInfo);
+    //$this->logThis("Verified Number of user : ".$verifiedNumber, $enEventType, $arrInfo);
     
     /**
      * 
@@ -241,7 +241,9 @@ class OutboundEventConsumer {
     }
 
     $callerId = '08039510994';
-    $response = $this->callThirdPartyApi("08010619996", $callerId, $landingFlowId, $memberShipValue);
+    //$verifiedNumber = "08010619996";//TODO remove this
+    
+    $response = $this->callThirdPartyApi($verifiedNumber, $callerId, $landingFlowId, $memberShipValue);
     
     if(false !== $response['response']) {
       $this->logThisApiCall($iPgId, $verifiedNumber, $enEventType, $callerId, $landingFlowId, $response['response'], $response['sid']);
@@ -467,12 +469,12 @@ class OutboundEventConsumer {
     if($array["Call"])
     {
       $callSid = $array["Call"]["Sid"];
-      $response  = $array["Call"]["Status"].' - '.$array["Call"]["StartTime"];
+      $response  = " Status : ".$array["Call"]["Status"]." - StartTime : ".$array["Call"]["StartTime"];
       return array("response" => $response, "sid" => $callSid);
     }
     elseif($array["RestException"])
     {
-      $response = $array["RestException"]["Status"].' - '.$array["RestException"]["Message"];
+      $response = "Status : " . $array["RestException"]["Status"].' - Message'.$array["RestException"]["Message"];
       return array("response" => $response);
     }
   }
