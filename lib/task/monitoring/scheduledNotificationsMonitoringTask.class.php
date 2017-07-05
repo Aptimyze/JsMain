@@ -12,7 +12,7 @@ class ScheduledNotificationsMonitoringTask extends sfBaseTask
    */
   private $debugInfo = true;
   private $notificationKeyWiseThreshhold = array("JUST_JOIN"=>20000,"MATCH_OF_DAY"=>50000);
-  private $mailId = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com";
+  private $mailId = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
           
   protected function configure()
   {
