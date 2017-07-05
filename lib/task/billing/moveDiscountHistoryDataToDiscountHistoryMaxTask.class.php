@@ -39,10 +39,25 @@ EOF;
 
         $currentTime = date("Y-m-d H:i:s");
         
+        //Move older than 30 days data from LIGHTNING_DEAL_DISCOUNT to LIGHTNING_DEAL_DISCOUNT_BACKUP.
+        //--------------------------------------------------------------------------------------------
+        $lessThanDate = date('Y-m-d',strtotime('-30 day'));
+        
+        $lightningDealBackup = new billing_LIGHTNING_DEAL_DISCOUNT_BACKUP();
+        $lightningDealBackup->backupData($lessThanDate);
+        unset($lightningDealBackup);
+        
+        //Delete data that has been backed up.
+        $lightningDealObj = new billing_LIGHTNING_DEAL_DISCOUNT();
+        $lightningDealObj->deleteOldData($lessThanDate);
+        unset($lightningDealObj);
+        
+        //--------------------------------------------------------------------------------------------
+        
         $discHistMaxObj = new billing_DISCOUNT_HISTORY_MAX();
         $discHistMaxObj->truncateTable();
         
-        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "Discount History Max table truncated", "Discount History Max table truncated");
+        //$this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "Discount History Max table truncated", "Discount History Max table truncated");
         if($this->debug == 1){
             error_log("Discount History Max Table truncated.\nGetting Distinct Profileids\nTime:$currentTime"."\n",3,$this->logFilePath);
         }
@@ -95,7 +110,7 @@ EOF;
         if($this->debug == 1){
             error_log("Total Updated:$updatedCount\nTime:$currentTime"."\n",3,$this->logFilePath);
         }
-        $this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed");
+        //$this->sendAlertMail("nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed", "moveDiscountHistoryDataToDiscountHistoryMaxTask.class.php executed");
 	}
     
     public function sendAlertMail($to,$msgBody,$subject){
