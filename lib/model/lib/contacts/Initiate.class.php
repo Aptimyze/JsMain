@@ -782,7 +782,7 @@ public function getNegativeScoreForUser()
 		$profileid = $profile->getPROFILEID();
 		$otherprofileid = $otherprofile->getPROFILEID();
 		$otherusername = $otherprofile->getUSERNAME();
-		$md5 = MD5($otherprofileid);
+		$md5 = JsAuthentication::jsEncryptProfilechecksum($otherprofileid);
 		$uname = $otherusername."|".$md5;
 		$string = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 			<rosterItem>
