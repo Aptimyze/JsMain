@@ -705,7 +705,7 @@ var altEmail = '~$altEmail`';</script>
        $('#city_chosen').addClass('chosen-container-err');
            return;   
         }
-        else if (CALID==23 && stateCode!='-1' && $("#otherCityInput").val().trim()=='' && cityCode=='0' )
+        else if (CALID==23 && stateCode!='-1' && $("#otherCityInput input").val().trim()=='' && cityCode=='0' )
         {
             $("#thirdReq").show();
             return;   
@@ -713,10 +713,10 @@ var altEmail = '~$altEmail`';</script>
         }
 
        else {  
-                            $(".js-otheroccInp input").val('');
+                            var tempText = $("#otherCityInput input").val();
                             if(CALID==23){
 
-                            dataCity = stateCode!='-1' : {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': $("#cityInputDiv input").val() } : {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
+                            dataCity = stateCode!='-1' ? {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': tempText } : {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
 
                             }
                             else 
