@@ -3,13 +3,10 @@ import React from 'react';
 import {push} from 'react-router-redux';
 import {getCookie,setCookie} from "../../common/components/CookieHelper";
 import axios from "axios";
-
-export  function commonApiCall(callUrl,data,reducer,method)
+import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
+export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj)
 {
   let callMethod = method ? method :  'POST';
-
-  return dispatch =>
-  {
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
     if ( aChsum )
@@ -17,22 +14,28 @@ export  function commonApiCall(callUrl,data,reducer,method)
 
       if ( callUrl.indexOf("?") == -1 )
       {
-        checkSumURL = '?AUTHCHECKSUM='+aChsum;
-      } 
-      else 
+        checkSumURL = '?AUTHCHECKSUM='+aChsum; // please ensure that this goes in post request
+      }
+      else
       {
         checkSumURL = '&AUTHCHECKSUM='+aChsum;
       }
     }
-    axios({
+    return axios({
     method: callMethod,
     url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
     data: '',
-    headers: { 
+    headers: {
       'Accept': 'application/json',
       'withCredentials':true
     },
   }).then( (response) => {
+      if(typeof trackJsb9 != undefined && typeof containerObj != 'undefined' && trackJsb9===true)
+      {
+        recordDataReceived(containerObj,new Date().getTime());
+        setJsb9Key(containerObj,response.data.jsb9Key);
+        recordServerResponse(containerObj,response.data.apiTimeTracking);
+      }
       if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
         setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
@@ -42,13 +45,17 @@ export  function commonApiCall(callUrl,data,reducer,method)
           localStorage.setItem('USERNAME',response.data.USERNAME);
         }
       }
-      dispatch({
-        type: reducer,
-        payload: response.data
-      });
+      if(typeof dispatch == 'function')
+      {
+        dispatch({
+          type: reducer,
+          payload: response.data
+        });
+      }
+      return response.data;
     })
     .catch( (error) => {
       console.warn('Actions - fetchJobs - recreived error: ', error)
     })
-  }
+
 }

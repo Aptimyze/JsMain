@@ -1,6 +1,6 @@
 
 export default class MyjsSliderBinding  {
-  constructor(parent,apiObject,props,sliderStyleFunction)
+  constructor(parent,apiObject,props)
   {
     this.parent = parent;
     this.apiObject = apiObject;
@@ -13,7 +13,6 @@ export default class MyjsSliderBinding  {
     this.elementWidth = this.transformX - 10;
     this.transformX_corr = ((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.getBoundingClientRect().left;
     this._index = 0;
-    this.sliderStyleFunction = sliderStyleFunction;
     var _this=this;
 
 // dynamic variables
@@ -70,7 +69,10 @@ window.addEventListener("resize",function()
 
             }
             alterCssStyle(transform,index){
-              this.sliderStyleFunction(transform,this.transitionDuration);
+              this.parent.style[this.props.cssPrefix + 'TransitionDuration'] = this.transitionDuration + 'ms';
+              var propValue = 'translate3d(' + transform + 'px, 0, 0)';
+              this.parent.style[this.props.animProp] =  propValue;
+
               this._index = index;
             }
             onTouchEnd(e)
@@ -86,7 +88,7 @@ window.addEventListener("resize",function()
                 if (!distance) return;
                 var timeDiff = this.timeEnd - this.timeStart;
                 var absD = Math.abs(distance);
-                if (timeDiff <= 500)
+                if (timeDiff <= 500 && absD>this.transformX/3 )
                     this.transitionDuration = (this.transformX / absD - 1) * (timeDiff);
                 else
                     this.transitionDuration = 500;

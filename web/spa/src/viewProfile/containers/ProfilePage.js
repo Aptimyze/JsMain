@@ -44,9 +44,9 @@ class ProfilePage extends React.Component {
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this.state.profilechecksum);
+        props.showProfile(this,this.state.profilechecksum);
     }
-    
+
 
     componentDidMount() {
         let _this = this;
@@ -176,7 +176,7 @@ class ProfilePage extends React.Component {
             </div>
         </div>;
 
-        
+
 
 
 
@@ -295,9 +295,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: (profilechecksum) => {
+        showProfile: (containerObj,profilechecksum) => {
             let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum;
-            dispatch(commonApiCall(call_url,{},'SHOW_INFO','GET'));
+            commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         }
     }
 }

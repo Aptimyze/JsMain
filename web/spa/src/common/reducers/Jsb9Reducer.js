@@ -1,12 +1,11 @@
-const jsb9Reducer = (state={
+const Jsb9Reducer = (state={
 },action) => {
 	console.log('jsb9',action.type);
 
 	switch(action.type)
 	{
-			case 'SET_TIME':
+			case 'SET_JSB9_REDIRECTION':
 		state = {
-			...state,
 			...action.payLoad
 		}
 		break;
@@ -14,4 +13,4 @@ const jsb9Reducer = (state={
 	return state;
 }
 
-export default jsb9Reducer;
+export default Jsb9Reducer;

@@ -32,12 +32,12 @@ export const getAndroidVersion = (inputUa) => {
 
 export const removeClass = (ele,className) => {
 	var array=[];
-	if(Object.prototype.toString.call( someVar ) !== '[object Array]')
+	if(Object.prototype.toString.call( ele ) !== '[object Array]')
 	 	array[0] = ele;
 	else array = ele;
 	var re = new RegExp(" "+className+" ","g");
-		for(i=0;i<array.length;i++){
-    array[i].className = array[i].className.replace(re,' ');
+		for(var i=0;i<array.length;i++){
+    array[i].className = (' '+array[i].className+' ').replace(re,' ');
 }
 }
 export const addClass = (ele,className) => {
@@ -45,7 +45,7 @@ var array=[];
 if(Object.prototype.toString.call( someVar ) !== '[object Array]')
  	array[0] = ele;
 else array = ele;
-	for(i=0;i<array.length;i++){
+	for(var i=0;i<array.length;i++){
   array[i].className = array[i].className + " "+className;
 	}
 }

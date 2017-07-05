@@ -15,8 +15,8 @@ import { redirectToLogin } from '../../common/components/RedirectRouter';
 import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
-
-
+import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
+import CalObjectClass from "../../cal/components/CalObject";
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -31,8 +31,6 @@ export class CheckDataPresent extends React.Component{
 
 		switch (this.props.blockname) {
 			case "int_exp":
-						console.log('expired list');
-						console.log(this.props);
 						if( (this.props.data===undefined)  || (this.props.data.tuples===null))
 						{
 							  return (<div className="noData Intexp"></div>);
@@ -58,17 +56,22 @@ export class CheckDataPresent extends React.Component{
 export  class MyjsPage extends React.Component {
 	constructor(props) {
   		super();
+			jsb9Fun.recordBundleReceived(this,new Date().getTime());
 			this.state=
 			{
+
 			}
 
   	}
 
   	componentDidMount()
   	{
-		this.props.hitApi();
+		if(!this.props.myjsData.fetched || true ) // caching conditions go here in place of true
+			this.props.hitApi(this);
 	}
-
+componentDidUpdate(){
+	jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+}
 	componentWillReceiveProps(nextProps)
 	{
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
@@ -81,7 +84,9 @@ export  class MyjsPage extends React.Component {
 	componentWillMount(){
 			this.CssFix();
 	}
+	componentWillUnmount(){
 
+	}
 	CssFix()
 	{
 			// create our test div element
@@ -108,6 +113,12 @@ export  class MyjsPage extends React.Component {
 	        {
 	          return (<div><Loader show="page"></Loader></div>)
 	        }
+					if(this.props.myjsData.apiData.calObject)
+					{
+						return (<div><CalObjectClass calData={this.props.myjsData.apiData.calObject}  /></div>);
+
+					}
+					this.trackJsb9 = 1;
   		return(
 		  <div id="mainContent">
 		  	<MetaTagComponents page="MyjsPage"/>
@@ -141,15 +152,16 @@ export  class MyjsPage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        myjsData: state.MyjsReducer,
-			 listingData :  state.listingReducer
+			 listingData :  state.listingReducer,
+			 Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        hitApi: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST'));
-        }
+        hitApi: (containerObj) => {return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);},
+//				jsb9TrackHit : () =>
+
     }
 }
 
