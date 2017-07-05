@@ -120,7 +120,7 @@ $(function(){
       }
       
       if(getfieldID.indexOf("religion") != -1){
-        dppAppEvents.updateCastOption($('#dpp-p_religion').val()); 
+        dppAppEvents.updateCastOption($('#dpp-p_religion').val(),""); 
         var casteValues = dppApp.get('p_caste');
         $('#dpp-p_caste').val(casteValues);
         $('#dpp-p_caste').trigger("chosen:updated");
@@ -855,7 +855,7 @@ function toggleNatureHandicap(arrValues){
  * @param {type} religionValArray
  * @returns {undefined}
  */
-function updateCastOption(religionValArray){
+function updateCastOption(religionValArray,type){
     dppApp.setFilterCheck('P_CASTE',0);
   if(false === religionValArray instanceof Array && typeof(religionValArray) == "string" && religionValArray.length ){
     var temp = religionValArray;
@@ -864,13 +864,17 @@ function updateCastOption(religionValArray){
   
   if(true === religionValArray instanceof Array && religionValArray.length === 0 ){
     //May be need to empty the option value
-    $(casteField).html("");
+    if(type != "suggest") {
+      $(casteField).html(""); 
+    }
     $(casteField).append('<option class="textTru chosenDropWid"  value="0">Others</option>');
     $(casteField).trigger(chosenUpdateEvent);
     return ;
   }
   var isCasteVisible = false;
-  $(casteField).html("");
+  if(type != "suggest") {
+    $(casteField).html(""); 
+  }
   if(religionValArray != null){
   for(var i=0;i<religionValArray.length;i++){
     
@@ -990,7 +994,7 @@ function initFields(){
   onCountry(dppApp.get('p_country'));
   onMarital(dppApp.get('p_mstatus'));
   toggleNatureHandicap(dppApp.get('p_challenged'));
-  updateCastOption(dppApp.get('p_religion')); 
+  updateCastOption(dppApp.get('p_religion'),""); 
   
 }
 
@@ -1006,7 +1010,7 @@ function initFields(){
 
   //Binding Religion Section
   $(religionField).on("change",function onReligionChange(){
-      updateCastOption($(this).val());
+      updateCastOption($(this).val(),"");
       valueToFill = dppApp.get("p_caste");
       if(valueToFill != ""){
         $(casteField).val(valueToFill);
@@ -1029,8 +1033,7 @@ return {
   onMaritalChange   : onMarital,
   updateCastOption  : updateCastOption,
   updateRangeUI     : disableFieldsOption,
-  initFields        : initFields,
-  updateCastOption  : updateCastOption  
+  initFields        : initFields  
 }
 }();
 
@@ -1371,7 +1374,7 @@ var _parentCatogary = [{
                   dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
                   dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
                   if(parentText == "religion") {
-                    dppAppEvents.updateCastOption(currentValArr); 
+                    dppAppEvents.updateCastOption(currentValArr,"suggest"); 
                   }
 
                   if($('#dpp-p_'+parentText).val()!=null)
