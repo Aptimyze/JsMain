@@ -79,7 +79,9 @@ function sendCurlPostRequestJJ($urlToHit,$postParams,$timeout='',$headerArr="")
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	if($postParams)
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-
+	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+	curl_setopt($ch, CURLOPT_HEADER, $header);
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
 	curl_setopt($ch,CURLOPT_NOSIGNAL,1);
 	curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);

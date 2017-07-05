@@ -548,8 +548,8 @@ public function executeCALRedirection($request){
 		else
 			$this->fromSignout=0;
 		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
-				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
-				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Free Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimony site. 10Lac+ Profiles, 3-level profile check, Search by caste and community, Privacy control & Register FREE! ‘Be Found’ Now");
 			}
 		else{
 			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");
@@ -2148,4 +2148,66 @@ if($k=="state_res")
             }
             return $Arr;
         }
+  
+  /**
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeMembershipPlanAudioV1(sfWebRequest $request)
+  {
+    $arrData = $request->getParameter("CustomField");
+    
+    //Right Now contains membershipValue
+    $memberShipValue = $arrData;
+    
+    //Thoushand
+    $arrOut[]  = intVal($memberShipValue / 1000);
+    $memberShipValue = $memberShipValue%1000;
+    $arrOut[] = "1000";
+    
+    // Hundred
+    $arrOut[]  = intVal($memberShipValue / 100);
+    $memberShipValue = $memberShipValue%100;
+    $arrOut[] = "100";
+    
+    if($memberShipValue > 0) {
+      $arrOut[] = $memberShipValue;
+    }
+    // content type required is text/plain
+    header("Content-type: text/plain");
+    /**
+     * 
+     */
+    foreach($arrOut as $val) {
+      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"\n";
+    }
+    die();
+  }
+
+  public function executeOutboundCallStatusV1(sfWebRequest $request)
+  {
+    $getParameters = array(
+        "CallSid","From","To","Direction","DialCallDuration","StartTime","EndTime","CallType","digits","RecordingUrl","CustomField","flow_id","DialCallStatus","ForwardedFrom","ProcessStatus","CurrentTime"
+    );
+    
+    $CallSid = $request->getPostParameter('CallSid');
+    $Status = $request->getPostParameter('Status');
+    $RecordingUrl = $request->getPostParameter('RecordingUrl');
+    $DateUpdated = $request->getPostParameter('DateUpdated');
+
+    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl;
+    
+    
+    if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
+      foreach($getParameters as $key) {
+        $arrOut[] = " $key : " . $request->getParameter($key);
+      }
+      
+      $totalResponse = implode(", ", $arrOut);
+    }
+    
+    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
+    $storeObj->updateCallResponse($CallSid, $totalResponse);
+    die(x);
+  }
 }

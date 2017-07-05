@@ -259,5 +259,19 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
                 }
         }
         
+        public function getTodaysNotifications(){
+            try{
+                $sql = "SELECT count(*) count,NOTIFICATION_KEY from MOBILE_API.SCHEDULED_APP_NOTIFICATIONS GROUP BY NOTIFICATION_KEY";
+                $res = $this->db->prepare($sql);
+                $res->execute();
+                while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                    $data[$row["NOTIFICATION_KEY"]] = $row["count"];
+                }
+                return $data;
+            } catch (Exception $ex) {
+
+            }
+        }
+        
 }
 ?>

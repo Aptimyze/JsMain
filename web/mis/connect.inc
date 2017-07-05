@@ -424,13 +424,20 @@ function net_off_tax_calculation($amount,$date='')
 	$ts_new = mktime(0,0,0,'4','1','2012');
 	$ts_new2 = mktime(0,0,0,'6','1','2015');
 	$ts_new3 = mktime(0,0,0,'11','15','2015');
-        $ts_gst = mktime(0,0,0,'01','07','2017');
+	$ts_new4 = mktime(0,0,0,'06','01','2016');
+        $ts_gst = mktime(0,0,0,'07','01','2017');
         if($ts_gst<=$ts_dt){    //Added for GST which will start from 1st July 2017
-            $new_off_tax_rate = billingVariables::NET_OFF_TAX_RATE;
+            $net_off_tax_rate = billingVariables::NET_OFF_TAX_RATE;
+	    $percent=$net_off_tax_rate*100;	
+        }
+        elseif($ts_new4<=$ts_dt)
+        {
+                $net_off_tax_rate =0.130435;
+                $percent=$net_off_tax_rate*100;
         }
         elseif($ts_new3<=$ts_dt)
         {
-                $net_off_tax_rate =0.130435;
+                $net_off_tax_rate =0.12664;
                 $percent=$net_off_tax_rate*100;
         }
 	elseif($ts_new2<=$ts_dt)

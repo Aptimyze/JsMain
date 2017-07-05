@@ -66,21 +66,26 @@ class ContactDetailsV1Action extends sfAction
 		$himher        = ($gender == 'M') ? "him" : "her";
 		$hisher        = ($gender == 'M') ? "his" : "her";
 		$pictureServiceObj=new PictureService($this->Profile);
-		$profilePicObj = $pictureServiceObj->getProfilePic();
+		
+        $profilePicObj = $pictureServiceObj->getProfilePic();
 		if($profilePicObj)
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
 			$thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$this->Profile->getGENDER());
 		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
-		$priArr = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
-		$memHandlerObj = new MembershipHandler();
+		
+        $priArr = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
+		
+        $memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top']; 
+
         $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
         $dataPlan = $data2["startingPlan"];
 		if ($priArr[0]["CONTACT_DETAIL"]["VISIBILITY"] == "Y" && !$this->contactEngineObj->errorHandlerObj->getErrorMessage()) {
 			$responseArray                       = $this->getContactDetailsInArray($this->contactEngineObj);
 			$source=CommonFunction::getViewContactDetailFlag($this->contactEngineObj->contactHandler);
+            
 			if($this->contactEngineObj->contactHandler->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
 			{
 				if($this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_STOP)
@@ -130,6 +135,10 @@ class ContactDetailsV1Action extends sfAction
 						$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
 					}
 					VCDTracking::insertTracking($this->contactHandlerObj);
+                    
+                    //Generate Event
+                    $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 				}
 				else
 				{
@@ -437,6 +446,10 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
 				}
 				VCDTracking::insertTracking($this->contactHandlerObj);
+                
+                //Generate Event
+                $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 			}
 		}
 		if (is_array($responseArray["contact1"]))

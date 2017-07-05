@@ -6,7 +6,7 @@
 */
 
 class AZKABAN_EXECUTION_FLOWS extends TABLE{
-        public function __construct($dbname="")
+        public function __construct($dbname='')
         {
 			parent::__construct($dbname);
         }
@@ -43,6 +43,30 @@ class AZKABAN_EXECUTION_FLOWS extends TABLE{
                         while($result = $res->fetch(PDO::FETCH_ASSOC))
                                         $resultArr[] = $result;
                         return $resultArr;
+ 
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
+	
+	public function getHeavyLogCrons($db,$time,$size)
+    {
+		
+		try 
+		{
+			if(!$db || !$time || !$size)
+				throw new jsException("No db/ time/ size provided in AZKABAN_EXECUTION_FLOWS");
+			$sql = "SELECT f.exec_id,f.flow_id FROM ".$db.".execution_flows AS f INNER JOIN ".$db.".execution_logs AS l ON f.exec_id = l.exec_id";
+			$sql.=" WHERE f.start_time >".$time." AND OCTET_LENGTH( l.log ) >".$size;
+			
+			$res=$this->db->prepare($sql);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC))
+                 $resultArr[] = $result;
+            return $resultArr;
  
 		}
 		catch(PDOException $e)

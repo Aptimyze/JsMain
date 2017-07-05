@@ -1846,6 +1846,19 @@ class MembershipHandler
                     $bottom = "if you upgrade your membership before <strong>" . date("d M", strtotime($expiry_date)) . "</strong> !";
                 }
                 break;
+            case 'VD_NOTIFICATION':
+                $discountVD = $vdodObj->getDiscountDetails($profileid);
+                $maxVDDisc  = $discountVD['MAX_DISCOUNT'];
+                $flat       = $discountVD['FLAT_DISCOUNT'];
+                $discPerc   = $maxVDDisc;
+                if ($flat) {
+                    $discountDisplayText = 'flat';
+                } else {
+                    $discountDisplayText = 'upto';
+                }
+                $top = "Get ".$discountDisplayText." ".$discPerc."% OFF on all Jeevansathi Plans";
+                $bottom = "Congratulations! You are selected for special discounts of ".$discountDisplayText." ".$discPerc."% by Jeevansathi. Offer valid till ".date("d M", strtotime($expiry_date)).". Tap to avail offer.";
+                break;
             case 'CASH':
                 $discountDisplayText = $vdodObj->getCashDiscountDispText($profileid, 'small');
                 $top                 = "Get " . $discountDisplayText . " " . $discPerc . "% OFF";
@@ -2004,9 +2017,10 @@ class MembershipHandler
         $endDate      = $vdDatesArr['EDATE'];
         $activationDt = $vdDatesArr['ENTRY_DT'];
         $todayDate    = date("Y-m-d");
+	$statusVd     = $vdDatesArr['STATUS'];
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
-        if (strtotime($startDate) == strtotime($todayDate)) {
+	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid) {
 
@@ -2666,9 +2680,19 @@ class MembershipHandler
             $servDisc['C'] = 0;
             $servDisc['NCP'] = 0;
             $servDisc['X'] = 0;
+            $maxDiscount = 0;
+        }
+        else{
+            $maxDiscount = 0;
+            $maxDiscount = max($servDisc['P'],$servDisc['NCP'],$servDisc['X'],$servDisc['C']);
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
+        unset($disHistObj);
+        
+        /*$discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"],"LAST_LOGIN_DATE"=>date("Y-m-d"),"MAX_DISCOUNT_DATE"=>date("Y-m-d")));
+        unset($discMaxObj);*/
         unset($nonZero);
     }
 
@@ -2747,7 +2771,7 @@ class MembershipHandler
     
     public function getMembershipAutoLoginLink($profileid,$source){
         if($profileid){
-            include(JsConstants::$docRoot."/classes/authentication.class.php");
+            include_once(JsConstants::$docRoot."/classes/authentication.class.php");
             $protect_obj = new protect;
             $profilechecksum = md5($profileid)."i".$profileid;
             $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);

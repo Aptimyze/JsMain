@@ -14,7 +14,8 @@ class NW_INSTITUTELIST extends TABLE implements AutoSuggestor {
                 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LIKE",$like, PDO::PARAM_STR);
-            $prep->bindValue(":RANGE", $limit, PDO::PARAM_INT);
+            $prep->bindValue(":RANGE", 25, PDO::PARAM_INT);
+            //$prep->bindValue(":RANGE", $limit, PDO::PARAM_INT);
 			$prep->execute();
 			$records = array();
             while ($result = $prep->fetch(PDO::FETCH_NUM)) {

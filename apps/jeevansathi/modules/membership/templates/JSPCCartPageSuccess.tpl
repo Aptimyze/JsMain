@@ -535,7 +535,7 @@
             <div style="overflow:hidden;position: relative;">
             <div id="payNowBtn" class="fullwid bg_greyed txtc lh50"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="finalCartPrice">~$data.cart_price`&nbsp;|&nbsp;</span><span class="colrw" id="cartPaymentSpan">Pay Now</span></div>
             </div>
-            <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
+            <div class="pt10 f11 txtc">~$data.cart_tax_text`</div>
         </div>
         <!--end:total-->
     </div>
