@@ -16,7 +16,6 @@ import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-import CalObjectClass from "../../cal/components/CalObject";
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -113,11 +112,7 @@ componentDidUpdate(){
 	        {
 	          return (<div><Loader show="page"></Loader></div>)
 	        }
-					if(this.props.myjsData.apiData.calObject)
-					{
-						return (<div><CalObjectClass calData={this.props.myjsData.apiData.calObject}  /></div>);
-
-					}
+					
 					this.trackJsb9 = 1;
   		return(
 		  <div id="mainContent">
