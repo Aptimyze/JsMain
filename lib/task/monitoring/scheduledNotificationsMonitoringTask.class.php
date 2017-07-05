@@ -42,16 +42,19 @@ EOF;
       $todaysNotifications = $scheduledAppObj->getTodaysNotifications();
       $notificationsNotSent = "";
       $mailMsg = "";
+      $currentDay = date('D');
       foreach($settings as $key => $val){
           $notificationKey = $val["NOTIFICATION_KEY"];
-          if(array_key_exists($notificationKey, $todaysNotifications)){
-              if(array_key_exists($notificationKey, $this->notificationKeyWiseThreshhold) && $todaysNotifications[$notificationKey] < $this->notificationKeyWiseThreshhold[$notificationKey]){
-                  $belowThresholdMsg = "Following notifications have below threshold message count<br>";
-                  $belowThresholdMsg.= "$notificationKey = ".$todaysNotifications[$notificationKey];
-              }
-          }
-          else{
-             $notificationsNotSent.="$notificationKey<br>"; 
+          if($val["FREQUENCY"] == $currentDay || $val["FREQUENCY"] == "D"){
+            if(array_key_exists($notificationKey, $todaysNotifications)){
+                if(array_key_exists($notificationKey, $this->notificationKeyWiseThreshhold) && $todaysNotifications[$notificationKey] < $this->notificationKeyWiseThreshhold[$notificationKey]){
+                    $belowThresholdMsg = "Following notifications have below threshold message count<br>";
+                    $belowThresholdMsg.= "$notificationKey = ".$todaysNotifications[$notificationKey];
+                }
+            }
+            else{
+               $notificationsNotSent.="$notificationKey<br>"; 
+            }
           }
       }
       
