@@ -435,7 +435,7 @@ $js_arr[]=array("mobPhotoUpload"   => "6");
 $js_arr[]=array("commonMob"   => "5");
 $js_arr[]=array("mobBrowser_js" => "3");
 $js_arr[]=array("mobSearchBand"   => "7");
-$js_arr[]=array("app_promo_js"   => "63");
+$js_arr[]=array("app_promo_js"    => "64");
 $js_arr[]=array("selectType_Page3_js"   => "5");
 $js_arr[]=array("editNativePlace_js"   => "10");
 $js_arr[]=array("mobNative_Place_selectType_js"   => "5");
