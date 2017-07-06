@@ -7,7 +7,7 @@ export class ShowExpiryList extends React.Component {
     super();
   }
   render(){
-    let tupleArray = this.props.listingData.tuples;
+   let tupleArray = this.props.listingData;
    let countTuple = (tupleArray.length<=3)?tupleArray.length: 3;
    let setdim = {width:"60px" , height:"60px" };
    let IntExpListing;
@@ -27,12 +27,12 @@ export class ShowExpiryList extends React.Component {
     }
     return(
         <div>
-          {tupleArray.slice(0,countTuple).map(function(tuple){
+          {tupleArray.slice(0,countTuple).map(function(profiles){
             return (
-                <div className="mar05 dispibl" key={tuple.profilechecksum}>
+                <div className="mar05 dispibl" key={profiles.profilechecksum}>
                   <div className="row mar05 brdr50p posrel outerCircleDiv">
-                    <Link to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.view_all_count}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
-                      <img src={tuple.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></Link>
+                    <Link to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.total}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
+                      <img src={profiles.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></Link>
                   </div>
                 </div>
             )
@@ -46,13 +46,12 @@ export class ShowExpiryList extends React.Component {
 
 export default class InterestExp extends React.Component{
   render(){
-    console.log(this.props.int_exp_list);
     return(
       <div className="mt15 bg4">
         <div className="f17 fontlig color7 padd22">Interests Expiring this week</div>
         <div className="pad015">
           <div className="fullwid">
-            <ShowExpiryList listingData={this.props.int_exp_list} totalcount={this.props.int_exp_list.view_all_count} />
+            <ShowExpiryList listingData={this.props.int_exp_list} totalcount={this.props.int_exp_list.total} />
           </div>
         </div>
 

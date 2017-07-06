@@ -30,14 +30,14 @@ export class CheckDataPresent extends React.Component{
 
 		switch (this.props.blockname) {
 			case "int_exp":
-						if( (this.props.data===undefined)  || (this.props.data.tuples===null))
+						if( (this.props.data===null)  || (this.props.data.profiles===null))
 						{
 							  return (<div className="noData Intexp"></div>);
 						}
-						return(<InterestExp int_exp_list={this.props.data}  />);
+						return(<InterestExp int_exp_list={this.props.data}/>);
 						break;
 			case "prf_visit":
-						if(this.props.data.tuples===null)
+						if(this.props.data.profiles===null)
 						{
 							return (<div className="noData prfvisit"></div>);
 						}
@@ -67,13 +67,21 @@ export  class MyjsPage extends React.Component {
   	{
 		if(!this.props.myjsData.fetched || true ) // caching conditions go here in place of true
 			this.props.hitApi_MYJS(this);
+		this.props.hitApi_IE();
+		this.props.hitApi_IR();
+		this.props.hitApi_MOD();
+		this.props.hitApi_DR();
+		this.props.hitApi_VA();
+		this.props.hitApi_Ham();
 	}
-componentDidUpdate(){
-	jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
-}
+
+	componentDidUpdate(){
+		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+	}
+
 	componentWillReceiveProps(nextProps)
 	{
-		this.callEventListner();		
+		window.addEventListener('scroll', this.callEventListner);		
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
 			showLoader : false
@@ -83,11 +91,13 @@ componentDidUpdate(){
 	componentWillMount(){
 			this.CssFix();
 	}
+
 	componentWillUnmount(){
+        window.removeEventListener('scroll', this.callEventListner); 
 		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
-	CssFix()
-	{
+
+	CssFix(){
 			// create our test div element
 			var div = document.createElement('div');
 			// css transition properties
@@ -103,12 +113,11 @@ componentDidUpdate(){
 								}
 					});
 			}
-	};
-}
+		};
+	}
 
   	callEventListner(){
-  			window.addEventListener('scroll', (event) => {
-			if(!this.state.irApi){
+  			if(!this.state.irApi){
 		    	this.props.hitApi_IR();		   
 		    	this.setState({
 		    		irApi: true
@@ -150,31 +159,30 @@ componentDidUpdate(){
 		    		hamApi: true
 		    	});
 		    }			   
-		});
   	}
+
   	render() {
 
-  			if(!this.props.myjsData.fetched)
-	        {
-	          return (<div><Loader show="page"></Loader></div>)
-	        }
-					
-					this.trackJsb9 = 1;
+  		if(!this.props.myjsData.fetched){
+	         return (<div><Loader show="page"></Loader></div>)
+	    }					
+		this.trackJsb9 = 1;
   		return(
   		<div id="mainContent">
 		  	<MetaTagComponents page="MyjsPage"/>
 		  		<GA ref="GAchild" />
 				  <div className="perspective" id="perspective">
-								<div className="" id="pcontainer">
-									<MyjsHeadHTML bellResponse={this.props.myjsData.apiData.BELL_COUNT} fetched={this.props.myjsData.fetched}/>
-									<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
-									<AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiData.all_acceptance} justjoined={this.props.myjsData.apiData.just_joined_matches}/>																		
-									<CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiData.interest_expiring}/>
-									<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiData.interest_received} listingName = 'interest_received' />
-									<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiData.match_of_the_day} listingName = 'match_of_the_day' />
-									<CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiData.visitors}/>
-									<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiData.match_alert} listingName = 'match_alert' />							</div>
+							<div className="" id="pcontainer">
+								<MyjsHeadHTML bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+								<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+								<AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>																		
+								<CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE.profiles}/>
+								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
+								<CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA.profiles}/>
+								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />							
 							</div>
+					</div>
 			</div>
 		);
 	}
@@ -193,27 +201,27 @@ const mapDispatchToProps = (dispatch) => {
     return{
         hitApi_MYJS: (containerObj) => {
 		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);
-	},
+		},
         jsb9TrackRedirection : (time,url) => {
-		jsb9Fun.recordRedirection(dispatch,time,url)
-	},
+			jsb9Fun.recordRedirection(dispatch,time,url)
+		},
      	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL,'&searchBasedParam=matchalerts&&caching=1&&timestamp=1499147929.097&&myjs=1','SET_DR_DATA','POST',dispatch);
-	},
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&searchBasedParam=matchalerts&caching=1&myjs=1','SET_DR_DATA','POST',dispatch);
+		},
      	hitApi_MOD: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&&caching=1&timestamp=1499153571.789&&myjs=1','SET_MOD_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
-  	hitApi_IR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&timestamp=1499153669.566&&myjs=1','SET_IR_DATA','POST',dispatch);
+  	    hitApi_IR: () => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&myjs=1','SET_IR_DATA','POST',dispatch);
         },
         hitApi_VA: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&timestamp=1499153727.102&&myjs=1','SET_VA_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
         },
         hitApi_IE: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&timestamp=1499153828.047&&myjs=1','SET_IE_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&myjs=1','SET_IE_DATA','POST',dispatch);
         },	
         hitApi_Ham: () => {
-            return commonApiCall('/common/hamburgerCounts',{},'SET_IE_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
         }
     }
 }
