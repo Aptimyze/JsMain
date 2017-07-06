@@ -10,7 +10,7 @@ import Jsb9Reducer from "./common/reducers/Jsb9Reducer"
 
 
 
-const store = createStore(combineReducers({LoginReducer,ProfileReducer,MyjsReducer,AlbumReducer,verifiedVisitReducer,jsb9Reducer,ForgotPasswordReducer}),{},applyMiddleware(thunk));
+const store = createStore(combineReducers({LoginReducer,ProfileReducer,MyjsReducer,AlbumReducer,verifiedVisitReducer,Jsb9Reducer,ForgotPasswordReducer}),{},applyMiddleware(thunk));
 
 
 export default store;
