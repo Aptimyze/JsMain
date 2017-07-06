@@ -4,11 +4,11 @@ import {Link} from "react-router-dom";
 
 export class MyjsShowVisitors extends React.Component{
   render(){
-    let tupleValues = this.props.listingData.tuples;
+    let tupleValues = this.props.listingData;
     let count = (tupleValues.length<=3)?tupleValues.length: 3;
     let VisitorsListing;
-    let totalCount = this.props.listingData.view_all_count;
-    if(this.props.listingData.tuples.length>4)
+    let totalCount = this.props.listingData.total;
+    if(this.props.listingData.length>4)
     {
       VisitorsListing = <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
           <div className="bg7 txtc disptbl myjsdim1">
@@ -22,11 +22,11 @@ export class MyjsShowVisitors extends React.Component{
     }
     return(
         <div className="fullwid clearfix">
-          {tupleValues.slice(0,count).map(function(tuple, index){
+          {tupleValues.slice(0,count).map(function(profiles, index){
             return (
-                <div className="fl pl_a" key={tuple.profilechecksum}>
-                  <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.view_all_count}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
-                    <img className="myjsdim1" src={tuple.photo.url}/>
+                <div className="fl pl_a" key={profiles.profilechecksum}>
+                  <Link  to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.total}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
+                    <img className="myjsdim1" src={profiles.photo.url}/>
                   </Link>
                 </div>
             )

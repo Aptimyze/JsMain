@@ -24,7 +24,7 @@ componentDidUpdate(){
     this.bindSlider();
   }
 bindSlider(){
-  if( this.state.sliderBound || !this.props.fetched || !this.props.listing.tuples)return;
+  if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
 //console.log()
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
@@ -38,7 +38,7 @@ bindSlider(){
 
 }
   render(){
-     if(!this.props.fetched || !this.props.listing.tuples) {
+     if(!this.props.fetched || !this.props.listing.profiles) {
       return <div></div>;
     }
     return(
@@ -54,7 +54,7 @@ bindSlider(){
             <div className="swrapper" id="swrapper">
                 <div className="wrap-box" id="wrapbox_{this.props.listingName}">
          <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
-           {this.props.listing.tuples.map( (tuple,index) => (
+           {this.props.listing.profiles.map( (tuple,index) => (
            <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" ><input className="proChecksum" type="hidden" value="{tuple.profilechecksum}"></input><img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
              <div className="bg4 overXHidden" id="hideOnAction">
                <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.view_all_count}&actual_offset=${index}&contact_id=${this.props.listing.contact_id}`}>
