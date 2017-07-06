@@ -19,7 +19,8 @@ import GA from "../../common/components/GA"
 
 class ProfilePage extends React.Component {
 
-    constructor(props) {
+    constructor(props) 
+    {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         super();
@@ -47,7 +48,8 @@ class ProfilePage extends React.Component {
     }
 
 
-    componentDidMount() {
+    componentDidMount() 
+    {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -64,7 +66,8 @@ class ProfilePage extends React.Component {
         }
     }
 
-    setNextPrevLink() {
+    setNextPrevLink() 
+    {
         let listingArray = ["match_of_the_day","match_alert","interest_received","interest_expiring"];
         if(this.props.myjsData.apiData != "") {
             let parentObj,nextObj,prevObj;
@@ -150,16 +153,8 @@ class ProfilePage extends React.Component {
                     showPromo : true
                 });
             }
-            window.addEventListener('scroll', (event) => {
-                let tabElem = document.getElementById("tab");
-                if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
-                    tabElem.classList.add("posFixTop");
-                }
-                if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
-                    tabElem.classList.remove("posFixTop");
-                }
-            });
-            var _this = this;
+            window.addEventListener('scroll', this.setScrollPos);
+            let _this = this;
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
@@ -168,15 +163,33 @@ class ProfilePage extends React.Component {
         }
         
     }
+
+    componentWillUnmount() 
+    {
+        window.removeEventListener('scroll', this.setScrollPos);    
+    }
+
+    setScrollPos() 
+    {
+        let tabElem = document.getElementById("tab");
+        if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
+            tabElem.classList.add("posFixTop");
+        }
+        if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
+            tabElem.classList.remove("posFixTop");
+        }
+    }
     
-    removePromoLayer() {
+    removePromoLayer() 
+    {
         this.setState ({
             showPromo : false
         });
         document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
-    showTab(elem) {
+    showTab(elem) 
+    {
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
                 document.getElementById(this.state.tabArray[i]+"Header").classList.remove("vpro_selectTab");
@@ -186,27 +199,32 @@ class ProfilePage extends React.Component {
             document.getElementById(elem+"Tab").classList.remove("dn");
         }
     }
-    initHistory() {
+    initHistory() 
+    {
         this.setState({
             showHistory:true
         });
     }
-    closeHistoryTab() {
+    closeHistoryTab() 
+    {
         this.setState({
             showHistory:false
         });
     }
 
-    imageLoaded() {
+    imageLoaded() 
+    {
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
     }
 
-    goBack() {
+    goBack() 
+    {
         this.props.history.goBack();
     }
 
-    render() {
+    render() 
+    {
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
