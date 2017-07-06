@@ -1068,9 +1068,7 @@ public function executeAppredirect(sfWebRequest $request)
   {
     $loggedInProfileObj = LoggedInProfile::getInstance();
     $profileId = $loggedInProfileObj->getPROFILEID(); 
-    $profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
-    $privacyOptions = FieldMap::getFieldLabel("privacy_option",'',1);    
-    
+    $profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");        
     $this->phoneMob = $profileDetail["PHONE_MOB"];
     $this->phoneRes = $profileDetail["PHONE_RES"];
     $this->showPhoneRes = $profileDetail["SHOWPHONE_RES"];
