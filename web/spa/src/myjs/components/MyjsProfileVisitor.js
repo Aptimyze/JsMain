@@ -1,5 +1,7 @@
 import React from "react";
 
+import {Link} from "react-router-dom";
+
 export class MyjsShowVisitors extends React.Component{
   render(){
     let tupleValues = this.props.listingData.tuples;
@@ -28,7 +30,7 @@ export class MyjsShowVisitors extends React.Component{
                   </Link>
                 </div>
             )
-          })}
+          },this)}
           {VisitorsListing}
         </div>
       )
