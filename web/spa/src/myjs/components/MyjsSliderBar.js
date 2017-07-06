@@ -61,7 +61,7 @@ bindSlider(){
 
 }
   render(){
-    if(!this.props.listing.tuples) {
+     if(!this.props.fetched || !this.props.listing.tuples) {
       return <div></div>;
     }
     return(

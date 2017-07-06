@@ -17,11 +17,11 @@ export  function commonApiCall(callUrl,data,reducer,method)
 
       if ( callUrl.indexOf("?") == -1 )
       {
-        checkSumURL = '?AUTHCHECKSUM='+aChsum;
+        checkSumURL = '?AUTHCHECKSUM='+aChsum+data;
       } 
       else 
       {
-        checkSumURL = '&AUTHCHECKSUM='+aChsum;
+        checkSumURL = '&AUTHCHECKSUM='+aChsum+data;
       }
     }
     axios({
