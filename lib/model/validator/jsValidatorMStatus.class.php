@@ -29,7 +29,9 @@ class jsValidatorMStatus extends sfValidatorBase
                         $religion = LoggedInProfile::getInstance()->getRELIGION();
                 }
                 if($value == "D" && !isset($editFieldArr["MSTATUS_PROOF"])){
-                        throw new sfValidatorError($this, ErrorHelp::$ERR_REQUIRED[mstatus_proof]);	
+                        if(!isset($_FILES["MSTATUS_PROOF"]) && !isset($_FILES["editFieldArr"]["name"]["MSTATUS_PROOF"])){
+                                throw new sfValidatorError($this, ErrorHelp::$ERR_REQUIRED[mstatus_proof]);	
+                        }
                 }
 	}
 	elseif(is_array($request->getParameter('formValues')))

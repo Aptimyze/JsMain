@@ -65,31 +65,38 @@ class ApiEditSubmitV1Action extends sfActions
 		unset($this->editFieldNameArr['DAY']);
 		unset($this->editFieldNameArr['YEAR']);
                 //print_r($this->editFieldNameArr);die;
-                if(!empty($_FILES)){
-                        foreach($_FILES as $f1){
-                                foreach($f1 as $fKey=>$fVal){
-                                        foreach($fVal as $key=>$fileVAlue){
-                                                $this->editFieldNameArr[$key][$fKey] = $fileVAlue;
+                
+                        if(!MobileCommon::isApp())
+                        {
+                                if(!empty($_FILES)){
+                                        foreach($_FILES as $f1){
+                                                foreach($f1 as $fKey=>$fVal){
+                                                        foreach($fVal as $key=>$fileVAlue){
+                                                                $this->editFieldNameArr[$key][$fKey] = $fileVAlue;
+                                                        }
+                                                }
                                         }
                                 }
+                        }else{
+                               foreach($_FILES as $key=>$f1){
+                                                $this->editFieldNameArr[$key] = $f1;
+                                } 
                         }
-                }
-		if(MobileCommon::isApp())
-		{
-			foreach ($this->editFieldNameArr as $key=>$value)
-			{
-				if(is_array($value))
-				{
-					foreach($value as $k=>$v)
-						$arr[$key][$k]=urldecode($v);
-				}
-				else
-					$arr[$key]=urldecode($value);
-			}
-			
-			$this->editFieldNameArr=$arr;
-		}
-                
+                        if(MobileCommon::isApp())
+                        {
+                                foreach ($this->editFieldNameArr as $key=>$value)
+                                {
+                                        if(is_array($value))
+                                        {
+                                                foreach($value as $k=>$v)
+                                                        $arr[$key][$k]=urldecode($v);
+                                        }
+                                        else
+                                                $arr[$key]=urldecode($value);
+                                }
+
+                                $this->editFieldNameArr=$arr;
+                        }
 		if(strtoupper($request->getParameter('incomplete'))==EditProfileEnum::$INCOMPLETE_YES)
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_YES;
 		else

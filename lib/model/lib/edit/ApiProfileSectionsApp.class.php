@@ -359,7 +359,11 @@ class ApiProfileSectionsApp extends ApiProfileSections {
                         $edit ="N";
                 }
                 //date of birth
-		$criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+                if(MobileCommon::isApp()){
+                        $criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d M Y", strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+                }else{
+                        $criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+                }
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$edit,$canEDit);
 		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","   " ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
                 //if($this->profile->getMSTATUS() != 'N'){
