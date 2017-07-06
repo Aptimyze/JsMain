@@ -15,7 +15,9 @@ import DppTab from"../components/DppTab";
 import CommHistory from "./CommHistory";
 import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
 import {getCookie} from '../../common/components/CookieHelper';
-import GA from "../../common/components/GA"
+import GA from "../../common/components/GA";
+import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
+
 
 class ProfilePage extends React.Component {
 
@@ -42,12 +44,14 @@ class ProfilePage extends React.Component {
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
         props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
 
     }
 
-
+    componentDidUpdate() {
+        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+    }
     componentDidMount() 
     {
         let _this = this;
@@ -166,7 +170,8 @@ class ProfilePage extends React.Component {
 
     componentWillUnmount() 
     {
-        window.removeEventListener('scroll', this.setScrollPos);    
+        window.removeEventListener('scroll', this.setScrollPos); 
+        this.props.jsb9TrackRedirection(new Date().getTime(),this.url);   
     }
 
     setScrollPos() 
@@ -371,7 +376,8 @@ const mapStateToProps = (state) => {
        profileId: state.ProfileReducer.profileId,
        show_gunascore:state.ProfileReducer.show_gunascore,
        fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
-       myjsData: state.MyjsReducer 
+       myjsData: state.MyjsReducer,
+       Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
@@ -380,7 +386,9 @@ const mapDispatchToProps = (dispatch) => {
         showProfile: (containerObj,profilechecksum,responseTracking) => {
             let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum+"&responseTracking="+responseTracking;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
+        jsb9TrackRedirection : (time,url) => jsb9Fun.recordRedirection(dispatch,time,url);
         }
+
     }
 }
 
