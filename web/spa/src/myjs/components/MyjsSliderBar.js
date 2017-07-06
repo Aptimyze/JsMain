@@ -38,7 +38,9 @@ bindSlider(){
 
 }
   render(){
-    if(!this.props.listing.tuples) return(<div></div>);
+     if(!this.props.fetched || !this.props.listing.tuples) {
+      return <div></div>;
+    }
     return(
       <div>
         <div className="pad1" style = {{marginTop: '15px'}}>
