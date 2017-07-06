@@ -88,15 +88,15 @@ EOF;
             $tuData = curl_exec($tuCurl);
           
             // remove header from curl Response 
-            //$header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
-            //$tuData = substr($tuData, $header_size);
+            $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
+            $tuData = substr($tuData, $header_size);
 
             curl_close($tuCurl);
 			/**
 			 * send mail alert in case of problem in fetching mis data
 			 */
              
-            if ($tuData !== true) {
+            if (empty($tuData)) {
                 CRMAlertManager::sendMailAlert("Issue in cronSendCrmHandledRevenueCSVTask while fetching mis data", "AgentNotifications");
             } else {
                 /**
