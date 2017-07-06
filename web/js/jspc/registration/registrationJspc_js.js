@@ -2404,7 +2404,6 @@ function clearPgDegree(){
     regField["pgDegree"].chosenValue = "";
     $("#pgCollege-inputBox_set").val('');
     inputData['pg_college'] = '';
-    inputData['other_pg_degree'] = '';
     $("#otherPgDegree_value").val('');
 }
 
@@ -2419,7 +2418,6 @@ function clearUgDegree(){
     regField["ugDegree"].chosenValue = "";
     
     inputData['college'] = '';
-    inputData['other_ug_degree'] = '';
     $("#ugCollege-inputBox_set").val('');
     $("#otherUgDegree_value").val('');
 }
