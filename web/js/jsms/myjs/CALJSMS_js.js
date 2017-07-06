@@ -152,8 +152,12 @@ if(calIdTemp=='20' || calIdTemp==23 ){
                 $("#stateList").html("");
                 $("#inputDiv").hide();
                 if($(this).attr('stateCode')=='-1')
-                    $("#citySelect").html('Select your Country');  
-
+                    $("#citySelect").html('Country');  
+                else 
+                {
+                    if(calIdTemp=='23')
+                        $("#citySelect").html('City');
+                }
                     $("#contText").hide();
                     $("#cityClickDiv").removeClass("dn");
                 

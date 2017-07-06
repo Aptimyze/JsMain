@@ -256,9 +256,8 @@
                 <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
             </div>
                         <div id="inputDiv" class="mt30 txtc dn">
-                <div class="fontlig f15 white">Enter your city to continue</div>
                 <div id="cityInputDiv" class="wid90p mar15auto bg4 hgt75 pad25">
-                    <input type="text" class="fullwid fl fontlig f18" placeholder="Enter City" id="occuText" />
+                    <input type="text" class="fullwid fl fontlig f18" placeholder="Please Specify" id="occuText" />
                 </div>
             </div>
             </div>

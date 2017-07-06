@@ -505,8 +505,8 @@ var altEmail = '~$altEmail`';</script>
                      </select>
           </div>
          <!-- start: in case of no City found -->
-         <div class="pt25 vishid js-otheroccInp">
-           <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
+         <div class="pt25 disp-none js-otheroccInp" style="padding-bottom:24px;">
+           <p id = 'secondReq' class="pb5 f12  color5 txtr">Required</p>
            <div id = "cityBox"> 
             <select id="city" data-placeholder="Enter your City" class="chosen-select-width">
                      </select> 
@@ -514,10 +514,12 @@ var altEmail = '~$altEmail`';</script>
          </div>
                   <!-- start: in case no occupation found -->
                   ~if $layerId == '23'`
-         <div id='otherCityInput' class="pt25  vishid ">
-           <p id = 'thirdReq' class="f12 disp-none color5 txtr pb5">Required</p>      
-           <input  class="wid96p fontlig color11 occL-p2 f16" placeholder="Enter Your City" type="text"/>
+                  <div class="disp-none" id="otherCityInput">
+                             <p id = 'thirdReq' class="f12 disp-none color5 txtr pb5">Required</p>      
+         <div id='otherCityBorder' style="border: 1px solid #e0e0e0;line-height: 44px;">
+           <input  class="f15 color11 fontlig wid94p occL-p2 f16"     style="margin: 0px 10px;border: none;" placeholder="Please Specify" type="text"/>
  
+         </div>
          </div>
         ~/if`
          <!-- end: in case no occupation found -->
@@ -633,7 +635,7 @@ var altEmail = '~$altEmail`';</script>
        $(selector).chosen(config[selector]);
      }  
     $('#city_chosen').removeClass('chosen-container-err');
-    $('#secondReq').addClass('vishid');
+    $('#secondReq').hide();
     $('#city').trigger("chosen:updated");
 
    }
@@ -643,17 +645,20 @@ var altEmail = '~$altEmail`';</script>
         var indexV = $('#stateList option:selected').val();
         var keyName = stateMap[indexV];
         if(keyName!='-1') {
-          $("#city").attr('data-placeholder','Enter Your City');
+          if(CALID==23)
+            $("#city").attr('data-placeholder','City');
+          else
+            $("#city").attr('data-placeholder','Enter Your City');
         }
         else 
-          $("#city").attr('data-placeholder','Enter Your Country');
+          $("#city").attr('data-placeholder','Country');
 
-        $('#otherCityInput').removeClass('visb');
+        $('#otherCityInput').hide();
         $("#stateList_chosen").removeClass('chosen-container-err');
         $('#city_chosen').removeClass('chosen-container-err');
            callCity(res);
           $('#city').val('');
-          $('.js-otheroccInp').addClass('visb');
+          $('.js-otheroccInp').show();
 
      });
       if(CALID=='23')
@@ -666,13 +671,13 @@ var altEmail = '~$altEmail`';</script>
         var indexC = $('#city option:selected').val();
         var keyNameCity = cityMap[indexC];
          if(keyNameCity=='0'){
-           $('#otherCityInput').addClass('visb');
+           $('#otherCityInput').show();
            $("#thirdReq").hide();
          }
          else 
-          $('#otherCityInput').removeClass('visb');
+          $('#otherCityInput').hide();
       }
-        else $('#otherCityInput').removeClass('visb');
+        else $('#otherCityInput').hide();
 
          });
       }
@@ -686,7 +691,7 @@ var altEmail = '~$altEmail`';</script>
  
  window.onload = function(){
 
-  $("#city").change( function(){$('#secondReq').addClass('vishid');
+  $("#city").change( function(){$('#secondReq').addClass('disp-none');
     $('#city_chosen').removeClass('chosen-container-err');});
   callState();
    $('#city-sub').click(function(){ 
@@ -701,13 +706,14 @@ var altEmail = '~$altEmail`';</script>
          }
          else if( $('#city').val() == 1 )
          { 
-      $('#secondReq').removeClass('vishid');
+      $('#secondReq').show();
        $('#city_chosen').addClass('chosen-container-err');
            return;   
         }
         else if (CALID==23 && stateCode!='-1' && $("#otherCityInput input").val().trim()=='' && cityCode=='0' )
         {
             $("#thirdReq").show();
+            $("#otherCityBorder").css('border-color',"#d9475c");
             return;   
 
         }
