@@ -192,7 +192,6 @@ class ProfilePage extends React.Component {
     }
 
     imageLoaded() {
-        console.log("yessss2")
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
     }
@@ -242,7 +241,7 @@ class ProfilePage extends React.Component {
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
         if(this.state.dataLoaded)
-        {console.log("yess")
+        {
             photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
             if(this.props.AboutInfo.name_of_user)
