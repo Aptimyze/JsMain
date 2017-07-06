@@ -86,15 +86,16 @@ EOF;
             curl_setopt($tuCurl, CURLOPT_USERAGENT,"JsInternal");    
 
             $tuData = curl_exec($tuCurl);
-
+          
             // remove header from curl Response 
-            $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
-            $tuData = substr($tuData, $header_size);
+            //$header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
+            //$tuData = substr($tuData, $header_size);
 
             curl_close($tuCurl);
 			/**
 			 * send mail alert in case of problem in fetching mis data
 			 */
+             
             if ($tuData !== true) {
                 CRMAlertManager::sendMailAlert("Issue in cronSendCrmHandledRevenueCSVTask while fetching mis data", "AgentNotifications");
             } else {
@@ -102,11 +103,12 @@ EOF;
                  * send csv as mail
                  */
                 $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com,anoop.singhal@naukri.com,pawan.tripathi@naukri.com";
-                $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-                // $to = "avneet.bindra@jeevansathi.com";
+                $cc = "ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com";
+                //$to = "ankita.g@jeevansathi.com";
                 $message = "Please find attached excel sheet containing requested data";
                 $subject = "Crm Handled Revenue MIS Report";
                 $csvAttachment = file_get_contents($file_path);
+                //print_r($csvAttachment);
                 /**
                  * print_r($csvAttachment);
                  */
