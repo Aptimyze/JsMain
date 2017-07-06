@@ -74,12 +74,14 @@ export  class MyjsPage extends React.Component {
 		this.props.hitApi_VA();
 		this.props.hitApi_Ham();
 	}
-componentDidUpdate(){
-	jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
-}
+
+	componentDidUpdate(){
+		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+	}
+
 	componentWillReceiveProps(nextProps)
 	{
-		this.callEventListner();		
+		window.addEventListener('scroll', this.callEventListner);		
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
 			showLoader : false
@@ -89,11 +91,13 @@ componentDidUpdate(){
 	componentWillMount(){
 			this.CssFix();
 	}
+
 	componentWillUnmount(){
+        window.removeEventListener('scroll', this.callEventListner); 
 		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
-	CssFix()
-	{
+
+	CssFix(){
 			// create our test div element
 			var div = document.createElement('div');
 			// css transition properties
@@ -109,12 +113,11 @@ componentDidUpdate(){
 								}
 					});
 			}
-	};
-}
+		};
+	}
 
   	callEventListner(){
-  			window.addEventListener('scroll', (event) => {
-			if(!this.state.irApi){
+  			if(!this.state.irApi){
 		    	this.props.hitApi_IR();		   
 		    	this.setState({
 		    		irApi: true
@@ -156,16 +159,14 @@ componentDidUpdate(){
 		    		hamApi: true
 		    	});
 		    }			   
-		});
   	}
+
   	render() {
 
-  			if(!this.props.myjsData.fetched)
-	        {
-	          return (<div><Loader show="page"></Loader></div>)
-	        }
-					
-					this.trackJsb9 = 1;
+  		if(!this.props.myjsData.fetched){
+	         return (<div><Loader show="page"></Loader></div>)
+	    }					
+		this.trackJsb9 = 1;
   		return(
   		<div id="mainContent">
 		  	<MetaTagComponents page="MyjsPage"/>
@@ -210,7 +211,7 @@ const mapDispatchToProps = (dispatch) => {
      	hitApi_MOD: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
-  	hitApi_IR: () => {
+  	    hitApi_IR: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&myjs=1','SET_IR_DATA','POST',dispatch);
         },
         hitApi_VA: () => {
