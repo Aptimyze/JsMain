@@ -18,7 +18,10 @@ $(function(){
 	$('.js-saveOption').click(function(){
 		
 		getEleV = $(this).parent().parent().attr('id');
-		$("div[data-title='Mobile'] div span").html($(this).find('.textV').html());
+		getEleatt = $(this).attr('value');
+		$("div[data-title="+getEleV+"] div span").html($(this).find('.textV').html());
+		$("div[data-title="+getEleV+"]").attr('value',getEleatt);
+
 
 		$('.js-saveOption').each(function(){
 			$(this).find('.privsel').remove('.privsel');
