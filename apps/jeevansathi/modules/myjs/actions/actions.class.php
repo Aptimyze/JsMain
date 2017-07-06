@@ -114,25 +114,25 @@ class myjsActions extends sfActions
  /**
   * Mobile Api version 1.0 action class
   */
-  public function executePerformV1(sfWebRequest $request) {    
-    //for logging       
-    //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
+  public function executePerformV1(sfWebRequest $request) {
+    //for logging
+    //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit");
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
     $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
-    
-    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew"))
+
+    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew") || MobileCommon::isNewMobileSite())
       $oldMyjsApi=false;
     else
       $oldMyjsApi=true;
     $module = "MYJSAPP";
     $stSecondTime = microtime(TRUE);
-    
+
     $inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
     $respObj = ApiResponseHandler::getInstance();
     $inputValidateObj->validateRequestMyJsData($request);
     $output = $inputValidateObj->getResponse();
-    
+
     $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
     $pid = $loggedInProfileObj->getPROFILEID();
 

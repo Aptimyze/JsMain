@@ -100,7 +100,7 @@ class HamburgerApp
 					else
 						$hamburgerDetails['SAVE_SEARCH'] = 0;
 				}
-			if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew")){
+			if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew") || $isNewMobileSite){
 				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 	         		$hamburgerDetails['PHOTO_REQUEST_NEW']=0;
 		     	else
