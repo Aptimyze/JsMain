@@ -19,7 +19,8 @@ import GA from "../../common/components/GA"
 
 class ProfilePage extends React.Component {
 
-    constructor(props) {
+    constructor(props) 
+    {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         super();
@@ -47,7 +48,8 @@ class ProfilePage extends React.Component {
     }
 
 
-    componentDidMount() {
+    componentDidMount() 
+    {
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -64,7 +66,8 @@ class ProfilePage extends React.Component {
         }
     }
 
-    setNextPrevLink() {
+    setNextPrevLink() 
+    {
         let listingArray = ["match_of_the_day","match_alert","interest_received","interest_expiring"];
         if(this.props.myjsData.apiData != "") {
             let parentObj,nextObj,prevObj;
@@ -86,18 +89,23 @@ class ProfilePage extends React.Component {
             let startX,endX,_this=this;
             document.getElementById("ProfilePage").addEventListener('touchstart', function(e){
                 startX = e.changedTouches[0].clientX;
+                endX = 0;
             });
             document.getElementById("ProfilePage").addEventListener('touchmove', function(e){
                 endX = e.changedTouches[0].clientX;
             });
             document.getElementById("ProfilePage").addEventListener('touchend', function(e){
-                if(endX-startX > 200 && _this.state.nextUrl) {
+                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl) 
+                {
+                    document.getElementById("swipePage").classList.add("animateLeft");
                     _this.setState ({
                         dataLoaded : false
                     });
                     _this.props.history.push(_this.state.nextUrl);
                     _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
-                } else if(startX-endX > 200 && _this.state.prevUrl) {
+                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl) 
+                {
+                    document.getElementById("swipePage").classList.add("animateLeft");
                     _this.setState ({
                         dataLoaded : false
                     });
@@ -139,21 +147,14 @@ class ProfilePage extends React.Component {
                 dataLoaded : true,
                 pic: picData
             });
+
             if(nextProps.appPromotion == true) {
                 this.setState ({
                     showPromo : true
                 });
             }
-            window.addEventListener('scroll', (event) => {
-                let tabElem = document.getElementById("tab");
-                if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
-                    tabElem.classList.add("posFixTop");
-                }
-                if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
-                    tabElem.classList.remove("posFixTop");
-                }
-            });
-            var _this = this;
+            window.addEventListener('scroll', this.setScrollPos);
+            let _this = this;
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
@@ -162,15 +163,33 @@ class ProfilePage extends React.Component {
         }
         
     }
+
+    componentWillUnmount() 
+    {
+        window.removeEventListener('scroll', this.setScrollPos);    
+    }
+
+    setScrollPos() 
+    {
+        let tabElem = document.getElementById("tab");
+        if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
+            tabElem.classList.add("posFixTop");
+        }
+        if(document.getElementById("photoParent").getBoundingClientRect().bottom > 30 && tabElem.classList.contains("posFixTop")) {
+            tabElem.classList.remove("posFixTop");
+        }
+    }
     
-    removePromoLayer() {
+    removePromoLayer() 
+    {
         this.setState ({
             showPromo : false
         });
         document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
-    showTab(elem) {
+    showTab(elem) 
+    {
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
                 document.getElementById(this.state.tabArray[i]+"Header").classList.remove("vpro_selectTab");
@@ -180,27 +199,32 @@ class ProfilePage extends React.Component {
             document.getElementById(elem+"Tab").classList.remove("dn");
         }
     }
-    initHistory() {
+    initHistory() 
+    {
         this.setState({
             showHistory:true
         });
     }
-    closeHistoryTab() {
+    closeHistoryTab() 
+    {
         this.setState({
             showHistory:false
         });
     }
 
-    imageLoaded() {
+    imageLoaded() 
+    {
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
     }
 
-    goBack() {
+    goBack() 
+    {
         this.props.history.goBack();
     }
 
-    render() {
+    render() 
+    {
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
@@ -210,6 +234,7 @@ class ProfilePage extends React.Component {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         }
+        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;      
         var historyIcon;
         if(getCookie("AUTHCHECKSUM")) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -240,10 +265,10 @@ class ProfilePage extends React.Component {
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
+        
         if(this.state.dataLoaded)
         {
             photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
-
             if(this.props.AboutInfo.name_of_user)
             {
                 Header = this.props.AboutInfo.name_of_user;
@@ -252,11 +277,12 @@ class ProfilePage extends React.Component {
                  Header = this.props.AboutInfo.username;
             }
             AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
-
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;        
-        } else {
+            document.getElementById("swipePage").classList.remove("animateLeft");
+        } 
+        else 
+        {
             AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
                 <div className="timeline-item">
                     <div id="animated-background" className="animated-background">
@@ -293,6 +319,7 @@ class ProfilePage extends React.Component {
                 {errorView}
                 {loaderView}
                 {historyView}
+                {swipeView}
                 <div className="fullheight bg4" id="mainContent">
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
