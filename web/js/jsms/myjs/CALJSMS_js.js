@@ -341,7 +341,6 @@ else {
                     var cityCode  = $("#citySelect").attr('cityCode');
                     if (citySelected || ( stateCode=='-1' && cityCode=='0'))
                         {
-                             showLoader();
 
                             if (layerId==23 && stateCode!='-1' && $("#cityInputDiv input").val().trim()=='' && cityCode=='0' )
                             {
@@ -370,6 +369,7 @@ else {
 
 
                         }
+                        showLoader();
                         $.ajax({
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
