@@ -21,7 +21,8 @@ class CRMAlertManager
     $emailTo=$emailAlertArray[$to];
     $subject="CRM Error";
     $message=$message.".....".date('d-m-Y H:i:s');
-    SendMail::send_email($emailTo,$message,$subject);           
+    //SendMail::send_email($emailTo,$message,$subject); 
+    CommonUtility::sendAlertMail($emailTo,$message,$subject);          
   }
 }
 ?>
