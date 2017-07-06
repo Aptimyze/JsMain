@@ -67,6 +67,12 @@ export  class MyjsPage extends React.Component {
   	{
 		if(!this.props.myjsData.fetched || true ) // caching conditions go here in place of true
 			this.props.hitApi_MYJS(this);
+		this.props.hitApi_IE();
+		this.props.hitApi_IR();
+		this.props.hitApi_MOD();
+		this.props.hitApi_DR();
+		this.props.hitApi_VA();
+		this.props.hitApi_Ham();
 	}
 componentDidUpdate(){
 	jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
