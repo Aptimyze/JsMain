@@ -1064,6 +1064,27 @@ public function executeAppredirect(sfWebRequest $request)
   	$this->setTemplate("knowYourCustomer");
   }
   
+  public function executePrivacySettings()
+  {
+    $loggedInProfileObj = LoggedInProfile::getInstance();
+    $profileId = $loggedInProfileObj->getPROFILEID(); 
+    $profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+    $privacyOptions = FieldMap::getFieldLabel("privacy_option",'',1);    
+    
+    $this->phoneMob = $profileDetail["PHONE_MOB"];
+    $this->phoneRes = $profileDetail["PHONE_RES"];
+    $this->showPhoneRes = $profileDetail["SHOWPHONE_RES"];
+    $this->showPhoneMob = $profileDetail["SHOWPHONE_MOB"];
+    $this->photoDsiplay = $profileDetail["PHOTO_DISPLAY"]; 
+    
+
+    $this->privacy = $profileDetail["PRIVACY"];    
+    $this->std = $profileDetail["STD"];
+    $this->isd = $profileDetail["ISD"];
+    $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
+    $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
+  }
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;    

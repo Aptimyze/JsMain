@@ -64,6 +64,7 @@ class RequestHandlerConfig
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
 			"hideUnhideProfile" => array("v1" => "HideUnhideProfileV1"),
       "options" => array("v1" => "AvailableOptionV1","v2" => "AvailableOptionV1","v3" => "AvailableOptionV1"),
+      	"privacySettings"=>array("v1" => "PrivacySettingsV1","v2" => "PrivacySettingsV1","v3" => "PrivacySettingsV1"),
 			),
 		"api" => array(
 			"appReg" => array("v1" => "AppRegV1", "v2" => "AppRegV1", "v3" => "AppRegV1"),
