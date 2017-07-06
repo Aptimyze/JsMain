@@ -212,8 +212,11 @@ if(calIdTemp=='20' || calIdTemp==23 ){
                 $("#citySelect").html(tempHtml);
                 if($("#CriticalActionlayerId").val()=='23')
                 {
-                    if(tempHtml == 'Others' && $("#stateSelect").attr('stateCode')!='-1')
+                    if(tempHtml == 'Others' && $("#stateSelect").attr('stateCode')!='-1'){
                         $("#inputDiv").show();
+                        var objDiv = document.getElementById("stateCityMidDiv");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+                    }
                     else {
                         $("#cityInputDiv input").val('');
                         $("#inputDiv").hide();
