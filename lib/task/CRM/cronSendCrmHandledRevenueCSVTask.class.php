@@ -95,10 +95,8 @@ EOF;
 			/**
 			 * send mail alert in case of problem in fetching mis data
 			 */
-             
-            if (empty($tuData)) {
-                CRMAlertManager::sendMailAlert("Issue in cronSendCrmHandledRevenueCSVTask while fetching mis data", "AgentNotifications");
-            } else {
+           
+            
                 /**
                  * send csv as mail
                  */
@@ -116,7 +114,7 @@ EOF;
               
                 SendMail::send_email($to, $message, $subject, "info@jeevansathi.com", $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', "Jeevansathi Info");
                 unset($csvAttachment);
-            }
+            
         } else {
             echo "Invalid fortnight value provided";
             die;
