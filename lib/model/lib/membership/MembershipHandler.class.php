@@ -2770,20 +2770,36 @@ class MembershipHandler
     }
 
     // get Latest Purchase Date	
-    public function getPurchaseDate($profileid){
+    public function getPurchaseDate($profileid,$type=''){
         if(empty($profileid)){
             return;
         }
         else{
             	$memCacheObject = JsMemcache::getInstance();
 		$key = "MemPurchase_".$profileid;
-		//$memCacheObject->set("$key",date("Y-m-d H:i:s"),604800);
 
-            	$purchasDate = $memCacheObject->get($key);
-		if(!$purchasDate){
-			$billingObj = new BILLING_PAYMENT_DETAIL('crm_slave');
-			$purchasDate = $billingObj->getLatestPaymentDateOfProfile($profileid);
+		/* testing part
+		$addKey ='allToPay';
+	        $storeVal =$addKey."#".date("Y-m-d H:i:s");
+		$memCacheObject->set("$key","$storeVal",604800); */
+
+            	$purchasDet 	=$memCacheObject->get($key);
+		$purchasDetArr 	=@explode("#", $purchasDet);
+		$purchasDate 	=$purchasDetArr[1];
+		$purchaseParamId =$purchasDetArr[0];
+		if($type=='F'){
+			if($purchaseParamId=='freeToPay')
+				$freeToPay =true;
+			else
+				$freeToPay =false;
+		}else{
+			if(!$purchasDate){
+				$billingObj = new BILLING_PAYMENT_DETAIL('crm_slave');
+				$purchasDate = $billingObj->getLatestPaymentDateOfProfile($profileid);
+			}
 		}
+		if($type=='F' && $freeToPay==false)
+			$purchasDate ='';
 		$resArr =array('PURCHASE_DATE'=>$purchasDate);
 		return $resArr;
     	}
