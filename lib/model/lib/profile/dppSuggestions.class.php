@@ -42,10 +42,14 @@ class dppSuggestions
 		if($type == "INCOME")
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
+		}
+		if($type == "RELIGION")
+		{
+			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
-			if ($type == "EDUCATION") // || $type == "OCCUPATION")
+			if ($type == "EDUCATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
@@ -74,7 +78,7 @@ class dppSuggestions
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
 		}	
-
+		
 		return $valueArr;
 	}
 
@@ -569,6 +573,38 @@ class dppSuggestions
 			}			
 		}
 		return $mtongueArr;
+	}
+
+	public function getSuggestionsForReligion($type,$valArr)
+	{
+		$religionArr = array();
+		if(is_array($valArr))
+		{
+			foreach($valArr as $key=>$val)
+			{
+				if($val == DppAutoSuggestEnum::$hinduReligionValue)
+				{				
+					if(!in_array(DppAutoSuggestEnum::$sikhReligionValue, $valArr))
+					{
+						$religionArr[DppAutoSuggestEnum::$sikhReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$sikhReligionValue];	
+					}
+					if(!in_array(DppAutoSuggestEnum::$jainReligionValue, $valArr))
+					{
+						$religionArr[DppAutoSuggestEnum::$jainReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$jainReligionValue];		
+					}
+					
+				}
+				elseif($val == DppAutoSuggestEnum::$sikhReligionValue || $val == DppAutoSuggestEnum::$jainReligionValue)
+				{
+					if(!in_array(DppAutoSuggestEnum::$hinduReligionValue, $valArr))
+					{
+						$religionArr[DppAutoSuggestEnum::$hinduReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$hinduReligionValue];
+					}					
+				}				
+			}
+
+			return $religionArr;
+		}
 	}
 }
 ?>

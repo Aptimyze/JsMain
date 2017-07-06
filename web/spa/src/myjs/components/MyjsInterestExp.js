@@ -7,10 +7,11 @@ export class ShowExpiryList extends React.Component {
     super();
   }
   render(){
-   let countTuple = (this.props.tuples.length<=3)?this.props.tuples.length: 3;
+    let tupleArray = this.props.listingData.tuples;
+   let countTuple = (tupleArray.length<=3)?tupleArray.length: 3;
    let setdim = {width:"60px" , height:"60px" };
    let IntExpListing;
-   if(this.props.tuples.length>4)
+   if(tupleArray.length>4)
    {
       IntExpListing=    <div className="mar05 dispibl">
         <div className="row mar05 bg7 brdr50p posrel outerCircleDiv" style={setdim}>
@@ -26,12 +27,12 @@ export class ShowExpiryList extends React.Component {
     }
     return(
         <div>
-          {this.props.tuples.slice(0,countTuple).map(function(tuple){
+          {tupleArray.slice(0,countTuple).map(function(tuple){
             return (
                 <div className="mar05 dispibl" key={tuple.profilechecksum}>
                   <div className="row mar05 brdr50p posrel outerCircleDiv">
-                    <a href=''>
-                      <img src={tuple.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></a>
+                    <Link to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.view_all_count}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
+                      <img src={tuple.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></Link>
                   </div>
                 </div>
             )
@@ -51,7 +52,7 @@ export default class InterestExp extends React.Component{
         <div className="f17 fontlig color7 padd22">Interests Expiring this week</div>
         <div className="pad015">
           <div className="fullwid">
-            <ShowExpiryList tuples={this.props.int_exp_list.tuples} totalcount={this.props.int_exp_list.view_all_count} />
+            <ShowExpiryList listingData={this.props.int_exp_list} totalcount={this.props.int_exp_list.view_all_count} />
           </div>
         </div>
 

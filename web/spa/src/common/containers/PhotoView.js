@@ -26,22 +26,24 @@ class PhotoView extends React.Component {
         this.setState({
             showLoader:false
         });
-        document.getElementById("label1").classList.remove("dn");
-        if(response.actionDetails && response.actionDetails.errmsglabel)
-            {   
-                this.setState ({
-                    insertError : true,
-                    errorMessage : response.actionDetails.errmsglabel
-            })    
-            setTimeout(function(){ 
-                _this.setState ({
-                    insertError : false,
-                    errorMessage : ""
-                })     
-            }, this.state.timeToHide+100); 
-        }
-        else if(response.responseMessage== "Successful" && response.imageButtonDetail.label) {
-            document.getElementById("label1").innerHTML = response.imageButtonDetail.label;  
+        if(document.getElementById("label1")) {
+            document.getElementById("label1").classList.remove("dn");
+            if(response.actionDetails && response.actionDetails.errmsglabel)
+                {   
+                    this.setState ({
+                        insertError : true,
+                        errorMessage : response.actionDetails.errmsglabel
+                })    
+                setTimeout(function(){ 
+                    _this.setState ({
+                        insertError : false,
+                        errorMessage : ""
+                    })     
+                }, this.state.timeToHide+100); 
+            }
+            else if(response.responseMessage== "Successful" && response.imageButtonDetail.label) {
+                document.getElementById("label1").innerHTML = response.imageButtonDetail.label;  
+            }
         }
     }
     requestPhoto(e) {

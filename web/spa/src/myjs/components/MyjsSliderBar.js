@@ -3,15 +3,6 @@ import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
 
-var slides1={
-  "whiteSpace": "nowrap",
-  "marginLeft": "10px",
-  "fontSize": "0px",
-  "overflowX": "hidden",
-  "width": "5783.2px",
-  "transitionDuration": "0.5s",
-  "transform": "translate3d(0px, 0px, 0px)"
-}
 var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
 
 export default class MyjsSlider extends React.Component {
@@ -25,33 +16,19 @@ export default class MyjsSlider extends React.Component {
     }
   }
 
-  alterCssStyle(transform,transitionDuration){
-        var styleObj = [];
-        styleObj[this.props.cssProps.cssPrefix + 'TransitionDuration'] = transitionDuration + 'ms';
-        var propValue = 'translate3d(' + transform + 'px, 0, 0)';
-        styleObj[this.props.cssProps.animProp] =  propValue;
-      //  var _this = this.
-        this.setState({
-          'sliderStyle' : {
-            ...sliderTupleStyle,
-            ...styleObj,
-          }
-         });
-  }
 componentDidUpdate(){
   this.bindSlider();
-
-
-
 }
 
-  componentDidMount(){
+  componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
     this.bindSlider();
   }
 bindSlider(){
-  if(!this.props.listing.tuples || (this.state.sliderBound || !this.props.fetched))return;
-
-  this.obj = new MyjsSliderBinding(document.getElementById("interest_received_tuples"),this.props.listing,this.props,this.alterCssStyle.bind(this));
+  if( this.state.sliderBound || !this.props.fetched || !this.props.listing.tuples)return;
+//console.log()
+  let elem = document.getElementById(this.props.listing.infotype+"_tuples");
+  if(!elem)return;
+  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.props.cssProps);
   this.obj.initTouch();
   this.setState({
             sliderBound: true,
@@ -76,7 +53,7 @@ bindSlider(){
 
             <div className="swrapper" id="swrapper">
                 <div className="wrap-box" id="wrapbox_{this.props.listingName}">
-         <div id={this.props.listingName+"_tuples"}   style={this.state.sliderStyle}>
+         <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
            {this.props.listing.tuples.map( (tuple,index) => (
            <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" ><input className="proChecksum" type="hidden" value="{tuple.profilechecksum}"></input><img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
              <div className="bg4 overXHidden" id="hideOnAction">

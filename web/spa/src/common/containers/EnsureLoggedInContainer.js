@@ -50,10 +50,9 @@ class EnsureLoggedInContainer extends React.Component
         }
         else if(!SPA_PAGE.includes(this.props.location.pathname))
         {
-            console.log('dasdasdas');
                return <div>
                         <Route component={PageNotFound} />
-                       </div>  
+                       </div>
         }
         else
             return null;

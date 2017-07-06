@@ -2,6 +2,7 @@
 /* This script contains all Javascript and CSS files and included in connect.inc to avoide caching problem */
 /* CSS File */
 function getCssFilesArr(){
+$css_arr[]=array("matchalerts_feedback"     => "3");
 $css_arr[]=array("jsms/search/searchform_css"   => "4");
 $css_arr[]=array("AppPromo" => "3");
 $css_arr[]=array("reg_common_css"   => "24");
@@ -255,6 +256,7 @@ return $css_arr;
 }
 /* JavaScript File */
 function getJsFilesArr(){
+$js_arr[]=array("matchalerts_feedback"     => "3");
 $js_arr[]=array("jsms/common/scrollTo"   => "4");
 $js_arr[]=array("jsms/search/mobSearchDropDown_js"   => "18");
 $js_arr[]=array("jsms/search/mobSearchForm_js"   => "7");
@@ -576,7 +578,7 @@ $js_arr[]=array("jspc/search/common/commonSlider"   => "4");
 $js_arr[]=array("jspc/search/searchSliders"   => "4");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"   => "4");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat" => "2");
-$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"   => "61");
+$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"    => "62");
 $js_arr[]=array("jspc/utility/chosen/chosen_jquery" => "32");
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism" => "2");
 $js_arr[]=array("jspc/logout/hpjs"   => "6");

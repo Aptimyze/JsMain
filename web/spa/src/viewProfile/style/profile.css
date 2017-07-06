@@ -424,5 +424,8 @@ padding: 10px 15px ;
     right: -1px;
     top: 204px;
   }
-    
-  
+  .animateLeft {
+    transition: all .2s linear;
+    transform: translate(0%, 0%) !important;
+  }
+  .posRight100p {transform: translate(100%, 0%);}

@@ -300,7 +300,7 @@ const mapDispatchToProps = (dispatch) => {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
 
-            dispatch(commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET'));
+            commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch);
         }
     }
 }

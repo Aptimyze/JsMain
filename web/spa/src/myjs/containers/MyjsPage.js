@@ -15,8 +15,7 @@ import { redirectToLogin } from '../../common/components/RedirectRouter';
 import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
-
-
+import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -31,8 +30,6 @@ export class CheckDataPresent extends React.Component{
 
 		switch (this.props.blockname) {
 			case "int_exp":
-						console.log('expired list');
-						console.log(this.props);
 						if( (this.props.data===undefined)  || (this.props.data.tuples===null))
 						{
 							  return (<div className="noData Intexp"></div>);
@@ -55,6 +52,7 @@ export class CheckDataPresent extends React.Component{
 export  class MyjsPage extends React.Component {
 	constructor(props) {
   		super();
+			jsb9Fun.recordBundleReceived(this,new Date().getTime());
 			this.state=
 			{
 				irApi: false,
@@ -67,9 +65,12 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
-		this.props.hitApi_MYJS();
+		if(!this.props.myjsData.fetched || true ) // caching conditions go here in place of true
+			this.props.hitApi_MYJS(this);
 	}
-
+componentDidUpdate(){
+	jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+}
 	componentWillReceiveProps(nextProps)
 	{
 		this.callEventListner();		
@@ -82,7 +83,9 @@ export  class MyjsPage extends React.Component {
 	componentWillMount(){
 			this.CssFix();
 	}
-
+	componentWillUnmount(){
+		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
+	}
 	CssFix()
 	{
 			// create our test div element
@@ -155,6 +158,8 @@ export  class MyjsPage extends React.Component {
 	        {
 	          return (<div><Loader show="page"></Loader></div>)
 	        }
+					
+					this.trackJsb9 = 1;
   		return(
   		<div id="mainContent">
 		  	<MetaTagComponents page="MyjsPage"/>
@@ -179,32 +184,36 @@ export  class MyjsPage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        myjsData: state.MyjsReducer,
-			 listingData :  state.listingReducer
+			 listingData :  state.listingReducer,
+			 Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        hitApi_MYJS: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST'));
-        },
+        hitApi_MYJS: (containerObj) => {
+		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);
+	},
+        jsb9TrackRedirection : (time,url) => {
+		jsb9Fun.recordRedirection(dispatch,time,url)
+	},
      	hitApi_DR: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL,'&searchBasedParam=matchalerts&&caching=1&&timestamp=1499147929.097&&myjs=1','SET_DR_DATA','POST'));
-        },
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL,'&searchBasedParam=matchalerts&&caching=1&&timestamp=1499147929.097&&myjs=1','SET_DR_DATA','POST',dispatch);
+	},
      	hitApi_MOD: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&&caching=1&timestamp=1499153571.789&&myjs=1','SET_MOD_DATA','POST'));
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&&caching=1&timestamp=1499153571.789&&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
-  		hitApi_IR: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&timestamp=1499153669.566&&myjs=1','SET_IR_DATA','POST'));
+  	hitApi_IR: () => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&timestamp=1499153669.566&&myjs=1','SET_IR_DATA','POST',dispatch);
         },
         hitApi_VA: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&timestamp=1499153727.102&&myjs=1','SET_VA_DATA','POST'));
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&timestamp=1499153727.102&&myjs=1','SET_VA_DATA','POST',dispatch);
         },
         hitApi_IE: () => {
-            dispatch(commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&timestamp=1499153828.047&&myjs=1','SET_IE_DATA','POST'));
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&timestamp=1499153828.047&&myjs=1','SET_IE_DATA','POST',dispatch);
         },	
         hitApi_Ham: () => {
-            dispatch(commonApiCall('/common/hamburgerCounts',{},'SET_IE_DATA','POST'));
+            return commonApiCall('/common/hamburgerCounts',{},'SET_IE_DATA','POST',dispatch);
         }
     }
 }

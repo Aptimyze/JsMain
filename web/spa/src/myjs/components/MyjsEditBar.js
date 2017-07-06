@@ -1,7 +1,22 @@
 import React from "react";
 
-
 export default class EditBar extends React.Component {
+  constructor(props) {
+        super();
+        this.state ={};
+  }
+
+  render(){
+    if(!this.props.fetched) {
+      return <div></div>;
+    }
+    return(
+        <EditBarPresent profileInfo = {this.props.profileInfo} cssProps={this.props.cssProps} />
+      );
+
+}
+}
+export class EditBarPresent extends React.Component {
   constructor(props) {
         super();
         this.state ={};
@@ -10,20 +25,24 @@ export default class EditBar extends React.Component {
 
   componentWillMount()
   {
-    this.setState({
-      pc_temp1 : 0,pc_temp2 : 0,t1 : null,profileCompletionCount : 0,limit:parseInt(this.props.profileInfo.completion), loaderStyle :null, loaderStyle2:null
-    });
-    var arr = [];
-    this.setState({
-      loaderStyle : arr,
-      loaderStyle2 : arr
-    });
   }
 
 componentDidMount(){
+  this.setState({
+    pc_temp1 : 0,pc_temp2 : 0,t1 : null,profileCompletionCount : 0,limit:parseInt(this.props.profileInfo.completion), loaderStyle :null, loaderStyle2:null
+  });
+  var arr = [];
+  this.setState({
+    loaderStyle : arr,
+    loaderStyle2 : arr
+  });
   this.profile_completion();
 }
 
+componentWillUnmount(){
+  clearInterval(this.state.t1);
+  clearInterval(this.state.t2);
+}
 
   start1()
   {
@@ -83,9 +102,6 @@ componentDidMount(){
   };
 
   render(){
-    if(!this.props.fetched) {
-      return <div></div>;
-    }
     return(
       <div className="pad1 preload myjsedit1" id="profileDetailSection">
         <div className="row editBarStyle">

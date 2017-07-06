@@ -1413,11 +1413,11 @@ public static $delhiNCRCitiesStr = "DE00,UP25,HA03,HA02,UP12,UP47,UP48";
 public static $mumbaiRegionStr = "MH04,MH12,MH28,MH29";
 public static $ageDiffNo = "5";
 public static $dollarArr = array("8","9","10","11","12","13","14","21");
-public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATION","P_CITY","P_MTONGUE","P_INCOME_RS","P_INCOME_DOL"); //occupation was removed
+public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATION","P_CITY","P_MTONGUE","P_INCOME_RS","P_INCOME_DOL","P_RELIGION"); //occupation was removed
 public static $NO_OF_DPP_SUGGESTIONS_CAL = 10; 
 public static $keyReplaceAgeArr = array("0"=>"LAGE","1"=>"HAGE");
 public static $keyReplaceIncomeArr = array("0"=>"LRS","1"=>"HRS","2"=>"LDS","3"=>"HDS");
-public static $headingForApp = array("AGE"=>"Widen Age range","CITY"=>"Add these Cities","CASTE"=>"Add these Castes","MTONGUE"=>"Add these Mother Tongues","EDUCATION"=>"Add these Education Degrees","INCOME"=>"Widen Income range"); //occupation was removed
+public static $headingForApp = array("AGE"=>"Widen Age range","CITY"=>"Add these Cities","CASTE"=>"Add these Castes","MTONGUE"=>"Add these Mother Tongues","EDUCATION"=>"Add these Education Degrees","INCOME"=>"Widen Income range","RELIGION"=>"Add these Religions"); //occupation was removed
 public static $descriptionText = "To increase matches and responses, here are a few suggested options to add to your partner preference. Tap to select options which you wish to add";
 public static $incomeFieldJSMS = array("P_INCOME_RS","P_INCOME_DOL");
 public static $incomeMappingArr = array("15"=>"0","2"=>"2","3"=>"3","4"=>"4","5"=>"5","6"=>"6","16"=>"7","17"=>"8","18"=>"9","20"=>"10","22"=>"11","23"=>"20","24"=>"21","25"=>"22","26"=>"23","27"=>"19","8"=>"12","9"=>"13","10"=>"14","11"=>"15","12"=>"16","13"=>"17","21"=>"18","14"=>"19");
@@ -1425,5 +1425,9 @@ public static $rupeeIncomeArr = array("15" => "No Income","2" => "Rs. 0 - 1 Lakh
 public static $OnClickLabel = "OnClick";
 public static $hindiAllLabel = "Hindi- All";
 public static $typeArr = array("CITY","MTONGUE");
+public static $religionValuesForDppSuggestion = array("1"=>"Hindu","4"=>"Sikh","9"=>"Jain");
+public static $sikhReligionValue = "4";
+public static $hinduReligionValue = "1";
+public static $jainReligionValue = "9";
 }
 

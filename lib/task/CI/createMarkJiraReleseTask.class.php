@@ -167,31 +167,7 @@ if(is_array($file) && !empty($file))
     //print_r(array($hotFix,$release,$hotFixJira,$releaseJira));
   }
 }
-public function sendCurlGETRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
-{
-    //print_r($urlToHit);
-    if(!$timeout)
-        $timeout = 50000;
-    $ch = curl_init($urlToHit);
-    if($headerArr)
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-    else
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-    if($postParams)
-        curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    if($postParams)
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-    if($requestType == "PUT")
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-    curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    $output = curl_exec($ch);
-    //print_r($output);
-    return $output;
-}
+
 public function markVersion($releaseJira,$tagName)
 {
   global $setVersionUrl;
@@ -206,7 +182,7 @@ public function markVersion($releaseJira,$tagName)
       //The required format of params is in this way
       $params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));
       //print_r($params."\n");
-      $response = sendCurlPostRequest($url,$params,'',$headerArr,"PUT");
+      $response = CommonFunction::sendCurlPostRequest($url,$params,'',$headerArr,"PUT");
     }
   }
 }
@@ -228,7 +204,7 @@ public function createRelease($releaseArr,$tagName)
               "project"=> $groups[$key]['name'],
               "projectId"=> $groups[$key]['id']));
       //print_r($params."\n");
-      $response = sendCurlPostRequest($createVersionUrl,$params,'',$headerArr);
+      $response = CommonFunction::sendCurlPostRequest($createVersionUrl,$params,'',$headerArr);
     }
     }
 }

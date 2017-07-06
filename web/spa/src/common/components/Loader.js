@@ -11,7 +11,7 @@ export default class Loader extends React.Component {
     {
       view = <div className="loader simple dark loaderimage"></div>;
     } else if (this.props.show == "div") {
-      view = <img src={API_SERVER + "/images/jsms/commonImg/loader.gif"} style={this.props.loaderStyles} />;
+      view = <img src={CONSTANTS.API_SERVER + "/images/jsms/commonImg/loader.gif"} style={this.props.loaderStyles} />;
     }
 	  return (
 	    <div>
