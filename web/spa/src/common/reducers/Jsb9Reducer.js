@@ -6,10 +6,11 @@ const Jsb9Reducer = (state={
 	{
 			case 'SET_JSB9_REDIRECTION':
 		state = {
-			...action.payLoad
+			...action.payload
 		}
 		break;
 	}
+	console.log('statestar');console.log(state);console.log('stateend');
 	return state;
 }
 

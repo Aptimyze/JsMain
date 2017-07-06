@@ -84,7 +84,7 @@ componentDidUpdate(){
 			this.CssFix();
 	}
 	componentWillUnmount(){
-
+		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
 	CssFix()
 	{
@@ -155,7 +155,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         hitApi: (containerObj) => {return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);},
-//				jsb9TrackHit : () =>
+				jsb9TrackRedirection : (time,url) => jsb9Fun.recordRedirection(dispatch,time,url)
 
     }
 }

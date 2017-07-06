@@ -1,6 +1,7 @@
+import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,apiObject,props)
+  constructor(parent,apiObject,props,url)
   {
     this.parent = parent;
     this.apiObject = apiObject;
@@ -14,6 +15,7 @@ export default class MyjsSliderBinding  {
     this.transformX_corr = ((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.getBoundingClientRect().left;
     this._index = 0;
     var _this=this;
+    this.page = 1;
 
 // dynamic variables
 window.addEventListener("resize",function()
@@ -97,9 +99,9 @@ window.addEventListener("resize",function()
                 }
                 else
                     this.gotoSlide(this._index);
-                    // var tupleLength = this.apiObject.tuples.length;
-                // if (this._index >=  tupleLength/ 2) if (tupleLength<100)
-                //     this.props.onnewtuples();
+                   var tupleLength = this.apiObject.tuples.length;
+                 if (this._index >=  tupleLength/ 2) if (tupleLength<100)
+                  this.callApi(++this.page);
                 e.preventDefault();
             }
             NextSlide()
@@ -151,5 +153,9 @@ window.addEventListener("resize",function()
                 else
                     transform = 0;
                 this.alterCssStyle('-'+transform,index);
+            }
+
+            callApi(){
+
             }
         }

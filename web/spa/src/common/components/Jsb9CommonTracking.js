@@ -4,7 +4,7 @@
   }
 
 
-  export function recordRedirection(dipatch,time, url){
+  export function recordRedirection(dispatch,time, url){
     dispatch({
       type: 'SET_JSB9_REDIRECTION',
       payload: {'REDIRECTION' : time,REFERER_URL : url}
@@ -14,6 +14,7 @@
   export function recordBundleReceived(containerObj,time){
     containerObj.jsB9Obj = {};
     containerObj.jsB9Obj.BUNDLE_RECEIVED = time;
+    containerObj.url = window.location.href;
   }
 
   export function recordServerResponse(containerObj,apiResponseTime){
