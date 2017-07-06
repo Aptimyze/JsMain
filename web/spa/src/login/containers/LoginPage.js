@@ -16,11 +16,18 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 import GA from "../../common/components/GA";
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
+import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
+import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 
 class LoginPage extends React.Component {
 
     constructor(props) {
         super();
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
+        jsb9Fun.recordDataReceived(this,new Date().getTime());
+        jsb9Fun.setJsb9Key(this,'JSNEWMOBLOGINURL');
+        jsb9Fun.recordServerResponse(this,'-1');
+
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -32,6 +39,7 @@ class LoginPage extends React.Component {
     }
 
     componentDidMount() {
+        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
         let _this = this;
         document.getElementById("LoginPage").style.height = window.innerHeight+"px";
         setTimeout(function(){
@@ -283,6 +291,7 @@ class LoginPage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        MyProfile: state.LoginReducer.MyProfile,
+       Jsb9Reducer: state.Jsb9Reducer
     }
 }
 
