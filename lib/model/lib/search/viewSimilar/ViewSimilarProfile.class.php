@@ -94,7 +94,6 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         }
                         else
                             $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams);
-                            
                         $suggestedProf = $resultTemp['suggestedProf'];
                         $constantVal = $resultTemp['constantVal'];
 						$priority = $resultTemp['priority'];
@@ -491,15 +490,17 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param - vspArray,$contactedUsername,$similarPageShow,$userGender
          * @return - new array
          */
-        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj)
+        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj,$viewedProfileID='')
         {
             if($userGender=="She")
                 $gender = 'F';
             else
                 $gender = 'M';
             $key = 0;
-            $nameOfUserObj = new NameOfUser;
-            $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+            if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
+                 $nameOfUserObj = new NameOfUser;
+                 $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+            }
             foreach($vspArray as $profileid=>$detailsArray)
             {
                 //$key = $detailsArray["OFFSET"]-1;
@@ -517,7 +518,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
                     }  
-                    else if($searchField == "name_of_user")
+                    else if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID) && $searchField == "name_of_user")
                     {
   			if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
                         {
@@ -581,14 +582,12 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                             $tempVal = str_replace(',99999', '', $tempVal);
                             $tempValArr = explode(" ", $tempVal);
                             foreach($tempValArr as $k1=>$v1){
-                                //if(in_array($v,array('LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
-                                    $whereParams[$v]= $tempVal;
-//                                else
-//                                    $whereParams[$v]= "'".$tempVal."'";
+                                if(($v == "PARTNER_CITYRES" && $loggedInProfileObj->getCOUNTRY_RES() != 51) || ($v == "PARTNER_CAASTE" && !in_array($loggedInProfileObj->getRELIGION(),array(1,2,3,4,9))))
+                                    continue;
+                                $whereParams[$v]= $tempVal;
                             }
                     }
             }
-            
             return $whereParams;
         }
 

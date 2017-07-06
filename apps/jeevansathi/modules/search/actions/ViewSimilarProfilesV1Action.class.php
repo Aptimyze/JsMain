@@ -142,7 +142,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$pid,1);
                                     $profileidsort = implode(" ",$profileidsort);
                                 }
-                                
+                                //print_r($resultsArray);die;
                                 $profileidsort = explode(" ", $profileidsort);
 
                                 $paramArray = array("searchBasedParam" => null,
@@ -201,8 +201,10 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     }
                                 }
                                 $i = 0;
-                                $nameOfUserObj = new NameOfUser;
-                                $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+                                if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
+                                    $nameOfUserObj = new NameOfUser;
+                                    $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+                                }
        	                        if(is_array($resultsArray))
                                 { 
                                     foreach ($resultsArray as $k => $v) {
@@ -219,11 +221,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                             $resultsArray[$k][subscription_icon] = $resultsArray[$k][paidlabel];
                                             $resultsArray[$k][subscription_text] = $resultsArray[$k][paidlabel];
                                             $name = '';
-                                            if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
+                                            if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID) && (is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!=''))
                                                 {
                                                         $name = $nameOfUserObj->getNameStr($resultsArray[$k][name_of_user],$loggedInProfileObj->getSUBSCRIPTION());
                                                 }
-                                            $resultsArray[$k][name_of_user]=$name;
+                                            if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID))
+                                                $resultsArray[$k][name_of_user]=$name;
                                             if($fromVspAndroid)
                                                 $resultsArray[$k][apiLinkToProfile] = "/api/v1/profile/detail?profilechecksum=".$resultsArray[$k][profilechecksum];
                                             if ($resultsArray[$k][userloginstatus] == "gtalk" || $resultsArray[$k][userloginstatus] == "jschat")
@@ -232,7 +235,6 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                                     $resultsArray[$k][verification_seal] = "In-Person Verified";
                                             else
                                                     $resultsArray[$k][verification_seal] = "";
-
                                             foreach ($resultsArray[$k] as $key => $value) {
                                                     $remDecorated = str_replace("decorated_", "", $key);
                                                     if ($resultsArray[$k][$remDecorated] != $resultsArray[$k][$key]) {

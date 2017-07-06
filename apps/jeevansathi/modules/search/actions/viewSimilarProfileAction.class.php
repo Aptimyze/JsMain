@@ -347,7 +347,7 @@ class viewSimilarProfileAction extends sfActions
 		{
 			$vspObj = new ViewSimilarProfile();
 			//print_r($this->finalResultsArray);die;
-			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
+			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile,$this->Profile->getPROFILEID());
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			

@@ -40,7 +40,7 @@ class VspFormatResponse{
             "NATIVE_CITY" => "NATIVE_CITY",
             "NATIVE_STATE" => "NATIVE_STATE",
             "ANCESTRAL_ORIGIN" => "ANCESTRAL_ORIGIN",
-            "NAME_OF_USER" => "",
+            "NAME_OF_USER" => "NAME_OF_USER",
             "paid_joined_viewed_icon" => "",
             "CHECK_PHONE" => "",
             "HOROSCOPE" => "SHOW_HOROSCOPE",
@@ -84,10 +84,24 @@ class VspFormatResponse{
                        $pValue[$val] = 'N';
                 }
                 if($key == "DECORATED_CASTE"){
-                       $explodedCaste = explode(":",$pValue[$val]);
-                       $pValue[$val] = $explodedCaste[1];
+                       if($pValue[$val]=='' || $pValue[$val]== null)
+                           $pValue[$val] = $pValue["RELIGION"];
+                       else{
+                           $explodedCaste = explode(":",$pValue[$val]);
+                           $pValue[$val] = $explodedCaste[1];
+                       }
                 }
-                $returnArray[$key] = $pValue[$val];
+                if($key == "AGE"){
+                        $pValue[$val] .= " yrs";
+                }
+                if($key == "MSTATUS" && !MobileCommon::isDesktop()){
+                        $mstatusArr = array_flip(FieldMap::getFieldLabel("mstatus",'',1));
+                        $pValue[$val] = $mstatusArr[$pValue[$val]];
+                }
+                if($pValue[$val]!=null)
+                    $returnArray[$key] = $pValue[$val];
+                else
+                    $returnArray[$key] = "";
             }
         }
         return $returnArray;
