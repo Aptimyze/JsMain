@@ -70,14 +70,14 @@
     </div>
     <!--end:top--> 
     <!--start-->
-    ~if $phoneMob && $isd`
+    ~if $profileDetail["PHONE_MOB"] && $profileDetail["ISD"]`
     <div class="fullwid brdr1 bg4">
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Mobile No.</div>
-                <div class="pb12">+~$isd` ~$phoneMob`</div>
-                <div class="js-showPr" data-title="Mobile_No" value="~$showPhoneMob`">
-                ~if $showPhoneMob eq "" || $showPhoneMob eq "Y"`
+                <div class="pb12">+~$profileDetail["ISD"]` ~$profileDetail["PHONE_MOB"]`</div>
+                <div class="js-showPr" data-title="Mobile_No" value="~$profileDetail['SHOWPHONE_MOB']`">
+                ~if $profileDetail["SHOWPHONE_MOB"] eq "" || $profileDetail["SHOWPHONE_MOB"] eq "Y"`
                 <div><span>Visible to All (Recommended)</span> <i class="mainsp dropar"></i></div> 
                 ~else`
                 <div><span>Visible to Members I Accept/Express Interest in</span> <i class="mainsp dropar"></i></div>
@@ -108,14 +108,14 @@
     ~/if`
     <!--end-->
     <!--start-->
-    ~if $phoneRes && $std`
+    ~if $profileDetail["PHONE_RES"] && $profileDetail["STD"]`
     <div class="fullwid brdr1 bg4">
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Landline Number</div>
-                <div class="pb12">~$std` ~$phoneRes`</div>
-                 <div class="js-showPr" data-title="Landline_Number" value="~$showPhoneRes`">
-                ~if $showPhoneRes eq "" || $showPhoneRes eq "Y"`
+                <div class="pb12">~$profileDetail["STD"]` ~$profileDetail["PHONE_RES"]`</div>
+                 <div class="js-showPr" data-title="Landline_Number" value="~$profileDetail['SHOWPHONE_RES']`">
+                ~if $profileDetail['SHOWPHONE_RES'] eq "" || $profileDetail['SHOWPHONE_RES'] eq "Y"`
                 <div><span>Visible to All (Recommended)</span> <i class="mainsp dropar"></i></div> 
                 ~else`
                 <div><span>Visible to Members I Accept/Express Interest in</span> <i class="mainsp dropar"></i></div>
@@ -131,8 +131,8 @@
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Photo Privacy</div>
-                <div class="js-showPr" data-title="Photo_Privacy" value="~$photoDisplay`">
-                ~if $photoDisplay eq "" || $photoDisplay eq "Y"`
+                <div class="js-showPp" data-title="Photo_Privacy" value="~$profileDetail['PHOTO_DISPLAY']`">
+                ~if $profileDetail["PHOTO_DISPLAY"] eq "" || $profileDetail["PHOTO_DISPLAY"] eq "A"`
                 <div><span>Visible to All (Recommended) </span><i class="mainsp dropar"></i></div> 
                 ~else`
                 <div><span>Visible to Members I Accept/Express Interest in </span><i class="mainsp dropar"></i></div>
@@ -147,22 +147,18 @@
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Profile Visibility</div>
-                <div class="js-showPv" data-title="Profile_Visibility" value="~$privacy`">
-                 ~if $privacy eq "" || $privacy eq "A"`
+                <div class="js-showPv" data-title="Profile_Visibility" value="~$profileDetail['PRIVACY']`">
+                 ~if $profileDetail["PRIVACY"] eq "" || $profileDetail["PRIVACY"] eq "A"`
                 <div><span>Visible to All (Recommended) </span><i class="mainsp dropar"></i></div> 
-                ~elseif $privacy eq "F"`
+                ~elseif $profileDetail["PRIVACY"] eq "F"`
                 <div><span>Visible to members who pass my filters </span><i class="mainsp dropar"></i></div>
-                ~elseif $privacy eq "C"`
+                ~elseif $profileDetail["PRIVACY"] eq "C"`
                 <div><span>Not visible to anyone (Not Recommended) </span><i class="mainsp dropar"></i></div>
                 ~/if`            
             </div>
         </div>    
     </div>
     <!--end-->
-   
-   
   </div>
-
-  
 </body>
 </html>

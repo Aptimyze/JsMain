@@ -9,4 +9,5 @@ class privacySettingsEnums
 	public static $validPhotoPrivacyValues = array("A","C");
 	public static $MobileSettingLabel = "Mobile_No";
 	public static $LandlineSettingLabel = "Landline_Number";
+	public static $jprofileFieldsToUpdate= array("Mobile_No"=>"SHOWPHONE_MOB","Landline_Number"=>"SHOWPHONE_RES","Photo_Privacy"=>"PHOTO_DISPLAY");
 }

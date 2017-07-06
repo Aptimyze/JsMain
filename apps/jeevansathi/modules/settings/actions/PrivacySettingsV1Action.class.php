@@ -3,6 +3,7 @@
 /*
  * @package    jeevansathi
  * @subpackage Privacy Settings
+ * @Description: This api fetches field and privacy from the request and updates the same on edit_log and jprofile
  * @author     Sanyam Chopra
 */
 
@@ -12,11 +13,10 @@ class PrivacySettingsV1Action extends sfAction
     {        
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $field = $request->getParameter("field");
-        
         $privacyValue = $request->getParameter("privacy");
         $privacySettingObj = new privacySettings();
         $response = $privacySettingObj->updatePrivacySettings($field,$privacyValue);        
-        if ($response)
+        if($response)
         {
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
             $apiResponseHandlerObj->setResponseBody(array('responseVal'=>$response));            

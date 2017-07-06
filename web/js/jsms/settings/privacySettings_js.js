@@ -1,5 +1,7 @@
 var settingsValue  = {"":"visible","Y":"visible","N":"semiVisible","C":"semiVisible"};
 var settingsValuePv  = {"":"visible","A":"visible","F":"semiVisible","C":"notVisible"};
+var settingsValuePp  = {"":"visible","A":"visible","C":"semiVisible"};
+
 var getT;
 $(function(){	
 	$('.js-showPr').click(function(){
@@ -25,7 +27,7 @@ $(function(){
 		var fieldWithSpace = getT.replace("_", " ");
 		$('#layerPp').html(fieldWithSpace);	
 		$('#layerPp').parent().attr('id',getT);	
-		$('.'+settingsValuePv[$(this).attr('value')]).after('<i class="fr privsel"></i>');		
+		$('.'+settingsValuePp[$(this).attr('value')]).after('<i class="fr privsel"></i>');		
 		$('.tapoverlay, .showPp').css('display','block');		
 	});
 	

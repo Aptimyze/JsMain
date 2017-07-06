@@ -1068,17 +1068,8 @@ public function executeAppredirect(sfWebRequest $request)
   {
     $loggedInProfileObj = LoggedInProfile::getInstance();
     $profileId = $loggedInProfileObj->getPROFILEID(); 
-    $profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");        
-    $this->phoneMob = $profileDetail["PHONE_MOB"];
-    $this->phoneRes = $profileDetail["PHONE_RES"];
-    $this->showPhoneRes = $profileDetail["SHOWPHONE_RES"];
-    $this->showPhoneMob = $profileDetail["SHOWPHONE_MOB"];
-    $this->photoDsiplay = $profileDetail["PHOTO_DISPLAY"]; 
-    
-
-    $this->privacy = $profileDetail["PRIVACY"];    
-    $this->std = $profileDetail["STD"];
-    $this->isd = $profileDetail["ISD"];
+    $this->profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+    //print_R($this->profileDetail);die;
     $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
     $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
     $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
