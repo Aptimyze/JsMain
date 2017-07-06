@@ -111,7 +111,8 @@ EOF;
                  * print_r($csvAttachment);
                  */
                 $fileName = "crmHandledRevenue_" . $month . "_" . $year . "_" . $fortnight . ".csv";
-                SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', 'Jeevansathi Info');
+              
+                SendMail::send_email($to, $message, $subject, "info@jeevansathi.com", $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', "Jeevansathi Info");
                 unset($csvAttachment);
             }
         } else {
