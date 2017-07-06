@@ -33,9 +33,9 @@
   export function recordDidMount(containerObj,time,reducer){
     if(!containerObj.jsB9Obj)
       containerObj.jsB9Obj = {};
-    if(containerObj.trackJsb9==0)return;
+    if(!containerObj.jsB9Obj.API_RESPONSE_TIME)return;
     if(containerObj.jsB9Obj.VIEW_MOUNTED) return;
-      containerObj.jsB9Obj.VIEW_MOUNTED = time;
+        containerObj.jsB9Obj.VIEW_MOUNTED = time;
       jsb9TrackApi(containerObj.jsB9Obj,reducer);
   }
 
