@@ -94,11 +94,11 @@ if(calIdTemp=='20' || calIdTemp==23 ){
     {
         $(window).resize(function()
         {
-        $("#cityMidDiv").css("height",window.innerHeight - 50);
+        $("#stateCityMidDiv").css("height",window.innerHeight - 50);
         }); 
     }
 
-    $("#cityMidDiv").css("height",window.innerHeight - 50);
+    $("#stateCityMidDiv").css("height",window.innerHeight - 50);
     $("#stateClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
