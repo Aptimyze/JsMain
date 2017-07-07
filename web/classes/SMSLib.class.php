@@ -700,7 +700,7 @@ class SMSLib
     {
         include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
         $cc      = 'palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com,prashant.pal@jeevansathi.com';
-        $to      = 'tanu.gupta@jeevansathi.com';
+        $to      = 'nitesh.s@jeevansathi.com';
         $msg     = '';
         $subject = "Scheduled SMS sendSmsAlert cron error mail";
         if ($commentText) {
@@ -716,7 +716,7 @@ class SMSLib
     {
         include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
         $cc      = 'esha.jain@jeevansathi.com,pankaj.khandelwal@jeevansathi.com';
-        $to      = 'tanu.gupta@jeevansathi.com';
+        $to      = 'nitesh.s@jeevansathi.com';
         $subject = "Match of the day Sms Calculation mail";
         $msg     = "Calculation Number = " . ($num + 1) . "<br/> Total Profile: " . $count . " <br/> Total Sms Generated: " . $countSmsGenerated . "<br/> Total New Best Match Calculated: " . $countBestMatchCalculated . "<br/><br/>Warm Regards";
         send_email($to, $msg, $subject, "", $cc);

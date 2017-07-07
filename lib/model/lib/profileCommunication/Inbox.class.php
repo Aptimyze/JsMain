@@ -300,7 +300,8 @@ class Inbox implements Module
 						}
 						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED"))
 						{
-							$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
+							if(is_array($skipArray))
+								$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
 						}
 						$conditionArray = $this->getCondition($infoType, $page); 
                                                 if($infoType == "MY_MESSAGE"){

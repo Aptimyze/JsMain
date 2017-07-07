@@ -42,7 +42,7 @@ $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
 }
 
 $to='esha.jain@jeevansathi.com';
-//$to='tanu.gupta@jeevansathi.com';
+//$to='nitesh.s@jeevansathi.com';
 $msg='';
 $subject="Scheduled SMS send success mail";
 $msg='Cron to send sms and update details table executed successfully<br/><br/>Warm Regards';
