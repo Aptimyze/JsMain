@@ -16,7 +16,9 @@ class RequestHoroscopeEnum {
         public static function getErrorByField($field, $search = "", $replace = "") {
                 $var_name = $field;
                 $errMsg = self::$$var_name;
-                $errMsg["message"] = str_replace($search, $replace, $errMsg['message']);
+                if($search != "")
+                        $errMsg["message"] = str_replace($search, $replace, $errMsg['message']);
+                
                 return $errMsg;
         }
 

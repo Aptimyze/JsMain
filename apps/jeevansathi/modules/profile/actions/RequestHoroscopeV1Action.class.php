@@ -29,7 +29,7 @@ class RequestHoroscopeV1Action extends sfAction{
                 }
                 $username = $resDetails[0]["USERNAME"];
                 if ($resDetails[0]["GENDER"] == $loggedInProfileObj->getGENDER()) {
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("SAMEGENDER_ERROR","#USERNAME#","SDFSD");
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("SAMEGENDER_ERROR","#USERNAME#",$username);
                         $this->sendResponse($request, $statusArr);
                 }
                 $filtered = false;
@@ -38,7 +38,7 @@ class RequestHoroscopeV1Action extends sfAction{
                         $filtered = $this->isFiltered($loggedInProfileObj, $requestedId);
                 }
                 if ($filtered) {
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("FILTERED_ERROR","#USERNAME#","SDFSD");
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("FILTERED_ERROR","#USERNAME#",$username);
                         $this->sendResponse($request, $statusArr);
                 }
                 $selfAstroDetails = $this->selfAstroDetails($loggedInProfileObj);
@@ -51,19 +51,23 @@ class RequestHoroscopeV1Action extends sfAction{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
                         $this->sendResponse($request, $statusArr);
                 }
-                $flag_show_template=$this->horoscopeRequestSent($profileid,$requestedId);
-                if($flag_show_template == "E"){
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("ALREADY_REQUESTED","#USERNAME#","SDFSD");
+                $horoscopeUploaded=$this->horoscopeRequestSent($profileid,$requestedId);
+                if($horoscopeUploaded === "E"){
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("ALREADY_REQUESTED","#USERNAME#",$username);
+                        $this->sendResponse($request, $statusArr);
+                }elseif($horoscopeUploaded == true){
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("REQUEST_SENT","#USERNAME#",$username);
+                        $this->sendResponse($request, $statusArr);
+                }else{
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("FAILURE");
                         $this->sendResponse($request, $statusArr);
                 }
-                $statusArr = RequestHoroscopeEnum::getErrorByField("REQUEST_SENT","#USERNAME#","SDFSD");
-                $this->sendResponse($request, $statusArr);
         }
         private function horoscopeRequestSent($profileid,$requestedId){
                 $dt=date("Y-m-d H:i:s");
                 $horoscopeObj = new Horoscope();
                 $requested = $horoscopeObj->ifHoroscopeRequested(array($profileid), $requestedId);
-                if(!empty($requested)){
+                if(!empty($requested) && $requested != NULL){
                         return 'E'; // Already requested
                 }
                 $dbName1 = JsDbSharding::getShardNo($profileid);
