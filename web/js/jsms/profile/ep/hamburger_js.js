@@ -638,7 +638,7 @@ var hamHtml="",slider1,slider2;
 					type = $(target).next().attr("name").split("p_")[1].split("[]")[0].toUpperCase();
 				}
 				
-				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION") {
+				if(type == "RELIGION" || type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION") {
 					$("#HAM_OPTION_1 li input:checked").each(function(){
 						typeDataArray.push($(this).val());
 					});
