@@ -50,29 +50,27 @@ export class CheckDataPresent extends React.Component{
 }
 
 export  class MyjsPage extends React.Component {
+
 	constructor(props) {
   		super();
-			jsb9Fun.recordBundleReceived(this,new Date().getTime());
-			this.state=
-			{
-				irApi: false,
-				modApi: false,
-				ieApi: false,
-				drApi: false,
-				vaApi: false
-			}
+		jsb9Fun.recordBundleReceived(this,new Date().getTime());
+		this.state=
+		{
+			irApi: false,
+			modApi: false,
+			ieApi: false,
+			drApi: false,
+			vaApi: false,
+			hamApi: false
+		}
   	}
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched || true ) // caching conditions go here in place of true
+		if(!this.props.myjsData.fetched || true ){ // caching conditions go here in place of true
 			this.props.hitApi_MYJS(this);
-		this.props.hitApi_IE();
-		this.props.hitApi_IR();
-		this.props.hitApi_MOD();
-		this.props.hitApi_DR();
-		this.props.hitApi_VA();
-		this.props.hitApi_Ham();
+			this.restApiHits();
+		}
 	}
 
 	componentDidUpdate(){
@@ -81,7 +79,7 @@ export  class MyjsPage extends React.Component {
 
 	componentWillReceiveProps(nextProps)
 	{
-		window.addEventListener('scroll', this.callEventListner);		
+		this.callEventListner();
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
 			showLoader : false
@@ -93,7 +91,6 @@ export  class MyjsPage extends React.Component {
 	}
 
 	componentWillUnmount(){
-        window.removeEventListener('scroll', this.callEventListner); 
 		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
 
@@ -117,7 +114,11 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-  			if(!this.state.irApi){
+  		window.addEventListener('scroll', (event) => {this.restApiHits()});
+  	}
+
+  	restApiHits(){
+  		if(!this.state.irApi){
 		    	this.props.hitApi_IR();		   
 		    	this.setState({
 		    		irApi: true
@@ -147,14 +148,8 @@ export  class MyjsPage extends React.Component {
 		    		ieApi: true
 		    	});
 		    }
-		    if(!this.state.ieApi){
-		    	this.props.hitApi_IE();		   
-		    	this.setState({
-		    		ieApi: true
-		    	});
-		    }
 		    if(!this.state.hamApi){
-		    	this.props.hitAPi_Ham();		   
+		    	this.props.hitApi_Ham();		   
 		    	this.setState({
 		    		hamApi: true
 		    	});
