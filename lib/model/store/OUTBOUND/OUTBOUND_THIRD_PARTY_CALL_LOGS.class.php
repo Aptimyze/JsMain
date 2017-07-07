@@ -10,7 +10,8 @@ class OUTBOUND_THIRD_PARTY_CALL_LOGS extends TABLE {
    * @brief Constructor function
    * @param $dbName - Database to which the connection would be made
    */
-  public function __construct($dbname = "") {
+  public function __construct($dbname = "crm_slave") {
+   $dbname = "crm_slave";
     parent::__construct($dbname);
   }
 
