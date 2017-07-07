@@ -75,7 +75,7 @@
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Mobile No.</div>
-                <div class="pb12">+~$profileDetail["ISD"]` ~$profileDetail["PHONE_MOB"]`</div>
+                <div class="pb12 "><a href="#" class="color3">+~$profileDetail["ISD"]` ~$profileDetail["PHONE_MOB"]`</a></div>
                 <div class="js-showPr" data-title="Mobile_No" value="~$profileDetail['SHOWPHONE_MOB']`">
                 ~if $profileDetail["SHOWPHONE_MOB"] eq "" || $profileDetail["SHOWPHONE_MOB"] eq "Y"`
                 <div><span>Visible to All (Recommended)</span> <i class="mainsp dropar"></i></div> 
@@ -94,7 +94,7 @@
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Alternate Number</div>
-                <div class="pb12">+~$altMobileIsd` ~$altMobile`</div>
+                <div class="pb12"><a href="#" class="color3">+~$altMobileIsd` ~$altMobile`</a></div>
                 <div class="js-showPr" data-title="Alternate_Number" value="~$showAltMob`">
                  ~if $showAltMob eq "" || $showAltMob eq "Y"`
                 <div><span>Visible to All (Recommended) </span><i class="mainsp dropar"></i></div> 
@@ -113,7 +113,7 @@
     	<div class="pad1">
 			<div class="pad2 color3 f14 fontlig">
             	<div class="pb12">Landline Number</div>
-                <div class="pb12">~$profileDetail["STD"]` ~$profileDetail["PHONE_RES"]`</div>
+                <div class="pb12 color3"><a href="#" class="color3">~$profileDetail["STD"]` ~$profileDetail["PHONE_RES"]`</a></div>
                  <div class="js-showPr" data-title="Landline_Number" value="~$profileDetail['SHOWPHONE_RES']`">
                 ~if $profileDetail['SHOWPHONE_RES'] eq "" || $profileDetail['SHOWPHONE_RES'] eq "Y"`
                 <div><span>Visible to All (Recommended)</span> <i class="mainsp dropar"></i></div> 

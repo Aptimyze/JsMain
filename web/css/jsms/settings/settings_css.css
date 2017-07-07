@@ -249,7 +249,11 @@ input{border:0; background:none; outline:none}
 .filter-onoff-new {background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/on-off.png);background-repeat: no-repeat;}
 .dropar{background-position: -12px -75px;width: 21px;height: 10px;}
 .zl-102{z-index:102; }
-.setndiv{position:fixed;transform: translate(-50%, -50%);top:50%;left:50%}
+.setndiv{position:fixed;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	top:50%;left:50%}
 .nbg1{background-color:#f4f4f4}
 ul.nlistp{list-style-type:none;margin:0; padding:0}
 ul.nlistp li{padding:20px 10px;border-bottom:1px solid #eae8e8}
