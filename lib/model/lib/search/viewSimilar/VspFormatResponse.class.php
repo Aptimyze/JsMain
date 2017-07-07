@@ -73,8 +73,9 @@ class VspFormatResponse{
             "ALBUM_COUNT" => "PHOTO_COUNT"
     );
     
-    public function formatTupleResponse($pValue){
+    public function formatTupleResponse($pValue,$fromEcpDesktop=''){
         $pValue = (array)$pValue;
+        //print_r($pValue);die;
         foreach(self::$vspResponseArray as $key=>$val){
             if($val!=""){    
                 if($key == "BOOKMARKED"){
@@ -82,6 +83,17 @@ class VspFormatResponse{
                        $pValue[$val] = 'Y';
                     else
                        $pValue[$val] = 'N';
+                }
+                if($key == "PHOTO_REQUESTED"){
+                    if($pValue[$val] == 0)
+                       $pValue[$val] = 'Y';
+                    else
+                       $pValue[$val] = 'N';
+                }
+                if($key == "PHOTO"){
+                    if($fromEcpDesktop){
+                        $val = "ProfilePic450Url";
+                    }
                 }
                 if($key == "DECORATED_CASTE"){
                        if($pValue[$val]=='' || $pValue[$val]== null)
@@ -94,7 +106,7 @@ class VspFormatResponse{
                 if($key == "AGE"){
                         $pValue[$val] .= " yrs";
                 }
-                if($key == "MSTATUS" && !MobileCommon::isDesktop()){
+                if($key == "MSTATUS" && !$fromEcpDesktop){
                         $mstatusArr = array_flip(FieldMap::getFieldLabel("mstatus",'',1));
                         $pValue[$val] = $mstatusArr[$pValue[$val]];
                 }
@@ -104,6 +116,7 @@ class VspFormatResponse{
                     $returnArray[$key] = "";
             }
         }
+        $returnArray["PHOTO_REQUEST"] = $returnArray["PHOTO_REQUESTED"];
         return $returnArray;
     }
 }

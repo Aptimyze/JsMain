@@ -240,7 +240,7 @@ class viewSimilarProfileAction extends sfActions
                     }
                 }
                 else{
-                    $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$this->loginProfile->getPROFILEID(),1);
+                    $resultsArray = $viewSimilarLibObj->getSimilarProfilesDetails($profileidsort,$this->loginProfile->getPROFILEID(),1,1);
                     $profileidsort = implode(" ",$profileidsort);
                 }
                 
@@ -348,6 +348,7 @@ class viewSimilarProfileAction extends sfActions
 			$vspObj = new ViewSimilarProfile();
 			//print_r($this->finalResultsArray);die;
 			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile,$this->Profile->getPROFILEID());
+                        //print_r($transformedResponse);die;
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			

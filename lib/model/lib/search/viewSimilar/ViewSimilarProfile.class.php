@@ -340,7 +340,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param $pid Profile ID of viewer
          * @return array of tuple object of profile details
          */
-        public function getSimilarProfilesDetails($userList, $pid,$formatResponse) {
+        public function getSimilarProfilesDetails($userList, $pid,$formatResponse,$fromEcpDesktop='') {
                 if ($userList) {
                         foreach ($userList as $key => $Pvalue) {
                                 $finalUserList["VIEW_SIMILAR"][$Pvalue] = array("PROFILEID" => $Pvalue);
@@ -366,7 +366,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         }
                         if($formatResponse){
                             $vspFormatObj = new VspFormatResponse ();
-                            $returnVspArray[$pKey] = $vspFormatObj->formatTupleResponse($pValue);
+                            $returnVspArray[$pKey] = $vspFormatObj->formatTupleResponse($pValue,$fromEcpDesktop);
                              
                         }
                 }
