@@ -11,7 +11,7 @@ export default class CareerInfo extends React.Component {
     	}
 
     	var work_status;
-    	if(this.props.about.work_status.label || this.props.about.work_status.value || this.props.about.work_status.company)
+    	if(this.props.about.work_status)
     	{
     		work_status = <div>
 	    		<div className="f12 color1">
@@ -62,7 +62,7 @@ export default class CareerInfo extends React.Component {
     	} 
 
     	var occupationSection;
-    	if(this.props.about.mycareer || this.props.about.work_status.label || this.props.about.work_status.value || this.props.about.work_status.company || this.props.about.earning || this.props.about.plan_to_work || this.props.about.abroad)
+    	if(this.props.about.mycareer || this.props.about.work_status || this.props.about.earning || this.props.about.plan_to_work || this.props.about.abroad)
     	{
     		occupationSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
 	    		<div className="fl">

@@ -86,24 +86,6 @@ class KundliInfo extends React.Component {
     		</div>;
     	}
 
-    	var rashi;
-    	if(this.props.about.more_astro.rashi) {
-    		rashi =  <div className="clearfix">
-                <div className="fontlig vpro_wordwrap" id="vpro_more_astro_rashi" >
-                	{this.props.about.more_astro.rashi}
-                </div>
-            </div>;
-    	}
-
-    	var nakshatra;
-    	if(this.props.about.more_astro.nakshatra) {
-    		nakshatra =  <div className="clearfix">
-                <div className="fontlig vpro_wordwrap" id="vpro_more_astro_nakshatra" >
-                	{this.props.about.more_astro.nakshatra}
-                </div>
-            </div>;
-    	}
-
         var AstroReport;
         if(!this.props.about.NO_ASTRO && this.props.about.sameGender != 1)
         {   
@@ -138,20 +120,34 @@ class KundliInfo extends React.Component {
     		 {downloadHoroscope}
     		</div>;
     	}
-
-    	var horo_match
-    	if(this.props.about.more_astro.horo_match) 
-    	{
-    		horo_match = <div className="clearfix pt10">
-                <i className="vpro_sprite vpro_pin"></i>
-                <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
-                </div>
-            </div>
-    	}
-
+    
     	var more_astro;
     	if(this.props.about.more_astro) 
     	{
+            var rashi,nakshatra,horo_match;
+            if(this.props.about.more_astro.rashi) {
+                rashi =  <div className="clearfix">
+                    <div className="fontlig vpro_wordwrap" id="vpro_more_astro_rashi" >
+                        {this.props.about.more_astro.rashi}
+                    </div>
+                </div>;
+            }
+            if(this.props.about.more_astro.nakshatra) {
+                nakshatra =  <div className="clearfix">
+                    <div className="fontlig vpro_wordwrap" id="vpro_more_astro_nakshatra" >
+                        {this.props.about.more_astro.nakshatra}
+                    </div>
+                </div>;
+            }
+            if(this.props.about.more_astro.horo_match) 
+            {
+                horo_match = <div className="clearfix pt10">
+                    <i className="vpro_sprite vpro_pin"></i>
+                    <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
+                    </div>
+                </div>
+            }
+
     		more_astro = <div>
     			<div className="f12 color1">More</div>
             	<div className="fontlig pb15">
