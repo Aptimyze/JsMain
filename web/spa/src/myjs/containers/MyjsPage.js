@@ -56,6 +56,7 @@ export  class MyjsPage extends React.Component {
 		jsb9Fun.recordBundleReceived(this,new Date().getTime());
 		this.state=
 		{
+			myjsApi: false,
 			irApi: false,
 			modApi: false,
 			ieApi: false,
@@ -68,8 +69,7 @@ export  class MyjsPage extends React.Component {
   	componentDidMount()
   	{
 		if(!this.props.myjsData.fetched || true ){ // caching conditions go here in place of true
-			this.props.hitApi_MYJS(this);
-			this.restApiHits();
+			this.firstApiHits(this);
 		}
 	}
 
@@ -117,50 +117,81 @@ export  class MyjsPage extends React.Component {
   		window.addEventListener('scroll', (event) => {this.restApiHits()});
   	}
 
-  	restApiHits(){
+  	firstApiHits(){
+  		if(!this.state.myjsApi){
+		    this.props.hitApi_MYJS();		   
+		    this.setState({
+		    	myjsApi: true
+		    });
+		}
+  		if(!this.state.hamApi){
+		    this.props.hitApi_Ham();		   
+		    this.setState({
+		    	hamApi: true
+		    });
+		}
+		if(!this.state.ieApi){
+		    this.props.hitApi_IE();		   
+		    this.setState({
+		    	ieApi: true
+		    });
+		}
   		if(!this.state.irApi){
-		    	this.props.hitApi_IR();		   
-		    	this.setState({
-		    		irApi: true
-		    	});
-		    }
-		    if(!this.state.modApi){
-		    	this.props.hitApi_MOD();		   
-		    	this.setState({
-		    		modApi: true
-		    	});
-		    }
-		    if(!this.state.drApi){
-		    	this.props.hitApi_DR();		   
-		    	this.setState({
-		    		drApi: true
-		    	});
-		    }
-		    if(!this.state.vaApi){
-		    	this.props.hitApi_VA();		   
-		    	this.setState({
-		    		vaApi: true
-		    	});
-		    }
-		    if(!this.state.ieApi){
-		    	this.props.hitApi_IE();		   
-		    	this.setState({
-		    		ieApi: true
-		    	});
-		    }
-		    if(!this.state.hamApi){
-		    	this.props.hitApi_Ham();		   
-		    	this.setState({
-		    		hamApi: true
-		    	});
-		    }			   
+		    this.props.hitApi_IR();		   
+		    this.setState({
+		    	irApi: true
+		    });
+		}		       
+  	}
+
+  	restApiHits(){
+  		if(!this.state.modApi){
+		    this.props.hitApi_MOD();		   
+		    this.setState({
+		    	modApi: true
+		    });
+		}
+		if(!this.state.vaApi){
+		    this.props.hitApi_VA();		   
+		    this.setState({
+		    	vaApi: true
+		    });
+		}
+ 		if(!this.state.drApi){
+		    this.props.hitApi_DR();		   
+		    this.setState({
+		    drApi: true
+		    });
+		}		     			  		
   	}
 
   	render() {
-
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
-	    }					
+	    }
+	    if(this.props.myjsData.fetched){
+  			var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+  		}
+  		if(this.props.myjsData.hamFetched){
+  			var MyjsHeadHTMLView = <MyjsHeadHTML bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+	    }
+  		if(this.props.myjsData.ieFetched){
+	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE.profiles}/>
+	    }
+	    if(this.props.myjsData.irFetched){
+	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    }
+	    if(this.props.myjsData.modFetched){
+	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
+	    }
+	    if(this.props.myjsData.vaFetched){
+	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA.profiles}/>
+	    }
+	    if(this.props.myjsData.drFetched)
+	    {
+	    	var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
+	    }
 		this.trackJsb9 = 1;
   		return(
   		<div id="mainContent">
@@ -168,14 +199,14 @@ export  class MyjsPage extends React.Component {
 		  		<GA ref="GAchild" />
 				  <div className="perspective" id="perspective">
 							<div className="" id="pcontainer">
-								<MyjsHeadHTML bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
-								<EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
-								<AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>																		
-								<CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE.profiles}/>
-								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
-								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
-								<CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA.profiles}/>
-								<MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />							
+								{MyjsHeadHTMLView}
+								{EditBarView}
+								{AcceptCountView}															
+								{interestExpView}
+								{interestRecView}
+								{matchOfTheDayView}
+								{MyjsProfileVisitorView}
+								{dailyRecommendationsView}					
 							</div>
 					</div>
 			</div>
@@ -187,8 +218,8 @@ export  class MyjsPage extends React.Component {
 const mapStateToProps = (state) => {
     return{
        myjsData: state.MyjsReducer,
-			 listingData :  state.listingReducer,
-			 Jsb9Reducer : state.Jsb9Reducer
+	   listingData :  state.listingReducer,
+	   Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
