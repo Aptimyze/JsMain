@@ -86,7 +86,9 @@ class LoginPage extends React.Component {
             this.setState ({
                 showLoader : false
             })
-            this.showError(nextProps.MyProfile.responseMessage);
+            if(nextProps.MyProfile.responseMessage) {
+                this.showError(nextProps.MyProfile.responseMessage); 
+            }
        }
     }
 
@@ -156,7 +158,22 @@ class LoginPage extends React.Component {
             e.target.innerText = "Hide";
         }
     }
+
+    componentDidUpdate(prevprops) {
+        if(prevprops.location.search.indexOf("ham=1") != -1) {
+            this.refs.Hamchild.hideHam();
+        }
+    }
+
     showHam() {
+        if(window.location.search.indexOf("ham=1") == -1) {
+            if(window.location.search.indexOf("?") == -1) {
+                this.props.history.push(window.location.pathname+"?ham=1");    
+            } else {
+                this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
+            }
+            
+        }
         this.refs.Hamchild.openHam();
     }
 
@@ -169,7 +186,7 @@ class LoginPage extends React.Component {
 
     render() {
         var errorView;
-        if(this.state.insertError)
+        if(this.state.insertError == true)
         {
           errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
         }
