@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
+import HamMain from "../../Hamburger/containers/HamMain"
 
 class LoginPage extends React.Component {
 
@@ -108,14 +109,11 @@ class LoginPage extends React.Component {
         let passVal = document.getElementById("password").value;
         let g_recaptcha_response;
         let captcha;
-            console.log("g_recaptcha_response is: ");
         if ( document.getElementById("g-recaptcha-response") )
         {
-            console.log("Inside LOGIN_ATTEMPT_COOKIE.");
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        console.log(g_recaptcha_response);
 
         if(emailVal.length != 0 && validateEmail(emailVal) == false) {
             this.showError(ErrorConstantsMapping("ValidEmail"));
@@ -127,7 +125,6 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
-            console.log("Parameters are: ")
             this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha);
             this.setState ({
                 showLoader : true
@@ -158,6 +155,9 @@ class LoginPage extends React.Component {
             passElem.type = "text";
             e.target.innerText = "Hide";
         }
+    }
+    showHam() {
+        this.refs.Hamchild.openHam();
     }
 
     removePromoLayer() {
@@ -240,6 +240,7 @@ class LoginPage extends React.Component {
             <div id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>
                 <GA ref="GAchild" />
+                <HamMain ref="Hamchild" page="Login"></HamMain>
                 {promoView}
                 {errorView}
                 {loaderView}
@@ -250,7 +251,7 @@ class LoginPage extends React.Component {
                                 <div className="op_pad1">
                                     <div className="lgin_pad1">
                                         <div className="fl HamiconLogin">
-                                            <i id="hamburgerIcon" className="dispbl mainsp baricon"></i>
+                                            <i  onClick={() => this.showHam()} id="hamburgerIcon" className="dispbl mainsp baricon"></i>
                                         </div>
                                         <img className="loginLogo" src="https://static.jeevansathi.com/images/jsms/commonImg/mainLogoNew.png" />
                                     </div>
