@@ -116,7 +116,7 @@ class RequestHoroscopeV1Action extends sfAction{
                 $dbObj = new newjs_CONTACTS($shardNo);
                 $resArray = $dbObj->getContactRecord($profileid, $requestedId);
                 $contact_status = $resArray['TYPE'];
-                if(($resArray['SENDER'] == $profileid && $contact_status != "A") || ($resArray['RECEIVER'] == $requestedId && $contact_status!='I' && $contact_status!='A' && $contact_status!='D')){
+                if(empty($resArray) || (($resArray['SENDER'] == $profileid && $contact_status != "A") || ($resArray['SENDER'] == $requestedId && $contact_status!='I' && $contact_status!='A' && $contact_status!='D'))){
                         return true;
                 }
                 return false;
