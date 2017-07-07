@@ -16,7 +16,7 @@ class LightningDeal
         $this->logFilePath = $logFilePath;
 	}
 
-	/*Pool 1-all currently free users who have logged-in in the last 30 days*/
+	/*Pool 1-all currently free users who have logged-in in the last 15 days*/
 	public function fetchDealPool1(){
         if($this->debug == 1){
             error_log("pool1 generation started"."\n",3,$this->logFilePath);
@@ -71,7 +71,7 @@ class LightningDeal
 	    return $pool1;
 	}
 
-	/*Pool 2-Remove profiles who have received a lightning offer in the last 30 days (eligible users who did not login and did not view the offer will not be removed)*/
+	/*Pool 2-Remove profiles who have received a lightning offer in the last 15 days (eligible users who did not login and did not view the offer will not be removed)*/
 	public function fetchDealPool2($pool1=null){
         if($this->debug == 1){
             error_log("pool2 generation started"."\n",3,$this->logFilePath);
@@ -82,7 +82,7 @@ class LightningDeal
 			$todayDate = date("Y-m-d");
 			$lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
 
-			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 30 days
+			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 15 days
 			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
 			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('','V',$lastViewedDt);
 			unset($lightningDiscObj);

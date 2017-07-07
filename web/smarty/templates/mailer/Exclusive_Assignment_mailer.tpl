@@ -53,16 +53,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td valign="top"><br /><font color="#000000">As a first step, we request you to please submit a copy of an ID proof of the person whose profile has been enlisted with us. You can send this to your service advisor on the email ID listed below. </font></td>
-                  </tr>
-                  <tr>
-                    <td valign="top"><br /><font color="#000000">Please ignore, if already sent.</font></td>
-                  </tr>
-                  <tr>
-                    <td valign="top"><br />On receipt of the document, you will receive a phone call from our advisor within 24 working hours explaining how the membership will work and understanding your requirements in detail. For your reference, we have listed the contact details of your assigned advisor who will help you through this process.</font></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" height="12"></td>
+                    <td valign="top"><br /><font color="#000000">You will receive a phone call from our advisor within 24 working hours explaining how the membership will work and understanding your requirements in detail. For your reference, we have listed the contact details of your assigned advisor who will help you through this process. </font></td>
                   </tr>
                   <tr>
                     <td valign="top">
@@ -86,6 +77,15 @@
                         </tr>
                       </table>
                     </td>
+                  </tr>
+                  <tr>
+                    <td valign="top"><br /><font color="#000000"> We also request you to share your detailed Bio data ( having photos/information that you haven’t shared on site ) to the Email ID : ~$EXECUTIVE_EMAIL`</font></td>
+                  </tr>
+                    <tr>
+                    <td valign="top"><br /><font color="#000000">  We will ONLY share this with members that you like and want us to follow up with regarding marriage alliance</font></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" height="12"></td>
                   </tr>
                 </table>
               </td>

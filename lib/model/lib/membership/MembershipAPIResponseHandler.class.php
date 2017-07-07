@@ -903,7 +903,11 @@ class MembershipAPIResponseHandler {
             $request->setParameter('mainMembership', $this->mainMem . $this->mainMemDur);
             $request->setParameter('vasImpression', $this->selectedVas);
             $paymentOptionsData = $this->generatePaymentOptionsPageResponse($request, $chequeData);
-            if ($this->currency == 'RS') {
+            
+            if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+                $output['payAtBranchesData'] = NULL;
+            }
+            else if ($this->currency == 'RS') {
                 $branchData = $this->generatePayAtBranchesPageResponse();
                 $output['payAtBranchesData'] = $branchData;
             }
@@ -1463,13 +1467,21 @@ class MembershipAPIResponseHandler {
             $cashChequePickup = NULL;
         }
         
+        if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+            $cashChequePickup = NULL;
+            $hidePayAtBranchesOption = true;
+        }
+        else{
+            $hidePayAtBranchesOption = false;
+        }
+        
         if ($this->currency == "DOL") {
             $proceedText = "You Pay USD " . number_format($totalCartPrice, 2, '.', ',') . "";
         } 
         else {
             $proceedText = "Continue";
         }
-        
+       
         $output = array(
             'title' => $title,
             'currency' => $this->currency,
@@ -1490,6 +1502,7 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'userProfile' => $this->profileid,
             'upgradeMem' => $this->upgradeMem,
+            'hidePayAtBranchesOption'=>$hidePayAtBranchesOption,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,

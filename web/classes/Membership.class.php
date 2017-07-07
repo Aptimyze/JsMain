@@ -2701,12 +2701,16 @@ class Membership
     public function setRedisForFreeToPaid($userObjTemp){
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
+	    $addKey ='freeToPay';	
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
             //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
         else{
+	    $addKey ='allToPay';
             //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
         }
+	$storeVal =$addKey."#".date("Y-m-d H:i:s");
+	JsMemcache::getInstance()->set("MemPurchase_$userObjTemp->profileid","$storeVal",1296000);
         
     }
     
