@@ -51,6 +51,7 @@ class RequestHandlerConfig
         "vsploadcheck"=>array("v1"=>"VSPLoadCheckV1","v2"=>"","v3"=>"VSPLoadCheckV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
+        "requestHoroscope"=>array("v1"=>"RequestHoroscopeV1"),
         "astroCompatibility"=>array("v1"=>"astroCompatibilityV1","v2"=>"astroCompatibilityV1","v3"=>"astroCompatibilityV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
