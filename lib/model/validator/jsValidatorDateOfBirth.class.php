@@ -13,7 +13,8 @@ class jsValidatorDateOfBirth extends sfValidatorBase {
         protected function doClean($value) {
 
                 $dtofbirth = $this->getOption("dtofbirth");
-                $Gender = $this->getOption("Gender");
+                $loggedInObj = LoggedInProfile::getInstance();
+                $Gender = $loggedInObj->getGENDER();
 
                 $arrMale = array("M", "MALE", "1", "m", "Male", "male");
                 $allowedMinAge = in_array($Gender, $arrMale) ? self::MALE_MIN_AGE : self::FEMALE_MIN_AGE;
