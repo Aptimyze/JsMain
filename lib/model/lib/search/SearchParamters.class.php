@@ -430,51 +430,8 @@ class SearchParamters
 			$this->SORT_LOGIC = $SORT_LOGIC; 
 	}
 	public function getSORT_LOGIC() { return $this->SORT_LOGIC; }
-        public function removeLowerINCOME($INCOME){
-                $rArr["minIR"] = "0" ;
-                $rArr["maxIR"] = "19" ;
-                $dArr["minID"] = "0" ;
-                $dArr["maxID"] = "19" ;
-                if($this->getLINCOME()){
-                        $rArr["minIR"] = $this->getLINCOME();
-                }   
-                if($this->getHINCOME()){
-                        $rArr["maxIR"] = $this->getHINCOME();
-                }   
-                if($this->getLINCOME_DOL()){
-                        $dArr["minID"] = $this->getLINCOME_DOL();
-                }
-                
-                if($this->getHINCOME_DOL()){
-                        $dArr["maxID"] = $this->getHINCOME_DOL();
-                }
-                $incomeHighValue = "";
-                if(($dArr["minID"]==0 && $rArr["minIR"]!=0)){
-                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
-                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome_dol",$dArr["minID"]);
-                        $dArr["minID"] = $incomeHighValue;
-                        $this->setLINCOME_DOL($dArr["minID"]);
-                        unset($incomeMapObj);
-                }elseif(($rArr["minIR"]==0 && $dArr["minID"]!=0)){
-                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
-                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
-                        $rArr["minIR"] = $incomeHighValue;
-                        $this->setLINCOME($rArr["minIR"]);
-                        unset($incomeMapObj);
-                }
-                if($incomeHighValue != ""){
-                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
-                        $incomeMapArr = $incomeMapObj->incomeMapping();
-                        unset($incomeMapObj);
-                        $INCOME = str_replace("'", "",$incomeMapArr['istr']);
-                }
-                return $INCOME;
-        }
 	public function setINCOME($INCOME) 
 	{
-                if(in_array(15, explode(",", $INCOME))){
-                        $INCOME = $this->removeLowerINCOME($INCOME);
-                }
 		$validInput = SearchInputValidation::validateInput("INCOME",$INCOME);
                 if($validInput)
 			$this->INCOME = $INCOME; 

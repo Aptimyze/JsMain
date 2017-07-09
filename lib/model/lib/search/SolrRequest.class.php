@@ -298,6 +298,21 @@ class SolrRequest implements RequestHandleInterface
 						unset($tempArr);
 					}
 				}
+				elseif($field=="INCOME")
+				{
+					if(in_array(15, explode(",", $value)) && !in_array("X", explode(",", $value))){
+                                                $value = $this->removeLowerINCOME($value,$this->searchParamtersObj->getLINCOME(),$this->searchParamtersObj->getHINCOME(),$this->searchParamtersObj->getLINCOME_DOL(),$this->searchParamtersObj->getHINCOME_DOL());
+                                                $this->searchParamtersObj->setINCOME($value);
+                                        }elseif(in_array("X", explode(",", $value))){
+                                                $value = str_replace(",X","",$value);
+                                                $this->searchParamtersObj->setINCOME($value);
+                                        }
+                                        $solrFormatValue = str_replace(","," ",$value);
+					$solrFormatValue = str_replace("','"," ",$solrFormatValue);
+                                        
+					$setWhereParams[]=$field;
+                                        $this->filters[]="&fq=$field:($solrFormatValue)";
+				}
 				else
 				{
 					$solrFormatValue = str_replace(","," ",$value);
@@ -693,5 +708,43 @@ class SolrRequest implements RequestHandleInterface
                 $searchKey .= $this->searchParamtersObj->getSEARCH_TYPE();
                 JsMemcache::getInstance()->storeDataInCacheByPipeline($keyAuto,array($searchKey),$Keytime);
                 JsMemcache::getInstance()->incrCount($searchKey);
+        }
+        private function removeLowerINCOME($income,$lincome=0,$hincome=0,$lincome_dol=0,$hincome_dol=0){
+                $rArr["minIR"] = "0" ;
+                $rArr["maxIR"] = "19" ;
+                $dArr["minID"] = "0" ;
+                $dArr["maxID"] = "19" ;
+                if($lincome){
+                        $rArr["minIR"] = $lincome;
+                }   
+                if($hincome){
+                        $rArr["maxIR"] = $hincome;
+                }   
+                if($lincome_dol){
+                        $dArr["minID"] = $lincome_dol;
+                }
+                
+                if($hincome_dol){
+                        $dArr["maxID"] = $hincome_dol;
+                }
+                $incomeHighValue = "";
+                if(($dArr["minID"]==0 && $rArr["minIR"]!=0)){
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome_dol",$dArr["minID"]);
+                        $dArr["minID"] = $incomeHighValue;
+                        unset($incomeMapObj);
+                }elseif(($rArr["minIR"]==0 && $dArr["minID"]!=0)){
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
+                        $rArr["minIR"] = $incomeHighValue;
+                        unset($incomeMapObj);
+                }
+                if($incomeHighValue != ""){
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeMapArr = $incomeMapObj->incomeMapping();
+                        unset($incomeMapObj);
+                        $income = str_replace("'", "",$incomeMapArr['istr']);
+                }
+                return $income;
         }
 }
