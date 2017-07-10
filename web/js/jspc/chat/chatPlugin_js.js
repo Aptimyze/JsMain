@@ -1738,7 +1738,8 @@ JsChat.prototype = {
                                 "to":userId+"@"+openfireServerName,
                                 //"messageId":latestMsgId,
                                 "extraParams": {
-                                    "pogChecksum": to_checksum 
+                                    "pogChecksum": to_checksum,
+                                    "orderBy":"ASC"
                                 }
                             }); 
                         }
@@ -1798,7 +1799,8 @@ JsChat.prototype = {
                         "from": getConnectedUserJID(),
                         "to": user_jid,
                         "extraParams": {
-                            "pogChecksum": checkSum
+                            "pogChecksum": checkSum,
+                            "orderBy":"ASC"
                         }
                     },"first_history");
                 }
@@ -2282,46 +2284,39 @@ JsChat.prototype = {
                 defaultEoiSentMsg = "Jeevansathi member with profile id "+ self_username +" likes your profile. Please 'Accept' to show that you like this profile.";
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
-            var now_mark_unread = false,read_class="nchatic_9";
+            var now_mark_read = false,read_class="nchatic_10";
             if(curElem._setLastReadMsgStorage == false){
-                now_mark_unread = true;
+                now_mark_read = true;
                 read_class = "nchatic_9";
-            }
-            else{
-                var last_read_msg = fetchLastReadMsgFromStorage(other_id);
-                if(last_read_msg == undefined || last_read_msg==""){
-                    now_mark_unread = true;
-                    read_class = "nchatic_10";
-                }
             }
             if(typeof communication != "undefined"){
                 $.each(communication, function (key, logObj) {
                     latestMsgId = logObj["id"];
                     //console.log(logObj);
                     if (parseInt(logObj["sender"]) == self_id) {
-                        if(logObj["chatId"] == "" && now_mark_unread == false){
+                        if(logObj["chatId"] == "" && now_mark_read == false){
                             logObj["chatId"] = generateChatHistoryID("sent");
-                            //now_mark_unread = true;
-                            //read_class = "nchatic_10";
+                            now_mark_read = true;
+                            read_class = "nchatic_9";
 
                         }
                         var last_read_msg = fetchLastReadMsgFromStorage(other_id);
                         //console.log("last_read",last_read_msg);
-                        
+                        if(last_read_msg == logObj["chatId"] && now_mark_read == false){
+		                    //console.log("set done");
+		                    now_mark_read = true;
+		                    read_class = "nchatic_9";
+                    	}
                         if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiSentMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted their interest")==-1)){
                             //append self sent message
                             logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).append('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText" data-msgid='+logObj["chatId"]+'>' + logObj["message"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText" data-msgid='+logObj["chatId"]+'>' + logObj["message"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
                                     var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).height();
                                         
                                     $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).next().css("margin-top",len);
                             });
                         }
-                        if(last_read_msg == logObj["chatId"] && now_mark_unread == false){
-                            //console.log("set done");
-                            now_mark_unread = true;
-                            read_class = "nchatic_10";
-                        }
+                        
                     } else if (parseInt(logObj["sender"]) == other_id) {
                         if(logObj["chatId"] == ""){
                             logObj["chatId"] = generateChatHistoryID("received");
@@ -2340,7 +2335,7 @@ JsChat.prototype = {
                             }*/
                             //append received message
                             logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText received_read" data-msgid=' + logObj["chatId"] + '>' + logObj["message"] + '</div></div></div>');
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText received_read" data-msgid=' + logObj["chatId"] + '>' + logObj["message"] + '</div></div></div>');
                         }
                     }
                 });
