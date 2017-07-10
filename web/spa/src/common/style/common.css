@@ -498,6 +498,7 @@ header, section, footer, aside, nav, article, figure {
 .pad19 {
 	padding:30px 15px
 }
+.pad20All{padding: 20px}
 .pad20 {
 	padding:10px 0
 }
@@ -505,6 +506,7 @@ header, section, footer, aside, nav, article, figure {
 	padding:5px 0
 }
 .padd22{padding:15px}
+.pad150{padding: 15px 0px 0px 0px}
 .padl1 {
 	padding-left:1px
 }
@@ -1126,6 +1128,7 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .scrollhid{
     overflow: hidden;
 }
+.overAuto {overflow: auto;}
 .vbtm{	vertical-align:bottom;}
 
 .reportInvalidjsmsButton
@@ -1144,7 +1147,8 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .hgt70{height:70px}
 
 .mt2{margin-top:2px}
-
+.mt20{margin-top: 20px !important }
+.mt10Imp{margin-top: 10px !important}
 .pad015{padding:0px 15px 15px 15px}
 
 .pad10p0p {
@@ -1165,6 +1169,7 @@ border-radius: 32px;
 
 .mr10{margin-right:10px }
 .ml0{margin-left:0px }
+.ml15{margin-left: 15px}
 .wid300{width: 300px}
 .top65{top: 65px}
 .overXHidden{overflow-x: hidden}
@@ -1236,6 +1241,7 @@ border-radius: 32px;
 .mb20 {
     margin-bottom: 20px
 }
+.mb15{margin-bottom: 15px}
 .posSkip {position: relative;
     margin: 0 auto;
     display: block;
@@ -1244,3 +1250,4 @@ border-radius: 32px;
 .wid50{width: 50px}
 .hgt50{height: 50px}
 .z99{z-index: 99}
+.wid32p{width: 32%}

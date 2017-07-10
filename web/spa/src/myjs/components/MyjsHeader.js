@@ -1,5 +1,6 @@
 import React from "react";
 import ShowNotificationLayer from "./ShowNotificationLayer";
+import HamMain from "../../Hamburger/containers/HamMain"
 require ('../../common/style/common.css');
 
 
@@ -8,9 +9,14 @@ export class ShowCount extends React.Component{
       super();
     }
     render() {
-      //if()console.
-      if(!this.props.param)  return (<div></div>);
-      else if(this.props.param.TOTAL_NEW==0) return (<div></div>);
+      if(!this.props.param)
+      {
+        return (<div></div>); 
+      }  
+      else if(this.props.param.TOTAL_NEW==0) 
+        { 
+          return (<div></div>);
+        }
       return(
           <div className="posabs myjstop1">
             <div className="disptbl oval">
@@ -31,7 +37,6 @@ export default class MyjsHeadHTML extends React.Component
   setNotificationView()
    {
      let currentView  = document.getElementById('notificationBellView');
-     console.log(currentView);
      currentView.classList.toggle('dispnone');
 
      let element = document.getElementById('darkSection');
@@ -46,16 +51,37 @@ export default class MyjsHeadHTML extends React.Component
      {
        document.getElementById("mainContent").style.overflow = "auto";
      }
-   }
+    }
+
+    componentDidUpdate(prevprops) {
+      if(prevprops.location) {
+        if(prevprops.location.search.indexOf("ham=1") != -1) {
+            this.refs.Hamchild.hideHam();
+        }  
+      }  
+    }
+
+    showHam() {
+        if(window.location.search.indexOf("ham=1") == -1) {
+            if(window.location.search.indexOf("?") == -1) {
+                this.props.history.push(window.location.pathname+"?ham=1");
+            } else {
+                this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
+            }
+            
+        }
+        this.refs.Hamchild.openHam();
+    }
+
   render(){
       return(
           <div className="posrel">
-            <div className="fullwid bg1 pad1">
+            <HamMain bellResponse={this.props.bellResponse} ref="Hamchild" page="others"></HamMain>
+            <div className="fullwid bg1 pad1 z80">
                 <div className="rem_pad1 clearfix">
                     <div className="fl wid20p">
-                      <div id="hamburgerIcon">
-                        <i className="loaderSmallIcon dn"></i>
-                        <i id="hamburgerIcon" className="dispbl mainsp baricon"></i>
+                      <div className="fl" id="hamburgerIcon">
+                        <i onClick={() => this.showHam()} id="hamIcon" className="dispbl mainsp baricon"></i>
                       </div>
                     </div>
                     <div id="myJsHeadingId" className="fl wid60p txtc color5  fontthin f19">Home</div>

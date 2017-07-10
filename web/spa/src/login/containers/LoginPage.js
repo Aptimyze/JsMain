@@ -160,9 +160,11 @@ class LoginPage extends React.Component {
     }
 
     componentDidUpdate(prevprops) {
-        if(prevprops.location.search.indexOf("ham=1") != -1) {
-            this.refs.Hamchild.hideHam();
-        }
+        if(prevprops.location) {
+            if(prevprops.location.search.indexOf("ham=1") != -1) {
+                this.refs.Hamchild.hideHam();
+            }     
+        }  
     }
 
     showHam() {

@@ -33,7 +33,7 @@
     background-position: -50px -14px;
 }
 .listingHam li {
-	margin: 25px 10px;
+	margin: 20px 10px;
 }
 .listingHam li i {
 	margin: 0px 10px;
@@ -57,6 +57,47 @@
     width: 27px;
     background-position: -11px -149px;
 }
+.editProfileIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -52px -141px;
+}
+.savedSearchIcon{
+	height: 27px;
+    width: 27px;
+    background-position: -13px -244px;
+}
+.myMatchesIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -54px -191px;
+}
+.plusIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -13px -196px;
+}
+.myContactIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -54px -234px;
+}
+.shortlistedIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -13px -15px; 
+}
+.phoneIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -13px -59px;
+}
+.profileVisitorIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -13px -100px;
+}
+
 .z104{z-index: 104}
 .hamImage{
 	position: fixed;
@@ -71,4 +112,43 @@
 	transition: all .2s linear;
     transform: translate(-20%, 0%) !important;
 }
-
+.irIcon{
+	width: 71px;
+    background-position: -220px -14px;
+    height: 70px;
+}
+.allAcIcon{
+	width: 71px;
+    background-position: -220px -89px;
+    height: 70px;
+}
+.justJnIcon {
+	width: 71px;
+    background-position: -220px -167px;
+    height: 70px;
+}
+.newham_count {
+    width: 22px;
+    height: 22px;
+    border-radius: 10px;
+}
+.newham_pos1 {
+    bottom: 4px;
+    right: 2px;
+}
+.brdrTop {
+	border-top: 1px solid white;  
+}
+.ml0Imp{
+	margin-left: 0px !important;
+}
+.mar0Imp{
+	margin:0px !important;
+}
+.hamBtn {
+	width: 98%;
+    text-align: center;
+    margin: 2px auto !important;
+    display: block;
+    position: relative;
+}
