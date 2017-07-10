@@ -158,5 +158,30 @@ class RabbitmqHelper
     }
     unset($output);
   }
+
+  public static function sendRMQAlertSMS($msg=''){
+    include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+    $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749");
+    if(JsConstants::$whichMachine == "test"){
+        $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749");
+    }
+    foreach($mobileNumberArr as $k=>$v){
+        RabbitmqHelper::smsRMQ($v,$msg);
+    }
+  }
+  
+  public static function smsRMQ($mobile,$msg){
+    $t = time();
+    if($msg){
+        $message    = "Mysql Error Count have reached ".$msg." $t";
+    }
+    else{
+        $message    = "Mysql Error Count have reached Rabbitmq killed $t";
+    }
+    $from           = "JSSRVR";
+    $profileid      = "144111";
+    $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+   
+  }
 }
 ?>
