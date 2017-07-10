@@ -72,7 +72,7 @@ all:
     enable_login: on
   hideDuration:
     enable_login: on
-  membershipPlanAudioV1:
+  MembershipPlanAudioV1:
     enable_login: off
-  outboundCallStatusV1:
+  OutboundCallStatusV1:
     enable_login: off
