@@ -15,26 +15,45 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
 	*/
     
         private $timeChange = 34200;//9.5*60*60;
+        private $oneDay = 84600;
 	public function execute($request)
 	{
-            $startDate = strtotime($request->getParameter('startDate'))-$this->timeChange;
-            $endDate = strtotime($request->getParameter('endDate'))-$this->timeChange;
-            $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',$startDate);
-            $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',$endDate);
-
+            $firstDateDay = explode('-',explode(' ',$request->getParameter('startDate'))[0])[2];
+            $endDateDay = explode('-',explode(' ',$request->getParameter('endDate'))[0])[2];
+            if($firstDateDay == $endDateDay){
+                $this->interval = "hour";
+            }
+            else{
+                $this->interval = "day";
+            }
+            $startDate = strtotime($request->getParameter('startDate'));
+            $endDate = strtotime($request->getParameter('endDate'));
+            if($this->interval == "hour"){
+                $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',$startDate);
+                $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',$endDate);
+            }
+            else{
+                $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',  strtotime('00:00:00')+$this->oneDay);
+                $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
+            }
             $timeDiff = $endDate -  $startDate;
             
-            $startDate2 = strtotime($request->getParameter('startDate2'))-$this->timeChange;
+            $startDate2 = strtotime($request->getParameter('startDate2'));
             if($startDate2){
                 $endDate2 = $startDate2 + $timeDiff;
-
-                $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',$startDate2);
-                $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',$endDate2);
+                if($this->interval == "hour"){
+                    $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',$startDate2);
+                    $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',$endDate2);
+                }
+                else{
+                    $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
+                    $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
+                }
             }
             
             
             $type = $request->getParameter("type");
-            $this->interval = intval($timeDiff/8);
+            //$this->interval = intval($timeDiff/8);
             $channelQuery = "";
             $channel =$request->getParameter('channel');
             if($channel!="all")
@@ -57,7 +76,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             if($startDate2){
             $totalResponse[] = $this->getResponse($greaterThan2, $lessThan2);
             }
-            
+            $totalResponse["dayOrHour"] = $this->interval;
             echo json_encode($totalResponse);die;//die('pa');
             return sfView::NONE;
     }
@@ -88,23 +107,50 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                                 {
                                         "date_histogram": 
                                         {
+                                                "min_doc_count": 0,
                                                 "field": "@timestamp",
-                                                "interval": "'.$this->interval.'s",
-                                                "extended_bounds" : {"min" : "'.$gt.'","max" : "'.$lt.'"},
-                                                "min_doc_count" : 0    
+                                                "interval": "'.$this->interval.'",
+                                                "time_zone": "-09:30"
                                         }
                                 }
                         }
                 }';
         
        // print_r($params);print_r($this->urlToHit);
+       //echo $params;die;
             $response = CommonUtility::sendCurlPostRequest($this->urlToHit,$params);
             $phpResponse = json_decode($response,true);
             foreach ($phpResponse['aggregations']['articles_over_time']['buckets'] as $key => $value) {
                 $returnedDate = substr(str_replace('T',' ', $value['key_as_string']),0,19);
-                $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange);
+                if($this->interval == "day"){
+                    if(date('d',strtotime($returnedDate)) < date('d',strtotime($gt)) || date('d',strtotime($returnedDate)) > date('d',strtotime($lt)))
+                        continue;
+                    $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange);
+                }
+                else
+                    $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange+1800);
                 $newResponse['count'][] = $value['doc_count'];
             }
+//            if($this->interval == "day"){
+//                for($i=date('d',strtotime($gt));$i<=date('d',strtotime($lt));$i++){
+//                    $found=0;
+//                    foreach ($phpResponse['aggregations']['articles_over_time']['buckets'] as $key => $value) {
+//                        $returnedDate = substr(str_replace('T',' ', $value['key_as_string']),0,19);
+//                        if(date('d',strtotime($returnedDate)) == $i){
+//                            $found = 1;
+//                        }
+//                    }
+//                    if(1){
+//                        $numString = (string)$i;
+//                        echo $returnedDate."\n";
+//                        echo $numString."\n";
+//                        print_r(substr_replace($returnedDate,$numString,8,9));die;
+//                        $newResponse['timestamp'][] = substr_replace($returnedDate,$numString,8,9);
+//
+//                        $newResponse['count'][] = 0;
+//                    }
+//                }
+//            }
             $newResponse['totalCount'] = $phpResponse['hits']['total'];
             return $newResponse;
         

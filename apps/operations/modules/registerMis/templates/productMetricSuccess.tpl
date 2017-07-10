@@ -488,9 +488,18 @@ function drawCharts(data,type){
             eleArr.show();
             var newLineChartData = jQuery.extend(true, {}, lineChartData);
             var newData = jQuery.extend(true, {}, data[0]);
+            var startString,endString;
             newLineChartData['labels'] = newData.timestamp;
+            if(data['dayOrHour']=="day"){
+                startString = 0;
+                endString = 10;
+            }
+            else{
+                startString = 10;
+                endString = 16;
+            }
             for(i=0;i<newLineChartData['labels'].length;i++){
-                newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(0,19);
+                newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(startString,endString);
             }
             newLineChartData['datasets'][0]['data'] = jQuery.extend(true, {}, newData.count);
             
