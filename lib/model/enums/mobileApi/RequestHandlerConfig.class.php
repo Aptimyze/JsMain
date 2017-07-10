@@ -123,7 +123,7 @@ class RequestHandlerConfig
 			"matchOTP" => array("v1" => "MatchOtp", "v2" => "MatchOtp", "v3" => "MatchOtp"),
 			"SMSContactsToMobile" => array("v1" => "SMSContactsToMobile", "v2" => "SMSContactsToMobile", "v3" => "SMSContactsToMobile"),
 			"reportPhoneInvalid" => array("v1" => "ReportInvalid", "v2" => "ReportInvalid", "v3" => "ReportInvalid")),
-		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1")),
+		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1"),"membershippitch" => array("v1" => "MembershipPlanAudioV1"),"outboundcallstatus" => array("v1" => "OutboundCallStatusV1") ),
 		"help" => array(
 			"helpQuery" => array("v1" => "SubmitQueryV1"),
 			"publicQuestions" => array("v1" => "GetPublicQuestionsV1")
@@ -146,10 +146,6 @@ class RequestHandlerConfig
 			"communicationSync" => array("v1" => "communicationSync"),
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
 		),
-        "static" => array(
-          "membershippitch" => array("v1" => "MembershipPlanAudioV1"),
-          "outboundcallstatus" => array("v1" => "OutboundCallStatusV1") 
-        ),
 	);
 
 	public static $moduleActionHamburgerArray = array(
