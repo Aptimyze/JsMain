@@ -161,9 +161,9 @@ class RabbitmqHelper
 
   public static function sendRMQAlertSMS($msg=''){
     include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-    $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749");
+    $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749","pankaj"=>"9810300513");
     if(JsConstants::$whichMachine == "test"){
-        $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749");
+        $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749","pankaj"=>"9810300513");
     }
     foreach($mobileNumberArr as $k=>$v){
         RabbitmqHelper::smsRMQ($v,$msg);
