@@ -96,7 +96,7 @@ class VspFormatResponse{
                     }
                 }
                 if($key == "DECORATED_CASTE"){
-                       if($pValue[$val]=='' || $pValue[$val]== null)
+                       if(($pValue[$val]=='' || $pValue[$val]== null) && !MobileCommon::isNewMobileSite())
                            $pValue[$val] = $pValue["RELIGION"];
                        else{
                            $explodedCaste = explode(":",$pValue[$val]);

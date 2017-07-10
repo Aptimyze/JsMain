@@ -506,11 +506,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                 //$key = $detailsArray["OFFSET"]-1;
                 foreach(viewSimilarConfig::$SearchToVSPResponseMappingArr as $searchField=>$vspField)
                 {
-                    if($searchField == "age")
-                    {
-                         $jspcVSPArray["profiles"][$key][$searchField] = $detailsArray[$vspField]." yrs";
-                    }
-                    else if($searchField == "photo")
+                    if($searchField == "photo")
                         $jspcVSPArray["profiles"][$key][$searchField]= PictureFunctions::mapUrlToMessageInfoArr($detailsArray[$vspField],ViewSimilarProfile::$defaultPicSize["PC"],$detailsArray["PHOTO_REQUESTED"],$gender);
                     else if($searchField == "subscription_icon")
                     {
@@ -578,15 +574,11 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
             foreach($reverseParams as $k=>$v)
             {
                     eval('$tempVal = $reverseCriteria->get'.$v.'();');
-                    if($tempVal){
-                            $tempVal = str_replace(',99999', '', $tempVal);
-                            $tempValArr = explode(" ", $tempVal);
-                            foreach($tempValArr as $k1=>$v1){
-                                if(($v == "PARTNER_CITYRES" && $loggedInProfileObj->getCOUNTRY_RES() != 51) || ($v == "PARTNER_CAASTE" && !in_array($loggedInProfileObj->getRELIGION(),array(1,2,3,4,9))))
-                                    continue;
-                                $whereParams[$v]= $tempVal;
-                            }
-                    }
+                    $tempVal = str_replace(',99999', '', $tempVal);
+                    $tempValArr = explode(" ", $tempVal);
+                    if(($v == "PARTNER_CITYRES" && $loggedInProfileObj->getCOUNTRY_RES() != 51) || ($v == "PARTNER_CASTE" && !in_array($loggedInProfileObj->getRELIGION(),array(1,2,3,4,9))))
+                        continue;
+                    $whereParams[$v]= $tempVal;
             }
             return $whereParams;
         }

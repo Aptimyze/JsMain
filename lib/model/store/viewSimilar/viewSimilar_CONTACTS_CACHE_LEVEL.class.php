@@ -91,9 +91,10 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 $valArray = explode(" ",$value);
                                 $whereString.= "AND (";
                                 $i=0;
-                                foreach($valArray as $k1=>$v1)
-                                    $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") AND ";
-                                $whereString = substr($whereString, 0, -5);
+                                foreach($valArray as $k1=>$v1){
+                                        $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") OR ";
+                                }
+                                $whereString = substr($whereString, 0, -4);
                                 $whereString .= " || ".$key."='' || ".$key." IS NULL)";
                             }
                             $value = "'".str_replace(",","','" , $value)."'";
