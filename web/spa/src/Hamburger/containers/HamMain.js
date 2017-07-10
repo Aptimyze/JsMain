@@ -71,7 +71,7 @@ export default class HamMain extends React.Component {
             myContactView = <li>
                 <div>
                     <i className="hamSprite myContactIcon"></i>
-                    <div id="myContactLink" className="f17 white ml15 dispibl">
+                    <div id="myContactLink" className="f17 ml15 white ml15 dispibl">
                         My Contacts
                     </div>
                     <i className="hamSprite plusIcon fr"></i>
@@ -100,7 +100,7 @@ export default class HamMain extends React.Component {
             myMatchesView = <li>
                 <div>
                     <i className="hamSprite myMatchesIcon"></i>
-                    <div id="myMatchesLink" className="f17 white ml15 dispibl">
+                    <div id="myMatchesLink" className=" ml15 f17 white ml15 dispibl">
                         My Matches
                     </div>
                     <i className="hamSprite plusIcon fr"></i>
@@ -179,7 +179,7 @@ export default class HamMain extends React.Component {
                 {profileVisitorView}
                 <li>
                     <i className="hamSprite settingsIcon"></i>
-                    <div id="settingsLink" className="dispibl white">
+                    <div id="settingsLink" className="ml15 dispibl white">
                         Settings
                     </div>
                     <i className="hamSprite plusIcon fr"></i>
