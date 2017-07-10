@@ -868,12 +868,15 @@ class crmAllocationActions extends sfActions
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)
 	  		{
-	            $executiveDetails = $inputArr["executiveDetails"];
-
-	            $profileDetails = array("PROFILEID"=>$profileid,"USERNAME"=>$inputArr["username"],"EXECUTIVE_NAME"=>$inputArr["executiveDetails"]["USERNAME"],"EXECUTIVE_PHONE"=>$executiveDetails["PHONE"],"EXECUTIVE_EMAIL"=>$executiveDetails["EMAIL"]);
-	            $mailerObj = new MembershipMailer();
-		  		$mailerObj->sendServiceActivationMail(1808,$profileDetails);
-		  	}
+                            $executiveDetails = $inputArr["executiveDetails"];
+                            $profileDetails = array("PROFILEID"=>$profileid,"USERNAME"=>$inputArr["username"],"EXECUTIVE_NAME"=>$inputArr["executiveDetails"]["USERNAME"],"EXECUTIVE_PHONE"=>$executiveDetails["PHONE"],"EXECUTIVE_EMAIL"=>$executiveDetails["EMAIL"]);
+                            $mailerObj = new MembershipMailer();
+                            $status = $mailerObj->sendServiceActivationMail(1808,$profileDetails);
+                            if($status==true){
+                                $exclusiveMailLogObj = new incentive_EXCLUSIVE_EMAIL_LOG();
+                                $exclusiveMailLogObj->insertExclusiveLogEntry($profileid, $inputArr["executiveDetails"]["USERNAME"]);
+                            }
+                        }
 		  	//send sms to profile in case of assignment if flag true
 		  	if($sendAssignSMS==true)
 		  	{

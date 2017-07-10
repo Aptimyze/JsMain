@@ -421,7 +421,8 @@ class MembershipMailer {
         if($profileDetails["CC_EMAIL"]){
             $ccList = $profileDetails["CC_EMAIL"]; //mail copy sent to this email
         }
-        $email_sender->send('','',$ccList);
+        $status = $email_sender->send('','',$ccList);
+        return $status;
     }   		
     function getContactsViewedList($profileid,$startDate,$endDate){
 	

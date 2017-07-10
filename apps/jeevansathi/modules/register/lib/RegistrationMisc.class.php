@@ -120,9 +120,8 @@ class RegistrationMisc{
                     $jpartnerObj->setGENDER('F');
 		  else
 		    $jpartnerObj->setGENDER('M');
-		  $jpartnerObj->setDPP('R');
-
-		$dppObj->insertJpartnerDPP($profileFieldArr);
+		  $jpartnerObj->setDPP('R');		  
+		$dppObj->insertJpartnerDPP($profileFieldArr,$casteNoBar);
 	}
 	public static function setFilterReligion($rel,$mtongue){
 		if($rel==1) //Hindu

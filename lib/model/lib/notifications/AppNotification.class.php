@@ -221,7 +221,7 @@ public function microtime_float()
             		break;
 
 		  case "PROFILE_VISITOR":
-			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
 			//$details = $this->getProfilesData($applicableProfiles,$className="newjs_SMS_TEMP_TABLE");
             		$poolObj = new NotificationDataPool();
 			$applicableProfilesArr =array_keys($applicableProfiles);
@@ -606,7 +606,7 @@ public function microtime_float()
   }   
   public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
-
+      $className = "JPROFILE";
 	  unset($applicableProfiles);
 	  $notifications = $this->getNotifications();
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)

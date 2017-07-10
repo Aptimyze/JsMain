@@ -2779,7 +2779,43 @@ class MembershipHandler
 	}
 	return false;
     }
-    
+
+    // get Latest Purchase Date	
+    public function getPurchaseDate($profileid,$type=''){
+        if(empty($profileid)){
+            return;
+        }
+        else{
+            	$memCacheObject = JsMemcache::getInstance();
+		$key = "MemPurchase_".$profileid;
+
+		/* testing part
+		$addKey ='allToPay';
+	        $storeVal =$addKey."#".date("Y-m-d H:i:s");
+		$memCacheObject->set("$key","$storeVal",604800); */
+
+            	$purchasDet 	=$memCacheObject->get($key);
+		$purchasDetArr 	=@explode("#", $purchasDet);
+		$purchasDate 	=$purchasDetArr[1];
+		$purchaseParamId =$purchasDetArr[0];
+		if($type=='F'){
+			if($purchaseParamId=='freeToPay')
+				$freeToPay =true;
+			else
+				$freeToPay =false;
+		}else{
+			if(!$purchasDate){
+				$billingObj = new BILLING_PAYMENT_DETAIL('crm_slave');
+				$purchasDate = $billingObj->getLatestPaymentDateOfProfile($profileid);
+			}
+		}
+		if($type=='F' && $freeToPay==false)
+			$purchasDate ='';
+		$resArr =array('PURCHASE_DATE'=>$purchasDate);
+		return $resArr;
+    	}
+    }		
+
     public function getMembershipAutoLoginLink($profileid,$source){
         if($profileid){
             include_once(JsConstants::$docRoot."/classes/authentication.class.php");
