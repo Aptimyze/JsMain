@@ -27,6 +27,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS"]["DOCURL"]="V_D";
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS_BYUSER"]["PROOF_VAL"]="V_DU";
 		self::$imageTypeEnum["PICTURE_DELETED"]["MAIN_PHOTO_URL"]="PD_M";
+		self::$imageTypeEnum["CRITICAL_INFO_DIVORCED_DOC"]["DOCUMENT_PATH"]="CI_DD";
 
         }
 	
