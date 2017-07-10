@@ -206,12 +206,18 @@ class SchedulersJob extends SugarBean {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); // never times out - bad idea?
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // 5 secs for connect timeout
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);  // open brand new conn
-		curl_setopt($ch, CURLOPT_HEADER, true); // do not return header info with result
+		//curl_setopt($ch, CURLOPT_HEADER, true); // do not return header info with result
+		$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+				
+				
+		
 		curl_setopt($ch, CURLOPT_NOPROGRESS, true); // do not have progress bar
 		curl_setopt($ch, CURLOPT_PORT, $_SERVER['SERVER_PORT']); // set port as reported by Server
 		//TODO make the below configurable
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // most customers will not have Certificate Authority account
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // most customers will not have Certificate Authority account
+		curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 		
 		if(constant('PHP_VERSION') > '5.0.0') {
 			curl_setopt($ch, CURLOPT_NOSIGNAL, true); // ignore any cURL signals to PHP (for multi-threading)

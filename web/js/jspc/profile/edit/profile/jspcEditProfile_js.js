@@ -4052,17 +4052,16 @@ updateEduLevelChanges =function(eduLevelVal)
 	{
 		if(casteVal==152)
 		{
-			if(jamaatFieldObject.value=='' || jamaatFieldObject.value==null)
-			{
-				requiredFieldStore.add(jamaatFieldObject);
-			}
 			showHideField(jamaatFieldObject,"show",false);
 		}
 		else
 		{
-			requiredFieldStore.remove(jamaatFieldObject);
 			showHideField(jamaatFieldObject,"hide",true);
 		}
+	}
+	else
+	{
+			showHideField(jamaatFieldObject,"hide",true);
 	}
     }
     /*

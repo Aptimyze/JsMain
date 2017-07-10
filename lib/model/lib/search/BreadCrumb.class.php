@@ -289,6 +289,7 @@ class BreadCrumb
 					if(strstr($SearchParamtersObj->{"get".$solr_clusters[$k]}(),","))
 					{
 						$temp = explode(",",$SearchParamtersObj->{"get".$solr_clusters[$k]}());
+                                                $temp = array_unique($temp);
 						foreach($temp as $kk=>$vv)
 						{
 							$temp[$kk] = str_replace("&amp;","&",FieldMap::getFieldLabel($fieldMapArr[$solr_clusters[$k]],$vv));

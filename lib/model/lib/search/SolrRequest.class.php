@@ -185,10 +185,11 @@ class SolrRequest implements RequestHandleInterface
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
 		$start = microtime(TRUE);
-                if(php_sapi_name() === 'cli')
+		$profileObj = LoggedInProfile::getInstance();
+				if(php_sapi_name() === 'cli')
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
                 else
-                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout,'',$profileObj->getPROFILEID());
                 $end= microtime(TRUE);
                 $diff = $end - $start;
                 if($diff > 2 ){

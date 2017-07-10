@@ -360,6 +360,11 @@ class FAQFeedBack
 			
 			//Insert Message in TICKET_MESSAGE Store
 			$szMsg = addslashes(stripslashes($this->m_szMessage));
+            
+            if(mb_detect_encoding($szMsg)) {
+              $szMsg = urldecode($szMsg);
+            }
+            
 			$objTicket_Message_STORE->Insert($iTicketID,$szMsg,$ip);
 			
 			//Insert in MIS_FEEDBACK_RESULT Store

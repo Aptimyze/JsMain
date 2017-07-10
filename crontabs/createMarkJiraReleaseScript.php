@@ -9,7 +9,7 @@ $branchName = $argv[1]; //This specifies whether the branch to be taken into acc
 
 $hotFixBlock = false;
 $releaseBlock = false;
-$groups = array('JSC'=>array("name"=>"JSC","id"=>10013),'JSM'=>array("name"=>"JSM","id"=>10015),'JSI'=>array("name"=>"JSI","id"=>10014)); //Any other group needs to be added here
+$groups = array('JSC'=>array("name"=>"JSC","id"=>10013),'JSM'=>array("name"=>"JSM","id"=>10015),'JSI'=>array("name"=>"JSI","id"=>10014),'JTA'=>array("name"=>"JTA","id"=>12400)); //Any other group needs to be added here
 $createVersionUrl = "https://jsba99.atlassian.net/rest/api/2/version";
 $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
 
@@ -58,6 +58,7 @@ if(is_array($file) && !empty($file))
         {
             $releaseJira = $releaseJiraArr;
         }
+        $file = $releaseJira;
     }
     else
     {
@@ -137,7 +138,8 @@ function markVersion($releaseJira,$tagName){
 		//Iterate for all the jira ids
 		foreach ($releaseJira as $key => $value) {
 			//Version name depending on whether it is hotfix or regular release
-			$versionName = $tagName;
+			$value = substr($value,0,8);
+            $versionName = $tagName;
 			$url = $setVersionUrl.$value;
 			//The required format of params is in this way
 			$params = json_encode(array("update"=>array("fixVersions"=>array(array("set"=>array(array("name"=>"$versionName")))))));

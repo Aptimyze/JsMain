@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/EmailTypeCreater.php
 	This class should not be updated manually.
-	Created on 2017-05-16
+	Created on 2017-06-13
 	 */
 	class MailerType{
 		private static $emailTypeArray=array(
@@ -125,6 +125,9 @@
 '1851'=>array('ID'=>'1872','MAIL_ID'=>'1851','TPL_LOCATION'=>'criticalInfoChangeMail.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'47','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'','MEMBERSHIP_TYPE'=>'','GENDER'=>'N','PHOTO_PROFILE'=>'N','REPLY_TO_ENABLED'=>'N','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
 '1852'=>array('ID'=>'1873','MAIL_ID'=>'1852','TPL_LOCATION'=>'criticalInfoDocUploadSuccess.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'47','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'','MEMBERSHIP_TYPE'=>'','GENDER'=>'N','PHOTO_PROFILE'=>'N','REPLY_TO_ENABLED'=>'N','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
 '1853'=>array('ID'=>'1874','MAIL_ID'=>'1853','TPL_LOCATION'=>'criticalInfoDocUploadFailed.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'47','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'','MEMBERSHIP_TYPE'=>'','GENDER'=>'N','PHOTO_PROFILE'=>'N','REPLY_TO_ENABLED'=>'N','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'','PARTIALS'=>''),
+'1854'=>array('ID'=>'1875','MAIL_ID'=>'1854','TPL_LOCATION'=>'upgradeToeValue.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com ','DESCRIPTION'=>'Upgrade membership to eValue','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
+'1855'=>array('ID'=>'1876','MAIL_ID'=>'1855','TPL_LOCATION'=>'upgradeToeAdvantage.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Upgrade membership to eAdvantage','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
+'1856'=>array('ID'=>'1877','MAIL_ID'=>'1856','TPL_LOCATION'=>'upgradeToJSExclusive.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Upgrade membership to JS Exclusive','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
 );
  
  

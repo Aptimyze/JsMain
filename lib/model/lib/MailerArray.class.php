@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-05-16
+	Created on 2017-06-13
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -78,6 +78,7 @@
 '70'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'REQUEST_USER_TO_DELETE','URL'=>'/settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'73'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PHOTO_UPLOAD_BY_PROFILE_VIEWED','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -151,6 +152,7 @@ private static $linkNameArray=array(
 'REQUEST_USER_TO_DELETE'=>'70',
 'ALTERNATE_EMAIL_PROMOTION'=>'71',
 'PAID_MEMBERS_MAILER'=>'72',
+'PHOTO_UPLOAD_BY_PROFILE_VIEWED'=>'73',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -429,6 +431,7 @@ private static $subjectArray=array(
 '1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed ~$hisHerfieldList`'),
 '1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
 '1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
+'1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
 );
 public static function getLink($Id){
 

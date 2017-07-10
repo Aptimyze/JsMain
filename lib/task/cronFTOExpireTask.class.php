@@ -80,7 +80,7 @@ try
 }
 catch(Exception $e)
 {
-                        $to='esha.jain@jeevansathi.com,tanu.gupta@jeevansathi.com';
+                        $to='esha.jain@jeevansathi.com,nitesh.s@jeevansathi.com';
                         $msg='';
                         $subject="error: ".__FILE__;
                         $msg='error while marking expired: query execution<br/>'.$e->getMessage().'<br/><br/>Warm Regards';
@@ -100,7 +100,7 @@ try
 }
 catch(Exception $e)
 {
-                        $to='esha.jain@jeevansathi.com,tanu.gupta@jeevansathi.com';
+                        $to='esha.jain@jeevansathi.com,nitesh.s@jeevansathi.com';
                         $msg='';
                         $subject="error: ".__FILE__;
                         $msg='error while marking expired: mail firing<br/>'.$e->getMessage().'<br/><br/>Warm Regards';

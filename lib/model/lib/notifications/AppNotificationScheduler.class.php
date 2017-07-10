@@ -79,7 +79,8 @@ class AppNotificationScheduler extends NotificationScheduler
 			  }
 		      $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
 		      $insertData[$k]['IOS_PHOTO_URL']=$v['IOS_PHOTO_URL'];
-			  if($v['NOTIFICATION_KEY']=='VD')
+
+			  if($v['NOTIFICATION_KEY']=='VD' || $v['NOTIFICATION_KEY']=='MEM_DISCOUNT')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
 				$insertData[$k]['TITLE']=$v['TITLE'];

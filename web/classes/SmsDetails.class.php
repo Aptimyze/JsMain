@@ -32,7 +32,7 @@ class SmsDetails
 	public function errormail($sql='',$error='')
 	{
 		$cc='esha.jain@jeevansathi.com';
-		$to='tanu.gupta@jeevansathi.com';
+		$to='nitesh.s@jeevansathi.com';
 		$subject="SMS confirm error mail";
 		if($sql || $error)
 			$msg= 'error occured:<br/> '.$error.'<br/> while executing: '.$sql.'<br/><br/> Warm Regards';

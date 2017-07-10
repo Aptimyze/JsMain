@@ -158,6 +158,14 @@ class MessageQueues
   public static $logConnectionTime = 0;
   
   public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
+  
+  //OutBound Events
+  const OUTBOUND_QUEUE = 'OutBoundQueue';
+  const OUTBOUND_EVENT = 'OUTBOUND_EVENT';
+  CONST OUTBOUND_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for outound queue 
+  CONST OUTBOUND_STARTCOMMAND = "symfony Outbound:ConsumeQueue"; //Command to start profile cache queue consuming cron
+  
+  
 }
 
 ?>

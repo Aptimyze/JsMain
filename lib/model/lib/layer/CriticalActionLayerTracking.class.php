@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  { 
+  {
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -140,8 +140,6 @@ return 0;
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
   {
-
-
  
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
@@ -334,10 +332,14 @@ return 0;
                     
                     break; 
                     case '15': 
+                    //This variable is introduced as we had to switch off this CAL for some duration (due to low numbers)
+                      $switchForCAL = 0;
+                      if($switchForCAL){
                       $screening=$profileObj->getSCREENING();
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
+                      }
                     break;  
 
                     case '16':                      
@@ -418,7 +420,7 @@ return 0;
                     break;
 
                      case '21': 
-        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
@@ -444,6 +446,31 @@ return 0;
                     if ($havePhoto == null)
                       $show=1;
                     }
+                    break;
+
+
+                    case '23' :
+                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                  {
+                    $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
+                    if(!$familyBasedOutOfObj->getCompletionStatus())
+                    {
+                      $show=1;
+                    }
+
+                  }  
+                     break;
+
+
+                  case '20':
+
+                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
+                      {  
+                          $show=1;
+                           
+                      }
+                      
+                      
                     break;
 
           default : return false;
@@ -524,19 +551,40 @@ break;
 
                           '18' => array(
                     
-                    'A' => '96'
-                    
+                    'A' => '96',
+                   'I' => '5.5'
                         ),
                     '21' => array(
                     
                     'A' => '99',
                     'I' => '5.3'
-                        )
+                        ),
+
+                    '23' => array(
+                    'A' => '99',  
+                    'I' => '5.4'
+                        ),
+
+                  '20' => array(  
+                    'A' => '99',
+                    'I' => '5.4'
+                        )        
+
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
        return false;
       
+      
+  }
+
+    public static function checkConditionForCityCAL($profileObj){
+   
+      $cityRes =$profileObj->getCITY_RES();
+      if($profileObj->getCOUNTRY_RES() == 51 && $cityRes == '0'){
+        return true;
+       } 
+       return false;
       
   }
 }

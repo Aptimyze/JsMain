@@ -20,13 +20,15 @@ ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
 
-$db=connect_ddl();
+$db=connect_db();
 $debug = 1;
 mysql_select_db("viewSimilar",$db);
 
 mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=30000",$db);
 
 include("$_SERVER[DOCUMENT_ROOT]/commonFiles/vspCronCommonFunctions.php");
+
+file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/VspCronLogs.txt",date("Y-m-d --- H:i:s")."\n");
 
 foreach($genderArr as $gender)
 {

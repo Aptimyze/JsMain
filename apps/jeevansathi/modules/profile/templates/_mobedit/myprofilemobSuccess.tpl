@@ -202,7 +202,7 @@
 <div class="fl wwrap fontlig f14 color3">
 <div class="fl wwrap fontlig color3">
 <div class="f13 wid76p dispibl">Also send me matches outside my Desired Partner Profile
-<!-- <div class="f12 color4 pt10">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div> -->
+ <div class="f12 color4 pt10">We will send you more matches based on the interests and acceptances you send</div>
 </div>
     <div id="toggleButton" class="fr dispibl filter-onoff-new ~if $toggleMatchalerts eq 'dpp'` filter-off ~else` filter-on ~/if`" onclick="toggleDppMatchalerts();"></div>
 </div>

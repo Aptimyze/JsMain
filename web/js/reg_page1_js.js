@@ -266,12 +266,6 @@ $(document).ready(function () {
                 $('#reg_caste').change(function(){
 				if(this.value=='152'){
 						$('#jamaat').css('display','inline');
-                                                $("#reg_jamaat").rules("add",{
-                                                    required:true,
-                                                    messages: {
-                                                        required: $("#jamaat_err").html()
-                                                    },
-                                                });
 					}else
 					{
 						$('#jamaat').css('display','none');
@@ -282,12 +276,6 @@ $(document).ready(function () {
                 $('#reg_religion').change(function(){
 				if(this.value=='2'){
 						$('#sectMuslim_section').css('display','inline');
-                                                $("#reg_sect_muslim").rules("add",{
-                                                     required: true,
-                                                     messages: {
-                                                        required: $("#sectMuslim_err").html()
-                                                     },
-                                                });
 					}else
 					{
 						$('#sectMuslim_section').css('display','none');

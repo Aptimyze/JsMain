@@ -226,11 +226,13 @@ function appendData(obj) {
 			      showLoader();
 			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
 				hideLoader();
+                location.reload();
                     },
                     error: function(response) {
 			      showLoader();
 				window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
 				hideLoader();
+
 			}
                 });
             }

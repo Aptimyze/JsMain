@@ -15,7 +15,7 @@ ini_set('default_socket_timeout',259200); // 3 days
 ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
-$db=connect_ddl();
+$db=connect_db();
 mysql_select_db("viewSimilar",$db);
 
 mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=30000",$db);
@@ -130,28 +130,37 @@ foreach($tableArr as $tableName)
 
 foreach($genderArr as $gender)
 {
-	if($gender == 'MALE')
+	if($gender == 'MALE'){
 		$oppositeGender = 'FEMALE';
-	elseif($gender == 'FEMALE')
+                $columnForGender = 'PARTNER_INCOME';
+        }
+	elseif($gender == 'FEMALE'){
 		$oppositeGender = 'MALE';
+                $columnForGender = 'PARTNER_ELEVEL_NEW';
+        }
 
-	$sql = "CREATE TEMPORARY TABLE $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender (PROFILEID INT( 11 ) UNSIGNED DEFAULT NULL ,AGE TINYINT( 4 ) DEFAULT  '0' ,LAST_LOGIN_DT DATE DEFAULT NULL, HAVEPHOTO CHAR(1) DEFAULT NULL ,PHOTO_DISPLAY CHAR(1) DEFAULT NULL, KEY `PROFILEID` (`PROFILEID`) )"; 
+	$sql = "CREATE TEMPORARY TABLE $databaseName.SUGGESTED_PROFILEIDS_AGE_AND_REV_$oppositeGender (PROFILEID INT( 11 ) UNSIGNED DEFAULT NULL ,AGE TINYINT( 4 ) DEFAULT  '0' ,LAST_LOGIN_DT DATE DEFAULT NULL, HAVEPHOTO CHAR(1) DEFAULT NULL ,PHOTO_DISPLAY CHAR(1) DEFAULT NULL,PARTNER_LAGE tinyint(4) DEFAULT NULL,PARTNER_HAGE tinyint(4) DEFAULT NULL,PARTNER_LHEIGHT tinyint(3) DEFAULT NULL,PARTNER_HHEIGHT tinyint(3) DEFAULT NULL,PARTNER_MSTATUS text DEFAULT NULL,PARTNER_CITYRES text DEFAULT NULL, PARTNER_COUNTRYRES text DEFAULT NULL,PARTNER_HANDICAPPED text DEFAULT NULL,PARTNER_RELIGION text DEFAULT NULL,PARTNER_CASTE text DEFAULT NULL,$columnForGender text DEFAULT NULL, KEY `PROFILEID` (`PROFILEID`) )"; 
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
         
         echo "\n".date("Y-m-d --- H:i:s")."\n";
-	$sql = "INSERT IGNORE INTO $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender SELECT PROFILEID,AGE,LAST_LOGIN_DT,HAVEPHOTO,PHOTO_DISPLAY FROM newjs.SEARCH_$oppositeGender WHERE LAST_LOGIN_DT >= DATE_SUB(CURDATE(), INTERVAL $days_since_last_login DAY)";
-        echo "\n".date("Y-m-d --- H:i:s")."\n";
+	$sql = "INSERT IGNORE INTO $databaseName.SUGGESTED_PROFILEIDS_AGE_AND_REV_$oppositeGender SELECT S.PROFILEID,AGE,LAST_LOGIN_DT,HAVEPHOTO,PHOTO_DISPLAY,PARTNER_LAGE,PARTNER_HAGE,PARTNER_LHEIGHT,PARTNER_HHEIGHT,PARTNER_MSTATUS,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_HANDICAPPED,PARTNER_RELIGION,PARTNER_CASTE,$columnForGender FROM newjs.SEARCH_$oppositeGender S LEFT JOIN newjs.SEARCH_".$oppositeGender."_REV AS R ON S.PROFILEID=R.PROFILEID WHERE LAST_LOGIN_DT >= DATE_SUB(CURDATE(), INTERVAL $days_since_last_login DAY)";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
+        echo "\n".date("Y-m-d --- H:i:s")."\n";
 
 	//$sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET T.AGE = M.AGE, T.PRIORITY = IF(HAVEPHOTO='Y',IF(PHOTO_DISPLAY='C',3,1),IF(HAVEPHOTO='U',5,7))";
-	$sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET T.AGE = M.AGE, T.PRIORITY = T.PRIORITY+1";
-	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));	
-
-	$sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET PRIORITY = PRIORITY+1 WHERE M.LAST_LOGIN_DT <= DATE_SUB(CURDATE(), INTERVAL $days_since_last_login_priority DAY)";
+	$sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_AND_REV_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET T.AGE = M.AGE, T.PRIORITY = T.PRIORITY+1,T.PARTNER_MSTATUS=M.PARTNER_MSTATUS,T.PARTNER_CITYRES=M.PARTNER_CITYRES,T.PARTNER_COUNTRYRES=M.PARTNER_COUNTRYRES,T.PARTNER_HANDICAPPED=M.PARTNER_HANDICAPPED, T.PARTNER_RELIGION=M.PARTNER_RELIGION, T.PARTNER_CASTE=M.PARTNER_CASTE,T.PARTNER_LAGE=M.PARTNER_LAGE, T.PARTNER_HAGE=M.PARTNER_HAGE, T.PARTNER_LHEIGHT=M.PARTNER_LHEIGHT, T.PARTNER_HHEIGHT=M.PARTNER_HHEIGHT,T.".$columnForGender."=M.".$columnForGender;
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
+        echo "\n".date("Y-m-d --- H:i:s")."\n";
+        
+//        $sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET T.AGE = M.AGE, T.PRIORITY = T.PRIORITY+1";
+//	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
+
+	$sql = "UPDATE $databaseName.TEMP_CONTACTS_CACHE_LEVEL2_".$gender."_RENAME AS T INNER JOIN $databaseName.SUGGESTED_PROFILEIDS_AGE_AND_REV_$oppositeGender AS M ON M.PROFILEID = T.RECEIVER SET PRIORITY = PRIORITY+1 WHERE M.LAST_LOGIN_DT <= DATE_SUB(CURDATE(), INTERVAL $days_since_last_login_priority DAY)";
+	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
+        echo "\n".date("Y-m-d --- H:i:s")."\n";
 	
-	$sql = "DROP TABLE $databaseName.SUGGESTED_PROFILEIDS_AGE_$oppositeGender";
-	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));	
+	$sql = "DROP TABLE $databaseName.SUGGESTED_PROFILEIDS_AGE_AND_REV_$oppositeGender";
+	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
 }
 
 foreach($tableArr as $tableName)
@@ -160,7 +169,7 @@ foreach($tableArr as $tableName)
 	$table2 = 'TEMP2_'.$tableName;
         if($tableName=='CONTACTS_CACHE_LEVEL2_FEMALE'  || $tableName=='CONTACTS_CACHE_LEVEL2_MALE')
                 $table1.="_RENAME";
-
+        
 	$sql = "RENAME TABLE $tableName TO $table2, $table1 TO $tableName, $table2 TO $table1 ";
 	mysqlquerydebug($sql,$db) or mysql_error_mail(mysql_error($db));
 	sleep(60);
