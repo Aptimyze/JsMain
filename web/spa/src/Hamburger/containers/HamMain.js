@@ -8,7 +8,7 @@ export default class HamMain extends React.Component {
 
     constructor(props) {
         super();
-        props.bellResponse.MEMBERSHIPT_TOP = "Flat 70% Off till 12 Jul!";
+       // props.bellResponse.MEMBERSHIPT_TOP = "Flat 70% Off till 12 Jul!";
     }
     checkHome(e) {
         if(window.location.pathname == "/" || window.location.pathname == "/login/") {
