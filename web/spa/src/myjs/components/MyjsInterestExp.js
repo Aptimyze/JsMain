@@ -1,5 +1,5 @@
 import React from "react";
-
+import {Link} from "react-router-dom";
 
 
 export class ShowExpiryList extends React.Component {
@@ -7,7 +7,7 @@ export class ShowExpiryList extends React.Component {
     super();
   }
   render(){
-   let tupleArray = this.props.listingData;
+   let tupleArray = this.props.listingData.profiles;
    let countTuple = (tupleArray.length<=3)?tupleArray.length: 3;
    let setdim = {width:"60px" , height:"60px" };
    let IntExpListing;
@@ -27,16 +27,15 @@ export class ShowExpiryList extends React.Component {
     }
     return(
         <div>
-          {tupleArray.slice(0,countTuple).map(function(profiles){
-            return (
+          {this.props.listingData.profiles.slice(0,countTuple).map((profiles,index) => ( 
                 <div className="mar05 dispibl" key={profiles.profilechecksum}>
                   <div className="row mar05 brdr50p posrel outerCircleDiv">
                     <Link to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.listingData.tracking}&total_rec=${this.props.listingData.total}&actual_offset=${index}&contact_id=${this.props.listingData.contact_id}`}>
-                      <img src={profiles.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/></Link>
+                      <img src={profiles.photo.url} className="cell vmid brdr50p innerCircleDiv" style={setdim}/>
+                    </Link>
                   </div>
                 </div>
-            )
-          })}
+          ))}
           {IntExpListing}
         </div>
       )
