@@ -1739,7 +1739,8 @@ JsChat.prototype = {
                                 //"messageId":latestMsgId,
                                 "extraParams": {
                                     "pogChecksum": to_checksum,
-                                    "orderBy":"ASC"
+                                    "orderBy":"DESC",
+                                    "time":latestMsgId
                                 }
                             }); 
                         }
@@ -2291,7 +2292,7 @@ JsChat.prototype = {
             }
             if(typeof communication != "undefined"){
                 $.each(communication, function (key, logObj) {
-                    latestMsgId = logObj["id"];
+                    latestMsgId = logObj["date"];
                     //console.log(logObj);
                     if (parseInt(logObj["sender"]) == self_id) {
                         if(logObj["chatId"] == "" && now_mark_read == false){
