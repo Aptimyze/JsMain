@@ -9,9 +9,11 @@ export default class HamMain extends React.Component {
     constructor(props) {
         super();
     }
-
-    componentDidMount() {
-      
+    checkHome(e) {
+        if(window.location.pathname == "/" || window.location.pathname == "/login/") {
+           e.preventDefault();
+           this.hideHam(); 
+        }
     }
     openHam() {
         document.getElementById("hamView").classList.add("z99")
@@ -23,53 +25,29 @@ export default class HamMain extends React.Component {
         document.getElementById("hamView").classList.remove("backShow")
         document.getElementById("hamburger").classList.remove("hamShow")
     }
-
     render() {
-
-        var appLinkView,urlString,appText;
-        if(getAndroidVersion()) {
-            urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
-            appText = "Download  App | 3MB only";
-        } else if(getIosVersion()) {
-            urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
-            appText = "Download iOS App";
-        }
-
-        var CommBrowseView;
-        if(this.props.page == "Login") {
-            CommBrowseView = <a href="/browse-matrimony-profiles-by-community-jeevansathi" className="white">
-                Browse by Community
-            </a>
-        }
-
-        var listingView = <div id="liting">
-            <ul className="fontlig white">
+        var listingView = <div id="listing">
+            <ul className="fontreg white listingHam">
                 <li>
-                    <div id="appDownloadLink">
-                        <a href = {urlString}  className="white">
-                            {appText}    
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <Link to={"/"} id="homeLink" className="f17">
+                    <i className="hamSprite homeIcon"></i>
+                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink" className="f17 white">
                         Home
                     </Link>
                 </li>
                 <li>
+                    <i className="hamSprite searchIcon"></i>
                     <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
                         Search
                     </a>
                 </li>
                 <li>
+                    <i className="hamSprite searchProfileIcon"></i>
                     <a id="searchProfileId" href="/search/searchByProfileId" className="white">
                         Search by Profile ID
                     </a>
                 </li>
                 <li>
-                    {CommBrowseView}
-                </li>
-                <li>
+                    <i className="hamSprite settingsIcon"></i>
                     <a href="/static/settings" className="white">
                         Settings
                     </a>
@@ -81,6 +59,7 @@ export default class HamMain extends React.Component {
             <div id="hamMain">
                 <div id="hamburger" className="white posfix z105 wid80p fl fullheight">
                     {listingView} 
+
                 </div>
                 <div onClick={this.hideHam} id="hamView" className="fullwid darkView fullheight hamView"></div>
             </div>

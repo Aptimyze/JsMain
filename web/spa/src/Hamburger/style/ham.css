@@ -15,7 +15,60 @@
     transform: translate(0%, 0%) !important;
 }
 #hamburger {
-	background: url(/spa/dist/icons/loginbg.jpg) center center no-repeat #3e3e3e!important;
+    background: url(https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg);
 	transform: translate(-100%, 0%);
 	transition: all .2s linear;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
+.hamSprite {
+	background: url(../../img/hamSprite.png) center no-repeat;
+	transform: scale(0.9,0.9);
+}
+.homeIcon {
+	width: 27px;
+    height: 27px;
+    background-position: -50px -14px;
+}
+.listingHam li {
+	margin: 25px 10px;
+}
+.listingHam li i {
+	margin: 0px 10px;
+	vertical-align: bottom;
+}
+.listingHam li a{
+	margin-left: 15px;
+}
+.searchIcon {
+	width: 27px;
+    height: 27px;
+    background-position: -50px -59px;
+}
+.searchProfileIcon {
+	width: 27px;
+    height: 27px;
+    background-position: -51px -99px;
+}
+.settingsIcon {
+	height: 27px;
+    width: 27px;
+    background-position: -11px -149px;
+}
+.z104{z-index: 104}
+.hamImage{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	z-index: 104;
+	transform: translate(-120%, 0%) !important;
+	transition: all .2s linear;
+}
+.hamImageShow{
+	transition: all .2s linear;
+    transform: translate(-20%, 0%) !important;
+}
+
