@@ -29,7 +29,7 @@ class MessageHandleV1Action extends sfAction
 			$messageCommunication->insertMessage();
 			if(!$messageCommunication->obsceneMessage())
 			{
-				$draft = $request->getParameter("draft");
+				$draft = htmlentities(urldecode($request->getParameter("draft")));
 				$type  = $request->getParameter('type');
 				$contactId  = $request->getParameter('contactId');
 				$LastSentMessageObj = new LastSentMessage();

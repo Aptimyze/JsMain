@@ -313,6 +313,46 @@ try{
 		$this->updateViewLogTable($viewLogData,$viewLogData['triggerOrNot']);
 	}
  }
+ public function updateCriticalInfo($body)
+ {
+	$prevMstatus=  $body['PREV_MSTATUS'];
+	$mstatus=  $body['MSTATUS'];
+	$prevDob = $body['PREV_DTOFBIRTH'];
+	$dob = $body['DTOFBIRTH'];
+	$profileid = $body['profileid']; 
+        $deleteInterest = 0;
+	if($dob && $prevDob){
+                $createDate = new DateTime($prevDob);
+                $date = $createDate->format('Y-m-d');
+                $todayDate = new DateTime($dob);
+                $actionDate = new DateTime($date);
+                $diff = $actionDate->diff($todayDate);
+                if ($diff->y >= 2) {
+                        $deleteInterest = 1;
+                }
+        }
+        if($prevMstatus!= "" && $mstatus != "" &&(($prevMstatus == "N" && $mstatus != "N") || ($prevMstatus != "N" && $mstatus == "N"))){
+                $deleteInterest = 1;
+        }
+        if($deleteInterest == 1){
+                $producerObj=new Producer();
+		if($producerObj->getRabbitMQServerConnected())
+		{
+			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+			$producerObj->sendMessage($sendMailData);
+                }else
+		{
+			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+                        $cmd = JsConstants::$php5path." -q ".$path;
+                        passthru($cmd);
+		}
+    
+        }else{
+                $maileobj = new CriticalInformationMailer($profileid,$body);
+                $maileobj->sendMailer(); 
+        }
+        
+ }
  public function updateMatchAlertsLaseSeen($body)
  {
 	$seenOn = $body['seen_date'];

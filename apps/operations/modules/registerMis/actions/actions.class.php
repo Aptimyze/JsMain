@@ -35,6 +35,7 @@ class registerMisActions extends sfActions {
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
     {
+      ini_set('memory_limit','512M');
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("COMMUNITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];

@@ -277,4 +277,3 @@ jsmsVerificationStaticPageSuccess:
    stylesheets: [-*,jsms/common/verificationIcon_css]
    javascripts: [jsms/common/verificationIcon_js]
    layout: jsmsMobLayout
-

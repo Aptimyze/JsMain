@@ -150,5 +150,16 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             throw new jsException($ex);
         }
     }
+    
+    public function deleteOldData($lessThanDate){
+        try{
+            $sql = "DELETE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE DEAL_DATE < :DEAL_DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DEAL_DATE",$lessThanDate, PDO::PARAM_STR);
+            $res->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
 ?>
