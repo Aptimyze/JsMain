@@ -42,6 +42,12 @@
 .listingHam li a{
 	margin-left: 15px;
 }
+.minorList li a{
+    margin-left: 70px;
+}
+.minorList li {
+    list-style: none;
+}
 .searchIcon {
 	width: 27px;
     height: 27px;
@@ -76,6 +82,11 @@
 	height: 27px;
     width: 27px;
     background-position: -13px -196px;
+}
+.plusParent .plusIcon {
+    height: 27px;
+    width: 27px;
+    background-position: -54px -268px;
 }
 .myContactIcon {
 	height: 27px;
@@ -139,6 +150,9 @@
 .brdrTop {
 	border-top: 1px solid white;  
 }
+.brdrBtm {
+    border-bottom: 1px solid white;  
+}
 .ml0Imp{
 	margin-left: 0px !important;
 }
@@ -151,4 +165,11 @@
     margin: 2px auto !important;
     display: block;
     position: relative;
+}
+.minorList {
+    transition: 0.4s;
+    overflow: hidden;
+}
+.pb8 {
+    padding-bottom: 8px;
 }
