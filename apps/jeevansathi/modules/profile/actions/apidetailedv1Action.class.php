@@ -508,7 +508,7 @@ class apidetailedv1Action extends sfAction
 			{
 				$tickKey = "HAVECHILD";
 			}
-			if($dppArray["dpp_religion"] == ProfileEnums::MUSLIM_NAME && $key==ProfileEnums::CASTE_KEY)
+			if(strpos($dppArray["dpp_religion"],ProfileEnums::MUSLIM_NAME) !== false && $key==ProfileEnums::CASTE_KEY)
 			{
 				$tickKey = "SECT";
 			}
