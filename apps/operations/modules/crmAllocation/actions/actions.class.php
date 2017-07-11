@@ -814,7 +814,10 @@ class crmAllocationActions extends sfActions
   */
   public function executeGetExclusiveMembers(sfWebRequest $request)
   {
-  	$type = $request->getParameter("EX_STATUS");
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
+  
+	$type = $request->getParameter("EX_STATUS");
   	$this->cid = $request->getParameter("cid");
   	$this->user = $request->getParameter("user");
   	$memHandlerObj = new MembershipHandler();

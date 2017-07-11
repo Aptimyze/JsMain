@@ -122,3 +122,12 @@ input[type=number] {
   .m0_20{margin:0px 20px}
   .mt4{margin-top:4px}
   .pb12{padding-bottom:12px}
+  .back-Gray{background-color: #e4e4e4;  }
+  .upload-btn-jsms{              display: inline;
+    border: 1px solid #808080;
+    padding: 8px;
+    margin-right: 10px;
+    color: #D9475D;
+    font-weight: 400;
+    background-color: #fff;
+  }/*same div height text*/
