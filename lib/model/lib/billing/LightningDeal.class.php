@@ -58,15 +58,16 @@ class LightningDeal
 			    unset($lastLoggedInPaidPool);
 			    $pool1 = $pool1 + $lastLoggedInArr;
 			}
-			unset($lastLoggedInArr);
+			if($this->debug == 1){
+                error_log("after membership filter-".count($lastLoggedInArr)."\n",3,$this->logFilePath);
+            }
+            unset($lastLoggedInArr);
 			$start += $this->sqlSelectLimit;
         }
         unset($serviceStObj);
         unset($discTrackingObj);
         if($this->debug == 1){
-	        //echo "after last 30 days login and currently free filter,pool 1.."."\n";
-	        //print_r($pool1);
-            error_log("pool1 generation end"."\n",3,$this->logFilePath);
+            error_log("pool1 generation end- ".count($pool1)."\n",3,$this->logFilePath);
 	    }
 	    return $pool1;
 	}
@@ -102,7 +103,7 @@ class LightningDeal
 	        print_r($pool2);
 	    }*/
         if($this->debug == 1){
-            error_log("pool2 generation end"."\n",3,$this->logFilePath);
+            error_log("pool2 generation end-".count($pool2)."\n",3,$this->logFilePath);
         }
 		return $pool2;
 	}
@@ -122,6 +123,9 @@ class LightningDeal
 			if(is_array($pool2) && $n>0){
 				$finalPool = array_slice($pool2, 0,$n);
 			}
+            if($this->debug == 1){
+                error_log("final pool generation end-".count($finalPool)."\n",3,$this->logFilePath);
+            }
 		}
 		
 		/*if($this->debug == 1){
@@ -152,7 +156,11 @@ class LightningDeal
             /*Storing discount in final pool from existing data of pool 1*/
             if(is_array($finalPool)){
                 $finalPoolWithDiscount = $this->fetchFinalPoolWithDiscount($finalPool,$pool1);
+                if($this->debug == 1){
+                    error_log("finalPoolWithDiscount-".count($finalPoolWithDiscount)."\n",3,$this->logFilePath);
+                }
             }
+            
 			unset($pool1);
 			unset($pool2);
             unset($finalPool);
