@@ -43,8 +43,8 @@ class RequestHoroscopeV1Action extends sfAction{
                 $selfAstroDetails = $this->selfAstroDetails($loggedInProfileObj);
                
                 if($selfAstroDetails['ASTRO_DETAILS'] == 0){
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("UPLOAD_HOROSCOPE_DETAILS");
-                        $this->sendResponse($request, $statusArr);
+                        $Errmsg = RequestHoroscopeEnum::getErrorByField("UPLOAD_HOROSCOPE_DETAILS");
+                        $msg["ADD_ASTRO"] = $Errmsg["message"];
                 }
                 if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
                         $Errmsg = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
