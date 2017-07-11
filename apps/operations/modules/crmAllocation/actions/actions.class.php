@@ -836,6 +836,7 @@ class crmAllocationActions extends sfActions
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
+
   	//active tab
   	$this->tabChosenDetails = exclusiveMemberList::$TYPE_TABID_MAPPING[$type];
   	//horizontal tab details
@@ -854,6 +855,7 @@ class crmAllocationActions extends sfActions
   	$sendAssignMailer = $request->getParameter("sendAssignMailer");
   	$sendAssignSMS = $request->getParameter("sendAssignSMS");
   	$profileid = intval($inputArr["profile"]);
+  	$billid = intval($inputArr["billid"]);
   	$success = true;
 
   	if($inputArr["exAction"] && $profileid)
@@ -861,11 +863,11 @@ class crmAllocationActions extends sfActions
 	  	$exObj = new billing_EXCLUSIVE_MEMBERS();
 	  	if($inputArr["exAction"]=="UNASSIGN")
 	  	{
-	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00");
+	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00",$billid);
 	  	}
 	  	else if($inputArr["exAction"]=="ASSIGN")
 	  	{
-	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'));
+	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'),$billid);
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)
 	  		{
