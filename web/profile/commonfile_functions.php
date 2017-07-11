@@ -722,6 +722,8 @@ $js_arr[]=array(" /web/spa/src/myjs/containers/MyjsPage"   => "1");
 $js_arr[]=array(" /web/spa/src/common/components/RedirectRouter"   => "1");
 $js_arr[]=array("/web/spa/src/common/components/MetaTagComponents"    => "2");
 $js_arr[]=array(" /web/spa/src/common/components/GA"   => "1");
+$js_arr[]=array(" /web/spa/server"   => "1");
+$js_arr[]=array("/web/spa/new_working"   => "1");
 return $js_arr;
 }
 function getJavascript(){
