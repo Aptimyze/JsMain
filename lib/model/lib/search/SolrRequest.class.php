@@ -300,11 +300,8 @@ class SolrRequest implements RequestHandleInterface
 				}
 				elseif($field=="INCOME")
 				{
-					if(in_array(15, explode(",", $value)) && !in_array("X", explode(",", $value))){
+					if(in_array(15, explode(",", $value))){
                                                 $value = $this->removeLowerINCOME($value,$this->searchParamtersObj->getLINCOME(),$this->searchParamtersObj->getHINCOME(),$this->searchParamtersObj->getLINCOME_DOL(),$this->searchParamtersObj->getHINCOME_DOL());
-                                                $this->searchParamtersObj->setINCOME($value);
-                                        }elseif(in_array("X", explode(",", $value))){
-                                                $value = str_replace(",X","",$value);
                                                 $this->searchParamtersObj->setINCOME($value);
                                         }
                                         $solrFormatValue = str_replace(","," ",$value);
@@ -729,14 +726,24 @@ class SolrRequest implements RequestHandleInterface
                 }
                 $incomeHighValue = "";
                 if(($dArr["minID"]==0 && $rArr["minIR"]!=0)){
+                        if(in_array("INCOME_DOL",explode(",",$this->searchParamtersObj->getCURRENT_CLUSTER()))){
+                                $rArr["minIR"] = 0;
+                                $this->searchParamtersObj->setLINCOME("0");
+                        }
                         $incomeMapObj = new IncomeMapping($rArr,$dArr);
                         $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome_dol",$dArr["minID"]);
                         $dArr["minID"] = $incomeHighValue;
+                        $this->searchParamtersObj->setLINCOME_DOL($incomeHighValue);
                         unset($incomeMapObj);
                 }elseif(($rArr["minIR"]==0 && $dArr["minID"]!=0)){
+                        if(in_array("INCOME",explode(",",$this->searchParamtersObj->getCURRENT_CLUSTER()))){
+                                $dArr["minID"] = 0;
+                                $this->searchParamtersObj->setLINCOME_DOL("0");
+                        }
                         $incomeMapObj = new IncomeMapping($rArr,$dArr);
                         $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
                         $rArr["minIR"] = $incomeHighValue;
+                        $this->searchParamtersObj->setLINCOME($incomeHighValue);
                         unset($incomeMapObj);
                 }
                 if($incomeHighValue != ""){

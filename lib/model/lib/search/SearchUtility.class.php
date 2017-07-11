@@ -282,7 +282,7 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
-                
+                $searchParamsSetter['CURRENT_CLUSTER'] = $cluster;
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')
@@ -397,7 +397,6 @@ class SearchUtility
 							$searchParamsSetter[$cluster]=implode(",",$incomeValues);
 						}
 					}
-                                        $searchParamsSetter[$cluster] .= ",X";
 				}
 				elseif($cluster == "INCOME_DOL")
 				{
@@ -443,7 +442,6 @@ class SearchUtility
 							$searchParamsSetter["INCOME"]=implode(",",$incomeValues);
 						}
 					}
-                                        $searchParamsSetter[$cluster] .= ",X";
 				}
 			}
 			else
