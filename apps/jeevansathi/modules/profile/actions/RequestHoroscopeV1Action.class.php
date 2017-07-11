@@ -12,10 +12,10 @@ class RequestHoroscopeV1Action extends sfAction{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("PROFILE_NOT_EXISTS");
                         $this->sendResponse($request, $statusArr);
                 }
-                
+                $msg = array();
                 if ($loggedInProfileObj->getSHOW_HOROSCOPE() != "Y") {
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("ADD_YOUR_HOROSCOPE");
-                        $this->sendResponse($request, $statusArr);
+                        $Errmsg = RequestHoroscopeEnum::getErrorByField("ADD_YOUR_HOROSCOPE");
+                        $msg[] = $Errmsg["message"];
                 }
                 
                 $jprofileObj = new JPROFILE("newjs_masterRep");
@@ -47,16 +47,17 @@ class RequestHoroscopeV1Action extends sfAction{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("UPLOAD_HOROSCOPE_DETAILS");
                         $this->sendResponse($request, $statusArr);
                 }
-//                if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
-//                        $statusArr = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
-//                        $this->sendResponse($request, $statusArr);
-//                }
+                if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
+                        $Errmsg = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
+                        $msg[] = $Errmsg["message"];
+                }
                 $horoscopeUploaded=$this->horoscopeRequestSent($profileid,$requestedId);
                 if($horoscopeUploaded === "E"){
                         $statusArr = RequestHoroscopeEnum::getErrorByField("ALREADY_REQUESTED","#USERNAME#",$username);
                         $this->sendResponse($request, $statusArr);
                 }elseif($horoscopeUploaded == true){
                         $statusArr = RequestHoroscopeEnum::getErrorByField("REQUEST_SENT","#USERNAME#",$username);
+                        $statusArr["otherMsg"] = $msg;
                         $this->sendResponse($request, $statusArr);
                 }else{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("FAILURE");
