@@ -324,7 +324,6 @@ class apidetailedv1Action extends sfAction
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
 		}
-		print_R($out);die;		
 		return $out;
 	}
 
