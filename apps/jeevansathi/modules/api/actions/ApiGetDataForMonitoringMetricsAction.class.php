@@ -15,7 +15,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
 	*/
     
         private $timeChange = 34200;//9.5*60*60;
-        private $oneDay = 84600;
+        private $oneDay = 86399;
 	public function execute($request)
 	{
             $firstDateDay = explode('-',explode(' ',$request->getParameter('startDate'))[0])[2];
@@ -33,8 +33,8 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                 $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',$endDate);
             }
             else{
-                $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',  strtotime('00:00:00')+$this->oneDay);
-                $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
+                $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',  strtotime('00:00:00')+$this->timeChange);
+                $lessThan = date('Y-m-d',$endDate+$this->oneDay)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay+$this->timeChange);
             }
             $timeDiff = $endDate -  $startDate;
             
@@ -46,8 +46,8 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                     $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',$endDate2);
                 }
                 else{
-                    $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
-                    $lessThan2 = date('Y-m-d',$endDate2)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay);
+                    $greaterThan2 = date('Y-m-d',$startDate2)."T".date('H:i:s',strtotime('00:00:00')+$this->timeChange);
+                    $lessThan2 = date('Y-m-d',$endDate2+$this->oneDay)."T".date('H:i:s',strtotime('00:00:00')+$this->oneDay+$this->timeChange);
                 }
             }
             
@@ -72,16 +72,16 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             $unId = time() + LoggedInProfile::getInstance()->getPROFILEID();
             $this->urlToHit = $elkServer.':'.$elkPort."/".$keyToFetch."/".$key2."/".$query;
             $totalResponse= array();
-            $totalResponse[] = $this->getResponse($greaterThan, $lessThan);
+            $totalResponse[] = $this->getResponse($greaterThan, $lessThan,$request->getParameter('startDate'),$request->getParameter('endDate'));
             if($startDate2){
-            $totalResponse[] = $this->getResponse($greaterThan2, $lessThan2);
+            $totalResponse[] = $this->getResponse($greaterThan2, $lessThan2,$request->getParameter('startDate2'),date('Y-m-d H:i:s',$endDate2));
             }
             $totalResponse["dayOrHour"] = $this->interval;
             echo json_encode($totalResponse);die;//die('pa');
             return sfView::NONE;
     }
     
-    public function getResponse($gt,$lt){
+    public function getResponse($gt,$lt,$oGt,$oLt){
        $params =  '{
                         "size": "0",
                         "query": 
@@ -131,26 +131,37 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                     $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange+1800);
                 $newResponse['count'][] = $value['doc_count'];
             }
-//            if($this->interval == "day"){
-//                for($i=date('d',strtotime($gt));$i<=date('d',strtotime($lt));$i++){
-//                    $found=0;
-//                    foreach ($phpResponse['aggregations']['articles_over_time']['buckets'] as $key => $value) {
-//                        $returnedDate = substr(str_replace('T',' ', $value['key_as_string']),0,19);
-//                        if(date('d',strtotime($returnedDate)) == $i){
-//                            $found = 1;
-//                        }
-//                    }
-//                    if(1){
-//                        $numString = (string)$i;
-//                        echo $returnedDate."\n";
-//                        echo $numString."\n";
-//                        print_r(substr_replace($returnedDate,$numString,8,9));die;
-//                        $newResponse['timestamp'][] = substr_replace($returnedDate,$numString,8,9);
-//
-//                        $newResponse['count'][] = 0;
-//                    }
-//                }
-//            }
+            if($this->interval == "day"){
+                $ll = date('d',strtotime($oGt));
+                $hl = date('d',strtotime($oLt));
+            }
+            else{
+                $ll = date('H',strtotime($gt));
+                $hl = date('H',strtotime($lt));
+            }
+            for($i=$ll;$i<=$hl;$i++){
+                $found=0;
+                foreach ($newResponse['timestamp'] as $key => $value) {
+                    $returnedDate = substr(str_replace('T',' ', $value),0,19);
+                    if(($this->interval == "day" && date('d',strtotime($returnedDate)) == $i) || ($this->interval == "hour" && date('H',strtotime($returnedDate)) == $i)){
+                        $found = 1;
+                    }
+                }
+                if(!$found){
+                    $numString = (string)$i;
+                    if(strlen($numString)==1)
+                         $numString = "0".$numString;
+                    if($this->interval == "day"){
+                        //print_r(substr_replace($returnedDate,$numString,8,2));die;
+                        $newResponse['timestamp'][] = substr_replace($returnedDate,$numString,8,2);
+                    }
+                    else{
+                        $newResponse['timestamp'][] = substr_replace($returnedDate,$numString,11,2);
+                    }
+
+                    $newResponse['count'][] = 0;
+                }
+            }
             $newResponse['totalCount'] = $phpResponse['hits']['total'];
             return $newResponse;
         

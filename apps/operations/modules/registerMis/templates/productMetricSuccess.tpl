@@ -417,29 +417,35 @@
             
             
             $('#time-start').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
+    format: 'yyyy-mm-dd hh',
     autoclose: true,
     pickerPosition: "bottom-left",
-    maxView: 3,
+    minView:1,
+    maxView: 2,
     minuteStep: 1,
-    endDate: new Date()
+    endDate: new Date(),
+    startView:2
 });
 
 $('#time-end').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
+    format: 'yyyy-mm-dd hh',
     autoclose: true,
     pickerPosition: "bottom-left",
-    maxView: 3,
+    minView:1,
+    maxView: 2,
     minuteStep: 1,
-    endDate: new Date()
+    endDate: new Date(),
+    startView:2
 });
             $('#time-start2').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
+    format: 'yyyy-mm-dd hh',
     autoclose: true,
     pickerPosition: "bottom-left",
-    maxView: 3,
+    minView:1,
+    maxView: 2,
     minuteStep: 1,
-    endDate: new Date()
+    endDate: new Date(),
+    startView:2
 });
 
             loadCurrentDateTime();
@@ -466,9 +472,9 @@ function getCurrentTime(zeroTime){
 var today = new Date();
 var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 if((typeof zeroTime !='undefined') && zeroTime)
-    var time = "00:00:00";
+    var time = "00";
 else 
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var time = today.getHours();
 var dateTime = date+' '+time;
 return dateTime;
     
@@ -520,10 +526,10 @@ function sendAjaxForData(type){
     var postParams = {};
     postParams.type = type;
     postParams.channel = currentChannel;
-    postParams.startDate = $("#time-startVal").val();
-    postParams.endDate = $("#time-EndVal").val();
+    postParams.startDate = $("#time-startVal").val()+":00:00";
+    postParams.endDate = $("#time-EndVal").val()+":59:59";
     if (doubleRange)
-        postParams.startDate2 = $("#time2-startVal").val();
+        postParams.startDate2 = $("#time2-startVal").val()+":00:00";
     $.ajax({
         
         'url':'/api/v1/api/metricMonitoring',
@@ -537,7 +543,7 @@ function sendAjaxForData(type){
             $("#chart-"+type + "Parent").append(dummyHtml);
             if(response!=null){
                 if(doubleRange)
-                    $("#"+type+"Count").text(response[0].totalCount+','+response[1].totalCount);
+                    $("#"+type+"Count").text("1-:"+response[0].totalCount+',2-:'+response[1].totalCount);
                 else
                     $("#"+type+"Count").text(response[0].totalCount);
                 drawCharts(response,type);
