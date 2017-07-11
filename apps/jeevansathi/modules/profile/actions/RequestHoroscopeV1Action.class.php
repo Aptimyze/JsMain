@@ -15,9 +15,8 @@ class RequestHoroscopeV1Action extends sfAction{
                 $msg = array();
                 if ($loggedInProfileObj->getSHOW_HOROSCOPE() != "Y") {
                         $Errmsg = RequestHoroscopeEnum::getErrorByField("ADD_YOUR_HOROSCOPE");
-                        $msg[] = $Errmsg["message"];
+                        $msg["ADD_HORO"] = $Errmsg["message"];
                 }
-                
                 $jprofileObj = new JPROFILE("newjs_masterRep");
                 $fields = 'PROFILEID,USERNAME,GENDER';
                 $valArray = array("PROFILEID"=>$requestedId,"activatedKey" => "1");
@@ -49,7 +48,7 @@ class RequestHoroscopeV1Action extends sfAction{
                 }
                 if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
                         $Errmsg = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
-                        $msg[] = $Errmsg["message"];
+                        $msg["BUY_ASTRO_SERVICE"] = $Errmsg["message"];
                 }
                 $horoscopeUploaded=$this->horoscopeRequestSent($profileid,$requestedId);
                 if($horoscopeUploaded === "E"){
@@ -57,8 +56,7 @@ class RequestHoroscopeV1Action extends sfAction{
                         $this->sendResponse($request, $statusArr);
                 }elseif($horoscopeUploaded == true){
                         $statusArr = RequestHoroscopeEnum::getErrorByField("REQUEST_SENT","#USERNAME#",$username);
-                        $statusArr["otherMsg"] = $msg;
-                        $this->sendResponse($request, $statusArr);
+                        $this->sendResponse($request, $statusArr,$msg);
                 }else{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("FAILURE");
                         $this->sendResponse($request, $statusArr);
@@ -122,9 +120,13 @@ class RequestHoroscopeV1Action extends sfAction{
                 }
                 return false;
         }
-        private function sendResponse($request,$statusArr){
+        private function sendResponse($request,$statusArr,$msgs=array()){
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);
+                if(!empty($msgs))
+                        $respObj->setResponseBody(array("error"=>$msgs));
+                else
+                    $respObj->setResponseBody(array("error"=>""));    
                 $respObj->generateResponse();
                 if($request->getParameter('internally'))
                         sfView::NONE;
