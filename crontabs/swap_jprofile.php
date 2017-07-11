@@ -279,12 +279,11 @@ while($row=mysql_fetch_row($res))
                 mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
         }
         
-        $sqlIsPaid = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID =$profileid ORDER BY ENTRY_DT DESC LIMIT 1";
-        $IsPaid = mysql_query($sqlIsPaid,$db) or die("error in data from billing purchases for $profileid".mysql_error1($db));
-        $IsPaid    =mysql_fetch_array($IsPaid);
+        $memberShipObj = new MembershipHandler();
+        $IsPaid    = $memberShipObj->getPurchaseDate($profileid);
         
-        if($IsPaid !== false && $IsPaid != '' && !empty($IsPaid)){
-                $sql_update="UPDATE SWAP SET PAID_DATE = '".$IsPaid['ENTRY_DT']."' WHERE PROFILEID=$profileid";
+        if($IsPaid['PURCHASE_DATE'] !== false && $IsPaid['PURCHASE_DATE'] != '' && !empty($IsPaid['PURCHASE_DATE'])){
+                $sql_update="UPDATE SWAP SET PAID_DATE = '".$IsPaid['PURCHASE_DATE']."' WHERE PROFILEID=$profileid";
                 mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
         }
         // Paid user check end
