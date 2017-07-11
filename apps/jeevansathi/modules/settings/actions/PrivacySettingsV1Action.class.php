@@ -12,10 +12,20 @@ class PrivacySettingsV1Action extends sfAction
     public function execute($request) 
     {        
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        $field = $request->getParameter("field");
-        $privacyValue = $request->getParameter("privacy");
+        $getDataFlag = $request->getParameter("getData");
         $privacySettingObj = new privacySettings();
-        $response = $privacySettingObj->updatePrivacySettings($field,$privacyValue);        
+        if($getDataFlag)
+        {            
+            $response = json_encode($privacySettingObj->getPrivacySettingsData());
+        }
+        else
+        {
+            $field = $request->getParameter("field");
+            $privacyValue = $request->getParameter("privacy");
+            $privacySettingObj = new privacySettings();
+            $response = $privacySettingObj->updatePrivacySettings($field,$privacyValue);
+        }
+         unset($privacySettingObj);       
         if($response)
         {
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

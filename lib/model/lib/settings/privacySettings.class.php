@@ -85,4 +85,30 @@ class privacySettings
 		$privacyObj->UpdatePrivacy($privacy,$profileid);
 		unset($privacyObj);
 	}
+
+	public function getPrivacySettingsData()
+	{
+		$privacyDetailArr = array();
+		$loggedInProfileObj = LoggedInProfile::getInstance();
+		$profileId = $loggedInProfileObj->getPROFILEID(); 
+		$profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+		//mobile
+		$privacyDetailArr["MOBILE"]["VALUE"] = $profileDetail["PHONE_MOB"];
+		$privacyDetailArr["MOBILE"]["ISD"] = $profileDetail["ISD"];
+		$privacyDetailArr["MOBILE"]["STATUS"] = $profileDetail["SHOWPHONE_MOB"];
+        //alternate mobile     
+		$privacyDetailArr["ALT_MOBILE"]["ISD"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
+		$privacyDetailArr["ALT_MOBILE"]["VALUE"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+		$privacyDetailArr["ALT_MOBILE"]["STATUS"] = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
+		//landline
+		$privacyDetailArr["LANDLINE"]["VALUE"] = $profileDetail["PHONE_RES"];
+		$privacyDetailArr["MOBILE"]["ISD"] = $profileDetail["STD"];
+		$privacyDetailArr["MOBILE"]["STATUS"] = $profileDetail["SHOWPHONE_RES"];
+		//photo privacy			
+		$privacyDetailArr["PHOTO"]["STATUS"] = $profileDetail["PHOTO_DISPLAY"];
+		//profile visibility
+		$privacyDetailArr["PROFILE_VISIBILITY"]["STATUS"] = $profileDetail["PRIVACY"];
+
+		return $privacyDetailArr;
+	}
 }
