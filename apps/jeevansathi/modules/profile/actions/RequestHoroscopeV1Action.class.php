@@ -47,10 +47,10 @@ class RequestHoroscopeV1Action extends sfAction{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("UPLOAD_HOROSCOPE_DETAILS");
                         $this->sendResponse($request, $statusArr);
                 }
-                if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
-                        $statusArr = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
-                        $this->sendResponse($request, $statusArr);
-                }
+//                if($selfAstroDetails['COMPATIBILITY_SUBSCRIPTION'] == 0){
+//                        $statusArr = RequestHoroscopeEnum::getErrorByField("BUY_ASTRO_SERVICE");
+//                        $this->sendResponse($request, $statusArr);
+//                }
                 $horoscopeUploaded=$this->horoscopeRequestSent($profileid,$requestedId);
                 if($horoscopeUploaded === "E"){
                         $statusArr = RequestHoroscopeEnum::getErrorByField("ALREADY_REQUESTED","#USERNAME#",$username);
