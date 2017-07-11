@@ -179,7 +179,7 @@ class SearchQueryJs
 			$fields1='returnOnlySql';
 		else
 			$fields1=$fields;
-		$res = $jprofile->getArray($valueArray, $excludeArray="", $greaterThanArray="",$fields1,$lessThanArray="",$orderby="",$limit="",$greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like,$nolike,"(ACTIVATED!='D' OR JSARCHIVED=1)");
+		$res = $jprofile->getArray($valueArray, $excludeArray="", $greaterThanArray="",$fields1,$lessThanArray="",$orderby="",$limit="",$greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like,$nolike,"(ACTIVATED!='D')");
 		if($returnOnlySql)
 		{
 			$res = str_replace('returnOnlySql',$fields,$res);

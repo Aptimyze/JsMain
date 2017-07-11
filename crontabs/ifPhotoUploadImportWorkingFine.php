@@ -14,7 +14,7 @@ $start_dt=date("Y-m-d",$ts);
 $start_dt1=date("Y-m-d",$ts2);
 
 //picasa,flickr
-$sourceArr = array('facebook','computer_noFlash','mobPicsGallery','appPicsCamera','appPicsGallery','iOSPicsGallery','mobileUpload');
+$sourceArr = array('facebook','computer_noFlash','mobPicsGallery','appPicsCamera','appPicsGallery','iOSPicsGallery');
 $frequency800 = array('appPicsGallery','computer_noFlash','mobPicsGallery');
 $frequency5 = array('appPicsCamera');
 
