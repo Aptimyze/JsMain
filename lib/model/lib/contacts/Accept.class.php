@@ -130,9 +130,19 @@ class Accept extends ContactEvent
       catch(Exception $e)
       {
       throw new jsException($e);
-    }
+      }
     
     }
+    
+    //Outbound Event
+    $iPgID = $this->contactHandler->getViewer()->getPROFILEID();
+    $iPogID =$this->contactHandler->getViewed()->getPROFILEID();
+    
+    //Pg accpets interest
+    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::ACCEPT_INTEREST, $iPgID, $iPogID);
+    
+    //Pog Interest has been interested
+    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::INTEREST_ACCEPTED, $iPogID, $iPgID);
   }	
 
   /**

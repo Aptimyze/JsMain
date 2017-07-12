@@ -1037,7 +1037,7 @@ class CommonFunction
     
     public static function showAndBeyondPixel($profileId)
     {
-    	if($profileId%9==5)
+    	if($profileId)
     	{
                 $loggedInObj = LoggedInProfile::getInstance();
                 $subscription = $loggedInObj->getSUBSCRIPTION();

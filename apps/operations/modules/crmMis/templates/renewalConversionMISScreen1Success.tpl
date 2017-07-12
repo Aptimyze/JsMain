@@ -72,7 +72,7 @@
 		<td align=center>~$totData.tsrc`</td>
 	</tr>
 	<tr style="background-color:lightyellow">
-		<td align=center class=formhead>Conversion % Upto E-10</td>
+		<td align=center class=formhead>Conversion % Upto E+10</td>
 		~foreach from=$misData key=k item=v`		
 			<td align=center>~$v.convPercUptoE10`</td>
 		~/foreach`
