@@ -5,7 +5,7 @@
 class WellKnownCollegesMap
 {
         
-        const COLLEGE_MAP = array( 
+        public static $COLLEGE_MAP = array( 
 		"AIIMS" => "AIIMS", 
 		"All India Institute of Medical Sciences" => "AIIMS", 
 		"All India Institute of Medical Sciences delhi" => "AIIMS", 

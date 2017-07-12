@@ -30,7 +30,7 @@ foreach($tableArr as $k=>$tableName){
     $result = $mysqlObjS->executeQuery($selectSql,$connSlave) or $mysqlObjS->logError($selectSql);
     $pKey = "PROFILEID";
     $collegeIds = array_flip(FieldMap::getFieldLabel('wellKnownColleges','',1));
-    $collegeNames = WellKnownCollegesMap::COLLEGE_MAP;
+    $collegeNames = WellKnownCollegesMap::$COLLEGE_MAP;
     while($row = $mysqlObjS->fetchAssoc($result))
     {
         if($row[$pKey] != ''){
