@@ -93,22 +93,24 @@ class privacySettings
 		$profileId = $loggedInProfileObj->getPROFILEID(); 
 		$profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
 		//mobile
-		$privacyDetailArr["MOBILE"]["VALUE"] = $profileDetail["PHONE_MOB"];
-		$privacyDetailArr["MOBILE"]["ISD"] = $profileDetail["ISD"];
-		$privacyDetailArr["MOBILE"]["STATUS"] = $profileDetail["SHOWPHONE_MOB"];
-        //alternate mobile     
-		$privacyDetailArr["ALT_MOBILE"]["ISD"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
-		$privacyDetailArr["ALT_MOBILE"]["VALUE"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
-		$privacyDetailArr["ALT_MOBILE"]["STATUS"] = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
-		//landline
-		$privacyDetailArr["LANDLINE"]["VALUE"] = $profileDetail["PHONE_RES"];
-		$privacyDetailArr["MOBILE"]["ISD"] = $profileDetail["STD"];
-		$privacyDetailArr["MOBILE"]["STATUS"] = $profileDetail["SHOWPHONE_RES"];
-		//photo privacy			
-		$privacyDetailArr["PHOTO"]["STATUS"] = $profileDetail["PHOTO_DISPLAY"];
-		//profile visibility
-		$privacyDetailArr["PROFILE_VISIBILITY"]["STATUS"] = $profileDetail["PRIVACY"];
+		$privacyDetailArr["Mobile_No"]["TITLE"] = "Mobile No.";
+		$privacyDetailArr["Mobile_No"]["VALUE"] = $profileDetail["ISD"]." ".$profileDetail["PHONE_MOB"];
+		$privacyDetailArr["Mobile_No"]["STATUS"] = $profileDetail["SHOWPHONE_MOB"];
 
+        //alternate mobile     
+		$privacyDetailArr["Alternate_Number"]["TITLE"] = "Alternate Number";
+		$privacyDetailArr["Alternate_Number"]["VALUE"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD." ".$loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+		$privacyDetailArr["Alternate_Number"]["STATUS"] = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
+		//landline
+		$privacyDetailArr["Landline_Number"]["TITLE"] = "Landline Number";
+		$privacyDetailArr["Landline_Number"]["VALUE"] = $profileDetail["STD"]." ".$profileDetail["PHONE_RES"];
+		$privacyDetailArr["Landline_Number"]["STATUS"] = $profileDetail["SHOWPHONE_RES"];
+		//photo privacy
+		$privacyDetailArr["Photo_Privacy"]["TITLE"] = "Photo Privacy";			
+		$privacyDetailArr["Photo_Privacy"]["STATUS"] = $profileDetail["PHOTO_DISPLAY"];
+		//profile visibility
+		$privacyDetailArr["Profile_Visibility"]["TITLE"] = "Profile Visibility";			
+		$privacyDetailArr["Profile_Visibility"]["STATUS"] = $profileDetail["PRIVACY"];		
 		return $privacyDetailArr;
 	}
 }
