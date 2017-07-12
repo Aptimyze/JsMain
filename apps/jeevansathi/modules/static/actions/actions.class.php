@@ -2197,12 +2197,16 @@ if($k=="state_res")
 
     $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n\n";
     
-    
+    $digitPressed = "";
     if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
       foreach($getParameters as $key) {
         
         if ($key == "CallSid") {
           $CallSid = $request->getParameter($key);
+          continue;
+        }
+        if($key == "digits") {
+          $digitPressed = $request->getParameter($key);
           continue;
         }
         $arrOut[] = " $key : " . $request->getParameter($key);
@@ -2214,7 +2218,7 @@ if($k=="state_res")
     }
     
     $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
-    $storeObj->updateCallResponse($CallSid, $totalResponse);
+    $storeObj->updateCallResponse($CallSid, $totalResponse, $digitPressed);
     
     $respObj = ApiResponseHandler::getInstance();
     $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

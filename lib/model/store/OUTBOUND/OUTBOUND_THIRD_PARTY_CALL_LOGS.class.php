@@ -117,14 +117,24 @@ class OUTBOUND_THIRD_PARTY_CALL_LOGS extends TABLE {
    * @return boolean
    * @throws jsException
    */
-  public function updateCallResponse($callSid, $apiresponse)
+  public function updateCallResponse($callSid, $apiresponse, $digitPressed="")
   {
+    $szDigitPressed = "";
+    
+    if(strlen($digitPressed)) {
+      $szDigitPressed = " , DIGIT_PRESSED = :DT_PRESSED";
+    }
+      
     try {
-      $sql = "UPDATE OUTBOUND.THIRD_PARTY_CALL_LOGS SET RESPONSE_FROM_THIRD_PARTY = CONCAT(RESPONSE_FROM_THIRD_PARTY, :API_RESP) WHERE CALLSID = :CALL_SID";
+      $sql = "UPDATE OUTBOUND.THIRD_PARTY_CALL_LOGS SET RESPONSE_FROM_THIRD_PARTY = CONCAT(RESPONSE_FROM_THIRD_PARTY, :API_RESP) {$szDigitPressed} WHERE CALLSID = :CALL_SID";
       $pdoStatement = $this->db->prepare($sql);
       
       $pdoStatement->bindValue( ":API_RESP", $apiresponse);
       $pdoStatement->bindValue( ":CALL_SID", $callSid);
+      
+      if(strlen($digitPressed)) {
+        $pdoStatement->bindValue( ":DT_PRESSED", $digitPressed);
+      }
       
       $pdoStatement->execute();
 
