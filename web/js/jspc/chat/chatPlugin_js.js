@@ -1739,8 +1739,7 @@ JsChat.prototype = {
                                 //"messageId":latestMsgId,
                                 "extraParams": {
                                     "pogChecksum": to_checksum,
-                                    "orderBy":"DESC",
-                                    "time":latestMsgId
+                                    "time":latestMsgId,
                                 }
                             }); 
                         }
@@ -1800,8 +1799,7 @@ JsChat.prototype = {
                         "from": getConnectedUserJID(),
                         "to": user_jid,
                         "extraParams": {
-                            "pogChecksum": checkSum,
-                            "orderBy":"ASC"
+                            "pogChecksum": checkSum
                         }
                     },"first_history");
                 }
@@ -2269,7 +2267,7 @@ JsChat.prototype = {
         }
     },
     //append chat history in chat box
-    _appendChatHistory: function (selfJID, otherJID, communication,requestType) {
+    _appendChatHistory: function (selfJID, otherJID, origCommunication,requestType) {
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
@@ -2279,6 +2277,7 @@ JsChat.prototype = {
             defaultEoiRecMsg;
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) { 
+            var communication = preProcessCommunication(origCommunication);
             if(curElem._checkForDefaultEoiMsg == true){
                 //other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html(); 
                 other_username =  $('chat-box[user-id="' + other_id + '"] .js-chatBoxTopName').html();    

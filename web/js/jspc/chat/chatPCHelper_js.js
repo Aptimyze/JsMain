@@ -546,6 +546,19 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     return messages;
 }
 
+/*preProcessCommunication
+ * pre process communication history
+ * @inputs: communication
+ * @output: response
+ */
+function preProcessCommunication(communication){
+  
+    if(Object.keys(communication).length>0)
+        return communication.reverse();
+    else
+        return null;
+}
+
 /*getChatHistory
  * fetch chat history on opening window again
  * @inputs: apiParams,key
