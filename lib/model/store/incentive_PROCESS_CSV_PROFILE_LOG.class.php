@@ -1,5 +1,5 @@
 <?php
-class incentive_FP_CSV_PROFILE_LOG extends TABLE
+class incentive_PROCESS_CSV_PROFILE_LOG extends TABLE
 {
         public function __construct($dbname="")
         {
@@ -10,7 +10,7 @@ class incentive_FP_CSV_PROFILE_LOG extends TABLE
         {
                 try
                 {
-                        $sql = "INSERT INTO incentive.FP_CSV_PROFILE_LOG (PROFILEID, CSV_SENT, CAMPAIGN_NAME, DIAL_STATUS, FILTER_NAME, FILTER_VALUE, ENTRY_DT, PROCESS) VALUES(:PROFILEID, :CSV_SENT, :CAMPAIGN_NAME, :DIAL_STATUS, :FILTER_NAME, :FILTER_VALUE,NOW(),:PROCESS)";
+                        $sql = "INSERT INTO incentive.PROCESS_CSV_PROFILE_LOG (PROFILEID, CSV_SENT, CAMPAIGN_NAME, DIAL_STATUS, FILTER_NAME, FILTER_VALUE, ENTRY_DT, PROCESS) VALUES(:PROFILEID, :CSV_SENT, :CAMPAIGN_NAME, :DIAL_STATUS, :FILTER_NAME, :FILTER_VALUE,NOW(),:PROCESS)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
                         $prep->bindValue(":CSV_SENT",$csvSent,PDO::PARAM_STR);

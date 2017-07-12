@@ -1,5 +1,5 @@
 <?php
-class incentive_FP_CSV_DATA_TEMP extends TABLE
+class incentive_PROCESS_CSV_DATA_TEMP extends TABLE
 {
         public function __construct($dbname="")
         {
@@ -9,7 +9,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
 	{
 		try
                 {
-                        $sql="TRUNCATE TABLE incentive.FP_CSV_DATA_TEMP";
+                        $sql="TRUNCATE TABLE incentive.PROCESS_CSV_DATA_TEMP";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                 }
@@ -23,7 +23,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
 	{
 		try
                 {
-                        $sql="delete from incentive.FP_CSV_DATA_TEMP where PROCESS =:PROCESS";
+                        $sql="delete from incentive.PROCESS_CSV_DATA_TEMP where PROCESS =:PROCESS";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
                         $prep->execute();
@@ -37,7 +37,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
         {
                 try
                 {
-                        $sql = "INSERT IGNORE INTO incentive.FP_CSV_DATA_TEMP (PROFILEID,ENTRY_DT,PROCESS) VALUES(:PROFILEID,:ENTRY_DT,:PROCESS)";
+                        $sql = "INSERT IGNORE INTO incentive.PROCESS_CSV_DATA_TEMP (PROFILEID,ENTRY_DT,PROCESS) VALUES(:PROFILEID,:ENTRY_DT,:PROCESS)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
@@ -53,7 +53,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
         {
                 try
                 {
-                        $sql ="SELECT PROFILEID FROM incentive.FP_CSV_DATA_TEMP ORDER BY ENTRY_DT DESC";
+                        $sql ="SELECT PROFILEID FROM incentive.PROCESS_CSV_DATA_TEMP ORDER BY ENTRY_DT DESC";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                         while($result=$prep->fetch(PDO::FETCH_ASSOC))
@@ -72,7 +72,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
         {
                 try
                 {
-                        $sql ="SELECT count(*) as CNT FROM incentive.FP_CSV_DATA_TEMP where PROCESS = :PROCESS";
+                        $sql ="SELECT count(*) as CNT FROM incentive.PROCESS_CSV_DATA_TEMP where PROCESS = :PROCESS";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
                         $prep->execute();
@@ -89,7 +89,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
         {
                 try
                 {
-                        $sql ="SELECT count(*) as CNT FROM incentive.FP_CSV_DATA_TEMP WHERE ENTRY_DT=:MAX_DT AND PROCESS=:PROCESS";
+                        $sql ="SELECT count(*) as CNT FROM incentive.PROCESS_CSV_DATA_TEMP WHERE ENTRY_DT=:MAX_DT AND PROCESS=:PROCESS";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":MAX_DT",$max_dt,PDO::PARAM_STR);
                         $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
@@ -115,7 +115,7 @@ class incentive_FP_CSV_DATA_TEMP extends TABLE
 				$profileStr =@implode(",",$profileArr);
 			if(!$profileStr)
 				throw new jsException("","no profiles passed");			
-                        $sql ="delete from incentive.FP_CSV_DATA_TEMP WHERE PROFILEID IN($profileStr)";
+                        $sql ="delete from incentive.PROCESS_CSV_DATA_TEMP WHERE PROFILEID IN($profileStr)";
                         if($process!=""){
                             $sql .=" and PROCESS = '$process'";
                         }

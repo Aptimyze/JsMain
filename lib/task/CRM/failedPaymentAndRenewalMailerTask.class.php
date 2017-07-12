@@ -22,7 +22,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
         sfContext::createInstance($this->configuration);
-        	$incSRLObj 	=new incentive_FP_REGULAR_LOG();
+        	$incSRLObj 	=new incentive_PROCESS_REGULAR_LOG();
 	        $latest_date 	=$incSRLObj->getLatestDate();
                 $process        ='renewalProcessInDialer';
 	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);

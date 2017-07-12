@@ -1,5 +1,5 @@
 <?php
-class incentive_FP_REGULAR_LOG extends TABLE
+class incentive_PROCESS_REGULAR_LOG extends TABLE
 {
         public function __construct($dbname="")
         {

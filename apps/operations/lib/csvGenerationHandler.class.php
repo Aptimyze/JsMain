@@ -70,7 +70,7 @@ class csvGenerationHandler
 			$failedPaymentObj->updateDialStatus($dateTime,$profiles);
                         
                         // delete from sales temp table
-			$fpCsvTempObj =new incentive_FP_CSV_DATA_TEMP('newjs_master');
+			$fpCsvTempObj =new incentive_PROCESS_CSV_DATA_TEMP('newjs_master');
 			$fpCsvTempObj->delete($processName);	
                 }
 		elseif($processName=="paidCampaignProcess"){
@@ -106,7 +106,7 @@ class csvGenerationHandler
 		}
                 elseif($processName=="failedPaymentInDialer"||$processName == "renewalProcessInDialer")
                 {
-                        $tempFPCsvObj =new incentive_FP_CSV_DATA_TEMP();
+                        $tempFPCsvObj =new incentive_PROCESS_CSV_DATA_TEMP();
 			$totalCount	 =count($profiles);
 			for($i=0; $i<$totalCount; $i++){
 				$profileArr =$profiles[$i];
@@ -456,7 +456,7 @@ class csvGenerationHandler
         
         public function getTemporaryFPProfilesCount($max_date,$process)
 	{
-		$fpCsvTemp =new incentive_FP_CSV_DATA_TEMP();	
+		$fpCsvTemp =new incentive_PROCESS_CSV_DATA_TEMP();	
 		$currLatestCnt = $fpCsvTemp->getLatestProfilesCount($max_date,$process);
 		return $currLatestCnt;
 	}
@@ -558,7 +558,7 @@ class csvGenerationHandler
                     
                         $max_dt         =$processObj->getEndDate();
                         if($fplogging == true){
-                            $fpCsvTemp 	=new incentive_FP_CSV_DATA_TEMP();	
+                            $fpCsvTemp 	=new incentive_PROCESS_CSV_DATA_TEMP();	
                             $info 	=$this->updateFPLog('TOTAL_PROFILES',$max_dt, 0,0,$processName);
                         }
 			$profileArr =array();
@@ -2276,7 +2276,7 @@ class csvGenerationHandler
                 public function updateFPLogs($totalCnt, $latestProfilesCnt, $max_dt, $filter, $process)
 		{
 				$dd     =date('Y-m-d');
-				$fpRegLogObj =new incentive_FP_REGULAR_LOG();
+				$fpRegLogObj =new incentive_PROCESS_REGULAR_LOG();
 
 				$cnt    =$totalCnt-$filter['notActivatedCnt'];
 				$cnt_L  =$latestProfilesCnt-$filter['notActivatedCnt_L'];
@@ -2336,8 +2336,8 @@ class csvGenerationHandler
                 public function updateFPLog($filterLabel, $max_dt, $prevTotalCnt=0, $prevLatestCnt=0, $process)
 		{
 				$dd             =date('Y-m-d');
-				$fpCsvTemp   =new incentive_FP_CSV_DATA_TEMP(); 	
-				$fpRegLogObj =new incentive_FP_REGULAR_LOG();
+				$fpCsvTemp   =new incentive_PROCESS_CSV_DATA_TEMP(); 	
+				$fpRegLogObj =new incentive_PROCESS_REGULAR_LOG();
 				$currTotalCnt   =$fpCsvTemp->getAllProfilesCount($process);
 				$currLatestCnt  =$fpCsvTemp->getLatestProfilesCount($dd, $process);
 				if($prevTotalCnt==0 && $prevLatestCnt==0){
@@ -2372,8 +2372,8 @@ class csvGenerationHandler
         	// FP CSV Profile logging
 	public function fpCsvProfileLog($profileid,$username,$csvSent,$filter='',$filterVal='',$campaignName='',$dialStatus='',$profiles=array(), $process)
 	{
-		$fpCsvDataTempObj	=new incentive_FP_CSV_DATA_TEMP();
-		$fpCsvProfileLogObj 	=new incentive_FP_CSV_PROFILE_LOG();
+		$fpCsvDataTempObj	=new incentive_PROCESS_CSV_DATA_TEMP();
+		$fpCsvProfileLogObj 	=new incentive_PROCESS_CSV_PROFILE_LOG();
 
                 if($process=="renewalProcessInDialer"){
                     if(count($profiles)>0){
