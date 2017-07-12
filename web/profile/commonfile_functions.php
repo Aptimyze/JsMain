@@ -252,6 +252,7 @@ $css_arr[]=array("autoSuggest_css"    => "2");
 $css_arr[]=array("main"    => "2");
 $css_arr[]=array("default"    => "2");
 $css_arr[]=array(" /JSNotificationExtension/JSnotification/desktop-notify"    => "2");
+$css_arr[]=array(" /web/spa/src/Hamburger/style/ham"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
