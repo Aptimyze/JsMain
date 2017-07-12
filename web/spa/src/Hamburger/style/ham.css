@@ -13,11 +13,26 @@
 .hamShow {
     transition: all .2s linear;
     transform: translate(0%, 0%) !important;
+    -webkit-transform: translate(0%, 0%) !important;
+    -moz-transform: translate(0%, 0%) !important;
+    -o-transform: translate(0%, 0%) !important;
+    -ms-transform: translate(0%, 0%) !important;
 }
 #hamburger {
     background: url(https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg);
+
 	transform: translate(-100%, 0%);
+    -webkit-transform: translate(-100%, 0%);
+    -moz-transform: translate(-100%, 0%);
+    -o-transform: translate(-100%, 0%);
+    -ms-transform: translate(-100%, 0%);
+
 	transition: all .2s linear;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    -o-transition:all .2s linear;
+    -ms-transition: all .2s linear;
+
 	-webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
