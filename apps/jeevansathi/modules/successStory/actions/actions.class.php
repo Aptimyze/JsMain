@@ -538,14 +538,23 @@ class successStoryActions extends sfActions
     }
 
     public function FetchProfile($request) {
-        $this->loginData = $data = $request->getAttribute("loginData");
-        $this->profileid = $this->loginData["PROFILEID"];
-        $this->profileChecksum = $this->loginData['CHECKSUM'];
-        if (!$this->profileid) $this->profileid = Encrypted::decrypt(date("Y-m-d") , Encrypted::hex2bin_ra($_COOKIE[SuccessUser]) , 1);
+        
+       
+        if($this->fromMailer!=true){
+            $this->loginData = $data = $request->getAttribute("loginData");
+            $this->profileid = $this->loginData["PROFILEID"];
+            $this->profileChecksum = $this->loginData['CHECKSUM'];
+            if (!$this->profileid)
+                $this->profileid = Encrypted::decrypt(date("Y-m-d") , Encrypted::hex2bin_ra($_COOKIE[SuccessUser]) , 1);
+        }
+        else {
+            $this->mailerid = $request->getParameter("mailid");
+            $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
+            $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid);
+        }
     }
 
     public function executeSubmitlayer(sfWebRequest $request) {
-        
         $this->FetchProfile($request);
         $jprofile = new JPROFILE('newjs_slave');
         $loggedInObj = LoggedInProfile::getInstance();
@@ -610,15 +619,19 @@ class successStoryActions extends sfActions
         if ($error) {
             $this->MSG = $error;
         } else {
-        	$this->MSG = 'verified';
-        	$this->InsertIntoSuccessStory($request, $row, $rowd);
+            $this->MSG = 'verified';
+            $this->InsertIntoSuccessStory($request, $row, $rowd);
+            //// tracking of offer consent  added by Palash Chordia
+            if($offerConsent=='Y')
+                (new NEWJS_OFFER_CONSENT())->insertConsent($this->profileid);
+            ////////////////  
+            if($this->fromMailer!=true){
 	        $this->DeleteProfile($row);
 	        $this->DeleteProfile($rowd);
-
-             //// tracking of offer consent  added by Palash Chordia
-            if($offerConsent=='Y')
-            (new NEWJS_OFFER_CONSENT())->insertConsent($this->profileid);
-            ////////////////  
+            }else{
+                
+            }
+                   
         }
 
         echo $this->MSG;
@@ -779,7 +792,30 @@ class successStoryActions extends sfActions
         $this->FetchProfile($request);
         $this->error = $request->getParameter("error");
         $this->offerConsent = $request->getParameter("offerConsent");
-
+        
+        $this->fromMailer = $request->getParameter("fromSuccessStoryMailer");
+        if($this->fromMailer==true){
+            $this->mailerid = $request->getParameter("mailid");
+            $authenticationJsObj = new JsAuthentication();
+            $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
+            if($this->mailerid==""||empty($this->mailerid)){
+                //Invalid URL requested
+                $this->error ="wrongmailid";
+                $context = $this->getContext();
+                $context->getController()->forward("static", "logoutPage",0); //Logout page
+            }
+            if(!$this->error){
+                $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
+                $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid);
+                if($this->profileid==""){
+                    //Profileid and mailer id not linked to each other.
+                    $this->error ="wrongmailid";
+                    $context = $this->getContext();
+                    $context->getController()->forward("static", "logoutPage",0); //Logout page
+                }
+            }
+            
+        }
         if (is_numeric($this->profileid)) {
             $jprofile = new JPROFILE();
             $row = $jprofile->get($this->profileid, "PROFILEID", "USERNAME,GENDER,EMAIL,CONTACT");
@@ -813,9 +849,16 @@ class successStoryActions extends sfActions
             
             if(empty($this->NAME)){
                 $nameOfUserOb=new NameOfUser();
-                $loginProfile=LoggedInProfile::getInstance();        
-                $nameOfUserArr = $nameOfUserOb->getNameData($loginProfile->getPROFILEID());
-                $this->NAME = $nameOfUserArr[$loginProfile->getPROFILEID()]["NAME"];
+                if($this->fromMailer!=true){
+                    $loginProfile=LoggedInProfile::getInstance();        
+                    $nameOfUserArr = $nameOfUserOb->getNameData($loginProfile->getPROFILEID());
+                    $this->NAME = $nameOfUserArr[$loginProfile->getPROFILEID()]["NAME"];
+                }
+                else{
+                    $nameOfUserArr = $nameOfUserOb->getNameData($this->profileid);
+                    $this->NAME = $nameOfUserArr[$this->profileid]["NAME"];
+                }
+                
             	unset($nameOfUserOb);
                 /*$objNameStore = new incentive_NAME_OF_USER;
 		        $loginProfile=LoggedInProfile::getInstance();
@@ -843,6 +886,7 @@ class successStoryActions extends sfActions
         for ($i = $curDate; $i >= 2000; $i--) $dateArray[] = $i;
         $this->dateArray = $dateArray;
         $this->curDate = $curDate;
+        
         $this->setTemplate('jspcLayer');
     }
     
@@ -1009,5 +1053,5 @@ class successStoryActions extends sfActions
         $this->dateArray = $dateArray;
         $this->curDate = $curDate;
     }
-}
+    }
 

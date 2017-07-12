@@ -3,7 +3,7 @@ all:
     enable_login: off
     enable_google_analytics:  on
   layer:
-    enable_login: on
+    enable_login: off
     enable_google_analytics: on
   story:
     enable_login: off
