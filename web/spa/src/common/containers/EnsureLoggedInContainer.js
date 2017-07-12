@@ -22,7 +22,7 @@ import {
 class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
-        if ( !this.props.MyProfile.AUTHCHECKSUM && !LOGGED_OUT_PAGE.includes(this.props.location.pathname) && SPA_PAGE.includes(this.props.location.pathname))
+        if ( !this.props.MyProfile.AUTHCHECKSUM && !LOGGED_OUT_PAGE.indexOf(this.props.location.pathname) && SPA_PAGE.indexOf(this.props.location.pathname))
         {
             this.props.history.prevUrl = this.props.location.pathname;
             this.props.history.push('/login');
@@ -48,7 +48,7 @@ class EnsureLoggedInContainer extends React.Component
                         </div>
             }
         }
-        else if(!SPA_PAGE.includes(this.props.location.pathname))
+        else if(!SPA_PAGE.indexOf(this.props.location.pathname))
         {
                return <div>
                         <Route component={PageNotFound} />
