@@ -22,7 +22,7 @@ export default class HamMain extends React.Component {
             urlString,
             appText
         };
-        //props.bellResponse.MEMBERSHIPT_TOP = "Flat 70% Off till 12 Jul!";
+       // props.bellResponse.MEMBERSHIPT_TOP = "Flat 70% Off till 12 Jul!";
     }
 
     translateSite(translateURL)
@@ -43,9 +43,14 @@ export default class HamMain extends React.Component {
 
     componentDidMount() 
     {
+        document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others") {
+            if(this.props.bellResponse.MEMBERSHIPT_TOP == null) {
+                document.getElementById("listing").style.height = (window.innerHeight-83)+"px";
+             } else {
+                document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+             }
             document.getElementById("myMatchesMinor").style.height = "0px";
-            document.getElementById("settingsMinor").style.height = "0px";
             document.getElementById("contactsMinor").style.height = "0px";  
         } 
     }
@@ -73,7 +78,7 @@ export default class HamMain extends React.Component {
         } else {
             e.target.parentElement.classList.add("plusParent");
             if(e.target.parentElement.id == "myMatchesParent") {
-                document.getElementById("myMatchesMinor").style.height = "200px";
+                document.getElementById("myMatchesMinor").style.height = "237px";
             } else if(e.target.parentElement.id == "settingsParent") {
                 document.getElementById("settingsMinor").style.height = "200px";
             } else if(e.target.parentElement.id == "contactsParent") {
@@ -100,23 +105,24 @@ export default class HamMain extends React.Component {
 
     render() 
     {
-        var startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipView,awaitingResponseCount,accMeCount,justJoinedCount;
+        var startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount;
         if(this.props.page == "others") {
-            membershipView = <li className="mar0Imp">
-                <div className="brdrTop pad150">
+            membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.props.bellResponse.MEMBERSHIPT_TOP}</div>
                     <a href="/search/visitors?matchedOrAll=A" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
                             {this.props.bellResponse.MEMBERSHIPT_BOTTOM}
                     </a>
-                </div>
-            </li>;
-
+                </div>;
+            if(this.props.bellResponse.VISITOR_ALERT != 0) {
+                profileVisitorCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.VISITOR_ALERT}</span>; 
+            }
             profileVisitorView = <li>
                 <div>
                     <i className="hamSprite profileVisitorIcon"></i>
                     <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="f17 white">
                         Profile Visitors
                     </a>
+                    {profileVisitorCount}
                 </div>
             </li>;
 
@@ -128,15 +134,32 @@ export default class HamMain extends React.Component {
                     </a>
                 </div>
             </li>;
+            if(this.props.bellResponse.BOOKMARK != 0) {
+                shortlistedCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.BOOKMARK}</span>;  
+            }
 
             shortlistedView = <li>
                 <div>
                     <i className="hamSprite shortlistedIcon"></i>
                     <a href="/search/shortlisted" id="shortlistedLink" className="f17 white">
                         Shortlisted
+                        {shortlistedCount}
                     </a>
                 </div>
             </li>;
+
+            if(this.props.bellResponse.FILTERED != 0) {
+                filteredCount = <span className="f15">{this.props.bellResponse.FILTERED}</span>;
+            }
+            if(this.props.bellResponse.ACCEPTED_MEMBERS != 0) {
+                allAccCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.ACCEPTED_MEMBERS}</span>;
+            }
+            if(this.props.bellResponse.MESSAGE_NEW != 0) {
+                messageCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.MESSAGE_NEW}</span>;
+            }
+            if(this.props.bellResponse.AWAITING_RESPONSE !=0) {
+                intRecCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.AWAITING_RESPONSE}</span>;
+            }
 
             myContactView = <li>
                 <div id="contactsParent">
@@ -146,10 +169,11 @@ export default class HamMain extends React.Component {
                     </div>
                     <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="contactsMinor" className = "minorList">
+                <ul id="contactsMinor" className = "minorList f15">
                     <li>
                         <a id="intRecLink" href="/inbox/1/1" className="white">
                             Interests Received
+                            {intRecCount}
                         </a>
                     </li>
                     <li>
@@ -160,11 +184,13 @@ export default class HamMain extends React.Component {
                     <li>
                         <a id="filtIntLink" href="/inbox/12/1" className="white">
                             Filtered Interest
+                            {filteredCount}
                         </a>
                     </li>
                     <li>
                         <a id="allAccLink" href="/inbox/2/1" className="white">
                             All Acceptances
+                            {allAccCount}
                         </a>
                     </li>
                     <li>
@@ -180,6 +206,7 @@ export default class HamMain extends React.Component {
                     <li>
                         <a id="messagesLink" href="/inbox/4/1" className="white">
                             Messages
+                            {messageCount}
                         </a>
                     </li>
                     <li>
@@ -190,12 +217,16 @@ export default class HamMain extends React.Component {
                 </ul>
             </li>;
 
+            if(this.props.bellResponse.SAVE_SEARCH != 0) {
+                savedSearchCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.SAVE_SEARCH}</span>;
+            }
 
             savedSearchView = <li>
                 <div>
                     <i className="hamSprite savedSearchIcon"></i>
                     <a href="/profile/viewprofile.php?ownview=1" id="savedSearchLink" className="f17 white">
                         Saved Searches
+                        {savedSearchCount}
                     </a>
                 </div>
             </li>;
@@ -209,6 +240,9 @@ export default class HamMain extends React.Component {
                 </div>
             </li>;
 
+            if(this.props.bellResponse.MATCHALERT != 0) {
+                dailyRecCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.MATCHALERT}</span>
+            }
             myMatchesView = <li>
                 <div id="myMatchesParent">
                     <i className="hamSprite myMatchesIcon"></i>
@@ -217,7 +251,7 @@ export default class HamMain extends React.Component {
                     </div>
                     <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="myMatchesMinor" className = "minorList">
+                <ul id="myMatchesMinor" className = "minorList f15">
                     <li>
                         <a id="dppLink" href="/search/perform?partnermatches=1" className="white">
                             Desired Partner Matches
@@ -242,6 +276,12 @@ export default class HamMain extends React.Component {
                         <a id="verifiedLink" href="/search/verifiedMatches" className="white">
                             Matches Verified By Visit
                         </a>
+                    </li>
+                    <li>
+                        <a id="dailyRec" href="/inbox/7/1" className="white">
+                            Daily Recommendations 
+                        </a>
+                        {dailyRecCount}
                     </li>
                 </ul>
             </li>;
@@ -303,8 +343,30 @@ export default class HamMain extends React.Component {
                 </div>
             </li>;
         }
+        else if(this.props.page == "Login") {
+            membershipRegisterView = <div className="brdrTop pad150 fontreg">
+                <div className = "dispibl wid49p pad16">
+                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink" className="hamBtnLoggedOut bg10 lh40 br6 white">
+                        LOGIN
+                    </Link>  
+                </div>
+                <div className = "dispibl wid49p pad16">
+                    <a className="bg7 br6 lh40 white hamBtnLoggedOut" href="/register/page1?source=mobreg4">
+                        REGISTER
+                    </a>
+                </div>
+            </div>
+            editProfileView = <li>
+                <div>
+                    <i className="hamSprite editProfileIcon"></i>
+                    <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="f17 white">
+                        Browse By Community
+                    </a>
+                </div>
+            </li>;
+        }
 
-        var listingView = <div id="listing" className="fullheight overflowhidden">
+        var listingView = <div id="listing" className="overflowhidden">
             <ul className="fontreg white listingHam fullheight overAuto">
                 <li className="brdrBtm f14 pb8 fontlig">
                     <div className="wid49p dispibl">
@@ -348,7 +410,7 @@ export default class HamMain extends React.Component {
                         </div>
                         <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                     </div>
-                    <ul id="settingsMinor" className = "minorList">
+                    <ul id="settingsMinor" className = "minorList f15">
                         <li>
                             <a id="changePassLink" href="/static/changePass" className="white">
                                 Change Password
@@ -376,8 +438,10 @@ export default class HamMain extends React.Component {
                         </li>
                     </ul>
                 </li>
-                {membershipView}
             </ul> 
+            <div className="mar0Imp posabs btm0 fullwid">
+                {membershipRegisterView}
+            </div>
         </div>;           
 
         return (

@@ -471,6 +471,7 @@ header, section, footer, aside, nav, article, figure {
 .pad10 {
 	padding:22px 0 5px 0
 }
+.pad1236 { padding: 12px 36px;}
 .pad11 {
 	padding:10px 0 0 15px
 }
@@ -711,6 +712,7 @@ header, section, footer, aside, nav, article, figure {
 .brdr20{border-top:1px solid #fbfbfb}
 .brdr21{border-top:1px solid #d4d4d4}
 .brdr22{border-top:1px solid #fff}
+.br6 {border-radius: 6px}
 /*---fonts classes---*/
 .fb{font-weight:bold}
 .f11 {
@@ -998,6 +1000,7 @@ background-color: rgba(102, 102, 102, 1);
 }
 
 .pad12_e{padding:12px;}
+.pad1221{padding: 12px 21px;}
 .dppHeart{
 	background-image:url(https://static.jeevansathi.com/images/jsms/commonImg/dpp-icon2.png);
 	background-repeat:no-repeat;
