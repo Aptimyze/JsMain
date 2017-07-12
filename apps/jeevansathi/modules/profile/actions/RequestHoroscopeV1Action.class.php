@@ -12,6 +12,13 @@ class RequestHoroscopeV1Action extends sfAction{
                         $statusArr = RequestHoroscopeEnum::getErrorByField("PROFILE_NOT_EXISTS");
                         $this->sendResponse($request, $statusArr);
                 }
+                $loggedInReligion = $loggedInProfileObj->getRELIGION();
+                $allowedReligion = array(RELIGION::HINDU,Religion::JAIN,Religion::SIKH, Religion::BUDDHIST);
+                if(!in_array($loggedInReligion, $allowedReligion) ){
+                        $religion = FieldMap::getFieldLabel("religion", $loggedInReligion);
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("RELIGION_ERROR","#RELIGION#",$religion);
+                        $this->sendResponse($request, $statusArr);
+                }
                 $msg = array();
                 if ($loggedInProfileObj->getSHOW_HOROSCOPE() != "Y") {
                         $Errmsg = RequestHoroscopeEnum::getErrorByField("ADD_YOUR_HOROSCOPE");
@@ -19,12 +26,19 @@ class RequestHoroscopeV1Action extends sfAction{
                 }
                 
                 $jprofileObj = new JPROFILE("newjs_masterRep");
-                $fields = 'PROFILEID,USERNAME,GENDER';
+                $fields = 'PROFILEID,USERNAME,GENDER,RELIGION';
                 $valArray = array("PROFILEID"=>$requestedId,"activatedKey" => "1");
                 $resDetails = $jprofileObj->getArray($valArray, "", '', $fields);
 
                 if (!$resDetails) {
                         $statusArr = RequestHoroscopeEnum::getErrorByField("PROFILE_NOT_EXISTS");
+                        $this->sendResponse($request, $statusArr);
+                }
+                
+                $requestedReligion = $resDetails[0]["RELIGION"];
+                if(!in_array($requestedReligion, $allowedReligion) ){
+                        $religion = FieldMap::getFieldLabel("religion", $requestedReligion);
+                        $statusArr = RequestHoroscopeEnum::getErrorByField("RELIGION_POG_ERROR","#RELIGION#",$religion);
                         $this->sendResponse($request, $statusArr);
                 }
                 $username = $resDetails[0]["USERNAME"];

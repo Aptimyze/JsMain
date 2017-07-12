@@ -12,6 +12,8 @@ class RequestHoroscopeEnum {
         public static $ALREADY_REQUESTED = array("message" => "You have already made request to #USERNAME# for a Horoscope.", "statusCode" => '1');
         public static $SAMEGENDER_ERROR = array("message" => "Sorry! You cannot request #USERNAME# for a Horoscope as your gender is the same as that of #USERNAME#.", "statusCode" => '1');
         public static $FILTERED_ERROR = array("message" => "Sorry! You cannot request #USERNAME# for a Horoscope as you have been filtered out by #USERNAME#.", "statusCode" => '1');
+        public static $RELIGION_ERROR = array("message" => "Sorry! Being a #RELIGION# profile, You cannot cannot send horoscope request.", "statusCode" => '1');
+        public static $RELIGION_POG_ERROR = array("message" => "Sorry! You cannot cannot send horoscope request to a #RELIGION# profile.", "statusCode" => '1');
 
         public static function getErrorByField($field, $search = "", $replace = "") {
                 $var_name = $field;
