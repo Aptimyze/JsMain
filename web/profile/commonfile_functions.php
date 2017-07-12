@@ -724,7 +724,7 @@ $js_arr[]=array("/web/spa/src/common/components/MetaTagComponents"    => "2");
 $js_arr[]=array(" /web/spa/src/common/components/GA"   => "1");
 $js_arr[]=array(" /web/spa/server"   => "1");
 $js_arr[]=array("/web/spa/new_working"   => "1");
-$js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"   => "1");
+$js_arr[]=array(" /web/spa/src/common/containers/EnsureLoggedInContainer"    => "2");
 $js_arr[]=array("/web/spa/src/common/components/ApiResponseHandler"   => "1");
 return $js_arr;
 }
