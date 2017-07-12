@@ -42,7 +42,7 @@ class AuthFilter extends sfFilter {
 		// End hindi switch code !
 
 		/*SPA*/
-		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum');
+		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword');
 		$spa = 0;
 		$specificDomain = str_replace('http://', '', $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
