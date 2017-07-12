@@ -2195,7 +2195,7 @@ if($k=="state_res")
     $RecordingUrl = $request->getPostParameter('RecordingUrl');
     $DateUpdated = $request->getPostParameter('DateUpdated');
 
-    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n";
+    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n\n";
     
     
     if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
@@ -2210,7 +2210,7 @@ if($k=="state_res")
       
       $totalResponse = implode(", ", $arrOut);
       
-      $totalResponse .= "\n";
+      $totalResponse .= "\n\n";
     }
     
     $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
