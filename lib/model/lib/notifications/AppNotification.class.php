@@ -606,7 +606,7 @@ public function microtime_float()
   }   
   public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
-
+      $className = "JPROFILE";
 	  unset($applicableProfiles);
 	  $notifications = $this->getNotifications();
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)

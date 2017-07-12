@@ -57,7 +57,7 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
         $res->execute();
         while($result=$res->fetch(PDO::FETCH_ASSOC))
         {
-            $rows[$result["PROFILEID"]] = $result;
+            $rows[$result["BILL_ID"]] = $result;
         }
         return $rows;
     }
@@ -73,15 +73,16 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
      * @param   $pid,$assigned_to,$assigned_dt
      * @return  none
      */ 
-  public function updateExclusiveMemberAssignment($pid,$assigned_to=NULL,$assigned_dt="0000-00-00")
+  public function updateExclusiveMemberAssignment($pid,$assigned_to=NULL,$assigned_dt="0000-00-00",$billid)
   {
     try
     {
-      if($pid)
+      if($pid && $billid)
       {
-        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ASSIGNED_TO=:ASSIGNED_TO,ASSIGNED_DT=:ASSIGNED_DT,ASSIGNED=:ASSIGNED WHERE PROFILEID=:PROFILEID";
+        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ASSIGNED_TO=:ASSIGNED_TO,ASSIGNED_DT=:ASSIGNED_DT,ASSIGNED=:ASSIGNED WHERE PROFILEID=:PROFILEID AND BILL_ID=:BILL_ID";
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+        $res->bindValue(":BILL_ID", $billid, PDO::PARAM_INT);
         $res->bindValue(":ASSIGNED_TO", $assigned_to, PDO::PARAM_STR);
         $res->bindValue(":ASSIGNED_DT", $assigned_dt, PDO::PARAM_STR);
         if($assigned_to==NULL)

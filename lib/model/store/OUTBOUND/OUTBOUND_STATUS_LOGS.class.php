@@ -10,8 +10,9 @@ class OUTBOUND_STATUS_LOGS extends TABLE
    * @brief Constructor function
    * @param $dbName - Database to which the connection would be made
    */
-  public function __construct($dbname = "") {
-    parent::__construct($dbname);
+  public function __construct($dbname = "notification_master") {
+  $dbname = "notification_master";
+   parent::__construct($dbname);
   }
 
   public function insertRecord($arrRecordData) {
