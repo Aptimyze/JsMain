@@ -88,8 +88,10 @@ class SocialSigninAction extends sfActions
 	        // get response from FB
 	        $fbData = $this->hitGraphApi($access_token);
 	        // check if fb response has error code
-	        if($fbResp->error->code){
 	        	$fbResp = json_decode($fbData);
+	        if($fbResp->error->code){
+	        	$responseData["FBcode"] = $fbResp;
+	        	$responseData["is_activate"] = "D";
 	        }
 	        else{
 	        	$fbResp = json_decode($fbData)[0];
