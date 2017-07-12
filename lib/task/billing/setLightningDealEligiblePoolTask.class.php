@@ -40,6 +40,10 @@ EOF;
         $dealObj = new LightningDeal($this->debug,$this->logFilePath);
         //generate eligible pool
         $eligiblePool = $dealObj->generateDealEligiblePool();
+        
+        //Renewal Pool
+        $renewalPool = $dealObj->generateRenewalPoolWithDiscount();
+        $eligiblePool = $eligiblePool + $renewalPool;
       
         //store eligible pool
         $dealObj->storeDealEligiblePool($eligiblePool);
@@ -61,7 +65,7 @@ EOF;
     public function sendAlertMail($to,$msgBody,$subject){
         $from = "info@jeevansathi.com";
         $from_name = "Jeevansathi Info";
-        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+        //SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
     }
 }
 ?>

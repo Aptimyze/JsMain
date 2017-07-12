@@ -524,6 +524,9 @@ class MembershipAPIResponseHandler {
         
         if(in_array($this->device, VariableParams::$lightningDealOfferConfig["channelsAllowed"]) && $this->discountTypeInfo["TYPE"] == discountType::LIGHTNING_DEAL_DISCOUNT){
             $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
+            if($this->userObj->userType == memUserType::PAID_WITHIN_RENEW && is_array($output["lightningDealContent"])){
+                $output["lightningDealContent"]["renewalLightning"] = "1";
+            }
             
             if(is_array($output["lightningDealContent"]) && is_array($output)){
                 $output["title"] = "Upgrade Membership";
