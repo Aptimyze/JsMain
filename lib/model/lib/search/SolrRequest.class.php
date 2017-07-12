@@ -97,7 +97,7 @@ class SolrRequest implements RequestHandleInterface
 	* @param loggedInProfileObj
         * @return responseObj object-array containing info like (ResultsArray / totalResults)
         */
-        public function getResults($results_cluster='all',$clustersToShow,$currentPage='',$cachedSearch='',$loggedInProfileObj='')
+        public function getResults($results_cluster='all',$clustersToShow,$currentPage='',$cachedSearch='',$loggedInProfileObj='',$noFilterQuery='')
         {
 		$this->clustersToShow = $clustersToShow;
 		$this->results_cluster = $results_cluster;
@@ -106,7 +106,7 @@ class SolrRequest implements RequestHandleInterface
 			$this->solrPostParams = $cachedSearch["URL"];
 		else
 		{
-	                $this->setWhereCondition('',$loggedInProfileObj);
+	                $this->setWhereCondition('',$loggedInProfileObj,$noFilterQuery);
 		}
 
 		$this->formSolrSearchUrl();
@@ -208,9 +208,9 @@ class SolrRequest implements RequestHandleInterface
         * we have divided filtering conditions in 2 part :
 	  (a) filters  (b) special cluster
         */
-        public function setWhereCondition($noSorting='',$loggedInProfileObj='')
+        public function setWhereCondition($noSorting='',$loggedInProfileObj='',$noFilterQuery='')
         {
-					
+            
 		$this->filters[]="q=*:*";
 		$this->filters[]="&wt=phps";
 		if($this->solrClusterlimit)
@@ -441,8 +441,8 @@ class SolrRequest implements RequestHandleInterface
 		{
 			$this->filters[0] = "q=".implode(" AND ",$textQuery);
 		}
-
-		if(SearchConfig::$filteredRemove && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID()!='')
+                
+		if(SearchConfig::$filteredRemove && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID()!='' && !$noFilterQuery)
 		{
 			$filterQuery = '';
 
