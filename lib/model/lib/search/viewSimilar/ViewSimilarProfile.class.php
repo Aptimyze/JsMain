@@ -506,7 +506,11 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                 //$key = $detailsArray["OFFSET"]-1;
                 foreach(viewSimilarConfig::$SearchToVSPResponseMappingArr as $searchField=>$vspField)
                 {
-                    if($searchField == "photo")
+                    if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID) && $searchField == "age")
+                    {
+                         $jspcVSPArray["profiles"][$key][$searchField] = $detailsArray[$vspField]." yrs";
+                    }
+                    else if($searchField == "photo")
                         $jspcVSPArray["profiles"][$key][$searchField]= PictureFunctions::mapUrlToMessageInfoArr($detailsArray[$vspField],ViewSimilarProfile::$defaultPicSize["PC"],$detailsArray["PHOTO_REQUESTED"],$gender);
                     else if($searchField == "subscription_icon")
                     {
