@@ -73,7 +73,17 @@ class RabbitmqHelper
     curl_setopt($curl, CURLOPT_URL,$url);
     curl_setopt($curl,CURLOPT_RETURNTRANSFER,True);
     curl_setopt($curl, CURLOPT_USERPWD,$rabbitmq_credentials);
+
+    $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+    curl_setopt($curl, CURLOPT_HEADER, $header);
+    curl_setopt($curl, CURLOPT_USERAGENT,"JsInternal");    
+
     $response= curl_exec($curl);
+
+    // remove header from curl Response 
+    $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+    $response = substr($response, $header_size);
+
     curl_close($curl);
     $result =json_decode($response); 
     return $result;
@@ -147,6 +157,31 @@ class RabbitmqHelper
       }
     }
     unset($output);
+  }
+
+  public static function sendRMQAlertSMS($msg=''){
+    include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+    $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749","pankaj"=>"9810300513");
+    if(JsConstants::$whichMachine == "test"){
+        $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749","pankaj"=>"9810300513");
+    }
+    foreach($mobileNumberArr as $k=>$v){
+        RabbitmqHelper::smsRMQ($v,$msg);
+    }
+  }
+  
+  public static function smsRMQ($mobile,$msg){
+    $t = time();
+    if($msg){
+        $message    = "Mysql Error Count have reached ".$msg." $t";
+    }
+    else{
+        $message    = "Mysql Error Count have reached Rabbitmq killed $t";
+    }
+    $from           = "JSSRVR";
+    $profileid      = "144111";
+    $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+   
   }
 }
 ?>

@@ -369,6 +369,8 @@ class AuthFilter extends sfFilter {
 					$request->setParameter('showKundliList', 1);
 				}
 			}
+                        if(MobileCommon::isNewMobileSite())
+                            $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
 		}
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();

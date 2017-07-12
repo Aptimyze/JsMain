@@ -64,6 +64,7 @@ class RequestHandlerConfig
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
 			"hideUnhideProfile" => array("v1" => "HideUnhideProfileV1"),
       "options" => array("v1" => "AvailableOptionV1","v2" => "AvailableOptionV1","v3" => "AvailableOptionV1"),
+      	"privacySettings"=>array("v1" => "PrivacySettingsV1","v2" => "PrivacySettingsV1","v3" => "PrivacySettingsV1"),
 			),
 		"api" => array(
 			"appReg" => array("v1" => "AppRegV1", "v2" => "AppRegV1", "v3" => "AppRegV1"),
@@ -123,7 +124,7 @@ class RequestHandlerConfig
 			"matchOTP" => array("v1" => "MatchOtp", "v2" => "MatchOtp", "v3" => "MatchOtp"),
 			"SMSContactsToMobile" => array("v1" => "SMSContactsToMobile", "v2" => "SMSContactsToMobile", "v3" => "SMSContactsToMobile"),
 			"reportPhoneInvalid" => array("v1" => "ReportInvalid", "v2" => "ReportInvalid", "v3" => "ReportInvalid")),
-		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1")),
+		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1"),"membershippitch" => array("v1" => "MembershipPlanAudioV1"),"outboundcallstatus" => array("v1" => "OutboundCallStatusV1") ),
 		"help" => array(
 			"helpQuery" => array("v1" => "SubmitQueryV1"),
 			"publicQuestions" => array("v1" => "GetPublicQuestionsV1")
@@ -145,7 +146,7 @@ class RequestHandlerConfig
 			"popChat" => array("v1" => "popChat"),
 			"communicationSync" => array("v1" => "communicationSync"),
 			"logChatListingFetchTimeout" => array("v1" => "logChatListingFetchTimeoutV1")
-		)
+		),
 	);
 
 	public static $moduleActionHamburgerArray = array(

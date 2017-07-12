@@ -10,7 +10,8 @@
 class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
 
         private $sortArray = array();
-        private $sortString = '';
+        protected $loggedInProfileObj;
+        protected $sortString = '';
         private $trendsForwardRangeCriteria = array("AGE", "HEIGHT", "INCOME");
         private $trendsForwardCriteria = array("MTONGUE", "CASTE", "EDU_LEVEL_NEW" => "EDUCATION", "OCCUPATION", "CITY_RES" => "CITY");
         private $trendsForwardCriteriaMapping = array("EDUCATION"=>"EDU_LEVEL_NEW", "CITY"=>"CITY_RES");
@@ -164,7 +165,6 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                 $sortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
-    
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
                 $this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);
                 $this->SearchParamtersObj->setFL_ATTRIBUTE("*,TS:".$this->sortString);

@@ -332,10 +332,14 @@ return 0;
                     
                     break; 
                     case '15': 
+                    //This variable is introduced as we had to switch off this CAL for some duration (due to low numbers)
+                      $switchForCAL = 0;
+                      if($switchForCAL){
                       $screening=$profileObj->getSCREENING();
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
+                      }
                     break;  
 
                     case '16':                      
@@ -416,7 +420,7 @@ return 0;
                     break;
 
                      case '21': 
-        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
@@ -444,6 +448,20 @@ return 0;
                     }
                     break;
 
+
+                    case '23' :
+                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                  {
+                    $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
+                    if(!$familyBasedOutOfObj->getCompletionStatus())
+                    {
+                      $show=1;
+                    }
+
+                  }  
+                     break;
+
+
                   case '20':
 
                       if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
@@ -454,6 +472,7 @@ return 0;
                       
                       
                     break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -532,14 +551,20 @@ break;
 
                           '18' => array(
                     
-                    'A' => '96'
-                    
+                    'A' => '96',
+                   'I' => '5.5'
                         ),
                     '21' => array(
                     
                     'A' => '99',
                     'I' => '5.3'
                         ),
+
+                    '23' => array(
+                    'A' => '99',  
+                    'I' => '5.4'
+                        ),
+
                   '20' => array(  
                     'A' => '99',
                     'I' => '5.4'

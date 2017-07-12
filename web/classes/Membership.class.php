@@ -85,9 +85,26 @@ class Membership
     private $assisted_arr = array();
     private $discount_percent;
     private $mtongue;
+    private $city_res;
+    private $country_res;
     private $serviceName;
     private $execName;
     private $supervisor;
+ 
+    function setCountry_res($country_res) {
+        $this->country_res = $country_res;
+    }
+    function getCountry_res() {
+        return $this->country_res;
+    }
+    
+    function setCity_res($city_res) {
+        $this->city_res = $city_res;
+    }
+    
+    function getCity_res() {
+        return $this->city_res;
+    }
     
     function setExecName($execName) {
         $this->execName = $execName;
@@ -703,7 +720,9 @@ class Membership
         } else {
             $this->generateBill($memUpgrade);
         }
-        
+        //Start:JSC-2925:Changes for GST
+        $this->logTaxBreakup();
+        //End:JSC-2925:Changes for GST
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateReceiptParams();
         }
@@ -839,10 +858,14 @@ class Membership
         }
 
         //Field for identifying the team to which sales belong
+        //Getting MTONGUE for storing in purchases
+        //Getting CITY_RES for storing in TAXBREAKUP and calculating tax
         $jprofileObj = new JPROFILE();
-        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+        $myrow_sales = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE,CITY_RES,COUNTRY_RES');
         $this->mtongue = $myrow_sales['MTONGUE'];
         $this->sales_type = $myrow_sales['CRM_TEAM'];
+        $this->city_res = $myrow_sales['CITY_RES'];
+        $this->country_res = $myrow_sales['COUNTRY_RES'];
     }
     
     function generateBill($memUpgrade = "NA") {
@@ -888,16 +911,12 @@ class Membership
             $paramsStr .= ", MEM_UPGRADE";
             $valuesStr .= ",'$memUpgrade'";
         }
-        // TAX FOR RS ONLY
-        if ($this->curtype == 'RS') {
-            $paramsStr .= ", TAX_RATE";
-            $valuesStr .= ",'$this->tax_rate'";
-        }
+        
 
         //Start:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
-        if($this->mtongue==""){
+        if($this->mtongue==""|| $this->country_res==""){
             $jprofileObj = new JPROFILE();
-            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE');
+            $jprofileDetail = $jprofileObj->get($this->profileid,'PROFILEID','MTONGUE, COUNTRY_RES');
             $paramsStr .= ",MTONGUE";
             $mtongue = $jprofileDetail['MTONGUE'];
             $valuesStr .= ",'$mtongue'";
@@ -907,6 +926,12 @@ class Membership
         }
         //End:JSC-2828:Code added to store mtongue of user in PURCHASES table at the time of billing
 
+        // TAX FOR RS ONLY
+        if ($this->curtype == 'RS'|| (($this->curtype=='DOL')&&($this->country_res=='51'))) {
+            $paramsStr .= ", TAX_RATE";
+            $valuesStr .= ",'$this->tax_rate'";
+        }
+        
         $this->billid = $billingPurObj->genericPurchaseInsert($paramsStr, $valuesStr);
         
         /**
@@ -1481,7 +1506,6 @@ class Membership
     
     function printbill($receiptid = "", $billid = "") {
         global $smarty;
-
         $serviceObj = new Services;
         $billingPurObj = new BILLING_PURCHASES();
         $billingServObj = new billing_SERVICES();
@@ -1539,7 +1563,21 @@ class Membership
         $printBillDataArr = $billingPurObj->fetchPrintBillDataForBillid($billid);
 	$this->profileid =$printBillDataArr[0]['PROFILEID'];
 	$jProfileArr = $jProfileObj->get($this->profileid,'PROFILEID','COUNTRY_RES,CITY_RES');
-
+        //For GST
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $taxBreakupObj = new billing_TAXBREAKUP();
+            $taxData = $taxBreakupObj->getRecordForBillid($billid);
+            $cgstApplied = $taxData['CGST'];
+            $igstApplied = $taxData['IGST'];
+            $sgstApplied = $taxData['SGST'];
+            if ($cgstApplied == 0 && $igstApplied == 0 && $sgstApplied == 0) {
+                $smarty->assign("exportFlag", 1);
+            } else {
+                $smarty->assign("exportFlag", 0);
+            }
+            $cityResTax = $taxData['CITY_RES'];
+            $countryResTax = $taxData['COUNTRY_RES'];
+        }
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
         $smarty->assign("memUpgrage",$purDetRow['MEM_UPGRADE']);
@@ -1572,12 +1610,26 @@ class Membership
 		$ipCountry =$myrow['COUNTRY'];
 	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
 	    $resCity =$jProfileArr['CITY_RES'];
-	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);	
+	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);
+            //For GST
+            if($billdate>billingVariables::TAX_LIVE_DATE){
+                $resCountryTextTax = FieldMap::getFieldLabel('country',$countryResTax);
+                $billingAddress =  $resCountryTextTax;
+            }
 	    if($resCountryVal==51 && $resCity){	
 		$stateRes =substr($resCity,0,2);
 	    	$stateRes =FieldMap::getFieldLabel('state_india',$stateRes);
                 $resCountry =$stateRes." , ".$resCountry;
-	    }
+                
+                //For GST
+                if ($billdate > billingVariables::TAX_LIVE_DATE) {
+                    $cityResText = FieldMap::getFieldLabel('city_india', $cityResTax);
+                    $stateResTax = substr($cityResTax, 0, 2);
+                    $stateResTaxText = FieldMap::getFieldLabel('state_india', $stateResTax);
+                    $billingAddress = $cityResText . ", " . $stateResTaxText . ", " . $resCountryTextTax;
+                }
+            }
+            
 	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied
                 $otherTaxes = billingVariables::SWACHH_TAX_RATE + billingVariables::KRISHI_KALYAN_TAX_RATE;
@@ -1676,7 +1728,11 @@ class Membership
         $smarty->assign("overseas", $overseas);
         $smarty->assign("order_date", $order_date);
         $smarty->assign("name", $name);
-        $smarty->assign("address", $address);
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $smarty->assign("address", $billingAddress);
+        }else{
+            $smarty->assign("address", $address);
+        }
         $smarty->assign("pin", $pin);
         $smarty->assign("receiptid", $receiptid);
         $smarty->assign("custno", $pid);
@@ -1713,6 +1769,65 @@ class Membership
         
         $feevalue = $myrow1['AMOUNT'];
         
+        //Start: For GST
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $listPrice = $feevalue + $discount;
+            $listPrice_exTax = round(($listPrice * 100 / ($tax_rate + 100)), 2);
+            list($listPrice_exTax_rs, $listPrice_exTax_paise) = explode(".", $listPrice_exTax);
+            if ($listPrice_exTax_paise == '')
+                $listPrice_exTax_paise = '00';
+            elseif (strlen($listPrice_exTax_paise) == 1)
+                $listPrice_exTax_paise .= '0';
+
+            $discount_exTax = round(($discount * 100 / ($tax_rate + 100)), 2);
+            list($discount_exTax_rs, $discount_exTax_paise) = explode(".", $discount_exTax);
+            if ($discount_exTax_paise == '')
+                $discount_exTax_paise = '00';
+            elseif (strlen($discount_exTax_paise) == 1)
+                $discount_exTax_paise .= '0';
+
+            $taxableValue = $listPrice_exTax - $discount_exTax;
+            list($taxableValue_rs, $taxableValue_paise) = explode(".", $taxableValue);
+            if ($taxableValue_paise == '')
+                $taxableValue_paise = '00';
+            elseif (strlen($taxableValue_paise) == 1)
+                $taxableValue_paise .= '0';
+
+            $cgstAmount = round((($cgstApplied / 100) * $taxableValue), 2);
+            list($cgstAmount_rs, $cgstAmount_paise) = explode(".", $cgstAmount);
+            if ($cgstAmount_paise == '')
+                $cgstAmount_paise = '00';
+            elseif (strlen($cgstAmount_paise) == 1)
+                $cgstAmount_paise .= '0';
+
+            $sgstAmount = round((($sgstApplied / 100) * $taxableValue), 2);
+            list($sgstAmount_rs, $sgstAmount_paise) = explode(".", $sgstAmount);
+            if ($sgstAmount_paise == '')
+                $sgstAmount_paise = '00';
+            elseif (strlen($sgstAmount_paise) == 1)
+                $sgstAmount_paise .= '0';
+
+            $igstAmount = round((($igstApplied / 100) * $taxableValue), 2);
+            list($igstAmount_rs, $igstAmount_paise) = explode(".", $igstAmount);
+            if ($igstAmount_paise == '')
+                $igstAmount_paise = '00';
+            elseif (strlen($igstAmount_paise) == 1)
+                $igstAmount_paise .= '0';
+
+            $smarty->assign("listPrice_exTax_rs", $listPrice_exTax_rs);
+            $smarty->assign("listPrice_exTax_paise", $listPrice_exTax_paise);
+            $smarty->assign("discount_exTax_rs", $discount_exTax_rs);
+            $smarty->assign("discount_exTax_paise", $discount_exTax_paise);
+            $smarty->assign("taxableValue_rs", $taxableValue_rs);
+            $smarty->assign("taxableValue_paise", $taxableValue_paise);
+            $smarty->assign("cgstAmount_rs", $cgstAmount_rs);
+            $smarty->assign("cgstAmount_paise", $cgstAmount_paise);
+            $smarty->assign("sgstAmount_rs", $sgstAmount_rs);
+            $smarty->assign("sgstAmount_paise", $sgstAmount_paise);
+            $smarty->assign("igstAmount_rs", $igstAmount_rs);
+            $smarty->assign("igstAmount_paise", $igstAmount_paise);
+        }
+        //End: For GST
         //$branch=$myrow1['DEPOSIT_BRANCH'];
         if ($saleBy != 'ONLINE') {
             $saleBy = trim($saleBy);
@@ -1912,7 +2027,12 @@ class Membership
         else $cost = convert($feevalue_incTax_rs) . " only";
         
         $smarty->assign("cost", $cost);
-        $output = $smarty->fetch("../jsadmin/BILL3.htm");
+        if ($billdate > billingVariables::TAX_LIVE_DATE) {
+            $output = $smarty->fetch("../jsadmin/BILL4.htm");
+        }
+        else{
+            $output = $smarty->fetch("../jsadmin/BILL3.htm");
+        }
         
         //echo $output;die;
         if ($output == "ERROR") {
@@ -2542,11 +2662,19 @@ class Membership
     public function generateNewInvoiceNo(){
         $fullYr = date('Y');
         $yr = date('y');$mn = date('m');$dt = date('d');
+        $fullDate = date('Y-m-d H:i:s');
         $autoIncReceiptidObj = new billing_AUTOINCREMENT_RECEIPTID('newjs_master');
         if($mn == "04" && $dt == "01"){
             //truncate table logic
             $result = $autoIncReceiptidObj->getLastInsertedRow();
             if($result["ENTRY_DT"]<$fullYr."-"."04"."-"."01 00:00:00"){
+                $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
+            }
+        }
+        else if($fullYr == "2017" && $mn == "07" && $dt =="01"){
+            $result = $autoIncReceiptidObj->getLastInsertedRow();
+            //Truncate table for GST
+            if($result["ENTRY_DT"]<billingVariables::TAX_LIVE_DATE){
                 $autoIncReceiptidObj->truncateAutoIncrementReceiptIdTable();
             }
         }
@@ -2560,20 +2688,29 @@ class Membership
             $receiptId = $yr.($yr+1)."-";
         for($i = 0;$i<$trailingZero;$i++) $receiptId.="0";
         $receiptId.=$id;
+        if($fullDate>billingVariables::TAX_LIVE_DATE){
+            $finalReceiptid = "JS09-".$receiptId;
+        }
+        else{
+            $finalReceiptid = "JS-".$receiptId;
+        }
         
-        $finalReceiptid = "JS-".$receiptId;
         return $finalReceiptid;
     }
     
     public function setRedisForFreeToPaid($userObjTemp){
         if($userObjTemp->profileid && $userObjTemp->userType == memUserType::FREE)
         {
+	    $addKey ='freeToPay';	
             JsMemcache::getInstance()->set("FreeToP_$userObjTemp->profileid",date("Y-m-d H:i:s"),604800);
             //$this->sendMailForPaidUser("Redis Key Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key set");
         }
         else{
+	    $addKey ='allToPay';
             //$this->sendMailForPaidUser("Redis Key Not Set for ".$userObjTemp->profileid." user type: ".$userObjTemp->userType,"Key not set");
         }
+	$storeVal =$addKey."#".date("Y-m-d H:i:s");
+	JsMemcache::getInstance()->set("MemPurchase_$userObjTemp->profileid","$storeVal",1296000);
         
     }
     
@@ -2583,5 +2720,36 @@ class Membership
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msg, $subject, $from,"","","","","","","1","",$from_name);
     }
+    
+    //Start:JSC-2925:Changes for GST
+    public function logTaxBreakup(){
+            $taxBreakupObj = new billing_TAXBREAKUP();
+            $paramsStr = "PROFILEID, BILLID, ENTRY_DT, CITY_RES, COUNTRY_RES";
+            $valuesStr = "'$this->profileid','$this->billid',now(),'$this->city_res','$this->country_res'";
+            
+            //Check for country to decide tax
+           if($this->country_res=="51"){
+                //Levy CGST + SGST in case of same state
+                if((strstr($this->city_res, billingVariables::BILLING_STATE))){
+                    $paramsStr .= ", CGST, SGST";
+                    $cgstRate = billingVariables::CGST;
+                    $sgstRate = billingVariables::SGST;
+                    $valuesStr .= ", '$cgstRate', '$sgstRate'";
+                }//Levy IGST in case of other state 
+                else{
+                    $paramsStr .= ", IGST";
+                    $igstRate = billingVariables::IGST;
+                    $valuesStr .= ", '$igstRate'";
+                }
+            }//Levy IGST in case currency is Rs but location is outside India
+            else if($this->curtype=='RS') {
+                $paramsStr .= ", IGST";
+                $igstRate = billingVariables::IGST;
+                $valuesStr .= ", '$igstRate'";
+            }
+            
+            $taxBreakupObj->insertRecord($paramsStr,$valuesStr);
+    }
+    //End:JSC-2925:Changes for GST
 }
 ?>

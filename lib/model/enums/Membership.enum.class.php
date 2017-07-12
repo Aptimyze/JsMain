@@ -22,12 +22,35 @@ class userCurrency
 }
 class billingVariables
 {
+    /*Comment Below Block of code for GST on 1st July 2017  
+     */
+    /*
     const TAX_RATE = "15";
     const SWACHH_TAX_RATE = "0.5";
     const KRISHI_KALYAN_TAX_RATE = 0.5;
     const NET_OFF_TAX_RATE = "0.130435";
-    //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
+    const TAX_TEXT = "SERVICE TAX";
+    const TAX_TEXT_SB = " (INCLUDING SWACHH BHARAT CESS)";
+    const TAX_LIVE_DATE = '2017-07-01 00:00:00';
+    */
+    /*Comment Above Block of code for GST on 1st July 2017*/
+    
+    /*Uncomment below code block for GST on 1st July 2017*/
+    const TAX_RATE = "18";
+    const SWACHH_TAX_RATE = "0";
+    const KRISHI_KALYAN_TAX_RATE = 0;
+    const NET_OFF_TAX_RATE = "0.152542";
+    const SERVICE_TAX_CONTENT = "(Inclusive of GST)";
+    const TAX_TEXT = "GST";
+    const TAX_TEXT_SB = " ";
+    const TAX_LIVE_DATE = '2017-07-01 00:00:00';
+     
+    const GST = "18";
+    const SGST = "9";
+    const CGST = "9";
+    const IGST = "18";
+    const BILLING_STATE = "UP";
 }
 
 class memDiscountTypes 
@@ -75,10 +98,10 @@ class VariableParams
 
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
-                                        "lastLightningDiscountViewedOffset" => 30,
-                                        "pool2FilterPercent" => 10,
+                                        "lastLightningDiscountViewedOffset" => 15,
+                                        "pool2FilterPercent" => 100,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                        "activeOfferFlag" => false
+                                        "activeOfferFlag" => true
                                         );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");

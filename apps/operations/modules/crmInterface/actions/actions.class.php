@@ -204,6 +204,53 @@ class crmInterfaceActions extends sfActions
         unset($vdSmsLogObj);
     }
 
+    // Schedule VD Notifications
+    public function executeScheduleVdNotification(sfWebRequest $request)
+    {
+        $formArr   = $request->getParameterHolder()->getAll();
+        $this->cid = $formArr['cid'];
+
+        $vdNotificationLogObj = new billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG();
+        if ($vdNotificationLogObj->isStatusY()) {
+            $this->errorMsg0 = "VD Notification is already scheduled.";
+        } else {
+            if ($formArr['frequency']) {
+                $this->frequency    = $formArr['frequency'];
+                $this->frequencyArr = range(1, $this->frequency);
+
+                $this->dateArr = array();
+                for ($i = 0; $i < $this->frequency + 10; $i++) {
+                    $this->dateArr[] = date('Y-m-d', strtotime('+' . $i . ' days'));
+                }
+            }
+            if ($formArr['isDone']) {
+                $dateArr = $formArr['selectedDateArr'];
+                for ($j = 0; $j < count($dateArr); $j++) {
+                    if ($dateArr[$j] > $dateArr[$j + 1]) {
+                        if ($j != count($dateArr) - 1) {
+                            $this->errorMsg = "Oops, please provide correct date values";
+                        }
+
+                    }
+                }
+                if (count(array_unique($formArr['selectedDateArr'])) != $formArr['frequency']) {
+                    $this->errorMsg = "Oops, please provide unique date values";
+                }
+
+                if (!$this->errorMsg) {
+                    $selectedDateArr = array();
+                    foreach ($formArr['selectedDateArr'] as $k => $dd) {
+
+                        $selectedDateArr[$k] = date('Y-m-d', strtotime($dd));
+                    }
+                    $vdNotificationLogObj->insertVdNotificationSchedule($selectedDateArr, $formArr['frequency']);
+                    $this->successMsg = "Updated successfully ...";
+                }
+            }
+        }
+        unset($vdNotificationLogObj);
+    }
+
     // Schedule VD Mailer
     public function executeScheduleVdMailer(sfWebRequest $request)
     {

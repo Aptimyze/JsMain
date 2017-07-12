@@ -191,18 +191,18 @@
 			{"label":"Highest Education","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"edu_level_new","userDecision":"","dindex":"0","storeKey":"edu_level_new","tapName":"Highest Education"},
       {"label":"PG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_pg","userDecision":"","dindex":"1","storeKey":"degree_pg","tapName":"PG Degree","required":"false"},
       {"label":"PG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"2","storeKey":"pg_college","inputType":"text","hint":notFilled,"required":"false"},
-      {"label":"Other PG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"3","storeKey":"other_pg_degree","inputType":"text","hint":notFilled,"required":"false"},
-      {"label":"UG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_ug","userDecision":"","dindex":"4","storeKey":"degree_ug","tapName":"UG Degree","required":"false"},
-      {"label":"UG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"5","storeKey":"college","inputType":"text","hint":notFilled,"required":"false"},
-      {"label":"Other UG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"6","storeKey":"other_ug_degree","inputType":"text","hint":notFilled,"required":"false"},
-			{"label":"Work Area","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"occupation","userDecision":"","dindex":"7","storeKey":"occupation","tapName":"Work Area"},
-			{"label":"Annual Income","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"income","userDecision":"","depValue":"","dindex":"8","storeKey":"income","tapName":"Annual Income"}
+//      {"label":"Other PG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"3","storeKey":"other_pg_degree","inputType":"text","hint":notFilled,"required":"false"},
+      {"label":"UG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_ug","userDecision":"","dindex":"3","storeKey":"degree_ug","tapName":"UG Degree","required":"false"},
+      {"label":"UG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"4","storeKey":"college","inputType":"text","hint":notFilled,"required":"false"},
+//      {"label":"Other UG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"6","storeKey":"other_ug_degree","inputType":"text","hint":notFilled,"required":"false"},
+			{"label":"Work Area","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"occupation","userDecision":"","dindex":"5","storeKey":"occupation","tapName":"Work Area"},
+			{"label":"Annual Income","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"income","userDecision":"","depValue":"","dindex":"6","storeKey":"income","tapName":"Annual Income"}
 				],
 		"s4": [
 			{"label":"Marital Status","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"children","dshow":"reg_mstatus","userDecision":"","dindex":"0","storeKey":"mstatus","optIndex":"0","tapName":"Martial Status","dependant_tapName":"Have Children"},
 			{"label":"Mother Tongue","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_mtongue","userDecision":"","dindex":"1","storeKey":"mtongue","tapName":"Mother Tongue"},
 			{"label":"Religion-Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_caste_","depValue":"","dshow":"religion","userDecision":"","dindex":"2","storeKey":"religion","optIndex":"1","tapName":"Religion","dependant_tapName":""},
-			{"label":"Jamaat","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"jamaat","userDecision":"","dindex":"3","storeKey":"jamaat","tapName":"Mother Tongue"},
+			{"label":"Jamaat","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"jamaat","userDecision":"","dindex":"3","storeKey":"jamaat","tapName":"Mother Tongue","required":"false"},
 			{"label":"Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"sect","userDecision":"","dindex":"4","storeKey":"sect","tapName":"Caste"},
 			{"label":"I am open to marry people of all castes \n(Caste No Bar)","value":"","inputType":"checkbox","show":"false","screenName":"s4","storeKey":"casteNoBar","hamburgermenu":"0","dindex":"5","dshow":"","required":"false"},
       {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"6","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
@@ -413,7 +413,7 @@
 					arrDependantFields[++iCount] = regFields['s2'][1];/*DOB Field*/                    
 				break;
 				case 'country_res':
-					arrDependantFields[iCount] = regFields['s3'][8];/*Income*/
+					arrDependantFields[iCount] = regFields['s3'][6];/*Income*/
                     arrDependantFields[iCount].value = notFilled;
                     arrDependantFields[iCount].userDecision = "";
                     arrDependantFields[++iCount] = regFields['s9'][3];/*Family Income*/

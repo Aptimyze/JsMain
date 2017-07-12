@@ -814,7 +814,10 @@ class crmAllocationActions extends sfActions
   */
   public function executeGetExclusiveMembers(sfWebRequest $request)
   {
-  	$type = $request->getParameter("EX_STATUS");
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
+  
+	$type = $request->getParameter("EX_STATUS");
   	$this->cid = $request->getParameter("cid");
   	$this->user = $request->getParameter("user");
   	$memHandlerObj = new MembershipHandler();
@@ -833,6 +836,7 @@ class crmAllocationActions extends sfActions
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
+
   	//active tab
   	$this->tabChosenDetails = exclusiveMemberList::$TYPE_TABID_MAPPING[$type];
   	//horizontal tab details
@@ -851,6 +855,7 @@ class crmAllocationActions extends sfActions
   	$sendAssignMailer = $request->getParameter("sendAssignMailer");
   	$sendAssignSMS = $request->getParameter("sendAssignSMS");
   	$profileid = intval($inputArr["profile"]);
+  	$billid = intval($inputArr["billid"]);
   	$success = true;
 
   	if($inputArr["exAction"] && $profileid)
@@ -858,20 +863,23 @@ class crmAllocationActions extends sfActions
 	  	$exObj = new billing_EXCLUSIVE_MEMBERS();
 	  	if($inputArr["exAction"]=="UNASSIGN")
 	  	{
-	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00");
+	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00",$billid);
 	  	}
 	  	else if($inputArr["exAction"]=="ASSIGN")
 	  	{
-	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'));
+	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'),$billid);
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)
 	  		{
-	            $executiveDetails = $inputArr["executiveDetails"];
-
-	            $profileDetails = array("PROFILEID"=>$profileid,"USERNAME"=>$inputArr["username"],"EXECUTIVE_NAME"=>$inputArr["executiveDetails"]["USERNAME"],"EXECUTIVE_PHONE"=>$executiveDetails["PHONE"],"EXECUTIVE_EMAIL"=>$executiveDetails["EMAIL"]);
-	            $mailerObj = new MembershipMailer();
-		  		$mailerObj->sendServiceActivationMail(1808,$profileDetails);
-		  	}
+                            $executiveDetails = $inputArr["executiveDetails"];
+                            $profileDetails = array("PROFILEID"=>$profileid,"USERNAME"=>$inputArr["username"],"EXECUTIVE_NAME"=>$inputArr["executiveDetails"]["USERNAME"],"EXECUTIVE_PHONE"=>$executiveDetails["PHONE"],"EXECUTIVE_EMAIL"=>$executiveDetails["EMAIL"]);
+                            $mailerObj = new MembershipMailer();
+                            $status = $mailerObj->sendServiceActivationMail(1808,$profileDetails);
+                            if($status==true){
+                                $exclusiveMailLogObj = new incentive_EXCLUSIVE_EMAIL_LOG();
+                                $exclusiveMailLogObj->insertExclusiveLogEntry($profileid, $inputArr["executiveDetails"]["USERNAME"]);
+                            }
+                        }
 		  	//send sms to profile in case of assignment if flag true
 		  	if($sendAssignSMS==true)
 		  	{

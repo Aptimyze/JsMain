@@ -114,6 +114,8 @@ abstract class Notification
               return $details["MESSAGE_RECEIVED"];
           case "MESSAGE":
 	      return $details["SELF"]["MESSAGE"];	
+        case "TITLE":
+        return $details["SELF"]["TITLE"]; 
 	  case "EDATE":
 		return $details["SELF"]['EDATE'];
 	  case "UPTO":
@@ -161,6 +163,8 @@ abstract class Notification
 		else
 			$CITY_RES= $this->countryDetail[$details['OTHER'][0]["COUNTRY_RES"]];
 		return strlen($CITY_RES)<=$maxlength ? $CITY_RES : substr($CITY_RES,0,$maxlength-2)."..";
+      case "MEM_NAME":
+          return $details["MEM_NAME"];
 	  }
   }
   public function getDate($days)

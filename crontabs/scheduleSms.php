@@ -49,7 +49,7 @@ function successmail()
         {
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                 $cc='esha.jain@jeevansathi.com';
-                $to='tanu.gupta@jeevansathi.com';
+                $to='nitesh.s@jeevansathi.com';
                 $msg='';
                 $subject="Scheduled SMS success mail";
                 $msg='Cron to populate sms in temp table executed successfully<br/><br/>Warm Regards';

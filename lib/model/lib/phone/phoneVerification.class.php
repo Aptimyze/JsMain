@@ -80,7 +80,7 @@ public function phoneUpdateProcess($message)
 			$profileObject=$this->profileObject;
 			
 			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
-
+			if($this->isVerified() == 'Y') return true;
 			switch ($this->phoneType)
 			{		
 
@@ -112,6 +112,7 @@ public function phoneUpdateProcess($message)
 
 			if($noOfTimesVerified == '0')
 			{
+		sfContext::getInstance()->getRequest()->setParameter('fromReg','Y');
                 $memcacheObj = JsMemcache::getInstance();
 
                 $minute = date("i");

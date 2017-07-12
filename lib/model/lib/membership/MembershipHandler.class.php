@@ -1602,7 +1602,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
-           
+
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1 || $lightningDealActive == 1) {
                 if($lightningDealActive == 1){
@@ -1846,6 +1846,19 @@ class MembershipHandler
                     $bottom = "if you upgrade your membership before <strong>" . date("d M", strtotime($expiry_date)) . "</strong> !";
                 }
                 break;
+            case 'VD_NOTIFICATION':
+                $discountVD = $vdodObj->getDiscountDetails($profileid);
+                $maxVDDisc  = $discountVD['MAX_DISCOUNT'];
+                $flat       = $discountVD['FLAT_DISCOUNT'];
+                $discPerc   = $maxVDDisc;
+                if ($flat) {
+                    $discountDisplayText = 'flat';
+                } else {
+                    $discountDisplayText = 'upto';
+                }
+                $top = "Get ".$discountDisplayText." ".$discPerc."% OFF on all Jeevansathi Plans";
+                $bottom = "Congratulations! You are selected for special discounts of ".$discountDisplayText." ".$discPerc."% by Jeevansathi. Offer valid till ".date("d M", strtotime($expiry_date)).". Tap to avail offer.";
+                break;
             case 'CASH':
                 $discountDisplayText = $vdodObj->getCashDiscountDispText($profileid, 'small');
                 $top                 = "Get " . $discountDisplayText . " " . $discPerc . "% OFF";
@@ -2004,9 +2017,10 @@ class MembershipHandler
         $endDate      = $vdDatesArr['EDATE'];
         $activationDt = $vdDatesArr['ENTRY_DT'];
         $todayDate    = date("Y-m-d");
+	$statusVd     = $vdDatesArr['STATUS'];
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
-        if (strtotime($startDate) == strtotime($todayDate)) {
+	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
             $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
             foreach ($vdProfilesArr as $key => $profileid) {
 
@@ -2235,8 +2249,17 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
+
         if (is_array($allocationDetails) && $allocationDetails) {
-            $profileIDArr = array_keys($allocationDetails);
+            
+            $profileIDArr = array_map(function($arr){ 
+                                    return $arr['PROFILEID'];
+                                },$allocationDetails);
+            
+            if(is_array($profileIDArr)){
+                $profileIDArr = array_unique($profileIDArr);
+            }
+            
             if (is_array($profileIDArr) && $profileIDArr) {
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
@@ -2255,18 +2278,20 @@ class MembershipHandler
                 unset($mainAdminObj);
 
                 //get billing details of profiles via billid's
-                $billIdArr = array_map(function ($arr) {return $arr['BILL_ID'];}, $allocationDetails);
+                $billIdArr = array_keys($allocationDetails);
+
                 if (is_array($billIdArr) && $billIdArr) {
                     $billingObj     = new BILLING_SERVICE_STATUS("crm_slave");
                     $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr), "PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT", "%X%");
                     unset($billingObj);
                 }
             }
-            foreach ($allocationDetails as $profileid => $value) {
+            foreach ($allocationDetails as $billid => $value) {
+                $profileid = $value["PROFILEID"];
                 if ($profileDetails[$profileid]) {
-                    $allocationDetails[$profileid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$profileid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
+                    $allocationDetails[$billid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$billid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
                 } else {
-                    unset($allocationDetails[$profileid]);
+                    unset($allocationDetails[$billid]);
                 }
 
             }
@@ -2274,6 +2299,7 @@ class MembershipHandler
             unset($jsadminDetails);
             unset($profileNamesArr);
         }
+        
         return $allocationDetails;
     }
 
@@ -2303,7 +2329,7 @@ class MembershipHandler
         if ($billingDetails) {
             $billingDetails = exclusiveMemberList::mapColumnsToActualValues($billingDetails, array("SERVICEID"));
         }
-
+        
         //merge all details
         if (is_array($billingDetails) && is_array($jsadminDetails)) {
             $allocationDetails = array_merge($allocationDetails, $profileDetails, $billingDetails, $jsadminDetails);
@@ -2314,7 +2340,6 @@ class MembershipHandler
         } else {
             $allocationDetails = array_merge($allocationDetails, $profileDetails);
         }
-
         return $allocationDetails;
 
     }
@@ -2410,20 +2435,39 @@ class MembershipHandler
     }
 
     public function calculateNewRenewalDiscountBasedOnPreviousTransaction($profileid, $discount_calc, $purDet) {
-        $billServObj    = new billing_SERVICES('newjs_slave');
-        $servDetailsArr = $billServObj->getServiceDetailsArr();
-        // Start - Logic to change renewal based on previous discount
-        $prevServPur = explode(",", $purDet['SERVICEID']);
+//Start: JSC-2938: Changes for actual billing amount
+//Old logic was fetching total amount from services table. So if price of service changes, wrong discount was being calculated.
+//New logic will fetch total amount from purchases(discount) + payment_details(amount) for actual amount that was billed 
+//
+//      //Start: ===Commentted for JSC-2938
+//      $billServObj    = new billing_SERVICES('newjs_slave');
+//      $servDetailsArr = $billServObj->getServiceDetailsArr();
+//      // Start - Logic to change renewal based on previous discount
+//      $prevServPur = explode(",", $purDet['SERVICEID']);
+//      $prevDiscAmt = $purDet['DISCOUNT'];
+//      if ($prevDiscAmt != 0) {
+//            $currency    = $purDet['CUR_TYPE'];
+//            foreach ($prevServPur as $val) {
+//                if ($currency == "RS") {
+//                    $prevTotAmt += $servDetailsArr[$val]['desktop_RS'];
+//                } else {
+//                    $prevTotAmt += $servDetailsArr[$val]['desktop_DOL'];
+//                }
+//            }
+//      //End: ===Commentted for JSC-29J38
+//      //Start: ===Logic to change renewal based on previous discount
         $prevDiscAmt = $purDet['DISCOUNT'];
         if ($prevDiscAmt != 0) {
-            $currency    = $purDet['CUR_TYPE'];
-            foreach ($prevServPur as $val) {
-                if ($currency == "RS") {
-                    $prevTotAmt += $servDetailsArr[$val]['desktop_RS'];
-                } else {
-                    $prevTotAmt += $servDetailsArr[$val]['desktop_DOL'];
-                }
-            }
+            $paymentDetailsObj = new BILLING_PAYMENT_DETAIL();
+            $billid = $purDet['BILLID'];
+            $billidArr = Array($purDet['BILLID']);
+            $details = $paymentDetailsObj->getAllDetailsForBillidArr($billidArr);
+            //print_r("Details: ". $details."\n");print_r($details);
+            
+            $prevAmt = $details[$billid]['AMOUNT'];
+            //Sum of amount in paymentdetails(which is after discount) and discount amount in purchases 
+            $prevTotAmt = $prevAmt + $prevDiscAmt;
+        //End: JSC-2938: Changes for getting actual billing amount
             $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
 	    if($prevDisc>=100){
 		$prevDisc =0;
@@ -2647,9 +2691,19 @@ class MembershipHandler
             $servDisc['C'] = 0;
             $servDisc['NCP'] = 0;
             $servDisc['X'] = 0;
+            $maxDiscount = 0;
+        }
+        else{
+            $maxDiscount = 0;
+            $maxDiscount = max($servDisc['P'],$servDisc['NCP'],$servDisc['X'],$servDisc['C']);
         }
         $disHistObj = new billing_DISCOUNT_HISTORY();
         $disHistObj->insertDiscountHistory($servDisc);
+        unset($disHistObj);
+        
+        /*$discMaxObj = new billing_DISCOUNT_HISTORY_MAX();
+        $discMaxObj->updateDiscountHistoryMax(array("MAX_DISCOUNT"=>$maxDiscount,"PROFILEID"=>$servDisc["PROFILEID"],"LAST_LOGIN_DATE"=>date("Y-m-d"),"MAX_DISCOUNT_DATE"=>date("Y-m-d")));
+        unset($discMaxObj);*/
         unset($nonZero);
     }
 
@@ -2681,7 +2735,7 @@ class MembershipHandler
             $memCacheObject->remove($profileid . "_MEM_OCB_MESSAGE_API17");
             $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
             $memCacheObject->remove($profileid . "_MEM_SUBSTATUS_ARRAY");
-        }
+}
     }
     
     public function modifyResponseForLightningDeal($data,$source=''){
@@ -2724,6 +2778,54 @@ class MembershipHandler
 		}
 	}
 	return false;
+    }
+
+    // get Latest Purchase Date	
+    public function getPurchaseDate($profileid,$type=''){
+        if(empty($profileid)){
+            return;
+        }
+        else{
+            	$memCacheObject = JsMemcache::getInstance();
+		$key = "MemPurchase_".$profileid;
+
+		/* testing part
+		$addKey ='allToPay';
+	        $storeVal =$addKey."#".date("Y-m-d H:i:s");
+		$memCacheObject->set("$key","$storeVal",604800); */
+
+            	$purchasDet 	=$memCacheObject->get($key);
+		$purchasDetArr 	=@explode("#", $purchasDet);
+		$purchasDate 	=$purchasDetArr[1];
+		$purchaseParamId =$purchasDetArr[0];
+		if($type=='F'){
+			if($purchaseParamId=='freeToPay')
+				$freeToPay =true;
+			else
+				$freeToPay =false;
+		}else{
+			if(!$purchasDate){
+				$billingObj = new BILLING_PAYMENT_DETAIL('crm_slave');
+				$purchasDate = $billingObj->getLatestPaymentDateOfProfile($profileid);
+			}
+		}
+		if($type=='F' && $freeToPay==false)
+			$purchasDate ='';
+		$resArr =array('PURCHASE_DATE'=>$purchasDate);
+		return $resArr;
+    	}
+    }		
+
+    public function getMembershipAutoLoginLink($profileid,$source){
+        if($profileid){
+            include_once(JsConstants::$docRoot."/classes/authentication.class.php");
+            $protect_obj = new protect;
+            $profilechecksum = md5($profileid)."i".$profileid;
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+            $echecksum = $protect_obj->js_encrypt($profilechecksum,$profileObj->getEMAIL());
+            $autoLoginLink = JsConstants::$siteUrl."/membership/jspc?CMGFRMMMMJS=1&checksum=$profilechecksum&profilechecksum=$profilechecksum&echecksum=$echecksum&enable_auto_loggedin=1&from_source=$source";
+            return $autoLoginLink;
+        }
     }
 
 }

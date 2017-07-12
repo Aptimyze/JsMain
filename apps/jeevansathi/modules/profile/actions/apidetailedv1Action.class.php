@@ -258,10 +258,8 @@ class apidetailedv1Action extends sfAction
         }
         else{
           $out =  $objDetailedDisplay->getResponse();
-        }
-		
+        }	
 		$this->profile->setNullValueMarker("");
-		
 		$arrPass = array('STYPE'=>$stype,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'stype'=>$stype);
 		if($request->getParameter('forViewProfile'))
 		{
@@ -299,7 +297,8 @@ class apidetailedv1Action extends sfAction
         		{
         			$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
         		}
-        	}        	
+        	}
+
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);
 			
 			if($this->loginProfile->getPROFILEID())
@@ -324,7 +323,7 @@ class apidetailedv1Action extends sfAction
                 $out['show_vsp'] = true;
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
-		}		
+		}
 		return $out;
 	}
 
@@ -508,6 +507,10 @@ class apidetailedv1Action extends sfAction
 			{
 				$tickKey = "HAVECHILD";
 			}
+			if(strpos($dppArray["dpp_religion"],ProfileEnums::MUSLIM_NAME) !== false && $key==ProfileEnums::CASTE_KEY)
+			{
+				$tickKey = "SECT";
+			}
 			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
 			{
 				$dppTickArray[$key]["VALUE"] = $value;
@@ -516,7 +519,7 @@ class apidetailedv1Action extends sfAction
 					$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
 				}
 			}		
-		}
+		}		
 		return $dppTickArray;
 	}
 

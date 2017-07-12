@@ -32,8 +32,7 @@ $headerArr = array(
 				'Content-Type:application/json'
 				);
 
-$jiraDescriptionArr = array();
-
+$jiraDescriptionStr = "";
 $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
 
 if(is_array($FilesArr) && !empty($FilesArr))
@@ -41,15 +40,13 @@ if(is_array($FilesArr) && !empty($FilesArr))
 	foreach($FilesArr as $key=>$value)
 	{
 		$response = sendCurlGETRequest($setVersionUrl.$value,"","",$headerArr,"GET");
-		$jiraDescriptionArr[$value]["status"] = $response->fields->status->name;
-		$jiraDescriptionArr[$value]["assignee"] = $response->fields->assignee->name;
-		$jiraDescriptionArr[$value]["description"] = $response->fields->summary;	
+		$jiraDescriptionStr .= $value." : ".$response->fields->summary."\nAssignee: ".$response->fields->assignee->name."\n\n";
 	}
 	
 	//to write the last released branch into a file(filename)
 	if($file = fopen($jiraDetailsFileName, "w+"))
 	{
-		fwrite($file, print_R($jiraDescriptionArr,true));
+		fwrite($file, $jiraDescriptionStr);
 	}
 
 	die("Data saved to file ");

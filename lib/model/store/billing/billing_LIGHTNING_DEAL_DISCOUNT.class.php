@@ -100,7 +100,7 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
     public function activateLightningDeal($params){
         if(is_array($params)){
             try{
-                $sql = "UPDATE billing.LIGHTNING_DEAL_DISCOUNT SET SDATE = :SDATE, EDATE = :EDATE, STATUS = :STATUS WHERE PROFILEID = :PROFILEID";
+                $sql = "UPDATE billing.LIGHTNING_DEAL_DISCOUNT SET SDATE = :SDATE, EDATE = :EDATE, STATUS = :STATUS WHERE PROFILEID = :PROFILEID AND STATUS = 'N' ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":SDATE", $params["SDATE"], PDO::PARAM_STR);
                 $prep->bindValue(":EDATE", $params["EDATE"], PDO::PARAM_STR);
@@ -146,6 +146,17 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             $res->execute();
             $row = $res->fetch(PDO::FETCH_ASSOC);
             return $row;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    
+    public function deleteOldData($lessThanDate){
+        try{
+            $sql = "DELETE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE DEAL_DATE < :DEAL_DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DEAL_DATE",$lessThanDate, PDO::PARAM_STR);
+            $res->execute();
         } catch (Exception $ex) {
             throw new jsException($ex);
         }

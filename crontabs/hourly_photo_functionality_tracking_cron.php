@@ -8,9 +8,13 @@ hourly tracking of photo
 include_once("connect.inc");
 //date_default_timezone_set('UTC');
 $dbM=connect_db();
+//=== Remove unwanted Skipped for refresh issue from jsadmin.MAIN_ADMIN====/
+$sql1="DELETE FROM jsadmin.MAIN_ADMIN WHERE SKIP_FLAG = 'Y' AND SKIP_COMMENTS='Skipped for refresh issue' AND SCREENING_TYPE='P'";
+$res=mysql_query($sql1,$dbM) or die(mysql_error());
 
 //--------------------------3rd chk------------------------------
 $sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW ORDER BY PICTUREID DESC LIMIT 20";
+
 $res=mysql_query($sql,$dbM) or die(mysql_error());
 while($row=mysql_fetch_assoc($res))
 {
