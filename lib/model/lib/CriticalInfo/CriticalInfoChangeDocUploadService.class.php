@@ -88,7 +88,7 @@ class CriticalInfoChangeDocUploadService
                 if(!$type)
                         $type=".jpg";
                 else
-                        $type=".".$type[1];
+                        $type=".".end($type);
 
                 $docUrlId=$this->docEncyption($profileId,$pre);
                 return array("URL"=>$docUrlId,"type"=>$type);

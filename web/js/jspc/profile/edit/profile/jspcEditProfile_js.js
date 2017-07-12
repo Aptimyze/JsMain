@@ -4948,7 +4948,9 @@ updateEduLevelChanges =function(eduLevelVal)
                 return false;
         }
         var file = $('#'+fieldId)[0].files[0];
-        if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
+        var nameArr = file.name.split(".");
+        var fileExt = nameArr[nameArr.length-1];
+        if (file && fileExt == "jpg" || fileExt == "JPG" || fileExt == "jpeg" || fileExt == "JPEG" || fileExt == "PDF" || fileExt == "pdf") {
         } else {
             $("#idlabel_" + fieldId).html('jpg/pdf only');
             setError(fieldKey,'Invalid file format',1);
