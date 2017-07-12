@@ -15,7 +15,7 @@ class VIEW_LOG extends TABLE
 	  * Pass $keyVal as 1 if the profileids are to sent in the key of the returned array.
 	**/
 
-        public function get($viewer,$viewedStr='',$key='')
+        public function get($viewer,$viewedStr='',$key='',$limit="")
         {
                 try
                 {
@@ -31,6 +31,10 @@ class VIEW_LOG extends TABLE
 				unset($viewedSql);
 				unset($viewedArray);
 			}
+			if($limit)
+			{
+				$sql .= " ORDER BY DATE DESC LIMIT :limit ";
+			}
                         $res=$this->db->prepare($sql);
 			if($viewedStr)
                         {
@@ -39,7 +43,10 @@ class VIEW_LOG extends TABLE
                         	foreach($viewedArray as $key =>$v)
                         		$res->bindValue(":v$key", $v, PDO::PARAM_INT);        
                         }
-
+                        if($limit)
+                        {
+                        	$res->bindValue(":limit", $limit, PDO::PARAM_INT);
+                        }
                         $res->execute();
                         while($result = $res->fetch(PDO::FETCH_ASSOC))
 			{
@@ -49,7 +56,7 @@ class VIEW_LOG extends TABLE
 					$resultArr[$result['VIEWED']] = 1;
 				else
 	                                $resultArr[] = $result['VIEWED'];
-			}
+			}			
                         return $resultArr;
                 }
                 catch(PDOException $e)

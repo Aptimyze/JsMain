@@ -28,6 +28,8 @@ mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_t
 
 include("$_SERVER[DOCUMENT_ROOT]/commonFiles/vspCronCommonFunctions.php");
 
+file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/VspCronLogs.txt",date("Y-m-d --- H:i:s")."\n");
+
 foreach($genderArr as $gender)
 {
 

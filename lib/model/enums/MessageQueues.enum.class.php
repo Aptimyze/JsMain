@@ -24,7 +24,7 @@ class MessageQueues
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
-  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 3; //count of discount tracking consumer count
+  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 6; //count of discount tracking consumer count
   CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
@@ -155,6 +155,14 @@ class MessageQueues
   public static $logConnectionTime = 0;
   
   public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
+  
+  //OutBound Events
+  const OUTBOUND_QUEUE = 'OutBoundQueue';
+  const OUTBOUND_EVENT = 'OUTBOUND_EVENT';
+  CONST OUTBOUND_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for outound queue 
+  CONST OUTBOUND_STARTCOMMAND = "symfony Outbound:ConsumeQueue"; //Command to start profile cache queue consuming cron
+  
+  
 }
 
 ?>

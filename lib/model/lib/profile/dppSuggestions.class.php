@@ -578,33 +578,32 @@ class dppSuggestions
 	public function getSuggestionsForReligion($type,$valArr)
 	{
 		$religionArr = array();
+		$religionValues = FieldMap::getFieldLabel("religion","",1);		
+		$religionValuesArr = array_flip($religionValues);
+
 		if(is_array($valArr))
 		{
-			foreach($valArr as $key=>$val)
+			if(in_array($religionValuesArr["Hindu"],$valArr))
 			{
-				if($val == DppAutoSuggestEnum::$hinduReligionValue)
-				{				
-					if(!in_array(DppAutoSuggestEnum::$sikhReligionValue, $valArr))
-					{
-						$religionArr[DppAutoSuggestEnum::$sikhReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$sikhReligionValue];	
-					}
-					if(!in_array(DppAutoSuggestEnum::$jainReligionValue, $valArr))
-					{
-						$religionArr[DppAutoSuggestEnum::$jainReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$jainReligionValue];		
-					}
-					
-				}
-				elseif($val == DppAutoSuggestEnum::$sikhReligionValue || $val == DppAutoSuggestEnum::$jainReligionValue)
-				{
-					if(!in_array(DppAutoSuggestEnum::$hinduReligionValue, $valArr))
-					{
-						$religionArr[DppAutoSuggestEnum::$hinduReligionValue] = DppAutoSuggestEnum::$religionValuesForDppSuggestion[DppAutoSuggestEnum::$hinduReligionValue];
-					}					
-				}				
+				$religionArr[] = $religionValuesArr["Sikh"];
+				$religionArr[] = $religionValuesArr["Jain"];				
 			}
-
-			return $religionArr;
-		}
+			if(in_array($religionValuesArr["Sikh"],$valArr) || in_array($religionValuesArr["Jain"],$valArr))
+			{
+				$religionArr[]=$religionValuesArr["Hindu"];				
+			}
+			unset($religionValuesArr);
+			if(is_array($religionArr) && !empty($religionArr))
+			{
+				$result = array_diff($religionArr, $valArr);
+			}
+			foreach($result as $k=>$v)
+			{
+				$finalArr[$v] = $religionValues[$v];
+			}
+			unset($religionValues);
+		}	
+		return $finalArr;
 	}
 }
 ?>

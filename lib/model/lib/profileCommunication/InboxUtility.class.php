@@ -3,6 +3,8 @@ class InboxUtility
 {	
 	public static function cachedInboxApi($type,$request="",$pid="",$response="",$inbox="")
         {
+        		if($request->getParameter("pageNo")>1)
+        			return 0;
                 $caching = $request->getParameter("caching");
                 if($caching || $type=="del")
                 {      
