@@ -17,6 +17,7 @@ class MessageQueues
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
+  CONST UPDATE_CRITICAL_INFO_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
   CONST PRODUCT_METRIC_QUEUE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
@@ -69,6 +70,7 @@ class MessageQueues
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST UPDATE_SEEN_PROFILE_QUEUE = "updateSeenProfileQueue";
+  CONST UPDATE_CRITICAL_INFO_QUEUE = "updateCriticalInfoQueue";
   CONST UPDATE_MATCHALERTS_LAST_SEEN_QUEUE = "updateMatchAlertsLastSeenQueue";
   CONST UPDATE_JUSTJOINED_LAST_SEEN_QUEUE = "updateJustJoinedLastSeenQueue";
   CONST LOGGING_QUEUE = "loginTrackingQueue";
@@ -79,6 +81,7 @@ class MessageQueues
   CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEENPROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenProfileQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST UPDATECRITICALINFO_STARTCOMMAND = "symfony cron:cronConsumeUpdateCriticalInfoQueueMessage"; //Command to start cron:cronConsumeUpdateCriticalInfoQueueMessage
   CONST UPDATE_FEATURED_PROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateFeaturedProfileQueue"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   CONST UPDATE_VIEW_LOG_STARTCOMMAND = "symfony cron:cronConsumeUpdateViewLogQueue"; //Command to start VIEW LOG consuming cron

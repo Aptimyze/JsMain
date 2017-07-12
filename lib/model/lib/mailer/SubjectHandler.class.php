@@ -65,7 +65,7 @@ Class SubjectHandler
 			$get_template_vars="getTemplateVars";
 		else
 			$get_template_vars="get_template_vars";
-		if(strpos($this->subjectCode,'~')){
+		if(strpos($this->subjectCode,'~') !== -1){
 			$regex='/~\$(.*)`/';
 			preg_match($regex,$this->subjectCode,$matches);
 			//To handle two smarty variables in subject code

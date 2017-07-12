@@ -969,10 +969,22 @@ public function executeAppredirect(sfWebRequest $request)
 		  
 		  foreach($arrKeys as $key=>$val)
 		  {
-			  if($val !== "reg_caste_" && $val!=="reg_city_")
+			  if($val == "mstatus_edit" || $val=="mstatus_muslim_edit"){
+				$outData[$val] = $this->getFieldMapData("mstatus");
+                                if($val == "mstatus_edit"){
+                                        foreach($outData[$val][0] as $k=>$v){
+                                                $kys = array_keys($v);
+                                                if(in_array("M", $kys)){
+                                                        unset($outData[$val][0][$k]);
+                                                }
+                                        }
+                                }
+                          }elseif($val !== "reg_caste_" && $val!=="reg_city_"){
 				$outData[$val] = $this->getFieldMapData($val);
-			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
+                          }else{//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+                          }
+                          
         //this part was added to remove religion "Others" from Registration in JSMS
       if(MobileCommon::isMobile() && $val=="religion")
       {
@@ -1023,6 +1035,17 @@ public function executeAppredirect(sfWebRequest $request)
 	  else if($k)
 	  {
 			$output = $this->getFieldMapData($k);
+                        if($k == "mstatus_edit" || $k=="mstatus_muslim_edit"){
+				$output = $this->getFieldMapData("mstatus");
+                                if($k == "mstatus_edit"){
+                                        foreach($output[0] as $k=>$v){
+                                                $kys = array_keys($v);
+                                                if(in_array("M", $kys)){
+                                                        unset($output[0][$k]);
+                                                }
+                                        }
+                                }
+                          }
 			if($k=="reg_city_jspc")
 			{
 				$outData = $output;
