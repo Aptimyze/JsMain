@@ -58,7 +58,7 @@ class newjs_CITY_NEW extends TABLE {
                 }
                 return $output;
         }
-    public function getAllCityLabel()
+    public function getAllCityLabel($oneTimeFlag="")
     {
         try
         {
@@ -67,8 +67,18 @@ class newjs_CITY_NEW extends TABLE {
             $prep->execute();
             $res = array();
             while($row=$prep->fetch(PDO::FETCH_ASSOC)) {
-                if($row['VALUE']) //this has to be commented for the query since 0 is also required
+                if($oneTimeFlag)
+                {
                     $res[$row['VALUE']] = $row['LABEL'];
+                }
+                else
+                {
+                    if($row['VALUE'])
+                    {
+                        $res[$row['VALUE']] = $row['LABEL'];
+                    }
+                }
+                
             }
         }
         catch(Exception $e)

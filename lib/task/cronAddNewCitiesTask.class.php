@@ -35,7 +35,7 @@ EOF;
     try 
     {
           $cityObj = new newjs_CITY_NEW("newjs_masterRep");
-          $allCityDataArr = $cityObj->getAllCityLabel(); //get cities in table
+          $allCityDataArr = $cityObj->getAllCityLabel("1"); //get cities in table
           $newCitiesDataArr = newCitiesEnums::$newCitiesDataArr;
           $spellCorrectionArr = newCitiesEnums::$spellCorrectionArr; 
           $newCitiesKeysArr = array_keys($newCitiesDataArr);
