@@ -2148,4 +2148,81 @@ if($k=="state_res")
             }
             return $Arr;
         }
+  
+  /**
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeMembershipPlanAudioV1(sfWebRequest $request)
+  {
+    $arrData = $request->getParameter("CustomField");
+    
+    //Right Now contains membershipValue
+    $memberShipValue = $arrData;
+    
+    //Thoushand
+    $arrOut[]  = intVal($memberShipValue / 1000);
+    $memberShipValue = $memberShipValue%1000;
+    $arrOut[] = "1000";
+    
+    // Hundred
+    $arrOut[]  = intVal($memberShipValue / 100);
+    $memberShipValue = $memberShipValue%100;
+    $arrOut[] = "100";
+    
+    if($memberShipValue > 0) {
+      $arrOut[] = $memberShipValue;
+    }
+    // content type required is text/plain
+    header("Content-type: text/plain");
+    /**
+     * 
+     */
+    foreach($arrOut as $val) {
+      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"\n";
+    }
+    die();
+  }
+
+  public function executeOutboundCallStatusV1(sfWebRequest $request)
+  {
+    $getParameters = array(
+        "CallSid","From","To","Direction","DialCallDuration","StartTime","EndTime","CallType","digits","RecordingUrl","CustomField","flow_id","DialCallStatus","ForwardedFrom","ProcessStatus","CurrentTime"
+    );
+    
+    $CallSid = $request->getPostParameter('CallSid');
+    $Status = $request->getPostParameter('Status');
+    $RecordingUrl = $request->getPostParameter('RecordingUrl');
+    $DateUpdated = $request->getPostParameter('DateUpdated');
+
+    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n\n";
+    
+    $digitPressed = "";
+    if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
+      foreach($getParameters as $key) {
+        
+        if ($key == "CallSid") {
+          $CallSid = $request->getParameter($key);
+          continue;
+        }
+        if($key == "digits") {
+          $digitPressed = $request->getParameter($key);
+          continue;
+        }
+        $arrOut[] = " $key : " . $request->getParameter($key);
+      }
+      
+      $totalResponse = implode(", ", $arrOut);
+      
+      $totalResponse .= "\n\n";
+    }
+    
+    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
+    $storeObj->updateCallResponse($CallSid, $totalResponse, $digitPressed);
+    
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    $respObj->generateResponse();
+    die();
+  }
 }

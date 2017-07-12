@@ -194,10 +194,12 @@
 <!--start:div-->
 <div class="pt20">
  <div class="rv2_pad4">
-   <div class="rv2_brdr1 txtc pad2  rv2_brrad1 fontlig">
-     <div id="payAtBranch" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv_ft2 cursp">~$data.pay_text1`</div>
-     <div class="rv_ft3 rv2_colr2">~$data.pay_text2`</div>
-   </div>
+    ~if !$data.hidePayAtBranchesOption || $data.hidePayAtBranchesOption eq false`
+      <div class="rv2_brdr1 txtc pad2  rv2_brrad1 fontlig">
+       <div id="payAtBranch" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv_ft2 cursp">~$data.pay_text1`</div>
+       <div class="rv_ft3 rv2_colr2">~$data.pay_text2`</div>
+      </div>
+   ~/if`
  </div>
 </div>
 <!--end:div-->

@@ -23,4 +23,5 @@ class CanSendEnums
 	public static $channelEnums = array(
 			"EMAIL"=>"EMAIL"
 			);
+	public static $exceptionForMailId = array("1848","1839"); //sample astro report and astro report mail ID
 }

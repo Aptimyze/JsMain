@@ -886,8 +886,9 @@ function updateCastOption(religionValArray,type){
     for(var j=0;j<casteArray.length;j++){
       var key = Object.keys(casteArray[j])[0];
       var valueLabel = casteArray[j][key];
-      
-      $(casteField).append('<option class="textTru chosenDropWid" value= \"' + key+ '\">' + valueLabel + '</option>');
+      if($("#dpp-p_caste .chosenDropWid[value='"+key+"']").length == 0 ) {
+       $(casteField).append('<option class="textTru chosenDropWid" value= \"' + key+ '\">' + valueLabel + '</option>');
+      }
       
     }
   }
