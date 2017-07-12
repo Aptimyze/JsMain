@@ -14,7 +14,7 @@ class SocialSigninAction extends sfActions
 	/**
 	* @const app secret for FB app
 	*/
-	const APPSECRET = "3a50ca8ac35728d6ffabef983c3df898";//"775d11b4ebb8dc803ff439cb59fc292a";
+	const APPSECRET = "775d11b4ebb8dc803ff439cb59fc292a";
 	/**
 	* @const facebook graph api url
 	*/
@@ -52,7 +52,7 @@ class SocialSigninAction extends sfActions
     	$postParams = json_encode(array(
     		"access_token" => $access_token,
     		"appsecret_proof" => $this->generateProof($access_token),
-    		"batch" => '[{"method":"GET", "relative_url":"me"},]'
+    		"batch" => '[{"method":"GET", "relative_url":"me?fields=email"},]'
     		));
     	$headerArr = array('Content-Type:application/json');
     	return CommonFunction::sendCurlPostRequest(SocialSigninAction::GRAPHAPIURL,$postParams,"",$headerArr,"POST");
@@ -115,7 +115,6 @@ class SocialSigninAction extends sfActions
 		if(is_array($responseData)) {
 			$respObj->setResponseBody($responseData);	
 		}
-		
 		$respObj->generateResponse();
 		die();
 	
