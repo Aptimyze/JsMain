@@ -1,0 +1,313 @@
+
+
+2017-06-21 20:47:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0
+ #Referer : http://127.0.1.1/ 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/time.png
+ #Method : GET
+
+
+2017-07-05 22:55:57
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/index
+ #Method : GET
+
+
+2017-07-08 2:48:17
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/socialsignin
+ #Method : GET
+
+
+2017-07-08 9:14:07
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/socialsignin
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/time.png
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/memory.png
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/log.png
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/close.png
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/sf.png
+ #Method : GET
+
+
+2017-07-08 9:15:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/config.png
+ #Method : GET
+
+
+2017-07-08 9:16:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/toggle.gif
+ #Method : GET
+
+
+2017-07-08 9:16:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/info.png
+ #Method : GET
+
+
+2017-07-08 9:16:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/warning.png
+ #Method : GET
+
+
+2017-07-08 9:16:08
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/error.png
+ #Method : GET
+
+
+2017-07-11 1:38:03
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/socialsignin
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/socialsignin
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/sf.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/config.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/time.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/log.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/close.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/memory.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/toggle.gif
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/info.png
+ #Method : GET
+
+
+2017-07-11 2:19:24
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer : http://trunk.jeevansathi.com/api/v1/api/socialsignin 
+ #Self :  /symfony_index.php/seo/404
+ #Uri : /sf/sf_web_debug/images/warning.png
+ #Method : GET
+
+
+2017-07-11 3:01:43
+ErrorMsg: Due to a temporary problem your request could not be processed. Please try after a couple of minutes
+Mysql Error: 
+Mysql Error Number:
+SQL: 
+#User Agent : Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+ #Referer :  
+ #Self :  /symfony_index.php
+ #Uri : /api/v1/api/socialsignin
+ #Method : POST
+

@@ -12,10 +12,13 @@ class SocialSigninAction extends sfActions
 { 
 	
 	/**
-	* @var private string app secret for FB app
+	* @const app secret for FB app
 	*/
-	//TODO : Move to ENUM or CONST
-	private $app_secret = "775d11b4ebb8dc803ff439cb59fc292a";
+	const APPSECRET = "3a50ca8ac35728d6ffabef983c3df898";//"775d11b4ebb8dc803ff439cb59fc292a";
+	/**
+	* @const facebook graph api url
+	*/
+	const GRAPHAPIURL = "https://graph.facebook.com";
 	
 	/**
 	* @fn generateProof
@@ -23,7 +26,7 @@ class SocialSigninAction extends sfActions
 	* @param $access_token - access_token from user
 	*/
 	private function generateProof($access_token){
-		return hash_hmac('sha256', $access_token, $this->app_secret);
+		return hash_hmac('sha256', $access_token, SocialSigninAction::APPSECRET);
 	}
 
 	/**
@@ -32,12 +35,12 @@ class SocialSigninAction extends sfActions
 	* @param $emailValue - email obtained from facebook
 	*/
 	private function checkEmailDB($emailValue){
-		$resp = "N";
+		$resp = "D";
 		if($emailValue){
 		$checkEmailInDBobj = new JPROFILE();
 		$resp = $checkEmailInDBobj->get($emailValue , /*$criteria*/"EMAIL", /*$fields*/ "ACTIVATED", /*$extraWhereClause*/ null, /*$cache*/ false)["ACTIVATED"];
 		}
-		return $resp ? $resp : "N";
+		return $resp ? $resp : "D";
 	}
     
     /**
@@ -46,16 +49,13 @@ class SocialSigninAction extends sfActions
 	* @param $emailValue - email obtained from facebook
 	*/
     private function hitGraphApi($access_token){
-
-
-    	$Url = "https://graph.facebook.com"; // TODO : Move to Enum or constant
     	$postParams = json_encode(array(
     		"access_token" => $access_token,
     		"appsecret_proof" => $this->generateProof($access_token),
     		"batch" => '[{"method":"GET", "relative_url":"me"},]'
     		));
     	$headerArr = array('Content-Type:application/json');
-    	return CommonFunction::sendCurlPostRequest($Url,$postParams,"",$headerArr,"POST");
+    	return CommonFunction::sendCurlPostRequest(SocialSigninAction::GRAPHAPIURL,$postParams,"",$headerArr,"POST");
     }
 
     /**
@@ -76,40 +76,40 @@ class SocialSigninAction extends sfActions
 	*/
 	public function execute($request)
 	{	
-       
 		$access_token = $request->getParameter("access_token");
-		if(!$access_token) return; // TODO:// Handle Failure Case, return failure response
-		// $access_token = "EAAIUo67ZBFGEBAN8B7bYgnv8Sh8pFuZC0LPmk1VQAEnPEBlrWJZCHZArVSBZCpFTYUZCikcPgTyhtyKhkXiIC4CvvFNLQZBAOwr7QSWAFr4WG5aO4oEmj7oNOCtwqHb2Mpr8XTxQl6UhglCuB5XvpzbWebDGEiTlJfP9dEg6VXJg1Au6qfIbySZAMNLc4p0tUm4ZD";
         
-        
-		$userEmail = "";
-        // get response from FB
-        $fbData = $this->hitGraphApi($access_token);
-        $fbResp = json_decode($fbData);
-        // jsonifying ugly parts
-        if(!$fbResp->error->code){//TODO : Use isset or isempty function for better readabilty of the code
-        	$fbResp = json_decode($fbData)[0];
-        	$fbResp->jsonBody = json_decode($fbResp->body);
-        	$userEmail = $fbResp->jsonBody->email;
-        }
-        
-        $respReturn = $fbResp;
-       
-        $responseData["FBcode"] = $respReturn;
-        
-        // $gotEmail = json_decode(json_decode($fbResp)[0]->body)->email;
-        // check email from db matching
-        $responseData["is_activate"] = $this->checkEmailDB($userEmail);
-
         // create object of apiresponsehandler
 		$respObj = ApiResponseHandler::getInstance();
 
-		// create object of appauthentication and generate authchecksum
-        if($responseData["is_activate"] != 'D'){
-        	
-        	$respObj->setAuthChecksum($this->generateAuthchecksum($userEmail));
-        }
-		
+		// if no access_token
+		if($access_token){
+
+			$userEmail = "";
+	        // get response from FB
+	        $fbData = $this->hitGraphApi($access_token);
+	        // check if fb response has error code
+	        if($fbResp->error->code){
+	        	$fbResp = json_decode($fbData);
+	        }
+	        else{
+	        	$fbResp = json_decode($fbData)[0];
+	        	$fbResp->jsonBody = json_decode($fbResp->body);
+	        	$userEmail = $fbResp->jsonBody->email;
+		        $responseData["FBcode"] = $fbResp;
+		        // get activated status from db
+			    $responseData["is_activate"] = $this->checkEmailDB($userEmail);
+			    // generating authchecksum
+		        if($responseData["is_activate"] != 'D'){
+		        	$authchecksum = $this->generateAuthchecksum($userEmail);
+		        	if($authchecksum){
+		        		$respObj->setAuthChecksum($authchecksum);
+		        	}
+		        }
+	        }// end inner else
+		}else{
+			$responseData['error'] = "access_token not provided";
+		}// end outer else
+        
 		$respObj->setHttpArray($status);
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		if(is_array($responseData)) {
