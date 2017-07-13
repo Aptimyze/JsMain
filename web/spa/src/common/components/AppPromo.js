@@ -53,13 +53,13 @@ export default class AppPromo extends React.Component {
 	        <div id="AppPromo" className="ham_b20_n ham_minu20 newocbbg1 fullwid">   	            	
 	           	<div className = "padAppPromo clearfix">
 	           	    <div className = "fl pt20">            	
-	           	    	<div onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            
+	           	    	<div id="closePromoBtn" onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            
 	           	    </div>        	
 	           	    <div className = "fl padl5">            	
 	           	    	<div className = "ocbnewimg logoocb"></div>            
 	           	    </div>            
 	           	    <div className = "fr pt10">            	
-	           	    	<div className = "newocbbg2 ocbbr1 ocbp1">                	
+	           	    	<div id="installApp" className = "newocbbg2 ocbbr1 ocbp1">                	
 	           	    		<a href={this.state.appHref} target="_blank" className = "white fontmed f13">Install</a>                
 	           	    	</div>            
 	           	    </div>             

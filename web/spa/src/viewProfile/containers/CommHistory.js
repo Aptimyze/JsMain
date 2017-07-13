@@ -29,11 +29,11 @@ class CommHistory extends React.Component {
     		let htmlString = "", data = nextProps.historyData.history;
     		for(var i=0; i< data.length; i++) {
     			if(data[i].ismine == true) {
-    				htmlString += "<div class='vpro_padl'>";
+    				htmlString += "<div id='comm_"+i+"' class='vpro_padl'>";
     				htmlString += "<div class='fontlig f14 white txtr padr15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
     			}
 				else {
-					htmlString += "<div class='vpro_padr'>";
+					htmlString += "<div id='comm_"+i+"' class='vpro_padr'>";
 					htmlString += "<div class='fontlig f14 white txtl padl15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
 				}  
 				htmlString+= "<div class='vpro_padr'><div class='brdr4'></div></div>"
@@ -64,7 +64,7 @@ class CommHistory extends React.Component {
 									<img src={this.props.profileThumbNailUrl} className="com_brdr_radsrp wid50 hgt50" />
 								</div>
 								<div className="posabs com_right1"> 
-									<i id="js-comCloseBtn" onClick={() => this.closeHistory()} className="mainsp com_cross cursp"></i>
+									<i id="comCloseBtn" onClick={() => this.closeHistory()} className="mainsp com_cross cursp"></i>
 								</div>
 								<div className="txtc f19 white pt10">
 									{this.props.username}

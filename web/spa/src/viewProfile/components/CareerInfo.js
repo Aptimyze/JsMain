@@ -14,7 +14,7 @@ export default class CareerInfo extends React.Component {
     	if(this.props.about.work_status)
     	{
     		work_status = <div>
-	    		<div className="f12 color1">
+	    		<div id="vpro_work_status_label" className="f12 color1">
 	    			{this.props.about.work_status.label}
 	    		</div>
 	          	<div className="fontlig pb15" >

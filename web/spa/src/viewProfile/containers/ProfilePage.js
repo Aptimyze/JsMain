@@ -329,8 +329,8 @@ class ProfilePage extends React.Component {
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">
-                                <div onClick={() => this.goBack()} className="posabs ot_pos1">
-                                    <i id="backBtn" className="mainsp arow2"></i>
+                                <div id="backBtn" onClick={() => this.goBack()} className="posabs ot_pos1">
+                                    <i className="mainsp arow2"></i>
                                 </div>
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
                                     {Header}
@@ -339,7 +339,7 @@ class ProfilePage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <Link to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                    <Link id="showAlbum" to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
                             {photoViewTemp}
