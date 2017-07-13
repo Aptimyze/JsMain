@@ -4,6 +4,8 @@ import {Link} from "react-router-dom";
 
 export class MyjsShowVisitors extends React.Component{
   render(){
+    console.log('------');
+    console.log(this.props);
     let tupleValues = this.props.listingData;
     let count = (tupleValues.length<=3)?tupleValues.length: 3;
     let VisitorsListing;
@@ -53,7 +55,7 @@ export default class ProfileVisitor extends React.Component{
           </div>
           <div className="myjsp1">
             <div className="fullwid">
-              <MyjsShowVisitors listingData={this.props.responseMessage} />
+              <MyjsShowVisitors listingData={this.props.responseMessage.profiles} />
             </div>
           </div>
         </div>

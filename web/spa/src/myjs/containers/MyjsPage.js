@@ -22,7 +22,7 @@ require ('../style/jsmsMyjs_css.css');
 
 export class CheckDataPresent extends React.Component{
 	render(){
-		console.log(this.props);
+
 
 	 if(!this.props.fetched)
 		{
@@ -42,6 +42,7 @@ export class CheckDataPresent extends React.Component{
 						{
 							return (<div className="noData prfvisit"></div>);
 						}
+						console.log('here2');
 						return(<MyjsProfileVisitor responseMessage={this.props.data}/>);
 			default:
 					return (<div>nodata</div>);
