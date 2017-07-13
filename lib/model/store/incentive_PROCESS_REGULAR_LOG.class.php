@@ -10,7 +10,7 @@ class incentive_PROCESS_REGULAR_LOG extends TABLE
         {
                 try
                 {
-                        $sql = "INSERT INTO incentive.FP_REGULAR_LOG (DATE,FILTER,FILTERED_PROFILES,COUNT,LATEST_REG_DT,LATEST_REG_FILTERED_PROFILES,LATEST_REG_COUNT, PROCESS) VALUES(:DATE,:FILTER,:FILTERED_PROFILES,:COUNT,:LATEST_REG_DT,:LATEST_REG_FILTERED_PROFILES,:LATEST_REG_COUNT,:PROCESS)";
+                        $sql = "INSERT INTO incentive.PROCESS_REGULAR_LOG (DATE,FILTER,FILTERED_PROFILES,COUNT,LATEST_REG_DT,LATEST_REG_FILTERED_PROFILES,LATEST_REG_COUNT, PROCESS) VALUES(:DATE,:FILTER,:FILTERED_PROFILES,:COUNT,:LATEST_REG_DT,:LATEST_REG_FILTERED_PROFILES,:LATEST_REG_COUNT,:PROCESS)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
                         $prep->bindValue(":FILTER",$filter,PDO::PARAM_STR);
@@ -31,7 +31,7 @@ class incentive_PROCESS_REGULAR_LOG extends TABLE
         {
                 try
                 {
-			$sql = 'SELECT MAX(`DATE`) AS MAX_DATE FROM incentive.`FP_REGULAR_LOG`';
+			$sql = 'SELECT MAX(`DATE`) AS MAX_DATE FROM incentive.`PROCESS_REGULAR_LOG`';
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 	                $row=$prep->fetch(PDO::FETCH_ASSOC);
@@ -47,7 +47,7 @@ class incentive_PROCESS_REGULAR_LOG extends TABLE
         {
                 try
                 {
-			$sql = 'SELECT * FROM incentive.`FP_REGULAR_LOG` WHERE `DATE` = :DATE and PROCESS = :PROCESS ORDER BY `ID` ASC';
+			$sql = 'SELECT * FROM incentive.`PROCESS_REGULAR_LOG` WHERE `DATE` = :DATE and PROCESS = :PROCESS ORDER BY `ID` ASC';
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
                         $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
