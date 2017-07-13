@@ -31,7 +31,7 @@ class jsValidatorDivorcedProof extends sfValidatorBase
                                 throw new sfValidatorError($this, ErrorHelp::$ERR_REQUIRED[mstatus_proof], array('value' => $name));
                         }
                         $name = explode('.',$name);
-                        if (!in_array($name[1],$this->fileType)) {
+                        if (!in_array(end($name),$this->fileType)) {
                           throw new sfValidatorError($this,'err_file_type', array('value' => $name[1]));
                         }
 
