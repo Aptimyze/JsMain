@@ -19,11 +19,11 @@ class newjs_KNWLARITYVNO extends TABLE{
                 }
 
 	}
-	public function getProfilesInTable()
+	public function getProfilesInTable($totalChunks,$chunk)
 	{
 		try
 		{
-			$sql = "SELECT DISTINCT(PROFILEID) FROM `KNWLARITYVNO` WHERE 1";
+			$sql = "SELECT DISTINCT(PROFILEID) FROM `KNWLARITYVNO` WHERE PROFILEID%$totalChunks=$chunk";
 			$prep=$this->db->prepare($sql);
 			$prep->execute();
 			while($result = $prep->fetch(PDO::FETCH_ASSOC))

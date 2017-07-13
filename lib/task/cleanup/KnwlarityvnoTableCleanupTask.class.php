@@ -28,18 +28,30 @@ $this->addOptions(array(
 
   protected function execute($arguments = array(), $options = array())
   {
+    ini_set('memory_limit','1024M');
+                ini_set('max_execution_time', 0);
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
-	$knwlarityvnoObj = new newjs_KNWLARITYVNO;
-	$knwlarityvnoObj->deleteInvalidData();
-	$profiles = $knwlarityvnoObj->getProfilesInTable();
-	$profilesDeleted = $this->getProfilesLoggedInBeforeDate($profiles);
-	if(is_array($profilesDeleted))
-		$knwlarityvnoObj->deleteVnoForProfiles($profilesDeleted);
+  	$knwlarityvnoObj = new newjs_KNWLARITYVNO;
+  	$knwlarityvnoObj->deleteInvalidData();
+    $totalChunks=100;
+    for($chunk=0;$chunk<$totalChunks;$chunk++)
+    {
+      	$profiles = $knwlarityvnoObj->getProfilesInTable($totalChunks,$chunk);
+        if(count($profiles)>0)
+      	{
+          $profilesDeleted = $this->getProfilesLoggedInBeforeDate($profiles);
+          unset($profiles);
+      	   if(is_array($profilesDeleted))
+      		  $knwlarityvnoObj->deleteVnoForProfiles($profilesDeleted);
+          unset($profilesDeleted);
+        }
+    }
   }
   private function getProfilesLoggedInBeforeDate($profiles)
   {
+
 	$jprofileObj = new JPROFILE("newjs_slave");
 	$profileDetails = array();
 	$parameterLess['LAST_LOGIN_DT']=$this->date;
