@@ -9,7 +9,7 @@ class populateLegacyDiscountPercentTask extends sfBaseTask
 		));
 		$this->namespace        = 'CRM';
 		$this->name             = 'populateLegacyDiscountPercent';
-		$this->briefDescription = 'fix mem upgrade issue';
+		$this->briefDescription = 'populate 100% discount percent value for 0 amount billings done in specified duration';
 		$this->detailedDescription = <<<EOF
 		The [populateLegacyDiscountPercent|INFO] task does things.
 		Call it with:
