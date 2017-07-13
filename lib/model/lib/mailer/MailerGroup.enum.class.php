@@ -50,4 +50,5 @@ class MailerGroup{
   const DELETE_PROFILE = 27;
 
   const PROMOTIONAL_ALTERNATE_EMAIL = 46;
+  const CRITICAL_INFO_EMAIL = 47;
 }
