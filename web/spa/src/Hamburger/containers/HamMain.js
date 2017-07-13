@@ -10,19 +10,6 @@ export default class HamMain extends React.Component {
     constructor(props) 
     {
         super();
-        let urlString = "",appText = "";
-        if(getAndroidVersion()) {
-            urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
-            appText = "Download APP (3MB)";
-        } else if(getIosVersion()) {
-            urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
-            appText = "Download iOS App ";
-        }
-        this.state = {
-            urlString,
-            appText
-        };
-       // props.bellResponse.MEMBERSHIPT_TOP = "Flat 70% Off till 12 Jul!";
     }
 
     translateSite(translateURL)
@@ -45,14 +32,16 @@ export default class HamMain extends React.Component {
     {
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others") {
-            if(this.props.bellResponse.MEMBERSHIPT_TOP == null) {
-                document.getElementById("listing").style.height = (window.innerHeight-83)+"px";
+            if(this.props.bellResponse.MEMBERSHIPT_TOP == null || !this.props.bellResponse.MEMBERSHIPT_TOP) {
+                document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
              } else {
                 document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
              }
             document.getElementById("myMatchesMinor").style.height = "0px";
             document.getElementById("contactsMinor").style.height = "0px";  
-        } 
+        } else {
+            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+        }
     }
 
     checkHome(e) 
@@ -105,7 +94,7 @@ export default class HamMain extends React.Component {
 
     render() 
     {
-        var startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount;
+        let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount;
         if(this.props.page == "others") {
             membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.props.bellResponse.MEMBERSHIPT_TOP}</div>
@@ -167,7 +156,7 @@ export default class HamMain extends React.Component {
                     <div id="myContactLink" className="f17 ml15 white ml15 dispibl">
                         My Contacts
                     </div>
-                    <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandContacts" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
                 <ul id="contactsMinor" className = "minorList f15">
                     <li>
@@ -249,7 +238,7 @@ export default class HamMain extends React.Component {
                     <div className=" ml15 f17 white ml15 dispibl">
                         My Matches
                     </div>
-                    <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandMyMatches" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
                 <ul id="myMatchesMinor" className = "minorList f15">
                     <li>
@@ -346,7 +335,7 @@ export default class HamMain extends React.Component {
         else if(this.props.page == "Login") {
             membershipRegisterView = <div className="brdrTop pad150 fontreg">
                 <div className = "dispibl wid49p pad16">
-                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink" className="hamBtnLoggedOut bg10 lh40 br6 white">
+                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink2" className="hamBtnLoggedOut bg10 lh40 br6 white">
                         LOGIN
                     </Link>  
                 </div>
@@ -366,20 +355,29 @@ export default class HamMain extends React.Component {
             </li>;
         }
 
-        var listingView = <div id="listing" className="overflowhidden">
+        let urlString = "",appText = "";
+        if(getAndroidVersion()) {
+            urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
+            appText = "Download APP (3MB)";
+        } else if(getIosVersion()) {
+            urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
+            appText = "Download iOS App ";
+        }
+
+        let listingView = <div id="listing" className="overflowhidden">
             <ul className="fontreg white listingHam fullheight overAuto">
                 <li className="brdrBtm f14 pb8 fontlig">
                     <div className="wid49p dispibl">
-                        <a href={this.state.urlString} target="_blank"  className="white fl mar0Imp">{this.state.appText}</a>
+                        <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                     </div>
                     <div className="wid49p dispibl">
-                        <div onClick={() => this.translateSite("http://hindi.jeevansathi.com")}  className="white fr mar0Imp">Hindi Version</div>
+                        <div id="hindiLink" onClick={() => this.translateSite("http://hindi.jeevansathi.com")}  className="white fr mar0Imp">Hindi Version</div>
                     </div>
                 </li>
                 {startingTuple}
                 <li>
                     <i className="hamSprite homeIcon mt10Imp"></i>
-                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink" className="f17 white">
+                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink1" className="f17 white">
                         Home
                     </Link>
                 </li>
@@ -408,7 +406,7 @@ export default class HamMain extends React.Component {
                         <div id="settingsLink" className="ml15 dispibl white">
                             Settings
                         </div>
-                        <i onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                        <i id="expandSettings" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                     </div>
                     <ul id="settingsMinor" className = "minorList f15">
                         <li>

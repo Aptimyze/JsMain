@@ -82,12 +82,12 @@ class DppTab extends React.Component {
         var matching_header;
         if(this.props.dpp_Ticks && this.state.loginStatus) 
         {
-            matching_header = <div className="clearfix f13 fontlig">
+            matching_header = <div id="matchHeader" className="clearfix f13 fontlig">
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
-                    <span className="js-matching">{matchingCount}</span> of&nbsp; 
-                    <span className="js-total">{totalCount}</span> matchings
+                    <span className="matching">{matchingCount}</span> of&nbsp; 
+                    <span className="total">{totalCount}</span> matchings
                 </div>
                 <div className="clearfix pt10 pb10">
                     <div className="fl wid24p txtc">
@@ -249,7 +249,7 @@ class DppTab extends React.Component {
             dpp_earning = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Earning</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_occupation">this.stackData({this.props.dpp.dpp_earning})</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_earning">this.stackData({this.props.dpp.dpp_earning})</div>
                 </div>
                 {this.getStatusMark("dpp_earning")}
             </div>

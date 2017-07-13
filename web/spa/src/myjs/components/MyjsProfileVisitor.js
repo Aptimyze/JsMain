@@ -53,7 +53,7 @@ export default class ProfileVisitor extends React.Component{
           </div>
           <div className="myjsp1">
             <div className="fullwid">
-              <MyjsShowVisitors listingData={this.props.responseMessage} />
+              <MyjsShowVisitors listingData={this.props.responseMessage.profiles} />
             </div>
           </div>
         </div>
