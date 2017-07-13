@@ -187,25 +187,25 @@ class LoginPage extends React.Component {
     }
 
     render() {
-        var errorView;
+        let errorView;
         if(this.state.insertError == true)
         {
           errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
         }
 
-        var loaderView;
+        let loaderView;
         if(this.state.showLoader)
         {
           loaderView = <Loader show="page"></Loader>;
         }
 
-        var promoView;
+        let promoView;
         if(this.state.showPromo)
         {
             promoView = <AppPromo parentComp="LoginPage" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-        var formInput = <div id ="formInput">
+        let formInput = <div id ="formInput">
                             <div className="fullwid brdr9 brdr10 lgin_inp_pad">
                                 <div className="fl padr10 wid8p">
                                     <div className="icons1 uicon"></div>
@@ -232,24 +232,28 @@ class LoginPage extends React.Component {
                             </div>
                         </div>;
 
-        var buttonView = <div id = "buttonView">
+        let buttonView = <div id = "buttonView">
                             <div className="posrel scrollhid">
                                 <div id="loginButton" className="bg7 fullwid txtc pad2">
-                                    <div onClick={() => this.doLogin()} className="white f18 <fon></fon>tlig">Login</div>
+                                    <div onClick={() => this.doLogin()} className="white f18 fontlig">Login</div>
                                 </div>
                             </div>
                             <div className="bg10 fullwid mt5">
-                                <div className="wid49p fl brdr11 txtc pad12">
-                                    <a href="/register/page1?source=mobreg4" className="f17 fontlig white">Register</a>
+                                <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
+                                    <a href="/register/page1?source=mobreg4" className="f17 fontlig white">
+                                        Register
+                                    </a>
                                 </div>
-                                <div className="wid49p fl txtc pad12 posrel scrollhid">
-                                    <a id="calltopSearch" href="https://www.jeevansathi.com/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">Search</a>
+                                <div id="searchLink" className="wid49p fl txtc pad12 posrel scrollhid">
+                                    <a id="calltopSearch" href="https://www.jeevansathi.com/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">
+                                        Search
+                                    </a>
                                 </div>
                                 <div className="clr"></div>
                             </div>
                         </div>;
-        // var captchDiv = <div className="captchaDiv pad3"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
-        var captchDiv ='';
+
+        let captchDiv ='';
         if(this.state.showCaptchDiv)
         {
             captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;            
@@ -279,7 +283,7 @@ class LoginPage extends React.Component {
                                         {formInput}
 
                                         <div id="afterCaptcha" className="txtc pad12">
-                                            <Link to={"/static/forgotPassword"} className="white f14 fontlig">Forgot Password</Link>
+                                            <Link id="forgotPasswordLink" to={"/static/forgotPassword"} className="white f14 fontlig">Forgot Password</Link>
                                         </div>
                                         <div className="abs_c fwid_c mt20">
                                             {captchDiv}
@@ -294,7 +298,7 @@ class LoginPage extends React.Component {
                                             </div>
 
                                             <div className="txtc pad2">
-                                                <a href="#" className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLink" href="#" className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
