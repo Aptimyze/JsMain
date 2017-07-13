@@ -526,6 +526,7 @@ class MembershipAPIResponseHandler {
             $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
             if($this->userObj->userType == memUserType::PAID_WITHIN_RENEW && is_array($output["lightningDealContent"])){
                 $output["lightningDealContent"]["renewalLightning"] = "1";
+                $output["backgroundText"] = NULL;
             }
             
             if(is_array($output["lightningDealContent"]) && is_array($output)){
