@@ -23,6 +23,7 @@ require ('../style/jsmsMyjs_css.css');
 export class CheckDataPresent extends React.Component{
 	render(){
 
+
 	 if(!this.props.fetched)
 		{
 			return (<div className="nodatafetch"></div>)
@@ -70,6 +71,7 @@ export  class MyjsPage extends React.Component {
   	{
 		if(!this.props.myjsData.fetched || true ){ // caching conditions go here in place of true
 			this.firstApiHits(this);
+
 		}
 	}
 
@@ -121,13 +123,13 @@ export  class MyjsPage extends React.Component {
 
   	firstApiHits(){
   		if(!this.state.myjsApi){
-		    this.props.hitApi_MYJS();		   
+		    this.props.hitApi_MYJS();
 		    this.setState({
 		    	myjsApi: true
 		    });
 		}
   		if(!this.state.hamApi){
-		    this.props.hitApi_Ham();		   
+		    this.props.hitApi_Ham();
 		    this.setState({
 		    	hamApi: true
 		    });
@@ -142,7 +144,7 @@ export  class MyjsPage extends React.Component {
 		    });
 		}
   		if(!this.state.irApi){
-		    this.props.hitApi_IR();		   
+		    this.props.hitApi_IR();
 		    this.setState({
 		    	irApi: true
 		    });
@@ -168,30 +170,42 @@ export  class MyjsPage extends React.Component {
   	}
 
   	render() {
+
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
 	    }
-	    if(this.props.myjsData.fetched){
-  			var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
-   			var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+
+
+  		if(this.props.myjsData.fetched){
+				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+
+				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+
   			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
-  		if(this.props.myjsData.ieFetched){
+
+			if(this.props.myjsData.ieFetched){
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
 	    if(this.props.myjsData.irFetched){
 	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
+
 	    if(this.props.myjsData.modFetched){
 	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
 	    }
 	    if(this.props.myjsData.vaFetched){
-	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA.profiles}/>
+	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-	    	var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
+				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
 	    }
+			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
+			{
+				var noDatablockView=<NodataBlock data={this.props.myjsData}/>
+			}
+
 		this.trackJsb9 = 1;
   		return(
   		<div id="mainContent">
@@ -201,12 +215,15 @@ export  class MyjsPage extends React.Component {
 							<div className="" id="pcontainer">
 								{MyjsHeadHTMLView}
 								{EditBarView}
-								{AcceptCountView}															
+								{AcceptCountView}
 								{interestExpView}
 								{interestRecView}
 								{matchOfTheDayView}
 								{MyjsProfileVisitorView}
-								{dailyRecommendationsView}					
+								{dailyRecommendationsView}
+								{noDatablockView}
+
+
 							</div>
 					</div>
 			</div>
@@ -245,7 +262,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         hitApi_IE: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&myjs=1','SET_IE_DATA','POST',dispatch);
-        },	
+        },
         hitApi_Ham: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
         }

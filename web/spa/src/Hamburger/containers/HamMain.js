@@ -45,14 +45,16 @@ export default class HamMain extends React.Component {
     {
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others") {
-            if(this.props.bellResponse.MEMBERSHIPT_TOP == null) {
-                document.getElementById("listing").style.height = (window.innerHeight-83)+"px";
+            if(this.props.bellResponse.MEMBERSHIPT_TOP == null || !this.props.bellResponse.MEMBERSHIPT_TOP) {
+                document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
              } else {
                 document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
              }
             document.getElementById("myMatchesMinor").style.height = "0px";
             document.getElementById("contactsMinor").style.height = "0px";  
-        } 
+        } else {
+            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+        }
     }
 
     checkHome(e) 

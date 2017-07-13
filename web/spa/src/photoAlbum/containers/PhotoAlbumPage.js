@@ -1,50 +1,52 @@
-
-
 import React from "react";
-import {connect} from "react-redux";
-import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
+import axios from "axios";
+import {getCookie} from '../../common/components/CookieHelper';
 
-class PhotoAlbumPage extends React.Component {
+let setdim={
+  width: window.innerWidth,
+  height: window.innerHeight
+}
+
+export default class PhotoAlbumPage extends React.Component {
 
     constructor(props) {
         super();
-        if(props.location.search.split("?profilechecksum=")[1]) {
-            this.state = {
-                profilechecksum:props.location.search.split("?profilechecksum=")[1]
-            };
-            props.getGallery(this.state.profilechecksum);
-        } 
+        this.state={
+          getRes: null,
+          setCont: 0
+        }
+
     }
-    componentWillReceiveProps(nextProps) {
-        console.log("next",nextProps.photoAlbumData.albumUrls);
+    componentDidMount(){
+
+      let _this = this;
+
+      if(getCookie("AUTHCHECKSUM"))
+      {
+        axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
+          .then(function(response){
+            _this.setState({ getRes: response.data });
+            calculateDimGallery
+
+          })
+      }
+
     }
-    componentDidMount() {
-        document.getElementById("PhotoAlbumPage").style.height = window.innerHeight+"px"; 
-    } 
+    calculateDimGallery(param){
+
+    }
+
 
     render() {
+      console.log(this.state);
+
 
         return (
-            <div id="PhotoAlbumPage">
-                Gallery Page   
-            </div>
+          <div className="bg14" style={setdim}>
+
+
+
+          </div>
         );
     }
 }
-
-const mapStateToProps = (state) => {
-    return{
-       photoAlbumData: state.AlbumReducer.photoAlbumData,
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return{
-        getGallery: (profilechecksum) => {
-            let call_url = "/api/v1/social/getAlbum?profileChecksum="+profilechecksum;
-            dispatch(commonApiCall(call_url,{},'GET_GALLERY','GET'));
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(PhotoAlbumPage)
