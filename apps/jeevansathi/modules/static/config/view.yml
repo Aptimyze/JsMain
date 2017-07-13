@@ -277,3 +277,10 @@ jsmsVerificationStaticPageSuccess:
    stylesheets: [-*,jsms/common/verificationIcon_css]
    javascripts: [jsms/common/verificationIcon_js]
    layout: jsmsMobLayout
+
+privacySettingsSuccess:
+    metas:
+      title: Privacy Settings-Jeevansathi
+    stylesheets: [-*,jsms/settings/settings_css]
+    javascripts: [-*,jsms/settings/privacySettings_js]
+    layout: jsmsMobLayout

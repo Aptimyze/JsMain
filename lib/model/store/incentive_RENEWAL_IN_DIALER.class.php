@@ -93,5 +93,23 @@ class incentive_RENEWAL_IN_DIALER extends TABLE{
         }
         return $profiles;
     }
+    
+        public function fetchRenewalDialerProfilesForFilter()
+    {
+        try
+        {
+            $sql = "SELECT a.PROFILEID FROM incentive.RENEWAL_IN_DIALER a, incentive.FP_CSV_DATA_TEMP b where a.PROFILEID = b.PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while($res=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $profiles[] = $res["PROFILEID"];
+            }
+        } catch (Exception $ex)
+        {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
 }
 ?>
