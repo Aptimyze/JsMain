@@ -52,7 +52,7 @@ class SocialSigninAction extends sfActions
 		$postParams = json_encode(array(
 			"access_token" => $access_token,
 			"appsecret_proof" => $this->generateProof($access_token),
-			"batch" => '[{"method":"GET", "relative_url":"me?fields=email,birthday,name,gender,interested_in,languages,education,locale,is_verified,religion"},]'
+			"batch" => '[{"method":"GET", "relative_url":"me?email,birthday,name,gender,first_name,location,user_photos,relationship_status,last_name,middle_name,picture,permissions,friends,interested_in,languages,education,locale,is_verified,religion"},]'
 			));
 		$headerArr = array('Content-Type:application/json');
 		return CommonFunction::sendCurlPostRequest(SocialSigninAction::GRAPHAPIURL,$postParams,"",$headerArr,"POST");
