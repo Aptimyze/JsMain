@@ -55,7 +55,7 @@ export default class MyjsHeadHTML extends React.Component
 
     componentDidUpdate(prevprops) {
       if(prevprops.location) {
-        if(prevprops.location.search.indexOf("ham=1") != -1) {
+        if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
             this.refs.Hamchild.hideHam();
         }  
       }  

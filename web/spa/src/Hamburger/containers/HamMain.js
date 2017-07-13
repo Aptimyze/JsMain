@@ -29,7 +29,10 @@ export default class HamMain extends React.Component {
     }
 
     componentDidMount() 
-    {
+    {   
+        this.setState({
+            minorLiHeight : document.getElementsByClassName("minorList")[0].getElementsByTagName("li")[0].getBoundingClientRect().height
+        });
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others") {
             if(this.props.bellResponse.MEMBERSHIPT_TOP == null || !this.props.bellResponse.MEMBERSHIPT_TOP) {
@@ -51,28 +54,32 @@ export default class HamMain extends React.Component {
            this.hideHam(); 
         }
     }
+    
+    scrollAnimate(element, difference) {
+        if (difference <= 0) return;
+        let _this = this;
+        setTimeout(function() {
+            element.scrollTop = element.scrollTop + 7;
+            _this.scrollAnimate(element, difference-7);
+        }, 10);
+    }
 
     expandListing(e) 
     {
+        let minorElem = e.target.parentElement.id.split("Parent")[0] +"Minor";
         if(e.target.parentElement.className.indexOf("plusParent") != -1) {
             e.target.parentElement.classList.remove("plusParent"); 
-            
-            if(e.target.parentElement.id == "myMatchesParent") {
-                document.getElementById("myMatchesMinor").style.height = "0px";
-            } else if(e.target.parentElement.id == "settingsParent") {
-                document.getElementById("settingsMinor").style.height = "0px";
-            } else if(e.target.parentElement.id == "contactsParent") {
-                document.getElementById("contactsMinor").style.height = "0px";
-            }
+            document.getElementById(minorElem).style.height = "0px";
         } else {
             e.target.parentElement.classList.add("plusParent");
-            if(e.target.parentElement.id == "myMatchesParent") {
-                document.getElementById("myMatchesMinor").style.height = "237px";
-            } else if(e.target.parentElement.id == "settingsParent") {
-                document.getElementById("settingsMinor").style.height = "200px";
-            } else if(e.target.parentElement.id == "contactsParent") {
-                document.getElementById("contactsMinor").style.height = "312px";
-            } 
+            let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
+            let exactHeight = this.state.minorLiHeight * listingLen;
+            document.getElementById(minorElem).style.height = exactHeight + "px";
+            let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
+            let _this = this;
+            setTimeout(function(){
+               _this.scrollAnimate(document.getElementById('scrollElem'),differHeight)
+            },200); 
         }
     }
 
@@ -85,7 +92,7 @@ export default class HamMain extends React.Component {
     }
 
     hideHam() 
-    {
+    {   
         document.getElementById("hamView").classList.remove("z99")
         document.getElementById("hamView").classList.add("dn")
         document.getElementById("hamView").classList.remove("backShow")
@@ -365,7 +372,7 @@ export default class HamMain extends React.Component {
         }
 
         let listingView = <div id="listing" className="overflowhidden">
-            <ul className="fontreg white listingHam fullheight overAuto">
+            <ul id="scrollElem" className="fontreg white listingHam fullheight overAuto">
                 <li className="brdrBtm f14 pb8 fontlig">
                     <div className="wid49p dispibl">
                         <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
@@ -437,7 +444,7 @@ export default class HamMain extends React.Component {
                     </ul>
                 </li>
             </ul> 
-            <div className="mar0Imp posabs btm0 fullwid">
+            <div id="bottomTab" className="mar0Imp posabs btm0 fullwid">
                 {membershipRegisterView}
             </div>
         </div>;           
