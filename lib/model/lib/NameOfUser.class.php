@@ -53,11 +53,13 @@ class NameOfUser
                 $nameObj = new incentive_NAME_OF_USER();
                 $profileid = "'".implode("','",$noCache)."'";
                 $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
-                foreach($nameData as $k=>$v)
-                {
-                        $this->setNameInCache($v['PROFILEID'],$v);
-                        $finalData[$v['PROFILEID']]=$v;
-                }
+		if(is_array($nameData)){	
+                	foreach($nameData as $k=>$v)
+                	{
+                	        $this->setNameInCache($v['PROFILEID'],$v);
+                	        $finalData[$v['PROFILEID']]=$v;
+                	}
+		}
         }
        //print_r($finalData);die;
 	return $finalData;
