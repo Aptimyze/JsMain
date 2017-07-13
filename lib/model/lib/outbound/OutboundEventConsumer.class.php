@@ -34,7 +34,7 @@ class OutboundEventConsumer {
    *
    * @var type 
    */
-  private $bDebugInfo = true;
+  private $bDebugInfo = false;
   
   /**
    * 
@@ -319,9 +319,14 @@ class OutboundEventConsumer {
     
     $bReturn = false;
     $currentHour = date('H');
+    $currentMin = date('i');
     
     if($currentHour >= OutBoundEventEnums::OUTBOUND_CALL_TIME_START && $currentHour <= OutBoundEventEnums::OUTBOUND_CALL_TIME_END) {
       $bReturn = true;
+    }
+    
+    if($bReturn && $currentHour == OutBoundEventEnums::OUTBOUND_CALL_TIME_END && $currentMin > OutBoundEventEnums::OUTBOUND_CALL_TIME_MINUTES_END) {
+      $bReturn = false;
     }
     
     date_default_timezone_set($orgTZ);
