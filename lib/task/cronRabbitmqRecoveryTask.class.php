@@ -59,8 +59,10 @@ EOF;
     {
       //checks whether number of pending messages in queues is more than limit or not
       //$messageLimit=MessageQueues::MESSAGE_LIMIT;
+      $overflowQueueData = "";
       $queueApi_url="/api/queues/%2F";
       $resultQueues=$this->checkRabbitmqServerStatus($serverid,$queueApi_url);
+
       if(is_array($resultQueues))
       {
         foreach($resultQueues as $arr)
@@ -80,10 +82,13 @@ EOF;
           {
             $messageCount=$messageCount + $queue_data->messages;
           }
+
           if($serverid=="FIRST_SERVER" && $queue_data->messages_ready>$messageLimit)
           {
+
             $str="\nRabbitmq Error Alert: Number of unconsumed messages pending in {$queue_data->name} is  {$queue_data->messages_ready} on first server";
             $msgOverflow = 1;
+            $overflowQueueData .= $queue_data->name.":".$queue_data->messages_ready."(ready), ";
             RabbitmqHelper::sendAlert($str,"default");
           } 
           //exec("ps aux | grep \"MessageQueues::CRONCONSUMER_STARTCOMMAND\" | grep -v grep | awk '{ print $2 }'", $out);
@@ -91,15 +96,20 @@ EOF;
           {
             $str="\nRabbitmq Error Alert: Number of unacknowledged messages pending in {$queue_data->name} is  {$queue_data->messages_unacknowledged} on first server. Restarting the consumers";
             $msgOverflow = 1;
+            $overflowQueueData .= $queue_data->name.":".$queue_data->messages_unacknowledged."(unacked), ";
             RabbitmqHelper::sendAlert($str,"default");
           }
         }
         if($msgOverflow == 1 && $serverid == "FIRST_SERVER"){
           //echo "killAndRestartConsumer"."\n";
+
+          RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+          //die("123");
           //kill and start consumers again
           $this->killAndRestartConsumer();
         }
       }
+ 
       //checks whether rabbitmq has raised either the memory alarm or disk alarm.
       $alarmApi_url="/api/nodes";
       $resultAlarm=$this->checkRabbitmqServerStatus($serverid,$alarmApi_url);
@@ -269,6 +279,7 @@ EOF;
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
+                                  MessageQueues::UPDATECRITICALINFO_STARTCOMMAND=>MessageQueues::UPDATE_CRITICAL_INFO_CONSUMER_COUNT            ,
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
