@@ -199,7 +199,8 @@ class OutboundEventConsumer {
       $this->logThis("Analytic Score check failed", $enEventType, $arrInfo);
       return ;
     }
-    
+     $memberShipValue = $memberShipValue['OFFER_PRICE'];
+ 
     //Get Verified Phone Numbers
     $verifiedNumber = $this->getVerifiedPhone($userDetails);
     
