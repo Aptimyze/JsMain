@@ -133,12 +133,12 @@ export  class MyjsPage extends React.Component {
 		    this.setState({
 		    	hamApi: true
 		    });
-		}			       
+		}
   	}
 
   	restApiHits(){
   		if(!this.state.ieApi){
-		    this.props.hitApi_IE();		   
+		    this.props.hitApi_IE();
 		    this.setState({
 		    	ieApi: true
 		    });
@@ -150,23 +150,23 @@ export  class MyjsPage extends React.Component {
 		    });
 		}
   		if(!this.state.modApi){
-		    this.props.hitApi_MOD();		   
+		    this.props.hitApi_MOD();
 		    this.setState({
 		    	modApi: true
 		    });
 		}
 		if(!this.state.vaApi){
-		    this.props.hitApi_VA();		   
+		    this.props.hitApi_VA();
 		    this.setState({
 		    	vaApi: true
 		    });
 		}
  		if(!this.state.drApi){
-		    this.props.hitApi_DR();		   
+		    this.props.hitApi_DR();
 		    this.setState({
 		    drApi: true
 		    });
-		}		     			  		
+		}
   	}
 
   	render() {
@@ -188,7 +188,7 @@ export  class MyjsPage extends React.Component {
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
 	    if(this.props.myjsData.irFetched){
-	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title={this.state.IR} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
 	    if(this.props.myjsData.modFetched){

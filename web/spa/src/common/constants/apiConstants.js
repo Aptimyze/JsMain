@@ -5,6 +5,6 @@ export const MYJS_CALL_URL = '/api/v1/myjs/perform';
 //Myjs # Daily recommendations
 export const MYJS_CALL_URL1 = '/api/v1/search/perform';
 //Myjs # Match of the day, Interest recieved, Profile Visitor, Interest expiry
-export const MYJS_CALL_URL2 = '/api/v1/inbox/perform';
+export const MYJS_CALL_URL2 = '/api/v2/inbox/perform';
 //Myjs # Hamburger counts, Acceptence count, Just joined counts, Bell counts
 export const MYJS_CALL_URL3 = '/api/v1/api/hamburgerDetails';
