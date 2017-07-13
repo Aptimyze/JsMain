@@ -2724,7 +2724,7 @@ class crmMisActions extends sfActions
                     } else {
                             $string .= $start_date."_to_".$end_date;
                     }
-                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrcUptoE10'=>'Total subscriptions renewed as of current date Upto E-10','convPercUptoE10'=>'Conversion % Upto E-10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
+                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrcUptoE10'=>'Total subscriptions renewed as of current date Upto E-10','convPercUptoE10'=>'Conversion % Upto E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
                     if($this->misData && is_array($this->misData))
 					{
 						$headerString = "Metric\t";
