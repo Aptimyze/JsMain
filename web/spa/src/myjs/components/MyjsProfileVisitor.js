@@ -4,8 +4,6 @@ import {Link} from "react-router-dom";
 
 export class MyjsShowVisitors extends React.Component{
   render(){
-    console.log('------');
-    console.log(this.props);
     let tupleValues = this.props.listingData;
     let count = (tupleValues.length<=3)?tupleValues.length: 3;
     let VisitorsListing;
