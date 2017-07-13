@@ -1087,6 +1087,16 @@ public function executeAppredirect(sfWebRequest $request)
   	$this->setTemplate("knowYourCustomer");
   }
   
+  public function executePrivacySettings()
+  {
+    $loggedInProfileObj = LoggedInProfile::getInstance();
+    $profileId = $loggedInProfileObj->getPROFILEID(); 
+    $this->profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+    //print_R($this->profileDetail);die;
+    $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
+    $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
+  }
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;    

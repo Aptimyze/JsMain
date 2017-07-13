@@ -209,6 +209,12 @@ class SearchConfig
         public static function getSearchDb($params = array()){
                 return self::$searchDbName;
         }
+        
+        public static $reverseParamsFemaleLoggedIn = array('PARTNER_MSTATUS','PARTNER_CITYRES','PARTNER_COUNTRYRES','PARTNER_HANDICAPPED','PARTNER_RELIGION','PARTNER_CASTE','LPARTNER_LAGE','HPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','HPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_HHEIGHT','PARTNER_ELEVEL_NEW');
+          
+        public static $reverseParamsMaleLoggedIn =  array('PARTNER_MSTATUS','PARTNER_CITYRES','PARTNER_COUNTRYRES','PARTNER_HANDICAPPED','PARTNER_RELIGION','PARTNER_CASTE','LPARTNER_LAGE','HPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','HPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_HHEIGHT','PARTNER_INCOME');
+        
+        public static $VspWithoutSolr = 1;
 
     public static $viewedMaxLimit = 5000; //setting limit for viewed and not viewed cluster
 }
