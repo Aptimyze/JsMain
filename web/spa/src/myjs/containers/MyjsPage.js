@@ -79,7 +79,9 @@ export  class MyjsPage extends React.Component {
 
 	componentWillReceiveProps(nextProps)
 	{
-		this.callEventListner();
+		// this.callEventListner();
+		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched)
+			this.restApiHits(this);
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
 			showLoader : false
@@ -129,8 +131,11 @@ export  class MyjsPage extends React.Component {
 		    this.setState({
 		    	hamApi: true
 		    });
-		}
-		if(!this.state.ieApi){
+		}			       
+  	}
+
+  	restApiHits(){
+  		if(!this.state.ieApi){
 		    this.props.hitApi_IE();		   
 		    this.setState({
 		    	ieApi: true
@@ -141,10 +146,7 @@ export  class MyjsPage extends React.Component {
 		    this.setState({
 		    	irApi: true
 		    });
-		}		       
-  	}
-
-  	restApiHits(){
+		}
   		if(!this.state.modApi){
 		    this.props.hitApi_MOD();		   
 		    this.setState({
