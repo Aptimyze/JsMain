@@ -42,6 +42,7 @@ class AuthFilter extends sfFilter {
 		// End hindi switch code !
 
 		/*SPA*/
+
 		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword');
 		$spa = 0;
 		$specificDomain = str_replace('http://', '', $request->getUri());
@@ -57,6 +58,34 @@ class AuthFilter extends sfFilter {
 		    }
 		}
 		if( MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
+
+			//bot section here.
+			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs/bin/phantomjs";
+			$phantomCrawler =  JsConstants::$docRoot."/spa/phantomCrawler.js";
+
+			// $_SERVER['HTTP_USER_AGENT'] .= " Googlebot";
+			if (
+				strpos($_SERVER['HTTP_USER_AGENT'],"Googlebot") &&
+				!strpos($_SERVER['HTTP_USER_AGENT'],"Phantomjs")
+				) 
+			{
+				$url = $request->getUri();
+
+				(exec($phantomExecutalbe." ".$phantomCrawler." ".$url, $output));
+
+				$print = false;
+				foreach ($output as $line) {
+					if ( strpos($line,"DOCTYPE html") )
+					{
+						$print = true;
+					}
+					if ( $print)
+					{
+						echo "$line\n";
+					}
+				}
+				die();
+			}
 			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
 			die;
 		}
