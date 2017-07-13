@@ -24,20 +24,21 @@ EOF;
         sfContext::createInstance($this->configuration);
         	$incSRLObj 	=new incentive_PROCESS_REGULAR_LOG();
 	        $latest_date 	=$incSRLObj->getLatestDate();
+                $prev_date = date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $latest_date) ) ));
+                $process        ='failedPaymentInDialer';
+	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
+	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
+	        $from 		="JeevansathiCrm@jeevansathi.com";
+	        $subject 	="Failed Payment in Dialer LOG for ".date("jS F Y", strtotime($prev_date));
+	        $csvObj 	=new csvGenerationHandler();
+                
+                $overallCount = $this->formatData($data);
+	       	$csvObj->sendEmailForFailedPaymentCSVLogging($overallCount, $to, $from, $subject);
                 $process        ='renewalProcessInDialer';
 	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
 	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
 	        $subject 	="Renewal Process in Dialer LOG for ".date("jS F Y", strtotime($latest_date));
-	        $csvObj 	=new csvGenerationHandler();
-                
-                $overallCount = $this->formatData($data);
-	       	$csvObj->sendEmailForFailedPaymentCSVLogging($overallCount, $to, $from, $subject);
-                $process        ='failedPaymentInDialer';
-	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
-	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
-	        $from 		="JeevansathiCrm@jeevansathi.com";
-	        $subject 	="Failed Payment in Dialer LOG for ".date("jS F Y", strtotime($latest_date));
 	        $csvObj 	=new csvGenerationHandler();
 	       	$csvObj->sendEmailAlert($data, $to, $from, $subject);
 
