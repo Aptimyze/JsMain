@@ -16,6 +16,9 @@
     containerObj.jsB9Obj.BUNDLE_RECEIVED = time;
     containerObj.url = window.location.href;
   }
+  export function flushJSB9Obj(containerObj) {
+    containerObj.jsB9Obj = {};
+  }
 
   export function recordServerResponse(containerObj,apiResponseTime){
     if(!containerObj.jsB9Obj)
@@ -40,7 +43,6 @@
   }
 
   export function jsb9TrackApi(trackingData,reducer) {
-
           var prevTime = reducer.REDIRECTION ? reducer.REDIRECTION : "-1" ;
           var refererUrl = reducer.REFERER_URL ? reducer.REFERER_URL : "-1" ;
           var jsb9Iframe = document.createElement('div');

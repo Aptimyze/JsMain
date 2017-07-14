@@ -23,9 +23,10 @@ class ProfilePage extends React.Component {
 
     constructor(props) 
     {
+        super();
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
-        super();
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -40,17 +41,15 @@ class ProfilePage extends React.Component {
             defaultPicData: "",
             responseTracking:responseTracking
         };
-
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        jsb9Fun.recordBundleReceived(this,new Date().getTime());
         props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
 
     }
 
-    componentDidUpdate() {
-        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+    componentDidUpdate(prevprops) {
+       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)    
     }
     componentDidMount() 
     {
@@ -72,19 +71,20 @@ class ProfilePage extends React.Component {
 
     setNextPrevLink() 
     {
-        let listingArray = ["match_of_the_day","match_alert","interest_received","interest_expiring"];
+        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD"];
         if(this.props.myjsData.apiData != "") {
+            console.log("apiDataDR",this.props.myjsData.apiDataDR);
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
-                if(this.props.myjsData.apiData[listingArray[i]].contact_id == this.state.contact_id) {
-                    parentObj = this.props.myjsData.apiData[listingArray[i]];
+                if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id) {
+                    parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
-                        nextObj = parentObj.tuples[parseInt(this.state.actual_offset)+1];
+                        nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
                         this.state.nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&contact_id="+this.state.contact_id;
                         this.state.nextprofilechecksum = nextObj.profilechecksum;
                     }
                     if(parseInt(this.state.actual_offset) != 0){
-                        prevObj = parentObj.tuples[parseInt(this.state.actual_offset)-1];
+                        prevObj = parentObj.profiles[parseInt(this.state.actual_offset)-1];
                         this.state.prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&contact_id="+this.state.contact_id;
                         this.state.prevprofilechecksum = prevObj.profilechecksum
                     }
@@ -105,15 +105,21 @@ class ProfilePage extends React.Component {
                     _this.setState ({
                         dataLoaded : false
                     });
+                    jsb9Fun.flushJSB9Obj(_this);
+                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
                     _this.props.history.push(_this.state.nextUrl);
+                    jsb9Fun.recordBundleReceived(_this,new Date().getTime());
                     _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
                 } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl) 
                 {
                     document.getElementById("swipePage").classList.add("animateLeft");
+                    jsb9Fun.flushJSB9Obj(_this);
                     _this.setState ({
                         dataLoaded : false
                     });
+                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
                     _this.props.history.push(_this.state.prevUrl);
+                    jsb9Fun.recordBundleReceived(_this,new Date().getTime());
                     _this.props.showProfile(_this,_this.state.prevprofilechecksum,_this.state.responseTracking);
                 } 
             }); 
@@ -386,9 +392,10 @@ const mapDispatchToProps = (dispatch) => {
         showProfile: (containerObj,profilechecksum,responseTracking) => {
             let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum+"&responseTracking="+responseTracking;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
-        jsb9TrackRedirection : (time,url) => jsb9Fun.recordRedirection(dispatch,time,url);
+        },
+        jsb9TrackRedirection : (time,url) => {
+            jsb9Fun.recordRedirection(dispatch,time,url)
         }
-
     }
 }
 
