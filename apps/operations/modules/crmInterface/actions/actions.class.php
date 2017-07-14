@@ -1373,6 +1373,11 @@ class crmInterfaceActions extends sfActions
         }
         return $profiles;
     }
+    
+    public function executeWelcomeDiscount(sfWebRequest $request){
+        die("LL");
+        
+    }
 
 }
 
