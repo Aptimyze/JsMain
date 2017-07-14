@@ -49,6 +49,24 @@ export class CheckDataPresent extends React.Component{
 		}
 	}
 }
+export class MemMsgView extends React.Component{
+render(){	return(
+		<div className="posrel pt20 pb20 newBgBand">
+			<div className="posrel fullwid">
+				<div className="clearfix myjsp2">
+					<div className="fl fontlig wid88p">
+						<div className="f24 white">{this.props.data.top}</div>
+						<div className="f14 white">{this.props.data.bottom}</div>
+					</div>
+					<div className="fr wid10p pt16">
+						<i className="mainsp myjsdim2"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	)}
+
+}
 
 export  class MyjsPage extends React.Component {
 
@@ -175,11 +193,19 @@ export  class MyjsPage extends React.Component {
 	         return (<div><Loader show="page"></Loader></div>)
 	    }
 
+			console.log(this.props.myjsData);
 
-  		if(this.props.myjsData.fetched){
+
+  		if(this.props.myjsData.fetched)
+			{
 				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
 				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+
+				if(this.props.myjsData.apiData.membership_message!=null)
+				{
+				 	var membershipmessageView = <MemMsgView data={this.props.myjsData.apiData.membership_message}/>
+				}
 
   			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
@@ -215,6 +241,7 @@ export  class MyjsPage extends React.Component {
 							<div className="" id="pcontainer">
 								{MyjsHeadHTMLView}
 								{EditBarView}
+								{membershipmessageView}
 								{AcceptCountView}
 								{interestExpView}
 								{interestRecView}
