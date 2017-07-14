@@ -312,6 +312,13 @@ class LightningDeal
                     }
                 }
                 $counter+=$limit;
+                if($this->debug == 1){
+                    error_log("getRenewalProfilesDiscount iteration".count($resultSet)."\n",3,$this->logFilePath);
+                }
+            }
+            
+            if($this->debug == 1){
+                error_log("getRenewalProfilesDiscount final set".count($resultSet)."\n",3,$this->logFilePath);
             }
             return $resultSet;
         }
@@ -349,11 +356,17 @@ class LightningDeal
                     }
                 }
                 $counter+=$limit;
+                if($this->debug == 1){
+                    error_log("removed in renewal iteration ".count($tempPool)."\n",3,$this->logFilePath);
+                }
             }
         }
         unset($lightningDiscObj);
         if(is_array($profiles))
             $profileArr = array_keys($profiles);
+        if($this->debug == 1){
+            error_log("After generateRenewalProfilesPool ".count($profileArr)."\n",3,$this->logFilePath);
+        }
         return $profileArr;
     }
 }
