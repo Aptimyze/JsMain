@@ -114,7 +114,7 @@ class incentive_PROCESS_CSV_DATA_TEMP extends TABLE
 			if(is_array($profileArr))
 				$profileStr =@implode(",",$profileArr);
 			if(!$profileStr)
-				throw new jsException("","no profiles passed");			
+				return;		
                         $sql ="delete from incentive.PROCESS_CSV_DATA_TEMP WHERE PROFILEID IN($profileStr)";
                         if($process!=""){
                             $sql .=" and PROCESS = '$process'";

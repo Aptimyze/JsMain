@@ -140,7 +140,7 @@ $css_arr[]=array("jsms/search/searchdropdown"   => "4");
 $css_arr[]=array("jsms/contact_engine/contactEngine"   => "19");
 $css_arr[]=array("jsms/hamburger/ham_css" => "4");
 $css_arr[]=array("jsms/common/jsmsApp_promo_css"   => "18");
-$css_arr[]=array("jsms/settings/settings_css"   => "12");
+$css_arr[]=array("jsms/settings/settings_css"    => "13");
 $css_arr[]=array("jsmsViewProfile_css" => "2");
 $css_arr[]=array("mp_css" => "2");
 $css_arr[]=array("contactEngine" => "2");
@@ -717,7 +717,7 @@ $js_arr[]=array("autoSuggest_js"    => "2");
 $js_arr[]=array("jsms/login/uploadDocument_js"       => "5");
 $js_arr[]=array("jspc/login/uploadDoc_js"       => "5");
 $js_arr[]=array("/JSNotificationExtension/JSnotification/client"    => "2");
-$js_arr[]=array("jsms/settings/privacySettings_js" =>"1");
+$js_arr[]=array("jsms/settings/privacySettings_js"  => "2");
 return $js_arr;
 }
 function getJavascript(){

@@ -29,7 +29,6 @@ EOF;
 		$processObj->setProcessName("MOBILE_APP_REGISTRATIONS");
 		$csvHandler = new csvGenerationHandler();
 		$profiles = $csvHandler->fetchProfiles($processObj);
-		print_r($profiles);
 		$csvHandler->saveProfileSet($processObj,$profiles);	
 		echo "Mobile App Registrations CSV Data added to table";	
 	}

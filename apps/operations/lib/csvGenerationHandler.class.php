@@ -666,7 +666,7 @@ class csvGenerationHandler
 						$profileArr =array_values($profileArr);
 					}
                                          // Pre-Allocation Filter
-                                        if($fplogging == true){
+                                        if($fplogging == true && count($preAllocated)>0){
                                             $filter ='PRE_ALLOCATED';
                                             $this->fpCsvProfileLog('','','N',$filter,'','','',$preAllocated,$processName);	
                                             $fpCsvTemp->removeProfiles($preAllocated,$processName);
@@ -1601,7 +1601,7 @@ class csvGenerationHandler
                 $fileHeaderArr  =csvFields::$csvFileHeader;
                 $fileHeader	=$fileHeaderArr[$processName];
                 if($fileHeader){
-			echo $fileHeader."\n";
+			$fileHeader."\n";
                         fwrite($fp,$fileHeader);
 		}
 
@@ -1617,7 +1617,7 @@ class csvGenerationHandler
 				if(in_array("$typeArr[1]",$MT))				
 					$csvData  =  $csvDataObj->getData($date, $csvType);
 			}
-			echo $sugarLtfHeader ="LEAD ID|LEAD NAME|AGE|GENDER|HEIGHT|MARITAL STATUS|RELIGION|MOTHER TONGUE|CASTE|EDUCATION|OCCUPATION|INCOME|MANGLIK|PHONE_NO1|PHONE_NO2|CAMPAIGN SOURCE|LEAD SOURCE|ENQUIRER NAME|EMAIL|CAMPAIGN USERNAME|CAMPAIGN DESCRIPTION|CAMPAIGN NEWSPAPER|CAMPAIGN NEWSPAPER DATE|CAMPAIGN EDITION|CAMPAIGN EMAILID|CAMPAIGN MOBILE|PRIORITY|USERNAME|PASSWORD|ENTRY_DATE|\n";
+			$sugarLtfHeader ="LEAD ID|LEAD NAME|AGE|GENDER|HEIGHT|MARITAL STATUS|RELIGION|MOTHER TONGUE|CASTE|EDUCATION|OCCUPATION|INCOME|MANGLIK|PHONE_NO1|PHONE_NO2|CAMPAIGN SOURCE|LEAD SOURCE|ENQUIRER NAME|EMAIL|CAMPAIGN USERNAME|CAMPAIGN DESCRIPTION|CAMPAIGN NEWSPAPER|CAMPAIGN NEWSPAPER DATE|CAMPAIGN EDITION|CAMPAIGN EMAILID|CAMPAIGN MOBILE|PRIORITY|USERNAME|PASSWORD|ENTRY_DATE|\n";
 			fwrite($fp,$sugarLtfHeader);
 		} elseif($processName=='MOBILE_APP_REGISTRATIONS' || $processName=='QA_ONLINE'){
 			$csvData = $csvDataObj->getData($date,$csvType);
@@ -1663,7 +1663,7 @@ class csvGenerationHandler
 					$line.="|"."$dialStatus"."|";
 				else
 					$line.="|";
-				echo $line.="\r\n";	
+				$line.="\r\n";	
 				fwrite($fp,$line);
 				unset($line);
 			}
