@@ -90,7 +90,7 @@ class billing_RENEWAL_DISCOUNT extends TABLE {
     
     public function getProfilesDiscount($profileStr,$todaysDt){
         try{
-            $sql = "SELECT PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT where PROFILEID IN ($profileStr) AND EXPIRY_DT >= :EXPIRY_DT";
+            $sql = "SELECT PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT where PROFILEID IN ($profileStr)";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":EXPIRY_DT",$todaysDt,PDO::PARAM_STR);
             $prep->execute();

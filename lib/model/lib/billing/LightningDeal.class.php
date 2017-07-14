@@ -320,7 +320,7 @@ class LightningDeal
     public function generateRenewalProfilesPool(){
         
         $expDate1 = date('Y-m-d');
-        $expDate2 = date('Y-m-d',  strtotime('+200 Days'));
+        $expDate2 = date('Y-m-d',  strtotime('+2 Days'));
         $serviceStatusObj = new BILLING_SERVICE_STATUS("crm_slave");
         $data = $serviceStatusObj->getRenewalProfilesForDates($expDate1, $expDate2);
         if(is_array($data)){
