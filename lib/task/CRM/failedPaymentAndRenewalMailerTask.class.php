@@ -23,10 +23,11 @@ EOF;
   {
         sfContext::createInstance($this->configuration);
         	$incSRLObj 	=new incentive_PROCESS_REGULAR_LOG();
-	        $latest_date 	=$incSRLObj->getLatestDate();
-                $prev_date = date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $latest_date) ) ));
                 $process        ='failedPaymentInDialer';
-	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
+	        $latest_date 	=$incSRLObj->getLatestDate($process);
+                $prev_date = date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $latest_date) ) ));
+               //for failed payment mailer, get previous day complete data
+	        $data 		=$incSRLObj->getAllDataForGivenDate($prev_date, $process);
 	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
 	        $subject 	="Failed Payment in Dialer LOG for ".date("jS F Y", strtotime($prev_date));
@@ -35,6 +36,7 @@ EOF;
                 $overallCount = $this->formatData($data);
 	       	$csvObj->sendEmailForFailedPaymentCSVLogging($overallCount, $to, $from, $subject);
                 $process        ='renewalProcessInDialer';
+                $latest_date 	=$incSRLObj->getLatestDate($process);
 	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
 	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
