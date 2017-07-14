@@ -27,12 +27,18 @@ class incentive_PROCESS_REGULAR_LOG extends TABLE
                         throw new jsException($e);
                 }
         }
-	public function getLatestDate()
+	public function getLatestDate($process)
         {
                 try
                 {
 			$sql = 'SELECT MAX(`DATE`) AS MAX_DATE FROM incentive.`PROCESS_REGULAR_LOG`';
+                        if($process){
+                            $sql .= " WHERE PROCESS =:PROCESS";
+                        }
                         $prep = $this->db->prepare($sql);
+                        if($process){
+                            $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
+                        }
                         $prep->execute();
 	                $row=$prep->fetch(PDO::FETCH_ASSOC);
 			$res = $row['MAX_DATE'];

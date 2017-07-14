@@ -666,7 +666,7 @@ class csvGenerationHandler
 						$profileArr =array_values($profileArr);
 					}
                                          // Pre-Allocation Filter
-                                        if($fplogging == true){
+                                        if($fplogging == true && count($preAllocated)>0){
                                             $filter ='PRE_ALLOCATED';
                                             $this->fpCsvProfileLog('','','N',$filter,'','','',$preAllocated,$processName);	
                                             $fpCsvTemp->removeProfiles($preAllocated,$processName);
