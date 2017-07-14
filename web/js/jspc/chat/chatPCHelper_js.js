@@ -552,7 +552,6 @@ function getMessagesFromLocalStorage(selfJID, other_id){
  * @output: response
  */
 function preProcessCommunication(communication){
-  
     if(Object.keys(communication).length>0)
         return communication.reverse();
     else
