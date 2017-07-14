@@ -5,7 +5,7 @@ padding:0;
 	-webkit-box-sizing:border-box;
 	box-sizing:border-box;
 	   -webkit-tap-highlight-color:rgba(0,0,0,0); /* prevent tap highlight color / shadow */
-    
+
 }
 html {
 	font-size:100%;
@@ -122,7 +122,7 @@ header, section, footer, aside, nav, article, figure {
 .dispnone{display:none}
 .dispinl {
 	display:inline
-}	
+}
 .btmo {
 	bottom:0px
 }
@@ -542,7 +542,7 @@ header, section, footer, aside, nav, article, figure {
 	padding-right:15px
 }
 .padr35{
-	padding-right:35px; 
+	padding-right:35px;
 }
 .pt1 {
 	padding-top:1px
@@ -591,6 +591,9 @@ header, section, footer, aside, nav, article, figure {
 }
 .pt25 {
 	padding-top:25px
+}
+.pt26{
+	padding-top: 26px
 }
 .pt30 {
 	padding-top:30px
@@ -1116,12 +1119,12 @@ transform:  translateX(100%) rotateY(0deg) !important;
     color: transparent;
     display: inline-block;
     text-shadow: 0 0 0 gray;
-    
+
     &:focus {
         outline: none;
     }
   }
-  
+
 .wordBreak{word-break: break-word;}
 .camera{background-position:-4px -292px; width:25px; height:20px;}
 .outerAlbumIcon{top:-6px; right:-5px; z-index:99;}
