@@ -2349,10 +2349,10 @@ JsChat.prototype = {
             }
             var selfJID = getConnectedUserJID();
             curElem.rosterDeleteChatBoxReponse(selfJID,other_id,"canChatMore");
-            /*if(typeof canChatMore != "undefined" && canChatMore == "false"){
+            if(typeof canChatMore == "undefined" || canChatMore == "false"){
                 //console.log("set as free");
                 curElem._disableChatTextArea(other_id);
-            }*/
+            }
             setTimeout(function(){
                 if(requestType == "first_history"){
                     curElem.preventSiteScroll(other_id);
