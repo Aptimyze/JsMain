@@ -416,7 +416,7 @@ class DetailedViewApi
             	{
             		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
             	}
-            	$this->m_arrOut["selfThumbnail"] = $this->thumbnailPic;
+            	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
             }
         }
 	}
