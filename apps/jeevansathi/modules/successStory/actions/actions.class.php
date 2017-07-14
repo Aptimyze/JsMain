@@ -550,7 +550,7 @@ class successStoryActions extends sfActions
         else {
             $this->mailerid = $request->getParameter("mailid");
             $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
-            $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid);
+            $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid,'Y');
         }
     }
 
@@ -621,6 +621,11 @@ class successStoryActions extends sfActions
         } else {
             $this->MSG = 'verified';
             $this->InsertIntoSuccessStory($request, $row, $rowd);
+            //Update status of mailer
+            if(!$this->mailerid)
+                $this->mailerid = $request->getParameter("mailid");
+            $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
+            $successStoryMailLog->updateStatusForMailerId($this->mailerid,'C');
             //// tracking of offer consent  added by Palash Chordia
             if($offerConsent=='Y')
                 (new NEWJS_OFFER_CONSENT())->insertConsent($this->profileid);
@@ -806,7 +811,7 @@ class successStoryActions extends sfActions
             }
             if(!$this->error){
                 $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
-                $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid);
+                $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid,'Y');
                 if($this->profileid==""){
                     //Profileid and mailer id not linked to each other.
                     $this->error ="wrongmailid";
