@@ -2454,7 +2454,7 @@ JsChat.prototype = {
 
             }
 
-            if(typeof msg_type != "undefined" && (msg_type == "eoi" || msg_type == "accept")){
+            if(typeof msg_type != "undefined" && (/*msg_type == "eoi" || */msg_type == "accept")){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
             //console.log("appendMsg",appendMsg);
