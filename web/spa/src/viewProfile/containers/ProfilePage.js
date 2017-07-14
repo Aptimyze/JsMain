@@ -170,6 +170,15 @@ class ProfilePage extends React.Component {
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
             },3000); 
             */
+        } else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true) {
+            let newProfilechecksum = nextProps.location.search.split("?profilechecksum=")[1].split("&")[0];
+            document.getElementById("swipePage").classList.add("animateLeft");
+            jsb9Fun.flushJSB9Obj(this);
+            this.setState ({
+                dataLoaded : false
+            });
+            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+            this.props.showProfile(this,newProfilechecksum,this.state.responseTracking);
         }
         
     }
