@@ -43,7 +43,9 @@ EOF;
         
         //Renewal Pool
         $renewalPool = $dealObj->generateRenewalPoolWithDiscount();
-        $eligiblePool = $eligiblePool + $renewalPool;
+        if(is_array($renewalPool)){
+            $eligiblePool = $eligiblePool + $renewalPool;
+        }
       
         //store eligible pool
         $dealObj->storeDealEligiblePool($eligiblePool);
