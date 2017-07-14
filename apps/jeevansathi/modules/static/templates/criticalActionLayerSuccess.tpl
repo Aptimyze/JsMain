@@ -691,12 +691,16 @@ var altEmail = '~$altEmail`';</script>
  
  window.onload = function(){
 
-  $("#city").change( function(){$('#secondReq').addClass('disp-none');
-    $('#city_chosen').removeClass('chosen-container-err');});
+  $("#city").change( function(){$('#secondReq').hide();
+  $('#city_chosen').removeClass('chosen-container-err');
+  $('#otherCityBorder').css('border','1px solid #e0e0e0');
+
+  });
   callState();
    $('#city-sub').click(function(){ 
         var stateCode = stateMap[$("#stateList").val()];
-        var cityCode = cityMap[$("#city").val()];
+        if(stateCode)
+          var cityCode = cityMap[$("#city").val()];
 
          if( $('#stateList').val() == 1)
          {
