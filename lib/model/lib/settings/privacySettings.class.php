@@ -94,12 +94,12 @@ class privacySettings
 		$profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
 		//mobile
 		$privacyDetailArr["Mobile_No"]["TITLE"] = "Mobile No.";
-		$privacyDetailArr["Mobile_No"]["VALUE"] = $profileDetail["ISD"]." ".$profileDetail["PHONE_MOB"];
+		$privacyDetailArr["Mobile_No"]["VALUE"] = "+".$profileDetail["ISD"]." ".$profileDetail["PHONE_MOB"];
 		$privacyDetailArr["Mobile_No"]["STATUS"] = $profileDetail["SHOWPHONE_MOB"];
 
         //alternate mobile     
 		$privacyDetailArr["Alternate_Number"]["TITLE"] = "Alternate Number";
-		$privacyDetailArr["Alternate_Number"]["VALUE"] = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD." ".$loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+		$privacyDetailArr["Alternate_Number"]["VALUE"] = "+".$loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD." ".$loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
 		$privacyDetailArr["Alternate_Number"]["STATUS"] = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
 		//landline
 		$privacyDetailArr["Landline_Number"]["TITLE"] = "Landline Number";
