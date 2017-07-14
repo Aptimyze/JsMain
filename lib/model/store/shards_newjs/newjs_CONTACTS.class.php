@@ -1323,5 +1323,25 @@ public function getSendersPending($chunkStr)
         throw new jsException($e);
       }
     }
+
+    public function getRbInterestSentForDuration($interestTime,$remainderArray){
+            try{
+            	
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`<3 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` = :INTEREST_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM  AND MSG_DEL='Y' ORDER BY `TIME` DESC  ";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":INTEREST_TIME",$interestTime,PDO::PARAM_STR);
+               	$prep->bindValue(":DIVISOR",$remainderArray['divisor'],PDO::PARAM_INT);
+                $prep->bindValue(":REMAINDER",$remainderArray['remainder'],PDO::PARAM_INT);               
+                $prep->bindValue(":SHARDREM",$remainderArray['shardRemainder'],PDO::PARAM_INT);               
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[]=$row;                
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
 }
 ?>
