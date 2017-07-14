@@ -486,11 +486,11 @@
       
       var pgDegree = $scope.fields[1];
       var pgCollege = $scope.fields[2];
-      var otherPgDegree = $scope.fields[3];
+  //    var otherPgDegree = $scope.fields[3];
       
-      var ugDegree = $scope.fields[4];
-      var ugCollege = $scope.fields[5];
-      var otherUgDegree = $scope.fields[6];
+      var ugDegree = $scope.fields[3];
+      var ugCollege = $scope.fields[4];
+//      var otherUgDegree = $scope.fields[6];
       
       var bUGDegree = false;
       var bPGDegree = false;
@@ -521,10 +521,10 @@
         }
         ugDegree.show = true;
         ugCollege.show = true;
-        otherUgDegree.show = true;
+//        otherUgDegree.show = true;
         
         pgCollege.show = true;
-        otherPgDegree.show = true;
+//        otherPgDegree.show = true;
       } else if (true == bUGDegree) {
         //PreFilled Ug_Degree With same value and hide it
         var output = {};
@@ -533,28 +533,28 @@
         ugDegree.show = false;
         
         ugCollege.show = true;
-        otherUgDegree.show = true;
+//        otherUgDegree.show = true;
         
         pgDegree.show = false;
         pgCollege.show = false;
-        otherPgDegree.show = false;
+//        otherPgDegree.show = false;
         Gui.resetField('s3','dindex',pgDegree.dindex);
         Gui.resetField('s3','dindex',pgCollege.dindex);
-        Gui.resetField('s3','dindex',otherPgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherPgDegree.dindex);
       } else {
         ugDegree.show = false;
         ugCollege.show = false;
-        otherUgDegree.show = false;
+//        otherUgDegree.show = false;
         Gui.resetField('s3','dindex',ugDegree.dindex);
         Gui.resetField('s3','dindex',ugCollege.dindex);
-        Gui.resetField('s3','dindex',otherUgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherUgDegree.dindex);
         
         pgDegree.show = false;
         pgCollege.show = false;
-        otherPgDegree.show = false;
+//        otherPgDegree.show = false;
         Gui.resetField('s3','dindex',pgDegree.dindex);
         Gui.resetField('s3','dindex',pgCollege.dindex);
-        Gui.resetField('s3','dindex',otherPgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherPgDegree.dindex);
       }
      
     }

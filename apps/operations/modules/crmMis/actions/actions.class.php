@@ -2652,8 +2652,8 @@ class crmMisActions extends sfActions
                 $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
-                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT");
-                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100)){
+                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT,STATUS");
+                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100) && $purchaseDetails[$pd['BILLID']]['STATUS'] == "DONE"){
 	                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
 	                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
 	                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
@@ -2724,7 +2724,7 @@ class crmMisActions extends sfActions
                     } else {
                             $string .= $start_date."_to_".$end_date;
                     }
-                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrcUptoE10'=>'Total subscriptions renewed as of current date Upto E-10','convPercUptoE10'=>'Conversion % Upto E-10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
+                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrcUptoE10'=>'Total subscriptions renewed as of current date Upto E-10','convPercUptoE10'=>'Conversion % Upto E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
                     if($this->misData && is_array($this->misData))
 					{
 						$headerString = "Metric\t";

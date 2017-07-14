@@ -139,6 +139,10 @@ class ContactDetailsV2Action extends sfAction
 					}
 
 					VCDTracking::insertTracking($this->contactHandlerObj);
+                    
+                    //Generate Event
+                    $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 				}
 				else
 				{
@@ -483,7 +487,10 @@ class ContactDetailsV2Action extends sfAction
 				}
 
 				VCDTracking::insertTracking($this->contactHandlerObj);
-
+                
+                //Generate Event
+                $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 			}
 		}
 		if (is_array($responseArray["contact1"]))

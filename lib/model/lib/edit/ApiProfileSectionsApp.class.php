@@ -343,7 +343,34 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		return $contactArr;
 	}
 	
-	
+	public function getApiCriticalInfo() {
+		
+		//mstatus
+                $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                $data = $infoChngObj->editedCriticalInfo($this->profile->getPROFILEID(),true);
+                $screened = 0;
+                $canEDit = 1;
+                $edit ="Y";
+                if($data){
+                        if($data["SCREENED_STATUS"] == "N"){
+                                $screened = 1;
+                        }
+                        $canEDit = 0;
+                        $edit ="N";
+                }
+                //date of birth
+                if(MobileCommon::isApp()){
+                        $criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d M Y", strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+                }else{
+                        $criricalArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$edit);
+                }
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$edit,$canEDit);
+		$criricalArr[]=$this->getApiFormatArray("MSTATUS_PROOF","   " ,"","",$this->getApiScreeningField("MSTATUS"),"Y");
+                //if($this->profile->getMSTATUS() != 'N'){
+                    $criricalArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
+                //}
+                return $criricalArr;
+        }
 	/** @function
 	 * @returns key value array of Basic Information section of app
 	 * */
@@ -363,14 +390,18 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
+                $canEdit = "Y";
+                if(MobileCommon::isApp()){//For Android and iOS its exist for both
+                     $canEdit = "N";
+                }
 		//date of birth
-		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),"N");
+		$basicArr[]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),$this->profile->getDTOFBIRTH(),$this->getApiScreeningField("DTOFBIRTH"),$canEdit);
 		
 		//mstatus
-		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),"N");
+		$basicArr[]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$canEdit);
                 
                 //HaveChild
-                if($this->profile->getMSTATUS() != 'N'){
+                if($canEdit == "Y" || $this->profile->getMSTATUS() != 'N'){
                     $basicArr[]= $this->getApiFormatArray("HAVECHILD","Have Children?",$this->profile->getDecoratedHaveChild(),$this->profile->getHAVECHILD(),$this->getApiScreeningField("HAVECHILD"));
                 }
                 

@@ -250,7 +250,7 @@ class noprofileApiAction extends sfAction
 			$objProfileDisplay = new profileDisplay;
 			
 			// Adding +1 in offset as ProfileDisplay ID starts from 1 to total rec
-			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1);
+			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1,$request->getParameter("stype"));
 			
 			// No need to Subtract -1, as we already did that in apidetailv1 action
 			$this->actual_offset = $iOffset; 

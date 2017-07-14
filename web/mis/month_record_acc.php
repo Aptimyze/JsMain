@@ -113,11 +113,12 @@ if (authenticated($checksum)) {
                 } else {
                     $gross_amt = $row['amt'];
                 }
-
+/*
+ *JSC-3028: Commented because now 70% amount is stored directly in payment_details and payment_details_new so need not calculate again
                 if ($gateway == 'APPLEPAY') {
                 	$gross_amt = round(($gross_amt*0.70),2);
                 }
-
+*/
                 if ($mode2 == 'DONE' || $mode2 == 'REFUND') {
                     $total_paid += $gross_amt;
                 } elseif ($mode2 == 'ACTUAL') {
@@ -137,9 +138,12 @@ if (authenticated($checksum)) {
                     } else {
                         $arr[$i]["amt_paid"] = $row['amt'];
                     }
+/*
+ *JSC-3028: Commented because now 70% amount is stored directly in payment_details and payment_details_new so need not calculate again
                     if ($gateway == 'APPLEPAY') {
 	                	$arr[$i]["amt_paid"] = round(($arr[$i]["amt_paid"]*0.70),2);
 	                }
+ */
                 }
                 list($edt, $time)    = explode(" ", $entry_dt);
                 list($yy, $mm, $dd)  = explode("-", $edt);

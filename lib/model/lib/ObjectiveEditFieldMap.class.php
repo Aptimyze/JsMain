@@ -22,6 +22,7 @@ class ObjectiveEditFieldMap
 				'SHOWMESSENGER'=>'privacy_option',
 				'SHOWADDRESS'=>'privacy_option',
 				'HAVECHILD'=>'children',
+                                'MSTATUS'=>'marital_status',
 				'P_LRS'=>'lincome',
 				'P_HRS'=>'hincome',
 				'P_LDS'=>'lincome_dol',
