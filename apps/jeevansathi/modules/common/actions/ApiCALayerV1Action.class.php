@@ -65,27 +65,31 @@ class ApiCALayerV1Action extends sfActions
                     $nameOfUser=$nameData[$profileId]['NAME'];
                     $namePrivacy=$nameData[$profileId]['DISPLAY'];
                 }
-        if($layerToShow==16)
-        {
-        	if($suggestions = $request->getParameter('dppSugg'))
-        	{
-        		$layerData['dppSuggObject'] = $suggestions;
-        		$layerData['dppCALGeneric'] = 0;
-        	}
-	    }
+								if($layerToShow==13)
+				        {
+				        		$layerData['primaryEmail'] = $this->loginProfile->getEMAIL();
+					    }
+			        if($layerToShow==16)
+			        {
+			        	if($suggestions = $request->getParameter('dppSugg'))
+			        	{
+			        		$layerData['dppSuggObject'] = $suggestions;
+			        		$layerData['dppCALGeneric'] = 0;
+			        	}
+				    }
 
-	    if($layerToShow == 19)
-	    {
-      		
-            $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
-            $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
-            $layerData['startDate']  = $request->getParameter('START_DATE');
-            $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
-            $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
-            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
-            $layerData['symbol'] = $request->getParameter('SYMBOL');
-     		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for';
-	    }
+				    if($layerToShow == 19)
+				    {
+
+			            $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
+			            $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
+			            $layerData['startDate']  = $request->getParameter('START_DATE');
+			            $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
+			            $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
+			            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
+			            $layerData['symbol'] = $request->getParameter('SYMBOL');
+			     		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for';
+				    }
 
 	     if($layerToShow==21)
         {
