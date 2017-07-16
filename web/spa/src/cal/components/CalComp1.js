@@ -404,7 +404,7 @@ return (<div>
       <div className="txtc pad15">
           <div className="posrel">
               <div className="fontthin f19 white">Desired Partner Profile</div>
-              <i id="closeFromDesiredPartnerProfile" className=" posabs mainsp srch_id_cross " style={{right:'0', top:'0px'}} onClick={this.criticalLayerButtonsAction('','B2')}></i>
+              <i id="closeFromDesiredPartnerProfile" className=" posabs mainsp srch_id_cross " style={{right:'0', top:'0px'}} onClick={()=>this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}></i>
           </div>
       </div>
 
