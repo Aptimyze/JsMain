@@ -5,7 +5,7 @@ class HamburgerApp
         {
 		$moduleName = $forwardingArray['moduleName'];
 		$actionName = $forwardingArray['actionName'];
-		$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
+		$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
                         $isNewMobileSite = MobileCommon::isNewMobileSite();
@@ -20,14 +20,14 @@ class HamburgerApp
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj)
                         {
-			if($profilePic=='U')	
+			if($profilePic=='U')
 				$picUrl = $profilePicObj->getProfilePic235Url();
 			else
 				$picUrl = $profilePicObj->getProfilePic120Url();
 			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
                         $thumbNail =$photoArray;
 			}
-			
+
 		}
                 else
                 {
@@ -55,7 +55,7 @@ class HamburgerApp
 				$hamburgerDetails['MESSAGE_NEW']=0;
 			else
 	          	$hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
-	                
+
 	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 				$hamburgerDetails['MATCHALERT']=0;
 			else
@@ -70,7 +70,7 @@ class HamburgerApp
 				$hamburgerDetails['VISITOR_ALERT']=0;
 				//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
 			}
-			
+
 			$hamburgerDetails['VISITORS_ALL']=0;
 			//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
 			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
@@ -111,22 +111,22 @@ class HamburgerApp
 					$hamburgerDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
 				else
 					$hamburgerDetails['DEC_ME_NEW'] = 0;
-				
+
 				$declinedMeCount=$profileMemcacheObj->get('DEC_ME');
 				 if($declinedMeCount)
 					$hamburgerDetails['DEC_ME']=JsCommon::convert99($declinedMeCount);
 				else
 					$hamburgerDetails['DEC_ME'] = 0;
-				
+
 				$declinedByMeCount=$profileMemcacheObj->get('DEC_BY_ME');
 				 if($declinedByMeCount)
 					$hamburgerDetails['DEC_BY_ME']=JsCommon::convert99($declinedByMeCount);
 				else
 					$hamburgerDetails['DEC_BY_ME'] = 0;
-				
+
 			$hamburgerDetails['TOTAL_NEW']=JsCommon::convert99($hamburgerDetails['AWAITING_RESPONSE_NEW'] + $hamburgerDetails['ACC_ME_NEW'] + $$hamburgerDetails['MESSAGE_NEW'] + $hamburgerDetails['PHOTO_REQUEST_NEW'] + $hamburgerDetails['JUST_JOINED_NEW'] + $hamburgerDetails["FILTERED_NEW"] + $hamburgerDetails['DEC_ME_NEW']);
 		     }
-				
+
 			return $hamburgerDetails;
 		}
         }

@@ -15,6 +15,7 @@ import { redirectToLogin } from '../../common/components/RedirectRouter';
 import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
+import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 require ('../style/jsmsMyjs_css.css');
 
@@ -185,6 +186,7 @@ export  class MyjsPage extends React.Component {
 		    drApi: true
 		    });
 		}
+
   	}
 
   	render() {
@@ -192,8 +194,10 @@ export  class MyjsPage extends React.Component {
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
 	    }
+			if(this.props.myjsData.apiData.calObject && !this.state.calShown){
+	         return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this} />);
+	    }
 
-			console.log(this.props.myjsData);
 
 
   		if(this.props.myjsData.fetched)
@@ -249,7 +253,6 @@ export  class MyjsPage extends React.Component {
 								{MyjsProfileVisitorView}
 								{dailyRecommendationsView}
 								{noDatablockView}
-
 
 							</div>
 					</div>

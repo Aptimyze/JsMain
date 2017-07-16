@@ -15,11 +15,11 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
       if ( callUrl.indexOf("?") == -1 )
       {
-        checkSumURL = '?AUTHCHECKSUM='+aChsum+data;
-      } 
-      else 
+        checkSumURL = '?AUTHCHECKSUM='+aChsum;
+      }
+      else
       {
-        checkSumURL = '&AUTHCHECKSUM='+aChsum+data;
+        checkSumURL = '&AUTHCHECKSUM='+aChsum;
       }
     }
     return axios({

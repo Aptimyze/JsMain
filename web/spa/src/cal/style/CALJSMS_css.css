@@ -10,7 +10,7 @@
 .pdt15{
 	padding-top:15%;
 	}
-.darkBackgrnd {overflow:auto;background-color:#282828; position:fixed; top:0; right:0; bottom:0; left:0;margin:0; padding:0px 0px 60px 0px; z-index:102;}          
+.darkBackgrnd {overflow:auto;background-color:#282828; position:fixed; top:0; right:0; bottom:0; left:0;margin:0; padding:0px 0px 60px 0px; z-index:102;}
 .pad_new{padding:40px 20px 0px 20px}
 .pad_new2{padding:10px 20px 10px 20px}
 .mt30{margin-top:30px}
@@ -30,21 +30,21 @@
             border-radius: 20px;
             min-width: 60px;
         }
-        
+
         .suggestOptionRange {
             margin: 6px auto;
             width: 160px;
         }
-        
+
         .suggestOptionRange2 {
             margin: 6px auto;
             width: 200px;
         }
-        
+
         .mb30 {
             margin-bottom: 30px
         }
-        
+
         .mb10 { margin-bottom:10px}
 		.suggestSelected {background-color:#d9475c;color:white;}
 
@@ -172,7 +172,7 @@
     #occuText:-ms-input-placeholder {
         color: #d3d3d3 !important;
     }
-    
+
     .pad0840{
         padding : 4px 40px;
     }

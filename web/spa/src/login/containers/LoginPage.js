@@ -2,7 +2,7 @@ require ('../style/login.css')
 import React from "react";
 import { connect } from "react-redux";
 import TopError from "../../common/components/TopError"
-import { validateEmail } from "../../common/components/commonValidations"
+import { validateInput } from "../../common/components/commonValidations"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
@@ -87,7 +87,7 @@ class LoginPage extends React.Component {
                 showLoader : false
             })
             if(nextProps.MyProfile.responseMessage) {
-                this.showError(nextProps.MyProfile.responseMessage); 
+                this.showError(nextProps.MyProfile.responseMessage);
             }
        }
     }
@@ -116,9 +116,10 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-
-        if(emailVal.length != 0 && validateEmail(emailVal) == false) {
-            this.showError(ErrorConstantsMapping("ValidEmail"));
+        console.log(g_recaptcha_response);
+        var validate = validateInput('email',emailVal);
+        if(validate.responseCode == 1) {
+            this.showError(validate.responseCode);
             document.getElementById("emailErr1").classList.remove("dn");
         } else if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -163,18 +164,18 @@ class LoginPage extends React.Component {
         if(prevprops.location) {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
                 this.refs.Hamchild.hideHam();
-            }     
-        }  
+            }
+        }
     }
 
     showHam() {
         if(window.location.search.indexOf("ham=1") == -1) {
             if(window.location.search.indexOf("?") == -1) {
-                this.props.history.push(window.location.pathname+"?ham=1");    
+                this.props.history.push(window.location.pathname+"?ham=1");
             } else {
                 this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
             }
-            
+
         }
         this.refs.Hamchild.openHam();
     }
@@ -256,7 +257,7 @@ class LoginPage extends React.Component {
         let captchDiv ='';
         if(this.state.showCaptchDiv)
         {
-            captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;            
+            captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
         }
 
         return (
