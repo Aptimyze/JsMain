@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
  <body>
  		<br>
- 		<div width="60%" style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;">
+ 		<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:126px;">
 			<div>Screen RB Interests</div>
 			<br>
 			~if $infoMsg`
@@ -15,7 +15,7 @@
 			</br>
 		</div>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/crmMis/gatewayWiseMis" method="post">
- 		<table border="0" align="center" width="60%" table-layout="auto">
+ 		<table border="0" align="center" width="80%" table-layout="auto">
 			~if $pogRBInterestsPool` 
 				~foreach from=$pogRBInterestsPool item=valued key=pid`
 					<tr class="formhead" align="center">
