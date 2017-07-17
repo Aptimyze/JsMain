@@ -32,40 +32,11 @@ class jsexclusiveActions extends sfActions
 		else{
 			$this->clientId = $assignedClients[0];
 			$pogRBInterestsPids = array(82666,9397643,9061321,134640);
-			$this->pogRBInterestsPool = array();
-			foreach ($pogRBInterestsPids as $key => $pid) {
-				$profileObj = new Operator;
-				$profileObj->getDetail($pid,"PROFILEID","PROFILEID,USERNAME,YOURINFO,HAVEPHOTO,GENDER");
-				if($profileObj){
-					$this->pogRBInterestsPool[$pid]['USERNAME'] = $profileObj->getUSERNAME();
-					$this->pogRBInterestsPool[$pid]['ABOUT_ME'] = $profileObj->getYOURINFO();
-					$profilePic = $profileObj->getHAVEPHOTO();
 
-					$oppGender = $profileObj->getGENDER();
-            		if (!empty($profilePic) && $profilePic != 'U'){
-            			$pictureServiceObj=new PictureService($profileObj);
-                		$profilePicObj = $pictureServiceObj->getProfilePic();
-                		$photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$oppGender,true);
-                		if($photoArray[label] == '' && $photoArray["url"] != null){
-                       		$this->pogRBInterestsPool[$pid]['PHOTO_URL'] = $photoArray['url'];
-                		}
-                		
-                		unset($photoArray);
-                		unset($profilePicObj);
-                		unset($pictureServiceObj);
-            		}
-            		if(empty($this->pogRBInterestsPool[$pid]['PHOTO_URL'])){
-            			if($oppGender=="M"){
-            				$this->pogRBInterestsPool[$pid]['PHOTO_URL'] = sfConfig::get("app_img_url").constant('StaticPhotoUrls::noPhotoMaleProfilePic120Url');
-            			}
-            			else{
-            				$this->pogRBInterestsPool[$pid]['PHOTO_URL'] = sfConfig::get("app_img_url").constant('StaticPhotoUrls::noPhotoFemaleProfilePic120Url');
-            			}
-            		}
-				}
-				unset($profileObj);
-			}
-
+			$exclusiveLib = new ExclusiveFunctions();
+			$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($pogRBInterestsPids);
+			unset($exclusiveLib);
+			
 			print_r($this->pogRBInterestsPool);
 		}
 	}
