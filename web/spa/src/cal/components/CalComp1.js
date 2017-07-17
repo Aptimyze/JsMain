@@ -410,7 +410,7 @@ return (<div>
   <div id="overlayMid" className="bg4 pad3 ">
       <div id="mainHeading" className="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
       <div id="dppDescription" className="txtc color8 fontlig f17">{this.state.suggDescriptionText}</div>
-      <div id="dppSuggestions" className="mb30">{this.state.suggestions}</div>
+      <div id="dppSuggestions" className="mb30">{this.getSuggestions()}</div>
   </div>
 
 
@@ -525,7 +525,7 @@ getSuggestions()
         if(elem.data.hasOwnProperty(key)) {
               counter++;
               let tempCount = counter;
-              childEle = (<div onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
+              childEle = (<div style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
               childEleArray.push(childEle);
               }
           }
@@ -535,8 +535,9 @@ getSuggestions()
           else if (elem.type == "AGE") {
                 counter++;
                 let tempCount = counter;
+
                 if (elem.data && elem.data.HAGE && elem.data.LAGE ) {
-                    childEle =  (<div id="LAGE_HAGE" style={!this.state.classCounter[tempCount] ? {} : this.state.classCounter[tempCount] } onClick={() =>this.toggleClass(tempCount,elem,'AGE')} className="suggestOptionRange suggestOption brdr18 fontreg color8 f16 txtc" > {elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	' } </div>);
+                    childEle =  (<div id="LAGE_HAGE" style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() =>this.toggleClass(tempCount,elem,'AGE')} className="suggestOptionRange suggestOption brdr18 fontreg color8 f16 txtc" > {elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	' } </div>);
                 }
                 basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
 
@@ -550,15 +551,15 @@ getSuggestions()
                 elem.data.LDS == "No Income" &&
                 elem.data.HRS == "and above" &&
                 elem.data.HDS == "and above") {
-                  LDS = (<div onClick={() => this.toggleClass(tempCount,elem,'INCOME')} className={"suggestOption suggestOptionRange2 brdr18 fontreg txtc color8 f16 dispibl"} >{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
+                  LDS = (<div  style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} className={"suggestOption suggestOptionRange2 brdr18 fontreg txtc color8 f16 dispibl"} >{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
                 }
                 else {
                   if (elem.data && elem.data.LRS && elem.data.HRS) {
-                    LRS = (<div  onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LRS_HRS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
+                    LRS = (<div   style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LRS_HRS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
                 }
 
                 if(elem.data && elem.data.LDS && elem.data.HDS) {
-                  LDS = (<div onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LDS_HDS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LDS + ' - ' + elem.data.HDS}</div>);
+                  LDS = (<div  style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LDS_HDS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LDS + ' - ' + elem.data.HDS}</div>);
                 }
             }
             basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{LRS}{LDS}</div>);
@@ -570,7 +571,7 @@ getSuggestions()
     return basicEle;
 
 });
-this.setState({'suggestions':suggData});
+return suggData;
 }
 
 upgradeSuggestions(){
