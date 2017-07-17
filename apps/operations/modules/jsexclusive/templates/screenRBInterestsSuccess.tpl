@@ -14,7 +14,8 @@
 	~/if`
 	</br>
 	</div>
-	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/crmMis/gatewayWiseMis" method="post">
+	<br>
+	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
  		<table border="0" align="center" width="80%" table-layout="auto">
 			~if $pogRBInterestsPool` 
 				~foreach from=$pogRBInterestsPool item=valued key=pid`
