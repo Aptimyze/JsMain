@@ -1,6 +1,5 @@
 ~include_partial('global/header')`
- <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
- 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/crmMis/gatewayWiseMis" method="post">
+ <body>
  		<br>
  		<div width="60%" style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;">
 			<div>Screen RB Interests</div>
@@ -13,15 +12,14 @@
 			~if $clientData && $clientData.HoroscopeMatch eq 'Y'`
 				<div>Horoscope match is Necessary</div>
 			~/if`
-			<br>
+			</br>
 		</div>
-
+	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/crmMis/gatewayWiseMis" method="post">
  		<table border="0" align="center" width="60%" table-layout="auto">
 			~if $pogRBInterestsPool` 
 				~foreach from=$pogRBInterestsPool item=valued key=pid`
 					<tr class="formhead" align="center">
-					    <td height="21" align="CENTER">
-					    ~$valued.USERNAME`
+					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$pid`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 				    </tr>
 					<tr class="formhead" align="left">
@@ -33,7 +31,6 @@
 					    ~$valued.ABOUT_ME`
 					    </td>
 				    </tr>
-				    <br>
 				~/foreach`
 		    ~/if`     	
  		</table>
