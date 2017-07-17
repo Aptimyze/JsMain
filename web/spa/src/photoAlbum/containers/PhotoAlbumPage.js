@@ -1,52 +1,71 @@
 import React from "react";
 import axios from "axios";
 import {getCookie} from '../../common/components/CookieHelper';
-
-let setdim={
-  width: window.innerWidth,
-  height: window.innerHeight
-}
+require ('../style/albumcss.css');
 
 export default class PhotoAlbumPage extends React.Component {
 
-    constructor(props) {
-        super();
-        this.state={
-          getRes: null,
-          setCont: 0
-        }
-
-    }
-    componentDidMount(){
-
-      let _this = this;
-
-      if(getCookie("AUTHCHECKSUM"))
-      {
-        axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
-          .then(function(response){
-            _this.setState({ getRes: response.data });
-            calculateDimGallery
-
-          })
+  constructor(props) {
+      super();
+      this.state={
+        getRes: null,
+        recAlbumlink: false,
+        setCont: 0
       }
+  }
+  componentDidMount(){
 
+    let _this = this;
+    if(getCookie("AUTHCHECKSUM"))
+    {
+      console.log(this.props.location.search);
+      axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
+        .then(function(response){
+          _this.setState({
+              getRes: response.data,
+              recAlbumlink: true
+          });
+        })
     }
-    calculateDimGallery(param){
 
+  }
+
+  render() {
+    if(!this.state.recAlbumlink){
+      return(<div className="noData album"></div>)
     }
+    else
+    {
+      let setcell={
+        width: window.innerWidth,
 
-
-    render() {
-      console.log(this.state);
+      }
+      let setouter={
+        width : window.innerWidth*5,
+          height: window.innerHeight,
+          display: "table"
+      }
 
 
         return (
-          <div className="bg14" style={setdim}>
 
-
-
+          <div>
+            <div className="bg14" style={setouter}>
+              {this.state.getRes.albumUrls.map((urllist,index) =>
+                <div className="dispcell vertmid txtc" style={setcell} key={urllist.pictureid}>
+                    <img src={urllist.url} />
+                </div>
+              )}
+            </div>
           </div>
-        );
+
+
+          );
+
+      }
     }
+
+
+
+
 }

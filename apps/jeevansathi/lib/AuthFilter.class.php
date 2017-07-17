@@ -45,7 +45,8 @@ class AuthFilter extends sfFilter {
 
 		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword');
 		$spa = 0;
-		$specificDomain = str_replace('http://', '', $request->getUri());
+		$specificDomain = str_replace('https://', '', $request->getUri());
+		$specificDomain = str_replace('https://', '', $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		if($specificDomain[1] == '')
 			$spa = 1;
@@ -58,21 +59,22 @@ class AuthFilter extends sfFilter {
 		    }
 		}
 		if( MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
-
 			//bot section here.
-			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs/bin/phantomjs";
+
+			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs-2.1.1/bin/phantomjs";
 			$phantomCrawler =  JsConstants::$docRoot."/spa/phantomCrawler.js";
 
-			// $_SERVER['HTTP_USER_AGENT'] .= " Googlebot";
+			//$_SERVER['HTTP_USER_AGENT'] .= " Googlebot";
 			if (
 				strpos($_SERVER['HTTP_USER_AGENT'],"Googlebot") &&
 				!strpos($_SERVER['HTTP_USER_AGENT'],"Phantomjs")
 				) 
 			{
-				$url = $request->getUri();
-
+				//$url = $request->getUri();
+				//this needs to be commented on live code.
+				$url = str_replace('https://', 'http://', $request->getUri());				
+				//$url = "http://xmppdev1.jeevansathi.com/login";
 				(exec($phantomExecutalbe." ".$phantomCrawler." ".$url, $output));
-
 				$print = false;
 				foreach ($output as $line) {
 					if ( strpos($line,"DOCTYPE html") )
@@ -90,7 +92,6 @@ class AuthFilter extends sfFilter {
 			die;
 		}
 		/*SPA*/
-		
 		if ($matchPointCID = $request->getParameter("matchPointCID")) {
 			$flag = 1; //to check if user is logged in
 			$TOUT = sfConfig::get("app_tout");
