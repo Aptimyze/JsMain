@@ -343,8 +343,7 @@ return 0;
                     break;  
 
                     case '16':                      
-                          $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          if(MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))) )
                           {
                             
                               ob_start();

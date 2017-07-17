@@ -58,15 +58,16 @@ class LightningDeal
 			    unset($lastLoggedInPaidPool);
 			    $pool1 = $pool1 + $lastLoggedInArr;
 			}
-			unset($lastLoggedInArr);
+			if($this->debug == 1){
+                error_log("after membership filter-".count($lastLoggedInArr)."\n",3,$this->logFilePath);
+            }
+            unset($lastLoggedInArr);
 			$start += $this->sqlSelectLimit;
         }
         unset($serviceStObj);
         unset($discTrackingObj);
         if($this->debug == 1){
-	        //echo "after last 30 days login and currently free filter,pool 1.."."\n";
-	        //print_r($pool1);
-            error_log("pool1 generation end"."\n",3,$this->logFilePath);
+            error_log("pool1 generation end- ".count($pool1)."\n",3,$this->logFilePath);
 	    }
 	    return $pool1;
 	}
@@ -102,7 +103,7 @@ class LightningDeal
 	        print_r($pool2);
 	    }*/
         if($this->debug == 1){
-            error_log("pool2 generation end"."\n",3,$this->logFilePath);
+            error_log("pool2 generation end-".count($pool2)."\n",3,$this->logFilePath);
         }
 		return $pool2;
 	}
@@ -122,6 +123,9 @@ class LightningDeal
 			if(is_array($pool2) && $n>0){
 				$finalPool = array_slice($pool2, 0,$n);
 			}
+            if($this->debug == 1){
+                error_log("final pool generation end-".count($finalPool)."\n",3,$this->logFilePath);
+            }
 		}
 		
 		/*if($this->debug == 1){
@@ -152,7 +156,11 @@ class LightningDeal
             /*Storing discount in final pool from existing data of pool 1*/
             if(is_array($finalPool)){
                 $finalPoolWithDiscount = $this->fetchFinalPoolWithDiscount($finalPool,$pool1);
+                if($this->debug == 1){
+                    error_log("finalPoolWithDiscount-".count($finalPoolWithDiscount)."\n",3,$this->logFilePath);
+                }
             }
+            
 			unset($pool1);
 			unset($pool2);
             unset($finalPool);
@@ -203,7 +211,7 @@ class LightningDeal
     public function getLightningDealCalData($request){
         $loginData = $request->getAttribute("loginData");
         $profileid = $loginData["PROFILEID"];
-        if($profileid && CommonFunction::getMembershipName($profileid) == "Free"){
+        if($profileid){
             $dateGreaterThan = date('Y-m-d H:i:s', strtotime('-1 day', strtotime(date('Y-m-d H:i:s'))));
             $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
             $data = $lightningObj->getLightningDealDiscountData($profileid,$dateGreaterThan);
@@ -284,6 +292,90 @@ class LightningDeal
             $memCacheObject->delete(myjsCachingEnums::PREFIX . $profileid . '_MESSAGE_BANNER');
         }
         return $data;
+    }
+    
+    public function generateRenewalPoolWithDiscount(){
+        $profiles = $this->generateRenewalProfilesPool();        
+        if(is_array($profiles)){
+            $profileDiscountPool = $this->getRenewalProfilesDiscount($profiles);
+            return $profileDiscountPool;
+        }
+    }
+    
+    public function getRenewalProfilesDiscount($profiles){
+        if(is_array($profiles)){
+            $renewalDiscObj = new billing_RENEWAL_DISCOUNT("crm_slave");
+            $count = count($profiles);
+            $limit = 5000;
+            $counter = 0;
+            while($counter <= $count){
+                unset($tempPool,$lastViewedPool);
+                $tempPool = array_slice($profiles, $counter,$counter+$limit);
+                $profileStr = implode(",", $tempPool);
+                $discountArr = $renewalDiscObj->getProfilesDiscount($profileStr,date('Y-m-d'));
+                if(is_array($discountArr)){
+                    foreach($discountArr as $key=>$val){
+                        $resultSet[$val["PROFILEID"]]["PROFILEID"] = $val["PROFILEID"];
+                        $resultSet[$val["PROFILEID"]]["MAX_DISCOUNT"] = $val["DISCOUNT"];
+                    }
+                }
+                $counter+=$limit;
+                if($this->debug == 1){
+                    error_log("getRenewalProfilesDiscount iteration".count($resultSet)."\n",3,$this->logFilePath);
+                }
+            }
+            
+            if($this->debug == 1){
+                error_log("getRenewalProfilesDiscount final set".count($resultSet)."\n",3,$this->logFilePath);
+            }
+            return $resultSet;
+        }
+    }
+    
+    public function generateRenewalProfilesPool(){
+        
+        $expDate1 = date('Y-m-d');
+        $expDate2 = date('Y-m-d',  strtotime('+2 Days'));
+        $serviceStatusObj = new BILLING_SERVICE_STATUS("crm_slave");
+        $data = $serviceStatusObj->getRenewalProfilesForDates($expDate1, $expDate2);
+        if(is_array($data)){
+            foreach($data as $key => $val){
+                $profiles[$val["PROFILEID"]] = $val;
+            }
+        }
+        $count = count($data);
+        $limit = 5000;
+        $counter = 0;
+        $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+        $lastViewedOffset = $this->dealConfig["lastLightningDiscountViewedOffset"] - 1;
+        $todayDate = date("Y-m-d");
+        $lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
+        if(is_array($profiles)){
+            $profileidArr = array_keys($profiles);
+        }
+        if(is_array($profileidArr)){
+            while($counter <= $count){
+                unset($tempPool,$lastViewedPool);
+                $tempPool = array_slice($profileidArr, $counter,$counter+$limit);
+                $lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles($tempPool,array('V','A'),$lastViewedDt);
+                if(is_array($lastViewedPool)){
+                    foreach($lastViewedPool as $key => $profileid){
+                        unset($profiles[$profileid]);
+                    }
+                }
+                $counter+=$limit;
+                if($this->debug == 1){
+                    error_log("removed in renewal iteration ".count($tempPool)."\n",3,$this->logFilePath);
+                }
+            }
+        }
+        unset($lightningDiscObj);
+        if(is_array($profiles))
+            $profileArr = array_keys($profiles);
+        if($this->debug == 1){
+            error_log("After generateRenewalProfilesPool ".count($profileArr)."\n",3,$this->logFilePath);
+        }
+        return $profileArr;
     }
 }
 ?>
