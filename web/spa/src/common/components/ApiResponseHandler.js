@@ -28,10 +28,12 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     data: '',
     headers: {
       'Accept': 'application/json',
-      'withCredentials':true
+      'withCredentials':true,
+      'X-Requested-By': 'jeevansathi',
+      'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
     },
   }).then( (response) => {
-      if(typeof trackJsb9 != undefined && typeof containerObj != 'undefined' && trackJsb9===true)
+      if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
       {
         recordDataReceived(containerObj,new Date().getTime());
         setJsb9Key(containerObj,response.data.jsb9Key);
