@@ -31,13 +31,22 @@ class jsexclusiveActions extends sfActions
 		}
 		else{
 			$this->clientId = $assignedClients[0];
-			$pogRBInterestsPids = array(82666,9397643,9061321,134640);
+			$pogRBInterestsPids = array(82666,9397643,9061321,134640,6999918);
 
-			$exclusiveLib = new ExclusiveFunctions();
-			$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($pogRBInterestsPids);
-			unset($exclusiveLib);
-			
-			print_r($this->pogRBInterestsPool);
+			$clientProfileObj = new Operator;
+			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
+
+			if($clientProfileObj){
+				$this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
+				$this->clientData = array("HoroscopeMatch"=>"N");
+				$this->clientData["HoroscopeMatch"] = $this->horoscopeMatch;
+				$this->clientData["gender"] = $clientProfileObj->getGENDER();
+				unset($clientProfileObj);
+
+				$exclusiveLib = new ExclusiveFunctions();
+				$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$pogRBInterestsPids);
+				unset($exclusiveLib);
+			}
 		}
 	}
 

@@ -10,6 +10,9 @@
 			~else`
 				<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientId`</a></div>
 			~/if`
+			~if $clientData.HoroscopeMatch eq 'Y'`
+				<div>Horoscope match is Necessary</div>
+			~/if`
 			<br>
 		</div>
 
