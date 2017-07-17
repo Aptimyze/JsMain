@@ -3042,6 +3042,17 @@ case "education":
 "41"=>"M.Ed",
 "42"=>"M.Phil",
 "43"=>"MDS",
+"44"=>"BPT",
+"45"=>"MPT",
+"46"=>"DM",
+"47"=>"MCh",
+"48"=>"MSW",
+"49"=>"BFA",
+"50"=>"MFA",
+"51"=>"BJMC",
+"52"=>"MJMC",
+"53"=>"B.Des",
+"54"=>"M.Des",
 );
 
 	break;
@@ -3049,13 +3060,13 @@ case "education":
 case "education_grouping_mapping_to_edu_level_new":
 
 	$arr=array(
-"8"=>"1,5,11,15,40,41",
+"8"=>"1,5,11,15,40,41,48,49,50,51,52",
 "5"=>"2,7,8,10,12,37",
-"4"=>"3,4,13,14,29,35,36",
+"4"=>"3,4,13,14,29,35,36,53,54",
 "7"=>"6,20",
 "1"=>"9,23,24",
 "6"=>"16,38,39",
-"2"=>"17,19,25,26,28,30,31,32,43",
+"2"=>"17,19,25,26,28,30,31,32,43,44,45,46,47",
 "3"=>"18,33,34",
 "9"=>"21,42",
 "10"=>"22",
@@ -3098,10 +3109,9 @@ case "income_level":
 case "degree_grouping":
 
         $arr=array(
-"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 17 , 22 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40 ",
-"PG"=>" 7 , 8 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 18 , 19 , 20 , 21 , 29 , 30 , 31 , 36 , 37 , 41 , 42 , 43 ",
+"UG"=>" 1 , 2 , 3 , 4 , 5 , 6 , 17 , 22 , 25 , 26 , 28 , 32 , 33 , 34 , 35 , 38 , 39 , 40, 44, 49, 51, 53 ",
+"PG"=>" 7 , 8 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 18 , 19 , 20 , 21 , 29 , 30 , 31 , 36 , 37 , 41 , 42 , 43 , 46 , 47 , 48 , 50 , 52 , 54",
 );
-
         break;
 
 
@@ -3112,6 +3122,7 @@ case "degree_ug":
 "1"=>"B.A",
 "35"=>"B.Arch",
 "2"=>"B.Com",
+"53"=>'B.Des',
 "3"=>"B.E/B.Tech",
 "40"=>"B.Ed",
 "34"=>"B.IT",
@@ -3121,27 +3132,31 @@ case "degree_ug":
 "38"=>"BBA",
 "33"=>"BCA",
 "28"=>"BDS",
+"49"=>'BFA',
 "39"=>"BHM",
 "26"=>"BHMS",
+"51"=>'BJMC',
 "6"=>"BL/LLB",
+"44"=>"BPT",
 "32"=>"BVSc.",
 "17"=>"MBBS",
 "22"=>"Other",
 );
 
 	break;
-
 case "degree_pg":
 
 	$arr=array(
 "7"=>"CA",
 "37"=>"CFA",
 "8"=>"CS",
+"46"=> 'DM',
 "10"=>"ICWA",
 "11"=>"M.A",
 "36"=>"M.Arch",
 "12"=>"M.Com",
 "19"=>"M.D.",
+"54"=>'M.Des',
 "43"=>"MDS",
 "13"=>"M.E/M.Tech",
 "41"=>"M.Ed",
@@ -3152,8 +3167,13 @@ case "degree_pg":
 "15"=>"M.Sc",
 "16"=>"MBA/PGDM",
 "18"=>"MCA/PGDCA",
+"47"=>'MCh',
+"50"=>'MFA',
+"52"=>'MJMC',
 "20"=>"ML/LLM",
 "31"=>"MVSc.",
+"45"=> 'MPT',
+"48"=>'MSW',
 "21"=>"Ph. D",
 "22"=>"Other",
 );
@@ -3164,8 +3184,8 @@ case "degree_grouping_reg":
 
         $arr=array(
 "ug"=>"9,24,23",
-"g"=>"1,2,3,4,5,6,17,22,25,26,28,32,33,34,35,38,39,40",
-"pg"=>"7,8,10,11,12,13,14,15,16,18,19,20,29,30,31,36,37,41",
+"g"=>"1,2,3,4,5,6,17,22,25,26,28,32,33,34,35,38,39,40,44,49,51,53",
+"pg"=>"7,8,10,11,12,13,14,15,16,18,19,20,29,30,31,36,37,41,45,46,47,48,50,52,54",
 "phd"=>"21,42"
 );
 break;
@@ -8311,7 +8331,7 @@ case "relationship_minireg":
 case "education_grouping":
 
         $arr=array(
-"4"=>"Engineering",
+"4"=>"Engineering/Design",
 "3"=>"Computers",
 "5"=>"Finance/Commerce",
 "6"=>"Management",
@@ -10065,13 +10085,15 @@ case "astro_privacy_label":
 case "eduDppArray":
 
 //	$arr=array(
-$arr["Engineering"]["B.Arch"] = "35";
-$arr["Engineering"]["B.E/B.Tech"] = "3";
-$arr["Engineering"]["B.Pharma"] = "4";
-$arr["Engineering"]["M.Arch"] = "36";
-$arr["Engineering"]["M.E/M.Tech"] = "13";
-$arr["Engineering"]["M.Pharma"] = "14";
-$arr["Engineering"]["M.S. (Engineering)"] = "29";
+$arr["Engineering/Design"]["B.Arch"] = "35";
+$arr["Engineering/Design"]["B.Des"] = "53";
+$arr["Engineering/Design"]["B.E/B.Tech"] = "3";
+$arr["Engineering/Design"]["B.Pharma"] = "4";
+$arr["Engineering/Design"]["M.Arch"] = "36";
+$arr["Engineering/Design"]["M.Des"] = "54";
+$arr["Engineering/Design"]["M.E/M.Tech"] = "13";
+$arr["Engineering/Design"]["M.Pharma"] = "14";
+$arr["Engineering/Design"]["M.S. (Engineering)"] = "29";
 $arr["Computers"]["B.IT"] = "34";
 $arr["Computers"]["BCA"] = "33";
 $arr["Computers"]["MCA/PGDCA"] = "18";
@@ -10087,21 +10109,30 @@ $arr["Management"]["MBA/PGDM"] = "16";
 $arr["Medicine"]["BAMS"] = "25";
 $arr["Medicine"]["BDS"] = "28";
 $arr["Medicine"]["BHMS"] = "26";
+$arr["Medicine"]["BPT"] = "44";
 $arr["Medicine"]["BVSc."] = "32";
+$arr["Medicine"]["DM"] = "46";
 $arr["Medicine"]["M.D."] = "19";
-$arr["Medicine"]["MDS"] = "43";
 $arr["Medicine"]["M.S. (Medicine)"] = "30";
+$arr["Medicine"]["MCh"] = "47";
+$arr["Medicine"]["MDS"] = "43";
 $arr["Medicine"]["MBBS"] = "17";
+$arr["Medicine"]["MSW"] = "48";
 $arr["Medicine"]["MVSc."] = "31";
+$arr["Medicine"]["MPT"] = "45";
 $arr["Law"]["BL/LLB"] = "6";
 $arr["Law"]["ML/LLM"] = "20";
 $arr["Arts/Science"]["B.A"] = "1";
 $arr["Arts/Science"]["B.Ed"] = "40";
 $arr["Arts/Science"]["B.Sc"] = "5";
+$arr["Arts/Science"]["BFA"] = "49";
+$arr["Arts/Science"]["BJMC"] = "51";
 $arr["Arts/Science"]["M.A"] = "11";
 $arr["Arts/Science"]["M.Ed"] = "41";
 $arr["Arts/Science"]["M.Sc"] = "15";
+$arr["Arts/Science"]["MFA"] = "50";
 $arr["Doctorate"]["M.Phil"] = "42";
+$arr["Doctorate"]["MJMC"] = "52";
 $arr["Doctorate"]["Ph. D"] = "21";
 $arr["Non-Graduate"]["High School"] = "23";
 $arr["Non-Graduate"]["Trade School"] = "24";
