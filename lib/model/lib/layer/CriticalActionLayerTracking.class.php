@@ -115,7 +115,7 @@ class CriticalActionLayerTracking
         for ($i=1;;$i++)
         { 
 
-      $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+      $layer = CriticalActionLayerDataDisplay::getLAYERFromPriority($i);
 
       if (!$layer) 
         { 
