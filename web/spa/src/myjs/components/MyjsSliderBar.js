@@ -41,7 +41,6 @@ bindSlider(){
      if(!this.props.fetched || !this.props.listing.profiles) {
       return <div></div>;
     }
-    console.log(this.props);
     return(
       <div>
         <div className="pad1" style = {{marginTop: '15px'}}>
@@ -57,7 +56,7 @@ bindSlider(){
           <Loader loaderStyles={{'position': 'relative','margin': '0px auto','display': 'none'}} />
           <div className="swrapper" id="swrapper">
             <div className="wrap-box" id={"wrapbox_"+this.props.listingName}>
-              <div id={this.props.listing.infotype}   style={this.state.sliderStyle}>
+              <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
                   <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>

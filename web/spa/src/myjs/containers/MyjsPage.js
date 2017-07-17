@@ -198,7 +198,7 @@ export  class MyjsPage extends React.Component {
 	         return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this} />);
 	    }
 
-
+			console.log(this.props.myjsData);
 
   		if(this.props.myjsData.fetched)
 			{

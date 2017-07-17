@@ -43,8 +43,9 @@ componentWillMount(){
         });
       break;
       case '20':
+      case '23':
 
-        this.getCityStateData("/static/getFieldData?l=state_res,city_res_jspc&dataType=json");
+        this.getCityStateData("/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json");
         this.setState({
           showListOcc : false,
           selectedOption: 'Select your State',
@@ -107,6 +108,7 @@ switch(this.calData.LAYERID)
     break;
 
     case '20':
+    case '23':
       toReturn =  this.setOccupCityCalData();
     break;
 
@@ -124,7 +126,6 @@ criticalLayerButtonsAction(url,clickAction,button) {
     if(this.CALButtonClicked===1)
       return;
     this.CALButtonClicked=1;
-    var CALParams='';
      switch(this.props.calData.LAYERID)
      {
 
@@ -146,13 +147,6 @@ criticalLayerButtonsAction(url,clickAction,button) {
                      }
            }
            else {
-                   if (!this.state.slctdOccCode)
-                     {
-                     this.showError("Please select Occupation");
-                     this.CALButtonClicked=0;
-                     return;
-                     }
-
                    commonApiCall(CONSTANTS.EDIT_SUBMIT+'?editFieldArr[OCCUPATION]='+this.state.slctdOccCode,{},'','POST').then((response) =>
                    {
                        if(response.responseStatusCode==1)
@@ -171,7 +165,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
 
         case '20':
 
-                    let params = `?editFieldArr[COUNTRY_RES]=51&editFieldArr[STATE_RES]=${this.state.slctdStateKey}&editFieldArr[CITY_RES]=${this.state.slctdCityCode}`;
+                  var params = `?editFieldArr[COUNTRY_RES]=51&editFieldArr[STATE_RES]=${this.state.slctdStateKey}&editFieldArr[CITY_RES]=${this.state.slctdCityCode}`;
                     commonApiCall(CONSTANTS.EDIT_SUBMIT+params,{},'','POST').then((response) =>
                    {
                        if(response.responseStatusCode==1)
@@ -183,10 +177,50 @@ criticalLayerButtonsAction(url,clickAction,button) {
                        CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
                        return true;
                   });
+        break;
+
+        case '23':
+                var params = '?';//`?editFieldArr[COUNTRY_RES]=51&editFieldArr[STATE_RES]=${this.state.slctdStateKey}&editFieldArr[CITY_RES]=${this.state.slctdCityCode}`;
+
+                if(this.state.showInputCity)
+                {
+                         var cityText = $i("cityInputDivText").value;
+                          if (cityText.trim()=='')
+                            {
+                            this.showError("Please enter city");
+                            this.CALButtonClicked=0;
+                            return;
+                            }
+                          else
+                            params +='&editFieldArr[ANCESTRAL_ORIGIN]='+cityText;
+                }
+                else
+                  params +='&editFieldArr[ANCESTRAL_ORIGIN]='; // blank
+                let countryCode;
+                if(this.state.slctdStateKey!='-1')
+                {
+                    countryCode = '51';
+                    params += `&editFieldArr[NATIVE_COUNTRY]=51&editFieldArr[NATIVE_STATE]=${this.state.slctdStateKey}&editFieldArr[NATIVE_CITY]=${this.state.slctdCityCode}`;
+                }
+                else
+                  {
+                    countryCode = this.state.slctdCityCode;
+                    params += `&editFieldArr[NATIVE_COUNTRY]=${countryCode}`;
+                  }
+                commonApiCall(CONSTANTS.EDIT_SUBMIT+params,{},'','POST').then((response) =>
+                 {
+                     if(response.responseStatusCode==1)
+                     {
+                     this.showError(response.responseMessage);
+                     this.CALButtonClicked=0;
+                     return;
+                     }
+                     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                     return;
+                });
 
 
         break;
-
       }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
     return;
@@ -225,6 +259,11 @@ return(
                       <input id="occInputDivText" type="text" className="fullwid fl fontlig f18" placeholder="Enter Occupation"  />
                   </div>
               </div>
+              <div id="cityInputDiv" className="mt30 txtc dn" style= {{ display : this.state.showInputCity ? "block" : 'none' }}>
+                  <div  className="wid90p mar15auto bg4 hgt75 pad25">
+                      <input id="cityInputDivText" type="text" className="fullwid fl fontlig f18" placeholder="Please Specify"  />
+                  </div>
+              </div>
 
               </div>
           </div>
@@ -258,11 +297,11 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 getCityStateData(url){
 
 commonApiCall(url,{},'','POST','',false).then((response) => {
-  var cityList= {};
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
+  var countryTemp = response.country_res[0];
 
-  this.setState({stateList : stateTemp,cityList:cityTemp});
+  this.setState({stateList : stateTemp,cityList:cityTemp,countryList:countryTemp});
 
 }) ;
 }
@@ -273,12 +312,6 @@ getListDataOccCityCAL(){
   {
 
         let liFunction = (key,data)=>{
-          this.setState({
-            showListOcc : false
-          });
-
-      //    document.getElementById(divName).innerHTML = data;
-          this.selectedState = data;
             let showOccInput ;
             if(key=='43')
             {
@@ -286,7 +319,7 @@ getListDataOccCityCAL(){
             }
             else
               showOccInput = false;
-              this.setState({showInputOcc:showOccInput, showSubmitButton:true,slctdOccCode: key,selectedOption:data,hideSelectText:true});
+              this.setState({showListOcc : false,showInputOcc:showOccInput, showSubmitButton:true,slctdOccCode: key,selectedOption:data,hideSelectText:true});
 
         }
 
@@ -295,24 +328,11 @@ getListDataOccCityCAL(){
         else innerDiv = (<div id="ListLoader" className="centerDiv"><Loader show="page"></Loader></div>);
 
   }
-  if(this.props.calData.LAYERID == 20)
+  if(this.props.calData.LAYERID == 20 || this.props.calData.LAYERID == 23)
   {
     let liFunction = (key,data)=>{
-      this.setState({
-        showListOcc : false
-      });
-
-  //    document.getElementById(divName).innerHTML = data;
-      this.selectedState = data;
-        let showOccInput ;
-        if(key=='43')
-        {
-          showOccInput= true;
-        }
-        else
-          showOccInput = false;
-          this.setState({showInputOcc:showOccInput, showSubmitButton:false,slctdStateKey: key,selectedOption:data,slctdCityCode: null,selectedCity:"Select your City",hideSelectText:false});
-
+          var selectText = key==-1 ? 'Select your Country' : 'Select your City';
+          this.setState({showInputCity:false,showSubmitButton:false,slctdStateKey: key,selectedOption:data,slctdCityCode: null,selectedCity:selectText,hideSelectText:false,showListOcc : false});
     }
 
     if(this.state.stateList)
@@ -325,15 +345,14 @@ return innerDiv;
 
 getCityListData(){
   let innerDiv = '';
-  if(this.props.calData.LAYERID==20)
+  if(this.props.calData.LAYERID==20 || this.props.calData.LAYERID == 23)
   {
 
         let liFunction = (key,data)=>{
-          this.setState({
-            showCityList : false
-          });
-
-            this.setState({showSubmitButton:true,slctdCityCode: key,selectedCity:data,hideSelectText:true});
+          let showInputCity = false;
+          if(this.props.calData.LAYERID == 23 && key=='0')
+              showInputCity= true;
+            this.setState({showInputCity:showInputCity,showSubmitButton:true,slctdCityCode: key,selectedCity:data,hideSelectText:true,showCityList : false});
         }
 
         if(this.state.cityList)
@@ -358,13 +377,17 @@ if(this.props.calData.LAYERID == 18)
         <li key={index} onClick ={()=>liFunction(key,occValue)}>{occValue}</li>
      );
    })
+
    }
   </ul>);
 return innerDiv;
 }
-else if(this.props.calData.LAYERID == 20)
+else if(this.props.calData.LAYERID == 20 || this.props.calData.LAYERID == 23)
 {
+  let otherCityDiv =(<div></div>);
+  if(this.props.calData.LAYERID == 23) otherCityDiv = (<li key='-1' onClick ={()=>liFunction(-1,'Outside India')}>Outside India</li>);
   let innerDiv = (<ul id="occList" style={{paddingLeft: '40px'}} className="occList color11 fontlig f18">
+    {otherCityDiv}
      {
        listData.map( (value,index) => {
          var stateKey = Object.keys(value)[0]
@@ -382,12 +405,23 @@ return innerDiv;
 
 getCityList(liFunction){
 if(!this.state.slctdStateKey) return (<div></div>);
-let obj = this.state.cityList[this.state.slctdStateKey][0];
+var obj;
+
+if(this.state.slctdStateKey !=-1)
+{
+    obj = this.state.cityList[this.state.slctdStateKey][0];
+}
+else obj = this.state.countryList;
 let innerDiv = (<ul id="occList" style={{paddingLeft: '40px'}} className="occList color11 fontlig f18">
    {
      obj.map( (value,index) => {
-       var cityKey = Object.keys(value)[0]
+       var cityKey = Object.keys(value)[0];
        var cityName = value[cityKey];
+       if(cityKey=='51')
+        {
+          return ('');
+        }
+
        return (
       <li key={index} onClick ={()=>liFunction(cityKey,cityName)}>{cityName}</li>
     );
