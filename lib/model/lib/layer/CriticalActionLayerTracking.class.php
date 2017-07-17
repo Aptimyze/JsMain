@@ -449,7 +449,7 @@ return 0;
 
 
                     case '23' :
-                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                        if(!MobileCommon::isApp() || self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
                   {
                     $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
                     if(!$familyBasedOutOfObj->getCompletionStatus())

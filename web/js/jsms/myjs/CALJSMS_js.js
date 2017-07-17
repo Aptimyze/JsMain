@@ -2,8 +2,8 @@
 var calTimerTime,calTimer;
 
 $(document).ready(function() {
-
-if($("#CriticalActionlayerId").val()=='18'){
+var calIdTemp =$("#CriticalActionlayerId").val(); 
+if(calIdTemp=='18'){
 
     if(isIphone != '1')
     {
@@ -88,20 +88,21 @@ if($("#CriticalActionlayerId").val()=='18'){
 
         }
 
-if($("#CriticalActionlayerId").val()=='20'){
+
+if(calIdTemp=='20' || calIdTemp==23 ){
     if(isIphone != '1')
     {
         $(window).resize(function()
         {
-        $("#cityMidDiv").css("height",window.innerHeight - 50);
+        $("#stateCityMidDiv").css("height",window.innerHeight - 50);
         }); 
     }
 
-    $("#cityMidDiv").css("height",window.innerHeight - 50);
+    $("#stateCityMidDiv").css("height",window.innerHeight - 50);
     $("#stateClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
-                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    url: "/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json",
                     type: "GET",
                     success: function(res) {
                         listArray = res;
@@ -125,11 +126,12 @@ if($("#CriticalActionlayerId").val()=='20'){
      appendStateData = function(allRes) {  
         $("#stateList").html('');
         $("#citySelect").html('Select your City');  
-        allRes = JSON.parse(allRes);
+        if(typeof allRes == 'string')
+            allRes = JSON.parse(allRes);
 
         res = allRes.state_res;
-
-        stateMap = {};
+        if($("#CriticalActionlayerId").val()=='23')
+            $("#stateList").append('<li stateCode = "-1">Outside India</li>');        stateMap = {};
          var stateIndex=1;
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
@@ -142,12 +144,20 @@ if($("#CriticalActionlayerId").val()=='20'){
       });      
    
         $("#stateList li").each(function(index, element) { 
-            $(this).bind("click", function() { 
+            $(this).bind("click", function() {
+                citySelected = false;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                 $("#stateSelect").html($(this).html());
                 $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
                 $("#stateListDiv").addClass("dn");
                 $("#stateList").html("");
-                    
+                $("#inputDiv").hide();
+                if($(this).attr('stateCode')=='-1')
+                    $("#citySelect").html('Country');  
+                else 
+                {
+                    if(calIdTemp=='23')
+                        $("#citySelect").html('City');
+                }
                     $("#contText").hide();
                     $("#cityClickDiv").removeClass("dn");
                 
@@ -164,12 +174,14 @@ if($("#CriticalActionlayerId").val()=='20'){
 
         $("#cityList").html('');
         var cityIndexFromMap  = $("#stateSelect").attr('stateCode');
-        
-        allRes = JSON.parse(allRes);
+        if(typeof allRes == 'string')
+            allRes = JSON.parse(allRes);
         cityMap = {};
         cityIndex = 2;
         
         occuSelected = 0;
+        if(cityIndexFromMap!='-1')
+        {
          $.each(allRes.city_res_jspc, function(index, elem) {
            if(index == cityIndexFromMap){
             $.each(elem[0], function(index1, elem1) {  
@@ -180,17 +192,41 @@ if($("#CriticalActionlayerId").val()=='20'){
                 });
         });
           }                                                                                                                                                                                                                                             
-              });      
-        $("#cityList li").each(function(index, element) {
-            $(this).bind("click", function() {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+              });    
+        }
+        else {
+        $.each(allRes.country_res[0], function(index, elem) {
+              $.each(elem, function(index2, elem2){  
+                    if(index2!='-1' && index2!='51')
+                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
+                  
+        });
+          });
 
-                $("#citySelect").html($(this).html());
+        }
+
+        $("#cityList li").each(function(index, element) {
+            $(this).bind("click", function() {  
+                citySelected = true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                var tempHtml = $(this).html();
+                $("#citySelect").html(tempHtml);
+                if($("#CriticalActionlayerId").val()=='23')
+                {
+                    if(tempHtml == 'Others' && $("#stateSelect").attr('stateCode')!='-1'){
+                        $("#inputDiv").show();
+                        var objDiv = document.getElementById("stateCityMidDiv");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+                    }
+                    else {
+                        $("#cityInputDiv input").val('');
+                        $("#inputDiv").hide();
+                    }
+                }
                 $("#citySelect").attr('cityCode',$(this).attr('cityCode'));
                 $("#cityListDiv").addClass("dn");
                 $("#cityList").html("");
                     occuSelected = 0;
                     $("#contText").hide();
-                
                 $("#stateCitySubmit").show();
             });
         });
@@ -306,15 +342,42 @@ else {
 
                     }
 
-                if(layerId==20)
+                if(layerId==20 || layerId==23)
                     {   
-                    if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
+                    var stateCode = $("#stateSelect").attr('stateCode');
+                    var cityCode  = $("#citySelect").attr('cityCode');
+                    if (citySelected || ( stateCode=='-1' && cityCode=='0'))
                         {
-                            showLoader();
-                             var stateCode = $("#stateSelect").attr('stateCode');
-                             var cityCode  = $("#citySelect").attr('cityCode');
-                            dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
-                            $.ajax({
+
+                            if (layerId==23 && stateCode!='-1' && $("#cityInputDiv input").val().trim()=='' && cityCode=='0' )
+                            {
+                                    showError("Please enter city");
+                                    CALButtonClicked=0;
+                                    return;
+                            }
+                            if(layerId==20)
+                                dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
+                            else
+                            {
+                                if(stateCode!='-1')
+                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': $("#cityInputDiv input").val() };
+                                else 
+                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
+                            }
+
+                        }
+                        else{
+                                if(stateCode!='-1')
+                                    showError("Please select City");
+                                else 
+                                    showError("Please select Country");
+                                CALButtonClicked=0;
+                                return;
+
+
+                        }
+                        showLoader();
+                        $.ajax({
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
@@ -332,15 +395,7 @@ else {
 
                                 }
                             });
-                        }
-                        else{
-                                showError("Please enter City");
-                                CALButtonClicked=0;
-                                return;
-
-
-                        }
-
+                        return;
                     }
 
 
