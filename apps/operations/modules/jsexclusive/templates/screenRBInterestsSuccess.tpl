@@ -1,19 +1,19 @@
 ~include_partial('global/header')`
- <body>
- 		<br>
- 		<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:126px;">
-			<div>Screen RB Interests</div>
-			<br>
-			~if $infoMsg`
-				<div>~$infoMsg`</div>
-			~else`
-				<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientId`</a></div>
-			~/if`
-			~if $clientData && $clientData.HoroscopeMatch eq 'Y'`
-				<div>Horoscope match is Necessary</div>
-			~/if`
-			</br>
-		</div>
+<body>
+	<br>
+	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:126px;">
+	<div>Screen RB Interests</div>
+	<br>
+	~if $infoMsg`
+		<div>~$infoMsg`</div>
+	~else`
+		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientId`</a></div>
+	~/if`
+	~if $clientData && $clientData.HoroscopeMatch eq 'Y'`
+		<div>Horoscope match is Necessary</div>
+	~/if`
+	</br>
+	</div>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/crmMis/gatewayWiseMis" method="post">
  		<table border="0" align="center" width="80%" table-layout="auto">
 			~if $pogRBInterestsPool` 
