@@ -117,6 +117,7 @@ class SearchParamters
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
         protected $IS_VSP; // check for VSP Search
+        protected $CURRENT_CLUSTER; // current selected cluster label
         
         public function __construct()
 	{
@@ -431,7 +432,7 @@ class SearchParamters
 	}
 	public function getSORT_LOGIC() { return $this->SORT_LOGIC; }
 	public function setINCOME($INCOME) 
-	{ 
+	{
 		$validInput = SearchInputValidation::validateInput("INCOME",$INCOME);
                 if($validInput)
 			$this->INCOME = $INCOME; 
@@ -1293,4 +1294,6 @@ class SearchParamters
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
         public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
         public function getIS_VSP() { return $this->IS_VSP; }
+        public function setCURRENT_CLUSTER($CURRENT_CLUSTER="") {$this->CURRENT_CLUSTER = $CURRENT_CLUSTER;}
+        public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
 }
