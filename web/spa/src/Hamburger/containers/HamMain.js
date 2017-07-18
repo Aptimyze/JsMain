@@ -2,7 +2,9 @@ require ('../style/ham.css')
 import React from "react";
 import {Link} from "react-router-dom";
 import { getAndroidVersion, getIosVersion} from "../../common/components/commonFunctions";
-import {getCookie,setCookie} from '../../common/components/CookieHelper';
+import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHelper';
+import axios from "axios";
+import * as CONSTANTS from '../../common/constants/apiConstants'
 
 
 export default class HamMain extends React.Component {
@@ -47,6 +49,18 @@ export default class HamMain extends React.Component {
         }
     }
 
+    logoutAccount() {
+        
+        axios.get(CONSTANTS.API_SERVER+"/api/v1/api/logout?AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM") )
+        .then(function(response){
+        })
+        removeCookie("AUTHCHECKSUM");
+        localStorage.clear();
+        setTimeout(function(){
+            window.location.href="/"
+        },1000); 
+    }
+
     checkHome(e) 
     {
         if(window.location.pathname == "/" || window.location.pathname == "/login/") {
@@ -55,13 +69,14 @@ export default class HamMain extends React.Component {
         }
     }
     
-    scrollAnimate(element, difference) {
+    scrollAnimate(element, difference,time) {
         if (difference <= 0) return;
+        time = difference/time;
         let _this = this;
         setTimeout(function() {
             element.scrollTop = element.scrollTop + 7;
             _this.scrollAnimate(element, difference-7);
-        }, 10);
+        }, time);
     }
 
     expandListing(e) 
@@ -78,7 +93,7 @@ export default class HamMain extends React.Component {
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
             let _this = this;
             setTimeout(function(){
-               _this.scrollAnimate(document.getElementById('scrollElem'),differHeight)
+               _this.scrollAnimate(document.getElementById('scrollElem'),differHeight,400)
             },200); 
         }
     }
@@ -101,7 +116,7 @@ export default class HamMain extends React.Component {
 
     render() 
     {
-        let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount;
+        let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView;
         if(this.props.page == "others") {
             membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.props.bellResponse.MEMBERSHIPT_TOP}</div>
@@ -220,7 +235,7 @@ export default class HamMain extends React.Component {
             savedSearchView = <li>
                 <div>
                     <i className="hamSprite savedSearchIcon"></i>
-                    <a href="/profile/viewprofile.php?ownview=1" id="savedSearchLink" className="f17 white">
+                    <a href="/search/MobSaveSearch" id="savedSearchLink" className="f17 white">
                         Saved Searches
                         {savedSearchCount}
                     </a>
@@ -338,6 +353,41 @@ export default class HamMain extends React.Component {
                     </div>
                 </div>
             </li>;
+            recommendationView = <li>
+                <a id="recommendationLink" href="/profile/viewprofile.php?ownview=1#Dpp" className="white">
+                    Recommendation
+                </a>
+            </li>;
+            privacySettingView = <li>
+                <a id="privacySettingLink" href="/static/privacySettings" className="white">
+                    Privacy Settings
+                </a>
+            </li>;
+            changePassView = <li>
+                <a id="changePassLink" href="/static/changePass" className="white">
+                    Change Password
+                </a>
+            </li>;
+            hideProfileView = <li>
+                <a id="hideProfileLink" href="/static/hideOption" className="white">
+                    Hide Profile
+                </a>
+            </li>;
+            deleteProfileView = <li>
+                <a id="deleteProfileLink" href="/static/deleteOption" className="white">
+                    Delete Profile
+                </a>
+            </li>;
+            helpView = <li>
+                <a id="helpLink" href="/help/index" className="white">
+                    Help
+                </a>
+            </li>;
+            logoutView = <li>
+                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white ml60">
+                    Logout
+                </div>
+            </li>;
         }
         else if(this.props.page == "Login") {
             membershipRegisterView = <div className="brdrTop pad150 fontreg">
@@ -416,31 +466,39 @@ export default class HamMain extends React.Component {
                         <i id="expandSettings" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                     </div>
                     <ul id="settingsMinor" className = "minorList f15">
+                        {recommendationView}
+                        {privacySettingView}
+                        {changePassView}
                         <li>
-                            <a id="changePassLink" href="/static/changePass" className="white">
-                                Change Password
+                            <a id="switchLink" href="/?desktop=Y" className="white">
+                                Switch to Desktop Site
                             </a>
                         </li>
-                        <li>
-                            <a id="hideProfileLink" href="/static/hideOption" className="white">
-                                Hide Profile
-                            </a>
-                        </li>
-                        <li>
-                            <a id="deleteProfileLink" href="/static/deleteOption" className="white">
-                                Delete Profile
-                            </a>
-                        </li>
-                        <li>
-                            <a id="helpLink" href="/help/index" className="white">
-                                Help
-                            </a>
-                        </li>
+                        {hideProfileView}
+                        {deleteProfileView}
+                        {helpView}
+                        
                         <li>
                             <a id="contactUsLink" href="/contactus/index" className="white">
                                 Contact Us
                             </a>
                         </li>
+                        <li>
+                            <a id="privacyPolicyLink" href="/static/page/privacypolicy" className="white">
+                                Privacy Policy
+                            </a>
+                        </li>
+                        <li>
+                            <a id="termsLink" href="/static/page/disclaimer" className="white">
+                                Terms of use
+                            </a>
+                        </li>
+                        <li>
+                            <a id="fraudLink" href="/static/page/fraudalert" className="white">
+                                Fraud Alert
+                            </a>
+                        </li>
+                        {logoutView}
                     </ul>
                 </li>
             </ul> 
