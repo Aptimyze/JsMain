@@ -235,7 +235,7 @@ export default class HamMain extends React.Component {
             savedSearchView = <li>
                 <div>
                     <i className="hamSprite savedSearchIcon"></i>
-                    <a href="/profile/viewprofile.php?ownview=1" id="savedSearchLink" className="f17 white">
+                    <a href="/search/MobSaveSearch" id="savedSearchLink" className="f17 white">
                         Saved Searches
                         {savedSearchCount}
                     </a>
