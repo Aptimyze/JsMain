@@ -16,6 +16,8 @@
 	</div>
 	<br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
+		<input type="hidden" name="clientIndex" value="~$clientIndex`">
+
  		<table border="0" align="center" width="80%" table-layout="auto">
 			~if $pogRBInterestsPool` 
 				~foreach from=$pogRBInterestsPool item=valued key=pid`
@@ -33,6 +35,12 @@
 					    </td>
 				    </tr>
 				~/foreach`
+				<br>
+				<tr align="center">
+					<td class="label" colspan="2" style="background-color:Moccasin">
+						<input type="submit" name="submit" value="SUBMIT">
+					</td>
+				</tr>
 		    ~/if`     	
  		</table>
  	</form>
