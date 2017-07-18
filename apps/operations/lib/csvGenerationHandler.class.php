@@ -2206,16 +2206,45 @@ class csvGenerationHandler
 				mail($to, $subject, $message, $headers);
 		}
                 
+                public function sendEmailForRenewalProcessCSVLogging($data, $to, $from, $subject)
+		{
+				$message = '<html><body>';
+				$message .= "<a href=https://docs.google.com/spreadsheets/d/146ktGIdAIbIb9fiIDtFnbvl_J5lj6A9paLks89tnUmc/edit#gid=0><b>Click for Filters Definitions</b></a><br><br>";
+				$message .= '<table rules="all" style="border-color: #666;" cellpadding="10">';
+				$message .= "<tr style='background: #eee;'><td><strong>FILTER</strong></td><td><strong>FILTERED_PROFILES</strong></td><td><strong>COUNT</strong></td></tr>";
+				$lastCount = 0;
+				foreach($data as $k=>$v)
+				{
+					$message .= "<tr><td>$v[FILTER]</td><td>$v[FILTERED_PROFILES]</td><td>$v[COUNT]</td></tr>";
+					$lastCount = $v['COUNT'];
+				}
+				$message .= "</table>";
+				$message .= "</body></html>";
+
+				$headers = "From: ".$from."\r\n";
+				$headers .= "Reply-To: ".$to."\r\n";
+				
+				// Only send email to manoj and vibhor is count is below 300	
+				if($lastCount < 2000){
+					$headers .= "CC: manoj.rana@naukri.com,vibhor.garg@jeevansathi.com\r\n";
+				}
+
+				$headers .= "MIME-Version: 1.0\r\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+                                //SendMail::send_email($to, $message);
+				mail($to, $subject, $message, $headers);
+		}
+                
                 public function sendEmailForFailedPaymentCSVLogging($data, $to, $from, $subject)
 		{
 				$message = '<html><body>';
 				$message .= "<a href=https://docs.google.com/spreadsheets/d/146ktGIdAIbIb9fiIDtFnbvl_J5lj6A9paLks89tnUmc/edit#gid=0><b>Click for Filters Definitions</b></a><br><br>";
 				$message .= '<table rules="all" style="border-color: #666;" cellpadding="10">';
-				$message .= "<tr style='background: #eee;'><td><strong>FILTER</strong></td><td><strong>FILTERED_PROFILES</strong></td><td><strong>COUNT</strong></td><td><strong>LATEST_REG_DT</strong></td><td><strong>LATEST_REG_FILTERED_PROFILES</strong></td><td><strong>LATEST_REG_COUNT</strong></td></tr>";
+				$message .= "<tr style='background: #eee;'><td><strong>FILTER</strong></td><td><strong>FILTERED_PROFILES</strong></td><td><strong>COUNT</strong></td></tr>";
 				$lastCount = 0;
                                 
                                 for($i=0;$i<11;$i++){
-                                    $message .= "<tr><td>".$data[$i][4]."</td><td>".$data[$i][0]."</td><td>".$data[$i][1]."</td><td>".$data[$i][5]."</td><td>".$data[$i][2]."</td><td>".$data[$i][3]."</td></tr>";
+                                    $message .= "<tr><td>".$data[$i][2]."</td><td>".$data[$i][0]."</td><td>".$data[$i][1]."</td></tr>";
                                     $lastCount = $data[$i][3];
                                 }
 				
