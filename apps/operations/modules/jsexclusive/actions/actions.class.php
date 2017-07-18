@@ -50,8 +50,8 @@ class jsexclusiveActions extends sfActions
     * @param : $request
     */
 	public function executeScreenRBInterests(sfWebRequest $request){
-		$exclusiveObj = new billing_EXCLUSIVE_MEMBERS("newjs_slave");
-		$assignedClients = $exclusiveObj->getExclusiveMembers("DISTINCT PROFILEID",true,"",$this->name,"",false);
+		$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+		$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
 		
@@ -63,7 +63,7 @@ class jsexclusiveActions extends sfActions
 			$this->infoMsg = "No assigned clients corresponding to logged in RM found..";
 		}
 		else if(!empty($this->clientIndex) && $this->clientIndex>=count($assignedClients)){
-			$this->infoMsg = "All clients for logged in RM have been screened..";
+			$this->infoMsg = "No more clients left for screening for logged in RM..";
 		}
 		else{
 			$this->clientId = $assignedClients[$this->clientIndex];
@@ -115,7 +115,8 @@ class jsexclusiveActions extends sfActions
 	//Get Count for each option 
 	  
 	  //Counter for welcome calls
-	  }
+	}
+
 	public function executeWelcomeCalls(sfWebRequest $request){
 	  
 	//Get all clients here
