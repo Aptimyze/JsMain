@@ -157,6 +157,21 @@ class Tuple {
     {
         $verificationSealObj=new VerificationSealLib($this->profileObject,'1');
         $verificationSeal = $verificationSealObj->getFsoStatus();
+        unset($verificationSealObj);
+        if(MobileCommon::isApp() == "A")
+        {
+            $aadharObj = new aadharVerification();
+            $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
+            unset($aadharObj);
+            if($verificationSeal && $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
+            {
+               $verificationSeal = 2; //both are verified(aadhar and verified by visit)
+            }
+            elseif($verificationSeal || $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
+            {
+                $verificationSeal = 1; //either one of aadhar verified or verified by visit  
+            }
+        }
         return $verificationSeal;
     }
     public function getVERIFICATION_STATUS()

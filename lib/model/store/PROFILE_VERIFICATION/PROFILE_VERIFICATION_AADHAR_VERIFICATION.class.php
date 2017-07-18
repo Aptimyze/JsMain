@@ -32,11 +32,11 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
     	}
     }
 
-    public function getRequestId($profileId)
+    public function getAadharDetails($profileId)
     {
     	try
     	{
-    		$sql = "SELECT PROFILEID,AADHAR_NO,REQUEST_ID from PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE PROFILEID = :PROFILEID";
+    		$sql = "SELECT PROFILEID,AADHAR_NO,REQUEST_ID,VERIFY_STATUS from PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE PROFILEID = :PROFILEID";
     		$res = $this->db->prepare($sql);
     		$res->bindParam(":PROFILEID", $profileId, PDO::PARAM_INT);
     		$res->execute();
@@ -44,6 +44,7 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
     		{
     			$output[$profileId]["AADHAR_NO"] =$row['AADHAR_NO'];
     			$output[$profileId]["REQUEST_ID"] =$row['REQUEST_ID'];
+    			$output[$profileId]["VERIFY_STATUS"] =$row['VERIFY_STATUS'];
     		}
             return $output;
     	}
@@ -68,5 +69,21 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
     	{
     		throw new jsException($e);
     	}
+    }
+
+    public function resetAadharDetails($profileId)
+    {
+    	try
+    	{
+    		$sql = "DELETE FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE PROFILEID=:PROFILEID";
+    		$res = $this->db->prepare($sql);
+    		$res->bindParam(":PROFILEID", $profileId, PDO::PARAM_INT);
+    		$res->execute();
+    	}
+    	catch(PDOException $e)
+    	{
+    		throw new jsException($e);
+    	}
+
     }
 }

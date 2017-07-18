@@ -528,7 +528,22 @@ class DetailedViewApi
 		$verificationSealObj=new VerificationSealLib($objProfile,'1');
    		$this->m_arrOut['verification_status']=$verificationSealObj->getFsoStatus();
    		unset($verificationSealObj);
-    
+   		
+   		//adding aadhar verification part
+   		if(MobileCommon::isApp() == "A")
+   		{
+   			$aadharObj = new aadharVerification();
+   			$aadharArr = $aadharObj->getAadharDetails($this->m_actionObject->profile->getPROFILEID());
+   			unset($aadharObj);
+   			if($this->m_arrOut['verification_status'] && $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+   			{
+   				$this->m_arrOut['verification_status'] = 2;
+   			}
+   			elseif($this->m_arrOut['verification_status'] || $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+   			{
+   				$this->m_arrOut['verification_status'] = 1;	
+   			}
+   		}   	    
 	}
 	
 	/**
