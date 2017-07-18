@@ -104,6 +104,7 @@ switch(this.props.calData.LAYERID)
     case '14':
     case '15':
     case '17':
+    case '22':
       toReturn =  this.getGenericCAL();
     break;
 
