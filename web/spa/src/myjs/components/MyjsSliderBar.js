@@ -3,14 +3,15 @@ import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
 
-var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
 
 export default class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
+    this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
+
     this.state={
       'sliderBound' :false,
-      'sliderStyle' :sliderTupleStyle,
+      'sliderStyle' :this.sliderTupleStyle,
       tupleWidth : {'width' : window.innerWidth}
 
     }
@@ -28,7 +29,7 @@ bindSlider(){
 //console.log()
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.props.cssProps);
+  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.alterCssStyle.bind(this));
   this.obj.initTouch();
   this.setState({
             sliderBound: true,
@@ -37,6 +38,19 @@ bindSlider(){
 
 
 }
+
+alterCssStyle(duration, transform){
+    this.setState((prevState)=>{
+      var styleArr = Object.assign({}, prevState.sliderStyle);
+      styleArr[this.props.cssProps.cssPrefix + 'TransitionDuration'] = duration + 'ms';
+      var propValue = 'translate3d(' + transform + 'px, 0, 0)';
+      styleArr[this.props.cssProps.animProp] =  propValue;
+      prevState.sliderStyle =styleArr;
+      return prevState;
+    });
+  }
+
+
   render(){
      if(!this.props.fetched || !this.props.listing.profiles) {
       return <div></div>;
