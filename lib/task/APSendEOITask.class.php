@@ -64,10 +64,12 @@ EOF;
                 $tempProfileRecords = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG();
 		$autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
                 $receiverEoiObj = new receiverEoiCount();
+                $sendInterestTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+                $notInTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES_COMPLETE();
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition,$totalScripts,$currentScript);
-		//$profileArr=array(1=>array("PROFILEID"=>1,"LAST_LOGIN_DT"=>"2017-01-27 00:00:00"));
+		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2017-07-16 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -118,6 +120,9 @@ EOF;
                                 
                                 //find profiles who have already received eoi's limited for today
                                 $notInProfiles = $receiverEoiObj->getReceiversWithLimit($this->maxEoiReceiver);
+                                
+                                $notInProfiles .= $notInTableObj->getNotInProfilesForSender($senderId);
+                                $notInProfiles = trim($notInProfiles);
                                 
                                 $searchMutualMatches = true;
                                 
@@ -171,7 +176,9 @@ EOF;
 							$this->setExceptionError($ex);
 						}
 						UserFilterCheck::$filterObj=null;
-						$contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
+                                                
+                                                $sendInterestTableObj->insertProfiles($profileObj->getPROFILEID(), $receiverObj->getPROFILEID());
+						/*$contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
 						if($contactEngineObj)
 						if($contactEngineObj->getComponent()->errorMessage != '')
 						{
@@ -183,12 +190,12 @@ EOF;
 							
 						}
 						else
-						{
+						{*/
 							//tracking of EOI sent
 							$totalContactsMade++;
 							$limitCounter++;
 							try{
-								$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
+								//$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
                                                                 // insert entry in receiver limit array
                                                                 $receiverEoiObj->insertOrUpdateEntryForReceiver($receiverId);
 							}
@@ -196,7 +203,7 @@ EOF;
 							{
 								$this->setExceptionError($ex);
 							}
-						}
+						//}
                                                 ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
