@@ -138,7 +138,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         contactApi: (profilechecksum) => {
-          var url = '&stype=15&profilechecksum='+profilechecksum;
+          var url = '&stype=15&myjs=1&profilechecksum='+profilechecksum;
           return commonApiCall(CONSTANTS.CONTACT_ENGINE_URL,url,'CONTACT_ACTION','POST',dispatch,true);
         }
     }
