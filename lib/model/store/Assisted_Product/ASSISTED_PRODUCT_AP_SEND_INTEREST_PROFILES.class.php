@@ -60,5 +60,36 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
                     throw new jsException($e);
                 } 
             }
-        }  
+        }
+
+    /*this function returns pog records which have date after a passed date and corresponds to passed pg profileid
+    * @param- $pgId,$afterDate=""
+    */
+    public function getPOGInterestEligibleProfiles($pgId,$afterDate="") {
+        if ($pgId) {
+            try {
+                $sql = "SELECT DISTINCT(RECEIVER) AS RECEIVER from Assisted_Product.AP_SEND_INTEREST_PROFILES where SENDER=:SENDER";
+                if(!empty($afterDate)){
+                    $sql .= " AND ENTRY_DATE > :AFTER_DATE";  
+                }
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":SENDER",$pgId, PDO::PARAM_INT);
+                if(!empty($afterDate)){
+                    $prep->bindValue(":AFTER_DATE",$afterDate, PDO::PARAM_STR);
+                }
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $detailArr[] = $row["RECEIVER"];
+                }
+                return $detailArr;
+            } 
+            catch (PDOException $e) {
+                throw new jsException($e);
+            } 
+        }
+        else{
+            return null;
+        }
+    }   
 }

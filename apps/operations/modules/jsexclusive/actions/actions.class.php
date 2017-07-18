@@ -56,14 +56,16 @@ class jsexclusiveActions extends sfActions
 		}
 		else{
 			$this->clientId = $assignedClients[$this->clientIndex];
-			$pogRBInterestsPids = array(82666,9397643,9061321,134640,6999918);
+			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
+			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
+			unset($assistedProductObj);
 
 			$clientProfileObj = new Operator;
 			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
 
 			if($clientProfileObj){
 				$this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
-				$this->clientData = array("HoroscopeMatch"=>"N");
+				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N");
 				$this->clientData["HoroscopeMatch"] = $this->horoscopeMatch;
 				$this->clientData["gender"] = $clientProfileObj->getGENDER();
 				unset($clientProfileObj);
@@ -72,6 +74,7 @@ class jsexclusiveActions extends sfActions
 				$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$pogRBInterestsPids);
 				unset($exclusiveLib);
 			}
+			unset($clientProfileObj);
 		}
 	}
 

@@ -7,7 +7,7 @@
 	~if $infoMsg`
 		<div>~$infoMsg`</div>
 	~else`
-		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientId`</a></div>
+		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
 	~/if`
 	~if $clientData && $clientData.HoroscopeMatch eq 'Y'`
 		<div>Horoscope match is Necessary</div>
