@@ -70,7 +70,7 @@ class jsexclusiveActions extends sfActions
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
 			unset($assistedProductObj);
-			
+
 			$clientProfileObj = new Operator;
 			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
 
@@ -100,11 +100,17 @@ class jsexclusiveActions extends sfActions
     */
 	public function executeSubmitScreenRBInterests(sfWebRequest $request){
 		$formArr = $request->getParameterHolder()->getAll();
+
 		if(is_numeric($formArr["clientIndex"])){
 			$this->clientIndex = $formArr["clientIndex"];
 			if(empty($this->clientIndex)){
 				$this->clientIndex = 0;
 			}
+			$acceptArr = $formArr["ACCEPT"];
+			$discardArr = $formArr["DISCARD"];
+			$acceptArr = array_diff($acceptArr, $discardArr);
+			print_r($acceptArr);
+			
 			++$this->clientIndex;
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}

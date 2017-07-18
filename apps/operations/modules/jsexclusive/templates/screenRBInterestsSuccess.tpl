@@ -31,6 +31,7 @@
 					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`">
 					    </td>
 					    <td height="21" align="CENTER">~$valued.ABOUT_ME`</td>
+					    <td height="21" align="CENTER"><input type="checkbox" name="DISCARD[]" value="~$valued.PROFILEID`">DISCARD<input type="hidden" name="ACCEPT[]" value="~$valued.PROFILEID`"></td></td>
 				    </tr>
 				    <tr align="center">
 				    	<td height="10" align="CENTER"></td>
