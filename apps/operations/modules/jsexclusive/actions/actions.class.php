@@ -31,8 +31,18 @@ class jsexclusiveActions extends sfActions
 	/*forwards the request to given module action
     * @param : $module,$action
     */
-	public function forwardTo($module,$action){
+	public function forwardTo($module,$action,$params=""){
 		$url="/operations.php/$module/$action";
+		if(is_array($params)){
+			foreach ($params as $key => $value) {
+				if(strpos($url, "?")){
+					$url .= "&".$key."=".$value;
+				}
+				else{
+					$url .= "?".$key."=".$value;
+				}
+			}
+		}
 		$this->redirect($url);
 	}
 
@@ -44,7 +54,7 @@ class jsexclusiveActions extends sfActions
 		$assignedClients = $exclusiveObj->getExclusiveMembers("DISTINCT PROFILEID",true,"",$this->name,"",false);
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
-		 
+		
 		if(empty($this->clientIndex) || !is_numeric($this->clientIndex)){
 			$this->clientIndex = 0;
 		}
@@ -89,13 +99,15 @@ class jsexclusiveActions extends sfActions
     * @param : $request
     */
 	public function executeSubmitScreenRBInterests(sfWebRequest $request){
-		$this->clientIndex = $request->getParameter("clientIndex");
+	
+		$formArr = $request->getParameterHolder()->getAll();
+		$this->clientIndex = $formArr["clientIndex"];
 		if(empty($this->clientIndex)){
-			$this->clientIndex = -1;
+			$this->clientIndex = 0;
 		}
 		++$this->clientIndex;
-		$request->setParameter("clientIndex",$this->clientIndex);
-		$this->forwardTo("jsexclusive","screenRBInterests");
+		
+		$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
     }
   
 	public function executeMenu(sfWebRequest $request)

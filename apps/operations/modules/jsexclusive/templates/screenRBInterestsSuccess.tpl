@@ -2,7 +2,7 @@
 <body>
 	<br>
 	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:126px;">
-	<div>Screen RB Interests</div>
+	<div><font size=4px>Screen RB Interests</font></div>
 	<br>
 	~if $infoMsg`
 		<div>~$infoMsg`</div>
