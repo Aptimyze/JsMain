@@ -31,7 +31,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     return axios({
     method: callMethod,
     url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
-    data: '',
+    data: ,
     headers: {
       'Accept': 'application/json',
       'withCredentials':true,

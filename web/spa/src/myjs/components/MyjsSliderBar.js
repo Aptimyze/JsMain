@@ -38,7 +38,7 @@ bindSlider(){
 //console.log()
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.alterCssStyle.bind(this));
+  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this));
   this.obj.initTouch();
   this.setState({
             sliderBound: true,
