@@ -6,14 +6,15 @@ import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 
-var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
 
 export class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
+    this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
+
     this.state={
       'sliderBound' :false,
-      'sliderStyle' :sliderTupleStyle,
+      'sliderStyle' :this.sliderTupleStyle,
       tupleWidth : {'width' : window.innerWidth}
 
     }
@@ -37,7 +38,7 @@ bindSlider(){
 //console.log()
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.props.cssProps);
+  this.obj = new MyjsSliderBinding(elem,this.props.listing,this.alterCssStyle.bind(this));
   this.obj.initTouch();
   this.setState({
             sliderBound: true,
@@ -47,9 +48,16 @@ bindSlider(){
 
 }
 
-sendInterest(pchecksum){
-    console.log(pchecksum);
-}
+alterCssStyle(duration, transform){
+    this.setState((prevState)=>{
+      var styleArr = Object.assign({}, prevState.sliderStyle);
+      styleArr[this.props.cssProps.cssPrefix + 'TransitionDuration'] = duration + 'ms';
+      var propValue = 'translate3d(' + transform + 'px, 0, 0)';
+      styleArr[this.props.cssProps.animProp] =  propValue;
+      prevState.sliderStyle =styleArr;
+      return prevState;
+    });
+  }
 
   render(){
      if(!this.props.fetched || !this.props.listing.profiles) {
@@ -76,7 +84,7 @@ sendInterest(pchecksum){
                   <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>
                   <img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
                   <div className="bg4 overXHidden" id="hideOnAction">
-                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&contact_id=${this.props.listing.contact_id}`}>
+                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
                       <div className="pad16 scrollhid hgt140">
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">

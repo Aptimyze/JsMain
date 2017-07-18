@@ -1,14 +1,14 @@
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,apiObject,props,url)
+  constructor(parent,tupleObject,styleFunction,url)
   {
     this.parent = parent;
-    this.apiObject = apiObject;
-    this.props = props;
+    this.tupleObject = tupleObject;
+    this.styleFunction = styleFunction;
     this.el = parent;
     this.tuple_ratio = 80;
-    this.slider = {"threshold": 80, "working": false, "movement": true, "transform": 0, "index": 0, "maxindex": 0};
+    this.threshold = 80;
     this.windowWidth = window.innerWidth;
     this.transformX = (this.tuple_ratio * this.windowWidth) / 100 + 10;
     this.elementWidth = this.transformX - 10;
@@ -71,11 +71,9 @@ window.addEventListener("resize",function()
 
             }
             alterCssStyle(transform,index){
-              this.parent.style[this.props.cssPrefix + 'TransitionDuration'] = this.transitionDuration + 'ms';
-              var propValue = 'translate3d(' + transform + 'px, 0, 0)';
-              this.parent.style[this.props.animProp] =  propValue;
-
+              this.styleFunction(this.transitionDuration,transform);
               this._index = index;
+
             }
             onTouchEnd(e)
             {
@@ -94,12 +92,12 @@ window.addEventListener("resize",function()
                     this.transitionDuration = (this.transformX / absD - 1) * (timeDiff);
                 else
                     this.transitionDuration = 500;
-                if (absD >= this.slider.threshold) {
+                if (absD >= this.threshold) {
                     distance < 0 ? this.NextSlide() : this.PrevSlide();
                 }
                 else
                     this.gotoSlide(this._index);
-                   var tupleLength = this.apiObject.tuples.length;
+                   var tupleLength = this.tupleObject.length;
                  if (this._index >=  tupleLength/ 2) if (tupleLength<100)
                   this.callApi(++this.page);
                 e.preventDefault();
@@ -107,9 +105,9 @@ window.addEventListener("resize",function()
             NextSlide()
             {
                 var index = this._index + 1;
-                if ((index+1) > this.apiObject.tuples.length)
+                if ((index+1) > this.tupleObject.length)
                 {
-                    index = this.apiObject.tuples.length-1;
+                    index = this.tupleObject.length-1;
                     this.transitionDuration = 500;
                 }
                 var transform;
@@ -137,12 +135,12 @@ window.addEventListener("resize",function()
             gotoSlide(index)
             {
 
-                if (index < 0 || index > this.apiObject.tuples.length)
+                if (index < 0 || index > this.tupleObject.length)
                 {
 
                     if (index < 0)
                         this._index = 0;
-                    else this._index = this.apiObject.tuples.length;
+                    else this._index = this.tupleObject.length;
                     index=this._index;
 
                 }
