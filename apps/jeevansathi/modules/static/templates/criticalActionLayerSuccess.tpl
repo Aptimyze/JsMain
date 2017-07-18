@@ -1,3 +1,4 @@
+<script>    var CALID = '~$layerId`'; </script>
 
 ~if $layerId == '13'`<script>
     var primaryEmail = '~$primaryEmail`';
@@ -463,7 +464,7 @@ var altEmail = '~$altEmail`';</script>
         <!--end:layer 1-->
         </div>
 
-   ~elseif $layerId == '20'`
+   ~elseif $layerId == '20' || $layerId == '23'`
 
  <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
       
@@ -500,17 +501,27 @@ var altEmail = '~$altEmail`';</script>
        <!-- start:div for chosen -->
        <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
          <p class="f12 color5 pos-abs disp-none city-pos1 js-req1">Required</p> <div id = "stateBox">   
-         <select id="cityList" data-placeholder="Enter your State" class="chosen-select-width">
+         <select id="stateList" data-placeholder="Enter your State" class="chosen-select-width">
                      </select>
           </div>
          <!-- start: in case of no City found -->
-         <div class="pt25 vishid js-otheroccInp">
-           <p id = 'secondReq' class="f12 vishid color5 txtr">Required</p>
+         <div class="pt25 disp-none js-otheroccInp" style="padding-bottom:24px;">
+           <p id = 'secondReq' class="pb5 f12  color5 txtr">Required</p>
            <div id = "cityBox"> 
             <select id="city" data-placeholder="Enter your City" class="chosen-select-width">
                      </select> 
                      </div>    
          </div>
+                  <!-- start: in case no occupation found -->
+                  ~if $layerId == '23'`
+                  <div class="disp-none" id="otherCityInput">
+                             <p id = 'thirdReq' class="f12 disp-none color5 txtr pb5">Required</p>      
+         <div id='otherCityBorder' style="border: 1px solid #e0e0e0;line-height: 44px;">
+           <input  class="f15 color11 fontlig wid94p occL-p2 f16"     style="margin: 0px 10px;border: none;" placeholder="Please Specify" type="text"/>
+ 
+         </div>
+         </div>
+        ~/if`
          <!-- end: in case no occupation found -->
        </div>
        <button id="city-sub"  class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">Submit</button>
@@ -524,7 +535,7 @@ var altEmail = '~$altEmail`';</script>
 
             function callState(){  
                     $.ajax({
-                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    url: "/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json",
                     type: "GET",
                     success: function(res) {
                         if(typeof res == 'string')
@@ -548,16 +559,21 @@ var altEmail = '~$altEmail`';</script>
         
 
      appendStateData = function(res) {
-        $("#cityList").html('');
+        $("#stateList").html('');
         occuSelected = 0;
         stateMap = {};
         var stateIndex=1;
-        $("#cityList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+        $("#stateList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex++)+'"></option>');
+        if(CALID==23)
+        {
+          $("#stateList").append('<option class="textTru chosenDropWid stateError" id="notFound" value="'+(stateIndex)+'">Outside India</option>');
+          stateMap[stateIndex++] = "-1";
+        }
 
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
               $.each(elem1, function(index2, elem2) {
-                    $("#cityList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
+                    $("#stateList").append('<option class="textTru chosenDropWid" value="'+(stateIndex)+'" stateCode = "'+index2+'">' + elem2 +'</option>');
                 stateMap[stateIndex++] = index2;
                 });
         });
@@ -569,23 +585,39 @@ var altEmail = '~$altEmail`';</script>
         $("#stateBox").removeClass('chosen-container-err'); 
         $('.js-req1').addClass('disp-none');
         $("#city").html('');
-        var indexV = $('#cityList option:selected').val();
+        var indexV = $('#stateList option:selected').val();
+
         var keyName = stateMap[indexV];
         cityMap = {};
         cityIndex = 1;
         $("#city").append('<option class="textTru chosenDropWid" id="notFound1" value="'+(cityIndex++)+'"></option>');
+        if(keyName=='-1')
+        {
 
-        $.each(res.city_res_jspc, function(index, elem) {
-           if(index == keyName){
-            $.each(elem[0], function(index1, elem1) {  
-              $.each(elem1, function(index2, elem2){  
-                if(index2!=43) //  omitting 'others' option
-                    $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
-                  cityMap[cityIndex++] = index2;
-                });
-        });
-          }
+              $.each(res.country_res[0], function(index, elem) {
+                $.each(elem, function(index2, elem2){  
+                    if(index2!='-1' && index2!='51')
+                    {
+                          $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                        cityMap[cityIndex++] = index2;
+                    } 
+                      });
               });
+                
+        }
+        else {
+              $.each(res.city_res_jspc, function(index, elem) {
+               if(index == keyName){
+                $.each(elem[0], function(index1, elem1) {  
+                  $.each(elem1, function(index2, elem2){  
+                        $("#city").append('<option class="textTru chosenDropWid" value="'+(cityIndex)+'" cityCode = "'+index2+'">' + elem2 +'</option>');
+                      cityMap[cityIndex++] = index2;
+                    });
+                });
+              }
+                  });
+
+        }
         }
 
    function loadChosen(){
@@ -603,20 +635,52 @@ var altEmail = '~$altEmail`';</script>
        $(selector).chosen(config[selector]);
      }  
     $('#city_chosen').removeClass('chosen-container-err');
-    $('#secondReq').addClass('vishid');
+    $('#secondReq').hide();
     $('#city').trigger("chosen:updated");
 
    }
 
    function statefunc(res){
-      $('#cityList').on("change",function(){
-        $("#cityList_chosen").removeClass('chosen-container-err');
+      $('#stateList').on("change",function(){
+        var indexV = $('#stateList option:selected').val();
+        var keyName = stateMap[indexV];
+        if(keyName!='-1') {
+          if(CALID==23)
+            $("#city").attr('data-placeholder','City');
+          else
+            $("#city").attr('data-placeholder','Enter Your City');
+        }
+        else 
+          $("#city").attr('data-placeholder','Country');
+
+        $('#otherCityInput').hide();
+        $("#stateList_chosen").removeClass('chosen-container-err');
         $('#city_chosen').removeClass('chosen-container-err');
            callCity(res);
           $('#city').val('');
-             $('.js-otheroccInp').addClass('visb');
+          $('.js-otheroccInp').show();
 
      });
+      if(CALID=='23')
+      {
+      $('#city').on("change",function(){
+        var indexV = $('#stateList option:selected').val();
+        var keyName = stateMap[indexV];
+        $("#otherCityInput").val('');
+        if(keyName!='-1') {
+        var indexC = $('#city option:selected').val();
+        var keyNameCity = cityMap[indexC];
+         if(keyNameCity=='0'){
+           $('#otherCityInput').show();
+           $("#thirdReq").hide();
+         }
+         else 
+          $('#otherCityInput').hide();
+      }
+        else $('#otherCityInput').hide();
+
+         });
+      }
     }
  
  var setscript=document.createElement('script');
@@ -626,28 +690,46 @@ var altEmail = '~$altEmail`';</script>
 
  
  window.onload = function(){
-  $("#city").change( function(){$('#secondReq').addClass('vishid');
-    $('#city_chosen').removeClass('chosen-container-err');});
+
+  $("#city").change( function(){$('#secondReq').hide();
+  $('#city_chosen').removeClass('chosen-container-err');
+  $('#otherCityBorder').css('border','1px solid #e0e0e0');
+
+  });
   callState();
    $('#city-sub').click(function(){ 
-         if( $('#cityList').val() == 1)
+        var stateCode = stateMap[$("#stateList").val()];
+        if(stateCode)
+          var cityCode = cityMap[$("#city").val()];
+
+         if( $('#stateList').val() == 1)
          {
            $('.js-req1').removeClass('disp-none');
-           $("#cityList_chosen").addClass('chosen-container-err');
+           $("#stateList_chosen").addClass('chosen-container-err');
            return;
          }
          else if( $('#city').val() == 1 )
          { 
-      $('#secondReq').removeClass('vishid');
+      $('#secondReq').show();
        $('#city_chosen').addClass('chosen-container-err');
            return;   
         }
+        else if (CALID==23 && stateCode!='-1' && $("#otherCityInput input").val().trim()=='' && cityCode=='0' )
+        {
+            $("#thirdReq").show();
+            $("#otherCityBorder").css('border-color',"#d9475c");
+            return;   
+
+        }
 
        else {  
-                            $(".js-otheroccInp input").val('');
-                            var stateCode = stateMap[$("#cityList").val()];
-                            var cityCode = cityMap[$("#city").val()];
-                            
+                            var tempText = $("#otherCityInput input").val();
+                            if(CALID==23){
+
+                            dataCity = stateCode!='-1' ? {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': tempText } : {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
+
+                            }
+                            else 
                             dataCity = {'editFieldArr[COUNTRY_RES]':51 , 'editFieldArr[CITY_RES]':cityCode,'editFieldArr[STATE_RES]':stateCode};
                             $.ajax({
                             url: '/api/v1/profile/editsubmit',

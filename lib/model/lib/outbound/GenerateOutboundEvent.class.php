@@ -9,7 +9,7 @@
  */
 class GenerateOutboundEvent {
 
-  const ENABLE_GENERATE_EVENT = false;
+  const ENABLE_GENERATE_EVENT = true;
 
   /**
    * @var Object
