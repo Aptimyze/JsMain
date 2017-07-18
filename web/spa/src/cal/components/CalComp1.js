@@ -53,7 +53,7 @@ componentWillMount(){
         let calData = this.props.calData;
         document.getElementsByTagName('body')[0].style.backgroundColor = '#fff';
         this.suggStyle = {backgroundColor:'#d9475c',color:'white'};
-        this.setState({suggDescriptionText: calData.Description,objectCounter:{},classCounter:{},suggStyle:{backgroundColor:'#d9475c',color:'white'}});
+        this.setState({suggDescriptionText: calData.Description,objectCounter:{'others':[]},classCounter:{},suggStyle:{backgroundColor:'#d9475c',color:'white'},simpleStyle:{},suggCount:0});
       break;
 
 
@@ -68,10 +68,7 @@ componentDidMount(){
       case '16':
 //        this.appendSuggestionsData("/static/getFieldData?k=occupation&dataType=json");
         this.getSuggestions();
-        this.setState({
-          showListOcc : false
-        });
-      break;
+        break;
 
       case '9':
       let val1 = $i("submitName").getBoundingClientRect().top, val2 = $i("skipBtn").getBoundingClientRect().top ;
@@ -107,6 +104,7 @@ switch(this.props.calData.LAYERID)
     case '14':
     case '15':
     case '17':
+    case '22':
       toReturn =  this.getGenericCAL();
     break;
 
@@ -413,13 +411,13 @@ return (<div>
   <div id="overlayMid" className="bg4 pad3 ">
       <div id="mainHeading" className="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
       <div id="dppDescription" className="txtc color8 fontlig f17">{this.state.suggDescriptionText}</div>
-      <div id="dppSuggestions" className="mb30">{this.state.suggestions}</div>
+      <div id="dppSuggestions" className="mb30">{this.getSuggestions()}</div>
   </div>
 
 
   <div id="foot" className="posfix fullwid bg7 btmo">
       <div className="scrollhid posrel">
-          <input type="submit" id="upgradeSuggestion" className="fullwid dispbl lh50 txtc f16 pinkRipple white" value="Upgrade Desired Partner Profile" />
+          <input type="submit" id="upgradeSuggestion" className="fullwid dispbl lh50 txtc f16 pinkRipple white" onClick={this.upgradeSuggestions.bind(this)} value="Upgrade Desired Partner Profile" />
       </div>
   </div>
 </div>);
@@ -428,18 +426,19 @@ return (<div>
 
 toggleClass(counter,elem,key2,otherCounter,value)  {
   this.setState((prevState) => {
-//    switch()
     let classCounter = prevState.classCounter[counter];
+    if(classCounter) prevState.suggCount--;
+    else prevState.suggCount++;
     prevState.classCounter[counter] = typeof classCounter=='object' ? '' : this.suggStyle;
-console.log(prevState.classCounter[counter]);
     switch (key2)
     {
       case 'other':
-        if(!prevState.objectCounter[otherCounter])
+        otherArray = prevState.objectCounter['others'];
+        if(!otherArray[otherCounter])
         {
-          prevState.objectCounter[otherCounter]={};
-          prevState.objectCounter[otherCounter]['type']=elem.type;
-          prevState.objectCounter[otherCounter]['arr']=[];
+          otherArray[otherCounter]={};
+          otherArray[otherCounter]['type']=elem.type;
+          otherArray[otherCounter]['arr']=[];
         }
 
         if(classCounter)
@@ -454,47 +453,57 @@ console.log(prevState.classCounter[counter]);
         }
       break;
 
-      case 'INCOME_BOTH':
-        if(classCounter)
+      case 'INCOME':
+        if(!prevState.objectCounter['INCOME']) prevState.objectCounter['INCOME']={};
+        if(!classCounter)
         {
-          prevState.objectCounter['INCOME'] = {"LRS":'',"HRS":'',"LDS":'',"HDS":''};
+          if(elem.data.LRS)
+            prevState.objectCounter['INCOME'].LRS = elem.data.LRS;
+          if(elem.data.HRS)
+            prevState.objectCounter['INCOME'].HRS = elem.data.HRS;
+          if(elem.data.LDS)
+            prevState.objectCounter['INCOME'].LDS = elem.data.LDS;
+          if(elem.data.HDS)
+            prevState.objectCounter['INCOME'].HDS = elem.data.HDS;
         }
         else
-          prevState.objectCounter['INCOME'] = {"LRS":elem.data.LRS,"HRS":elem.data.HRS};
+        {
+          if(elem.data.LRS)
+            delete prevState.objectCounter['INCOME'].LRS;
+          if(elem.data.HRS)
+            delete prevState.objectCounter['INCOME'].HRS;
+          if(elem.data.LDS)
+            delete prevState.objectCounter['INCOME'].LDS;
+          if(elem.data.HDS)
+            delete prevState.objectCounter['INCOME'].HDS;
+
+        }
       break;
 
-      case 'INCOME_LRS':
-      if(classCounter)
-      {
-        prevState.objectCounter['INCOME'] = { ...prevState.objectCounter['INCOME'], "LRS":'',"HRS":''};
-      }
-      else
-        prevState.objectCounter['INCOME'] = { ...prevState.objectCounter['INCOME'], "LRS":elem.data.LRS,"HRS":elem.data.HRS};
-
-      break;
-
-      case 'INCOME_LDS':
-      if(classCounter)
-      {
-        prevState.objectCounter['INCOME'] = { ...prevState.objectCounter['INCOME'], "LDS":'',"HDS":''};
-      }
-      else
-        prevState.objectCounter['INCOME'] = { ...prevState.objectCounter['INCOME'], "LDS":elem.data.LDS,"HDS":elem.data.HDS};
-      break;
 
       case 'AGE':
-      if(classCounter)
+      if(!prevState.objectCounter['AGE']) prevState.objectCounter['AGE']={};
+      if(!classCounter)
       {
-        prevState.objectCounter['AGE'] = { ...prevState.objectCounter['AGE'], "LAGE":'',"HAGE":''};
+        if(elem.data.LAGE)
+          prevState.objectCounter['AGE'].LAGE = elem.data.LAGE;
+        if(elem.data.HAGE)
+            prevState.objectCounter['AGE'].HAGE = elem.data.HAGE;
       }
       else
-        prevState.objectCounter['AGE'] = { ...prevState.objectCounter['AGE'], "LAGE":elem.data.LAGE,"HAGE":elem.data.HAGE};
+      {
+        if(elem.data.HAGE)
+          delete prevState.objectCounter['AGE'].HAGE;
+        if(elem.data.LAGE)
+          delete prevState.objectCounter['AGE'].LAGE;
+
+      }
       break;
 
     }
-    prevState.tempClass = 1;
     return prevState;
   });
+  console.log(this.state);
 //  let classnm = !this.state.classCounter[counter] ? "ppp" : ' suggestSelected'; console.log(this.state.classCounter);console.log(classnm);
 }
 
@@ -517,20 +526,21 @@ getSuggestions()
         if(elem.data.hasOwnProperty(key)) {
               counter++;
               let tempCount = counter;
-              childEle = (<div onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
+              childEle = (<div style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
               childEleArray.push(childEle);
               }
           }
-          basicEle = (<div className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEleArray}</div>);
+          basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEleArray}</div>);
 
         }
           else if (elem.type == "AGE") {
                 counter++;
                 let tempCount = counter;
+
                 if (elem.data && elem.data.HAGE && elem.data.LAGE ) {
-                    childEle =  (<div id="LAGE_HAGE" style={!this.props.tempClass ? {} : this.state.suggStyle } onClick={() =>this.toggleClass(tempCount,elem,'AGE')} className="suggestOptionRange suggestOption brdr18 fontreg color8 f16 txtc" >{elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	'}</div>);
+                    childEle =  (<div id="LAGE_HAGE" style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() =>this.toggleClass(tempCount,elem,'AGE')} className="suggestOptionRange suggestOption brdr18 fontreg color8 f16 txtc" > {elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	' } </div>);
                 }
-                basicEle = (<div className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
+                basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
 
             } else if (elem.type == "INCOME") {
               let LDS='',LRS='';
@@ -542,18 +552,18 @@ getSuggestions()
                 elem.data.LDS == "No Income" &&
                 elem.data.HRS == "and above" &&
                 elem.data.HDS == "and above") {
-                  LDS = (<div onClick={this.toggleClass(tempCount,elem,'INCOME_BOTH')} className={"suggestOption suggestOptionRange2 brdr18 fontreg txtc color8 f16 dispibl"} >{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
+                  LDS = (<div  style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} className={"suggestOption suggestOptionRange2 brdr18 fontreg txtc color8 f16 dispibl"} >{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
                 }
                 else {
                   if (elem.data && elem.data.LRS && elem.data.HRS) {
-                    LRS = (<div  onClick={this.toggleClass(tempCount,elem,'INCOME_LRS')} id="LRS_HRS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
+                    LRS = (<div   style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LRS_HRS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LRS + ' - ' + elem.data.HRS}</div>);
                 }
 
                 if(elem.data && elem.data.LDS && elem.data.HDS) {
-                  LDS = (<div onClick={this.toggleClass(tempCount,elem,'INCOME_LDS')} id="LDS_HDS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LDS + ' - ' + elem.data.HDS}</div>);
+                  LDS = (<div  style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() => this.toggleClass(tempCount,elem,'INCOME')} id="LDS_HDS" className={"suggestOptionRange2 suggestOption brdr18 fontreg txtc color8 f16 "}>{elem.data.LDS + ' - ' + elem.data.HDS}</div>);
                 }
             }
-            basicEle = (<div className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{LRS}{LDS}</div>);
+            basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{LRS}{LDS}</div>);
 
           }
 
@@ -562,9 +572,32 @@ getSuggestions()
     return basicEle;
 
 });
-this.setState({'suggestions':suggData});
+return suggData;
 }
 
+upgradeSuggestions(){
+if(this.state.suggCount<=0) {this.showError('Please select at least one suggestion.');return;}
+var sendObj = [];
+var objectCounter = this.state.objectCounter;
+
+if(objectCounter['AGE']['LAGE'])
+    sendObj.push({"type":'AGE',"data":objectCounter['AGE']});
+
+if(objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS'])
+    sendObj.push({"type":'INCOME',"data":objectCounter['INCOME']});
+
+objectCounter['others'].map((value,index)=>{
+  if(value.arr.length)
+    sendObj.push({"type":value.type,"data":value.arr});
+});
+
+var url = JSON.stringify(sendObj).split('"').join("%22");
+commonApiCall('/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,{},'','POST').then((response) =>
+{
+  this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1');
+});
+
+}
 ///////////////////////////// suggestions CAL ends
 ////
   showError(inputString) {

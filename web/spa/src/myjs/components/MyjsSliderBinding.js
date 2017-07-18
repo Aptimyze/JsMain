@@ -1,11 +1,11 @@
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,apiObject,props,url)
+  constructor(parent,apiObject,styleFunction,url)
   {
     this.parent = parent;
     this.apiObject = apiObject;
-    this.props = props;
+    this.styleFunction = styleFunction;
     this.el = parent;
     this.tuple_ratio = 80;
     this.slider = {"threshold": 80, "working": false, "movement": true, "transform": 0, "index": 0, "maxindex": 0};
@@ -71,11 +71,9 @@ window.addEventListener("resize",function()
 
             }
             alterCssStyle(transform,index){
-              this.parent.style[this.props.cssPrefix + 'TransitionDuration'] = this.transitionDuration + 'ms';
-              var propValue = 'translate3d(' + transform + 'px, 0, 0)';
-              this.parent.style[this.props.animProp] =  propValue;
-
+              this.styleFunction(this.transitionDuration,transform);
               this._index = index;
+
             }
             onTouchEnd(e)
             {
@@ -99,7 +97,7 @@ window.addEventListener("resize",function()
                 }
                 else
                     this.gotoSlide(this._index);
-                   var tupleLength = this.apiObject.tuples.length;
+                   var tupleLength = this.apiObject.profiles.length;
                  if (this._index >=  tupleLength/ 2) if (tupleLength<100)
                   this.callApi(++this.page);
                 e.preventDefault();
