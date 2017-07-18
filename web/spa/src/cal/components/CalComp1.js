@@ -484,10 +484,10 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
       if(!prevState.objectCounter['AGE']) prevState.objectCounter['AGE']={};
       if(!classCounter)
       {
-        if(elem.data.HAGE)
-          prevState.objectCounter['AGE'].HAGE = elem.data.HAGE;
         if(elem.data.LAGE)
           prevState.objectCounter['AGE'].LAGE = elem.data.LAGE;
+        if(elem.data.HAGE)
+            prevState.objectCounter['AGE'].HAGE = elem.data.HAGE;
       }
       else
       {
