@@ -108,8 +108,14 @@ class jsexclusiveActions extends sfActions
 			}
 			$acceptArr = $formArr["ACCEPT"];
 			$discardArr = $formArr["DISCARD"];
-			$acceptArr = array_diff($acceptArr, $discardArr);
-			print_r($acceptArr);
+			if(is_array($acceptArr) && is_array($discardArr)){
+				$acceptArr = array_diff($acceptArr, $discardArr);
+			}
+			
+			$email = $request->getParameter("email");
+			$exclusiveObj = new ExclusiveFunctions();
+			$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"agentEmail"=>$email));
+			unset($exclusiveObj);
 			
 			++$this->clientIndex;
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));

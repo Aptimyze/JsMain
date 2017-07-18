@@ -28,19 +28,29 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
         	}
 	}
         
-        public function deleteEntry($sender,$receiver)
+    public function deleteEntry($sender,$receiver)
 	{
 		try{
-			$sql="DELETE FROM Assisted_Product.AP_SEND_INTEREST_PROFILES WHERE SENDER=:sender AND RECEIVER=:receiver";
+			$sql="DELETE FROM Assisted_Product.AP_SEND_INTEREST_PROFILES WHERE SENDER=:sender AND";
+            if(is_array($receiver)){
+                $sql .= " RECEIVER IN (:receiver)";
+            }
+            else{
+                $sql .= " RECEIVER=:receiver";
+            }
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":sender",$sender,PDO::PARAM_INT);
-                        $prep->bindValue(":receiver",$receiver,PDO::PARAM_INT);
-                        $prep->execute();
+            if(is_array($receiver)){
+                $prep->bindValue(":receiver",$receiver,PDO::PARAM_STR);  
+            }
+            else{
+                $prep->bindValue(":receiver",$receiver,PDO::PARAM_INT);
+            }
+            $prep->execute();
 		}
-		 catch(PDOException $e)
-	        {
-                        throw new jsException($e);
-        	}
+        catch(PDOException $e){
+            throw new jsException($e);
+        }
 	}
         
         /*this functions selects records which have date after a passed date

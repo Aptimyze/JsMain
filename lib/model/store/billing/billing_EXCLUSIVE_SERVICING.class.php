@@ -81,11 +81,37 @@ class billing_EXCLUSIVE_SERVICING extends TABLE
 		  if($clientId && $agentUsername)
 		  {
 		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID AND AGENT_USERNAME=:AGENT_USERNAME AND SCREENED_STATUS=:SCREENED_STATUS";
-		    error_log("ankita DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=$clientId AND AGENT_USERNAME=$agentUsername AND SCREENED_STATUS=N");
+		    
 		    $res = $this->db->prepare($sql);
 		    $res->bindValue(":CLIENT_ID", $clientId, PDO::PARAM_INT);
 		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
 		    $res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
+		    $res->execute();
+		  }
+		}
+		catch(Exception $e)
+		{
+		  throw new jsException($e);
+		}
+	}
+
+	/**
+	 * Function to update screening status
+	 *
+	 * @param   $agentUsername,$clientId,$screenedStatus='Y'
+	 * @return  none
+	 */
+	public function updateScreenedStatus($agentUsername,$clientId,$screenedStatus='Y'){
+		try
+		{
+		  if($clientId && $agentUsername)
+		  {
+		    $sql = "UPDATE billing.EXCLUSIVE_SERVICING SET SCREENED_STATUS=:SCREENED_STATUS,SCREENED_DT=:SCREENED_DT WHERE CLIENT_ID=:CLIENT_ID AND AGENT_USERNAME=:AGENT_USERNAME";
+		    $res = $this->db->prepare($sql);
+		    $res->bindValue(":CLIENT_ID", $clientId, PDO::PARAM_INT);
+		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+		    $res->bindValue(":SCREENED_STATUS",$screenedStatus, PDO::PARAM_STR);
+		    $res->bindValue(":SCREENED_DT",date("Y-m-d"), PDO::PARAM_STR);
 		    $res->execute();
 		  }
 		}

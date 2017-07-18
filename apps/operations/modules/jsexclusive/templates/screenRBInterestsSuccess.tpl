@@ -18,6 +18,7 @@
 	<br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
 		<input type="hidden" name="clientIndex" value="~$clientIndex`">
+		<input type="hidden" name="clientId" value="~$clientId`">
 
  		<table border="0" align="center" width="80%" table-layout="auto" style="
     border-spacing: 10px;">

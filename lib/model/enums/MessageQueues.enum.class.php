@@ -165,7 +165,7 @@ class MessageQueues
   CONST OUTBOUND_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for outound queue 
   CONST OUTBOUND_STARTCOMMAND = "symfony Outbound:ConsumeQueue"; //Command to start profile cache queue consuming cron
   
-  
+  CONST RB_INTERESTS_QUEUE = 'RBInterestsQueue';
 }
 
 ?>
