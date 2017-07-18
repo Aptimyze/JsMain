@@ -42,6 +42,37 @@ class billing_EXCLUSIVE_SERVICING extends TABLE
 	}
 
 	/**
+     * Function to get unscreened clients' count from billing.EXCLUSIVE_SERVICING table
+     *
+     * @param   $agentUsername
+     * @return  count
+     */ 
+	public function getUnScreenedClientCount($agentUsername)
+	{
+		if($agentUsername){
+			try{
+			    $sql = "SELECT COUNT(DISTINCT CLIENT_ID) AS CNT FROM billing.EXCLUSIVE_SERVICING WHERE SCREENED_STATUS = :SCREENED_STATUS AND AGENT_USERNAME = :AGENT_USERNAME";
+			    $res = $this->db->prepare($sql);
+			    $res->bindValue(":SCREENED_STATUS",'N',PDO::PARAM_STR);
+			    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+			    $res->execute();
+			    if($result=$res->fetch(PDO::FETCH_ASSOC))
+			    {
+			        return $result["CNT"];
+			    }
+			    return 0;
+			}
+			catch(Exception $e)
+			{
+			  throw new jsException($e);
+			}
+		}
+		else{
+			return 0;
+		}
+	}
+
+	/**
      * Function to insert profileid into EXCLUSIVE_MEMBERS table
      *
      * @param   $params
