@@ -6,11 +6,12 @@
 	<br>
 	~if $infoMsg`
 		<div>~$infoMsg`</div>
-	~else`
-		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
 	~/if`
-	~if $clientData && $clientData.HoroscopeMatch eq 'Y'`
-		<div>Horoscope match is Necessary</div>
+	~if $clientData`
+		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
+		~if $clientData.HoroscopeMatch eq 'Y'`
+			<div>Horoscope match is Necessary</div>
+		~/if`
 	~/if`
 	</br>
 	</div>
@@ -39,6 +40,13 @@
 				<tr align="center">
 					<td class="label" colspan="2" style="background-color:Moccasin">
 						<input type="submit" name="submit" value="SUBMIT">
+					</td>
+				</tr>
+		    ~else if $showNextButton eq 'Y'`
+		    	<br>
+				<tr align="center">
+					<td class="label" colspan="2" style="background-color:Moccasin">
+						<input type="submit" name="submit" value="NEXT">
 					</td>
 				</tr>
 		    ~/if`     	

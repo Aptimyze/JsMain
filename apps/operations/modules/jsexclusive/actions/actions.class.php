@@ -43,11 +43,12 @@ class jsexclusiveActions extends sfActions
 		$exclusiveObj = new billing_EXCLUSIVE_MEMBERS("newjs_slave");
 		$assignedClients = $exclusiveObj->getExclusiveMembers("DISTINCT PROFILEID",true,"",$this->name,"",false);
 		$this->clientIndex = $request->getParameter("clientIndex");
-		
+		$this->showNextButton = 'N';
+		 
 		if(empty($this->clientIndex) || !is_numeric($this->clientIndex)){
 			$this->clientIndex = 0;
 		}
-
+		
 		if(!is_array($assignedClients) || count($assignedClients)==0){
 			$this->infoMsg = "No assigned clients corresponding to logged in RM found..";
 		}
@@ -70,9 +71,15 @@ class jsexclusiveActions extends sfActions
 				$this->clientData["gender"] = $clientProfileObj->getGENDER();
 				unset($clientProfileObj);
 
-				$exclusiveLib = new ExclusiveFunctions();
-				$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$pogRBInterestsPids);
-				unset($exclusiveLib);
+				if(is_array($pogRBInterestsPids) && count($pogRBInterestsPids)>0){
+					$exclusiveLib = new ExclusiveFunctions();
+					$this->pogRBInterestsPool = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$pogRBInterestsPids);
+					unset($exclusiveLib);
+				}
+				else{
+					$this->infoMsg = "No members for this client found..";
+					$this->showNextButton = 'Y';
+				}
 			}
 			unset($clientProfileObj);
 		}
@@ -83,7 +90,7 @@ class jsexclusiveActions extends sfActions
     */
 	public function executeSubmitScreenRBInterests(sfWebRequest $request){
 		$this->clientIndex = $request->getParameter("clientIndex");
-		if(!isset($this->clientIndex)){
+		if(empty($this->clientIndex)){
 			$this->clientIndex = -1;
 		}
 		++$this->clientIndex;
