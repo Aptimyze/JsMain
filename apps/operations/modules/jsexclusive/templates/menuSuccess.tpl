@@ -28,7 +28,7 @@
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/serviceActivationChangeInterface?name=~$name`&cid=~$cid`">Screen RB interests</a>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/screenRBInterests?name=~$name`&cid=~$cid`">Screen RB interests</a>
         </td>
     </tr>
     <br>

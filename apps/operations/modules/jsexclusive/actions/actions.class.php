@@ -13,6 +13,17 @@ class jsexclusiveActions extends sfActions
 	*
 	* @param sfRequest $request A request object
 	*/
+	public function preExecute()
+	{
+		$request=sfContext::getInstance()->getRequest();
+		$this->cid=$request->getParameter("cid");
+		$this->name=$request->getParameter("name");
+	}
+	/**
+	* Executes index action
+	*
+	* @param sfRequest $request A request object
+	*/
 	public function executeIndex(sfWebRequest $request){
 		$this->forward('default', 'module');
 	}
@@ -29,8 +40,6 @@ class jsexclusiveActions extends sfActions
     * @param : $request
     */
 	public function executeScreenRBInterests(sfWebRequest $request){
-		$this->name = $request->getAttribute('name');
-
 		$exclusiveObj = new billing_EXCLUSIVE_MEMBERS("newjs_slave");
 		$assignedClients = $exclusiveObj->getExclusiveMembers("DISTINCT PROFILEID",true,"",$this->name,"",false);
 		$this->clientIndex = $request->getParameter("clientIndex");
