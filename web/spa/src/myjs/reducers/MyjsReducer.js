@@ -7,7 +7,8 @@ const MyjsReducer = (state={
 	irFetched:false,
 	vaFetched:false,
 	ieFetched:false,
-	hamFetched:false
+	hamFetched:false,
+	contactDone:false
 },action) => {
 	switch(action.type)
 	{
@@ -58,6 +59,13 @@ const MyjsReducer = (state={
 			...state,
 			apiDataHam:action.payload,
 			hamFetched : true
+		}
+		break;
+			case 'CONTACT_ACTION':
+		state = {
+			...state,
+			contact:action.payload,
+			contactDone : true
 		}
 		break;
 	}
