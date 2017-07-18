@@ -71,5 +71,17 @@ class jsexclusiveActions extends sfActions
 	public function executeSubmitScreenRBInterests(sfWebRequest $request){
 
     }
+  
+	public function executeMenu(sfWebRequest $request)
+	{
+	//Get Count for each option 
+	  
+	  //Counter for welcome calls
+	  }
+	public function executeWelcomeCalls(sfWebRequest $request){
+	  
+	//Get all clients here
+	  
+	}
 }
 ?>
