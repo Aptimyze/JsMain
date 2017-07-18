@@ -233,6 +233,11 @@ if (isset($data)) //successful login
         if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
+        
+        if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/menu\">Exclusive RM Interface</a>";
+        }
+        
         if (in_array('IUO', $priv) || in_array('IUI', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/only_service.php?name=$username&cid=$cid&mode=W\">Disposing call without alloting profile</a>";
         }
