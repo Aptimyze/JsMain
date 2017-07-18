@@ -57,7 +57,8 @@ $(document).ready(function() {
  	}
  	else
  	{
- 		params["executiveDetails"]=null;
+ 		assigned_to = $("#UNASSIGN"+params["billid"]).html();
+ 		params["assignedToUsername"]=assigned_to;
 	} 
  	if(validRequest==true)
  		sendExMemAllocationRequest(params);
