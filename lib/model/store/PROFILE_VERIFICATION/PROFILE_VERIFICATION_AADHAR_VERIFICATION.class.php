@@ -63,7 +63,7 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
     		$res->bindParam(":PROFILEID", $profileId, PDO::PARAM_INT);
     		$res->bindParam(":STATUS", $status, PDO::PARAM_STR);
     		$res->execute();
-
+    		return true;
     	}
     	catch(PDOException $e)
     	{

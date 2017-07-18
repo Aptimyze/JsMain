@@ -22,7 +22,7 @@ class aadharVerificationV1Action extends sfActions
 		$this->username = $this->loginProfile->getUSERNAME();
 		$aadharId = $request->getParameter("aid");
 		$nameOfUser = $request->getParameter("name");
-		if(strlen($aadharId) != 12)
+		if(strlen($aadharId) != 12) //to check the length of aadhar number
 		{
 			$errorArr["ERROR"] = "Aadhar Id is not in proper format";
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
@@ -32,7 +32,7 @@ class aadharVerificationV1Action extends sfActions
 		{
 			$nameOfUserObj=new NameOfUser();        
 			$nameOfUserArr = $nameOfUserObj->getNameData($this->profileId);		
-			if (strcasecmp($nameOfUserArr[$this->profileId]["NAME"], $nameOfUser) != 0)
+			if (strcasecmp($nameOfUserArr[$this->profileId]["NAME"], $nameOfUser) != 0) //check if the user changed the name on the CAL
 			{
 				$nameArr["NAME"] = $nameOfUser;
 				$nameOfUserObj->updateName($this->profileId,$nameArr);				
