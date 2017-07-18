@@ -1,6 +1,9 @@
 <?php
 class ExclusiveFunctions{
 
+	/*formatScreenRBInterestsData - format screened RB interests for clients assigned to logged in RM and filtered by RM
+    * @param :$clientParams=array(),$pogRBInterestsPids=array()
+    */
 	public function formatScreenRBInterestsData($clientParams=array(),$pogRBInterestsPids=array()){
 		$pogRBInterestsPool = array();
 		foreach ($pogRBInterestsPids as $key => $pid) {
@@ -41,6 +44,9 @@ class ExclusiveFunctions{
 		return $pogRBInterestsPool;
 	}
 
+	/*formatRabbitmqData - format screened RB data for rabbitmq
+    * @param :$inputArr=""
+    */
 	public function formatRabbitmqData($inputArr=""){
 		if(is_array($inputArr)){
 			$outputArr = array('process' =>'RBSendInterests','data'=>array('type' => 'RB_EOI_SCREENING','body'=>array("MEMBERSHIP"=>"JsExclusive","SENDER"=>$inputArr["clientId"],"RECEIVER"=>$inputArr["acceptArr"],"SCREENED_DT"=>date("Y-m-d H:i:s"),"agentEmail"=>$inputArr["agentEmail"])), 'redeliveryCount'=>0);
@@ -51,6 +57,9 @@ class ExclusiveFunctions{
 		}
 	}
 
+	/*processScreenedEois - process screened accepted and declined RB eois
+    * @param :$params=""
+    */
 	public function processScreenedEois($params=""){
 		if(is_array($params) && $params["clientId"] && $params["agentUsername"]){
 			if(is_array($params["acceptArr"] && count($params["acceptArr"])>0)){
