@@ -33,14 +33,13 @@ class incentive_PROCESS_CSV_DATA_TEMP extends TABLE
                         throw new jsException();
                 }
 	}
-	public function insertProfile($profileid, $entryDt, $process)
+	public function insertProfile($profileid, $process)
         {
                 try
                 {
-                        $sql = "INSERT IGNORE INTO incentive.PROCESS_CSV_DATA_TEMP (PROFILEID,ENTRY_DT,PROCESS) VALUES(:PROFILEID,:ENTRY_DT,:PROCESS)";
+                        $sql = "INSERT IGNORE INTO incentive.PROCESS_CSV_DATA_TEMP (PROFILEID,PROCESS) VALUES(:PROFILEID,:PROCESS)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-			$prep->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
                         $prep->bindValue(":PROCESS",$process,PDO::PARAM_STR);
                         $prep->execute();
                 }
@@ -85,6 +84,7 @@ class incentive_PROCESS_CSV_DATA_TEMP extends TABLE
                 }
                 return $cnt;
         }
+	/*
         public function getLatestProfilesCount($max_dt,$process)
         {
                 try
@@ -102,7 +102,7 @@ class incentive_PROCESS_CSV_DATA_TEMP extends TABLE
                         throw new jsException($e);
                 }
                 return $cnt;
-	}
+	}*/
 
 
 
