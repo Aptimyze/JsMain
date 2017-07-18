@@ -46,7 +46,7 @@ class ApiEditSubmitV1Action extends sfActions
             // file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf_new.$date.txt",$http_msg,FILE_APPEND);
 		}
 		
-		$this->editFieldNameArr=$request->getParameter('editFieldArr');		
+		$this->editFieldNameArr=$request->getParameter('editFieldArr');        
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{
 			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
@@ -65,7 +65,20 @@ class ApiEditSubmitV1Action extends sfActions
 		unset($this->editFieldNameArr['DAY']);
 		unset($this->editFieldNameArr['YEAR']);
                 //print_r($this->editFieldNameArr);die;
-                
+        
+        //aadhar section
+        if(MobileCommon::isApp() == "A" && $this->editFieldNameArr['NAME'])
+        {
+            $nameObj = new NameOfUser();
+            $nameOfUserArr = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+            $nameOfUser = $nameOfUserArr[$this->loginProfile->getPROFILEID()]["NAME"];
+            if(strcasecmp($nameOfUser,$this->editFieldNameArr['NAME'])!=0)
+            {
+                $aadharObj = new aadharVerification();
+                $aadharObj->resetAadharDetails($this->loginProfile->getPROFILEID());
+
+            }
+        }
                         if(!MobileCommon::isApp())
                         {
                                 if(!empty($_FILES)){

@@ -22,8 +22,8 @@ class aadharVerificationStatusV1Action extends sfActions
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loginProfile = LoggedInProfile::getInstance();
 		$this->profileId = $this->loginProfile->getPROFILEID();
-		$aadharVerificationObj = new PROFILE_VERIFICATION_AADHAR_VERIFICATION("newjs_masterRep");
-		$dataArr = $aadharVerificationObj->getRequestId($this->profileId);
+		$aadharVerificationObj = new aadharVerification();
+		$dataArr = $aadharVerificationObj->getAadharDetails($this->profileId);
 		$returnVal = $this->getVerificationStatus($dataArr[$this->profileId]["REQUEST_ID"]);
 		
 		if($returnVal == 0)
@@ -41,7 +41,8 @@ class aadharVerificationStatusV1Action extends sfActions
 		else
 		{
 			$aadharVerificationObj->updateVerificationStatus($this->profileId,self::VERIFIED);
-			$finalArr["MESSAGE"] = "Aadhar Verified";			
+			$finalArr["MESSAGE"] = "Aadhar Verified";
+			$finalArr["AADHAR_NO"]	= $dataArr[$this->profileId]["AADHAR_NO"];
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiResponseHandlerObj->setResponseBody($finalArr);
 		}
