@@ -99,15 +99,18 @@ class jsexclusiveActions extends sfActions
     * @param : $request
     */
 	public function executeSubmitScreenRBInterests(sfWebRequest $request){
-	
 		$formArr = $request->getParameterHolder()->getAll();
-		$this->clientIndex = $formArr["clientIndex"];
-		if(empty($this->clientIndex)){
-			$this->clientIndex = 0;
+		if(is_numeric($formArr["clientIndex"])){
+			$this->clientIndex = $formArr["clientIndex"];
+			if(empty($this->clientIndex)){
+				$this->clientIndex = 0;
+			}
+			++$this->clientIndex;
+			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
-		++$this->clientIndex;
-		
-		$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
+		else{
+			$this->forwardTo("jsexclusive","screenRBInterests");
+		}
     }
   
 	public function executeMenu(sfWebRequest $request)
