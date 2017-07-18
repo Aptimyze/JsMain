@@ -428,9 +428,9 @@ private static $subjectArray=array(
 '1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
 '1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'"Feedback request from Jeevansathi.com"'),
 '1850'=>array('MAIL_ID'=>'1850','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> could not be generated'),
-'1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed his ~$fieldList`'),
-'1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
+'1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed ~$hisHerfieldList`'),
 '1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
+'1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
 '1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
 );
 public static function getLink($Id){

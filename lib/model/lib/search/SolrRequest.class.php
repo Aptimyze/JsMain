@@ -97,7 +97,7 @@ class SolrRequest implements RequestHandleInterface
 	* @param loggedInProfileObj
         * @return responseObj object-array containing info like (ResultsArray / totalResults)
         */
-        public function getResults($results_cluster='all',$clustersToShow,$currentPage='',$cachedSearch='',$loggedInProfileObj='')
+        public function getResults($results_cluster='all',$clustersToShow,$currentPage='',$cachedSearch='',$loggedInProfileObj='',$noFilterQuery='')
         {
 		$this->clustersToShow = $clustersToShow;
 		$this->results_cluster = $results_cluster;
@@ -106,7 +106,7 @@ class SolrRequest implements RequestHandleInterface
 			$this->solrPostParams = $cachedSearch["URL"];
 		else
 		{
-	                $this->setWhereCondition('',$loggedInProfileObj);
+	                $this->setWhereCondition('',$loggedInProfileObj,$noFilterQuery);
 		}
 
 		$this->formSolrSearchUrl();
@@ -208,9 +208,9 @@ class SolrRequest implements RequestHandleInterface
         * we have divided filtering conditions in 2 part :
 	  (a) filters  (b) special cluster
         */
-        public function setWhereCondition($noSorting='',$loggedInProfileObj='')
+        public function setWhereCondition($noSorting='',$loggedInProfileObj='',$noFilterQuery='')
         {
-					
+            
 		$this->filters[]="q=*:*";
 		$this->filters[]="&wt=phps";
 		if($this->solrClusterlimit)
@@ -297,6 +297,18 @@ class SolrRequest implements RequestHandleInterface
 							$textQuery[] = SearchConfig::$textBasedSearchParameters.":(NOT ".implode(" AND NOT ",$tempArr).")";
 						unset($tempArr);
 					}
+				}
+				elseif($field=="INCOME")
+				{
+					if(in_array(15, explode(",", $value))){
+                                                $value = $this->removeLowerINCOME($value,$this->searchParamtersObj->getLINCOME(),$this->searchParamtersObj->getHINCOME(),$this->searchParamtersObj->getLINCOME_DOL(),$this->searchParamtersObj->getHINCOME_DOL());
+                                                $this->searchParamtersObj->setINCOME($value);
+                                        }
+                                        $solrFormatValue = str_replace(","," ",$value);
+					$solrFormatValue = str_replace("','"," ",$solrFormatValue);
+                                        
+					$setWhereParams[]=$field;
+                                        $this->filters[]="&fq=$field:($solrFormatValue)";
 				}
 				else
 				{
@@ -441,8 +453,8 @@ class SolrRequest implements RequestHandleInterface
 		{
 			$this->filters[0] = "q=".implode(" AND ",$textQuery);
 		}
-
-		if(SearchConfig::$filteredRemove && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID()!='')
+                
+		if(SearchConfig::$filteredRemove && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID()!='' && !$noFilterQuery)
 		{
 			$filterQuery = '';
 
@@ -693,5 +705,53 @@ class SolrRequest implements RequestHandleInterface
                 $searchKey .= $this->searchParamtersObj->getSEARCH_TYPE();
                 JsMemcache::getInstance()->storeDataInCacheByPipeline($keyAuto,array($searchKey),$Keytime);
                 JsMemcache::getInstance()->incrCount($searchKey);
+        }
+        private function removeLowerINCOME($income,$lincome=0,$hincome=0,$lincome_dol=0,$hincome_dol=0){
+                $rArr["minIR"] = "0" ;
+                $rArr["maxIR"] = "19" ;
+                $dArr["minID"] = "0" ;
+                $dArr["maxID"] = "19" ;
+                if($lincome){
+                        $rArr["minIR"] = $lincome;
+                }   
+                if($hincome){
+                        $rArr["maxIR"] = $hincome;
+                }   
+                if($lincome_dol){
+                        $dArr["minID"] = $lincome_dol;
+                }
+                
+                if($hincome_dol){
+                        $dArr["maxID"] = $hincome_dol;
+                }
+                $incomeHighValue = "";
+                if(($dArr["minID"]==0 && $rArr["minIR"]!=0)){
+                        if(in_array("INCOME_DOL",explode(",",$this->searchParamtersObj->getCURRENT_CLUSTER()))){
+                                $rArr["minIR"] = 0;
+                                $this->searchParamtersObj->setLINCOME("0");
+                        }
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome_dol",$dArr["minID"]);
+                        $dArr["minID"] = $incomeHighValue;
+                        $this->searchParamtersObj->setLINCOME_DOL($incomeHighValue);
+                        unset($incomeMapObj);
+                }elseif(($rArr["minIR"]==0 && $dArr["minID"]!=0)){
+                        if(in_array("INCOME",explode(",",$this->searchParamtersObj->getCURRENT_CLUSTER()))){
+                                $dArr["minID"] = 0;
+                                $this->searchParamtersObj->setLINCOME_DOL("0");
+                        }
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
+                        $rArr["minIR"] = $incomeHighValue;
+                        $this->searchParamtersObj->setLINCOME($incomeHighValue);
+                        unset($incomeMapObj);
+                }
+                if($incomeHighValue != ""){
+                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        $incomeMapArr = $incomeMapObj->incomeMapping();
+                        unset($incomeMapObj);
+                        $income = str_replace("'", "",$incomeMapArr['istr']);
+                }
+                return $income;
         }
 }

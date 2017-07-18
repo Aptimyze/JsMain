@@ -44,6 +44,7 @@ class EditDetails{
 			$myProfileArr["Family"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiFamilyDetails());
 			$myProfileArr["Lifestyle"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiLifeAttr());
 			$myProfileArr["Contact"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiContactInfo());
+			$myProfileArr["Critical"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiCriticalInfo());
 
 
 

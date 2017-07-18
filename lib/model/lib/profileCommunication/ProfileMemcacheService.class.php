@@ -646,7 +646,8 @@ class ProfileMemcacheService
 	{
 		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
 		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
-		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+		if(is_array($skipProfile))
+			$considerProfiles = array_diff($considerProfiles,$skipProfile);
 		unset($skipProfile);
 	}
 	if(is_array($considerProfiles) && count($considerProfiles)>0)

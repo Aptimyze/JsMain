@@ -1,7 +1,7 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" ~if $index % 2 eq 1` style="max-width:320px; border-left:1px solid #eae9e9;" ~else` style="max-width:320px;" ~/if`>
 <tr>
     <td></td>
-    <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
+    <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~if $user->getNAME_OF_USER()` ~$user->getNAME_OF_USER()` ~else` ~$user->getUSERNAME()` ~/if`</a></td>
     <td height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""`Guna Match ~$user->getGUNA()`/36 ~/if`</td>
 </tr>
 <tr>

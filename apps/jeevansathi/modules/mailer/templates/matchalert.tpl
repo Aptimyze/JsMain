@@ -79,7 +79,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerSurvey",[surveyLink=>$data.surveyLink])`
+                        	~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
                         </td>
                     </tr>
                     <tr>

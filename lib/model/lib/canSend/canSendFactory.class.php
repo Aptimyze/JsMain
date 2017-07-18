@@ -9,7 +9,7 @@
  */
 class canSendFactory {
 
-  public static function initiateClass($channel,$dataArray,$profileid)
+  public static function initiateClass($channel,$dataArray,$profileid,$mailID="") //added mailID in the parameter list to allow for certain checks to be bypassed in canSendEmail
   {
 	switch ($channel) 
 	{
@@ -20,7 +20,7 @@ class canSendFactory {
                     if($subscriptionField)
                         $subscriptionClassObj = new CanSendEnums::$fieldMap[$subscriptionField]['TABLE_CLASS'];
                     $bouncedMailObj = new bounces_BOUNCED_MAILS;
-			return new canSendEmail($dataArray,$profileid,$subscriptionClassObj,$bouncedMailObj);
+			return new canSendEmail($dataArray,$profileid,$subscriptionClassObj,$bouncedMailObj,$mailID);
 			break;
 		default:
 			return false;

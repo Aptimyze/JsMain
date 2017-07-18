@@ -16,6 +16,7 @@ class ViewSimilarProfile {
                                             "JSMS"=>"MobileAppPicUrl",
                                             "IOS"=>"MobileAppPicUrl",
                                             "APP"=>"MobileAppPicUrl");
+        
         /**
          * Function to find similar profile IDs
          * @param: $profileObj Profile Object of viwed profile
@@ -30,7 +31,10 @@ class ViewSimilarProfile {
                 //$suggAlgoMinimumNoOfContactsRequired=0; // to check directly for Normal search operation
                 $suggAlgoScoreConst = viewSimilarConfig::$suggAlgoScoreConst;
                 $suggAlgoNoOfResults = viewSimilarConfig::$suggAlgoNoOfResults_Mobile;
-                $suggAlgoNoOfResultsNoFilter = viewSimilarConfig::$suggAlgoNoOfResultsNoFilter;
+                if(viewSimilarConfig::VspWithoutSolr($viewed))
+                    $suggAlgoNoOfResultsNoFilter = viewSimilarConfig::$suggAlgoNoOfResultsInOneCall;
+                else
+                    $suggAlgoNoOfResultsNoFilter = viewSimilarConfig::$suggAlgoNoOfResultsNoFilter;
                 //view Opposite Gender
                 if ($viewedGender == 'M') {
                         $viewedGender = 'MALE';
@@ -51,7 +55,7 @@ class ViewSimilarProfile {
                 $dateHourToAppend = date('m-d', time());
                 $noOfResultsToStore = sizeof($contactsViewed);
                 JsMemcache::getInstance()->hIncrBy("ECP_CL_CONTACTS_COUNT_".$shardToAppend,$dateHourToAppend."__".$noOfResultsToStore,1);*/
-                
+                //echo sizeof($contactsViewed);die;
                 // ENOUGH contacts viewed check
                 if (sizeof($contactsViewed) >= $suggAlgoMinimumNoOfContactsRequired) {
                         $suggProfAlgo = 'contacts';
@@ -75,12 +79,21 @@ class ViewSimilarProfile {
                         }
                         // contacts viewed
 $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,MTONGUE,ENTRY_DT,HAVEPHOTO,SHOW_HOROSCOPE,COUNTRY_RES,BTYPE,COMPLEXION,EDU_LEVEL_NEW,OCCUPATION,MSTATUS,CITY_RES,DRINK,SMOKE,DIET,HANDICAPPED,MANGLIK,RELATION,HANDICAPPED,HIV,SUBSCRIPTION,BTIME,MOB_STATUS,LANDL_STATUS,ACTIVATED,INCOMPLETE");
-						$viewedAge = $profileObj->getAGE();
+                        $viewedAge = $profileObj->getAGE();
 
-						$AgeViewed =  $this->AgeInterval($viewedOppositeGender,$viewedAge,$viewerAge);
-						$lAge=$AgeViewed['lAge'];
-						$hAge=$AgeViewed['hAge'];
-                        $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $lAge, $hAge);
+                        $AgeViewed =  $this->AgeInterval($viewedOppositeGender,$viewedAge,$viewerAge);
+                        if(viewSimilarConfig::VspWithoutSolr($viewed))
+                            $whereParams = $this->getWhereParamsForReverseDpp($viewedOppositeGender,$loginProfile);
+                        $whereParams['lage']=$AgeViewed['lAge'];
+                        $whereParams['hage']=$AgeViewed['hAge'];
+                        
+                        if(viewSimilarConfig::VspWithoutSolr($viewed)){
+                            $profileListObj = new IgnoredContactedProfiles();
+                            $ignoredContactedProfiles = $profileListObj->getProfileList($viewer);
+                            $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams,$ignoredContactedProfiles);
+                        }
+                        else
+                            $resultTemp = $similarProfileObj->getSuggestedProf($viewedOppositeGender, $viewedContactsStr, $whereParams);
                         $suggestedProf = $resultTemp['suggestedProf'];
                         $constantVal = $resultTemp['constantVal'];
 						$priority = $resultTemp['priority'];
@@ -204,13 +217,13 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         {
         	if($viewedOppositeGender == MALE){                
         		$viewerAgeMin = $viewerAge - 5;
-                $Age['lAge'] = min($viewerAgeMin,$viewedAge);
-                $Age['hAge'] = max($viewedAge,$viewerAge);
+                $Age['lAge'] = (int)min($viewerAgeMin,$viewedAge);
+                $Age['hAge'] = (int)max($viewedAge,$viewerAge);
             }
            	else {
            		$viewedAgeMax = $viewedAge + 5;
-                $Age['lAge'] = min($viewedAgeMax,$viewerAge);
-                $Age['hAge'] = max($viewedAge + 5,$viewerAge);
+                $Age['lAge'] = (int)min($viewedAge,$viewerAge);
+                $Age['hAge'] = (int)max($viewedAgeMax,$viewerAge);
             }
             return $Age;
         }
@@ -294,8 +307,26 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $paramArr["MANGLIK"] = '';
                                 $paramArr["MSTATUS"] = $result['MSTATUS'];
                                 $paramArr["IS_VSP"] = 1;
+                                
+                                if(viewSimilarConfig::VspWithoutSolr($viewed) && $viewer){
+                                    $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master', $viewer);
+                                    if($paramArr["GENDER"]=='M'){
+                                        $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
+                                    }
+                                    else{
+                                        $reverseParams = SearchConfig::$reverseParamsMaleLoggedIn;
+                                    }
 
-                                $results = $this->suggestedAlgoSearch($paramArr, $viewer);
+                                    $reverseCriteria = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
+                                    $reverseCriteria->getSearchCriteria();
+                                    foreach($reverseParams as $k=>$v)
+                                    {
+                                        eval('$tempVal = $reverseCriteria->get'.$v.'();');
+                                        if($tempVal)
+                                            eval('$paramArr['.$v.']="'.$tempVal.'";');
+                                    }
+                                }
+                                $results = $this->suggestedAlgoSearch($paramArr, $viewer,$profileObj);
                         if ($results)
                                 $results = array_slice(explode(",", $results), 0, $suggAlgoNoOfResults);
 
@@ -309,13 +340,14 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param $pid Profile ID of viewer
          * @return array of tuple object of profile details
          */
-        public function getSimilarProfilesDetails($userList, $pid) {
+        public function getSimilarProfilesDetails($userList, $pid,$formatResponse,$fromEcpDesktop='') {
                 if ($userList) {
                         foreach ($userList as $key => $Pvalue) {
                                 $finalUserList["VIEW_SIMILAR"][$Pvalue] = array("PROFILEID" => $Pvalue);
                         }
                 }
-                
+                if(sizeof($userList) == 0)
+                    return array();
                 $profileObj = LoggedInProfile::getInstance('newjs_master');
                 $tupleService = new TupleService();
                 $tupleService->setLoginProfileObj($profileObj);
@@ -332,8 +364,15 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                                 $username=substr($pValue->getUSERNAME(),0,6)."..";
                                 $pValue->setUSERNAME($username);
                         }
+                        if($formatResponse){
+                            $vspFormatObj = new VspFormatResponse ();
+                            $returnVspArray[$pKey] = $vspFormatObj->formatTupleResponse($pValue,$fromEcpDesktop);
+                             
+                        }
                 }
-                
+                if($formatResponse){
+                    return $returnVspArray;
+                }
                 return $similarProfileDetail;
         }
 
@@ -378,7 +417,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param - $pid - Optional field for profile ID
          * @return - $output - List of profile IDs
          * */
-        function suggestedAlgoSearch($paramArr, $pid = '') {
+        function suggestedAlgoSearch($paramArr, $pid = '',$profileObj) {
                 $SearchParametersObj = new SearchBasedOnParameters;
                 $SearchParametersObj->getSearchCriteria($paramArr);
                 $SearchParametersObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
@@ -387,13 +426,25 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $SearchUtilityObj = new SearchUtility;
                         $noAwaitingContacts = 1;
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master', $pid);
+                        
+                        if(viewSimilarConfig::VspWithoutSolr($profileObj->getPROFILEID())){
+                            $SearchParametersObj->setWhereParams(SearchConfig::$searchWhereParameters.",".SearchConfig::$membersLookingForMeWhereParameters);
+                            $SearchParametersObj->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters);
+
+                            $ageToSet = $this->AgeInterval($loggedInProfileObj->getGENDER(),$profileObj->getAGE(),$loggedInProfileObj->getAGE());    
+                            $SearchParametersObj->setLAGE($ageToSet['lAge']);
+                            $SearchParametersObj->setHAGE($ageToSet['hAge']);
+                            
+                        }
+                        
                         $SearchUtilityObj->removeProfileFromSearch($SearchParametersObj, 'spaceSeperator', $loggedInProfileObj, '', $noAwaitingContacts);
                 }
 
                 $SearchServiceObj = new SearchService;
-                $respObj = $SearchServiceObj->performSearch($SearchParametersObj, "onlyResults");
+                $respObj = $SearchServiceObj->performSearch($SearchParametersObj, "onlyResults",'','','',$loggedInProfileObj,1);
                 if ($respObj->getSearchResultsPidArr() && is_array($respObj->getSearchResultsPidArr()))
-                        $output = implode(",", $respObj->getSearchResultsPidArr());
+                    $output = implode(",", $respObj->getSearchResultsPidArr());
+                
                 return $output;
         }
         
@@ -439,21 +490,23 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param - vspArray,$contactedUsername,$similarPageShow,$userGender
          * @return - new array
          */
-        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj)
+        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj,$viewedProfileID='')
         {
             if($userGender=="She")
                 $gender = 'F';
             else
                 $gender = 'M';
             $key = 0;
-            $nameOfUserObj = new NameOfUser;
-            $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+            if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID)){
+                 $nameOfUserObj = new NameOfUser;
+                 $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
+            }
             foreach($vspArray as $profileid=>$detailsArray)
             {
                 //$key = $detailsArray["OFFSET"]-1;
                 foreach(viewSimilarConfig::$SearchToVSPResponseMappingArr as $searchField=>$vspField)
                 {
-                    if($searchField == "age")
+                    if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID) && $searchField == "age")
                     {
                          $jspcVSPArray["profiles"][$key][$searchField] = $detailsArray[$vspField]." yrs";
                     }
@@ -465,7 +518,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
                     }  
-                    else if($searchField == "name_of_user")
+                    else if(!viewSimilarConfig::VspWithoutSolr($viewedProfileID) && $searchField == "name_of_user")
                     {
   			if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
                         {
@@ -511,6 +564,27 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
             if(MobileCommon::isDesktop())
                 $jspcVSPArray["defaultImage"] = PictureFunctions::getNoPhotoJSMS($gender,ViewSimilarProfile::$defaultPicSize["PC"]);
             return $jspcVSPArray;
+        }
+        
+        
+        private function getWhereParamsForReverseDpp($viewerGender,$loggedInProfileObj){
+            if($viewerGender == 'FEMALE')
+                $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
+            else
+                $reverseParams = SearchConfig::$reverseParamsMaleLoggedIn;
+            
+            $reverseCriteria = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$loggedInProfileObj);
+            $reverseCriteria->getSearchCriteria();
+            foreach($reverseParams as $k=>$v)
+            {
+                    eval('$tempVal = $reverseCriteria->get'.$v.'();');
+                    $tempVal = str_replace(',99999', '', $tempVal);
+                    $tempValArr = explode(" ", $tempVal);
+                    if(($v == "PARTNER_CITYRES" && $loggedInProfileObj->getCOUNTRY_RES() != 51) || ($v == "PARTNER_CASTE" && !in_array($loggedInProfileObj->getRELIGION(),array(1,2,3,4,9))))
+                        continue;
+                    $whereParams[$v]= $tempVal;
+            }
+            return $whereParams;
         }
 
 }

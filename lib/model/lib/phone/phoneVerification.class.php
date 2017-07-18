@@ -80,7 +80,7 @@ public function phoneUpdateProcess($message)
 			$profileObject=$this->profileObject;
 			
 			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
-
+			if($this->isVerified() == 'Y') return true;
 			switch ($this->phoneType)
 			{		
 

@@ -62,11 +62,11 @@ EOF;
 				}
 				if($reportName==1)
 				{
-					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
+					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
 				}
 				elseif($reportName==2)
 				{
-					SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
+					SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
 					include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 					$mobile         = "9818424749";
 					$date = date("Y-m-d h");
@@ -89,7 +89,7 @@ EOF;
 			{
 				$mailContent = "\n<br>Report of ". $this->reportType[$reportName]." Crons not executing on Server ".$server ;
 				
-				SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
+				SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
                                 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
                                 $mobile         = "9818424749";
                                 $date = date("Y-m-d h");
@@ -131,7 +131,7 @@ EOF;
 			passthru("cd /usr/local/azkaban/azkaban-executor-server-2.1; sh bin/azkaban-executor-shutdown.sh");
 			passthru("cd /usr/local/azkaban/azkaban-executor-server-2.1; sh bin/azkaban-executor-start.sh > azkaban-access.log");
 			passthru("cd /usr/local/azkaban/azkaban-web-server-2.1; sh bin/azkaban-web-start.sh > azkaban-access.log");
-			SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com","restarted azkaban","Azkaban Restarted ".date('y-m-d h:i:s'));
+			SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com","restarted azkaban","Azkaban Restarted ".date('y-m-d h:i:s'));
                                 
 			$count=0;
 		}

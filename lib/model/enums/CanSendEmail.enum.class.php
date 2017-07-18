@@ -11,6 +11,9 @@ class CanSendEnums
 			"27" => "SERVICE_MAILS",//top 8 mailers
 			"22" => "SERVICE_MAILS",   //phone verification mailer
 			"5" => "CONTACT_ALERT_MAILS", //eoi mailers
+			"2" => "CONTACT_ALERT_MAILS", //acceptance mailers
+			"13" => "CONTACT_ALERT_MAILS", //write messaage mailers
+			"42" => "CONTACT_ALERT_MAILS", //shortlisted  mailers
 			"SAVED_SEARCH" => "PERSONAL_MATCHES"
 			));
 	public static $fieldMap = array(
@@ -23,4 +26,5 @@ class CanSendEnums
 	public static $channelEnums = array(
 			"EMAIL"=>"EMAIL"
 			);
+	public static $exceptionForMailId = array("1848","1839"); //sample astro report and astro report mail ID
 }

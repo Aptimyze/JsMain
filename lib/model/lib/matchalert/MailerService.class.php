@@ -173,7 +173,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT,SCREENING"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();

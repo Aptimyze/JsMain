@@ -23,10 +23,10 @@ class profileDisplay{
 			}
 			$infoType = substr($infoType, 0, -1);
                         if($infoType=="VISITORS"){
-                            if($stype=='5' || $stype=='IV' || $stype=='AV' || $stype=='WV')
-                                $infoTypenav['matchedOrAll']= 'A';
-                            elseif($stype=='M5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
+                            if($stype=='MV5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
                                 $infoTypenav['matchedOrAll']= 'M';
+                            else
+                                $infoTypenav['matchedOrAll']= 'A';
                         }
 			$pageNo = ceil($offset/$config[$infoType]["COUNT"]);
 			$infoTypenav["PAGE"] = $infoType;
