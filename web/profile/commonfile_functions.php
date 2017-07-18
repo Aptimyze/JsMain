@@ -393,7 +393,7 @@ $js_arr[]=array("jspc/crm/uploadVD_js"   => "4");
 $js_arr[]=array("jspc/crm/pendingFieldVisits_js"   => "5");
 $js_arr[]=array("jspc/crm/requestFieldVisit_js"   => "5");
 $js_arr[]=array("jspc/crm/dateSelectionField_js"   => "5");
-$js_arr[]=array("jspc/crm/exclusiveMemAllocation_js"    => "8");
+$js_arr[]=array("jspc/crm/exclusiveMemAllocation_js"    => "9");
 $js_arr[]=array("jspc/crm/loader_js"   => "6");
 $js_arr[]=array("jspc/crm/exclusiveServicingII_js"   => "9");
 $js_arr[]=array("jspc/crm/changeActiveServiceInterface_js"   => "13");
