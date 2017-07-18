@@ -2,10 +2,13 @@ import React from "react";
 import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
+import { connect } from "react-redux";
+import { commonApiCall } from "../../common/components/ApiResponseHandler";
+import * as CONSTANTS from '../../common/constants/apiConstants';
 
 var sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
 
-export default class MyjsSlider extends React.Component {
+export class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
     this.state={
@@ -23,6 +26,12 @@ componentDidUpdate(){
   componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
     this.bindSlider();
   }
+
+  componentWillReceiveProps(nextProps){
+      if(nextProps.contact.contactDone)
+        console.log('interest sent');
+  }
+
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
 //console.log()
@@ -37,6 +46,11 @@ bindSlider(){
 
 
 }
+
+sendInterest(pchecksum){
+    console.log(pchecksum);
+}
+
   render(){
      if(!this.props.fetched || !this.props.listing.profiles) {
       return <div></div>;
@@ -91,7 +105,7 @@ bindSlider(){
                       </div>
                     </Link>
             <div className="brdr8 fullwid hgt60">
-                 <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" ><input className="inputProChecksum" type="hidden" value="{elem.profilechecksum}"></input><span className="f15 color2 fontreg">Send Interest</span></div>
+                 <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(tuple.profilechecksum)}><input className="inputProChecksum" type="hidden" value="{tuple.profilechecksum}"></input><span className="f15 color2 fontreg">Send Interest</span></div>
                  <div className="clr"></div>
                </div>
              </div>
@@ -106,3 +120,21 @@ bindSlider(){
 
 }
 }
+
+const mapStateToProps = (state) => {
+    return{
+     contact: state.MyjsReducer
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        contactApi: (profilechecksum) => {
+          var url = '&stype=15&profilechecksum='+profilechecksum;
+          return commonApiCall(CONSTANTS.CONTACT_ENGINE_URL,url,'CONTACT_ACTION','POST',dispatch,true);
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(MyjsSlider)
+
