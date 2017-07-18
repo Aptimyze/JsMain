@@ -46,6 +46,7 @@ class AuthFilter extends sfFilter {
 		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword','/');
 		$spa = 0;
 		$specificDomain = str_replace('https://', '', $request->getUri());
+		$specificDomain = str_replace('http://', '', $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		if($specificDomain[1] == '')
 			$spa = 1;
