@@ -104,6 +104,7 @@ switch(this.props.calData.LAYERID)
     case '14':
     case '15':
     case '17':
+    case '22':
       toReturn =  this.getGenericCAL();
     break;
 
@@ -484,10 +485,10 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
       if(!prevState.objectCounter['AGE']) prevState.objectCounter['AGE']={};
       if(!classCounter)
       {
-        if(elem.data.HAGE)
-          prevState.objectCounter['AGE'].HAGE = elem.data.HAGE;
         if(elem.data.LAGE)
           prevState.objectCounter['AGE'].LAGE = elem.data.LAGE;
+        if(elem.data.HAGE)
+            prevState.objectCounter['AGE'].HAGE = elem.data.HAGE;
       }
       else
       {
