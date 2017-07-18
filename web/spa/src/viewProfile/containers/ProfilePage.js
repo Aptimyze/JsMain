@@ -71,22 +71,27 @@ class ProfilePage extends React.Component {
 
     setNextPrevLink() 
     {
-        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD"];
-        if(this.props.myjsData.apiData != "") {
-            console.log("apiDataDR",this.props.myjsData.apiDataDR);
+        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD","apiDataDR"];
+        if(this.props.myjsData.apiDataIR != "" || this.props.myjsData.apiDataMOD != "" || this.props.myjsData.apiDataVA != "" || this.props.myjsData.apiDataDR != "") {
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
-                if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id) {
+                if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
                     parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
                         nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
-                        this.state.nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&contact_id="+this.state.contact_id;
-                        this.state.nextprofilechecksum = nextObj.profilechecksum;
+                        let nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
+                        let nextprofilechecksum = nextObj.profilechecksum;
+                        this.setState({
+                            nextUrl,nextprofilechecksum
+                        });
                     }
                     if(parseInt(this.state.actual_offset) != 0){
                         prevObj = parentObj.profiles[parseInt(this.state.actual_offset)-1];
-                        this.state.prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&contact_id="+this.state.contact_id;
-                        this.state.prevprofilechecksum = prevObj.profilechecksum
+                        let prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
+                        let prevprofilechecksum = prevObj.profilechecksum;
+                        this.setState({
+                            prevUrl,prevprofilechecksum
+                        });
                     }
                 }
             } 
@@ -123,10 +128,9 @@ class ProfilePage extends React.Component {
                     _this.props.showProfile(_this,_this.state.prevprofilechecksum,_this.state.responseTracking);
                 } 
             }); 
-        }
+        } 
 
     }
-
     componentWillReceiveProps(nextProps)
     {   
         if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum) {
@@ -135,13 +139,18 @@ class ProfilePage extends React.Component {
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
+            if(total_rec == "undefined") {
+                total_rec = "20";
+            }
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
+            let searchid = getParameterByName(window.location.href,"searchid");
             this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
                 actual_offset: actual_offset,
                 total_rec:total_rec,
                 responseTracking:responseTracking,
+                searchid:searchid
             },this.setNextPrevLink);
             let picData;
             if(!nextProps.pic) {
