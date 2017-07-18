@@ -2827,5 +2827,16 @@ class MembershipHandler
             return $autoLoginLink;
         }
     }
+    
+    public function setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount){
+        if(is_array($activeCommunityWiseDiscount)){
+            foreach($activeCommunityWiseDiscount as $cat=>$data){
+                foreach($data as $commId => $val){
+                    $redisVal[$commId] = $val["DISCOUNT"];
+                }
+            }
+            JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
+        }
+    }
 
 }

@@ -1375,8 +1375,51 @@ class crmInterfaceActions extends sfActions
     }
     
     public function executeWelcomeDiscount(sfWebRequest $request){
-        die("LL");
+        $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();
+        if($request->getParameter('submit')){
+            $activeCat = $communityWelcomeDiscountObj->getActiveGroupByCategories();
+            $communityWelcomeDiscountObj->startTransaction();
+            $communityWelcomeDiscountObj->markAllInactive();
+            $this->$error = 0;
+            foreach($activeCat as $cat => $communityArr){
+                foreach($communityArr as $key=>$communityId){
+                    unset($params);
+                    $params["COMMUNITY"]   = $communityId;
+                    $params["CATEGORY_ID"] = $cat;
+                    $params["DISCOUNT"]    = $request->getParameter($cat);
+                    $params["ENTRY_BY"]    = $request->getParameter("name");
+                    $params["ENTRY_DT"]    = date('Y-m-d H:i:s');
+                    $params["ACTIVE"]      = "Y";
+                    if(!($params["DISCOUNT"]>=0 && $params["DISCOUNT"]<=100 && is_numeric($params["DISCOUNT"]))){
+                        $this->error = 1;
+                        $this->message = "Discount should be between 0 to 100";
+                        break;
+                    }
+                    $communityWelcomeDiscountObj->insertCommunityWiseDiscount($params);
+                }
+                if($this->error == 1){
+                    $communityWelcomeDiscountObj->rollbackTransaction();
+                    break;
+                }
+            }
+            if($this->error == 0){
+                $communityWelcomeDiscountObj->commitTransaction();
+                $this->message = "Discount updated successfully";
+            }
+        }       
         
+        $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
+        foreach($activeCommunityWiseDiscount as $catId=>$comArr){
+            foreach($comArr as $key=>$val){
+                $data[$catId]["NAME"][]= $val["COMMUNITY"]=="0"?"Others":FieldMap::getFieldLabel("community", $val["COMMUNITY"]);
+                $data[$catId]["DISCOUNT"] = $val["DISCOUNT"];
+            }
+        }
+        $this->data = $data;
+        
+        $membershipHandlerObj = new MembershipHandler();
+        $membershipHandlerObj->setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount);
+        unset($membershipHandlerObj);
     }
 
 }
