@@ -1,7 +1,7 @@
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
 <body>
 	<br>
-	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:126px;">
+	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:131px;">
 	<div><font size=4px>Screen RB Interests</font></div>
 	<br>
 	~if $infoMsg`
@@ -19,21 +19,21 @@
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
 		<input type="hidden" name="clientIndex" value="~$clientIndex`">
 
- 		<table border="0" align="center" width="80%" table-layout="auto">
+ 		<table border="0" align="center" width="80%" table-layout="auto" style="
+    border-spacing: 10px;">
 			~if $pogRBInterestsPool` 
-				~foreach from=$pogRBInterestsPool item=valued key=pid`
+				~foreach from=$pogRBInterestsPool item=valued key=k`
 					<tr class="formhead" align="center">
-					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$pid`" target="_blank">~$valued.USERNAME`</a>
+					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 				    </tr>
 					<tr class="formhead" align="left">
 					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`">
 					    </td>
+					    <td height="21" align="CENTER">~$valued.ABOUT_ME`</td>
 				    </tr>
-				    <tr class="formhead" align="center">
-					    <td height="21" align="CENTER">
-					    ~$valued.ABOUT_ME`
-					    </td>
+				    <tr align="center">
+				    	<td height="10" align="CENTER"></td>
 				    </tr>
 				~/foreach`
 				<br>

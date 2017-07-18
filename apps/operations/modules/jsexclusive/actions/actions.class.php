@@ -70,7 +70,7 @@ class jsexclusiveActions extends sfActions
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
 			unset($assistedProductObj);
-
+			
 			$clientProfileObj = new Operator;
 			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
 
