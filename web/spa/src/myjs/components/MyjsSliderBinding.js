@@ -1,18 +1,19 @@
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,tupleObject,styleFunction,url)
+  constructor(parent,tupleObject,styleFunction,notMyjs)
   {
     this.parent = parent;
     this.tupleObject = tupleObject;
     this.styleFunction = styleFunction;
     this.el = parent;
-    this.tuple_ratio = 80;
-    this.threshold = 80;
+    this.threshold = !notMyjs ? 80 :100;
     this.windowWidth = window.innerWidth;
-    this.transformX = (this.tuple_ratio * this.windowWidth) / 100 + 10;
+
+    this.tuple_ratio = !notMyjs ? 80 :100;
+    this.transformX = (this.tuple_ratio * this.windowWidth) / 100 + (!notMyjs?10:0);
     this.elementWidth = this.transformX - 10;
-    this.transformX_corr = ((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.getBoundingClientRect().left;
+    this.transformX_corr = !notMyjs ? (((this.tuple_ratio * 3 - 100) * this.windowWidth) / 200 + 10+this.el.getBoundingClientRect().left) :this.windowWidth;
     this._index = 0;
     var _this=this;
     this.page = 1;
@@ -104,7 +105,7 @@ window.addEventListener("resize",function()
             }
             NextSlide()
             {
-                var index = this._index + 1;
+                var index = this._index + 1;console.log(index);
                 if ((index+1) > this.tupleObject.length)
                 {
                     index = this.tupleObject.length-1;

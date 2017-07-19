@@ -49,6 +49,7 @@ alterCssStyle(duration, transform){
     return prevState;
   });
 }
+<<<<<<< HEAD
 // getButtonView(tuple) {
 //   if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
 //     console.log("yess",tuple)
