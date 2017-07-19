@@ -101,6 +101,9 @@ class ExclusiveFunctions{
 						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"PY"));
 					}
 				}
+				$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+				$assistedEoiObj->deleteEntry($params["clientId"],$params["acceptArr"]);
+				unset($assistedEoiObj);
 				unset($producerObj);
 				
 			}
