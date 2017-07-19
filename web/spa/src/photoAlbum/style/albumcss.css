@@ -13,3 +13,14 @@
     -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
 	}
+	.up_sprite {
+    background-image: url('../../img/upload-sprite.png');
+    background-repeat: no-repeat;
+    display: block !important;
+}
+.puback {
+    background-position: 1px -248px;
+    width: 47px;
+    height: 34px;
+}
+.bckpos{top:3%; left:3%}

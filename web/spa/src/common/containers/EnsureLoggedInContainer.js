@@ -4,6 +4,7 @@ import {withRouter} from "react-router";
 import asyncComponent from '../components/asyncComponent';
 import {LOGGED_OUT_PAGE} from "../../common/constants/CommonConstants";
 import {SPA_PAGE} from "../../common/constants/CommonConstants";
+import {stripTrailingSlash} from '../../common/components/UrlDecoder';
 
 // import MyjsPage from '../../myjs/containers/MyjsPage';
 const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
@@ -22,9 +23,11 @@ import {
 class EnsureLoggedInContainer extends React.Component
 {
     componentDidMount() {
-        if ( !this.props.MyProfile.AUTHCHECKSUM && !(LOGGED_OUT_PAGE.indexOf(this.props.location.pathname) !== -1) && (SPA_PAGE.indexOf(this.props.location.pathname) !== -1))
+        var url = stripTrailingSlash(this.props.location.pathname);
+
+        if ( !this.props.MyProfile.AUTHCHECKSUM && !(LOGGED_OUT_PAGE.indexOf(url) !== -1) && (SPA_PAGE.indexOf(url) !== -1))
         {
-            this.props.history.prevUrl = this.props.location.pathname;
+            this.props.history.prevUrl = url;
             this.props.history.push('/login');
         }
     }

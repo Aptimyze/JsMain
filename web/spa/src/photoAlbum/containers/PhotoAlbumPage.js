@@ -85,9 +85,12 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
     getIDn = e.target.id.split("_");
     adjusted_height = parseInt(window.innerWidth * ( imgH_a/imgW_a ));
     document.getElementById(e.target.id).style.height = adjusted_height;
-//    document.getElementById(e.target.id).style.width = "100%";
     document.getElementById("loader_"+getIDn[1]).style.display="none";
     document.getElementById(e.target.id).style.visibility = "visible";
+  }
+  goBack()
+  {
+      this.props.history.goBack();
   }
 
 
@@ -109,7 +112,8 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
       return(
 
-          <div>
+          <div className="posrel">
+            <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
             <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
 
 
