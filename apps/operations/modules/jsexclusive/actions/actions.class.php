@@ -126,7 +126,7 @@ class jsexclusiveActions extends sfActions
 				
 				$email = $request->getParameter("email");
 				$exclusiveObj = new ExclusiveFunctions();
-				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"agentEmail"=>$email));
+				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr));
 				unset($exclusiveObj);
 			}
 			++$this->clientIndex;

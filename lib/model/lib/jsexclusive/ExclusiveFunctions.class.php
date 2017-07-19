@@ -49,8 +49,7 @@ class ExclusiveFunctions{
     */
 	public function formatRabbitmqData($inputArr=""){
 		if(is_array($inputArr)){
-			error_log("ankita agentEmail-..".$inputArr["agentEmail"]);
-			$outputArr = array('process' =>'RBSendInterests','data'=>array('type' => 'RB_EOI_SCREENING','body'=>array("MEMBERSHIP"=>"JsExclusive","SENDER"=>$inputArr["clientId"],"RECEIVER"=>$inputArr["acceptArr"],"SCREENED_DT"=>date("Y-m-d H:i:s"),"agentEmail"=>$inputArr["agentEmail"])), 'redeliveryCount'=>0);
+			$outputArr = array('process' =>'RBSendInterests','data'=>array('type' => 'RB_EOI_SCREENING','body'=>array("MEMBERSHIP"=>"JsExclusive","SENDER"=>$inputArr["clientId"],"RECEIVER"=>$inputArr["acceptArr"],"SCREENED_DT"=>date("Y-m-d H:i:s"))), 'redeliveryCount'=>0);
 			return $outputArr;
 		}
 		else{
@@ -66,30 +65,31 @@ class ExclusiveFunctions{
 			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
 				$mqData = $this->formatRabbitmqData($params);
 			}
-			
 			$exMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
 			if(is_array($mqData)){
 				$producerObj = new Producer();
 				if($producerObj->getRabbitMQServerConnected()){
 					$producerObj->sendMessage($mqData);
+					
 					foreach ($params["acceptArr"] as $key => $value) {
-						$exMappingObj->addClientMemberEntry($params["clientId"],$value,"Y");
+						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"Y"));
 					}
 				} 
 				else{
 					foreach ($params["acceptArr"] as $key => $value) {
-						$exMappingObj->addClientMemberEntry($params["clientId"],$value,"PY");
+						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"PY"));
 					}
 				}
 				unset($producerObj);
 				
 			}
+			
 			if(is_array($params["discardArr"]) && count($params["discardArr"])>0){
 				$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
 				$assistedEoiObj->deleteEntry($params["clientId"],$params["discardArr"]);
 				unset($assistedEoiObj);
 				foreach ($params["discardArr"] as $key => $value) {
-					$exMappingObj->addClientMemberEntry($params["clientId"],$value,"N");
+					$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"N"));
 				}
 			}
 			unset($exMappingObj);
