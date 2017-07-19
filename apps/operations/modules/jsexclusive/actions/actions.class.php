@@ -147,7 +147,9 @@ class jsexclusiveActions extends sfActions
 				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr));
 				unset($exclusiveObj);
 			}
-			++$this->clientIndex;
+			else{
+				++$this->clientIndex;
+			}
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
 		else{
