@@ -11,12 +11,11 @@
 	</div>
 	<div style="text-align:center;font-size:12px;width:80%;margin-left:131px;">
 		~if $clientData`
-		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
+		<div style="font-size: 15px">Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
 		~if $clientData.HoroscopeMatch eq 'Y'`
-			<div>Horoscope match is Necessary</div>
+			<div style="font-size: 20px">Horoscope match is Necessary</div>
 		~/if`
 	~/if`
-	</br>
 	</div>
 	<br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">

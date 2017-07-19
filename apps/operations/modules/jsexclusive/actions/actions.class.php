@@ -18,9 +18,11 @@ class jsexclusiveActions extends sfActions
 		$request=sfContext::getInstance()->getRequest();
 		$this->cid=$request->getParameter("cid");
 		$this->name=$request->getParameter("name");
+		$this->module = $request->getParameter("module");
+		$this->action = $request->getParameter("action");
 
 		//put module wise condition
-		if($this->name){
+		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->unscreenedClientsCount = $exclusiveObj->getUnScreenedClientCount($this->name);
 			unset($exclusiveObj);
