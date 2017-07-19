@@ -3,8 +3,9 @@ import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
-  
+
 export default class MyjsSlider extends React.Component {
+
   constructor(props) {
     super(props);
     this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
@@ -16,7 +17,7 @@ export default class MyjsSlider extends React.Component {
 
     }
     console.log("mm",props.listing.infotype)
-  
+
   }
 
 componentDidUpdate(){
@@ -26,6 +27,7 @@ componentDidUpdate(){
 componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
   this.bindSlider();
 }
+
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
@@ -50,6 +52,7 @@ alterCssStyle(duration, transform){
   });
 }
 
+
 // getButtonView(tuple) {
 //   if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
 //     console.log("yess",tuple)
@@ -64,13 +67,13 @@ alterCssStyle(duration, transform){
 //                   </div>
 //                   <div className="clr"></div>
 //                 </div>);
-//       } 
+//       }
 //       else {
 //           return "";
 //       }
 // }
 
-render(){ 
+render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
@@ -90,6 +93,9 @@ render(){
           <div className="swrapper" id="swrapper">
             <div className="wrap-box" id={"wrapbox_"+this.props.listingName}>
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
+
+
+
               {this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
                   <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>
@@ -123,10 +129,14 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton/>
+
+                    <ContactEngineButton buttondetails={tuple}/>
+
                 </div>
            </div>
          ))}
+
+
          <div className="clr"></div>
          </div>
        </div>

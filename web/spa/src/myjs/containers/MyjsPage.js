@@ -17,7 +17,7 @@ import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-import contactEngine from "../../contact_engine/containers/contactEngine";
+
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -223,14 +223,14 @@ export  class MyjsPage extends React.Component {
 	    }
 
 	    if(this.props.myjsData.modFetched){
-	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
+	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
 	    }
 	    if(this.props.myjsData.vaFetched){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
+				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
 	    }
 			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
 			{
