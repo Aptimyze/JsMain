@@ -121,6 +121,7 @@ class jsexclusiveActions extends sfActions
 				$discardArr = $formArr["DISCARD"];
 				if(is_array($acceptArr) && is_array($discardArr)){
 					$acceptArr = array_diff($acceptArr, $discardArr);
+					$acceptArr = array_values($acceptArr);
 				}
 				
 				$email = $request->getParameter("email");
