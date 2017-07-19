@@ -159,6 +159,9 @@ EOF;
                                     
 				$matchArr = $resultArr['PIDS'];
 				$matchCount = $resultArr['CNT'];
+                                
+                                $isNewRBEligible = MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID());
+                                
 				// getting partner matches
 				if(($limit > $limitCounter) && $matchCount)
 				{
@@ -177,10 +180,13 @@ EOF;
 						}
 						UserFilterCheck::$filterObj=null;
                                                 
-                                                $sendInterestTableObj->insertProfiles($profileObj->getPROFILEID(), $receiverObj->getPROFILEID());
-						/*$contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
-						if($contactEngineObj)
-						if($contactEngineObj->getComponent()->errorMessage != '')
+                                                if($isNewRBEligible)
+                                                    $sendInterestTableObj->insertProfiles($profileObj->getPROFILEID(), $receiverObj->getPROFILEID());
+                                                else
+                                                    $contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
+                                                
+						if($isNewRBEligible || $contactEngineObj)
+						if(!$isNewRBEligible && $contactEngineObj->getComponent()->errorMessage != '')
 						{
 							// if any error occurs send mail
 							$mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
@@ -190,12 +196,13 @@ EOF;
 							
 						}
 						else
-						{*/
+						{
 							//tracking of EOI sent
 							$totalContactsMade++;
 							$limitCounter++;
 							try{
-								//$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
+                                                            if(!$isNewRBEligible)
+								$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
                                                                 // insert entry in receiver limit array
                                                                 $receiverEoiObj->insertOrUpdateEntryForReceiver($receiverId);
 							}
@@ -203,7 +210,7 @@ EOF;
 							{
 								$this->setExceptionError($ex);
 							}
-						//}
+						}
                                                 ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)

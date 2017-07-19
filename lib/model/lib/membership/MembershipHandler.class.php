@@ -2834,7 +2834,7 @@ class MembershipHandler
         }
     }
 
-    public function isEligibleForRBHandling($profileid) {
+    public static function isEligibleForRBHandling($profileid) {
         if(empty($profileid) || !is_numeric($profileid)){
             return false;
         }
