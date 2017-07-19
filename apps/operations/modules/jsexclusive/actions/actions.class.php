@@ -18,6 +18,16 @@ class jsexclusiveActions extends sfActions
 		$request=sfContext::getInstance()->getRequest();
 		$this->cid=$request->getParameter("cid");
 		$this->name=$request->getParameter("name");
+
+		//put module wise condition
+		if($this->name){
+			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+			$this->unscreenedClientsCount = $exclusiveObj->getUnScreenedClientCount($this->name);
+			unset($exclusiveObj);
+		}
+		else{
+			$this->unscreenedClientsCount = 0;
+		}
 	}
 	/**
 	* Executes index action
@@ -106,11 +116,18 @@ class jsexclusiveActions extends sfActions
 			if(empty($this->clientIndex)){
 				$this->clientIndex = 0;
 			}
-			$acceptArr = $formArr["ACCEPT"];
-			$discardArr = $formArr["DISCARD"];
-			$acceptArr = array_diff($acceptArr, $discardArr);
-			print_r($acceptArr);
-			
+			if($formArr["submit"] == "SUBMIT"){
+				$acceptArr = $formArr["ACCEPT"];
+				$discardArr = $formArr["DISCARD"];
+				if(is_array($acceptArr) && is_array($discardArr)){
+					$acceptArr = array_diff($acceptArr, $discardArr);
+				}
+				
+				$email = $request->getParameter("email");
+				$exclusiveObj = new ExclusiveFunctions();
+				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"agentEmail"=>$email));
+				unset($exclusiveObj);
+			}
 			++$this->clientIndex;
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}

@@ -3,6 +3,7 @@
 	<br>
 	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:131px;">
 	<div><font size=4px>Screen RB Interests</font></div>
+	<div><font size=4px>Clients left-~$unscreenedClientsCount`</font></div>
 	<br>
 	~if $infoMsg`
 		<div>~$infoMsg`</div>
@@ -18,6 +19,7 @@
 	<br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
 		<input type="hidden" name="clientIndex" value="~$clientIndex`">
+		<input type="hidden" name="clientId" value="~$clientId`">
 
  		<table border="0" align="center" width="80%" table-layout="auto" style="
     border-spacing: 10px;">

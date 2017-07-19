@@ -1,6 +1,9 @@
 <?php
 class ExclusiveFunctions{
 
+	/*formatScreenRBInterestsData - format screened RB interests for clients assigned to logged in RM and filtered by RM
+    * @param :$clientParams=array(),$pogRBInterestsPids=array()
+    */
 	public function formatScreenRBInterestsData($clientParams=array(),$pogRBInterestsPids=array()){
 		$pogRBInterestsPool = array();
 		foreach ($pogRBInterestsPids as $key => $pid) {
@@ -39,6 +42,61 @@ class ExclusiveFunctions{
 			unset($profileObj);
 		}
 		return $pogRBInterestsPool;
+	}
+
+	/*formatRabbitmqData - format screened RB data for rabbitmq
+    * @param :$inputArr=""
+    */
+	public function formatRabbitmqData($inputArr=""){
+		if(is_array($inputArr)){
+			error_log("ankita agentEmail-..".$inputArr["agentEmail"]);
+			$outputArr = array('process' =>'RBSendInterests','data'=>array('type' => 'RB_EOI_SCREENING','body'=>array("MEMBERSHIP"=>"JsExclusive","SENDER"=>$inputArr["clientId"],"RECEIVER"=>$inputArr["acceptArr"],"SCREENED_DT"=>date("Y-m-d H:i:s"),"agentEmail"=>$inputArr["agentEmail"])), 'redeliveryCount'=>0);
+			return $outputArr;
+		}
+		else{
+			return null;
+		}
+	}
+
+	/*processScreenedEois - process screened accepted and declined RB eois
+    * @param :$params=""
+    */
+	public function processScreenedEois($params=""){
+		if(is_array($params) && $params["clientId"] && $params["agentUsername"]){
+			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
+				$mqData = $this->formatRabbitmqData($params);
+			}
+			
+			$exMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
+			if(is_array($mqData)){
+				$producerObj = new Producer();
+				if($producerObj->getRabbitMQServerConnected()){
+					$producerObj->sendMessage($mqData);
+					foreach ($params["acceptArr"] as $key => $value) {
+						$exMappingObj->addClientMemberEntry($params["clientId"],$value,"Y");
+					}
+				} 
+				else{
+					foreach ($params["acceptArr"] as $key => $value) {
+						$exMappingObj->addClientMemberEntry($params["clientId"],$value,"PY");
+					}
+				}
+				unset($producerObj);
+				
+			}
+			if(is_array($params["discardArr"]) && count($params["discardArr"])>0){
+				$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+				$assistedEoiObj->deleteEntry($params["clientId"],$params["discardArr"]);
+				unset($assistedEoiObj);
+				foreach ($params["discardArr"] as $key => $value) {
+					$exMappingObj->addClientMemberEntry($params["clientId"],$value,"N");
+				}
+			}
+			unset($exMappingObj);
+			$exServicingObj = new billing_EXCLUSIVE_SERVICING();
+			$exServicingObj->updateScreenedStatus($params["agentUsername"],$params["clientId"],'Y');
+			unset($exServicingObj);
+		}
 	}
 }
 ?>
