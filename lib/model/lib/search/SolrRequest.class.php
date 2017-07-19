@@ -190,6 +190,7 @@ class SolrRequest implements RequestHandleInterface
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
                 else
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout,'',$profileObj->getPROFILEID());
+                
                 $end= microtime(TRUE);
                 $diff = $end - $start;
                 if($diff > 2 ){
@@ -198,6 +199,7 @@ class SolrRequest implements RequestHandleInterface
                 }
                 
                 if(!$this->searchResults){
+                        $this->searchParamtersObj->setSEARCH_FAILED(1);
                         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".date('H:i:s')." ::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
