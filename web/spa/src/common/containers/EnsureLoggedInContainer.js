@@ -58,7 +58,10 @@ class EnsureLoggedInContainer extends React.Component
                        </div>
         }
         else
+        {
+            this.props.history.push('/login');
             return null;
+        }
     }
 
 

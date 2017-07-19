@@ -43,7 +43,7 @@ class AuthFilter extends sfFilter {
 
 		/*SPA*/
 
-		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword','/');
+		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword');
 		$spa = 0;
 		$originalArray = array('https://','http://');	
 		$replaceArray = array('','');	
