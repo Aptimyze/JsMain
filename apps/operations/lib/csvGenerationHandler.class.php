@@ -2383,8 +2383,11 @@ class csvGenerationHandler
                                 $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
                             else if($filter =="RENEWAL_PROCESS_IN_DIALER")
                                 $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
-                            else
+                            else if($filter =="UNSUBSCRIBED")
+                                $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else{
                                 $fpCsvProfileLogObj->insertProfile($val['PROFILEID'],'',$csvSent,$filter,'Y','','',$process);
+                            }
                         }
 		}
 		elseif($profileid)	
