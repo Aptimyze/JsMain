@@ -58,11 +58,11 @@ export default class HamMain extends React.Component {
         axios.get(CONSTANTS.API_SERVER+"/api/v1/api/logout?AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM") )
         .then(function(response){
         })
-        removeCookie("AUTHCHECKSUM");
         localStorage.clear();
+        removeCookie("AUTHCHECKSUM");
         setTimeout(function(){
-            window.location.href="/"
-        },1500); 
+            window.location.href="/"   
+        },2000); 
     }
 
     checkHome(e) 
