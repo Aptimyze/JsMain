@@ -33,7 +33,14 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
 		try{
 			$sql="DELETE FROM Assisted_Product.AP_SEND_INTEREST_PROFILES WHERE SENDER=:sender AND";
             if(is_array($receiver)){
-                $sql .= " RECEIVER IN (:receiver)";
+                $receiverStr = "";
+                foreach ($receiver as $key => $value) {
+                    $receiverStr .= ":receiver".$key.",";
+                }
+                if(strlen($receiverStr)>0){
+                    $receiverStr = substr($receiverStr, 0,-1);
+                    $sql .= " RECEIVER IN (".$receiverStr.")";
+                }
             }
             else{
                 $sql .= " RECEIVER=:receiver";
@@ -41,7 +48,9 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":sender",$sender,PDO::PARAM_INT);
             if(is_array($receiver)){
-                $prep->bindValue(":receiver",$receiver,PDO::PARAM_STR);  
+                foreach ($receiver as $key => $value){
+                    $prep->bindValue(":receiver".$key,$value,PDO::PARAM_INT);   
+                }   
             }
             else{
                 $prep->bindValue(":receiver",$receiver,PDO::PARAM_INT);
