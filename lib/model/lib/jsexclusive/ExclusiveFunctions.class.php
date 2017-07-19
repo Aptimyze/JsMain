@@ -6,6 +6,19 @@ class ExclusiveFunctions{
     */
 	public function formatScreenRBInterestsData($clientParams=array(),$pogRBInterestsPids=array()){
 		$pogRBInterestsPool = array();
+
+		if(count($pogRBInterestsPids)>0 && $clientParams["HoroscopeMatch"] == 'Y'){
+			$gunaScoreObj = new gunaScore();
+			$gunaScoreArr = $gunaScoreObj->getGunaScore($clientParams['PROFILEID'],$clientParams['clientCaste'],implode(",", $pogRBInterestsPids),$clientParams["gender"],1);
+			unset($gunaScoreObj);
+			
+			foreach ($gunaScoreArr as $key => $valueArr) {
+				foreach ($valueArr as $k => $v) {
+					$formattedGunaScoreArr[$k] = $v;
+				}
+			}
+			unset($gunaScoreArr);
+		} 
 		foreach ($pogRBInterestsPids as $key => $pid) {
 			$profileObj = new Operator;
 			$profileObj->getDetail($pid,"PROFILEID","PROFILEID,USERNAME,YOURINFO,HAVEPHOTO,GENDER,HOROSCOPE_MATCH");
@@ -38,12 +51,8 @@ class ExclusiveFunctions{
 	        				$pogRBInterestsPool[$key]['PHOTO_URL'] = sfConfig::get("app_img_url").constant('StaticPhotoUrls::noPhotoFemaleProfilePic120Url');
 	        			}
 	        		}
-	        		if($clientParams["HoroscopeMatch"] == 'Y'){
-	        			$gunaScoreObj = new gunaScore();
-	        			$score = $gunaScoreObj->getGunaScore($clientParams['PROFILEID'],$clientParams['clientCaste'],$pid,$clientParams["gender"],'',1);
-	        			unset($gunaScoreObj);
-	        			$pogRBInterestsPool[$key]['GUNA_SCORE'] = $score[$pid];
-	        			unset($score);
+	        		if(is_array($formattedGunaScoreArr) && $formattedGunaScoreArr[$pid]){
+	        			$pogRBInterestsPool[$key]['GUNA_SCORE'] = $formattedGunaScoreArr[$pid];
 	        		}
 	        	}
 			}
