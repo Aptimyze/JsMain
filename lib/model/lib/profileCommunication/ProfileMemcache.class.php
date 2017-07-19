@@ -241,6 +241,9 @@ class ProfileMemcache
      * @var Object
      */
     private static $_instance;
+    
+    const EXPIRY_THRESHHOLD = 120;
+    const EXPIRY_TIME = 600;
     /**
      * 
      * Constructor for instantiating object of ProfileMemcache class
@@ -267,9 +270,8 @@ class ProfileMemcache
         if (true === is_numeric($profileid)) {
             $this->_profileid     = $profileid;
             $this->_updatedFields = null;
-            //JsMemcache::getInstance()->delete($this->_profileid);
-            $this->_memcache      = unserialize(JsMemcache::getInstance()->get($this->_getProfileId()));
-            $this->_initializeMemcacheData();
+            $this->getMemcacheData();            
+            $this->_initializeCacheData();
             
         } else {
             jsException::log("ProfileId is not numeric. Supplied profileid = $profileid");
@@ -286,57 +288,13 @@ class ProfileMemcache
      * 
      * @access private
      */
-    private function _initializeMemcacheData()
+    private function _initializeCacheData()
     {
-        $this->GROUPS_UPDATED          = $this->_memcache["GROUPS_UPDATED"] ? $this->_memcache["GROUPS_UPDATED"] : 1;
-        $this->ACC_BY_ME               = $this->_memcache["ACC_BY_ME"] ? $this->_memcache["ACC_BY_ME"] : 0;
-        $this->ACC_ME                  = $this->_memcache["ACC_ME"] ? $this->_memcache["ACC_ME"] : 0;
-        $this->ACC_ME_NEW              = $this->_memcache["ACC_ME_NEW"] ? $this->_memcache["ACC_ME_NEW"] : 0;
-        $this->DEC_BY_ME               = $this->_memcache["DEC_BY_ME"] ? $this->_memcache["DEC_BY_ME"] : 0;
-        $this->DEC_ME                  = $this->_memcache["DEC_ME"] ? $this->_memcache["DEC_ME"] : 0;
-        $this->DEC_ME_NEW              = $this->_memcache["DEC_ME_NEW"] ? $this->_memcache["DEC_ME_NEW"] : 0;
-        $this->TODAY_INI_BY_ME         = $this->_memcache["TODAY_INI_BY_ME"] ? $this->_memcache["TODAY_INI_BY_ME"] : 0;
-        $this->WEEK_INI_BY_ME          = $this->_memcache["WEEK_INI_BY_ME"] ? $this->_memcache["WEEK_INI_BY_ME"] : 0;
-        $this->MONTH_INI_BY_ME         = $this->_memcache["MONTH_INI_BY_ME"] ? $this->_memcache["MONTH_INI_BY_ME"] : 0;
-        $this->TOTAL_CONTACTS_MADE     = $this->_memcache["TOTAL_CONTACTS_MADE"] ? $this->_memcache["TOTAL_CONTACTS_MADE"] : 0;
-        $this->CONTACTS_MADE_AFTER_DUP = $this->_memcache["CONTACTS_MADE_AFTER_DUP"] ? $this->_memcache["CONTACTS_MADE_AFTER_DUP"] : 0;
-        $this->NOT_REP                 = $this->_memcache["NOT_REP"] ? $this->_memcache["NOT_REP"] : 0;
-        $this->OPEN_CONTACTS           = $this->_memcache["OPEN_CONTACTS"] ? $this->_memcache["OPEN_CONTACTS"] : 0;
-        $this->CANCELLED_EOI           = $this->_memcache["CANCELLED_EOI"] ? $this->_memcache["CANCELLED_EOI"] : 0;
-        $this->AWAITING_RESPONSE       = $this->_memcache["AWAITING_RESPONSE"] ? $this->_memcache["AWAITING_RESPONSE"] : 0;
-        $this->AWAITING_RESPONSE_NEW   = $this->_memcache["AWAITING_RESPONSE_NEW"] ? $this->_memcache["AWAITING_RESPONSE_NEW"] : 0;
-        $this->FILTERED                = $this->_memcache["FILTERED"] ? $this->_memcache["FILTERED"] : 0;
-        $this->FILTERED_NEW            = $this->_memcache["FILTERED_NEW"] ? $this->_memcache["FILTERED_NEW"] : 0;
-        $this->HOROSCOPE               = $this->_memcache["HOROSCOPE"] ? $this->_memcache["HOROSCOPE"] : 0;
-        $this->HOROSCOPE_REQUEST_BY_ME           = $this->_memcache["HOROSCOPE_REQUEST_BY_ME"] ? $this->_memcache["HOROSCOPE_REQUEST_BY_ME"] : 0;
-        $this->HOROSCOPE_NEW       = $this->_memcache["HOROSCOPE_NEW"] ? $this->_memcache["HOROSCOPE_NEW"] : 0;
-        $this->INTRO_CALLS               = $this->_memcache["INTRO_CALLS"] ? $this->_memcache["INTRO_CALLS"] : 0;
-        $this->INTRO_CALLS_COMPLETE      = $this->_memcache["INTRO_CALLS_COMPLETE"] ? $this->_memcache["INTRO_CALLS_COMPLETE"] : 0;
-        $this->PHOTO_REQUEST           = $this->_memcache["PHOTO_REQUEST"] ? $this->_memcache["PHOTO_REQUEST"] : 0;
-        $this->PHOTO_REQUEST_NEW       = $this->_memcache["PHOTO_REQUEST_NEW"] ? $this->_memcache["PHOTO_REQUEST_NEW"] : 0;
-        $this->PHOTO_REQUEST_BY_ME          = $this->_memcache["PHOTO_REQUEST_BY_ME"] ? $this->_memcache["PHOTO_REQUEST_BY_ME"] : 0;
-        $this->MESSAGE                 = $this->_memcache["MESSAGE"] ? $this->_memcache["MESSAGE"] : 0;
-        $this->MESSAGE_NEW             = $this->_memcache["MESSAGE_NEW"] ? $this->_memcache["MESSAGE_NEW"] : 0;
-        $this->MESSAGE_ALL                 = $this->_memcache["MESSAGE_ALL"] ? $this->_memcache["MESSAGE_ALL"] : 0;
-        $this->MATCHALERT              = $this->_memcache["MATCHALERT"] ? $this->_memcache["MATCHALERT"] : 0;
-        $this->MATCHALERT_TOTAL              = $this->_memcache["MATCHALERT_TOTAL"] ? $this->_memcache["MATCHALERT_TOTAL"] : 0;
-        $this->VISITOR_ALERT           = $this->_memcache["VISITOR_ALERT"] ? $this->_memcache["VISITOR_ALERT"] : 0;
-        $this->VISITORS_ALL           = $this->_memcache["VISITORS_ALL"] ? $this->_memcache["VISITORS_ALL"] : 0;
-        $this->CHAT_REQUEST            = $this->_memcache["CHAT_REQUEST"] ? $this->_memcache["CHAT_REQUEST"] : 0;
-        $this->BOOKMARK                = $this->_memcache["BOOKMARK"] ? $this->_memcache["BOOKMARK"] : 0;
-        $this->SAVED_SEARCH                = $this->_memcache["SAVED_SEARCH"] ? $this->_memcache["SAVED_SEARCH"] : 0;
+        $arr = $this->_memcache;
         
-        $this->JUST_JOINED_MATCHES            = $this->_memcache["JUST_JOINED_MATCHES"] ? $this->_memcache["JUST_JOINED_MATCHES"] : 0;
-        $this->JUST_JOINED_MATCHES_NEW                = $this->_memcache["JUST_JOINED_MATCHES_NEW"] ? $this->_memcache["JUST_JOINED_MATCHES_NEW"] : 0;
-        $this->CONTACTS_VIEWED            = $this->_memcache["CONTACTS_VIEWED"] ? $this->_memcache["CONTACTS_VIEWED"] : 0;
-        $this->PEOPLE_WHO_VIEWED_MY_CONTACTS            = $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] ? $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] : 0;
-         $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
-        $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
-        $this->INTEREST_ARCHIVED           = $this->_memcache["INTEREST_ARCHIVED"] ? $this->_memcache["INTEREST_ARCHIVED"] : "";
-        $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
-        $this->INTEREST_EXPIRING                = $this->_memcache["INTEREST_EXPIRING"] ? $this->_memcache["INTEREST_EXPIRING"] : 0;
-    
-    
+        foreach ($arr as $key => $value) {
+         $this->$key = $value ;   
+        }
     }
     
     /**
@@ -357,6 +315,24 @@ class ProfileMemcache
         return $this->_profileid;
         
     }
+    /**
+     * 
+     * Get the Profile Key for which cache will be set.
+     * 
+     * <p>
+     * This function returns the key for the profileid of the logged in user for which Cached Data was requested. 
+     * It gets the value of {@link $_profileid}
+     * </p>
+     * 
+     * @access private
+     * @return String
+     */
+    private function _getProfileKey()
+    {
+        
+        return "_k_".$this->_profileid;
+        
+    }
     
     /**
      * 
@@ -370,37 +346,30 @@ class ProfileMemcache
      * @access private
      * @return bool
      */
-    private function _setMemcacheData($data_variables)
+    private function _setCacheData()
     {
         // Get TTL of Key
-        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileId());
-        if($lifetime < 0)
+        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileKey());
+        foreach($this->_updatedFields as $key =>$value)
+        {
+           $tempArr[$key] = $this->get($key);
+
+        }
+        if($lifetime < self::EXPIRY_THRESHHOLD)
         {
             // key doesnot exist or expire time is not defined
-            $lifetime = 1800;
+            $lifetime = self::EXPIRY_TIME;
+            JsMemcache::getInstance()->setHashObject($this->_getProfileKey(),$tempArr,$lifetime) ;
+
         }
-        $ret_val = JsMemcache::getInstance()->set($this->_getProfileId(), $data_variables, $lifetime);
+        else
+            JsMemcache::getInstance()->setHashObjectWithoutExp($this->_getProfileKey(),$tempArr) ;
+        $this->_updatedFields = null;
+//        $ret_val = JsMemcache::getInstance()->set($this->_getProfileKey(), $data_variables, $lifetime);
         return $ret_val;
     }
     
-    /**
-     * 
-     * Update JsMemcache Variables.
-     * 
-     * <p>
-     * This function updates the variables for current profileid's JsMemcache Object.
-     * </p>
-     * 
-     * @param $data_variables, Must be serialized only.
-     * @access private
-     * @throws Exception
-     */
-    private function _updateMemcacheVariables($data_variables)
-    {
-        $this->_setMemcacheData($data_variables);
-    }
-    
-    /**
+   /**
      * 
      * Get the Instance of ProfileMemcache class.
      * 
@@ -445,929 +414,47 @@ class ProfileMemcache
     public static function clearInstance($profileid)
     {
         if (isset(self::$_instance[$profileid])) {
-            JsMemcache::getInstance()->delete(self::$_instance[$profileid]->_getProfileId());
+            JsMemcache::getInstance()->delete(self::$_instance[$profileid]->_getProfileKey());
             unset(self::$_instance[$profileid]);
         } else {
             //      jsException::log("Please set the instance first by calling \"getInstance\" method.");
         }
     }
-    
-    /**
-     * 
-     * Get count of ACC_BY_ME.
-     * 
-     * <p>
-     * This function returns the count of ACC_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getACC_BY_ME()
-    {
-        
-        return $this->ACC_BY_ME ? $this->ACC_BY_ME : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of ACC_BY_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setACC_BY_ME($current = 0)
-    {
-        $this->ACC_BY_ME = $current;
-    }
-    
-    public function getCHAT_REQUEST()
-    {
-        
-        return $this->CHAT_REQUEST ? $this->CHAT_REQUEST : 0;
-        
-    }
-    
-    public function setCHAT_REQUEST($current = 0)
-    {
-        $this->CHAT_REQUEST = $current;
-    }
-    public function getBOOKMARK()
-    {
-        
-        return $this->BOOKMARK ? $this->BOOKMARK : 0;
-        
-    }
-    
-    public function setBOOKMARK($current = 0)
-    {
-        $this->BOOKMARK = $current;
-    }
-    public function getSAVED_SEARCH()
-    {
-        
-        return $this->SAVED_SEARCH ? $this->SAVED_SEARCH : 0;
-        
-    }
-    
-    public function setSAVED_SEARCH($current = 0)
-    {
-        $this->SAVED_SEARCH = $current;
-    }
-    /**
-     * 
-     * Get count of ACC_ME. 
-     * 
-     * <p>
-     * This function returns the count of ACC_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getACC_ME()
-    {
-        
-        return $this->ACC_ME ? $this->ACC_ME : 0;
-        
-    }
-    
-    public function getACC_ME_NEW()
-    {
-        
-        return $this->ACC_ME_NEW ? $this->ACC_ME_NEW : 0;
-        
-    }
-    /**
-     * 
-     * Set count of ACC_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setACC_ME($current = 0)
-    {
-        $this->ACC_ME = $current;
-    }
-    public function setACC_ME_NEW($current = 0)
-    {
-        $this->ACC_ME_NEW = $current;
-    }
-    
-    /**
-     * 
-     * Get count of DEC_BY_ME
-     * 
-     * <p>
-     * This function returns the count of DEC_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getDEC_BY_ME()
-    {
-        
-        return $this->DEC_BY_ME ? $this->DEC_BY_ME : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of DEC_BY_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setDEC_BY_ME($current = 0)
-    {
-        $this->DEC_BY_ME = $current;
-        
-    }
-    
-    /**
-     * 
-     * Get count of DEC_ME
-     * 
-     * <p>
-     * This function returns the count of DEC_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getDEC_ME()
-    {
-        
-        return $this->DEC_ME ? $this->DEC_ME : 0;
-        
-    }
-    public function getDEC_ME_NEW()
-    {
-        
-        return $this->DEC_ME_NEW ? $this->DEC_ME_NEW : 0;
-        
-    }
-    /**
-     * 
-     * Set count of DEC_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setDEC_ME($current = 0)
-    {
-        $this->DEC_ME = $current;
-        
-    }
-    public function setDEC_ME_NEW($current = 0)
-    {
-        $this->DEC_ME_NEW = $current;
-        
-    }
-    public function getMESSAGE()
-    {
-        
-        return $this->MESSAGE ? $this->MESSAGE : 0;
-        
-    }
-    public function setMESSAGE($current = 0)
-    {
-        $this->MESSAGE = $current;
-        
-    }
-    
-    public function getMESSAGE_NEW()
-    {
-        
-        return $this->MESSAGE_NEW ? $this->MESSAGE_NEW : 0;
-        
-    }
-    public function setMESSAGE_NEW($current = 0)
-    {
-        $this->MESSAGE_NEW = $current;
-        
-    }
-    public function getHOROSCOPE()
-    {
-        
-        return $this->HOROSCOPE ? $this->HOROSCOPE : 0;
-        
-    }
-    public function setHOROSCOPE($current = 0)
-    {
-        $this->HOROSCOPE = $current;
-        
-    }
-    public function getINTRO_CALLS()
-    {
-        
-        return $this->INTRO_CALLS ? $this->INTRO_CALLS : 0;
-        
-    }
-    public function setINTRO_CALLS($current = 0)
-    {
-        $this->INTRO_CALLS = $current;
-        
-    }
-    public function getINTRO_CALLS_COMPLETE()
-    {
-        
-        return $this->INTRO_CALLS_COMPLETE ? $this->INTRO_CALLS_COMPLETE : 0;
-        
-    }
-    public function setINTRO_CALLS_COMPLETE($current = 0)
-    {
-        $this->INTRO_CALLS_COMPLETE = $current;
-        
-    }
-    public function getHOROSCOPE_REQUEST_BY_ME()
-    {
-        
-        return $this->HOROSCOPE_REQUEST_BY_ME ? $this->HOROSCOPE_REQUEST_BY_ME : 0;
-        
-    }
-    public function setHOROSCOPE_REQUEST_BY_ME($current = 0)
-    {
-        $this->HOROSCOPE_REQUEST_BY_ME = $current;
-        
-    }
-    
-    /*public function getHOROSCOPE_NEW()
-    {
-        
-        return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
-        
-    }
-    public function setHOROSCOPE_NEW($current = 0)
-    {
-        $this->HOROSCOPE_NEW = $current;
-        
-    }*/
-    
-    public function getPHOTO_REQUEST()
-    {
-        
-        return $this->PHOTO_REQUEST ? $this->PHOTO_REQUEST : 0;
-        
-    }
-    public function setPHOTO_REQUEST($current = 0)
-    {
-        $this->PHOTO_REQUEST = $current;
-        
-    }
 
-    public function getINTEREST_ARCHIVED()
-    {
-        return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
-    }
-    public function setINTEREST_ARCHIVED($current = 0)
-    {
-        $this->INTEREST_ARCHIVED = $current;
-    }
-
-
-    public function getPHOTO_REQUEST_BY_ME()
-    {
-        
-        return $this->PHOTO_REQUEST_BY_ME ? $this->PHOTO_REQUEST_BY_ME : 0;
-        
-    }
-    public function setPHOTO_REQUEST_BY_ME($current = 0)
-    {
-
-        $this->PHOTO_REQUEST_BY_ME = $current;
-        
-    }
-
-    
-    public function getPHOTO_REQUEST_NEW()
-    {
-        
-        return $this->PHOTO_REQUEST_NEW ? $this->PHOTO_REQUEST_NEW : 0;
-        
-    }
-    public function setPHOTO_REQUEST_NEW($current = 0)
-    {
-        $this->PHOTO_REQUEST_NEW = $current;
-        
-    }
-
-    public function getHOROSCOPE_NEW()
-    {
-        
-        return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
-        
-    }
-    public function setHOROSCOPE_NEW($current = 0)
-    {
-        $this->HOROSCOPE_NEW = $current;
-        
-    }
-    
-    
-    public function getMATCHALERT()
-    {
-        
-        return $this->MATCHALERT ? $this->MATCHALERT : 0;
-    }
-    public function setMATCHALERT($current = 0)
-    {
-        $this->MATCHALERT = $current;
-    }
-    public function getMATCHALERT_TOTAL()
-    {
-        return $this->MATCHALERT_TOTAL ? $this->MATCHALERT_TOTAL : 0;
-    }
-    public function setMATCHALERT_TOTAL($current = 0)
-    {
-        $this->MATCHALERT_TOTAL = $current;
-    }
-    
-    public function getVISITOR_ALERT()
-    {
-        
-        return $this->VISITOR_ALERT ? $this->VISITOR_ALERT : 0;
-        
-    }
-    public function setVISITOR_ALERT($current = 0)
-    {
-        $this->VISITOR_ALERT = $current;
-    }
-    
-    public function getVISITORS_ALL()
-    {
-        return $this->VISITORS_ALL ? $this->VISITORS_ALL : 0;
-        
-    }
-    public function setVISITORS_ALL($current = 0)
-    {
-        $this->VISITORS_ALL = $current;
-    }
-    
-    /**
-     * Get count of AWAITING_RESPONSE
-     *
-     * <p>
-     * This function gets the count of EOI received AWAITING_RESPONSE
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getAWAITING_RESPONSE()
-    {
-        
-        return $this->AWAITING_RESPONSE ? $this->AWAITING_RESPONSE : 0;
-        
-    }
-    public function getAWAITING_RESPONSE_NEW()
-    {
-        
-        return $this->AWAITING_RESPONSE_NEW ? $this->AWAITING_RESPONSE_NEW : 0;
-        
-    }
-    /**
-     * Set count of AWAITING_RESPONSE
-     *
-     * <p>
-     * This function sets the count of EOI received AWAITING_RESPONSE
-     * </p>
-     *
-     * @access public
-     * @param $current integer
-     */
-    public function setAWAITING_RESPONSE($current = 0)
-    {
-        $this->AWAITING_RESPONSE = $current;
-        
-    }
-    public function setAWAITING_RESPONSE_NEW($current = 0)
-    {
-        $this->AWAITING_RESPONSE_NEW = $current;
-        
-    }
-    /**
-     * Get count of FILTERED
-     *
-     * <p>
-     * This function gets the count of EOI received FILTERED
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getFILTERED()
-    {
-        
-        return $this->FILTERED ? $this->FILTERED : 0;
-        
-    }
-    
-    /**
-     * Set count of FILTERED
-     *
-     * <p>
-     * This function sets the count of EOI received FILTERED
-     * </p>
-     *
-     * @access public
-     * @param $current integer
-     */
-    public function setFILTERED($current = 0)
-    {
-        $this->FILTERED = $current;
-    }
-    
-    /**
-     * Get count of FILTERED_NEW
-     *
-     * <p>
-     * This function gets the count of EOI received FILTERED_NEW
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getFILTERED_NEW()
-    {
-        
-        return $this->FILTERED_NEW ? $this->FILTERED_NEW : 0;
-        
-    }
-    
-    /**
-     * Set count of FILTERED_NEW
-     *
-     * <p>
-     * This function sets the count of EOI received FILTERED_NEW
-     * </p>
-     *
-     * @access public
-     * @param $current integer
-     */
-    public function setFILTERED_NEW($current = 0)
-    {
-        $this->FILTERED_NEW = $current;
-    }
-    
-    
-    
     /**
      * 
-     * Set count of JUST_JOINED_MATCHES
+     * Set data for a key in object
      * 
      * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setJUST_JOINED_MATCHES($current = 0)
-    {
-         $this->JUST_JOINED_MATCHES = $current;
-        
-    }
-    /**
-     * Get count of JUST_JOINED_MATCHES
-     *
-     * <p>
-     * This function gets the count of JUST_JOINED_MATCHES 
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getJUST_JOINED_MATCHES()
-    {
-        return $this->JUST_JOINED_MATCHES;
-        
-    }
-    
-    /**
-     * 
-     * Set count of JUST_JOINED_MATCHES_NEW
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setJUST_JOINED_MATCHES_NEW($current = 0)
-    {
-        $this->JUST_JOINED_MATCHES_NEW = $current;
-        
-    }
-    /**
-     * Get count of JUST_JOINED_MATCHES_NEW
-     *
-     * <p>
-     * This function gets the count of JUST_JOINED_MATCHES_NEW 
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getJUST_JOINED_MATCHES_NEW()
-    {
-        return $this->JUST_JOINED_MATCHES_NEW;
-        
-    }
-    
-    /**
-     * 
-     * Set count of CONTACTS_VIEWED
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setCONTACTS_VIEWED($current = 0)
-    {
-         $this->CONTACTS_VIEWED = $current;
-        
-    }
-    /**
-     * Get count of CONTACTS_VIEWED
-     *
-     * <p>
-     * This function gets the count of CONTACTS_VIEWED 
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getCONTACTS_VIEWED()
-    {
-        return $this->CONTACTS_VIEWED;
-        
-    }
-
-/**
-     * 
-     * Set count of PEOPLE_WHO_VIEWED_MY_CONTACTS
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setPEOPLE_WHO_VIEWED_MY_CONTACTS($current = 0)
-    {
-         $this->PEOPLE_WHO_VIEWED_MY_CONTACTS = $current;
-        
-    }
-    /**
-     * Get count of PEOPLE_WHO_VIEWED_MY_CONTACTS
-     *
-     * <p>
-     * This function gets the count of PEOPLE_WHO_VIEWED_MY_CONTACTS 
-     * </p>
-     *
-     * @access public
-     * @return integer
-     */
-    public function getPEOPLE_WHO_VIEWED_MY_CONTACTS()
-    {
-        return $this->PEOPLE_WHO_VIEWED_MY_CONTACTS;
-        
-    }
-
-    
-    /**
-     * 
-     * Get count of TODAY_INI_BY_ME
-     * 
-     * <p>
-     * This function returns the count of TODAY_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getTODAY_INI_BY_ME()
-    {
-        
-        return $this->TODAY_INI_BY_ME ? $this->TODAY_INI_BY_ME : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of TODAY_INI_BY_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setTODAY_INI_BY_ME($current = 0)
-    {
-        $this->TODAY_INI_BY_ME = $current;
-        
-    }
-    
-    /**
-     * 
-     * Get count of WEEK_INI_BY_ME.
-     * 
-     * <p>
-     * This function returns the count of WEEK_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getWEEK_INI_BY_ME()
-    {
-        
-        return $this->WEEK_INI_BY_ME ? $this->WEEK_INI_BY_ME : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of WEEK_INI_BY_ME.
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setWEEK_INI_BY_ME($current = 0)
-    {
-        $this->WEEK_INI_BY_ME = $current;
-        
-    }
-    
-    /**
-     * 
-     * Get count of MONTH_INI_BY_ME
-     * 
-     * <p>
-     * This function returns the count of MONTH_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getMONTH_INI_BY_ME()
-    {
-        
-        return $this->MONTH_INI_BY_ME ? $this->MONTH_INI_BY_ME : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of MONTH_INI_BY_ME
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setMONTH_INI_BY_ME($current = 0)
-    {
-        $this->MONTH_INI_BY_ME = $current;
-        
-    }
-    public function getCONTACTS_MADE_AFTER_DUP()
-    {
-        return $this->CONTACTS_MADE_AFTER_DUP ? $this->CONTACTS_MADE_AFTER_DUP : 0;
-    }
-    public function setCONTACTS_MADE_AFTER_DUP($current = 0)
-    {
-        $this->CONTACTS_MADE_AFTER_DUP = $current;
-    }
-    
-    /**
-     * 
-     * Get count of TOTAL_CONTACTS_MADE
-     * 
-     * <p>
-     * This function returns the count of TOTAL_CONTACTS_MADE JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getTOTAL_CONTACTS_MADE()
-    {
-        
-        return $this->TOTAL_CONTACTS_MADE ? $this->TOTAL_CONTACTS_MADE : 0;
-        
-    }
-    /**
-     * 
-     * Set count of TOTAL_CONTACTS_MADE 
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setTOTAL_CONTACTS_MADE($current = 0)
-    {
-        $this->TOTAL_CONTACTS_MADE = $current;
-        
-    }
-    /**
-     * 
-     * Get count of GROUPS_UPDATED
-     * 
-     * <p>
-     * This function returns the value of GROUPS_UPDATED JsMemcache Object variable. If set, returns the same. Otherwise 1.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    
-    public function getGROUPS_UPDATED()
-    {
-        return $this->GROUPS_UPDATED ? $this->GROUPS_UPDATED : 1;
-    }
-    /**
-     * 
-     * Set data about groups updated in memcache
-     * 
-     * <p>
-     * This function sets the member variable value to the specified $newValue value.
+     * This function sets the member variable value to the specified $value value.
      * </p>
      * 
      * @access public
      * @param $newValue integer
      */
     
-    public function setGROUPS_UPDATED($newValue = 1)
-    {
-        $this->GROUPS_UPDATED                   = $newValue;
-        $this->_updatedFields['GROUPS_UPDATED'] = $this->GROUPS_UPDATED;
+    public function set($key,$value)    {
+        $this->$key  = $value;
+        $this->setFieldUpdated($key);
+
     }
     /**
      * 
-     * Get count of NOT_REP.
+     * Get data for a key in object
      * 
      * <p>
-     * This function returns the count of NOT_REP JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * This function gets the member variable value .
      * </p>
      * 
      * @access public
-     * @return integer
+     * @param $newValue integer
      */
-    public function getNOT_REP()
-    { 
-        return $this->NOT_REP ? $this->NOT_REP : 0;
-        
-    }
     
-    /**
-     * 
-     * Set count of NOT_REP 
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setNOT_REP($current = 0)
-    {
-        $this->NOT_REP = $current;
-        
-    }
-    
-    /**
-     * 
-     * Get count of OPEN_CONTACTS.
-     * 
-     * <p>
-     * This function returns the count of OPEN_CONTACTS JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getOPEN_CONTACTS()
-    {
-        
-        return $this->OPEN_CONTACTS ? $this->OPEN_CONTACTS : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of OPEN_CONTACTS 
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setOPEN_CONTACTS($current = 0)
-    {
-        $this->OPEN_CONTACTS = $current;
-        
+    public function get($key)    {
+        return $this->$key  ;
+
     }
 
-    /**
-     * 
-     * Set count of INTEREST EXPIRING 
-     * 
-     * <p>
-     * This function sets the number of interest expiring values.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setINTEREST_EXPIRING($current = 0)
-    {
-        $this->INTEREST_EXPIRING = $current;
-        
-    }
-    
-    /**
-     * 
-     * Get count of CANCELLED_EOI.
-     * 
-     * <p>
-     * This function returns the count of CANCELLED_EOI JsMemcache Object variable. If set, returns the same. Otherwise 0.
-     * </p>
-     * 
-     * @access public
-     * @return integer
-     */
-    public function getCANCELLED_EOI()
-    {
-        
-        return $this->CANCELLED_EOI ? $this->CANCELLED_EOI : 0;
-        
-    }
-    
-    /**
-     * 
-     * Set count of CANCELLED_EOI 
-     * 
-     * <p>
-     * This function incrementally sets the member variable count to the specified $current value.
-     * </p>
-     * 
-     * @access public
-     * @param $current integer
-     */
-    public function setCANCELLED_EOI($current = 0)
-    {
-        $this->CANCELLED_EOI = $current;
-        
-    }
-    public function getContactedProfiles()
-    {
-        return $this->contactedProfile;
-    }
-    
-    public function setContactedProfile($contactedProfile)
-    {
-        
-        $this->contactedProfile = $contactedProfile;
-    }
     
     /**
      * 
@@ -1383,200 +470,7 @@ class ProfileMemcache
     public function updateMemcacheData()
     {
         
-        $data_variables = array(
-            "ACC_BY_ME" => call_user_func(array(
-                $this,
-                getACC_BY_ME
-            )),
-            "ACC_ME" => call_user_func(array(
-                $this,
-                getACC_ME
-            )),
-            "ACC_ME_NEW" => call_user_func(array(
-                $this,
-                getACC_ME_NEW
-            )),
-            "DEC_BY_ME" => call_user_func(array(
-                $this,
-                getDEC_BY_ME
-            )),
-            "DEC_ME" => call_user_func(array(
-                $this,
-                getDEC_ME
-            )),
-            "DEC_ME_NEW" => call_user_func(array(
-                $this,
-                getDEC_ME_NEW
-            )),
-            "TODAY_INI_BY_ME" => call_user_func(array(
-                $this,
-                getTODAY_INI_BY_ME
-            )),
-            "WEEK_INI_BY_ME" => call_user_func(array(
-                $this,
-                getWEEK_INI_BY_ME
-            )),
-            "TOTAL_CONTACTS_MADE" => call_user_func(array(
-                $this,
-                getTOTAL_CONTACTS_MADE
-            )),
-            "MONTH_INI_BY_ME" => call_user_func(array(
-                $this,
-                getMONTH_INI_BY_ME
-            )),
-            "NOT_REP" => call_user_func(array(
-                $this,
-                getNOT_REP
-            )),
-            "OPEN_CONTACTS" => call_user_func(array(
-                $this,
-                getOPEN_CONTACTS
-            )),
-            "CANCELLED_EOI" => call_user_func(array(
-                $this,
-                getCANCELLED_EOI
-            )),
-            "GROUPS_UPDATED" => call_user_func(array(
-                $this,
-                getGROUPS_UPDATED
-            )),
-            "FILTERED" => call_user_func(array(
-                $this,
-                getFILTERED
-            )),
-            "FILTERED_NEW" => call_user_func(array(
-                $this,
-                getFILTERED_NEW
-            )),
-            "AWAITING_RESPONSE" => call_user_func(array(
-                $this,
-                getAWAITING_RESPONSE
-            )),
-            "AWAITING_RESPONSE_NEW" => call_user_func(array(
-                $this,
-                getAWAITING_RESPONSE_NEW
-            )),
-            "MESSAGE" => call_user_func(array(
-                $this,
-                getMESSAGE
-            )),
-            "MESSAGE_NEW" => call_user_func(array(
-                $this,
-                getMESSAGE_NEW
-            )),
-            "MESSAGE_ALL" => call_user_func(array(
-                $this,
-                getMESSAGE_ALL
-            )),
-            "PHOTO_REQUEST" => call_user_func(array(
-                $this,
-                getPHOTO_REQUEST
-            )),
-            "PHOTO_REQUEST_NEW" => call_user_func(array(
-                $this,
-                getPHOTO_REQUEST_NEW
-            )),
-            "PHOTO_REQUEST_BY_ME" => call_user_func(array(
-                $this,
-                getPHOTO_REQUEST_BY_ME
-            )),
-            "INTRO_CALLS" => call_user_func(array(
-                $this,
-                getINTRO_CALLS
-            )),
-            "INTRO_CALLS_COMPLETE" => call_user_func(array(
-                $this,
-                getINTRO_CALLS_COMPLETE
-            )),
-            "HOROSCOPE" => call_user_func(array(
-                $this,
-                getHOROSCOPE
-            )),
-            "HOROSCOPE_NEW" => call_user_func(array(
-                $this,
-                getHOROSCOPE_NEW
-            )),
-            "HOROSCOPE_REQUEST_BY_ME" => call_user_func(array(
-                $this,
-                getHOROSCOPE_REQUEST_BY_ME
-            )),
-            /*"HOROSCOPE_NEW" => call_user_func(array(
-                $this,
-                getHOROSCOPE_NEW
-            )),*/
-            "CONTACTS_MADE_AFTER_DUP" => call_user_func(array(
-                $this,
-                getCONTACTS_MADE_AFTER_DUP
-            )),
-            "MATCHALERT" => call_user_func(array(
-                $this,
-                getMATCHALERT
-            )),
-            "MATCHALERT_TOTAL" => call_user_func(array(
-                $this,
-                getMATCHALERT_TOTAL
-            )),
-            "VISITOR_ALERT" => call_user_func(array(
-                $this,
-                getVISITOR_ALERT
-            )),
-            "VISITORS_ALL" => call_user_func(array(
-                $this,
-                getVISITORS_ALL
-            )),
-            "CHAT_REQUEST" => call_user_func(array(
-                $this,
-                getCHAT_REQUEST
-            )),
-            "BOOKMARK" => call_user_func(array(
-                $this,
-                getBOOKMARK
-            )),
-            "SAVED_SEARCH" => call_user_func(array(
-                $this,
-                getSAVED_SEARCH
-            )),
-            "JUST_JOINED_MATCHES" => call_user_func(array(
-                $this,
-                getJUST_JOINED_MATCHES
-            )),
-            "JUST_JOINED_MATCHES_NEW" => call_user_func(array(
-                $this,
-                getJUST_JOINED_MATCHES_NEW
-            )),
-            "CONTACTS_VIEWED" => call_user_func(array(
-                $this,
-                getCONTACTS_VIEWED
-            )),
-            "PEOPLE_WHO_VIEWED_MY_CONTACTS" => call_user_func(array(
-                $this,
-                getPEOPLE_WHO_VIEWED_MY_CONTACTS
-            )),
-            "CONTACTED_BY_ME" => call_user_func(array(
-                $this,
-                getCONTACTED_BY_ME
-            )),
-            "CONTACTED_ME" => call_user_func(array(
-                $this,
-                getCONTACTED_ME
-            )),
-            "IGNORED" => call_user_func(array(
-                $this,
-                getIGNORED
-            )),
-             "INTEREST_ARCHIVED" => call_user_func(array(
-                $this,
-                getINTEREST_ARCHIVED
-	    )),
-            "INTEREST_EXPIRING" => call_user_func(array(
-                $this,
-                getINTEREST_EXPIRING
-            )),
-        );
-        
-        $this->_updateMemcacheVariables(serialize($data_variables));
-        // $this->_memcache = unserialize(JsMemcache::getInstance()->get($this->_getProfileId()));
-        
+        $this->_setCacheData();        
     }
     
     /**
@@ -1593,7 +487,7 @@ class ProfileMemcache
      */
     public function getMemcacheData()
     {
-        $this->_memcache = unserialize(JsMemcache::getInstance()->get($this->_getProfileId()));
+        $this->_memcache      = JsMemcache::getInstance()->getHashAllValue($this->_getProfileKey());
         if ($this->_memcache && is_array($this->_memcache))
             return $this->_memcache;
         else
@@ -1622,8 +516,19 @@ class ProfileMemcache
         }
     }
     
+
+    public function setFieldUpdated($key)
+    {
+        
+        $this->_updatedFields[$key] = 1;
+        
+    }
+    public static function unsetInstance($profileid)
+    {
+            unset(self::$_instance[$profileid]);
+    }
     
-    
+
      /**
      * 
      * Set CONTACTED_BY_ME profiles.
@@ -1728,7 +633,1083 @@ class ProfileMemcache
         return $this->IGNORED;
         
     }
+    
+        /**
+     * 
+     * Get count of ACC_BY_ME.
+     * 
+     * <p>
+     * This function returns the count of ACC_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getACC_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
 
+        
+        return $this->ACC_BY_ME ? $this->ACC_BY_ME : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of ACC_BY_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setACC_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->ACC_BY_ME = $current;
+    }
+    
+    public function getCHAT_REQUEST()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->CHAT_REQUEST ? $this->CHAT_REQUEST : 0;
+        
+    }
+    
+    public function setCHAT_REQUEST($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->CHAT_REQUEST = $current;
+    }
+    public function getBOOKMARK()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->BOOKMARK ? $this->BOOKMARK : 0;
+        
+    }
+    
+    public function setBOOKMARK($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->BOOKMARK = $current;
+    }
+    public function getSAVED_SEARCH()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->SAVED_SEARCH ? $this->SAVED_SEARCH : 0;
+        
+    }
+    
+    public function setSAVED_SEARCH($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->SAVED_SEARCH = $current;
+    }
+    /**
+     * 
+     * Get count of ACC_ME. 
+     * 
+     * <p>
+     * This function returns the count of ACC_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getACC_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->ACC_ME ? $this->ACC_ME : 0;
+        
+    }
+    
+    public function getACC_ME_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->ACC_ME_NEW ? $this->ACC_ME_NEW : 0;
+        
+    }
+    /**
+     * 
+     * Set count of ACC_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setACC_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->ACC_ME = $current;
+    }
+    public function setACC_ME_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->ACC_ME_NEW = $current;
+    }
+    
+    /**
+     * 
+     * Get count of DEC_BY_ME
+     * 
+     * <p>
+     * This function returns the count of DEC_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getDEC_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->DEC_BY_ME ? $this->DEC_BY_ME : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of DEC_BY_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setDEC_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->DEC_BY_ME = $current;
+        
+    }
+    
+    /**
+     * 
+     * Get count of DEC_ME
+     * 
+     * <p>
+     * This function returns the count of DEC_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getDEC_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->DEC_ME ? $this->DEC_ME : 0;
+        
+    }
+    public function getDEC_ME_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->DEC_ME_NEW ? $this->DEC_ME_NEW : 0;
+        
+    }
+    /**
+     * 
+     * Set count of DEC_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setDEC_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->DEC_ME = $current;
+        
+    }
+    public function setDEC_ME_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->DEC_ME_NEW = $current;
+        
+    }
+    public function getMESSAGE()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->MESSAGE ? $this->MESSAGE : 0;
+        
+    }
+    public function setMESSAGE($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->MESSAGE = $current;
+        
+    }
+    
+    public function getMESSAGE_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->MESSAGE_NEW ? $this->MESSAGE_NEW : 0;
+        
+    }
+    public function setMESSAGE_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->MESSAGE_NEW = $current;
+        
+    }
+    public function getHOROSCOPE()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->HOROSCOPE ? $this->HOROSCOPE : 0;
+        
+    }
+    public function setHOROSCOPE($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->HOROSCOPE = $current;
+        
+    }
+    public function getINTRO_CALLS()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->INTRO_CALLS ? $this->INTRO_CALLS : 0;
+        
+    }
+    public function setINTRO_CALLS($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->INTRO_CALLS = $current;
+        
+    }
+    public function getINTRO_CALLS_COMPLETE()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->INTRO_CALLS_COMPLETE ? $this->INTRO_CALLS_COMPLETE : 0;
+        
+    }
+    public function setINTRO_CALLS_COMPLETE($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->INTRO_CALLS_COMPLETE = $current;
+        
+    }
+    public function getHOROSCOPE_REQUEST_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->HOROSCOPE_REQUEST_BY_ME ? $this->HOROSCOPE_REQUEST_BY_ME : 0;
+        
+    }
+    public function setHOROSCOPE_REQUEST_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->HOROSCOPE_REQUEST_BY_ME = $current;
+        
+    }
+    
+    /*public function getHOROSCOPE_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
+        
+    }
+    public function setHOROSCOPE_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->HOROSCOPE_NEW = $current;
+        
+    }*/
+    
+    public function getPHOTO_REQUEST()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->PHOTO_REQUEST ? $this->PHOTO_REQUEST : 0;
+        
+    }
+    public function setPHOTO_REQUEST($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->PHOTO_REQUEST = $current;
+        
+    }
+
+    public function getINTEREST_ARCHIVED()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
+    }
+    public function setINTEREST_ARCHIVED($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->INTEREST_ARCHIVED = $current;
+    }
+
+
+    public function getPHOTO_REQUEST_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->PHOTO_REQUEST_BY_ME ? $this->PHOTO_REQUEST_BY_ME : 0;
+        
+    }
+    public function setPHOTO_REQUEST_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+
+        $this->PHOTO_REQUEST_BY_ME = $current;
+        
+    }
+
+    
+    public function getPHOTO_REQUEST_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->PHOTO_REQUEST_NEW ? $this->PHOTO_REQUEST_NEW : 0;
+        
+    }
+    public function setPHOTO_REQUEST_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->PHOTO_REQUEST_NEW = $current;
+        
+    }
+
+    public function getHOROSCOPE_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->HOROSCOPE_NEW ? $this->HOROSCOPE_NEW : 0;
+        
+    }
+    public function setHOROSCOPE_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->HOROSCOPE_NEW = $current;
+        
+    }
+    
+    
+    public function getMATCHALERT()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->MATCHALERT ? $this->MATCHALERT : 0;
+    }
+    public function setMATCHALERT($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->MATCHALERT = $current;
+    }
+    public function getMATCHALERT_TOTAL()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->MATCHALERT_TOTAL ? $this->MATCHALERT_TOTAL : 0;
+    }
+    public function setMATCHALERT_TOTAL($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->MATCHALERT_TOTAL = $current;
+    }
+    
+    public function getVISITOR_ALERT()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->VISITOR_ALERT ? $this->VISITOR_ALERT : 0;
+        
+    }
+    public function setVISITOR_ALERT($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->VISITOR_ALERT = $current;
+    }
+    
+    public function getVISITORS_ALL()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->VISITORS_ALL ? $this->VISITORS_ALL : 0;
+        
+    }
+    public function setVISITORS_ALL($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->VISITORS_ALL = $current;
+    }
+    
+    /**
+     * Get count of AWAITING_RESPONSE
+     *
+     * <p>
+     * This function gets the count of EOI received AWAITING_RESPONSE
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getAWAITING_RESPONSE()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->AWAITING_RESPONSE ? $this->AWAITING_RESPONSE : 0;
+        
+    }
+    public function getAWAITING_RESPONSE_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->AWAITING_RESPONSE_NEW ? $this->AWAITING_RESPONSE_NEW : 0;
+        
+    }
+    /**
+     * Set count of AWAITING_RESPONSE
+     *
+     * <p>
+     * This function sets the count of EOI received AWAITING_RESPONSE
+     * </p>
+     *
+     * @access public
+     * @param $current integer
+     */
+    public function setAWAITING_RESPONSE($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->AWAITING_RESPONSE = $current;
+        
+    }
+    public function setAWAITING_RESPONSE_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->AWAITING_RESPONSE_NEW = $current;
+        
+    }
+    /**
+     * Get count of FILTERED
+     *
+     * <p>
+     * This function gets the count of EOI received FILTERED
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getFILTERED()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->FILTERED ? $this->FILTERED : 0;
+        
+    }
+    
+    /**
+     * Set count of FILTERED
+     *
+     * <p>
+     * This function sets the count of EOI received FILTERED
+     * </p>
+     *
+     * @access public
+     * @param $current integer
+     */
+    public function setFILTERED($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->FILTERED = $current;
+    }
+    
+    /**
+     * Get count of FILTERED_NEW
+     *
+     * <p>
+     * This function gets the count of EOI received FILTERED_NEW
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getFILTERED_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->FILTERED_NEW ? $this->FILTERED_NEW : 0;
+        
+    }
+    
+    /**
+     * Set count of FILTERED_NEW
+     *
+     * <p>
+     * This function sets the count of EOI received FILTERED_NEW
+     * </p>
+     *
+     * @access public
+     * @param $current integer
+     */
+    public function setFILTERED_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->FILTERED_NEW = $current;
+    }
+    
+    
+    
+    /**
+     * 
+     * Set count of JUST_JOINED_MATCHES
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setJUST_JOINED_MATCHES($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+         $this->JUST_JOINED_MATCHES = $current;
+        
+    }
+    /**
+     * Get count of JUST_JOINED_MATCHES
+     *
+     * <p>
+     * This function gets the count of JUST_JOINED_MATCHES 
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getJUST_JOINED_MATCHES()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->JUST_JOINED_MATCHES;
+        
+    }
+    
+    /**
+     * 
+     * Set count of JUST_JOINED_MATCHES_NEW
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setJUST_JOINED_MATCHES_NEW($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->JUST_JOINED_MATCHES_NEW = $current;
+        
+    }
+    /**
+     * Get count of JUST_JOINED_MATCHES_NEW
+     *
+     * <p>
+     * This function gets the count of JUST_JOINED_MATCHES_NEW 
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getJUST_JOINED_MATCHES_NEW()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->JUST_JOINED_MATCHES_NEW;
+        
+    }
+    
+    /**
+     * 
+     * Set count of CONTACTS_VIEWED
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setCONTACTS_VIEWED($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+         $this->CONTACTS_VIEWED = $current;
+        
+    }
+    /**
+     * Get count of CONTACTS_VIEWED
+     *
+     * <p>
+     * This function gets the count of CONTACTS_VIEWED 
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getCONTACTS_VIEWED()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->CONTACTS_VIEWED;
+        
+    }
+
+/**
+     * 
+     * Set count of PEOPLE_WHO_VIEWED_MY_CONTACTS
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setPEOPLE_WHO_VIEWED_MY_CONTACTS($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+         $this->PEOPLE_WHO_VIEWED_MY_CONTACTS = $current;
+        
+    }
+    /**
+     * Get count of PEOPLE_WHO_VIEWED_MY_CONTACTS
+     *
+     * <p>
+     * This function gets the count of PEOPLE_WHO_VIEWED_MY_CONTACTS 
+     * </p>
+     *
+     * @access public
+     * @return integer
+     */
+    public function getPEOPLE_WHO_VIEWED_MY_CONTACTS()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->PEOPLE_WHO_VIEWED_MY_CONTACTS;
+        
+    }
+
+    
+    /**
+     * 
+     * Get count of TODAY_INI_BY_ME
+     * 
+     * <p>
+     * This function returns the count of TODAY_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getTODAY_INI_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->TODAY_INI_BY_ME ? $this->TODAY_INI_BY_ME : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of TODAY_INI_BY_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setTODAY_INI_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->TODAY_INI_BY_ME = $current;
+        
+    }
+    
+    /**
+     * 
+     * Get count of WEEK_INI_BY_ME.
+     * 
+     * <p>
+     * This function returns the count of WEEK_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getWEEK_INI_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->WEEK_INI_BY_ME ? $this->WEEK_INI_BY_ME : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of WEEK_INI_BY_ME.
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setWEEK_INI_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->WEEK_INI_BY_ME = $current;
+        
+    }
+    
+    /**
+     * 
+     * Get count of MONTH_INI_BY_ME
+     * 
+     * <p>
+     * This function returns the count of MONTH_INI_BY_ME JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getMONTH_INI_BY_ME()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->MONTH_INI_BY_ME ? $this->MONTH_INI_BY_ME : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of MONTH_INI_BY_ME
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setMONTH_INI_BY_ME($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->MONTH_INI_BY_ME = $current;
+        
+    }
+    public function getCONTACTS_MADE_AFTER_DUP()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->CONTACTS_MADE_AFTER_DUP ? $this->CONTACTS_MADE_AFTER_DUP : 0;
+    }
+    public function setCONTACTS_MADE_AFTER_DUP($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->CONTACTS_MADE_AFTER_DUP = $current;
+    }
+    
+    /**
+     * 
+     * Get count of TOTAL_CONTACTS_MADE
+     * 
+     * <p>
+     * This function returns the count of TOTAL_CONTACTS_MADE JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getTOTAL_CONTACTS_MADE()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->TOTAL_CONTACTS_MADE ? $this->TOTAL_CONTACTS_MADE : 0;
+        
+    }
+    /**
+     * 
+     * Set count of TOTAL_CONTACTS_MADE 
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setTOTAL_CONTACTS_MADE($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->TOTAL_CONTACTS_MADE = $current;
+        
+    }
+    /**
+     * 
+     * Get count of GROUPS_UPDATED
+     * 
+     * <p>
+     * This function returns the value of GROUPS_UPDATED JsMemcache Object variable. If set, returns the same. Otherwise 1.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    
+    public function getGROUPS_UPDATED()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        return $this->GROUPS_UPDATED ? $this->GROUPS_UPDATED : 1;
+    }
+    /**
+     * 
+     * Set data about groups updated in memcache
+     * 
+     * <p>
+     * This function sets the member variable value to the specified $newValue value.
+     * </p>
+     * 
+     * @access public
+     * @param $newValue integer
+     */
+    
+    public function setGROUPS_UPDATED($newValue = 1)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->GROUPS_UPDATED                   = $newValue;
+        $this->_updatedFields['GROUPS_UPDATED'] = $this->GROUPS_UPDATED;
+    }
+    /**
+     * 
+     * Get count of NOT_REP.
+     * 
+     * <p>
+     * This function returns the count of NOT_REP JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getNOT_REP()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+ 
+        return $this->NOT_REP ? $this->NOT_REP : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of NOT_REP 
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setNOT_REP($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->NOT_REP = $current;
+        
+    }
+    
+    /**
+     * 
+     * Get count of OPEN_CONTACTS.
+     * 
+     * <p>
+     * This function returns the count of OPEN_CONTACTS JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getOPEN_CONTACTS()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->OPEN_CONTACTS ? $this->OPEN_CONTACTS : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of OPEN_CONTACTS 
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setOPEN_CONTACTS($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->OPEN_CONTACTS = $current;
+        
+    }
+
+    /**
+     * 
+     * Set count of INTEREST EXPIRING 
+     * 
+     * <p>
+     * This function sets the number of interest expiring values.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setINTEREST_EXPIRING($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->INTEREST_EXPIRING = $current;
+        
+    }
+    
+    /**
+     * 
+     * Get count of CANCELLED_EOI.
+     * 
+     * <p>
+     * This function returns the count of CANCELLED_EOI JsMemcache Object variable. If set, returns the same. Otherwise 0.
+     * </p>
+     * 
+     * @access public
+     * @return integer
+     */
+    public function getCANCELLED_EOI()
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        
+        return $this->CANCELLED_EOI ? $this->CANCELLED_EOI : 0;
+        
+    }
+    
+    /**
+     * 
+     * Set count of CANCELLED_EOI 
+     * 
+     * <p>
+     * This function incrementally sets the member variable count to the specified $current value.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setCANCELLED_EOI($current = 0)
+    {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
+        $this->CANCELLED_EOI = $current;
+        
+    }
     /**
      * 
      * Get interest expiring profiles count.
@@ -1742,6 +1723,8 @@ class ProfileMemcache
      */
     public function getINTEREST_EXPIRING()
     {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
         return $this->INTEREST_EXPIRING;
     }
     
@@ -1759,16 +1742,16 @@ class ProfileMemcache
      */
     public function getMESSAGE_ALL()
     {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
         return $this->MESSAGE_ALL ? $this->MESSAGE_ALL : 0;
     }
     public function setMESSAGE_ALL($current = 0)
     {
+SendMail::send_email('palashc2011@gmail.com',__FUNCTION__.' calledfrom Profilememcache','profilememcache');
+
         $this->MESSAGE_ALL = $current;
     }
-    public static function unsetInstance($profileid)
-    {
-            unset(self::$_instance[$profileid]);
-    }
+
     
-   
 }
