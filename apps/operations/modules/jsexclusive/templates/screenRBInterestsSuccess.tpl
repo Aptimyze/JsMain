@@ -31,6 +31,8 @@
 					    </td>
 					    ~if $valued.GUNA_SCORE`
 					    	<td height="10" align="CENTER"><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
+					    ~else`
+					    	<td height="10" align="CENTER"></td>
 						~/if`
 				    </tr>
 					<tr class="formhead" align="left">
@@ -46,14 +48,14 @@
 				~/foreach`
 				<br>
 				<tr align="center">
-					<td class="label" colspan="2" style="background-color:Moccasin">
+					<td class="label" colspan="2" height="20" style="background-color:Moccasin">
 						<input type="submit" name="submit" value="SUBMIT">
 					</td>
 				</tr>
 		    ~else if $showNextButton eq 'Y'`
 		    	<br>
 				<tr align="center">
-					<td class="label" colspan="2" style="background-color:Moccasin">
+					<td class="label" colspan="2" height="20" style="background-color:Moccasin">
 						<input type="submit" name="submit" value="NEXT">
 					</td>
 				</tr>

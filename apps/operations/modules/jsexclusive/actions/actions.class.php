@@ -24,8 +24,17 @@ class jsexclusiveActions extends sfActions
 		//put module wise condition
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
-			$this->unscreenedClientsCount = $exclusiveObj->getUnScreenedClientCount($this->name);
+			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 			unset($exclusiveObj);
+			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
+				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+				$this->unscreenedClientsCount = $apObj->getSenderCountAfterDate($this->assignedClients);
+				unset($apObj);
+			}
+			else{
+				$this->unscreenedClientsCount = 0;
+			}
+			
 		}
 		else{
 			$this->unscreenedClientsCount = 0;
@@ -63,7 +72,7 @@ class jsexclusiveActions extends sfActions
     */
 	public function executeScreenRBInterests(sfWebRequest $request){
 		$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
-		$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
+		//$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
 		
@@ -71,14 +80,14 @@ class jsexclusiveActions extends sfActions
 			$this->clientIndex = 0;
 		}
 		
-		if(!is_array($assignedClients) || count($assignedClients)==0){
+		if(!is_array($this->assignedClients) || count($this->assignedClients)==0){
 			$this->infoMsg = "No assigned clients corresponding to logged in RM found..";
 		}
-		else if(!empty($this->clientIndex) && $this->clientIndex>=count($assignedClients)){
+		else if(!empty($this->clientIndex) && $this->clientIndex>=count($this->assignedClients)){
 			$this->infoMsg = "No more clients left for screening for logged in RM..";
 		}
 		else{
-			$this->clientId = $assignedClients[$this->clientIndex];
+			$this->clientId = $this->assignedClients[$this->clientIndex];
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
 			//$pogRBInterestsPids = array(543);
