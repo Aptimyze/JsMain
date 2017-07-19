@@ -4,7 +4,6 @@
 	<div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
 		<div style="font-weight:bold;"><font size=4px>Screen RB Interests</font></div>
 		<div style="margin-left:704px;"><font size=4px>Clients left-~$unscreenedClientsCount`</font></div>
-		<br>
 		~if $infoMsg`
 			<div>~$infoMsg`</div>
 		~/if`

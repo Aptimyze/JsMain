@@ -84,10 +84,10 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
     /*this functions selects records which have date after a passed date
     * @param- $afterDate- date after which records have to be fetched
     */
-    public function getSenderCountAfterDate($clientIdArr,$afterDate="") {
+    public function getSendersAfterDate($clientIdArr,$afterDate="") {
         if (is_array($clientIdArr) && count($clientIdArr)>0) {
             try {
-                $sql = "SELECT COUNT(DISTINCT SENDER) AS CNT from Assisted_Product.AP_SEND_INTEREST_PROFILES where";
+                $sql = "SELECT DISTINCT SENDER AS SENDER from Assisted_Product.AP_SEND_INTEREST_PROFILES where";
                 $senderStr = "";
                 foreach ($clientIdArr as $key => $value) {
                     $senderStr .= ":SENDER".$key.",";
@@ -105,17 +105,17 @@ class ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES extends TABLE
                     $prep->bindValue(":AFTER_DATE",$afterDate, PDO::PARAM_STR);
                 }
                 $prep->execute();
-                $row = $prep->fetch(PDO::FETCH_ASSOC);
-                if($row){
-                    return $row[CNT];
+                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $result[] = $row['SENDER'];
                 }
-                else{
-                    return 0;
-                }
+                return $result;
             } 
             catch (PDOException $e) {
                 throw new jsException($e);
             } 
+        }
+        else{
+            return null;
         }
     }
 
