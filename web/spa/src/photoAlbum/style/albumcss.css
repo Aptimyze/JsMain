@@ -3,3 +3,13 @@
 	height: auto;
 	width: auto\9; /* IE8 */
 }
+
+.imghid{visibility: hidden;}
+.loadrpos{
+		position: absolute;
+		top:50%;
+		left: 50%;
+		-ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+	}

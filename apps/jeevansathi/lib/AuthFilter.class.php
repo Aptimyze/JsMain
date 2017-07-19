@@ -43,10 +43,10 @@ class AuthFilter extends sfFilter {
 
 		/*SPA*/
 
-		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword');
+		$spaUrls = array('login','myjs','viewprofile','MobilePhotoAlbum','static/forgotPassword','/');
 		$spa = 0;
 		$specificDomain = str_replace('https://', '', $request->getUri());
-		$specificDomain = str_replace('https://', '', $request->getUri());
+		$specificDomain = str_replace('http://', '', $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		if($specificDomain[1] == '')
 			$spa = 1;
@@ -68,11 +68,11 @@ class AuthFilter extends sfFilter {
 			if (
 				strpos($_SERVER['HTTP_USER_AGENT'],"Googlebot") &&
 				!strpos($_SERVER['HTTP_USER_AGENT'],"Phantomjs")
-				) 
+				)
 			{
 				//$url = $request->getUri();
 				//this needs to be commented on live code.
-				$url = str_replace('https://', 'http://', $request->getUri());				
+				$url = str_replace('https://', 'http://', $request->getUri());
 				//$url = "http://xmppdev1.jeevansathi.com/login";
 				(exec($phantomExecutalbe." ".$phantomCrawler." ".$url, $output));
 				$print = false;
@@ -101,9 +101,9 @@ class AuthFilter extends sfFilter {
 				$userDetails = $conn->findUser($userno);*/
 				$backendLibObj = new backendActionsLib(array("jsadmin_CONNECT"=>"newjs_master"),crmCommonConfig::$useCrmMemcache);
 				$userDetails = $backendLibObj->fetchSessionDetailsBySessionID($userno);
-				if ($userDetails) 
+				if ($userDetails)
 				{
-					if (time() - $userDetails["TIME"] < $TOUT) 
+					if (time() - $userDetails["TIME"] < $TOUT)
 					{
 						//$conn->updateUserTime($userno);
 						$backendLibObj->updateAgentSessionTime($userno);
@@ -116,7 +116,7 @@ class AuthFilter extends sfFilter {
 				echo "<html><body><META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=" . sfConfig::get("app_site_url") . "/jsadmin\"></body></html>";
 				throw new sfStopException();
 			}
-		} 
+		}
 		elseif($request->getParameter('module')=="mailer" && $request->getParameter('action')=="openRate")
 		{}
 		elseif($request->getParameter('module')=="common" && $request->getParameter('action')=="resetPassword")
@@ -126,7 +126,7 @@ class AuthFilter extends sfFilter {
 			$protect_obj->logout();
 		}
 		else {
-			
+
 			global $protect_obj;
 			if(($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" )|| ($request->getParameter('module')=="myjs" && $request->getParameter('action')=="jspcPerform" ) || $request->getParameter("blockOldConnection500")){
 				JsCommon::oldIncludes(false);
@@ -141,10 +141,10 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute("protect_obj",$protect_obj);
 				if(strpos($_SERVER['REQUEST_URI'],"search")!==false)
 					$request->setParameter('searchRepConn', 1);
-					
+
 			if ($this->isFirstCall() && !$request->getAttribute('FirstCall')) {
 				$request->setAttribute('FirstCall', 1);
-				
+
 				// Code to execute after the action execution, before the rendering
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
@@ -152,18 +152,18 @@ class AuthFilter extends sfFilter {
 				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
-				
+
 				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
 					if($request->getParameter("allowLoginfromBackend"))
-						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");
 					else
 						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
-		
+
 				$request->setAttribute('loginData', $data);
 				if ($data[PROFILEID]) $login = true;
 				else $login = false;
@@ -184,7 +184,7 @@ class AuthFilter extends sfFilter {
 		        			$currency = 'DOL';
 		        		}
 		        	}
-		        	
+
 		        } else {
 		        	//$countryIpAddressObj = new jsadmin_ip_country_live();
 	        		//$getCountry = $countryIpAddressObj->getUserCountry($ipAddress);
@@ -201,9 +201,9 @@ class AuthFilter extends sfFilter {
 				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
-				
-					
-				
+
+
+
 				if($request->getParameter('module')!="e")
 				{
 		            if($request->getParameter('module')!="api" && $request->getParameter('module')!="static"  && ($request->getParameter('module')!="register" || $request->getParameter('action')=="page5") && $request->getParameter('action')!="alertManager" && $data['PROFILEID'])
@@ -212,7 +212,7 @@ class AuthFilter extends sfFilter {
 					            	if ($data['PROFILEID'])
 							{
 								$memObject=JsMemcache::getInstance();
-								$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
+								$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']);
 								if(!$showConsentMsg) {
 									$showConsentMsg = JsCommon::showConsentMessage($data['PROFILEID']) ? 'Y' : 'N';
 									$memObject->set('showConsentMsg_'.$data['PROFILEID'],$showConsentMsg);
@@ -222,7 +222,7 @@ class AuthFilter extends sfFilter {
 							}
 
 
-		            	
+
 
 						if($data[INCOMPLETE]=='Y' )
 						{
@@ -236,12 +236,12 @@ class AuthFilter extends sfFilter {
                                                                 die;
                                                         }
 						}
-							
-						
+
+
 						if($request->getParameter('module')!="phone" && $request->getParameter('module')!="common")
-						{							
+						{
 							$phoneVerified = JsMemcache::getInstance()->get($data['PROFILEID']."_PHONE_VERIFIED");
-							
+
 							if(!$phoneVerified)
 							{
 								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
@@ -252,9 +252,9 @@ class AuthFilter extends sfFilter {
 
 							if($phoneVerified!="Y")
 							{
-								
+
 								if(!MobileCommon::isNewMobileSite() && MobileCommon::isMobile())
-								{ 
+								{
 									include_once(JsConstants::$docRoot.'/jsmb/phoneVerify.php');
 									die;
 								}
@@ -270,7 +270,7 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 							}
-							
+
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
 								$context->getController()->forward("phone","consentMessage",0);
@@ -280,19 +280,19 @@ class AuthFilter extends sfFilter {
 						}
 					}
 				}
-                                
-					
+
+
 				if ($_COOKIE['SULEKHACO'] == "yes") $request->setAttribute("SULEKHACO", 1);
 				$mob_cookie_arr = explode(",", $_COOKIE['JS_MOBILE']);
 				$MOB_COOKIE = $mob_cookie_arr[0];
 				if ($MOB_COOKIE == 'Y') $request->setAttribute('MOB_YES', 1);
 				//$request->setAttribute('loginData', $data);
-				//$request->setAttribute('protect_obj', $protect_obj);				
+				//$request->setAttribute('protect_obj', $protect_obj);
 				$bmsObj = new BMSHandler();
 				$zedo = $bmsObj->setBMSVariable($data,1,$request);
 				$request->setAttribute("zedo",$zedo);
-				
-				//Kundli Block 
+
+				//Kundli Block
 				if($login)
 				{
 					$key = $data["PROFILEID"]."_KUNDLI_LINK";
@@ -333,7 +333,7 @@ class AuthFilter extends sfFilter {
 				}
 				else
 					$request->setAttribute('subscriptionHeader',"1");
-				
+
 				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
@@ -344,12 +344,12 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('AJAX_CALL_MEMCACHE',Header::checkMemcacheUpdated($data["PROFILEID"]));
 				if ($request->getParameter("ID_CHECKED")) $request->setParameter("ID_CHECKED", urlencode($request->getParameter("ID_CHECKED")));
 				if ($request->getParameter("after_login_call")) $request->setParameter("after_login_call", stripslashes($request->getParameter("after_login_call")));
-				
+
 				//MODULE ENABLE LOGIN FUNCTIONALITY
 				$enable_login=sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login');
 				if(!$enable_login)
 					$enable_login=sfConfig::get('mod_' . strtolower($request->getParameter('module')) . '_' . strtolower($request->getParameter('action')) . '_enable_login');
-					
+
 				if(!$enable_login)
 					$enable_login=sfConfig::get('mod_' . $request->getParameter('module') . '_default'. '_enable_login');
 				if ($enable_login !== 'off') {
@@ -361,53 +361,53 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
-            
-            
+
+
 
                		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
 
-            
+
                $headers = getallheaders();
-            
-	            
+
+
 	            if (false === isset($headers[LoggingEnums::RAJX])) {
 	            	$out = LoggingManager::getInstance()->getUniqueId();
-	            	$request->setAttribute(LoggingEnums::RIFT,$out); 
+	            	$request->setAttribute(LoggingEnums::RIFT,$out);
 
 	            }
 	            else
-	            {   	            	
+	            {
 	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
 
-	            	
+
 	            }
-	          	                        
+
 			}
 			else
 			{
 				if($request->getAttribute('mobileAppApi')==1)
 				{
-					if (!$request->getAttribute('FirstMobileApiCall')) 
+					if (!$request->getAttribute('FirstMobileApiCall'))
 					{
 						if($request->getAttribute('loginData')=='')
 						{
 							$this->apiWebHandler = ApiRequestHandler::getInstance($request);
 							$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
 							$enable_login=sfConfig::get('mod_' . ($forwardingArray["moduleName"]) . '_' . ($forwardingArray["actionName"]) . '_enable_login');
-							if ($enable_login !== 'off') 
+							if ($enable_login !== 'off')
 							{
 								$respObj = ApiResponseHandler::getInstance();
 								$respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
-								$respObj->generateResponse();		
-								die;					
+								$respObj->generateResponse();
+								die;
 							}
 						}
 						$request->setAttribute('FirstMobileApiCall', 1);
 					}
 				}
-			
+
 			}
 		}
 		if($data[PROFILEID])
@@ -430,7 +430,7 @@ class AuthFilter extends sfFilter {
 		unset($revisionObj);
 		$filterChain->execute();
 	}
-	
+
 	public function LoggedInAppPromo($data){
 		$profileid=$data[PROFILEID];
 		$lastLoginDt=$data['LAST_LOGIN_DT'];

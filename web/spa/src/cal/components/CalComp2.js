@@ -36,7 +36,7 @@ componentWillMount(){
             });
       break;
       case '18':
-        this.getOccupationData("/static/getFieldData?k=occupation&dataType=json");
+        this.getOccupationData("/api/v2/static/getFieldData?k=occupation&dataType=json");
         this.setState({
           showListOcc : false,
           selectedOption: 'Select your Occupation'
@@ -45,7 +45,7 @@ componentWillMount(){
       case '20':
       case '23':
 
-        this.getCityStateData("/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json");
+        this.getCityStateData("/api/v2/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json");
         this.setState({
           showListOcc : false,
           selectedOption: 'Select your State',
@@ -218,7 +218,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
                      CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
                      return;
                 });
-
+                return;
 
         break;
       }
@@ -296,7 +296,7 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 }
 getCityStateData(url){
 
-commonApiCall(url,{},'','POST','',false).then((response) => {
+commonApiCall(url,'','','POST','',false).then((response) => {console.log(response);
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
   var countryTemp = response.country_res[0];

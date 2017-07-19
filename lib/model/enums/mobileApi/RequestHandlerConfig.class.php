@@ -110,7 +110,7 @@ class RequestHandlerConfig
 			"cancel" => array("v1" => "postCancelInterestv1", "v2" => "postCancelInterestv2", "v3" => "postCancelInterestv2"),
 			"preWriteMessage" => array("v2" => "PreWriteMessagev2"),
 			"profilesToBeRemoved" => array("v1" => "IgnoredContactedProfilesV1")),
-		"common" => array("AddBookmark" => array("v1" => "AddBookmarkv1", "v3" => "AddBookmarkv1"), "ignoreprofile" => array("v1" => "ApiIgnoreProfileV1", "v3" => "ApiIgnoreProfileV1"), "engagementcount" => array("v2" => "GetEngagementCountv1"), "caLayer" => array("v1" => "ApiCALayerV1", "v2" => "ApiCALayerV1", "v3" => "ApiCALayerV1"), "criticalActionLayerTracking" => array("v1" => "", "v2" => "", "v3" => "criticalActionLayerTracking"), "verificationData" => array("v1" => "ApiVerificationDataV1", "v2" => "", "v3" => "ApiVerificationDataV1"), "trackRCB" => array("v1" => "TrackRCBV1", "v3" => "TrackRCBV1"), "requestCallbackLayer" => array("v1" => "ApiRequestCallbackV1", "v2" => "ApiRequestCallbackV1", "v3" => "ApiRequestCallbackV1"),
+		"common" => array("AddBookmark" => array("v1" => "AddBookmarkv1", "v3" => "AddBookmarkv1"), "ignoreprofile" => array("v1" => "ApiIgnoreProfileV1", "v3" => "ApiIgnoreProfileV1"), "engagementcount" => array("v2" => "GetEngagementCountv1"), "caLayer" => array("v1" => "ApiCALayerV1", "v2" => "ApiCALayerV1", "v3" => "ApiCALayerV1"), "criticalActionLayerTracking" => array("v1" => "criticalActionLayerTracking", "v2" => "criticalActionLayerTracking", "v3" => "criticalActionLayerTracking"), "verificationData" => array("v1" => "ApiVerificationDataV1", "v2" => "", "v3" => "ApiVerificationDataV1"), "trackRCB" => array("v1" => "TrackRCBV1", "v3" => "TrackRCBV1"), "requestCallbackLayer" => array("v1" => "ApiRequestCallbackV1", "v2" => "ApiRequestCallbackV1", "v3" => "ApiRequestCallbackV1"),
 			"checkPassword" => array("v1" => "checkPasswordV1"),
 			"logOtherUrl" => array("v1" => "logOtherUrlV1"),
 			"trackIdfy" => array("v1"=>"apiTrackIdfyProfilesV1"),
@@ -123,13 +123,13 @@ class RequestHandlerConfig
 			"matchOTP" => array("v1" => "MatchOtp", "v2" => "MatchOtp", "v3" => "MatchOtp"),
 			"SMSContactsToMobile" => array("v1" => "SMSContactsToMobile", "v2" => "SMSContactsToMobile", "v3" => "SMSContactsToMobile"),
 			"reportPhoneInvalid" => array("v1" => "ReportInvalid", "v2" => "ReportInvalid", "v3" => "ReportInvalid")),
-		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1"),"membershippitch" => array("v1" => "MembershipPlanAudioV1"),"outboundcallstatus" => array("v1" => "OutboundCallStatusV1") ),
+		"static" => array("page" => array("v1" => "pagev1", "v2" => "pagev1", "v3" => "pagev1"), "pagehits" => array("v1" => "savehitsv1", "v2" => "savehitsv1", "v3" => "savehitsv1"),"membershippitch" => array("v1" => "MembershipPlanAudioV1"),"outboundcallstatus" => array("v1" => "OutboundCallStatusV1"),"getFieldData" => array("v1" => "getFieldData","v2" => "getFieldData") ),
 		"help" => array(
 			"helpQuery" => array("v1" => "SubmitQueryV1"),
 			"publicQuestions" => array("v1" => "GetPublicQuestionsV1")
 		),
 		"testautomation" => array(
-			"clearMatchAlertLog" => array("v1"=>"flushMatchAlertLogV1"),					
+			"clearMatchAlertLog" => array("v1"=>"flushMatchAlertLogV1"),
 		),
 		"chat" => array(
 			"authenticateChatSession" => array("v1" => "authenticateChatSessionV1"),
@@ -180,7 +180,7 @@ class RequestHandlerConfig
 			"notificationSubscriptionStatus" => array("v1" => "N", "v3" => "N")
 		),
 		"profile" => array("gunascore" => array("v1" => "N", "v2" => "N", "v3" => "N"),
-		),		
+		),
  		"register" => array("staticTablesData" => array("v1" => "N", "v2" => "N", "v3" => "N"),
  		),
  		"api" => array("versionupgrade" => array("v1" => "N", "v2" => "N", "v3" => "N"),
