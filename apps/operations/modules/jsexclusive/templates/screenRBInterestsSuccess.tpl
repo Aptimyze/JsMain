@@ -30,13 +30,13 @@
 					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 					    ~if $valued.GUNA_SCORE`
-					    	<td height="10" align="CENTER"><div>~$valued.GUNA_SCORE`/36</div></td>
+					    	<td height="10" align="CENTER"><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
 						~/if`
 				    </tr>
 					<tr class="formhead" align="left">
 					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`">
 					    </td>
-					    <td height="21" align="CENTER">~$valued.ABOUT_ME`</td>
+					    <td height="21" align="CENTER" style="font-weight: normal;">~$valued.ABOUT_ME`</td>
 					    <td height="21" align="CENTER"><input type="checkbox" name="DISCARD[]" value="~$valued.PROFILEID`">DISCARD<input type="hidden" name="ACCEPT[]" value="~$valued.PROFILEID`"></td></td>
 				    </tr>
 				    

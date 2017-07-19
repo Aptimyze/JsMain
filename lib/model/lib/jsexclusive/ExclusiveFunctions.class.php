@@ -26,6 +26,9 @@ class ExclusiveFunctions{
 				$pogRBInterestsPool[$key]['PROFILEID'] = $pid;
 				$pogRBInterestsPool[$key]['USERNAME'] = $profileObj->getUSERNAME();
 				$pogRBInterestsPool[$key]['ABOUT_ME'] = $profileObj->getYOURINFO();
+				if(!empty($pogRBInterestsPool[$key]['ABOUT_ME'])){
+					$pogRBInterestsPool[$key]['ABOUT_ME'] = substr($pogRBInterestsPool[$key]['ABOUT_ME'], 0,1000);
+				}
 				$profilePic = $profileObj->getHAVEPHOTO();
 				$oppGender = $profileObj->getGENDER();
 				
