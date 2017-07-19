@@ -1,14 +1,16 @@
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
 <body>
 	<br>
-	<div style="background-color:lightblue;text-align:center;font-size:12px;font-weight:bold;width:80%;margin-left:131px;">
-	<div><font size=4px>Screen RB Interests</font></div>
-	<div><font size=4px>Clients left-~$unscreenedClientsCount`</font></div>
-	<br>
-	~if $infoMsg`
-		<div>~$infoMsg`</div>
-	~/if`
-	~if $clientData`
+	<div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
+		<div style="font-weight:bold;"><font size=4px>Screen RB Interests</font></div>
+		<div style="margin-left:704px;"><font size=4px>Clients left-~$unscreenedClientsCount`</font></div>
+		<br>
+		~if $infoMsg`
+			<div>~$infoMsg`</div>
+		~/if`
+	</div>
+	<div style="text-align:center;font-size:12px;width:80%;margin-left:131px;">
+		~if $clientData`
 		<div>Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
 		~if $clientData.HoroscopeMatch eq 'Y'`
 			<div>Horoscope match is Necessary</div>
@@ -29,7 +31,7 @@
 					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 					    ~if $valued.GUNA_SCORE`
-					    	<td height="10" align="CENTER">~$valued.GUNA_SCORE`/36</td>
+					    	<td height="10" align="CENTER"><div>~$valued.GUNA_SCORE`/36</div></td>
 						~/if`
 				    </tr>
 					<tr class="formhead" align="left">
