@@ -243,7 +243,7 @@ class ProfileMemcache
     private static $_instance;
     
     const EXPIRY_THRESHHOLD = 120;
-    const EXPIRY_TIME = 1800;
+    const EXPIRY_TIME = 600;
     /**
      * 
      * Constructor for instantiating object of ProfileMemcache class
