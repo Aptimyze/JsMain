@@ -101,7 +101,7 @@ EOF;
 				$totalLimit=100;
 				if($this->isJsDummyMember($senderId))
 				{
-					$limit=100;
+					$limit=25;
 					$totalLimit=200;
 				}
 				$totalSenders++;
