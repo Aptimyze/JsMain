@@ -83,14 +83,6 @@ render(){
   var buttonView;
   console.log()
 
-
-   /* buttonView = <div className="brdr8 fullwid hgt60">
-                      <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(tuple.profilechecksum)}>
-                        <input className="inputProChecksum" type="hidden" value="{tuple.profilechecksum}"></input>
-                        <span className="f15 color2 fontreg">Send Interest</span>
-                      </div>
-                      <div className="clr"></div>
-                    </div>;*/
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
@@ -173,4 +165,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(MyjsSlider)
-
