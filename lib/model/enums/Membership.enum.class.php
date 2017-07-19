@@ -75,6 +75,9 @@ class memDiscountTypes
 
 class VariableParams
 {
+
+    public static $jsExclusiveReleaseDate = "2017-07-17"; //YYYY-MM-DD
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',
@@ -941,4 +944,5 @@ class franchiseeCommission
 class SelectGatewayRedirect{
     public static $gatewayOptions = array('default','payu','ccavenue');
 }
+
 ?>
