@@ -16,8 +16,6 @@ export default class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth}
 
     }
-    console.log("mm",props.listing.infotype)
-
   }
 
 componentDidUpdate(){
@@ -129,9 +127,7 @@ render(){
                         </div>
                       </div>
                     </Link>
-
-                    <ContactEngineButton buttondetails={tuple}/>
-
+                    <ContactEngineButton profilechecksum={tuple.profilechecksum}/>
                 </div>
            </div>
          ))}

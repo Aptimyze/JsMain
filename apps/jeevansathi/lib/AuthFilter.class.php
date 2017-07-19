@@ -75,7 +75,7 @@ class AuthFilter extends sfFilter {
 				//this needs to be commented on live code.
 				$url = str_replace('https://', 'http://', $request->getUri());
 				//$url = "http://xmppdev1.jeevansathi.com/login";
-				(exec($phantomExecutalbe." ".$phantomCrawler." ".$url, $output));
+				(exec($phantomExecutalbe." ".$phantomCrawler." ".escapeshellarg($url), $output));
 				$print = false;
 				foreach ($output as $line) {
 					if ( strpos($line,"DOCTYPE html") )
