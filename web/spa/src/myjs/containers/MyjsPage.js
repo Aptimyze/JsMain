@@ -17,6 +17,7 @@ import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
+import contactEngine from "../../contact_engine/containers/contactEngine";
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -191,14 +192,14 @@ export  class MyjsPage extends React.Component {
 
   	render() {
 
+
+
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
 	    }
 			if(this.props.myjsData.apiData.calObject && !this.state.calShown){
-	         return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this} />);
+				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this} />);
 	    }
-
-			console.log(this.props.myjsData);
 
   		if(this.props.myjsData.fetched)
 			{
