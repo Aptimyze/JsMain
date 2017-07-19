@@ -34,9 +34,9 @@ page.open(system.args[1], function () {});
 
 var checkComplete = function () {
   
-  if((new Date().getTime() - lastReceived > 10000 &&
+  if((new Date().getTime() - lastReceived > 1000 &&
      requestCount === responseCount) ||
-       new Date().getTime() - startTime > 10000)  {
+       new Date().getTime() - startTime > 1000)  {
     clearInterval(checkCompleteInterval);
     console.log(page.content);
     phantom.exit();

@@ -236,7 +236,7 @@ class LoginPage extends React.Component {
         let buttonView = <div id = "buttonView">
                             <div className="posrel scrollhid">
                                 <div id="loginButton" className="bg7 fullwid txtc pad2">
-                                    <div onClick={() => this.doLogin()} className="white f18 fontlig">Login</div>
+                                    <div onClick={() => this.doLogin()} className="white f18 fontlig">Login Here</div>
                                 </div>
                             </div>
                             <div className="bg10 fullwid mt5">
