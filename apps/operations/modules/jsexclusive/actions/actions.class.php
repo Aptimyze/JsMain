@@ -29,8 +29,9 @@ class jsexclusiveActions extends sfActions
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
 				$this->assignedClients = $apObj->getSendersAfterDate($this->assignedClients);
+
 				unset($apObj);
-				if(is_array($this->unscreenedClientsCount)){
+				if(is_array($this->assignedClients)){
 					$this->unscreenedClientsCount = count($this->assignedClients);
 				}
 				else{
@@ -40,7 +41,6 @@ class jsexclusiveActions extends sfActions
 			else{
 				$this->unscreenedClientsCount = 0;
 			}
-			
 		}
 		else{
 			$this->unscreenedClientsCount = 0;
