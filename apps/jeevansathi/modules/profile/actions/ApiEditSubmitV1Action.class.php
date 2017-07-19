@@ -66,19 +66,6 @@ class ApiEditSubmitV1Action extends sfActions
 		unset($this->editFieldNameArr['YEAR']);
                 //print_r($this->editFieldNameArr);die;
         
-        //aadhar section
-        if(MobileCommon::isApp() == "A" && $this->editFieldNameArr['NAME'])
-        {
-            $nameObj = new NameOfUser();
-            $nameOfUserArr = $nameObj->getNameData($this->loginProfile->getPROFILEID());
-            $nameOfUser = $nameOfUserArr[$this->loginProfile->getPROFILEID()]["NAME"];
-            if(strcasecmp($nameOfUser,$this->editFieldNameArr['NAME'])!=0)
-            {
-                $aadharObj = new aadharVerification();
-                $aadharObj->resetAadharDetails($this->loginProfile->getPROFILEID());
-
-            }
-        }
                         if(!MobileCommon::isApp())
                         {
                                 if(!empty($_FILES)){

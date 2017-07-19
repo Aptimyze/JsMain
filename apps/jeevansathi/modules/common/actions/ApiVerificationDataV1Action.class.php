@@ -31,6 +31,8 @@ class ApiVerificationDataV1Action extends sfActions
 		$profileId = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));		
 		$verificationDataString=$this->getVerificationData($profileId);
 		$documentArr = array("documentsVerified"=>$verificationDataString);
+		
+		//aadhar data	
 		$aadharData = $this->getAadharData($profileId);
 		if(is_array($aadharData))
 		{
@@ -93,6 +95,7 @@ class ApiVerificationDataV1Action extends sfActions
 
 	}
 
+	// this is used to get aadhar details
 	public function getAadharData($profileId)
 	{
 		$aadharVerificationObj = new aadharVerification();

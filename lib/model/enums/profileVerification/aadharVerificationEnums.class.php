@@ -15,4 +15,13 @@ class aadharVerificationEnums
 		);
 
 	const NOTVERIFIED = "N";
+	const AADHARLENGTH = 12;
+	const IMPROPERFORMAT = "Aadhar Id is not in proper format";
+	const NOTVERIFIEDMSG = "Aadhar Not Verified";
+	const STATUSPENDINGMSG = "Status Pending";
+	const AADHARVERIFIED = "Aadhar Verified";
+	public static $headerArrForStatus = array('apiKey:f97b05b2-9360-4706-91e7-6154513200a1');
+	CONST COMPLETED = "completed";
+	CONST EXACTMATCH = "exact";
+	CONST VERIFIED = "Y";
 }
