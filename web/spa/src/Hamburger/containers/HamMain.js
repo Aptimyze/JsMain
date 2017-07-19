@@ -5,6 +5,7 @@ import { getAndroidVersion, getIosVersion} from "../../common/components/commonF
 import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHelper';
 import axios from "axios";
 import * as CONSTANTS from '../../common/constants/apiConstants'
+import Loader from "../../common/components/Loader";
 
 
 export default class HamMain extends React.Component {
@@ -12,6 +13,7 @@ export default class HamMain extends React.Component {
     constructor(props) 
     {
         super();
+        this.state = {showLoader:false}
     }
 
     translateSite(translateURL)
@@ -50,15 +52,17 @@ export default class HamMain extends React.Component {
     }
 
     logoutAccount() {
-        
+        this.setState({showLoader:true});
+        this.hideHam(); 
+
         axios.get(CONSTANTS.API_SERVER+"/api/v1/api/logout?AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM") )
         .then(function(response){
         })
-        removeCookie("AUTHCHECKSUM");
         localStorage.clear();
+        removeCookie("AUTHCHECKSUM");
         setTimeout(function(){
-            window.location.href="/"
-        },1000); 
+            window.location.href="/"   
+        },2000); 
     }
 
     checkHome(e) 
@@ -116,6 +120,11 @@ export default class HamMain extends React.Component {
 
     render() 
     {
+        let loaderView;
+        if(this.state.showLoader)
+        {
+          loaderView = <Loader show="page"></Loader>;
+        }
         let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView;
         if(this.props.page == "others") {
             membershipRegisterView = <div className="brdrTop pad150">
@@ -512,6 +521,7 @@ export default class HamMain extends React.Component {
                 <div id="hamburger" className="white posfix z105 wid80p fullheight overflowhidden">
                         {listingView}
                 </div>
+                {loaderView}
                 <div onClick={this.hideHam} id="hamView" className="fullwid darkView fullheight hamView dn"></div>
             </div>
         );

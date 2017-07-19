@@ -71,8 +71,8 @@ class ProfilePage extends React.Component {
 
     setNextPrevLink() 
     {
-        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD","apiDataDR"];
-        if(this.props.myjsData.apiDataIR != "" || this.props.myjsData.apiDataMOD != "" || this.props.myjsData.apiDataVA != "" || this.props.myjsData.apiDataDR != "") {
+        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD","apiDataDR","apiDataVA"];
+        if(this.props.myjsData.apiDataIR != "" || this.props.myjsData.apiDataMOD != "" || this.props.myjsData.apiDataDR != "") {
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
                 if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
@@ -84,6 +84,10 @@ class ProfilePage extends React.Component {
                         this.setState({
                             nextUrl,nextprofilechecksum
                         });
+                    } else {
+                        this.setState({
+                            nextUrl:"",nextprofilechecksum:""
+                        });
                     }
                     if(parseInt(this.state.actual_offset) != 0){
                         prevObj = parentObj.profiles[parseInt(this.state.actual_offset)-1];
@@ -91,6 +95,10 @@ class ProfilePage extends React.Component {
                         let prevprofilechecksum = prevObj.profilechecksum;
                         this.setState({
                             prevUrl,prevprofilechecksum
+                        });
+                    } else {
+                        this.setState({
+                            prevUrl:"",prevprofilechecksum:""
                         });
                     }
                 }
@@ -104,7 +112,7 @@ class ProfilePage extends React.Component {
                 endX = e.changedTouches[0].clientX;
             });
             document.getElementById("ProfilePage").addEventListener('touchend', function(e){
-                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl) 
+                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl != "") 
                 {
                     document.getElementById("swipePage").classList.add("animateLeft");
                     _this.setState ({
@@ -115,7 +123,7 @@ class ProfilePage extends React.Component {
                     _this.props.history.push(_this.state.nextUrl);
                     jsb9Fun.recordBundleReceived(_this,new Date().getTime());
                     _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
-                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl) 
+                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl != "") 
                 {
                     document.getElementById("swipePage").classList.add("animateLeft");
                     jsb9Fun.flushJSB9Obj(_this);

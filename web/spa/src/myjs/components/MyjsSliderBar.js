@@ -2,12 +2,9 @@ import React from "react";
 import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
-import { connect } from "react-redux";
-import { commonApiCall } from "../../common/components/ApiResponseHandler";
-import * as CONSTANTS from '../../common/constants/apiConstants';
-
-
-export class MyjsSlider extends React.Component {
+import ContactEngineButton from "../../contact_engine/containers/contactEngine";
+  
+export default class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
     this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
@@ -18,7 +15,6 @@ export class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth}
 
     }
-    console.log("mm",props.listing.infotype)
   
   }
 
@@ -28,12 +24,6 @@ componentDidUpdate(){
 
 componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
   this.bindSlider();
-}
-
-componentWillReceiveProps(nextProps){
-  if(nextProps.contact.contactDone) {
-    console.log('interest sent');
-  }    
 }
 
 bindSlider(){
@@ -58,39 +48,28 @@ alterCssStyle(duration, transform){
     return prevState;
   });
 }
-getButtonView(tuple) {
-  if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
-    console.log("yess",tuple)
-    return (<div className="brdr8 fl wid90p hgt60">
-                  <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2">
-                    <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-                      <a className="f15 color2 fontreg">Accept</a>
-                  </div>
-                  <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn">
-                    <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-                    <a className="f15 color2 fontlig">Decline</a>
-                  </div>
-                  <div className="clr"></div>
-                </div>);
-      } 
-      else {
-          return "";
-      }
 
-}
+// getButtonView(tuple) {
+//   if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
+//     console.log("yess",tuple)
+//     return (<div className="brdr8 fl wid90p hgt60">
+//                   <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(tuple.profilechecksum)}>
+//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
+//                       <a className="f15 color2 fontreg">Accept</a>
+//                   </div>
+//                   <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(tuple.profilechecksum)}>
+//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
+//                     <a className="f15 color2 fontlig">Decline</a>
+//                   </div>
+//                   <div className="clr"></div>
+//                 </div>);
+//       } 
+//       else {
+//           return "";
+//       }
+// }
 
-render(){
-  var buttonView;
-  console.log()
-
-
-   /* buttonView = <div className="brdr8 fullwid hgt60">
-                      <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(tuple.profilechecksum)}>
-                        <input className="inputProChecksum" type="hidden" value="{tuple.profilechecksum}"></input>
-                        <span className="f15 color2 fontreg">Send Interest</span>
-                      </div>
-                      <div className="clr"></div>
-                    </div>;*/
+render(){ 
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
@@ -143,7 +122,7 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    {this.getButtonView(tuple)}
+                    <ContactEngineButton profilechecksum={tuple.profilechecksum}/>
                 </div>
            </div>
          ))}
@@ -156,21 +135,3 @@ render(){
 
   }
 }
-
-const mapStateToProps = (state) => {
-    return{
-     contact: state.MyjsReducer
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return{
-        contactApi: (profilechecksum) => {
-          var url = '&stype=15&myjs=1&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.CONTACT_ENGINE_URL,url,'CONTACT_ACTION','POST',dispatch,true);
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(MyjsSlider)
-
