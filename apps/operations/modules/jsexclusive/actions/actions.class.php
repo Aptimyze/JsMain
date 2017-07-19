@@ -79,14 +79,15 @@ class jsexclusiveActions extends sfActions
 			$this->clientId = $assignedClients[$this->clientIndex];
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
+			//$pogRBInterestsPids = array(543);
 			unset($assistedProductObj);
 
 			$clientProfileObj = new Operator;
-			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
+			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH,CASTE");
 
 			if($clientProfileObj){
 				$this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
-				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N");
+				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N","PROFILEID"=>$this->clientId,"clientCaste"=>$clientProfileObj->getCASTE());
 				$this->clientData["HoroscopeMatch"] = $this->horoscopeMatch;
 				$this->clientData["gender"] = $clientProfileObj->getGENDER();
 				unset($clientProfileObj);
