@@ -15,7 +15,6 @@ export default class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth}
 
     }
-    console.log("mm",props.listing.infotype)
   
   }
 
