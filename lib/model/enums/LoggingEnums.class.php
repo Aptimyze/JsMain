@@ -117,6 +117,7 @@ class LoggingEnums
         21 => 'Others',
         22 => 'Javascript',
         23 => 'Feedback',
+        24 => 'DeleteCron'
         );
 
     public static $ModuleMapping = array(
@@ -185,6 +186,7 @@ class LoggingEnums
         "successStory" => 5,
         "myjs_api" => 10,
         "common" => 21,
+        "deletecron"=>24,
         );
     
      
