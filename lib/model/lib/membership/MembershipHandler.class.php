@@ -1023,7 +1023,7 @@ class MembershipHandler
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
             }
-            if ($screeningStatus == "Y") 
+            //if ($screeningStatus == "Y") 
             {
                 if($apiObj!="" && is_array($apiObj->discountTypeInfo)){
                     $discountTypeArr = $apiObj->discountTypeInfo;
@@ -2834,15 +2834,64 @@ class MembershipHandler
         }
     }
     
-    public function setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount){
+    public function setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount,$communityId=""){
         if(is_array($activeCommunityWiseDiscount)){
             foreach($activeCommunityWiseDiscount as $cat=>$data){
                 foreach($data as $commId => $val){
                     $redisVal[$commId] = $val["DISCOUNT"];
+                    if($communityId != "" && $commId == $communityId){
+                        $discount = $val["DISCOUNT"];
+                    }
+                    if($commId == 0){
+                        $otherDiscount = $val["DISCOUNT"];
+                    }
                 }
             }
             JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
+            return $discount?$discount:$otherDiscount;
         }
     }
+    
+    public function getCommunityWelcomeDiscount($communityId){
+        if($communityId || $communityId == 0){
+            $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
+            if($discountArr){
+                $discount = $discountArr[$communityId];
+                if(!($discount && $discount >= 0)){
+                    $discount = $discountArr[0];
+                }
+            }
+            else{
+                $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();
+                $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
+                $discount = $this->setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount,$communityId);
+            }
+            return $discount;
+        }
+    }
+    
+    public function addCommunityWelcomeDiscount($profileid,$community){
+        $discountPercent = $this->getCommunityWelcomeDiscount($community);
+        $memObj = new MembershipHandler();
+        $serviceArr = $memObj->getActiveServices();
+        unset($memObj);
+        $vdObj = new VariableDiscount();
+        $startDate = date('Y-m-d');
+        $endDate = date("Y-m-d",strtotime('+'.VariableParams::COMMUNITY_WELCOME_DISCOUNT_DURATION." days"));
+        $entryDt = date('Y-m-d');
+        $sendMailForDiscount = false; //mail not to be sent
+        $sendSMSForDiscount = true;  //SMS to be sent
+        
+        $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
+        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
+        
+        $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
+        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$entryDt);
+        
+
+        unset($discountDetails,$vdObj,$discountObj,$commWelDiscLogObj);
+        
+    }
+    
 
 }
