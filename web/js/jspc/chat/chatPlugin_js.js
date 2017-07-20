@@ -2285,7 +2285,8 @@ JsChat.prototype = {
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
             var now_mark_read = false,read_class="nchatic_10";
-            if(curElem._setLastReadMsgStorage == false){
+            var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+            if(curElem._setLastReadMsgStorage == false || (requestType!="first_history" && last_read_msg!=undefined)){
                 now_mark_read = true;
                 read_class = "nchatic_9";
             }
@@ -2349,10 +2350,10 @@ JsChat.prototype = {
             }
             var selfJID = getConnectedUserJID();
             curElem.rosterDeleteChatBoxReponse(selfJID,other_id,"canChatMore");
-            if(typeof canChatMore == "undefined" || canChatMore == "false"){
+            /*if(typeof canChatMore != "undefined" && canChatMore == "false"){
                 //console.log("set as free");
                 curElem._disableChatTextArea(other_id);
-            }
+            }*/
             setTimeout(function(){
                 if(requestType == "first_history"){
                     curElem.preventSiteScroll(other_id);
@@ -2454,7 +2455,7 @@ JsChat.prototype = {
 
             }
 
-            if(typeof msg_type != "undefined" && (/*msg_type == "eoi" || */msg_type == "accept")){
+            if(typeof msg_type != "undefined" && (msg_type == "eoi" || msg_type == "accept")){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
             //console.log("appendMsg",appendMsg);
