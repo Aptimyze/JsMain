@@ -236,16 +236,16 @@ class phoneActions extends sfActions
    		
    		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
-  }
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
+        }
      	if(!$reasonNumber)
      	{
      			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
      	}
 
      	$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
@@ -265,9 +265,10 @@ class phoneActions extends sfActions
 			die;
      	}
 
-   		$profile2=new Profile();
+        
    		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
+        ReportInvalid::markNumberUnverified($profileid, $phone, $mobile);
 
 		if($reasonNumber == 3)
 			{  
