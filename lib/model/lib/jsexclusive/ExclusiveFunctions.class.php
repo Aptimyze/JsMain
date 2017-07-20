@@ -83,29 +83,30 @@ class ExclusiveFunctions{
     */
 	public function processScreenedEois($params=""){
 		if(is_array($params) && $params["clientId"] && $params["agentUsername"]){
-			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
-				$mqData = $this->formatRabbitmqData($params);
-			}
 			$exMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
-			if(is_array($mqData)){
-				$producerObj = new Producer();
-				if($producerObj->getRabbitMQServerConnected()){
-					$producerObj->sendMessage($mqData);
-					
+			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
+				/*$mqData = $this->formatRabbitmqData($params);
+				if(is_array($mqData)){
+					$producerObj = new Producer();
+					if($producerObj->getRabbitMQServerConnected()){
+						$producerObj->sendMessage($mqData);
+						foreach ($params["acceptArr"] as $key => $value) {
+							$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"P"));
+						}
+					/*} 
+					else{
+						foreach ($params["acceptArr"] as $key => $value) {
+							$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"PY"));
+						}
+					}*/
+					$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+					$assistedEoiObj->deleteEntry($params["clientId"],$params["acceptArr"]);
+					unset($assistedEoiObj);
 					foreach ($params["acceptArr"] as $key => $value) {
-						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"Y"));
+						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"P"));
 					}
-				} 
-				else{
-					foreach ($params["acceptArr"] as $key => $value) {
-						$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"PY"));
-					}
-				}
-				$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
-				$assistedEoiObj->deleteEntry($params["clientId"],$params["acceptArr"]);
-				unset($assistedEoiObj);
-				unset($producerObj);
-				
+					//unset($producerObj);	
+				//}
 			}
 			
 			if(is_array($params["discardArr"]) && count($params["discardArr"])>0){
