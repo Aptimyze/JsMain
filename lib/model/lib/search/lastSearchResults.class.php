@@ -21,15 +21,21 @@ class lastSearchResults extends SearchLogger
 		}
 	}
 	
-	public function getLastSearchResultCriteria()
+	public function getLastSearchResultCriteria($limit='',$sort='',$ordered = 0)
 	{
-		$output = $this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance);
+                if($sort != ""){
+                        $this->setSORT_LOGIC($sort);
+                }
+                if($limit != ""){
+                        $this->setNoOfResults($limit);
+                }
+		$output = $this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance,$ordered);
         
 		//The output is 1 in case there is an array and 0 in case no results were found. Therefore, setProfilesToShow is set to "0 0" so as to show the ZERO results message
-       	if($output == 0)
-        {
-        	$this->setProfilesToShow("0 0");
-        }
-        $this->setSEARCH_TYPE(SearchTypesEnums::LAST_SEARCH_RESULTS);
+                if($output == 0)
+                {
+                        $this->setProfilesToShow("0 0");
+                }
+                $this->setSEARCH_TYPE(SearchTypesEnums::LAST_SEARCH_RESULTS);
 	}
 }

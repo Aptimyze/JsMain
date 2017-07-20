@@ -11,6 +11,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $LowDppCountCachetime = 604800; // 1 week
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
+        private $limitLastSearchRec = 10;
 	const clusterRecordLimit = 10;
         const _communityModelToggle=0;
         const limitNtWhenCommunity = 10;
@@ -62,7 +63,7 @@ EOF;
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
+                        //$arr = array(9474668=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -94,7 +95,13 @@ EOF;
                                                         
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
                                                         // Set Low Dpp flag
-                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                                                                         
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);     
+                                                        
+                                                        if($totalResults["CNT"] == 0){
+                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
+                                                                $totalResults = $lastSearchObj->getMatches();
+                                                        }
+                                                        
                                                         $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$BroaderDppSort);   
                                                         $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting); 
                                                         if(count($profiles) == 0)
@@ -117,6 +124,7 @@ EOF;
                                                         }
                                                         else
                                                             $this->limitNtRec=self::limitNtNoCommunity;
+                                                        
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
@@ -126,6 +134,10 @@ EOF;
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+                                                        if($totalResults["CNT"] == 0){
+                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
+                                                                $totalResults = $lastSearchObj->getMatches();
+                                                        }
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
