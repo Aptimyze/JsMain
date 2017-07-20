@@ -100,6 +100,9 @@ EOF;
                                                         if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
                                                                 $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
                                                                 $totalResults = $lastSearchObj->getMatches();
+                                                                if($totalResults["CNT"] == 0){
+                                                                        $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                }
                                                         }
                                                         
                                                         $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$BroaderDppSort);   
@@ -137,6 +140,9 @@ EOF;
                                                         if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
                                                                 $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
                                                                 $totalResults = $lastSearchObj->getMatches();
+                                                                if($totalResults["CNT"] == 0){
+                                                                        $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                }
                                                         }
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
