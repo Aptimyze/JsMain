@@ -39,7 +39,8 @@ class ProfilePage extends React.Component {
             profilechecksum: profilechecksum || "",
             gender: "M",
             defaultPicData: "",
-            responseTracking:responseTracking
+            responseTracking:responseTracking,
+            disablePhotoLink: false
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
@@ -182,6 +183,10 @@ class ProfilePage extends React.Component {
             }
             window.addEventListener('scroll', this.setScrollPos);
             let _this = this;
+            if(nextProps.pic.action == null) {
+                this.setState({disablePhotoLink: true})
+            }
+
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
@@ -247,6 +252,13 @@ class ProfilePage extends React.Component {
         this.setState({
             showHistory:false
         });
+    }
+    checkPhotoAlbum(e) 
+    {
+        if(this.state.disablePhotoLink == false) {
+            e.preventDefault();
+        }
+
     }
 
     imageLoaded() 
@@ -371,7 +383,7 @@ class ProfilePage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <Link id="showAlbum" to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                    <Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)} to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
                             {photoViewTemp}
