@@ -207,6 +207,13 @@ export  class MyjsPage extends React.Component {
 
   	}
 
+		hitIRforPagination(){
+			if(this.props.myjsData.apiDataIR.nextpossible!='true' || this.props.myjsData.apiDataIR.paginationHit)return;
+			this.props.myjsData.apiDataIR.paginationHit = true;
+			var nextPage = parseInt(this.props.myjsData.apiDataIR.page_index);
+			nextPage++;
+			this.props.hitApi_IR(nextPage);
+		}
   	render() {
 
 			
@@ -242,7 +249,7 @@ export  class MyjsPage extends React.Component {
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
 	    if(this.props.myjsData.irFetched){
-	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
 	    if(this.props.myjsData.modFetched){

@@ -1,7 +1,7 @@
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,tupleObject,styleFunction,notMyjs)
+  constructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit)
   {
     this.parent = parent;
     this.tupleObject = tupleObject;
@@ -9,7 +9,7 @@ export default class MyjsSliderBinding  {
     this.el = parent;
     this.threshold = !notMyjs ? 80 :100;
     this.windowWidth = window.innerWidth;
-
+    this.nextPageHit = nextPageHit;
     this.tuple_ratio = !notMyjs ? 80 :100;
     this.transformX = (this.tuple_ratio * this.windowWidth) / 100 + (!notMyjs?10:0);
     this.elementWidth = this.transformX - 10;
@@ -17,6 +17,7 @@ export default class MyjsSliderBinding  {
     this._index = 0;
     var _this=this;
     this.page = 1;
+    this.indexElevate = indexElevate ? indexElevate : 0 ;
 
 // dynamic variables
 window.addEventListener("resize",function()
@@ -98,19 +99,19 @@ window.addEventListener("resize",function()
                 }
                 else
                     this.gotoSlide(this._index);
-                   var tupleLength = this.tupleObject.length;
-                 if (this._index >=  tupleLength/ 2) if (tupleLength<100)
-                  this.callApi(++this.page);
                 e.preventDefault();
             }
             NextSlide()
             {
-                var index = this._index + 1;console.log(index);
-                if ((index+1) > this.tupleObject.length)
+                var index = this._index + 1;
+                if ((index+1) > (this.tupleObject.length+this.indexElevate))
                 {
-                    index = this.tupleObject.length-1;
+                    index = (this.tupleObject.length+this.indexElevate)-1;
                     this.transitionDuration = 500;
                 }
+                if(index==(this.tupleObject.length-1))
+                  if(typeof this.nextPageHit=='function')
+                    this.nextPageHit();
                 var transform;
                 if (index == 0)
                     var transform = 0;
@@ -136,12 +137,12 @@ window.addEventListener("resize",function()
             gotoSlide(index)
             {
 
-                if (index < 0 || index > this.tupleObject.length)
+                if (index < 0 || index > (this.tupleObject.length +this.indexElevate))
                 {
 
                     if (index < 0)
                         this._index = 0;
-                    else this._index = this.tupleObject.length;
+                    else this._index = this.tupleObject.length + this.indexElevate;
                     index=this._index;
 
                 }
@@ -154,7 +155,7 @@ window.addEventListener("resize",function()
                 this.alterCssStyle('-'+transform,index);
             }
 
-            callApi(){
-
+            setIndexElevate(newElevate){
+              this.indexElevate = newElevate;
             }
         }

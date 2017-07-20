@@ -526,7 +526,7 @@ getSuggestions()
         if(elem.data.hasOwnProperty(key)) {
               counter++;
               let tempCount = counter;
-              childEle = (<div style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
+              childEle = (<div key ={key} style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
               childEleArray.push(childEle);
               }
           }
@@ -586,9 +586,10 @@ if(objectCounter['AGE']['LAGE'])
 if(objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS'])
     sendObj.push({"type":'INCOME',"data":objectCounter['INCOME']});
 
-objectCounter['others'].map((value,index)=>{
-  if(value.arr.length)
-    sendObj.push({"type":value.type,"data":value.arr});
+objectCounter['others'].forEach(function(elem){
+
+  if(elem.arr.length)
+    sendObj.push({"type":elem.type,"data":elem.arr});
 });
 
 var url = JSON.stringify(sendObj).split('"').join("%22");
