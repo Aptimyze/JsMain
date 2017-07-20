@@ -19,7 +19,7 @@
             ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/welcomeCalls/">WELCOME CALLS DUE </a>
         </td>
         <td>
-            `.&nbsp;&nbsp;~$welcomeCallsCount`
+            &nbsp;&nbsp;~$welcomeCallsCount`
         </td>
     </tr>
     <br>
@@ -31,7 +31,10 @@
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/serviceActivationChangeInterface?name=~$name`&cid=~$cid`">Screen RB interests</a>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/screenRBInterests?name=~$name`&cid=~$cid`">Screen RB interests </a>
+        </td>
+         <td>
+            &nbsp;&nbsp;~$unscreenedClientsCount`
         </td>
     </tr>
     <br>

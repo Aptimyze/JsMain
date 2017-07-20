@@ -34,7 +34,7 @@ EOF;
                 $alreadySentCount = $tempProfileRecords->getCount();
                 
                 //profiles to whom eoi's have been sent
-                $autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
+                $autoContObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
                 $todaysSentContacts = $autoContObj->getCountAfterDate(date('Y-m-d'));
                 
                 //todays entries

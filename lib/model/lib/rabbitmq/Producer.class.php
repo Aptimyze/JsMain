@@ -187,6 +187,10 @@ class Producer
       
       //OutBound Event Queue
       $this->channel->queue_declare(MQ::OUTBOUND_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
+      //RB interests queue
+      $this->channel->queue_declare(MQ::RB_INTERESTS_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -324,6 +328,9 @@ class Producer
         break;
         case MQ::OUTBOUND_EVENT:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::OUTBOUND_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+
+        case "RBSendInterests":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::RB_INTERESTS_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
           break;
 			}
 		} catch (Exception $exception) {
