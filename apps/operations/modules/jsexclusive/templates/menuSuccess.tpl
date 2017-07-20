@@ -25,7 +25,7 @@
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/serviceActivationChangeInterface?name=~$name`&cid=~$cid`">Today's Clients ( Ask for Followups )</a>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/menu">Today's Clients ( Ask for Followups )</a>
         </td>
     </tr>
     <br>
@@ -40,7 +40,7 @@
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/serviceActivationChangeInterface?name=~$name`&cid=~$cid`">Pending Concalls</a>
+            ~$num++`.&nbsp;&nbsp;<a href="operations.php/jsexclusive/menu">Pending Concalls</a>
         </td>
     </tr>
 </table>
