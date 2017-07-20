@@ -40,12 +40,16 @@ class ProfilePage extends React.Component {
             gender: "M",
             defaultPicData: "",
             responseTracking:responseTracking,
-            disablePhotoLink: false
+            disablePhotoLink: false,
+            callApi: false
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
+        if(props.fetchedProfilechecksum != false) {
+            this.state.callApi = true;
+        }
+        
 
     }
 
@@ -53,7 +57,8 @@ class ProfilePage extends React.Component {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)    
     }
     componentDidMount() 
-    {
+    {   
+        this.props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -142,8 +147,7 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {   
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum) {
-
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -159,7 +163,8 @@ class ProfilePage extends React.Component {
                 actual_offset: actual_offset,
                 total_rec:total_rec,
                 responseTracking:responseTracking,
-                searchid:searchid
+                searchid:searchid,
+                callApi: false
             },this.setNextPrevLink);
             let picData;
             if(!nextProps.pic) {
@@ -206,7 +211,8 @@ class ProfilePage extends React.Component {
     }
 
     componentWillUnmount() 
-    {
+    {   
+        //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos); 
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);   
     }
