@@ -82,7 +82,7 @@ const mapDispatchToProps = (dispatch) => {
     return{
         showVerifiedData: (profilechecksum) => {
             let call_url = "/api/v1/common/verificationData?profilechecksum="+profilechecksum;
-            dispatch(commonApiCall(call_url,{},'SHOW_VERIFIED_INFO','GET'));
+            commonApiCall(call_url,{},'SHOW_VERIFIED_INFO','GET',dispatch,false);
         }
     }
 }

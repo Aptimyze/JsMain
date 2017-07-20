@@ -8,7 +8,6 @@ class CommHistory extends React.Component {
 
     constructor(props) {
     	super();
-    	props.showHistory(props.profileId); 
     	this.state = {
     		showLoader: true
     	} 
@@ -20,10 +19,11 @@ class CommHistory extends React.Component {
     	document.getElementById("comHistoryOverlay").style.height = window.innerHeight+"px";
     	document.getElementById("commHistoryScroller").style.height = (window.innerHeight - 110) + "px";  
     	document.getElementById("commHistoryScroller").style.width = (window.innerWidth) + "px";  
+        this.props.showHistory(this.props.profileId); 
     }
     componentWillReceiveProps(nextProps)
     {
-    	if(nextProps.historyData.history == null) {
+        if(nextProps.historyData.history == null) {
 			document.getElementById("commHistoryScroller").innerHTML += "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'>Your interaction with "+ this.props.username + " will appear here.</div></div>";
     	} else {
     		let htmlString = "", data = nextProps.historyData.history;
@@ -91,7 +91,7 @@ const mapDispatchToProps = (dispatch) => {
     return{
         showHistory: (profilechecksum) => {
             let call_url = "/api/v1/contacts/history?profilechecksum="+profilechecksum+"&pageNo=1&dataType=json";
-            dispatch(commonApiCall(call_url,{},'SHOW_HISTORY_INFO','GET'));
+            commonApiCall(call_url,{},'SHOW_HISTORY_INFO','GET',dispatch,false);
         }
     }
 }
