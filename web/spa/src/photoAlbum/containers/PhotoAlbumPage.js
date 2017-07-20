@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import {getCookie} from '../../common/components/CookieHelper';
 import MyjsSliderBinding from "../../myjs/components/MyjsSliderBinding";
+import { commonApiCall } from "../../common/components/ApiResponseHandler";
 require ('../style/albumcss.css');
 
 
