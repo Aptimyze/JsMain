@@ -20,9 +20,13 @@ export default class MyjsSlider extends React.Component {
 
 componentDidUpdate(){
   this.bindSlider();
+  if(this.props.listing.nextpossible=='false' && this.obj)
+    this.obj.setIndexElevate(0);
+
 }
 
-componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
+
+componentDidMount(){
   this.bindSlider();
 }
 
@@ -31,11 +35,11 @@ bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this));
+  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,this.props.apiNextPage);
   this.obj.initTouch();
   this.setState({
     sliderBound: true,
-    upleWidth : {'width' : this.obj.transformX-10}
+    tupleWidth : {'width' : this.obj.transformX-10}
   });
 }
 
@@ -94,7 +98,8 @@ render(){
 
 
 
-              {this.props.listing.profiles.map((tuple,index) => (
+              {
+                [this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
                   <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>
                   <img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
@@ -127,10 +132,10 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton profilechecksum={tuple.profilechecksum}/>
+                    <ContactEngineButton buttondata={tuple}/>
                 </div>
            </div>
-         ))}
+         )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
 
 
          <div className="clr"></div>

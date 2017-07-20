@@ -16,7 +16,7 @@ export class contactEngine extends React.Component{
   componentWillReceiveProps(nextProps){
 	  if(nextProps.contact.contactDone) {
 	    console.log('interest sent');
-	  }    
+	  }
 	  if(nextProps.contact.acceptDone){
 	    console.log('accept done');
 	  }
@@ -26,10 +26,12 @@ export class contactEngine extends React.Component{
   }
 
   render(){
+    //console.log('in ce');
+    //console.log(this.props);
     return(
     	<div className="brdr8 fullwid hgt60">
-        	<div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.profilechecksum,'matchOfDay')}>
-            	<input className="inputProChecksum" type="hidden" value={this.props.profilechecksum}></input>
+        	<div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,'matchOfDay')}>
+            	<input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <span className="f15 color2 fontreg">Send Interest</span>
             </div>
         	<div className="clr"></div>
