@@ -17,6 +17,7 @@ import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
+import AppPromo from "../../common/components/AppPromo";
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -52,7 +53,9 @@ export class CheckDataPresent extends React.Component{
 	}
 }
 export class MemMsgView extends React.Component{
-render(){	return(
+render(){
+
+	return(<a href={this.props.data.membership_message_link}>
 		<div className="posrel pt20 pb20 newBgBand">
 			<div className="posrel fullwid">
 				<div className="clearfix myjsp2">
@@ -66,6 +69,7 @@ render(){	return(
 				</div>
 			</div>
 		</div>
+		</a>
 	)}
 
 }
@@ -83,7 +87,8 @@ export  class MyjsPage extends React.Component {
 			ieApi: false,
 			drApi: false,
 			vaApi: false,
-			hamApi: false
+			hamApi: false,
+			showPromo: false
 		}
   	}
 
@@ -108,7 +113,19 @@ export  class MyjsPage extends React.Component {
 		this.setState ({
 			showLoader : false
 		})
+		if(nextProps.myjsData.apiData.appPromotion == true && this.state.showPromo == false) {
+			this.setState ({
+                showPromo : true
+            });
+		}
 	}
+	removePromoLayer() 
+    {
+        this.setState ({
+            showPromo : false
+        });
+        document.getElementById("mainContent").classList.remove("ham_b100");
+    }
 
 	componentWillMount(){
 			this.CssFix();
@@ -192,7 +209,12 @@ export  class MyjsPage extends React.Component {
 
   	render() {
 
-
+			
+		var promoView;
+        if(this.state.showPromo == true)
+        {	console.log("yesss")
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+        }
 
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
@@ -203,6 +225,7 @@ export  class MyjsPage extends React.Component {
 
   		if(this.props.myjsData.fetched)
 			{
+
 				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
 				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
@@ -239,25 +262,27 @@ export  class MyjsPage extends React.Component {
 
 		this.trackJsb9 = 1;
   		return(
-  		<div id="mainContent">
-		  	<MetaTagComponents page="MyjsPage"/>
-		  		<GA ref="GAchild" />
-				  <div className="perspective" id="perspective">
-							<div className="" id="pcontainer">
-								{MyjsHeadHTMLView}
-								{EditBarView}
-								{membershipmessageView}
-								{AcceptCountView}
-								{interestExpView}
-								{interestRecView}
-								{matchOfTheDayView}
-								{MyjsProfileVisitorView}
-								{dailyRecommendationsView}
-								{noDatablockView}
-
-							</div>
+  		<div id="MyjsPage">
+  			{promoView}
+	  		<div id="mainContent">
+			  	<MetaTagComponents page="MyjsPage"/>
+			  	<GA ref="GAchild" />
+				<div className="perspective" id="perspective">
+					<div className="" id="pcontainer">
+									{MyjsHeadHTMLView}
+									{EditBarView}
+									{membershipmessageView}
+									{AcceptCountView}
+									{interestExpView}
+									{interestRecView}
+									{matchOfTheDayView}
+									{MyjsProfileVisitorView}
+									{dailyRecommendationsView}
+									{noDatablockView}
 					</div>
+				</div>
 			</div>
+		</div>
 		);
 	}
 
