@@ -246,7 +246,7 @@ class LoginPage extends React.Component {
                                     </a>
                                 </div>
                                 <div id="searchLink" className="wid49p fl txtc pad12 posrel scrollhid">
-                                    <a id="calltopSearch" href="https://www.jeevansathi.com/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">
+                                    <a id="calltopSearch" href="/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">
                                         Search
                                     </a>
                                 </div>
