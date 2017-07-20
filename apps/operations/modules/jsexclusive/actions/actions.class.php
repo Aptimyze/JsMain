@@ -197,6 +197,15 @@ class jsexclusiveActions extends sfActions {
         $serviceDayArr = $exclusiveServicingObj->getServiceDay($this->client);
         $this->serviceDay = $serviceDayArr[0];
         $this->serviceDaySetDate = $serviceDayArr[1];
+        
+        $countArr = $exclusiveServicingObj->getDayWiseAssignedCount($agent);
+        $this->dayWiseCountArr = array('MON'=>($countArr['MON']==''?0:$countArr['MON'])
+                                    ,'TUE'=>($countArr['TUE']==''?0:$countArr['TUE'])
+                                    ,'WED'=>($countArr['WED']==''?0:$countArr['WED'])
+                                    ,'THU'=>($countArr['THU']==''?0:$countArr['THU'])
+                                    ,'FRI'=>($countArr['FRI']==''?0:$countArr['FRI'])
+                                    ,'SAT'=>($countArr['SAT']==''?0:$countArr['SAT'])
+                                    ,'SUN'=>($countArr['SUN']==''?0:$countArr['SUN']));
         if($submit){
             $this->serviceDay = $request['serviceDay'];
             $this->serviceDaySetDate = date('Y-m-d');
@@ -213,7 +222,7 @@ class jsexclusiveActions extends sfActions {
  *                  3- General Processing error
  */
         //Location where file will be uploaded and downloaded from
-        $fileLocation = "/var/www/html/branch2/web/uploads/temp/"; 
+        $fileLocation = sfConfig::get("sf_web_dir"). "/uploads/ExclusiveBiodata/"; 
         //Max size of file allowed
         $maxsize = 5 * 1024 * 1024;
         //Allowed File Types:
@@ -267,12 +276,13 @@ class jsexclusiveActions extends sfActions {
                 $fileType = $fileParam['type'];
                 $filesize = $_FILES["photo"]["size"];
                 $ext = end(explode('.', $fileName));
+                $nameWithoutExt = explode('.', $fileName)[0];
                 if ($filesize > $maxsize)
                     $this->invalidFile = 1;
                 if (!in_array($ext, $allowedExtension)) {
                     $this->invalidFile = 2;
                 } else {
-                    $location = $fileLocation . $_FILES['uploaded_csv']['name'];
+                    $location = $fileLocation . $this->client . $_FILES['uploaded_csv']['name'];
                     if (move_uploaded_file($_FILES['uploaded_csv']['tmp_name'], $location)) {
                         $exclusiveServicingObj->setBioDataLocation($this->client, $location);
                         $this->uploadSuccess = true;

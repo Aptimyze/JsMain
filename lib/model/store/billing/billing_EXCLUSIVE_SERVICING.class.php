@@ -54,10 +54,10 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
     }
 
     /**
-     * Function to get profile details from EXCLUSIVE_SERVICING table
+     * Function to get bio data location and upload date for a particular user
      *
-     * @param   $fields,$assigned flag
-     * @return  array of rows
+     * @param   $profileid
+     * @return  array of biodata location and biodata upload date
      */
     public function checkBioData($profileid) {
         try {
@@ -74,11 +74,11 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
 
-        /**
-     * Function to get profile details from EXCLUSIVE_SERVICING table
+     /**
+     * Function to delete the biodata location for a particular client
      *
-     * @param   $fields,$assigned flag
-     * @return  array of rows
+     * @param   $profileid
+     * @return  nothing
      */
     public function deleteBioData($profileid) {
         try {
@@ -92,11 +92,11 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
 
-        /**
-     * Function to get profile details from EXCLUSIVE_SERVICING table
+     /**
+     * Function to set the biodata location and the timestamp when it was uploaded
      *
-     * @param   $fields,$assigned flag
-     * @return  array of rows
+     * @param   $profileid, $location
+     * @return  nothing
      */
     public function setBioDataLocation($profileid,$location) {
         try {
@@ -111,11 +111,11 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
-            /**
-     * Function to get profile details from EXCLUSIVE_SERVICING table
+     /**
+     * Function to set the service day and date when it was set
      *
-     * @param   $fields,$assigned flag
-     * @return  array of rows
+     * @param   $profileid,$serviceDay
+     * @return  nothing
      */
     public function setServiceDay($profileid,$serviceDay) {
         try {
@@ -130,11 +130,11 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
-        /**
-     * Function to get profile details from EXCLUSIVE_SERVICING table
+     /**
+     * Funtion to get the service day and date when it was set
      *
-     * @param   $fields,$assigned flag
-     * @return  array of rows
+     * @param   $profileid
+     * @return  array of service day and service set date
      */
     public function getServiceDay($profileid) {
         try {
@@ -296,5 +296,27 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		  throw new jsException($e);
 		}
 	}
+        
+            /**
+     * Function to get count of users/clients assigned to a particular agent for each service day
+     *
+     * @param   $agent ID
+     * @return  array of rows
+     */
+    public function getDayWiseAssignedCount($agent) {
+        try {
+            $sql = "SELECT COUNT(SERVICE_DAY) AS CNT,SERVICE_DAY FROM billing.EXCLUSIVE_SERVICING";
+            $sql = $sql . " WHERE AGENT_USERNAME =:AGENT GROUP BY SERVICE_DAY";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+            $res->execute();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $output[$result['SERVICE_DAY']] = $result['CNT'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

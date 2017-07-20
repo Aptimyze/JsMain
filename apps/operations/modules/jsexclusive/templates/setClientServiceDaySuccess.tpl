@@ -29,13 +29,13 @@
             <td>
                 <select name="serviceDay" id="serviceDay">
                     <option value="NA">NA</option>
-                    <option value="MON">Monday</option>
-                    <option value="TUE">Tuesday</option>
-                    <option value="WED">Wednesday</option>
-                    <option value="THU">Thursday</option>
-                    <option value="FRI">Friday</option>
-                    <option value="SAT">Saturday</option>
-                    <option value="SUN">Sunday</option>
+                    <option value="MON">Monday (~$dayWiseCountArr['MON']`)</option>
+                    <option value="TUE">Tuesday (~$dayWiseCountArr['TUE']`)</option>
+                    <option value="WED">Wednesday (~$dayWiseCountArr['WED']`)</option>
+                    <option value="THU">Thursday (~$dayWiseCountArr['THU']`)</option>
+                    <option value="FRI">Friday (~$dayWiseCountArr['FRI']`)</option>
+                    <option value="SAT">Saturday (~$dayWiseCountArr['SAT']`)</option>
+                    <option value="SUN">Sunday (~$dayWiseCountArr['SUN']`)</option>
                 </select>
             </td>
             <td>
@@ -47,9 +47,14 @@
             </td>
         </tr>
         <tr></tr><tr></tr>
+    </table>
+    <table width="50%" border="0" align="center" cellpadding="4" cellspacing="4">
         <tr>
             <td><br><br>
-                **Note: You will not be able to change this after leaving this page.
+                NOTE:
+                <br>
+                **You will not be able to change this after leaving this page.<br>
+                **The number in the parenthesis indicates clients already having their service day set as that day itself.
             </td>
         </tr>
     </table>
