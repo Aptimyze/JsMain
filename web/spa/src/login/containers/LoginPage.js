@@ -116,15 +116,15 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        console.log(g_recaptcha_response);
+        
         var validate = validateInput('email',emailVal);
-        if(validate.responseCode == 1) {
-            this.showError(validate.responseCode);
-            document.getElementById("emailErr1").classList.remove("dn");
-        } else if(emailVal.length == 0 && passVal.length == 0) {
+        if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
-        } else if(emailVal.length == 0) {
+        } else if(email.length == 0) {
             this.showError(ErrorConstantsMapping("EnterEmail"));
+        } else if(validate.responseCode == 1) {
+            this.showError(validate.responseMessage);
+            document.getElementById("emailErr1").classList.remove("dn");
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
