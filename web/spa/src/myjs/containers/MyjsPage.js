@@ -52,7 +52,9 @@ export class CheckDataPresent extends React.Component{
 	}
 }
 export class MemMsgView extends React.Component{
-render(){	return(
+render(){
+
+	return(<a href={this.props.data.membership_message_link}>
 		<div className="posrel pt20 pb20 newBgBand">
 			<div className="posrel fullwid">
 				<div className="clearfix myjsp2">
@@ -66,6 +68,7 @@ render(){	return(
 				</div>
 			</div>
 		</div>
+		</a>
 	)}
 
 }
@@ -192,6 +195,7 @@ export  class MyjsPage extends React.Component {
 
   	render() {
 
+			
 
 
   		if(!this.props.myjsData.fetched){
@@ -203,6 +207,7 @@ export  class MyjsPage extends React.Component {
 
   		if(this.props.myjsData.fetched)
 			{
+
 				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
 				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
