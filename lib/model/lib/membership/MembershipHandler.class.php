@@ -2886,7 +2886,7 @@ class MembershipHandler
         $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
         
         $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
-        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$entryDt);
+        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$community,$entryDt);
         
 
         unset($discountDetails,$vdObj,$discountObj,$commWelDiscLogObj);
