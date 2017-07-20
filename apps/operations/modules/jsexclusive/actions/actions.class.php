@@ -18,12 +18,29 @@ class jsexclusiveActions extends sfActions
 		$request=sfContext::getInstance()->getRequest();
 		$this->cid=$request->getParameter("cid");
 		$this->name=$request->getParameter("name");
+		$this->module = $request->getParameter("module");
+		$this->action = $request->getParameter("action");
 
 		//put module wise condition
-		if($this->name){
+		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
-			$this->unscreenedClientsCount = $exclusiveObj->getUnScreenedClientCount($this->name);
+			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 			unset($exclusiveObj);
+			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
+				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+				$this->assignedClients = $apObj->getSendersAfterDate($this->assignedClients);
+
+				unset($apObj);
+				if(is_array($this->assignedClients)){
+					$this->unscreenedClientsCount = count($this->assignedClients);
+				}
+				else{
+					$this->unscreenedClientsCount = 0;
+				}
+			}
+			else{
+				$this->unscreenedClientsCount = 0;
+			}
 		}
 		else{
 			$this->unscreenedClientsCount = 0;
@@ -61,7 +78,7 @@ class jsexclusiveActions extends sfActions
     */
 	public function executeScreenRBInterests(sfWebRequest $request){
 		$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
-		$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
+		//$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
 		
@@ -69,24 +86,25 @@ class jsexclusiveActions extends sfActions
 			$this->clientIndex = 0;
 		}
 		
-		if(!is_array($assignedClients) || count($assignedClients)==0){
+		if(!is_array($this->assignedClients) || count($this->assignedClients)==0){
 			$this->infoMsg = "No assigned clients corresponding to logged in RM found..";
 		}
-		else if(!empty($this->clientIndex) && $this->clientIndex>=count($assignedClients)){
+		else if(!empty($this->clientIndex) && $this->clientIndex>=count($this->assignedClients)){
 			$this->infoMsg = "No more clients left for screening for logged in RM..";
 		}
 		else{
-			$this->clientId = $assignedClients[$this->clientIndex];
+			$this->clientId = $this->assignedClients[$this->clientIndex];
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
+			//$pogRBInterestsPids = array(543);
 			unset($assistedProductObj);
 
 			$clientProfileObj = new Operator;
-			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH");
+			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH,CASTE");
 
 			if($clientProfileObj){
 				$this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
-				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N");
+				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N","PROFILEID"=>$this->clientId,"clientCaste"=>$clientProfileObj->getCASTE());
 				$this->clientData["HoroscopeMatch"] = $this->horoscopeMatch;
 				$this->clientData["gender"] = $clientProfileObj->getGENDER();
 				unset($clientProfileObj);
@@ -121,14 +139,17 @@ class jsexclusiveActions extends sfActions
 				$discardArr = $formArr["DISCARD"];
 				if(is_array($acceptArr) && is_array($discardArr)){
 					$acceptArr = array_diff($acceptArr, $discardArr);
+					$acceptArr = array_values($acceptArr);
 				}
 				
 				$email = $request->getParameter("email");
 				$exclusiveObj = new ExclusiveFunctions();
-				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"agentEmail"=>$email));
+				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr));
 				unset($exclusiveObj);
 			}
-			++$this->clientIndex;
+			else{
+				++$this->clientIndex;
+			}
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
 		else{
