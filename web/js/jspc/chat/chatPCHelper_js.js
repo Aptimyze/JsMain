@@ -546,94 +546,99 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     return messages;
 }
 
+/*preProcessCommunication
+ * pre process communication history
+ * @inputs: communication
+ * @output: response
+ */
+function preProcessCommunication(communication){
+    if(Object.keys(communication).length>0)
+        return communication.reverse();
+    else
+        return null;
+}
+
 /*getChatHistory
  * fetch chat history on opening window again
- * @inputs: chatParams
+ * @inputs: apiParams,key
  * @output: response
  */
 function getChatHistory(apiParams,key) {
-    var postData = {},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
-    var bare_from_jid = apiParams["extraParams"]["from"].split("/")[0],bare_to_jid = apiParams["extraParams"]["to"].split("/")[0];
-    if (typeof apiParams["extraParams"] != "undefined") {
-        $.each(apiParams["extraParams"], function (key, value) {
-            postData[key] = value;
-        });
-        if(typeof apiParams["extraParams"]["messageId"] == "undefined"){
-            //console.log("no messageId");
-            if(chatConfig.Params[device].storeMsgInLocalStorage == true){
-                oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
-                //console.log("oldHistory");
-               
-                if(typeof oldHistory!= "undefined"){
-                    fetchFromLocalStorage = true;
-                }
-                setLocalStorage = true;
-            }
-        }
-        else{
-            fetchFromLocalStorage = false;
-        }
-    }
-    /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
-    if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
-        manageHistoryLoader(bare_to_jid,"hide");
-        //call plugin function to append history in div
-        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], messageFromLocalStorage,key);
-    }
-    else{*/
-        //console.log("api for history");
-
-        if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
-            $.each(chatConfig.Params.chatHistoryApi["extraParams"], function (k, v) {
-                postData[k] = v;
-            });
-        }
-        $.myObj.ajax({
-            url: chatConfig.Params.chatHistoryApi["apiUrl"],
-            dataType: 'json',
-            type: 'POST',
-            data: JSON.stringify(postData),
-            cache: false,
-            async: true,
-            beforeSend: function (xhr) {},
-            success: function (response) {
-                if (response["responseStatusCode"] == "0") {
-                    //console.log("history");
-                    ////console.log($.parseJSON(response["Message"]));
-                    if (typeof response["Message"] != "undefined") {
-                        if(setLocalStorage == true){
-                            localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
-                        }
-                        //console.log("setting pagination-"+response["pagination"]);
-                        if(response["pagination"] == 0){
-
-                            //console.log("no more history");
-                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
-                        }
-                        else{
-                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("1");
-                        }
-                        manageHistoryLoader(bare_to_jid,"hide");
-                        //call plugin function to append history in div
-                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key,response["canChat"]);
-                        //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
-                    }
-                    else{
-                        $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
-                        manageHistoryLoader(bare_to_jid,"hide");
-                    }
+    var selfAuth = readCookie("AUTHCHECKSUM");
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
+        var getRequestUrl = "",headerData={},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
+        var bare_from_jid = apiParams["from"].split("/")[0],bare_to_jid = apiParams["to"].split("/")[0];
+        headerData["JB-Profile-Identifier"] = selfAuth;
+        if (typeof apiParams["extraParams"] != "undefined") {
+            $.each(apiParams["extraParams"], function (key, value) {
+                if(getRequestUrl == ""){
+                    getRequestUrl = listingWebServiceUrl["rosterRemoveMsg"]+"?"+key+"="+value;
                 }
                 else{
-                    manageHistoryLoader(bare_to_jid,"hide");
-                    checkForSiteLoggedOutMode(response);
+                    getRequestUrl = getRequestUrl+"&"+key+"="+value;
                 }
-            },
-            error: function (xhr) {
-                manageHistoryLoader(bare_to_jid,"hide");
-                //return "error";
+            });
+            if(typeof apiParams["messageId"] == "undefined"){
+                if(chatConfig.Params[device].storeMsgInLocalStorage == true){
+                    oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
+                    if(typeof oldHistory!= "undefined"){
+                        fetchFromLocalStorage = true;
+                    }
+                    setLocalStorage = true;
+                }
             }
-        });
-   // }
+            else{
+                fetchFromLocalStorage = false;
+            }
+        }
+        /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["from"].split("@")[0], apiParams["to"].split("@")[0]);
+        if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
+            manageHistoryLoader(bare_to_jid,"hide");
+            //call plugin function to append history in div
+            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], messageFromLocalStorage,key);
+        }
+        else{*/
+            $.myObj.ajax({
+                url:getRequestUrl,
+                type: 'GET',
+                headers:headerData,
+                cache: false,
+                async: true,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    if (response["header"]!=undefined && response["header"]["status"] == 200) {
+                        if (typeof response["data"] != "undefined") {
+                            if(setLocalStorage == true){
+                                localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,JSON.stringify(response["items"]));
+                            }
+                            if(response["data"]["last"] == true){
+                                $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
+                            }
+                            else{
+                                $("#moreHistory_"+bare_to_jid.split("@")[0]).val("1");
+                            }
+                            manageHistoryLoader(bare_to_jid,"hide");
+                            //call plugin function to append history in div
+                            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], response["data"]["items"],key);
+                            //objJsChat.storeMessagesInLocalHistory(apiParams["from"].split('@')[0],apiParams["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
+                        }
+                        else{
+                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
+                            manageHistoryLoader(bare_to_jid,"hide");
+                        }
+                    }
+                    else{
+                        manageHistoryLoader(bare_to_jid,"hide");
+                        checkForSiteLoggedOutMode(response);
+                    }
+                },
+                error: function (xhr) {
+                    manageHistoryLoader(bare_to_jid,"hide");
+                    //return "error";
+                }
+            });
+       // }
+    }
 }
 
 /*generateChatHistoryID
@@ -1807,6 +1812,7 @@ $(document).ready(function () {
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
             rosterGroups:chatConfig.Params[device].rosterGroups,
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
+            checkForDefaultCommunication:chatConfig.Params[device].checkForDefaultCommunication,
             setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
             chatAutoLogin:chatConfig.Params[device].autoChatLogin,
             categoryTrackingParams:chatConfig.Params.categoryTrackingParams,
@@ -2029,7 +2035,7 @@ $(document).ready(function () {
         });
        }
        
-       objJsChat.rosterDeleteChatBoxReponse = function(from,to){
+       objJsChat.rosterDeleteChatBoxReponse = function(from,to,key){
            var headerData = {"Content-Type": "application/json"};
            var inputParams = JSON.stringify({
             "msg":"chatCheck",
@@ -2049,13 +2055,26 @@ $(document).ready(function () {
                 data: inputParams,
                 beforeSend: function (xhr) {},
                 success: function (response) {
-                    if(response["header"]["status"] == 400){
-                        var msg = response["data"]["buttondetails"]["infomsglabel"];
-                        if(msg == undefined){
+                    if(response["header"]["status"] == 400 && response["data"] != undefined){
+                        var msg;
+                        if(response["data"]["buttondetails"]==undefined){
                             msg = objJsChat._rosterDeleteChatBoxMsg;
                         }
-                        if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
-                            $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                        else{
+                            msg = response["data"]["buttondetails"]["infomsglabel"];
+                            if(msg == undefined){
+                                msg = objJsChat._rosterDeleteChatBoxMsg;
+                            }
+                        }
+                        if(key==undefined || key!="canChatMore"){
+                            if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
+                                $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                            }
+                        }
+                        else if(key=="canChatMore" && response["data"]["buttondetails"]["infomsglabel"]=="Only paid members can start the chat"){
+                            //console.log("disabled chat box");
+                            //$('chat-box[user-id="' + to + '"]').attr("data-paidInitiated","false");
+                            $('chat-box[user-id="' + to + '"] textarea').prop("disabled", true);   
                         }
                     }
                 },
