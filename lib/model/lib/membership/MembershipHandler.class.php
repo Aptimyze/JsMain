@@ -2872,9 +2872,7 @@ class MembershipHandler
     
     public function addCommunityWelcomeDiscount($profileid,$community){
         $discountPercent = $this->getCommunityWelcomeDiscount($community);
-        $memObj = new MembershipHandler();
-        $serviceArr = $memObj->getActiveServices();
-        unset($memObj);
+        $serviceArr = $this->getActiveServices();
         $vdObj = new VariableDiscount();
         $startDate = date('Y-m-d');
         $endDate = date("Y-m-d",strtotime('+'.VariableParams::COMMUNITY_WELCOME_DISCOUNT_DURATION." days"));
@@ -2882,11 +2880,11 @@ class MembershipHandler
         $sendMailForDiscount = false; //mail not to be sent
         $sendSMSForDiscount = true;  //SMS to be sent
         
-        $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
+        $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC1"=>$discountPercent,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
         $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
         
         $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
-        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$community,$entryDt);
+        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$startDate,$endDate,$community,$entryDt);
         
 
         unset($discountDetails,$vdObj,$discountObj,$commWelDiscLogObj);
