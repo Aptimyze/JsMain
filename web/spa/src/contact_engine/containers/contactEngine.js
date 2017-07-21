@@ -14,18 +14,6 @@ export class contactEngine extends React.Component{
   	// console.log(this.props);
   }
 
-  componentWillReceiveProps(nextProps){
-  	if(nextProps.contact.contactDone) {
-	    console.log('interest sent');
-	}
-	if(nextProps.contact.acceptDone){
-	   console.log('accept done');
-	}
-	if(nextProps.contact.declineDone){
-	   console.log('decline done');
-	}
-  }
-
   render(){
   	if(this.props.pagesrcbtn == "myjs") 
       {
@@ -88,12 +76,6 @@ export class contactEngine extends React.Component{
     }
 }
 
-const mapStateToProps = (state) => {
-    return{
-     contact: state.contactEngineReducer
-    }
-}
-
 const mapDispatchToProps = (dispatch) => {
     return{
         contactApi: (profilechecksum, source) => {
@@ -116,4 +98,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(contactEngine)
+export default connect('',mapDispatchToProps)(contactEngine)

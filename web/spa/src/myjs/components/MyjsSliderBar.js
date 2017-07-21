@@ -3,8 +3,9 @@ import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
+import { connect } from "react-redux";
 
-export default class MyjsSlider extends React.Component {
+export class MyjsSlider extends React.Component {
 
   constructor(props) {
     super(props);
@@ -33,11 +34,22 @@ componentDidUpdate(){
 
 }
 
-
 componentDidMount(){
 
   this.bindSlider();
 }
+
+ componentWillReceiveProps(nextProps){
+    if(nextProps.contact.contactDone) {
+      console.log('interest sent');
+  }
+  if(nextProps.contact.acceptDone){
+     console.log('accept done');
+  }
+  if(nextProps.contact.declineDone){
+     console.log('decline done');
+  }
+  }
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
@@ -129,3 +141,15 @@ render(){
 
   }
 }
+
+const mapStateToProps = (state) => {
+    return{
+     contact: state.contactEngineReducer
+    }
+}
+
+// const mapDispatchToProps = (dispatch) => {
+//     return{}
+// }
+
+export default connect(mapStateToProps)(MyjsSlider)
