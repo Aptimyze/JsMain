@@ -15,7 +15,7 @@ export class contactEngine extends React.Component{
   }
 
   render(){
-  	if(this.props.pagesrcbtn == "myjs") 
+  	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
           return (<div className="brdr8 fl wid90p hgt60">
@@ -38,7 +38,7 @@ export class contactEngine extends React.Component{
                       <span className="f15 color2 fontreg">Send Interest</span>
                   </div>
                 <div className="clr"></div>
-              </div>);      
+              </div>);
           }
       } else if(this.props.pagesrcbtn == "pd") {
          if(this.props.buttonName == "apiDataIR") {
@@ -47,8 +47,8 @@ export class contactEngine extends React.Component{
             <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1">
               <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                 <i className="ot_sprtie ot_chk"></i>
-                <div className="white">Accept Interest</div>  
-              </div>    
+                <div className="white">Accept Interest</div>
+              </div>
             </div>
             <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_2">
               <div id="btnDecline" className="fontlig f13 whitecursp dispbl">

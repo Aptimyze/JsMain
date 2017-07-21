@@ -35,10 +35,11 @@ export class SetNodataHtml extends React.Component{
 export default class NodataBlock extends React.Component{
 
 	render(){
-    console.log('no data block');
-    console.log(this.props);
+
 			  let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
         let browsePrfHtml='';
+
+      
 
         if(this.props.data.apiDataDR.no_of_results=="0"){
           browsePrfHtml= <div id="browseMyMatchBand" key="browseprf">
@@ -60,7 +61,7 @@ export default class NodataBlock extends React.Component{
        if(!this.props.data.apiDataVA.total){
            noDataHtml2= <SetNodataHtml idname="PF_null" key="PF_null" title="Profile Visitors" message="Members Who Visited Your Profile Will Appear Here"   />
         }
-        if(!this.props.data.apiDataDR.no_of_results){
+        if(this.props.data.apiDataDR.no_of_results=="0"){
           noDataHtml3= <SetNodataHtml idname="MA_null" key="MA_null" title="Daily Recommendations" message="Members Matching Your Desired Partner Profile Will Appear Here"   />
         }
 
