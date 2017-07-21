@@ -30,7 +30,6 @@ componentDidMount(){
   this.bindSlider();
 }
 
-
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
@@ -54,27 +53,6 @@ alterCssStyle(duration, transform){
   });
 }
 
-
-// getButtonView(tuple) {
-//   if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
-//     console.log("yess",tuple)
-//     return (<div className="brdr8 fl wid90p hgt60">
-//                   <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(tuple.profilechecksum)}>
-//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-//                       <a className="f15 color2 fontreg">Accept</a>
-//                   </div>
-//                   <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(tuple.profilechecksum)}>
-//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-//                     <a className="f15 color2 fontlig">Decline</a>
-//                   </div>
-//                   <div className="clr"></div>
-//                 </div>);
-//       }
-//       else {
-//           return "";
-//       }
-// }
-
 render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
@@ -95,9 +73,6 @@ render(){
           <div className="swrapper" id="swrapper">
             <div className="wrap-box" id={"wrapbox_"+this.props.listingName}>
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
-
-
-
               {
                 [this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
@@ -132,12 +107,10 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton buttondata={tuple}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName}/>
                 </div>
            </div>
          )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
-
-
          <div className="clr"></div>
          </div>
        </div>

@@ -14,29 +14,41 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-	  if(nextProps.contact.contactDone) {
+  	if(nextProps.contact.contactDone) {
 	    console.log('interest sent');
-	  }
-	  if(nextProps.contact.acceptDone){
-	    console.log('accept done');
-	  }
-	  if(nextProps.contact.declineDone){
-	    console.log('decline done');
-	  }
+	}
+	if(nextProps.contact.acceptDone){
+	   console.log('accept done');
+	}
+	if(nextProps.contact.declineDone){
+	   console.log('decline done');
+	}
   }
 
   render(){
-    //console.log('in ce');
-    //console.log(this.props);
-    return(
+  	if(this.props.buttonName == "interest_received") {
+	    return (<div className="brdr8 fl wid90p hgt60">
+	                  <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum)}>
+	                    <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
+	                      <a className="f15 color2 fontreg">Accept</a>
+	                  </div>
+	                  <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
+	                    <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
+	                    <a className="f15 color2 fontlig">Decline</a>
+	                  </div>
+	                  <div className="clr"></div>
+	                </div>);
+	}
+	else {
+		return(
     	<div className="brdr8 fullwid hgt60">
-        	<div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,'matchOfDay')}>
+        	<div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
             	<input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <span className="f15 color2 fontreg">Send Interest</span>
             </div>
         	<div className="clr"></div>
-        </div>
-    );
+        </div>);    	
+    }
   }
 }
 
@@ -51,7 +63,7 @@ const mapDispatchToProps = (dispatch) => {
         contactApi: (profilechecksum, source) => {
           if(source=='matchOfDay')
             var url = '&stype=WMOD&profilechecksum='+profilechecksum;
-          else if(source=='matchAlert')
+          else if(source=='match_alert')
             var url = '&stype=WMM&profilechecksum='+profilechecksum;
           else
             var url = '&profilechecksum='+profilechecksum;
