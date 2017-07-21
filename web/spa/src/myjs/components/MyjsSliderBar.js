@@ -16,6 +16,14 @@ export default class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth}
 
     }
+
+    if(!props.listing.total) {
+      if(props.listing.profiles) {
+        props.listing.total = props.listing.profiles.length;
+      } else {
+        props.listing.total = 0;
+      }
+    }
   }
 
 componentDidUpdate(){
@@ -27,6 +35,7 @@ componentDidUpdate(){
 
 
 componentDidMount(){
+
   this.bindSlider();
 }
 
@@ -107,7 +116,7 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs"/>
                 </div>
            </div>
          )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}

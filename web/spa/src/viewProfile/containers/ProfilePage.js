@@ -39,12 +39,17 @@ class ProfilePage extends React.Component {
             profilechecksum: profilechecksum || "",
             gender: "M",
             defaultPicData: "",
-            responseTracking:responseTracking
+            responseTracking:responseTracking,
+            disablePhotoLink: false,
+            callApi: false
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
+        if(props.fetchedProfilechecksum != false) {
+            this.state.callApi = true;
+        }
+        
 
     }
 
@@ -52,7 +57,8 @@ class ProfilePage extends React.Component {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)    
     }
     componentDidMount() 
-    {
+    {   
+        this.props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -141,8 +147,7 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {   
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum) {
-
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -158,7 +163,8 @@ class ProfilePage extends React.Component {
                 actual_offset: actual_offset,
                 total_rec:total_rec,
                 responseTracking:responseTracking,
-                searchid:searchid
+                searchid:searchid,
+                callApi: false
             },this.setNextPrevLink);
             let picData;
             if(!nextProps.pic) {
@@ -182,6 +188,10 @@ class ProfilePage extends React.Component {
             }
             window.addEventListener('scroll', this.setScrollPos);
             let _this = this;
+            if(nextProps.pic.action == null) {
+                this.setState({disablePhotoLink: true})
+            }
+
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
@@ -201,7 +211,8 @@ class ProfilePage extends React.Component {
     }
 
     componentWillUnmount() 
-    {
+    {   
+        //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos); 
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);   
     }
@@ -247,6 +258,13 @@ class ProfilePage extends React.Component {
         this.setState({
             showHistory:false
         });
+    }
+    checkPhotoAlbum(e) 
+    {
+        if(this.state.disablePhotoLink == false) {
+            e.preventDefault();
+        }
+
     }
 
     imageLoaded() 
@@ -371,7 +389,7 @@ class ProfilePage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <Link id="showAlbum" to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                    <Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)} to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
                             {photoViewTemp}
