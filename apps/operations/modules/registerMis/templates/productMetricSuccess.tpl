@@ -228,16 +228,16 @@
 
 
       <div class="col-sm-8">
-        <div class="col-sm-6 start-date">
+        <div class="col-sm-6 start-date" style="padding:0px">
           <div class='input-group date' id="time-start">
-            <input id="time-startVal" type='text' style="cursor: pointer;" class="form-control" placeholder="Start Time" readonly>
+            <input id="time-startVal" type='text' style="background-color:rgba(38, 185, 154, 0.7);cursor: pointer;color:white;" class="form-control" placeholder="Start Time" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
           </div>
         </div>
   
-        <div class="col-sm-6 end-date">
+        <div class="col-sm-6 end-date" style="padding:0 0 0 10px">
           <div class='input-group date' id="time-end">
-            <input id="time-EndVal" type='text' style="cursor: pointer;" class="form-control" placeholder="End Time" readonly>
+            <input id="time-EndVal" type='text' style="background-color:rgba(38, 185, 154, 0.7);cursor: pointer;color:white;" class="form-control" placeholder="End Time" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
           </div>
         </div>
@@ -246,22 +246,22 @@
                        <div class='tooltipNew'>
                             <span class="tooltiptext">Select start date for the Second Date Range</span>
                       <div class=' input-group date col-sm-6 end-date' id="time-start2">
-            <input id="time2-startVal" type='text' style="cursor: pointer;" class="form-control" placeholder="End Time" readonly>
+            <input id="time2-startVal" type='text' style="background-color:rgba(3, 88, 106, 0.701961);cursor: pointer;color:white;" class="form-control" placeholder="End Time" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
           </div>
                        </div>
         </div>
 
-         <div class="col-sm-6 end-date">
+         <div class="col-sm-6 end-date" style="padding: 0px">
           <div>
-            <input style="width: 100%;" type='button' value='GO' onclick='loadData(currentChannel)' >
+            <input style="width: 50%;" type='button' value='GO' onclick='loadData(currentChannel)' >
             
           </div>
                  
              <div class="checkbox">
-            <label>
-                <input type="checkbox" value="">
-                <span onClick="toggleDate2Visibility();" class="cr"><i class="cr-icon fa fa-check"></i></span>
+            <label style="padding-left: 0px">
+                <input onClick="toggleDate2Visibility();" type="checkbox" value="">
+                <span class="cr"><i class="cr-icon fa fa-check"></i></span>
                 Compare two date-ranges
             </label>
         </div>
@@ -282,7 +282,10 @@
                                     <h2>Registrations</h2>
 
                                     <div class="clearfix">
-                                        <span id ='REGCount' style="float:right;color: black;font-size: 26px;"></span>
+                                        <div id ='REGCount1' style="float:right;color: rgba(38, 185, 154, 0.7);font-size: 20px;"><span style="color:inherit" id="REGC1"></span></div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div id ='REGCount2' style="float:right;color: rgba(3, 88, 106, 0.70);font-size: 20px;display:none"><span style="color:inherit" id = "REGC2"></span></div>
                                     </div>
                                 </div>
                                 <div class="x_content" id="chart-REGParent">
@@ -296,8 +299,10 @@
                                 <div class="x_title">
                                     <h2>Logins</h2>
                                     <div class="clearfix">
-                                        <span id ='LOGCount' style="float:right;color: black;font-size: 26px;"></span>
-
+                                        <div id ='LOGCount1' style="float:right;color: rgba(38, 185, 154, 0.7);font-size: 20px;"><span style="color:inherit" id="LOGC1"></span></div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div id ='LOGCount2' style="float:right;color: rgba(3, 88, 106, 0.70);font-size: 20px;display:none"><span style="color:inherit" id = "LOGC2"></span></div>
                                     </div>
                                 </div>
                                 <div class="x_content" id="chart-LOGParent">
@@ -315,8 +320,10 @@
                                     <h2>Interests</h2>
 
                                     <div class="clearfix">
-                                      <span id ='EOICount' style="float:right;color: black;font-size: 26px;"></span>
-
+                                        <div id ='EOICount1' style="float:right;color: rgba(38, 185, 154, 0.7);font-size: 20px;"><span style="color:inherit" id="EOIC1"></span></div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div id ='EOICount2' style="float:right;color: rgba(3, 88, 106, 0.70);font-size: 20px;display:none"><span style="color:inherit" id = "EOIC2"></span></div>
                                     </div>
                                 </div>
                                 <div class="x_content" id="chart-EOIParent">
@@ -330,8 +337,10 @@
                                 <div class="x_title">
                                     <h2>Acceptances</h2>
                                     <div class="clearfix">
-                                        <span id ='ACCCount' style="float:right;color: black;font-size: 26px;"></span>
-
+                                        <div id ='ACCCount1' style="float:right;color: rgba(38, 185, 154, 0.7);font-size: 20px;"><span style="color:inherit" id="ACCC1"></span></div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div id ='ACCCount2' style="float:right;color: rgba(3, 88, 106, 0.70);font-size: 20px;display:none"><span style="color:inherit" id = "ACCC2"></span></div>
                                     </div>
                                 </div>
                                 <div class="x_content" id="chart-ACCParent">
@@ -497,15 +506,26 @@ function drawCharts(data,type){
             var startString,endString;
             newLineChartData['labels'] = newData.timestamp;
             if(data['dayOrHour']=="day"){
-                startString = 0;
+                startString = 5;
                 endString = 10;
             }
             else{
                 startString = 10;
                 endString = 16;
             }
+            var weekday = new Array('SUN','MON','TUE','WED','THU','FRI','SAT');
             for(i=0;i<newLineChartData['labels'].length;i++){
-                newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(startString,endString);
+                if(data['dayOrHour']=="day"){
+                    var dateSplit = newLineChartData['labels'][i].split('-');
+                    var d = new Date();
+                    var daySplit = dateSplit[2].split(' ');
+                    d.setDate(daySplit[0]);
+                    d.setMonth(dateSplit[1]-1);
+                    d.setYear(dateSplit[0]);
+                    newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(startString,endString)+' ('+weekday[d.getDay()]+')';
+                }
+                else
+                    newLineChartData['labels'][i] = newLineChartData['labels'][i].replace('T',' ').substring(startString,endString);
             }
             newLineChartData['datasets'][0]['data'] = jQuery.extend(true, {}, newData.count);
             
@@ -542,10 +562,13 @@ function sendAjaxForData(type){
             dummyHtml = $(dummyHtml).attr('id','chart-'+type);
             $("#chart-"+type + "Parent").append(dummyHtml);
             if(response!=null){
-                if(doubleRange)
-                    $("#"+type+"Count").text("1-:"+response[0].totalCount+',2-:'+response[1].totalCount);
+                if(doubleRange){
+                    $("#"+type+"C1").text(numberWithCommas(response[0].totalCount));
+                    $("#"+type+"Count2").show();
+                    $("#"+type+"C2").text(numberWithCommas(response[1].totalCount));
+                }
                 else
-                    $("#"+type+"Count").text(response[0].totalCount);
+                    $("#"+type+"C1").text(numberWithCommas(response[0].totalCount));
                 drawCharts(response,type);
             }
         }
@@ -571,9 +594,17 @@ function toggleDate2Visibility()
         
         doubleRange = 0;
     }
+    $("#time2-startVal").val($("#time-startVal").val());
+    $("#REGCount2").hide();
+    $("#LOGCount2").hide();
+    $("#ACCCount2").hide();
+    $("#EOICount2").hide();
 }
 
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 
 
