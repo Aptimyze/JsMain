@@ -16,15 +16,18 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-  	if(nextProps.contactAction.contactDone) {
-	    console.log('interest sent from PD');
-	  }
-  	if(nextProps.contactAction.acceptDone){
-  	   console.log('accept done from PD');
-  	}
-  	if(nextProps.contactAction.declineDone){
-  	   console.log('decline done from PD');
-  	}
+    if(nextProps.contact) {
+      if(nextProps.contact.contactDone) {
+        console.log('interest sent');
+      }
+      if(nextProps.contact.acceptDone){
+         console.log('accept done');
+      }
+      if(nextProps.contact.declineDone){
+         console.log('decline done');
+      }  
+    }
+  	
   }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
@@ -75,10 +78,12 @@ export class contactEngine extends React.Component{
          } else {
           return(
           <div id="buttons1" className="view_ce fullwid">
-            <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
-              <i className="mainsp msg_srp"></i>
-              <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
-              <div className="white wid60p">Send Interest</div>
+            <div className="fullwid bg7 txtc pad5new posrel" >
+              <div className="wid60p" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
+                <i className="mainsp msg_srp"></i>
+                <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
+                <div className="white">Send Interest</div>
+              </div>
               <ThreeDots />
             </div>
           </div>
