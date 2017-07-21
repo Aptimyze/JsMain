@@ -7,7 +7,7 @@ server.listen(8090, function(request, response) {
   var page = require('webpage').create();//new WebPage();
   page.settings.userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
 
-  page.open('http://192.168.183.75:80/login', function (status) {
+  page.open('http://localhost:8080/login', function (status) {
     if (status !== 'success') {
       console.log('Unable to load the address!');
       phantom.exit();

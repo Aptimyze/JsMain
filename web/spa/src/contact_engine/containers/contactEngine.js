@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import ThreeDots from "./ThreeDots"
 
 export class contactEngine extends React.Component{
   constructor(props){
@@ -14,6 +15,17 @@ export class contactEngine extends React.Component{
   	// console.log(this.props);
   }
 
+  componentWillReceiveProps(nextProps){
+  	if(nextProps.contact.contactDone) {
+	    console.log('interest sent');
+	  }
+  	if(nextProps.contact.acceptDone){
+  	   console.log('accept done');
+  	}
+  	if(nextProps.contact.declineDone){
+  	   console.log('decline done');
+  	}
+  }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
       {
@@ -63,7 +75,8 @@ export class contactEngine extends React.Component{
           <div id="buttons1" className="view_ce fullwid">
             <div className="fullwid bg7 txtc pad5new posrel">
               <i className="mainsp msg_srp"></i>
-              <div className="white">Send Interest</div>
+              <div className="white wid60p">Send Interest</div>
+              <ThreeDots />
             </div>
           </div>
           );

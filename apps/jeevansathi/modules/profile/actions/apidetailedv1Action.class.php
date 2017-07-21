@@ -286,8 +286,8 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        if(MobileCommon::isAndroidApp())
-        {
+        //if(MobileCommon::isAndroidApp())
+        //{
         	$tickArr = array();
 
         	if($this->loginProfile->getPROFILEID())
@@ -305,7 +305,7 @@ class apidetailedv1Action extends sfAction
 			{
 				$out["dpp_Ticks"]["matching"] = $this->getTotalAndMatchingDppCount($out["dpp_Ticks"]);
 			}
-        }
+        //}
         //tick array part ends
 
         //this has been added to ensure that guna score flag for preview profile is "n"
