@@ -12,6 +12,15 @@ class jsValidatorTimeToCall extends sfValidatorBase
   
   protected function doClean($value)
   {
+        if($value['start_am_pm'] =="a.m.")
+                $value['start_am_pm'] = "am";
+        if($value['start_am_pm']=="p.m.")
+                $value['start_am_pm'] = "pm";
+        if($value['time_to_call_end']=="a.m.")
+                $value['time_to_call_end'] = "am";
+        if($value['time_to_call_end']=="p.m.")
+                $value['time_to_call_end'] = "pm";
+
     if(count(array_filter($value)) && isset($value['time_to_call_start']) && !empty($value['time_to_call_start']) && isset($value['start_am_pm']) && !empty($value['start_am_pm']))
     {
 		if($value['time_to_call_start']>12 || $value['time_to_call_start']<1)

@@ -163,6 +163,8 @@ function after_login(response)
 		if(response==0)
 		if( window.top.location.pathname=="/static/logoutPage" || window.top.location.pathname=="/jsmb/login_home.php")
 			window.top.location.href = "/myjs/jspcPerform";
+		else if(window.location.href.indexOf("common/resetPassword")>0)
+			window.top.location.href = "/myjs/jspcPerform";
 		else
 			window.top.location.href = address_url;
 	}

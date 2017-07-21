@@ -33,14 +33,11 @@ EOF;
         sfContext::createInstance($this->configuration);
         $processObj	=new PROCESS();
         $csvHandler	=new csvGenerationHandler();
-        $max_dt         =date("Y-m-d",time());
         
         $processObj->setProcessName("failedPaymentInDialer");
         $processObj->setMethod("NEW_FAILED_PAYMENT");
         $processObj->setSubMethod("NEW_FAILED_PAYMENT");
         
-	$processObj->setEndDate($max_dt);	
-
 	$processId =15;
 	$processObj->setIdAllot($processId);
 	$lastHandledDtObj =new incentive_LAST_HANDLED_DATE();
@@ -58,11 +55,13 @@ EOF;
 	$csvHandler->removeOldProfiles($processObj);
 	$profiles =$csvHandler->fetchProfiles($processObj);
         $csvHandler->storeTemporaryProfiles($processObj,$profiles);
+
         // logging array defined below		
-	$filter = array("notActivatedCnt"=>0,"invalidPhoneCnt"=>0, "maleAgeCnt"=>0, "nriCnt"=>0, "nonOptinProfileCnt"=>0, "noPhoneExistsCnt"=>0,"noPhoneCnt"=>0, "notActivatedCnt_L"=>0,"invalidPhoneCnt_L"=>0, "maleAgeCnt_L"=>0, "nriCnt_L"=>0, "nonOptinProfileCnt_L"=>0, "noPhoneExistsCnt_L"=>0,"noPhoneCnt_L"=>0);
+	$filter = array("notActivatedCnt"=>0,"invalidPhoneCnt"=>0, "maleAgeCnt"=>0, "nriCnt"=>0, "nonOptinProfileCnt"=>0, "noPhoneExistsCnt"=>0,"noPhoneCnt"=>0);
 	// pre-filter logic
 	if(count($profiles)>0)
 		$profiles =$csvHandler->preFilter($processObj, $profiles);
+
 	if(count($profiles)>0){
 		foreach($profiles as $key=>$data){
 			$profileid =$data['PROFILEID'];
@@ -83,8 +82,9 @@ EOF;
         
         // Used for logging part and sending email alert
 	$totalCnt 		=count($profiles);
-	$latestProfilesCnt 	=$csvHandler->getTemporaryFPProfilesCount($max_dt,'failedPaymentInDialer');
-	$csvHandler->updateFPLogs($totalCnt, $latestProfilesCnt, $max_dt, $filter,'failedPaymentInDialer');
+	//$latestProfilesCnt 	=$csvHandler->getTemporaryFPProfilesCount($max_dt,'failedPaymentInDialer');
+	$csvHandler->updateFPLogs($totalCnt, $filter,'failedPaymentInDialer');
+
         // Generate CSV
 	$processName =$processObj->getProcessName();	
 	$dateSet =$csvStartDt."#".$endDt;		

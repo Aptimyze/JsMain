@@ -64,17 +64,11 @@ class screeningActions extends sfActions {
                 if (!empty($infoArr)) {
                         $this->documentURL = PictureFunctions::getCloudOrApplicationCompleteUrl($infoArr["DOCUMENT_PATH"]);
                         $urlOri = PictureFunctions::getCloudOrApplicationCompleteUrl($infoArr["DOCUMENT_PATH"],true);
-                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
                         $contentType = "image";
-                        foreach (glob($urlOri) as $filename) 
-                        {
-                                if(finfo_file($finfo, $filename) === 'application/pdf') 
-                                {
-                                        $contentType = "pdf";
-                                        $type="";
-                                } 
+                        $fileExt = explode(".",$urlOri);
+                        if(end($fileExt) == 'pdf' || end($fileExt) == 'PDF'){
+                        		$contentType = "pdf";
                         }
-                        finfo_close($finfo);
                         $this->contentType = $contentType;
                         $this->documentPath = $infoArr["DOCUMENT_PATH"];
                 } else {

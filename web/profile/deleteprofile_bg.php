@@ -214,6 +214,8 @@ mysql_query($sql_del,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql
 $sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET MAINDB=1 WHERE PROFILEID='$profileid' and DATE='$today'";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
+//Delete Roster Data for this profile
+deleteChatRoster($profileid);
 
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
@@ -710,5 +712,41 @@ function deleteChatData($dbName, $iProfileId)
   } catch (Exception $ex) {
     mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data  {$iProfileId} on {$dbName}", print_r($ex->getTrace(),true));
     die("Issue while deleting data for chat tables");
+  }
+}
+
+/**
+ * 
+ * @param type $profileid
+ */
+function deleteChatRoster($profileid) {
+  try{
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected()) {
+      $sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($sendMailData);
+    }
+  } catch (Exception $ex) {
+    $redisKey = "DELETE_PROFILE_BG_CHAT_ROSTER_FAILED";
+    $memObj = JsMemcache::getInstance();
+    if($memObj) {
+      $memObj->incrCount($redisKey);
+    }
+    
+    //Log This
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex, array(LoggingEnums::ACTION_NAME => "CHAT_ROSTER_DATA_DELETION_PROCESS", LoggingEnums::MODULE_NAME => "deletecron", LoggingEnums::MESSAGE=>"Chat roster data not delete for profile {$profileid} in deleteprofile_bg cron"));
+    
+    //if error count reach 10 then fire mail
+    $count = 10;
+    if($memObj) {
+      $count = $memObj->getRedisKey($redisKey);
+    } 
+    
+    if($count%10 == 0) {
+      if($memObj)
+        $memObj->delete($redisKey);
+      
+      mail("nitesh.s@jeevansathi.com","Chat roster data not getting deleted", "Issues while inserting into rabbitmq queue USER_DELETE for user {$profileid}");
+    }
   }
 }
