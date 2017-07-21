@@ -16,6 +16,14 @@ export default class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth}
 
     }
+
+    if(!props.listing.total) {
+      if(props.listing.profiles) {
+        props.listing.total = props.listing.profiles.length;
+      } else {
+        props.listing.total = 0;
+      }
+    }
   }
 
 componentDidUpdate(){
@@ -27,6 +35,7 @@ componentDidUpdate(){
 
 
 componentDidMount(){
+
   this.bindSlider();
 }
 
