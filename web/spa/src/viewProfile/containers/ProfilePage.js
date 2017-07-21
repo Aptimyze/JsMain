@@ -17,7 +17,7 @@ import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
 import {getCookie} from '../../common/components/CookieHelper';
 import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-
+import ContactEngineButton from "../../contact_engine/containers/contactEngine";
 
 class ProfilePage extends React.Component {
 
@@ -41,7 +41,8 @@ class ProfilePage extends React.Component {
             defaultPicData: "",
             responseTracking:responseTracking,
             disablePhotoLink: false,
-            callApi: false
+            callApi: false,
+            listingName: ""
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
@@ -82,6 +83,7 @@ class ProfilePage extends React.Component {
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
                 if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
+                    this.setState({listingName:listingArray[i]});
                     parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
                         nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
@@ -279,7 +281,15 @@ class ProfilePage extends React.Component {
     }
 
     render() 
-    {
+    {   
+        var contactEngineView;
+        if(this.state.listingName != "") {
+            let buttondata = {
+                profilechecksum : this.state.profilechecksum,
+                responseTracking: this.state.responseTracking
+            };
+            contactEngineView = <ContactEngineButton buttondata={buttondata} buttonName={this.state.listingName} pagesrcbtn="pd"/>;
+        }
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
@@ -408,6 +418,7 @@ class ProfilePage extends React.Component {
                     {FamilyView}
                     {DppView}
                 </div>
+                {contactEngineView}
             </div>
         );
     }

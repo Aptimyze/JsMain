@@ -1259,3 +1259,26 @@ border-radius: 32px;
 .z99{z-index: 99}
 .wid32p{width: 32%}
 .z1{z-index: 1}
+.ot_chk {
+    background-position: -185px -206px;
+    width: 34px;
+    height: 20px;
+}
+.newitcross {
+    background-position: -196px -180px;
+    width: 22px;
+    height: 20px;
+}
+.ot_sprtie {
+    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.msg_srp {
+    background-position: -204px -24px;
+    width: 22px;
+    height: 14px;
+}
+.mainsp {
+    background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/main-sprite_new_1.png);
+    background-repeat: no-repeat;
+}
