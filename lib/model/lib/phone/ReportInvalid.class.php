@@ -76,7 +76,7 @@ class ReportInvalid
          //Number is already unverified
          return ;
       }
-      //$verifiedDate = "2017-01-01 00:00:00"; For Testing
+
       $reportInvalidObj = new JSADMIN_REPORT_INVALID_PHONE();
       $count = $reportInvalidObj->getCountOfInvalid($profileid, $phoneFlag, $mobileFlag, date('Y-m-d H:i:s'), $verifiedDate);
        
@@ -124,6 +124,8 @@ class ReportInvalid
       if($storeObj) {
         $storeObj->edit($arrFields, $profileid);
       }
+      
+      JsMemcache::getInstance()->delete($profileid."_PHONE_VERIFIED");
     }
     
     /**
