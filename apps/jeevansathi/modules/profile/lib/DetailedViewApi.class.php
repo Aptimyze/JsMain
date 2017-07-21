@@ -369,8 +369,8 @@ class DetailedViewApi
             else
                 $this->m_arrOut['NO_ASTRO']=1;
 
-        //if(MobileCommon::isAndroidApp())
-        //{ 
+        if(MobileCommon::isAndroidApp())
+        { 
             $this->m_arrOut['thumbnailPic'] = null;
             $havePhoto=$this->m_objProfile->getHAVEPHOTO();
             if($havePhoto=='Y')
@@ -408,7 +408,7 @@ class DetailedViewApi
             	}
             	$this->m_arrOut["selfThumbnail"] = $this->thumbnailPic;
             }
-        //}
+        }
 	}
 	
 	/**
