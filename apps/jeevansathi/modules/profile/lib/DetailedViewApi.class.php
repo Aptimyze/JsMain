@@ -122,6 +122,10 @@ class DetailedViewApi
 		$this->m_arrOut = array();
 		$this->getDecorated_MoreInfo();
 		$arrMoreInfo = $this->m_arrOut;
+                
+		$this->m_arrOut = array();
+		$this->getDecorated_CriticalInfo();
+		$arrCriticalInfo = $this->m_arrOut;
 		
         if($originalProflie)
             $this->m_objProfile = $originalProflie;
@@ -138,11 +142,17 @@ class DetailedViewApi
 							'dpp'		=>	$arrLookingFor,
 							'pic'		=>	$arrPicSection,
 							'page_info' =>	$arrMoreInfo,
+							'Critical' =>	$arrCriticalInfo,
 							);
 							
 		return $this->m_arrSectionOut;
 	}
-	
+	protected function getDecorated_CriticalInfo(){
+                $objProfile = $this->m_objProfile;
+                $this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();                
+                $this->m_arrOut['age'] = $objProfile->getAGE();
+                $this->m_arrOut['dtofbirth'] = "(".date("jS M Y", strtotime($objProfile->getDTOFBIRTH())).")";
+        }
 	/**
 	 * getDecorated_AboutMe
 	 * 
@@ -298,6 +308,7 @@ class DetailedViewApi
 		$szLocation = CommonFunction::getResLabel($objProfile->getCOUNTRY_RES(),$state,$city,$objProfile->getANCESTRAL_ORIGIN(),"city");	
 		$this->m_arrOut['location'] = $szLocation;
 		//Caste
+                $this->m_arrOut['religionId'] = $objProfile->getReligion();
 		if(stripos($objProfile->getDecoratedCaste(),": ")!=false)
 		{
 			$this->m_arrOut['caste'] = substr($objProfile->getDecoratedCaste(),stripos($objProfile->getDecoratedCaste(),": ") + 2);
@@ -406,7 +417,7 @@ class DetailedViewApi
             	{
             		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
             	}
-            	$this->m_arrOut["selfThumbnail"] = $this->thumbnailPic;
+            	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
             }
         }
 	}

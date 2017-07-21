@@ -282,7 +282,7 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
-                
+                $searchParamsSetter['CURRENT_CLUSTER'] = $cluster;
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')
@@ -338,7 +338,7 @@ class SearchUtility
 			if(!is_array($list_of_clusters) || (is_array($list_of_clusters) && !in_array($cluster,$list_of_clusters)) )
 				$list_of_clusters[] = $cluster;
 			$searchParamsSetter['NEWSEARCH_CLUSTERING'] = implode(",",$list_of_clusters);
-
+                        
 			if(strstr($clusterVal,'$'))
 			{
 				$temp = explode("$",$clusterVal);
@@ -352,6 +352,7 @@ class SearchUtility
 					$searchParamsSetter["L".$cluster]=$temp[0];
 					$searchParamsSetter["H".$cluster]=$temp[1];
 				}
+                                
 				if($cluster == "INCOME")
 				{
 					if($temp[0]=="-" && $temp[1]=="-")	//If Rupee checkbox is unclicked i.e. dont use Rupee parameter

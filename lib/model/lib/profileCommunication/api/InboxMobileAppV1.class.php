@@ -862,7 +862,7 @@ class InboxMobileAppV1
 						$message="";
 				}
 				$message= nl2br($message);
-				$message =addslashes(htmlspecialchars_decode($message));
+				$message =htmlspecialchars_decode($message);
 			}
 			else
 				$message = null;

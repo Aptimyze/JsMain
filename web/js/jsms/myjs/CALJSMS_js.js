@@ -2,8 +2,8 @@
 var calTimerTime,calTimer;
 
 $(document).ready(function() {
-
-if($("#CriticalActionlayerId").val()=='18'){
+var calIdTemp =$("#CriticalActionlayerId").val(); 
+if(calIdTemp=='18'){
 
     if(isIphone != '1')
     {
@@ -11,27 +11,27 @@ if($("#CriticalActionlayerId").val()=='18'){
         {
         $("#occMidDiv").css("height",window.innerHeight - 50);
         $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
-        });
+        });	
     }
     occuSelected= 0;
 
     $("#occInputDiv input").on('keydown',function(event){
         var self = $(this);
         setTimeout(function(){
-          var regex = /[^a-zA-Z. 0-9]+/g;
-
+          var regex = /[^a-zA-Z. 0-9]+/g; 
+            
          var value = self.val();
          value = value.trim().replace(regex,"");
          if(value != self.val().trim())
            self.val(value);
         },1);
-
-//        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0) && inputValue != 8 && (inputValue != 32 && inputValue != 0) ) {
-//            event.preventDefault();
+        
+//        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0) && inputValue != 8 && (inputValue != 32 && inputValue != 0) ) { 
+//            event.preventDefault(); 
 //        }
     } );
     $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() {
+    $("#occClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
                     url: "/static/getFieldData?k=occupation&dataType=json",
@@ -88,20 +88,21 @@ if($("#CriticalActionlayerId").val()=='18'){
 
         }
 
-if($("#CriticalActionlayerId").val()=='20'){
+
+if(calIdTemp=='20' || calIdTemp==23 ){
     if(isIphone != '1')
     {
         $(window).resize(function()
         {
-        $("#cityMidDiv").css("height",window.innerHeight - 50);
-        });
+        $("#stateCityMidDiv").css("height",window.innerHeight - 50);
+        }); 
     }
 
-    $("#cityMidDiv").css("height",window.innerHeight - 50);
-    $("#stateClickDiv").on("click", function() {
+    $("#stateCityMidDiv").css("height",window.innerHeight - 50);
+    $("#stateClickDiv").on("click", function() { 
         if(typeof listArray == 'undefined')
         {      $.ajax({
-                    url: "/static/getFieldData?l=state_res,city_res_jspc&dataType=json",
+                    url: "/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json",
                     type: "GET",
                     success: function(res) {
                         listArray = res;
@@ -122,35 +123,44 @@ if($("#CriticalActionlayerId").val()=='20'){
             $("#cityListDiv").removeClass("dn");
     });
 
-     appendStateData = function(allRes) {
+     appendStateData = function(allRes) {  
         $("#stateList").html('');
-        $("#citySelect").html('Select your City');
-        allRes = JSON.parse(allRes);
+        $("#citySelect").html('Select your City');  
+        if(typeof allRes == 'string')
+            allRes = JSON.parse(allRes);
 
         res = allRes.state_res;
-
-        stateMap = {};
+        if($("#CriticalActionlayerId").val()=='23')
+            $("#stateList").append('<li stateCode = "-1">Outside India</li>');        stateMap = {};
          var stateIndex=1;
         $.each(res, function(index, elem) {
             $.each(elem, function(index1, elem1) {
                 $.each(elem1, function(index2, elem2) {
                     $("#stateList").append('<li stateCode = "'+index2+'">' + elem2 + '</li>');
                     stateMap[stateIndex++] = index2;
-
+                    
             });
         });
-      });
-
-        $("#stateList li").each(function(index, element) {
+      });      
+   
+        $("#stateList li").each(function(index, element) { 
             $(this).bind("click", function() {
+                citySelected = false;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                 $("#stateSelect").html($(this).html());
                 $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
                 $("#stateListDiv").addClass("dn");
                 $("#stateList").html("");
-
+                $("#inputDiv").hide();
+                if($(this).attr('stateCode')=='-1')
+                    $("#citySelect").html('Country');  
+                else 
+                {
+                    if(calIdTemp=='23')
+                        $("#citySelect").html('City');
+                }
                     $("#contText").hide();
                     $("#cityClickDiv").removeClass("dn");
-
+                
                 $("#stateCitySubmit").show();
             });
 
@@ -164,33 +174,59 @@ if($("#CriticalActionlayerId").val()=='20'){
 
         $("#cityList").html('');
         var cityIndexFromMap  = $("#stateSelect").attr('stateCode');
-
-        allRes = JSON.parse(allRes);
+        if(typeof allRes == 'string')
+            allRes = JSON.parse(allRes);
         cityMap = {};
         cityIndex = 2;
-
+        
         occuSelected = 0;
+        if(cityIndexFromMap!='-1')
+        {
          $.each(allRes.city_res_jspc, function(index, elem) {
            if(index == cityIndexFromMap){
-            $.each(elem[0], function(index1, elem1) {
-              $.each(elem1, function(index2, elem2){
+            $.each(elem[0], function(index1, elem1) {  
+              $.each(elem1, function(index2, elem2){  
                     $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
-
-
+                  
+                
                 });
         });
-          }
-              });
-        $("#cityList li").each(function(index, element) {
-            $(this).bind("click", function() {
+          }                                                                                                                                                                                                                                             
+              });    
+        }
+        else {
+        $.each(allRes.country_res[0], function(index, elem) {
+              $.each(elem, function(index2, elem2){  
+                    if(index2!='-1' && index2!='51')
+                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
+                  
+        });
+          });
 
-                $("#citySelect").html($(this).html());
+        }
+
+        $("#cityList li").each(function(index, element) {
+            $(this).bind("click", function() {  
+                citySelected = true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                var tempHtml = $(this).html();
+                $("#citySelect").html(tempHtml);
+                if($("#CriticalActionlayerId").val()=='23')
+                {
+                    if(tempHtml == 'Others' && $("#stateSelect").attr('stateCode')!='-1'){
+                        $("#inputDiv").show();
+                        var objDiv = document.getElementById("stateCityMidDiv");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+                    }
+                    else {
+                        $("#cityInputDiv input").val('');
+                        $("#inputDiv").hide();
+                    }
+                }
                 $("#citySelect").attr('cityCode',$(this).attr('cityCode'));
                 $("#cityListDiv").addClass("dn");
                 $("#cityList").html("");
                     occuSelected = 0;
                     $("#contText").hide();
-
                 $("#stateCitySubmit").show();
             });
         });
@@ -204,7 +240,7 @@ if($("#CriticalActionlayerId").val()=='20'){
 
 else if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
-        appendData(suggestions);
+        appendData(suggestions);            
         }
 else if($("#CriticalActionlayerId").val()=='19')
 {
@@ -218,15 +254,15 @@ else {
         {
               $("#skipBtn").css("margin-top",$("#submitName").offset().top-$("#skipBtn").offset().top-70);
         }
-
-
-
+          
+    
+    
     }
-}
+} 
 )
     var CALButtonClicked=0;
-
-        function validateUserName(name){
+    
+        function validateUserName(name){        
         var name_of_user=name;
         name_of_user = name_of_user.replace(/\./gi, " ");
         name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
@@ -245,15 +281,15 @@ else {
                 }
         }
        return true;
-
+     
     }
     function criticalLayerButtonsAction(clickAction,button) {
-        if(CALButtonClicked===1)return;
+        if(CALButtonClicked===1)return;  
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
         if(layerId==9 && button=='B1')
-                    {
+                    {   
                         var newNameOfUser='',privacyShowName='';
                         newNameOfUser = ($("#nameInpCAL").val()).trim();
                         var validation=validateUserName(newNameOfUser)
@@ -266,7 +302,7 @@ else {
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
                     }
         if(layerId==18)
-                    {
+                    {   
 
                         if (occuSelected==1)
                         {
@@ -274,12 +310,12 @@ else {
                             dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
                             $.ajax({
                             url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
                             dateType : 'json',
                             data: dataOcc,
                             success: function(response) {
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button;
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
                             },
@@ -289,9 +325,9 @@ else {
                         }
                         else if ($("#occInputDiv input").val().trim()!='')
                         {
-
+                            
                             var occupText = $("#occInputDiv input").val();
-                            window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText;
+                            window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
                             CALButtonClicked=0;
                             return;
                         }
@@ -306,49 +342,68 @@ else {
 
                     }
 
-                if(layerId==20)
-                    {
-                    if ($("#citySelect").html()!='' && $("#citySelect").html()!='Select your City')
+                if(layerId==20 || layerId==23)
+                    {   
+                    var stateCode = $("#stateSelect").attr('stateCode');
+                    var cityCode  = $("#citySelect").attr('cityCode');
+                    if (citySelected || ( stateCode=='-1' && cityCode=='0'))
                         {
-                            showLoader();
-                             var stateCode = $("#stateSelect").attr('stateCode');
-                             var cityCode  = $("#citySelect").attr('cityCode');
-                            dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
-                            $.ajax({
-                            url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },
-                            type: 'POST',
-                            dateType : 'json',
-                            data: dataStateCity,
-                            success: function(response) {
-                                hideLoader();
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button;
-                                CALButtonClicked=0;
 
-                            },
-                            error: function(response) {
-                                 hideLoader();
-                                showError('Something went wrong');
+                            if (layerId==23 && stateCode!='-1' && $("#cityInputDiv input").val().trim()=='' && cityCode=='0' )
+                            {
+                                    showError("Please enter city");
+                                    CALButtonClicked=0;
+                                    return;
+                            }
+                            if(layerId==20)
+                                dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
+                            else
+                            {
+                                if(stateCode!='-1')
+                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': $("#cityInputDiv input").val() };
+                                else 
+                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
+                            }
 
-                                }
-                            });
                         }
                         else{
-                                showError("Please enter City");
+                                if(stateCode!='-1')
+                                    showError("Please select City");
+                                else 
+                                    showError("Please select Country");
                                 CALButtonClicked=0;
                                 return;
 
 
                         }
+                        showLoader();
+                        $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dateType : 'json',
+                            data: dataStateCity,
+                            success: function(response) {
+                                hideLoader();
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
 
+                            },
+                            error: function(response) {
+                                 hideLoader();   
+                                showError('Something went wrong');
+
+                                }
+                            });
+                        return;
                     }
 
 
 
-        window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams;
+        window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
         CALButtonClicked=0;
-
-
+        
+        
     }
 
 
@@ -367,9 +422,9 @@ else {
         }
 
 
-
-
-
+        
+            
+ 
 
 
         function appendData(obj) {
@@ -379,7 +434,7 @@ else {
             $.each(obj.dppData, function(index, elem) {
                 if (elem) {
                     if (elem.heading && elem.data) {
-
+             
                         $("#dppSuggestions").append('<div class="brdr1 pad2 dispnone" id="suggest_' + elem.type + '"><div id="heading_' + elem.type + '" class="txtc fontreg pb10 color8 f16">' + elem.heading + '</div></div>');
                         if (elem.range == 0) {
                             $.each(elem.data, function(index2, elem2) {
@@ -387,7 +442,7 @@ else {
                             });
                         } else if (elem.type == "AGE") {
                             if (elem.data.HAGE != undefined && elem.data.LAGE != undefined) {
-                                  $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LAGE_HAGE" class="suggestOption suggestOptionRange brdr18 fontreg color8 f16 txtc" value="'+elem.data.LAGE+'_'+elem.data.HAGE+'">' + elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	</div>');
+                                $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LAGE_HAGE" class="suggestOption suggestOptionRange brdr18 fontreg color8 f16 txtc" value="'+elem.data.LAGE+'_'+elem.data.HAGE+'">' + elem.data.LAGE + 'years - ' + elem.data.HAGE + 'years	</div>');
                             }
                         } else if (elem.type == "INCOME") {
                             if (elem.data.LDS != undefined && elem.data.LDS != null && elem.data.HDS != undefined && elem.data.HDS != null) {
@@ -420,7 +475,7 @@ else {
                             var type=$(this).attr("id").split("_")[1],objFinal,valueArr;
 							if(type == "AGE" && $("#LAGE_HAGE").hasClass("suggestSelected"))	{
 								valueArr = $(this).find(".suggestOptionRange").attr("value");
-								objFinal = {"type":type,"data":{"LAGE":valueArr.split("_")[0],"HAGE":valueArr.split("_")[1]}};
+								objFinal = {"type":type,"data":{"LAGE":valueArr.split("_")[0],"HAGE":valueArr.split("_")[1]}};		
 								sendObj.push(objFinal);
 							} else if (type == "INCOME") {
 								var LDS,HDS,LRS,HRS,dataArr;
@@ -433,20 +488,20 @@ else {
                                     }
                                     else {
                                         LRS = $("#LRS_HRS").attr("value").split("_")[0],HRS = $("#LRS_HRS").attr("value").split("_")[1];
-                                        dataArr = {"LRS":LRS,"HRS":HRS};
+                                        dataArr = {"LRS":LRS,"HRS":HRS};    
                                     }
 								} else if($("#LRS_HRS").hasClass("suggestSelected") && $("#LDS_HDS").hasClass("suggestSelected")) {
 									LDS = $("#LDS_HDS").attr("value").split("_")[0],HDS = $("#LDS_HDS").attr("value").split("_")[1],LRS = $("#LRS_HRS").attr("value").split("_")[0],HRS = $("#LRS_HRS").attr("value").split("_")[1];
 									dataArr = {"LRS":LRS,"HRS":HRS,"LDS":LDS,"HDS":HDS};
 								}
 								objFinal = {"type":type,"data":dataArr};
-								sendObj.push(objFinal);
+								sendObj.push(objFinal);		
 							} else{
 								valueArr = [];
 								$(element).find(".suggestSelected").each(function(index2, element2) {
                                     valueArr.push($(this).attr("value"));
-                                });
-								if(valueArr.length != 0) {
+                                });	
+								if(valueArr.length != 0) {		
 									objFinal = {"type":type,"data":valueArr};
 									sendObj.push(objFinal);
 								}
@@ -475,25 +530,25 @@ else {
        {
                  $.ajax({
                     url: '/api/v1/profile/sendEmailVerLink?emailType=2',
-                    headers: { 'X-Requested-By': 'jeevansathi' },
+                    headers: { 'X-Requested-By': 'jeevansathi' },       
                     type: 'POST',
                     success: function(response) {
                       if(response.responseStatusCode == 1)
                       {
                       showError("Something went wrong");
                       CALButtonClicked=0;
-                      return;
+                      return;   
                       }
-
+                 
                 $("#altEmailAskVerify").hide();
             msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
-                   return;
+                   return; 
                     }
-                });
+                });              
 
-
+                
 
 
 
@@ -523,10 +578,10 @@ function updateCalTimer(){
   if (!m && !s && !h) {
      clearInterval(calTimer);
      }
-
+  
     calTimerTime.setSeconds(s-1);
-
-
+    
+    
     m = formatTime(m);
     s = formatTime(s);
     h = formatTime(h);

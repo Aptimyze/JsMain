@@ -53,6 +53,11 @@ class ApiEditV1Action extends sfActions
 
 }
                         }
+                        $myProfileArr["showEdit"] = 0;
+                        $myProfileArr["cannot_edit_section"] = array();
+                        if($myProfileArr["Critical"][1]["verifyStatus"]==1 || $myProfileArr["Details"]["critical"]["OnClick"][1]["verifyStatus"]==1){
+                                $myProfileArr["cannot_edit_section"][] = "Critical";
+                        }
 			$apiResponseHandlerObj->setHttpArray($ResponseOut);
 			$apiResponseHandlerObj->setResponseBody($myProfileArr);
 			$apiResponseHandlerObj->generateResponse();

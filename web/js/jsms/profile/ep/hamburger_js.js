@@ -151,7 +151,7 @@ var hamHtml="",slider1,slider2;
 		{
 			
 			var html=this.originalHtml;
-			if($.inArray(this.type,["time_to_call_start","p_age","p_height","p_income_dol","p_income_rs"])==-1)
+			if($.inArray(this.type,["time_to_call_start","p_age","p_height","p_income_dol","p_income_rs","dtofbirth"])==-1)
 			{
 				$(this.ulOption).parent().parent().css("width","100%");
 				html=html.replace(/\{\{txtc\}\}/,"");
@@ -246,55 +246,93 @@ var hamHtml="",slider1,slider2;
 					else
 						selectedVal="0";
 			}
-			
-			$.each(data,function(st,json)
+			if(ele.type=="dtofbirth")
 			{
-				//var json=data[st];
-				//console.log(json);
-				$.each(json,function(k,v)
-				{
-					$.each(v,function(value,label)
-					{
-						
-						
-						var hamclass="checked";
-						var hamclass_noselect="";
-						var isarr="";
-						if(value==-1 || value=="-1")
-							hamclass_noselect="noselect";
-						
-						var temp=html;
-						var type=keyArr[which];
-						var labelText=label;
-						if(ele.type=='p_age')
-							labelText=label+" years";
-						temp=temp.replace(/HAM_VALUE/g,value);
-						temp=temp.replace(/HAM_LABEL/g,labelText);
-						temp=temp.replace(/HAM_TYPE/g,ele.inputtype);
-						temp=temp.replace(/HAM_NAME/g,type+isarr);
-						
-						
-						//console.log(value+" "+selectedVal);
-						if(selectedVal)
-						{
-								if((value+"").replace(":00","").toUpperCase()==selectedVal.toUpperCase() || (value+"").toUpperCase()==selectedVal.toUpperCase())
-								{
-										temp=temp.replace(/HAM_CLASS/gi,hamclass);
-										keyName=keyArr[which];
-										//console.log("Key"+keyName);
-										 ele.OutputUpdate(keyName,label,value);
-								}
-						}		
-						temp=temp.replace(/HAM_CLASS/gi,hamclass_noselect);
-							
-							
-						
-						
-						finalarr[i]=temp;
-						i++;
-					});
-				});
-			});
+
+                        $.each(data,function(value,label)
+                        {
+                                if(ele.type=="time_to_call_start")
+                                        value=label;
+                                var hamclass="checked";
+                                var hamclass_noselect="";
+                                var isarr="";
+                                if(value==-1 || value=="-1")
+                                        hamclass_noselect="noselectReg";
+
+                                var temp=html;
+                                var type=keyArr[which];
+
+
+                                temp=temp.replace(/HAM_VALUE/g,value);
+                                temp=temp.replace(/HAM_LABEL/g,label);
+                                temp=temp.replace(/HAM_TYPE/g,ele.inputtype);
+                                temp=temp.replace(/HAM_NAME/g,type+isarr);
+
+
+                                //console.log(value+" "+selectedVal);
+                                                if((value+"").replace(":00","")==selectedVal || value==selectedVal|| "0"+value==selectedVal)
+                                                {
+                                                                temp=temp.replace(/HAM_CLASS/gi,hamclass);
+                                                                keyName=keyArr[which];
+                                                                //console.log("Key"+keyName);
+                                                                 ele.OutputUpdate(keyName,label,value);
+                                                }
+                                temp=temp.replace(/HAM_CLASS/gi,hamclass_noselect);
+
+                                finalarr[i]=temp;
+                                i++;
+                        });
+
+			}else{
+                                $.each(data,function(st,json)
+                                {
+                                        //var json=data[st];
+                                        //console.log(json);
+                                        $.each(json,function(k,v)
+                                        {
+                                                $.each(v,function(value,label)
+                                                {
+
+
+                                                        var hamclass="checked";
+                                                        var hamclass_noselect="";
+                                                        var isarr="";
+                                                        if(value==-1 || value=="-1")
+                                                                hamclass_noselect="noselect";
+
+                                                        var temp=html;
+                                                        var type=keyArr[which];
+                                                        var labelText=label;
+                                                        if(ele.type=='p_age')
+                                                                labelText=label+" years";
+                                                        temp=temp.replace(/HAM_VALUE/g,value);
+                                                        temp=temp.replace(/HAM_LABEL/g,labelText);
+                                                        temp=temp.replace(/HAM_TYPE/g,ele.inputtype);
+                                                        temp=temp.replace(/HAM_NAME/g,type+isarr);
+
+
+                                                        //console.log(value+" "+selectedVal);
+                                                        if(selectedVal)
+                                                        {
+                                                                        if((value+"").replace(":00","").toUpperCase()==selectedVal.toUpperCase() || (value+"").toUpperCase()==selectedVal.toUpperCase())
+                                                                        {
+                                                                                        temp=temp.replace(/HAM_CLASS/gi,hamclass);
+                                                                                        keyName=keyArr[which];
+                                                                                        //console.log("Key"+keyName);
+                                                                                         ele.OutputUpdate(keyName,label,value);
+                                                                        }
+                                                        }		
+                                                        temp=temp.replace(/HAM_CLASS/gi,hamclass_noselect);
+
+
+
+
+                                                        finalarr[i]=temp;
+                                                        i++;
+                                                });
+                                        });
+                                });
+                        }
 			
 			$(id).html("");
 			$(id).html(finalarr.join(""));
@@ -305,101 +343,204 @@ var hamHtml="",slider1,slider2;
 		};
 		eHamburger.prototype.MultiHamburger=function()
 		{   
-			$("#search_ham_"+this.tapid).parent().parent().addClass('dn');
-			var ele=this;
-			var txtc="txtc fullwid";
-			var type=this.type;
-			var data=this.FilterData(JSON.parse(this.CheckResponse(staticTables.getData(this.type))));
-			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-			var finalarr=new Array();
-			var curJson=this.json.OnClick[this.indexPos];
-			var html=$("#HAM_OPTION_4").html();
-			var cnt=1;
-			
-			this.updateHamLabel();
-			//if(this.type=="time_to_call_start" || this.type=="p_height" || this.type=="p_age" )
-			if(1)
+                        if(this.type=="dtofbirth")
 			{
-				
-				cnt=2;
-				
+                                var ele=this;
+                                var txtc="txtc fullwid";
+                                var type=this.type;
+
+                                $("#TAPNAME_"+this.tapid).html(this.TapName());
+                                var finalarr=new Array();
+
+                                var html=$("#HAM_OPTION_4").html();
+                                var cnt=1;
+
+                                this.updateHamLabel();
+                                cnt=3;
+                                var days = {};
+                                var month = {};
+                                var monthLabel = ['Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec'];
+                                var year = {};
+                                var y_diff = 18;
+                                var yearDelta = 70;
+                                var currYear = (Date()).split(" ")[3];
+                                var gender;
+                                if(submitObj.hasOwnProperty('editFieldArray') && submitObj.editFieldArray.hasOwnProperty("GENDER"))
+                                        gender = submitObj.editFieldArray['GENDER'];
+                                else
+                                        gender = fetchEditDetails("dtofbirth","GENDER",changingEditData["Details"]["basic"]);
+                                if(gender==="M")
+                                {
+                                        y_diff = 21;
+                                }
+
+                                //days
+                                for (var i = 1; i <= 31; i++) {
+                                   days[i] = i;
+                                }
+                                for (var i = 1; i <= 12; i++) {
+                                   month[i] = monthLabel[i-1];
+                                }
+                                //year
+                                for (var i = currYear-yearDelta; i <= currYear-y_diff; i++) {
+                                   year[i] = i;
+                                }
+
+                                var height=this.getDivHeight();
+                                for(var ham_i=1;ham_i<=cnt;ham_i++)
+                                {
+                                        var tempData = [days,month,year];
+
+                                        var data= tempData[ham_i - 1];
+                                        (function(i,type)
+                                        {
+                                                var id="#HAM_OPTION_"+i;
+                                                ele.updateHamOption(id,data,txtc,i-1);
+
+                                        $(id).parent().css("width",100/cnt+"%").css("float","left").css("height",height).css("overflow","auto").css("position","relative");
+                                var indh=$(id).children().first().outerHeight();
+                                //alert(indh);
+                                if(indh<=0)
+                                        indh=40;
+                                if(getIosVersion()){
+                                        indh=41;
+                                }
+                                var hgt=$(id).children().first().height();
+                                if(hgt<=0)
+                                        hgt=20;
+                                
+                                if(getIosVersion()){
+                                        hgt=21;
+                                }
+                                var width=$(id).children().first().width();
+                                var showP=Math.abs(Math.ceil(height/indh));
+                                var up,down;
+                                up=down=Math.floor(showP/2);
+
+                                if(showP%2==0)
+                                {
+                                        up=Math.floor(showP/2);
+                                        down=Math.ceil(showP/2);
+                                }
+                                for(var itemp=0;itemp<up;itemp++)
+                                        $(id).prepend("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");
+                                for(var itemp=0;itemp<down;itemp++)
+                                        $(id).append("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");
+                                //$("#HAM_OPTION_1").parent().scrollTop(indh*up);       
+                                var topPos=$($(id).children()[up]).position().top;
+                                
+                                this.topPos=topPos;
+                                this.topPos=topPos=indh*up;
+                                //alert("U:"+up+" TOP:::: "+$($(id).children()[up]).position().top+" :::::Final :::::"+topPos+" ::: INDH"+indh);
+                                var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px;border-right:2px solid #2c3137'></div>";
+                                //alert(di);
+                                $(id).parent().prepend(di);
+
+                                $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+                                $(id).removeClass('dn');
+                                        })(ham_i,type);
+                                }
+                                BindHamWindow(this);
+                                $("#ham_load").remove();
 			}
 			else
-			{}
-			var height=this.getDivHeight();
-			//var height=370;
-			
-			var ids=[];
-			for(var ham_i=1;ham_i<=cnt;ham_i++)
 			{
-				ids[ham_i-1]="#HAM_OPTION_"+ham_i-1;
-				
-			}
-			$("#ham_load").remove();
-			for(var ham_i=1;ham_i<=cnt;ham_i++)
-			{
-				
-				//Dollar left and right valeus are differcnt[so have to update data from json.
-				var rsCheck={"p_income_rs":{1:0,2:1},"p_income_dol":{1:0,2:1}};
-				var tempData;
-				if(rsCheck[type])
-					tempData=data[rsCheck[type][ham_i]];
-				else
-					tempData=data;
-				(function(i,type)
-				{
-					var id="#HAM_OPTION_"+i;
-					$(id).removeClass('dn');
-					ele.updateHamOption(id,tempData,txtc,i-1);
-				$(id).parent().css("width",100/cnt+"%").css("float","left").css("height",height).css("overflow","auto").css("position","relative");
-					var indh=$(id).children().first().outerHeight();
-			if(indh<=0)
-				indh=40;
-			var hgt=$(id).children().first().height();
-			var width=$(id).children().first().width();
-			var showP=Math.abs(Math.ceil(height/indh));
-			var up,down;
-			up=down=Math.floor(showP/2);
-			
-			if(showP%2==0)
-			{
-				up=Math.floor(showP/2);
-				down=Math.ceil(showP/2);
-			}
-			for(var itemp=0;itemp<up;itemp++)
-				$(id).prepend("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");
-			for(var itemp=0;itemp<down;itemp++)
-				$(id).append("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");	
-			//$("#HAM_OPTION_1").parent().scrollTop(indh*up);	
-			var topPos=$($(id).children()[up]).position().top;
-			this.topPos=topPos;
-			this.topPos=topPos=indh*up;
-			var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px'></div>";
-			$(id).parent().prepend(di);
-			if($(id).attr("id").split("_")[2] == 1) {
-				slider1 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
-			} else {
-				slider2 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
-			}
-				})(ham_i,type);
-			}
-			if(type == "p_age") {
-				setTimeout(function(){
-					typeDataArray = [$("#HAM_OPTION_1 li input:checked").val(),$("#HAM_OPTION_2 li input:checked").val()];
-					changeSuggestion("AGE", typeDataArray);
-				},100);	
-			} else if (type == "p_income_rs") {
-				setTimeout(function(){
-					typeDataArray = [$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html(),"No Income","and above"];
-					changeSuggestion("INCOME",typeDataArray);
-				},100);	
-			} else if(type == "p_income_dol") {
-				setTimeout(function(){
-					typeDataArray = ["No Income","and above",$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html()];
-					changeSuggestion("INCOME",typeDataArray);
-				},100);	
-			}
-			BindHamWindow(this);
+                                $("#search_ham_"+this.tapid).parent().parent().addClass('dn');
+                                var ele=this;
+                                var txtc="txtc fullwid";
+                                var type=this.type;
+                                var data=this.FilterData(JSON.parse(this.CheckResponse(staticTables.getData(this.type))));
+                                $("#TAPNAME_"+this.tapid).html(this.TapName());	
+                                var finalarr=new Array();
+                                var curJson=this.json.OnClick[this.indexPos];
+                                var html=$("#HAM_OPTION_4").html();
+                                var cnt=1;
+
+                                this.updateHamLabel();
+                                //if(this.type=="time_to_call_start" || this.type=="p_height" || this.type=="p_age" )
+                                if(1)
+                                {
+
+                                        cnt=2;
+
+                                }
+                                else
+                                {}
+                                var height=this.getDivHeight();
+                                //var height=370;
+
+                                var ids=[];
+                                for(var ham_i=1;ham_i<=cnt;ham_i++)
+                                {
+                                        ids[ham_i-1]="#HAM_OPTION_"+ham_i-1;
+
+                                }
+                                $("#ham_load").remove();
+                                for(var ham_i=1;ham_i<=cnt;ham_i++)
+                                {
+
+                                        //Dollar left and right valeus are differcnt[so have to update data from json.
+                                        var rsCheck={"p_income_rs":{1:0,2:1},"p_income_dol":{1:0,2:1}};
+                                        var tempData;
+                                        if(rsCheck[type])
+                                                tempData=data[rsCheck[type][ham_i]];
+                                        else
+                                                tempData=data;
+                                        (function(i,type)
+                                        {
+                                                var id="#HAM_OPTION_"+i;
+                                                $(id).removeClass('dn');
+                                                ele.updateHamOption(id,tempData,txtc,i-1);
+                                        $(id).parent().css("width",100/cnt+"%").css("float","left").css("height",height).css("overflow","auto").css("position","relative");
+                                                var indh=$(id).children().first().outerHeight();
+                                if(indh<=0)
+                                        indh=40;
+                                var hgt=$(id).children().first().height();
+                                var width=$(id).children().first().width();
+                                var showP=Math.abs(Math.ceil(height/indh));
+                                var up,down;
+                                up=down=Math.floor(showP/2);
+
+                                if(showP%2==0)
+                                {
+                                        up=Math.floor(showP/2);
+                                        down=Math.ceil(showP/2);
+                                }
+                                for(var itemp=0;itemp<up;itemp++)
+                                        $(id).prepend("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");
+                                for(var itemp=0;itemp<down;itemp++)
+                                        $(id).append("<li class='hpad5' fake=1><div class='fl f16 color17 txtc fontlig' style='color:#2c3137;height:"+hgt+"px'>0</div><div class='clr'></div></li>");	
+                                //$("#HAM_OPTION_1").parent().scrollTop(indh*up);	
+                                var topPos=$($(id).children()[up]).position().top;
+                                this.topPos=topPos;
+                                this.topPos=topPos=indh*up;
+                                var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px'></div>";
+                                $(id).parent().prepend(di);
+                                if($(id).attr("id").split("_")[2] == 1) {
+                                        slider1 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+                                } else {
+                                        slider2 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+                                }
+                                        })(ham_i,type);
+                                }
+                                if(type == "p_age") {
+                                        setTimeout(function(){
+                                                typeDataArray = [$("#HAM_OPTION_1 li input:checked").val(),$("#HAM_OPTION_2 li input:checked").val()];
+                                                changeSuggestion("AGE", typeDataArray);
+                                        },100);	
+                                } else if (type == "p_income_rs") {
+                                        setTimeout(function(){
+                                                typeDataArray = [$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html(),"No Income","and above"];
+                                                changeSuggestion("INCOME",typeDataArray);
+                                        },100);	
+                                } else if(type == "p_income_dol") {
+                                        setTimeout(function(){
+                                                typeDataArray = ["No Income","and above",$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html()];
+                                                changeSuggestion("INCOME",typeDataArray);
+                                        },100);	
+                                }
+                                BindHamWindow(this);
+                        }
 			
 				
 			
@@ -501,14 +642,16 @@ var hamHtml="",slider1,slider2;
 		{
 			if(this.isMultiOption() && $("#HAM_LABEL").hasClass('dn'))
 			{
-				var tempStr1,tempStr2;
-				tempStr1=tempStr2=$("#HAM_MULTI").html();
-				var json={"FROM_TO":"From","WIDTH":"wid49p fl","txtc":"txtc"};
-				
-				tempStr1=UpdateHtml(tempStr1,json);
-				json={"FROM_TO":"To","WIDTH":"wid49p fl","txtc":"txtc"};
-				tempStr2=UpdateHtml(tempStr2,json);
-				$("#HAM_LABEL").append(tempStr1).append(tempStr2).removeClass("dn");
+                                if(this.type!="dtofbirth")
+				{
+					var tempStr1,tempStr2;
+					tempStr1=tempStr2=$("#HAM_MULTI").html();
+					var json={"FROM_TO":"From","WIDTH":"wid49p fl","txtc":"txtc"};
+					tempStr1=UpdateHtml(tempStr1,json);
+					json={"FROM_TO":"To","WIDTH":"wid49p fl","txtc":"txtc"};
+					tempStr2=UpdateHtml(tempStr2,json);
+					$("#HAM_LABEL").append(tempStr1).append(tempStr2).removeClass("dn");
+				}
 				this.EnableSaveButton()
 				
 			}
@@ -822,6 +965,12 @@ var hamHtml="",slider1,slider2;
 			{
 				keyName[0]="p_lds";
 				keyName[1]="p_hds";
+			}
+                        if(type=="dtofbirth")
+			{
+				keyName[0]="day";
+				keyName[1]="month";
+				keyName[2]="year";
 			}
 			return keyName;
 		}

@@ -2652,8 +2652,8 @@ class crmMisActions extends sfActions
                 $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
-                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT");
-                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100)){
+                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT,STATUS");
+                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100) && $purchaseDetails[$pd['BILLID']]['STATUS'] == "DONE"){
 	                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
 	                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
 	                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
