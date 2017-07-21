@@ -12,18 +12,18 @@ export class contactEngine extends React.Component{
   }
 
   componentDidMount(){
-  	// console.log(this.props);
+  	// 	console.log(this.props);
   }
 
   componentWillReceiveProps(nextProps){
-  	if(nextProps.contact.contactDone) {
-	    console.log('interest sent');
+  	if(nextProps.contactAction.contactDone) {
+	    console.log('interest sent from PD');
 	  }
-  	if(nextProps.contact.acceptDone){
-  	   console.log('accept done');
+  	if(nextProps.contactAction.acceptDone){
+  	   console.log('accept done from PD');
   	}
-  	if(nextProps.contact.declineDone){
-  	   console.log('decline done');
+  	if(nextProps.contactAction.declineDone){
+  	   console.log('decline done from PD');
   	}
   }
   render(){
@@ -56,15 +56,17 @@ export class contactEngine extends React.Component{
          if(this.props.buttonName == "apiDataIR") {
           return(
             <div id="buttons1" className="view_ce fullwid">
-            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1">
+            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum)}>
               <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                 <i className="ot_sprtie ot_chk"></i>
+                <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <div className="white">Accept Interest</div>
               </div>
             </div>
             <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_2">
-              <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
+              <div id="btnDecline" className="fontlig f13 whitecursp dispbl" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
                 <i className="ot_sprtie newitcross"></i>
+                <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <div className="white">Decline Interest</div>
               </div>
             </div>
@@ -73,8 +75,9 @@ export class contactEngine extends React.Component{
          } else {
           return(
           <div id="buttons1" className="view_ce fullwid">
-            <div className="fullwid bg7 txtc pad5new posrel">
+            <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
               <i className="mainsp msg_srp"></i>
+              <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
               <div className="white wid60p">Send Interest</div>
               <ThreeDots />
             </div>
@@ -86,6 +89,12 @@ export class contactEngine extends React.Component{
       } else {
         return "";
       }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return{
+     contactAction: state.contactEngineReducer
     }
 }
 
@@ -111,4 +120,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect('',mapDispatchToProps)(contactEngine)
+export default connect(mapStateToProps,mapDispatchToProps)(contactEngine)
