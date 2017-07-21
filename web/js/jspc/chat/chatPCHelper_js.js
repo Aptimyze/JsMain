@@ -739,17 +739,14 @@ function getSelfName(){
         flag = false;
         selfName =  modifiedName;
     }
-    //console.log("getSelfName",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
-        ////console.log("In self Name");
         $.myObj.ajax({
             url: apiUrl,
             async: false,
             success: function (response) {
                 if (response["responseStatusCode"] == "0") {
                     selfName = response["name"];
-                    ////console.log("Success In self Name",selfName);
                     localStorage.setItem('name', JSON.stringify({
                         'selfName': selfName,
                         'user': loggedInJspcUser
@@ -763,7 +760,6 @@ function getSelfName(){
                 //return "error";
             }
         });
-        ////console.log("ReturnIn self Name");
     }
     return selfName;
 }
@@ -780,9 +776,7 @@ function checkForSiteLoggedOutMode(response){
 */
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
-    //console.log("membership",membership);
     if(!membership){
-        //console.log("not exists");
         if(self_subcription){
             localStorage.setItem("self_subcription",self_subcription);
             membership = self_subcription;
@@ -812,15 +806,15 @@ function requestListingPhoto(apiParams) {
                     manageListingPhotoReqFlag("set",elem);
                 }
                 if(apiParams["initialList"]== true || isListPhotoReqValid(elem) == true){
-                    //console.log("normal flow");
+                    
                     if(localStorage.getItem("listingPic_"+elem)) {
                         var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
                         if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
-                            //console.log("api request gone");
+                   
                             newApiParamsPid[elem] = apiParams["profiles"][elem];
                         } 
                         else{
-                            //console.log("localStorage used");
+                        
                             exsistParamPid[elem] = apiParams["profiles"][elem];
                         }
                     }
@@ -837,7 +831,7 @@ function requestListingPhoto(apiParams) {
         if(Object.keys(newApiParamsPid).length != 0) {
             newApiParams = {"profiles":newApiParamsPid,"photoType":apiParams.photoType,"type":apiParams["initialList"]};
         }
-        //console.log("requestListingPhoto",newApiParams);
+        
         if (typeof newApiParams != "undefined" && newApiParams) {
             $.myObj.ajax({
                 url: apiUrl,
@@ -855,7 +849,7 @@ function requestListingPhoto(apiParams) {
                         });
                         objJsChat._addListingPhoto(response, "api");
                         objJsChat._addListingPhoto(Object.keys(exsistParamPid), "local");
-                        //console.log("request",apiParams["initialList"]);
+                        
                     }
                     else{
                         checkForSiteLoggedOutMode(response);
@@ -913,7 +907,7 @@ function initiateChatConnection() {
         updatePresenceAfterInterval();
     },chatConfig.Params[device].listingRefreshTimeout);
     */
-    //console.log(updatePresenceIntervalId);
+  
 }
 /*getConnectedUserJID
  * get jid of connected user
@@ -973,8 +967,6 @@ function xmlToJson(xml) {
  * @param: state
  */
 function invokePluginLoginHandler(state, loader) {
-    //console.log("invoke plign handler");
-    //console.log(state);
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
         //setLogoutClickLocalStorage("unset");
@@ -1018,11 +1010,8 @@ function invokePluginLoginHandler(state, loader) {
             $(objJsChat._logoutChat).click();
         }
     } else if(state == "autoChatLogin"){
-        //console.log("ankita",localStorage.getItem("logout_"+loggedInJspcUser));
         if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
-            //console.log("yes");
             if($(objJsChat._loginbtnID).length != 0){
-                //console.log("click button");
                 $(objJsChat._loginbtnID).click();
             }
         }
