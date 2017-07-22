@@ -14,7 +14,9 @@ export class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth}
+      tupleWidth : {'width' : window.innerWidth},
+      mainHeight : 0,
+      showNow: 'hidden'
 
     }
 
@@ -35,7 +37,8 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
-
+  if(!this.props.listing.profiles)return;
+this.applyAnimation();
   this.bindSlider();
 }
 
@@ -62,7 +65,9 @@ bindSlider(){
     tupleWidth : {'width' : this.obj.transformX-10}
   });
 }
-
+componentWillUnmount(){
+clearInterval(thisObj.timer);
+}
 alterCssStyle(duration, transform){
   this.setState((prevState)=>{
     var styleArr = Object.assign({}, prevState.sliderStyle);
@@ -74,13 +79,19 @@ alterCssStyle(duration, transform){
   });
 }
 
+applyAnimation()
+{
+var thisObj = this;
+this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=236) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=10; thisObj.setState({mainHeight:height});},10);
+
+}
 render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
   return(
-      <div>
-        <div className="pad1" style = {{marginTop: '15px'}}>
+      <div style={{height:this.state.mainHeight+'px'}}>
+        <div className="pad1" style = {{marginTop: '15px', visibility:this.state.showNow}}>
           <div className="fullwid pb10">
             <div className="fl color7">
               <span className="f17 fontlig">{this.props.title}</span>

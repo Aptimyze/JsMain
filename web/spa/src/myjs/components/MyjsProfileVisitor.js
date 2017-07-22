@@ -42,11 +42,26 @@ export class MyjsShowVisitors extends React.Component{
 export default class ProfileVisitor extends React.Component{
   constructor(props) {
         super();
+        this.state={
+          mainHeight : 0,
+          showNow: 'hidden'
+
+        }
+
   }
+  componentDidMount(){
+    if(!this.props.responseMessage.profiles)return;
+    this.applyAnimation();
+  }
+
+  componentWillUnmount(){
+  clearInterval(thisObj.timer);
+  }
+
   render(){
     return(
-      <div className="setWidth mt10" id="visitorPresent">
-        <div className="pad1 bg4">
+      <div style={{height:this.state.mainHeight+'px'}} className="setWidth mt10" id="visitorPresent">
+        <div className="pad1 bg4" style = {{visibility:this.state.showNow}}>
           <div className="fullwid pt15 pb10">
             <div className="f17 fontlig color7">Profile Visitors</div>
           </div>
@@ -62,4 +77,13 @@ export default class ProfileVisitor extends React.Component{
 
 
   }
+
+
+  applyAnimation()
+  {
+  var thisObj = this;
+  this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=129) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=3; thisObj.setState({mainHeight:height});},1);
+
+  }
+
 }

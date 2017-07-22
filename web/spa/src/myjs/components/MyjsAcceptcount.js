@@ -23,9 +23,13 @@ export class AcceptancesCount extends React.Component {
 export default class AcceptCount extends React.Component {
   constructor(props) {
       super();
-
+      this.state ={bounceAnimation:""};
   }
+componentDidMount(){
+this.setState({bounceAnimation:" bounceIn animated "});
 
+
+}
 
   render(){
   if(!this.props.fetched) {
@@ -37,7 +41,7 @@ export default class AcceptCount extends React.Component {
 
           <a href="/inbox/2/1">
             <div className="fl wid49p txtc">
-              <div className="row bg7 wid75 hgt75 brdr50p posrel" id="acceptedMe">
+              <div className={"row bg7 wid75 hgt75 brdr50p posrel "+this.state.bounceAnimation}  id="acceptedMe">
                 <div className="cell vmid white fullwid myjs_f30 fontlig">{this.props.acceptance.ACCEPTED_MEMBERS}</div>
                 <AcceptancesCount count={this.props.acceptance.ACC_ME_NEW}/>
               </div>
@@ -50,7 +54,7 @@ export default class AcceptCount extends React.Component {
 
           <a href="/search/perform?justJoinedMatches=1">
             <div className="fl wid49p txtc">
-              <div className="row bg7 wid75 hgt75 brdr50p posrel" id="iAccepted">
+              <div className={"row bg7 wid75 hgt75 brdr50p posrel "+this.state.bounceAnimation} id="iAccepted">
                 <div className="cell vmid white myjs_f30 fontlig">{this.props.justjoined.JUST_JOINED_COUNT}</div>
                 <AcceptancesCount count={this.props.justjoined.JUST_JOINED_NEW}/>
               </div>
