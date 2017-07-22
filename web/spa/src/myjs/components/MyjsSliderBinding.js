@@ -20,13 +20,13 @@ export default class MyjsSliderBinding  {
     this.indexElevate = indexElevate ? indexElevate : 0 ;
 
 // dynamic variables
-window.addEventListener("resize",function()
-{
-    _this.windowWidth = window.innerWidth;
-    _this.transformX = (_this.tuple_ratio * _this.windowWidth) / 100 + 10;
-    _this.elementWidth = _this.transformX - 10;
-    _this.transformX_corr = ((_this.tuple_ratio * 3 - 100) * _this.windowWidth)/200 + 10+_this.el.getBoundingClientRect().left;
-});
+// window.addEventListener("resize",function()
+// {
+//     _this.windowWidth = window.innerWidth;
+//     _this.transformX = (_this.tuple_ratio * _this.windowWidth) / 100 + 10;
+//     _this.elementWidth = _this.transformX - 10;
+//     _this.transformX_corr = ((_this.tuple_ratio * 3 - 100) * _this.windowWidth)/200 + 10+_this.el.getBoundingClientRect().left;
+// });
   }
 
 

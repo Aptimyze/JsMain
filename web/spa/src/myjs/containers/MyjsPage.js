@@ -317,8 +317,9 @@ const mapDispatchToProps = (dispatch) => {
      	hitApi_MOD: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
-  	    hitApi_IR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&myjs=1','SET_IR_DATA','POST',dispatch);
+  	    hitApi_IR: (nextPage) => {
+					if(typeof nextPage == 'undefined')nextPage=1;
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,'SET_IR_DATA','POST',dispatch);
         },
         hitApi_VA: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
