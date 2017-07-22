@@ -7,6 +7,7 @@ export default class MyjsSliderBinding  {
     this.tupleObject = tupleObject;
     this.styleFunction = styleFunction;
     this.el = parent;
+    this.parent = this.el.parentNode;
     this.threshold = !notMyjs ? 80 :100;
     this.windowWidth = window.innerWidth;
     this.nextPageHit = nextPageHit;
@@ -45,7 +46,7 @@ export default class MyjsSliderBinding  {
             }
             onTouchStart(e)
             {
-                    this.touch.originalPos = this.el.getBoundingClientRect();
+                    this.touch.originalPos = {left: this.el.getBoundingClientRect().left - this.parent.getBoundingClientRect().left - this.el.offsetLeft};
                     this.timeStart = (new Date()).getTime();
                     var orig = e.originalEvent;
                     this.touch.start.x = e.changedTouches[0].pageX;
