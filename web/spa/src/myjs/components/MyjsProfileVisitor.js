@@ -55,7 +55,7 @@ export default class ProfileVisitor extends React.Component{
   }
 
   componentWillUnmount(){
-  clearInterval(thisObj.timer);
+  clearInterval(this.timer);
   }
 
   render(){

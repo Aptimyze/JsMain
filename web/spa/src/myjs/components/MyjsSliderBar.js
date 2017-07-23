@@ -66,7 +66,7 @@ bindSlider(){
   });
 }
 componentWillUnmount(){
-clearInterval(thisObj.timer);
+clearInterval(this.timer);
 }
 alterCssStyle(duration, transform){
   this.setState((prevState)=>{
