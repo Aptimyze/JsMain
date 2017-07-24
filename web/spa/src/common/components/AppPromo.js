@@ -31,11 +31,12 @@ export default class AppPromo extends React.Component {
 	    		}, 10);
 	    		setCookie("AppPromo","jeevansathi",3); 
     		}
-    	} else if(this.state.parentComp == "others") {
+    	} else if(this.state.parentComp == "others" && getCookie("AppPromo") == false) {
     		setTimeout(function(){ 
 			    document.getElementById("AppPromo").classList.remove("ham_minu20");
 			    document.getElementById("mainContent").className +=" ham_b100 ham_plus20";
 	    	}, 10);
+	    	setCookie("AppPromo","jeevansathi",3); 
     	}
     }	
 

@@ -446,7 +446,7 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
-    if($this->layerId==18 || $this->layerId==20)
+    if($this->layerId==18 || $this->layerId==20 || $this->layerId==23)
     {
           include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
@@ -969,10 +969,22 @@ public function executeAppredirect(sfWebRequest $request)
 		  
 		  foreach($arrKeys as $key=>$val)
 		  {
-			  if($val !== "reg_caste_" && $val!=="reg_city_")
+			  if($val == "mstatus_edit" || $val=="mstatus_muslim_edit"){
+				$outData[$val] = $this->getFieldMapData("mstatus");
+                                if($val == "mstatus_edit"){
+                                        foreach($outData[$val][0] as $k=>$v){
+                                                $kys = array_keys($v);
+                                                if(in_array("M", $kys)){
+                                                        unset($outData[$val][0][$k]);
+                                                }
+                                        }
+                                }
+                          }elseif($val !== "reg_caste_" && $val!=="reg_city_"){
 				$outData[$val] = $this->getFieldMapData($val);
-			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
+                          }else{//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
+                          }
+                          
         //this part was added to remove religion "Others" from Registration in JSMS
       if(MobileCommon::isMobile() && $val=="religion")
       {
@@ -1023,6 +1035,17 @@ public function executeAppredirect(sfWebRequest $request)
 	  else if($k)
 	  {
 			$output = $this->getFieldMapData($k);
+                        if($k == "mstatus_edit" || $k=="mstatus_muslim_edit"){
+				$output = $this->getFieldMapData("mstatus");
+                                if($k == "mstatus_edit"){
+                                        foreach($output[0] as $k=>$v){
+                                                $kys = array_keys($v);
+                                                if(in_array("M", $kys)){
+                                                        unset($output[0][$k]);
+                                                }
+                                        }
+                                }
+                          }
 			if($k=="reg_city_jspc")
 			{
 				$outData = $output;
@@ -1064,6 +1087,16 @@ public function executeAppredirect(sfWebRequest $request)
   	$this->setTemplate("knowYourCustomer");
   }
   
+  public function executePrivacySettings()
+  {
+    $loggedInProfileObj = LoggedInProfile::getInstance();
+    $profileId = $loggedInProfileObj->getPROFILEID(); 
+    $this->profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+    //print_R($this->profileDetail);die;
+    $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
+    $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
+  }
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;    

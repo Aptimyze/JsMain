@@ -266,6 +266,7 @@ EOF;
                                   MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
                                   MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){
@@ -279,6 +280,7 @@ EOF;
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
+                                  MessageQueues::UPDATECRITICALINFO_STARTCOMMAND=>MessageQueues::UPDATE_CRITICAL_INFO_CONSUMER_COUNT            ,
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,

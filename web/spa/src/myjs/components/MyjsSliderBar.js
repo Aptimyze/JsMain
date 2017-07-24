@@ -3,8 +3,10 @@ import {Link} from "react-router-dom";
 import Loader from "../../common/components/Loader";
 import MyjsSliderBinding from "../components/MyjsSliderBinding";
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
-  
-export default class MyjsSlider extends React.Component {
+import { connect } from "react-redux";
+
+export class MyjsSlider extends React.Component {
+
   constructor(props) {
     super(props);
     this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
@@ -12,32 +14,60 @@ export default class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth}
+      tupleWidth : {'width' : window.innerWidth},
+      mainHeight : 0,
+      showNow: 'hidden'
 
     }
-  
+
+    if(!props.listing.total) {
+      if(props.listing.profiles) {
+        props.listing.total = props.listing.profiles.length;
+      } else {
+        props.listing.total = 0;
+      }
+    }
   }
 
 componentDidUpdate(){
   this.bindSlider();
+  if(this.props.listing.nextpossible=='false' && this.obj)
+    this.obj.setIndexElevate(0);
+
 }
 
-componentDidMount(){ // console.log('did mount myjs');console.log(this.props.listing.tuples[0].profilechecksum);
+componentDidMount(){
+  if(!this.props.listing.profiles)return;
+this.applyAnimation();
   this.bindSlider();
 }
+
+ componentWillReceiveProps(nextProps){
+    if(nextProps.contact.contactDone) {
+      console.log('interest sent');
+  }
+  if(nextProps.contact.acceptDone){
+     console.log('accept done');
+  }
+  if(nextProps.contact.declineDone){
+     console.log('decline done');
+  }
+  }
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this));
+  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,this.props.apiNextPage);
   this.obj.initTouch();
   this.setState({
     sliderBound: true,
-    upleWidth : {'width' : this.obj.transformX-10}
+    tupleWidth : {'width' : this.obj.transformX-10}
   });
 }
-
+componentWillUnmount(){
+clearInterval(this.timer);
+}
 alterCssStyle(duration, transform){
   this.setState((prevState)=>{
     var styleArr = Object.assign({}, prevState.sliderStyle);
@@ -49,33 +79,19 @@ alterCssStyle(duration, transform){
   });
 }
 
-// getButtonView(tuple) {
-//   if(this.props.listing.infotype == "INTEREST_RECEIVED_FILTER") {
-//     console.log("yess",tuple)
-//     return (<div className="brdr8 fl wid90p hgt60">
-//                   <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(tuple.profilechecksum)}>
-//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-//                       <a className="f15 color2 fontreg">Accept</a>
-//                   </div>
-//                   <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(tuple.profilechecksum)}>
-//                     <input className="inputProChecksum" type="hidden" value={tuple.profilechecksum} />
-//                     <a className="f15 color2 fontlig">Decline</a>
-//                   </div>
-//                   <div className="clr"></div>
-//                 </div>);
-//       } 
-//       else {
-//           return "";
-//       }
-// }
+applyAnimation()
+{
+var thisObj = this;
+this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=236) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=10; thisObj.setState({mainHeight:height});},10);
 
-render(){ 
+}
+render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
   return(
-      <div>
-        <div className="pad1" style = {{marginTop: '15px'}}>
+      <div style={{height:this.state.mainHeight+'px'}}>
+        <div className="pad1" style = {{marginTop: '15px', visibility:this.state.showNow}}>
           <div className="fullwid pb10">
             <div className="fl color7">
               <span className="f17 fontlig">{this.props.title}</span>
@@ -89,7 +105,8 @@ render(){
           <div className="swrapper" id="swrapper">
             <div className="wrap-box" id={"wrapbox_"+this.props.listingName}>
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
-              {this.props.listing.profiles.map((tuple,index) => (
+              {
+                [this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
                   <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>
                   <img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
@@ -122,10 +139,10 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton profilechecksum={tuple.profilechecksum}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs"/>
                 </div>
            </div>
-         ))}
+         )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
          <div className="clr"></div>
          </div>
        </div>
@@ -135,3 +152,11 @@ render(){
 
   }
 }
+
+const mapStateToProps = (state) => {
+    return{
+     contact: state.contactEngineReducer
+    }
+}
+
+export default connect(mapStateToProps)(MyjsSlider)

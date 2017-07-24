@@ -321,7 +321,7 @@ class searchActions extends sfActions
                         if($request->getParameter("justJoinedMatches")==1){
 						$profileId=$loggedInProfileObj->getPROFILEID();
 						$mprofileMemcache=new ProfileMemcacheService($profileId);
-						$tempJustJoined=$mprofileMemcache->memcache->getJUST_JOINED_MATCHES_NEW()*(-1);//print_r($tempJustJoined); 
+						$tempJustJoined=$mprofileMemcache->get('JUST_JOINED_MATCHES_NEW')*(-1);//print_r($tempJustJoined); 
 						$mprofileMemcache->update('JUST_JOINED_MATCHES_NEW',$tempJustJoined); 
 						$mprofileMemcache->updateMemcache();
 			
@@ -1589,7 +1589,7 @@ class searchActions extends sfActions
 						if($request->getParameter("justJoinedMatches")==1){
 						$profileId=$loggedInProfileObj->getPROFILEID();
 						$mprofileMemcache=new ProfileMemcacheService($profileId);
-						$tempJustJoined=$mprofileMemcache->memcache->getJUST_JOINED_MATCHES_NEW()*(-1);//print_r($tempJustJoined); 
+						$tempJustJoined=$mprofileMemcache->get('JUST_JOINED_MATCHES_NEW')*(-1);//print_r($tempJustJoined); 
 						$mprofileMemcache->update('JUST_JOINED_MATCHES_NEW',$tempJustJoined); 
 						$mprofileMemcache->updateMemcache();
 			

@@ -17,7 +17,7 @@ import {commonApiCall} from "../../common/components/ApiResponseHandler.js";
 import {getCookie} from '../../common/components/CookieHelper';
 import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-
+import ContactEngineButton from "../../contact_engine/containers/contactEngine";
 
 class ProfilePage extends React.Component {
 
@@ -39,12 +39,19 @@ class ProfilePage extends React.Component {
             profilechecksum: profilechecksum || "",
             gender: "M",
             defaultPicData: "",
-            responseTracking:responseTracking
+            defaultThumbNail: "",
+            responseTracking:responseTracking,
+            disablePhotoLink: false,
+            callApi: false,
+            listingName: ""
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
-        props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
+        if(props.fetchedProfilechecksum != false) {
+            this.state.callApi = true;
+        }
+        
 
     }
 
@@ -52,7 +59,8 @@ class ProfilePage extends React.Component {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)    
     }
     componentDidMount() 
-    {
+    {   
+        this.props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -76,6 +84,7 @@ class ProfilePage extends React.Component {
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
                 if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
+                    this.setState({listingName:listingArray[i]});
                     parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
                         nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
@@ -141,8 +150,7 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {   
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum) {
-
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -158,7 +166,8 @@ class ProfilePage extends React.Component {
                 actual_offset: actual_offset,
                 total_rec:total_rec,
                 responseTracking:responseTracking,
-                searchid:searchid
+                searchid:searchid,
+                callApi: false
             },this.setNextPrevLink);
             let picData;
             if(!nextProps.pic) {
@@ -182,6 +191,10 @@ class ProfilePage extends React.Component {
             }
             window.addEventListener('scroll', this.setScrollPos);
             let _this = this;
+            if(nextProps.pic.action == null) {
+                this.setState({disablePhotoLink: true})
+            }
+
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
@@ -201,7 +214,8 @@ class ProfilePage extends React.Component {
     }
 
     componentWillUnmount() 
-    {
+    {   
+        //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos); 
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);   
     }
@@ -248,6 +262,13 @@ class ProfilePage extends React.Component {
             showHistory:false
         });
     }
+    checkPhotoAlbum(e) 
+    {
+        if(this.state.disablePhotoLink == false) {
+            e.preventDefault();
+        }
+
+    }
 
     imageLoaded() 
     {
@@ -261,7 +282,17 @@ class ProfilePage extends React.Component {
     }
 
     render() 
-    {
+    {   
+        var contactEngineView;
+        if(this.state.listingName != "") {
+            let buttondata = {
+                profilechecksum : this.state.profilechecksum,
+                responseTracking: this.state.responseTracking,
+                profileThumbNailUrl: this.props.AboutInfo.thumbnailPic || this.state.defaultPicData,
+                username:this.props.AboutInfo.username
+            };
+            contactEngineView = <ContactEngineButton buttondata={buttondata} buttonName={this.state.listingName} pagesrcbtn="pd"/>;
+        }
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
@@ -298,7 +329,7 @@ class ProfilePage extends React.Component {
 
         var historyView;
         if(this.state.showHistory) {
-            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
+            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} ></CommHistory>
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
@@ -371,7 +402,7 @@ class ProfilePage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <Link id="showAlbum" to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                    <Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)} to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                         <div id="photoParent" className="fullwid scrollhid">
                             {photoView}
                             {photoViewTemp}
@@ -390,6 +421,7 @@ class ProfilePage extends React.Component {
                     {FamilyView}
                     {DppView}
                 </div>
+                {contactEngineView}
             </div>
         );
     }

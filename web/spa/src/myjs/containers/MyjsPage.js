@@ -17,7 +17,8 @@ import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-import contactEngine from "../../contact_engine/containers/contactEngine";
+import AppPromo from "../../common/components/AppPromo";
+
 require ('../style/jsmsMyjs_css.css');
 
 
@@ -52,7 +53,9 @@ export class CheckDataPresent extends React.Component{
 	}
 }
 export class MemMsgView extends React.Component{
-render(){	return(
+render(){
+
+	return(<a href={this.props.data.membership_message_link}>
 		<div className="posrel pt20 pb20 newBgBand">
 			<div className="posrel fullwid">
 				<div className="clearfix myjsp2">
@@ -66,6 +69,7 @@ render(){	return(
 				</div>
 			</div>
 		</div>
+		</a>
 	)}
 
 }
@@ -83,7 +87,8 @@ export  class MyjsPage extends React.Component {
 			ieApi: false,
 			drApi: false,
 			vaApi: false,
-			hamApi: false
+			hamApi: false,
+			showPromo: false
 		}
   	}
 
@@ -108,7 +113,19 @@ export  class MyjsPage extends React.Component {
 		this.setState ({
 			showLoader : false
 		})
+		if(nextProps.myjsData.apiData.appPromotion == true && this.state.showPromo == false) {
+			this.setState ({
+                showPromo : true
+            });
+		}
 	}
+	removePromoLayer() 
+    {
+        this.setState ({
+            showPromo : false
+        });
+        document.getElementById("mainContent").classList.remove("ham_b100");
+    }
 
 	componentWillMount(){
 			this.CssFix();
@@ -190,9 +207,21 @@ export  class MyjsPage extends React.Component {
 
   	}
 
+		hitIRforPagination(){
+			if(this.props.myjsData.apiDataIR.nextpossible!='true' || this.props.myjsData.apiDataIR.paginationHit)return;
+			this.props.myjsData.apiDataIR.paginationHit = true;
+			var nextPage = parseInt(this.props.myjsData.apiDataIR.page_index);
+			nextPage++;
+			this.props.hitApi_IR(nextPage);
+		}
   	render() {
 
-
+			
+		var promoView;
+        if(this.state.showPromo == true)
+        {	console.log("yesss")
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+        }
 
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
@@ -203,6 +232,7 @@ export  class MyjsPage extends React.Component {
 
   		if(this.props.myjsData.fetched)
 			{
+
 				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
 				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
@@ -219,18 +249,18 @@ export  class MyjsPage extends React.Component {
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
 	    if(this.props.myjsData.irFetched){
-	    	var interestRecView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
 	    if(this.props.myjsData.modFetched){
-	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title={this.state.MOD} listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
+	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
 	    }
 	    if(this.props.myjsData.vaFetched){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title={this.state.DR} listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
+				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
 	    }
 			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
 			{
@@ -239,25 +269,27 @@ export  class MyjsPage extends React.Component {
 
 		this.trackJsb9 = 1;
   		return(
-  		<div id="mainContent">
-		  	<MetaTagComponents page="MyjsPage"/>
-		  		<GA ref="GAchild" />
-				  <div className="perspective" id="perspective">
-							<div className="" id="pcontainer">
-								{MyjsHeadHTMLView}
-								{EditBarView}
-								{membershipmessageView}
-								{AcceptCountView}
-								{interestExpView}
-								{interestRecView}
-								{matchOfTheDayView}
-								{MyjsProfileVisitorView}
-								{dailyRecommendationsView}
-								{noDatablockView}
-
-							</div>
+  		<div id="MyjsPage">
+  			{promoView}
+	  		<div id="mainContent">
+			  	<MetaTagComponents page="MyjsPage"/>
+			  	<GA ref="GAchild" />
+				<div className="perspective" id="perspective">
+					<div className="" id="pcontainer">
+									{MyjsHeadHTMLView}
+									{EditBarView}
+									{membershipmessageView}
+									{AcceptCountView}
+									{interestExpView}
+									{interestRecView}
+									{matchOfTheDayView}
+									{MyjsProfileVisitorView}
+									{dailyRecommendationsView}
+									{noDatablockView}
 					</div>
+				</div>
 			</div>
+		</div>
 		);
 	}
 
@@ -285,8 +317,9 @@ const mapDispatchToProps = (dispatch) => {
      	hitApi_MOD: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
-  	    hitApi_IR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo=1&myjs=1','SET_IR_DATA','POST',dispatch);
+  	    hitApi_IR: (nextPage) => {
+					if(typeof nextPage == 'undefined')nextPage=1;
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,'SET_IR_DATA','POST',dispatch);
         },
         hitApi_VA: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
