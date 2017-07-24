@@ -1,9 +1,17 @@
 var loginAttempts=0;
 var secureSite=0;
+var LoginLayerByUserActions = false;
 if (window.location.protocol == "https:")
 	secureSite=1;
 function LoginValidation()
 {
+	/* GA tracking */
+	if(LoginLayerByUserActions){
+		trackJsEventGA("login layer", "login", loggedInJspcGender || 'Unregistered');
+	}
+	else{
+		trackJsEventGA("login", "login", loggedInJspcGender || 'Unregistered');
+	}
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
    
@@ -32,7 +40,6 @@ function LoginValidation()
 			}
 			else
 			{   
-        
 				if(validateCaptcha()){
 					$("#emailErr").addClass("visb").html("Invalid Format");
 					$("#EmailContainer").addClass("brderred");
@@ -169,6 +176,7 @@ function after_login(response)
 
 function onFrameLoginResponseReceived(message)
 {
+	var loginFlag = false;
 	if(message.origin === SSL_SITE_URL)
 	{		
 		var response="";
@@ -246,8 +254,13 @@ function onFrameLoginResponseReceived(message)
 		}
 		else
 		{
+			loginFlag = true;
+			GAMapper("GA_LL_LOGIN_SUCCESS");
 			after_login(response);
-		}		
+		}
+		if(loginFlag == false){
+			GAMapper("GA_LL_LOGIN_FALIURE");
+		}
 	}
 	
 		
@@ -295,6 +308,7 @@ function LoginBinding()
 {
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').unbind();
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').click(function() {
+		LoginLayerByUserActions = true;
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
@@ -305,13 +319,18 @@ function LoginBinding()
                 $('#topNavigationBar').removeClass("z2");
             },
             success: function(response) {
+            	GAMapper("GAV_LL_SHOW");
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
                 if($(this).hasClass("loginAlbumSearch")){
+                	/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
 					$("#loginRegistration").addClass("loginAlbumSearch");
 					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
 				}
 				else if($(this).hasClass("loginProfileSearch")){
+					/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
 					$("#loginRegistration").addClass("loginProfileSearch");
 					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
 				}
@@ -384,6 +403,15 @@ function commonLoginBinding()
                     $("#remember").val("1");
                 });
                 $("#loginRegistration").click(function() {
+
+					/* GA tracking */
+					if(LoginLayerByUserActions){
+						trackJsEventGA("login layer", "Register", loggedInJspcGender || 'Unregistered')
+					}
+					else{
+						trackJsEventGA("login", "Register", loggedInJspcGender || 'Unregistered')
+					}
+
 					if($(this).hasClass("logout"))
 						location.href="/register/page1?source=login_p";
 					else if($(this).hasClass("loginAlbumSearch"))
@@ -453,8 +481,15 @@ $(document).ready(function(){
 
 function forgotPasswordBinding(fromLayer)
 {
-	
 	$('#forgotPasswordLoginLayer').click(function() {
+
+			/* GA tracking */
+		if(LoginLayerByUserActions){
+			trackJsEventGA("login layer", "Forgot Password", loggedInJspcGender || 'Unregistered');
+		}
+		else{
+			trackJsEventGA("login", "Forgot Password", loggedInJspcGender || 'Unregistered');
+		}
 		
 		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
@@ -531,7 +566,9 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			
+
+			/* GA tracking */
+			trackJsEventGA("Forgot Password", "Send link to reset", loggedInJspcGender || 'Unregistered');
 			var email=$("#userEmail").val();
 			if(email)
 			{

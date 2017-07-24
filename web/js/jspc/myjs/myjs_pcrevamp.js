@@ -1054,11 +1054,16 @@ function criticalLayerButtonsAction(clickAction,button) {
                         toggleRequestCallBackOverlay(1, 'RCB_CAL');
                         $('.js-dd ul li[value="M"]').trigger('click');
                     }
-                
+                /* GA tracking */
+                trackJsEventGA("CAL NO", layerId, button);
                 }
                 else {
+                  /*GA tracking */
+                  trackJsEventGA("CAL YES", layerId, button);
                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                 }
+
+
                 
         }
 

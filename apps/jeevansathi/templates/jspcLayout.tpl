@@ -53,7 +53,7 @@
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview']);
+                _gaq.push(['_trackPageview', "PC_"+$('title').text()]);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

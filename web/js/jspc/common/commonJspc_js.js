@@ -1,3 +1,29 @@
+function GAMapper(GAEvent){
+    var GAMapping = {
+        // verify otp layer
+        "GA_VOL_MISS_CALL" :    ["E", "Enter Code Screen", "Miss Call", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT" :       ["E", "Enter Code Screen", "Verify", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_RESEND" :       ["E", "Enter Code Screen", "Resend Code", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT_ERROR" : ["E", "Enter Code Screen", "Wrong OTP", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT_SUCCESS" : ["E", "Enter Code Screen", "Correct OTP", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUCCESS_OK" :   ["E", "Phone verification response", "Verify Okay", loggedInJspcGender || "Unregistered"],
+        "GA_LL_LOGIN_SUCCESS" : ["E", "login layer", "Login Success", loggedInJspcGender || "Unregistered"],
+        "GA_LL_LOGIN_FAILURE" : ["E", "login layer", "Login Failure", loggedInJspcGender || "Unregistered"],
+        // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
+        "GAV_VOL_SHOW" :        ["V", "Verify otp layer"],
+        // 
+        "GAV_LL_SHOW" :         ["V", "Login Layer"],
+    }
+    if(GAMapping[GAEvent]){
+        if(GAMapping[GAEvent][0] == "E"){
+            trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], GAMapping[GAEvent][3]);
+        }else if(GAMapping[GAEvent][0] == "V"){
+    // console.log("GA", GAEvent);
+            _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
+        }
+    }
+}
+
 var currentlyDisplayedLayer = '';
 
 //this variable has been added for idfy
