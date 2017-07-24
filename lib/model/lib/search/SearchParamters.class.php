@@ -117,6 +117,8 @@ class SearchParamters
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
         protected $IS_VSP; // check for VSP Search
+        protected $KNOWN_COLLEGE;
+        protected $KNOWN_COLLEGE_IGNORE;
         protected $CURRENT_CLUSTER; // current selected cluster label
         protected $SEARCH_FAILED;
         
@@ -862,6 +864,20 @@ class SearchParamters
 			$this->MARRIED_WORKING = $MARRIED_WORKING; 
 	}
 	public function getMARRIED_WORKING() { return $this->MARRIED_WORKING; }
+        public function setKNOWN_COLLEGE($KNOWN_COLLEGE) 
+	{
+		$validInput = SearchInputValidation::validateInput("KNOWN_COLLEGE",$KNOWN_COLLEGE);
+                if($validInput)
+			$this->KNOWN_COLLEGE = $KNOWN_COLLEGE; 
+	}
+	public function getKNOWN_COLLEGE() { return $this->KNOWN_COLLEGE; }
+        public function setKNOWN_COLLEGE_IGNORE($KNOWN_COLLEGE_IGNORE) 
+	{
+		$validInput = SearchInputValidation::validateInput("KNOWN_COLLEGE_IGNORE",$KNOWN_COLLEGE_IGNORE);
+                if($validInput)
+			$this->KNOWN_COLLEGE_IGNORE = $KNOWN_COLLEGE_IGNORE; 
+	}
+	public function getKNOWN_COLLEGE_IGNORE() { return $this->KNOWN_COLLEGE_IGNORE; }
 	public function setGOING_ABROAD($GOING_ABROAD) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("GOING_ABROAD",$GOING_ABROAD);
