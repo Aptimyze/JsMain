@@ -17,11 +17,9 @@ function to stop polling for non roster webservice api
 * @inputs:type(optional)
 */
 function clearNonRosterPollingInterval(type){
-    //console.log("in clearNonRosterPollingInterval");
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                //console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
                 clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
@@ -40,10 +38,9 @@ function to reactivate poll for non roster list
 function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
-    //console.log("dppLiveForAll",dppLiveForAll);
-    //console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
+    
     nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
-    //console.log("reActivateNonRosterPolling",nonRosterGroups);
+  
     if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
@@ -58,11 +55,9 @@ function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
                 profileEligible = false;
             }
         }
-        //console.log("profileEligible",profileEligible);
+        
         if(profileEligible == true){
-            //console.log("in reActivateNonRosterPolling",source);
             $.each(nonRosterGroups,function(key,groupId){
-                    //pollForNonRosterListing(groupId);
                     clearNonRosterPollingInterval(groupId);
                     var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
                     strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
@@ -81,8 +76,6 @@ function to check whether request to non roster webservice is valid or not
 function checkForValidNonRosterRequest(groupId){
     //return true;
     var selfSub = getMembershipStatus();
-    //console.log("ankita",selfSub);
-    //console.log("ankita1",chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]);
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
@@ -98,7 +91,6 @@ function checkForValidNonRosterRequest(groupId){
     else{
         valid = true;
     }
-    //console.log("checkForValidNonRosterRequest",valid,groupId,chatConfig.Params[device].nonRosterListingRefreshCap);
     return valid;
 }
 
@@ -107,13 +99,11 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    //console.log("pollForNonRosterListing",type,updateChatListImmediate);
     if(type == undefined || type == ""){
         type = "dpp";
     }
     var selfAuth = readCookie("AUTHCHECKSUM");
     if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
-        //console.log("selfAuth",selfAuth);
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
             if(showChat == "1"){
@@ -135,7 +125,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             validRe = checkForValidNonRosterRequest(type);
             //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
         }
-        //console.log("validRe",type,validRe);
+        
         if(validRe == true){
             var getInputData = "";
             if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
@@ -205,7 +195,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 };*/
             
                     if(response["header"]["status"] == 200){
-                        //console.log("fetchNonRosterListing success",response);
+                        
                         if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
                             //chatConfig.Params[device].nonRosterListingRefreshCap[type] = response["data"]["pollTime"];
                             //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
@@ -235,7 +225,7 @@ function to process the non roster data
 */
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
-    //console.log("in processNonRosterData",source); 
+     
     var newNonRoster = {},oldNonRoster = {},offlineNonRoster = {};
     if((Object.keys(strophieWrapper.NonRoster)).length>0){
         $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
@@ -265,8 +255,7 @@ function processNonRosterData(response,type,source){
     else{
         newNonRoster = {};
     }
-    //console.log("oldNonRoster",oldNonRoster);
-    //console.log("newNonRoster",newNonRoster);
+    
     isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
     if(isResponseSame == false){
         if((Object.keys(oldNonRoster)).length > 0){
