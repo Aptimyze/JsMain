@@ -128,13 +128,66 @@
             <ul id="paidBenefits" class="clearfix hor_list memfealist colrw fontlig f15">
             </ul>
             <div class="mem_pad22">
-                <div class="pt5 colrw mem-brd10 clearfix">
+                <div class="pt5 colrw mem-brd10 clearfix" id = "discBanner">
                     <div class="fl">
                         <div id="bannerTextVas" class="mt10 f20"></div>
                         <div class="pt17 f20" id="bannerTimerVas"></div>
                     </div>
                 </div>
             </div>
+            
+            <div id='lightningContentRenew' class = "colrw mem-brd10">
+                <div class="disp-tbl fullwid">
+                    <div class="disp-cell wid63p pt15">
+                        <div>
+                            <p class="f16">
+                                FLASH DEAL
+                            </p>
+                            <p class="pt7">
+                                <span class="f30 disp_ib" id='lightDiscRenew'>
+                                </span>
+                                <span class="disp_ib f15 pl10">
+                                    ON ALL MEMBERSHIPS
+                                </span>
+                            </p>
+                            <p class="pt7 f15">
+                                PLAN STARTS @ 
+                                <span class="color12 strike">
+                                    <span id='lightStrikePriceRenew'>
+                                    </span>
+                                </span>
+                                &nbsp;
+                                <span id='lightDiscPriceRenew'>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="disp-cell vmid wid20p">
+                        <div class="fontlig f14 pb10">
+                            Offer Valid for
+                        </div>
+                        <ul class="time">
+                            <li class="inscol">
+                                <span id='jspcLandingMRenew' style="font-size: 20px">
+                                </span>
+                                <span style="font-size: 15px">
+                                    M
+                                </span>
+                            </li>
+                            <li class="padl10">
+                                <span id='jspcLandingSRenew' style="font-size: 20px">
+                                </span>
+                                <span style="font-size: 15px">
+                                    S
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>            
+            
+            
+            
         </div>
         <div class="fl mem-widp12 disp-none" id="UpgradeMembershipDiv">
             <!--div class="f19 color12 pb15" id ="messageDiv"></div>
@@ -434,14 +487,22 @@ $(document).ready(function() {
     }
     if(lightDiscText){
         $("#memMsgContent").hide();
+        if(lightningRenew == "1"){
+            $("#discBanner").addClass("disp-none");
+        }
         $("#lightDisc").html(lightDiscText);
         $("#lightStrikePrice").html(priceStrike);
         $("#lightDiscPrice").html(discPrice);
         $("#memMsgParent").removeClass("mem_pad13");
-        showTimerForLightningMemberShipPlan("jspcLanding");
+        $("#lightDiscRenew").html(lightDiscText);
+        $("#lightStrikePriceRenew").html(priceStrike);
+        $("#lightDiscPriceRenew").html(discPrice);
+        $("#memMsgParent").removeClass("mem_pad13");
+        showTimerForLightningMemberShipPlan("jspcLanding","renew");
     }
     else{
         $("#lightningContent").hide();
+        $("#lightningContentRenew").hide();
     }
 });
 </script>

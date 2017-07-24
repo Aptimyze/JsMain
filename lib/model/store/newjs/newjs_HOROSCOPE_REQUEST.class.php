@@ -499,5 +499,14 @@ $sql="UPDATE newjs.HOROSCOPE_REQUEST SET SEEN='Y' WHERE PROFILEID_REQUEST_BY=:PR
                         return array();
 		}
    }
+   public function updateHoroscopeRequestCount($profileid,$reuestedBy) {
+
+                $sql = "UPDATE HOROSCOPE_REQUEST SET CNT=CNT+1 WHERE PROFILEID=:PROFILEID and PROFILEID_REQUEST_BY=:PROFILEID_REQUEST_BY";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $res->bindValue(":PROFILEID_REQUEST_BY", $reuestedBy, PDO::PARAM_INT);
+                $res->execute();
+        }
+
 }
 ?>

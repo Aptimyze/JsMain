@@ -119,6 +119,8 @@ class SearchParamters
         protected $IS_VSP; // check for VSP Search
         protected $KNOWN_COLLEGE;
         protected $KNOWN_COLLEGE_IGNORE;
+        protected $CURRENT_CLUSTER; // current selected cluster label
+        protected $SEARCH_FAILED;
         
         public function __construct()
 	{
@@ -433,7 +435,7 @@ class SearchParamters
 	}
 	public function getSORT_LOGIC() { return $this->SORT_LOGIC; }
 	public function setINCOME($INCOME) 
-	{ 
+	{
 		$validInput = SearchInputValidation::validateInput("INCOME",$INCOME);
                 if($validInput)
 			$this->INCOME = $INCOME; 
@@ -1309,4 +1311,8 @@ class SearchParamters
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
         public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
         public function getIS_VSP() { return $this->IS_VSP; }
+        public function setCURRENT_CLUSTER($CURRENT_CLUSTER="") {$this->CURRENT_CLUSTER = $CURRENT_CLUSTER;}
+        public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
+        public function setSEARCH_FAILED($SEARCH_FAILED="") {$this->SEARCH_FAILED = $SEARCH_FAILED;}
+        public function getSEARCH_FAILED() { return $this->SEARCH_FAILED; }
 }

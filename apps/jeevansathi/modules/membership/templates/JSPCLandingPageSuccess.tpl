@@ -23,6 +23,7 @@
     var priceStrike = "~$data.lightningDealContent.priceStrike`";
     var discPrice = "~$data.lightningDealContent.discPrice`";
     var lightningDealExpiryInSec = "~$data.lightningDealContent.diffSecond`";
+    var lightningRenew = "~$data.lightningDealContent.renewalLightning`";
     ~if $data.lightningDealContent`
         var lightningTop = "~$data.lightningDealContent.top`";
         var lightningMiddle = "~$data.lightningDealContent.middle`";

@@ -95,7 +95,7 @@
                     <!--start:timer div-->
                     <div class="posabs" style="right:14px; top:13px">
                         <p class="f14 color7 pl38">Valid for</p>
-                         <ul class="time color7">
+                         <ul class="time color7 fontmed">
                              <li class="inscol"><span id='jsmsLandingM'></span><span>M</span></li>
                              <li><span id='jsmsLandingS'></span><span>S</span></li>
                             </ul>

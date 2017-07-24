@@ -211,7 +211,7 @@ class DppAutoSuggestValue
 	 */
 	static function ReligionAutoSuggest($profileObj,$casteNoBar="")
 	{
-		if($casteNoBar && $profileObj->getRELIGION()=="1")
+		if($casteNoBar=="true" && $profileObj->getRELIGION()=="1")
 		{
 			return DppAutoSuggestEnum::$religionAutoSuggestForCasteNoBar;
 		}

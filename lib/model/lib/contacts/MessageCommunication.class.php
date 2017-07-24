@@ -208,7 +208,7 @@ class MessageCommunication
 			$this->SENDER = $profileid;
 			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();
 				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
-			if(MobileCommon::isAPP()=="A" && ($appVersion==101|| $appVersion==100))
+			if(MobileCommon::isAPP()=="A" && $appVersion>=100)
 			{
 				$this->ID = sfContext::getInstance()->getRequest()->getParameter("messageid");
 				$this->MESSAGE =htmlentities(urldecode(sfContext::getInstance()->getRequest()->getParameter("draft")))?htmlentities(urldecode(sfContext::getInstance()->getRequest()->getParameter("draft"))):htmlentities($_GET["chatMessage"]);

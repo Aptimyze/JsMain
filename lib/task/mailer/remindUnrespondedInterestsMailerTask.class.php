@@ -37,7 +37,7 @@ EOF;
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_UNRESPONDED_CONTACTS("newjs_masterDDL");
+	            $mailerYNObj = new MAIL_UNRESPONDED_CONTACTS("newjs_master");
 	            $mailerYNObj->EmptyMailer();
 	            echo "Truncated Mailer Table\n\n";
 	            $chunk=$arguments["chunks"];

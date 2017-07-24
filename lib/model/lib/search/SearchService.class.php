@@ -49,7 +49,7 @@ class SearchService
 	* @param loggedInProfileObj
 	*/
 	
-	public function performSearch($SearchParamtersObj='',$results_cluster='',$clustersToShow='',$currentPage='',$cachedSearch='',$loggedInProfileObj='')
+	public function performSearch($SearchParamtersObj='',$results_cluster='',$clustersToShow='',$currentPage='',$cachedSearch='',$loggedInProfileObj='',$noFilterQuery='')
 	{
 		$SearchResponseObj = ResponseHandleFactory::getResponseEngine($this->responseType,$this->engineType,$this->showAllClustersOptions);
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF() =='N')
@@ -57,7 +57,7 @@ class SearchService
 			return $SearchResponseObj;
 		}
 		$SearchRequestObj = RequestHandleFactory::getRequestEngine($SearchResponseObj,$SearchParamtersObj);
-		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj);
+		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj,$noFilterQuery);
 		
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES')
 		{
