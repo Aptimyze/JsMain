@@ -9,10 +9,12 @@ export class contactEngine extends React.Component{
     super();
     //console.log("const1",props)
 
+
   }
 
   componentDidMount(){
-  	// 	console.log(this.props);
+    console.log('in contct');
+  	console.log(this.props);
   }
 
   componentWillReceiveProps(nextProps){
@@ -25,9 +27,9 @@ export class contactEngine extends React.Component{
       }
       if(nextProps.contact.declineDone){
          console.log('decline done');
-      }  
+      }
     }
-  	
+
   }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
