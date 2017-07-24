@@ -26,8 +26,8 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             else{
                 $this->interval = "day";
             }
-            $startDate = strtotime($request->getParameter('startDate'))-$this->timeChange;
-            $endDate = strtotime($request->getParameter('endDate'))-$this->timeChange;
+            $startDate = strtotime($request->getParameter('startDate'));
+            $endDate = strtotime($request->getParameter('endDate'));
             //if($this->interval == "hour"){
                 $greaterThan = date('Y-m-d',$startDate)."T".date('H:i:s',$startDate);
                 $lessThan = date('Y-m-d',$endDate)."T".date('H:i:s',$endDate);
@@ -38,7 +38,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             //}
             $timeDiff = $endDate -  $startDate;
             
-            $startDate2 = strtotime($request->getParameter('startDate2'))-$this->timeChange;
+            $startDate2 = strtotime($request->getParameter('startDate2'));
             if($startDate2){
                 $endDate2 = $startDate2 + $timeDiff;
                 //if($this->interval == "hour"){
@@ -122,16 +122,16 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
             $phpResponse = json_decode($response,true);
             foreach ($phpResponse['aggregations']['articles_over_time']['buckets'] as $key => $value) {
                 $returnedDate = substr(str_replace('T',' ', $value['key_as_string']),0,19);
-                if($this->interval == "day"){
-                    if(date('d',strtotime($returnedDate)) < date('d',strtotime($gt)) || date('d',strtotime($returnedDate)) > date('d',strtotime($lt)))
-                        continue;
-                    $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange);
-                }
-                else
-                    $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+$this->timeChange+1800);
+                //if($this->interval == "day"){
+                    //if(date('d',strtotime($returnedDate)) < date('d',strtotime($gt)) || date('d',strtotime($returnedDate)) > date('d',strtotime($lt)))
+                        //continue;
+                    $newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate));
+                //}
+                //else
+                    //$newResponse['timestamp'][] = date('Y-m-d H:i:s',strtotime($returnedDate)+1800);
                 $newResponse['count'][] = $value['doc_count'];
             }
-            if($this->interval == "day"){
+            /*if($this->interval == "day"){
                 $ll = date('d',strtotime($oGt));
                 $hl = date('d',strtotime($oLt));
             }
@@ -139,7 +139,7 @@ class ApiGetDataForMonitoringMetricsAction extends sfActions
                 $ll = date('H',strtotime($gt));
                 $hl = date('H',strtotime($lt));
             }
-            /*for($i=$ll;$i<=$hl;$i++){
+            for($i=$ll;$i<=$hl;$i++){
                 $found=0;
                 foreach ($newResponse['timestamp'] as $key => $value) {
                     $returnedDate = substr(str_replace('T',' ', $value),0,19);
