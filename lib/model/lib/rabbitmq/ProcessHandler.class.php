@@ -348,7 +348,7 @@ try{
 			$producerObj->sendMessage($sendMailData);
                 }else
 		{
-			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid $current_time > /dev/null &";
+			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid '$current_time' > /dev/null &";
                         $cmd = JsConstants::$php5path." -q ".$path;
                         passthru($cmd);
 		}
