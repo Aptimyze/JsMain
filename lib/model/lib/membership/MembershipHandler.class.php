@@ -2870,7 +2870,7 @@ class MembershipHandler
         }
     }
     
-    public function addCommunityWelcomeDiscount($profileid,$community){
+    public function processCommunityWelcomeDiscount($profileid,$community){
         $discountPercent = $this->getCommunityWelcomeDiscount($community);
         $serviceArr = $this->getActiveServices();
         $vdObj = new VariableDiscount();
@@ -2888,7 +2888,20 @@ class MembershipHandler
         
 
         unset($discountDetails,$vdObj,$discountObj,$commWelDiscLogObj);
-        
+    }
+    
+    public function addCommunityWelcomeDiscount($profileid,$community){
+        $prodObj=new Producer();
+        if($prodObj->getRabbitMQServerConnected())
+        {
+            $body = array("PROFILEID"=>$profileid,"COMMUNITY"=>$community);
+            $type = "COMMUNITY_DISCOUNT_LOG";
+            $queueData = array('process' =>'COMMUNITY_DISCOUNT',
+                                'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                              );
+            $prodObj->sendMessage($queueData);
+        }
+        unset($prodObj,$queueData,$body);
     }
     
 

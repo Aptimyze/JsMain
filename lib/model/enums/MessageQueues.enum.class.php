@@ -26,6 +26,7 @@ class MessageQueues
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
   CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 6; //count of discount tracking consumer count
+  CONST COMMUNITY_DISCOUNT_CONSUMER_COUNT = 2; //count of community discount consumer
   CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
@@ -76,6 +77,9 @@ class MessageQueues
   CONST LOGGING_QUEUE = "loginTrackingQueue";
   CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
+  CONST COMMUNITY_DISCOUNT_QUEUE = "CommunityDiscountQueue";
+  CONST CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND = "cronExecuteCommunityDiscountConsumerTask";
+  CONST CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND = "cronConsumeCommunityDiscountQueueMessageTask";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST CRONMATCHALERTSLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeMatchAlertsLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
