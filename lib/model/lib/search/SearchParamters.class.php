@@ -118,6 +118,7 @@ class SearchParamters
         protected $TRENDS_DATA;
         protected $IS_VSP; // check for VSP Search
         protected $CURRENT_CLUSTER; // current selected cluster label
+        protected $SEARCH_FAILED;
         
         public function __construct()
 	{
@@ -1296,4 +1297,6 @@ class SearchParamters
         public function getIS_VSP() { return $this->IS_VSP; }
         public function setCURRENT_CLUSTER($CURRENT_CLUSTER="") {$this->CURRENT_CLUSTER = $CURRENT_CLUSTER;}
         public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
+        public function setSEARCH_FAILED($SEARCH_FAILED="") {$this->SEARCH_FAILED = $SEARCH_FAILED;}
+        public function getSEARCH_FAILED() { return $this->SEARCH_FAILED; }
 }
