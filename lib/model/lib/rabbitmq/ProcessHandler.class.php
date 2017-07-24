@@ -325,6 +325,7 @@ try{
 	$prevDob = $body['PREV_DTOFBIRTH'];
 	$dob = $body['DTOFBIRTH'];
 	$profileid = $body['profileid']; 
+	$current_time = $body['current_time']; 
         $deleteInterest = 0;
 	if($dob && $prevDob){
                 $createDate = new DateTime($prevDob);
@@ -343,11 +344,11 @@ try{
                 $producerObj=new Producer();
 		if($producerObj->getRabbitMQServerConnected())
 		{
-			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid,'current_time'=>$current_time)), 'redeliveryCount'=>0 );
 			$producerObj->sendMessage($sendMailData);
                 }else
 		{
-			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid $current_time > /dev/null &";
                         $cmd = JsConstants::$php5path." -q ".$path;
                         passthru($cmd);
 		}
