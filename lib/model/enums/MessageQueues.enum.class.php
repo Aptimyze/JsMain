@@ -79,6 +79,7 @@ class MessageQueues
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST COMMUNITY_DISCOUNT_QUEUE = "CommunityDiscountQueue";
   CONST CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronConsumeCommunityDiscountQueueMessageTask";
+  CONST CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronExecuteCommunityDiscountConsumerTask";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST CRONMATCHALERTSLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeMatchAlertsLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
