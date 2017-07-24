@@ -769,6 +769,26 @@ i {
 	background-image:url('../../img/main-sprite_new_1.png');
 	background-repeat:no-repeat
 }
+.vcontact {
+    background-position: -228px -49px;
+    width: 29px;
+    height: 20px;
+}
+.srtlist {
+    background-position: -228px -74px;
+    width: 29px;
+    height: 19px;
+}
+.ignore {
+    background-position: -228px -100px;
+    width: 29px;
+    height: 19px;
+}
+.reportAbuse {
+    background-position: -158px -322px;
+    width: 22px;
+    height: 23px;
+}
 .icons1 {
 	background-image:url(https://static.jeevansathi.com/images/jsms/commonImg/icons1.png);
 	background-repeat:no-repeat
@@ -1292,4 +1312,32 @@ border-radius: 32px;
 	    background-position: -207px -56px;
     width: 16px;
     height: 39px;
+}
+.srpoverlay_2 {
+    width: 100%;
+    position: absolute;
+    left: 0%;
+    z-index: 109;
+}
+.threeDotOverlay {
+	position: absolute;
+	top:50%;
+	transform: translate(0%, -50%);
+    -webkit-transform: translate(0,-50%);
+}
+.photoDiv {
+	border: 1px solid rgb(255,255,255);
+	border: 1px solid rgba(255,255,255,0.2);  
+	overflow:hidden; 
+	width: 90px; 
+	height: 90px; 
+	border-radius: 45px;
+}
+.pl15{padding-left: 15px}
+.pr15{padding-right: 15px}
+.mt45{margin-top: 45px}
+.srp_close1 {
+    width: 25px;
+    height: 23px;
+    background-position: -160px -228px;
 }

@@ -7,7 +7,7 @@ import ThreeDots from "./ThreeDots"
 export class contactEngine extends React.Component{
   constructor(props){
     super();
-    //console.log("const1",props)
+    console.log("const1",props);
 
   }
 
@@ -84,7 +84,7 @@ export class contactEngine extends React.Component{
                 <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <div className="white">Send Interest</div>
               </div>
-              <ThreeDots />
+              <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
             </div>
           </div>
           );
