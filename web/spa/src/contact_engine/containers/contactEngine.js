@@ -1,3 +1,4 @@
+require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
@@ -7,9 +8,6 @@ import ThreeDots from "./ThreeDots"
 export class contactEngine extends React.Component{
   constructor(props){
     super();
-    console.log("const1",props);
-
-
   }
 
   componentDidMount(){
@@ -68,7 +66,7 @@ export class contactEngine extends React.Component{
                 <div className="white">Accept Interest</div>
               </div>
             </div>
-            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_2">
+            <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2">
               <div id="btnDecline" className="fontlig f13 whitecursp dispbl" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
                 <i className="ot_sprtie newitcross"></i>
                 <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
