@@ -122,6 +122,14 @@ class DetailedViewApi
 		$this->m_arrOut = array();
 		$this->getDecorated_MoreInfo();
 		$arrMoreInfo = $this->m_arrOut;
+
+		//Decorated Data
+		if ( MobileCommon::isNewMobileSite())
+		{
+			$this->m_arrOut = array();
+			$this->getMetaTags();
+			$arrMoreInfo = $this->m_arrOut;
+		}
                 
 		$this->m_arrOut = array();
 		$this->getDecorated_CriticalInfo();
@@ -147,6 +155,110 @@ class DetailedViewApi
 							
 		return $this->m_arrSectionOut;
 	}
+
+
+	protected function getMetaTags()
+	{
+		$objProfile = $this->m_objProfile;
+		$viewerProfile = $this->m_actionObject->loginProfile;
+		$viewedProfile = $this->m_objProfile;
+		// var_dump($viewerProfile);
+		// var_dump($viewedProfile);
+		// var_dump($objProfile);
+
+
+		//http://www.jeevansathi.com/<bride>-<mother-tongue>-<religion>-<caste>-<username/userID>-profiles  
+		$casteAllow=0;
+		if(CommonUtility::CasteAllowed($viewedProfile->getRELIGION()))
+			$casteAllow=1;
+		// die(print_r(CommonUtility::CasteAllowed($viewedProfile->getRELIGION())));
+
+		//Canonical url
+		$mtongue = $viewedProfile->getMTONGUE();
+		$religion = $viewedProfile->getReligion();
+		$caste = $viewedProfile->getCASTE();
+
+		$mtongue = FieldMap::getFieldLabel("community_small",$mtongue);
+		$religion = FieldMap::getFieldLabel("religion",$religion);
+		$caste = FieldMap::getFieldLabel("caste",$caste);
+		$can_url=$mtongue."-".$religion;
+		if($casteAllow)
+			$can_url.="-".$caste;
+			
+		$country_res = (FieldMap::getFieldLabel("country",$viewedProfile->getCOUNTRY_RES()));
+		// die($country_res);
+		$city_res = (FieldMap::getFieldLabel("city",$viewedProfile->getCITY_RES()));
+		// //Title
+		// //strip tags check added to remove meta content in page title
+		if($viewedProfile->getGOTHRA() && strip_tags($viewedProfile->getGOTHRA())!="")
+			$gotra=" - ".$viewedProfile->getGOTHRA();
+		
+		if($city_res || $country_res)
+		{
+			$location=" - ";
+			if($city_res)
+				$location=$location.$city_res.", ";
+			if($country_res)
+				$location=$location.$country_res;
+				
+		}	
+		// die($city_res);
+		$title=$mtongue;
+		if($casteAllow)
+			$title.=" - ".$caste;
+		if($viewedProfile->getGOTHRA() && strip_tags($viewedProfile->getGOTHRA())!="")
+			$gothra=" - ".$viewedProfile->getGOTHRA();
+		$title.=" - ".$religion.$gothra;
+		
+		if($location)
+			$title=$title.$location;
+		$title=$title." - ".$viewedProfile->getAGE()." - ".$viewedProfile->getUSERNAME();
+		
+		$location=ltrim($location," - ");
+		$desc="Looking for an ideal ".$mtongue;
+		// die($caste);
+		if($casteAllow)
+			$desc.=" ".$caste;
+		$desc.=" ".$religion;
+		
+		if($viewedProfile->getGENDER()=="M")
+		{
+			$whois="groom";
+		
+			$title="Groom - ".$title;
+			$desc=$desc." Groom in $location";
+		}
+		else
+		{
+			$whois="bride";
+		
+			$title="Bride - ".$title;
+			$desc=$desc." Bride in $location";
+		}
+		$desc=$desc."? Your dream Life Partner is just a click away.";
+		if(!$viewerProfile)
+			$desc=$desc." Log on to Jeevansathi.com Now!";
+
+		$can_url=CommonUtility::CanonicalProfile($viewedProfile);
+
+		$desc=htmlspecialchars_decode($desc,ENT_QUOTES);
+
+		$keyword=$mtongue." ".ucfirst($whois)."s, ";
+		if($casteAllow)
+			$keyword.=$caste." ".ucfirst($whois)."s, ";
+				
+		$keyword.=$location." ".ucfirst($whois)."s, ".ucfirst($whois).", ".ucfirst($whois)."s, ".$religion." ".ucfirst($whois)."s, Life partner, find ".$whois."s, find $whois, $whois matchmaking, ".FieldMap::getFieldLabel("occupation",$viewedProfile->getOCCUPATION())." ".($whois)."s, Jeevansathi.com, Indian matrimony, matrimony, matrimonial, matrimonial";
+		$keyword=htmlspecialchars_decode($keyword,ENT_QUOTES);
+		
+		$metaTags['keyword'] = $keyword;
+		$metaTags['title'] = $title;
+		$metaTags['title'] = $title;
+		$metaTags['can_url'] = $can_url;
+		$metaTags['desc'] = $desc;
+
+		$this->m_arrOut['meta_tags'] = $metaTags;
+	}
+	
 	protected function getDecorated_CriticalInfo(){
                 $objProfile = $this->m_objProfile;
                 $this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();                

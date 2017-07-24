@@ -39,6 +39,7 @@ class ProfilePage extends React.Component {
             profilechecksum: profilechecksum || "",
             gender: "M",
             defaultPicData: "",
+            defaultThumbNail: "",
             responseTracking:responseTracking,
             disablePhotoLink: false,
             callApi: false,
@@ -286,7 +287,9 @@ class ProfilePage extends React.Component {
         if(this.state.listingName != "") {
             let buttondata = {
                 profilechecksum : this.state.profilechecksum,
-                responseTracking: this.state.responseTracking
+                responseTracking: this.state.responseTracking,
+                profileThumbNailUrl: this.props.AboutInfo.thumbnailPic || this.state.defaultPicData,
+                username:this.props.AboutInfo.username
             };
             contactEngineView = <ContactEngineButton buttondata={buttondata} buttonName={this.state.listingName} pagesrcbtn="pd"/>;
         }
@@ -326,7 +329,7 @@ class ProfilePage extends React.Component {
 
         var historyView;
         if(this.state.showHistory) {
-            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic} ></CommHistory>
+            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} ></CommHistory>
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
