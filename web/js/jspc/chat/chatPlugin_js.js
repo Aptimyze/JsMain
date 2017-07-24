@@ -2384,14 +2384,16 @@ JsChat.prototype = {
     },
     
     //enable chat for free member if paid initiates
-    _enableChatAfterPaidInitiates: function(userId){
+    _enableChatAfterPaidInitiates: function(userId,type){
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
             //console.log("removing");
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
         }
         //console.log("222");
-        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        if(typeof type == "undefined" || type != "disable"){
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        }
     },
 
     //add meesage recieved from another user
@@ -2455,8 +2457,14 @@ JsChat.prototype = {
 
             }
 
-            if(typeof msg_type != "undefined" && (msg_type == "eoi" || msg_type == "accept")){
-                curEle._enableChatAfterPaidInitiates(userId);
+            if($('chat-box[user-id="' + userId + '"]').length != 0 && typeof msg_type != "undefined" && (msg_type == "eoi" || msg_type == "accept")){
+                var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+                if(groupId == chatConfig.Params["categoryNames"]["Acceptance"]){
+                    curEle._enableChatAfterPaidInitiates(userId);
+                }
+                else{
+                    curEle._enableChatAfterPaidInitiates(userId,"disable");
+                }
             }
             //console.log("appendMsg",appendMsg);
             if(appendMsg == true){
