@@ -52,6 +52,10 @@
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/commoninterface/uploadVD?name=~$name`&cid=~$cid`">Upload Mini VD Data</a>
 		</div>
         <br>
+        <div>
+			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/welcomeDiscount?name=~$name`&cid=~$cid`">Update Welcome Discount</a>
+		</div>
+        <br>
         ~/if`
         ~if $MGorSLHDO`
         <div>
