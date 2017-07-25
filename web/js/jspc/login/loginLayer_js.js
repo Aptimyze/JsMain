@@ -259,7 +259,7 @@ function onFrameLoginResponseReceived(message)
 			after_login(response);
 		}
 		if(loginFlag == false){
-			GAMapper("GA_LL_LOGIN_FALIURE");
+			GAMapper("GA_LL_LOGIN_FAILURE");
 		}
 	}
 	
