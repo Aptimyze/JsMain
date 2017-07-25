@@ -29,11 +29,13 @@ export class contactEngine extends React.Component{
   callContactApi(action){
   	this.props.showLoaderDiv();
   	if(action == 'ACCEPT')
-  		this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID);
+  		this.props.acceptApi(this.props.profiledata.profilechecksum,this.props.tupleID);
   	if(action == 'DECLINE')
-  		this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID);
+  		this.props.declineApi(this.props.profiledata.profilechecksum,this.props.tupleID);
   	if(action == 'INITIATE')
-  		this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID);
+  		this.props.contactApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
+  	if(action == 'REMINDER')
+
   }
 
   render(){
@@ -124,6 +126,15 @@ const mapDispatchToProps = (dispatch) => {
           else
             var url = '&profilechecksum='+profilechecksum;
           return commonApiCall(CONSTANTS.SEND_INTEREST_API,url,'CONTACT_ACTION','POST',dispatch,true,{},tupleID);
+        },
+        reminderApi: (profilechecksum, source, tupleID) => {
+          if(source=='matchOfDay')
+            var url = '&stype=WMOD&profilechecksum='+profilechecksum;
+          else if(source=='match_alert')
+            var url = '&stype=WMM&profilechecksum='+profilechecksum;
+          else
+            var url = '&profilechecksum='+profilechecksum;
+          return commonApiCall(CONSTANTS.REMINDER_API,url,'CONTACT_ACTION','POST',dispatch,true,{},tupleID);
         },
         acceptApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
