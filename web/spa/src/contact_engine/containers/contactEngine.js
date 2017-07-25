@@ -19,6 +19,7 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
+    console.log("next",nextProps.contactAction)
       if(nextProps.contactAction.acceptDone) {
        this.setState({
        	actionDone: true
@@ -30,11 +31,11 @@ export class contactEngine extends React.Component{
   	this.props.showLoaderDiv();
   	if(action == 'ACCEPT')
   		this.props.acceptApi(this.props.profiledata.profilechecksum,this.props.tupleID);
-  	if(action == 'DECLINE')
+  	else if(action == 'DECLINE')
   		this.props.declineApi(this.props.profiledata.profilechecksum,this.props.tupleID);
-  	if(action == 'INITIATE')
+  	else if(action == 'INITIATE')
   		this.props.contactApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
-  	if(action == 'REMINDER')
+  	else if(action == 'REMINDER')
   		this.props.reminderApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
   }
 
@@ -66,7 +67,23 @@ export class contactEngine extends React.Component{
           }
       } else if(this.props.pagesrcbtn == "pd") {
       	if(this.state.actionDone){
-      		return null;
+          if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
+            return (
+              <div id="buttons1" className="view_ce fullwid">
+                <div className="fullwid bg7 txtc pad5new posrel" >
+                  <div className="wid60p">
+                    <i className="mainsp ot_msg"></i>
+                    <input className="inputProChecksum" type="hidden" value={this.props.profiledata.profilechecksum}></input>
+                    <input className="action" type="hidden" value={this.props.contactAction.accept.buttondetails.button.action}></input>
+                    <div className="white">{this.props.contactAction.accept.buttondetails.button.label}</div>
+                  </div>
+                  <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+                </div>
+              </div>
+            );
+
+          }
+          else {return null;}
       	}
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(
