@@ -18,6 +18,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
+import MetaTagComponents from '../../common/components/MetaTagComponents';
 
 class ProfilePage extends React.Component {
 
@@ -332,7 +333,7 @@ class ProfilePage extends React.Component {
             historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} ></CommHistory>
         }
 
-        var AboutView,FamilyView,DppView,Header = "View Profile",photoView;
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='';
         
         if(this.state.dataLoaded)
         {
@@ -348,6 +349,8 @@ class ProfilePage extends React.Component {
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;        
             document.getElementById("swipePage").classList.remove("animateLeft");
+            console.log("this.props",this.props.pageInfo.meta_tags);
+            metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
         } 
         else 
         {
@@ -379,10 +382,10 @@ class ProfilePage extends React.Component {
                 document.getElementById("animated-background").style.height = backHeight + "px";
             },100);
         }
-
         return (
             <div id="ProfilePage">
                 <GA ref="GAchild" />
+                {metaTagView}
                 {promoView}
                 {errorView}
                 {loaderView}
@@ -428,6 +431,7 @@ class ProfilePage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.ProfileReducer);
     return{
        responseMessage: state.ProfileReducer.responseMessage,
        AboutInfo: state.ProfileReducer.aboutInfo,
@@ -440,6 +444,7 @@ const mapStateToProps = (state) => {
        profileId: state.ProfileReducer.profileId,
        show_gunascore:state.ProfileReducer.show_gunascore,
        fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
+       pageInfo: state.ProfileReducer.pageInfo,
        myjsData: state.MyjsReducer,
        Jsb9Reducer : state.Jsb9Reducer
     }
