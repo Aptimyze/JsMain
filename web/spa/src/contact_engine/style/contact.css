@@ -26,6 +26,7 @@
     right: 0;
     padding: 10px 5px;	
 }
+.mb70{margin-bottom: 70px}
 
 .threedot1 {
 	    background-position: -207px -56px;
@@ -102,3 +103,9 @@
 .pad3015 {
     padding: 30px 15px;
 }
+.abuseLi{
+    padding-left: 44px;
+    text-align: left;
+}
+.top87{top: 87px;}
+.bgTrans{background-color: transparent;}
