@@ -460,6 +460,14 @@ public function logDiscount($body,$type){
     }
 }
 
+    public function addCommunityDiscount($body,$type){
+        if($type == "COMMUNITY_DISCOUNT_LOG"){
+            $memHandlerObj = new MembershipHandler();
+            $memHandlerObj->processCommunityWelcomeDiscount($body["PROFILEID"],$body["COMMUNITY"]);
+            unset($memHandlerObj);
+        }
+    }
+
   /*
    * Send instant eoi notification
    */
