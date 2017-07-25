@@ -160,7 +160,7 @@ class ProfilePage extends React.Component {
                 showLoader:false
             });
         }
-        if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
+        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
             this.setState({
                 showLoader:false
             });   
