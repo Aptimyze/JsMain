@@ -11,7 +11,6 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
-
 	$context = $this->getContext();
 	$request = $context->getRequest();
 	if(!$request->getParameter("startScriptTime"))
@@ -45,8 +44,8 @@ class AuthFilter extends sfFilter {
 
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum','static/forgotPassword');
 		$spa = 0;
-		$originalArray = array('https://','http://');	
-		$replaceArray = array('','');	
+		$originalArray = array('https://','http://');
+		$replaceArray = array('','');
 		$specificDomain = str_replace($originalArray, $replaceArray, $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		if($specificDomain[1] == '')

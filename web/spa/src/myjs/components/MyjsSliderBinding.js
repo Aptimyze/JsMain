@@ -19,7 +19,9 @@ export default class MyjsSliderBinding  {
     var _this=this;
     this.page = 1;
     this.indexElevate = indexElevate ? indexElevate : 0 ;
-
+    console.log(this.transformX_corr);
+    console.log(this.transformX);
+console.log(this.el.getBoundingClientRect().left);
 // dynamic variables
 // window.addEventListener("resize",function()
 // {
