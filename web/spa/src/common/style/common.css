@@ -1280,6 +1280,7 @@ border-radius: 32px;
 .z99{z-index: 99}
 .wid32p{width: 32%}
 .z1{z-index: 1}
+
 .animateLeft {
     transition: all .2s linear;
     transform: translate(0%, 0%) !important;
@@ -1289,3 +1290,5 @@ border-radius: 32px;
     transform: translate(0%, 0%) !important;
 }
 .posRight100p {transform: translate(100%, 0%);}
+
+.setmid{top:50%;left:50%;transform: translate(-50%,-50%);}
