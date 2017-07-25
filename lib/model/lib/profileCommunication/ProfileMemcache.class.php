@@ -423,21 +423,6 @@ class ProfileMemcache
         JsMemcache::getInstance()->delete(self::_getProfileKey($profileid));
     }
 
-    /**
-     * 
-     * Clears the cache data from redis.
-     * 
-     * <p>
-     * This function clears the current instance of ProfileMemcache class.
-     * </p>
-     *
-     * @access public
-     * @throws Exception
-     */
-    public static function flushRedisData($profileid)
-    {
-        JsMemcache::getInstance()->delete(self::_getProfileKey($profileid));
-    }
 
     /**
      * 
