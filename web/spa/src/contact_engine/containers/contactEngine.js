@@ -35,7 +35,7 @@ export class contactEngine extends React.Component{
   	if(action == 'INITIATE')
   		this.props.contactApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
   	if(action == 'REMINDER')
-
+  		this.props.reminderApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
   }
 
   render(){
@@ -134,7 +134,7 @@ const mapDispatchToProps = (dispatch) => {
             var url = '&stype=WMM&profilechecksum='+profilechecksum;
           else
             var url = '&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.REMINDER_API,url,'CONTACT_ACTION','POST',dispatch,true,{},tupleID);
+          return commonApiCall(CONSTANTS.REMINDER_API,url,'REMINDER','POST',dispatch,true,{},tupleID);
         },
         acceptApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
