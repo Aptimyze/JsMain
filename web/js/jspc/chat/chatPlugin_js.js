@@ -611,7 +611,7 @@ JsChat.prototype = {
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
-                    //console.log("ankita",data[key]["rosterDetails"]["groups"]);
+                    
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
                             //tab1ListingIds.push(key);
@@ -628,7 +628,7 @@ JsChat.prototype = {
                         var getNamelbl = fullname,
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
-                            nick = data[key]["rosterDetails"]["nick"]; //ankita for image
+                            nick = data[key]["rosterDetails"]["nick"]; //for image
                         List += '<li class=\"clearfix profileIcon\"';
                         List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-addIndex=\"" + data[key]["rosterDetails"]["addIndex"] + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
                         List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" onmousedown=\"return false;\" oncontextmenu=\"return false;\" class=\"fl wid40hgt40\">";
@@ -1099,7 +1099,7 @@ JsChat.prototype = {
     },
     //bind clicking close icon
     _bindClose: function (elem) {
-        //console.log("in _bindClose ankita");
+        
         var curElem = this;
         $(elem).off("click").on("click", function () {
             curElem._scrollDown($(this).closest("chat-box"), "remove");
@@ -1441,7 +1441,6 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     //console.log("nits",$(superParent));
                                     if ($(superParent).find("#sendInt").length != 0 || msgSendOutput['eoi_sent'] == true) {
-                                        //console.log("appending intsent msg ankita");
                                         if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false || msgSendOutput['eoi_sent'] == true){
                                             //console.log("Append yourinterest has been sent");
                                             $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
@@ -1661,10 +1660,6 @@ JsChat.prototype = {
     _getChatBoxType: function (userId, groupID, key) {
         //this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
-        //var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
-        //this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupID + "']").attr("id").split("_")[1]);
-        //var groupID = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("id").split("_")[1];
-        //this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
         if (typeof key == "undefined" || key != "updateChatBoxType") {
@@ -2282,7 +2277,7 @@ JsChat.prototype = {
                 now_mark_read = true;
                 read_class = "nchatic_9";
             }
-            if(typeof communication != "undefined"){
+            if(communication !== undefined && Object.keys(communication).length>0){
                 $.each(communication, function (key, logObj) {
                     latestMsgId = logObj["date"];
                     //console.log(logObj);
@@ -2698,10 +2693,10 @@ JsChat.prototype = {
         else if (($(this._listingPanelID).length == 0) && (this._loginStatus == "Y")) {
             //this._chatLoggerPlugin('case 2');
             if ($(curEle._loginPanelID).length == 0) {
-                //this._chatLoggerPlugin("ankita_1");
+                
                 //curEle._appendLoggedHTML();    
             } else {
-                //this._chatLoggerPlugin("ankita_2");
+               
                 $(curEle._loginPanelID).remove();
                 $("#blankPanelLoader").removeClass("disp-none");
                 // function () {
@@ -3128,9 +3123,9 @@ JsChat.prototype = {
         
 		if(type == "new"){
 			setTimeout(function(){ 
-               // console.log("ankita",data);
+               
 				$.each(data,function(index,elem){
-                    //console.log("here ankita",elem);
+                   
                     //console.log($("#"+elem["userId"]+"_"+elem["group"]));
 					//console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
                     $("#"+elem["userId"]+"_"+elem["group"]).click();
@@ -3321,12 +3316,7 @@ JsChat.prototype = {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
             }
-            /*
-            if (curEle._loginStatus == "Y") {
-                that._chatLoggerPlugin("ankita_logged in");
-                curEle._startLoginHTML();
-            }
-            */
+            
         });
         delete that;
         //auto login to chat on site relogin if flag true and login authentication success
@@ -3358,7 +3348,7 @@ JsChat.prototype = {
     //manage chat loader
     manageChatLoader: function (type) {
         if (type == "hide") {
-            //this._chatLoggerPlugin("hiding loader_ankita");
+            
             $("#scrollDivLoader").hide();
         }
     },
@@ -3376,7 +3366,7 @@ JsChat.prototype = {
     },
     //start:this function is that init forthe chat
     start: function () {
-        //console.log(my_action,"ankita1");
+        
         var divElement = document.createElement("Div");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         
