@@ -260,7 +260,8 @@ class MembershipHandler
         } else{
             if($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
                 $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
-                if($userType == memUserType::PAID_WITHIN_RENEW){
+                //if($userType == memUserType::PAID_WITHIN_RENEW)
+                {
                     $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
                     if ($this->lightningDealDiscount) {
                         $discountInfo["TYPE"] = discountType::LIGHTNING_DEAL_DISCOUNT;
