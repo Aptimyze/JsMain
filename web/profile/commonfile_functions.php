@@ -597,7 +597,7 @@ $js_arr[]=array("jspc/membership/jspc_mem_scrollpane" => "2");
 $js_arr[]=array("jspc/membership/jspc_mem_mousewheel" => "2");
 $js_arr[]=array("jspc/membership/jspc_mem_select_box" => "2");
 $js_arr[]=array("jspc/membership/jspc_mem_md5"   => "4");
-$js_arr[]=array("jspc/login/loginLayer_js"   => "56");
+$js_arr[]=array("jspc/login/loginLayer_js"    => "57");
 $js_arr[]=array("jspc/photoUpload/photoUpload_js"   => "4");
 $js_arr[]=array("jspc/photoUpload/addPhoto_js"   => "33");
 $js_arr[]=array("jspc/photoUpload/importPhotoAlbum_js"   => "12");

@@ -159,6 +159,7 @@ class Producer
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+            $this->channel->queue_declare(MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::INSTANT_EOI_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
@@ -312,6 +313,9 @@ class Producer
 
                 case 'DISCOUNT_HISTORY':
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DISC_HISTORY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                    break;
+                case 'COMMUNITY_DISCOUNT':
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                     break;
         case MQ::SCRIPT_PROFILER_PROCESS:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCRIPT_PROFILER_Q,MQ::MANDATORY,MQ::IMMEDIATE);
