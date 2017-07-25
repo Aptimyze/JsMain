@@ -6,6 +6,7 @@
 class LastSearchBasedMatchAlertsStrategy extends MatchAlertsStrategy {
 
         private $dontShowFilteredProfiles = 'N';
+        private $removeFiltered = 1;
         private $ordered = 1;
 
         /**
@@ -28,7 +29,7 @@ class LastSearchBasedMatchAlertsStrategy extends MatchAlertsStrategy {
          */
         public function getMatches() {
                 $this->searchObj = new lastSearchResults($this->loggedInProfileObj);
-                $this->searchObj->getLastSearchResultCriteria($this->limit,$this->sort,$this->ordered);
+                $this->searchObj->getLastSearchResultCriteria($this->limit,$this->sort,$this->ordered,$this->removeFiltered);
                 $SearchServiceObj = new SearchService($this->searchEngine, $this->outputFormat, 0);
                 $SearchUtilityObj = new SearchUtility;
                 $arr = $this->getSearchResult($SearchServiceObj, $SearchUtilityObj);
