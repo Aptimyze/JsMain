@@ -336,6 +336,7 @@
  <field name="VERIFICATION_SEAL" type="string" indexed="true" stored="true" />
  <field name="NAME_OF_USER" type="string" indexed="true" stored="true" />
  <field name="PAID_ON" type="date" indexed="true" stored="true" />
+ <field name="KNOWN_COLLEGE" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
  </fields>
 
  <!-- Field to use to determine and enforce document uniqueness. 

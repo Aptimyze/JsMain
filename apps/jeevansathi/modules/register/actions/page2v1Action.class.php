@@ -28,7 +28,10 @@ class page2v1Action extends sfAction {
 				$today = CommonUtility::makeTime(date("Y-m-d"));
 				$values_that_are_not_in_form = array('INCOMPLETE' => 'N','ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
         $this->form->updateData($profileid,$values_that_are_not_in_form);
-        
+                
+                //Added Community wise Welcome discount
+                $memHandlerObj = new MembershipHandler();
+                $memHandlerObj->addCommunityWelcomeDiscount($profileid,$this->loginProfile->getMTONGUE());
 				
 
   			//Communicate to user through email and sms starts
