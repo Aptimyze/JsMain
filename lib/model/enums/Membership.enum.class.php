@@ -97,7 +97,7 @@ class VariableParams
                                         );
 
     public static $lightningDealOfferConfig = array(
-                                        "lastLoggedInOffset" => 15,
+                                        "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 15,
                                         "pool2FilterPercent" => 100,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
@@ -688,6 +688,12 @@ class VariableParams
     public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
     
     public static $lightningDealDuration = '30'; //in minutes;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME = 86400;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_KEY = "CommunityWelcomeDiscount";
+    
+    const COMMUNITY_WELCOME_DISCOUNT_DURATION = "2"; //in days
 }
 class discountType
 {

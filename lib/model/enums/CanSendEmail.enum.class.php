@@ -11,6 +11,9 @@ class CanSendEnums
 			"27" => "SERVICE_MAILS",//top 8 mailers
 			"22" => "SERVICE_MAILS",   //phone verification mailer
 			"5" => "CONTACT_ALERT_MAILS", //eoi mailers
+			"2" => "CONTACT_ALERT_MAILS", //acceptance mailers
+			"13" => "CONTACT_ALERT_MAILS", //write messaage mailers
+			"42" => "CONTACT_ALERT_MAILS", //shortlisted  mailers
 			"SAVED_SEARCH" => "PERSONAL_MATCHES"
 			));
 	public static $fieldMap = array(
