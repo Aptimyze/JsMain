@@ -6378,7 +6378,15 @@ updateEduLevelChanges =function(eduLevelVal)
     {
 	var caste = editAppObject[BASIC]["CASTE"];
 	if(caste!=undefined && caste!='' && caste.hasOwnProperty("value"))
+	{
 		onCasteChange(caste.value);
+	}
+	else
+	{
+		var jamaatFieldObject = editAppObject[BASIC]["JAMAAT"];
+		showHideField(jamaatFieldObject,"hide",true);
+	}
+
     }
     /*
      * initUGAndPGDegreeMap
