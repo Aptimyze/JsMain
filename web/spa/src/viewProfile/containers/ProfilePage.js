@@ -51,7 +51,6 @@ class ProfilePage extends React.Component {
         if(props.fetchedProfilechecksum != false) {
             this.state.callApi = true;
         }
-        
 
     }
 
@@ -84,7 +83,6 @@ class ProfilePage extends React.Component {
             let parentObj,nextObj,prevObj;
             for (var i=0; i< listingArray.length; i++) {
                 if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
-                    this.setState({listingName:listingArray[i]});
                     parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
                         nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
@@ -150,6 +148,7 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {   
+            console.log("button",nextProps.buttonDetails)   
         if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
@@ -284,14 +283,14 @@ class ProfilePage extends React.Component {
     render() 
     {   
         var contactEngineView;
-        if(this.state.listingName != "" && this.state.dataLoaded == true) {
-            let buttondata = {
+        if(this.state.dataLoaded == true) {
+            let profiledata = {
                 profilechecksum : this.state.profilechecksum,
                 responseTracking: this.state.responseTracking,
                 profileThumbNailUrl: this.props.AboutInfo.thumbnailPic || this.state.defaultPicData,
                 username:this.props.AboutInfo.username
             };
-            contactEngineView = <ContactEngineButton buttondata={buttondata} buttonName={this.state.listingName} pagesrcbtn="pd"/>;
+            contactEngineView = <ContactEngineButton profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
         }
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
@@ -429,7 +428,6 @@ class ProfilePage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       responseMessage: state.ProfileReducer.responseMessage,
        AboutInfo: state.ProfileReducer.aboutInfo,
        FamilyInfo: state.ProfileReducer.familyInfo,
        DppInfo: state.ProfileReducer.dppInfo,
@@ -441,7 +439,8 @@ const mapStateToProps = (state) => {
        show_gunascore:state.ProfileReducer.show_gunascore,
        fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
        myjsData: state.MyjsReducer,
-       Jsb9Reducer : state.Jsb9Reducer
+       Jsb9Reducer : state.Jsb9Reducer,
+       buttonDetails: state.ProfileReducer.buttonDetails
     }
 }
 
