@@ -40,13 +40,6 @@ componentDidMount(){
 }
 
  componentWillReceiveProps(nextProps){
-
-   console.log('in myjs bar');
-   console.log(nextProps.contact.tupleID);
-
-   console.log('working 1');
-   //console.log(nextProps);
-
     if(nextProps.contact.contactDone) {
         console.log('interest sent slider');
     }
@@ -55,21 +48,38 @@ componentDidMount(){
     }
     if(nextProps.contact.declineDone)
     {
-       console.log('decline done slider');
+       this.removeMyjsTuple(nextProps.contact.tupleID);
+    }
+}
+removeMyjsTuple(param){
+  let e = document.getElementById(param);
+  let transitionEvent = this.whichTransitionEvent();
+  transitionEvent && e.addEventListener(transitionEvent, function() {
+      e.parentNode.removeChild(e);
+  });
+  e.classList.add("setop0");
+}
+whichTransitionEvent(){
+    let t;
+    let el = document.createElement('fakeelement');
+    let transitions = {
+      'transition':'transitionend',
+      'OTransition':'oTransitionEnd',
+      'MozTransition':'transitionend',
+      'WebkitTransition':'webkitTransitionEnd'
+    }
+
+    for(t in transitions){
+        if( el.style[t] !== undefined ){
+            return transitions[t];
+        }
     }
 }
 showLoader(param){
-
-    console.log('in show loader');
-
-    console.log(param);
-
     let z = document.createElement('IMG');
     z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
     z.setAttribute("class","posabs setmid");
-    console.log(z);
     document.getElementById(param).appendChild(z);
-
 }
 
 bindSlider(){
@@ -117,7 +127,7 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => (
-                <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
+                <div key={index} className="mr10 dispibl ml0 posrel rmtuple" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
 
                   <div className="bg4 overXHidden" id="hideOnAction">
