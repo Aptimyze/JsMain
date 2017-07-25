@@ -52,7 +52,7 @@ class SocialSigninAction extends sfActions
 		$postParams = json_encode(array(
 			"access_token" => $access_token,
 			"appsecret_proof" => $this->generateProof($access_token),
-			"batch" => '[{"method":"GET", "relative_url":"me?fields=email,birthday,name,gender,first_name,location,user_photos,relationship_status,last_name,middle_name,picture,permissions,friends,interested_in,languages,education,locale,is_verified,religion"},]'
+			"batch" => '[{"method":"GET", "relative_url":"me?fields=email,birthday,name,gender,first_name,location,albums{photos{picture}},relationship_status,last_name,middle_name,picture,permissions,friends,interested_in,languages,education,locale,is_verified,religion"},]'
 			));
 		$headerArr = array('Content-Type:application/json');
 		return CommonFunction::sendCurlPostRequest(SocialSigninAction::GRAPHAPIURL,$postParams,"",$headerArr,"POST");
@@ -63,10 +63,17 @@ class SocialSigninAction extends sfActions
 	* @brief function to generate authchecksum from email
 	* @param $userEmail - email for which authchecksum is to be generated
 	*/
-	private function generateAuthchecksum($userEmail){
+	private function generateAuthchecksum($userEmail,$registrationid){
 		$authenticationLoginObj= new AppAuthentication();
 		$data = $authenticationLoginObj->createFacebookAuthCheckum($userEmail);
-		return $data['AUTHCHECKSUM'];
+		if(CommonFunction::getMainMembership($data[SUBSCRIPTION]))
+					$subscription=CommonFunction::getMainMembership($data[SUBSCRIPTION]);
+				else
+					$subscription="";
+		$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$data['PROFILEID'])?"1":"0";
+		$notificationStatus = NotificationFunctions::settingStatus($registrationid,$data['PROFILEID']);				
+		$loginData=array("GENDER"=>$data[GENDER],"USERNAME"=>$data[USERNAME],"INCOMPLETE"=>$data[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus,"RELIGION"=>$data[RELIGION]);
+		return $loginData;
 	}
 
 	/**
@@ -77,7 +84,8 @@ class SocialSigninAction extends sfActions
 	public function execute($request)
 	{	
 		$access_token = $request->getParameter("access_token");
-		
+		$registrationid=$request->getParameter("registrationid");
+
 		// create object of apiresponsehandler
 		$respObj = ApiResponseHandler::getInstance();
 
@@ -102,7 +110,7 @@ class SocialSigninAction extends sfActions
 				$responseData["is_activate"] = $this->checkEmailDB($userEmail);
 				// generating authchecksum
 				if($responseData["is_activate"] != 'D'){
-					$authchecksum = $this->generateAuthchecksum($userEmail);
+					$authchecksum = $this->generateAuthchecksum($userEmail,$registrationid);
 					if($authchecksum){
 						$respObj->setAuthChecksum($authchecksum);
 					}
