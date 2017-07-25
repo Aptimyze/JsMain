@@ -197,6 +197,7 @@ class jsexclusiveActions extends sfActions {
         $serviceDayArr = $exclusiveServicingObj->getServiceDay($this->client);
         $this->serviceDay = $serviceDayArr[0];
         $this->serviceDaySetDate = $serviceDayArr[1];
+        $emailStage = $serviceDayArr[2];
         
         $countArr = $exclusiveServicingObj->getDayWiseAssignedCount($agent);
         $this->dayWiseCountArr = array('MON'=>($countArr['MON']==''?0:$countArr['MON'])
@@ -209,7 +210,32 @@ class jsexclusiveActions extends sfActions {
         if($submit){
             $this->serviceDay = $request['serviceDay'];
             $this->serviceDaySetDate = date('Y-m-d');
-            $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay);
+            $emailStage = 'Q';//Marking Email stage as pending in queue
+            $status = $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay,$emailStage);
+            if($status == true && $emailStage!='S'){
+                //Push to RabbitMQ delayed queue to send "After Welcome Call Email"
+                $exclusiveObj = new ExclusiveFunctions();
+                $pswrd = new jsadmin_PSWRDS();
+                $agentDetails = $pswrd->getExecutiveDetails($agent);
+                $fromName=$agentDetails['FIRST_NAME'] . $agentDetails['LAST_NAME'];     //Complete Name for alias in email
+                $fromEmail=$agentDetails['EMAIL'];
+                $firstname=$agentDetails['FIRST_NAME'];
+                $phone = $agentDetails['PHONE'];
+                $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay);
+                $producerObj=new Producer();
+                if($producerObj->getRabbitMQServerConnected()){
+                    $sendMailData = array('process' =>'EXCLUSIVE_DELAYED_EMAIL',
+                                            'data'=>array('type' => 'EXCLUSIVE_WELCOME_EMAIL',
+                                                            'fromName'=>$fromName,
+                                                            'profileid'=>$this->client,
+                                                            'firstname'=>$firstname,
+                                                            'phone'=>$phone,
+                                                            'serviceDay'=>$serviceDay,
+                                                            'senderEmail'=>$fromEmail),
+                                            'redeliveryCount'=>0 );
+                    $producerObj->sendMessage($sendMailData);
+                }
+            }
         }
         
         
