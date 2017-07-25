@@ -1,5 +1,6 @@
 var page = require('webpage').create();
 var system = require('system');
+var apiServer = 'https://www.jeevansathi.com/';
 
 var lastReceived = new Date().getTime();
 var requestCount = 0;
@@ -30,7 +31,17 @@ page.onResourceRequested = function (request) {
     }
 };
 
-page.open(system.args[1], function () {});
+
+var url = system.args[1];
+
+if ( url.indexOf(apiServer) !== -1)
+{
+  page.open(url, function () {});
+}
+else
+{
+  console.log("url is not found."); 
+}
 
 var checkComplete = function () {
   

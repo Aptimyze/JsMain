@@ -82,6 +82,19 @@ export class contactEngine extends React.Component{
               </div>
             </div>
           );
+        } else if(this.props.buttondata.buttons.primary[0].action == "REMINDER" || this.props.buttondata.buttons.primary[0].action == "INITIATE") {
+          return(<div id="buttons1" className="view_ce fullwid">
+            <div className="fullwid bg7 txtc pad5new posrel" >
+              <div className="wid60p">
+                <i className="mainsp msg_srp"></i>
+                <input className="inputProChecksum" type="hidden" value={this.props.profiledata.profilechecksum}></input>
+                <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>
+                <div className="white">{this.props.buttondata.buttons.primary[0].label}</div>
+              </div>
+              <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+            </div>
+          </div>
+          );
         }
       }
     }

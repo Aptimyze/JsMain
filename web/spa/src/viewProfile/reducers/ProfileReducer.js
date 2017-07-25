@@ -11,6 +11,7 @@ const ProfileReducer = (state={
 	profileId: '',
 	show_gunascore: "",
 	gunaScore: [],
+	pageInfo: [],
 	fetchedProfilechecksum: false,
 	buttonDetails: []
 },action) => {
@@ -29,6 +30,7 @@ const ProfileReducer = (state={
 			dpp_Ticks:action.payload.dpp_Ticks,
 			profileId:action.payload.page_info.profilechecksum,
 			show_gunascore: action.payload.show_gunascore,
+			pageInfo: action.payload.page_info,
 			fetchedProfilechecksum: action.payload.about.username,
 			buttonDetails: action.payload.buttonDetails
 		}
