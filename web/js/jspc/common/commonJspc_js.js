@@ -44,7 +44,8 @@ function GAMapper(GAEvent, extraParams={}){
             }
         }
     }
-    catch() {
+    catch(err) {
+        return;
     }
 }
 
