@@ -2319,7 +2319,6 @@ JsChat.prototype = {
                             if(removeFreeMemMsg == false && $('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
                                 //if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                 removeFreeMemMsg = true;
-                                //console.log("enabling text box realtime in _appendChatHistory");
                                 curElem._enableChatAfterPaidInitiates(other_id);
                                 //}
                             }
@@ -2337,7 +2336,6 @@ JsChat.prototype = {
                 }
             }
             if(latestMsgId != ""){
-                //console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
             var selfJID = getConnectedUserJID();
@@ -2355,11 +2353,7 @@ JsChat.prototype = {
     },
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
-        //console.log("appending self sent msg");
         var curElem = this;
-        /*if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-            $(".profileIcon[id^='" + userId + "']")[0].click();
-        }*/
         if ($('chat-box[user-id="' + userId + '"]').length != 0){
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
@@ -2379,10 +2373,8 @@ JsChat.prototype = {
     _enableChatAfterPaidInitiates: function(userId,type){
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
-            //console.log("removing");
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
         }
-        //console.log("222");
         if(typeof type == "undefined" || type != "disable"){
             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
         }
@@ -2402,7 +2394,7 @@ JsChat.prototype = {
             'CHATID': uniqueId,
             'ID': ''
         };
-        //console.log("in _appendRecievedMessage");
+        
         //append received message in chatbox
         
         if (message == chatConfig.Params[device].rejectObsceneMsg){
@@ -2413,11 +2405,9 @@ JsChat.prototype = {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-                //console.log("msg from history1",uniqueId);
                 appendMsg = false; //as this msg already exists in history
                 var checkInterval = 0;
                 var chatBoxOpenInterval = setInterval(function(){
-                    //console.log("checking",$(".profileIcon[id^='" + userId + "']"));
                     if($(".profileIcon[id^='" + userId + "']").length == 1){
                         $(".profileIcon[id^='" + userId + "']")[0].click();
                         if(appendMsg == false){
@@ -2429,12 +2419,10 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
                             }
                             else if($('#extra_'+userId).length == 0){
-                                //console.log("add here....uncomment",uniqueId);
                                 //mark this msg read on sender side
                                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
                             }
                         },500);
-                        //console.log("clear interval");
                         clearInterval(chatBoxOpenInterval);
                     }
                     else{
@@ -2458,21 +2446,20 @@ JsChat.prototype = {
                     curEle._enableChatAfterPaidInitiates(userId,"disable");
                 }
             }
-            //console.log("appendMsg",appendMsg);
+            
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
                 //adding msg in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
             else{
-                //console.log("marking as read",uniqueId);
+                
                 //mark this msg read on sender side
                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
             }
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
-                //console.log("11");
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             //mark all unread msgs as read
@@ -2481,7 +2468,6 @@ JsChat.prototype = {
             //adding bubble for minimized tab
                 setTimeout(function(){
                     
-                //console.log("InTimeout",$('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin"));
                     if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                         val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
@@ -2551,14 +2537,11 @@ JsChat.prototype = {
     rosterDeleteChatBoxReponse: null,
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
-        //console.log("in disablechatPanelsBox");
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
-                //console.log("disabling1",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                 setTimeout(function(){
                     if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
-                       //console.log("disabling2",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
                             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
@@ -2574,7 +2557,7 @@ JsChat.prototype = {
                                         if((currentT - rosterMsgTime)> 500){
                                             var selfJID = getConnectedUserJID();
                                             curElem.rosterDeleteChatBoxReponse(selfJID,userId);
-                                            //console.log("added 1");
+                                            
                                             rosterMsgTime = currentT;
                                             }
                                         }
@@ -2586,7 +2569,6 @@ JsChat.prototype = {
                     }  
                 },1000);
             }
-            //console.log("setting migrated",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
             $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","false");
         }
     },
@@ -2601,16 +2583,13 @@ JsChat.prototype = {
     _onlineUserMsgMe: function () {
         var noOfInputs = 0;
         $("chat-box .chatBoxBar .pinkBubble2").each(function (index, element) {
-            //console.log(element);
             if ($(this).find(".noOfMessg").html() != 0) {
                 noOfInputs++;
             }
         });
-        //console.log("noOfInputs",noOfInputs);
+        
        $(".extraChatList .pinkBubble").each(function (index, element) {
            var userId = $(this).parent().attr("id").split("_")[1];
-           //console.log("userManvi",userId);
-           //console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
            if ($(this).find(".noOfMessg").html() != 0 && $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html() == 0) {
                 noOfInputs++;
            }
@@ -2670,9 +2649,8 @@ JsChat.prototype = {
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
         var curElem = this;
         if (messgId) {
-            //this._chatLoggerPlugin("Change status" + newStatus);
+            
             if (newStatus == "recieved") {
-                //console.log("marked");
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
             } else if (newStatus == "recievedRead") {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
@@ -2771,17 +2749,14 @@ JsChat.prototype = {
         var str = '';
         var TotalBtn = '',
             widCal = '';
-        //console.log(groupButtons, "Nitish");
+        
         TotalBtn = groupButtons.length;
-        //this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
+       
         widCal = parseInt(100 / TotalBtn);
-        //this._chatLoggerPlugin('widCal: ' + widCal);
-        //this._chatLoggerPlugin("BB");
+        
         var that = this;
         $.each(groupButtons, function (k, v) {
-            //that._chatLoggerPlugin(k);
-            //that._chatLoggerPlugin(v);
-            //that._chatLoggerPlugin("KKKKKK" + v.action);
+            
             if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
                 str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
             } else {
@@ -3055,9 +3030,8 @@ JsChat.prototype = {
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function () {
         if ($('#js-lsitingPanel').length == 0) {
-            //console.log("in _appendLoggedHTML");
+            
             var curEle = this;
-            //this._chatLoggerPlugin('_appendLoggedHTML');
             $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
                 curEle._addChatTop();
                 curEle.addTab();
@@ -3068,7 +3042,7 @@ JsChat.prototype = {
     },
     
     _changeLocalStorage:function(type,userId,groupId,newState) {
-        //console.log("inside function",type,userId,groupId,newState);
+        
         var thisElem = this;
         var data = [];
         var reAdd = true;
@@ -3143,14 +3117,14 @@ JsChat.prototype = {
     },
     
     _updateChatStructure:function(type) {
-		//console.log("inside update function",type);
+		
 		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
 		if(localStorage.getItem("chatBoxData")) {
 			data = JSON.parse(localStorage.getItem("chatBoxData"));
 		}
-        //console.log("localstorage",data);
+       
         
 		if(type == "new"){
 			setTimeout(function(){ 
