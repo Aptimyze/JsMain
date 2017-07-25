@@ -72,7 +72,15 @@ class SocialSigninAction extends sfActions
 					$subscription="";
 		$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$data['PROFILEID'])?"1":"0";
 		$notificationStatus = NotificationFunctions::settingStatus($registrationid,$data['PROFILEID']);				
-		$loginData=array("GENDER"=>$data[GENDER],"USERNAME"=>$data[USERNAME],"INCOMPLETE"=>$data[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus,"RELIGION"=>$data[RELIGION]);
+		$loginData=array("GENDER"=>$data[GENDER],
+						"USERNAME"=>$data[USERNAME],
+						"INCOMPLETE"=>$data[INCOMPLETE],
+						"SUBSCRIPTION"=>$subscription,
+						"LANDINGPAGE"=>'1',
+						"GCM_REGISTER"=>$done,
+						"NOTIFICATION_STATUS"=>$notificationStatus,
+						"RELIGION"=>$data[RELIGION], 
+						"AUTHCHECKSUM" => $data[AUTHCHECKSUM]);
 		return $loginData;
 	}
 
@@ -112,8 +120,19 @@ class SocialSigninAction extends sfActions
 				if($responseData["is_activate"] != 'D'){
 					$authchecksum = $this->generateAuthchecksum($userEmail,$registrationid);
 					if($authchecksum){
-						$respObj->setAuthChecksum($authchecksum);
+						$respObj->setAuthChecksum($authchecksum['AUTHCHECKSUM']);
 					}
+					$responseData["GENDER"] 		= $authchecksum["GENDER"];
+					$responseData["USERNAME"] 		= $authchecksum["USERNAME"];
+					$responseData["INCOMPLETE"] 	= $authchecksum["INCOMPLETE"];
+					$responseData["GCM_REGISTER"] 	= $authchecksum["GCM_REGISTER"];
+					$responseData["LANDINGPAGE"] 	= $authchecksum["LANDINGPAGE"];
+					$responseData["SUBSCRIPTION"] 	= $authchecksum["SUBSCRIPTION"];
+					$responseData["NOTIFICATION_STATUS"] = $authchecksum["NOTIFICATION_STATUS"];
+					$responseData["RELIGION"] 		= $authchecksum["RELIGION"];
+
+
+
 				}
 				$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			}// end inner else
