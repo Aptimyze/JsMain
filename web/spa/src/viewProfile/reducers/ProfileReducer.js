@@ -13,6 +13,7 @@ const ProfileReducer = (state={
 	gunaScore: [],
 	pageInfo: [],
 	fetchedProfilechecksum: false
+	buttonDetails: []
 },action) => {
 	switch(action.type)
 	{
@@ -30,7 +31,8 @@ const ProfileReducer = (state={
 			profileId:action.payload.page_info.profilechecksum,
 			show_gunascore: action.payload.show_gunascore,
 			pageInfo: action.payload.page_info,
-			fetchedProfilechecksum: action.payload.about.username
+			fetchedProfilechecksum: action.payload.about.username,
+			buttonDetails: action.payload.buttonDetails
 		}
 		break;
 		case "SHOW_HISTORY_INFO":
