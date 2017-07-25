@@ -415,11 +415,12 @@ class ProfileMemcache
     public static function clearInstance($profileid)
     {
         if (isset(self::$_instance[$profileid])) {
-            JsMemcache::getInstance()->delete(self::$_instance[$profileid]->_getProfileKey($profileid));
+
             unset(self::$_instance[$profileid]);
         } else {
             //      jsException::log("Please set the instance first by calling \"getInstance\" method.");
         }
+        JsMemcache::getInstance()->delete(self::_getProfileKey($profileid));
     }
 
     /**
