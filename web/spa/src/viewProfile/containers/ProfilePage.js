@@ -148,16 +148,25 @@ class ProfilePage extends React.Component {
 
     }
     showLoaderDiv() {
-         this.setState({
+        this.setState({
             showLoader:true
-        });  
+        });
+        document.getElementById("swipePage").classList.add("animateLeft");
+        this.setState ({
+            dataLoaded : false
+        });
+        jsb9Fun.flushJSB9Obj(this);
+        this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+        this.props.history.push(this.state.nextUrl);
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
+        this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);  
     }
     componentWillReceiveProps(nextProps)
     {
         if(nextProps.contactAction.declineDone){
             this.setState({
-            showLoader:false
-        });      
+                showLoader:false
+            });      
         }
         console.log("button",nextProps.buttonDetails)   
         if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
