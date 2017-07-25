@@ -14,7 +14,7 @@ class SocialSigninAction extends sfActions
 	/**
 	* @const app secret for FB app
 	*/
-	const APPSECRET = "775d11b4ebb8dc803ff439cb59fc292a";
+	const APPSECRET = "5b3a858a007757d76aab1bb9497a25ae";//"775d11b4ebb8dc803ff439cb59fc292a";
 	/**
 	* @const facebook graph api url
 	*/
@@ -63,7 +63,7 @@ class SocialSigninAction extends sfActions
 	* @brief function to generate authchecksum from email
 	* @param $userEmail - email for which authchecksum is to be generated
 	*/
-	private function generateAuthchecksum($userEmail,$registrationid){
+	private function generateLoginData($userEmail,$registrationid){
 		$authenticationLoginObj= new AppAuthentication();
 		$data = $authenticationLoginObj->createFacebookAuthCheckum($userEmail);
 		if(CommonFunction::getMainMembership($data[SUBSCRIPTION]))
@@ -118,18 +118,18 @@ class SocialSigninAction extends sfActions
 				$responseData["is_activate"] = $this->checkEmailDB($userEmail);
 				// generating authchecksum
 				if($responseData["is_activate"] != 'D'){
-					$authchecksum = $this->generateAuthchecksum($userEmail,$registrationid);
-					if($authchecksum){
-						$respObj->setAuthChecksum($authchecksum['AUTHCHECKSUM']);
+					$loginData = $this->generateLoginData($userEmail,$registrationid);
+					if($loginData){
+						$respObj->setAuthChecksum($loginData['AUTHCHECKSUM']);
+						$responseData["GENDER"]           = $loginData["GENDER"];
+						$responseData["USERNAME"]         = $loginData["USERNAME"];
+						$responseData["INCOMPLETE"]       = $loginData["INCOMPLETE"];
+						$responseData["GCM_REGISTER"]     = $loginData["GCM_REGISTER"];
+						$responseData["LANDINGPAGE"]      = $loginData["LANDINGPAGE"];
+						$responseData["SUBSCRIPTION"]     = $loginData["SUBSCRIPTION"];
+						$responseData["NOTIFICATION_STATUS"] = $loginData["NOTIFICATION_STATUS"];
+						$responseData["RELIGION"]         = $loginData["RELIGION"];
 					}
-					$responseData["GENDER"] 		= $authchecksum["GENDER"];
-					$responseData["USERNAME"] 		= $authchecksum["USERNAME"];
-					$responseData["INCOMPLETE"] 	= $authchecksum["INCOMPLETE"];
-					$responseData["GCM_REGISTER"] 	= $authchecksum["GCM_REGISTER"];
-					$responseData["LANDINGPAGE"] 	= $authchecksum["LANDINGPAGE"];
-					$responseData["SUBSCRIPTION"] 	= $authchecksum["SUBSCRIPTION"];
-					$responseData["NOTIFICATION_STATUS"] = $authchecksum["NOTIFICATION_STATUS"];
-					$responseData["RELIGION"] 		= $authchecksum["RELIGION"];
 
 
 
