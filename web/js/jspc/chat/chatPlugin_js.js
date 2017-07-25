@@ -181,7 +181,7 @@ JsChat.prototype = {
         }
 
         $.each(data, function(index,elem){
-            //console.log("data",data);
+           
             if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
                 $("#"+elem["userId"]+"_"+elem["group"]).click();    
             }
@@ -268,7 +268,7 @@ JsChat.prototype = {
                 curEle.minimizedPanelHTML();
             }).promise().done(function () {
                 $(curEle._maxChatBarOut).click(function () {
-                    //console.log('aaa1');
+                    
                     curEle._maximizeChatPanel();
                 });
             });
@@ -285,7 +285,7 @@ JsChat.prototype = {
     _chatTabs: function (param,type) {
         var curElem = this;
         if($('#' + param).hasClass("active") == false) {
-            //console.log("param",param);
+            
             curElem._changeLocalStorage("tabStateChange","","",param);
             /*if(param == "tab1") {
                 curElem._changeLocalStorage("tabStateChange","","","online");
@@ -323,7 +323,7 @@ JsChat.prototype = {
             //apiParams["pid"] = jidStr.slice(0, -1);
             apiParams["photoType"] = "ProfilePic120Url";
             apiParams["initialList"] = true;
-            //console.log("request2");
+            
             requestListingPhoto(apiParams);
         }
     },
@@ -360,7 +360,6 @@ JsChat.prototype = {
     },
     //start:addChatTop function
     _addChatTop: function (param) {
-        //console.log("add chat top",this._selfName);
         var curEleRef = this,
             that = this;
         
@@ -391,9 +390,7 @@ JsChat.prototype = {
             }
         });
         $(curEleRef._logoutChat).click(function () {
-            //console.log("Site logout clicked");
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
-                //that._chatLoggerPlugin("in if");
                 var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
                 curEleRef.onLogoutPreClick(fromSiteLogout);
             }
@@ -405,16 +402,13 @@ JsChat.prototype = {
     },
     //start:set height for the listing scroll div
     _chatScrollHght: function () {
-        //this._chatLoggerPlugin('cal scroll div');
         var totalHgt = this._getHeight();
         var remHgt = parseInt(totalHgt) - 140;
-        //this._chatLoggerPlugin(remHgt);
-        //this._chatLoggerPlugin(this._scrollDivId);
         $(this._scrollDivId).css('height', remHgt);
     },
     //start:add tab
     addTab: function () {
-        //console.log("addTab");
+        
         //this script is same as old one shared eariler need to be reworked as discussed
         //this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
@@ -472,7 +466,6 @@ JsChat.prototype = {
         if(localStorage.getItem("tabState") == undefined) {
             curEle._changeLocalStorage("tabStateChange","","",curEle._defaultActiveTab);    
         } else { 
-            //console.log("tabstate",localStorage.getItem("tabState"));
             curEle._chatTabs(localStorage.getItem("tabState"),"noAnimate");
         }
     },
@@ -482,7 +475,6 @@ JsChat.prototype = {
         $(".js-htab").each(function (index, element) {
             dataLength = 0;
             $(this).find(".chatlist").each(function (index2, element2) {
-                //that._chatLoggerPlugin($(this).find("li").length);
 		if (!$(this).hasClass('jsNonRosterGroup'))
 	                dataLength = dataLength + $(this).find("li").length;
             });
