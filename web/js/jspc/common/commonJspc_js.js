@@ -1,7 +1,7 @@
 function GAMapper(GAEvent, extraParams={}){
-    var Status = "Unregistered";
-    if(typeof(loggedInJspcGender) != "undefined"){
-        Status = loggedInJspcGender;
+    var userStatus = "Unregistered";
+    if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
+        userStatus = loggedInJspcGender;
     }
     var GAMapping = {
         // verify otp layer
@@ -22,18 +22,21 @@ function GAMapper(GAEvent, extraParams={}){
         "GA_TOPBAR_FORGOT"      :["E", "login", "Forgot Password"],
         "GA_LL_FORGOT"          :["E", "login layer", "Forgot Password"],
         "GA_FORGOTL_SENDLINK"   :["E", "Forgot Password", "Send link to reset"],
+        "GA_SEARCH_LOGGEDOUT_PROFILE" : ["E", "Search results logged out", "profile"],
+        "GA_SEARCH_LOGGEDOUT_ALBUM": ["E", "Search results logged out", "album"],
+        "GA_SEARCH_LOGGEDOUT_EOI": ["E", "Login Layer", extraParams['type'] || ''],
         // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
         "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
         // 
         "GAV_LL_SHOW"           :["V", "Login Layer"],
 
-        "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] || '', extraParams['button'] || ''],
-        "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'], extraParams['button']],
+        "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] + extraParams['button']],
+        "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] + extraParams['button']],
 
     }
     if(GAMapping[GAEvent]){
         if(GAMapping[GAEvent][0] == "E"){
-            trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], Status);
+            trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
         }else if(GAMapping[GAEvent][0] == "V"){
             _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
         }

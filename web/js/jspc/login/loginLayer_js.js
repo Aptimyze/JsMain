@@ -325,15 +325,26 @@ function LoginBinding()
                 if($(this).hasClass("loginAlbumSearch")){
                 	/* flag for user action resulting for login layer */
                 	LoginLayerByUserActions = true;
+                	/* GA tracking */
+                	GAMapper("GA_SEARCH_LOGGEDOUT_ALBUM");
 					$("#loginRegistration").addClass("loginAlbumSearch");
 					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
 				}
 				else if($(this).hasClass("loginProfileSearch")){
 					/* flag for user action resulting for login layer */
                 	LoginLayerByUserActions = true;
+					/* GA tracking */
+                	GAMapper("GA_SEARCH_LOGGEDOUT_PROFILE");
 					$("#loginRegistration").addClass("loginProfileSearch");
 					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
 				}
+
+				/* GA tracking */
+				var SplitId = this.id.split('-'); 
+				if(SplitId.length == 3){
+					GAMapper("GA_SEARCH_LOGGEDOUT_EOI", {"type": SplitId[0]});
+				}
+
                 $('#cls-login').click(function() {
                   //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {
