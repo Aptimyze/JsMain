@@ -297,6 +297,7 @@ header, section, footer, aside, nav, article, figure {
 .hgt180 {
 	height:180px
 }
+.hgt85{height: 85px}
 .minhgt199 {
 	min-height:199px
 }
@@ -1279,65 +1280,15 @@ border-radius: 32px;
 .z99{z-index: 99}
 .wid32p{width: 32%}
 .z1{z-index: 1}
-.ot_chk {
-    background-position: -185px -206px;
-    width: 34px;
-    height: 20px;
-}
-.newitcross {
-    background-position: -196px -180px;
-    width: 22px;
-    height: 20px;
-}
-.ot_sprtie {
-    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
-    background-repeat: no-repeat;
-}
-.msg_srp {
-    background-position: -204px -24px;
-    width: 22px;
-    height: 14px;
-}
-.mainsp {
-    background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/main-sprite_new_1.png);
-    background-repeat: no-repeat;
-}
-.srp_pos2 {
-	top: 0;
-    right: 0;
-    padding: 10px 5px;	
-}
 
-.threedot1 {
-	    background-position: -207px -56px;
-    width: 16px;
-    height: 39px;
+.animateLeft {
+    transition: all .2s linear;
+    transform: translate(0%, 0%) !important;
 }
-.srpoverlay_2 {
-    width: 100%;
-    position: absolute;
-    left: 0%;
-    z-index: 109;
+.animateLeftSlow {
+    transition: all .5s linear;
+    transform: translate(0%, 0%) !important;
 }
-.threeDotOverlay {
-	position: absolute;
-	top:50%;
-	transform: translate(0%, -50%);
-    -webkit-transform: translate(0,-50%);
-}
-.photoDiv {
-	border: 1px solid rgb(255,255,255);
-	border: 1px solid rgba(255,255,255,0.2);  
-	overflow:hidden; 
-	width: 90px; 
-	height: 90px; 
-	border-radius: 45px;
-}
-.pl15{padding-left: 15px}
-.pr15{padding-right: 15px}
-.mt45{margin-top: 45px}
-.srp_close1 {
-    width: 25px;
-    height: 23px;
-    background-position: -160px -228px;
-}
+.posRight100p {transform: translate(100%, 0%);}
+
+.setmid{top:50%;left:50%;transform: translate(-50%,-50%);}

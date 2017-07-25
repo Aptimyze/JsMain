@@ -14,9 +14,7 @@ export class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth},
-      mainHeight : 0,
-      showNow: 'hidden'
+      tupleWidth : {'width' : window.innerWidth}
 
     }
 
@@ -37,22 +35,42 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
-  if(!this.props.listing.profiles)return;
-this.applyAnimation();
+
   this.bindSlider();
 }
 
  componentWillReceiveProps(nextProps){
+
+   console.log('in myjs bar');
+   console.log(nextProps.contact.tupleID);
+
+   console.log('working 1');
+   //console.log(nextProps);
+
     if(nextProps.contact.contactDone) {
-      console.log('interest sent');
-  }
-  if(nextProps.contact.acceptDone){
-     console.log('accept done');
-  }
-  if(nextProps.contact.declineDone){
-     console.log('decline done');
-  }
-  }
+        console.log('interest sent slider');
+    }
+    if(nextProps.contact.acceptDone){
+       console.log('accept done slider');
+    }
+    if(nextProps.contact.declineDone)
+    {
+       console.log('decline done slider');
+    }
+}
+showLoader(param){
+
+    console.log('in show loader');
+
+    console.log(param);
+
+    let z = document.createElement('IMG');
+    z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
+    z.setAttribute("class","posabs setmid");
+    console.log(z);
+    document.getElementById(param).appendChild(z);
+
+}
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
@@ -65,9 +83,7 @@ bindSlider(){
     tupleWidth : {'width' : this.obj.transformX-10}
   });
 }
-componentWillUnmount(){
-clearInterval(this.timer);
-}
+
 alterCssStyle(duration, transform){
   this.setState((prevState)=>{
     var styleArr = Object.assign({}, prevState.sliderStyle);
@@ -79,19 +95,13 @@ alterCssStyle(duration, transform){
   });
 }
 
-applyAnimation()
-{
-var thisObj = this;
-this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=236) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=10; thisObj.setState({mainHeight:height});},10);
-
-}
 render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
   return(
-      <div style={{height:this.state.mainHeight+'px'}}>
-        <div className="pad1" style = {{marginTop: '15px', visibility:this.state.showNow}}>
+      <div>
+        <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7">
               <span className="f17 fontlig">{this.props.title}</span>
@@ -107,9 +117,9 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => (
-                <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id="" >
-                  <input className="proChecksum" type="hidden" value={tuple.profilechecksum}></input>
-                  <img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
+                <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
+                  <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
+
                   <div className="bg4 overXHidden" id="hideOnAction">
                     <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
                       <div className="pad16 scrollhid hgt140">
@@ -139,7 +149,11 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs"/>
+                    <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
+
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+
+                    </div>
                 </div>
            </div>
          )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
@@ -158,5 +172,9 @@ const mapStateToProps = (state) => {
      contact: state.contactEngineReducer
     }
 }
+
+// const mapDispatchToProps = (dispatch) => {
+//     return{}
+// }
 
 export default connect(mapStateToProps)(MyjsSlider)

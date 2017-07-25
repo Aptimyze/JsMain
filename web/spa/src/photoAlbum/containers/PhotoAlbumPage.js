@@ -29,7 +29,7 @@ export default class PhotoAlbumPage extends React.Component {
     if(getCookie("AUTHCHECKSUM"))
     {
       console.log(this.props.location.search);
-      axios.get('/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
+      axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
         .then(function(response){
           _this.setState({
               getRes: response.data,

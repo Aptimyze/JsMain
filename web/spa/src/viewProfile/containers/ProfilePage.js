@@ -285,7 +285,7 @@ class ProfilePage extends React.Component {
     render() 
     {   
         var contactEngineView;
-        if(this.state.listingName != "") {
+        if(this.state.listingName != "" && this.state.dataLoaded == true) {
             let buttondata = {
                 profilechecksum : this.state.profilechecksum,
                 responseTracking: this.state.responseTracking,
