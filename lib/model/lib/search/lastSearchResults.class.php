@@ -21,7 +21,7 @@ class lastSearchResults extends SearchLogger
 		}
 	}
 	
-	public function getLastSearchResultCriteria($limit='',$sort='',$ordered = 0)
+	public function getLastSearchResultCriteria($limit='',$sort='',$ordered = 0,$removeFiltered = 0)
 	{
                 if($sort != ""){
                         $this->setSORT_LOGIC($sort);
@@ -30,7 +30,9 @@ class lastSearchResults extends SearchLogger
                         $this->setNoOfResults($limit);
                 }
 		$output = $this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance,$ordered);
-        
+                if($removeFiltered == 1){
+                        $this->setShowFilteredProfiles('N');
+                }
 		//The output is 1 in case there is an array and 0 in case no results were found. Therefore, setProfilesToShow is set to "0 0" so as to show the ZERO results message
                 if($output == 0)
                 {
