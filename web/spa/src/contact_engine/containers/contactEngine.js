@@ -8,9 +8,9 @@ import ThreeDots from "./ThreeDots"
 export class contactEngine extends React.Component{
   constructor(props){
     super();
-    // this.state = {
-    // 	actionDone: false
-    // }
+    this.state = {
+    	actionDone: false
+    }
   }
 
   componentDidMount(){
@@ -19,16 +19,21 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-      // if(nextProps.contactAction.contactDone || nextProps.contactAction.acceptDone || nextProps.contactAction.declineDone) {
-      //  this.setState({
-      //  	actionDone: true
-      //  })
-      // }
+      if(nextProps.contactAction.acceptDone) {
+       this.setState({
+       	actionDone: true
+       })
+      }
   }
 
-  callContactApi(){
+  callContactApi(action){
   	this.props.showLoaderDiv();
-  	this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID);
+  	if(action == 'ACCEPT')
+  		this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID);
+  	if(action == 'DECLINE')
+  		this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID);
+  	if(action == 'INITIATE')
+  		this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID);
   }
 
   render(){
@@ -58,10 +63,13 @@ export class contactEngine extends React.Component{
               </div>);
           }
       } else if(this.props.pagesrcbtn == "pd") {
+      	if(this.state.actionDone){
+      		return <div>Hello</div>
+      	}
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(
             <div id="buttons1" className="view_ce fullwid">
-              <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
+              <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
                 <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                   <i className="ot_sprtie ot_chk"></i>
                   <input className="inputProChecksum" type="hidden" value={this.props.profiledata.profilechecksum}></input>
@@ -71,7 +79,7 @@ export class contactEngine extends React.Component{
                   <div className="white">{this.props.buttondata.buttons.others[0].label}</div>
                 </div>
               </div>
-              <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi()}>
+              <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[1].action)}>
                 <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
                   <i className="ot_sprtie newitcross"></i>
                   <input className="inputProChecksum" type="hidden" value={this.props.profiledata.profilechecksum}></input>
@@ -85,7 +93,7 @@ export class contactEngine extends React.Component{
         } else if(this.props.buttondata.buttons.primary[0].action == "REMINDER" || this.props.buttondata.buttons.primary[0].action == "INITIATE") {
           return(<div id="buttons1" className="view_ce fullwid">
             <div className="fullwid bg7 txtc pad5new posrel" >
-              <div className="wid60p">
+              <div className="wid60p" onClick={() => this.callContactApi(this.props.buttondata.buttons.primary[0].action)}>
                 <i className="mainsp msg_srp"></i>
                 <input className="inputProChecksum" type="hidden" value={this.props.profiledata.profilechecksum}></input>
                 <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>

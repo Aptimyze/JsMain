@@ -154,7 +154,7 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {
-        if(nextProps.contactAction.declineDone){
+        if(nextProps.contactAction.declineDone || nextProps.contactAction.acceptDone){
             this.setState({
             showLoader:false
         });      
