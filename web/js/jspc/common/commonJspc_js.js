@@ -1,18 +1,28 @@
 function GAMapper(GAEvent){
     var GAMapping = {
         // verify otp layer
-        "GA_VOL_MISS_CALL" :    ["E", "Enter Code Screen", "Miss Call", loggedInJspcGender || "Unregistered"],
-        "GA_VOL_SUBMIT" :       ["E", "Enter Code Screen", "Verify", loggedInJspcGender || "Unregistered"],
-        "GA_VOL_RESEND" :       ["E", "Enter Code Screen", "Resend Code", loggedInJspcGender || "Unregistered"],
-        "GA_VOL_SUBMIT_ERROR" : ["E", "Enter Code Screen", "Wrong OTP", loggedInJspcGender || "Unregistered"],
-        "GA_VOL_SUBMIT_SUCCESS" : ["E", "Enter Code Screen", "Correct OTP", loggedInJspcGender || "Unregistered"],
-        "GA_VOL_SUCCESS_OK" :   ["E", "Phone verification response", "Verify Okay", loggedInJspcGender || "Unregistered"],
-        "GA_LL_LOGIN_SUCCESS" : ["E", "login layer", "Login Success", loggedInJspcGender || "Unregistered"],
-        "GA_LL_LOGIN_FAILURE" : ["E", "login layer", "Login Failure", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_MISS_CALL"      :["E", "Enter Code Screen", "Miss Call", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT"         :["E", "Enter Code Screen", "Verify", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_RESEND"         :["E", "Enter Code Screen", "Resend Code", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT_ERROR"   :["E", "Enter Code Screen", "Wrong OTP", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUBMIT_SUCCESS" :["E", "Enter Code Screen", "Correct OTP", loggedInJspcGender || "Unregistered"],
+        "GA_VOL_SUCCESS_OK"     :["E", "Phone verification response", "Verify Okay", loggedInJspcGender || "Unregistered"],
+        "GA_LL_LOGIN_SUCCESS"   :["E", "login layer", "Login Success", loggedInJspcGender || "Unregistered"],
+        "GA_LL_LOGIN_FAILURE"   :["E", "login layer", "Login Failure", loggedInJspcGender || "Unregistered"],
+        
+        "GA_EOI_INITIATE"       :["E", "EOI", "Express Interest", loggedInJspcGender || "Unregistered"],
+        "GA_EOI_SHORTLIST"      :["E", "EOI", "Shortlist", loggedInJspcGender || "Unregistered"],
+        "GA_EOI_CONTACT_DETAIL" :["E", "EOI", "Contact", loggedInJspcGender || "Unregistered"],
+        "GA_LL_REGISTER"        :["E", "login layer", "Register", loggedInJspcGender || 'Unregistered'],
+        "GA_TOPBAR_REGISTER"    :["E", "login", "Register", loggedInJspcGender || 'Unregistered'],
+        "GA_TOPBAR_FORGOT"      :["E", "login", "Forgot Password", loggedInJspcGender || 'Unregistered'],
+        "GA_LL_FORGOT"          :["E", "login layer", "Forgot Password", loggedInJspcGender || 'Unregistered'],
+        "GA_FORGOTL_SENDLINK"   :["E", "Forgot Password", "Send link to reset", loggedInJspcGender || 'Unregistered'],
         // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
-        "GAV_VOL_SHOW" :        ["V", "Verify otp layer"],
+        "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
         // 
-        "GAV_LL_SHOW" :         ["V", "Login Layer"],
+        "GAV_LL_SHOW"           :["V", "Login Layer"],
+
     }
     if(GAMapping[GAEvent]){
         if(GAMapping[GAEvent][0] == "E"){

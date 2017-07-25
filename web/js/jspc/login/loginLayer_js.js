@@ -7,10 +7,10 @@ function LoginValidation()
 {
 	/* GA tracking */
 	if(LoginLayerByUserActions){
-		trackJsEventGA("login layer", "login", loggedInJspcGender || 'Unregistered');
+		GAMapper("GA_LL_LOGIN");
 	}
 	else{
-		trackJsEventGA("login", "login", loggedInJspcGender || 'Unregistered');
+		GAMapper("GA_TOPBAR_LOGIN");
 	}
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
@@ -308,7 +308,7 @@ function LoginBinding()
 {
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').unbind();
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').click(function() {
-		LoginLayerByUserActions = true;
+		// LoginLayerByUserActions = true;
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
@@ -406,10 +406,10 @@ function commonLoginBinding()
 
 					/* GA tracking */
 					if(LoginLayerByUserActions){
-						trackJsEventGA("login layer", "Register", loggedInJspcGender || 'Unregistered')
+						GAMapper("GA_LL_REGISTER");
 					}
 					else{
-						trackJsEventGA("login", "Register", loggedInJspcGender || 'Unregistered')
+						GAMapper("GA_TOPBAR_REGISTER");
 					}
 
 					if($(this).hasClass("logout"))
@@ -485,10 +485,10 @@ function forgotPasswordBinding(fromLayer)
 
 			/* GA tracking */
 		if(LoginLayerByUserActions){
-			trackJsEventGA("login layer", "Forgot Password", loggedInJspcGender || 'Unregistered');
+			GAMapper("GA_LL_FORGOT");
 		}
 		else{
-			trackJsEventGA("login", "Forgot Password", loggedInJspcGender || 'Unregistered');
+			GAMapper("GA_TOPBAR_FORGOT");
 		}
 		
 		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
@@ -568,7 +568,8 @@ function postForgotEmailLayer()
 		$("#sendLinkForgot").click(function(){
 
 			/* GA tracking */
-			trackJsEventGA("Forgot Password", "Send link to reset", loggedInJspcGender || 'Unregistered');
+			GAMapper("GA_FORGOTL_SENDLINK");
+
 			var email=$("#userEmail").val();
 			if(email)
 			{

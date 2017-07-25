@@ -33,20 +33,8 @@ var Button= function(elementObj) {
 
 Button.prototype.request= function() {
 	
-	var GAlabel = "";
-	switch(this.name){
-		case 'INITIATE':
-			GAlabel = 'Express Interest';
-		break;
-		case 'SHORTLIST':
-			GAlabel = 'Shortlist';
-		break;
-		case 'CONTACT_DETAIL':
-			GAlabel = 'Contact';
-		break;
-	}
 	/* GA tracking */
-	trackJsEventGA("Search Results", GAlabel, loggedInJspcGender || 'Unregistered');
+	GAMapper("GA_EOI_"+this.name);
 if(this.name=='WRITE_MESSAGE_LIST')
     {
         this.params+=('&pagination=1');
