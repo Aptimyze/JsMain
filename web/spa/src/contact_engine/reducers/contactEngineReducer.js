@@ -1,7 +1,8 @@
 const contactEngineReducer = (state={
 	contactDone:false,
 	acceptDone:false,
-	declineDone:false
+	declineDone:false,
+	tupleID: null
 },action) => {
 	switch(action.type)
 	{			
@@ -23,7 +24,8 @@ const contactEngineReducer = (state={
 		state = {
 			...state,
 			decline:action.payload,
-			declineDone : true
+			declineDone : true,
+			tupleID : action.token
 		}
 		break;
 	}

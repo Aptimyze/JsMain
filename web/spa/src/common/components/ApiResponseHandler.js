@@ -5,7 +5,7 @@ import {getCookie,setCookie} from "../../common/components/CookieHelper";
 import "babel-polyfill";
 import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
-export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj)
+export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
   let callMethod = method ? method :  'POST';
     let aChsum = getCookie('AUTHCHECKSUM');
@@ -58,7 +58,8 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       {
         dispatch({
           type: reducer,
-          payload: response.data
+          payload: response.data,
+          token: tupleID
         });
       }
       return response.data;

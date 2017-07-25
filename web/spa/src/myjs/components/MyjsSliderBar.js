@@ -41,7 +41,7 @@ componentDidMount(){
 
  componentWillReceiveProps(nextProps){
    console.log('in myjs bar');
-   console.log(nextProps);
+   console.log(nextProps.contact.tupleID);
     if(nextProps.contact.contactDone) {
         console.log('interest sent slider');
     }
@@ -146,7 +146,7 @@ render(){
                       </div>
                     </Link>
                     <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs"/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
                     </div>
                 </div>
            </div>

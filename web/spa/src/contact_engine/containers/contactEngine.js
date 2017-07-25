@@ -38,7 +38,7 @@ export class contactEngine extends React.Component{
                           <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
                             <a className="f15 color2 fontreg">Accept</a>
                         </div>
-                        <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
+                        <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
                           <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
                           <a className="f15 color2 fontlig">Decline</a>
                         </div>
@@ -118,9 +118,9 @@ const mapDispatchToProps = (dispatch) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
           return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true);
         },
-        declineApi: (profilechecksum) => {
+        declineApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.DECLINE_API,url,'DECLINE','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.DECLINE_API,url,'DECLINE','POST',dispatch,true,{},tupleID);
         }
     }
 }
