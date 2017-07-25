@@ -154,8 +154,8 @@ class ProfilePage extends React.Component {
         
     }
     componentWillReceiveProps(nextProps)
-    {
-        if(nextProps.contactAction.declineDone){
+    {  
+        if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
             this.setState({
                 showLoader:false
             });   
@@ -168,9 +168,8 @@ class ProfilePage extends React.Component {
             this.props.history.push(this.state.nextUrl);
             jsb9Fun.recordBundleReceived(this,new Date().getTime());
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);     
-        }
-        console.log("button",nextProps.buttonDetails)   
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+        } 
+        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
