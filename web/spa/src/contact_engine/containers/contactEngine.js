@@ -8,37 +8,33 @@ import ThreeDots from "./ThreeDots"
 export class contactEngine extends React.Component{
   constructor(props){
     super();
+    this.state = {
+    	actionDone: false
+    }
   }
 
   componentDidMount(){
-    console.log('in contct');
-  	console.log(this.props);
+    // console.log('in contct');
+  	// console.log(this.props);
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.contact) {
-      if(nextProps.contact.contactDone) {
-        console.log('interest sent');
+      if(nextProps.contactAction.contactDone || nextProps.contactAction.acceptDone || nextProps.contactAction.declineDone) {
+       this.setState({
+       	actionDone: true
+       })
       }
-      if(nextProps.contact.acceptDone){
-         console.log('accept done');
-      }
-      if(nextProps.contact.declineDone){
-         console.log('decline done');
-      }
-    }
-
   }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
           return (<div className="brdr8 fl wid90p hgt60">
-                        <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum)}>
+                        <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
                           <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
                             <a className="f15 color2 fontreg">Accept</a>
                         </div>
-                        <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
+                        <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
                           <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
                           <a className="f15 color2 fontlig">Decline</a>
                         </div>
@@ -48,7 +44,7 @@ export class contactEngine extends React.Component{
         else {
           return(
             <div className="brdr8 fullwid hgt60">
-                <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
+                <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID)}>
                     <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                       <span className="f15 color2 fontreg">Send Interest</span>
                   </div>
@@ -56,6 +52,7 @@ export class contactEngine extends React.Component{
               </div>);
           }
       } else if(this.props.pagesrcbtn == "pd") {
+
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(
             <div id="buttons1" className="view_ce fullwid">
@@ -77,6 +74,7 @@ export class contactEngine extends React.Component{
                   <input className="action" type="hidden" value={this.props.buttondata.buttons.others[1].action}></input>
                   <div className="white">{this.props.buttondata.buttons.others[1].label}</div>
                 </div>
+
               </div>
             </div>
           );
@@ -93,22 +91,22 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        contactApi: (profilechecksum, source) => {
+        contactApi: (profilechecksum, source, tupleID) => {
           if(source=='matchOfDay')
             var url = '&stype=WMOD&profilechecksum='+profilechecksum;
           else if(source=='match_alert')
             var url = '&stype=WMM&profilechecksum='+profilechecksum;
           else
             var url = '&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.SEND_INTEREST_API,url,'CONTACT_ACTION','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.SEND_INTEREST_API,url,'CONTACT_ACTION','POST',dispatch,true,{},tupleID);
         },
-        acceptApi: (profilechecksum) => {
+        acceptApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true,{},tupleID);
         },
-        declineApi: (profilechecksum) => {
+        declineApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.DECLINE_API,url,'DECLINE','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.DECLINE_API,url,'DECLINE','POST',dispatch,true,{},tupleID);
         }
     }
 }
