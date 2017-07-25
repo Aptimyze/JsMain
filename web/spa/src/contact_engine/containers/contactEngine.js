@@ -8,6 +8,9 @@ import ThreeDots from "./ThreeDots"
 export class contactEngine extends React.Component{
   constructor(props){
     super();
+    this.state = {
+    	actionDone: false
+    }
   }
 
   componentDidMount(){
@@ -16,25 +19,18 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.contact) {
-      if(nextProps.contact.contactDone) {
-        console.log('interest sent');
+      if(nextProps.contactAction.contactDone || nextProps.contactAction.acceptDone || nextProps.contactAction.declineDone) {
+       this.setState({
+       	actionDone: true
+       })
       }
-      if(nextProps.contact.acceptDone){
-         console.log('accept done');
-      }
-      if(nextProps.contact.declineDone){
-         console.log('decline done');
-      }
-    }
-
   }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
           return (<div className="brdr8 fl wid90p hgt60">
-                        <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum)}>
+                        <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
                           <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum} />
                             <a className="f15 color2 fontreg">Accept</a>
                         </div>
@@ -48,7 +44,7 @@ export class contactEngine extends React.Component{
         else {
           return(
             <div className="brdr8 fullwid hgt60">
-                <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
+                <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID)}>
                     <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                       <span className="f15 color2 fontreg">Send Interest</span>
                   </div>
@@ -56,10 +52,12 @@ export class contactEngine extends React.Component{
               </div>);
           }
       } else if(this.props.pagesrcbtn == "pd") {
+      	if(this.state.actionDone)
+      		return null;
          if(this.props.buttonName == "apiDataIR") {
           return(
             <div id="buttons1" className="view_ce fullwid">
-            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum)}>
+            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
               <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                 <i className="ot_sprtie ot_chk"></i>
                 <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
@@ -67,7 +65,7 @@ export class contactEngine extends React.Component{
               </div>
             </div>
             <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2">
-              <div id="btnDecline" className="fontlig f13 whitecursp dispbl" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum)}>
+              <div id="btnDecline" className="fontlig f13 whitecursp dispbl" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID)}>
                 <i className="ot_sprtie newitcross"></i>
                 <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <div className="white">Decline Interest</div>
@@ -79,7 +77,7 @@ export class contactEngine extends React.Component{
           return(
           <div id="buttons1" className="view_ce fullwid">
             <div className="fullwid bg7 txtc pad5new posrel" >
-              <div className="wid60p" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName)}>
+              <div className="wid60p" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID)}>
                 <i className="mainsp msg_srp"></i>
                 <input className="inputProChecksum" type="hidden" value={this.props.buttondata.profilechecksum}></input>
                 <div className="white">Send Interest</div>
@@ -105,18 +103,18 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        contactApi: (profilechecksum, source) => {
+        contactApi: (profilechecksum, source, tupleID) => {
           if(source=='matchOfDay')
             var url = '&stype=WMOD&profilechecksum='+profilechecksum;
           else if(source=='match_alert')
             var url = '&stype=WMM&profilechecksum='+profilechecksum;
           else
             var url = '&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.SEND_INTEREST_API,url,'CONTACT_ACTION','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.SEND_INTEREST_API,url,'CONTACT_ACTION','POST',dispatch,true,{},tupleID);
         },
-        acceptApi: (profilechecksum) => {
+        acceptApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true);
+          return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true,{},tupleID);
         },
         declineApi: (profilechecksum, tupleID) => {
           var url = '&stype=15&profilechecksum='+profilechecksum;
