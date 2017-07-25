@@ -148,19 +148,33 @@ class ProfilePage extends React.Component {
 
     }
     showLoaderDiv() {
-         this.setState({
+        this.setState({
             showLoader:true
-        });  
+        });
+        
     }
     componentWillReceiveProps(nextProps)
-    {
-        if(nextProps.contactAction.declineDone || nextProps.contactAction.acceptDone){
+    {  
+        if(nextProps.contactAction.acceptDone){
             this.setState({
-            showLoader:false
-        });      
+                showLoader:false
+            });
         }
-        console.log("button",nextProps.buttonDetails)   
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+        if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
+            this.setState({
+                showLoader:false
+            });   
+            document.getElementById("swipePage").classList.add("animateLeft");
+            this.setState ({
+                dataLoaded : false
+            });
+            jsb9Fun.flushJSB9Obj(this);
+            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+            this.props.history.push(this.state.nextUrl);
+            jsb9Fun.recordBundleReceived(this,new Date().getTime());
+            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);     
+        } 
+        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
