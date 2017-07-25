@@ -33,38 +33,39 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{  
+		$countOfReminderSent=0;
+
 		ini_set('memory_limit','912M');
 		ini_set('max_execution_time', 0);
+		
 		if(!sfContext::hasInstance())
 	        sfContext::createInstance($this->configuration);
-        $mailerYNObj = new MAIL_UNRESPONDED_CONTACTS("newjs_masterDDL");
-        $mailerYNObj->EmptyMailer();
-        echo "Truncated Mailer Table\n\n";
+       
         $chunk=$arguments["chunks"];
         if(!$chunk)$chunk=1;
-        echo "CHUNK = ".$chunk."\n\n";
-        $resultArray=array();
-       	$interestDate =mktime(0, 0, 0, date("m"), date("d")-7, date("Y"));
-      	for($i=0;$i<$chunk;$i++)
-		{
-		   	echo "MEMORY USAGE At the start of loop: ".memory_get_usage() . "\n";
-        	echo "MEMORY USAGE At the step 0 of loop: ".memory_get_usage() . "\n";
-			for($j=3;$j<6;$j++)
-            {
 
+        $resultArray=array();
+       	
+       	$timestamp =mktime(0, 0, 0, date("m"), date("d")-7, date("Y"));		
+		$interestDate=date("Y-m-d",$timestamp);
+
+      	for($i=0;$i<$chunk;$i++)
+			echo "\nchunk=".$i;
+			for($j=3;$j<4;$j++)
+            {
                 $dbObShard = JsDbSharding::getShardNo($j,'Y');
 				$dbOb=new newjs_CONTACTS($dbObShard);
                 $shardRemainder = $j%3;
                 $remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);
-                $row=$dbOb->getInterestSentForDuration($interestDate,$remainderArray);
+                $row=$dbOb->getRbInterestSentForDuration($interestDate,$remainderArray);
                 if(!is_array($row))continue;
                 $arranged = array();
 				foreach ($row as $key => $value) {
 					$channel = "reminderCron";
 					$source = "reminderCron";
-					
+
 					$senderProfileObj = new Profile();
-					$senderProfileId = $value['RECEIVER'];
+ 					$senderProfileId = $value['SENDER'];
 					$senderProfileObj->getDetail($senderProfileId, "PROFILEID");
 					
 					$recProfileObj = new Profile();
@@ -72,31 +73,28 @@ EOF;
 					$recProfileObj->getDetail($recProfileId, "PROFILEID");
 					if($recProfileObj && $senderProfileObj)
 					{
-						$contactObj = new Contacts($this->senderProfileObj, $recProfileObj);
+						$contactObj = new Contacts($senderProfileObj, $recProfileObj);
 						$contactHandlerObj = new ContactHandler($senderProfileObj,$recProfileObj,"EOI",$contactObj,'R',ContactHandler::POST);
 						$contactHandlerObj->setElement("MESSAGE","");
 						$contactHandlerObj->setElement("DRAFT_NAME","preset");
 						$contactHandlerObj->setElement("STATUS","R");
-						$contactEngineObj=ContactFactory::event($this->contactHandlerObj);
+						$contactEngineObj=ContactFactory::event($contactHandlerObj);
 						if($contactEngineObj->getComponent()->errorMessage != '')
 						{
 							//Error
-							$mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
-							$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/connectionThreshold".date('Ymd').".txt";
-        					file_put_contents($fileName, date("Y m d H:i:s", strtotime("now"))."\n".$mailMes."\n\n", FILE_APPEND);							
-
+							$mailMes .= "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
+							$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ApSendRemainder".date('Ymd').".txt";
+							file_put_contents($fileName, date("Y m d H:i:s", strtotime("now"))."\n".$mailMes."\n\n", FILE_APPEND);
+							
 						}
 						else
 						{
-
+							$countOfReminder++;
 						}
 					}
 				}
 			}
 		}
+		echo "Total Reminder sent == ".$countOfReminder++;
 	}
 }
-
-
-
-
