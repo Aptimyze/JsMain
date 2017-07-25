@@ -40,8 +40,13 @@ componentDidMount(){
 }
 
  componentWillReceiveProps(nextProps){
+
    console.log('in myjs bar');
    console.log(nextProps.contact.tupleID);
+
+   console.log('working 1');
+   //console.log(nextProps);
+
     if(nextProps.contact.contactDone) {
         console.log('interest sent slider');
     }
@@ -53,20 +58,19 @@ componentDidMount(){
        console.log('decline done slider');
     }
 }
-//myCallback = (dataFromChild) => {
-  //    console.log("in my call back");
-//}
+showLoader(param){
 
-  showLoader(param){
+    console.log('in show loader');
 
     console.log(param);
 
     let z = document.createElement('IMG');
     z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
     z.setAttribute("class","posabs setmid");
+    console.log(z);
     document.getElementById(param).appendChild(z);
 
-  }
+}
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
@@ -115,7 +119,7 @@ render(){
                 [this.props.listing.profiles.map((tuple,index) => (
                 <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
-                  <img className="srp_box2 contactLoader posabs dispnone top65" src="/images/jsms/commonImg/loader.gif" />
+
                   <div className="bg4 overXHidden" id="hideOnAction">
                     <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
                       <div className="pad16 scrollhid hgt140">
@@ -146,7 +150,9 @@ render(){
                       </div>
                     </Link>
                     <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
+
                     <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+
                     </div>
                 </div>
            </div>

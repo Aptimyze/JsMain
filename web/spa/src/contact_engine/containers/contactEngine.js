@@ -14,8 +14,8 @@ export class contactEngine extends React.Component{
   }
 
   componentDidMount(){
-    console.log('in contct');
-  	console.log(this.props);
+    // console.log('in contct');
+  	// console.log(this.props);
   }
 
   componentWillReceiveProps(nextProps){
