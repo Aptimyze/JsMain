@@ -44,8 +44,7 @@ function GAMapper(GAEvent, extraParams={}){
             }
         }
     }
-    catch(err) {
-        console.log(err.message);
+    catch() {
     }
 }
 
