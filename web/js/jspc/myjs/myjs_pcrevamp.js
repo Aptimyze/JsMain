@@ -1055,11 +1055,11 @@ function criticalLayerButtonsAction(clickAction,button) {
                         $('.js-dd ul li[value="M"]').trigger('click');
                     }
                 /* GA tracking */
-                trackJsEventGA("CAL NO", layerId, button);
+                GAMapper("GA_CAL_NO", {"layerId": layerId, "button": button});
                 }
                 else {
                   /*GA tracking */
-                  trackJsEventGA("CAL YES", layerId, button);
+                  GAMapper("GA_CAL_YES", {"layerId": layerId, "button": button});
                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                 }
 
