@@ -12,7 +12,7 @@ const ProfileReducer = (state={
 	show_gunascore: "",
 	gunaScore: [],
 	pageInfo: [],
-	fetchedProfilechecksum: false
+	fetchedProfilechecksum: false,
 	buttonDetails: []
 },action) => {
 	switch(action.type)
