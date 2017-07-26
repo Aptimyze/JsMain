@@ -4,8 +4,8 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 98;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 100;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 104;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 101;
 	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
@@ -19,7 +19,7 @@ class ApiRequestHandler
 		if ($this->responseFlag) {
 			$this->AuthenticateDevice($request);
 		}
-		$this->app = array("android" => array('APILEVEL' => '14', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
+		$this->app = array("android" => array('APILEVEL' => '16', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
 	}
 
 	/*

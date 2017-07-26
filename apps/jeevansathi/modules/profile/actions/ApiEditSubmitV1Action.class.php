@@ -57,30 +57,46 @@ class ApiEditSubmitV1Action extends sfActions
                 }
 
 		unset($this->editFieldNameArr['STATE_RES']);
-                if(!empty($_FILES)){
-                        foreach($_FILES as $f1){
-                                foreach($f1 as $fKey=>$fVal){
-                                        foreach($fVal as $key=>$fileVAlue){
-                                                $this->editFieldNameArr[$key][$fKey] = $fileVAlue;
+                if($this->editFieldNameArr['DAY']!='' &&is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['MONTH']!='' && is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['YEAR'] && is_numeric($this->editFieldNameArr['YEAR']))
+		{
+			$this->editFieldNameArr['DTOFBIRTH']=date("Y-m-d",mktime(0,0,0,$this->editFieldNameArr['MONTH'],$this->editFieldNameArr['DAY'],$this->editFieldNameArr['YEAR']));
+		}
+		unset($this->editFieldNameArr['MONTH']);
+		unset($this->editFieldNameArr['DAY']);
+		unset($this->editFieldNameArr['YEAR']);
+                //print_r($this->editFieldNameArr);die;
+                
+                        if(!MobileCommon::isApp())
+                        {
+                                if(!empty($_FILES)){
+                                        foreach($_FILES as $f1){
+                                                foreach($f1 as $fKey=>$fVal){
+                                                        foreach($fVal as $key=>$fileVAlue){
+                                                                $this->editFieldNameArr[$key][$fKey] = $fileVAlue;
+                                                        }
+                                                }
                                         }
                                 }
+                        }else{
+                               foreach($_FILES as $key=>$f1){
+                                                $this->editFieldNameArr[$key] = $f1;
+                                } 
                         }
-                }
-		if(MobileCommon::isApp())
-		{
-			foreach ($this->editFieldNameArr as $key=>$value)
-			{
-				if(is_array($value))
-				{
-					foreach($value as $k=>$v)
-						$arr[$key][$k]=urldecode($v);
-				}
-				else
-					$arr[$key]=urldecode($value);
-			}
-			
-			$this->editFieldNameArr=$arr;
-		}
+                        if(MobileCommon::isApp())
+                        {
+                                foreach ($this->editFieldNameArr as $key=>$value)
+                                {
+                                        if(is_array($value))
+                                        {
+                                                foreach($value as $k=>$v)
+                                                        $arr[$key][$k]=urldecode($v);
+                                        }
+                                        else
+                                                $arr[$key]=urldecode($value);
+                                }
+
+                                $this->editFieldNameArr=$arr;
+                        }
 		if(strtoupper($request->getParameter('incomplete'))==EditProfileEnum::$INCOMPLETE_YES)
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_YES;
 		else
@@ -102,7 +118,18 @@ class ApiEditSubmitV1Action extends sfActions
                 
 		if(is_array($this->editFieldNameArr))
 		{
+                        if($this->verifyCriticalInfoEdit($request) === false){
+                                $errorArr["error"]="Cannot edit Critical Information again";
+                                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                                $apiResponseHandlerObj->setResponseBody($errorArr);
+                                ValidationHandler::getValidationHandler("",$errorArr["error"]);
+                                $apiResponseHandlerObj->generateResponse();
+                                if($request->getParameter('internally'))
+                                        return sfView::NONE;
+                                die;
+                       }
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);
+                        
 			$nonEditableField=$this->form->editableFieldsValidation($this->editFieldNameArr,$this->incomplete);
 			
 			//valid incomplete fields only
@@ -117,7 +144,6 @@ class ApiEditSubmitV1Action extends sfActions
 				else
 					$incompleteFieldFlag=true;
 			}
-			
 			$this->form->bind($this->editFieldNameArr);
 			if ($this->form->isValid() && !$nonEditableField && $incompleteFieldFlag)
 			{   
@@ -276,4 +302,18 @@ class ApiEditSubmitV1Action extends sfActions
 
     $memcacheObj->lpush($key,$profileId);
   }
+        public function verifyCriticalInfoEdit($request){
+                $editableCriticalArr=EditProfileEnum::$editableCriticalArr;
+                $criticalInfoedited=0;
+                foreach($this->editFieldNameArr as $key=>$val)
+                {
+                        if(in_array($key,$editableCriticalArr))
+                                $criticalInfoedited=1;
+                }
+                if($criticalInfoedited == 1){
+                        return CriticalEditedBefore::canEdit($this->loginProfile->getPROFILEID(),$request->getParameter("docOnly"));
+                }else{
+                        return true;
+                }
+        }
 }

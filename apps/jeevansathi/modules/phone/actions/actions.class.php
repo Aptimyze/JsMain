@@ -198,10 +198,7 @@ class phoneActions extends sfActions
 		}
 
 		}
-			$verifiedLogObj= new PHONE_VERIFIED_LOG();
-			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
-			$noOfTimesVerified=$row['COUNT'];
-	$result['fromReg'] = ($noOfTimesVerified == 0) ? 'Y' : 'N';
+	$result['fromReg'] =  'N';
 	$result['FLAG']=$phoneVerified;
 	$result['PHOTO']= null;
 	if($phoneVerified=="Y")
@@ -211,6 +208,11 @@ class phoneActions extends sfActions
 		$result['PHOTO']=$pictureServiceObj->isProfilePhotoPresent();
 		if($result['PHOTO']!='Y')
 			$result['PHOTO']= "N";
+                        $verifiedLogObj= new PHONE_VERIFIED_LOG();
+                        $row=$verifiedLogObj->getNoOfTimesVerified($profileid);
+                        $noOfTimesVerified=$row['COUNT'];
+			$result['fromReg'] = ($noOfTimesVerified == 1) ? 'Y' : 'N';
+
 	}
 
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -234,16 +236,16 @@ class phoneActions extends sfActions
    		
    		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
-  }
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
+        }
      	if(!$reasonNumber)
      	{
      			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
      	}
 
      	$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
@@ -263,9 +265,10 @@ class phoneActions extends sfActions
 			die;
      	}
 
-   		$profile2=new Profile();
+        
    		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
+        ReportInvalid::markNumberUnverified($profileid, $phone, $mobile);
 
 		if($reasonNumber == 3)
 			{  

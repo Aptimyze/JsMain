@@ -46,12 +46,21 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
            	if(!empty($offsetDt)){
            		$sql .= " ENTRY_DT>=:ENTRY_DT";
            	}
-           	$sql .= " AND STATUS=:STATUS";
+            if(is_array($viewed)){
+                $sql .= " AND STATUS IN (:STATUS0, :STATUS1)";
+            }
+            else
+                $sql .= " AND STATUS=:STATUS";
             $prep = $this->db->prepare($sql);
             if(!empty($offsetDt)){
             	$prep->bindValue(":ENTRY_DT", $offsetDt,PDO::PARAM_STR);
             }
-            $prep->bindValue(":STATUS", $viewed,PDO::PARAM_STR);
+            if(is_array($viewed)){
+                $prep->bindValue(":STATUS0", $viewed[0],PDO::PARAM_STR);
+                $prep->bindValue(":STATUS1", $viewed[1],PDO::PARAM_STR);
+            }
+            else
+                $prep->bindValue(":STATUS", $viewed,PDO::PARAM_STR);
             $prep->execute();
             while ($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profilesArr[] = $res['PROFILEID'];
@@ -146,6 +155,17 @@ class billing_LIGHTNING_DEAL_DISCOUNT extends TABLE{
             $res->execute();
             $row = $res->fetch(PDO::FETCH_ASSOC);
             return $row;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    
+    public function deleteOldData($lessThanDate){
+        try{
+            $sql = "DELETE FROM billing.LIGHTNING_DEAL_DISCOUNT WHERE DEAL_DATE < :DEAL_DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DEAL_DATE",$lessThanDate, PDO::PARAM_STR);
+            $res->execute();
         } catch (Exception $ex) {
             throw new jsException($ex);
         }

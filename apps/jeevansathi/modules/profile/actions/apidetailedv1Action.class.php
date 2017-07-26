@@ -258,10 +258,8 @@ class apidetailedv1Action extends sfAction
         }
         else{
           $out =  $objDetailedDisplay->getResponse();
-        }
-		
+        }	
 		$this->profile->setNullValueMarker("");
-		
 		$arrPass = array('STYPE'=>$stype,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'stype'=>$stype);
 		if($request->getParameter('forViewProfile'))
 		{
@@ -299,7 +297,8 @@ class apidetailedv1Action extends sfAction
         		{
         			$tickArr = $this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                				
         		}
-        	}        	
+        	}
+
 			$out["dpp_Ticks"] = $this->dppMatching($out["dpp"],$tickArr);
 			
 			if($this->loginProfile->getPROFILEID())
@@ -324,7 +323,7 @@ class apidetailedv1Action extends sfAction
                 $out['show_vsp'] = true;
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
-		}		
+		}
 		return $out;
 	}
 
@@ -468,9 +467,9 @@ class apidetailedv1Action extends sfAction
 		if(strlen($szContactID)!=0 && $this->loginProfile->getPROFILEID() && ($iOffset+1)>0 && ($iOffset+1)<=$iTotalRecord)
 		{
 			$objProfileDisplay = new profileDisplay;
-			
+		
 			// Adding +1 in offset as ProfileDisplay ID starts from 1 to total rec
-			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1);
+			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1,$request->getParameter("stype"));
 			
 			// Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
 			// offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset
@@ -508,6 +507,10 @@ class apidetailedv1Action extends sfAction
 			{
 				$tickKey = "HAVECHILD";
 			}
+			if(strpos($dppArray["dpp_religion"],ProfileEnums::MUSLIM_NAME) !== false && $key==ProfileEnums::CASTE_KEY)
+			{
+				$tickKey = "SECT";
+			}
 			if(!in_array($key,ProfileEnums::$removeFromDppTickArr))
 			{
 				$dppTickArray[$key]["VALUE"] = $value;
@@ -516,7 +519,7 @@ class apidetailedv1Action extends sfAction
 					$dppTickArray[$key]["STATUS"] = $tickArray[$tickKey];
 				}
 			}		
-		}
+		}		
 		return $dppTickArray;
 	}
 

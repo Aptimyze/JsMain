@@ -25,7 +25,7 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-		$mailerEIObj = new MAIL_ExpiringInterest("newjs_masterDDL");
+		$mailerEIObj = new MAIL_ExpiringInterest("newjs_master");
 		$this->emptyMailer($mailerEIObj);
 		$chunk = $arguments["chunks"];
 		for($serverId = 0; $serverId < $this->noOfActiveServers; $serverId++)

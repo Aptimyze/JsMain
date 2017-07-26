@@ -857,7 +857,7 @@ function inviewCheck()
     });
 }
 
-function showTimerForLightningMemberShipPlan(source) {
+function showTimerForLightningMemberShipPlan(source,type) {
     if(source == "jsmsMyjs" || source == "jspcMyjs"){
         var cT = new Date(current);
         var eT = new Date(membershipPlanExpiry);
@@ -920,6 +920,8 @@ function updateMemTimerLightning(){
     else if( src == "jspcLanding"){
         $("#jspcLandingM").html(m);
         $("#jspcLandingS").html(s);
+        $("#jspcLandingMRenew").html(m);
+        $("#jspcLandingSRenew").html(s);
     }
     else if( src == "jspcMyjs"){
         $("#jspcMyjsM").html(m);

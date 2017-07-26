@@ -90,9 +90,10 @@ EOF;
 				       	$type = array("archive"=>1);
 								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
 				}
-				elseif($module=="VERIFICATION_DOCUMENTS_BYUSER" || $module=="VERIFICATION_DOCUMENTS")
+				elseif($module=="VERIFICATION_DOCUMENTS_BYUSER" || $module=="VERIFICATION_DOCUMENTS" || $module=="CRITICAL_INFO_DIVORCED_DOC")
 				{
 					$url = trim($v[$whichImage]);
+                                        $serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$urlOri = PictureFunctions::getCloudOrApplicationCompleteUrl($url,true);
 					$finfo = finfo_open(FILEINFO_MIME_TYPE);
 					foreach (glob($urlOri) as $filename) 
@@ -100,7 +101,6 @@ EOF;
 						if(finfo_file($finfo, $filename) === 'application/pdf') 
 						{
 							$contentType = "application/pdf";
-							$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 							$type="";
 						} 
 					}

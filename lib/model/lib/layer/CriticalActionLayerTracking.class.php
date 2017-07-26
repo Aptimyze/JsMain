@@ -115,7 +115,7 @@ class CriticalActionLayerTracking
         for ($i=1;;$i++)
         { 
 
-      $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+      $layer = CriticalActionLayerDataDisplay::getLAYERFromPriority($i);
 
       if (!$layer) 
         { 
@@ -343,8 +343,7 @@ return 0;
                     break;  
 
                     case '16':                      
-                          $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          if(MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))) )
                           {
                             
                               ob_start();
@@ -450,7 +449,7 @@ return 0;
 
 
                     case '23' :
-                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                        if(!MobileCommon::isApp() || self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
                   {
                     $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
                     if(!$familyBasedOutOfObj->getCompletionStatus())
@@ -551,8 +550,8 @@ break;
 
                           '18' => array(
                     
-                    'A' => '96'
-                    
+                    'A' => '96',
+                   'I' => '5.5'
                         ),
                     '21' => array(
                     

@@ -57,6 +57,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			break;
                 case 'jamaat':
                         return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
+                        break;
                 case 'sectMuslim':
                         return new jsValidatorSectMuslim(array('religion'=>$form_values['religion'],'required'=>false),array('required' => $defaultMsg));
                         break;
@@ -140,6 +141,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 	public static function getEditValidator($field,$form_values="",$loggedInObj){
 		$const_cl=$field->getConstraintClass();
 		$field_map_name=ObjectiveEditFieldMap::getFieldMapKey($field->getName(),$page);
+                        
 		//get all dropdown values from Fieldmaplib
 		$defaultMsg = ErrorHelp::getDefaultMessage($field->getNAME());
 		$errInvalid = ErrorHelp::INVALID_VALUE_ERR;
@@ -162,6 +164,14 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		switch($const_cl){
 		case 'string':
 			return new sfValidatorString(array('required'=>false));
+			break;
+                case 'dob':
+			return new jsValidatorDateOfBirth(array("dtofbirth"=>$form_values['DTOFBIRTH']),array('required' => true));
+//			if(@$loggedInObj->getGENDER()=='M')
+//				$min=21;
+//			else
+//				$min=18;
+//			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
 			break;
 		case 'stringName':
 			return new sfValidatorString(array('required'=>false,'nameField'=>1));
@@ -222,8 +232,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			return new sfValidatorString(array(),array('required' => $defaultMsg));
 			break;
 		case 'mstatus':
-			return new sfValidatorAnd(
-                    array(new jsValidatorMStatus(),$choiceValidator),array(),array('required'=>$defaultMsg));
+                        return new jsValidatorMStatus(array('required' => true));
 			break;
 		case 'havechild':
 			return new sfValidatorAnd(array($choiceValidator,new jsValidatorHasChildren(array('mstatus'=>$form_values['mstatus']))),array('required'=>false),array('required' => $defaultMsg));
@@ -359,6 +368,12 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			{
                 $szName = $field->getName();
 				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size']));
+				break;
+			}
+                        case 'mstatus_proof':
+			{
+                $szName = $field->getName();
+				return new jsValidatorDivorcedProof(array('required'=>true,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size'],'mstatus'=>@$form_values['MSTATUS']));
 				break;
 			}
 		}

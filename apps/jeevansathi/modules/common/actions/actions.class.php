@@ -1002,4 +1002,36 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         $respObj->generateResponse();
         die;
     }
+    public function executeUploadDocumentProof(sfWebRequest $request)
+    {
+            $this->done = false;
+            $this->msg = "";
+                if ($request->getParameter("submitForm")) {
+                        $editFieldNameArr["MSTATUS"] = $_POST["MSTATUS"];
+                        $editFieldNameArr["MSTATUS_PROOF"] = $_FILES["MSTATUS_PROOF"];
+                        $request->setParameter("editFieldArr",$editFieldNameArr);
+                        $request->setParameter("docOnly",true);
+                        $request->setParameter("internally",true);
+                        $_SERVER["HTTP_X_REQUESTED_BY"] = true;
+                        ob_start();
+                        sfContext::getInstance()->getController()->getPresentationFor('profile','ApiEditSubmitV1');
+                        $returnDocumentUpload = ob_get_contents(); 
+                        ob_end_clean();
+                        $a = json_decode($returnDocumentUpload,true);
+                        if($a["responseStatusCode"] != 0){
+                                $this->msg = $a["error"];
+                                $this->done = false;
+                        }else{
+                                $this->msg = "Document Uploaded successfully";
+                                $this->done = true;
+                        }
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }else{
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }
+    }
 }
