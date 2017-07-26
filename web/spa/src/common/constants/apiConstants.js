@@ -1,5 +1,4 @@
-export const API_SERVER = 'http://trunk.jeevansathi.com';
-
+export const API_SERVER = 'http://test1.jeev.com';
 export const LOGIN_CALL_URL = '/api/v1/api/login';
 //Myjs # Head, Edit bar
 export const MYJS_CALL_URL = '/api/v1/myjs/perform';
@@ -13,4 +12,3 @@ export const EDIT_SUBMIT = '/api/v1/profile/editsubmit';
 export const SEND_INTEREST_API = '/api/v2/contacts/postEOI';
 export const ACCEPT_API = '/api/v2/contacts/postAccept';
 export const DECLINE_API = '/api/v2/contacts/postNotInterested';
-export const REMINDER_API = '/api/v2/contacts/postSendReminder';

@@ -14,7 +14,10 @@ export class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth}
+      tupleWidth : {'width' : window.innerWidth},
+      mainHeight : 0,
+      showNow: 'hidden',
+      bounceIn:''
 
     }
 
@@ -37,6 +40,7 @@ componentDidUpdate(){
 componentDidMount(){
 
   this.bindSlider();
+  this.setState({bounceIn:"bounceIn animated"});
 }
 
  componentWillReceiveProps(nextProps){
@@ -110,7 +114,7 @@ render(){
     return <div></div>;
   }
   return(
-      <div>
+      <div className={this.state.bounceIn} style={{}}>
         <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7">

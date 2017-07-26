@@ -22,7 +22,7 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 
 class ProfilePage extends React.Component {
 
-    constructor(props) 
+    constructor(props)
     {
         super();
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
@@ -56,10 +56,10 @@ class ProfilePage extends React.Component {
     }
 
     componentDidUpdate(prevprops) {
-       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)    
+       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
-    componentDidMount() 
-    {   
+    componentDidMount()
+    {
         this.props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
@@ -77,7 +77,7 @@ class ProfilePage extends React.Component {
         }
     }
 
-    setNextPrevLink() 
+    setNextPrevLink()
     {
         let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD","apiDataDR","apiDataVA"];
         if(this.props.myjsData.apiDataIR != "" || this.props.myjsData.apiDataMOD != "" || this.props.myjsData.apiDataDR != "") {
@@ -110,7 +110,7 @@ class ProfilePage extends React.Component {
                         });
                     }
                 }
-            } 
+            }
             let startX,endX,_this=this;
             document.getElementById("ProfilePage").addEventListener('touchstart', function(e){
                 startX = e.changedTouches[0].clientX;
@@ -120,41 +120,41 @@ class ProfilePage extends React.Component {
                 endX = e.changedTouches[0].clientX;
             });
             document.getElementById("ProfilePage").addEventListener('touchend', function(e){
-                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl != "") 
+                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl != "")
                 {
                     document.getElementById("swipePage").classList.add("animateLeft");
                     _this.setState ({
                         dataLoaded : false
                     });
                     jsb9Fun.flushJSB9Obj(_this);
-                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
                     _this.props.history.push(_this.state.nextUrl);
                     jsb9Fun.recordBundleReceived(_this,new Date().getTime());
                     _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
-                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl != "") 
+                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl != "")
                 {
                     document.getElementById("swipePage").classList.add("animateLeft");
                     jsb9Fun.flushJSB9Obj(_this);
                     _this.setState ({
                         dataLoaded : false
                     });
-                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
                     _this.props.history.push(_this.state.prevUrl);
                     jsb9Fun.recordBundleReceived(_this,new Date().getTime());
                     _this.props.showProfile(_this,_this.state.prevprofilechecksum,_this.state.responseTracking);
-                } 
-            }); 
-        } 
+                }
+            });
+        }
 
     }
     showLoaderDiv() {
         this.setState({
             showLoader:true
         });
-        
+
     }
     componentWillReceiveProps(nextProps)
-    {  
+    {
         if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
             this.setState({
                 showLoader:false
@@ -163,17 +163,17 @@ class ProfilePage extends React.Component {
         else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
             this.setState({
                 showLoader:false
-            });   
+            });
             document.getElementById("swipePage").classList.add("animateLeft");
             this.setState ({
                 dataLoaded : false
             });
             jsb9Fun.flushJSB9Obj(this);
-            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
             this.props.history.push(this.state.nextUrl);
             jsb9Fun.recordBundleReceived(this,new Date().getTime());
-            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);     
-        } 
+            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
+        }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
@@ -222,7 +222,7 @@ class ProfilePage extends React.Component {
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
-            },3000); 
+            },3000);
             */
         } else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true) {
             let newProfilechecksum = nextProps.location.search.split("?profilechecksum=")[1].split("&")[0];
@@ -231,20 +231,20 @@ class ProfilePage extends React.Component {
             this.setState ({
                 dataLoaded : false
             });
-            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href); 
+            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
             this.props.showProfile(this,newProfilechecksum,this.state.responseTracking);
         }
-        
+
     }
 
-    componentWillUnmount() 
-    {   
+    componentWillUnmount()
+    {
         //this.props.fetchedProfilechecksum = "false";
-        window.removeEventListener('scroll', this.setScrollPos); 
-        this.props.jsb9TrackRedirection(new Date().getTime(),this.url);   
+        window.removeEventListener('scroll', this.setScrollPos);
+        this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
 
-    setScrollPos() 
+    setScrollPos()
     {
         let tabElem = document.getElementById("tab");
         if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
@@ -254,8 +254,8 @@ class ProfilePage extends React.Component {
             tabElem.classList.remove("posFixTop");
         }
     }
-    
-    removePromoLayer() 
+
+    removePromoLayer()
     {
         this.setState ({
             showPromo : false
@@ -263,7 +263,7 @@ class ProfilePage extends React.Component {
         document.getElementById("mainContent").classList.remove("ham_b100");
     }
 
-    showTab(elem) 
+    showTab(elem)
     {
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
@@ -274,19 +274,19 @@ class ProfilePage extends React.Component {
             document.getElementById(elem+"Tab").classList.remove("dn");
         }
     }
-    initHistory() 
+    initHistory()
     {
         this.setState({
             showHistory:true
         });
     }
-    closeHistoryTab() 
+    closeHistoryTab()
     {
         this.setState({
             showHistory:false
         });
     }
-    checkPhotoAlbum(e) 
+    checkPhotoAlbum(e)
     {
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
@@ -294,19 +294,19 @@ class ProfilePage extends React.Component {
 
     }
 
-    imageLoaded() 
+    imageLoaded()
     {
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
     }
 
-    goBack() 
+    goBack()
     {
         this.props.history.goBack();
     }
 
-    render() 
-    {   
+    render()
+    {
         var contactEngineView;
         if(this.state.dataLoaded == true) {
             let profiledata = {
@@ -326,7 +326,7 @@ class ProfilePage extends React.Component {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         }
-        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;      
+        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
         var historyIcon;
         if(getCookie("AUTHCHECKSUM")) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -357,7 +357,7 @@ class ProfilePage extends React.Component {
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='';
-        
+
         if(this.state.dataLoaded)
         {
             photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
@@ -370,11 +370,11 @@ class ProfilePage extends React.Component {
             }
             AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
-            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;        
+            DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
             document.getElementById("swipePage").classList.remove("animateLeft");
             metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
-        } 
-        else 
+        }
+        else
         {
             AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
                 <div className="timeline-item">
