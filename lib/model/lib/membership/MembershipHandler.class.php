@@ -2929,26 +2929,5 @@ class MembershipHandler
             return false;
         }
     }
-
-    public static function isEligibleForRBHandling($profileid) {
-         if(empty($profileid) || !is_numeric($profileid)){
-             return false;
-         }
-         $serviceid = 'X';
-         $startDate = VariableParams::$jsExclusiveReleaseDate;
- 
-         $purchasesObj = new BILLING_SERVICE_STATUS();
-         $profile = $purchasesObj->getEligibleProfileForRBHandling($profileid,$serviceid,$startDate);
- 
-         unset($purchasesObj);
-         unset($serviceid);
-         unset($startDate);
-         
-         if (count($profile)) {
-             return true;
-         } else {
-             return false;
-         }
-     }
      
 }
