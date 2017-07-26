@@ -43,23 +43,23 @@ class HamburgerApp
 			$hamburgerDetails["MEMBERSHIPT_TOP"] = $membershipMessage["top"]?$membershipMessage["top"]:null;
 			$hamburgerDetails["MEMBERSHIPT_BOTTOM"] = $membershipMessage["bottom"]?$membershipMessage["bottom"]:null;
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
-			$hamburgerDetails['AWAITING_RESPONSE_NEW']=$profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
-			$hamburgerDetails['AWAITING_RESPONSE']=$profileMemcacheObj->get("AWAITING_RESPONSE");
-			$hamburgerDetails['FILTERED']=$profileMemcacheObj->get("FILTERED");
-			$hamburgerDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
+			$hamburgerDetails['AWAITING_RESPONSE_NEW']=self::convertoInt($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
+			$hamburgerDetails['AWAITING_RESPONSE']=self::convertoInt($profileMemcacheObj->get("AWAITING_RESPONSE"));
+			$hamburgerDetails['FILTERED']=self::convertoInt($profileMemcacheObj->get("FILTERED"));
+			$hamburgerDetails["FILTERED_NEW"] = self::convertoInt($profileMemcacheObj->get("FILTERED_NEW"));
 				if(!$hamburgerDetails["FILTERED_NEW"]){
 					$hamburgerDetails["FILTERED_NEW"] = 0;
 				}
-			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
+			$hamburgerDetails['ACC_ME_NEW']=self::convertoInt($profileMemcacheObj->get("ACC_ME_NEW"));
 			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1 || ($isApp=='A' && $appVersion>89))
 				$hamburgerDetails['MESSAGE_NEW']=0;
 			else
-	          	$hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
+	          	$hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? self::convertoInt($profileMemcacheObj->get("MESSAGE_NEW")) : 0;
 	                
 	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 				$hamburgerDetails['MATCHALERT']=0;
 			else
-				$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
+				$hamburgerDetails['MATCHALERT']=self::convertoInt($profileMemcacheObj->get("MATCHALERT_TOTAL"));
 			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
 			{
 				$hamburgerDetails['VISITOR_ALERT']=0;
@@ -80,13 +80,13 @@ class HamburgerApp
 			}
 			else{
 				$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
-				$hamburgerDetails['JUST_JOINED_COUNT'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES');
-				$hamburgerDetails['JUST_JOINED_NEW'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				$hamburgerDetails['JUST_JOINED_COUNT'] = self::convertoInt($profileMemcacheObj->get('JUST_JOINED_MATCHES'));
+				$hamburgerDetails['JUST_JOINED_NEW'] = self::convertoInt($profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW'));
 			}
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
-				$hamburgerDetails['ACC_ME'] = $profileMemcacheObj->get('ACC_ME');
-				$hamburgerDetails['ACC_BY_ME'] = $profileMemcacheObj->get('ACC_BY_ME');
+				$hamburgerDetails['ACC_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_ME'));
+				$hamburgerDetails['ACC_BY_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_BY_ME'));
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
@@ -130,5 +130,10 @@ class HamburgerApp
 			return $hamburgerDetails;
 		}
         }
+
+       public static function convertoInt($ss){
+       	return ($ss+0);
+       }
 }
 ?>
+

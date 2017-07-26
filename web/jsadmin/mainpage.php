@@ -234,7 +234,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
         
-        if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
+        if (in_array('ExPmSr', $priv) || in_array('SuPmSr', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/menu\">Exclusive RM Interface</a>";
         }
         
