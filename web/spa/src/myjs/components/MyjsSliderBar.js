@@ -14,9 +14,7 @@ export class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth},
-      mainHeight : 0,
-      showNow: 'hidden',
+      tupleWidth : {'width' : window.innerWidth}
 
     }
 
@@ -42,16 +40,14 @@ componentDidMount(){
 }
 
  componentWillReceiveProps(nextProps){
+   console.log('nxt');
+   console.log(nextProps.contact);
     if(nextProps.contact.contactDone) {
         console.log('interest sent slider');
     }
     if(nextProps.contact.acceptDone){
        console.log('accept done slider');
     }
-    // if(nextProps.contact.declineDone)
-    // {
-    //    this.removeMyjsTuple(nextProps.contact.tupleID);
-    // }
 }
 removeMyjsTuple(param){console.log('inremocemmm');
   let e = document.getElementById(param);
@@ -113,7 +109,9 @@ render(){
     return <div></div>;
   }
   return(
-      <div  style={{}}>
+
+      <div>
+
         <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7">
