@@ -38,7 +38,7 @@ export default class ThreeDots extends React.Component{
   render(){
     var reportAbuseView;
     if(this.state.showAbuseLayer == true) {
-      reportAbuseView = <ReportAbuse closeAbuseLayer={() => this.closeAbuseLayer()} profileThumbNailUrl={this.props.profileThumbNailUrl} />
+      reportAbuseView = <ReportAbuse username={this.props.username} profilechecksum={this.props.profilechecksum} closeAbuseLayer={() => this.closeAbuseLayer()} profileThumbNailUrl={this.props.profileThumbNailUrl} />
       document.getElementById("vpro_tapoverlay").classList.add("dn");
     }
     var layerView;

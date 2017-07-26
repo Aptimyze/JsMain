@@ -13,3 +13,5 @@ export const EDIT_SUBMIT = '/api/v1/profile/editsubmit';
 export const SEND_INTEREST_API = '/api/v2/contacts/postEOI';
 export const ACCEPT_API = '/api/v2/contacts/postAccept';
 export const DECLINE_API = '/api/v2/contacts/postNotInterested';
+
+export const ABUSE_FEEDBACK_API = '/api/v1/faq/feedbackAbuse';

@@ -87,7 +87,7 @@ export class contactEngine extends React.Component{
                 <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>
                 <div className="white">{this.props.buttondata.buttons.primary[0].label}</div>
               </div>
-              <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+              <ThreeDots username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
             </div>
           </div>
           );

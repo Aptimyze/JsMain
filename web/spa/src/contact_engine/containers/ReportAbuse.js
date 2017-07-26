@@ -5,6 +5,8 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
+import axios from "axios";
+
 
 export default class ReportAbuse extends React.Component{
   
@@ -12,6 +14,7 @@ export default class ReportAbuse extends React.Component{
         super();
         this.state = {
             selectOption: "",
+            selectText: "",
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
@@ -28,8 +31,10 @@ export default class ReportAbuse extends React.Component{
   
     listSelected(e) {
         e.target.getElementsByTagName("i")[0].classList.remove("dn");
+        console.log(e.target.innerText)
         this.setState({
-            selectOption: e.target.id
+            selectOption: e.target.id,
+            selectText: e.target.innerText
         })
         setTimeout(function(){
             document.getElementById("reportAbuseScreen2").classList.add("animateLeftSlow");
@@ -57,7 +62,39 @@ export default class ReportAbuse extends React.Component{
     } else if(document.getElementById("detailReasonsLayer").value == "") {
         this.showError(ErrorConstantsMapping("enterComments"));  
     } else {
-        console.log("do further")
+
+        let reason = document.getElementById("detailReasonsLayer").value;
+        let mainReason = this.state.selectText;
+
+        // let feed = {};
+        // var category = 'Abuse';
+        // var mainReason = mainReason;
+        let message = this.props.username+' has been reported abuse by '+localStorage.getItem('USERNAME')+' with the following reason:'+reason;
+        let profilechecksum = this.props.profilechecksum;
+
+        let _this = this;
+
+        let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason;
+
+        axios({
+        method: 'POST',
+        url: CONSTANTS.API_SERVER +  CONSTANTS.ABUSE_FEEDBACK_API + postData, 
+        data: {},
+        headers: {
+          'Accept': 'application/json',
+          'withCredentials':true,
+          'X-Requested-By': 'jeevansathi',
+          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+      }).then( (response) => {
+            _this.showError(response.data.message);
+        })
+        .catch( (error) => {
+          console.warn('Actions - fetchJobs - recreived error: ', error)
+        })
+
+
+
     }
   }
   
