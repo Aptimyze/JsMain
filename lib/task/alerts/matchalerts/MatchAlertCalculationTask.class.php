@@ -21,6 +21,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 		$this->addArguments(array(
                         new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'My argument'),
                         new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
+                        new sfCommandArgument('fromReg', sfCommandArgument::OPTIONAL, 'My argument',0),
         	));
 
 		$this->addOptions(array(
@@ -44,6 +45,7 @@ EOF;
                 ini_set('memory_limit','512M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
+                $fromReg = $arguments["fromReg"]; // registered data flag
                 
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
@@ -51,7 +53,6 @@ EOF;
                 $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");
-
 		$flag=1;
 
 		do{
@@ -61,7 +62,7 @@ EOF;
                         
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
-			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
+			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
                         //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
 			if(is_array($arr))
 			{
