@@ -2290,7 +2290,7 @@ JsChat.prototype = {
                 now_mark_read = true;
                 read_class = "nchatic_9";
             }
-            if(typeof communication != "undefined"){
+            if(communication !== undefined && Object.keys(communication).length>0){
                 $.each(communication, function (key, logObj) {
                     latestMsgId = logObj["date"];
                     //console.log(logObj);
@@ -2324,12 +2324,15 @@ JsChat.prototype = {
                         }
                         //check for default eoi message,remove after monday JSI release
                         if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted your interest")==-1)){
-                            if(removeFreeMemMsg == false && $('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
+                            if(removeFreeMemMsg == false){
                                 //if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                 removeFreeMemMsg = true;
-                                //console.log("enabling text box realtime in _appendChatHistory");
-                                curElem._enableChatAfterPaidInitiates(other_id);
-                                //}
+                                if($('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
+                                    curElem._enableChatAfterPaidInitiates(other_id);
+                                }
+                                else{
+                                    curElem._enableChatAfterPaidInitiates(other_id,"disable");
+                                }
                             }
                             /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
                                 curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
@@ -2385,6 +2388,7 @@ JsChat.prototype = {
     
     //enable chat for free member if paid initiates
     _enableChatAfterPaidInitiates: function(userId,type){
+
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
             //console.log("removing");

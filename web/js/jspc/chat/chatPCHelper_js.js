@@ -544,7 +544,7 @@ function preProcessCommunication(communication){
     if(Object.keys(communication).length>0)
         return communication.reverse();
     else
-        return null;
+        return {};
 }
 
 /*getChatHistory
