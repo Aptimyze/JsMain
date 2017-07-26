@@ -92,10 +92,7 @@ EOF;
                     } else {
                     	$this->updateStatus($pid,'I');
                     }
-                } else {
-                	print_r("Nopes\n");
                 }
-                
     		}
 	    }
 	}

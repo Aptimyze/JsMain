@@ -74,8 +74,9 @@ class ExclusiveMatchMailer {
 
 	public function getAcceptancesForMatchMailer($dbName,$profilesId){
 		$contactsObj = new newjs_CONTACTS($dbName);
-		$res = $contactsObj->getSentAcceptancesForMatchMailer($profilesId);
-		$result = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$res);
+        $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
+		$res = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
+		$result = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$res,$lastWeekMailDate);
 		unset($contactsObj);
 		return $result;
 	}

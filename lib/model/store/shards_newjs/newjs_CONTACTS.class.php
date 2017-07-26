@@ -1324,9 +1324,8 @@ public function getSendersPending($chunkStr)
       }
     }
 
-    public function getSentAcceptancesForMatchMailer($profilesId) {
+    public function getSentAcceptancesForMatchMailer($profilesId,$time) {
     	try {
-    		$lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
     		
     		$sql = "SELECT SENDER, RECEIVER
     				FROM newjs.CONTACTS
@@ -1335,7 +1334,7 @@ public function getSendersPending($chunkStr)
     		$prep = $this->db->prepare($sql);
     		$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_STR);
     		$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
-    		$prep->bindValue(':TIME',$lastWeekMailDate,PDO::PARAM_STR);
+    		$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
     		$prep->execute();
     		$prep->setFetchMode(PDO::FETCH_ASSOC);
 
@@ -1348,7 +1347,7 @@ public function getSendersPending($chunkStr)
     	}
     }
 
-    public function getReceivedAcceptancesForMatchMailer($profilesId,$result){
+    public function getReceivedAcceptancesForMatchMailer($profilesId,$result,$time){
     	try {
     		$sql = "SELECT SENDER, RECEIVER
 					FROM newjs.CONTACTS
@@ -1357,7 +1356,7 @@ public function getSendersPending($chunkStr)
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_INT);
 			$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
-			$prep->bindValue(':TIME',$lastWeekMailDate,PDO::PARAM_STR);
+			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
 			$prep->execute();
 			$prep->setFetchMode(PDO::FETCH_ASSOC);
 
