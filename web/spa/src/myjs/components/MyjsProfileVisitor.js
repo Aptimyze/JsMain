@@ -51,7 +51,6 @@ export default class ProfileVisitor extends React.Component{
   }
   componentDidMount(){
     if(!this.props.responseMessage.profiles)return;
-    this.applyAnimation();
   }
 
   componentWillUnmount(){
@@ -60,7 +59,7 @@ export default class ProfileVisitor extends React.Component{
 
   render(){
     return(
-      <div style={{}} className="bounceIn animated setWidth mt10" id="visitorPresent">
+      <div style={{}} className=" setWidth mt10" id="visitorPresent">
         <div className="pad1 bg4" style = {{}}>
           <div className="fullwid pt15 pb10">
             <div className="f17 fontlig color7">Profile Visitors</div>
@@ -78,12 +77,5 @@ export default class ProfileVisitor extends React.Component{
 
   }
 
-
-  applyAnimation()
-  {
-  var thisObj = this;
-  this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=129) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=3; thisObj.setState({mainHeight:height});},1);
-
-  }
 
 }

@@ -17,7 +17,6 @@ export class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth},
       mainHeight : 0,
       showNow: 'hidden',
-      bounceIn:''
 
     }
 
@@ -40,7 +39,6 @@ componentDidUpdate(){
 componentDidMount(){
 
   this.bindSlider();
-  this.setState({bounceIn:"bounceIn animated"});
 }
 
  componentWillReceiveProps(nextProps){
@@ -62,6 +60,9 @@ removeMyjsTuple(param){
       e.parentNode.removeChild(e);
   });
   e.classList.add("setop0");
+  this.props.apiHit();
+
+
 }
 whichTransitionEvent(){
     let t;
@@ -81,7 +82,7 @@ whichTransitionEvent(){
 }
 showLoader(param){
     let z = document.createElement('IMG');
-    z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
+    z.setAttribute("src", "http://static.jeevansathi.com/images/jsms/commonImg/loader.gif");
     z.setAttribute("class","posabs setmid");
     document.getElementById(param).appendChild(z);
 }
@@ -114,7 +115,7 @@ render(){
     return <div></div>;
   }
   return(
-      <div className={this.state.bounceIn} style={{}}>
+      <div  style={{}}>
         <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7">
