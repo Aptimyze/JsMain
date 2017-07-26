@@ -15,10 +15,13 @@ function GAMapper(GAEvent, extraParams={}){
             "GA_VOL_SUCCESS_OK"     :["E", "Phone verification response", "Verify Okay"],
             "GA_LL_LOGIN_SUCCESS"   :["E", "login layer", "Login Success"],
             "GA_LL_LOGIN_FAILURE"   :["E", "login layer", "Login Failure"],
+
             
             "GA_EOI_INITIATE"       :["E", "EOI", "Express Interest"],
             "GA_EOI_SHORTLIST"      :["E", "EOI", "Shortlist"],
             "GA_EOI_CONTACT_DETAIL" :["E", "EOI", "Contact"],
+            "GA_LL_LOGIN"           :["E", "login layer", "Login"],
+            "GA_TOPBAR_LOGIN"       :["E", "login", "login"],
             "GA_LL_REGISTER"        :["E", "login layer", "Register"],
             "GA_TOPBAR_REGISTER"    :["E", "login", "Register"],
             "GA_TOPBAR_FORGOT"      :["E", "login", "Forgot Password"],
