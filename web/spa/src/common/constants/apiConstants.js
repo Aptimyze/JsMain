@@ -1,5 +1,4 @@
 export const API_SERVER = 'http://trunk.jeevansathi.com';
-
 export const LOGIN_CALL_URL = '/api/v1/api/login';
 //Myjs # Head, Edit bar
 export const MYJS_CALL_URL = '/api/v1/myjs/perform';

@@ -20,7 +20,7 @@ export class MyjsShowVisitors extends React.Component{
       VisitorsListing = <div></div>;
     }
     return(
-        <div className="fullwid clearfix">
+        <div className=" fullwid clearfix">
           {tupleValues.slice(0,count).map(function(profiles, index){
             return (
                 <div className="fl pl_a" key={profiles.profilechecksum}>
@@ -60,8 +60,8 @@ export default class ProfileVisitor extends React.Component{
 
   render(){
     return(
-      <div style={{height:this.state.mainHeight+'px'}} className="setWidth mt10" id="visitorPresent">
-        <div className="pad1 bg4" style = {{visibility:this.state.showNow}}>
+      <div style={{}} className="bounceIn animated setWidth mt10" id="visitorPresent">
+        <div className="pad1 bg4" style = {{}}>
           <div className="fullwid pt15 pb10">
             <div className="f17 fontlig color7">Profile Visitors</div>
           </div>

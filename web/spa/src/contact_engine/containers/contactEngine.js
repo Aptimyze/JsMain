@@ -78,7 +78,7 @@ export class contactEngine extends React.Component{
       	}
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(<div id="buttons1" className="view_ce fullwid">
-            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
+            <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
               <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                 <i className="ot_sprtie ot_chk"></i>
                 <input className="params" type="hidden" value={this.props.buttondata.buttons.others[0].params}></input>
@@ -87,7 +87,7 @@ export class contactEngine extends React.Component{
                 <div className="white">{this.props.buttondata.buttons.others[0].label}</div>
               </div>
             </div>
-            <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[1].action)}>
+            <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[1].action)}>
               <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
                 <i className="ot_sprtie newitcross"></i>
                 <input className="params" type="hidden" value={this.props.buttondata.buttons.others[1].params}></input>

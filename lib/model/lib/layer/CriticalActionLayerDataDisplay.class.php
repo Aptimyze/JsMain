@@ -11,7 +11,7 @@ Keep the Layer id same as the key of $arr. Else there will be a mismatch.
 
   */
   public static function getDataValue($layerid='',$label='',$value=''){
-    $arr=array( 
+    $arr=array(
 1=>array(LAYERID=>"1",
 TIMES=>"4",
 MINIMUM_INTERVAL=>"72",
@@ -512,7 +512,7 @@ BUTTON1_PAGEID_ANDROID=>"0",
 BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N",
-),
+)
 );
 if ($label) {
    if ($value) {

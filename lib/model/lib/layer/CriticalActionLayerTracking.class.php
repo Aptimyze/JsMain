@@ -341,7 +341,7 @@ return 0;
                           $show=1;
                       }
                     break;
-                    case '16':                      
+                    case '16':
                           if(MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))) )
                           {
 
@@ -470,6 +470,10 @@ return 0;
 
 
                     break;
+                  case '24':
+
+                            $show=1;
+                  break;
 
           default : return false;
         }
