@@ -10,14 +10,16 @@ const contactEngineReducer = (state={
 		state = {
 			...state,
 			contact:action.payload,
-			contactDone : true
+			contactDone : true,
+			tupleID : action.token
 		}
 		break;
 		case 'ACCEPT':
 		state = {
 			...state,
 			accept:action.payload,
-			acceptDone : true
+			acceptDone : true,
+			tupleID : action.token
 		}
 		break;
 		case 'DECLINE':
@@ -25,6 +27,14 @@ const contactEngineReducer = (state={
 			...state,
 			decline:action.payload,
 			declineDone : true,
+			tupleID : action.token
+		}
+		break;
+		case 'REMINDER':
+		state = {
+			...state,
+			reminder:action.payload,
+			reminderDone : true,
 			tupleID : action.token
 		}
 		break;

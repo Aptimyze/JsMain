@@ -20,7 +20,7 @@ export class MyjsShowVisitors extends React.Component{
       VisitorsListing = <div></div>;
     }
     return(
-        <div className="fullwid clearfix">
+        <div className=" fullwid clearfix">
           {tupleValues.slice(0,count).map(function(profiles, index){
             return (
                 <div className="fl pl_a" key={profiles.profilechecksum}>
@@ -51,7 +51,6 @@ export default class ProfileVisitor extends React.Component{
   }
   componentDidMount(){
     if(!this.props.responseMessage.profiles)return;
-    this.applyAnimation();
   }
 
   componentWillUnmount(){
@@ -60,8 +59,8 @@ export default class ProfileVisitor extends React.Component{
 
   render(){
     return(
-      <div style={{height:this.state.mainHeight+'px'}} className="setWidth mt10" id="visitorPresent">
-        <div className="pad1 bg4" style = {{visibility:this.state.showNow}}>
+      <div style={{}} className=" setWidth mt10" id="visitorPresent">
+        <div className="pad1 bg4" style = {{}}>
           <div className="fullwid pt15 pb10">
             <div className="f17 fontlig color7">Profile Visitors</div>
           </div>
@@ -78,12 +77,5 @@ export default class ProfileVisitor extends React.Component{
 
   }
 
-
-  applyAnimation()
-  {
-  var thisObj = this;
-  this.timer = setInterval(function(){var height =thisObj.state.mainHeight;if(height>=129) {clearInterval(thisObj.timer);thisObj.setState({showNow:'visible'});}height+=3; thisObj.setState({mainHeight:height});},1);
-
-  }
 
 }

@@ -206,7 +206,7 @@ componentWillUnmount(){
           <div className="txtc ">
               <a href="/profile/viewprofile.php?ownview=1#Dpp">
                 <div className="editBarStyle5">
-                  <i className="mainsp dppHeart"></i>
+                  <i className="dppHeart"></i>
               </div>
             </a>
             <div className="f12 color7 fontlig">Desired Partner</div>

@@ -34,22 +34,6 @@ const MyjsReducer = (state={
 		break;
 		case 'SET_IR_DATA':
 
-		if(state.apiDataIR){
-			var apiDataIR = state.apiDataIR;
-			action.payload.profiles.forEach(function(elem){
-				apiDataIR['profiles'].push(elem);
-			});
-			apiDataIR['paginationHit'] = false;
-			apiDataIR['nextpossible'] = action.payload.nextpossible;
-			apiDataIR['page_index'] = action.payload.page_index;
-			state = {
-				...state,
-				apiDataIR:apiDataIR,
-				irFetched : true
-			}
-
-		}
-		else
 		state = {
 			...state,
 			apiDataIR:action.payload,
@@ -77,6 +61,22 @@ const MyjsReducer = (state={
 			hamFetched : true
 		}
 		break;
+
+		case 'SET_IR_PAGINATION':
+			var apiDataIR = state.apiDataIR;
+			action.payload.profiles.forEach(function(elem){
+				apiDataIR['profiles'].push(elem);
+			});
+			apiDataIR['paginationHit'] = false;
+			apiDataIR['nextpossible'] = action.payload.nextpossible;
+			apiDataIR['page_index'] = action.payload.page_index;
+			state = {
+				...state,
+				apiDataIR:apiDataIR,
+				irFetched : true
+			}
+			break;
+
 	}
 	return state;
 }

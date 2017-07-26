@@ -40,36 +40,45 @@ componentDidMount(){
 }
 
  componentWillReceiveProps(nextProps){
-
-   console.log('in myjs bar');
-   console.log(nextProps.contact.tupleID);
-
-   console.log('working 1');
-   //console.log(nextProps);
-
+   console.log('nxt');
+   console.log(nextProps.contact);
     if(nextProps.contact.contactDone) {
         console.log('interest sent slider');
     }
     if(nextProps.contact.acceptDone){
        console.log('accept done slider');
     }
-    if(nextProps.contact.declineDone)
-    {
-       console.log('decline done slider');
+}
+removeMyjsTuple(param){console.log('inremocemmm');
+  let e = document.getElementById(param);
+  let transitionEvent = this.whichTransitionEvent();
+  transitionEvent && e.addEventListener(transitionEvent, function() {
+      e.parentNode.removeChild(e);
+  });
+  e.classList.add("setop0");
+  this.obj.unbindSlider().initTouch();
+}
+whichTransitionEvent(){
+    let t;
+    let el = document.createElement('fakeelement');
+    let transitions = {
+      'transition':'transitionend',
+      'OTransition':'oTransitionEnd',
+      'MozTransition':'transitionend',
+      'WebkitTransition':'webkitTransitionEnd'
+    }
+
+    for(t in transitions){
+        if( el.style[t] !== undefined ){
+            return transitions[t];
+        }
     }
 }
 showLoader(param){
-
-    console.log('in show loader');
-
-    console.log(param);
-
     let z = document.createElement('IMG');
-    z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
+    z.setAttribute("src", "http://static.jeevansathi.com/images/jsms/commonImg/loader.gif");
     z.setAttribute("class","posabs setmid");
-    console.log(z);
     document.getElementById(param).appendChild(z);
-
 }
 
 bindSlider(){
@@ -100,7 +109,9 @@ render(){
     return <div></div>;
   }
   return(
+
       <div>
+
         <div className="pad1" style = {{marginTop: '15px'}}>
           <div className="fullwid pb10">
             <div className="fl color7">
@@ -117,7 +128,7 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => (
-                <div key={index} className="mr10 dispibl ml0 posrel" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
+                <div key={index} className="mr10 dispibl ml0 posrel rmtuple" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
 
                   <div className="bg4 overXHidden" id="hideOnAction">
@@ -151,7 +162,7 @@ render(){
                     </Link>
                     <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
 
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(this.props.listing.infotype+"_"+index)} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
 
                     </div>
                 </div>
