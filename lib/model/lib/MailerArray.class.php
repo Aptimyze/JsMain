@@ -432,6 +432,7 @@ private static $subjectArray=array(
 '1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
 '1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
 '1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
+'1879'=>array('MAIL_ID'=>'1879','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We were unable to reach you.Kindly authenticate your contact details'),
 );
 public static function getLink($Id){
 

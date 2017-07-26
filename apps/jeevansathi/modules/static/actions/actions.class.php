@@ -446,7 +446,7 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
-    if($this->layerId==18 || $this->layerId==20)
+    if($this->layerId==18 || $this->layerId==20 || $this->layerId==23)
     {
           include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
@@ -1087,6 +1087,16 @@ public function executeAppredirect(sfWebRequest $request)
   	$this->setTemplate("knowYourCustomer");
   }
   
+  public function executePrivacySettings()
+  {
+    $loggedInProfileObj = LoggedInProfile::getInstance();
+    $profileId = $loggedInProfileObj->getPROFILEID(); 
+    $this->profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
+    //print_R($this->profileDetail);die;
+    $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
+    $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
+    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
+  }
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;    
@@ -2218,19 +2228,34 @@ if($k=="state_res")
     $RecordingUrl = $request->getPostParameter('RecordingUrl');
     $DateUpdated = $request->getPostParameter('DateUpdated');
 
-    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl;
+    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n\n";
     
-    
+    $digitPressed = "";
     if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
       foreach($getParameters as $key) {
+        
+        if ($key == "CallSid") {
+          $CallSid = $request->getParameter($key);
+          continue;
+        }
+        if($key == "digits") {
+          $digitPressed = $request->getParameter($key);
+          continue;
+        }
         $arrOut[] = " $key : " . $request->getParameter($key);
       }
       
       $totalResponse = implode(", ", $arrOut);
+      
+      $totalResponse .= "\n\n";
     }
     
     $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
-    $storeObj->updateCallResponse($CallSid, $totalResponse);
-    die(x);
+    $storeObj->updateCallResponse($CallSid, $totalResponse, $digitPressed);
+    
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    $respObj->generateResponse();
+    die();
   }
 }

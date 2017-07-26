@@ -850,7 +850,9 @@ function updateNative(json,realJson,indexPos)
 function updateProofLabel(thisObject){
         var fileLabelId = $(thisObject).attr("labelKey");
         var file = thisObject.files[0];
-        if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
+        var nameArr = file.name.split(".");
+        var fileExt = nameArr[nameArr.length-1];
+        if (file && fileExt == "jpg" || fileExt == "JPG" || fileExt == "jpeg" || fileExt == "JPEG" || fileExt == "PDF" || fileExt == "pdf") {
         } else {
             $("#"+fileLabelId).html('jpg/pdf only');
             ShowTopDownError(["Invalid file format"]);

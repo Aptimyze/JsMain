@@ -34,7 +34,7 @@ class OutboundEventConsumer {
    *
    * @var type 
    */
-  private $bDebugInfo = true;
+  private $bDebugInfo = false;
   
   /**
    * 
@@ -199,7 +199,8 @@ class OutboundEventConsumer {
       $this->logThis("Analytic Score check failed", $enEventType, $arrInfo);
       return ;
     }
-    
+     $memberShipValue = $memberShipValue['OFFER_PRICE'];
+ 
     //Get Verified Phone Numbers
     $verifiedNumber = $this->getVerifiedPhone($userDetails);
     
@@ -240,7 +241,7 @@ class OutboundEventConsumer {
         break;
     }
 
-    $callerId = '08039510994';
+    $callerId = '01139587944';
     //$verifiedNumber = "08010619996";//TODO remove this
     
     $response = $this->callThirdPartyApi($verifiedNumber, $callerId, $landingFlowId, $memberShipValue);
@@ -319,9 +320,14 @@ class OutboundEventConsumer {
     
     $bReturn = false;
     $currentHour = date('H');
+    $currentMin = date('i');
     
     if($currentHour >= OutBoundEventEnums::OUTBOUND_CALL_TIME_START && $currentHour <= OutBoundEventEnums::OUTBOUND_CALL_TIME_END) {
       $bReturn = true;
+    }
+    
+    if($bReturn && $currentHour == OutBoundEventEnums::OUTBOUND_CALL_TIME_END && $currentMin > OutBoundEventEnums::OUTBOUND_CALL_TIME_MINUTES_END) {
+      $bReturn = false;
     }
     
     date_default_timezone_set($orgTZ);
