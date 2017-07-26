@@ -97,7 +97,7 @@ EOF;
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                                                                         
                                                         $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$BroaderDppSort);   
                                                         $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting); 
-                                                        if(count($profiles) == 0)
+                                                        if($totalResults["CNT"] == 0)
                                                         {                                                            
                                                             $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversTVsT);
                                                         }
