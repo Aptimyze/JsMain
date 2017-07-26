@@ -49,14 +49,19 @@ componentDidMount(){
        console.log('accept done slider');
     }
 }
-removeMyjsTuple(param){console.log('inremocemmm');
+removeMyjsTuple(param,index){
   let e = document.getElementById(param);
   let transitionEvent = this.whichTransitionEvent();
+  let _this=this;
   transitionEvent && e.addEventListener(transitionEvent, function() {
       e.parentNode.removeChild(e);
+      _this.props.spliceIndex(_this.props.listing.infotype,index);
+      _this.obj.unbindSlider().initTouch();console.log(_this.props.listing);
+
   });
   e.classList.add("setop0");
-  this.obj.unbindSlider().initTouch();
+//
+
 }
 whichTransitionEvent(){
     let t;
@@ -162,7 +167,7 @@ render(){
                     </Link>
                     <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
 
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(this.props.listing.infotype+"_"+index)} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(this.props.listing.infotype+"_"+index)} button={tuple.buttonDetailsJSMS.buttons} profilechecksum={tuple.profilechecksum} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
 
                     </div>
                 </div>
@@ -184,8 +189,12 @@ const mapStateToProps = (state) => {
     }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//     return{}
-// }
+ const mapDispatchToProps = (dispatch) => {
+     return{
+       spliceIndex: (infotype,index)=> dispatch({'type': 'SPLICE_MYJS_DATA', payload: {index:index, infotype: infotype}})
+     }
 
-export default connect(mapStateToProps)(MyjsSlider)
+
+ }
+
+export default connect(mapStateToProps,mapDispatchToProps)(MyjsSlider)

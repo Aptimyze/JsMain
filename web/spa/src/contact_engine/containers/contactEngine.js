@@ -7,11 +7,13 @@ import ThreeDots from "./ThreeDots"
 
 export class contactEngine extends React.Component{
   constructor(props){
-    super();
+    super();console.log(props);
     this.state = {
     	actionDone: false,
       remindDone: false
     }
+    this.actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
+
   }
 
   componentDidMount(){
@@ -41,21 +43,21 @@ export class contactEngine extends React.Component{
   		this.props.reminderApi(this.props.profiledata.profilechecksum,this.props.buttonName,this.props.tupleID);
   }
 
-  performAction(button,profilechecksum)
+  performAction(button)
   {
-    
-
-
+      let profilechecksum = this.props.profilechecksum, callBFun =  this.props.callBack;
+      var url = `&${button.params}&profilechecksum=${profilechecksum}`;
+      return commonApiCall(this.actionUrl[button.action],url,'','POST').then(()=>{if(typeof callBFun=='function') callBFun();});
   }
   render(){
   	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
           return (<div className="brdr8 fl wid90p hgt60">
-            <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.props.acceptApi(this.props.buttondata.profilechecksum,this.props.tupleID).then(()=>this.props.callBack())}>
+            <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.performAction(this.props.button[0])}>
               <a className="f15 color2 fontreg">Accept</a>
             </div>
-            <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.props.declineApi(this.props.buttondata.profilechecksum,this.props.tupleID).then(()=>this.props.callBack())}>
+            <div className="txtc wid49p fl f15 pad2 eoiDeclineBtn" onClick={() => this.performAction(this.props.button[1])}>
               <a className="f15 color2 fontlig">Decline</a>
             </div>
             <div className="clr"></div>
@@ -63,7 +65,7 @@ export class contactEngine extends React.Component{
         }
         else {
           return(<div className="brdr8 fullwid hgt60">
-            <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.props.contactApi(this.props.buttondata.profilechecksum,this.props.buttonName,this.props.tupleID)}>
+            <div className="txtc fullwid fl matchOfDayBtn brdr7 pad2" onClick={() => this.performAction()}>
               <span className="f15 color2 fontreg">Send Interest</span>
             </div>
             <div className="clr"></div>
@@ -161,14 +163,6 @@ const mapDispatchToProps = (dispatch) => {
             var url = '&profilechecksum='+profilechecksum;
           return commonApiCall(CONSTANTS.REMINDER_API,url,'REMINDER','POST',dispatch,true,{},tupleID);
         },
-        acceptApi: (profilechecksum, tupleID) => {
-          var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.ACCEPT_API,url,'ACCEPT','POST',dispatch,true,{},tupleID);
-        },
-        declineApi: (profilechecksum, tupleID) => {
-          var url = '&stype=15&profilechecksum='+profilechecksum;
-          return commonApiCall(CONSTANTS.DECLINE_API,url,'DECLINE','POST',dispatch,true,{},tupleID);
-        }
     }
 }
 
