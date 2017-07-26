@@ -68,8 +68,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->setINCOME($incomeStr);
                 
                 $relaxedCity = $relaxedObj->getRelaxedCITY_RES($this->getCITY_RES());
-                $this->setCITY_RES($relaxedCity);
-                $this->setCITY_INDIA($relaxedCity);
+                $this->setCITY_RES($relaxedCity,"",2);
 
                 $relaxedSmoking = $relaxedObj->getRelaxedSMOKE($this->getSMOKE());
                 $this->setSMOKE($relaxedSmoking);
