@@ -9,7 +9,8 @@ export class contactEngine extends React.Component{
   constructor(props){
     super();
     this.state = {
-    	actionDone: false
+    	actionDone: false,
+      remindDone: false
     }
   }
 
@@ -21,6 +22,10 @@ export class contactEngine extends React.Component{
        this.setState({
        	actionDone: true
        })
+      } else if(nextProps.contactAction.reminderDone) {
+        this.setState({
+          remindDone: true
+        })
       }
   }
 
@@ -75,7 +80,17 @@ export class contactEngine extends React.Component{
 
           }
           else {return null;}
-      	}
+      	} else if(this.state.remindDone) {
+            return (<div id="buttons2" className="view_ce fullwid lh26">
+                  <div className="fullwid srp_bg1 txtc pad5new posrel" >
+                    <div className="wid60p">
+                      <div className="white">{this.props.contactAction.reminder.buttondetails.button.label}</div>
+                    </div>
+                    <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+                  </div>
+                </div>
+            );
+        }
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(<div id="buttons1" className="view_ce fullwid">
             <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
