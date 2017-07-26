@@ -123,5 +123,23 @@ class ExclusiveFunctions{
 			unset($exServicingObj);
 		}
 	}
+        
+        public function getCompleteDay($shortDay){
+            if($shortDay=='MON'){
+                return 'Monday';
+            }elseif($shortDay=='TUE'){
+                return 'Tuesday';
+            }elseif($shortDay=='WED'){
+                return 'Wednesday';
+            }elseif($shortDay=='THU'){
+                return 'Thursday';
+            }elseif($shortDay=='FRI'){
+                return 'Friday';
+            }elseif($shortDay=='SAT'){
+                return 'Saturday';
+            }elseif($shortDay=='SUN'){
+                return 'Sunday';
+            }
+        }
 }
 ?>
