@@ -197,7 +197,7 @@ class jsexclusiveActions extends sfActions {
         $serviceDayArr = $exclusiveServicingObj->getServiceDay($this->client);
         $this->serviceDay = $serviceDayArr[0];
         $this->serviceDaySetDate = $serviceDayArr[1];
-        $emailStage = $serviceDayArr[2];
+        $emailStage = $serviceDayArr[2];        //Getting current email stage to check if email was sent already
         
         $countArr = $exclusiveServicingObj->getDayWiseAssignedCount($agent);
         $this->dayWiseCountArr = array('MON'=>($countArr['MON']==''?0:$countArr['MON'])
@@ -210,9 +210,9 @@ class jsexclusiveActions extends sfActions {
         if($submit){
             $this->serviceDay = $request['serviceDay'];
             $this->serviceDaySetDate = date('Y-m-d');
-            $emailStage = 'Q';//Marking Email stage as pending in queue
-            $status = $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay,$emailStage);
-            if($status == true && $emailStage!='S'){
+            $emailStageNew = 'Q';//Marking Email stage as pending in queue
+            $status = $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay,$emailStageNew);
+            if($status == true && $emailStage!='Q' && $emailStage!='C'){        ///Send Email only for the first time service day is set
                 //Push to RabbitMQ delayed queue to send "After Welcome Call Email"
                 $exclusiveObj = new ExclusiveFunctions();
                 $pswrd = new jsadmin_PSWRDS();
@@ -221,8 +221,8 @@ class jsexclusiveActions extends sfActions {
                 $fromEmail=$agentDetails['EMAIL'];
                 $firstname=$agentDetails['FIRST_NAME'];
                 $phone = $agentDetails['PHONE'];
-                $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay);
-                $producerObj=new Producer();
+                $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay); //Get the full day like Saturday from day code like SAT
+                $producerObj=new Producer();        //Push the message to delayed queue for sending email after 2 hours
                 if($producerObj->getRabbitMQServerConnected()){
                     $sendMailData = array('process' =>'EXCLUSIVE_DELAYED_EMAIL',
                                             'data'=>array('type' => 'EXCLUSIVE_WELCOME_EMAIL',

@@ -195,7 +195,7 @@ class Producer
       //After Welcome call email for exclusive members delayed queue 
       $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
 					array("x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
-                                              "x-message-ttl" => array("I", MQ::EXCLUSIVE_MAIL_DELAY_UNIT*3*1000),
+                                              "x-message-ttl" => array("I", MQ::EXCLUSIVE_MAIL_DELAY_UNIT*60*60*1000),
                                               "x-dead-letter-routing-key"=>array("S",MQ::EXCLUSIVE_MAIL_SENDING_QUEUE)
                                               ));
       $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_SENDING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
