@@ -27,6 +27,10 @@ class jsexclusiveActions extends sfActions {
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
+                        //Get Count for each option 
+                        $agent = $request['name'];
+                        //Counter for welcome calls
+                        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -161,11 +165,7 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeMenu(sfWebRequest $request) {
-        //Get Count for each option 
-        $agent = $request['name'];
-        //Counter for welcome calls
-        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-        $this->welcomeCallsCount = $exclusiveServicingObj->getWelcomeCallsCount($agent);
+        
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
@@ -197,6 +197,7 @@ class jsexclusiveActions extends sfActions {
         $serviceDayArr = $exclusiveServicingObj->getServiceDay($this->client);
         $this->serviceDay = $serviceDayArr[0];
         $this->serviceDaySetDate = $serviceDayArr[1];
+        $emailStage = $serviceDayArr[2];        //Getting current email stage to check if email was sent already
         
         $countArr = $exclusiveServicingObj->getDayWiseAssignedCount($agent);
         $this->dayWiseCountArr = array('MON'=>($countArr['MON']==''?0:$countArr['MON'])
@@ -209,7 +210,32 @@ class jsexclusiveActions extends sfActions {
         if($submit){
             $this->serviceDay = $request['serviceDay'];
             $this->serviceDaySetDate = date('Y-m-d');
-            $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay);
+            $emailStageNew = 'Q';//Marking Email stage as pending in queue
+            $status = $exclusiveServicingObj->setServiceDay($this->client,$this->serviceDay,$emailStageNew);
+            if($status == true && $emailStage!='Q' && $emailStage!='C'){        ///Send Email only for the first time service day is set
+                //Push to RabbitMQ delayed queue to send "After Welcome Call Email"
+                $exclusiveObj = new ExclusiveFunctions();
+                $pswrd = new jsadmin_PSWRDS();
+                $agentDetails = $pswrd->getExecutiveDetails($agent);
+                $fromName=$agentDetails['FIRST_NAME'] . $agentDetails['LAST_NAME'];     //Complete Name for alias in email
+                $fromEmail=$agentDetails['EMAIL'];
+                $firstname=$agentDetails['FIRST_NAME'];
+                $phone = $agentDetails['PHONE'];
+                $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay); //Get the full day like Saturday from day code like SAT
+                $producerObj=new Producer();        //Push the message to delayed queue for sending email after 2 hours
+                if($producerObj->getRabbitMQServerConnected()){
+                    $sendMailData = array('process' =>'EXCLUSIVE_DELAYED_EMAIL',
+                                            'data'=>array('type' => 'EXCLUSIVE_WELCOME_EMAIL',
+                                                            'fromName'=>$fromName,
+                                                            'profileid'=>$this->client,
+                                                            'firstname'=>$firstname,
+                                                            'phone'=>$phone,
+                                                            'serviceDay'=>$serviceDay,
+                                                            'senderEmail'=>$fromEmail),
+                                            'redeliveryCount'=>0 );
+                    $producerObj->sendMessage($sendMailData);
+                }
+            }
         }
         
         
@@ -217,7 +243,8 @@ class jsexclusiveActions extends sfActions {
 
     public function executeUploadBiodata(sfWebRequest $request) {
 /* Key for:
- * $this->invalidFile:    1- Size exceeds 5 MB
+ * $this->invalidFile:
+ *                  1- Size exceeds 5 MB
  *                  2- Invalid file type
  *                  3- General Processing error
  */
@@ -249,6 +276,7 @@ class jsexclusiveActions extends sfActions {
                 $this->deleteStatus = $exclusiveServicingObj->deleteBioData($this->client);
                 $this->freshUpload = true;
             }else{
+                $this->deleteStatus = $exclusiveServicingObj->deleteBioData($this->client);
                 $this->invalidFile = 3;
                 $this->freshUpload = false;
             }

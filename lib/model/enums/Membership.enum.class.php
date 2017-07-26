@@ -75,7 +75,6 @@ class memDiscountTypes
 
 class VariableParams
 {
-
     public static $jsExclusiveReleaseDate = "2017-07-17"; //YYYY-MM-DD
 
 	public static $membershipMailerArr =array(

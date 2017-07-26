@@ -1,5 +1,9 @@
 <?php
-
+/*
+ * Email Stage key:
+ * Q: Queued
+ * C: Completed
+ */
 class billing_EXCLUSIVE_SERVICING extends TABLE {
 
     public function __construct($dbname = "") {
@@ -117,12 +121,13 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
      * @param   $profileid,$serviceDay
      * @return  nothing
      */
-    public function setServiceDay($profileid,$serviceDay) {
+    public function setServiceDay($profileid,$serviceDay,$emailStage) {
         try {
-            $sql = "update billing.EXCLUSIVE_SERVICING SET SERVICE_DAY=:SERVICE_DAY, SERVICE_SET_DT = now() where CLIENT_ID = :CLIENTID";
+            $sql = "update billing.EXCLUSIVE_SERVICING SET SERVICE_DAY=:SERVICE_DAY, SERVICE_SET_DT = now(),EMAIL_STAGE=:EMAIL_STAGE where CLIENT_ID = :CLIENTID";
             $res = $this->db->prepare($sql);
             $res->bindValue(":CLIENTID", $profileid, PDO::PARAM_STR);
             $res->bindValue(":SERVICE_DAY", $serviceDay, PDO::PARAM_STR);
+            $res->bindValue(":EMAIL_STAGE", $emailStage, PDO::PARAM_STR);
             $res->execute();
             return true;
         } catch (Exception $e) {
@@ -130,20 +135,38 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
+         /**
+     * Function to set the service day and date when it was set
+     *
+     * @param   $profileid,$serviceDay
+     * @return  nothing
+     */
+    public function updateMailerStatus($profileid,$emailStatus) {
+        try {
+            $sql = "update billing.EXCLUSIVE_SERVICING SET EMAIL_STAGE =:EMAIL_STAGE where CLIENT_ID = :CLIENTID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":CLIENTID", $profileid, PDO::PARAM_STR);
+            $res->bindValue(":EMAIL_STAGE", $emailStatus, PDO::PARAM_STR);
+            $res->execute();
+            return true;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
      /**
-     * Funtion to get the service day and date when it was set
+     * Funtion to get the service day,date when it was set and the stage of email
      *
      * @param   $profileid
      * @return  array of service day and service set date
      */
     public function getServiceDay($profileid) {
         try {
-            $sql = "SELECT SERVICE_DAY,SERVICE_SET_DT FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID";
+            $sql = "SELECT SERVICE_DAY,SERVICE_SET_DT,EMAIL_STAGE FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID";
             $res = $this->db->prepare($sql);
             $res->bindValue(":CLIENTID", $profileid, PDO::PARAM_STR);
             $res->execute();
             if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
-                return array($result['SERVICE_DAY'], $result['SERVICE_SET_DT']);
+                return array($result['SERVICE_DAY'], $result['SERVICE_SET_DT'],$result['EMAIL_STAGE']);
             }
             return false;
         } catch (Exception $e) {
@@ -272,7 +295,32 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 	}
 
 	/**
-	 * Function to update screening status
+	 * Function to get profileId and agentName for sending MatchMails
+	 * 
+	 * @return list of agentName and profileIDs
+	 */
+	public function getProfileIDandAgentNameForMailing()	{
+		try {
+			$tomorrow = strtoupper(date('D',strtotime(' +1 day')));
+			$sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+					FROM billing.EXCLUSIVE_SERVICING 
+					WHERE SERVICE_DAY = :tomorrow ;" ;
+
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
+			$prep->execute();
+			$prep->setFetchMode(PDO::FETCH_ASSOC);
+			
+			while ($res = $prep->fetch()) {
+				$result[$res['AGENT_USERNAME']][] = $res;
+			}
+
+			return $result;
+		} catch (Exception $e) {
+			throw new jsException($e);
+		}
+	}
+	 /** Function to update screening status
 	 *
 	 * @param   $agentUsername,$clientId,$screenedStatus='Y'
 	 * @return  none

@@ -2872,7 +2872,11 @@ class MembershipHandler
     
     public function processCommunityWelcomeDiscount($profileid,$community){
         $discountPercent = $this->getCommunityWelcomeDiscount($community);
-        $serviceArr = $this->getActiveServices();
+        $tempServiceArr = $this->getActiveServices();
+        foreach($tempServiceArr as $key => $val){
+            if($val != 'D')
+                $serviceArr[] = $val;
+        }
         $vdObj = new VariableDiscount();
         $startDate = date('Y-m-d');
         $endDate = date("Y-m-d",strtotime('+'.VariableParams::COMMUNITY_WELCOME_DISCOUNT_DURATION." days"));
@@ -2925,5 +2929,5 @@ class MembershipHandler
             return false;
         }
     }
-
+     
 }

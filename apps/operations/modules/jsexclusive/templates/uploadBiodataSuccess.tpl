@@ -68,6 +68,11 @@
                 <font size=1>File Size cannot be more than 5MB</font>
             </td>
         </tr>
+        <tr class="formhead" align="center" width="100%">
+            <td colspan="3"  height="30">
+                <font size=1><input type="button" onclick="location.href='/operations.php/jsexclusive/uploadBiodata?client=~$client`'" value="Back"></font>
+            </td>
+        </tr>
     </table>
 ~else if $invalidFile eq 2`
     <br>
@@ -77,6 +82,11 @@
                 <font size=1>File format can be either ~$allowedExtension`</font>
             </td>
         </tr>
+        <tr class="formhead" align="center" width="100%">
+            <td colspan="3"  height="30">
+                <font size=1><input type="button" onclick="location.href='/operations.php/jsexclusive/uploadBiodata?client=~$client`'" value="Back"></font>
+            </td>
+        </tr>
     </table>
 ~else if $invalidFile eq 3`
     <br>
@@ -84,6 +94,11 @@
         <tr class="formhead" align="center" width="100%">
             <td colspan="3"  height="30">
                 <font size=1>Error occured, please retry.</font>
+            </td>
+        </tr>
+        <tr class="formhead" align="center" width="100%">
+            <td colspan="3"  height="30">
+                <font size=1><input type="button" onclick="location.href='/operations.php/jsexclusive/uploadBiodata?client=~$client`'" value="Back"></font>
             </td>
         </tr>
     </table>

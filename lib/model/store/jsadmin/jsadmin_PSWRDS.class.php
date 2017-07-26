@@ -853,6 +853,29 @@ class jsadmin_PSWRDS extends TABLE
         return $res;
     }
     
-    
+    /**
+     * Function to get emailId and name of agent for MatchMail
+     * 
+     * @return EMAIL, FIRST_NAME and LAST_NAME of agents
+     */
+    public function getAgentDetailsForMatchMail($usernames) {
+        # code...
+        try {
+            $sql = "SELECT USERNAME, EMAIL, FIRST_NAME, LAST_NAME, PHONE
+                    FROM jsadmin.PSWRDS
+                    WHERE USERNAME IN (:USERNAMES) ;" ;
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':USERNAMES',$usernames,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($row = $prep->fetch()) {
+                $result[$row["USERNAME"]] = $row;
+                unset($result[$row["USERNAME"]]["USERNAME"]);
+            }
+            return $result;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
