@@ -266,7 +266,8 @@ EOF;
                                   MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
                                   MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
-                                  MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT
+                                  MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
+                                  MessageQueues::CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){
