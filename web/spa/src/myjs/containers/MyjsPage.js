@@ -248,8 +248,10 @@ export  class MyjsPage extends React.Component {
 			if(this.props.myjsData.ieFetched){
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
-	    if(this.props.myjsData.irFetched && this.props.myjsData.ieFetched){
-	    	var interestRecView = <MyjsSlider showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+
+	    if(this.props.myjsData.irFetched){
+	    	var interestRecView = <MyjsSlider apiHit={this.props.hitApi_IR.bind(this)} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+
 	    }
 
 	    if(this.props.myjsData.modFetched && this.props.myjsData.irFetched && this.props.myjsData.ieFetched){
@@ -318,9 +320,15 @@ const mapDispatchToProps = (dispatch) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
         },
   	    hitApi_IR: (nextPage) => {
-					if(typeof nextPage == 'undefined')nextPage=1;
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,'SET_IR_DATA','POST',dispatch);
+					let reducerName = '';
+					if(typeof nextPage == 'undefined'){ nextPage=1;reducerName = 'SET_IR_DATA';}
+					else { reducerName = 'SET_IR_PAGINATION';}
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,reducerName,'POST',dispatch);
         },
+				hitApi_IR: (nextPage) => {
+					if(typeof nextPage == 'undefined')nextPage=1;
+						return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,'SET_IR_DATA','POST',dispatch);
+				},
         hitApi_VA: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
         },

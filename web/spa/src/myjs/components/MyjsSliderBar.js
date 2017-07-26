@@ -62,6 +62,8 @@ removeMyjsTuple(param){
       e.parentNode.removeChild(e);
   });
   e.classList.add("setop0");
+  this.props.apiHit();
+
 
 }
 whichTransitionEvent(){
