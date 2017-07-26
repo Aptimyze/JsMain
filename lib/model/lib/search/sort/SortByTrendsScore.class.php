@@ -26,6 +26,7 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::setPaidDateSorting();
                 //parent::isJsBoostSorting($loggedInProfileObj);
         }
         /**
@@ -161,6 +162,11 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                         $sortAscOrDesc[$counter] = $this->sortByDesc;
                         $counter++;
                 }
+                
+                //Paid members sorting
+                $sortString[$counter] = parent::getPaidDateSorting();
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
                 
                 $sortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;

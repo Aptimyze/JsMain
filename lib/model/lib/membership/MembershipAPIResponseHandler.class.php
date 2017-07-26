@@ -2052,6 +2052,7 @@ class MembershipAPIResponseHandler {
 
         $output['startingPlan'] = $startingPlanData['startingPlan'];
         $output['maxDiscount'] = $disc;
+        $output['userType'] = $this->userType;
         unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();
