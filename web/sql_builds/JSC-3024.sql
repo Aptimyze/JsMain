@@ -31,7 +31,7 @@ CREATE TABLE billing.`EXCLUSIVE_CLIENT_MEMBER_MAPPING` (
 
 use incentive;
 
-CREATE TABLE ExclusiveMatchMailer (
+CREATE TABLE incentive.`ExclusiveMatchMailer` (
   RECEIVER int(11) NOT NULL,
   AGENT_NAME varchar(50) NOT NULL,
   AGENT_EMAIL varchar(50) NOT NULL,
