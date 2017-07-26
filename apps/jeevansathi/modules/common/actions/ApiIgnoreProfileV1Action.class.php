@@ -94,8 +94,8 @@ class ApiIgnoreProfileV1Action extends sfActions
                                         }
                     //changed to library call
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
-					JsMemcache::getInstance()->remove($profileID);
-					JsMemcache::getInstance()->remove($ignoredProfileid);
+					ProfileMemcache::clearInstance($profileID);
+					ProfileMemcache::clearInstance($ignoredProfileid);
                                         $ignoreCount--;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
 					$page["source"] = $request->getParameter("pageSource");
@@ -189,8 +189,8 @@ class ApiIgnoreProfileV1Action extends sfActions
                                     }   
                                         
                                         $ignore_Store_Obj->ignoreProfile($profileID,$ignoredProfileid);
-					JsMemcache::getInstance()->remove($profileID);
-					JsMemcache::getInstance()->remove($ignoredProfileid);
+					ProfileMemcache::clearInstance($profileID);
+					ProfileMemcache::clearInstance($ignoredProfileid);
                                         $ignoreCount++;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
                                         
