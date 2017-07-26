@@ -401,3 +401,11 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
     transition-timing-function: ease-in;
   }
 .setop0{opacity: 0}
+.srp_box2 {
+    width: 76px;
+    height: 76px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+}
