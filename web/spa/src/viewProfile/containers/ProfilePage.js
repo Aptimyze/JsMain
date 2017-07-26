@@ -147,9 +147,34 @@ class ProfilePage extends React.Component {
         }
 
     }
+    showLoaderDiv() {
+        this.setState({
+            showLoader:true
+        });
+
+    }
     componentWillReceiveProps(nextProps)
     {
-        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+        if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
+            this.setState({
+                showLoader:false
+            });
+        }
+        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
+            this.setState({
+                showLoader:false
+            });
+            document.getElementById("swipePage").classList.add("animateLeft");
+            this.setState ({
+                dataLoaded : false
+            });
+            jsb9Fun.flushJSB9Obj(this);
+            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
+            this.props.history.push(this.state.nextUrl);
+            jsb9Fun.recordBundleReceived(this,new Date().getTime());
+            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
+        }
+        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -290,7 +315,7 @@ class ProfilePage extends React.Component {
                 profileThumbNailUrl: this.props.AboutInfo.thumbnailPic || this.state.defaultPicData,
                 username:this.props.AboutInfo.username
             };
-            contactEngineView = <ContactEngineButton profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+            contactEngineView = <ContactEngineButton showLoaderDiv={()=> this.showLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
         }
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
@@ -347,7 +372,6 @@ class ProfilePage extends React.Component {
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
             document.getElementById("swipePage").classList.remove("animateLeft");
-            console.log("this.props",this.props.pageInfo.meta_tags);
             metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
         }
         else
@@ -429,7 +453,6 @@ class ProfilePage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.ProfileReducer);
     return{
        AboutInfo: state.ProfileReducer.aboutInfo,
        FamilyInfo: state.ProfileReducer.familyInfo,
@@ -444,7 +467,8 @@ const mapStateToProps = (state) => {
        pageInfo: state.ProfileReducer.pageInfo,
        myjsData: state.MyjsReducer,
        Jsb9Reducer : state.Jsb9Reducer,
-       buttonDetails: state.ProfileReducer.buttonDetails
+       buttonDetails: state.ProfileReducer.buttonDetails,
+       contactAction: state.contactEngineReducer
     }
 }
 
