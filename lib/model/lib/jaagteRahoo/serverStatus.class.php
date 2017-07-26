@@ -39,13 +39,13 @@ class ServerStatus
 				{
 					if(strpos($line,"worker"))
 					{
-						$arr = explode(",",$line);
-						if(array_key_exists(1,$arr))
-							$idle = $arr[1];
+						$arr = explode(" ",$line);
+						if(array_key_exists(0,$arr))
+							$idle = $arr[0];
 						else
 							$idle = $line;
-						$arr1 = explode(" ",trim($idle));
-						$idleNum = $arr1[0];
+
+						$idleNum = 200- $idle;
 					}
 				}
 			}

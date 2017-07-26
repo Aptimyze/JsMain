@@ -68,7 +68,15 @@ class search_LATEST_SEARCHQUERY extends TABLE
                 }
 	}
         
-	public function getSearchQuery($paramArr=array(),$fields="*")
+        /**
+         * 
+         * @param type $paramArr
+         * @param type $fields
+         * @param type $ordered this vziable is used to get results irrespertive of search type ordered by date desc
+         * @return type
+         * @throws jsException
+         */
+	public function getSearchQuery($paramArr=array(),$fields="*",$ordered=0)
 	{
 		foreach($paramArr as $key=>$val)
                         ${$key} = $val;
@@ -78,18 +86,30 @@ class search_LATEST_SEARCHQUERY extends TABLE
 
 		try
 		{
-			$sql = "SELECT $fields FROM search.LATEST_SEARCHQUERY WHERE PROFILEID=:PROFILEID AND SEARCH_CHANNEL=:SEARCH_CHANNEL";
-                        if($SEARCH_TYPE)
-                                $sql .= " AND SEARCH_TYPE=:SEARCH_TYPE";
+                        if($ordered == 0)
+                                $sql = "SELECT $fields FROM search.LATEST_SEARCHQUERY WHERE PROFILEID=:PROFILEID AND SEARCH_CHANNEL=:SEARCH_CHANNEL";
                         else
-                                $sql .= " AND SEARCH_TYPE!='".SearchTypesEnums::Advance."'";
+                                $sql = "SELECT $fields,SEARCH_CHANNEL FROM search.LATEST_SEARCHQUERY WHERE PROFILEID=:PROFILEID ";
+                        
+                        if($ordered == 0){
+                                if($SEARCH_TYPE)
+                                        $sql .= " AND SEARCH_TYPE=:SEARCH_TYPE";
+                                else
+                                        $sql .= " AND SEARCH_TYPE!='".SearchTypesEnums::Advance."'";
+                        }
+                        
+                        if($ordered == 1){
+                              $sql .= " ORDER BY DATE DESC LIMIT 1"  ;
+                        }
 			$res = $this->db->prepare($sql);
 			$res->bindParam(":PROFILEID", $PROFILEID, PDO::PARAM_INT);
-			$res->bindParam(":SEARCH_CHANNEL",$SEARCH_CHANNEL, PDO::PARAM_STR);
-                        if($SEARCH_TYPE)
+                        if($ordered == 0)
+                                $res->bindParam(":SEARCH_CHANNEL",$SEARCH_CHANNEL, PDO::PARAM_STR);
+                        
+                        if($SEARCH_TYPE && $ordered == 0)
                                 $res->bindParam(":SEARCH_TYPE",$SEARCH_TYPE, PDO::PARAM_STR);
                 	$res->execute();
-	                $row = $res->fetch(PDO::FETCH_ASSOC);
+                        $row = $res->fetch(PDO::FETCH_ASSOC);
 	                return $row;
 		}
                 catch(Exception $e)

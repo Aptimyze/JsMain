@@ -144,8 +144,7 @@ class TrendsPartnerProfiles extends PartnerProfile {
                                 if($relaxVal['notOcc']!='')
                                     $this->setOCCUPATION_IGNORE($relaxVal['notOcc']);
                         }elseif($key == "CITY_RES"){
-                                $this->setCITY_RES(str_replace("'","",$relaxVal));
-                                $this->setCITY_INDIA(str_replace("'","",$relaxVal));
+                                $this->setCITY_RES(str_replace("'","",$relaxVal),"",2);
                         }else{
                                 if($key == "CASTE"){
                                         eval('$this->set'.$key.'("'.str_replace("'","",$relaxVal).'",1);');

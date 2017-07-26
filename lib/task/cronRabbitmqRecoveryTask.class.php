@@ -267,13 +267,18 @@ EOF;
                                   MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
-                                  MessageQueues::CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
+                                  MessageQueues::CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){
         $this->consumerToCountMapping = array(
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT
+				);
+    }
+    elseif($arguments["server"] == "82"){
+        $this->consumerToCountMapping = array(
+                                  MessageQueues::UPDATEMATCHALERTSREG_STARTCOMMAND=>MessageQueues::UPDATE_MATCHALERT_REG_COUNT
 				);
     }
     else{

@@ -754,6 +754,9 @@ class Membership
         //flush myjs cache after success payment
         if($this->profileid && !empty($this->profileid)){
             MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete($this->profileid . "_MEM_HAMB_MESSAGE");
+            unset($memCacheObject);
         }
     }
 
@@ -2331,7 +2334,7 @@ class Membership
             return 0;
         }
         $today = date('Y-m-d H:i:s');
-        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
+        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
         $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
         if (is_array($row) && $row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
