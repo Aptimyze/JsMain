@@ -242,33 +242,34 @@ else{
 return true;
 }
 }
-/**
-* 
-* Function for executing cron- checks status of rabbitmq server, checks memory consumption, no of messages pending in queues,
-* consuming messages queued on the second server and checking the number of active consumer instances.
-* 
-* @access protected
-* @param $arguments,$options
-*/
-protected function execute($arguments = array(), $options = array())
-{
 
-if(!sfContext::hasInstance())
-sfContext::createInstance($this->configuration);
-
-if($arguments["server"] == "72"){
-$this->consumerToCountMapping = array(
-			  MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT,
-			  MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT,
-			  MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
-			  MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
-			  MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
-			  MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
-			  MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
-			  MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
-			  MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
-                          MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND=>MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT,
-                          MessageQueues::CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
+  /**
+   * 
+   * Function for executing cron- checks status of rabbitmq server, checks memory consumption, no of messages pending in queues,
+   * consuming messages queued on the second server and checking the number of active consumer instances.
+   * 
+   * @access protected
+   * @param $arguments,$options
+   */
+  protected function execute($arguments = array(), $options = array())
+  {
+     
+    if(!sfContext::hasInstance())
+    sfContext::createInstance($this->configuration);
+    
+    if($arguments["server"] == "72"){
+        $this->consumerToCountMapping = array(
+                                  MessageQueues::CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND => MessageQueues::BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT,
+                                  MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT,
+                                  MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
+                                  MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATIONCONSUMERCOUNT,
+                                  MessageQueues::CRONCONSUMER_STARTCOMMAND => MessageQueues::CONSUMERCOUNT,
+                                  MessageQueues::CRON_INSTANT_EOI_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::INSTANTEOICONSUMERCOUNT,
+                                  MessageQueues::CRONMATCHALERTSLASTSEEN_STARTCOMMAND=>MessageQueues::MATCHALERT_LAST_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
+                                  MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
+                                  MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND=>MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT,
+                          	  MessageQueues::CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){

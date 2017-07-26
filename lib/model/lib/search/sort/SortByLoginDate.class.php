@@ -17,6 +17,7 @@ class SortByLoginDate extends SearchSort implements SortStrategyInterface {
         public function __construct($SearchParamtersObj, $loggedInProfileObj = '') {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
+                parent::setPaidDateSorting();
                 //parent::isJsBoostSorting($loggedInProfileObj);
         }
 
@@ -33,6 +34,11 @@ class SortByLoginDate extends SearchSort implements SortStrategyInterface {
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
     
+                //Paid members sorting
+                $sortString[$counter] = parent::getPaidDateSorting();
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
+                
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
                 $this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);
                 $this->SearchParamtersObj->setFL_ATTRIBUTE("*");
