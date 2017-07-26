@@ -94,5 +94,32 @@ class billing_EXCLUSIVE_SERVICING extends TABLE
 		  throw new jsException($e);
 		}
 	}
+
+	/**
+	 * Function to get profileId and agentName for sending MatchMails
+	 * 
+	 * @return list of agentName and profileIDs
+	 */
+	public function getProfileIDandAgentNameForMailing()	{
+		try {
+			$tomorrow = strtoupper(date('D',strtotime(' +1 day')));
+			$sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+					FROM billing.EXCLUSIVE_SERVICING 
+					WHERE SERVICE_DAY = :tomorrow ;" ;
+
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
+			$prep->execute();
+			$prep->setFetchMode(PDO::FETCH_ASSOC);
+			
+			while ($res = $prep->fetch()) {
+				$result[$res['AGENT_USERNAME']][] = $res;
+			}
+
+			return $result;
+		} catch (Exception $e) {
+			throw new jsException($e);
+		}
+	}
 }
 ?>

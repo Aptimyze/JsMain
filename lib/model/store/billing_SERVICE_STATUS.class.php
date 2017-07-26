@@ -974,4 +974,28 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
+
+    public function getEligibleProfileForRBHandling($profileid,$serviceid,$startDate) {
+         try{
+             $sql = "SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID = :profileid AND ACTIVATED_ON >= :startDate AND ACTIVATED = :status AND ACTIVE = :status AND SERVICEID LIKE :serviceid ;" ;
+ 
+             $serviceid = "%".$serviceid."%";
+             $status = "Y";
+ 
+             $prep = $this->db->prepare($sql);
+             $prep->bindValue(':profileid',$profileid,PDO::PARAM_INT);
+             $prep->bindValue(':startDate',$startDate,PDO::PARAM_STR);
+             $prep->bindValue(':status',$status,PDO::PARAM_STR);
+             $prep->bindValue(':serviceid',$serviceid,PDO::PARAM_STR);
+             $prep->execute();
+             $prep->setFetchMode(PDO::FETCH_ASSOC);
+             
+             while($row = $prep->fetch()){
+                 $result[] = $row;
+             }
+             return $result;
+         } catch (Exception $ex){
+             throw new jsException($ex);
+         }
+     }
 }
