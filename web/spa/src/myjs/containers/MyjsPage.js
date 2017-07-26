@@ -248,17 +248,17 @@ export  class MyjsPage extends React.Component {
 			if(this.props.myjsData.ieFetched){
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
-	    if(this.props.myjsData.irFetched && this.props.myjsData.ieFetched){
+	    if(this.props.myjsData.irFetched ){
 	    	var interestRecView = <MyjsSlider showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
-	    if(this.props.myjsData.modFetched && this.props.myjsData.irFetched && this.props.myjsData.ieFetched){
+	    if(this.props.myjsData.modFetched ){
 	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} listingName = 'match_of_the_day' />
 	    }
-	    if(this.props.myjsData.vaFetched &&  this.props.myjsData.modFetched && this.props.myjsData.irFetched && this.props.myjsData.ieFetched){
+	    if(this.props.myjsData.vaFetched ){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
-	    if(this.props.myjsData.drFetched && this.props.myjsData.vaFetched &&  this.props.myjsData.modFetched && this.props.myjsData.irFetched && this.props.myjsData.ieFetched)
+	    if(this.props.myjsData.drFetched )
 	    {
 				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} listingName = 'match_alert' />
 	    }
