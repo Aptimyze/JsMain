@@ -48,21 +48,19 @@ componentDidMount(){
     if(nextProps.contact.acceptDone){
        console.log('accept done slider');
     }
-    if(nextProps.contact.declineDone)
-    {
-       this.removeMyjsTuple(nextProps.contact.tupleID);
-    }
+    // if(nextProps.contact.declineDone)
+    // {
+    //    this.removeMyjsTuple(nextProps.contact.tupleID);
+    // }
 }
-removeMyjsTuple(param){
+removeMyjsTuple(param){console.log('inremocemmm');
   let e = document.getElementById(param);
   let transitionEvent = this.whichTransitionEvent();
   transitionEvent && e.addEventListener(transitionEvent, function() {
       e.parentNode.removeChild(e);
   });
   e.classList.add("setop0");
-  this.props.apiHit();
-
-
+  this.obj.unbindSlider().initTouch();
 }
 whichTransitionEvent(){
     let t;
@@ -166,7 +164,7 @@ render(){
                     </Link>
                     <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
 
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(this.props.listing.infotype+"_"+index)} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
 
                     </div>
                 </div>

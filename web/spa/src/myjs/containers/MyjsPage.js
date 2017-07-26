@@ -250,7 +250,7 @@ export  class MyjsPage extends React.Component {
 	    }
 
 	    if(this.props.myjsData.irFetched){
-	    	var interestRecView = <MyjsSlider apiHit={this.props.hitApi_IR.bind(this)} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
 	    if(this.props.myjsData.modFetched ){
@@ -324,10 +324,6 @@ const mapDispatchToProps = (dispatch) => {
 					else { reducerName = 'SET_IR_PAGINATION';}
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,reducerName,'POST',dispatch);
         },
-				hitApi_IR: (nextPage) => {
-					if(typeof nextPage == 'undefined')nextPage=1;
-						return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,'SET_IR_DATA','POST',dispatch);
-				},
         hitApi_VA: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
         },
