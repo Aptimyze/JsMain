@@ -1323,5 +1323,51 @@ public function getSendersPending($chunkStr)
         throw new jsException($e);
       }
     }
+
+    public function getSentAcceptancesForMatchMailer($profilesId) {
+    	try {
+    		$lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
+    		
+    		$sql = "SELECT SENDER, RECEIVER
+    				FROM newjs.CONTACTS
+    				WHERE SENDER IN (:PROFILESID) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+
+    		$prep = $this->db->prepare($sql);
+    		$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_STR);
+    		$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
+    		$prep->bindValue(':TIME',$lastWeekMailDate,PDO::PARAM_STR);
+    		$prep->execute();
+    		$prep->setFetchMode(PDO::FETCH_ASSOC);
+
+    		while ($row = $prep->fetch()) {
+				$result[$row["SENDER"]][] = $row["RECEIVER"];
+    		}
+    		return $result;
+    	} catch (Exception $e) {
+    		throw new jsException($e);
+    	}
+    }
+
+    public function getReceivedAcceptancesForMatchMailer($profilesId,$result){
+    	try {
+    		$sql = "SELECT SENDER, RECEIVER
+					FROM newjs.CONTACTS
+					WHERE RECEIVER IN (:PROFILESID) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_INT);
+			$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
+			$prep->bindValue(':TIME',$lastWeekMailDate,PDO::PARAM_STR);
+			$prep->execute();
+			$prep->setFetchMode(PDO::FETCH_ASSOC);
+
+			while ($row = $prep->fetch()) {
+				$result[$row["RECEIVER"]][] = $row["SENDER"];
+			}
+			return $result;
+    	} catch (Exception $e) {
+    		throw new jsException($e);
+    	}
+    }
 }
 ?>
