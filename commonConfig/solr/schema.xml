@@ -155,7 +155,7 @@
      -->
    <!--
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
-     -->
+   -->
 
    <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -336,6 +336,7 @@
  <field name="VERIFICATION_SEAL" type="string" indexed="true" stored="true" />
  <field name="NAME_OF_USER" type="string" indexed="true" stored="true" />
  <field name="PAID_ON" type="date" indexed="true" stored="true" />
+ <field name="PAID_ON_SCORE" type="int" indexed="true" stored="true" />
  <field name="KNOWN_COLLEGE" type="commaDelimited" indexed="true" multivalued="true" stored="true" />
  </fields>
 
