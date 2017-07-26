@@ -58,6 +58,7 @@ removeMyjsTuple(param){
       e.parentNode.removeChild(e);
   });
   e.classList.add("setop0");
+
 }
 whichTransitionEvent(){
     let t;
@@ -77,7 +78,7 @@ whichTransitionEvent(){
 }
 showLoader(param){
     let z = document.createElement('IMG');
-    z.setAttribute("src", "http://static.test2.jeev.com/images/jsms/commonImg/loader.gif");
+    z.setAttribute("src", "http://static.jeevansathi.com/images/jsms/commonImg/loader.gif");
     z.setAttribute("class","posabs setmid");
     document.getElementById(param).appendChild(z);
 }
