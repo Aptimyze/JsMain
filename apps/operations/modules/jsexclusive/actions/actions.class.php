@@ -27,6 +27,10 @@ class jsexclusiveActions extends sfActions {
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
+                        //Get Count for each option 
+                        $agent = $request['name'];
+                        //Counter for welcome calls
+                        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -161,11 +165,7 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeMenu(sfWebRequest $request) {
-        //Get Count for each option 
-        $agent = $request['name'];
-        //Counter for welcome calls
-        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-        $this->welcomeCallsCount = $exclusiveServicingObj->getWelcomeCallsCount($agent);
+        
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
@@ -243,7 +243,8 @@ class jsexclusiveActions extends sfActions {
 
     public function executeUploadBiodata(sfWebRequest $request) {
 /* Key for:
- * $this->invalidFile:    1- Size exceeds 5 MB
+ * $this->invalidFile:
+ *                  1- Size exceeds 5 MB
  *                  2- Invalid file type
  *                  3- General Processing error
  */
@@ -275,6 +276,7 @@ class jsexclusiveActions extends sfActions {
                 $this->deleteStatus = $exclusiveServicingObj->deleteBioData($this->client);
                 $this->freshUpload = true;
             }else{
+                $this->deleteStatus = $exclusiveServicingObj->deleteBioData($this->client);
                 $this->invalidFile = 3;
                 $this->freshUpload = false;
             }
