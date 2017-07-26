@@ -26,6 +26,7 @@ class SortByBroaderDppScore extends SortByTrendsScore {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::setPaidDateSorting($loggedInProfileObj, 0);
         }
 
         /**
@@ -82,6 +83,7 @@ class SortByBroaderDppScore extends SortByTrendsScore {
 
         public function getSortString() {
                 $counter = 0;
+                
                 $dppSortString[$counter] = "LAST_LOGIN_SCORE";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
@@ -122,6 +124,12 @@ class SortByBroaderDppScore extends SortByTrendsScore {
                         $counter++;
                 }
                 $this->SearchParamtersObj->setTRENDS_DATA("");
+                
+                //Paid members sorting
+                $dppSortString[$counter] = parent::getPaidDateSorting();
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
+                
                 // Sort by last login dt
                 $dppSortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;

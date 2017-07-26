@@ -68,23 +68,24 @@ class Visitors
 		$returnProfiles = $this->sortArray($returnProfiles);
                 
                 if($memcacheObjToSetAllVisitorsKey)
-                    $memcacheObjToSetAllVisitorsKey->setVISITORS_ALL(count($returnProfiles));
-                
+                    $memcacheObjToSetAllVisitorsKey->set('VISITORS_ALL',count($returnProfiles));
+                $profileMemcacheObj = new ProfileMemcacheService($this->profile);
+
 		if(($page || $profileCount) && is_array($returnProfiles))
 		{
 			$count = count($returnProfiles);
-			$profileMemcacheObj = new ProfileMemcacheService($this->profile);
 			$memcacheCount = $profileMemcacheObj->get("VISITOR_ALERT");
 			$diff = $count-$memcacheCount;
 			if($diff!=0)
 			{
 				$profileMemcacheObj->update("VISITOR_ALERT",$diff);
-				$profileMemcacheObj->updateMemcache();
 
 			}
 			$offset = $page*$profileCount;
 			$returnProfiles = array_slice($returnProfiles,$offset,$profileCount,true);
 		}
+                $profileMemcacheObj->updateMemcache();
+
 		return $returnProfiles;
 	}
 	public function passInVisitors()

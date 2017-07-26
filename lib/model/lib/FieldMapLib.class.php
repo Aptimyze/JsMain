@@ -183,6 +183,7 @@ case "search_clusters":
 "29"=>"Profile Added In",
 "30"=>"Date Sent",
 "31"=>"Family based out of",
+"32"=>"Well Known Colleges",          
 );
 
         break;
@@ -220,6 +221,7 @@ case "solr_clusters":
 "29"=>"PROFILE_ADDED",
 "30"=>"MATCHALERTS_DATE_CLUSTER",
 "31"=>"NATIVE_STATE",
+"32"=>"KNOWN_COLLEGE",          
 );
 
         break;
@@ -8568,7 +8570,64 @@ case "occupation_grouping":
         );
 
         break;
+    
+   
+case "wellKnownColleges":
 
+        $arr=array(
+"1"=>"AIIMS",
+"2"=>"Banaras Hindu University",
+"3"=>"BIT Mesra",
+"4"=>"BITS",
+"5"=>"Delhi University",
+"6"=>"IIT",
+"7"=>"DCE",
+"8"=>"DAIICT",
+"9"=>"FMS",
+"10"=>"ICAI",
+"11"=>"IIFT",
+"12"=>"IIIT",
+"13"=>"IIM",
+"14"=>"ISB",
+"15"=>"Jadavpur University",
+"16"=>"JNU",
+"17"=>"MDI",
+"18"=>"Mumbai University",
+"19"=>"NITIE",
+"20"=>"NIT",
+"21"=>"NSIT",
+"22"=>"XLRI",
+"23"=>"NID",
+"24"=>"Harvard University",
+"25"=>"Stanford University",
+"26"=>"Columbia University",
+"27"=>"Massachusetts Institute of Technology",
+"28"=>"Princeston University",
+"29"=>"University of Pennsylvania",
+"30"=>"Cornell University",
+"31"=>"University of California, Berkley",
+"32"=>"Williams College",
+"33"=>"Yale University",
+"34"=>"University of Chicago",
+"35"=>"Darthmouth College",
+"36"=>"University of Michigan",
+"37"=>"Caltech",
+"38"=>"Duke University",
+"39"=>"University of Notre Dame",
+"40"=>"Northwestern University",
+"41"=>"Northeastern University",
+"42"=>"University of Cambridge",
+"43"=>"Universtiy of Oxford",
+"44"=>"Imperial College",
+"45"=>"University of Manchester",
+"46"=>"INSEAD",
+"47"=>"Nanyang Institute of Technology",
+"48"=>"Nanyang Business School",
+"49"=>"Harvard Business School",
+"50"=>"London Business School",
+);
+
+        break;
 
 case "caste_clusters_breadcrumb":
 
