@@ -326,9 +326,11 @@ try{
         $matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT();
         $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable($table, $profileId,'1');  
         unset($matchalerts_MATCHALERTS_TO_BE_SENT);
-        $php5 = JsConstants::$php5path;
-        $cronDocRoot = JsConstants::$cronDocRoot;
-        passthru("$php5 $cronDocRoot/symfony alert:MatchAlertCalculation $profileId 0 1");
+        if($tableEmpty != 1){
+                $php5 = JsConstants::$php5path;
+                $cronDocRoot = JsConstants::$cronDocRoot;
+                passthru("$php5 $cronDocRoot/symfony alert:MatchAlertCalculation $profileId 0 1");
+        }
  }
  public function updateCriticalInfo($body)
  {
