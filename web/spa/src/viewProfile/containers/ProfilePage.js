@@ -372,7 +372,6 @@ class ProfilePage extends React.Component {
             FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
             DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;        
             document.getElementById("swipePage").classList.remove("animateLeft");
-            console.log("this.props",this.props.pageInfo.meta_tags);
             metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
         } 
         else 
@@ -454,7 +453,6 @@ class ProfilePage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.ProfileReducer);
     return{
        AboutInfo: state.ProfileReducer.aboutInfo,
        FamilyInfo: state.ProfileReducer.familyInfo,
