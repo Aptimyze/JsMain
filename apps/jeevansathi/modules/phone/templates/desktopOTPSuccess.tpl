@@ -7,6 +7,8 @@ var tollFree_NRI='~CommonConstants::HELP_NUMBER_NRI`';
 var tollFree_INR='~CommonConstants::HELP_NUMBER_INR`';
 fillLayerDetails('js-OTPverifyLayerId');
 var resendOtpLink=function(){
+    /* GA tracking */
+  GAMapper("GA_VOL_RESEND");
 $("#resendOtpLink").unbind('click');
   $("#resendOtpLink").html('Sending');
   $("#resendOtpGif").show();
