@@ -98,6 +98,9 @@ class ExclusiveMatchMailer {
 				$res[$key][$user.$count] = $v;
 				$count++;
 			}
+			$date = date('Y-m-d h:m:s');
+            $mailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
+			$mailLogObj->insertMailLog($value["RECEIVER"],"MATCH_MAIL",$count-1,$date);
 		}
 		return $res;
 	}

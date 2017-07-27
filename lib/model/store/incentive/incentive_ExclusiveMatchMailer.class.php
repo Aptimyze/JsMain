@@ -24,27 +24,22 @@ class incentive_ExclusiveMatchMailer extends TABLE {
     	try {
             $sql = "INSERT INTO incentive.ExclusiveMatchMailer (RECEIVER,AGENT_NAME,AGENT_EMAIL,AGENT_PHONE) VALUES";
             $COUNT = 1;
-            foreach($receiverData as $key=>$value) {
-                $valueToInsert .= "(:KEY".$COUNT.",";
-                $bind["KEY".$COUNT]["VALUE"] = $value["CLIENT_ID"];
-                $bind["KEY".$COUNT]["TYPE"] = "INT";
-                $COUNT++;
-                $valueToInsert .=":KEY".$COUNT.",";
-                $bind["KEY".$COUNT]["VALUE"] = $value["AGENT_NAME"];
-                $bind["KEY".$COUNT]["TYPE"] = "STRING";
-                $COUNT++;
-                $valueToInsert .=":KEY".$COUNT.",";
-                $bind["KEY".$COUNT]["VALUE"] = $value["AGENT_EMAIL"];
-                $bind["KEY".$COUNT]["TYPE"] = "STRING";
-                $COUNT++;
-                $valueToInsert .=":KEY".$COUNT.",";
-                $bind["KEY".$COUNT]["VALUE"] = $value["AGENT_PHONE"];
-                $bind["KEY".$COUNT]["TYPE"] = "STRING";
-                $COUNT++;
-                $valueInsert .= rtrim($valueToInsert,',')."),";
-                $valueToInsert="";
-            }
-
+            $valueToInsert .= "(:KEY".$COUNT.",";
+            $bind["KEY".$COUNT]["VALUE"] = $receiverData["CLIENT_ID"];
+            $bind["KEY".$COUNT]["TYPE"] = "INT";
+            $COUNT++;
+            $valueToInsert .=":KEY".$COUNT.",";
+            $bind["KEY".$COUNT]["VALUE"] = $receiverData["AGENT_NAME"];
+            $bind["KEY".$COUNT]["TYPE"] = "STRING";
+            $COUNT++;
+            $valueToInsert .=":KEY".$COUNT.",";
+            $bind["KEY".$COUNT]["VALUE"] = $receiverData["AGENT_EMAIL"];
+            $bind["KEY".$COUNT]["TYPE"] = "STRING";
+            $COUNT++;
+            $valueToInsert .=":KEY".$COUNT.",";
+            $bind["KEY".$COUNT]["VALUE"] = $receiverData["AGENT_PHONE"];
+            $bind["KEY".$COUNT]["TYPE"] = "STRING";
+            $valueInsert .= rtrim($valueToInsert,',')."),";
             $valueInsert = rtrim($valueInsert,',');
             $sql .=$valueInsert;
             $pdoStatement = $this->db->prepare($sql);

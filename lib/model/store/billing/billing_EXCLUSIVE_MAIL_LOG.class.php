@@ -1,6 +1,6 @@
 <?php
 
-class billing_MAIL_LOG extends TABLE {
+class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
 
     public function __construct($dbname = "") {
         parent::__construct($dbname);
@@ -8,7 +8,7 @@ class billing_MAIL_LOG extends TABLE {
 
     public function insertMailLog($profileID,$mailType,$acptCount,$date) {
         try{
-            $sql = "INSERT INTO billing.MAIL_LOG (PROFILE, MAIL_TYPE, ACPT_COUNT, DATE) 
+            $sql = "INSERT INTO billing.EXCLUSIVE_MAIL_LOG (PROFILE, MAIL_TYPE, ACPT_COUNT, DATE) 
                     VALUES ( :PROFILEID , :MAIL_TYPE , :COUNT , :DATE ) ;" ;
 
             $prep = $this->db->prepare($sql);

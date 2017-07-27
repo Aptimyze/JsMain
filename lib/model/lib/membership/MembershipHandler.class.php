@@ -2922,7 +2922,6 @@ class MembershipHandler
         unset($purchasesObj);
         unset($serviceid);
         unset($startDate);
-        
         if (count($profile)) {
             return true;
         } else {
