@@ -14,8 +14,9 @@ export class MyjsSlider extends React.Component {
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
-      tupleWidth : {'width' : window.innerWidth}
-
+      tupleWidth : {'width' : window.innerWidth},
+      loaderStyles:[],
+      divStyles:[]
     }
 
     if(!props.listing.total) {
@@ -35,31 +36,36 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
-
   this.bindSlider();
 }
 
  componentWillReceiveProps(nextProps){
-   console.log('nxt');
-   console.log(nextProps.contact);
-    if(nextProps.contact.contactDone) {
-        console.log('interest sent slider');
-    }
-    if(nextProps.contact.acceptDone){
-       console.log('accept done slider');
-    }
-}
-removeMyjsTuple(param,index){
-  let e = document.getElementById(param);
-  let transitionEvent = this.whichTransitionEvent();
-  let _this=this;
-  transitionEvent && e.addEventListener(transitionEvent, function() {
-      e.parentNode.removeChild(e);
-      _this.props.spliceIndex(_this.props.listing.infotype,index);
-      _this.obj.unbindSlider().initTouch();console.log(_this.props.listing);
+   if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
+   {
+     this.setState({
+       loaderStyles:[],
+       divStyles:[]
 
-  });
-  e.classList.add("setop0");
+     });
+     this.obj.unbindSlider().initTouch();
+console.log(this.state.loaderStyles);
+   }
+
+}
+removeMyjsTuple(index){
+//  let e = document.getElementById(param);return
+//  let transitionEvent = this.whichTransitionEvent();
+//  let _this=this;
+//  transitionEvent && e.addEventListener(transitionEvent, function() {
+//      e.parentNode.removeChild(e);
+      this.setState((prevState)=>{prevState.divStyles[index] = 'none';return prevState; },()=>
+    {
+      this.props.spliceIndex(this.props.listing.infotype,index);
+    }
+  )
+
+  //});
+//  e.classList.add("setop0");
 //
 
 }
@@ -78,12 +84,6 @@ whichTransitionEvent(){
             return transitions[t];
         }
     }
-}
-showLoader(param){
-    let z = document.createElement('IMG');
-    z.setAttribute("src", "http://static.jeevansathi.com/images/jsms/commonImg/loader.gif");
-    z.setAttribute("class","posabs setmid");
-    document.getElementById(param).appendChild(z);
 }
 
 bindSlider(){
@@ -113,6 +113,8 @@ render(){
   if(!this.props.fetched || !this.props.listing.profiles) {
     return <div></div>;
   }
+
+//  var loaderStyles = [], divStyles=[];
   return(
 
       <div>
@@ -132,8 +134,9 @@ render(){
             <div className="wrap-box" id={"wrapbox_"+this.props.listingName}>
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
-                [this.props.listing.profiles.map((tuple,index) => (
-                <div key={index} className="mr10 dispibl ml0 posrel rmtuple" style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
+                [this.props.listing.profiles.map((tuple,index) => {
+                  return (
+                <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
 
                   <div className="bg4 overXHidden" id="hideOnAction">
@@ -165,14 +168,16 @@ render(){
                         </div>
                       </div>
                     </Link>
-                    <div onClick={() => this.showLoader(this.props.listing.infotype+"_"+index)}>
+                    <div onClick={() => this.setState((prevState)=>{prevState.loaderStyles[index]={};prevState.loaderStyles[index].display='block';return prevState;})}>
 
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(this.props.listing.infotype+"_"+index)} button={tuple.buttonDetailsJSMS.buttons} profilechecksum={tuple.profilechecksum} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(index)} button={tuple.buttonDetailsJSMS.buttons} profilechecksum={tuple.profilechecksum} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index} button={tuple.buttonDetailsJSMS.buttons}/>
 
                     </div>
                 </div>
+                <img style={this.state.loaderStyles[index] ? this.state.loaderStyles[index] : {} } src='http://static.jeevansathi.com/images/jsms/commonImg/loader.gif' className="posabs setmid dispnone" />
+
            </div>
-         )),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
+         );}),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
          <div className="clr"></div>
          </div>
        </div>
