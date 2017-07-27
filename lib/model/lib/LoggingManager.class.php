@@ -747,14 +747,14 @@ class LoggingManager
 
                 if(!LoggingEnums::$COOL_METRIC[$body['type']])return;
                 $dataOutput = array();
-                $dataOutput['Date'] = $body['currentTime'];
+                $dataOutput['Date'] = date('Y-m-d H:i:s',(strtotime($body['currentTime']) + 34200));
                 $dataOutput['logType'] = $body['type'];
                 $dataOutput['channel'] = $body['whichChannel'];
                 $dataOutput['profileId'] = $body['profileId'];
                 $dataOutput = json_encode($dataOutput);
                 $currDate = Date('Y-m-d');
                 try{
-		$filePath =  $this->serverLogPath."/coolMetric/$currDate/".$currDate.".log";
+		$filePath =  $this->serverLogPath."/coolMetric/$currDate/".$currDate."_".$body['type'].".log";
                 if(!file_exists(dirname($filePath)))
                     mkdir(dirname($filePath), 0777, true);                
 		$fileResource = fopen($filePath,"a");

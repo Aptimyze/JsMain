@@ -271,7 +271,7 @@ class apidetailedv1Action extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			
 			if(MobileCommon::isIOSApp())
-				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
+				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORED"=>$this->IGNORED));
 			else
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 
@@ -467,9 +467,9 @@ class apidetailedv1Action extends sfAction
 		if(strlen($szContactID)!=0 && $this->loginProfile->getPROFILEID() && ($iOffset+1)>0 && ($iOffset+1)<=$iTotalRecord)
 		{
 			$objProfileDisplay = new profileDisplay;
-			
+		
 			// Adding +1 in offset as ProfileDisplay ID starts from 1 to total rec
-			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1);
+			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1,$request->getParameter("stype"));
 			
 			// Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
 			// offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset

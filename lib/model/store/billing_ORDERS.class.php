@@ -168,12 +168,13 @@ class BILLING_ORDERS extends TABLE{
         }       
     }
 
-    public function getFailedPayUOrders($entryDt){
+    public function getFailedPayUOrders($entryDt,$timeMax){
         try     
         {       
-            $sql="SELECT ID, ORDERID, CURTYPE, PROFILEID FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT";
+            $sql="SELECT ID, ORDERID, CURTYPE, PROFILEID FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT AND ENTRY_DT<=:MAX_DT";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
+            $prep->bindValue(":MAX_DT", $timeMax, PDO::PARAM_STR);//Added to remove entries that might still be on PG
             $prep->execute();
             while($result = $prep->fetch(PDO::FETCH_ASSOC))
             {       

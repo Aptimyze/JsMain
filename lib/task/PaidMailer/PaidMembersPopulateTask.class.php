@@ -27,10 +27,10 @@ EOF;
 		/** 
 		* truncate tables 
 		*/
-                $search_PAIDMEMBERS_TO_BE_SENTDDL = new search_PAIDMEMBERS_TO_BE_SENT('newjs_masterDDL');
+                $search_PAIDMEMBERS_TO_BE_SENTDDL = new search_PAIDMEMBERS_TO_BE_SENT('newjs_master');
                 $search_PAIDMEMBERS_TO_BE_SENTDDL->truncateTable();
                 unset($search_PAIDMEMBERS_TO_BE_SENTDDL);
-                $search_PAID_MEMBERS_MAILERDDL = new search_PAID_MEMBERS_MAILER('newjs_masterDDL');
+                $search_PAID_MEMBERS_MAILERDDL = new search_PAID_MEMBERS_MAILER('newjs_master');
                 $search_PAID_MEMBERS_MAILERDDL->truncateTable();
                 unset($search_PAID_MEMBERS_MAILERDDL);
                 

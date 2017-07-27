@@ -98,7 +98,7 @@ class incentive_RENEWAL_IN_DIALER extends TABLE{
     {
         try
         {
-            $sql = "SELECT a.PROFILEID FROM incentive.RENEWAL_IN_DIALER a, incentive.FP_CSV_DATA_TEMP b where a.PROFILEID = b.PROFILEID";
+            $sql = "SELECT a.PROFILEID FROM incentive.RENEWAL_IN_DIALER a, incentive.PROCESS_CSV_DATA_TEMP b where a.PROFILEID = b.PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while($res=$prep->fetch(PDO::FETCH_ASSOC))

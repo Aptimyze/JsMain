@@ -754,6 +754,9 @@ class Membership
         //flush myjs cache after success payment
         if($this->profileid && !empty($this->profileid)){
             MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete($this->profileid . "_MEM_HAMB_MESSAGE");
+            unset($memCacheObject);
         }
     }
 
@@ -2331,7 +2334,7 @@ class Membership
             return 0;
         }
         $today = date('Y-m-d H:i:s');
-        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
+        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
         $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
         if (is_array($row) && $row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
@@ -2481,14 +2484,14 @@ class Membership
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else if ($screeningStatus == "N") {
+        }/*else if ($screeningStatus == "N") {
             $main_service = $mainServiceId;
             $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else {
+        }*/else {
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
            
             // Existing codes for setting discount type in billing.ORDERS

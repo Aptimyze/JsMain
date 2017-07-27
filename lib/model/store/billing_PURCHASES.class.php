@@ -458,6 +458,20 @@ class BILLING_PURCHASES extends TABLE
         return $profiles;
     }
 
+    public function updateDiscountPercent($billIdStr,$discountPercent)
+    {
+        try
+        {
+            $sql  = "UPDATE billing.PURCHASES SET DISCOUNT_PERCENT=:DISCOUNT_PERCENT WHERE BILLID IN(".$billIdStr.")";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":DISCOUNT_PERCENT", $discountPercent, PDO::PARAM_INT);
+            $prep->execute();
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
+
     public function genericPurchaseInsert($paramsStr, $valuesStr)
     {
         if (empty($paramsStr) || empty($valuesStr)) {

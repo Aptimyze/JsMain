@@ -308,6 +308,7 @@ class DetailedViewApi
 		$szLocation = CommonFunction::getResLabel($objProfile->getCOUNTRY_RES(),$state,$city,$objProfile->getANCESTRAL_ORIGIN(),"city");	
 		$this->m_arrOut['location'] = $szLocation;
 		//Caste
+                $this->m_arrOut['religionId'] = $objProfile->getReligion();
 		if(stripos($objProfile->getDecoratedCaste(),": ")!=false)
 		{
 			$this->m_arrOut['caste'] = substr($objProfile->getDecoratedCaste(),stripos($objProfile->getDecoratedCaste(),": ") + 2);
@@ -416,7 +417,7 @@ class DetailedViewApi
             	{
             		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
             	}
-            	$this->m_arrOut["selfThumbnail"] = $this->thumbnailPic;
+            	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
             }
         }
 	}

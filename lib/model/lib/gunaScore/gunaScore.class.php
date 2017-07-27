@@ -134,19 +134,19 @@ class gunaScore
     $startTime = microtime(true);
     $fresult = CommonUtility::sendCurlGetRequest($url,gunaScoreConstants::TIMEOUT);
     $endTime = microtime(true)-$startTime;
-    $memObject=JsMemcache::getInstance();
+    //$memObject=JsMemcache::getInstance();
     if($fresult)
     {
-      $this->logApiResponeTime($memObject,$endTime);
-      $memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
-      $memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
+      //$this->logApiResponeTime($memObject,$endTime);
+      //$memObject->incrCount("gunaNotBlank_".date("Y-m-d"));
+      //$memObject->setExpiryTime("gunaNotBlank_".date("Y-m-d"),"604800"); //7 days
       $fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));      
     }
-    else
-    {
-      $memObject->incrCount("gunaBlank_".date("Y-m-d"));
-      $memObject->setExpiryTime("gunaBlank_".date("Y-m-d"),"604800"); //7 days
-    }
+    // else
+    // {
+    //   $memObject->incrCount("gunaBlank_".date("Y-m-d"));
+    //   $memObject->setExpiryTime("gunaBlank_".date("Y-m-d"),"604800"); //7 days
+    // }
 
     if(is_array($fresult))
     {
