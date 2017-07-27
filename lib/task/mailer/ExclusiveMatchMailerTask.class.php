@@ -50,7 +50,6 @@ EOF;
 		    	$calculatetable->updateAcceptancesAndStatus($str_value,$key);
 	    	}
 	    }
-
 	    //Sending Mail
 	    $receivers = $exclusiveMailer->getMailerProfiles();
 	    $mailerServiceObj = new MailerService();
@@ -83,8 +82,8 @@ EOF;
                     $subject = $subjectAndBody["subject"];
 					$this->smarty->assign('data',$data);
                     $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-                    // $file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
-                    // fwrite($file,$msg);
+//                     $file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
+//                     fwrite($file,$msg);
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
                     if ($flag) {
@@ -103,8 +102,10 @@ EOF;
 		$truncateTable->truncate();
 		unset($truncateTable);
 		foreach ($data as $key => $value) {
-			if(MemberShipHandler::isEligibleForRBHandling($value["CLIENT_ID"]))
-				$populateTable->insertReceiversAndAgentDetails($value);
+		    foreach ($value as $k => $v){
+                if(MemberShipHandler::isEligibleForRBHandling($v["CLIENT_ID"]))
+                    $populateTable->insertReceiversAndAgentDetails($v);
+            }
 		}
 		unset($populateTable);
 	}
