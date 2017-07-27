@@ -51,7 +51,7 @@ EOF;
 
       	for($i=0;$i<$chunk;$i++)
 		{	echo "\nchunk=".$i;
-			for($j=3;$j<4;$j++)
+			for($j=3;$j<6;$j++)
             {
                 $dbObShard = JsDbSharding::getShardNo($j,'Y');
 				$dbOb=new newjs_CONTACTS($dbObShard);
