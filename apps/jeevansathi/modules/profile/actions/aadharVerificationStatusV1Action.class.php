@@ -53,7 +53,7 @@ class aadharVerificationStatusV1Action extends sfActions
 			else
 			{
 				$finalArr["MESSAGE"] = aadharVerificationEnums::NOTVERIFIEDMSG;
-				$finalArr["RESPONSE"]  = ResponseHandlerConfig::$FAILURE;
+				$finalArr["RESPONSE"]  = ResponseHandlerConfig::$SUCCESS;
 			}			
 		}
 		else
