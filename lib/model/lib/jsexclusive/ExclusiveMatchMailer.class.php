@@ -60,8 +60,8 @@ class ExclusiveMatchMailer {
 					$result[$key][$k]["AGENT_EMAIL"] = $agentDetail[$key
 					]["EMAIL"];
                     $result[$key][$k]["AGENT_NAME"] = $agentDetail[$key]["FIRST_NAME"];
-					if (!$result[$key][$k]["FIRST_NAME"]){
-					    $result[$key][$k]["FIRST_NAME"] = $key;
+					if (!$result[$key][$k]["AGENT_NAME"]){
+					    $result[$key][$k]["AGENT_NAME"] = $key;
                     }
 
 					if ($agentDetail[$key]["LAST_NAME"]) {
