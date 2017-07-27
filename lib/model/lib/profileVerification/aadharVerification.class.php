@@ -65,8 +65,16 @@ class aadharVerification
 		
 		$response = json_decode(CommonUtility::sendCurlPOSTRequest($urlToHit,json_encode($aadharArr),"",$headerArr));
 		$reqId = $response->request_id;
-		$date = date("Y-m-d H:i:s");
-		$this->insertAadharDetails($profileId,$username,$date,$aadharId,$reqId);
+		if($reqId)
+		{
+			$date = date("Y-m-d H:i:s");
+			$this->insertAadharDetails($profileId,$username,$date,$aadharId,$reqId);
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public function insertAadharDetails($profileId,$username,$date,$aadharId,$reqId)
