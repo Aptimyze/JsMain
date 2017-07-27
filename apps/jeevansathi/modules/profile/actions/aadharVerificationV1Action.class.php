@@ -38,10 +38,17 @@ class aadharVerificationV1Action extends sfActions
 				$nameOfUserObj->updateName($this->profileId,$nameArr);				
 			}
 			$aadharVerificationObj = new aadharVerification();			
-			$aadharVerificationObj->callAadharVerificationApi($aadharId,$nameOfUser,$this->profileId,$this->username);
+			$response = $aadharVerificationObj->callAadharVerificationApi($aadharId,$nameOfUser,$this->profileId,$this->username);
 			unset($aadharVerificationObj);
-			unset($nameOfUserObj);			
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);	
+			unset($nameOfUserObj);
+			if($response)
+			{
+				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);		
+			}			
+			else
+			{
+				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			}
 		}		        
         $apiResponseHandlerObj->generateResponse();
 		return sfView::NONE; 
