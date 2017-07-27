@@ -48,7 +48,7 @@ componentDidMount(){
 
      });
      this.obj.unbindSlider().initTouch();
-console.log(this.state.loaderStyles);
+      console.log(this.state,'pal');
    }
 
 }
@@ -90,7 +90,16 @@ bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples  ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,this.props.apiNextPage);
+  // console.log('slider====');
+  // console.log(elem);
+  // console.log(this.props.listing.profiles);
+  // console.log(this.props.listing.tuples);
+  // console.log(this.alterCssStyle.bind(this));
+  // console.log(this.props.listing.infotype);
+  //
+  // console.log("======");
+  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,
+      this.props.apiNextPage);
   this.obj.initTouch();
   this.setState({
     sliderBound: true,
