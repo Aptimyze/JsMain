@@ -1,42 +1,60 @@
 function GAMapper(GAEvent, extraParams={}){
     try {
-
+        var PageName = currentPageName || "other page";
         var userStatus = "Unregistered";
         if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
             userStatus = loggedInJspcGender;
         }
         var GAMapping = {
             // verify otp layer
-            "GA_VOL_MISS_CALL"      :["E", "Enter Code Screen", "Miss Call"],
-            "GA_VOL_SUBMIT"         :["E", "Enter Code Screen", "Verify"],
-            "GA_VOL_RESEND"         :["E", "Enter Code Screen", "Resend Code"],
-            "GA_VOL_SUBMIT_ERROR"   :["E", "Enter Code Screen", "Wrong OTP"],
-            "GA_VOL_SUBMIT_SUCCESS" :["E", "Enter Code Screen", "Correct OTP"],
-            "GA_VOL_SUCCESS_OK"     :["E", "Phone verification response", "Verify Okay"],
-            "GA_LL_LOGIN_SUCCESS"   :["E", "login layer", "Login Success"],
-            "GA_LL_LOGIN_FAILURE"   :["E", "login layer", "Login Failure"],
+            "GA_VOL_MISS_CALL"              :["E", "Enter Code Screen", "Miss Call"],
+            "GA_VOL_SUBMIT"                 :["E", "Enter Code Screen", "Verify"],
+            "GA_VOL_RESEND"                 :["E", "Enter Code Screen", "Resend Code"],
+            "GA_VOL_SUBMIT_ERROR"           :["E", "Enter Code Screen", "Wrong OTP"],
+            "GA_VOL_SUBMIT_SUCCESS"         :["E", "Enter Code Screen", "Correct OTP"],
+            "GA_VOL_SUCCESS_OK"             :["E", "Phone verification response", "Verify Okay"],
+            
+            "GA_LL_LOGIN_SUCCESS"           :["E", "login layer", "Login Success"],
+            "GA_LL_LOGIN_FAILURE"           :["E", "login layer", "Login Failure"],
 
             
-            "GA_EOI_INITIATE"       :["E", "EOI", "Express Interest"],
-            "GA_EOI_SHORTLIST"      :["E", "EOI", "Shortlist"],
-            "GA_EOI_CONTACT_DETAIL" :["E", "EOI", "Contact"],
-            "GA_LL_LOGIN"           :["E", "login layer", "Login"],
-            "GA_TOPBAR_LOGIN"       :["E", "login", "login"],
-            "GA_LL_REGISTER"        :["E", "login layer", "Register"],
-            "GA_TOPBAR_REGISTER"    :["E", "login", "Register"],
-            "GA_TOPBAR_FORGOT"      :["E", "login", "Forgot Password"],
-            "GA_LL_FORGOT"          :["E", "login layer", "Forgot Password"],
-            "GA_FORGOTL_SENDLINK"   :["E", "Forgot Password", "Send link to reset"],
-            "GA_SEARCH_LOGGEDOUT_PROFILE" : ["E", "Search results logged out", "profile"],
-            "GA_SEARCH_LOGGEDOUT_ALBUM": ["E", "Search results logged out", "album"],
-            "GA_SEARCH_LOGGEDOUT_EOI": ["E", "Login Layer", extraParams['type'] || ''],
+            "GA_CE_INITIATE"                :["E", PageName || "", "Express Interest"],
+            "GA_CE_SHORTLIST"               :["E", PageName || "", "Shortlist"],
+            "GA_CE_CONTACT_DETAIL"          :["E", PageName || "", "Contact"],
+            "GA_CE_CHAT"                    :["E", PageName || "", "Chat"],
+
+
+            "GA_CE_MYJSJUSTJOINED"          :["E", 'myjs justjoined', 'Express Interest'],
+            "GA_CE_MYJSLASTSEARCH"          :["E", "myjs lastsearch", "Express Interest"],
+            "GA_CE_MYJSVERIFIEDMATCHES"     :["E", "myjs verifiedmatches", "Express Interest"],
+            "GA_CE_MYJSDAILYMATCHES"        :["E", "myjs dailymatches", "Express Interest"],
+
+
+            "GA_SEARCH_LOGGEDOUT_PROFILE"   :["E", PageName || "advance search", "profile"],
+            "GA_SEARCH_LOGGEDOUT_ALBUM"     :["E", PageName || "advance search", "album"],
+            "GA_SEARCH_LOGGEDOUT_EOI"       :["E", PageName || "advance search", extraParams['type'] || ''],
+
+
+
+            "GA_LL_LOGIN"                   :["E", "login layer", "Login"],
+            "GA_TOPBAR_LOGIN"               :["E", "login", "login"],
+            "GA_LL_REGISTER"                :["E", "login layer", "Register"],
+            "GA_TOPBAR_REGISTER"            :["E", "login", "Register"],
+            "GA_TOPBAR_FORGOT"              :["E", "login", "Forgot Password"],
+            "GA_LL_FORGOT"                  :["E", "login layer", "Forgot Password"],
+            "GA_FORGOTL_SENDLINK"           :["E", "Forgot Password", "Send link to reset"],
+
+            
+
             // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
             "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
             // 
             "GAV_LL_SHOW"           :["V", "Login Layer"],
 
-            "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] + extraParams['button']],
-            "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] + extraParams['button']],
+            "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] +" "+ extraParams['button']],
+            "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] +" "+ extraParams['button']],
+            /* click on album on profile description page when logged in */
+            "GA_PROFILE_ALBUM"      :["E", PageName || "", "album"],
 
         }
         if(GAMapping[GAEvent]){

@@ -29,8 +29,7 @@ $("#resendOtpGif").hide();
 ajaxConfig.url='/phone/sendOtpSMS';
 jQuery.myObj.ajax(ajaxConfig);
 };
-
-$("#missedCallOption").bind('click',showVerifyLayer);
+$("#missedCallOption").bind('click', function(){GAMapper("GA_VOL_MISS_CALL"); showVerifyLayer();});
 $("#resendOtpLink").bind('click',resendOtpLink);
 </script>
 

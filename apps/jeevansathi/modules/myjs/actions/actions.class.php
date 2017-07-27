@@ -394,7 +394,9 @@ class myjsActions extends sfActions
 
  	public function executeJspcPerform(sfWebRequest $request)
 	{
-		if(MobileCommon::isNewMobileSite())
+    $request->setParameter('currentPageName',"myjs");
+    		
+    if(MobileCommon::isNewMobileSite())
 		{
 			header("Location:".sfConfig::get("app_site_url"));die;
 		}

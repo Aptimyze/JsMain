@@ -1,3 +1,4 @@
+currentPageName="profile page";
 var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1,vspScrollLevel=600,alreadyShown=0;
 var kundliResponseArr = {"F":"You cannot request horoscope as you don’t match this profile's filters","G":"You cannot request horoscope to a person of the same gender"};
 
@@ -438,6 +439,7 @@ $('#cls-astroComp').click(function(){
 });
 
 $('.js-searchTupleImage').click(function(){
+    GAMapper("GA_PROFILE_ALBUM");
     var photoData = $(this).attr("data");
     photoData = photoData.split(",");
 

@@ -34,7 +34,7 @@ var Button= function(elementObj) {
 Button.prototype.request= function() {
 	
 	/* GA tracking */
-	GAMapper("GA_EOI_"+this.name);
+	GAMapper("GA_CE_"+this.name);
 if(this.name=='WRITE_MESSAGE_LIST')
     {
         this.params+=('&pagination=1');
