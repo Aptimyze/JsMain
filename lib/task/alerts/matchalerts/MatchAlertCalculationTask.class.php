@@ -11,6 +11,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $LowDppCountCachetime = 604800; // 1 week
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
+        private $limitLastSearchRec = 10;
 	const clusterRecordLimit = 10;
         const _communityModelToggle=0;
         const limitNtWhenCommunity = 10;
@@ -21,6 +22,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 		$this->addArguments(array(
                         new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'My argument'),
                         new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
+                        new sfCommandArgument('fromReg', sfCommandArgument::OPTIONAL, 'My argument',0),
         	));
 
 		$this->addOptions(array(
@@ -44,6 +46,7 @@ EOF;
                 ini_set('memory_limit','512M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
+                $fromReg = $arguments["fromReg"]; // registered data flag
                 
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
@@ -51,7 +54,6 @@ EOF;
                 $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");
-
 		$flag=1;
 
 		do{
@@ -61,7 +63,7 @@ EOF;
                         
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
-			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
+			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
                         //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
 			if(is_array($arr))
 			{
@@ -94,7 +96,16 @@ EOF;
                                                         
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
                                                         // Set Low Dpp flag
-                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                                                                         
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);     
+                                                        
+                                                        if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
+                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
+                                                                $totalResults = $lastSearchObj->getMatches();
+                                                                if($totalResults["CNT"] == 0){
+                                                                        $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                }
+                                                        }
+                                                        
                                                         $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$BroaderDppSort);   
                                                         $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting); 
                                                         if($totalResults["CNT"] == 0)
@@ -117,6 +128,7 @@ EOF;
                                                         }
                                                         else
                                                             $this->limitNtRec=self::limitNtNoCommunity;
+                                                        
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
@@ -126,6 +138,13 @@ EOF;
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+                                                        if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
+                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
+                                                                $totalResults = $lastSearchObj->getMatches();
+                                                                if($totalResults["CNT"] == 0){
+                                                                        $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                }
+                                                        }
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
