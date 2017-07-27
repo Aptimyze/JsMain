@@ -50,7 +50,7 @@ EOF;
 		$interestDate=date("Y-m-d",$timestamp);
 
       	for($i=0;$i<$chunk;$i++)
-			echo "\nchunk=".$i;
+		{	echo "\nchunk=".$i;
 			for($j=3;$j<4;$j++)
             {
                 $dbObShard = JsDbSharding::getShardNo($j,'Y');
@@ -67,6 +67,7 @@ EOF;
 					$senderProfileObj = new Profile();
  					$senderProfileId = $value['SENDER'];
 					$senderProfileObj->getDetail($senderProfileId, "PROFILEID");
+					if($this->checkJsExclusiveCondition($senderProfileObj)==false)continue;
 					
 					$recProfileObj = new Profile();
 					$recProfileId = $value['RECEIVER'];
@@ -96,5 +97,13 @@ EOF;
 			}
 		}
 		echo "Total Reminder sent == ".$countOfReminder++;
+	}
+
+	public function checkJsExclusiveCondition($senderObj)
+	{
+		if(strstr($senderObj->getSUBSCRIPTION(),"X")!="")
+       		return true;
+		else
+       		return false;
 	}
 }
