@@ -260,6 +260,12 @@ class MembershipHandler
         } else{
             if($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
                 $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
+                if($userType == memUserType::PAID_WITHIN_RENEW){
+                    $this->lightningDealDiscount = $this->memObj->getLightningDealDiscount($user->getProfileid(),$device);
+                    if ($this->lightningDealDiscount) {
+                        $discountInfo["TYPE"] = discountType::LIGHTNING_DEAL_DISCOUNT;
+                    } 
+                }
             } else {
                 if ($user->getProfileid() != '') {
                     if($userType == memUserType::FREE || $userType == memUserType::EXPIRED_BEYOND_LIMIT){
@@ -1017,7 +1023,7 @@ class MembershipHandler
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
             }
-            if ($screeningStatus == "Y") 
+            //if ($screeningStatus == "Y") 
             {
                 if($apiObj!="" && is_array($apiObj->discountTypeInfo)){
                     $discountTypeArr = $apiObj->discountTypeInfo;
@@ -1846,6 +1852,19 @@ class MembershipHandler
                     $bottom = "if you upgrade your membership before <strong>" . date("d M", strtotime($expiry_date)) . "</strong> !";
                 }
                 break;
+            case 'VD_NOTIFICATION':
+                $discountVD = $vdodObj->getDiscountDetails($profileid);
+                $maxVDDisc  = $discountVD['MAX_DISCOUNT'];
+                $flat       = $discountVD['FLAT_DISCOUNT'];
+                $discPerc   = $maxVDDisc;
+                if ($flat) {
+                    $discountDisplayText = 'flat';
+                } else {
+                    $discountDisplayText = 'upto';
+                }
+                $top = "Get ".$discountDisplayText." ".$discPerc."% OFF on all Jeevansathi Plans";
+                $bottom = "Congratulations! You are selected for special discounts of ".$discountDisplayText." ".$discPerc."% by Jeevansathi. Offer valid till ".date("d M", strtotime($expiry_date)).". Tap to avail offer.";
+                break;
             case 'CASH':
                 $discountDisplayText = $vdodObj->getCashDiscountDispText($profileid, 'small');
                 $top                 = "Get " . $discountDisplayText . " " . $discPerc . "% OFF";
@@ -2236,8 +2255,17 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
+
         if (is_array($allocationDetails) && $allocationDetails) {
-            $profileIDArr = array_keys($allocationDetails);
+            
+            $profileIDArr = array_map(function($arr){ 
+                                    return $arr['PROFILEID'];
+                                },$allocationDetails);
+            
+            if(is_array($profileIDArr)){
+                $profileIDArr = array_unique($profileIDArr);
+            }
+            
             if (is_array($profileIDArr) && $profileIDArr) {
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
@@ -2256,18 +2284,20 @@ class MembershipHandler
                 unset($mainAdminObj);
 
                 //get billing details of profiles via billid's
-                $billIdArr = array_map(function ($arr) {return $arr['BILL_ID'];}, $allocationDetails);
+                $billIdArr = array_keys($allocationDetails);
+
                 if (is_array($billIdArr) && $billIdArr) {
                     $billingObj     = new BILLING_SERVICE_STATUS("crm_slave");
                     $billingDetails = $billingObj->fetchServiceDetailsByBillId(array_filter($billIdArr), "PROFILEID,SERVICEID,DATE_FORMAT(EXPIRY_DT, '%d/%m/%Y') AS EXPIRY_DT", "%X%");
                     unset($billingObj);
                 }
             }
-            foreach ($allocationDetails as $profileid => $value) {
+            foreach ($allocationDetails as $billid => $value) {
+                $profileid = $value["PROFILEID"];
                 if ($profileDetails[$profileid]) {
-                    $allocationDetails[$profileid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$profileid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
+                    $allocationDetails[$billid] = $this->modifyExclusiveMembersDetails($profileid, $profileDetails[$profileid], $allocationDetails[$billid], $jsadminDetails[$profileid], $billingDetails[$profileid], $profileNamesArr[$profileid]);
                 } else {
-                    unset($allocationDetails[$profileid]);
+                    unset($allocationDetails[$billid]);
                 }
 
             }
@@ -2275,6 +2305,7 @@ class MembershipHandler
             unset($jsadminDetails);
             unset($profileNamesArr);
         }
+        
         return $allocationDetails;
     }
 
@@ -2304,7 +2335,7 @@ class MembershipHandler
         if ($billingDetails) {
             $billingDetails = exclusiveMemberList::mapColumnsToActualValues($billingDetails, array("SERVICEID"));
         }
-
+        
         //merge all details
         if (is_array($billingDetails) && is_array($jsadminDetails)) {
             $allocationDetails = array_merge($allocationDetails, $profileDetails, $billingDetails, $jsadminDetails);
@@ -2315,7 +2346,6 @@ class MembershipHandler
         } else {
             $allocationDetails = array_merge($allocationDetails, $profileDetails);
         }
-
         return $allocationDetails;
 
     }
@@ -2755,7 +2785,43 @@ class MembershipHandler
 	}
 	return false;
     }
-    
+
+    // get Latest Purchase Date	
+    public function getPurchaseDate($profileid,$type=''){
+        if(empty($profileid)){
+            return;
+        }
+        else{
+            	$memCacheObject = JsMemcache::getInstance();
+		$key = "MemPurchase_".$profileid;
+
+		/* testing part
+		$addKey ='allToPay';
+	        $storeVal =$addKey."#".date("Y-m-d H:i:s");
+		$memCacheObject->set("$key","$storeVal",604800); */
+
+            	$purchasDet 	=$memCacheObject->get($key);
+		$purchasDetArr 	=@explode("#", $purchasDet);
+		$purchasDate 	=$purchasDetArr[1];
+		$purchaseParamId =$purchasDetArr[0];
+		if($type=='F'){
+			if($purchaseParamId=='freeToPay')
+				$freeToPay =true;
+			else
+				$freeToPay =false;
+		}else{
+			if(!$purchasDate){
+				$billingObj = new BILLING_PAYMENT_DETAIL('crm_slave');
+				$purchasDate = $billingObj->getLatestPaymentDateOfProfile($profileid);
+			}
+		}
+		if($type=='F' && $freeToPay==false)
+			$purchasDate ='';
+		$resArr =array('PURCHASE_DATE'=>$purchasDate);
+		return $resArr;
+    	}
+    }		
+
     public function getMembershipAutoLoginLink($profileid,$source){
         if($profileid){
             include_once(JsConstants::$docRoot."/classes/authentication.class.php");
@@ -2767,5 +2833,80 @@ class MembershipHandler
             return $autoLoginLink;
         }
     }
+    
+    public function setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount,$communityId=""){
+        if(is_array($activeCommunityWiseDiscount)){
+            foreach($activeCommunityWiseDiscount as $cat=>$data){
+                foreach($data as $commId => $val){
+                    $redisVal[$commId] = $val["DISCOUNT"];
+                    if($communityId != "" && $commId == $communityId){
+                        $discount = $val["DISCOUNT"];
+                    }
+                    if($commId == 0){
+                        $otherDiscount = $val["DISCOUNT"];
+                    }
+                }
+            }
+            JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
+            return $discount?$discount:$otherDiscount;
+        }
+    }
+    
+    public function getCommunityWelcomeDiscount($communityId){
+        if($communityId || $communityId == 0){
+            $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
+            if($discountArr){
+                $discount = $discountArr[$communityId];
+                if(!($discount && $discount >= 0)){
+                    $discount = $discountArr[0];
+                }
+            }
+            else{
+                $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();
+                $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
+                $discount = $this->setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount,$communityId);
+            }
+            return $discount;
+        }
+    }
+    
+    public function processCommunityWelcomeDiscount($profileid,$community){
+        $discountPercent = $this->getCommunityWelcomeDiscount($community);
+        $tempServiceArr = $this->getActiveServices();
+        foreach($tempServiceArr as $key => $val){
+            if($val != 'D')
+                $serviceArr[] = $val;
+        }
+        $vdObj = new VariableDiscount();
+        $startDate = date('Y-m-d');
+        $endDate = date("Y-m-d",strtotime('+'.VariableParams::COMMUNITY_WELCOME_DISCOUNT_DURATION." days"));
+        $entryDt = date('Y-m-d');
+        $sendMailForDiscount = false; //mail not to be sent
+        $sendSMSForDiscount = true;  //SMS to be sent
+        
+        $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC1"=>$discountPercent,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
+        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
+        
+        $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
+        $commWelDiscLogObj->addEntry($profileid,$discountPercent,$startDate,$endDate,$community,$entryDt);
+        
+
+        unset($discountDetails,$vdObj,$discountObj,$commWelDiscLogObj);
+    }
+    
+    public function addCommunityWelcomeDiscount($profileid,$community){
+        $prodObj=new Producer();
+        if($prodObj->getRabbitMQServerConnected())
+        {
+            $body = array("PROFILEID"=>$profileid,"COMMUNITY"=>$community);
+            $type = "COMMUNITY_DISCOUNT_LOG";
+            $queueData = array('process' =>'COMMUNITY_DISCOUNT',
+                                'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                              );
+            $prodObj->sendMessage($queueData);
+        }
+        unset($prodObj,$queueData,$body);
+    }
+    
 
 }

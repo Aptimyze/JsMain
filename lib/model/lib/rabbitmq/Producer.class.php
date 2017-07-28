@@ -145,8 +145,12 @@ class Producer
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
+			$this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
 			$this->channel->queue_declare(MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
+			$this->channel->queue_declare(MQ::UPDATE_CRITICAL_INFO_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         $this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         $this->channel->queue_declare(MQ::UPDATE_JUSTJOINED_LAST_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         
@@ -158,6 +162,7 @@ class Producer
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+            $this->channel->queue_declare(MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::INSTANT_EOI_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
@@ -183,6 +188,9 @@ class Producer
 						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
 					);
       $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
+      
+      //OutBound Event Queue
+      $this->channel->queue_declare(MQ::OUTBOUND_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -235,6 +243,11 @@ class Producer
 					break;
 				case "UPDATE_SEEN_PROFILE":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "MATCHALERTS_REG":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+				case "UPDATE_CRITICAL_INFO_PROFILE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_CRITICAL_INFO_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "MATCHALERTS_LAST_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
@@ -302,6 +315,9 @@ class Producer
                 case 'DISCOUNT_HISTORY':
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DISC_HISTORY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                     break;
+                case 'COMMUNITY_DISCOUNT':
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                    break;
         case MQ::SCRIPT_PROFILER_PROCESS:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCRIPT_PROFILER_Q,MQ::MANDATORY,MQ::IMMEDIATE);
           break;
@@ -315,7 +331,9 @@ class Producer
         case MQ::PRODUCT_METRICS:
                      $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PRODUCT_METRIC_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
         break;
- 
+        case MQ::OUTBOUND_EVENT:
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::OUTBOUND_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+          break;
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

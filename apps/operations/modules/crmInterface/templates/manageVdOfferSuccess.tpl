@@ -37,6 +37,10 @@
                 </div>
 		<br>
 		<div>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/scheduleVdNotification?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer Notifications</a>
+                </div>
+		<br>
+		<div>
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/extendVdOffer?name=~$name`&cid=~$cid`">Extend Variable Discount Offer Date</a>
 		</div>
 		<br>
@@ -46,6 +50,10 @@
 		<br>
 		<div>
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/commoninterface/uploadVD?name=~$name`&cid=~$cid`">Upload Mini VD Data</a>
+		</div>
+        <br>
+        <div>
+			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/welcomeDiscount?name=~$name`&cid=~$cid`">Update Welcome Discount</a>
 		</div>
         <br>
         ~/if`

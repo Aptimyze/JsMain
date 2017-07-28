@@ -3,7 +3,7 @@ class astroReport
 {
 	//This function is used to send mails (sample astro report/actual astro report) to the user who requested it
 	public function sendAstroMail($mailID,$otherUsername,$otherProfileId,$file,$type,$loggedInProfileId,$extraParameter="")
-	{
+	{		
 		$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,$mailID);
 		
 		$emailTpl = $email_sender->setProfileId($loggedInProfileId);

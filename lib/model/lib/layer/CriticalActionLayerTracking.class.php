@@ -115,7 +115,7 @@ class CriticalActionLayerTracking
         for ($i=1;;$i++)
         { 
 
-      $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+      $layer = CriticalActionLayerDataDisplay::getLAYERFromPriority($i);
 
       if (!$layer) 
         { 
@@ -269,7 +269,6 @@ return 0;
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {
-                            JsMemcache::getInstance()->incrCount("DPP_CAL_0");
                               
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
@@ -285,7 +284,6 @@ return 0;
                               {
                                 if(is_array($value['data']))                                  
                                 {      
-                                  JsMemcache::getInstance()->incrCount("DPP_CAL_1");
                                   $show = 0;
                                   break;
                                 }
@@ -343,8 +341,7 @@ return 0;
                     break;  
 
                     case '16':                      
-                          $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          if(MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))) )
                           {
                             
                               ob_start();
@@ -420,7 +417,7 @@ return 0;
                     break;
 
                      case '21': 
-        if(MobileCommon::isApp() && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
         {
                      $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
                     $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
@@ -450,7 +447,7 @@ return 0;
 
 
                     case '23' :
-                        if(MobileCommon::isApp() && self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                        if(!MobileCommon::isApp() || self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
                   {
                     $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
                     if(!$familyBasedOutOfObj->getCompletionStatus())
@@ -551,8 +548,8 @@ break;
 
                           '18' => array(
                     
-                    'A' => '96'
-                    
+                    'A' => '96',
+                   'I' => '5.5'
                         ),
                     '21' => array(
                     

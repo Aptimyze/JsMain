@@ -544,7 +544,7 @@ class ShowProfileStats
 		if($this->profileObj->getACTIVATED()!="D")
 		{
 			$profilememcacheObj = new ProfileMemcacheService($this->profileObj);
-			$contactByMeProfile = unserialize($profilememcacheObj->memcache->getCONTACTED_BY_ME());
+			$contactByMeProfile = unserialize($profilememcacheObj->get('CONTACTED_BY_ME'));
 			foreach ($contactByMeProfile as $type=>$profileids)
 			{
 				foreach($profileids as $key=>$profileid)

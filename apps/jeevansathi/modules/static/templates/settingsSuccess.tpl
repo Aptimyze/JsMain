@@ -27,6 +27,18 @@
     </div>
     ~/if`
     <!--end:div-->
+        <!--start:div-->
+    <div class="clearfix pad12">
+      <div class="fl wid94p"><a href="/profile/viewprofile.php?ownview=1#Dpp" class="color13">Recommendations</a></div>
+      <div class="fr pt2"><a href="/profile/viewprofile.php?ownview=1#Dpp"><i class="mainsp set_arow2"></i></a></div>
+    </div>
+    <!--end:div-->
+    <!--start:div-->
+    <div class="clearfix pad12">
+      <div class="fl wid94p"><a href="/static/privacySettings" bind-slide="1" class="color13">Privacy Settings</a></div>
+      <div class="fr pt2"><a href="/static/privacySettings"><i class="mainsp set_arow2"></i></a></div>
+    </div>
+    <!--end:div-->
     <!--start:div-->
     <div class="clearfix pad12">
       <div class="fl wid94p"><a href="/static/changePass" bind-slide="1" class="color13">Change Password</a></div>

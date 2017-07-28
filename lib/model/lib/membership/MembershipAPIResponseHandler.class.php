@@ -510,7 +510,8 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
             'pageOneVas'=>$this->pageOneVas,
             'preSelectLandingVas'=>$preSelectVasGlobal,
-            'disableVasDiscount'=>$disableVasDiscount 
+            'disableVasDiscount'=>$disableVasDiscount,
+            'date'=>date('Y-m-d H:i:s')
         );
         
         //fetch the upgrade membership content based on eligibilty and channel
@@ -523,6 +524,10 @@ class MembershipAPIResponseHandler {
         
         if(in_array($this->device, VariableParams::$lightningDealOfferConfig["channelsAllowed"]) && $this->discountTypeInfo["TYPE"] == discountType::LIGHTNING_DEAL_DISCOUNT){
             $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
+            if($this->userObj->userType == memUserType::PAID_WITHIN_RENEW && is_array($output["lightningDealContent"])){
+                $output["lightningDealContent"]["renewalLightning"] = "1";
+                $output["backgroundText"] = NULL;
+            }
             
             if(is_array($output["lightningDealContent"]) && is_array($output)){
                 $output["title"] = "Upgrade Membership";
@@ -835,7 +840,7 @@ class MembershipAPIResponseHandler {
         else
             $sub_dur = $this->mainMemDur;
         
-       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         $this->couponParams = $this->memApiFuncs->getCouponCodeDetails($this);
         
@@ -902,7 +907,11 @@ class MembershipAPIResponseHandler {
             $request->setParameter('mainMembership', $this->mainMem . $this->mainMemDur);
             $request->setParameter('vasImpression', $this->selectedVas);
             $paymentOptionsData = $this->generatePaymentOptionsPageResponse($request, $chequeData);
-            if ($this->currency == 'RS') {
+            
+            if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+                $output['payAtBranchesData'] = NULL;
+            }
+            else if ($this->currency == 'RS') {
                 $branchData = $this->generatePayAtBranchesPageResponse();
                 $output['payAtBranchesData'] = $branchData;
             }
@@ -1197,7 +1206,7 @@ class MembershipAPIResponseHandler {
         	$sub_dur = '';	
         }
         
-        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT. billingVariables::TAX_TEXT_SB;
         
         $this->apply_coupon_text = NULL;
         $this->custVAS = null;
@@ -1398,7 +1407,7 @@ class MembershipAPIResponseHandler {
         );
         
         $title = 'Select Payment Method';
-        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         if ($this->currency == "RS") {
             $callUs = array(
@@ -1462,13 +1471,21 @@ class MembershipAPIResponseHandler {
             $cashChequePickup = NULL;
         }
         
+        if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+            $cashChequePickup = NULL;
+            $hidePayAtBranchesOption = true;
+        }
+        else{
+            $hidePayAtBranchesOption = false;
+        }
+        
         if ($this->currency == "DOL") {
             $proceedText = "You Pay USD " . number_format($totalCartPrice, 2, '.', ',') . "";
         } 
         else {
             $proceedText = "Continue";
         }
-        
+       
         $output = array(
             'title' => $title,
             'currency' => $this->currency,
@@ -1489,6 +1506,7 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'userProfile' => $this->profileid,
             'upgradeMem' => $this->upgradeMem,
+            'hidePayAtBranchesOption'=>$hidePayAtBranchesOption,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
@@ -2034,6 +2052,7 @@ class MembershipAPIResponseHandler {
 
         $output['startingPlan'] = $startingPlanData['startingPlan'];
         $output['maxDiscount'] = $disc;
+        $output['userType'] = $this->userType;
         unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();

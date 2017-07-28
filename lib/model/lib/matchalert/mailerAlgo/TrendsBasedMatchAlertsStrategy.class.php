@@ -38,25 +38,10 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 		$SearchUtilityObj =  new SearchUtility;
                 $pids =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj,0,implode(' ',$notInProfiles));
                 if(is_array($pids)){
-                        if($this->logProfile == 0){
-                                if(count($pids)<$this->limit){
-                                        return array("CNT"=>count($pids),"profiles"=>$pids);   
-                                }else{
-                                        if(!empty($notInProfiles)){
-                                                $pids = array_merge($pids, $notInProfiles);
-                                        }
-                                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
-                                }
-                        }else{
-                                if(!empty($notInProfiles)){
-                                        $pids = array_merge($pids, $notInProfiles);
-                                }
-                                $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
+                        if(!empty($notInProfiles)){
+                                $pids = array_merge($pids, $notInProfiles);
                         }
-                }else{
-                     if(!empty($notInProfiles) && $this->logProfile == 1) {
-                             $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $notInProfiles, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
-                     }  
+                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,0,$matchesSetting);
                 }
                 return array("CNT"=>count($pids),"profiles"=>$pids);   
         }

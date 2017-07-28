@@ -517,7 +517,7 @@ app.directive('regCasteNoBarField',function(Gui){
                                         setTimeout(function () {
                                                 var output={};
                                                 output["casteNoBar"] = {"label":'casteNoBar',"value":$scope.info.value};
-                                                Gui.updateGuiFields('s4',3,output);
+                                                Gui.updateGuiFields('s4',5,output);
                     }, 50);
                                                 
                                 }
