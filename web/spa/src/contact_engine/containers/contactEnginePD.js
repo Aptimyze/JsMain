@@ -8,7 +8,7 @@ import WriteMessage from "./WriteMessage"
 
 export class contactEnginePD extends React.Component{
   constructor(props){
-    super();console.log(props);
+    super();
     this.state = {
     	actionDone: false,
       remindDone: false,
@@ -31,7 +31,6 @@ export class contactEnginePD extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-      console.log(nextProps.contactAction);
       if(nextProps.contactAction.acceptDone) {
        this.setState({
        	  actionDone: true
@@ -61,7 +60,7 @@ export class contactEnginePD extends React.Component{
   render(){
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-      messageOverlayView = <WriteMessage membership="paid" closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl}  />
+      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.button} />
     }
     if(this.state.actionDone){
       if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
@@ -92,7 +91,9 @@ export class contactEnginePD extends React.Component{
     }
     else if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
       return(<div id="buttons1" className="view_ce fullwid">
+
         <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.contactAction(this.props.buttondata.buttons.others[0].action)}>
+
           <div id="btnAccept" className="fontlig f13 white cursp dispbl">
             <i className="ot_sprtie ot_chk"></i>
             <input className="params" type="hidden" value={this.props.buttondata.buttons.others[0].params}></input>
