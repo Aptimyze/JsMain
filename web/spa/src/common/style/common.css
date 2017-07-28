@@ -1148,7 +1148,7 @@ transform:  translateX(100%) rotateY(0deg) !important;
 
 .wordBreak{word-break: break-word;}
 .camera{background-position:-4px -292px; width:25px; height:20px;}
-.outerAlbumIcon{top:-6px; right:-5px; z-index:99;}
+.outerAlbumIcon{top:-6px; right:-5px; z-index:60;}
 .crBoxCount{width: 22px;height: 22px;border-top-left-radius: 11px;border-top-right-radius: 11px;border-bottom-right-radius: 11px;border-bottom-left-radius: 11px;}
 .crBoxIcon{width: 47px;height: 47px;border-top-left-radius: 30px;border-top-right-radius: 30px;border-bottom-right-radius: 30px;border-bottom-left-radius: 30px;}
 

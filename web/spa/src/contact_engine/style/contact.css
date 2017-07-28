@@ -118,3 +118,38 @@
 .srp_bg1 {
     background-color: #d2d2d2;
 }
+.freeMsgDiv {
+    top: 50%;
+    text-align: center;
+}
+.txtAr_bg1 {
+    background-color: #272727;
+}
+.brdr23_contact {
+    border-top: 1px solid #4f4541;
+}
+.com_pad3 {
+    padding: 5px 0 5px 10px;
+}
+.lh15 {
+    line-height: 15px;
+}
+.inp_1 {
+    background-color: #5f4247;
+    border-radius: 5px;
+}
+textarea {
+    overflow: auto;
+    vertical-align: top;
+    resize: none;
+    border: 0;
+}
+.com_pad4 {
+    padding: 12px 14px 0 0;
+}
+.padl30_contact {
+    padding-left: 35px;
+}
+.com_pad1_new {
+    padding: 15px 10px 30px 35px;
+}
