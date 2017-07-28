@@ -125,9 +125,9 @@ class ExclusiveMatchMailer {
         $date = date('Y-m-d');
         $mailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
         foreach ($result as $key => $value){
-            $acceptances = explode(",",$result["ACCEPTANCES"]);
+            $acceptances = explode(",",$value["ACCEPTANCES"]);
             $count = count($acceptances);
-            $mailLogObj->insertMailLog($result["RECEIVER"],"MATCH_MAIL",$count,$date);
+            $mailLogObj->insertMailLog($value["RECEIVER"],"MATCH_MAIL",$count,$date);
         }
 	}
 }
