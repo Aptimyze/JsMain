@@ -6,25 +6,24 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
 
-export class contactEngine extends React.Component{
+export class contactEnginePD extends React.Component{
   constructor(props){
     super();console.log(props);
     this.state = {
     	actionDone: false,
       remindDone: false,
-      showMessageOverlay:true
+      showMessageOverlay:false
     }
     this.actionUrl = {
-      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails",
       "INITIATE":"/api/v2/contacts/postEOI",
-      "INITIATE_MYJS":"/api/v2/contacts/postEOI",
-      "CANCEL":"/api/v2/contacts/postCancelInterest",
-      "SHORTLIST":"/api/v1/common/AddBookmark",
+      "ACCEPT": "/api/v2/contacts/postAccept",
       "DECLINE":"/api/v2/contacts/postNotInterested",
       "REMINDER":"/api/v2/contacts/postSendReminder",
+      "WRITE_MESSAGE":"/api/v2/contacts/WriteMessage",
+      "CANCEL":"/api/v2/contacts/postCancelInterest",
+      "SHORTLIST":"/api/v1/common/AddBookmark",      
       "MESSAGE":"/api/v2/contacts/postWriteMessage",
-      "ACCEPT":"/api/v2/contacts/postAccept",
-      "WRITE_MESSAGE":"/api/v2/contacts/WriteMessage"
+      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails"
     };
   }
 
@@ -32,13 +31,20 @@ export class contactEngine extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
+      console.log(nextProps.contactAction);
       if(nextProps.contactAction.acceptDone) {
        this.setState({
-       	actionDone: true
+       	  actionDone: true
        })
-      } else if(nextProps.contactAction.reminderDone) {
+      }
+      if(nextProps.contactAction.reminderDone) {
         this.setState({
           remindDone: true
+        })
+      } 
+      if (nextProps.contactAction.msgInitiated) {
+        this.setState({
+          showMessageOverlay: true
         })
       }
   }
@@ -46,11 +52,10 @@ export class contactEngine extends React.Component{
     this.setState({showMessageOverlay: false})
   }
 
-
   contactAction(action){
   	this.props.showLoaderDiv();
-    var url = '&profilechecksum='+profilechecksum;
-    return commonApiCall(this.actionUrl[action],url,action,'POST',dispatch,true);
+    var url = '&profilechecksum='+this.props.profiledata.profilechecksum;
+    this.props.callContactApi(this.actionUrl[action],action,url);
   }  	
 
   render(){
@@ -62,7 +67,7 @@ export class contactEngine extends React.Component{
       if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
         return (<div id="buttons1" className="view_ce fullwid z100">
           {messageOverlayView}
-          <div className="fullwid bg7 txtc pad5new posrel" >
+          <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.contactAction(this.props.contactAction.accept.buttondetails.button.action)}>
             <div className="wid60p">
               <i className="mainsp ot_msg"></i>
               <input className="action" type="hidden" value={this.props.contactAction.accept.buttondetails.button.action}></input>
@@ -87,7 +92,7 @@ export class contactEngine extends React.Component{
     }
     else if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
       return(<div id="buttons1" className="view_ce fullwid">
-        <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.props.callContactApi(this.props.buttondata.buttons.others[0].action)}>
+        <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.contactAction(this.props.buttondata.buttons.others[0].action)}>
           <div id="btnAccept" className="fontlig f13 white cursp dispbl">
             <i className="ot_sprtie ot_chk"></i>
             <input className="params" type="hidden" value={this.props.buttondata.buttons.others[0].params}></input>
@@ -96,7 +101,7 @@ export class contactEngine extends React.Component{
             <div className="white">{this.props.buttondata.buttons.others[0].label}</div>
           </div>
         </div>
-        <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.props.callContactApi(this.props.buttondata.buttons.others[1].action)}>
+        <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.contactAction(this.props.buttondata.buttons.others[1].action)}>
           <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
             <i className="ot_sprtie newitcross"></i>
             <input className="params" type="hidden" value={this.props.buttondata.buttons.others[1].params}></input>
@@ -110,7 +115,7 @@ export class contactEngine extends React.Component{
     else if(this.props.buttondata.buttons.primary[0].action == "REMINDER" || this.props.buttondata.buttons.primary[0].action == "INITIATE") {
       return(<div id="buttons1" className="view_ce fullwid">
         <div className="fullwid bg7 txtc pad5new posrel" >
-          <div className="wid60p" onClick={() => this.props.callContactApi(this.props.buttondata.buttons.primary[0].action)}>
+          <div className="wid60p" onClick={() => this.contactAction(this.props.buttondata.buttons.primary[0].action)}>
             <i className="mainsp msg_srp"></i>
             <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>
             <div className="white">{this.props.buttondata.buttons.primary[0].label}</div>
@@ -131,10 +136,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-      callContactApi: (action) => {
-        contactAction(action)
-      }    
+        callContactApi: (api,action,url) => {
+          commonApiCall(api,url,action,'POST',dispatch,true);
+        }
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(contactEngine)
+export default connect(mapStateToProps,mapDispatchToProps)(contactEnginePD)

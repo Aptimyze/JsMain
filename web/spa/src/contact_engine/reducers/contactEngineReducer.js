@@ -2,7 +2,8 @@ const contactEngineReducer = (state={
 	contactDone:false,
 	acceptDone:false,
 	declineDone:false,
-	tupleID: null
+	reminderDone:false,
+	msgInitiated:false
 },action) => {
 	switch(action.type)
 	{			
@@ -10,32 +11,35 @@ const contactEngineReducer = (state={
 		state = {
 			...state,
 			contact:action.payload,
-			contactDone : true,
-			tupleID : action.token
+			contactDone : true
 		}
 		break;
 		case 'ACCEPT':
 		state = {
 			...state,
 			accept:action.payload,
-			acceptDone : true,
-			tupleID : action.token
+			acceptDone : true
 		}
 		break;
 		case 'DECLINE':
 		state = {
 			...state,
 			decline:action.payload,
-			declineDone : true,
-			tupleID : action.token
+			declineDone : true
 		}
 		break;
 		case 'REMINDER':
 		state = {
 			...state,
 			reminder:action.payload,
-			reminderDone : true,
-			tupleID : action.token
+			reminderDone : true
+		}
+		break;
+		case 'WRITE_MESSAGE':
+		state = {
+			...state,
+			message:action.payload,
+			msgInitiated : true
 		}
 		break;
 	}
