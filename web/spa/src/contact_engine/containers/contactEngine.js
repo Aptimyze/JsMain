@@ -3,14 +3,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
-import ThreeDots from "./ThreeDots"
+import ThreeDots from "./ThreeDots";
+import WriteMessage from "./WriteMessage";
 
 export class contactEngine extends React.Component{
   constructor(props){
     super();console.log(props);
     this.state = {
     	actionDone: false,
-      remindDone: false
+      remindDone: false,
+      showMessageOverlay:false
     }
     this.actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
 
@@ -32,6 +34,7 @@ export class contactEngine extends React.Component{
   }
 
   callContactApi(action){
+    console.log("yess",action)
   	this.props.showLoaderDiv();
   	if(action == 'ACCEPT')
   		this.props.acceptApi(this.props.profiledata.profilechecksum,this.props.tupleID);
@@ -50,6 +53,10 @@ export class contactEngine extends React.Component{
       return commonApiCall(this.actionUrl[button.action],url,'','POST').then(()=>{if(typeof callBFun=='function') callBFun();});
   }
   render(){
+    var messageOverlayView;
+    if(this.state.showMessageOverlay == true) {
+      messageOverlayView = <WriteMessage />
+    }
   	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
@@ -75,7 +82,7 @@ export class contactEngine extends React.Component{
       	if(this.state.actionDone){
           if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
             return (<div id="buttons1" className="view_ce fullwid">
-              <div className="fullwid bg7 txtc pad5new posrel" >
+              <div onClick={() => this.callContactApi(this.props.contactAction.accept.buttondetails.button.action)} className="fullwid bg7 txtc pad5new posrel" >
                 <div className="wid60p">
                   <i className="mainsp ot_msg"></i>
                   <input className="action" type="hidden" value={this.props.contactAction.accept.buttondetails.button.action}></input>
@@ -101,7 +108,8 @@ export class contactEngine extends React.Component{
         }
         if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
           return(<div id="buttons1" className="view_ce fullwid">
-            <div className="wid49p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
+          {messageOverlayView}
+            <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[0].action)}>
               <div id="btnAccept" className="fontlig f13 white cursp dispbl">
                 <i className="ot_sprtie ot_chk"></i>
                 <input className="params" type="hidden" value={this.props.buttondata.buttons.others[0].params}></input>
@@ -110,7 +118,7 @@ export class contactEngine extends React.Component{
                 <div className="white">{this.props.buttondata.buttons.others[0].label}</div>
               </div>
             </div>
-            <div className="wid49p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[1].action)}>
+            <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.callContactApi(this.props.buttondata.buttons.others[1].action)}>
               <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
                 <i className="ot_sprtie newitcross"></i>
                 <input className="params" type="hidden" value={this.props.buttondata.buttons.others[1].params}></input>
