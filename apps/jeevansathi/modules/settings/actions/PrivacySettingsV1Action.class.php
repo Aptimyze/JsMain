@@ -16,7 +16,7 @@ class PrivacySettingsV1Action extends sfAction
         $privacySettingObj = new privacySettings();
         if($getDataFlag)
         {            
-            $response = json_encode($privacySettingObj->getPrivacySettingsData());
+            $response = $privacySettingObj->getPrivacySettingsData();            
         }
         else
         {
