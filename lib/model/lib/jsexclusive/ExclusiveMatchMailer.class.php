@@ -27,25 +27,34 @@ class ExclusiveMatchMailer {
 			}
 		}
 
+        $result= array();
+		$result1= array();
+		$result2= array();
 		if (!empty($shard1Profiles)) {
 			$dbName = "shard1_slave";
-			$result = $result + $this->getAcceptancesUtil($dbName,$shard1Profiles);
+			$result = $this->getAcceptancesUtil($dbName,$shard1Profiles);
+			if(!is_array($result))
+			    $result = array();
 		} 
 		unset($shard1Profiles);
 
 		if (!empty($shard2Profiles)) {
 			$dbName = "shard2_slave";
-			$result = $result + $this->getAcceptancesUtil($dbName,$shard2Profiles);
+            $result1 = $this->getAcceptancesUtil($dbName,$shard2Profiles);
+            if(!is_array($result1))
+                $result1 = array();
 		}
 		unset($shard2Profiles); 
 
 		if (!empty($shard3Profiles)) {
 			$dbName = "shard3_slave";
-			$result = $result + $this->getAcceptancesUtil($dbName,$shard3Profiles); 
-		}
+            $result2 = $this->getAcceptancesUtil($dbName,$shard3Profiles);
+            if(!is_array($result2))
+                $result2 = array();
+        }
 		unset($shard3Profiles);
-
-		return $result;
+        $result4 = $result + $result1 + $result2;
+		return $result4;
 	}
 
 	public function getClientAndAgentDetails() {
@@ -76,10 +85,11 @@ class ExclusiveMatchMailer {
 	public function getAcceptancesForMatchMailer($dbName,$profilesId){
 		$contactsObj = new newjs_CONTACTS($dbName);
         $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
-        echo $profilesId;
 		$res1 = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$result = $res1 + $res2;
+		print_r($res1);
+		print_r($res2);
 		unset($contactsObj);
 		return $result;
 	}

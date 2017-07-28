@@ -1326,7 +1326,7 @@ public function getSendersPending($chunkStr)
 
     public function getSentAcceptancesForMatchMailer($profilesId,$time) {
     	try {
-    		
+    		$result = array();
     		$sql = "SELECT SENDER, RECEIVER
     				FROM newjs.CONTACTS
     				WHERE SENDER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
@@ -1348,6 +1348,7 @@ public function getSendersPending($chunkStr)
 
     public function getReceivedAcceptancesForMatchMailer($profilesId,$time){
     	try {
+            $result = array();
     		$sql = "SELECT SENDER, RECEIVER
 					FROM newjs.CONTACTS
 					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
