@@ -1078,7 +1078,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            //console.log("adding ankita4",newGroupId);
+           
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
         }
         if (key == "create_list") {
