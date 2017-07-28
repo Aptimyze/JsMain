@@ -134,7 +134,7 @@ class incentive_ExclusiveMatchMailer extends TABLE {
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             while ($row = $prep->fetch()) {
-                $result[] = $row;
+                    $result[] = $row;
             }
             return $result;
         } catch (Exception $e) {

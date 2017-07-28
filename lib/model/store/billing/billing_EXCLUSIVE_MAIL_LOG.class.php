@@ -49,7 +49,7 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
             $prep->bindValue(':DATE',$date,PDO::PARAM_STR);
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
-            while ($row = $prep->fetch){
+            while ($row = $prep->fetch()){
                 $result[] = $row["PROFILE"];
             }
             return $result;

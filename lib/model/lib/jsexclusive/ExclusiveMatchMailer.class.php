@@ -88,8 +88,6 @@ class ExclusiveMatchMailer {
 		$res1 = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$result = $res1 + $res2;
-		print_r($res1);
-		print_r($res2);
 		unset($contactsObj);
 		return $result;
 	}
