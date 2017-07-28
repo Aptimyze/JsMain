@@ -863,9 +863,19 @@ class jsadmin_PSWRDS extends TABLE
         try {
             $sql = "SELECT USERNAME, EMAIL, FIRST_NAME, LAST_NAME, PHONE
                     FROM jsadmin.PSWRDS
-                    WHERE USERNAME IN (:USERNAMES) ;" ;
+                    WHERE USERNAME IN (" ;
+            $COUNT=1;
+            foreach($usernames as $key => $value){
+                $valueToSearch[] = ":KEY".$COUNT;
+                $bind["KEY".$COUNT]["VALUE"] = $value;
+                $COUNT++;
+            }
+            $values = implode(",",$valueToSearch).");";
+            $sql .= $values;
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(':USERNAMES',$usernames,PDO::PARAM_STR);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_STR);
+            }
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             while ($row = $prep->fetch()) {

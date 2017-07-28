@@ -50,11 +50,11 @@ EOF;
 		    	$calculatetable->updateAcceptancesAndStatus($str_value,$key);
 	    	}
 	    }
+	    $exclusiveMailer->logMails();
 	    //Sending Mail
 	    $receivers = $exclusiveMailer->getMailerProfiles();
 	    $mailerServiceObj = new MailerService();
 	    $this->smarty = $mailerServiceObj->getMailerSmarty();
-
 	    if (is_array($receivers)) {
 	    	$mailerLinks = $mailerServiceObj->getLinks();
     		$this->smarty->assign('mailerLinks',$mailerLinks);
@@ -89,7 +89,7 @@ EOF;
                     if ($flag) {
                     	$this->updateStatus($pid,'Y');
                     } else {
-                    	$this->updateStatus($pid,'I');
+                    	$this->updateStatus($pid,'N');
                     }
                 }
     		}
@@ -97,14 +97,15 @@ EOF;
 	}
 
 	public function populateMatchMailer($data) {
-		$populateTable = new incentive_ExclusiveMatchMailer();
-		$truncateTable = new incentive_ExclusiveMatchMailer('newjs_master');
-		$truncateTable->truncate();
-		unset($truncateTable);
+        $date = date('Y-m-d');
+		$exclusiveMatchMailerObj = new incentive_ExclusiveMatchMailer('newjs_master');
+		$exclusiveMatchMailerObj->truncate();
+		$exclusiveMailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
+		$profiles = $exclusiveMailLogObj->getProfiles('Y',"MATCH_MAIL",$date);
 		foreach ($data as $key => $value) {
 		    foreach ($value as $k => $v){
-                if(MemberShipHandler::isEligibleForRBHandling($v["CLIENT_ID"]))
-                    $populateTable->insertReceiversAndAgentDetails($v);
+                if(MemberShipHandler::isEligibleForRBHandling($v["CLIENT_ID"]) && !in_array($v["CLIENT_ID"],$profiles))
+                    $exclusiveMatchMailerObj->insertReceiversAndAgentDetails($v);
             }
 		}
 		unset($populateTable);
@@ -118,8 +119,9 @@ Glad to be of service";
   	}
 
   	public function updateStatus($pid,$status) {
-  		$updateStatusObj = new incentive_ExclusiveMatchMailer();
-  		$updateStatusObj->updateStatus($pid,$status);
+        $date = date('Y-m-d');
+  		$updateStatusObj = new billing_EXCLUSIVE_MAIL_LOG();
+  		$updateStatusObj->updateStatus($pid,$status,$date);
   	}
 
 }

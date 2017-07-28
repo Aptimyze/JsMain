@@ -53,8 +53,7 @@ class ExclusiveMatchMailer {
 		$result = $servicingObj->getProfileIDandAgentNameForMailing();
 		if (count($result)) {
 			$pswrdsObj = new jsadmin_PSWRDS();
-			$str_agents = implode(",", array_keys($result));
-			$agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($str_agents);
+			$agentDetail = $pswrdsObj->getAgentDetailsForMatchMail(array_keys($result));
 			foreach ($result as $key => $value) {
 				foreach ($value as $k => $v) {
 					$result[$key][$k]["AGENT_EMAIL"] = $agentDetail[$key
@@ -62,9 +61,7 @@ class ExclusiveMatchMailer {
                     $result[$key][$k]["AGENT_NAME"] = $agentDetail[$key]["FIRST_NAME"];
 					if (!$result[$key][$k]["AGENT_NAME"]){
 					    $result[$key][$k]["AGENT_NAME"] = $key;
-                    }
-
-					if ($agentDetail[$key]["LAST_NAME"]) {
+                    } else {
 						$result[$key][$k]["AGENT_NAME"].= " ".$agentDetail[$key]["LAST_NAME"];
 					}
 					$result[$key][$k]["AGENT_PHONE"] = $agentDetail[$key]["PHONE"];
@@ -87,7 +84,7 @@ class ExclusiveMatchMailer {
 
 	public function getMailerProfiles() {
 		$exclusiveMatchMailerObj = new incentive_ExclusiveMatchMailer();
-		$res = $exclusiveMatchMailerObj->getAll();
+		$res = $exclusiveMatchMailerObj->getAllProfilesToSendMail();
 		unset($exclusiveMatchMailerObj);
 		$user = "USER";
 		foreach ($res as $key => $value) {
@@ -102,9 +99,6 @@ class ExclusiveMatchMailer {
 				$res[$key][$user.$count] = $v;
 				$count++;
 			}
-			$date = date('Y-m-d h:m:s');
-            $mailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
-			$mailLogObj->insertMailLog($value["RECEIVER"],"MATCH_MAIL",$count-1,$date);
 		}
 		return $res;
 	}
@@ -123,6 +117,18 @@ class ExclusiveMatchMailer {
 			$count += $limit;
 		}
 		return $result;
+	}
+
+    public function logMails() {
+        $exclusiveMatchMailerObj = new incentive_ExclusiveMatchMailer();
+        $result = $exclusiveMatchMailerObj->getAllProfiles();
+        $date = date('Y-m-d');
+        $mailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
+        foreach ($result as $key => $value){
+            $acceptances = explode(",",$result["ACCEPTANCES"]);
+            $count = count($acceptances);
+            $mailLogObj->insertMailLog($result["RECEIVER"],"MATCH_MAIL",$count,$date);
+        }
 	}
 }
 

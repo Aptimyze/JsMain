@@ -92,7 +92,7 @@ class incentive_ExclusiveMatchMailer extends TABLE {
     	}
     }
 
-    public function getAll() {
+    public function getAllProfilesToSendMail() {
         try {
             $sql = "SELECT RECEIVER, ACCEPTANCES, AGENT_EMAIL, AGENT_NAME, AGENT_PHONE
                     FROM incentive.ExclusiveMatchMailer
@@ -120,6 +120,23 @@ class incentive_ExclusiveMatchMailer extends TABLE {
             $prep->bindValue(':STATUS',$status,PDO::PARAM_STR);
             $prep->bindValue(':RECEIVER',$pid,PDO::PARAM_INT);
             $prep->execute();
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getAllProfiles(){
+        try {
+            $sql = "SELECT RECEIVER, ACCEPTANCES
+                    FROM incentive.ExclusiveMatchMailer ;";
+
+            $prep= $this->db->prepare($sql);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($row = $prep->fetch()) {
+                $result[] = $row;
+            }
+            return $result;
         } catch (Exception $e) {
             throw new jsException($e);
         }
