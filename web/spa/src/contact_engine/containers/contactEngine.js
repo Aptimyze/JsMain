@@ -14,6 +14,7 @@ export default class contactEngine extends React.Component{
       var url = `&${button.params}&profilechecksum=${profilechecksum}`;
       return commonApiCall(this.actionUrl[button.action],url,'','POST').then(()=>{if(typeof callBFun=='function') callBFun();});
   }
+
   render(){
       if(this.props.buttonName == "interest_received") {
          return (<div className="brdr8 fl wid90p hgt60">
