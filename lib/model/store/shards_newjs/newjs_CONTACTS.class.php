@@ -1329,10 +1329,9 @@ public function getSendersPending($chunkStr)
     		
     		$sql = "SELECT SENDER, RECEIVER
     				FROM newjs.CONTACTS
-    				WHERE SENDER IN (:PROFILESID) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+    				WHERE SENDER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
 
     		$prep = $this->db->prepare($sql);
-    		$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_STR);
     		$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
     		$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
     		$prep->execute();
@@ -1347,14 +1346,13 @@ public function getSendersPending($chunkStr)
     	}
     }
 
-    public function getReceivedAcceptancesForMatchMailer($profilesId,$result,$time){
+    public function getReceivedAcceptancesForMatchMailer($profilesId,$time){
     	try {
     		$sql = "SELECT SENDER, RECEIVER
 					FROM newjs.CONTACTS
-					WHERE RECEIVER IN (:PROFILESID) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
 
 			$prep = $this->db->prepare($sql);
-			$prep->bindValue(':PROFILESID',$profilesId,PDO::PARAM_INT);
 			$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
 			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
 			$prep->execute();
