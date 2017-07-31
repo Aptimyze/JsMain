@@ -269,7 +269,6 @@ return 0;
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {
-                            JsMemcache::getInstance()->incrCount("DPP_CAL_0");
                               
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
@@ -285,7 +284,6 @@ return 0;
                               {
                                 if(is_array($value['data']))                                  
                                 {      
-                                  JsMemcache::getInstance()->incrCount("DPP_CAL_1");
                                   $show = 0;
                                   break;
                                 }

@@ -101,7 +101,7 @@ class jsexclusiveActions extends sfActions {
 		}
 		else{
 			$this->clientId = $this->assignedClients[$this->clientIndex];
-			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES("newjs_slave");
+			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
 			//$pogRBInterestsPids = array(543);
 			unset($assistedProductObj);
