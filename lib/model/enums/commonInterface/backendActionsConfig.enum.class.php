@@ -61,7 +61,7 @@ class fsoInterfaceDisplay
 class crmCommonConfig
 {
 	public static $useCrmMemcache = false;
-	public static $jsexclusiveReferenceDt = "27/07/2017 00:00:00";
+	public static $jsexclusiveReferenceDt = "31/07/2017 00:00:00";
 }
 
 ?>
