@@ -11,6 +11,7 @@ class DppRelaxation {
         }
 
         public function getRelaxedMTONGUE($mtongue) {
+                $removeValuesIfNotPresent = array("7"); // Remove castes if they are not filled in but added as part of group currently bihari
                 $mtongueValues = explode(',', $mtongue);
                 $allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues", '', 1);
                 $checkHindiMtongues = array_flip($allHindiMtongues);
@@ -20,6 +21,12 @@ class DppRelaxation {
                                 $mtongueFlag = 1;
                         else
                                 $finalMtongue.=',' . $value;
+                }
+                foreach($removeValuesIfNotPresent as $val){
+                        if(!in_array($val, $mtongueValues)){ // remove bihari mtongue if not already present
+                                unset($checkHindiMtongues[$val]);
+                                $allHindiMtongues = array_flip($checkHindiMtongues);
+                        }
                 }
                 if ($mtongueFlag == 1)
                         $finalMtongue.= ',' . implode(',', $allHindiMtongues);
@@ -42,7 +49,7 @@ class DppRelaxation {
                 }
                 // 0 : b-professional 1 : b-medical 2 : b-others 3 : m-professional 4 : m-medical 5 : m-others
                 // defining mapping here because these are function specific
-                $educationDegreesMapping = array('0' => '35,3,4,34,6', '1' => '25,28,26,32,17', '2' => '1,2,5,33,38,39,40', '3' => '36,13,14,29,18,7,37,8,10,16,20,42,21', '4' => '19,30,43,31', '5' => '11,12,15,41');
+                $educationDegreesMapping = array('0' => '35,3,4,34,6,45,52,53,54', '1' => '25,28,26,32,17,46,47', '2' => '1,2,5,33,38,39,40,44,48,49,50,51', '3' => '36,13,14,29,18,7,37,8,10,16,20,42,21,45,52,53,54', '4' => '19,30,43,31,46,47', '5' => '11,12,15,41,44,48,49,50,51');
 
                 $maleDppEducationMapping = array('0' => '0,2', '1' => '1', '2' => '2', '3' => '3,5,0,2', '4' => '4,1', '5' => '5,2');
 

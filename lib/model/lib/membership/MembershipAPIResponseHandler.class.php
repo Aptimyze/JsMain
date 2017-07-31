@@ -524,7 +524,7 @@ class MembershipAPIResponseHandler {
         
         if(in_array($this->device, VariableParams::$lightningDealOfferConfig["channelsAllowed"]) && $this->discountTypeInfo["TYPE"] == discountType::LIGHTNING_DEAL_DISCOUNT){
             $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
-            if($this->userObj->userType == memUserType::PAID_WITHIN_RENEW && is_array($output["lightningDealContent"])){
+            if(($this->userObj->userType == memUserType::PAID_WITHIN_RENEW || $this->userObj->userType == memUserType::EXPIRED_WITHIN_LIMIT) && is_array($output["lightningDealContent"])){
                 $output["lightningDealContent"]["renewalLightning"] = "1";
                 $output["backgroundText"] = NULL;
             }
@@ -2052,6 +2052,7 @@ class MembershipAPIResponseHandler {
 
         $output['startingPlan'] = $startingPlanData['startingPlan'];
         $output['maxDiscount'] = $disc;
+        $output['userType'] = $this->userType;
         unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();
