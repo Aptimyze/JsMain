@@ -51,5 +51,21 @@ CREATE TABLE incentive.`ExclusiveMatchMailer` (
   `STATUS` enum('N','U','Y','I') DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO jeevansathi_mailer.`EMAIL_TYPE` (`MAIL_ID`, `TPL_LOCATION`, `HEADER_TPL`, `FOOTER_TPL`, `TEMPLATE_EX_LOCATION`, `MAIL_GROUP`, `CUSTOM_CRITERIA`, `SENDER_EMAILID`, `DESCRIPTION`, `MEMBERSHIP_TYPE`, `GENDER`, `PHOTO_PROFILE`, `REPLY_TO_ENABLED`, `FROM_NAME`, `REPLY_TO_ADDRESS`, `MAX_COUNT_TO_BE_SENT`, `REQUIRE_AUTOLOGIN`, `FTO_FLAG`, `PRE_HEADER`, `PARTIALS`) VALUES (1857, 'jsExclusiveServiceDayMailer.tpl', NULL, 'revamp_footer.tpl', NULL, 27, 1, '~$senderEmail`', 'Upgrade membership to JS Exclusive', 'D', NULL, NULL, NULL, '~$senderName`', NULL, NULL, NULL, NULL, 'Please add ~$senderEmail` to your address book to ensure delivery of this mail into you inbox', '');
-
+CREATE TABLE billing.`EXCLUSIVE_FOLLOWUPS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `AGENT_USERNAME` varchar(20) NOT NULL,
+  `CLIENT_ID` int(11) NOT NULL,
+  `MEMBER_ID` int(11) NOT NULL,
+  `ENTRY_DT` datetime DEFAULT NULL,
+  `FOLLOWUP_1` varchar(30) DEFAULT NULL,
+  `FOLLOWUP_2` varchar(30) DEFAULT NULL,
+  `FOLLOWUP_3` varchar(30) DEFAULT NULL,
+  `FOLLOWUP1_DT` date DEFAULT NULL,
+  `FOLLOWUP2_DT` date DEFAULT NULL,
+  `FOLLOWUP3_DT` date DEFAULT NULL,
+ `STATUS` enum('P','Y','N','F1','F2','F3'),
+ PRIMARY KEY (`ID`),
+ UNIQUE COMBINATION(`AGENT_USERNAME`,`CLIENT_ID`,`MEMBER_ID`),
+ KEY AGENT_USERNAME(`AGENT_USERNAME`),
+ KEY CLIENT_ID(`CLIENT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
