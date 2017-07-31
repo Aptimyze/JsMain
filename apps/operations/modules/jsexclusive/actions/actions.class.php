@@ -323,5 +323,14 @@ class jsexclusiveActions extends sfActions {
         }
     }
 
+    /**
+    * Executes followupCaller action
+    * follow ups of all exclusive clients done by all RM's
+    * @param sfRequest $request A request object
+    */
+    public function executeFollowupCaller(sfWebRequest $request){
+        //columns list for interface
+        $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
+    }
 }
 ?>
