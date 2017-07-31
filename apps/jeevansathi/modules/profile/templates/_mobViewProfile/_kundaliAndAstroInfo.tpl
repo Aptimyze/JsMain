@@ -1,8 +1,9 @@
-~if isset($arrData.city_country) || isset($arrData.date_time) || isset($arrData.more_astro)`
+
     <!--start:Kundali And Astro-->
     <div class="pad5 bg4 fontlig color3 clearfix f14">
       <div class="fl"><i class="vpro_sprite vpro_kund"></i></div>
       <div class="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
+    ~if isset($arrData.city_country) || isset($arrData.date_time) || isset($arrData.more_astro)`   
       <div class="clr hgt10"></div>
         ~if isset($arrData.city_country)` 
             <div class="f12 color1">City, Country of Birth</div>
@@ -25,6 +26,8 @@
                     <div class="fontlig fl vpro_wordwrap2" id="vpro_more_astro_nakshatra" >~$arrData.more_astro.nakshatra`</div>
                 </div>
                 ~/if`
+        ~/if`
+    ~/if`
                 ~if $arrData.sameGender neq 1`
                 <!--start:button-->
                 <div class="clearfix pb20 pt20">
@@ -47,11 +50,9 @@
                 </div>
                 
             </div>
-        ~/if`
-       
     </div>
     <!--end:Kundali And Astro--> 
-~/if`
+
 <!-- Religious Beliefs Section-->
 ~if isset($arrData.muslim_m) || isset($arrData.sikh_m) || isset($arrData.christian_m)`
 <div class="pad5 bg4 fontlig color3 clearfix f14">
