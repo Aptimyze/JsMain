@@ -14,7 +14,7 @@ class SocialSigninAction extends sfActions
 	/**
 	* @const app secret for FB app
 	*/
-	const APPSECRET = "5b3a858a007757d76aab1bb9497a25ae";//"775d11b4ebb8dc803ff439cb59fc292a";
+	const APPSECRET = "775d11b4ebb8dc803ff439cb59fc292a";//"775d11b4ebb8dc803ff439cb59fc292a";
 	/**
 	* @const facebook graph api url
 	*/
