@@ -872,9 +872,9 @@ class crmAllocationActions extends sfActions
 	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'),$billid);
 	  		$bill_dttime = $inputArr["bill_dttime"];
 	  	
-	  		if(!empty($bill_dttime) && strcmp($bill_dttime,crmCommonConfig::$jsexclusiveReferenceDt)>=0){
+	  		//if(!empty($bill_dttime) && strcmp($bill_dttime,crmCommonConfig::$jsexclusiveReferenceDt)>=0){
 	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d')));
-	  		}
+	  		//}
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)
 	  		{
