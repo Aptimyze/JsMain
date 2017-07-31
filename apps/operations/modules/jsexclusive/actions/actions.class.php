@@ -333,10 +333,10 @@ class jsexclusiveActions extends sfActions {
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_masterRep");
         $this->followUpsPool = $followUpObj->getFollowUpEntries();
-        //print_r($this->followUpsPool);die;
+      
         unset($followUpObj);
 
-        if(!is_array($followUpsPool) || count($followUpsPool)==0){
+        if(!is_array($this->followUpsPool) || count($this->followUpsPool)==0){
            $this->infoMsg = "No followUps found.."; 
         }
         else{
