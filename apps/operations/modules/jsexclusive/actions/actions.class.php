@@ -331,6 +331,9 @@ class jsexclusiveActions extends sfActions {
     public function executeFollowupCaller(sfWebRequest $request){
         //columns list for interface
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
+        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_masterRep");
+        $followUpsPool = $followUpObj->getFollowUpEntries();
+        print_r($followUpsPool);die;
     }
 }
 ?>
