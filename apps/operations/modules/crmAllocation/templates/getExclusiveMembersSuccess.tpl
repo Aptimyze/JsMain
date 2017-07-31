@@ -18,7 +18,7 @@
 		    <!-- <td height="21" align="CENTER">~$valued.MATCHES`</td> -->
 		    <td height="21" align="CENTER">~$valued.PHONE_MOB`</td>
 		    <td height="21" align="CENTER">~$valued.EMAIL`</td>
-		    <td height="21" align="CENTER">~$valued.BILLING_DT`</td>
+		    <td height="21" align="CENTER" id="EXCLUSIVE_~$valued.BILL_ID`">~$valued.BILLING_DT`</td>
 		    <td height="21" align="CENTER">~$valued.SERVICE_DURATION`</td>
 		    <td height="21" align="CENTER">~$valued.EXPIRY_DT`</td>
 		    <td height="21" align="CENTER">~$valued.SALES_PERSON`</td>
