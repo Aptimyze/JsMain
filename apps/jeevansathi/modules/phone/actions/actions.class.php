@@ -327,6 +327,7 @@ class phoneActions extends sfActions
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {
+  	$request->setParameter('currentMSPageName',"Phone Verification");
 	if($request->getParameter('fromReg'))
 		$this->fromReg = 1;
 	$this->groupname = $request->getParameter('groupname');

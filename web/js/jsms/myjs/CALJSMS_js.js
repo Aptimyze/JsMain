@@ -284,6 +284,11 @@ else {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
+        if(button == 'B2'){
+            GAMapper("GA_CAL_CLOSE", {"currentPageName": currentMSPageName});
+        }else if(button == "B1"){
+            GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentMSPageName});
+        }
         if(CALButtonClicked===1)return;  
         CALButtonClicked=1;
         var CALParams='';

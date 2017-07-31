@@ -1,3 +1,67 @@
+function GAMapper(GAEvent, extraParams={}){
+    try {
+    	var PageName = "";
+    	if(typeof(currentMSPageName) != "undefined"){
+         PageName = currentMSPageName || "";
+    	}
+        var userStatus = "Unregistered";
+        if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
+            userStatus = loggedInJspcGender;
+        }
+
+        var GAMapping = {
+        	"GA_HOME_PAGE"					:["V", "Home page"],
+
+        	"GA_HOME_LOGIN_BTN"				:["E", "Home Page", "Login Button"],
+        	"GA_HOME_REGISTER"				:["E", "Home Page", "Register Button"],
+        	"GA_HOME_SEARCH"				:["E", "Home Page", "Search Button"],
+        	"GA_HOME_FORGOT"				:["E", "Home Page", "Forgot Password"],
+
+        	"GA_FORGOT_CANCEL"				:["E", "Forgot Page", "Cancel"],
+        	"GA_FORGOT_RESET"				:["E", "Forgot Page", "Reset"],
+            // verify otp layer
+            // 
+            "GA_PVS1_EDIT_NUMBER"			:["E", "Phone Verification", "Edit Number"],
+            "GA_PVS1_VALIDATE_NUMBER"	:["E", "Phone Verification", "Continue"],
+
+            "GA_PVS1_VERIFY_BTN"			:["E", "Phone Verification", "Verify Button"],
+            "GA_PVS2_SHOW"					:["V", "Submit Otp Layer"],
+            "GA_PVS2_VERIFY_BTN"			:["E", "Verify Otp Layer", "Verify Button"],
+            "GA_PVS2_RESEND"				:["E", "Verify Otp Layer", "Resend"],
+            "GA_PVS3_WRONGOTPLAYER"			:["V", "Wrong otp layer"],
+            "GA_PVS3_TRIALSOVER"			:["V", "Trials Over layer"],
+            "GA_PVS3_VERIFY_SUCCESS"		:["V", "Otp verified layer"],
+            "GA_PVS3_WRONGOTPLAYER"			:["V", "Wrong otp layer"],
+            "GA_PVS3_TRIALSOVER"			:["V", "Trials over layer"],
+
+
+            "GA_PVS2_MISS_CALL"				:["E", "Phone Verification", "Miss Call"],
+            "GA_PVS3_STOP"					:["E", "Phone Verification Attempt", "Stop"],
+            "GA_PVS3_VERIFIED_OK"			:["V", "Phone Verified OKay layer"],
+
+            "GA_OTP_VERIFY_FAILED"			:["E", "Phone Verification Attempt", "Failed"],
+
+            "GA_CAL_CLOSE"					:["E", "CAL " + extraParams['currentPageName'] , "Close"],
+            "GA_CAL_ACCEPT"					:["E", "CAL " + extraParams['currentPageName'] , "Open"],
+
+
+            "GA_MYJS_PAGE"					:["V", "Myjs page"],
+            "GA_PHONEVERIFICATION_PAGE"		:["V", "Phone Verification Screen"],
+            "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']]
+        }
+        if(GAMapping[GAEvent]){
+            if(GAMapping[GAEvent][0] == "E"){
+                trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
+            }else if(GAMapping[GAEvent][0] == "V"){
+                _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
+            }
+        }
+    }
+    catch(err) {
+        return;
+    }
+}
+
 /**
 * This function will replace string with mapping present in object(mapObj)
 * @param str {string}

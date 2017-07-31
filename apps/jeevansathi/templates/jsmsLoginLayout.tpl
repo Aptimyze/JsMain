@@ -3,33 +3,36 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
-	<link rel="canonical" href="https://www.jeevansathi.com/"/> 
-	<script>
-	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
-	{
-		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
-	}
-	</script>
-	~include_http_metas`
-	~include_metas`
+  <head>
+  <link rel="canonical" href="https://www.jeevansathi.com/"/> 
+  ~assign var=currentMSPageName value= $sf_request->getParameter('currentMSPageName')`
+  <script>
+  var currentMSPageName = "~$currentMSPageName`";
+  var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
+  if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
+  {
+    document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
+  }
+  </script>
+  ~include_http_metas`
+  ~include_metas`
   ~include_partial('global/jsmsCommonHeader')`
-	<script type="text/javascript">
-        	var t_pagestart = new Date().getTime();
-			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
+  <script type="text/javascript">
+          var t_pagestart = new Date().getTime();
+      var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
       var trackingProfile = "~$sf_request->getAttribute('profileid')`";
                         var webView= "~$webView`";
-	</script>
-	<meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
-	<meta http-equiv="content-language" content="en" />
-	<meta name="theme-color" content="#415765">
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </script>
+  <meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
+  <meta http-equiv="content-language" content="en" />
+  <meta name="theme-color" content="#415765">
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
-	<link rel="apple-touch-icon" href="/apple-touch-icon_new.png">
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon_new.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
@@ -72,19 +75,18 @@ function loadJS() {
        }
      </style>
     <!--link rel="shortcut icon" href="/favicon.ico" /-->
-     	<script type="text/javascript">
-		var t_headend = new Date().getTime();
-		~if $sf_request->getAttribute('AppLoggedInUser')`
-			var AppLoggedInUser=~$sf_request->getAttribute('AppLoggedInUser')`;
-		~else`
-			var AppLoggedInUser=1;
-		~/if`
-		var appPromoPerspective=0;
-		var DualHamburger=1;
-	</script>
+      <script type="text/javascript">
+    var t_headend = new Date().getTime();
+    ~if $sf_request->getAttribute('AppLoggedInUser')`
+      var AppLoggedInUser=~$sf_request->getAttribute('AppLoggedInUser')`;
+    ~else`
+      var AppLoggedInUser=1;
+    ~/if`
+    var appPromoPerspective=0;
+    var DualHamburger=1;
+  </script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
-
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";
@@ -105,7 +107,7 @@ var domainCode={};
 
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview']);
+                _gaq.push(['_trackPageview', currentMSPageName || ""]);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

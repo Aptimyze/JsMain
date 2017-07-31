@@ -21,6 +21,8 @@ function jsmsPhoneReady()
 	setPhoneValues();
     setDialNumber($("#dialNumber1").text());
     $("#mainBottomButton").unbind().bind('click',function(){
+    	GAMapper("GA_PVS1_VERIFY_BTN");
+    	GAMapper("GA_PVS2_SHOW");
     	sendSMSAjax(1);
     	
      });
@@ -107,6 +109,7 @@ function showError(error)
 
 
 function sendMatchOtpAjax() {
+	GAMapper("GA_PVS2_VERIFY_BTN");
 var OTP=$("#matchOtpText").val();
 if(!OTP)
 {
@@ -125,6 +128,9 @@ $.ajax({
 									if(response.matched=='true')
 									{	
 									verifiedScreen();
+									GAMapper("GA_PVS3_VERIFY_SUCCESS");
+									// GAMapper("GA_PVS3_PHONEVERIFIED");
+
 									}
 									else if(response.matched=='false')
 									{
@@ -132,6 +138,7 @@ $.ajax({
 										{
 										$("#otpWrongCodeLayer").show();cssLayerFix();
 										trialsOver='N';
+										GAMapper("GA_PVS3_WRONGOTPLAYER");
 										}
 									else if(response.trialsOver=='Y') 
 										{
@@ -139,6 +146,7 @@ $.ajax({
 											showOTPFailedLayer();
 											trialsOver='Y';
 											$(".js-noTrials").show();
+										GAMapper("GA_PVS3_TRIALSOVER");
 										}
 
 									}
@@ -208,6 +216,7 @@ function checkValidMobile(mobileISD,mobileNumber)
 
 function validatePhone()
 {
+	GAMapper("GA_PVS1_VALIDATE_NUMBER");
 	var isdVal = $("#ISD").val().trim().replace(/^[0]+/g,"");
 	var phone = $("#PHONE_MOB").val().trim().replace(/^[0]+/g,"");
 	var error='';
@@ -331,6 +340,7 @@ function failedScreen()
 }
 function failedOk()
 {
+	GAMapper("GA_OTP_VERIFY_FAILED");
 	$("#phoneVerificationFailedScreen").hide();
 	setHash("mainLayer");
 	showMainLayer();
@@ -345,6 +355,7 @@ function verifyAttempt()
 
 function stopAttempt()
 {
+	GAMapper("GA_PVS3_STOP");
 	limit=0;
 	setHash("failed");
 	$("#attemptingToVerify").hide();//slideUp( "slow", function() {});
@@ -353,6 +364,8 @@ function stopAttempt()
 }
 function editScreen()
 {
+	GAMapper("GA_PVS1_EDIT_NUMBER");
+
 	setHash("edit");
 	var title = '';
 	if(mainPhone)
@@ -386,6 +399,7 @@ function stopAjaxRequests()
 }
 function verifiedOk()
 {
+	GAMapper("GA_PVS3_VERIFIED_OK");
 	setHash("verifiedOk");
 	$('#mydiv').show();
 	if(fromReg==1)

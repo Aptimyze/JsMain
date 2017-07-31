@@ -1,3 +1,4 @@
+
 function getIosVersionOne(ua) {
     //return false;
     var ua = ua || navigator.userAgent;
@@ -112,8 +113,8 @@ $(function(){
             });
 		});
 $("#loginButton").bind("touchstart",function(){
-  
-  
+  /* GA tracking */
+  GAMapper("GA_HOME_LOGIN_BTN");
 	$(window).scrollTop(0);
         var email=$("#email").val();
         var pass=$("#password").val();
