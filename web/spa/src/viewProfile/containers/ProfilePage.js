@@ -87,7 +87,7 @@ class ProfilePage extends React.Component {
                     parentObj = this.props.myjsData[listingArray[i]];
                     if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
                         nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
-                        let nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
+                        let nextUrl = "/profile/viewprofile?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
                         let nextprofilechecksum = nextObj.profilechecksum;
                         this.setState({
                             nextUrl,nextprofilechecksum
@@ -99,7 +99,7 @@ class ProfilePage extends React.Component {
                     }
                     if(parseInt(this.state.actual_offset) != 0){
                         prevObj = parentObj.profiles[parseInt(this.state.actual_offset)-1];
-                        let prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
+                        let prevUrl = "/profile/viewprofile?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
                         let prevprofilechecksum = prevObj.profilechecksum;
                         this.setState({
                             prevUrl,prevprofilechecksum
@@ -453,6 +453,7 @@ class ProfilePage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.ProfileReducer.buttonDetails);
     return{
        AboutInfo: state.ProfileReducer.aboutInfo,
        FamilyInfo: state.ProfileReducer.familyInfo,

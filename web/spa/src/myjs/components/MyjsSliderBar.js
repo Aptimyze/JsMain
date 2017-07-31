@@ -132,7 +132,7 @@ render(){
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
 
                   <div className="bg4 overXHidden" id="hideOnAction">
-                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
+                    <Link  to={`/profile/viewprofile?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
                       <div className="pad16 scrollhid hgt140">
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
