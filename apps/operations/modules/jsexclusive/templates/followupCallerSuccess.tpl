@@ -12,8 +12,9 @@
 	<table align="CENTER" width="150%" table-layout="auto">
 		~include_partial("headerSubSection",["columnNamesArr"=>$columnNamesArr])`
 		
-		~foreach from=$result item=valued key=billid`
+		~foreach from=$result item=valued key=id`
 		<tr align="CENTER" bgcolor="#fbfbfb" id="exRow~$billid`">
+			<td height="21" align="CENTER">~$key`+1</td>
 			<td height="21" align="CENTER">~$valued.PROFILE_NAME`</td>
 		    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a></td>	
 		    <td height="21" align="CENTER">~$valued.AGE`</td>
@@ -41,7 +42,7 @@
 					</select>
 				</td>
 		    ~/if`
-		    <td height="21" align="CENTER"><div class="jsc-ExAllocate jsc-cursp" data="~$valued.PROFILEID`,~$valued.USERNAME`,~$valued.PHONE_MOB`,~$tabChosenDetails.ACTION`,~$valued.BILL_ID`"><b>~$tabChosenDetails.ACTION`</td></b></td>
+		    <td height="21" align="CENTER"><div class="jsc-ExAllocate jsc-cursp" data="~$valued.PROFILEID`,~$valued.USERNAME`,~$valued.PHONE_MOB`,~$tabChosenDetails.ACTION`,~$valued.BILL_ID`"><b>STATUS</td></b></td>
 		</tr>
 		~/foreach`
 		<tr bgcolor="#fbfbfb">
