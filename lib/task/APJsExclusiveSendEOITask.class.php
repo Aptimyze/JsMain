@@ -66,10 +66,10 @@ EOF;
 					if($contactEngineObj->getComponent()->errorMessage != '')
 					{
 						// if any error occurs send mail
-						 $mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
+						 $mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderProfileId Receiver: $recProfileId ";
 						$this->Showtime("Error $mailMes");
-						$val["FAILURE_REASON"]=$contactEngineObj->getComponent()->errorMessage;
-						$senderReceiverMappingObj->updateSendEoiError($val['Id'],$val["FAILURE_REASON"]);
+					 	$val["FAILURE_REASON"]=$contactEngineObj->getComponent()->errorMessage;
+						$senderReceiverMappingObj->updateSendEoiError($val['ID'],$val["FAILURE_REASON"]);
 						//SendMail::send_email("nikhil.dhiman@jeevansathi.com,hemant.a@jeevansathi.com",$mailMes,"Contacts entry error in APSendEOITask.class.php");
 					}
 					else
