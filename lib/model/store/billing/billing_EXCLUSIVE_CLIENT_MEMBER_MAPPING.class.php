@@ -66,10 +66,10 @@ class billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING extends TABLE
 	public function updateScreenedStatus($id)
 	{
 		try{
-			if(is_array($params) && $params){
+			if($id){
 				$sql = "UPDATE  `EXCLUSIVE_CLIENT_MEMBER_MAPPING` SET  `SCREENED_STATUS` =  'Y' WHERE  `ID` =:ID ";
 				$res = $this->db->prepare($sql);
-				$res->bindValue(":ID", $ID, PDO::PARAM_INT);
+				$res->bindValue(":ID", $id, PDO::PARAM_INT);
 				$res->execute();
 				return true;
 			}

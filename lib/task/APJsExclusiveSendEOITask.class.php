@@ -62,29 +62,31 @@ EOF;
 				$recProfileObj->getDetail($recProfileId, "PROFILEID");
 				$contactEngineObj = $this->sendEOI($senderProfileObj, $recProfileObj);
 			                           
-				if($contactEngineObj)
-				if($contactEngineObj->getComponent()->errorMessage != '')
-				{
-					// if any error occurs send mail
-					$mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
-					$this->Showtime("Error $mailMes");
-					$val["FAILURE_REASON"]=$contactEngineObj->getComponent()->errorMessage;
-					$senderReceiverMappingObj->updateSendEoiError($val['Id'],$val["FAILURE_REASON"]);
-					//SendMail::send_email("nikhil.dhiman@jeevansathi.com,hemant.a@jeevansathi.com",$mailMes,"Contacts entry error in APSendEOITask.class.php");
-				}
-				else
-				{
-					//tracking of EOI sent
-					try{
-							$autoContObj->insertIntoAutoContactsTracking($senderProfileId,$recProfileId);
-							$senderReceiverMappingObj->updateScreenedStatus($val['ID']);
-			        }
-					catch(Exception $ex)
+				if($contactEngineObj){
+					if($contactEngineObj->getComponent()->errorMessage != '')
 					{
-						$this->setExceptionError($ex);
+						// if any error occurs send mail
+						 $mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
+						$this->Showtime("Error $mailMes");
+						$val["FAILURE_REASON"]=$contactEngineObj->getComponent()->errorMessage;
+						$senderReceiverMappingObj->updateSendEoiError($val['Id'],$val["FAILURE_REASON"]);
+						//SendMail::send_email("nikhil.dhiman@jeevansathi.com,hemant.a@jeevansathi.com",$mailMes,"Contacts entry error in APSendEOITask.class.php");
+					}
+					else
+					{
+						//tracking of EOI sent
+						try{
+								$autoContObj->insertIntoAutoContactsTracking($senderProfileId,$recProfileId);
+								$senderReceiverMappingObj->updateScreenedStatus($val['ID']);
+				        }
+						catch(Exception $ex)
+						{
+							$this->setExceptionError($ex);
+						}
 					}
 				}
 			}
+
 		}
 		catch(Exception $ex)
 		{
@@ -117,12 +119,12 @@ EOF;
 			if($contactObj->getTYPE() == 'N')
 			{
 				$contactHandlerObj = new ContactHandler($profileObj,$receiverObj,"EOI",$contactObj,'I',ContactHandler::POST);
-				$contactHandlerObj->setPageSource("APN");		
+				$contactHandlerObj->setPageSource("AP");		
 				$contactHandlerObj->setElement("MESSAGE",'');
 				$contactHandlerObj->setElement("STATUS","I");
 				$contactHandlerObj->setElement("PROFILECHECKSUM",JsCommon::createChecksumForProfile($profileObj->getPROFILEID()));
 				$contactHandlerObj->setElement("STYPE",3);
-                                $contactEngineObj=ContactFactory::event($contactHandlerObj);
+				$contactEngineObj=ContactFactory::event($contactHandlerObj);
 				return $contactEngineObj;
 			}
 		}
