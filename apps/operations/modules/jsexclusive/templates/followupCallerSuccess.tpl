@@ -17,11 +17,12 @@
 			<tr align="CENTER" bgcolor="#fbfbfb" id="followUp~$sno`">
 				<td height="21" align="CENTER">~($sno+1)`</td>
 				<td height="21" align="CENTER">
-				~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].USERNAME`</td>
-			    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.CLIENT_ID`" target="_blank">~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].NAME`</a></td>	
+				~if $finalFollowUpsPool.clientsData[$valued.CLIENT_ID]`~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].USERNAME`~/if`</td>
+			    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.CLIENT_ID`" target="_blank">
+			    ~if $finalFollowUpsPool.clientsData[$valued.CLIENT_ID]`~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].NAME`~/if`</a></td>	
 			    <td height="21" align="CENTER">~$valued.MEMBER_ID`</td>
-			    <td height="21" align="CENTER">~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].PHONE_MOB`</td>
-			    <td height="21" align="CENTER">~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].ALT_MOBILE`</td>
+			    <td height="21" align="CENTER">~if $finalFollowUpsPool.membersData[$valued.MEMBER_ID]`~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].PHONE_MOB`~/if`</td>
+			    <td height="21" align="CENTER">~if $finalFollowUpsPool.membersData[$valued.MEMBER_ID]`~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].ALT_MOBILE`~/if`</td>
 			    <td height="21" align="CENTER">~$valued.AGENT_USERNAME`</td>
 			    <td height="21" align="CENTER">~$valued.FOLLOWUP_1`</td>
 			    <td height="21" align="CENTER">~$valued.FOLLOWUP_2`</td>
