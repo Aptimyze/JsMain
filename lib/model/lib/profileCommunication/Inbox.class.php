@@ -71,7 +71,7 @@ class Inbox implements Module
                         $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
 			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
-				$memcacheServiceObj->clearInstance();
+				$memcacheServiceObj->unsetKey('CONTACTED_ME');
                             
 			}
                         
