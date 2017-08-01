@@ -5,6 +5,7 @@ import MyjsSliderBinding from "../components/MyjsSliderBinding";
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
 import { connect } from "react-redux";
 
+
 export class MyjsSlider extends React.Component {
 
   constructor(props) {
@@ -37,6 +38,9 @@ componentDidUpdate(){
 
 componentDidMount(){
   this.bindSlider();
+}
+componentWillUnmount() {
+  this.props.history.prevUrl = this.props.location.pathname;
 }
 
  componentWillReceiveProps(nextProps){
