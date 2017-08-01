@@ -89,7 +89,7 @@ class ProfilePage extends React.Component {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
             }
-            //this.props.fetchNextPrevData(this, nextDataApi);
+            this.props.fetchNextPrevData(this, nextDataApi);
             this.setState({
                 nextUrl,
                 nextDataApi
@@ -110,7 +110,7 @@ class ProfilePage extends React.Component {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
             }
-            //this.props.fetchNextPrevData(this, prevDataApi);
+            this.props.fetchNextPrevData(this, prevDataApi);
             this.setState({
                 prevUrl,
                 prevDataApi
@@ -193,7 +193,7 @@ class ProfilePage extends React.Component {
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
-            console.log("mmmm",searchid)
+
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
@@ -414,7 +414,9 @@ class ProfilePage extends React.Component {
             </div>;
             setTimeout(function(){
                 var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                document.getElementById("animated-background").style.height = backHeight + "px";
+                if(document.getElementById("animated-background")) {
+                    document.getElementById("animated-background").style.height = backHeight + "px";
+                }
             },100);
         }
         return (
@@ -491,10 +493,10 @@ const mapDispatchToProps = (dispatch) => {
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },
-        /*fetchNextPrevData: (containerObj,urlString) => {
+        fetchNextPrevData: (containerObj,urlString) => {
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'','GET',"saveLocal",true,containerObj);
-        },*/
+        },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
         }
