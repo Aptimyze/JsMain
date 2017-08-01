@@ -1,7 +1,7 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
-    currentMSPageName = "~$calObject.LAYERID`";
-    GAMapper("GA_CAL_PAGE", {"layerid": currentMSPageName});
+    currentPageName = "~$calObject.LAYERID`";
+    GAMapper("GA_CAL_PAGE", {"layerid": currentPageName});
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';

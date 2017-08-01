@@ -313,7 +313,7 @@ class myjsActions extends sfActions
   public function executeJsmsPerform(sfWebRequest $request)
 	{			//myjs jsms action hit for logging
         
-        $request->setParameter('currentMSPageName',"myjs");
+        $request->setParameter('currentPageName',"myjs");
         $this->pageMyJs = 1; 
         
         LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 

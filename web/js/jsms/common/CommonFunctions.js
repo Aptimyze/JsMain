@@ -1,8 +1,8 @@
 function GAMapper(GAEvent, extraParams={}){
     try {
     	var PageName = "";
-    	if(typeof(currentMSPageName) != "undefined"){
-         PageName = currentMSPageName || "";
+    	if(typeof(currentPageName) != "undefined"){
+         PageName = currentPageName || "";
     	}
         var userStatus = "Unregistered";
         if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
@@ -22,7 +22,7 @@ function GAMapper(GAEvent, extraParams={}){
             // verify otp layer
             // 
             "GA_PVS1_EDIT_NUMBER"			:["E", "Phone Verification", "Edit Number"],
-            "GA_PVS1_VALIDATE_NUMBER"	:["E", "Phone Verification", "Continue"],
+            "GA_PVS1_VALIDATE_NUMBER"		:["E", "Phone Verification", "Continue"],
 
             "GA_PVS1_VERIFY_BTN"			:["E", "Phone Verification", "Verify Button"],
             "GA_PVS2_SHOW"					:["V", "Submit Otp Layer"],
@@ -47,9 +47,13 @@ function GAMapper(GAEvent, extraParams={}){
 
             "GA_MYJS_PAGE"					:["V", "Myjs page"],
             "GA_PHONEVERIFICATION_PAGE"		:["V", "Phone Verification Screen"],
-            "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']]
+            "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']],
+
+  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || ""]
+
         }
         if(GAMapping[GAEvent]){
+        	console.log(GAMapping[GAEvent]);
             if(GAMapping[GAEvent][0] == "E"){
                 trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
             }else if(GAMapping[GAEvent][0] == "V"){

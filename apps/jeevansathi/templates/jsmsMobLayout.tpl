@@ -7,9 +7,9 @@
         ~if $sf_request->getParameter('showAndBeyond')`
         <script type="text/javascript" src="//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js" async></script>
         ~/if`
-  ~assign var=currentMSPageName value= $sf_request->getParameter('currentMSPageName')`
+  ~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 	<script>
-  var currentMSPageName = "~$currentMSPageName`";
+  var currentPageName = "~$currentPageName`";
   var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
 
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
@@ -94,7 +94,7 @@ var domainCode={};
 
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview', currentMSPageName || ""]);
+                _gaq.push(['_trackPageview', currentPageName || ""]);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

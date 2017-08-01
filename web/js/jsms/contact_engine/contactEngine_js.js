@@ -444,6 +444,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 
 function performAction(action, tempParams, index,isPrime,fromButton)
 {
+  GAMapper("GA_CONTACT_ENGINE", {"actionDetail": actionDetail[action]});
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
 		tempParams['actionName']            ="MessageHandle";

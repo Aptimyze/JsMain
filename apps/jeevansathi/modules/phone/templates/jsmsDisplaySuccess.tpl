@@ -1,6 +1,6 @@
-~assign var=currentMSPageName value= $sf_request->getParameter('currentMSPageName')`
+~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 <script type="text/javascript">
-currentMSPageName = "~$currentMSPageName`";
+currentPageName = "~$currentPageName`";
 GAMapper("GA_PHONEVERIFICATION_PAGE");
 var tollFreeINR='~$apiData.phoneDetails.TOLL_FREE_INR`';
 var tollFreeNRI='~$apiData.phoneDetails.TOLL_FREE_NRI`';

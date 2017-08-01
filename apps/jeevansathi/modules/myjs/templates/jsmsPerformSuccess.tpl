@@ -1,6 +1,6 @@
-~assign var=currentMSPageName value= $sf_request->getParameter('currentMSPageName')`
+~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 <script type="text/javascript">
-	currentMSPageName = "~$currentMSPageName`";
+	currentPageName = "~$currentPageName`";
 	GAMapper('GA_MYJS_PAGE');
     var userGender="~$apiData.gender`",siteUrl="~sfConfig::get('app_site_url')`";
     var myjsdata = ~$jsonData|decodevar`;
