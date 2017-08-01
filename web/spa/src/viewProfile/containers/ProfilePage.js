@@ -52,15 +52,15 @@ class ProfilePage extends React.Component {
         if(props.fetchedProfilechecksum != false) {
             this.state.callApi = true;
         }
-
     }
 
     componentDidUpdate(prevprops) {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
     componentDidMount()
-    {
-        this.props.showProfile(this,this.state.profilechecksum,this.state.responseTracking);
+    {   
+        let urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
+        this.props.showProfile(this, urlString);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -77,74 +77,81 @@ class ProfilePage extends React.Component {
         }
     }
 
-    setNextPrevLink()
-    {
-        let listingArray = ["apiDataIE","apiDataIR","apiDataVA","apiDataMOD","apiDataDR","apiDataVA"];
-        if(this.props.myjsData.apiDataIR != "" || this.props.myjsData.apiDataMOD != "" || this.props.myjsData.apiDataDR != "") {
-            let parentObj,nextObj,prevObj;
-            for (var i=0; i< listingArray.length; i++) {
-                if(this.props.myjsData[listingArray[i]].contact_id == this.state.contact_id || this.props.myjsData[listingArray[i]].searchid === this.state.searchid) {
-                    parentObj = this.props.myjsData[listingArray[i]];
-                    if(parseInt(this.state.actual_offset) < parseInt(this.state.total_rec)-1) {
-                        nextObj = parentObj.profiles[parseInt(this.state.actual_offset)+1];
-                        let nextUrl = "/profile/viewprofile.php?profilechecksum="+nextObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)+1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
-                        let nextprofilechecksum = nextObj.profilechecksum;
-                        this.setState({
-                            nextUrl,nextprofilechecksum
-                        });
-                    } else {
-                        this.setState({
-                            nextUrl:"",nextprofilechecksum:""
-                        });
-                    }
-                    if(parseInt(this.state.actual_offset) != 0){
-                        prevObj = parentObj.profiles[parseInt(this.state.actual_offset)-1];
-                        let prevUrl = "/profile/viewprofile.php?profilechecksum="+prevObj.profilechecksum+"&responseTracking="+this.state.responseTracking+"&total_rec="+this.state.total_rec+"&actual_offset="+(parseInt(this.state.actual_offset)-1)+"&searchid="+this.state.searchid+"&contact_id="+this.state.contact_id;
-                        let prevprofilechecksum = prevObj.profilechecksum;
-                        this.setState({
-                            prevUrl,prevprofilechecksum
-                        });
-                    } else {
-                        this.setState({
-                            prevUrl:"",prevprofilechecksum:""
-                        });
-                    }
-                }
+    setNextPrevLink() {
+        if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
+            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
+            let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
+
+            if(this.state.searchid != 1 && this.state.searchid != null){
+                nextUrl += "&searchid=" + this.state.searchid; 
+                nextDataApi += "&searchid=" + this.state.searchid; 
+            } else if(this.state.contact_id != undefined) {
+                nextUrl += "&contact_id=" + this.state.contact_id;
+                nextDataApi += "&contact_id=" + this.state.contact_id;
             }
-            let startX,endX,_this=this;
-            document.getElementById("ProfilePage").addEventListener('touchstart', function(e){
-                startX = e.changedTouches[0].clientX;
-                endX = 0;
+            this.props.fetchNextPrevData(this, nextDataApi);
+            this.setState({
+                nextUrl,
+                nextDataApi
             });
-            document.getElementById("ProfilePage").addEventListener('touchmove', function(e){
-                endX = e.changedTouches[0].clientX;
-            });
-            document.getElementById("ProfilePage").addEventListener('touchend', function(e){
-                if(endX!=0 && endX-startX > 200 && _this.state.nextUrl != "")
-                {
-                    document.getElementById("swipePage").classList.add("animateLeft");
-                    _this.setState ({
-                        dataLoaded : false
-                    });
-                    jsb9Fun.flushJSB9Obj(_this);
-                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
-                    _this.props.history.push(_this.state.nextUrl);
-                    jsb9Fun.recordBundleReceived(_this,new Date().getTime());
-                    _this.props.showProfile(_this,_this.state.nextprofilechecksum,_this.state.responseTracking);
-                } else if(endX!=0 && startX-endX > 200 && _this.state.prevUrl != "")
-                {
-                    document.getElementById("swipePage").classList.add("animateLeft");
-                    jsb9Fun.flushJSB9Obj(_this);
-                    _this.setState ({
-                        dataLoaded : false
-                    });
-                    _this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
-                    _this.props.history.push(_this.state.prevUrl);
-                    jsb9Fun.recordBundleReceived(_this,new Date().getTime());
-                    _this.props.showProfile(_this,_this.state.prevprofilechecksum,_this.state.responseTracking);
-                }
+        } else {
+            this.setState({
+                nextUrl: "",
+                nextDataApi: ""
             });
         }
+        if (parseInt(this.state.actual_offset) != 0) {
+            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
+            let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
+            if(this.state.searchid != 1 && this.state.searchid != null){
+                prevUrl += "&searchid=" + this.state.searchid; 
+                prevDataApi += "&searchid=" + this.state.searchid; 
+            } else if(this.state.contact_id != undefined) {
+                prevUrl += "&contact_id=" + this.state.contact_id;
+                prevDataApi += "&contact_id=" + this.state.contact_id;
+            }
+            this.props.fetchNextPrevData(this, prevDataApi);
+            this.setState({
+                prevUrl,
+                prevDataApi
+            });
+        } else {
+            this.setState({
+                prevUrl: "",
+                prevDataApi: ""
+            });
+        }
+        let startX, endX, _this = this;
+        document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
+            startX = e.changedTouches[0].clientX;
+            endX = 0;
+        });
+        document.getElementById("ProfilePage").addEventListener('touchmove', function(e) {
+            endX = e.changedTouches[0].clientX;
+        });
+        document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
+            if (endX != 0 && endX - startX > 200 && _this.state.nextUrl != "") {
+                document.getElementById("swipePage").classList.add("animateLeft");
+                _this.setState({
+                    dataLoaded: false
+                });
+                jsb9Fun.flushJSB9Obj(_this);
+                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
+                _this.props.history.push(_this.state.nextUrl);
+                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+                _this.props.showProfile(_this, _this.state.nextDataApi);
+            } else if (endX != 0 && startX - endX > 200 && _this.state.prevUrl != "") {
+                document.getElementById("swipePage").classList.add("animateLeft");
+                jsb9Fun.flushJSB9Obj(_this);
+                _this.setState({
+                    dataLoaded: false
+                });
+                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
+                _this.props.history.push(_this.state.prevUrl);
+                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+                _this.props.showProfile(_this, _this.state.prevDataApi);
+            }
+        });
 
     }
     showLoaderDiv() {
@@ -175,15 +182,22 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+            
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
+            let searchid = getParameterByName(window.location.href,"searchid");
+            let responseTracking = getParameterByName(window.location.href,"responseTracking");
+            
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
-            let responseTracking = getParameterByName(window.location.href,"responseTracking");
-            let searchid = getParameterByName(window.location.href,"searchid");
+
+            if(contact_id == "nan") {
+                contact_id = undefined;
+            }
+            
             this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
@@ -215,9 +229,12 @@ class ProfilePage extends React.Component {
             }
             window.addEventListener('scroll', this.setScrollPos);
             let _this = this;
-            if(nextProps.pic.action == null) {
-                this.setState({disablePhotoLink: true})
+            if(nextProps.pic) {
+                if(nextProps.pic.action == null) {
+                    this.setState({disablePhotoLink: true})
+                }   
             }
+            
 
             //calling tracking event
             /*setTimeout(function(){
@@ -225,14 +242,9 @@ class ProfilePage extends React.Component {
             },3000);
             */
         } else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true) {
-            let newProfilechecksum = nextProps.location.search.split("?profilechecksum=")[1].split("&")[0];
-            document.getElementById("swipePage").classList.add("animateLeft");
-            jsb9Fun.flushJSB9Obj(this);
-            this.setState ({
-                dataLoaded : false
-            });
-            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
-            this.props.showProfile(this,newProfilechecksum,this.state.responseTracking);
+            if(this.props.history.prevUrl) {
+              this.props.history.push(this.props.history.prevUrl);  
+            } 
         }
 
     }
@@ -302,7 +314,8 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-        this.props.history.goBack();
+
+        this.props.history.push(this.props.history.prevUrl);
     }
 
     render()
@@ -401,7 +414,9 @@ class ProfilePage extends React.Component {
             </div>;
             setTimeout(function(){
                 var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                document.getElementById("animated-background").style.height = backHeight + "px";
+                if(document.getElementById("animated-background")) {
+                    document.getElementById("animated-background").style.height = backHeight + "px";
+                }
             },100);
         }
         return (
@@ -474,9 +489,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: (containerObj,profilechecksum,responseTracking) => {
-            let call_url = "/api/v1/profile/detail?profilechecksum="+profilechecksum+"&responseTracking="+responseTracking;
+        showProfile: (containerObj,urlString) => {
+            let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
+        },
+        fetchNextPrevData: (containerObj,urlString) => {
+            let call_url = "/api/v1/profile/detail"+urlString;
+            commonApiCall(call_url,{},'','GET',"saveLocal",true,containerObj);
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)

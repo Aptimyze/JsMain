@@ -5,6 +5,7 @@ import MyjsSliderBinding from "../components/MyjsSliderBinding";
 import ContactEngineButton from "../../contact_engine/containers/contactEngine";
 import { connect } from "react-redux";
 
+
 export class MyjsSlider extends React.Component {
 
   constructor(props) {
@@ -38,6 +39,9 @@ componentDidUpdate(){
 componentDidMount(){
   this.bindSlider();
 }
+componentWillUnmount() {
+  this.props.history.prevUrl = this.props.location.pathname;
+}
 
  componentWillReceiveProps(nextProps){
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
@@ -48,7 +52,7 @@ componentDidMount(){
 
      });
      this.obj.unbindSlider().initTouch();
-      console.log(this.state,'pal');
+      
    }
 
 }
