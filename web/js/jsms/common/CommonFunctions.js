@@ -12,6 +12,8 @@ function GAMapper(GAEvent, extraParams={}){
         var GAMapping = {
         	"GA_HOME_PAGE"					:["V", "Home page"],
 
+        	"GA_LOGIN_REPONSE_FAIL"			:["E", "Login Response", "Success"],
+        	"GA_LOGIN_REPONSE_SUCCESS"		:["E", "Login Response", "Fail"],
         	"GA_HOME_LOGIN_BTN"				:["E", "Home Page", "Login Button"],
         	"GA_HOME_REGISTER"				:["E", "Home Page", "Register Button"],
         	"GA_HOME_SEARCH"				:["E", "Home Page", "Search Button"],
@@ -53,7 +55,6 @@ function GAMapper(GAEvent, extraParams={}){
 
         }
         if(GAMapping[GAEvent]){
-        	console.log(GAMapping[GAEvent]);
             if(GAMapping[GAEvent][0] == "E"){
                 trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
             }else if(GAMapping[GAEvent][0] == "V"){

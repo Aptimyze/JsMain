@@ -189,11 +189,13 @@ $("#loginButton").bind("touchstart",function(){
                                     errorMes=result.responseMessage;
                                 if(redirectUrl)
 								{
+                  GAMapper("GA_LOGIN_REPONSE_SUCCESS");
 									setTimeout(function(){startTouchEvents(10);ShowNextPage(redirectUrl,0);},animationtimer);
 									return;
 								}
 								if(errorMes)
 								{
+                  GAMapper("GA_LOGIN_REPONSE_FAIL");
 									setTimeout(function(){startTouchEvents(10);ShowTopDownError([errorMes]);},animationtimer);
 									return;
 								}
