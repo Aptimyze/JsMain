@@ -393,14 +393,14 @@ class jsexclusiveActions extends sfActions {
                     if(is_array($clientNameArr)){
                         foreach ($clientNameArr as $key => $value) {
                             if($value["DISPLAY"]=='Y'){
-                                $this->finalFollowUpsPool["clientNameData"][$value['PROFILEID']]['NAME'] = $value['NAME'];
+                                $this->finalFollowUpsPool["clientsData"][$value['PROFILEID']]['NAME'] = $value['NAME'];
                             }
                         }
                     }
                     unset($clientNameArr);
                     if(is_array($clientUsernameArr)){
                         foreach ($clientUsernameArr as $key => $value) {
-                            $this->finalFollowUpsPool["clientNameData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
+                            $this->finalFollowUpsPool["clientsData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
                         }
                     }
                     unset($clientUsernameArr);
