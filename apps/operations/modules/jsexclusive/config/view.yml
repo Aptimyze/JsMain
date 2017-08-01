@@ -5,3 +5,11 @@ screenRBInterestsSuccess:
   stylesheets:    []
 
   javascripts:    []
+
+followupCallerSuccess:
+  metas:
+    title:        JsExclusive - Follow Ups
+
+  stylesheets:    []
+
+  javascripts:    []
