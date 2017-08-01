@@ -191,6 +191,17 @@ class Producer
       
       //OutBound Event Queue
       $this->channel->queue_declare(MQ::OUTBOUND_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
+      //RB interests queue
+      $this->channel->queue_declare(MQ::RB_INTERESTS_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      
+      //After Welcome call email for exclusive members delayed queue 
+      $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array("x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
+                                              "x-message-ttl" => array("I", MQ::EXCLUSIVE_MAIL_DELAY_UNIT*60*60*1000),
+                                              "x-dead-letter-routing-key"=>array("S",MQ::EXCLUSIVE_MAIL_SENDING_QUEUE)
+                                              ));
+      $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_SENDING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -333,7 +344,15 @@ class Producer
         break;
         case MQ::OUTBOUND_EVENT:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::OUTBOUND_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+
+        case "RBSendInterests":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::RB_INTERESTS_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
           break;
+      
+        case "EXCLUSIVE_DELAYED_EMAIL":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+        break;
+                                    
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

@@ -172,7 +172,14 @@ class MessageQueues
   CONST OUTBOUND_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for outound queue 
   CONST OUTBOUND_STARTCOMMAND = "symfony Outbound:ConsumeQueue"; //Command to start profile cache queue consuming cron
   
+  CONST RB_INTERESTS_QUEUE = 'RBInterestsQueue';
   
+  //Exclusive Mail after welcome call
+  CONST EXCLUSIVE_MAIL_DELAY_QUEUE = 'ExclusiveMailDelayQueue';
+  CONST EXCLUSIVE_MAIL_SENDING_QUEUE = 'ExclusiveMailSender';
+  CONST EXCLUSIVE_MAIL_DELAY_UNIT = '2'; //Hours by which to delay mail sending 
+  CONST CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND = "symfony cron:cronConsumeExclusiveWelcomeEmailTask"; //Command to start cron:cronConsumeExclusiveWelcomeEmailTask\
+  CONST CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT=1;
 }
 
 ?>

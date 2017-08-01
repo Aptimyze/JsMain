@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/EmailTypeCreater.php
 	This class should not be updated manually.
-	Created on 2017-07-31
+	Created on 2017-07-24
 	 */
 	class MailerType{
 		private static $emailTypeArray=array(
