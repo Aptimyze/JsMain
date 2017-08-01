@@ -53,7 +53,7 @@ export class contactEngine extends React.Component{
   	if(this.props.pagesrcbtn == "myjs")
       {
         if(this.props.buttonName == "interest_received") {
-          return (<div className="brdr8 fl wid90p hgt60">
+          return (<div className="brdr8 fl fullwid hgt60">
             <div className="txtc wid49p fl eoiAcceptBtn brdr7 pad2" onClick={() => this.performAction(this.props.button[0])}>
               <a className="f15 color2 fontreg">Accept</a>
             </div>
