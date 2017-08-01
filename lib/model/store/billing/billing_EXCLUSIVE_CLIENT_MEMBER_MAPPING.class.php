@@ -66,10 +66,10 @@ class billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING extends TABLE
 	public function updateScreenedStatus($id)
 	{
 		try{
-			if(is_array($params) && $params){
-				$sql = "UPDATE  `EXCLUSIVE_CLIENT_MEMBER_MAPPING` SET  `SCREENED_STATUS` =  'Y' WHERE  `ID` =:ID ";
+			if($id){
+				$sql = "UPDATE  billing.EXCLUSIVE_CLIENT_MEMBER_MAPPING SET  `SCREENED_STATUS` =  'Y' WHERE  `ID` =:ID ";
 				$res = $this->db->prepare($sql);
-				$res->bindValue(":ID", $ID, PDO::PARAM_INT);
+				$res->bindValue(":ID", $id, PDO::PARAM_INT);
 				$res->execute();
 				return true;
 			}
@@ -91,11 +91,11 @@ class billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING extends TABLE
 	public function updateSendEoiError($id,$reason)
 	{
 		try{
-			if(is_array($params) && $params){
-				$sql = "UPDATE  `EXCLUSIVE_CLIENT_MEMBER_MAPPING` SET  `SCREENED_STATUS` =  'E' AND `FAILURE_REASON`=:REASON WHERE  `ID` =:ID ";
+			if($id){
+				$sql = "UPDATE  billing.EXCLUSIVE_CLIENT_MEMBER_MAPPING SET  `SCREENED_STATUS` =  'E', `FAILURE_REASON`=:REASON WHERE  `ID` =:ID ";
 				$res = $this->db->prepare($sql);
-				$res->bindValue(":ID", $ID, PDO::PARAM_INT);
-				$res->bindValue(":REASON", $ID, PDO::PARAM_STR);
+				$res->bindValue(":ID", $id, PDO::PARAM_INT);
+				$res->bindValue(":REASON", $reason, PDO::PARAM_STR);
 				$res->execute();
 				return true;
 			}
