@@ -12,4 +12,4 @@ followupCallerSuccess:
 
   stylesheets:    []
 
-  javascripts:    []
+  javascripts:    [jspc/crm/exclusiveFollowUps_js@bottom]

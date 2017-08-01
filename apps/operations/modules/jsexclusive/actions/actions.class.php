@@ -334,9 +334,9 @@ class jsexclusiveActions extends sfActions {
         $currentDt = date("Y-m-d");
 
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_masterRep");
-        $followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
+        $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
         
-        if($followUpsCount == 0){
+        if($this->followUpsCount == 0){
            $this->infoMsg = "No followUps found.."; 
         }
         else{
@@ -347,7 +347,7 @@ class jsexclusiveActions extends sfActions {
             $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
             $this->finalFollowUpsPool = array("followUpData"=>array(),"membersData"=>array(),"clientsData"=>array());
 
-            while($start<=$followUpsCount){
+            while($start<=$this->followUpsCount){
                 //fetch followup data
                 $followUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
 
@@ -370,6 +370,7 @@ class jsexclusiveActions extends sfActions {
                     if(is_array($phoneDetails)){
                         foreach ($phoneDetails as $key => $value) {
                             $this->finalFollowUpsPool["membersData"][$value['PROFILEID']]['PHONE_MOB'] = $value['PHONE_MOB'];
+                            $this->finalFollowUpsPool["membersData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
                         }
                     }
                     unset($phoneDetails);
@@ -414,6 +415,10 @@ class jsexclusiveActions extends sfActions {
         }
         unset($followUpObj);
         //print_r($this->finalFollowUpsPool);die;
+    }
+
+    public function executeSubmitFollowupStatus(sfWebRequest $request){
+        var_dump($request->getParameter("followUp"));die;
     }
 }
 ?>
