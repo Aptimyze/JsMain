@@ -287,7 +287,14 @@ abstract class JsPhotoScreen_Tracking
 		{
 			return false;
 		}
-
+		if($this->m_objProfile->getACTIVATED() != "Y" && $this->m_szOld_HavePhoto_Status == "U")
+		{
+			$jsadminObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+			$jsadminObj->insert($this->m_objProfile->getPROFILEID());
+			unset($jsadminObj);
+			$arrUpdateValue["ACTIVATED"] = "Y";
+			CommonFunction::sendWelcomeMailer($this->m_objProfile->getPROFILEID(),0);
+		}
 		$objPhotoScreeningService = new photoScreeningService($this->m_objProfile);
 		if($objPhotoScreeningService->isProfileScreened() == 0)
 		{

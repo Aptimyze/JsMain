@@ -518,7 +518,7 @@ class CommonFunction
 		return $years;
 	}
 
-	 public static function sendWelcomeMailer($pid)
+	 public static function sendWelcomeMailer($pid,$sendQuery=1)
 	{
 		$email_sender=new EmailSender(MailerGroup::WELCOME,1780);
 		$emailTpl=$email_sender->setProfileId($pid);
@@ -532,9 +532,12 @@ class CommonFunction
 		$top8Mailer->send();
 		
 		//logging time when user gets activated and phone verified for first time.
-		$jprofileDbObject=JPROFILE::getInstance();
+		if($sendQuery){
+			$jprofileDbObject=JPROFILE::getInstance();
 		$paramArr["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
 		$jprofileDbObject->edit($paramArr,$pid);
+		unset($jprofileDbObject);
+		}
 	}
 	public static function getChannel()
 	{
