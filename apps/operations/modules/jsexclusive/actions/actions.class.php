@@ -418,7 +418,10 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeSubmitFollowupStatus(sfWebRequest $request){
-        var_dump($request->getParameter("followUp"));die;
+        $followUpId = $request->getParameter("followUp");
+        if(!isset($followUpId)){
+            
+        }
     }
 }
 ?>
