@@ -19,7 +19,7 @@ class aadharVerificationEnums
 	const IMPROPERFORMAT = "Aadhar Id is not in proper format";
 	const NOTVERIFIEDMSG = "Given aadhar number does not match with profile details";
 	const STATUSPENDINGMSG = "Status Pending";
-	const AADHARVERIFIED = "Aadhar Verified";
+	const AADHARVERIFIED = "Aadhar number is verified";
 	public static $headerArrForStatus = array('apiKey:f97b05b2-9360-4706-91e7-6154513200a1');
 	CONST COMPLETED = "completed";
 	CONST EXACTMATCH = "exact";
