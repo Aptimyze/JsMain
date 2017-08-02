@@ -30,12 +30,40 @@ export default class ThreeDots extends React.Component{
   showAbuseLayer() {
     this.setState({showAbuseLayer: true})
   }
+
+  manageThreeDotsButton(action){
+    switch(action)
+    {
+      case 'IGNORE':
+        console.log("IGNORE is called");
+        break;
+      case 'SHORTLIST':
+        console.log("SHORTLIST is called");
+        break;
+      default:
+        console.log("Default is called.");
+        break;
+    }
+  }
+
+
   closeAbuseLayer() {
     this.setState({showAbuseLayer: false})
     document.getElementById("vpro_tapoverlay").classList.remove("dn");
   }
 
   render(){
+    // console.log("ThreeDots",this.props.buttondata.buttons.others);
+    // var buttons = this.props;
+    // buttons.forEach(function(value)
+    // {
+    //   console.log(value);
+    // });
+
+    // for( buttons in this.props.buttondata.buttons.other)
+    // {
+    //   console.log(buttons);
+    // }
     var reportAbuseView;
     if(this.state.showAbuseLayer == true) {
       reportAbuseView = <ReportAbuse username={this.props.username} profilechecksum={this.props.profilechecksum} closeAbuseLayer={() => this.closeAbuseLayer()} profileThumbNailUrl={this.props.profileThumbNailUrl} />
@@ -43,6 +71,9 @@ export default class ThreeDots extends React.Component{
     }
     var layerView;
     if(this.state.showLayer == true) {
+      var buttons = (this.props.buttondata.buttons.others);
+      console.log(buttons);
+      var imageList = {'INITIATE':'msg_srp','CONTACTDETAIL':'vcontact','SHORTLIST':'srtlist','IGNORE':'ignore'};
         layerView = <div id="contactOverlay" className="posabs dispbl scrollhid">
             <div id="vpro_tapoverlay" className="posabs vpro_tapoverlay">
                 <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
@@ -52,26 +83,24 @@ export default class ThreeDots extends React.Component{
                       </div>
                       <div className="f14 white fontlig opa80 pt10" id="topMsg">Connect with {this.props.username}</div>
                     </div>
+                    { 
+                      buttons.map(function(button,index)
+                      {
+                        console.log(button);
+                        let top_id = button.action;
+                        let inside_id = "otherimage"+index;
+                        let outside_id = "otherlabel"+index;
+                        let label = button.label;
+                        let image = "mainsp " + imageList[button.action];
+                          return (
+                            <div onClick={() => this.manageThreeDotsButton(button.action)} className="wid49p txtc mt45 dispibl" id={top_id}>
+                              <i className= {image} id={inside_id}></i>
+                              <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
+                            </div>
+                          )
+                      },this)
+                    }
 
-                    <div className="wid49p txtc mt45 dispibl" id="INITIATE">
-                      <i className="mainsp msg_srp" id="otherimage0"></i>
-                      <div className="f14 white fontlig lh30" id="otherlabel0">Send Interest</div>
-                    </div>
-
-                    <div className="wid49p txtc mt45 dispibl" id="CONTACT_DETAIL">
-                      <i className="mainsp vcontact" id="otherimage1"></i>
-                      <div className="f14 white fontlig lh30" id="otherlabel1">View Contacts</div>
-                    </div>
-
-                    <div className="wid49p txtc mt45 dispibl" id="SHORTLIST_1">
-                      <i className="mainsp srtlist" id="otherimage2"></i>
-                      <div className="f14 white fontlig lh30" id="otherlabel2">Shortlist</div>
-                    </div>
-
-                    <div className="wid49p txtc mt45 dispibl" id="IGNORE_1">
-                      <i className="mainsp ignore"></i>
-                      <div className="f14 white fontlig lh30" id="otherlabel3">Block</div>
-                    </div>
                     <div onClick={() => this.showAbuseLayer()}  className="wid49p txtc mt45 fl" id="REPORT_ABUSE_1">
                       <i className="reportAbuse mainsp"></i>
                       <div className="f14 white fontlig lh30" id="otherlabel4">Report Abuse</div>
