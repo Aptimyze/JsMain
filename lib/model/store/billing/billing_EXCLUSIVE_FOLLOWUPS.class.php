@@ -56,7 +56,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		{
 		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT)";
 
-		    $sql .= "ORDER BY STATUS DESC,ENTRY_DT ASC";
+		    $sql .= "ORDER BY STATUS DESC,MEMBER_ID";
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
 		    }

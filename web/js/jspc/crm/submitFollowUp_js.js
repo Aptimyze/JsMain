@@ -1,3 +1,22 @@
+function validateFollowUp()
+{
+    var status = $("#followupStatus").val();
+    if(status=="F"){
+        var reason = $("#reason").val();
+        if(reason==""){
+            alert("Choose reason in case of followup");
+            return false;
+        }
+        if(reason=="Others"){
+            var reasonText = $("#reasonText").val();
+            if(reasonText==""){
+               alert("Specify reason in case of others option in followup");
+            return false; 
+            }
+        }
+    }
+}
+
 $(document).ready(function() {
     showDateSelectionField("date1","2017","2018");
 

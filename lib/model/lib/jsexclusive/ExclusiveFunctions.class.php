@@ -229,7 +229,7 @@ class ExclusiveFunctions{
 
     public function updateFollowUpDetails($params=array()){
         $currentDt = date("Y-m-d");
-
+        var_dump($params["date1"]);die;
         if(empty($params["date1"])){
             if($params["followupStatus"]=='F'){
                 $params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
@@ -241,6 +241,7 @@ class ExclusiveFunctions{
       	else if($params["followupStatus"]=='Y' || $params["followupStatus"]=='N'){
       		$params["date1"] = $currentDt;
       	}
+      	
 
         $updateArr = array();
         switch($params["followUpDetails"]["STATUS"]){
@@ -248,6 +249,7 @@ class ExclusiveFunctions{
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F1";
                     $updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    $updateArr["FOLLOWUP2_DT"] = $params["date1"];
                 }
                 else{
                 	if($params["followupStatus"]=='N'){
@@ -255,13 +257,14 @@ class ExclusiveFunctions{
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
-                $updateArr["FOLLOWUP1_DT"] = $params["date1"];
+                $updateArr["FOLLOWUP1_DT"] = $currentDt;
                 $updateArr["FOLLOWUP_1"] .= "|".$params["operator"];
                 break;
             case "F1":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F2";
                     $updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                     $updateArr["FOLLOWUP3_DT"] = $params["date1"];
                 }
                 else{
                 	if($params["followupStatus"]=='N'){
@@ -270,12 +273,13 @@ class ExclusiveFunctions{
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_2"] .= "|".$params["operator"];
-                $updateArr = $params["date1"];
+                $updateArr["FOLLOWUP2_DT"] = $currentDt;
                 break;
             case "F2":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] == "F3";
                     $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                     $updateArr["FOLLOWUP4_DT"] = $params["date1"];
                 }
                 else{
                 	if($params["followupStatus"]=='N'){
@@ -284,7 +288,7 @@ class ExclusiveFunctions{
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_3"] .= "|".$params["operator"];
-                $updateArr["FOLLOWUP3_DT"] = $params["date1"];
+                $updateArr["FOLLOWUP3_DT"] = $currentDt;
                 break;
             case "F3":
                 if($params["followupStatus"]=='F'){
@@ -298,7 +302,7 @@ class ExclusiveFunctions{
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_4"] .= "|".$params["operator"];
-                $updateArr["FOLLOWUP4_DT"] = $params["date1"];
+                $updateArr["FOLLOWUP4_DT"] = $currentDt;
                 break;
         }
        	$updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
