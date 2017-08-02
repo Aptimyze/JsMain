@@ -12,35 +12,35 @@ export default class BasicInfo extends React.Component {
     	}
 
     	var myInfo = <div className='hgt10'></div>;
-    	if(this.props.about.myinfo) 
+    	if(this.props.about.myinfo)
     	{
     		myInfo = <div className="fontlig pad2 wordBreak vpro_lineHeight" id="vpro_myinfo" >{this.props.about.myinfo}</div>;
     	}
 
     	var appearanceTitle,appearance;
-    	if(this.props.about.appearance) 
+    	if(this.props.about.appearance)
     	{
     		appearanceTitle = <div className="f14 color1">Appearance</div>
     		appearance = <div className="fontlig pb15" id="vpro_appearance">{this.props.about.appearance}</div>
     	}
     	var special_case, special_case_title;
-    	if(this.props.about.special_case) 
+    	if(this.props.about.special_case)
     	{
     		special_case_title = <div className="f14 color1">Special Cases</div>;
-    		special_case = <div class="fontlig pb15" id="vpro_special_case" >{this.props.about.special_case}</div>
+    		special_case = <div className="fontlig pb15" id="vpro_special_case" >{this.props.about.special_case}</div>
     	}
     	return (
     		<div className="pad5 bg4 fontlig color3 clearfix f14">
     			<div className="hgt10"></div>
-  				<div className="fl"> 
+  				<div className="fl">
 	  				<span className="f18" id="vpro_username" >{this.props.about.username}</span>&nbsp;&nbsp;
-	  				<span className="f11 color13" id="vpro_last_active" >{this.props.about.last_active}</span> 
+	  				<span className="f11 color13" id="vpro_last_active" >{this.props.about.last_active}</span>
   				</div>
   				<div className="fr color2 f14 pt5 fontrobbold" id="vpro_subscription">{this.props.about.subscription_text}</div>
   				<div className="clr hgt10"></div>
   				<ul className="vpro_info fontlig">
 	  				<li className="wid49p" id="vpro_age" >
-	  					{this.props.about.age} Years&nbsp;  
+	  					{this.props.about.age} Years&nbsp;
 	  					<span id="vpro_height">{this.props.about.height}</span>
 	  				</li>
 	  				<li className="wid49p" id="vpro_occupation" >
