@@ -55,12 +55,14 @@ class ProfilePage extends React.Component {
     }
 
     componentDidUpdate(prevprops) {
+      console.log('---componentDidUpdate----');
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
     componentDidMount()
-    {   
+    {
         let urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
         this.props.showProfile(this, urlString);
+
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -77,14 +79,15 @@ class ProfilePage extends React.Component {
         }
     }
 
+
     setNextPrevLink() {
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
             let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
 
             if(this.state.searchid != 1 && this.state.searchid != null){
-                nextUrl += "&searchid=" + this.state.searchid; 
-                nextDataApi += "&searchid=" + this.state.searchid; 
+                nextUrl += "&searchid=" + this.state.searchid;
+                nextDataApi += "&searchid=" + this.state.searchid;
             } else if(this.state.contact_id != undefined) {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
@@ -104,8 +107,8 @@ class ProfilePage extends React.Component {
             let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
             if(this.state.searchid != 1 && this.state.searchid != null){
-                prevUrl += "&searchid=" + this.state.searchid; 
-                prevDataApi += "&searchid=" + this.state.searchid; 
+                prevUrl += "&searchid=" + this.state.searchid;
+                prevDataApi += "&searchid=" + this.state.searchid;
             } else if(this.state.contact_id != undefined) {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
@@ -121,6 +124,7 @@ class ProfilePage extends React.Component {
                 prevDataApi: ""
             });
         }
+
         let startX, endX, _this = this;
         document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
             startX = e.changedTouches[0].clientX;
@@ -153,8 +157,12 @@ class ProfilePage extends React.Component {
             }
         });
 
+        console.log('---exit setNextPrevLink----');
+
+
     }
     showLoaderDiv() {
+      console.log('---showLoaderDiv----');
         this.setState({
             showLoader:true
         });
@@ -162,12 +170,15 @@ class ProfilePage extends React.Component {
     }
     componentWillReceiveProps(nextProps)
     {
-        if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
+      console.log('---componentWillReceiveProps----');
+        if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone)
+        {
             this.setState({
                 showLoader:false
             });
         }
-        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
+        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true)
+        {
             this.setState({
                 showLoader:false
             });
@@ -181,15 +192,16 @@ class ProfilePage extends React.Component {
             jsb9Fun.recordBundleReceived(this,new Date().getTime());
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
-        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-            
+        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true)
+        {
+
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
-            
+
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
@@ -197,7 +209,7 @@ class ProfilePage extends React.Component {
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
-            
+
             this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
@@ -232,9 +244,9 @@ class ProfilePage extends React.Component {
             if(nextProps.pic) {
                 if(nextProps.pic.action == null) {
                     this.setState({disablePhotoLink: true})
-                }   
+                }
             }
-            
+
 
             //calling tracking event
             /*setTimeout(function(){
@@ -243,14 +255,16 @@ class ProfilePage extends React.Component {
             */
         } else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true) {
             if(this.props.history.prevUrl) {
-              this.props.history.push(this.props.history.prevUrl);  
-            } 
+              this.props.history.push(this.props.history.prevUrl);
+            }
         }
+          console.log('---exit componentWillReceiveProps----');
 
     }
 
     componentWillUnmount()
     {
+        console.log('---componentWillUnmount----');
         //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
@@ -258,6 +272,7 @@ class ProfilePage extends React.Component {
 
     setScrollPos()
     {
+        console.log('---setScrollPos----');
         let tabElem = document.getElementById("tab");
         if(tabElem.getBoundingClientRect().top < 0 && !tabElem.classList.contains("posFixTop")) {
             tabElem.classList.add("posFixTop");
@@ -269,6 +284,7 @@ class ProfilePage extends React.Component {
 
     removePromoLayer()
     {
+        console.log('---removePromoLayer----');
         this.setState ({
             showPromo : false
         });
@@ -277,6 +293,7 @@ class ProfilePage extends React.Component {
 
     showTab(elem)
     {
+      console.log('---showTab----');
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
                 document.getElementById(this.state.tabArray[i]+"Header").classList.remove("vpro_selectTab");
@@ -288,18 +305,21 @@ class ProfilePage extends React.Component {
     }
     initHistory()
     {
+      console.log('---initHistory----');
         this.setState({
             showHistory:true
         });
     }
     closeHistoryTab()
     {
+      console.log('---closeHistoryTab----');
         this.setState({
             showHistory:false
         });
     }
     checkPhotoAlbum(e)
     {
+      console.log('---checkPhotoAlbum----');
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
         }
@@ -308,20 +328,21 @@ class ProfilePage extends React.Component {
 
     imageLoaded()
     {
+        console.log('---imageLoaded----');
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
     }
 
     goBack()
     {
-
         this.props.history.push(this.props.history.prevUrl);
     }
 
     render()
     {
         var contactEngineView;
-        if(this.state.dataLoaded == true) {
+        if(this.state.dataLoaded == true)
+        {
             let profiledata = {
                 profilechecksum : this.state.profilechecksum,
                 responseTracking: this.state.responseTracking,
@@ -335,7 +356,9 @@ class ProfilePage extends React.Component {
             himHer = "her";
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
-        } else {
+        }
+        else
+        {
             photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         }
