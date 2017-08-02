@@ -58,7 +58,7 @@ class App extends React.Component
       {redirectToHashUrl}
       <Switch>
       <Route path='/login' component= {LoginPage}/>
-      <Route path='/profile/viewprofile' component={ProfilePage} />
+      <Route path='/profile/viewprofile.php' component={ProfilePage} />
       <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />
       <Route path="/static/forgotPassword" component={ForgotPassword}/>
       <Route path="/" component={EnsureLoggedInContainer}/>
