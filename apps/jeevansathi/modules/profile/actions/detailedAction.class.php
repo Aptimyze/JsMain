@@ -368,6 +368,7 @@ class detailedAction extends sfAction
 		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
 		//this part is added to ensure that even if toShowHoroscope is 'D', astro gets shown
         $arrOutDisplay["about"]["NO_ASTRO"] = $this->changeAstroViewCondition($arrOutDisplay["about"]["toShowHoroscope"],$arrOutDisplay["about"]["NO_ASTRO"]);
+        $arrOutDisplay["astroSent"] = $this->checkIfAstroSent();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
@@ -413,7 +414,7 @@ class detailedAction extends sfAction
         {
             $this->NAVIGATOR = $request->getParameter('NAVIGATOR');
         }
-        //print_r($this->arrOutDisplay);die;
+       	//print_r($this->arrOutDisplay);die;
 		$this->setTemplate("_mobViewProfile/jsmsViewProfile");
 	}
 	/**
@@ -1387,4 +1388,25 @@ class detailedAction extends sfAction
     	return $noAstro;
     }
 
+    public function checkIfAstroSent()
+    {    	
+    	$astroObj = new astroReport();
+    	$flag = $astroObj->getActualReportFlag($this->loginProfile->getPROFILEID(),$this->profile->getPROFILEID());					
+    	if($flag)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		$count = $astroObj->getNumberOfActualReportSent($this->loginProfile->getPROFILEID());					
+    		if($count >= "100")
+    		{
+    			return 0;
+    		}
+    		else
+    		{
+    			return 1;
+    		}
+    	}	
+    }
 }
