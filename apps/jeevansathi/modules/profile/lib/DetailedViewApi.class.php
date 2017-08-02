@@ -344,8 +344,7 @@ class DetailedViewApi
 
 		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
     if($bHoroScope === 'D'){
-      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
-      $this->m_arrOut['NO_ASTRO']  = 0; //added because Get Astro Report needs to be shown even when all details are hidden
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;     
     }
     else{
         $astroArr = (array)$this->m_arrAstro;
@@ -381,6 +380,11 @@ class DetailedViewApi
             else
                 $this->m_arrOut['NO_ASTRO']=1;
 
+        //condition change for astro report to be shown
+        if($bHoroScope === 'D' && $this->m_arrOut['NO_ASTRO'] == 1)
+        {
+            $this->m_arrOut['NO_ASTRO']=0;
+        }
         if(MobileCommon::isAndroidApp())
         { 
             $this->m_arrOut['thumbnailPic'] = null;
