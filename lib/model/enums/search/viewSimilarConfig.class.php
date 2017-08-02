@@ -88,6 +88,7 @@ class viewSimilarConfig
         }
 
         public static function VspWithoutSolr($profileId){
+            return true;
             if($profileId%9<5)
                 return true;
             else

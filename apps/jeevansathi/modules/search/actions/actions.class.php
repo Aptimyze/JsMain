@@ -1713,7 +1713,6 @@ class searchActions extends sfActions
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
                                 
-                                
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
 				
@@ -1732,9 +1731,9 @@ class searchActions extends sfActions
 				}
 
 			}
-			
 			/** caching **/
-			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+                        if($SearchParamtersObj->getSEARCH_FAILED() != 1)
+                                $ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
 
 			/** caching **/
 
