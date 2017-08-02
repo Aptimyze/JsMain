@@ -428,6 +428,7 @@ class ProfilePage extends React.Component {
                     </div>
                 </div>;
                 Header = "Profile not found";
+                metaTagView = <MetaTagComponents page="ProfileNotFound" />
             }
             
         }
