@@ -63,7 +63,7 @@ class crmCommonConfig
 	public static $useCrmMemcache = false;
 	public static $jsexclusiveReferenceDt = "31/07/2017 00:00:00";
 	public static $jsexlusiveFollowUpColumns = array("","Client","Client Name","Member","Member Phone No 1","Member Phone No 2","RM","Followup Status 1","Followup Status 2","Followup Status 3","Action");
-	public static $followupslimit = 1000;
+	public static $followupslimit = 2000;
 }
 
 ?>
