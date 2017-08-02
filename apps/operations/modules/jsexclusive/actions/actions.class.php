@@ -333,87 +333,19 @@ class jsexclusiveActions extends sfActions {
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
         $currentDt = date("Y-m-d");
 
-        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_masterRep");
+        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
         $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
-        
+        unset($followUpObj);
+
         if($this->followUpsCount == 0){
            $this->infoMsg = "No followUps found.."; 
         }
         else{
-            $start = 0;
-            $limit = crmCommonConfig::$followupslimit;
-            $jprofileObj = new JPROFILE("newjs_slave");
-            $contactObj = new ProfileContact("newjs_slave");
-            $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
-            $this->finalFollowUpsPool = array("followUpData"=>array(),"membersData"=>array(),"clientsData"=>array());
-
-            while($start<=$this->followUpsCount){
-                //fetch followup data
-                $followUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
-
-                if(is_array($followUpsPool)){
-                    //merge the follow up pool
-                    $this->finalFollowUpsPool["followUpData"] = array_merge($this->finalFollowUpsPool["followUpData"],$followUpsPool);
-
-                    //fetch distinct member ids
-                    $membersIds = array_map(function ($arr) { return $arr['MEMBER_ID']; }, $followUpsPool);  
-                    $membersIds = array_values($membersIds);   
-                    $memberIdStr = implode($membersIds,",");
-                    unset($membersIds);
-
-                    //fetch primary and alternate contact nos of member ids     
-                    $phoneDetails = $jprofileObj->getArray(array("PROFILEID"=>$memberIdStr),"","","PROFILEID,USERNAME,PHONE_MOB");
-                    $altPhoneDetails = $contactObj->getArray(array("PROFILEID"=>$memberIdStr),"","","PROFILEID,ALT_MOBILE");
-                    unset($memberIdStr);
-                    
-                    //merge contact details
-                    if(is_array($phoneDetails)){
-                        foreach ($phoneDetails as $key => $value) {
-                            $this->finalFollowUpsPool["membersData"][$value['PROFILEID']]['PHONE_MOB'] = $value['PHONE_MOB'];
-                            $this->finalFollowUpsPool["membersData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
-                        }
-                    }
-                    unset($phoneDetails);
-                    if(is_array($altPhoneDetails)){
-                        foreach ($altPhoneDetails as $key => $value) {
-                            $this->finalFollowUpsPool["membersData"][$value['PROFILEID']]['ALT_MOBILE'] = $value['ALT_MOBILE'];
-                        }
-                    }
-                    unset($altPhoneDetails);
-
-                    //fetch distinct client ids
-                    $clientIds = array_map(function ($arr) { return $arr['CLIENT_ID']; }, $followUpsPool);  
-                    $clientIds = array_values($clientIds); 
-                   
-                    $clientIdStr = implode($clientIds,",");
-                    unset($clientIds);
-
-                    //fetch name,username of clients
-                    $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID"=>$clientIdStr),"","","PROFILEID,NAME,DISPLAY");
-                    $clientUsernameArr = $jprofileObj->getArray(array("PROFILEID"=>$clientIdStr),"","","PROFILEID,USERNAME");
-                    if(is_array($clientNameArr)){
-                        foreach ($clientNameArr as $key => $value) {
-                            if($value["DISPLAY"]=='Y'){
-                                $this->finalFollowUpsPool["clientsData"][$value['PROFILEID']]['NAME'] = $value['NAME'];
-                            }
-                        }
-                    }
-                    unset($clientNameArr);
-                    if(is_array($clientUsernameArr)){
-                        foreach ($clientUsernameArr as $key => $value) {
-                            $this->finalFollowUpsPool["clientsData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
-                        }
-                    }
-                    unset($clientUsernameArr);
-                }   
-                unset($followUpsPool); 
-                $start += $limit;
-            }
-            unset($nameOfUserObj);
-            unset($jprofileObj);
-            unset($contactObj);
+            $this->infoMsg = $request->getParameter("infoMsg");
+            $exclusiveLib = new ExclusiveFunctions();
+            $this->finalFollowUpsPool = $exclusiveLib->formatFollowUpsData($this->followUpsCount);
+            unset($exclusiveLib);
         }
-        unset($followUpObj);
         //print_r($this->finalFollowUpsPool);die;
     }
 
@@ -421,7 +353,7 @@ class jsexclusiveActions extends sfActions {
         $formArr = $request->getParameterHolder()->getAll();
 
         if(is_array($formArr)){
-            $this->ifollowUpId = $formArr["ifollowUp"];
+            $this->ifollowUpId = intval($formArr["ifollowUpId"]);
             $this->istatus = $formArr["istatus"];
 
             //submit of followup form
@@ -432,11 +364,15 @@ class jsexclusiveActions extends sfActions {
                     $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
                     $followUpDetails = $followUpObj->getFollowUpEntry($this->ifollowUpId);
                     unset($followUpObj);
-                    if(is_array($followUpDetails) && $followUpDetails["STATUS"] == $istatus){
-                        print_r($formArr);die;
+
+                    //update followup
+                    if(is_array($followUpDetails) && $followUpDetails["STATUS"]==$this->istatus){
+                        $exclusiveLib = new ExclusiveFunctions();
+                        $exclusiveLib->updateFollowUpDetails(array("followupStatus"=>$formArr["followupStatus"],"ifollowUpId"=>$this->ifollowUpId,"followUpDetails"=>$followUpDetails,"reason"=>$formArr["reason"],"reasonText"=>$formArr["reasonText"],"date1"=>$formArr["date1"]));
+                        unset($exclusiveLib);
                     }
                     else{
-                        $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit"));
+                        $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit !"));
                     }
                 }
                 $this->forwardTo("jsexclusive","followupCaller");

@@ -16,10 +16,10 @@
     ~/if`
     <tr></tr>
     <tr>
-    <form name="followupStatus" method="post" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitFollowupStatus" enctype="multipart/form-data">
+    <form name="followupStatusForm" method="post" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitFollowupStatus" enctype="multipart/form-data">
         <table width="50%" border="0" align="center" cellpadding="4" cellspacing="4">
-            <input type="hidden" id="ifollowUpId" value="~$ifollowUpId`">
-            <input type="hidden" id="istatus" value="~$istatus`">
+            <input type="hidden" name="ifollowUpId" value="~$ifollowUpId`">
+            <input type="hidden" name="istatus" value="~$istatus`">
             <tr class="fieldsnew">
                 <td>
                     Status:

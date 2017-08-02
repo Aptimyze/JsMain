@@ -16,4 +16,16 @@ $(document).ready(function() {
             $("#reasonText").addClass("crm-disabled");
         }
     });
+
+    $("#reason").change(function(){
+        var selectedVal = $(this).find(':selected').val();
+        if(selectedVal=="Others"){
+            $("#reasonText").removeAttr("disabled");
+            $("#reasonText").removeClass("crm-disabled");
+        }
+        else{
+            $("#reasonText").attr("disabled","disabled");
+            $("#reasonText").addClass("crm-disabled");
+        }
+    });
 });

@@ -141,5 +141,148 @@ class ExclusiveFunctions{
                 return 'Sunday';
             }
         }
+
+    public function formatFollowUpsData($followUpsCount){
+    	$currentDt = date("Y-m-d");
+    	$start = 0;
+        $limit = crmCommonConfig::$followupslimit;
+        $jprofileObj = new JPROFILE("newjs_slave");
+        $contactObj = new ProfileContact("newjs_slave");
+        $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+        $finalFollowUpsPool = array("followUpData"=>array(),"membersData"=>array(),"clientsData"=>array());
+        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        while($start<=$followUpsCount){
+            //fetch followup data
+            $followUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
+
+            if(is_array($followUpsPool)){
+                //merge the follow up pool
+                $finalFollowUpsPool["followUpData"] = array_merge($finalFollowUpsPool["followUpData"],$followUpsPool);
+
+                //fetch distinct member ids
+                $membersIds = array_map(function ($arr) { return $arr['MEMBER_ID']; }, $followUpsPool);  
+                $membersIds = array_values($membersIds);   
+                $memberIdStr = implode($membersIds,",");
+                unset($membersIds);
+
+                //fetch primary and alternate contact nos of member ids     
+                $phoneDetails = $jprofileObj->getArray(array("PROFILEID"=>$memberIdStr),"","","PROFILEID,USERNAME,PHONE_MOB");
+                $altPhoneDetails = $contactObj->getArray(array("PROFILEID"=>$memberIdStr),"","","PROFILEID,ALT_MOBILE");
+                unset($memberIdStr);
+                
+                //merge contact details
+                if(is_array($phoneDetails)){
+                    foreach ($phoneDetails as $key => $value) {
+                        $finalFollowUpsPool["membersData"][$value['PROFILEID']]['PHONE_MOB'] = $value['PHONE_MOB'];
+                        $finalFollowUpsPool["membersData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
+                    }
+                }
+                unset($phoneDetails);
+                if(is_array($altPhoneDetails)){
+                    foreach ($altPhoneDetails as $key => $value) {
+                        $finalFollowUpsPool["membersData"][$value['PROFILEID']]['ALT_MOBILE'] = $value['ALT_MOBILE'];
+                    }
+                }
+                unset($altPhoneDetails);
+
+                //fetch distinct client ids
+                $clientIds = array_map(function ($arr) { return $arr['CLIENT_ID']; }, $followUpsPool);  
+                $clientIds = array_values($clientIds); 
+               
+                $clientIdStr = implode($clientIds,",");
+                unset($clientIds);
+
+                //fetch name,username of clients
+                $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID"=>$clientIdStr),"","","PROFILEID,NAME,DISPLAY");
+                $clientUsernameArr = $jprofileObj->getArray(array("PROFILEID"=>$clientIdStr),"","","PROFILEID,USERNAME");
+                if(is_array($clientNameArr)){
+                    foreach ($clientNameArr as $key => $value) {
+                        if($value["DISPLAY"]=='Y'){
+                            $finalFollowUpsPool["clientsData"][$value['PROFILEID']]['NAME'] = $value['NAME'];
+                        }
+                    }
+                }
+                unset($clientNameArr);
+                if(is_array($clientUsernameArr)){
+                    foreach ($clientUsernameArr as $key => $value) {
+                        $finalFollowUpsPool["clientsData"][$value['PROFILEID']]['USERNAME'] = $value['USERNAME'];
+                    }
+                }
+                unset($clientUsernameArr);
+            }   
+            unset($followUpsPool); 
+            $start += $limit;
+        }
+        unset($followUpObj);
+        unset($nameOfUserObj);
+        unset($jprofileObj);
+        unset($contactObj);
+        return $finalFollowUpsPool;
+    }
+
+    public function updateFollowUpDetails($params=array()){
+    	
+        $currentDt = date("Y-m-d");
+
+        if(empty($params["date1"])){
+            if($params["followupStatus"]=='F'){
+                $params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+            }
+            else{
+                $params["date1"] = $currentDt;
+            }
+        }
+      	else if($params["followupStatus"]=='Y' || $params["followupStatus"]=='N'){
+      		$params["date1"] = $currentDt;
+      	}
+        $updateArr = array();
+        switch($params["followUpDetails"]["STATUS"]){
+            case "F0":
+                if($params["followupStatus"]=='F'){
+                    $updateArr["STATUS"] = "F1";
+                    $updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                }
+                else{
+                    $updateArr["STATUS"] = $params["followupStatus"];
+                }
+                $updateArr["FOLLOWUP1_DT"] = $params["date1"];
+                break;
+            case "F1":
+                if($params["followupStatus"]=='F'){
+                    $updateArr["STATUS"] = "F2";
+                    $updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                }
+                else{
+                    $updateArr["STATUS"] = $params["followupStatus"];
+                }
+                $updateArr = $params["date1"];
+                break;
+            case "F2":
+                if($params["followupStatus"]=='F'){
+                    $updateArr["STATUS"] == "F3";
+                    $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                }
+                else{
+                    $updateArr["STATUS"] = $params["followupStatus"];
+                }
+                $updateArr["FOLLOWUP3_DT"] = $params["date1"];
+                break;
+            case "F3":
+                if($params["followupStatus"]=='F'){
+                    $updateArr["STATUS"] = "F4";
+                    $updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                }
+                else{
+                    $updateArr["STATUS"] = $params["followupStatus"];
+                }
+                $updateArr["FOLLOWUP4_DT"] = $params["date1"];
+                break;
+        }
+       
+        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
+        $followUpObj->updateFollowUp($params["ifollowUpId"],$updateArr);
+        unset($followUpObj);
+        unset($updateArr);
+    }
 }
 ?>

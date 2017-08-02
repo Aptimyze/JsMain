@@ -3,6 +3,16 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 
     public function __construct($dbname = "") {
         parent::__construct($dbname);
+        $this->ID_BIND_TYPE = "INT";
+		$this->STATUS_BIND_TYPE = "STR";
+		$this->FOLLOWUP_1_BIND_TYPE = "STR";
+		$this->FOLLOWUP_2_BIND_TYPE = "STR";
+		$this->FOLLOWUP_3_BIND_TYPE = "STR";
+		$this->FOLLOWUP_4_BIND_TYPE = "STR";
+		$this->FOLLOWUP1_DT_BIND_TYPE = "STR";
+		$this->FOLLOWUP2_DT_BIND_TYPE = "STR";
+		$this->FOLLOWUP3_DT_BIND_TYPE = "STR";
+		$this->FOLLOWUP4_DT_BIND_TYPE = "STR";
     }
 
     /**
@@ -87,5 +97,38 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		  throw new jsException($e);
 		}
 	}
+
+	/**
+     * Function to update details of followup
+     *
+     * @param   $id,$updateArr=""
+     * @return  none
+     */ 
+  public function updateFollowUp($id,$updateArr="")
+  {
+    try
+    {
+      if($id && is_array($updateArr) && count($updateArr)>0)
+      {
+      	$updateStr = "";
+      	foreach ($updateArr as $key => $value) {
+      		$updateStr = $key."=:".$key.",";
+      	}
+      	$updateStr = substr($updateStr,0,-1);
+        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ".$updateStr." WHERE ID=:ID";
+        $res = $this->db->prepare($sql);
+        foreach ($updateArr as $key => $value) {
+      		$res->bindValue(":".$key, $value, constant('PDO::PARAM_'.$this->{$key.'_BIND_TYPE'}));
+      	}
+        $res->bindValue(":ID", $id, PDO::PARAM_INT);
+        $res->execute();
+      }
+    }
+    catch(Exception $e)
+    {
+      throw new jsException($e);
+    }
+  }
+
 }
 ?>

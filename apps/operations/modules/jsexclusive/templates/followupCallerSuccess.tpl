@@ -5,7 +5,7 @@
 		<div style="font-weight:bold;"><font size=4px>Follow Ups Today&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:normal;">~$followUpsCount`</font></span></div>
 		~if $infoMsg`
 			<br>
-			<div>~$infoMsg`</div>
+			<div style="color: #d9475c;font-size:18px;font-weight:bold;">~$infoMsg`</div>
 		~/if`
 	</div>
 	<br>
