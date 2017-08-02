@@ -239,7 +239,7 @@ if (isset($data)) //successful login
         }
 
         if (in_array('ExPmSr', $priv) || in_array('SuPmSr', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/followupCaller\">Followup Caller Module</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/followupCaller\">JsExclusive Followup Caller Module</a>";
         }
         
         if (in_array('IUO', $priv) || in_array('IUI', $priv)) {
