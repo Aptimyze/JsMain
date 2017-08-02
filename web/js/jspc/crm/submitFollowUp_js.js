@@ -1,7 +1,7 @@
 function validateFollowUp()
 {
     var status = $("#followupStatus").val();
-    if(status=="F"){
+    if(status=="F"){      
         var reason = $("#reason").val();
         if(reason==""){
             alert("Choose reason in case of followup");
@@ -18,7 +18,6 @@ function validateFollowUp()
 }
 
 $(document).ready(function() {
-    showDateSelectionField("date1","2017","2018");
 
     $("#followupStatus").change(function(){
         var selectedVal = $(this).find(':selected').val();
@@ -26,6 +25,22 @@ $(document).ready(function() {
             if(selectedVal=="F"){
                 $("#reason").removeAttr("disabled");
                 $("#reason").removeClass("crm-disabled");
+                $("#day").removeAttr("disabled");
+                $("#day").removeClass("crm-disabled");
+                $("#month").removeAttr("disabled");
+                $("#month").removeClass("crm-disabled");
+                $("#year").removeAttr("disabled");
+                $("#year").removeClass("crm-disabled");
+            }
+            else{
+                $("#reason").attr("disabled","disabled");
+                $("#reason").addClass("crm-disabled");
+                $("#day").attr("disabled","disabled");
+                $("#day").addClass("crm-disabled");
+                $("#month").attr("disabled","disabled");
+                $("#month").addClass("crm-disabled");
+                $("#year").attr("disabled","disabled");
+                $("#year").addClass("crm-disabled");
             }
             $("#reasonText").removeAttr("disabled");
             $("#reasonText").removeClass("crm-disabled");
@@ -33,6 +48,12 @@ $(document).ready(function() {
         else{
             $("#reason").attr("disabled","disabled");
             $("#reason").addClass("crm-disabled");
+            $("#day").attr("disabled","disabled");
+            $("#day").addClass("crm-disabled");
+            $("#month").attr("disabled","disabled");
+            $("#month").addClass("crm-disabled");
+            $("#year").attr("disabled","disabled");
+            $("#year").addClass("crm-disabled");
             $("#reasonText").attr("disabled","disabled");
             $("#reasonText").addClass("crm-disabled");
         }

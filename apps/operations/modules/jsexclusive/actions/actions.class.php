@@ -368,6 +368,7 @@ class jsexclusiveActions extends sfActions {
                     //update followup
                     if(is_array($followUpDetails) && $followUpDetails["STATUS"]==$this->istatus){
                         $exclusiveLib = new ExclusiveFunctions();
+                        $formArr["date1"] = $formArr["yearValue"]."-".$formArr["monthValue"]."-".$formArr["dayValue"];
                         $exclusiveLib->updateFollowUpDetails(array("operator"=>$this->name,"followupStatus"=>$formArr["followupStatus"],"ifollowUpId"=>$this->ifollowUpId,"followUpDetails"=>$followUpDetails,"reason"=>$formArr["reason"],"reasonText"=>$formArr["reasonText"],"date1"=>$formArr["date1"]));
                         unset($exclusiveLib);
                     }
@@ -380,6 +381,18 @@ class jsexclusiveActions extends sfActions {
             else{
                 $this->clientUsername = $formArr["iclient"];
                 $this->memberUsername = $formArr["imember"];
+                
+                $this->todayDay = date('d',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayMonth   = date('m',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayYear  = date('Y',strtotime(date("Y-m-d") . "+1 day"));
+                $this->dayArr = GetDateArrays::getDayArray();
+                $this->monthArr   = GetDateArrays::getMonthArray();
+                $this->yearArr    = array();
+                $dateArr      = GetDateArrays::generateDateDataForRange($this->todayYear,$this->todayYear+1);
+                foreach(array_keys($dateArr) as $key=>$value){
+                    $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
+                }
+
             }
         }
     }

@@ -229,7 +229,6 @@ class ExclusiveFunctions{
 
     public function updateFollowUpDetails($params=array()){
         $currentDt = date("Y-m-d");
-        var_dump($params["date1"]);die;
         if(empty($params["date1"])){
             if($params["followupStatus"]=='F'){
                 $params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
@@ -241,7 +240,9 @@ class ExclusiveFunctions{
       	else if($params["followupStatus"]=='Y' || $params["followupStatus"]=='N'){
       		$params["date1"] = $currentDt;
       	}
-      	
+      	else if($params["date1"]==$currentDt){
+      		$params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+      	}
 
         $updateArr = array();
         switch($params["followUpDetails"]["STATUS"]){

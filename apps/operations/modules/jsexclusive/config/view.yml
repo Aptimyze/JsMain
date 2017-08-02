@@ -18,6 +18,6 @@ submitFollowupStatusSuccess:
   metas:
     title:        JsExclusive - Submit Follow Up Status
 
-  stylesheets:    [jquery_dateLists]
+  stylesheets:    []
 
-  javascripts:    [jquery_dateLists,jspc/crm/dateSelectionField_js@bottom,jspc/crm/submitFollowUp_js@bottom]
+  javascripts:    [jspc/crm/submitFollowUp_js]

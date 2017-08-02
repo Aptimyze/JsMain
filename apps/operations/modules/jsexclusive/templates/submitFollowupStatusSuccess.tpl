@@ -59,7 +59,23 @@
                     **Set date (Optional):
                 </td>
                 <td class="fieldsnew">
-                <input id="date1" name="date1" type="text" value="">
+                    <select id="day" name="dayValue" class="crm-disabled" disabled>
+                        ~foreach from=$dayArr item=dayVal`
+                            <option value="~$dayVal.VALUE`" ~if $dayVal.VALUE eq $todayDay` selected="yes" ~/if`>~$dayVal.NAME`</option>
+                        ~/foreach`
+                    </select>
+                    &nbsp;
+                    <select id="month" name="monthValue" class="crm-disabled" disabled>
+                        ~foreach from=$monthArr item=monthVal`
+                            <option value="~$monthVal.VALUE`" ~if $monthVal.VALUE eq $todayMonth` selected="yes" ~/if`>~$monthVal.NAME`</option>
+                        ~/foreach`
+                    </select>
+                    &nbsp;
+                    <select id="year" name="yearValue" class="crm-disabled" disabled>
+                        ~foreach from=$yearArr item=yearVal`
+                            <option value="~$yearVal.VALUE`" ~if $yearVal.VALUE eq $todayYear` selected="yes" ~/if`>~$yearVal.NAME`</option>
+                        ~/foreach`
+                    </select>
                 </td>
             </tr>
             <tr></tr>
