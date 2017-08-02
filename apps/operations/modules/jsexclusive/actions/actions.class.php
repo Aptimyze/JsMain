@@ -418,9 +418,33 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeSubmitFollowupStatus(sfWebRequest $request){
-        $followUpId = $request->getParameter("followUp");
-        if(!isset($followUpId)){
-            
+        $formArr = $request->getParameterHolder()->getAll();
+
+        if(is_array($formArr)){
+            $this->ifollowUpId = $formArr["ifollowUp"];
+            $this->istatus = $formArr["istatus"];
+
+            //submit of followup form
+            if(isset($formArr["submit"])){
+                if($formArr["submit"]=="Submit"){
+
+                    //fetch follow up details corresponding to follow up id
+                    $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
+                    $followUpDetails = $followUpObj->getFollowUpEntry($this->ifollowUpId);
+                    unset($followUpObj);
+                    if(is_array($followUpDetails) && $followUpDetails["STATUS"] == $istatus){
+                        print_r($formArr);die;
+                    }
+                    else{
+                        $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit"));
+                    }
+                }
+                $this->forwardTo("jsexclusive","followupCaller");
+            }
+            else{
+                $this->clientUsername = $formArr["iclient"];
+                $this->memberUsername = $formArr["imember"];
+            }
         }
     }
 }

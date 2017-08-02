@@ -27,7 +27,7 @@
 			    <td height="21" align="CENTER">~$valued.FOLLOWUP_1`</td>
 			    <td height="21" align="CENTER">~$valued.FOLLOWUP_2`</td>
 			    <td height="21" align="CENTER">~$valued.FOLLOWUP_3`</td>
-			    <td height="21" align="CENTER"><div class="jsc-ExStatus jsc-cursp" data="~$valued.ID`" style="background-color:lightgrey;color:#d9475c;width:50%"><b>STATUS</td></b></td>
+			    <td height="21" align="CENTER"><div class="jsc-ExStatus jsc-cursp" data="~$valued.ID`,~$valued.STATUS`,~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].USERNAME`,~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].USERNAME`" style="background-color:lightgrey;color:#d9475c;width:50%"><b>STATUS</td></b></td>
 			</tr>
 			~/foreach`
 		~/if`

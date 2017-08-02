@@ -6,6 +6,34 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
     }
 
     /**
+     * Function to get followup' details from billing.EXCLUSIVE_FOLLOWUPS table
+     *
+     * @param   followUpId
+     * @return  row
+     */ 
+	public function getFollowUpEntry($followUpId)
+	{
+		if(is_numeric($followUpId)){
+			try{
+			    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE ID=:ID";
+			    $res = $this->db->prepare($sql);
+			    $res->bindValue(":ID", $followUpId, PDO::PARAM_INT);
+			    $res->execute();
+			    if($result=$res->fetch(PDO::FETCH_ASSOC)){
+			        return $result;
+			    }
+			    return null;
+			}
+			catch(Exception $e){
+			  throw new jsException($e);
+			}
+		}
+		else{
+			return null;
+		}
+	}
+
+	/**
      * Function to get followups' details from billing.EXCLUSIVE_FOLLOWUPS table
      *
      * @param   
