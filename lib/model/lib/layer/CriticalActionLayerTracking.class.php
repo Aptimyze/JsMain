@@ -7,7 +7,7 @@ class CriticalActionLayerTracking
 
   const ANALYTIC_SCORE_THRESHOLD=70;
   const RCB_LAYER_REF_DATE='2011-01-01';
-
+  public static $independentCALS = array(19); // cals that are highly important and surpass the normal CAL Logic
   /* this function will select entries for today
    *@param- profile id, layer on which user gives response,button the user presses
    */
@@ -74,6 +74,11 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
+    foreach (self::$independentCALS as $key => $value) {
+      # code...
+      if(self::checkFinalLayerConditions($profileObj,$value))
+        return $value;
+    }
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
@@ -398,7 +403,6 @@ return 0;
                       }
                       break;
                     case '19': 
-                              
                       if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
                       $lightningCALObj = new LightningDeal();
                       $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
