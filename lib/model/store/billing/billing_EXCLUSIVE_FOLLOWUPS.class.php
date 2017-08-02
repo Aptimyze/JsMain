@@ -13,6 +13,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		$this->FOLLOWUP2_DT_BIND_TYPE = "STR";
 		$this->FOLLOWUP3_DT_BIND_TYPE = "STR";
 		$this->FOLLOWUP4_DT_BIND_TYPE = "STR";
+		$this->CONCALL_SCH_DT_BIND_TYPE = "STR";
     }
 
     /**
@@ -108,14 +109,14 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
   {
     try
     {
-      if($id && is_array($updateArr) && count($updateArr)>0)
+      if($id>=0 && is_array($updateArr) && count($updateArr)>0)
       {
       	$updateStr = "";
       	foreach ($updateArr as $key => $value) {
-      		$updateStr = $key."=:".$key.",";
+      		$updateStr .= $key."=:".$key.",";
       	}
       	$updateStr = substr($updateStr,0,-1);
-        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ".$updateStr." WHERE ID=:ID";
+        $sql = "UPDATE billing.EXCLUSIVE_FOLLOWUPS SET ".$updateStr." WHERE ID=:ID";
         $res = $this->db->prepare($sql);
         foreach ($updateArr as $key => $value) {
       		$res->bindValue(":".$key, $value, constant('PDO::PARAM_'.$this->{$key.'_BIND_TYPE'}));

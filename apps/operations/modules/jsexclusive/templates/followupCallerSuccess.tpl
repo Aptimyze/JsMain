@@ -9,7 +9,7 @@
 		~/if`
 	</div>
 	<br>
-	<table align="CENTER" width="150%" table-layout="auto">
+	<table align="CENTER" width="100%" table-layout="auto">
 		~include_partial("headerSubSection",["columnNamesArr"=>$columnNamesArr])`
 		
 		~if $finalFollowUpsPool && $finalFollowUpsPool.followUpData`
