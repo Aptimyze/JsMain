@@ -40,7 +40,10 @@
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="operations.php/jsexclusive/menu">Pending Concalls</a>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/pendingConcalls?name=~$name`&cid=~$cid`">Pending Concalls11</a>
+        </td>
+        <td>
+            &nbsp;&nbsp;~$pendingConcallsCount`
         </td>
     </tr>
 </table>
