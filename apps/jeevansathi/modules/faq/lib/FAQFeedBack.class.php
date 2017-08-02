@@ -144,8 +144,8 @@ class FAQFeedBack
 				}
 			
 				//End
-				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
-				JsMemcache::getInstance()->remove($otherProfileId);
+				ProfileMemcache::clearInstance($loginProfile->getPROFILEID());
+				ProfileMemcache::clearInstance($otherProfileId);
 
 				if(stristr($categoryNew, 'Already married/engaged') || stristr($categoryNew,'User is already married / engaged'))
 				{	

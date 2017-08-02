@@ -481,6 +481,11 @@ class registerActions extends sfActions
 				$this->loginProfile = LoggedInProfile::getInstance();
 				$this->loginProfile->getDetail($this->loginData[PROFILEID], "PROFILEID");
                 $this->form->updateData($this->loginData[PROFILEID],$values_that_are_not_in_form);
+                
+                //Added Community wise Welcome discount
+                $memHandlerObj = new MembershipHandler();
+                $memHandlerObj->addCommunityWelcomeDiscount($this->loginData[PROFILEID],$this->loginProfile->getMTONGUE());
+                
 				$fto_action = FTOStateUpdateReason::REGISTER;
 				$this->loginProfile->getPROFILE_STATE()->updateFTOState($this->loginProfile, $fto_action);
 				$id = $this->loginProfile->getPROFILEID();

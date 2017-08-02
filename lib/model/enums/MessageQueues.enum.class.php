@@ -16,6 +16,7 @@ class MessageQueues
   CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
+  CONST UPDATE_MATCHALERT_REG_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST UPDATE_SEEN_PROFILE_CONSUMER_COUNT = 3; //variable to store cosumers to be executed for update seen
   CONST UPDATE_CRITICAL_INFO_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
@@ -26,6 +27,7 @@ class MessageQueues
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
   CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 6; //count of discount tracking consumer count
+  CONST COMMUNITY_DISCOUNT_CONSUMER_COUNT = 2; //count of community discount consumer
   CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
@@ -33,8 +35,8 @@ class MessageQueues
   CONST VIEW_LOG = "ViewLogQueue";
   CONST FALLBACK_SERVER_MSGPICK_COUNT = 10; 
   //per queue msg limit mapping
-  public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
-  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE"); //queues not to be considered for msg upper limit alert
+  public static $upperMessageLimitPerQueue = array("default"=>20000,"INSTANT_NOTIFICATION_QUEUE"=>30000);
+  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE","DelayedMailQueue","MatchAlertNotification","WriteMsgDelayedQueue"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 500000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
@@ -70,17 +72,22 @@ class MessageQueues
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST UPDATE_SEEN_PROFILE_QUEUE = "updateSeenProfileQueue";
+  CONST UPDATE_MATCHALERTS_REG_QUEUE = "MatchAlertsRegQueue";
   CONST UPDATE_CRITICAL_INFO_QUEUE = "updateCriticalInfoQueue";
   CONST UPDATE_MATCHALERTS_LAST_SEEN_QUEUE = "updateMatchAlertsLastSeenQueue";
   CONST UPDATE_JUSTJOINED_LAST_SEEN_QUEUE = "updateJustJoinedLastSeenQueue";
   CONST LOGGING_QUEUE = "loginTrackingQueue";
   CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
+  CONST COMMUNITY_DISCOUNT_QUEUE = "CommunityDiscountQueue";
+  CONST CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronConsumeCommunityDiscountQueueMessageTask";
+  CONST CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronExecuteCommunityDiscountConsumerTask";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST CRONMATCHALERTSLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeMatchAlertsLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST CRONJUSTJOINEDLASTSEEN_STARTCOMMAND = "symfony cron:cronConsumeJustJoinedLastSeen"; //Command to start cron:cronConsumeMatchAlertsLastSeen
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEENPROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenProfileQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
+  CONST UPDATEMATCHALERTSREG_STARTCOMMAND = "symfony cron:cronConsumeSendMatchalertsReg"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATECRITICALINFO_STARTCOMMAND = "symfony cron:cronConsumeUpdateCriticalInfoQueueMessage"; //Command to start cron:cronConsumeUpdateCriticalInfoQueueMessage
   CONST UPDATE_FEATURED_PROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateFeaturedProfileQueue"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
@@ -165,7 +172,14 @@ class MessageQueues
   CONST OUTBOUND_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for outound queue 
   CONST OUTBOUND_STARTCOMMAND = "symfony Outbound:ConsumeQueue"; //Command to start profile cache queue consuming cron
   
+  CONST RB_INTERESTS_QUEUE = 'RBInterestsQueue';
   
+  //Exclusive Mail after welcome call
+  CONST EXCLUSIVE_MAIL_DELAY_QUEUE = 'ExclusiveMailDelayQueue';
+  CONST EXCLUSIVE_MAIL_SENDING_QUEUE = 'ExclusiveMailSender';
+  CONST EXCLUSIVE_MAIL_DELAY_UNIT = '2'; //Hours by which to delay mail sending 
+  CONST CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND = "symfony cron:cronConsumeExclusiveWelcomeEmailTask"; //Command to start cron:cronConsumeExclusiveWelcomeEmailTask\
+  CONST CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT=1;
 }
 
 ?>
