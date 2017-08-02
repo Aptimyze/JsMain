@@ -1,4 +1,5 @@
 const ProfileReducer = (state={
+	responseStatusCode: '',
 	responseMessage: '',
 	appPromotion: '',
 	aboutInfo: [],
@@ -20,6 +21,7 @@ const ProfileReducer = (state={
 		case "SHOW_INFO":
 		state = {
 			...state,
+			responseStatusCode: action.payload.responseStatusCode,
 			responseMessage: action.payload.responseMessage,
 			appPromotion: action.payload.appPromotion,
 			aboutInfo: action.payload.about,
