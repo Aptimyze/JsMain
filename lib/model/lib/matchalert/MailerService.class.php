@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='')
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -54,6 +54,12 @@ class MailerService
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
+			if (!empty($alias) && is_string($alias)) {
+				$senderDetails["ALIAS"] = $alias;
+			}
+			if (!empty($alternateEmailID) && is_string($alternateEmailID)) {
+				$senderDetails["SENDER"] = $alternateEmailID;
+			}
                 	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
@@ -173,7 +179,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT,SCREENING"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();

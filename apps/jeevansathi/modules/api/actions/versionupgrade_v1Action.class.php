@@ -17,8 +17,7 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-			"See Recent Searches and Profile Views 
-			Get FLASH DEALS for Membership upgrades"            
+			" Critical Bug fixes and performance enhancements"            
         );
 	public function execute($request)
 	{	

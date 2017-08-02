@@ -133,8 +133,10 @@ The JS Team</div></td>
 		{
 			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
 			$producerObj->sendMessage($sendMailData);
-			$sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
-			$producerObj->sendMessage($sendMailData);
+            
+            //As per request
+//			$sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+//			$producerObj->sendMessage($sendMailData);
 		}
 		else
 		{

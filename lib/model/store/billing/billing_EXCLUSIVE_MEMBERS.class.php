@@ -39,25 +39,43 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
     /**
      * Function to get profile details from EXCLUSIVE_MEMBERS table
      *
-     * @param   $fields,$assigned flag
+     * @param   $fields="*",$assigned=false,$orderBy="",$assignedTo="",
+     *     $assignedGtDt="*",$formatBillIdWise=true
      * @return  array of rows
      */ 
-   public function getExclusiveMembers($fields="*",$assigned=false,$orderBy="")
+   public function getExclusiveMembers($fields="*",$assigned=false,$orderBy="",$assignedTo="",$assignedGtDt="",$formatBillIdWise=true)
   {
     try
     {
         $sql = "SELECT ".$fields." FROM billing.EXCLUSIVE_MEMBERS";
         if($assigned==true)
-            $sql = $sql." WHERE ASSIGNED = 'Y'";
+          $sql = $sql." WHERE ASSIGNED = 'Y'";
         else
-            $sql = $sql." WHERE ASSIGNED = 'N'";
+          $sql = $sql." WHERE ASSIGNED = 'N'";
+        if(!empty($assignedTo)){
+          $sql = $sql." AND ASSIGNED_TO = :ASSIGNED_TO";
+        }
+        if(!empty($assignedGtDt)){
+          $sql = $sql." AND ASSIGNED_DT >= :ASSIGNED_DT";
+        }
         if($orderBy)
           $sql = $sql." ORDER BY ".$orderBy." DESC";
         $res = $this->db->prepare($sql);
+        if(!empty($assignedTo)){
+          $res->bindValue(":ASSIGNED_TO", $assignedTo, PDO::PARAM_STR);
+        }
+        if(!empty($assignedGtDt)){
+          $res->bindValue(":ASSIGNED_DT", $assignedGtDt, PDO::PARAM_STR);
+        }
         $res->execute();
         while($result=$res->fetch(PDO::FETCH_ASSOC))
         {
-            $rows[$result["PROFILEID"]] = $result;
+          if($formatBillIdWise==true){
+            $rows[$result["BILL_ID"]] = $result;
+          }
+          else{
+            $rows[] = $result['PROFILEID'];
+          }
         }
         return $rows;
     }
@@ -73,15 +91,16 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
      * @param   $pid,$assigned_to,$assigned_dt
      * @return  none
      */ 
-  public function updateExclusiveMemberAssignment($pid,$assigned_to=NULL,$assigned_dt="0000-00-00")
+  public function updateExclusiveMemberAssignment($pid,$assigned_to=NULL,$assigned_dt="0000-00-00",$billid)
   {
     try
     {
-      if($pid)
+      if($pid && $billid)
       {
-        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ASSIGNED_TO=:ASSIGNED_TO,ASSIGNED_DT=:ASSIGNED_DT,ASSIGNED=:ASSIGNED WHERE PROFILEID=:PROFILEID";
+        $sql = "UPDATE billing.EXCLUSIVE_MEMBERS SET ASSIGNED_TO=:ASSIGNED_TO,ASSIGNED_DT=:ASSIGNED_DT,ASSIGNED=:ASSIGNED WHERE PROFILEID=:PROFILEID AND BILL_ID=:BILL_ID";
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+        $res->bindValue(":BILL_ID", $billid, PDO::PARAM_INT);
         $res->bindValue(":ASSIGNED_TO", $assigned_to, PDO::PARAM_STR);
         $res->bindValue(":ASSIGNED_DT", $assigned_dt, PDO::PARAM_STR);
         if($assigned_to==NULL)

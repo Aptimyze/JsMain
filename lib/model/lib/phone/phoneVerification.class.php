@@ -80,7 +80,7 @@ public function phoneUpdateProcess($message)
 			$profileObject=$this->profileObject;
 			
 			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
-
+			if($this->isVerified() == 'Y') return true;
 			switch ($this->phoneType)
 			{		
 
@@ -129,6 +129,7 @@ public function phoneUpdateProcess($message)
                 
                 $memcacheObj->lpush($key,$profileid);
                 $this->sendToProductMetricQueue();
+                 $this->sendMatchAlerts($profileid);
 
 			}
 
@@ -447,6 +448,14 @@ public function contact_archive($field="",$val="")
                 }
             } catch (Exception $e) {
                         }
+    }
+    private function sendMatchAlerts($profileid) {
+        $producerObj = new Producer();
+        if($producerObj->getRabbitMQServerConnected())
+        {
+                $updateSeenProfileData = array("process"=>"MATCHALERTS_REG",'data'=>array('body'=>array('profileid'=>$profileid)));
+                $producerObj->sendMessage($updateSeenProfileData);
+        }
     }
 
 }

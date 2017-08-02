@@ -15,7 +15,7 @@ if (isset($data)) //successful login
     $username = preg_replace('/[^A-Za-z0-9\. -_]/', '', $username);
     $center = getcenter_for_walkin($name);
 
-    if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {
+    if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://crm.jeevansathi.com') {
         if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
@@ -211,6 +211,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/userview.php?name=$user&cid=$cid\">View assigned profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=new\">Screen New Profiles</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/screen_new.php?name=$user&cid=$cid&val=edit\">Screen Edit Profiles</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/screening/screenDocument?source=edit?name=$user&cid=$cid&val=edit\">Screen Divorced Document Proof</a>";
         }
 	if(in_array('DP', $priv) || in_array('MG', $priv) || in_array('P', $priv) || in_array('SLHDO', $priv)) {
 		$linkarr[] = "<a href=\"$SITE_URL/jsadmin/del_csl_profile.php?name=$name&cid=$cid\">Delete comma-seperated list of profiles</a>";
@@ -232,6 +233,11 @@ if (isset($data)) //successful login
         if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
+        
+        if (in_array('ExPmSr', $priv) || in_array('SuPmSr', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/menu\">Exclusive RM Interface</a>";
+        }
+        
         if (in_array('IUO', $priv) || in_array('IUI', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/only_service.php?name=$username&cid=$cid&mode=W\">Disposing call without alloting profile</a>";
         }

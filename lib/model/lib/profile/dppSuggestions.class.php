@@ -42,10 +42,14 @@ class dppSuggestions
 		if($type == "INCOME")
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
+		}
+		if($type == "RELIGION")
+		{
+			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
-			if ($type == "EDUCATION") // || $type == "OCCUPATION")
+			if ($type == "EDUCATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
@@ -74,7 +78,7 @@ class dppSuggestions
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
 		}	
-
+		
 		return $valueArr;
 	}
 
@@ -569,6 +573,37 @@ class dppSuggestions
 			}			
 		}
 		return $mtongueArr;
+	}
+
+	public function getSuggestionsForReligion($type,$valArr)
+	{
+		$religionArr = array();
+		$religionValues = FieldMap::getFieldLabel("religion","",1);		
+		$religionValuesArr = array_flip($religionValues);
+
+		if(is_array($valArr))
+		{
+			if(in_array($religionValuesArr["Hindu"],$valArr))
+			{
+				$religionArr[] = $religionValuesArr["Sikh"];
+				$religionArr[] = $religionValuesArr["Jain"];				
+			}
+			if(in_array($religionValuesArr["Sikh"],$valArr) || in_array($religionValuesArr["Jain"],$valArr))
+			{
+				$religionArr[]=$religionValuesArr["Hindu"];				
+			}
+			unset($religionValuesArr);
+			if(is_array($religionArr) && !empty($religionArr))
+			{
+				$result = array_diff($religionArr, $valArr);
+			}
+			foreach($result as $k=>$v)
+			{
+				$finalArr[$v] = $religionValues[$v];
+			}
+			unset($religionValues);
+		}	
+		return $finalArr;
 	}
 }
 ?>

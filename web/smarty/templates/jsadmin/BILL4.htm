@@ -119,21 +119,18 @@
 			<div style="border: 1px solid;"></div>
 			<P class="p3 ft2">Username: <SPAN class="ft1">~$username`</SPAN></P>
 			<P class="p3 ft2">Name: <SPAN class="ft1">~$name`</SPAN></P>
-			<P class="p4 ft2">Bill to/Ship to Address: <SPAN class="ft1">~$address`</SPAN></P>
+			<P class="p3 ft2">Bill to/Ship to Address: <SPAN class="ft1">~$address`</SPAN></P>
                         ~if $resCountry`
-                                <P class="p4 ft2">Residence Country: <SPAN class="ft1">~$resCountry`</SPAN></P>
+                                <P class="p3 ft2">Residence Country: <SPAN class="ft1">~$resCountry`</SPAN></P>
                         ~/if`
-			~if $ipCountry`
-				<P class="p4 ft2">IP Country: <SPAN class="ft1">~$ipCountry`</SPAN></P>
-			~/if`
-			<P class="p4 ft1"><SPAN class="ft2">Salesperson: </SPAN>~$saleBy`</P>
+			<P class="p3 ft2"><SPAN class="ft2">Salesperson: </SPAN>~$saleBy`</P>
 			<div style="display: block;height: 20px;"></div>
 			<div style="border: 1px solid;"></div>
 			<TABLE cellpadding=0 cellspacing=0 class="t1">
 				<TR>
 					<TD class="tr1 td2 txtc" style="width: 20px;"><P class="p5 ft2">S.No.</P></TD>
 					<TD class="tr1 td3 txtc"><P class="p6 ft4">Product Subscription</P></TD>
-                                        <TD class="tr1 td3 txtc"><P class="p6 ft4">SAC</P></TD>
+                                        <TD class="tr1 td3 txtc"><P class="p6 ft4">HSN for Services</P></TD>
 					<TD class="tr1 td4 txtc"><P class="p5 ft4">Subscription Start Date</P></TD>
 					<TD class="tr1 td5 txtc"><P class="p7 ft4">Subscription End Date</P></TD>
 				</TR>
@@ -141,7 +138,7 @@
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">1</P></TD>
 					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($memUpgrage,"MAIN")` Upgrade to ~/if` ~$eAdvantageServiceName`&nbsp;</P></TD>
-					<TD class="tr2 td8 txtc"><P class="p1 ft6">998431&nbsp;</P></TD>
+					<TD class="tr2 td8 txtc"><P class="p1 ft6">998439&nbsp;</P></TD>
                                         <TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[0].S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td10 txtc"><P class="p1 ft6">~$SERVICES[0].E_DATE`&nbsp;</P></TD>
 				</TR>
@@ -150,7 +147,7 @@
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">~$v.NUM`</P></TD>
 					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($v.MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$v.NAME_DUR`&nbsp;</P></TD>
-					<TD class="tr2 td8 txtc"><P class="p1 ft6">998431&nbsp;</P></TD>
+					<TD class="tr2 td8 txtc"><P class="p1 ft6">998439&nbsp;</P></TD>
                                         <TD class="tr2 td9 txtc"><P class="p1 ft6">~$v.S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$v.E_DATE`&nbsp;</P></TD>
 				</TR>
@@ -162,7 +159,7 @@
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">~$SERVICES[index].NUM`</P></TD>
 					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($SERVICES[index].MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$SERVICES[index].NAME_DUR`&nbsp;</P></TD>
-					<TD class="tr2 td8 txtc"><P class="p1 ft6">998431&nbsp;</P></TD>
+					<TD class="tr2 td8 txtc"><P class="p1 ft6">998439&nbsp;</P></TD>
                                         <TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[index].S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[index].E_DATE`&nbsp;</P></TD>
 				</TR>
@@ -187,18 +184,18 @@
                                             <TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$taxableValue_rs`.~$taxableValue_paise`</P></TD>
                                         </TR>
 					<TR>
-						<TD class="tr3 td10"><P class="p1 ft2">CGST: </P></TD>
-						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~$cgstAmount_rs`.~$cgstAmount_paise`</P></TD>
+						<TD class="tr1 td10"><P class="p1 ft2">CGST: </P></TD>
+						<TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$cgstAmount_rs`.~$cgstAmount_paise`</P></TD>
 
 					</TR>
                                         <TR>
-						<TD class="tr3 td10"><P class="p1 ft2">SGST: </P></TD>
-						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~$sgstAmount_rs`.~$sgstAmount_paise`</P></TD>
+						<TD class="tr1 td10"><P class="p1 ft2">SGST: </P></TD>
+						<TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$sgstAmount_rs`.~$sgstAmount_paise`</P></TD>
 
 					</TR>
                                         <TR>
-						<TD class="tr3 td10"><P class="p1 ft2">IGST: </P></TD>
-						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~$igstAmount_rs`.~$igstAmount_paise`</P></TD>
+						<TD class="tr1 td10"><P class="p1 ft2">IGST: </P></TD>
+						<TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$igstAmount_rs`.~$igstAmount_paise`</P></TD>
 
 					</TR>
 	            ~else`
@@ -210,12 +207,12 @@
 	            </TR>
 	            ~/if`
 				<TR>
-					<TD class="tr4 td10"><P class="p1 ft2">Invoice Total (~if $type eq "RS"`INR~else`USD ~/if`)</P></TD>
-					<TD class="tr4 td11 txtr"><P class="p1 ft1 txtr">~$costvalue_rs`.~$costvalue_paise`</P></TD>
+					<TD class="tr2 td10"><P class="p1 ft2">Invoice Total (~if $type eq "RS"`INR~else`USD ~/if`)</P></TD>
+					<TD class="tr2 td11 txtr"><P class="p1 ft1 txtr">~$costvalue_rs`.~$costvalue_paise`</P></TD>
 				</TR>
 				<TR>
-					<TD class="tr3 td10"><P class="p1 ft2">Total (In words)</P></TD>
-					<TD class="tr3 td11 txtr"><P class="p1 ft3 txtr">*** ~$cost`</P></TD>
+					<TD class="tr2 td10"><P class="p1 ft2">Total (In words)</P></TD>
+					<TD class="tr2 td11 txtr"><P class="p1 ft3 txtr">*** ~$cost`</P></TD>
 				</TR>
 			</TABLE>
 			<div>
@@ -225,15 +222,17 @@
 			<P class="p19"><SPAN class="ft2">Authorised Signatory</SPAN></P>
 			</div>
 			<P class="p9"><SPAN class="ft8">Please Note the following :</SPAN></P>
-			<P class="p9 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">This invoice is recognized subject to realization of payment/confirmation.</SPAN></P>
+                        <P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">Harmonised System of Nomenclature(HSN) for Services – 998439 –<br></SPAN><SPAN class="ft8"> Other online contents not elsewhere covered.</SPAN></P>
+                        
+			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">This invoice is recognized subject to realization of payment/confirmation.</SPAN></P>
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">All ~if $type eq 'RS'`cheques / DD~else`payments~/if` should be made in favor of "Jeevansathi Internet Services" payable at New Delhi.</SPAN></P>
-			<P class="p11 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">Refer Terms and Conditions attached in the next page and visit:<br> </SPAN><SPAN class="ft9"><a href="http://www.jeevansathi.com/profile/disclaimer.php">http://www.jeevansathi.com/profile/disclaimer.php</a></SPAN></P>
+			<P class="p11 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">Refer Terms and Conditions attached in the next page and visit:<br></SPAN><SPAN class="ft9"><a href="http://www.jeevansathi.com/profile/disclaimer.php">http://www.jeevansathi.com/profile/disclaimer.php</a></SPAN></P>
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">All disputes subject to Delhi Jurisdiction only</SPAN></P>
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">This is a computer generated invoice</SPAN></P>
 			~if $exportFlag eq '1'`
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">Supply meant for Export under Bond or Letter of Undertaking without payment of IGST</SPAN></P>
 			~/if`
-			~if $countServices lte 4` <br>
+			~if $countServices lte 4` 
 			~/if`
 			<table cellspacing="0" cellpadding="0" class="t3" style="width:100%">
 				<tr>
@@ -242,7 +241,7 @@
 					<td style="text-align:left;"><p class="p1 ft10">Registered Office</p></td>
 				</tr>
 				<tr>
-					<td colspan="3" style="height: 20px;"></td>
+					<td colspan="3" style="height: 2px;"></td>
 				</tr>
 				<tr style="line-height: 10px;">
 					<td>
@@ -263,7 +262,7 @@
 			</table>
 			<br>
 			<div>
-			~if $countServices lte 4` <br><br>
+			~if $countServices lte 2` <br><br>
 			~/if`
 			<p style="font-size:12px;"><span style="font-weight: bold;">PAN:</span> AAACI1838D | <span style="font-weight: bold;">CIN:</span> L74899DL1995PLC068021</p>
 			

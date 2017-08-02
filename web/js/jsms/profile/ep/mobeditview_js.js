@@ -11,7 +11,7 @@ var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','Foc
 var bCallCreateHoroscope = false;
 var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
 var editInArr = {};
-editInArr['Details'] = new Array("YOURINFO","basic","Ethnicity","Appearance","SpecialCases");
+editInArr['Details'] = new Array("YOURINFO","critical","basic","Ethnicity","Appearance","SpecialCases");
 editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
 editInArr['Education'] = new Array("EDUCATION","CollegeDetails");
 editInArr['Career']= new Array("JOB_INFO","CarrerDetails","FuturePlans");
@@ -22,6 +22,7 @@ editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifes
 var editValArr={};
 editValArr["YOURINFO"]=new Array("YOURINFO");
 editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS","RELATION");
+editValArr["critical"] = new Array("DTOFBIRTH","MSTATUS","MSTATUS_PROOF");
 editValArr["Ethnicity"]=new Array("RELIGION","CASTE","JAMAAT","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
 editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
 editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
@@ -225,11 +226,13 @@ function appendData(obj) {
 			      showLoader();
 			window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
 				hideLoader();
+                location.reload();
                     },
                     error: function(response) {
 			      showLoader();
 				window.location.href = "/profile/viewprofile.php?ownview=1#Dpp";
 				hideLoader();
+
 			}
                 });
             }
@@ -259,7 +262,9 @@ var mobEditPage=(function(){
           cache: true,
           async: true,
           success: function(result) {
-			  
+                if(result.cannot_edit_section){
+                        storeJson["canEdit"] = result.cannot_edit_section;
+                }
 		if(CommonErrorHandling(result))
 		{
 			result=formatJsonOutput(result);
@@ -501,6 +506,9 @@ var mobEditPage=(function(){
 					else
 						$( "#"+key+"EditSection" ).append(sliderDiv);
 					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName);
+                                        if(v.outerSectionNameSubHeading){
+                                                $( "#"+v.outerSectionKey+'_name' ).append("<span class='f13 dispibl'>"+v.outerSectionNameSubHeading+"</span");
+                                        }
 					
 					var emptyFields=0;
 						var jsonCnt=0;

@@ -46,7 +46,7 @@ try
 }
 catch(Exception $e)
 {
-                        $to='esha.jain@jeevansathi.com,tanu.gupta@jeevansathi.com';
+                        $to='esha.jain@jeevansathi.com,nitesh.s@jeevansathi.com';
                         $msg='';
                         $subject="error: ".__FILE__;
                         $msg='error while updating state: profileid: '.$profileid.' and action: '.$action.'<br/>'.$e->getMessage().'<br/><br/>Warm Regards';

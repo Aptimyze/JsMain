@@ -463,7 +463,7 @@ XML;
 		$msg="TYPE:".$type;
 		if($db)
 			$msg = $msg."\nSQL:".$sql."\nDB:".$db."\nERROR:".mysql_error($db);
-		mail("tanu.gupta@jeevansathi.com","SMS Cron: $type",$msg);
+		mail("nitesh.s@jeevansathi.com","SMS Cron: $type",$msg);
 	}
 
 	function getIndianTime()

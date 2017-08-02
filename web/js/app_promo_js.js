@@ -18,6 +18,9 @@ else
 if(typeof(AndroidPromotion)=="undefined"){
 	var AndroidPromotion=0;
 }
+if(typeof(AppLoggedInUser)=="undefined"){
+	var AppLoggedInUser=0;
+}
 $( document ).ready(function() {
 	//
       if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
@@ -26,9 +29,8 @@ $( document ).ready(function() {
             divForMessageAppPromo= "<div class=\"padAppPromo clearfix\"> <div class = \"f14 innerTextBorder txtc pb10 pt5\">Chat real time with online matches, Download App</div></div>";
         
       }  
-      if((getAndroidVersion() || getIosVersion()) && 
-      	AndroidPromotion && (typeof webView ==='undefined' || webView =="") && !getCookieData("appPromo")){
-      if(((typeof appPromo === 'undefined')) || messageListingAppPromo)
+      if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && AppLoggedInUser && (typeof webView ==='undefined' || webView =="")){
+      if((!getCookieData("appPromo") && (typeof appPromo === 'undefined')) || messageListingAppPromo)
       { 
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#mainContent").length){
