@@ -366,5 +366,26 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             throw new jsException($e);
         }
     }
+    
+     /* Function to get detail for a client id to check if it exists in the system
+     *
+     * @param   $agent ID
+     * @return  array of rows
+     */
+    public function getAllDataForClient($clientid) {
+        try {
+            $sql = "SELECT * FROM billing.EXCLUSIVE_SERVICING";
+            $sql = $sql . " WHERE CLIENT_ID =:CLIENTID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":CLIENTID", $clientid, PDO::PARAM_STR);
+            $res->execute();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result;
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

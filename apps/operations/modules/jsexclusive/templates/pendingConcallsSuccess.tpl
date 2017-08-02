@@ -1,42 +1,43 @@
-~include_partial('global/header')`
+~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
 <div>
 	<br>
 	<div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
-		<div style="font-weight:bold;"><font size=4px>Pending Concalls &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:normal;">~$followUpsCount`</font></span></div>
+		<div style="font-weight:bold;"><font size=4px>Pending Concalls &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:normal;">~$totalCount`</font></span></div>
 		~if $infoMsg`
 			<br>
-			<div>~$infoMsg`</div>
+			<div style="align:center;">~$infoMsg`</div>
 		~/if`
 	</div>
 	<br>
-	<table align="CENTER" width="150%" table-layout="auto">
+	<table align="CENTER" width="100%" table-layout="auto">
 		~include_partial("headerSubSection",["columnNamesArr"=>$columnNamesArr])`
-		
-		~if $finalFollowUpsPool && $finalFollowUpsPool.followUpData`
-			~foreach from=$finalFollowUpsPool.followUpData item=valued key=sno`
-			<tr align="CENTER" bgcolor="#fbfbfb" id="followUp~$sno`">
-				<td height="21" align="CENTER">~($sno+1)`</td>
-				<td height="21" align="CENTER">
-				~if $finalFollowUpsPool.clientsData[$valued.CLIENT_ID]`<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.CLIENT_ID`" target="_blank">~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].USERNAME`</a>~/if`</td>
-			    <td height="21" align="CENTER">
-			    ~if $finalFollowUpsPool.clientsData[$valued.CLIENT_ID]`~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].NAME`~/if`</td>	
-			    <td height="21" align="CENTER">~if $finalFollowUpsPool.membersData[$valued.MEMBER_ID]`<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.MEMBER_ID`" target="_blank">~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].USERNAME`</a>~/if`</td>
-			    <td height="21" align="CENTER">~if $finalFollowUpsPool.membersData[$valued.MEMBER_ID]`~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].PHONE_MOB`~/if`</td>
-			    <td height="21" align="CENTER">~if $finalFollowUpsPool.membersData[$valued.MEMBER_ID]`~$finalFollowUpsPool.membersData[$valued.MEMBER_ID].ALT_MOBILE`~/if`</td>
-			    <td height="21" align="CENTER">~$valued.AGENT_USERNAME`</td>
-			    <td height="21" align="CENTER">~$valued.FOLLOWUP_1`</td>
-			    <td height="21" align="CENTER">~$valued.FOLLOWUP_2`</td>
-			    <td height="21" align="CENTER">~$valued.FOLLOWUP_3`</td>
-			    <td height="21" align="CENTER"><div class="jsc-ExStatus jsc-cursp" data="~$valued.ID`" style="background-color:lightgrey;color:#d9475c;width:50%"><b>STATUS</td></b></td>
+                ~foreach from=$displayData item=value key=sno`
+			
+			<tr align="CENTER" bgcolor="#fbfbfb" id="asd">
+				<td height="21" align="CENTER">~$value.SNO`</td>
+				<td height="21" align="CENTER">~$value.CONCALL_SCH_DT`</td>
+                                <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$value.CLIENT_ID`" target="_blank">~$value.CLIENT_USERNAME`</a></td>
+                                <td height="21" align="CENTER">~$value.CLIENT_NAME`</td>
+                                <td height="21" align="CENTER">~$value.CLIENT_PH1`</td>
+                                <td height="21" align="CENTER">~$value.CLIENT_PH2`</td>
+                                <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$value.MEMBER_ID`" target="_blank">~$value.MEMBER_USERNAME`</a></td>
+                                <td height="21" align="CENTER">~$value.MEMBER_NAME`</td>
+                                <td height="21" align="CENTER">~$value.MEMBER_PH1`</td>
+                                <td height="21" align="CENTER">~$value.MEMBER_PH2`</td>
+                                <td height="21" align="CENTER"><input type="button" onclick="if(confirm('Are you sure the call was completed?')){location.href='/operations.php/jsexclusive/pendingConcalls?name=~$name`&cid=~$cid`&executedFor=~$value.ID`'}" value="Concall Executed"></td>
 			</tr>
-			~/foreach`
-		~/if`
+                        ~/foreach`
 		<tr bgcolor="#fbfbfb">
 		    <td colspan="20" height="21">&nbsp; </td>
 		</tr>
-		<tr>
-		    <td colspan="20" height="21">&nbsp; </td>
-		</tr>
+            
 	</table>
+        <table align="center">
+        <tr class="formhead" align="center" width="100%">
+                <td colspan="3"  height="30">
+                    <font size=1><input type="button" onclick="location.href='/operations.php/jsexclusive/menu'" value="Back"></font>
+                </td>
+        </tr>
+        </table>
 </div>
 ~include_partial('global/footer')`

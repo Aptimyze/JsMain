@@ -99,7 +99,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
                             . " WHERE CONCALL_STATUS != 'Y'"
                             . " AND CONCALL_SCH_DT <=:DATE"
                             . " AND AGENT_USERNAME=:AGENT"
-                            . " ORDER BY CLIENT_ID ,CONCALL_SCH_DT ASC";
+                            . " ORDER BY CLIENT_ID ,CONCALL_SCH_DT DESC";
 		    //print_r("$sql<br>$agent<br>$date");
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
@@ -114,6 +114,30 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		    return $rows;
 		}
 		catch(Exception $e){
+		  throw new jsException($e);
+		}
+	}
+        
+        	 /** Function to update screening status
+	 *
+	 * @param   $agentUsername,$clientId,$screenedStatus='Y'
+	 * @return  none
+	 */
+	public function markConcallStatusForId($id,$status,$date){
+		try
+		{
+		  if($id)
+		  {
+		    $sql = "UPDATE billing.EXCLUSIVE_FOLLOWUPS SET CONCALL_STATUS=:STATUS,CONCALL_ACTUAL_DT=:ACTUAL_DT WHERE ID=:ID";
+		    $res = $this->db->prepare($sql);
+		    $res->bindValue(":STATUS", $status, PDO::PARAM_STR);
+		    $res->bindValue(":ACTUAL_DT", $date, PDO::PARAM_STR);
+		    $res->bindValue(":ID",$id, PDO::PARAM_STR);
+		    $res->execute();
+		  }
+		}
+		catch(Exception $e)
+		{
 		  throw new jsException($e);
 		}
 	}
