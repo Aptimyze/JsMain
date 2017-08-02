@@ -375,6 +375,7 @@ class phoneActions extends sfActions
 //action for pc phone verification ....... By Palash Chordia 
   public function executePhoneVerificationPcDisplay(sfWebRequest $request)
 		{
+							$request->setParameter("currentPageName", "Phone verficaion Jspc");
 	$this->loginData=$request->getAttribute("loginData");
 	$loginProfileid = $this->loginData[PROFILEID];
 	$this->loginProfile=LoggedInProfile::getInstance();

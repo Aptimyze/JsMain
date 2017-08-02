@@ -1,6 +1,7 @@
 function GAMapper(GAEvent, extraParams={}){
     try {
         var PageName = currentPageName || "other page";
+        if(LoginLayerByUserActions)
         var userStatus = "Unregistered";
         if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
             userStatus = loggedInJspcGender;
@@ -8,7 +9,7 @@ function GAMapper(GAEvent, extraParams={}){
         var GAMapping = {
             // verify otp layer
             "GA_VOL_MISS_CALL"              :["E", "Enter Code Screen", "Miss Call"],
-            "GA_VOL_SUBMIT"                 :["E", "Enter Code Screen", "Verify"],
+            "GA_VOL_SUBMIT"                 :["E", "Enter Code Screen", "Submit"],
             "GA_VOL_RESEND"                 :["E", "Enter Code Screen", "Resend Code"],
             "GA_VOL_SUBMIT_ERROR"           :["E", "Enter Code Screen", "Wrong OTP"],
             "GA_VOL_SUBMIT_SUCCESS"         :["E", "Enter Code Screen", "Correct OTP"],
@@ -18,11 +19,7 @@ function GAMapper(GAEvent, extraParams={}){
             "GA_LL_LOGIN_FAILURE"           :["E", "login layer", "Login Failure"],
 
             
-            "GA_CE_INITIATE"                :["E", PageName || "", "Express Interest"],
-            "GA_CE_SHORTLIST"               :["E", PageName || "", "Shortlist"],
-            "GA_CE_CONTACT_DETAIL"          :["E", PageName || "", "Contact"],
-            "GA_CE_CHAT"                    :["E", PageName || "", "Chat"],
-
+            "GA_CE"                         :["E", PageName || "", (extraParams['action'] || "")],
 
             "GA_CE_MYJSJUSTJOINED"          :["E", 'myjs justjoined', 'Express Interest'],
             "GA_CE_MYJSLASTSEARCH"          :["E", "myjs lastsearch", "Express Interest"],
@@ -30,9 +27,9 @@ function GAMapper(GAEvent, extraParams={}){
             "GA_CE_MYJSDAILYMATCHES"        :["E", "myjs dailymatches", "Express Interest"],
 
 
-            "GA_SEARCH_LOGGEDOUT_PROFILE"   :["E", PageName || "advance search", "profile"],
-            "GA_SEARCH_LOGGEDOUT_ALBUM"     :["E", PageName || "advance search", "album"],
-            "GA_SEARCH_LOGGEDOUT_EOI"       :["E", PageName || "advance search", extraParams['type'] || ''],
+            "GA_SEARCH_LOGGEDOUT_PROFILE"   :["E", "Login Layer by user action", "profile"],
+            "GA_SEARCH_LOGGEDOUT_ALBUM"     :["E", "Login Layer by user action", "album"],
+            "GA_SEARCH_LOGGEDOUT_EOI"       :["E", "Login Layer by user action", extraParams['type'] || ''],
 
 
 
@@ -49,7 +46,7 @@ function GAMapper(GAEvent, extraParams={}){
             // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
             "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
             // 
-            "GAV_LL_SHOW"           :["V", "Login Layer"],
+            "GAV_LL_SHOW"           :["V", "Login Layer"+(extraParams['action'] || "")],
 
             "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] +" "+ extraParams['button']],
             "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] +" "+ extraParams['button']],

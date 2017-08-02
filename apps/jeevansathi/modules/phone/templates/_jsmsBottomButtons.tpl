@@ -10,10 +10,10 @@
         <div class="clearfix otpp2">
             <div class="fl f15 fontlig otpcolr1">
                 <p>You can also verify by giving a </p>
-                <p class="pt10"><strong>missed call</strong> to <strong><a id='call3' class="color2" onclick="GAMapper('GA_OTP_MISS_CALL');"></a></strong></p>
+                <p class="pt10"><strong>missed call</strong> to <strong><a id='call3' class="color2" onclick="GAMapper('GA_PVS2_MISS_CALL');"></a></strong></p>
             </div>
             <div class="fr otpp3" onClick='checkVerificationStatus()'>
-            	<a id='dialOnly' onclick="GAMapper('GA_OTP_MISS_CALL');"><img id='js-dialOnlyImage' src="/images/jsms/commonImg/OTPphnicon.png"></a>
+            	<a id='dialOnly' onclick="GAMapper('GA_PVS2_MISS_CALL');"><img id='js-dialOnlyImage' src="/images/jsms/commonImg/OTPphnicon.png"></a>
             </div>
             </div>    
     </div>

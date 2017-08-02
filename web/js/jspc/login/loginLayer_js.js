@@ -164,6 +164,8 @@ function validateCaptcha()
 
 function after_login(response)
 	{
+		if(response)
+				GAMapper("GA_LL_LOGIN_SUCCESS");
 		var address_url=window.location.href;
 		if(window.location.href.indexOf("redirectUri=")>0)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
@@ -204,6 +206,7 @@ function onFrameLoginResponseReceived(message)
 				{ 
 				  createCaptcha("logoutPage");
 				}
+				GAMapper("GA_LL_LOGIN_FAILURE");
 		  }
       else{
   		/*	hideCommonLoader();
@@ -234,6 +237,7 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
       }
 		}
 		else if(response == 2)
@@ -251,15 +255,12 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
 		}
 		else
 		{
 			loginFlag = true;
-			GAMapper("GA_LL_LOGIN_SUCCESS");
 			after_login(response);
-		}
-		if(loginFlag == false){
-			GAMapper("GA_LL_LOGIN_FAILURE");
 		}
 	}
 	
@@ -308,7 +309,7 @@ function LoginBinding()
 {
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').unbind();
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').click(function() {
-		// LoginLayerByUserActions = true;
+		LoginLayerByUserActions = false;
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
@@ -319,13 +320,13 @@ function LoginBinding()
                 $('#topNavigationBar').removeClass("z2");
             },
             success: function(response) {
-            	GAMapper("GAV_LL_SHOW");
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
                 if($(this).hasClass("loginAlbumSearch")){
                 	/* flag for user action resulting for login layer */
                 	LoginLayerByUserActions = true;
                 	/* GA tracking */
+                	GAMapper("GAV_LL_SHOW",{action:"by user action"});
                 	GAMapper("GA_SEARCH_LOGGEDOUT_ALBUM");
 					$("#loginRegistration").addClass("loginAlbumSearch");
 					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
@@ -334,6 +335,7 @@ function LoginBinding()
 					/* flag for user action resulting for login layer */
                 	LoginLayerByUserActions = true;
 					/* GA tracking */
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
                 	GAMapper("GA_SEARCH_LOGGEDOUT_PROFILE");
 					$("#loginRegistration").addClass("loginProfileSearch");
 					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
@@ -342,9 +344,13 @@ function LoginBinding()
 				/* GA tracking */
 				var SplitId = this.id.split('-'); 
 				if(SplitId.length == 3){
+					LoginLayerByUserActions = true;
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
 					GAMapper("GA_SEARCH_LOGGEDOUT_EOI", {"type": SplitId[0]});
 				}
 
+				if(!LoginLayerByUserActions)
+					GAMapper("GAV_LL_SHOW");
                 $('#cls-login').click(function() {
                   //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {

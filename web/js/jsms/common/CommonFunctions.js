@@ -14,10 +14,10 @@ function GAMapper(GAEvent, extraParams={}){
 
         	"GA_LOGIN_REPONSE_FAIL"			:["E", "Login Response", "Success"],
         	"GA_LOGIN_REPONSE_SUCCESS"		:["E", "Login Response", "Fail"],
-        	"GA_HOME_LOGIN_BTN"				:["E", "Home Page", "Login Button"],
-        	"GA_HOME_REGISTER"				:["E", "Home Page", "Register Button"],
-        	"GA_HOME_SEARCH"				:["E", "Home Page", "Search Button"],
-        	"GA_HOME_FORGOT"				:["E", "Home Page", "Forgot Password"],
+        	"GA_HOME_LOGIN_BTN"				:["E", pageName || "Login Page", "Login Button"],
+        	"GA_HOME_REGISTER"				:["E", pageName || "Login Page", "Register Button"],
+        	"GA_HOME_SEARCH"				:["E", pageName || "Login Page", "Search Button"],
+        	"GA_HOME_FORGOT"				:["E", pageName || "Login Page", "Forgot Password"],
 
         	"GA_FORGOT_CANCEL"				:["E", "Forgot Page", "Cancel"],
         	"GA_FORGOT_RESET"				:["E", "Forgot Page", "Reset"],
