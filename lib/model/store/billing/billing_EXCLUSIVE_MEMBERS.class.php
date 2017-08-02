@@ -139,5 +139,57 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
       throw new jsException($e);
     }
   }
+  public function archiveProfile($billid)
+  {
+    try
+    {
+      if($billid)
+      {
+        $sql = "INSERT INTO billing.EXCLUSIVE_MEMBERS_LOG SELECT * FROM billing.EXCLUSIVE_MEMBERS WHERE BILLID=:BILLID";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+        $res->execute();
+      }
+    }
+    catch(Exception $e)
+    {
+      throw new jsException($e);
+    }
+  }
+  public function deleteExclusiveEntry($billid)
+  {
+    try
+    {
+      if($billid)
+      {
+        $sql = "DELETE FROM billing.EXCLUSIVE_MEMBERS WHERE BILLID=:BILLID";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":PROFILEID", $billid, PDO::PARAM_INT);
+        $res->execute();
+      }
+    }
+    catch(Exception $e)
+    {
+      throw new jsException($e);
+    }
+  }
+  public function getExclusiveMembersList($billingDate)
+  {
+    try
+    {
+        $sql = "SELECT * FROM billing.EXCLUSIVE_MEMBERS WHERE BILLING_DT<=:BILLING_DT";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":BILLING_DT", $billingDate, PDO::PARAM_STR);
+        $res->execute();
+        while($result=$res->fetch(PDO::FETCH_ASSOC))
+            $rows[] = $result;
+        return $rows;
+    }
+    catch(Exception $e)
+    {
+      throw new jsException($e);
+    }
+  }
+	
 }
 ?>
