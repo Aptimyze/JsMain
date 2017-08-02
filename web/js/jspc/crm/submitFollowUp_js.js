@@ -3,9 +3,11 @@ $(document).ready(function() {
 
     $("#followupStatus").change(function(){
         var selectedVal = $(this).find(':selected').val();
-        if(selectedVal=="F"){
-            $("#reason").removeAttr("disabled");
-            $("#reason").removeClass("crm-disabled");
+        if(selectedVal=="F" || selectedVal=="N"){
+            if(selectedVal=="F"){
+                $("#reason").removeAttr("disabled");
+                $("#reason").removeClass("crm-disabled");
+            }
             $("#reasonText").removeAttr("disabled");
             $("#reasonText").removeClass("crm-disabled");
         }

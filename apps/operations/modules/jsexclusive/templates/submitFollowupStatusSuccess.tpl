@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <input type="text" id="reasonText" value="" class="crm-disabled" disabled>
+                    <input type="text" maxlength="70" id="reasonText" value="" class="crm-disabled" disabled>
                 </td>
             </tr>
             <tr class="fieldsnew">
@@ -79,7 +79,7 @@
                     NOTE:
                     <br>
                     Click on submit button to set followup status.<br>
-                    * Mention reason for "Others" only in reason dropdown<br>
+                    * Mention reason for followup-"Others" and decline cases<br>
                     ** Set date for future followup only<br>
                 </td>
             </tr>
