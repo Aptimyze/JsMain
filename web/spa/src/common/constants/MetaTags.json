@@ -11,5 +11,10 @@
     "ProfilePage":
     {
         "title" : "My Jeevansathi - Jeevansathi.com"
+    },
+    "ProfileNotFound":
+    {
+        "title" : "Sorry, the profile you requested was not found"
     }
+
 }

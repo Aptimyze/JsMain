@@ -45,6 +45,9 @@ export class contactEnginePD extends React.Component{
         this.setState({
           showMessageOverlay: true
         })
+      } 
+      if(nextProps.contactAction.contactDone) {
+        console.log("yess",nextProps.contactAction)
       }
   }
   closeMessageLayer() {

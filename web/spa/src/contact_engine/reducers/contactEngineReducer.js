@@ -7,7 +7,7 @@ const contactEngineReducer = (state={
 },action) => {
 	switch(action.type)
 	{			
-		case 'CONTACT_ACTION':
+		case 'INITIATE':
 		state = {
 			...state,
 			contact:action.payload,
