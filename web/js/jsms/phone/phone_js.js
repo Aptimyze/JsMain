@@ -84,6 +84,7 @@ function showMainLayer(){
 			showNumberedLayer(1);
     		$("#mainBottomButton").attr('href','javascript:;');
     		$("#mainBottomButton").unbind().bind('click',function(){
+    			GAMapper("GA_PVS1_VERIFY_BTN");
     			sendSMSAjax(1);
     			
     			
