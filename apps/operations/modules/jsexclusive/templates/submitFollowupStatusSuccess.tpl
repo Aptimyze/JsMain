@@ -20,7 +20,7 @@
                 Status:
             </td>
             <td>
-                <select name="status" id="status">
+                <select name="followupStatus" id="followupStatus">
                     <option value="Y">Confirm</option>
                     <option value="N">Decline</option>
                     <option value="F">Followup</option>
@@ -32,7 +32,8 @@
                 Reason:
             </td>
             <td>
-                <select name="reason" id="reason">
+                <select name="reason" id="reason" disabled class="crm-disabled">
+                    <option value="">Select</option>
                     <option value="Will check profile">Will check profile</option>
                     <option value="Not decided yet">Not decided yet</option>
                     <option value="RNR/Switched off">RNR/Switched off</option>
@@ -45,16 +46,25 @@
                 Reason text:
             </td>
             <td>
-                <input type="text" id="reasonText" value="">
+                <input type="text" id="reasonText" value="" class="crm-disabled" disabled>
             </td>
         </tr>
         <tr class="fieldsnew">
             <td class="label">
-                Set date:
+                **Set date:
             </td>
             <td class="fieldsnew">
             <input id="date1" type="text" value="">
-        </td>
+            </td>
+        </tr>
+        <tr></tr>
+        <tr align="center">
+            <td class="label" style="background-color:PeachPuff">
+                <input type="submit" name="back" value="Back to Followup page">
+            </td>
+            <td class="label" style="background-color:PeachPuff">
+                <input type="submit" name="submit" value="Submit">
+            </td>
         </tr>
         <tr></tr><tr></tr>
     </table>
@@ -63,8 +73,8 @@
             <td><br><br>
                 NOTE:
                 <br>
-                **You will not be able to change this after leaving this page.<br>
-                **The number in the parenthesis indicates clients already having their service day set as that day itself.
+                * Click on submit button to set followup status.<br>
+                ** Set date for future followup only<br>
             </td>
         </tr>
     </table>
