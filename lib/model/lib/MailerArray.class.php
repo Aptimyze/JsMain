@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-06-13
+	Created on 2017-07-24
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -431,6 +431,7 @@ private static $subjectArray=array(
 '1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed ~$hisHerfieldList`'),
 '1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
 '1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
+'1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
 '1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
 '1879'=>array('MAIL_ID'=>'1879','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We were unable to reach you.Kindly authenticate your contact details'),
 );
