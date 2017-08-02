@@ -233,7 +233,7 @@ if (authenticated($cid)) {
 									$bl_msg.= " to edit your profile <br>";
 							
 							}
-                                                        if($activatedWithoutYourInfo)
+                                                        if(!$activatedWithoutYourInfo)
                                                             $INCOMPLETE="Y";
 							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
                 			$instantNotificationObj->sendNotification($pid);
@@ -749,6 +749,7 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
+                                            if(!$activatedWithoutYourInfo)
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
@@ -775,7 +776,7 @@ $screeningValMainAdmin = 0;
 			}
 		}
 		}
-        
+                
         $cScoreObject = ProfileCompletionFactory::getInstance(null,null,$pid);
         $cScoreObject->updateProfileCompletionScore();
 		$smarty->assign("name", $user);

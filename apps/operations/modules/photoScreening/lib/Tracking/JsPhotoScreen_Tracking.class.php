@@ -293,6 +293,7 @@ abstract class JsPhotoScreen_Tracking
 			$jsadminObj->insert($this->m_objProfile->getPROFILEID());
 			unset($jsadminObj);
 			$arrUpdateValue["ACTIVATED"] = "Y";
+                        $arrUpdateValue["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
 			CommonFunction::sendWelcomeMailer($this->m_objProfile->getPROFILEID(),0);
 		}
 		$objPhotoScreeningService = new photoScreeningService($this->m_objProfile);

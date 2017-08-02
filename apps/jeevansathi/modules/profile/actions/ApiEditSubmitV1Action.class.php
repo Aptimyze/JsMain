@@ -55,6 +55,12 @@ class ApiEditSubmitV1Action extends sfActions
                 {
                         $this->editFieldNameArr['JAMAAT']='';
                 }
+                
+                if(array_key_exists("YOURINFO",$this->editFieldNameArr) && strlen($this->loginProfile->getYOURINFO())<100)
+                {
+                        $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+                        $activated_without_yourInfoObj->insert($this->loginProfile->getPROFILEID());
+                }
 
 		unset($this->editFieldNameArr['STATE_RES']);
                 if($this->editFieldNameArr['DAY']!='' &&is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['MONTH']!='' && is_numeric($this->editFieldNameArr['DAY']) && $this->editFieldNameArr['YEAR'] && is_numeric($this->editFieldNameArr['YEAR']))

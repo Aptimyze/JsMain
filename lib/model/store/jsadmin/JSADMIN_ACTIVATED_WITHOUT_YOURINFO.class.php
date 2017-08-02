@@ -18,7 +18,7 @@ class JSADMIN_ACTIVATED_WITHOUT_YOURINFO extends TABLE{
                 try
                 {
 					$now = date("Y-m-d H:i:s");
-					$sql = "Insert IGNORE INTO jsadmin.ACTIVATED_WITHOUT_YOURINFO (`PROFILEID`,`ENTRY_DATE`) values(:id,:date,:now)";
+					$sql = "Insert IGNORE INTO jsadmin.ACTIVATED_WITHOUT_YOURINFO (`PROFILEID`,`ENTRY_DATE`) values(:id,:date)";
 					$res = $this->db->prepare($sql);
 				  	$res->bindValue(":id", $profileId, PDO::PARAM_INT);	
 				  	$res->bindValue(":date", $now, PDO::PARAM_STR);			  	
