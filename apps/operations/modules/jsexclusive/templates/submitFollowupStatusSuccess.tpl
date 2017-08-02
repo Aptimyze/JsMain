@@ -48,7 +48,7 @@
             </tr>
             <tr class="fieldsnew">
                 <td>
-                    Reason text:
+                    *Reason text:
                 </td>
                 <td>
                     <input type="text" id="reasonText" value="" class="crm-disabled" disabled>
@@ -56,7 +56,7 @@
             </tr>
             <tr class="fieldsnew">
                 <td class="label">
-                    **Set date:
+                    **Set date (Optional):
                 </td>
                 <td class="fieldsnew">
                 <input id="date1" type="text" value="">
@@ -78,7 +78,8 @@
                 <td><br><br>
                     NOTE:
                     <br>
-                    * Click on submit button to set followup status.<br>
+                    Click on submit button to set followup status.<br>
+                    * Mention reason for "Others" only in reason dropdown<br>
                     ** Set date for future followup only<br>
                 </td>
             </tr>
