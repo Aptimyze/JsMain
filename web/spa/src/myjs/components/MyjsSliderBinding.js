@@ -65,7 +65,7 @@ export default class MyjsSliderBinding  {
               this.parent.removeEventListener('touchmove', this.binderfun2);
               // bind a "touchend" event to the viewport
               this.parent.removeEventListener('touchend', this.binderfun3);
-              this._index--;
+              this._index++;
               return this;
 
 
@@ -121,7 +121,7 @@ export default class MyjsSliderBinding  {
                 e.preventDefault();
             }
             NextSlide()
-            {
+            {console.log(this.tupleObject.length);console.log(this._index);console.log(this.tupleObject);
                 var index = this._index + 1;
                 if ((index+1) > (this.tupleObject.length+this.indexElevate))
                 {

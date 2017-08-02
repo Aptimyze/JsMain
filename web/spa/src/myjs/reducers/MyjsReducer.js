@@ -76,6 +76,32 @@ const MyjsReducer = (state={
 				irFetched : true
 			}
 			break;
+			case 'SPLICE_MYJS_DATA':
+			var arr,key;
+				switch(action.payload.infotype)
+				{
+					case 'INTEREST_RECEIVED':
+						arr = state.apiDataIR;
+						key = 'apiDataIR';
+					break;
+					case 'MATCH_OF_THE_DAY':
+						arr = state.apiDataMOD;
+						key = 'apiDataMOD';
+					break;
+					case 'MATCH_ALERT':
+						arr = state.apiDataDR;
+						key = 'apiDataDR';
+					break;
+				}
+				var ob = {};
+				arr['profiles'].splice(action.payload.index,1);
+				ob[key] = arr;
+				state = {
+					...state,
+						ob
+				}
+				console.log(state,'-=-=-=-=-=-pp');
+				break;
 
 	}
 	return state;

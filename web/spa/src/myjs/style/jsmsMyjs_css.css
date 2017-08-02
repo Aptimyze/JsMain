@@ -395,6 +395,20 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
   animation-fill-mode: both;
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.fadeOut {
+  animation-name: fadeOut;
+}
+
 .rmtuple{opacity: 1;
   transition-property: opacity;
     transition-duration: 1s;
