@@ -153,17 +153,26 @@ class ExclusiveFunctions{
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
         while($start<=$followUpsCount){
             //fetch followup data
-            $followUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
-
+            $origFollowUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
+            $membersIds = array();
+            $clientIds = array();
+            if(is_array($origFollowUpsPool))
+	            foreach ($origFollowUpsPool as $mid => $clients) {
+	            	foreach ($clients as $k => $v) {
+	            		$followUpsPool[] = $v;
+	            		if(!in_array($v['CLIENT_ID'], $clientIds)){
+	            			$clientIds[] = $v['CLIENT_ID'];
+	            		}
+	            		if(!in_array($v['MEMBER_ID'], $membersIds)){
+	            			$membersIds[] = $v['MEMBER_ID'];
+	            		}
+	            	}
+	            }
             if(is_array($followUpsPool)){
                 //merge the follow up pool
                 $finalFollowUpsPool["followUpData"] = array_merge($finalFollowUpsPool["followUpData"],$followUpsPool);
-
-                //fetch distinct member ids
-                $membersIds = array_map(function ($arr) { return $arr['MEMBER_ID']; }, $followUpsPool);  
-                $membersIds = array_values($membersIds);   
+    
                 $memberIdStr = implode($membersIds,",");
-                unset($membersIds);
 
                 //fetch primary and alternate contact nos of member ids     
                 $phoneDetails = $jprofileObj->getArray(array("PROFILEID"=>$memberIdStr),"","","PROFILEID,USERNAME,PHONE_MOB");
@@ -184,13 +193,8 @@ class ExclusiveFunctions{
                     }
                 }
                 unset($altPhoneDetails);
-
-                //fetch distinct client ids
-                $clientIds = array_map(function ($arr) { return $arr['CLIENT_ID']; }, $followUpsPool);  
-                $clientIds = array_values($clientIds); 
                
                 $clientIdStr = implode($clientIds,",");
-                unset($clientIds);
 
                 //fetch name,username of clients
                 $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID"=>$clientIdStr),"","","PROFILEID,NAME,DISPLAY");
@@ -209,7 +213,9 @@ class ExclusiveFunctions{
                     }
                 }
                 unset($clientUsernameArr);
-            }   
+            }  
+            unset($clientIds);
+            unset($membersIds); 
             unset($followUpsPool); 
             $start += $limit;
         }
