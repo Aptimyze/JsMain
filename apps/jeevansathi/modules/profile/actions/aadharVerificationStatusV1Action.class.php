@@ -22,6 +22,7 @@ class aadharVerificationStatusV1Action extends sfActions
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loginProfile = LoggedInProfile::getInstance();
 		$this->profileId = $this->loginProfile->getPROFILEID();
+		$this->nameOfUser = $request->getParameter("name");
 		$aadharVerificationObj = new aadharVerification();
 		$dataArr = $aadharVerificationObj->getAadharDetails($this->profileId);
 		$this->aadharID = $dataArr[$this->profileId]["AADHAR_NO"];
@@ -43,6 +44,13 @@ class aadharVerificationStatusV1Action extends sfActions
 		{
 			if($output[0]->source_output[0]->match_result->name == aadharVerificationEnums::EXACTMATCH)
 			{
+				$nameOfUserObj=new NameOfUser();        
+				$nameOfUserArr = $nameOfUserObj->getNameData($this->profileId);		
+				if (strcasecmp($nameOfUserArr[$this->profileId]["NAME"], $this->nameOfUser) != 0) //check if the user changed the name on the CAL
+				{
+					$nameArr["NAME"] = $this->nameOfUser;
+					$nameOfUserObj->updateName($this->profileId,$nameArr);				
+				}
 				$aadharVerificationObj = new aadharVerification();
 				$aadharVerificationObj->updateVerificationStatus($this->profileId,aadharVerificationEnums::VERIFIED);
 				unset($aadharVerificationObj);

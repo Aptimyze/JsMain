@@ -29,14 +29,7 @@ class aadharVerificationV1Action extends sfActions
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
 		else
-		{
-			$nameOfUserObj=new NameOfUser();        
-			$nameOfUserArr = $nameOfUserObj->getNameData($this->profileId);		
-			if (strcasecmp($nameOfUserArr[$this->profileId]["NAME"], $nameOfUser) != 0) //check if the user changed the name on the CAL
-			{
-				$nameArr["NAME"] = $nameOfUser;
-				$nameOfUserObj->updateName($this->profileId,$nameArr);				
-			}
+		{			
 			$aadharVerificationObj = new aadharVerification();			
 			$response = $aadharVerificationObj->callAadharVerificationApi($aadharId,$nameOfUser,$this->profileId,$this->username);
 			unset($aadharVerificationObj);
