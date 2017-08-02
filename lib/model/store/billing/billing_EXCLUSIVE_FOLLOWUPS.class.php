@@ -63,7 +63,27 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		    $res = $this->db->prepare($sql);
 		    $res->bindValue(":CURRENT_DT", $followUpDate, PDO::PARAM_STR);
 		    $res->execute();
-		    while($result=$res->fetch(PDO::FETCH_ASSOC)){
+		    while($result=$res->fetch(PDO::FETCH_ASSOC)){ 
+		    	if(strpos($result['FOLLOWUP_1'], "|")!==false){
+		    		$followup1Str = explode("|", $result['FOLLOWUP_1']);
+		    		$result['FOLLOWUP_1'] = $followup1Str[0];
+		    		unset($followup1Str);
+		    	}
+		    	if(strpos($result['FOLLOWUP_2'], "|")!==false){
+		    		$followup2Str = explode("|", $result['FOLLOWUP_2']);
+		    		$result['FOLLOWUP_2'] = $followup2Str[0];
+		    		unset($followup2Str);
+		    	}
+		    	if(strpos($result['FOLLOWUP_3'], "|")!==false){
+		    		$followup3Str = explode("|", $result['FOLLOWUP_3']);
+		    		$result['FOLLOWUP_3'] = $followup3Str[0];
+		    		unset($followup3Str);
+		    	}
+		    	if(strpos($result['FOLLOWUP_4'], "|")!==false){
+		    		$followup4Str = explode("|", $result['FOLLOWUP_4']);
+		    		$result['FOLLOWUP_4'] = $followup4Str[0];
+		    		unset($followup4Str);
+		    	}
 		        $rows[$result["MEMBER_ID"]][] = $result;
 		    }
 		    return $rows;

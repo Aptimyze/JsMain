@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <input type="text" maxlength="70" id="reasonText" value="" class="crm-disabled" disabled>
+                    <input type="text" maxlength="70" id="reasonText" name="reasonText" value="" class="crm-disabled" disabled>
                 </td>
             </tr>
             <tr class="fieldsnew">
@@ -59,7 +59,7 @@
                     **Set date (Optional):
                 </td>
                 <td class="fieldsnew">
-                <input id="date1" type="text" value="">
+                <input id="date1" name="date1" type="text" value="">
                 </td>
             </tr>
             <tr></tr>

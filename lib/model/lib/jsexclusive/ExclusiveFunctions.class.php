@@ -154,6 +154,7 @@ class ExclusiveFunctions{
         while($start<=$followUpsCount){
             //fetch followup data
             $origFollowUpsPool = $followUpObj->getPendingFollowUpEntries($currentDt,$limit,$start); 
+
             $membersIds = array();
             $clientIds = array();
             if(is_array($origFollowUpsPool))
@@ -227,7 +228,6 @@ class ExclusiveFunctions{
     }
 
     public function updateFollowUpDetails($params=array()){
-    	
         $currentDt = date("Y-m-d");
 
         if(empty($params["date1"])){
@@ -250,6 +250,9 @@ class ExclusiveFunctions{
                     $updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                 }
                 else{
+                	if($params["followupStatus"]=='N'){
+                		$updateArr["FOLLOWUP_1"] = $params["reasonText"];
+                	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP1_DT"] = $params["date1"];
@@ -261,6 +264,9 @@ class ExclusiveFunctions{
                     $updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                 }
                 else{
+                	if($params["followupStatus"]=='N'){
+                		$updateArr["FOLLOWUP_2"] = $params["reasonText"];
+                	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_2"] .= "|".$params["operator"];
@@ -272,6 +278,9 @@ class ExclusiveFunctions{
                     $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                 }
                 else{
+                	if($params["followupStatus"]=='N'){
+                		$updateArr["FOLLOWUP_3"] = $params["reasonText"];
+                	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_3"] .= "|".$params["operator"];
@@ -283,6 +292,9 @@ class ExclusiveFunctions{
                     $updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                 }
                 else{
+                	if($params["followupStatus"]=='N'){
+                		$updateArr["FOLLOWUP_4"] = $params["reasonText"];
+                	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
                 $updateArr["FOLLOWUP_4"] .= "|".$params["operator"];
