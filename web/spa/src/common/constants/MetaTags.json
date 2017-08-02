@@ -14,7 +14,7 @@
     },
     "ProfileNotFound":
     {
-        "title" : "Sorry, the profile you requested was not found"
+        "title" : "Profile Not Found"
     }
 
 }
