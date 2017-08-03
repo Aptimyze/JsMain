@@ -24,7 +24,7 @@ export class MyjsShowVisitors extends React.Component{
           {tupleValues.slice(0,count).map(function(profiles, index){
             return (
                 <div className="fl pl_a" key={profiles.profilechecksum}>
-                  <Link  to={`/profile/viewprofile?profilechecksum=${profiles.profilechecksum}&${this.props.responseMessage.tracking}&total_rec=${tupleValues.length}&actual_offset=${index}&searchid=${this.props.responseMessage.searchid}&contact_id=nan`}>
+                  <Link  to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.responseMessage.tracking}&total_rec=${tupleValues.length}&actual_offset=${index}&searchid=${this.props.responseMessage.searchid}&contact_id=nan`}>
                     <img className="myjsdim1" src={profiles.photo.url}/>
                   </Link>
                 </div>

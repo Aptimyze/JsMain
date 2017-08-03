@@ -252,7 +252,7 @@ export default class HamMain extends React.Component {
             editProfileView = <li>
                 <div>
                     <i className="hamSprite editProfileIcon"></i>
-                    <a href="/profile/viewprofile?ownview=1" id="editProfileLink" className="f17 white">
+                    <a href="/profile/viewprofile.php?ownview=1" id="editProfileLink" className="f17 white">
                         Edit Profile
                     </a>
                 </div>
@@ -361,7 +361,7 @@ export default class HamMain extends React.Component {
                 </div>
             </li>;
             recommendationView = <li>
-                <a id="recommendationLink" href="/profile/viewprofile?ownview=1#Dpp" className="white">
+                <a id="recommendationLink" href="/profile/viewprofile.php?ownview=1#Dpp" className="white">
                     Recommendation
                 </a>
             </li>;
