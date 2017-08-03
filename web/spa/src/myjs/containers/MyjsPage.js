@@ -219,7 +219,7 @@ export  class MyjsPage extends React.Component {
 
 		var promoView;
         if(this.state.showPromo == true)
-        {	console.log("yesss")
+        {	
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
@@ -249,17 +249,17 @@ export  class MyjsPage extends React.Component {
 	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
 	    }
 
-	    if(this.props.myjsData.irFetched){
+	    if(this.props.myjsData.irFetched && this.props.myjsData.apiDataIR.profiles){
 	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
 	    }
 
-	    if(this.props.myjsData.modFetched ){
+	    if(this.props.myjsData.modFetched && this.props.myjsData.apiDataMOD.profiles){
 	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' />
 	    }
 	    if(this.props.myjsData.vaFetched ){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
-	    if(this.props.myjsData.drFetched )
+	    if(this.props.myjsData.drFetched && this.props.myjsData.apiDataDR.profiles)
 	    {
 				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' />
 	    }
