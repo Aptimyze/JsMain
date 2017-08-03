@@ -32,7 +32,7 @@ export default class RcbLayer extends React.Component {
       )
     }
     return(
-      <a href="/profile/viewprofile.php?ownview=1#Family">
+      <a href="/profile/viewprofile?ownview=1#Family">
         <div className="posrel pt20 pb20 newBgBand">
           <div className="posrel fullwid">
             <div className="clearfix myjsc2">

@@ -127,7 +127,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-            <a href="/profile/viewprofile.php?ownview=1#Family">
+            <a href="/profile/viewprofile?ownview=1#Family">
               <div className="editBarStyle5">
                 <i className="mainsp myjs_family"></i>
               </div>
@@ -138,7 +138,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-            <a href="/profile/viewprofile.php?ownview=1#Details">
+            <a href="/profile/viewprofile?ownview=1#Details">
               <div className="editBarStyle5">
                   <i className="mainsp basicdetail"></i>
               </div>
@@ -149,7 +149,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Lifestyle">
+              <a href="/profile/viewprofile?ownview=1#Lifestyle">
               <div className="editBarStyle5">
                   <i className="mainsp lifestyle_2"></i>
               </div>
@@ -160,7 +160,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Album">
+              <a href="/profile/viewprofile?ownview=1#Album">
                 <div className="editBarStyle5">
                   <i className="mainsp camera"></i>
               </div>
@@ -171,7 +171,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Education">
+              <a href="/profile/viewprofile?ownview=1#Education">
                 <div className="editBarStyle5">
                   <i className="mainsp myjs_edu"></i>
               </div>
@@ -182,7 +182,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Career">
+              <a href="/profile/viewprofile?ownview=1#Career">
                 <div className="editBarStyle5">
                   <i className="mainsp myjs_career"></i>
               </div>
@@ -193,7 +193,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Kundli">
+              <a href="/profile/viewprofile?ownview=1#Kundli">
               <div className="editBarStyle5">
                   <i className="mainsp myjs_kundli"></i>
               </div>
@@ -204,7 +204,7 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Dpp">
+              <a href="/profile/viewprofile?ownview=1#Dpp">
                 <div className="editBarStyle5">
                   <i className="dppHeart"></i>
               </div>
