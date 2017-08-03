@@ -481,8 +481,8 @@ return 0;
                           if($nameOfUser)
                           {
                             $aadhaarObj = new aadharVerification();
-                            $details = $aadhaarObj->getAadharDetails($profileid);
-                            if(!$details[AADHAR_NO])
+                            $details = $aadhaarObj->getAadharDetails($profileid)[$profileid];
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
                               $show=1;
                           }
                       }
