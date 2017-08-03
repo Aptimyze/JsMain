@@ -52,45 +52,53 @@ class ApiVerificationDataV1Action extends sfActions
 	public function getVerificationData($profileId)
 	{	
 		$profileIdArr = array($profileId);
-		$verificationSealObj=new VerificationSealLib();
-		$arrResult=$verificationSealObj->getVerifiedDocumets($profileIdArr);
-		$arrTemp = array();
-		$arrTemp1[] = $arrResult["VERIFICATION_SEAL"]["Self_Address"];
-		$arrTemp1[] = $arrResult["VERIFICATION_SEAL"]["Parents_Address"];
+		$verificationSealObj=new VerificationSealLib($objProfile,'1');
+		if($verificationSealObj->getFsoStatus() == 0)
+		{
+			$verifiedDocumentsString = null; //this is set so as to indicate that the profile was not verified by visit.
+		}
+		else
+		{
+			$arrResult=$verificationSealObj->getVerifiedDocumets($profileIdArr);
+			$arrTemp = array();
+			$arrTemp1[] = $arrResult["VERIFICATION_SEAL"]["Self_Address"];
+			$arrTemp1[] = $arrResult["VERIFICATION_SEAL"]["Parents_Address"];
 
-		if(is_array($arrTemp1) && count($arrTemp1))
-		{
-			$arrTemp = implode(", ",array_unique($arrTemp1));
-		}
-		unset($arrTemp1);
- 		unset($verificationSealObj);
-		$arrResult["address"]=ltrim(rtrim($arrTemp,", "),",");
+			if(is_array($arrTemp1) && count($arrTemp1))
+			{
+				$arrTemp = implode(", ",array_unique($arrTemp1));
+			}
+			unset($arrTemp1);
+			unset($verificationSealObj);
+			$arrResult["address"]=ltrim(rtrim($arrTemp,", "),",");
 
-		$verifiedDocumentsString="";
-		if($arrResult["VERIFICATION_SEAL"]["Date_of_Birth"] != "")
-		{
-			$verifiedDocumentsString.="Date of Birth (".$arrResult["VERIFICATION_SEAL"]["Date_of_Birth"]."),";
+			$verifiedDocumentsString="";
+			if($arrResult["VERIFICATION_SEAL"]["Date_of_Birth"] != "")
+			{
+				$verifiedDocumentsString.="Date of Birth (".$arrResult["VERIFICATION_SEAL"]["Date_of_Birth"]."),";
+			}
+			if($arrResult["VERIFICATION_SEAL"]["Qualification"] != "")
+			{
+				$verifiedDocumentsString.=" Education (".$arrResult["VERIFICATION_SEAL"]["Qualification"]."),";
+			}
+			if($arrResult["VERIFICATION_SEAL"]["Income"] != "")
+			{
+				$verifiedDocumentsString.=" Income (".$arrResult["VERIFICATION_SEAL"]["Income"]."),";
+			}
+			if($arrResult["address"] != "")
+			{
+				$verifiedDocumentsString.=" Address (".$arrResult["address"]."),";
+			}
+			if($arrResult["VERIFICATION_SEAL"]["Divorce"] != "")
+			{
+				$verifiedDocumentsString.=" Marital Status (".$arrResult["VERIFICATION_SEAL"]["Divorce"]."),";
+			}
+			if(substr($verifiedDocumentsString,-1) == ',')
+			{
+				$verifiedDocumentsString=rtrim($verifiedDocumentsString,",");
+			}	
 		}
-		if($arrResult["VERIFICATION_SEAL"]["Qualification"] != "")
-		{
-			$verifiedDocumentsString.=" Education (".$arrResult["VERIFICATION_SEAL"]["Qualification"]."),";
-		}
-		if($arrResult["VERIFICATION_SEAL"]["Income"] != "")
-		{
-			$verifiedDocumentsString.=" Income (".$arrResult["VERIFICATION_SEAL"]["Income"]."),";
-		}
-		if($arrResult["address"] != "")
-		{
-			$verifiedDocumentsString.=" Address (".$arrResult["address"]."),";
-		}
-		if($arrResult["VERIFICATION_SEAL"]["Divorce"] != "")
-		{
-			$verifiedDocumentsString.=" Marital Status (".$arrResult["VERIFICATION_SEAL"]["Divorce"]."),";
-		}
-		if(substr($verifiedDocumentsString,-1) == ',')
-		{
-			$verifiedDocumentsString=rtrim($verifiedDocumentsString,",");
-		}
+		
 		return $verifiedDocumentsString;
 
 	}
