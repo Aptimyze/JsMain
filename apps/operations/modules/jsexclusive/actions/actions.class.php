@@ -391,10 +391,14 @@ class jsexclusiveActions extends sfActions {
 
             //Start:fetch primary mobile num and username of all ids 
             $combinedIdStr = implode($combinedIdArr, ",");
-            $phoneDetails = $jprofileObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,USERNAME,PHONE_MOB");
+            $phoneDetails = $jprofileObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,USERNAME,PHONE_MOB,PHONE_WITH_STD");//phonewithstd
             $n = count($phoneDetails);
+            $noPhoneWithStd=array();
             for ($i = 0; $i < $n; $i++) {
                 $phoneDetailsAltered[$phoneDetails[$i]['PROFILEID']] = $phoneDetails[$i];
+                if($phoneDetails[$i]['PHONE_WITH_STD']==""){
+                    $noPhoneWithStdArr[]=$phoneDetails[$i]['PROFILEID'];
+                }
             }
             unset($phoneDetails);
             $phoneDetails = $phoneDetailsAltered;
@@ -402,8 +406,9 @@ class jsexclusiveActions extends sfActions {
             unset($i);
             unset($n);
             //End:fetch primary mobile num and username of all ids 
-            //Start:fetch alternate mobile num for all ids
-            $altPhoneDetails = $contactObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,ALT_MOBILE");
+            //Start:fetch alternate mobile number for ids where phone_with_std was blank
+            $noPhoneWithStdStr = implode($noPhoneWithStdArr, ",");
+            $altPhoneDetails = $contactObj->getArray(array("PROFILEID" => $noPhoneWithStdStr), "", "", "PROFILEID,ALT_MOBILE");
             $n = count($altPhoneDetails);
             for ($i = 0; $i < $n; $i++) {
                 $altPhoneDetailsAltered[$altPhoneDetails[$i]['PROFILEID']] = $altPhoneDetails[$i];
@@ -430,7 +435,10 @@ class jsexclusiveActions extends sfActions {
             for ($i = 0; $i < count($combinedIdArr); $i++) {
                 $detailsArray[$combinedIdArr[$i]]['USERNAME'] = $phoneDetails[$combinedIdArr[$i]]['USERNAME'];
                 $detailsArray[$combinedIdArr[$i]]['PHONE_MOB'] = $phoneDetails[$combinedIdArr[$i]]['PHONE_MOB'];
-                $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'];
+                if($altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'])
+                    $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'];
+                else
+                    $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $phoneDetails[$combinedIdArr[$i]]['PHONE_WITH_STD'];
                 if ($clientNameArr[$combinedIdArr[$i]]['DISPLAY'] == 'Y') {
                     $detailsArray[$combinedIdArr[$i]]['NAME'] = $clientNameArr[$combinedIdArr[$i]]['NAME'];
                 }
