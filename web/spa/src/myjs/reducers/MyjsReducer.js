@@ -104,7 +104,9 @@ const MyjsReducer = (state={
 						total : --oldCount
 					}
 				}
+				console.log(state,'-=-=-=-=-=-pp');
 				break;
+
 	}
 	return state;
 }

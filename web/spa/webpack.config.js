@@ -82,6 +82,13 @@ config = {
    
    ]
  },
+
+ devServer: {
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+    },
+
 }
 
 module.exports = config;

@@ -45,6 +45,9 @@ export class contactEnginePD extends React.Component{
         this.setState({
           showMessageOverlay: true
         })
+      } 
+      if(nextProps.contactAction.contactDone) {
+        console.log("yess",nextProps.contactAction)
       }
   }
   closeMessageLayer() {
@@ -72,7 +75,7 @@ export class contactEnginePD extends React.Component{
               <input className="action" type="hidden" value={this.props.contactAction.accept.buttondetails.button.action}></input>
               <div className="white">{this.props.contactAction.accept.buttondetails.button.label}</div>
             </div>
-            <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+            <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
           </div>
         </div>
         );
@@ -84,7 +87,7 @@ export class contactEnginePD extends React.Component{
                 <div className="wid60p">
                   <div className="white">{this.props.contactAction.reminder.buttondetails.button.label}</div>
                 </div>
-                <ThreeDots username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+                <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
               </div>
             </div>
         );
@@ -121,7 +124,7 @@ export class contactEnginePD extends React.Component{
             <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>
             <div className="white">{this.props.buttondata.buttons.primary[0].label}</div>
           </div>
-          <ThreeDots username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+          <ThreeDots buttondata={this.props.buttondata} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
         </div>
       </div>
       );
