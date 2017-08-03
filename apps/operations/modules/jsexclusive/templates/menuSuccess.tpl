@@ -63,10 +63,10 @@ function passvalue(){
     
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;Username:<input type="text" id="searchUserName" name="searchUserName"/>
+            ~$num++`.&nbsp;&nbsp;Search Client: &nbsp;&nbsp;<input style="width:90px;"type="text" id="searchUserName" name="searchUserName"/>
         </td>
         <td>
-            &nbsp;&nbsp;<input type="button" onclick="passvalue();" value="Search">
+           &nbsp;&nbsp;<input  type="button" onclick="passvalue();" value="Search">
         </td>
     </tr>
     
