@@ -372,10 +372,25 @@ class jsexclusiveActions extends sfActions {
         $date = date('Y-m-d');
         $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
         $dataArray = $exclFollowupsObj->getPendingConcallsEntries($date, $agent);
+        $count = count($dataArray);
+        
+        //Start: Code to Group data array to keep same client ID together
+        $this->array_sort_by_column($dataArray, 'CONCALL_SCH_DT',SORT_DESC);
+        $perClientArray = array();
+        for($i=0;$i<$count;$i++){
+            $perClientArray[$dataArray[$i]['CLIENT_ID']][]=$dataArray[$i];
+        }
+        foreach ($perClientArray as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $sortedDataArray[] = $value2;
+            }
+        }
+        $dataArray = $sortedDataArray;
+        //End: Code to Group data array to keep same client ID together
         $this->columnNamesArr = array("S.No.", "DateAdded", "Client ID", "Client Name", "Client Number 1", "Client Number 2", "Member ID", "Member Name", "Member Phone No 1", "Member Phone No 2", "Action");
         $clientIdArr = array();
         $memberIdArr = array();
-        $count = count($dataArray);
+        
         if ($count > 0) {
             for ($i = 0; $i < $count; $i++) {
                 $clientIdArr[$i] = $dataArray[$i]['CLIENT_ID'];
@@ -538,6 +553,14 @@ class jsexclusiveActions extends sfActions {
 
             }
         }
+    }
+    function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+        $sort_col = array();
+        foreach ($arr as $key=> $row) {
+            $sort_col[$key] = $row[$col];
+        }
+
+        array_multisort($sort_col, $dir, $arr);
     }
 
 }

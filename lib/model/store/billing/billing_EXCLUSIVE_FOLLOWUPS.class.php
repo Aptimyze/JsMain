@@ -156,7 +156,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
                             . " WHERE CONCALL_STATUS != 'Y'"
                             . " AND CONCALL_SCH_DT <=:DATE"
                             . " AND AGENT_USERNAME=:AGENT"
-                            . " ORDER BY CLIENT_ID ,CONCALL_SCH_DT DESC";
+                            . " ORDER BY CONCALL_SCH_DT DESC";
 		    //print_r("$sql<br>$agent<br>$date");
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
