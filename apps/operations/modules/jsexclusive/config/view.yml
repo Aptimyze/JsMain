@@ -13,3 +13,11 @@ followupCallerSuccess:
   stylesheets:    []
 
   javascripts:    [jspc/crm/exclusiveFollowUps_js@bottom]
+
+submitFollowupStatusSuccess:
+  metas:
+    title:        JsExclusive - Submit Follow Up Status
+
+  stylesheets:    []
+
+  javascripts:    [jspc/crm/submitFollowUp_js]
