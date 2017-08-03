@@ -81,7 +81,7 @@ class ProfilePage extends React.Component {
 
     setNextPrevLink() {
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
-            let nextUrl = "/profile/viewprofile?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
+            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
 
             if(this.state.searchid != 1 && this.state.searchid != null){
@@ -103,7 +103,7 @@ class ProfilePage extends React.Component {
             });
         }
         if (parseInt(this.state.actual_offset) != 0) {
-            let prevUrl = "/profile/viewprofile?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
+            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
             if(this.state.searchid != 1 && this.state.searchid != null){
                 prevUrl += "&searchid=" + this.state.searchid;
