@@ -170,14 +170,14 @@ class Tuple {
             $verificationSeal = $this->getVERIFICATION_SEAL();
             if($verificationSeal && $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
             {
-               return 2; //both are verified(aadhar and verified by visit)
+               return 3; //both are verified(aadhar and verified by visit)
             }
-            elseif($verificationSeal || $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
+            elseif($aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
             {
-                return 1; //either one of aadhar verified or verified by visit  
+                return 2; //aadhar verified
             }
             else
-                return 0;
+                return $verificationSeal;
         }
         else
         {

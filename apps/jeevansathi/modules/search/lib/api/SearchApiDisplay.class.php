@@ -607,7 +607,7 @@ class SearchApiDisplay
 	
 		$this->profileids1 = $SearchResponseObj->getSearchResultsPidArr();
 		$this->searchResultsData1 = $SearchResponseObj->getResultsArr();
-				
+
 		//merging featured profile and search results
 		if(is_array($this->profileids1))
 		foreach($this->profileids1 as $k => $pid)
@@ -932,12 +932,12 @@ class SearchApiDisplay
    			$aadharArr = $aadharObj->getAadharDetails($this->viewerObj->getPROFILEID());   			
    			unset($aadharObj);
    			$aadharStatus = $aadharArr[$this->viewerObj->getPROFILEID()]["VERIFY_STATUS"];
-   			if($verificationStatus == 0 && $aadharStatus == "N")
-				return 0;
-			elseif($verificationStatus == 1 || $aadharStatus == "Y")
-				return 1;
-			elseif($verificationStatus == 1 && $aadharStatus == "Y")
-				return 2;   		
+   			if($verificationStatus == 1 && $aadharStatus == "Y")
+				return 3;   		
+			elseif($aadharStatus == "Y")
+				return 2;
+   			else
+   				return $verificationStatus;
 		}
 		else
 		{

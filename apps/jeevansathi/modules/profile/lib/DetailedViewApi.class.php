@@ -537,12 +537,12 @@ class DetailedViewApi
    			unset($aadharObj);
    			if($this->m_arrOut['verification_status'] && $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
    			{
-   				$this->m_arrOut['verification_status'] = 2;
+   				$this->m_arrOut['verification_status'] = 3; //this indicates that both are verified.
    			}
-   			elseif($this->m_arrOut['verification_status'] || $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
-   			{
-   				$this->m_arrOut['verification_status'] = 1;	
-   			}
+   			elseif($aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+        	{
+        		$this->m_arrOut['verification_status'] = 2; //this indicates aadhar is verified.
+        	}   			
    		}   	    
 	}
 	

@@ -52,7 +52,8 @@ class ApiVerificationDataV1Action extends sfActions
 	public function getVerificationData($profileId)
 	{	
 		$profileIdArr = array($profileId);
-		$verificationSealObj=new VerificationSealLib($objProfile,'1');
+		$this->profile=Profile::getInstance("newjs_masterRep",$profileId);		
+		$verificationSealObj=new VerificationSealLib($this->profile);		
 		if($verificationSealObj->getFsoStatus() == 0)
 		{
 			$verifiedDocumentsString = null; //this is set so as to indicate that the profile was not verified by visit.
