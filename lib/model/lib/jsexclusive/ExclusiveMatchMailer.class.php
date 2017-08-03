@@ -143,6 +143,12 @@ class ExclusiveMatchMailer {
             $mailLogObj->insertMailLog($value["RECEIVER"],"MATCH_MAIL",$count,$date);
         }
 	}
+    
+    public function logMatchMailProfiles($data){
+        if($data && is_array($data)){
+            
+        }
+    }
 }
 
 

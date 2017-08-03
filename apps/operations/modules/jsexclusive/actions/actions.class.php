@@ -31,6 +31,14 @@ class jsexclusiveActions extends sfActions {
                         $agent = $request['name'];
                         //Counter for welcome calls
                         $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+                        $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
+                        if(is_array($todaysClient)){
+                            $this->todaysClientCount = $todaysClient[strtoupper(date('D'))]?$todaysClient[strtoupper(date('D'))]:0;
+                        }
+                        else{
+                            $this->todaysClientCount = 0;
+                        }
+                        
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -185,6 +193,17 @@ class jsexclusiveActions extends sfActions {
         $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        if($request["submit"]){
+            $username = $request->getParameter("clientUserid");
+            $username = preg_replace('/\s+/', '', $username);
+            if($username == ""){
+                $this->message = "Please enter a username";
+                $this->error = 1;
+            }
+            else{
+                $this->message = "Matchmail sent to ".$username;
+            }
+        }
     }
     
     public function executeSetClientServiceDay(sfWebRequest $request) {
@@ -321,6 +340,16 @@ class jsexclusiveActions extends sfActions {
                 }
             }
         }
+    }
+    
+    public function executeTodaysClients($request){
+        $this->cid = $request['cid'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        $this->todaysClientProfiles = $exclusiveObj->getDayWiseAssignedAgent($request['name'],  strtoupper(date('D')));
+    }
+    
+    public function executeAddFollowUpFromMatchMail($request){
+        $this->cid = $request['cid'];
     }
 
 }
