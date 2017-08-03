@@ -30,7 +30,23 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       }
     } 
     
-    if(!localStorage.getItem(callUrl)) {
+    if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl) {
+      let data;
+      if(localStorage.getItem("prevDataUrl") == callUrl) {
+        data = JSON.parse(localStorage.getItem("prevData"))
+      } else {
+        data = JSON.parse(localStorage.getItem("nextData"))
+      }
+      if(typeof dispatch == 'function')
+      {
+        dispatch({
+          type: reducer,
+          payload: data,
+          token: tupleID
+        });
+      }
+    }
+    else {
       return axios({
         method: callMethod,
         url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
@@ -64,24 +80,17 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             payload: response.data,
             token: tupleID
           });
-        } else if(dispatch == "saveLocal") {
-          if(!localStorage.getItem(callUrl)) {
-              localStorage.setItem(callUrl, JSON.stringify(response.data));
-          }
-        }
+        } else if(dispatch == "saveLocalNext") {
+            localStorage.setItem("nextData", JSON.stringify(response.data));
+            localStorage.setItem("nextDataUrl",callUrl)
+        } else if(dispatch == "saveLocalPrev") {
+            localStorage.setItem("prevData", JSON.stringify(response.data));
+            localStorage.setItem("prevDataUrl",callUrl)
+        } 
         return response.data;
       })
       .catch( (error) => {
         console.warn('Actions - fetchJobs - recreived error: ', error)
       })
-    } else {
-      if(typeof dispatch == 'function')
-        {
-          dispatch({
-            type: reducer,
-            payload: JSON.parse(localStorage.getItem(callUrl)),
-            token: tupleID
-          });
-        }
     }
 }

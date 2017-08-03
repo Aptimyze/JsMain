@@ -58,9 +58,7 @@ class ProfilePage extends React.Component {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
     componentDidMount()
-  {
-
-      console.log('---componentDidMount---');
+    {
         let urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
         this.props.showProfile(this, urlString);
         let _this = this;
@@ -77,54 +75,7 @@ class ProfilePage extends React.Component {
                defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
             })
         }
-    }
-
-    setNextPrevLink() {
-        if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
-            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
-            let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
-
-            if(this.state.searchid != 1 && this.state.searchid != null){
-                nextUrl += "&searchid=" + this.state.searchid;
-                nextDataApi += "&searchid=" + this.state.searchid;
-            } else if(this.state.contact_id != undefined) {
-                nextUrl += "&contact_id=" + this.state.contact_id;
-                nextDataApi += "&contact_id=" + this.state.contact_id;
-            }
-            this.props.fetchNextPrevData(this, nextDataApi);
-            this.setState({
-                nextUrl,
-                nextDataApi
-            });
-        } else {
-            this.setState({
-                nextUrl: "",
-                nextDataApi: ""
-            });
-        }
-        if (parseInt(this.state.actual_offset) != 0) {
-            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
-            let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
-            if(this.state.searchid != 1 && this.state.searchid != null){
-                prevUrl += "&searchid=" + this.state.searchid;
-                prevDataApi += "&searchid=" + this.state.searchid;
-            } else if(this.state.contact_id != undefined) {
-                prevUrl += "&contact_id=" + this.state.contact_id;
-                prevDataApi += "&contact_id=" + this.state.contact_id;
-            }
-            this.props.fetchNextPrevData(this, prevDataApi);
-            this.setState({
-                prevUrl,
-                prevDataApi
-            });
-        } else {
-            this.setState({
-                prevUrl: "",
-                prevDataApi: ""
-            });
-        }
-
-        let startX, endX, _this = this;
+        let startX, endX;
         document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
             startX = e.changedTouches[0].clientX;
             endX = 0;
@@ -157,6 +108,54 @@ class ProfilePage extends React.Component {
                 _this.props.showProfile(_this, _this.state.prevDataApi);
             }
         });
+    }
+
+    setNextPrevLink() {
+        if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
+            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
+            let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
+
+            if(this.state.searchid != 1 && this.state.searchid != null){
+                nextUrl += "&searchid=" + this.state.searchid;
+                nextDataApi += "&searchid=" + this.state.searchid;
+            } else if(this.state.contact_id != undefined) {
+                nextUrl += "&contact_id=" + this.state.contact_id;
+                nextDataApi += "&contact_id=" + this.state.contact_id;
+            }
+            this.props.fetchNextPrevData(this, nextDataApi, "saveLocalNext");
+            this.setState({
+                nextUrl,
+                nextDataApi
+            });
+        } else {
+            this.setState({
+                nextUrl: "",
+                nextDataApi: ""
+            });
+        }
+        if (parseInt(this.state.actual_offset) != 0) {
+            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
+            let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
+            if(this.state.searchid != 1 && this.state.searchid != null){
+                prevUrl += "&searchid=" + this.state.searchid;
+                prevDataApi += "&searchid=" + this.state.searchid;
+            } else if(this.state.contact_id != undefined) {
+                prevUrl += "&contact_id=" + this.state.contact_id;
+                prevDataApi += "&contact_id=" + this.state.contact_id;
+            }
+            this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
+            this.setState({
+                prevUrl,
+                prevDataApi
+            });
+        } else {
+            this.setState({
+                prevUrl: "",
+                prevDataApi: ""
+            });
+        }
+
+
 
     }
     showLoaderDiv() {
@@ -197,7 +196,7 @@ class ProfilePage extends React.Component {
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
-            console.log("mmmm",searchid)
+            
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
@@ -232,7 +231,7 @@ class ProfilePage extends React.Component {
                 });
             }
             window.addEventListener('scroll', this.setScrollPos);
-            let _this = this;
+            //let _this2 = this;
             if(nextProps.pic) {
                 if(nextProps.pic.action == null) {
                     this.setState({disablePhotoLink: true})
@@ -374,6 +373,7 @@ class ProfilePage extends React.Component {
 
         if(this.state.dataLoaded)
         {
+            document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
                 let profiledata = {
@@ -401,15 +401,14 @@ class ProfilePage extends React.Component {
 
                 DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
-                document.getElementById("swipePage").classList.remove("animateLeft");
-
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
+
                 invalidProfileView = <div>
-                <div className="bg4 txtc" id="errorContent">
-                    <div className="txtc setmid posfix fullwid" id="noProfileIcon">
+                    <div className="bg4 txtc" id="errorContent">
+                        <div className="txtc setmid posfix fullwid" id="noProfileIcon">
                             <i className="vpro_sprite female_nopro"></i>
                             <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
                         </div>
@@ -426,7 +425,6 @@ class ProfilePage extends React.Component {
         }
         else
         {
-          console.log("p5");
             AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
                 <div className="timeline-item">
                     <div id="animated-background" className="animated-background">
@@ -509,7 +507,6 @@ class ProfilePage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.ProfileReducer.buttonDetails);
     return{
        responseStatusCode: state.ProfileReducer.responseStatusCode,
        responseMessage: state.ProfileReducer.responseMessage,
@@ -537,9 +534,9 @@ const mapDispatchToProps = (dispatch) => {
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },
-        fetchNextPrevData: (containerObj,urlString) => {
+        fetchNextPrevData: (containerObj,urlString,saveState) => {
             let call_url = "/api/v1/profile/detail"+urlString;
-            commonApiCall(call_url,{},'','GET',"saveLocal",true,containerObj);
+            commonApiCall(call_url,{},'SAVE_INFO','GET',saveState,true,containerObj);
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
