@@ -101,7 +101,7 @@ class VariableParams
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 15,
-                                        "pool2FilterPercent" => 100,
+                                        "pool2FilterPercent" => 25,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
                                         "activeOfferFlag" => true
                                         );
