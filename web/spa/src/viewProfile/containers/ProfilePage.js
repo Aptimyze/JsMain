@@ -58,7 +58,9 @@ class ProfilePage extends React.Component {
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
     componentDidMount()
-    {   
+  {
+
+      console.log('---componentDidMount---');
         let urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
         this.props.showProfile(this, urlString);
         let _this = this;
@@ -83,8 +85,8 @@ class ProfilePage extends React.Component {
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
 
             if(this.state.searchid != 1 && this.state.searchid != null){
-                nextUrl += "&searchid=" + this.state.searchid; 
-                nextDataApi += "&searchid=" + this.state.searchid; 
+                nextUrl += "&searchid=" + this.state.searchid;
+                nextDataApi += "&searchid=" + this.state.searchid;
             } else if(this.state.contact_id != undefined) {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
@@ -104,8 +106,8 @@ class ProfilePage extends React.Component {
             let prevUrl = "/profile/viewprofile?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
             if(this.state.searchid != 1 && this.state.searchid != null){
-                prevUrl += "&searchid=" + this.state.searchid; 
-                prevDataApi += "&searchid=" + this.state.searchid; 
+                prevUrl += "&searchid=" + this.state.searchid;
+                prevDataApi += "&searchid=" + this.state.searchid;
             } else if(this.state.contact_id != undefined) {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
@@ -184,14 +186,14 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-            
+
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
-            
+
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
@@ -199,7 +201,7 @@ class ProfilePage extends React.Component {
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
-            
+
             this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
@@ -234,19 +236,21 @@ class ProfilePage extends React.Component {
             if(nextProps.pic) {
                 if(nextProps.pic.action == null) {
                     this.setState({disablePhotoLink: true})
-                }   
+                }
             }
-            
+
 
             //calling tracking event
             /*setTimeout(function(){
                 console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
             },3000);
             */
-        } else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true) {
+        }
+        else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true)
+        {
             if(this.props.history.prevUrl) {
-              this.props.history.push(this.props.history.prevUrl);  
-            } 
+              this.props.history.push(this.props.history.prevUrl);
+            }
         }
 
     }
@@ -358,15 +362,20 @@ class ProfilePage extends React.Component {
 
         var historyView;
         if(this.state.showHistory) {
-            historyView = <CommHistory closeHistory={()=>this.closeHistoryTab()} profileId={this.props.profileId} username={this.props.AboutInfo.username} profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} ></CommHistory>
+            historyView = <CommHistory
+                            closeHistory={()=>this.closeHistoryTab()}
+                            profileId={this.props.profileId}
+                            username={this.props.AboutInfo.username}
+                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
+                          </CommHistory>
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
         if(this.state.dataLoaded)
-        {   
+        {
             if(this.props.responseStatusCode == "0") {
-                
+
                 let profiledata = {
                     profilechecksum : this.state.profilechecksum,
                     responseTracking: this.state.responseTracking,
@@ -394,7 +403,7 @@ class ProfilePage extends React.Component {
 
                 document.getElementById("swipePage").classList.remove("animateLeft");
 
-                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>    
+                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
@@ -413,10 +422,11 @@ class ProfilePage extends React.Component {
                 }
                 metaTagView = <MetaTagComponents page="ProfileNotFound" />
             }
-            
+
         }
         else
         {
+          console.log("p5");
             AboutViewTemp = <div id="preLoader" className="timeline-wrapper">
                 <div className="timeline-item">
                     <div id="animated-background" className="animated-background">
