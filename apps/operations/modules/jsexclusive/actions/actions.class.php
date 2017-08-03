@@ -27,10 +27,7 @@ class jsexclusiveActions extends sfActions {
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
-                        //Get Count for each option 
-                        $agent = $request['name'];
-                        //Counter for welcome calls
-                        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+                       
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -165,7 +162,22 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeMenu(sfWebRequest $request) {
+        //Get Count for welcome calls module on menu page 
+        $agent = $request['name'];
+        $notFound = $request['notFound'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        //Counter for welcome calls
+        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+        unset($exclusiveObj);
         
+        //To get count for pending con calls for menu page
+        $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $date = date('Y-m-d');
+        $this->pendingConcallsCount = $exclFollowupsObj->getPendingConcallsCount($date,$agent);
+        unset($exclFollowupsObj);
+        if($notFound==true){
+            $this->notFound=1;
+        }
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
@@ -182,9 +194,32 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $this->cid = $request['cid'];
         $this->client = $request['client'];
-        $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
-        //Get all clients here
-        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        $from = $request['from'];
+        //$this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
+        //check if user is eligible for new handling
+        if($from == 'search'){
+            $username = $request['username'];
+            $jprofileObj = new JPROFILE("newjs_slave");
+            $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+            if(!details){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
+            if(!$userDetails){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $this->client=$details['PROFILEID'];
+        }
+        
     }
     
     public function executeSetClientServiceDay(sfWebRequest $request) {
@@ -323,6 +358,106 @@ class jsexclusiveActions extends sfActions {
         }
     }
 
+
+    public function executePendingConcalls(sfWebRequest $request) {
+        $agent = $request['name'];
+        $executedFor = $request['executedFor'];
+        //This if statement will be true if the concall executed button is pressed and the row id of the row to be deleted will be passed
+        if ($executedFor) {
+            $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+            $date = date('Y-m-d H:i:s');
+            $status = 'Y';
+            $exclFollowupsObj->markConcallStatusForId($executedFor, $status, $date);
+        }
+        $date = date('Y-m-d');
+        $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $dataArray = $exclFollowupsObj->getPendingConcallsEntries($date, $agent);
+        $this->columnNamesArr = array("S.No.", "DateAdded", "Client ID", "Client Name", "Client Number 1", "Client Number 2", "Member ID", "Member Name", "Member Phone No 1", "Member Phone No 2", "Action");
+        $clientIdArr = array();
+        $memberIdArr = array();
+        $count = count($dataArray);
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
+                $clientIdArr[$i] = $dataArray[$i]['CLIENT_ID'];
+                $memberIdArr[$i] = $dataArray[$i]['MEMBER_ID'];
+            }
+            $combinedIdArr = array_merge($clientIdArr, $memberIdArr);
+            $combinedIdArr = array_unique($combinedIdArr);
+            $combinedIdArr = array_values($combinedIdArr);
+            //Getting information for all ids
+            $jprofileObj = new JPROFILE("newjs_slave");
+            $contactObj = new ProfileContact("newjs_slave");
+            $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+
+            //Start:fetch primary mobile num and username of all ids 
+            $combinedIdStr = implode($combinedIdArr, ",");
+            $phoneDetails = $jprofileObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,USERNAME,PHONE_MOB");
+            $n = count($phoneDetails);
+            for ($i = 0; $i < $n; $i++) {
+                $phoneDetailsAltered[$phoneDetails[$i]['PROFILEID']] = $phoneDetails[$i];
+            }
+            unset($phoneDetails);
+            $phoneDetails = $phoneDetailsAltered;
+            unset($phoneDetailsAltered);
+            unset($i);
+            unset($n);
+            //End:fetch primary mobile num and username of all ids 
+            //Start:fetch alternate mobile num for all ids
+            $altPhoneDetails = $contactObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,ALT_MOBILE");
+            $n = count($altPhoneDetails);
+            for ($i = 0; $i < $n; $i++) {
+                $altPhoneDetailsAltered[$altPhoneDetails[$i]['PROFILEID']] = $altPhoneDetails[$i];
+            }
+            unset($altPhoneDetails);
+            $altPhoneDetails = $altPhoneDetailsAltered;
+            unset($phoneDetailsAltered);
+            unset($i);
+            unset($n);
+            //End:fetch alternate mobile num for all ids
+            //Start: fetch name of all ids
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            $n = count($clientNameArr);
+            for ($i = 0; $i < $n; $i++) {
+                $clientNameArrAltered[$clientNameArr[$i]['PROFILEID']] = $clientNameArr[$i];
+            }
+            unset($clientNameArr);
+            $clientNameArr = $clientNameArrAltered;
+            unset($clientNameArrAltered);
+            unset($i);
+            unset($n);
+            //End: Fetch name of all ids
+            //Start:Putting all details in a single array for displaying
+            for ($i = 0; $i < count($combinedIdArr); $i++) {
+                $detailsArray[$combinedIdArr[$i]]['USERNAME'] = $phoneDetails[$combinedIdArr[$i]]['USERNAME'];
+                $detailsArray[$combinedIdArr[$i]]['PHONE_MOB'] = $phoneDetails[$combinedIdArr[$i]]['PHONE_MOB'];
+                $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'];
+                if ($clientNameArr[$combinedIdArr[$i]]['DISPLAY'] == 'Y') {
+                    $detailsArray[$combinedIdArr[$i]]['NAME'] = $clientNameArr[$combinedIdArr[$i]]['NAME'];
+                }
+            }
+            $count = count($dataArray);
+            for ($i = 0; $i < $count; $i++) {
+                $dataArray[$i]['CLIENT_USERNAME'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['USERNAME'];
+                $dataArray[$i]['CLIENT_NAME'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['NAME'];
+                $dataArray[$i]['CLIENT_PH1'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['PHONE_MOB'];
+                $dataArray[$i]['CLIENT_PH2'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['ALT_MOBILE'];
+                $dataArray[$i]['MEMBER_USERNAME'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['USERNAME'];
+                $dataArray[$i]['MEMBER_NAME'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['NAME'];
+                $dataArray[$i]['MEMBER_PH1'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['PHONE_MOB'];
+                $dataArray[$i]['MEMBER_PH2'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['ALT_MOBILE'];
+                $dataArray[$i]['SNO'] = $i + 1;
+            }
+            $this->displayData = $dataArray;
+            $this->totalCount = $i;
+        }
+        else{//Case where no profiles exist for particular agent.
+            $this->infoMsg="No Profiles exist for you today!";
+        }
+        unset($dataArray);
+        unset($detailsArray);
+        //End:Putting all details in a single array for displaying
+    }
+
     /**
     * Executes followupCaller action
     * follow ups of all exclusive clients done by all RM's
@@ -396,5 +531,6 @@ class jsexclusiveActions extends sfActions {
             }
         }
     }
+
 }
 ?>

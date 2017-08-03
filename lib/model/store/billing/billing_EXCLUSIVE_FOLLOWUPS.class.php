@@ -55,7 +55,6 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		try
 		{
 		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT)";
-
 		    $sql .= "ORDER BY STATUS DESC,MEMBER_ID";
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
@@ -103,6 +102,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 	{
 		try
 		{
+
 		    $sql = "SELECT count(*) AS CNT FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT)";
 		    $res = $this->db->prepare($sql);
 		    $res->bindValue(":CURRENT_DT", $followUpDate, PDO::PARAM_STR);
@@ -114,6 +114,87 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		    return 0;
 		}
 		catch(Exception $e){
+		  throw new jsException($e);
+		}
+	}
+
+     /**
+     * Function to get pending con calls count from billing.EXCLUSIVE_FOLLOWUPS table for a
+     * particular agent 
+     * @param   
+     * @return  array of rows
+     */
+    public function getPendingConcallsCount($date, $agent) {
+        try {
+            $sql = "SELECT count(*) AS CNT FROM billing.EXCLUSIVE_FOLLOWUPS where CONCALL_STATUS != 'Y' AND CONCALL_SCH_DT <=:DATE AND AGENT_USERNAME=:AGENT";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE", $date, PDO::PARAM_STR);
+            $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+            $res->execute();
+
+            if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                return $result['CNT'];
+            }
+            return 0;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+
+    /**
+     * Function to get con calls details from billing.EXCLUSIVE_FOLLOWUPS table
+     *
+     * @param   
+     * @return  array of rows
+     */ 
+	public function getPendingConcallsEntries($date,$agent,$limit="",$offset=0)
+	{
+		try
+		{
+		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS"
+                            . " WHERE CONCALL_STATUS != 'Y'"
+                            . " AND CONCALL_SCH_DT <=:DATE"
+                            . " AND AGENT_USERNAME=:AGENT"
+                            . " ORDER BY CLIENT_ID ,CONCALL_SCH_DT DESC";
+		    //print_r("$sql<br>$agent<br>$date");
+		    if($offset>=0 && !empty($limit)){
+		    	$sql .= " LIMIT ".$offset.",".$limit;
+		    }
+		    $res = $this->db->prepare($sql);
+		    $res->bindValue(":DATE", $date, PDO::PARAM_STR);
+                    $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+		    $res->execute();
+		    while($result=$res->fetch(PDO::FETCH_ASSOC)){
+		        $rows[] = $result;
+		    }
+		    return $rows;
+		}
+		catch(Exception $e){
+		  throw new jsException($e);
+		}
+	}
+        
+        	 /** Function to update screening status
+	 *
+	 * @param   $agentUsername,$clientId,$screenedStatus='Y'
+	 * @return  none
+	 */
+	public function markConcallStatusForId($id,$status,$date){
+		try
+		{
+		  if($id)
+		  {
+		    $sql = "UPDATE billing.EXCLUSIVE_FOLLOWUPS SET CONCALL_STATUS=:STATUS,CONCALL_ACTUAL_DT=:ACTUAL_DT WHERE ID=:ID";
+		    $res = $this->db->prepare($sql);
+		    $res->bindValue(":STATUS", $status, PDO::PARAM_STR);
+		    $res->bindValue(":ACTUAL_DT", $date, PDO::PARAM_STR);
+		    $res->bindValue(":ID",$id, PDO::PARAM_STR);
+		    $res->execute();
+		  }
+		}
+		catch(Exception $e)
+		{
 		  throw new jsException($e);
 		}
 	}
