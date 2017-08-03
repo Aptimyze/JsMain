@@ -352,13 +352,14 @@ class SearchApiStrategyV1
                                                 $clusterData = array("0"=>array("key"=>"L".$clusterIndex,"value"=>$clusterLVal),"1"=>array("key"=>"H".$clusterIndex,"value"=>$clusterHVal));
                                                 $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
                                         }else{
+                                                $key = $clusterIndex;
                                                 if($clusterIndex == "EDUCATION_GROUPING"){
                                                         $clusterIndex = "EDU_LEVEL_NEW";
                                                 }elseif($clusterIndex == "OCCUPATION_GROUPING"){
                                                         $clusterIndex = "OCCUPATION";
                                                 }
                                                 eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
-                                                $clusterData = array("0"=>array("key"=>$clusterIndex,"value"=>$clusterVal));
+                                                $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
                                                 $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
                                         }
                                 }
