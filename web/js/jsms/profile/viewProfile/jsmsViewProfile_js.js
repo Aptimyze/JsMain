@@ -676,10 +676,12 @@ astroCompatibility = function()
 		}
 		
 	});
+	var clickedElem = false;
 	$(".js-astroMem").click(function(){
 
-		if(astroSent == 1)
+		if(astroSent == 1 && clickedElem == false)
 		{
+			clickedElem true;
 			window.location = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username;
 		}
 		

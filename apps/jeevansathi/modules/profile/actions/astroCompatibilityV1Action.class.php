@@ -139,9 +139,9 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				
 				unset($astroObj);
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+				/*$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 				$apiResponseHandlerObj->setResponseBody($successArr);
-				$apiResponseHandlerObj->generateResponse();
+				$apiResponseHandlerObj->generateResponse();*/
 				return SfView::NONE;
 				
 			}
