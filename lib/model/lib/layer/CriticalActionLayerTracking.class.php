@@ -482,7 +482,7 @@ return 0;
                           {
                             $aadhaarObj = new aadharVerification();
                             $details = $aadhaarObj->getAadharDetails($profileid);
-                            if(!$details[AADHAR_NO])
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
                               $show=1;
                           }
                       }
