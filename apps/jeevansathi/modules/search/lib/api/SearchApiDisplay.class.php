@@ -450,6 +450,8 @@ class SearchApiDisplay
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
+                //aadhar verification part
+                  $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS']);
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
 				{
@@ -605,7 +607,7 @@ class SearchApiDisplay
 	
 		$this->profileids1 = $SearchResponseObj->getSearchResultsPidArr();
 		$this->searchResultsData1 = $SearchResponseObj->getResultsArr();
-
+				
 		//merging featured profile and search results
 		if(is_array($this->profileids1))
 		foreach($this->profileids1 as $k => $pid)
@@ -846,7 +848,8 @@ class SearchApiDisplay
 	public function getSealInfo($verificationSeal='0')
 	{ 
 			if($verificationSeal == '0')
-							return 0;
+				return 0;
+		
 			$verificationSeal=  explode(",", $verificationSeal);
 			if($verificationSeal[0]=="F"){
 				$sealArr=array_flip(PROFILE_VERIFICATION_DOCUMENTS_ENUM::$VERIFICATION_SEAL_ARRAY);
@@ -920,4 +923,25 @@ class SearchApiDisplay
                 
                 return $label;
         }*/
+
+    public function getFinalVerificationStatus($verificationStatus)
+    {
+    	if(MobileCommon::isAndroidApp())
+		{
+			$aadharObj = new aadharVerification();
+   			$aadharArr = $aadharObj->getAadharDetails($this->viewerObj->getPROFILEID());   			
+   			unset($aadharObj);
+   			$aadharStatus = $aadharArr[$this->viewerObj->getPROFILEID()]["VERIFY_STATUS"];
+   			if($verificationStatus == 0 && $aadharStatus == "N")
+				return 0;
+			elseif($verificationStatus == 1 || $aadharStatus == "Y")
+				return 1;
+			elseif($verificationStatus == 1 && $aadharStatus == "Y")
+				return 2;   		
+		}
+		else
+		{
+			return $verificationStatus;
+		}
+    }
 }

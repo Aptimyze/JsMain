@@ -154,32 +154,39 @@ class Tuple {
         return $this->EMAIL;
     }
     public function getVERIFICATION_SEAL()
-    {
+    {   
         $verificationSealObj=new VerificationSealLib($this->profileObject,'1');
         $verificationSeal = $verificationSealObj->getFsoStatus();
-        unset($verificationSealObj);
+        unset($verificationSealObj);    
+        return $verificationSeal;
+    }
+    public function getVERIFICATION_STATUS()
+    {
         if(MobileCommon::isApp() == "A")
         {
             $aadharObj = new aadharVerification();
             $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
             unset($aadharObj);
+            $verificationSeal = $this->getVERIFICATION_SEAL();
             if($verificationSeal && $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
             {
-               $verificationSeal = 2; //both are verified(aadhar and verified by visit)
+               return 2; //both are verified(aadhar and verified by visit)
             }
             elseif($verificationSeal || $aadharArr[$this->PROFILEID]["VERIFY_STATUS"] == "Y")
             {
-                $verificationSeal = 1; //either one of aadhar verified or verified by visit  
+                return 1; //either one of aadhar verified or verified by visit  
             }
+            else
+                return 0;
         }
-        return $verificationSeal;
-    }
-    public function getVERIFICATION_STATUS()
-    {
-        if($this->getVERIFICATION_SEAL())
-            return 1;
         else
-            return 0;
+        {
+            if($this->getVERIFICATION_SEAL())
+                return 1;
+            else
+                return 0;
+        }
+        
     }
     public function getGUNA() {
         return $this->GUNA;
