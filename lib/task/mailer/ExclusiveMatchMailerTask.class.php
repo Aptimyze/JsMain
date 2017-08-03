@@ -102,6 +102,8 @@ EOF;
 		$exclusiveMatchMailerObj->truncate();
 		$exclusiveMailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
 		$profiles = $exclusiveMailLogObj->getProfiles('Y',"MATCH_MAIL",$date);
+		if(!is_array($profiles))
+			$profiles = array();
 		foreach ($data as $key => $value) {
 		    foreach ($value as $k => $v){
                 if(MemberShipHandler::isEligibleForRBHandling($v["CLIENT_ID"]) && !in_array($v["CLIENT_ID"],$profiles))
