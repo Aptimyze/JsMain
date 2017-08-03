@@ -677,7 +677,7 @@ astroCompatibility = function()
 		
 	});
 	$(".js-astroMem").click(function(){
-		window.location = "www.branch1.jeev.com/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username;
+		window.location = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username;
 		
 		//removing ajax call in this case as ajax doesnt let us download the pdf	
 		// $.ajax({
