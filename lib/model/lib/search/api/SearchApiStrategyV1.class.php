@@ -342,18 +342,20 @@ class SearchApiStrategyV1
                         $searchSummaryObj = new SearchService();
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
+                        
                         if(MobileCommon::isAndroidApp()){
-                                
-                        }
-                        $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
-                        if($clusterIndex != ""){
-                                if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
-                                        eval('$clusterLVal = $SearchParamtersObj->getL'.$clusterIndex.'();');
-                                        eval('$clusterHVal = $SearchParamtersObj->getH'.$clusterIndex.'();');
-                                        $this->output["searchSummary"]["FILTER_FIELD"] = array("L".$clusterIndex=>$clusterLVal,"H".$clusterIndex=>$clusterHVal);
-                                }else{
-                                        eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
-                                        $this->output["searchSummary"]["FILTER_FIELD"] = array($clusterIndex=>$clusterVal);
+                                $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
+                                if($clusterIndex != ""){
+                                        if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
+                                                eval('$clusterLVal = $SearchParamtersObj->getL'.$clusterIndex.'();');
+                                                eval('$clusterHVal = $SearchParamtersObj->getH'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>"L".$clusterIndex,"value"=>$clusterLVal),"1"=>array("key"=>"H".$clusterIndex,"value"=>$clusterHVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }else{
+                                                eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>$clusterIndex,"value"=>$clusterVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }
                                 }
                         }
                 }
