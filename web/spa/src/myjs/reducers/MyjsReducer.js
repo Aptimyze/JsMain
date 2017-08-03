@@ -93,13 +93,15 @@ const MyjsReducer = (state={
 						key = 'apiDataDR';
 					break;
 				}
-				let newArray = arr['profiles'].slice();
+				let newArray = arr['profiles'].slice(), oldCount = arr.total;
+
 				newArray.splice(action.payload.index,1);
 				state = {
 					...state,
 					[key] : {
 						...arr,
-						profiles : newArray
+						profiles : newArray,
+						total : --oldCount
 					}
 				}
 				break;
