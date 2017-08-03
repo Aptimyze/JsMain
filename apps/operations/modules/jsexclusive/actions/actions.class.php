@@ -203,17 +203,19 @@ class jsexclusiveActions extends sfActions {
             $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
             if(!details){
                 $module="jsexclusive";
-                $action="menu";
+                $action="welcomeCallsPage2";
                 $params=array("notFound"=>true);
-                $this->forwardTo($module,$action,$params);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
             }
             $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
             $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
             if(!$userDetails){
                 $module="jsexclusive";
-                $action="menu";
+                $action="welcomeCallsPage2";
                 $params=array("notFound"=>true);
-                $this->forwardTo($module,$action,$params);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
             }
             $this->client=$details['PROFILEID'];
         }

@@ -13,6 +13,7 @@
             <font size=3>CLIENT SERVICE PAGE</font>
         </td>
     </tr>
+    ~if $notFound neq true`
     ~assign var=num value=1`
     <tr>
         <td>
@@ -41,6 +42,18 @@
             ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/welcomeCallsPage2?client=~$client`">Fill Preferential DPP for RB ( Custome RB )</a>
         </td>
     </tr><br>
+    ~else`
+    <tr>
+        <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;User is either invalid or not eligible for new exclusive handling
+        </td>
+    </tr><br>
+    <tr>
+        <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="location.href='/operations.php/jsexclusive/menu'" value="Back">
+        </td>
+    </tr><br>
+    ~/if`
 </table>
 
 
