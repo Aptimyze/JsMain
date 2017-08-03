@@ -74,19 +74,10 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
-    foreach (self::$independentCALS as $key => $value) {
-      # code...
-      if(self::checkFinalLayerConditions($profileObj,$value))
-        return $value;
-    }
     $profileId = $profileObj->getPROFILEID();
-    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
-              return 0;
-            
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -102,6 +93,14 @@ class CriticalActionLayerTracking
     
 
     }
+
+    foreach (self::$independentCALS as $key => $value) {
+      # code...
+      if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
+        return $value;
+    }
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
+              return 0;
 
   
         //default condition for minimum time difference between layers
@@ -145,7 +144,6 @@ return 0;
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
   {
- 
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -415,8 +413,8 @@ return 0;
                         $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
                         $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
                         $show=1;                      
+                        self::flushCALCacheData($profileid);
                       }
-
                       }                      
                     break;
 
@@ -587,5 +585,12 @@ break;
        } 
        return false;
       
+  }
+
+
+  public static  function flushCALCacheData($profileid)
+  {
+    $redis = JsMemcache::getInstance();
+    $redis->delete($profileid.'_CAL_DAY_FLAG');
   }
 }
