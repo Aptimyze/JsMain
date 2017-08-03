@@ -556,7 +556,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//aadhar verification
 		$aadharVerificationObj = new aadharVerification();
 		$aadharArr = $aadharVerificationObj->getAadharDetails($this->profile->getPROFILEID());
-		$basicArr[] =$this->getApiFormatArray("AADHAR","Aadhar no." ,$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],"","",$aadharArr[$this->profile->getPROFILEID()]["VERIFY_STATUS"]);
+		$basicArr[] =$this->getApiFormatArray("AADHAAR","Aadhaar no." ,$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],"","",$aadharArr[$this->profile->getPROFILEID()]["VERIFY_STATUS"]);
 		  
         return $basicArr;
 		

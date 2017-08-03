@@ -56,17 +56,20 @@ class aadharVerificationStatusV1Action extends sfActions
 				unset($aadharVerificationObj);
 				$finalArr["MESSAGE"] = aadharVerificationEnums::AADHARVERIFIED;
 				$finalArr["AADHAR_NO"] = $this->aadharID;
+				$finalArr["VERIFIED"] = "Y";
 				$finalArr["RESPONSE"]  = ResponseHandlerConfig::$SUCCESS;
 			}
 			else
 			{
 				$finalArr["MESSAGE"] = aadharVerificationEnums::NOTVERIFIEDMSG;
+				$finalArr["VERIFIED"] = "N";
 				$finalArr["RESPONSE"]  = ResponseHandlerConfig::$SUCCESS;
 			}			
 		}
 		else
 		{
 			$finalArr["MESSAGE"] = aadharVerificationEnums::STATUSPENDINGMSG;
+			$finalArr["VERIFIED"] = "P";
 			$finalArr["RESPONSE"]  = ResponseHandlerConfig::$FAILURE;
 		}
 
