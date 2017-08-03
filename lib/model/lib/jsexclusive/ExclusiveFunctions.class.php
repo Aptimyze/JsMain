@@ -306,7 +306,9 @@ class ExclusiveFunctions{
                 $updateArr["FOLLOWUP4_DT"] = $currentDt;
                 break;
         }
-       	$updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        if($params["followupStatus"]=='Y'){
+       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        }
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
         $followUpObj->updateFollowUp($params["ifollowUpId"],$updateArr);
         unset($followUpObj);

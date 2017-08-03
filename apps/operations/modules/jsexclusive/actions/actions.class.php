@@ -503,7 +503,9 @@ class jsexclusiveActions extends sfActions {
                     //update followup
                     if(is_array($followUpDetails) && $followUpDetails["STATUS"]==$this->istatus){
                         $exclusiveLib = new ExclusiveFunctions();
-                        $formArr["date1"] = $formArr["yearValue"]."-".$formArr["monthValue"]."-".$formArr["dayValue"];
+                        if($formArr["yearValue"] && $formArr["monthValue"] && $formArr["dayValue"]){
+                            $formArr["date1"] = $formArr["yearValue"]."-".$formArr["monthValue"]."-".$formArr["dayValue"];
+                        }
                         $exclusiveLib->updateFollowUpDetails(array("operator"=>$this->name,"followupStatus"=>$formArr["followupStatus"],"ifollowUpId"=>$this->ifollowUpId,"followUpDetails"=>$followUpDetails,"reason"=>$formArr["reason"],"reasonText"=>$formArr["reasonText"],"date1"=>$formArr["date1"]));
                         unset($exclusiveLib);
                     }

@@ -81,7 +81,7 @@
             <tr></tr>
             <tr align="center">
                 <td class="label" style="background-color:PeachPuff">
-                    <input type="submit" name="submit" value="Back to Followup page">
+                    <input type="button" value="Back to Followups" onclick="backToFollowUps();">
                 </td>
                 <td class="label" style="background-color:PeachPuff">
                     <input type="submit" name="submit" value="Submit" onclick="return validateFollowUp();">
