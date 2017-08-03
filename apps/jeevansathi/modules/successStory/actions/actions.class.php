@@ -538,8 +538,6 @@ class successStoryActions extends sfActions
     }
 
     public function FetchProfile($request) {
-        
-       
         if($this->fromMailer!=true){
             $this->loginData = $data = $request->getAttribute("loginData");
             $this->profileid = $this->loginData["PROFILEID"];
@@ -549,6 +547,8 @@ class successStoryActions extends sfActions
         }
         else {
             $this->mailerid = $request->getParameter("mailid");
+            $authenticationJsObj = new JsAuthentication();
+            $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
             $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
             $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid,'Y');
         }
@@ -974,10 +974,43 @@ class successStoryActions extends sfActions
     }
 
     public function executeJsmsInputStory(sfWebRequest $request){
-    	$this->FetchProfile($request);
+        $this->fromMailer = $request->getParameter("fromSuccessStoryMailer");
+        $this->FetchProfile($request);
+        $this->error = $request->getParameter("error");
+        $this->offerConsent = $request->getParameter("offerConsent");
+
+        if($this->fromMailer==true){
+            $this->mailerid = $request->getParameter("mailid");
+            $this->mailId = $this->mailerid;
+            $authenticationJsObj = new JsAuthentication();
+            $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
+            if($this->mailerid==""||empty($this->mailerid)){
+                //Invalid URL requested
+                $this->error ="wrongmailid";
+                $context = $this->getContext();
+                $context->getController()->forward("static", "logoutPage",0); //Logout page
+            }
+            if(!$this->error){
+                $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
+                $this->profileid = $successStoryMailLog->getLogEntry($this->mailerid,'Y');
+                if($this->profileid==""){
+                    //Profileid and mailer id not linked to each other.
+                    $this->error ="wrongmailid";
+                    $context = $this->getContext();
+                    $context->getController()->forward("static", "logoutPage",0); //Logout page
+                }
+            }
+        }
+
     	if (is_numeric($this->profileid)) {
-            $loggedInObj = LoggedInProfile::getInstance();
-            $this->USERNAME = $loggedInObj->getUSERNAME();
+            if($this->fromMailer != true){
+                $loggedInObj = LoggedInProfile::getInstance();
+                $this->USERNAME = $loggedInObj->getUSERNAME();
+            } else {
+                $jprofile = new JPROFILE();
+                $row = $jprofile->get($this->profileid, "PROFILEID", "USERNAME,GENDER,EMAIL,CONTACT");
+                $this->USERNAME = $row["USERNAME"];
+            }
             $dbObj = new NEWJS_SUCCESS_STORIES('newjs_slave');
             $resultArr = $dbObj->fetchStoryDetail(array(
                 "USERNAME" => $this->USERNAME
@@ -994,19 +1027,35 @@ class successStoryActions extends sfActions
 
     public function executeJsmsSelectImage(sfWebRequest $request){
     	$this->successStoryMsg = $request->getParameter('successStoryMsg');
+        $this->fromMailer = $request->getParameter("fromSuccessStoryMailer");
+        $this->mailerid = $request->getParameter("mailid");
+        $this->mailId = $this->mailerid;
     	$this->FetchProfile($request);
         $this->error = $request->getParameter("error");
-
+        $this->offerConsent = $request->getParameter("offerConsent");
         if (is_numeric($this->profileid)) {
-            $loggedInObj = LoggedInProfile::getInstance();
-            $this->USERNAME = $loggedInObj->getUSERNAME();
-            $this->EMAIL = $loggedInObj->getEMAIL();
-            $this->CONTACT = $loggedInObj->getCONTACT();
-            $this->CHECKSUM = $checksum;
-            $this->PROFILEID = $profileid;
-            
-            $user_name = $loggedInObj->getUSERNAME();
-            $gender = $loggedInObj->getGENDER();
+            if($this->fromMailer != true){
+                $loggedInObj = LoggedInProfile::getInstance();
+                $this->USERNAME = $loggedInObj->getUSERNAME();
+                $this->EMAIL = $loggedInObj->getEMAIL();
+                $this->CONTACT = $loggedInObj->getCONTACT();
+                $this->CHECKSUM = $checksum;
+                $this->PROFILEID = $profileid;
+
+                $user_name = $loggedInObj->getUSERNAME();
+                $gender = $loggedInObj->getGENDER();
+            } else {
+                $jprofile = new JPROFILE();
+                $row = $jprofile->get($this->profileid, "PROFILEID", "USERNAME,GENDER,EMAIL,CONTACT");
+                $this->USERNAME = $row["USERNAME"];
+                $this->EMAIL = $row["EMAIL"];
+                $this->CONTACT = $row["CONTACT"];
+                $this->CHECKSUM = $checksum;
+                $this->PROFILEID = $profileid;
+
+                $user_name = $row["USERNAME"];
+                $gender = $row["GENDER"];
+            }
             
             $dbObj = new NEWJS_SUCCESS_STORIES('newjs_slave');
             $resultArr = $dbObj->fetchStoryDetail(array(
@@ -1026,14 +1075,19 @@ class successStoryActions extends sfActions
                 $this->USERNAME_W = $row["USERNAME_W"];
                 $this->EMAIL_W = $row["EMAIL_W"];
             }
-            
-            if(empty($this->NAME)){
-                $nameOfUserOb=new NameOfUser();                
-                $nameOfUserArr = $nameOfUserOb->getNameData($this->profileid);
-                $this->NAME = $nameOfUserArr[$this->profileid]["NAME"];
+
+            if(empty($this->NAME)) {
+                $nameOfUserOb = new NameOfUser();
+                if ($this->fromMailer != true) {
+                    $loginProfile = LoggedInProfile::getInstance();
+                    $nameOfUserArr = $nameOfUserOb->getNameData($loginProfile->getPROFILEID());
+                    $this->NAME = $nameOfUserArr[$loginProfile->getPROFILEID()]["NAME"];
+                } else {
+                    $nameOfUserArr = $nameOfUserOb->getNameData($this->profileid);
+                    $this->NAME = $nameOfUserArr[$this->profileid]["NAME"];
+                }
+
                 unset($nameOfUserOb);
-            	/*$objNameStore = new incentive_NAME_OF_USER('newjs_slave');
-				$this->NAME = $objNameStore->getName($this->profileid);*/
             }
 
             $W_DATE = $row["WEDDING_DATE"];

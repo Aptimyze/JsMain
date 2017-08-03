@@ -93,7 +93,11 @@
             <div id="overlayHead" class="bg1 txtc pad15">
                 <div class="posrel lh30">
                     <div class="fontthin f20 white">Add Wedding Photo</div>
-                    <a href="/successStory/jsmsInputStory"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~if $fromMailer neq 'true'`
+                        <a href="/successStory/jsmsInputStory"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~else`
+                        <a href="/successStory/layer?fromSuccessStoryMailer=~$fromMailer`&mailid=~$mailId`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~/if`
                 </div>
             </div>
             <!--end:top-->
@@ -127,7 +131,11 @@
             <div id="overlayHead" class="bg1 txtc pad15">
                 <div class="posrel lh30">
                     <div class="fontthin f20 white">Add Details</div>
-                    <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~if $fromMailer neq 'true'`
+                        <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~else`
+                        <a href="/successStory/layer?fromSuccessStoryMailer=~$fromMailer`&mailid=~$mailId`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                    ~/if`
                 </div>
             </div>
             <!--end:top-->
@@ -267,9 +275,15 @@
                 <input type="hidden" name="profileid" value="~$PROFILEID`">
                 <input style="width:0px;height:0px;position:absolute;" id="myFileInput" type="file" name="wedding_photo" accept="image/*;capture=camera">
                 <!--start:submit button-->
-                <div id="foot" class="posfix fullwid bg7 btmo">
-                    <input type="submit" id="main_button" class="cursp fullwid dispbl lh50 txtc f16 white" value="Submit Success Story & Delete Profile">
-                </div>
+                ~if $fromMailer neq 'true'`
+                    <div id="foot" class="posfix fullwid bg7 btmo">
+                        <input type="submit" id="main_button" class="cursp fullwid dispbl lh50 txtc f16 white" value="Submit Success Story & Delete Profile">
+                    </div>
+                ~else`
+                    <div id="foot" class="posfix fullwid bg7 btmo">
+                        <input type="submit" id="main_button" class="cursp fullwid dispbl lh50 txtc f16 white" value="Submit Success Story">
+                    </div>
+                ~/if`
                 <!--end:submit button-->
             </div>
             <!--end:option-->
