@@ -402,11 +402,15 @@ class ProfilePage extends React.Component {
                 <div className="bg4 txtc" id="errorContent">
                     <div className="txtc setmid posfix fullwid" id="noProfileIcon">
                             <i className="vpro_sprite female_nopro"></i>
-                            <div className="f14 fontreg color13 lh30">Sorry, the profile you requested was not found</div>
+                            <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
                         </div>
                     </div>
                 </div>;
-                Header = "Profile not found";
+                if(this.props.AboutInfo.username) {
+                    Header = this.props.AboutInfo.username;
+                } else {
+                    Header = "Profile not found";
+                }
                 metaTagView = <MetaTagComponents page="ProfileNotFound" />
             }
             
