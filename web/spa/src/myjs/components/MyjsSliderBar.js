@@ -51,27 +51,21 @@ componentWillUnmount() {
        divStyles:[]
 
      });
-     this.obj.unbindSlider().initTouch();
-      
+     this.obj.resetSlider(nextProps.listing.profiles);
+
    }
 
 }
 removeMyjsTuple(index){
-//  let e = document.getElementById(param);return
-//  let transitionEvent = this.whichTransitionEvent();
-//  let _this=this;
-//  transitionEvent && e.addEventListener(transitionEvent, function() {
-//      e.parentNode.removeChild(e);
-      this.setState((prevState)=>{prevState.divStyles[index] = 'none';return prevState; },()=>
-    {
-      this.props.spliceIndex(this.props.listing.infotype,index);
-    }
-  )
-
-  //});
-//  e.classList.add("setop0");
-//
-
+  let e = document.getElementById(this.props.listing.infotype+"_"+index);
+  let transitionEvent = this.whichTransitionEvent();
+  let _this=this;
+  let eventfun = function() {
+    e.removeEventListener(transitionEvent, eventfun);
+    _this.props.spliceIndex(_this.props.listing.infotype,index);
+  };
+  transitionEvent && e.addEventListener(transitionEvent, eventfun);
+  this.setState((prevState)=>{prevState.divStyles[index] = 'setop0';return prevState; });
 }
 whichTransitionEvent(){
     let t;
@@ -94,14 +88,6 @@ bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  // console.log('slider====');
-  // console.log(elem);
-  // console.log(this.props.listing.profiles);
-  // console.log(this.props.listing.tuples);
-  // console.log(this.alterCssStyle.bind(this));
-  // console.log(this.props.listing.infotype);
-  //
-  // console.log("======");
   this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,
       this.props.apiNextPage);
   this.obj.initTouch();
