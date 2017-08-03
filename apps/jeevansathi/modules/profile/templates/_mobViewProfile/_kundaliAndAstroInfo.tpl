@@ -93,4 +93,5 @@
 var username = "~$arrData.username`";
 var otherProfilechecksum = "~$otherProfilechecksum`";
 var gender = "~$arrData.gender`";
+var astroSent = "~$astroSent`";
 </script>
