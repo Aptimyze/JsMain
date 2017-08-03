@@ -5,9 +5,6 @@ import PropTypes from 'prop-types';
 
 
 const MetaTagComponents = (props) => {
-	console.log("meta_tags",props.meta_tags);
-			
-			
 			if ( props.meta_tags != undefined)
 			{
 			return (<Helmet>
