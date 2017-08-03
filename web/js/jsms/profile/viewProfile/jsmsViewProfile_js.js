@@ -676,15 +676,24 @@ astroCompatibility = function()
 		}
 		
 	});
+	var clickedElem = false;
 	$(".js-astroMem").click(function(){
-		$.ajax({
-			method: "POST",
-			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username,
-			async:true,
-			timeout:20000,
-			success:function(response){
-			}
-		});
+
+		if(astroSent == 1 && clickedElem == false)
+		{
+			clickedElem true;
+			window.location = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username;
+		}
+		
+		//removing ajax call in this case as ajax doesnt let us download the pdf	
+		// $.ajax({
+		// 	method: "POST",
+		// 	url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username,
+		// 	async:true,
+		// 	timeout:20000,
+		// 	success:function(response){
+		// 	}
+		// });
 		$(".js-buttonAstro").html("OK");
 			$(".js-textAstro").html("Astro compatibility report with this member has been sent to your registered Email ID");
 			$(".js-buttonAstro").click(function(){
