@@ -11,7 +11,6 @@
 */
 class showMatchAlertPoolAction extends sfActions
 {
-	private $limit = 20;
 	/**
      * Executes index action
      *
@@ -22,25 +21,19 @@ class showMatchAlertPoolAction extends sfActions
 		$this->profileid = $request->getParameter('pid');
         $this->cid       = $request->getParameter('cid');
 
-		$removeFilteredProfiles = false;
+		$removeFilteredProfiles = true;
 		$compeleteResponse = true;
         $profileObj = LoggedInProfile::getInstance('',$this->profileid);        
 		$profileObj->getDetail('','','*');
 		$this->username = $profileObj->getUSERNAME();
 		$partnerObj = new SearchCommonFunctions();
+		//dpp call without filters
 		$matchesObj = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$removeFilteredProfiles,'','','','',$compeleteResponse);			
 		$this->dppCount = $matchesObj->getTotalResults();
-		$resultArr = $matchesObj->getResultsArr();
-		print_r($resultArr);die;
-		foreach($resultArr as $key=>$value)
-		{
-			$usernameArr[] = $value["USERNAME"];
-		}
-		$this->usernameArr = $usernameArr;
-		print_R($this->usernameArr);
-		$matchAlertObj = new matchalerts_LOG("newjs_slave");
-		$this->matchAlertProfiles = $matchAlertObj->getProfilesSentInMatchAlerts($this->profileid);
-		print_r($this->matchAlertProfiles);die;
-		$this->diffCount = $this->matchAlertCount["COUNT"] - $this->dppCount;
+		unset($matchesObj);
+		//dpp call without filters minus the matchalerts
+		$matchesObj = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','',1,$removeFilteredProfiles,'','','','',$compeleteResponse);
+		$this->diffCount = $matchesObj->getTotalResults();
+		unset($matchesObj);
 	}
 }

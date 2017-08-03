@@ -376,25 +376,5 @@ echo $sql."\n";
           $res->execute();
         }
 
-        public function getMatchAlertCountForBackend($profileId)
-        {
-        	try
-        	{
-        		$sql = "SELECT COUNT(*) as COUNT from matchalerts.LOG where RECEIVER = :PROFILEID";
-
-        		$prep = $this->db->prepare($sql);
-				$prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
-				$prep->execute();
-				while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-					$result=$row;
-				}				
-				return $result;
-
-        	}
-        	catch (PDOException $ex) 
-        	{
-                jsException::nonCriticalError($ex);
-            }
-        }
 }
 ?>
