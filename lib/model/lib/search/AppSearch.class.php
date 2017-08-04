@@ -75,8 +75,12 @@ class AppSearch extends SearchParamters
                 if($request->getParameter('edu_level_new'))
                         $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
                 
-                if($request->getParameter('known_college'))
-                        $searchParamsSetter['KNOWN_COLLEGE'] = $request->getParameter('known_college');
+                if($request->getParameter('known_college')){
+                        if($request->getParameter('known_college') == "Any")
+                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
+                        else
+                                $searchParamsSetter['KNOWN_COLLEGE'] = $request->getParameter('known_college');
+                }
                 
                 if($request->getParameter('native_state'))
                         $searchParamsSetter['NATIVE_STATE'] = $request->getParameter('native_state');
@@ -89,6 +93,12 @@ class AppSearch extends SearchParamters
                 
                 if($request->getParameter('last_activity'))
                         $searchParamsSetter['LAST_ACTIVITY'] = $request->getParameter('last_activity');
+                
+                if($request->getParameter('horoscope'))
+                        $searchParamsSetter['HOROSCOPE'] = $request->getParameter('horoscope');
+                
+                if($request->getParameter('diet'))
+                        $searchParamsSetter['DIET'] = $request->getParameter('diet');
                 
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
