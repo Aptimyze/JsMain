@@ -28,7 +28,7 @@ EOF;
 		$serviceObj = new BILLING_SERVICE_STATUS();
 
 		$checkingDate  	='2017-03-31 00:00:00';
-		$fetchDate    	='2017-12-31 00:00:00';
+		$fetchDate    	='2016-12-31 00:00:00';
 		$dataArr 	=$exObj->getExclusiveMembersList($fetchDate);
 
 		foreach($dataArr as $key=>$val){
