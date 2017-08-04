@@ -314,12 +314,14 @@ class negativeTreatment
             $delete_reason    = 'Other reasons';
             $specify_reason   = 'Negative List';
             foreach ($this->profileArr as $key => $profileid) {
-                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED');
+                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED,EMAIL');
                 $profileid = $jProfile['PROFILEID'];
                 $activated = $jProfile['ACTIVATED'];
                 $username  = $jProfile['USERNAME'];
+                $email     = $jProfile['EMAIL'];
                 if ($profileid && $activated != 'D') {
                     // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
+                    $this->sendEmailOnDelete($profileid,$username,$email);
                     $this->deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username);
                     $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
@@ -479,6 +481,16 @@ class negativeTreatment
 	if($status1>=1 || $status2>=1)
 		return true;
 	return;
-    }	
-
+    }
+    public function sendEmailOnDelete($profileid, $username, $email) {
+        $subject = "Your Profile $username has been deleted due to terms of use violation";
+        //print_r("\nUsername : $username\nEmail: $email\nProfile: $profileid\n<br>Subject: $subject<br>\n");
+        $top8Mailer = new EmailSender(MailerGroup::TOP8, '1858');
+        $tpl = $top8Mailer->setProfileId($profileid);
+        $tpl->getSmarty()->assign("toName", $username);
+        $tpl->setSubject($subject);
+        $top8Mailer->send();
+        $emailLoggerObg = new incentive_NEGATIVE_DELETE_EMAIL_LOG();
+        $emailLoggerObg->insertNegativeDeleteLogEntry($profileid);
+    }
 }

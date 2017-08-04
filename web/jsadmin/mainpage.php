@@ -624,6 +624,7 @@ if (isset($data)) //successful login
         }
          if ( in_array('P', $priv) || in_array('MG', $priv)) {
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/registerMis/productMetric\">Product Metrics</a>";
+                    $linkarr[]="<a href=\"$SITE_URL/jsadmin/makeFieldsBlank.php?cid=$cid\">Make Fields Blank of a Profile</a>";
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/showLIVETags\">LIVE Tags</a>";
          }
     }
