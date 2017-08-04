@@ -747,7 +747,7 @@ class LoggingManager
 
                 if(!LoggingEnums::$COOL_METRIC[$body['type']])return;
                 $dataOutput = array();
-                $dataOutput['Date'] = $body['currentTime'];
+                $dataOutput['Date'] = date('Y-m-d H:i:s',(strtotime($body['currentTime']) + 34200));
                 $dataOutput['logType'] = $body['type'];
                 $dataOutput['channel'] = $body['whichChannel'];
                 $dataOutput['profileId'] = $body['profileId'];

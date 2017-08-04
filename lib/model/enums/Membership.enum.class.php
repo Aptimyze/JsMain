@@ -75,6 +75,8 @@ class memDiscountTypes
 
 class VariableParams
 {
+    public static $jsExclusiveReleaseDate = "2017-08-01"; //YYYY-MM-DD
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',
@@ -99,7 +101,7 @@ class VariableParams
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 15,
-                                        "pool2FilterPercent" => 100,
+                                        "pool2FilterPercent" => 25,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
                                         "activeOfferFlag" => true
                                         );
@@ -688,6 +690,12 @@ class VariableParams
     public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
     
     public static $lightningDealDuration = '30'; //in minutes;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME = 86400;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_KEY = "CommunityWelcomeDiscount";
+    
+    const COMMUNITY_WELCOME_DISCOUNT_DURATION = "2"; //in days
 }
 class discountType
 {
@@ -941,4 +949,5 @@ class franchiseeCommission
 class SelectGatewayRedirect{
     public static $gatewayOptions = array('default','payu','ccavenue');
 }
+
 ?>

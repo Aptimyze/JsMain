@@ -1,4 +1,10 @@
-<?php 
+<?php
+//As discussed with Lavesh and Nitesh, Now Profile are allowed to do changes in critical fields like DOB ,gender etc) 
+//and data of such profiles are also getting deleted from deleteprofile_bg, which do entry in newjs.NEW_DELETED_PROFILE_LOG.
+//
+//If this cron will execute,then data for such profile will also be moved, which is not intended
+//So calling successfulldie()
+successfullDie(); 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
  include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");

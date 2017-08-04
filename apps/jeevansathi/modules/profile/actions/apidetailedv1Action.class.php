@@ -271,7 +271,7 @@ class apidetailedv1Action extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			
 			if(MobileCommon::isIOSApp())
-				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
+				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORED"=>$this->IGNORED));
 			else
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 
