@@ -184,7 +184,7 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-
+            console.log("mmm",nextProps)
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
