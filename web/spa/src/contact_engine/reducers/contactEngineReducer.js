@@ -1,11 +1,13 @@
 const contactEngineReducer = (state={
 	contactDone:false,
 	acceptDone:false,
-	declineDone:false
+	declineDone:false,
+	reminderDone:false,
+	msgInitiated:false
 },action) => {
 	switch(action.type)
 	{			
-		case 'CONTACT_ACTION':
+		case 'INITIATE':
 		state = {
 			...state,
 			contact:action.payload,
@@ -24,6 +26,20 @@ const contactEngineReducer = (state={
 			...state,
 			decline:action.payload,
 			declineDone : true
+		}
+		break;
+		case 'REMINDER':
+		state = {
+			...state,
+			reminder:action.payload,
+			reminderDone : true
+		}
+		break;
+		case 'WRITE_MESSAGE':
+		state = {
+			...state,
+			message:action.payload,
+			msgInitiated : true
 		}
 		break;
 	}

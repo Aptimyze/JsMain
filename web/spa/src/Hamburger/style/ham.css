@@ -7,7 +7,7 @@
 	background: black;
 }
 .backShow {
-	opacity: 0.5;
+	opacity: 0.7;
 	transition: all .2s linear;
 }
 .hamShow {

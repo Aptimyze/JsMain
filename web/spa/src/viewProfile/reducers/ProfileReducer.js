@@ -1,4 +1,5 @@
 const ProfileReducer = (state={
+	responseStatusCode: '',
 	responseMessage: '',
 	appPromotion: '',
 	aboutInfo: [],
@@ -11,13 +12,17 @@ const ProfileReducer = (state={
 	profileId: '',
 	show_gunascore: "",
 	gunaScore: [],
-	fetchedProfilechecksum: false
+	pageInfo: [],
+	fetchedProfilechecksum: false,
+	buttonDetails: []
 },action) => {
+		// console.log("action.payload",action.payload);
 	switch(action.type)
 	{
 		case "SHOW_INFO":
 		state = {
 			...state,
+			responseStatusCode: action.payload.responseStatusCode,
 			responseMessage: action.payload.responseMessage,
 			appPromotion: action.payload.appPromotion,
 			aboutInfo: action.payload.about,
@@ -28,7 +33,9 @@ const ProfileReducer = (state={
 			dpp_Ticks:action.payload.dpp_Ticks,
 			profileId:action.payload.page_info.profilechecksum,
 			show_gunascore: action.payload.show_gunascore,
-			fetchedProfilechecksum: action.payload.about.username
+			pageInfo: action.payload.page_info,
+			fetchedProfilechecksum: action.payload.about.username,
+			buttonDetails: action.payload.buttonDetails
 		}
 		break;
 		case "SHOW_HISTORY_INFO":
@@ -42,6 +49,15 @@ const ProfileReducer = (state={
 			...state,
 			gunaScore:action.payload
 		}
+		break;
+		case "REPLACE_BUTTON":
+		let bD = {...state.buttonDetails};
+		bD.buttons.others[action.payload.index] = action.payload.button.button;
+		state = {
+			...state,
+			buttonDetails:bD
+		}
+		break;
 	}
 	return state;
 }

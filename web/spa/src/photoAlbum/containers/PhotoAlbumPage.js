@@ -3,6 +3,7 @@ import axios from "axios";
 import {getCookie} from '../../common/components/CookieHelper';
 import MyjsSliderBinding from "../../myjs/components/MyjsSliderBinding";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
+import * as CONSTANTS from '../../common/constants/apiConstants';
 require ('../style/albumcss.css');
 
 
@@ -26,18 +27,30 @@ export default class PhotoAlbumPage extends React.Component {
   componentDidMount(){
 
     let _this = this;
+
     if(getCookie("AUTHCHECKSUM"))
     {
-      console.log(this.props.location.search);
-      axios.get('/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
-        .then(function(response){
+        commonApiCall(CONSTANTS.PHOTALBUM_API,{},'','POST').then(function(reponse){
           _this.setState({
-              getRes: response.data,
-              recAlbumlink: true
-          });
+                      getRes: response.data,
+                      recAlbumlink: true
+                  });
+          console.log(reponse);
+        });
 
-        })
     }
+    // if(getCookie("AUTHCHECKSUM"))
+    // {
+    //   console.log(this.props.location.search);
+    //   axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
+    //     .then(function(response){
+    //       _this.setState({
+    //           getRes: response.data,
+    //           recAlbumlink: true
+    //       });
+    //
+    //     })
+    // }
   }
 
 componentDidUpdate(){

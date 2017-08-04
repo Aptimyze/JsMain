@@ -34,22 +34,6 @@ const MyjsReducer = (state={
 		break;
 		case 'SET_IR_DATA':
 
-		if(state.apiDataIR){
-			var apiDataIR = state.apiDataIR;
-			action.payload.profiles.forEach(function(elem){
-				apiDataIR['profiles'].push(elem);
-			});
-			apiDataIR['paginationHit'] = false;
-			apiDataIR['nextpossible'] = action.payload.nextpossible;
-			apiDataIR['page_index'] = action.payload.page_index;
-			state = {
-				...state,
-				apiDataIR:apiDataIR,
-				irFetched : true
-			}
-
-		}
-		else
 		state = {
 			...state,
 			apiDataIR:action.payload,
@@ -77,6 +61,52 @@ const MyjsReducer = (state={
 			hamFetched : true
 		}
 		break;
+
+		case 'SET_IR_PAGINATION':
+			var apiDataIR = state.apiDataIR;
+			action.payload.profiles.forEach(function(elem){
+				apiDataIR['profiles'].push(elem);
+			});
+			apiDataIR['paginationHit'] = false;
+			apiDataIR['nextpossible'] = action.payload.nextpossible;
+			apiDataIR['page_index'] = action.payload.page_index;
+			state = {
+				...state,
+				apiDataIR:apiDataIR,
+				irFetched : true
+			}
+			break;
+			case 'SPLICE_MYJS_DATA':
+			var arr,key;
+				switch(action.payload.infotype)
+				{
+					case 'INTEREST_RECEIVED':
+						arr = state.apiDataIR;
+						key = 'apiDataIR';
+					break;
+					case 'MATCH_OF_THE_DAY':
+						arr = state.apiDataMOD;
+						key = 'apiDataMOD';
+					break;
+					case 'MATCH_ALERT':
+						arr = state.apiDataDR;
+						key = 'apiDataDR';
+					break;
+				}
+				let newArray = arr['profiles'].slice(), oldCount = arr.total;
+
+				newArray.splice(action.payload.index,1);
+				state = {
+					...state,
+					[key] : {
+						...arr,
+						profiles : newArray,
+						total : --oldCount
+					}
+				}
+				console.log(state,'-=-=-=-=-=-pp');
+				break;
+
 	}
 	return state;
 }

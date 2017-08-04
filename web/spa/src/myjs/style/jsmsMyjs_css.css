@@ -323,19 +323,19 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
 .editBarStyle{
   width:250%
 }
-.editBarStyle1={
+.editBarStyle1{
     width:16%
 }
-.editBarStyle2={
+.editBarStyle2{
   transform: rotate(-133.2deg)
 }
-.editBarStyle3={
+.editBarStyle3{
   transform: rotate(-180deg)
 }
-.editBarStyle4={
+.editBarStyle4{
     width:10.75%
 }
-.editBarStyle5={
+.editBarStyle5{
   height:35px
 }
 .sliderc1{display: block; background-color: rgb(228, 228, 228); margin-top: 15px; width: 412px;}
@@ -346,10 +346,6 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
 
 
 /* bouncer animation red circles*/
-
-
-
-
 @-webkit-keyframes bounceIn {
   from{
     opacity: 1;
@@ -397,4 +393,33 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
   animation-duration: .75s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.fadeOut {
+  animation-name: fadeOut;
+}
+
+.rmtuple{opacity: 1;
+  transition-property: opacity;
+    transition-duration: 1s;
+    transition-timing-function: ease-in;
+  }
+.setop0{opacity: 0}
+.srp_box2 {
+    width: 76px;
+    height: 76px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
 }

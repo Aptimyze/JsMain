@@ -1,5 +1,8 @@
 .vpro_sprite{background-image:url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png); background-repeat:no-repeat}
-.vpro_correct{background-position: -195px -202px;width: 28px;height: 27px;}
+.vpro_correct{    background-position: -195px -202px;
+    width: 28px;
+    height: 20px;
+    margin-left: 3px;}
 
 .vpro_comHisIcon{background-position: -5px -4px;width: 28px;height: 27px;}
 .vpro_pos1{right:0; top:0}
@@ -424,8 +427,4 @@ padding: 10px 15px ;
     right: -1px;
     top: 204px;
   }
-  .animateLeft {
-    transition: all .2s linear;
-    transform: translate(0%, 0%) !important;
-  }
-  .posRight100p {transform: translate(100%, 0%);}
+  

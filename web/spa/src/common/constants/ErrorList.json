@@ -6,5 +6,7 @@
 	"Default": "Something went wrong",
 	"ValidEmailnPass": "Provide a valid email address or phone number",
 	"EnterEmailnPass": "Provide your email address or phone number",
-	"invalidName" : {"responseCode" : 1, "responseMessage" : "Please provide a valid Full Name"}
+	"invalidName" : {"responseCode" : 1, "responseMessage" : "Please provide a valid Full Name"},
+	"SelectReason": "Please select a reason",
+	"enterComments": "Please Enter The Comments (in atleast 25 characters)"
 }

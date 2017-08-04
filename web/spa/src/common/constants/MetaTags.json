@@ -7,5 +7,14 @@
     "MyjsPage":
     {
         "title" : "My Jeevansathi - Jeevansathi.com"
+    },
+    "ProfilePage":
+    {
+        "title" : "My Jeevansathi - Jeevansathi.com"
+    },
+    "ProfileNotFound":
+    {
+        "title" : "Profile Not Found"
     }
+
 }
