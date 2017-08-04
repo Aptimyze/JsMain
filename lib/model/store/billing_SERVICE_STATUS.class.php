@@ -998,5 +998,22 @@ class BILLING_SERVICE_STATUS extends TABLE {
              throw new jsException($ex);
          }
      }
+    public function getMaxExpirydForBillid($billid)
+    {
+        try
+        {
+            $sql  = "SELECT EXPIRY_DT FROM billing.SERVICE_STATUS WHERE BILLID=:BILLID AND SERVEFOR LIKE '%F%' LIMIT 1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output = $row['EXPIRY_DT'];
+            }
+            return $output;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
 }
 

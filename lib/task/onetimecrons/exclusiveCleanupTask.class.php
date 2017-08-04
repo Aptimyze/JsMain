@@ -34,7 +34,7 @@ EOF;
 		foreach($dataArr as $key=>$val){
 			$profileid 	=$val['PROFILEID'];
 			$billid 	=$val['BILL_ID'];
-			$maxExpiry 	=$serviceObj->getLastExpiry($profileid);	
+			$maxExpiry 	=$serviceObj->getMaxExpirydForBillid($billid);	
 
 			if(strtotime($maxExpiry)<strtotime($checkingDate)){
 				$exObj->archiveProfile($billid,$profileid);
