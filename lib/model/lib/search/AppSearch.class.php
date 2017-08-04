@@ -65,6 +65,7 @@ class AppSearch extends SearchParamters
 		$searchParamsSetter['CASTE'] = $request->getParameter('caste');
 		$searchParamsSetter['HAVEPHOTO'] = $request->getParameter('photo');
 		$searchParamsSetter['MTONGUE'] = $request->getParameter('mtongue');
+		$searchParamsSetter['VIEWED'] = $request->getParameter('viewed');
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
                 if($city_country_resArr && $cities_resArr){

@@ -357,6 +357,12 @@ class SearchApiStrategyV1
                                                         $clusterIndex = "EDU_LEVEL_NEW";
                                                 }elseif($clusterIndex == "OCCUPATION_GROUPING"){
                                                         $clusterIndex = "OCCUPATION";
+                                                }elseif($clusterIndex == "COUNTRY_RES"){
+                                                        $key = "LOCATION";
+                                                }elseif($clusterIndex == "CITY_RES"){
+                                                        $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "HAVEPHOTO"){
+                                                        $key = "PHOTO";
                                                 }
                                                 eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
                                                 $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
