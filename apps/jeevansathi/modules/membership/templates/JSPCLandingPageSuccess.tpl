@@ -482,7 +482,7 @@
             <div class="fl wid50p jsexc">
                 <ul>
                     <li>Work on your profile to ensure its gets noticed</li>
-                    <li>Understand qualities that you are looking for in your desired partner</li>
+                    <li>Understand the qualities that you are looking for in your desired partner</li>
                     <li>Sending Interests to handpicked profiles matching your criteria</li>
                     <li>Contact profiles shortlisted by you and arrange meetings</li>
                     <li>Get benefits of JS Boost and make your number visible to free members</li>
