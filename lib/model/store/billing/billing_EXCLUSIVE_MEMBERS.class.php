@@ -145,7 +145,7 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
     {
       if($billid)
       {
-        $sql = "INSERT INTO billing.EXCLUSIVE_MEMBERS_LOG SELECT * FROM billing.EXCLUSIVE_MEMBERS WHERE BILLID=:BILLID";
+        $sql = "INSERT INTO billing.EXCLUSIVE_MEMBERS_LOG SELECT * FROM billing.EXCLUSIVE_MEMBERS WHERE BILL_ID=:BILLID";
         $res = $this->db->prepare($sql);
         $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
         $res->execute();
@@ -162,9 +162,9 @@ class billing_EXCLUSIVE_MEMBERS extends TABLE
     {
       if($billid)
       {
-        $sql = "DELETE FROM billing.EXCLUSIVE_MEMBERS WHERE BILLID=:BILLID";
+        $sql = "DELETE FROM billing.EXCLUSIVE_MEMBERS WHERE BILL_ID=:BILLID";
         $res = $this->db->prepare($sql);
-        $res->bindValue(":PROFILEID", $billid, PDO::PARAM_INT);
+        $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
         $res->execute();
       }
     }

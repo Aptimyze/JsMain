@@ -27,7 +27,7 @@ EOF;
 		$exObj = new billing_EXCLUSIVE_MEMBERS();
 		$serviceObj = new BILLING_SERVICE_STATUS();
 
-		$billingDate  	='2017-03-31 00:00:00';
+		$checkingDate  	='2017-03-31 00:00:00';
 		$fetchDate    	='2017-12-31 00:00:00';
 		$dataArr 	=$exObj->getExclusiveMembersList($fetchDate);
 
@@ -36,7 +36,7 @@ EOF;
 			$billid 	=$val['BILL_ID'];
 			$maxExpiry 	=$serviceObj->getLastExpiry($profileid);	
 
-			if(strtotime($maxExpiry)<$billingDate){
+			if(strtotime($maxExpiry)<strtotime($checkingDate)){
 				$exObj->archiveProfile($billid,$profileid);
 				$exObj->deleteExclusiveEntry($billid,$profileid);
 			}
