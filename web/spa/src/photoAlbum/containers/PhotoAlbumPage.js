@@ -27,15 +27,15 @@ export default class PhotoAlbumPage extends React.Component {
   componentDidMount(){
 
     let _this = this;
-
+    console.log(this.props.location.search);
     if(getCookie("AUTHCHECKSUM"))
     {
-        commonApiCall(CONSTANTS.PHOTALBUM_API,{},'','POST').then(function(reponse){
+        commonApiCall(CONSTANTS.PHOTALBUM_API,"&"+_this.props.location.search.substr(1),'','POST').then(function(response){
           _this.setState({
                       getRes: response.data,
                       recAlbumlink: true
                   });
-          console.log(reponse);
+          console.log(response);
         });
 
     }
