@@ -549,7 +549,7 @@ $js_arr[]=array("registration_pg1" => "4");
 $js_arr[]=array("jsms/contactus/contactus_js" => "2");
 $js_arr[]=array("jsms/common/sly"   => "6");
 $js_arr[]=array("jspc/myjs/myjs_js"   => "94");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"      => "118");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"      => "119");
 $js_arr[]=array("jspc/myjs/engBarJs_js"   => "43");
 $js_arr[]=array("jspc/common/nano"   => "8");
 $js_arr[]=array("jspc/registration/registrationJspc_js"    => "46");
