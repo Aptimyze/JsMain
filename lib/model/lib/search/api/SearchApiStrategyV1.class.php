@@ -365,6 +365,8 @@ class SearchApiStrategyV1
                                                         $key = "LOCATION_CITIES";
                                                 }elseif($clusterIndex == "HAVEPHOTO"){
                                                         $key = "PHOTO";
+                                                }elseif($clusterIndex == "CASTE_GROUP"){
+                                                        $key = "CASTE";
                                                 }
                                                 eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
                                                 $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));

@@ -65,7 +65,31 @@ class AppSearch extends SearchParamters
 		$searchParamsSetter['CASTE'] = $request->getParameter('caste');
 		$searchParamsSetter['HAVEPHOTO'] = $request->getParameter('photo');
 		$searchParamsSetter['MTONGUE'] = $request->getParameter('mtongue');
-		$searchParamsSetter['VIEWED'] = $request->getParameter('viewed');
+                
+                if($request->getParameter('viewed'))
+                        $searchParamsSetter['VIEWED'] = $request->getParameter('viewed');
+                
+                if($request->getParameter('occupation'))
+                        $searchParamsSetter['OCCUPATION'] = $request->getParameter('occupation');
+                
+                if($request->getParameter('edu_level_new'))
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
+                
+                if($request->getParameter('known_college'))
+                        $searchParamsSetter['KNOWN_COLLEGE'] = $request->getParameter('known_college');
+                
+                if($request->getParameter('native_state'))
+                        $searchParamsSetter['NATIVE_STATE'] = $request->getParameter('native_state');
+                
+                if($request->getParameter('manglik'))
+                        $searchParamsSetter['MANGLIK'] = $request->getParameter('manglik');
+                
+                if($request->getParameter('relation'))
+                        $searchParamsSetter['RELATION'] = $request->getParameter('relation');
+                
+                if($request->getParameter('last_activity'))
+                        $searchParamsSetter['LAST_ACTIVITY'] = $request->getParameter('last_activity');
+                
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
                 if($city_country_resArr && $cities_resArr){
