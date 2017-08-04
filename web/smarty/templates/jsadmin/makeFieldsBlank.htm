@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>Add profiles to edit @ jeevansathi.com</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+<link rel="stylesheet" href="~$SITE_URL`/profile/images/styles.css" type="text/css">
+<script language="javascript">
+<!--
+
+function checkDrop(formName)
+{
+	if(formName.SELaction.value=="")
+	{
+		alert ("Please select an appropriate action from the dropdown");
+		return false;
+	}	
+	return true;
+}
+
+function MM_openBrWindow(theURL,winName,features)
+{
+	window.open(theURL,winName,features);
+}
+
+function checkAll()
+{
+	var docF=document.registerd;
+	
+	for(var i=0;i<docF.elements.length;i++)
+	{
+		if(docF.elements[i].type=="checkbox")
+			docF.elements[i].checked=docF.checkfull.checked;
+	}
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+~include file="head.htm"`
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr class="formhead" align="center">
+		<td colspan="2">
+			<a href="mainpage.php?cid=~$CID`">Mainpage</a>
+		</td>
+	</tr>
+    <tr>
+
+
+
+    <td height="55" valign="middle" class="heading" bgcolor="#FFFFFF" width="90%">
+      <br>
+        <form name="registerd" method="post" action="makeFieldsBlank.php">
+        <table width="49%" border="0" cellspacing="1" cellpadding="4" align="center">       
+        <tr><td >
+	</td></tr>  
+	~if $RELOGIN` 
+          <tr>
+          	<td colspan=2>
+          	<font color="red" size=1>
+          		No user with this name exists
+          	</font>
+          	</td>
+          </tr>	   
+          ~/if`
+        	<tr>
+            <td width="49%" class="label" bgcolor="#F9F9F9">Username</td>
+            <td width="51%" bgcolor="#F9F9F9">
+              <input type="text" name="username" size="18" maxlength="40" class="textboxes1" value="~$username`">
+            </td>
+          </tr>
+		<tr>
+		    <td width="49%" class="label" bgcolor="#F9F9F9">Select All</td>
+		    <td width="51%" bgcolor="#F9F9F9">
+		      <input type="checkbox" name="checkfull" onclick="checkAll();">
+		    </td>
+		</tr>
+		<tr>
+           <td bgcolor="#F9F9F9" class="label">Sect</td>
+                <td><input type="checkbox" name="sect" value="Y"></td>
+                </tr>
+        	<tr>
+           <td bgcolor="#F9F9F9" class="label">Jamaat</td>
+		<td><input type="checkbox" name="jamaat" value="Y"></td>
+		</tr>
+           <td bgcolor="#F9F9F9" class="label">Hijab</td>
+		<td><input type="checkbox" name="hijab" value="Y"></td>
+		</tr>
+          <tr valign="middle" align="center">
+            <td width="49%" bgcolor="#F9F9F9" height="44">
+              <input type="submit" name="CMDSubmit" value="  Submit  " class="textboxes1">
+            </td>
+            <td width="51%" bgcolor="#F9F9F9" height="44">
+              <input type="reset" name="reset" value="  Reset  " class="textboxes1">
+            </td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+        <br>
+        <br>
+      <input type="hidden" name="operator_name" value="~$OPERATOR_NAME`">  
+      <input type="hidden" name="cid" value="~$CID`">  
+      </form>
+      </td>
+    </tr>
+  </table>
+~include file="foot.htm"`
+
+</body>
+</html>

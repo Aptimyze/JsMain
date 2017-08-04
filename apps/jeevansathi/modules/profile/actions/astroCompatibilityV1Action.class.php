@@ -93,14 +93,14 @@ class astroCompatibilityV1Action extends sfActions
 			if($sendMail  && $subscription)
 			{
 				$astroObj = new astroReport();
-				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);						
+				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);					
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
 				}
 				else
 				{
-					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
+					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);					
 					if($count >= "100")
 					{
 						$successArr["MESSAGE"] = "Actual Report Sent";
@@ -121,6 +121,7 @@ class astroCompatibilityV1Action extends sfActions
 						$file=PdfCreation::PdfFile($urlToVedic);					
 						if($file)
 						{
+							PdfCreation::setResponse("astroCompatibility-".$otherUsername.".pdf",$file);
 							$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
 							$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
 							$astroObj->addDataForActualReport($loggedInProfileId);
@@ -138,9 +139,9 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				
 				unset($astroObj);
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+				/*$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 				$apiResponseHandlerObj->setResponseBody($successArr);
-				$apiResponseHandlerObj->generateResponse();
+				$apiResponseHandlerObj->generateResponse();*/
 				return SfView::NONE;
 				
 			}
