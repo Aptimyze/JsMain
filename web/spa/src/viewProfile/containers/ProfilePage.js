@@ -84,7 +84,7 @@ class ProfilePage extends React.Component {
             endX = e.changedTouches[0].clientX;
         });
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
-            if (endX != 0 && endX - startX > 200 && _this.state.nextUrl != "") {
+            if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 _this.setState({
@@ -95,7 +95,7 @@ class ProfilePage extends React.Component {
                 _this.props.history.push(_this.state.nextUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
                 _this.props.showProfile(_this, _this.state.nextDataApi);
-            } else if (endX != 0 && startX - endX > 200 && _this.state.prevUrl != "") {
+            } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 jsb9Fun.flushJSB9Obj(_this);
