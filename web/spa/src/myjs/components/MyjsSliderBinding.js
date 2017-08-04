@@ -8,7 +8,7 @@ export default class MyjsSliderBinding  {
     this.styleFunction = styleFunction;
     this.el = parent;
     this.parent = this.el.parentNode;
-    this.threshold = !notMyjs ? 80 :100;
+    this.threshold = !notMyjs ? 40 :100;
     this.windowWidth = window.innerWidth;
     this.nextPageHit = nextPageHit;
     this.tuple_ratio = !notMyjs ? 80 :100;
@@ -19,17 +19,6 @@ export default class MyjsSliderBinding  {
     var _this=this;
     this.page = 1;
     this.indexElevate = indexElevate ? indexElevate : 0 ;
-//     console.log(this.transformX_corr);
-//     console.log(this.transformX);
-// console.log(this.el.getBoundingClientRect().left);
-// dynamic variables
-// window.addEventListener("resize",function()
-// {
-//     _this.windowWidth = window.innerWidth;
-//     _this.transformX = (_this.tuple_ratio * _this.windowWidth) / 100 + 10;
-//     _this.elementWidth = _this.transformX - 10;
-//     _this.transformX_corr = ((_this.tuple_ratio * 3 - 100) * _this.windowWidth)/200 + 10+_this.el.getBoundingClientRect().left;
-// });
   }
 
 
@@ -58,17 +47,11 @@ export default class MyjsSliderBinding  {
                     this.touch.start.y = e.changedTouches[0].pageY;
             }
 
-            unbindSlider(){
-              var _this = this;
-              this.parent.removeEventListener('touchstart', this.binderfun1);
-          // bind a "touchmove" event to tMyjsSliderBindinghe viewport
-              this.parent.removeEventListener('touchmove', this.binderfun2);
-              // bind a "touchend" event to the viewport
-              this.parent.removeEventListener('touchend', this.binderfun3);
-              this._index++;
+            resetSlider(newListing){
+              this.tupleObject = newListing;
+              if(this._index==this.tupleObject.length)
+                this.PrevSlide();
               return this;
-
-
             }
             onTouchMove(e)
             {
@@ -121,7 +104,7 @@ export default class MyjsSliderBinding  {
                 e.preventDefault();
             }
             NextSlide()
-            {console.log(this.tupleObject.length);console.log(this._index);console.log(this.tupleObject);
+            {
                 var index = this._index + 1;
                 if ((index+1) > (this.tupleObject.length+this.indexElevate))
                 {

@@ -2,16 +2,20 @@ require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
+import { performAction } from "./contactEngine.js";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import {getCookie} from '../../common/components/CookieHelper';
 import ReportAbuse from "./ReportAbuse";
+import Loader from "../../common/components/Loader";
 
-export default class ThreeDots extends React.Component{
+
+class ThreeDots extends React.Component{
   constructor(props){
     super();
     this.state = {
       showLayer: false,
-      showAbuseLayer: false
+      showAbuseLayer: false,
+      showLoader:false
     };
 
   }
@@ -31,17 +35,32 @@ export default class ThreeDots extends React.Component{
     this.setState({showAbuseLayer: true})
   }
 
-  manageThreeDotsButton(action){
-    switch(action)
+  showLoaderDiv() {
+      this.setState({
+          showLoader:true
+      });
+  }
+  hideLoaderDiv() {
+      this.setState({
+            showLoader:false
+      });
+    }
+
+  callBackFunctionThreeDots(jsonOb){
+    this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
+  }
+
+
+  manageThreeDotsButton(button,index){
+    this.showLoaderDiv();
+    switch(button.action)
     {
       case 'IGNORE':
-        console.log("IGNORE is called");
         break;
       case 'SHORTLIST':
-        console.log("SHORTLIST is called");
+        performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
         break;
       default:
-        console.log("Default is called.");
         break;
     }
   }
@@ -52,18 +71,13 @@ export default class ThreeDots extends React.Component{
     document.getElementById("vpro_tapoverlay").classList.remove("dn");
   }
 
-  render(){
-    // console.log("ThreeDots",this.props.buttondata.buttons.others);
-    // var buttons = this.props;
-    // buttons.forEach(function(value)
-    // {
-    //   console.log(value);
-    // });
+  componentWillReceiveProps(nextProps)
+  {
+    this.hideLoaderDiv();   
+  }
 
-    // for( buttons in this.props.buttondata.buttons.other)
-    // {
-    //   console.log(buttons);
-    // }
+  render(){
+
     var reportAbuseView;
     if(this.state.showAbuseLayer == true) {
       reportAbuseView = <ReportAbuse username={this.props.username} profilechecksum={this.props.profilechecksum} closeAbuseLayer={() => this.closeAbuseLayer()} profileThumbNailUrl={this.props.profileThumbNailUrl} />
@@ -72,9 +86,15 @@ export default class ThreeDots extends React.Component{
     var layerView;
     if(this.state.showLayer == true) {
       var buttons = (this.props.buttondata.buttons.others);
-      console.log(buttons);
+      var loaderView;
+      if(this.state.showLoader)
+      {
+        loaderView = <Loader show="page"></Loader>;
+      }
+
       var imageList = {'INITIATE':'msg_srp','CONTACTDETAIL':'vcontact','SHORTLIST':'srtlist','IGNORE':'ignore'};
         layerView = <div id="contactOverlay" className="posabs dispbl scrollhid">
+        {loaderView}
             <div id="vpro_tapoverlay" className="posabs vpro_tapoverlay">
                 <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
                     <div id="3DotProPic" className="txtc">
@@ -86,14 +106,23 @@ export default class ThreeDots extends React.Component{
                     { 
                       buttons.map(function(button,index)
                       {
-                        console.log(button);
                         let top_id = button.action;
                         let inside_id = "otherimage"+index;
                         let outside_id = "otherlabel"+index;
                         let label = button.label;
-                        let image = "mainsp " + imageList[button.action];
+                        let image;
+
+                        if ( button.action == "SHORTLIST" && (button.params.indexOf("true") !== -1 ))
+                        {
+                          image = "mainsp shortlisted";
+                        }
+                        else
+                        {
+                          image = "mainsp " + imageList[button.action];
+                        }
+
                           return (
-                            <div onClick={() => this.manageThreeDotsButton(button.action)} className="wid49p txtc mt45 dispibl" id={top_id}>
+                            <div onClick={() => this.manageThreeDotsButton(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>
                               <i className= {image} id={inside_id}></i>
                               <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
                             </div>
@@ -115,6 +144,7 @@ export default class ThreeDots extends React.Component{
     }
     return(
       <div>
+        
         {layerView}
         {reportAbuseView}
         <div onClick={() => this.getThreeDotLayer()} className="posabs srp_pos2">
@@ -125,3 +155,16 @@ export default class ThreeDots extends React.Component{
   }
   	
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        changeButton: (button,index) => {
+          dispatch({
+            type: 'REPLACE_BUTTON',
+            payload: {button:button,index:index}
+          });
+        }
+    }
+}
+
+export default connect(null,mapDispatchToProps)(ThreeDots)

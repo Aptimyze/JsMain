@@ -156,7 +156,6 @@ class ProfilePage extends React.Component {
         }
 
 
-
     }
     showLoaderDiv() {
         this.setState({
@@ -450,9 +449,7 @@ class ProfilePage extends React.Component {
             </div>;
             setTimeout(function(){
                 var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                if(document.getElementById("animated-background")) {
-                    document.getElementById("animated-background").style.height = backHeight + "px";
-                }
+                document.getElementById("animated-background").style.height = backHeight + "px";
             },100);
         }
         return (
