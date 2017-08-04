@@ -355,8 +355,10 @@ class SearchApiStrategyV1
                                                 $key = $clusterIndex;
                                                 if($clusterIndex == "EDUCATION_GROUPING"){
                                                         $clusterIndex = "EDU_LEVEL_NEW";
+                                                        $key = "EDU_LEVEL_NEW";
                                                 }elseif($clusterIndex == "OCCUPATION_GROUPING"){
                                                         $clusterIndex = "OCCUPATION";
+                                                        $key = "OCCUPATION";
                                                 }elseif($clusterIndex == "COUNTRY_RES"){
                                                         $key = "LOCATION";
                                                 }elseif($clusterIndex == "CITY_RES"){
