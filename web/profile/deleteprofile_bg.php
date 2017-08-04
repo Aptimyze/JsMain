@@ -807,7 +807,7 @@ function calculateTimeOfDeletion($dbObj)
     if(is_array($myrow)) {
       $timeOfDeletion = $myrow['ARG_DEL_TIME_STAMP'];
     } else {
-      $timeOfDeletion = null;
+      //$timeOfDeletion = null;
     }   
   } 
   
