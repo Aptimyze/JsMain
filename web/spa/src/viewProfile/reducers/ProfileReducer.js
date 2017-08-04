@@ -1,4 +1,5 @@
 const ProfileReducer = (state={
+	responseStatusCode: '',
 	responseMessage: '',
 	appPromotion: '',
 	aboutInfo: [],
@@ -15,11 +16,13 @@ const ProfileReducer = (state={
 	fetchedProfilechecksum: false,
 	buttonDetails: []
 },action) => {
+		// console.log("action.payload",action.payload);
 	switch(action.type)
 	{
 		case "SHOW_INFO":
 		state = {
 			...state,
+			responseStatusCode: action.payload.responseStatusCode,
 			responseMessage: action.payload.responseMessage,
 			appPromotion: action.payload.appPromotion,
 			aboutInfo: action.payload.about,
@@ -46,6 +49,15 @@ const ProfileReducer = (state={
 			...state,
 			gunaScore:action.payload
 		}
+		break;
+		case "REPLACE_BUTTON":
+		let bD = {...state.buttonDetails};
+		bD.buttons.others[action.payload.index] = action.payload.button.button;
+		state = {
+			...state,
+			buttonDetails:bD
+		}
+		break;
 	}
 	return state;
 }

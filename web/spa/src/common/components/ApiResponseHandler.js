@@ -7,6 +7,7 @@ import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
+
   let callMethod = method ? method :  'POST';
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
@@ -27,45 +28,69 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         else
           checkSumURL = '&AUTHCHECKSUM='+aChsum;
       }
-    }
-    return axios({
-    method: callMethod,
-    url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
-    data: {},
-    headers: {
-      'Accept': 'application/json',
-      'withCredentials':true,
-      'X-Requested-By': 'jeevansathi',
-      'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
-    },
-  }).then( (response) => {
-      if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
-      {
-        recordDataReceived(containerObj,new Date().getTime());
-        setJsb9Key(containerObj,response.data.jsb9Key);
-        recordServerResponse(containerObj,response.data.apiTimeTracking);
-      }
-      if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
-        setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
-
-        if ( response.data.GENDER && response.data.USERNAME )
-        {
-          localStorage.setItem('GENDER',response.data.GENDER);
-          localStorage.setItem('USERNAME',response.data.USERNAME);
-        }
+    } 
+    
+    if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl) {
+      let data;
+      if(localStorage.getItem("prevDataUrl") == callUrl) {
+        data = JSON.parse(localStorage.getItem("prevData"))
+      } else {
+        data = JSON.parse(localStorage.getItem("nextData"))
       }
       if(typeof dispatch == 'function')
       {
         dispatch({
           type: reducer,
-          payload: response.data,
+          payload: data,
           token: tupleID
         });
       }
-      return response.data;
-    })
-    .catch( (error) => {
-      console.warn('Actions - fetchJobs - recreived error: ', error)
-    })
+    }
+    else {
+      return axios({
+        method: callMethod,
+        url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
+        data: {},
+        headers: {
+          'Accept': 'application/json',
+          'withCredentials':true,
+          'X-Requested-By': 'jeevansathi',
+          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+      }).then( (response) => {
+        if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
+        {
+          recordDataReceived(containerObj,new Date().getTime());
+          setJsb9Key(containerObj,response.data.jsb9Key);
+          recordServerResponse(containerObj,response.data.apiTimeTracking);
+        }
+        if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
+          setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
+          if ( response.data.GENDER && response.data.USERNAME )
+          {
+            localStorage.setItem('GENDER',response.data.GENDER);
+            localStorage.setItem('USERNAME',response.data.USERNAME);
+          }
+        }
+        if(typeof dispatch == 'function')
+        {
+          dispatch({
+            type: reducer,
+            payload: response.data,
+            token: tupleID
+          });
+        } else if(dispatch == "saveLocalNext") {
+            localStorage.setItem("nextData", JSON.stringify(response.data));
+            localStorage.setItem("nextDataUrl",callUrl)
+        } else if(dispatch == "saveLocalPrev") {
+            localStorage.setItem("prevData", JSON.stringify(response.data));
+            localStorage.setItem("prevDataUrl",callUrl)
+        } 
+        return response.data;
+      })
+      .catch( (error) => {
+        console.warn('Actions - fetchJobs - recreived error: ', error)
+      })
+    }
 }
