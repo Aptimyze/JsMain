@@ -547,6 +547,7 @@ class successStoryActions extends sfActions
         }
         else {
             $this->mailerid = $request->getParameter("mailid");
+            $this->mailerid = urldecode($this->mailerid);
             $authenticationJsObj = new JsAuthentication();
             $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
             $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
@@ -555,6 +556,8 @@ class successStoryActions extends sfActions
     }
 
     public function executeSubmitlayer(sfWebRequest $request) {
+        $this->mailerid = $request->getParameter("mailid");
+        $this->mailerid = urldecode($this->mailerid);
         $this->FetchProfile($request);
         $jprofile = new JPROFILE('newjs_slave');
         $loggedInObj = LoggedInProfile::getInstance();
@@ -622,10 +625,12 @@ class successStoryActions extends sfActions
             $this->MSG = 'verified';
             $this->InsertIntoSuccessStory($request, $row, $rowd);
             //Update status of mailer
-            if(!$this->mailerid)
-                $this->mailerid = $request->getParameter("mailid");
-            $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
-            $successStoryMailLog->updateStatusForMailerId($this->mailerid,'C');
+            if($this->mailerid){
+                $authenticationJsObj = new JsAuthentication();
+                $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
+                $successStoryMailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
+                $successStoryMailLog->updateStatusForMailerId($this->mailerid,'C');
+            }
             //// tracking of offer consent  added by Palash Chordia
             if($offerConsent=='Y')
                 (new NEWJS_OFFER_CONSENT())->insertConsent($this->profileid);
@@ -801,6 +806,8 @@ class successStoryActions extends sfActions
         $this->fromMailer = $request->getParameter("fromSuccessStoryMailer");
         if($this->fromMailer==true){
             $this->mailerid = $request->getParameter("mailid");
+            $this->mailid = $this->mailerid;
+            $this->mailerid = urldecode($this->mailerid);
             $authenticationJsObj = new JsAuthentication();
             $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
             if($this->mailerid==""||empty($this->mailerid)){
@@ -981,6 +988,7 @@ class successStoryActions extends sfActions
 
         if($this->fromMailer==true){
             $this->mailerid = $request->getParameter("mailid");
+            $this->mailer = urldecode($this->mailerid);
             $this->mailId = $this->mailerid;
             $authenticationJsObj = new JsAuthentication();
             $this->mailerid=$authenticationJsObj->js_decrypt($this->mailerid);
@@ -1029,6 +1037,7 @@ class successStoryActions extends sfActions
     	$this->successStoryMsg = $request->getParameter('successStoryMsg');
         $this->fromMailer = $request->getParameter("fromSuccessStoryMailer");
         $this->mailerid = $request->getParameter("mailid");
+        $this->mailerid = urldecode($this->mailerid);
         $this->mailId = $this->mailerid;
     	$this->FetchProfile($request);
         $this->error = $request->getParameter("error");

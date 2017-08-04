@@ -25,7 +25,7 @@
         <div class="mauto wid80p txtc f28 pt40 pb40">Dear ~if $NAME`~$NAME`~else`~$USERNAME`~/if`, thanks for sharing your success story with us. <br>Please upload your wedding photo too to publish the story on Jeevansathi</div>
         ~/if`
         <!--start:form-->
-        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer~if $offerConsent eq 'Y'`?offerConsent=Y~/if`~if $fromMailer eq 'true'`&fromSuccessStoryMailer=true&mailid=~$mailid`~/if`" method="post" enctype="multipart/form-data" target="_self">
+        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer?~if $offerConsent eq 'Y'`offerConsent=Y&~/if`~if $fromMailer eq 'true'`fromSuccessStoryMailer=true&mailid=~$mailid`~/if`" method="post" enctype="multipart/form-data" target="_self">
             <div class="clearfix ssp6 pb30 ssbrd3">
                 <div class="fl f15 pt10">Your story</div>
                 <div class="fl pl15 ssfwid6">

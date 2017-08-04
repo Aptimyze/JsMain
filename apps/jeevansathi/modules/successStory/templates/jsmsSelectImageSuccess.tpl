@@ -123,7 +123,7 @@
 
     </div>
     </div>
-    <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer" method="post" enctype="multipart/form-data" target="_self">
+    <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer~if $fromMailer eq 'true'`?fromSuccessStoryMailer=true&mailid=~$mailid`~/if`" method="post" enctype="multipart/form-data" target="_self">
     <div id="mainContent2" class="dn">
         <div class="loader" id="pageloader"></div>
         <div>
@@ -273,6 +273,8 @@
                 <input type="hidden" name="username" value="~$USERNAME`">
                 <input type="hidden" name="email" value="~$EMAIL`">
                 <input type="hidden" name="profileid" value="~$PROFILEID`">
+                <input type="hidden" name="fromSuccessStoryMailer" value="~$fromMailer`">
+                <input type="hidden" name="mailid" value="~$mailId`">
                 <input style="width:0px;height:0px;position:absolute;" id="myFileInput" type="file" name="wedding_photo" accept="image/*;capture=camera">
                 <!--start:submit button-->
                 ~if $fromMailer neq 'true'`
