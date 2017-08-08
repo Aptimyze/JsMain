@@ -43,13 +43,14 @@ export class WriteMessage extends React.Component{
   }
 
   render(){
+    console.log(this.props.buttonData);
     var loaderView;
         if(this.state.showLoader)
         {
           loaderView = <Loader show="div"></Loader>;
         }
     var buttonView, innerView;
-    if(this.props.buttonData.action == "MEMBERSHIP") {
+    if(this.props.buttonData != 'Y') {
       buttonView = <a href="/profile/mem_comparison.php" id="buttons1" className="view_ce fullwid">
               <div className="fullwid bg7 txtc pad5new posrel lh40">
                   <div className="wid60p">

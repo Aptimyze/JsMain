@@ -63,7 +63,7 @@ export class contactEnginePD extends React.Component{
   render(){
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.button} />
+      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.isPaid} />
     }
     if(this.state.actionDone){
       if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
