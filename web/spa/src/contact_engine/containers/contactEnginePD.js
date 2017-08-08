@@ -142,6 +142,7 @@ const mapDispatchToProps = (dispatch) => {
     return{
         callContactApi: (api,action,url) => {
           commonApiCall(api,url,action,'POST',dispatch,true);
+          dispatch({type:'RESET_MYJS_TIMESTAMP',payload:{value:-1}});
         }
     }
 }

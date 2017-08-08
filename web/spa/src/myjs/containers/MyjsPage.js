@@ -94,9 +94,9 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched ){ // caching conditions go here in place of true
+		if(!this.props.myjsData.fetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+			this.props.resetTimeStamp();
 			this.firstApiHits(this);
-
 		}
 	}
 
@@ -333,7 +333,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         hitApi_Ham: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
-        }
+        },
+				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}})
     }
 }
 
