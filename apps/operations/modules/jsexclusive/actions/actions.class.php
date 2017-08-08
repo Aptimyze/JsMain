@@ -262,8 +262,8 @@ class jsexclusiveActions extends sfActions {
         $action = $request['useraction'];
         if ($action == "") {
             $biodata = $exclusiveServicingObj->checkBioData($this->client);
-            $biodataLocation = $biodata[0];
-            $biodataUploadDate = $biodata[1];
+            $biodataLocation = $biodata['BIODATA_LOCATION'];
+            $biodataUploadDate = $biodata['BIODATA_UPLOAD_DT'];
             if ($biodataLocation == NULL || $biodataLocation == "") {
                 $this->freshUpload = true;
             } else {
@@ -271,7 +271,7 @@ class jsexclusiveActions extends sfActions {
             }
         } else if ($action == 'deleteBioData') {
             $biodata = $exclusiveServicingObj->checkBioData($this->client);
-            $biodataLocation = $biodata[0];
+            $biodataLocation = $biodata['BIODATA_LOCATION'];
             if(unlink($biodataLocation)){
                 $this->deleteStatus = $exclusiveServicingObj->deleteBioData($this->client);
                 $this->freshUpload = true;
@@ -282,7 +282,7 @@ class jsexclusiveActions extends sfActions {
             }
         } else if ($action == 'viewBioData') {
             $biodata = $exclusiveServicingObj->checkBioData($this->client);
-            $biodataLocation = $biodata[0];
+            $biodataLocation = $biodata['BIODATA_LOCATION'];
             $ext = end(explode('.', $biodataLocation));
             $file = "BioData-$this->client.".$ext;
             $xlData=file_get_contents($biodataLocation);

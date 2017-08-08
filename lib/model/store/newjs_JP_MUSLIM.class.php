@@ -61,7 +61,7 @@ class NEWJS_JP_MUSLIM extends TABLE{
 					
 					if(!$resUpdateReligion->rowCount())
 					{
-						$sqlEditReligion = "REPLACE INTO JP_MUSLIM ($keys) VALUES ($values)";
+						$sqlEditReligion = "INSERT IGNORE INTO JP_MUSLIM ($keys) VALUES ($values)";
 						$resEditReligion = $this->db->prepare($sqlEditReligion);
 						foreach($paramArr as $key=>$val)
 							$resEditReligion->bindValue(":".$key, $val);

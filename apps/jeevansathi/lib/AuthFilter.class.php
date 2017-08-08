@@ -249,9 +249,10 @@ class AuthFilter extends sfFilter {
 				if($login)
 				{
 					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					if(JsMemcache::getInstance()->get($key))
+					$kundliData=JsMemcache::getInstance()->get($key);
+					if($kundliData)
                                         {
-                                                $kundli_link = JsMemcache::getInstance()->get($key);
+                                                $kundli_link = $kundliData;
                                         }
 					else
 					{
@@ -399,9 +400,10 @@ class AuthFilter extends sfFilter {
       	}
       	else
       		$lastDayFlag=false;
+      	$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
 
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null || JsMemcache::getInstance()->get($profileid."_appPromo")===false)
+			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
@@ -423,7 +425,7 @@ class AuthFilter extends sfFilter {
 			}
 			else
 			{
-				return JsMemcache::getInstance()->get($profileid."_appPromo");
+				return $appPromo;
 			}
 		}
 		else
