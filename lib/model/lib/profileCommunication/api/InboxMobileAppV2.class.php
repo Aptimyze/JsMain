@@ -1222,15 +1222,26 @@ class InboxMobileAppV2
 			}
 			return $text;
 		}
-                
-         
-           
+
+
+
 	private function getTracking($infoType){
 		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
 		{
 		return "responseTracking=".$rtype;
 		}
-		if(sfContext::getInstance()->getRequest()->getParameter("myjs"))
+
+		if(sfContext::getInstance()->getRequest()->getParameter("JSMS_MYJS")==1)
+		{
+			$trackingMap=array(
+				"INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
+				"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
+				"MATCH_OF_THE_DAY"=>"responseTracking=".SearchTypesEnums::JSMSMatchOfDay,
+				"VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS
+
+                               );
+		}
+		else if(sfContext::getInstance()->getRequest()->getParameter("myjs"))
 		{
 			$trackingMap=array(
                                 "INTEREST_RECEIVED_FILTER"=>"responseTracking=".JSTrackingPageType::MYJS_AWAITING,
