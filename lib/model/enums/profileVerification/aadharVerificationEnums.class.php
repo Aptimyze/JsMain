@@ -24,4 +24,5 @@ class aadharVerificationEnums
 	CONST COMPLETED = "completed";
 	CONST EXACTMATCH = "exact";
 	CONST VERIFIED = "Y";
+	CONST ALREADYVERIFIED = "This Aadhaar number is already verified for another profile on Jeevansathi.";
 }

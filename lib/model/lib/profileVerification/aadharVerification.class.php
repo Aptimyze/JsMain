@@ -153,4 +153,15 @@ class aadharVerification
 		JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
 	}
 
+    public function preVerification($aadharId)
+    {
+        $resultArr = self::$aadharObj->checkIfaadharVerified($aadharId);
+        if($resultArr['VERIFY_STATUS'] == aadharVerificationEnums::VERIFIED)
+        {
+            return 1;
+        }
+        else
+            return 0;
+    }
+
 }

@@ -18,6 +18,7 @@ class aadharVerificationV1Action extends sfActions
 	{
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loginProfile = LoggedInProfile::getInstance();
+		$aadharVerificationObj = new aadharVerification();
 		$this->profileId = $this->loginProfile->getPROFILEID();
 		$this->username = $this->loginProfile->getUSERNAME();
 		$aadharId = $request->getParameter("aid");
@@ -28,9 +29,14 @@ class aadharVerificationV1Action extends sfActions
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
+		elseif($aadharVerificationObj->preVerification($aadharId)) //aadhar already entered and verified
+		{
+			$errorArr["ERROR"] = aadharVerificationEnums::ALREADYVERIFIED;
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->setResponseBody($errorArr);
+		} 
 		else
-		{			
-			$aadharVerificationObj = new aadharVerification();			
+		{		
 			$response = $aadharVerificationObj->callAadharVerificationApi($aadharId,$nameOfUser,$this->profileId,$this->username);
 			unset($aadharVerificationObj);
 			unset($nameOfUserObj);
@@ -45,5 +51,5 @@ class aadharVerificationV1Action extends sfActions
 		}		        
         $apiResponseHandlerObj->generateResponse();
 		return sfView::NONE; 
-	}
+	}	
 }
