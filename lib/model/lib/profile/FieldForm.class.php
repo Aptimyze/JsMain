@@ -65,7 +65,7 @@ class FieldForm extends sfForm
           $prevMstatus = $this->loggedInObj->getMSTATUS();
           $prevDob = $this->loggedInObj->getDTOFBIRTH();
           $fieldsEdited = array();
-          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;
+          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;          
 	  foreach($this->formValues as $field_name=>$value){
 		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
 		{
@@ -75,6 +75,19 @@ class FieldForm extends sfForm
 		{
                         if($field_name != "MANGLIK" || ($field_name == "MANGLIK" && ($prevManglikStatus !="S0" && $prevManglikStatus !="S")))
                                 $fieldsEdited[] = $field_name;
+		}
+		//aadhar section
+		if($field_name == "NAME")
+		{
+			$nameObj = new NameOfUser();
+            $nameOfUserArr = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
+            $nameOfUser = $nameOfUserArr[$this->loggedInObj->getPROFILEID()]["NAME"];
+            if(strcasecmp($nameOfUser,$value)!=0)
+            {
+                $aadharObj = new aadharVerification();
+                $aadharObj->resetAadharDetails($this->loggedInObj->getPROFILEID());
+
+            }
 		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
