@@ -213,6 +213,7 @@ $css_arr[]=array("jsms/help/JSMSHelp_css"   => "6");
 $css_arr[]=array("jsms/myjs/CALJSMS_css"     => "25");
 $css_arr[]=array("-1" => "4");
 $css_arr[]=array(" /web/js/ /web/profile/css/my_js_css" => "2");
+$css_arr[]=array("jsms/oldMobileSite/oldMobileSitePage"     => "1");
 $css_arr[]=array("yatra_style"   => "8");
 $css_arr[]=array("promotions/chatPromo/chatPromoMS_css"   => "8");
 $css_arr[]=array("promotions/chatPromo/chatPromoPC_css"   => "6");
