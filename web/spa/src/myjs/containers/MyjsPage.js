@@ -107,6 +107,7 @@ export  class MyjsPage extends React.Component {
 	componentWillReceiveProps(nextProps)
 	{
 		// this.callEventListner();
+		console.log('nextProps',nextProps);
 		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched)
 			this.restApiHits(this);
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);

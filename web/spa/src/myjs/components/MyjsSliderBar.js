@@ -109,7 +109,7 @@ alterCssStyle(duration, transform){
 }
 
 render(){
-  if(!this.props.fetched || !this.props.listing.profiles) {
+  if(!this.props.fetched || !this.props.listing.profiles || !this.props.listing.profiles.length) {
     return <div></div>;
   }
 
@@ -176,7 +176,7 @@ render(){
                 <img style={this.state.loaderStyles[index] ? this.state.loaderStyles[index] : {} } src='http://static.jeevansathi.com/images/jsms/commonImg/loader.gif' className="posabs setmid dispnone" />
 
            </div>
-         );}),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div></div>) ]}
+         );}),this.props.showLoader=='1' ? (<div key = '-1' className={"mr10 ml0 posrel " + (this.props.listing.nextpossible=='true' ? 'dispibl' :  'dispnone') }  style={this.state.tupleWidth} id="loadingMorePic"><div className="bg4"><div className="row minhgt199"><div className="cell vmid txtc pad17"><i className="mainsp heart"></i><div className="color3 f14 pt5">Loading More Interests</div></div></div></div> </div>) : (<div key='-1' ></div>) ]}
          <div className="clr"></div>
          </div>
        </div>
