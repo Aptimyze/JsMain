@@ -42,8 +42,8 @@ this.setState({bounceAnimation:" bounceIn animated "});
           <a href="/inbox/2/1">
             <div className="fl wid49p txtc">
               <div className={"row bg7 wid75 hgt75 brdr50p posrel "+this.state.bounceAnimation}  id="acceptedMe">
-                <div className="cell vmid white fullwid myjs_f30 fontlig">{this.props.acceptance.ACCEPTED_MEMBERS}</div>
-                <AcceptancesCount count={this.props.acceptance.ACC_ME_NEW}/>
+                <div className="cell vmid white fullwid myjs_f30 fontlig">{this.props.apiDataHam ? this.props.apiDataHam.hamburgerDetails.ACCEPTED_MEMBERS : ''}</div>
+                <AcceptancesCount count={this.props.apiDataHam ? this.props.apiDataHam.hamburgerDetails.ACC_ME_NEW : ''}/>
               </div>
               <div className="f12 fontlig color7 pt10">
                 <p>All</p>
@@ -55,8 +55,8 @@ this.setState({bounceAnimation:" bounceIn animated "});
           <a href="/search/perform?justJoinedMatches=1">
             <div className="fl wid49p txtc">
               <div className={"row bg7 wid75 hgt75 brdr50p posrel "+this.state.bounceAnimation} id="iAccepted">
-                <div className="cell vmid white myjs_f30 fontlig">{this.props.justjoined.JUST_JOINED_COUNT}</div>
-                <AcceptancesCount count={this.props.justjoined.JUST_JOINED_NEW}/>
+                <div className="cell vmid white myjs_f30 fontlig">{this.props.apiDataHam ? this.props.apiDataHam.hamburgerDetails.JUST_JOINED_COUNT : ''}</div>
+                <AcceptancesCount count={this.props.apiDataHam ? this.props.apiDataHam.hamburgerDetails.JUST_JOINED_NEW :''}/>
               </div>
               <div className="f12 fontlig color7 pt10">
                 <p>Just</p>

@@ -243,7 +243,7 @@ export  class MyjsPage extends React.Component {
 				 	var membershipmessageView = <MemMsgView data={this.props.myjsData.apiData.membership_message}/>
 				}
 
-  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} apiDataHam={this.props.myjsData.apiDataHam} />
 	    }
 
 			if(this.props.myjsData.ieFetched){
