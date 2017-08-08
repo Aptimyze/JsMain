@@ -20,5 +20,6 @@ export const setCookie = (key,value,hours=1) =>
 
 export const removeCookie = (key) =>
 {
-	 document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    console.log("Removing cookie: "+key);
+	 document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'+ ' path=/';
 }
