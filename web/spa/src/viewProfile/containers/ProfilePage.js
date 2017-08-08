@@ -77,11 +77,11 @@ class ProfilePage extends React.Component {
                 urlString += "&contact_id=" + contact_id;
             }
         }
-        
+
         this.props.showProfile(this, urlString);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
+      //  document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
         if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
@@ -507,16 +507,17 @@ class ProfilePage extends React.Component {
                     </div>
                     {invalidProfileView}
                     <div id="validProfile" className="">
-                      {this.props.pic.pic_count ?
+                      {this.props.pic ?
                         (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
-                            <div id="photoParent" className="fullwid scrollhid">
+                            <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
                                 {photoView}
                                 {photoViewTemp}
                             </div>
-                        </Link>) : (<div id="photoParent" className="fullwid scrollhid">
+                        </Link>) : (
+                          <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
                             {photoView}
                             {photoViewTemp}
-                        </div>)}
+                        </div></div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
                                 <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
