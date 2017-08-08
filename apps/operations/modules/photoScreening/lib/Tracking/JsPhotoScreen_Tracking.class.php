@@ -287,12 +287,13 @@ abstract class JsPhotoScreen_Tracking
 		{
 			return false;
 		}
-		if($this->m_objProfile->getACTIVATED() != "Y" && $this->m_szOld_HavePhoto_Status == "U")
+		if($this->m_objProfile->getACTIVATED() != "Y" && $this->m_szOld_HavePhoto_Status == "U" && $arrUpdateValue["HAVEPHOTO"] == "Y")
 		{
 			$jsadminObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
 			$jsadminObj->insert($this->m_objProfile->getPROFILEID());
 			unset($jsadminObj);
 			$arrUpdateValue["ACTIVATED"] = "Y";
+			$arrUpdateValue["INCOMPLETE"] = "N";
                         $arrUpdateValue["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
 			CommonFunction::sendWelcomeMailer($this->m_objProfile->getPROFILEID(),0);
 		}
