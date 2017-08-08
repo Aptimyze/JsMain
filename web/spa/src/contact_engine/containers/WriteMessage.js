@@ -35,7 +35,8 @@ export class WriteMessage extends React.Component{
     this.showLoaderDiv()
     let message = document.getElementById("writeMessageTxtId").value;
     document.getElementById("writeMessageTxtId").value = "";
-    //send message api
+    var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message;
+    this.props.sendMessageApi('/api/v2/contacts/postWriteMessage','MESSAGE',url);
     this.setState({
       showLoader:false
     });
@@ -43,7 +44,6 @@ export class WriteMessage extends React.Component{
   }
 
   render(){
-    console.log(this.props.buttonData);
     var loaderView;
         if(this.state.showLoader)
         {
@@ -118,8 +118,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        
+         sendMessageApi: (api,action,url) => {
+          commonApiCall(api,url,action,'POST',dispatch,true);
     }
+}
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(WriteMessage)
