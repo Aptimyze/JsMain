@@ -22,7 +22,7 @@ class gunascorev1Action extends sfAction
 		$profileId=$loggedInDetails['PROFILEID'];  //getting the profileid
 		$gender=$loggedInDetails["GENDER"];
 		$caste = $loggedInDetails["CASTE"];
-		$caste = 0;
+		
 		$oProfile=CommonFunction::getProfileFromChecksum($request->getParameter("oprofile"));
 		if($oProfile == $profileId)
 		{
