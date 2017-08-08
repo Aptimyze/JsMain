@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/EmailTypeCreater.php
 	This class should not be updated manually.
-	Created on 2017-08-01
+	Created on 2017-08-04
 	 */
 	class MailerType{
 		private static $emailTypeArray=array(
@@ -131,7 +131,7 @@
 '1879'=>array('ID'=>'1879','MAIL_ID'=>'1879','TPL_LOCATION'=>'reportInvalidPhone.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'48','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'On un-verification of phone due to mark invalid feature of phone','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'Y','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
 '1857'=>array('ID'=>'1880','MAIL_ID'=>'1857','TPL_LOCATION'=>'jsExclusiveServiceDayMailer.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'~$senderEmail`','DESCRIPTION'=>'Upgrade membership to JS Exclusive','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'~$senderName`','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add ~$senderEmail` to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
 '1858'=>array('ID'=>'1881','MAIL_ID'=>'1858','TPL_LOCATION'=>'negativeTreatmentDeleteProfileEmail.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com`','DESCRIPTION'=>'Profile deleted due to negative treatment','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info`','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
-'1859'=>array('ID'=>'1882','MAIL_ID'=>'1859','TPL_LOCATION'=>'uploadSuccessStory.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Upload Success Story','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
+'1859'=>array('ID'=>'1882','MAIL_ID'=>'1859','TPL_LOCATION'=>'uploadSuccessStoryMail.tpl','HEADER_TPL'=>'','FOOTER_TPL'=>'revamp_footer.tpl','TEMPLATE_EX_LOCATION'=>'','MAIL_GROUP'=>'27','CUSTOM_CRITERIA'=>'1','SENDER_EMAILID'=>'info@jeevansathi.com','DESCRIPTION'=>'Upload Success Story','MEMBERSHIP_TYPE'=>'D','GENDER'=>'','PHOTO_PROFILE'=>'','REPLY_TO_ENABLED'=>'','FROM_NAME'=>'Jeevansathi Info','REPLY_TO_ADDRESS'=>'','MAX_COUNT_TO_BE_SENT'=>'','REQUIRE_AUTOLOGIN'=>'','FTO_FLAG'=>'','PRE_HEADER'=>'Please add info@jeevansathi.com to your address book to ensure delivery of this mail into you inbox','PARTIALS'=>''),
 );
  
  

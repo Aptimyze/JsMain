@@ -8,7 +8,7 @@ class UploadSuccessStoryMailTask extends sfBaseTask {
 
     protected function configure() {
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'Application Name','operations'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'Application Name','jeevansathi'),
         ));
 
         $this->namespace        = 'mailer';
@@ -37,13 +37,24 @@ EOF;
         $profilesInfo = $this->getProfilesInfo();
         $subject = "Submit your success story and get a free gift!";
 
-        foreach ($profilesInfo as $key => $value) {
+        foreach ($profilesInfo as $profileId => $userName) {
+//            $mailerId = AddStory::getEncryptedMailerId($profileId);
+            $mailerId = "5061310c154ec1696d7b3e3bcf07979a|i|7";
+            $mailerId = urlencode($mailerId);
             $top8Mailer = new EmailSender(MailerGroup::TOP8, '1859');
-            $tpl = $top8Mailer->setProfileId($key);
-            $tpl->getSmarty()->assign("userName",$value);
-            $tpl->getSmarty()->assign("SITE_URL","trunk.jeev.com");
+            $tpl = $top8Mailer->setProfileId($profileId);
+            $tpl->getSmarty()->assign("userName",$userName);
+            if($mailerId)
+                $tpl->getSmarty()->assign("mailerId",$mailerId);
+            else
+                continue;
+            $tpl->getSmarty()->assign("fromMailer","true");
             $tpl->setSubject($subject);
-            $top8Mailer->send();
+            $jprofile = new JPROFILE();
+            $row = $jprofile->get($profileId, "PROFILEID", "EMAIL");
+            if($mailerId)
+                $top8Mailer->send($row["EMAIL"]);
+            die();
         }
     }
 
@@ -56,8 +67,8 @@ EOF;
 
         $profilesDeleted = array();
 
-        foreach ($dates as $key => $value) {
-            $tempRes = $profileDelReasonObj->getProfilesForSuccesStory($value);
+        foreach ($dates as $index => $date) {
+            $tempRes = $profileDelReasonObj->getProfilesForSuccesStory($date);
             if(is_array($tempRes))
                 $profilesDeleted+= $tempRes;
         }
@@ -70,7 +81,6 @@ EOF;
             else
                 $result = $profilesDeleted;
         }
-        print_r($result);
         return $result;
     }
 }

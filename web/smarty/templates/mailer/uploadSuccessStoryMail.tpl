@@ -35,93 +35,82 @@
     </tr>
     <tr>
         <td width="575"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="">
+            <tr>
+                <td colspan="3" height="14"></td>
+                <td colspan="3" height="14"></td>
+                <td colspan="3" height="14"></td>
+            </tr>
+            <tr>
+                <td width="22">
+                    <img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="right" />
+                </td>
+                <td width="531">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
+                        <tr>
+                            <td>
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td style="padding-bottom:10px;">Dear ~$userName`,</td><br>
+                                    </tr>
 
-                <tr>
-                    <td colspan="3" height="14"></td>
-                </tr>
-                <tr>
-                    <td width="22"><img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
-                    <td width="531"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td style="padding-bottom:10px;">Dear ~$userName`,</td><br>
-                                        </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:10px;">
+                                A while back, you had deleted your profile stating that you found your match on Jeevansathi.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+                                We heartily congratulate you for finding your perfect match. It is stories like yours which constantly motivate us to keep improving our platform.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+                                We request you to share a success story, describing how you found your match on Jeevansathi, and a few pics of you together with your soulmate (wedding pics will be even better!).
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+                                This will definitely motivate Jeevansathi members waiting to find their special someone.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+                                A sweet surprise will be waiting for you after you submit your success story.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#ad160d" height="27" align="center" width="50%">
+                                <a href="/successStory/layer?fromSuccessStoryMailer=~$fromMailer`&mailid=~$mailerId`" target="_blank" style="text-decoration:none; color:#ffffff;"> <strong>Submit your Success Story</strong>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="22">
+                    <img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="right" />
+                </td>
+            </tr>
+            <tr>
+                <td><table style="font-family:Arial" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td style="font-size:12px;" valign="top" height="35"></td>
+                    </tr>
+                    <tr>
+                        <td width="22"><img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="right" /></td>
 
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td style="padding-bottom:10px;">A while back, you had deleted your profile stating that you found your match on Jeevansathi.</td><br>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>We heartily congratulate you for finding your perfect match. It is stories like yours which constantly motivate us to keep improving our platform.</td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>We request you to share a success story, describing how you found your match on Jeevansathi, and a few pics of you together with your soulmate (wedding pics will be even better!).</td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>This will definitely motivate Jeevansathi members waiting to find their special someone.</td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td><a href="~$SITE_URL`/success/success_stories.php" target="_blank" style="color:#0476DF; text-decoration:none;"><b>Submit your Success Story</b></a></td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-
-                <tr>
-                    <td></td>
-                    <td><table style="font-family:Arial" border="0" cellpadding="0" cellspacing="0" width="100%">
-                            <tr>
-                                <td style="font-size:12px;" valign="top" height="35">A sweet surprise will be waiting for you after you submit your success story.</td>
-                            </tr>
-                            <tr>
-                                <td><table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
-                                        <tbody>
-                                        <tr><td style="font-size:12px;" valign="top">Warm Regards</td></tr>
-                                        <tr><td style="font-size:12px; padding-bottom:10px;" valign="top">Team Jeevansathi</td></tr>
-                                        </tr>
-                                        </tbody>
-                                    </table></td>
-                            </tr>
+                        <td><table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr><td style="font-size:12px;" valign="top">Warm Regards</td></tr>
+                                <tr><td style="font-size:12px; padding-bottom:10px;" valign="top">Team Jeevansathi</td></tr>
+                            </tbody>
                         </table></td>
-                    <td></td>
-                </tr>
-            </table></td>
+                    </tr>
+                </table></td>
+            </tr>
+        </table></td>
     </tr>
     ~$FOOTER`
 </table>
