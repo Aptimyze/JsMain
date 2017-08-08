@@ -11,10 +11,10 @@ export class ShowCount extends React.Component{
     render() {
       if(!this.props.param)
       {
-        return (<div></div>); 
-      }  
-      else if(this.props.param.TOTAL_NEW==0) 
-        { 
+        return (<div></div>);
+      }
+      else if(this.props.param.TOTAL_NEW==0)
+        {
           return (<div></div>);
         }
       return(
@@ -57,8 +57,8 @@ export default class MyjsHeadHTML extends React.Component
       if(prevprops.location) {
         if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
             this.refs.Hamchild.hideHam();
-        }  
-      }  
+        }
+      }
     }
 
     showHam() {
@@ -68,7 +68,7 @@ export default class MyjsHeadHTML extends React.Component
             } else {
                 this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
             }
-            
+
         }
         this.refs.Hamchild.openHam();
     }

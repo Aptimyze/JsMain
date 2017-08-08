@@ -47,7 +47,17 @@ class ThreeDots extends React.Component{
     }
 
   callBackFunctionThreeDots(jsonOb){
-    this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
+    switch(button.action)
+    {
+      case 'CONTACT_DETAIL':
+        
+      break;
+      default:
+//        performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
+      break;
+    }
+
+//    this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
   }
 
 
@@ -57,10 +67,8 @@ class ThreeDots extends React.Component{
     {
       case 'IGNORE':
         break;
-      case 'SHORTLIST':
-        performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
-        break;
       default:
+      performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
         break;
     }
   }
@@ -73,7 +81,7 @@ class ThreeDots extends React.Component{
 
   componentWillReceiveProps(nextProps)
   {
-    this.hideLoaderDiv();   
+    this.hideLoaderDiv();
   }
 
   render(){
@@ -103,7 +111,7 @@ class ThreeDots extends React.Component{
                       </div>
                       <div className="f14 white fontlig opa80 pt10" id="topMsg">Connect with {this.props.username}</div>
                     </div>
-                    { 
+                    {
                       buttons.map(function(button,index)
                       {
                         let top_id = button.action;
@@ -144,7 +152,7 @@ class ThreeDots extends React.Component{
     }
     return(
       <div>
-        
+
         {layerView}
         {reportAbuseView}
         <div onClick={() => this.getThreeDotLayer()} className="posabs srp_pos2">
@@ -153,7 +161,7 @@ class ThreeDots extends React.Component{
       </div>
       );
   }
-  	
+
 }
 
 const mapDispatchToProps = (dispatch) => {

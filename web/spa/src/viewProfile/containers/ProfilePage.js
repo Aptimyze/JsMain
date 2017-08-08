@@ -59,13 +59,33 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
-        let urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
+        let urlString;
+        if(this.state.profilechecksum != "") {
+            urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;    
+        } else {
+            let contact_id = getParameterByName(window.location.href,"contact_id");
+            let actual_offset = getParameterByName(window.location.href,"actual_offset");
+            let total_rec = getParameterByName(window.location.href,"total_rec");
+            let searchid = getParameterByName(window.location.href,"searchid");
+          
+            urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
+
+            if(searchid != 1 && searchid != null)
+            {
+                urlString += "&searchid=" + searchid;
+            } else if(contact_id != undefined) {
+                urlString += "&contact_id=" + contact_id;
+            }
+        }
+
         this.props.showProfile(this, urlString);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
+      //  document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+        if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
+        }
         if(this.state.gender == "M") {
             this.setState({
                defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
@@ -184,7 +204,7 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-
+            
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -195,7 +215,9 @@ class ProfilePage extends React.Component {
             if(total_rec == "undefined") {
                 total_rec = "20";
             }
-            
+            if(!profilechecksum) {
+                profilechecksum = nextProps.pageInfo.profilechecksum;
+            }
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
@@ -318,8 +340,14 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-
-        this.props.history.push(this.props.history.prevUrl);
+        if ( typeof this.props.history.prevUrl == 'undefined' )
+        {
+            this.props.history.push("/myjs");   
+        }
+        else
+        {
+            this.props.history.push(this.props.history.prevUrl);
+        }
     }
 
     render()
@@ -449,7 +477,9 @@ class ProfilePage extends React.Component {
             </div>;
             setTimeout(function(){
                 var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                document.getElementById("animated-background").style.height = backHeight + "px";
+                if(document.getElementById("animated-background")) {
+                    document.getElementById("animated-background").style.height = backHeight + "px";
+                }
             },100);
         }
         return (
@@ -477,12 +507,17 @@ class ProfilePage extends React.Component {
                     </div>
                     {invalidProfileView}
                     <div id="validProfile" className="">
-                        <Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)} to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
-                            <div id="photoParent" className="fullwid scrollhid">
+                      {this.props.pic ?
+                        (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                            <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
                                 {photoView}
                                 {photoViewTemp}
                             </div>
-                        </Link>
+                        </Link>) : (
+                          <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                            {photoView}
+                            {photoViewTemp}
+                        </div></div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
                                 <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>

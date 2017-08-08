@@ -104,7 +104,21 @@ const MyjsReducer = (state={
 						total : --oldCount
 					}
 				}
-				console.log(state,'-=-=-=-=-=-pp');
+				break;
+				case 'RESET_MYJS_TIMESTAMP':
+
+				let value = action.payload.value ? action.payload.value  : new Date().getTime();
+				if(value==-1)
+					state = {
+						...state,
+						fetched :false,
+						timeStamp : value
+						}
+				else
+					state = {
+						...state,
+						timeStamp : value
+						}
 				break;
 
 	}

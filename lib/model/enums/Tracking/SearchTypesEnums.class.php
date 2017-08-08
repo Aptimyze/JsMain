@@ -148,6 +148,7 @@ class SearchTypesEnums
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 	const AndroidMatchOfDay = "AMD";
 	const IOSMatchOfDay = "IMD";
+	const JSMSMatchOfDay = "WMOD";
 	const MatchOfDay = "MD";
         const LAST_SEARCH_RESULTS = "LSR";
         const JSPC_LAST_SEARCH = "LSPC";

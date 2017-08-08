@@ -94,9 +94,9 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched || true ){ // caching conditions go here in place of true
+		if(!this.props.myjsData.fetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+			this.props.resetTimeStamp();
 			this.firstApiHits(this);
-
 		}
 	}
 
@@ -107,6 +107,7 @@ export  class MyjsPage extends React.Component {
 	componentWillReceiveProps(nextProps)
 	{
 		// this.callEventListner();
+		console.log('nextProps',nextProps);
 		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched)
 			this.restApiHits(this);
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
@@ -219,7 +220,7 @@ export  class MyjsPage extends React.Component {
 
 		var promoView;
         if(this.state.showPromo == true)
-        {	
+        {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
@@ -242,26 +243,26 @@ export  class MyjsPage extends React.Component {
 				 	var membershipmessageView = <MemMsgView data={this.props.myjsData.apiData.membership_message}/>
 				}
 
-  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} apiDataHam={this.props.myjsData.apiDataHam} />
 	    }
 
 			if(this.props.myjsData.ieFetched){
-	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
+	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
 	    }
 
 	    if(this.props.myjsData.irFetched && this.props.myjsData.apiDataIR.profiles){
-	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
 	    }
 
 	    if(this.props.myjsData.modFetched && this.props.myjsData.apiDataMOD.profiles){
-	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' />
+	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
 	    }
 	    if(this.props.myjsData.vaFetched ){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched && this.props.myjsData.apiDataDR.profiles)
 	    {
-				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' />
+				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
 			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
 			{
@@ -298,9 +299,9 @@ export  class MyjsPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       myjsData: state.MyjsReducer,
-	   listingData :  state.listingReducer,
-	   Jsb9Reducer : state.Jsb9Reducer
+     myjsData: state.MyjsReducer,
+	   Jsb9Reducer : state.Jsb9Reducer,
+
     }
 }
 
@@ -313,26 +314,27 @@ const mapDispatchToProps = (dispatch) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
      	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&searchBasedParam=matchalerts&caching=1&myjs=1','SET_DR_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1','SET_DR_DATA','POST',dispatch);
 		},
      	hitApi_MOD: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&myjs=1','SET_MOD_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1','SET_MOD_DATA','POST',dispatch);
         },
   	    hitApi_IR: (nextPage) => {
 					let reducerName = '';
 					if(typeof nextPage == 'undefined'){ nextPage=1;reducerName = 'SET_IR_DATA';}
 					else { reducerName = 'SET_IR_PAGINATION';}
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage,reducerName,'POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage+'&JSMS_MYJS=1',reducerName,'POST',dispatch);
         },
         hitApi_VA: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&myjs=1','SET_VA_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1','SET_VA_DATA','POST',dispatch);
         },
         hitApi_IE: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&myjs=1','SET_IE_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1','SET_IE_DATA','POST',dispatch);
         },
         hitApi_Ham: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
-        }
+        },
+				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}})
     }
 }
 

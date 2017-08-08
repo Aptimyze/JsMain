@@ -3,6 +3,7 @@ import axios from "axios";
 import {getCookie} from '../../common/components/CookieHelper';
 import MyjsSliderBinding from "../../myjs/components/MyjsSliderBinding";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
+import * as CONSTANTS from '../../common/constants/apiConstants';
 require ('../style/albumcss.css');
 
 
@@ -11,7 +12,7 @@ export default class PhotoAlbumPage extends React.Component {
 
   constructor(props) {
       super();
-      this.sliderTupleStyle = {'whiteSpace': 'nowrap','fontSize':'0px','overflowX':'hidden','display': 'table'};
+      this.sliderTupleStyle = {'whiteSpace': 'nowrap','fontSize':'0px','overflowX':'hidden','display': 'table','height':window.innerHeight+'px'};
       this.state={
         getRes: null,
         recAlbumlink: false,
@@ -26,18 +27,31 @@ export default class PhotoAlbumPage extends React.Component {
   componentDidMount(){
 
     let _this = this;
+    console.log(this.props.location.search);
     if(getCookie("AUTHCHECKSUM"))
     {
-      console.log(this.props.location.search);
-      axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
-        .then(function(response){
+        commonApiCall(CONSTANTS.PHOTALBUM_API,"&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1),'','POST').then(function(response){
+          console.log('albumdata', response);
           _this.setState({
-              getRes: response.data,
-              recAlbumlink: true
-          });
+                      getRes: response,
+                      recAlbumlink: true
+                  });
+          console.log(response);
+        });
 
-        })
     }
+    // if(getCookie("AUTHCHECKSUM"))
+    // {
+    //   console.log(this.props.location.search);
+    //   axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
+    //     .then(function(response){
+    //       _this.setState({
+    //           getRes: response.data,
+    //           recAlbumlink: true
+    //       });
+    //
+    //     })
+    // }
   }
 
 componentDidUpdate(){
@@ -79,14 +93,14 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
   	}
 
 
-  _onLoad(e) {
+  _onLoad(e) {console.log(e.target.id);
     let imgW_a, imgH_a, adjusted_height, getIDn;
     imgW_a = e.target.offsetWidth;
     imgH_a = e.target.offsetHeight;
     getIDn = e.target.id.split("_");
     adjusted_height = parseInt(window.innerWidth * ( imgH_a/imgW_a ));
     document.getElementById(e.target.id).style.height = adjusted_height;
-    document.getElementById("loader_"+getIDn[1]).style.display="none";
+    document.getElementById("albumLoader_"+getIDn[1]).style.display="none";
     document.getElementById(e.target.id).style.visibility = "visible";
   }
   goBack()
@@ -119,9 +133,9 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
 
             {this.state.getRes.albumUrls.map((urllist, index) => {
-              return <div className="dispcell vertmid txtc" style={this.state.tupleWidth} key={urllist.pictureid}>
-                  <img id={"loader_"+urllist.pictureid} className="loadrpos" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
-                  <img id={"image_"+urllist.pictureid} style={this.state.tupleWidth} src={urllist.url} onLoad={this._onLoad} className="imghid"  />
+              return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
+                  <img id={"albumLoader_"+index} className="loadrpos" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+                  <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid"  />
               </div>;
             })}
 
