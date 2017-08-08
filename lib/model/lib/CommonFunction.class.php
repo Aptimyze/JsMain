@@ -1003,7 +1003,7 @@ class CommonFunction
 			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
 			$tpl = $top8Mailer->setProfileId($profileid);
 			// TODO : change subject
-			$subject = "New Login Attempt";
+			$subject = "There was a Login on your account from a new Device/Browser";
 			$tpl->setSubject($subject);
 			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
 			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
@@ -1041,7 +1041,18 @@ class CommonFunction
     	{
                 $loggedInObj = LoggedInProfile::getInstance();
                 $subscription = $loggedInObj->getSUBSCRIPTION();
-                if($subscription==''){
+                $verifyDate=$loggedInObj->getVERIFY_ACTIVATED_DT();
+                $verifyDateFlag=true;
+                if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
+				{
+					$verifyDate = $loginProfile->getENTRY_DT();
+				}
+                	$datetime1 = new DateTime();
+					$datetime2 = new DateTime($verifyDate);
+					$interval = $datetime1->diff($datetime2);
+					if($interval->days<=7)
+						$verifyDateFlag=true;
+                if($subscription=='' && $verifyDateFlag){
                     $analyticScore = ScoringLib::getAnalyticScore($profileId);
                     if($analyticScore >= 0 && $analyticScore <=30)
     			return true;
