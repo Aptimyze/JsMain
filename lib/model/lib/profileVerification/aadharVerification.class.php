@@ -128,11 +128,11 @@ class aadharVerification
 	}
 
 	public function updateVerificationStatus($profileId,$verifiedFlag)
-	{			
+	{	
 		$updatedResult = self::$aadharObj->updateVerificationStatus($profileId,$verifiedFlag);
 		$paramArr["VERIFY_STATUS"] = $verifiedFlag;	
         if (true === $updatedResult) {
-            ProfileCacheLib::getInstance()->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $pid, __CLASS__);
+            ProfileCacheLib::getInstance()->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $profileId, __CLASS__);
         }
         return $updatedResult;
 	}
@@ -155,8 +155,8 @@ class aadharVerification
 
     public function preVerification($aadharId)
     {
-        $resultArr = self::$aadharObj->checkIfaadharVerified($aadharId);
-        if($resultArr['VERIFY_STATUS'] == aadharVerificationEnums::VERIFIED)
+        $resultArr = self::$aadharObj->checkIfaadharVerified($aadharId,aadharVerificationEnums::VERIFIED);
+        if(is_array($resultArr) && !empty($resultArr))
         {
             return 1;
         }

@@ -87,11 +87,12 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
 
     }
 
-    public function checkIfaadharVerified($aadharId)
+    public function checkIfaadharVerified($aadharId,$verifyValue)
     {
-        $sql = "SELECT AADHAR_NO,VERIFY_STATUS FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE AADHAR_NO = :AADHARID";
+        $sql = "SELECT AADHAR_NO,VERIFY_STATUS FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE AADHAR_NO = :AADHARID AND VERIFY_STATUS = :VERIFY";
         $res = $this->db->prepare($sql);
         $res->bindParam(":AADHARID", $aadharId, PDO::PARAM_INT);
+        $res->bindParam(":VERIFY", $verifyValue, PDO::PARAM_STR);
         $res->execute();
         while($row=$res->fetch(PDO::FETCH_ASSOC))
         {
