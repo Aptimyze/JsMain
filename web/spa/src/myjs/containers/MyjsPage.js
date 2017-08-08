@@ -299,9 +299,9 @@ export  class MyjsPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       myjsData: state.MyjsReducer,
-	   listingData :  state.listingReducer,
-	   Jsb9Reducer : state.Jsb9Reducer
+     myjsData: state.MyjsReducer,
+	   Jsb9Reducer : state.Jsb9Reducer,
+
     }
 }
 

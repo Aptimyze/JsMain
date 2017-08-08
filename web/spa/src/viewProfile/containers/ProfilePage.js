@@ -501,12 +501,16 @@ class ProfilePage extends React.Component {
                     </div>
                     {invalidProfileView}
                     <div id="validProfile" className="">
-                        <Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)} to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                      {this.props.pic.pic_count ?
+                        (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                             <div id="photoParent" className="fullwid scrollhid">
                                 {photoView}
                                 {photoViewTemp}
                             </div>
-                        </Link>
+                        </Link>) : (<div id="photoParent" className="fullwid scrollhid">
+                            {photoView}
+                            {photoViewTemp}
+                        </div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
                                 <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
