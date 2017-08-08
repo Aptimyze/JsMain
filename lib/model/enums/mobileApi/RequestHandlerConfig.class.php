@@ -75,7 +75,8 @@ class RequestHandlerConfig
 			"logout" => array("v1" => "logoutv1", "v2" => "logoutv1", "v3" => "logoutv1"),
 			"versionupgrade" => array("v1" => "versionupgrade_v1", "v3" => "versionupgrade_v1"),
 			"hamburgerDetails" => array("v1" => "hamburgerDetailsV1", "v3" => "hamburgerDetailsV1"),
-                        "metricMonitoring" => array("v1" => "ApiGetDataForMonitoringMetrics")),
+			"socialsignin" => array("v1" => "SocialSignin", "v3" => "SocialSignin"),
+            "metricMonitoring" => array("v1" => "ApiGetDataForMonitoringMetrics")),
 
 		"social" => array(
 			"requestPhoto" => array("v1" => "RequestPhotoV1", "v2" => "", "v3" => "RequestPhotoV1"),

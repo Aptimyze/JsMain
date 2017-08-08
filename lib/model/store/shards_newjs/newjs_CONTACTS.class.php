@@ -1323,5 +1323,69 @@ public function getSendersPending($chunkStr)
         throw new jsException($e);
       }
     }
+
+    public function getSentAcceptancesForMatchMailer($profilesId,$time) {
+    	try {
+    		$result = array();
+    		$sql = "SELECT SENDER, RECEIVER
+    				FROM newjs.CONTACTS
+    				WHERE SENDER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+
+    		$prep = $this->db->prepare($sql);
+    		$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
+    		$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
+    		$prep->execute();
+    		$prep->setFetchMode(PDO::FETCH_ASSOC);
+
+    		while ($row = $prep->fetch()) {
+				$result[$row["SENDER"]][] = $row["RECEIVER"];
+    		}
+    		return $result;
+    	} catch (Exception $e) {
+    		throw new jsException($e);
+    	}
+    }
+
+    public function getReceivedAcceptancesForMatchMailer($profilesId,$time){
+    	try {
+            $result = array();
+    		$sql = "SELECT SENDER, RECEIVER
+					FROM newjs.CONTACTS
+					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
+			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
+			$prep->execute();
+			$prep->setFetchMode(PDO::FETCH_ASSOC);
+
+			while ($row = $prep->fetch()) {
+				$result[$row["RECEIVER"]][] = $row["SENDER"];
+			}
+			return $result;
+    	} catch (Exception $e) {
+    		throw new jsException($e);
+    	}
+    }
+    
+	public function getRbInterestSentForDuration($interestTime,$remainderArray){
+            try{
+            	
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`<3 AND MSG_DEL='Y' AND TYPE = 'I' AND DATE(`TIME`) = :INTEREST_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM  AND MSG_DEL='Y' ORDER BY `TIME` DESC  ";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":INTEREST_TIME",$interestTime,PDO::PARAM_STR);
+               	$prep->bindValue(":DIVISOR",$remainderArray['divisor'],PDO::PARAM_INT);
+                $prep->bindValue(":REMAINDER",$remainderArray['remainder'],PDO::PARAM_INT);               
+                $prep->bindValue(":SHARDREM",$remainderArray['shardRemainder'],PDO::PARAM_INT);               
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[]=$row;                
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
 }
 ?>

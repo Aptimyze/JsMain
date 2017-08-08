@@ -230,7 +230,7 @@ class PageForm extends sfForm
 		  edit_nonHindu_religion($religionArr,"newjs.".$religion_table,$religion_log_table);
 	  }
 	  if(count($nativePlaceArr)){
-			$nativePlaceArr[PROFILEID]=$id;
+			$nativePlaceArr[PROFILEID]=$loggedInObj->getPROFILEID();
 			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
