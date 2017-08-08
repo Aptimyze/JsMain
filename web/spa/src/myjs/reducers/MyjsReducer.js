@@ -108,10 +108,17 @@ const MyjsReducer = (state={
 				case 'RESET_MYJS_TIMESTAMP':
 
 				let value = action.payload.value ? action.payload.value  : new Date().getTime();
-				state = {
-					...state,
-					timeStamp : value
-					}
+				if(value==-1)
+					state = {
+						...state,
+						fetched :false,
+						timeStamp : value
+						}
+				else
+					state = {
+						...state,
+						timeStamp : value
+						}
 				break;
 
 	}
