@@ -94,7 +94,7 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched || true ){ // caching conditions go here in place of true
+		if(!this.props.myjsData.fetched ){ // caching conditions go here in place of true
 			this.firstApiHits(this);
 
 		}
@@ -220,7 +220,7 @@ export  class MyjsPage extends React.Component {
 
 		var promoView;
         if(this.state.showPromo == true)
-        {	
+        {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
