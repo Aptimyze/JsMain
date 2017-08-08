@@ -22,7 +22,7 @@ class gunascorev1Action extends sfAction
 		$profileId=$loggedInDetails['PROFILEID'];  //getting the profileid
 		$gender=$loggedInDetails["GENDER"];
 		$caste = $loggedInDetails["CASTE"];
-
+		$caste = 0;
 		$oProfile=CommonFunction::getProfileFromChecksum($request->getParameter("oprofile"));
 		if($oProfile == $profileId)
 		{
@@ -44,19 +44,18 @@ class gunascorev1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$gunaData = $this->getGunaScoreForSearch($profileId,$caste,$oProfile,$gender,1);		
 			$apiObj->setResponseBody(array("SCORE"=>$gunaData[$oProfile]));
+			$apiObj->generateResponse();
+			if($request->getParameter('INTERNAL')==1)
+			{
+				return sfView::NONE;
+			}
 		}
 		elseif(!$caste)
-		{
-			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$mailBody = self::MAILBODY."loggedInDetails: \n\n".$loggedInDetails."\n\n".print_r($_SERVER,true);
+		{			
+			$mailBody = self::MAILBODY."loggedInDetails: \n\n".print_r($loggedInDetails)."\n\n".print_r($_SERVER,true);
 			SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);
 
-		}
-		$apiObj->generateResponse();
-		if($request->getParameter('INTERNAL')==1)
-		{
-			return sfView::NONE;
-		}
+		}	
 		die;
 	}
 
