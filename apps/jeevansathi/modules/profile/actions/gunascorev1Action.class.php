@@ -9,6 +9,11 @@
  */
 class gunascorev1Action extends sfAction
 {
+	const MAILBODY = "CASTE BLANK IN GUNA SCORE : ";
+	const RECEIVER = "sanyam1204@gmail.com,eshajain88@gmail.com";    
+    const SENDER = "info@jeevansathi.com";
+    const SUBJECT = "caste blank in gunaScore";
+
 	public function execute($request)
 	{
 		$apiObj=ApiResponseHandler::getInstance();	
@@ -34,16 +39,23 @@ class gunascorev1Action extends sfAction
 		}
 		
 		$parent="";
-		if($oProfile && $profileId && !$sameGender)
+		if($oProfile && $profileId && !$sameGender && $caste)
 		{
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$gunaData = $this->getGunaScoreForSearch($profileId,$caste,$oProfile,$gender,1);		
 			$apiObj->setResponseBody(array("SCORE"=>$gunaData[$oProfile]));
-			$apiObj->generateResponse();
-			if($request->getParameter('INTERNAL')==1)
-			{
-				return sfView::NONE;
-			}			
+		}
+		elseif(!$caste)
+		{
+			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+			$mailBody = self::MAILBODY."loggedInDetails: \n\n".$loggedInDetails."\n\n".print_r($_SERVER,true);
+			SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);
+
+		}
+		$apiObj->generateResponse();
+		if($request->getParameter('INTERNAL')==1)
+		{
+			return sfView::NONE;
 		}
 		die;
 	}
