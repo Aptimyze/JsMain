@@ -112,10 +112,10 @@ componentWillUnmount(){
           <div className="fullwid pad12" id="jsmsProfilePic">
             <div className="posrel fl">
               <div className="hold hold1">
-                <div className="pie pie1 editBarStyle2" style={this.state.loaderStyle2}></div>
+                <div className="pie pie1" style={this.state.loaderStyle2}></div>
               </div>
               <div className="hold hold2">
-                <div className="pie pie2 editBarStyle3" style={this.state.loaderStyle}></div>
+                <div className="pie pie2" style={this.state.loaderStyle}></div>
               </div>
               <div className="bg"> </div>
               <img className="image" src={this.props.profileInfo.photo} />
