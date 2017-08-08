@@ -95,6 +95,10 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('FirstCall', 1);
 				
 				// Code to execute after the action execution, before the rendering
+				//Stopping from going to oldMobileSite
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite')){
+					$context->getController()->forward("static", "oldMobileSite");
+				}
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
