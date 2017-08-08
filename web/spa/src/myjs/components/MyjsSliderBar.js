@@ -125,7 +125,7 @@ render(){
               &nbsp;
               <span id='matchAlert_count' className="opa50 f14">{this.props.listing.total}</span>
             </div>
-            <div className="fr pt5"> <a href="/inbox/7/1" className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
+            <div className="fr pt5"> <a href={this.props.url} className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
             <div className="clr"></div>
           </div>
           <Loader loaderStyles={{'position': 'relative','margin': '0px auto','display': 'none'}} />
