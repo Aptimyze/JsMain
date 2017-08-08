@@ -18,8 +18,8 @@
             <div id="overlayHead" class="bg1 txtc pad15">
                 <div class="posrel lh30">
                     <div class="fontthin f20 white dispibl">Your Success Story</div>
-                    <span id="skipSuccess" class="white fr fontthin cursp">Skip</span>
                     ~if $fromMailer neq 'true'`
+                        <span id="skipSuccess" class="white fr fontthin cursp">Skip</span>
                         <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1 cursp"></i></a>
                     ~/if`
                 </div>
