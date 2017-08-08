@@ -247,22 +247,22 @@ export  class MyjsPage extends React.Component {
 	    }
 
 			if(this.props.myjsData.ieFetched){
-	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE}/>
+	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
 	    }
 
 	    if(this.props.myjsData.irFetched && this.props.myjsData.apiDataIR.profiles){
-	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' />
+	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/6/1'/>
 	    }
 
 	    if(this.props.myjsData.modFetched && this.props.myjsData.apiDataMOD.profiles){
-	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' />
+	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
 	    }
 	    if(this.props.myjsData.vaFetched ){
 	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched && this.props.myjsData.apiDataDR.profiles)
 	    {
-				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' />
+				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
 			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
 			{
