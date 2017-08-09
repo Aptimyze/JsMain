@@ -2216,8 +2216,9 @@ class MembershipHandler
     public function getRealMembershipName($profileid)
     {
         $memCacheObject = JsMemcache::getInstance();
-        if ($memCacheObject->get($profileid . "_MEM_NAME")) {
-            $output = unserialize($memCacheObject->get($profileid . "_MEM_NAME"));
+        $memValue=$memCacheObject->get($profileid . "_MEM_NAME")
+        if ($memValue) {
+            $output = unserialize($memValue);
             $output = json_encode($output);
             $output = str_replace('"', '', $output);
         } else {
