@@ -350,6 +350,45 @@ class jsexclusiveActions extends sfActions {
     
     public function executeAddFollowUpFromMatchMail($request){
         $this->cid = $request['cid'];
+        $this->client = $request->getParameter('client');
+        $this->agent = $request->getParameter('name');
+        $formArr = $request->getParameter('followupForm');
+        $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
+        $exclusiveLib = new ExclusiveFunctions();
+        if($request->getParameter('submit')){
+            foreach($formArr as $profileid => $val){
+                if($val == 'Y'){
+                    $yesArr[] = $profileid;
+                }
+                else if ($val == 'N'){
+                    $noArr[] = $profileid;
+                }
+            }
+            if(is_array($yesArr)){
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent);
+            }
+            if(is_array($noArr)){
+                $followupObj->updateStatusForClientId(implode(",", $noArr),'N');
+            }
+        }
+        
+        $undecidedData = $followupObj->getDataDateWise($this->client, 'U');
+        
+        
+        $acceptanceIdArr = $exclusiveLib->returnAcceptanceIdArr($undecidedData);
+        
+        $noData = $followupObj->getDataDateWise($this->client, 'N');
+        $noIdArr = $exclusiveLib->returnAcceptanceIdArr($noData);
+        
+        if(is_array($noIdArr)){
+            $jprofileObj = new JPROFILE('newjs_masterRep');
+            $this->declinedArr = $jprofileObj->getAllSubscriptionsArr($noIdArr);
+        }
+        
+        $matchMailData = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$acceptanceIdArr);        
+        $this->matchMailFollowUpData = $exclusiveLib->formatDataForMatchMail($undecidedData,$matchMailData);
+        
+        unset($exclusiveLib);
     }
 
 }
