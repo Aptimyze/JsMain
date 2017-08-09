@@ -27,7 +27,6 @@ class jsexclusiveActions extends sfActions {
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
-                       
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -168,6 +167,13 @@ class jsexclusiveActions extends sfActions {
         $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
         //Counter for welcome calls
         $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+        $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
+        if(is_array($todaysClient)){
+            $this->todaysClientCount = $todaysClient[strtoupper(date('D'))]?$todaysClient[strtoupper(date('D'))]:0;
+        }
+        else{
+            $this->todaysClientCount = 0;
+        }
         unset($exclusiveObj);
         
         //To get count for pending con calls for menu page
@@ -194,8 +200,28 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $this->cid = $request['cid'];
         $this->client = $request['client'];
-        $from = $request['from'];
+
         //$this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
+        //Get all clients here
+        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        if($request["submit"]){
+            $username = $request->getParameter("clientUserid");
+            $username = preg_replace('/\s+/', '', $username);
+            if($username == ""){
+                $this->message = "Please enter a username";
+                $this->error = 1;
+            }
+            else{
+                $jprofileObj = new JPROFILE("newjs_slave");
+                $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+                $exclusiveLib = new ExclusiveFunctions();
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
+                $this->message = "Proposal mail sent to ".$username;
+            }
+        }
+
+        $from = $request['from'];
+        
         //check if user is eligible for new handling
         if($from == 'search'){
             $username = $request['username'];
@@ -356,6 +382,59 @@ class jsexclusiveActions extends sfActions {
                 }
             }
         }
+    }
+    
+    public function executeTodaysClients($request){
+        $this->cid = $request['cid'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        $this->todaysClientProfiles = $exclusiveObj->getDayWiseAssignedAgent($request['name'],  strtoupper(date('D')));
+    }
+    
+    public function executeAddFollowUpFromMatchMail($request){
+        $this->cid = $request['cid'];
+        $this->client = $request->getParameter('client');
+        $this->agent = $request->getParameter('name');
+        $formArr = $request->getParameter('followupForm');
+        $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
+        $exclusiveLib = new ExclusiveFunctions();
+        if($request->getParameter('submit')){
+            foreach($formArr as $profileid => $val){
+                if($val == 'Y'){
+                    $yesArr[] = $profileid;
+                }
+                else if ($val == 'N'){
+                    $noArr[] = $profileid;
+                }
+            }
+            if(is_array($yesArr)){
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent);
+            }
+            if(is_array($noArr)){
+                $followupObj->updateStatusForClientId(implode(",", $noArr),'N');
+            }
+        }
+        
+        $undecidedData = $followupObj->getDataDateWise($this->client, 'U');
+        
+        
+        $acceptanceIdArr = $exclusiveLib->returnAcceptanceIdArr($undecidedData);
+        
+        if($request->getParameter('declined')){
+            $noData = $followupObj->getDataDateWise($this->client, 'N');
+            $noIdArr = $exclusiveLib->returnAcceptanceIdArr($noData);
+
+            if(is_array($noIdArr)){
+                $jprofileObj = new JPROFILE('newjs_masterRep');
+                $this->declinedArr = $jprofileObj->getAllSubscriptionsArr($noIdArr);
+            }
+        }
+        else{
+        
+            $matchMailData = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$acceptanceIdArr);        
+            $this->matchMailFollowUpData = $exclusiveLib->formatDataForMatchMail($undecidedData,$matchMailData);
+        }
+        
+        unset($exclusiveLib);
     }
 
 

@@ -163,6 +163,22 @@ class ExclusiveMatchMailer {
             $mailLogObj->insertMailLog($value["RECEIVER"],"MATCH_MAIL",$count,$date);
         }
 	}
+    
+    public function logMatchMailProfiles($data){
+        if($data && is_array($data)){
+            $exclusiveMailLogObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS();
+            foreach($data as $profileid => $val){
+                unset($params);
+                foreach($val as $key =>$value){
+                    $params["CLIENT_ID"] = $profileid;
+                    $params["ACCEPTANCE_ID"] = $value;
+                    $params["STATUS"] = "U";
+                    $params["ENTRY_DT"] = date('Y-m-d');
+                    $exclusiveMailLogObj->insertForFollowup($params);
+                }
+            }
+        }
+    }
 }
 
 
