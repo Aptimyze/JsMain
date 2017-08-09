@@ -269,7 +269,7 @@ return true;
                                   MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
                                   MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND=>MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT,
-                          	  MessageQueues::CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
+                          	  MessageQueues::CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){
