@@ -167,6 +167,13 @@ class jsexclusiveActions extends sfActions {
         $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
         //Counter for welcome calls
         $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+        $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
+        if(is_array($todaysClient)){
+            $this->todaysClientCount = $todaysClient[strtoupper(date('D'))]?$todaysClient[strtoupper(date('D'))]:0;
+        }
+        else{
+            $this->todaysClientCount = 0;
+        }
         unset($exclusiveObj);
         
         //To get count for pending con calls for menu page
