@@ -13,14 +13,22 @@ class NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET extends TABLE
         parent::__construct($dbname);
     }
 
-    public function insert($pid, $whereStrLabel = 'SENDER')
+    public function insert($pid, $whereStrLabel = 'SENDER', $timeOfDeletion=null)
     {
         if (!$pid)
             throw new jsException("", "VALUE OR TYPE IS BLANK IN insert() of NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET.class.php");
         try {
             $sql = "INSERT IGNORE INTO newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET SELECT * FROM newjs.MESSAGE_LOG WHERE " . $whereStrLabel . "=:PROFILEID";
+            if($timeOfDeletion) {
+              $sql.= " AND DATE <= :TIME_OF_DEL";
+            }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+            
+            if($timeOfDeletion) {
+              $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+            }
+            
             $prep->execute();
             $count = $prep->rowCount();
             return $count;

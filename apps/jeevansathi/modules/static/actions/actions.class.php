@@ -42,6 +42,13 @@ class staticActions extends sfActions
 	else if(MobileCommon::isMobile())
         $this->setTemplate("mob404");
   }
+  
+   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
+  public function executeOldMobileSite(sfWebRequest $request)
+  {
+	  
+  }
+  
 	public function executeVerifyAuth(sfWebRequest $request)
 	{
 		$siteUrl=JsConstants::$siteUrl;

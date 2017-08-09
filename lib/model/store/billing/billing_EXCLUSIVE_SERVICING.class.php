@@ -65,12 +65,12 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
      */
     public function checkBioData($profileid) {
         try {
-            $sql = "SELECT BIODATA_LOCATION,BIODATA_UPLOAD_DT FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID";
+            $sql = "SELECT BIODATA_LOCATION,BIODATA_UPLOAD_DT,AGENT_USERNAME FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID LIMIT 1";
             $res = $this->db->prepare($sql);
             $res->bindValue(":CLIENTID", $profileid, PDO::PARAM_STR);
             $res->execute();
             if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
-                return array($result['BIODATA_LOCATION'], $result['BIODATA_UPLOAD_DT']);
+                return $result;
             }
             return false;
         } catch (Exception $e) {

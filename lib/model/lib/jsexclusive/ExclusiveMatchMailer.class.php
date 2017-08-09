@@ -86,8 +86,28 @@ class ExclusiveMatchMailer {
 		$contactsObj = new newjs_CONTACTS($dbName);
         $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
 		$res1 = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
-		$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
-		$result = $res1 + $res2;
+		$flag=1;
+		$result = array();
+		if (is_array($res1) && !empty($res1)) {
+			foreach ($res1 as $key => $value) {
+				if (count($value)<20) {
+					$flag=0;
+				}
+				foreach ($value as $k => $v) {
+					$result[$key][] = $v;
+				}
+			}
+		}	
+		if($flag == 0)
+			$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
+
+		if (is_array($res2) && !empty($res2)) {
+			foreach ($res2 as $key => $value) {
+				foreach ($value as $k => $v) {
+					$result[$key][] = $v;
+				}
+			}
+		}
 		unset($contactsObj);
 		return $result;
 	}
