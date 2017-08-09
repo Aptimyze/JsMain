@@ -215,7 +215,10 @@ if (authenticated($cid)) {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
 								if ($_POST[$NAME[$i]] == "") {
-									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate.";
+                                                                        if(!$activatedWithoutYourInfo)
+                                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
@@ -227,7 +230,10 @@ if (authenticated($cid)) {
 							}
 							else
 							{
-							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate.";
+                                                        if(!$activatedWithoutYourInfo)
+                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
@@ -235,6 +241,10 @@ if (authenticated($cid)) {
 							}
                                                         if(!$activatedWithoutYourInfo)
                                                             $INCOMPLETE="Y";
+                                                        else{
+                                                            $screen = removeFlag("yourinfo", $screen);
+                                                            $completeWithoutYourInfo = "Y";
+                                                        }
 							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
                 			$instantNotificationObj->sendNotification($pid);
 						}
@@ -649,16 +659,21 @@ $screeningValMainAdmin = 0;
 		$smarty->assign('password', $r2['PASSWORD']);
 		$smarty->assign('email', $r2['EMAIL']);
 		//Mail only when incomplete checkbox is not checked
-		if ($service_mes == 'S') if ($INCOMPLETE != "") {
+		if ($service_mes == 'S') if ($INCOMPLETE != "" || $completeWithoutYourInfo=="Y") {
 			if ($why_inc != "Please provide reason why this profile is incomplete" && $why_inc != "") {
 				$inc_reason = htmlspecialchars($why_inc, ENT_QUOTES);
 				$sql = "replace into jsadmin.INCOMPLETE(PROFILEID,REASON) values ('$pid','$inc_reason')";
 				mysql_query_decide($sql) or die(mysql_error_js());
 			}
 			$from = "info@jeevansathi.com";
-			
+                        
 			$smarty->assign("bl_msg", $bl_msg);
-			$subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        if(!$activatedWithoutYourInfo){
+                            $subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        }
+                        else{
+                            $subject = "'About me' mentioned in your Profile has been edited/removed as it was inappropriate";
+                        }
 			$smarty->assign("CHECKSUM", $PROFILECHECKSUM);
 			$smarty->assign("echecksum", $echecksum);
 			$smarty->assign("myprofilechecksum", $PROFILECHECKSUM);
@@ -751,7 +766,7 @@ $screeningValMainAdmin = 0;
 					{
                                             if(!$activatedWithoutYourInfo)
 						CommonFunction::sendWelcomeMailer($pid);
-					}
+                                            }
 						//send_email($to, $MESSAGE);
 				}
 				else
