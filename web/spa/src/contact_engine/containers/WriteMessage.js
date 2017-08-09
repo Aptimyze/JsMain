@@ -35,7 +35,8 @@ export class WriteMessage extends React.Component{
     this.showLoaderDiv()
     let message = document.getElementById("writeMessageTxtId").value;
     document.getElementById("writeMessageTxtId").value = "";
-    //send message api
+    var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message;
+    this.props.sendMessageApi('/api/v2/contacts/postWriteMessage','MESSAGE',url);
     this.setState({
       showLoader:false
     });
@@ -49,7 +50,7 @@ export class WriteMessage extends React.Component{
           loaderView = <Loader show="div"></Loader>;
         }
     var buttonView, innerView;
-    if(this.props.buttonData.action == "MEMBERSHIP") {
+    if(this.props.buttonData != 'Y') {
       buttonView = <a href="/profile/mem_comparison.php" id="buttons1" className="view_ce fullwid">
               <div className="fullwid bg7 txtc pad5new posrel lh40">
                   <div className="wid60p">
@@ -117,8 +118,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        
+         sendMessageApi: (api,action,url) => {
+          commonApiCall(api,url,action,'POST',dispatch,true);
     }
+}
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(WriteMessage)
