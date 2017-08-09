@@ -162,7 +162,7 @@ class AuthFilter extends sfFilter {
 					if ($data['PROFILEID'])
 					{
 						$memObject=JsMemcache::getInstance();
-						$showConsentMsg='Y';//$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
+						$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
 						if(!$showConsentMsg) {
 							$showConsentMsg = JsCommon::showConsentMessage($data['PROFILEID']) ? 'Y' : 'N';
 							$memObject->set('showConsentMsg_'.$data['PROFILEID'],$showConsentMsg);
