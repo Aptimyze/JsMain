@@ -817,7 +817,6 @@ var altEmail = '~$altEmail`';</script>
 
     
         appendManglikData = function() {
-          // console.info("here");
         $("#occList").html('');
         occuSelected = 0;
         occMap = {};
@@ -853,12 +852,13 @@ var altEmail = '~$altEmail`';</script>
      for (var selector in config) {
        $(selector).chosen(config[selector]);
      }
+
+
+     $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
    }
   
  
-   // function occfunc(){
       $('#occList').on("change",function(){
-        console.log("hello");
         if( $('#occList').val() != 1)
           $('.js-req1').fadeOut();
          
@@ -866,7 +866,6 @@ var altEmail = '~$altEmail`';</script>
 
 
     function onClickActionSubmit(){
-      console.log("clickd submit");
          if( $('#occList').val() == 1)
          {
            $('.js-req1').fadeIn();
@@ -904,7 +903,6 @@ var altEmail = '~$altEmail`';</script>
      $('#occ-sub').click(function(){ 
         onClickActionSubmit();  
      });
-   // }
  
  var setscript=document.createElement('script');
  setscript.type='text/javascript';
