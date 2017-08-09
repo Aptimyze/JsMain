@@ -242,7 +242,8 @@ if (authenticated($cid)) {
                                                         if(!$activatedWithoutYourInfo)
                                                             $INCOMPLETE="Y";
                                                         else{
-                                                            $screen = removeFlag("yourinfo", $screen);
+                                                            if(strlen($_POST[$NAME[$i]])<50)
+                                                                $arrProfileUpdateParams[$NAME[$i]] = "";
                                                             $completeWithoutYourInfo = "Y";
                                                         }
 							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
