@@ -38,8 +38,8 @@ EOF;
         $subject = "Submit your success story and get a free gift!";
 
         foreach ($profilesInfo as $profileId => $userName) {
-//            $mailerId = AddStory::getEncryptedMailerId($profileId);
-            $mailerId = "5061310c154ec1696d7b3e3bcf07979a|i|7";
+            $mailerId = AddStory::getEncryptedMailerId($profileId);
+//            $mailerId = "5061310c154ec1696d7b3e3bcf07979a|i|7";
             $mailerId = urlencode($mailerId);
             $top8Mailer = new EmailSender(MailerGroup::TOP8, '1859');
             $tpl = $top8Mailer->setProfileId($profileId);
@@ -54,7 +54,6 @@ EOF;
             $row = $jprofile->get($profileId, "PROFILEID", "EMAIL");
             if($mailerId)
                 $top8Mailer->send($row["EMAIL"]);
-            die();
         }
     }
 
