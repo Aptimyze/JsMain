@@ -177,10 +177,12 @@ class ExclusiveFunctions{
             }
         }
         
-        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent){
+        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$skipUpdate=false){
             if(is_array($arr)){
-                $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
-                $followupObj->updateStatusForClientId(implode(",", $arr),'Y');
+                if($skipUpdate == false){
+                    $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
+                    $followupObj->updateStatusForClientId(implode(",", $arr),'Y');
+                }
                 $exclusiveFollowupObj = new billing_EXCLUSIVE_FOLLOWUPS();
                 $todaysDate = date('Y-m-d H:i:s');
                 $params["ENTRY_DT"] = $todaysDate;

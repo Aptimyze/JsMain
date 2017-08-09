@@ -60,6 +60,7 @@
             </td>
             <td>
                 <input type="text" id="clientUserid" name="clientUserid" value="">
+                <input type="hidden" id="client" name ="client" value="~$client`">
             </td>
             <td>     
                 <input type="submit" name="submit" value="Submit" >

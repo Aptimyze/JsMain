@@ -42,19 +42,22 @@
                         </td>
                     </tr>
                 ~/foreach`
+            ~else`
+                <tr style="background-color:lightgreen;" align="center"><td>No data Available</td><td>~$date`</td></tr>
 		    ~/if`     	
  		</table>
  	</form>
     
-    ~if $declinedArr`
+    
     <div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
-		<div style="font-weight:bold;"><font size=4px>Declined list</font></div>
+        <div style="font-weight:bold;"><font size=4px><a href="/operations.php/jsexclusive/addFollowUpFromMatchMail?client=~$client`&declined=1">Declined list</a></font></div>
 		
 	</div>
+    ~if $declinedArr`
         <table border="0" align="center" width="80%" table-layout="auto" style=" border-spacing: 10px;">
             ~foreach from=$declinedArr item=val key=profileid`
                 <tr class="formhead" align="center">
-                    <td height="21" align="CENTER" colspan="2"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$val.ACCEPTANCE_ID`" target="_blank">~$val.USERNAME`</a>
+                    <td height="21" align="CENTER" colspan="2"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$profileid`" target="_blank">~$val.USERNAME`</a>
                     </td>
                 </tr>
             ~/foreach`

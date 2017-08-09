@@ -212,7 +212,11 @@ class jsexclusiveActions extends sfActions {
                 $this->error = 1;
             }
             else{
-                $this->message = "Matchmail sent to ".$username;
+                $jprofileObj = new JPROFILE("newjs_slave");
+                $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+                $exclusiveLib = new ExclusiveFunctions();
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
+                $this->message = "Proposal mail sent to ".$username;
             }
         }
 
@@ -415,16 +419,20 @@ class jsexclusiveActions extends sfActions {
         
         $acceptanceIdArr = $exclusiveLib->returnAcceptanceIdArr($undecidedData);
         
-        $noData = $followupObj->getDataDateWise($this->client, 'N');
-        $noIdArr = $exclusiveLib->returnAcceptanceIdArr($noData);
-        
-        if(is_array($noIdArr)){
-            $jprofileObj = new JPROFILE('newjs_masterRep');
-            $this->declinedArr = $jprofileObj->getAllSubscriptionsArr($noIdArr);
+        if($request->getParameter('declined')){
+            $noData = $followupObj->getDataDateWise($this->client, 'N');
+            $noIdArr = $exclusiveLib->returnAcceptanceIdArr($noData);
+
+            if(is_array($noIdArr)){
+                $jprofileObj = new JPROFILE('newjs_masterRep');
+                $this->declinedArr = $jprofileObj->getAllSubscriptionsArr($noIdArr);
+            }
         }
+        else{
         
-        $matchMailData = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$acceptanceIdArr);        
-        $this->matchMailFollowUpData = $exclusiveLib->formatDataForMatchMail($undecidedData,$matchMailData);
+            $matchMailData = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$acceptanceIdArr);        
+            $this->matchMailFollowUpData = $exclusiveLib->formatDataForMatchMail($undecidedData,$matchMailData);
+        }
         
         unset($exclusiveLib);
     }
