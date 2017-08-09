@@ -288,7 +288,6 @@ class phoneActions extends sfActions
 
     	$result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';
 	}
-	$respObj = ApiResponseHandler::getInstance();
     $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
