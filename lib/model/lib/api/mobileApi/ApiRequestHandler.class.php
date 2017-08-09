@@ -174,6 +174,19 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
+				else if ($request->getParameter("showConsentMsg") == 'Y') 
+				{	
+
+					$respObj = ApiResponseHandler::getInstance();
+					$respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
+					$sendingDetails['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+					$respObj->setResponseBody($sendingDetails);
+					$respObj->generateResponse();
+					die;
+
+				}	
+			
+
 			}
 
 		}
