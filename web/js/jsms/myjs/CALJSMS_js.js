@@ -88,6 +88,61 @@ if(calIdTemp=='18'){
 
         }
 
+    /* CAL 25 */
+    if(calIdTemp=='25'){
+
+
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#occMidDiv").css("height",window.innerHeight - 50);
+        // $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        }); 
+    }
+    occuSelected= 0;
+
+
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occClickDiv").on("click", function() { 
+        if(typeof listArray == 'undefined' || listArray === null)
+        { 
+                listArray = {
+                D :"Don't know",
+                M : "Yes",
+                A : "Angshik (partial manglik)",
+                N : "No"};
+            }
+            appendOccupationData(listArray);
+                $("#listDiv").removeClass("dn");
+        });
+
+     appendOccupationData = function(res) {
+        $("#occList").html('');
+        occuSelected = 0;
+        $.each(res, function(index, elem) {
+                    $("#occList").append('<li occCode = "'+index+'">' + elem + '</li>');
+        });
+        // $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
+        $("#occList li").each(function(index, element) {
+            $(this).bind("click", function() {
+
+                $("#occSelect").html($(this).html());
+                $("#occSelect").attr('occCode',$(this).attr('occCode'));
+                $("#listDiv").addClass("dn");
+                $('#searchOcc').val("");
+                $("#occList").html("");
+                $("#contText").hide();
+                $("#manglikSubmit").show();
+            });
+        });
+        $("#listLoader").addClass("dn");
+        $("#occList").removeClass("dn");
+        }
+
+        } /*end of CAL 25*/
+
+
 
 if(calIdTemp=='20' || calIdTemp==23 ){
     if(isIphone != '1')
@@ -312,7 +367,7 @@ else {
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataOcc,
                             success: function(response) {
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
@@ -340,6 +395,26 @@ else {
 
                         }
 
+                    }
+                    if(layerId == 25){
+                        var occuCode = $("#occSelect").attr('occCode');
+                        if(occuCode){
+                            dataOcc = {'editFieldArr[MANGLIK]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button;
+                                CALButtonClicked=0;
+                            },
+                            error: function(response) {
+                                }
+                            });
+
+                        }
                     }
 
                 if(layerId==20 || layerId==23)
@@ -381,7 +456,7 @@ else {
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataStateCity,
                             success: function(response) {
                                 hideLoader();

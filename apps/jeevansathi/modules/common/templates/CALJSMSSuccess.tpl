@@ -237,6 +237,34 @@
     </div>
 
 
+~elseif $calObject.LAYERID eq '25'`
+        
+        <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
+        <div id="occMidDiv" style='padding-top:20%;' class="posrel midDiv white">
+            <div class="pb10 fontlig f19 txtc">~$calObject.TITLE`</div>
+             <div class="pad0840 txtc fontlig f16">~$calObject.TEXT`</div>
+           <div class="pad0840 txtc fontlig f16">~$calObject.SUBTEXT`</div>
+            <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
+                <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select</div>
+                <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
+            </div>
+            <div id="contText" class="fontlig f15 mt10 txtc">Select to continue</div>
+          
+        </div>
+    </div>
+    <div id="listDiv" class="listDivInner bg4 scrollhid dn" style= '-webkit-overflow-scrolling: touch;'>
+        <div id="listLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
+        <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select</div>
+        <ul id="occList" class="occList color11 fontlig f18 dn">
+        </ul>
+    </div>
+    <div id="foot" class="posfix fullwid bg7 btmo">
+        <div class="scrollhid posrel">
+            <input type="submit" id="manglikSubmit" class="dispnone fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="OK">
+        </div>
+    </div>
+
+
 
 
 ~elseif ($calObject.LAYERID eq '20' or $calObject.LAYERID eq '23')`

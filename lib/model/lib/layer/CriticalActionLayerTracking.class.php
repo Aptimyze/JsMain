@@ -471,6 +471,16 @@ return 0;
                       
                       
                     break;
+                  case '25':
+                      $profileObject = LoggedInProfile::getInstance('newjs_master');
+                      if(in_array($profileObject->getRELIGION(), 
+                        array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
+                          // die(isset($profileObject->getMANGLIK()));
+                        if(empty($profileObject->getMANGLIK())) {
+                          $show=1;
+                        }
+                      }
+                  break;
 
           default : return false;
         }
