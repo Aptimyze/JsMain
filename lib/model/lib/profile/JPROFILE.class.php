@@ -723,21 +723,21 @@ class JPROFILE
 
     private function logCacheConsumption()
     {return;
-        $key = 'cacheConsumeCount'.date('Y-m-d');
+       /* $key = 'cacheConsumeCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
 
     }
 
     private function totalQueryCount()
     {return;
-        $key = 'totalQueryCount'.date('Y-m-d');
+      /*  $key = 'totalQueryCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
     }
     
     /**
@@ -766,9 +766,9 @@ class JPROFILE
     }
 
     private function logCacheConsumeCount($funName)
-    {
-        $key = 'cacheConsumption' . '_' . date('Y-m-d');
-        JsMemcache::getInstance()->hIncrBy($key, $funName);
+    {return;
+      /*  $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        JsMemcache::getInstance()->hIncrBy($key, $funNam*/e);
 
        // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
