@@ -175,11 +175,13 @@ class ApiRequestHandler
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
 				else if ($request->getParameter("showConsentMsg") == 'Y') 
-				{	
+				{
 
 					$respObj = ApiResponseHandler::getInstance();
 					$respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
 					$sendingDetails['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+					$sendingDetails['apiHit'] = CommonConstants::$CONSENT_MSG_API;
+					$sendingDetails['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
 					$respObj->setResponseBody($sendingDetails);
 					$respObj->generateResponse();
 					die;

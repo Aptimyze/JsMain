@@ -120,6 +120,8 @@ class RequestHandlerConfig
 			),
 		"inbox" => array("perform" => array("v1" => "performV1", "v2" => "performV2", "v3" => "performV2")),
 		"phone" => array("display" => array("v1" => "displayV1", "v2" => "displayV1", "v3" => "displayV1"),
+					"consentConfirm" => array("v1" => "consentConfirm", "v2" => "consentConfirm", "v3" => "consentConfirm"),
+
 			"save" => array("v1" => "saveV1", "v3" => "saveV1"),
 			"verified" => array("v1" => "verifiedV1", "v3" => "verifiedV1"),
 			"sendOTPSMS" => array("v1" => "SendOtpSMS", "v2" => "SendOtpSMS", "v3" => "SendOtpSMS"),

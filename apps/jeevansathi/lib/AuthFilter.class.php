@@ -154,20 +154,26 @@ class AuthFilter extends sfFilter {
 				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
-				
 					
-				$showConsentMsg = 'N';
 				if($request->getParameter('module')!="e")
 				{
+					$showConsentMsg = '';
 
+					if ($data['PROFILEID'])
+					{
+						$memObject=JsMemcache::getInstance();
+						$showConsentMsg='Y';//$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
+						if(!$showConsentMsg) {
+							$showConsentMsg = JsCommon::showConsentMessage($data['PROFILEID']) ? 'Y' : 'N';
+							$memObject->set('showConsentMsg_'.$data['PROFILEID'],$showConsentMsg);
+						}
+						$request->setParameter("showConsentMsg",$showConsentMsg);
+
+					}
 
 
 		            if($request->getParameter('module')!="api" && $request->getParameter('module')!="static"  && ($request->getParameter('module')!="register" || $request->getParameter('action')=="page5") && $request->getParameter('action')!="alertManager" && $data['PROFILEID'])
 		            {
-
-
-		            	
-
 						if($data[INCOMPLETE]=='Y' )
 						{
 							$request->setParameter("incompleteUser",1);
@@ -217,29 +223,12 @@ class AuthFilter extends sfFilter {
 							
 
 						}
-							if ($data['PROFILEID'])
-							{
-								$memObject=JsMemcache::getInstance();
-								$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
-								if(!$showConsentMsg) {
-									$showConsentMsg = JsCommon::showConsentMessage($data['PROFILEID']) ? 'Y' : 'N';
-									$memObject->set('showConsentMsg_'.$data['PROFILEID'],$showConsentMsg);
-								}
-								$request->setParameter("showConsentMsg",$showConsentMsg);
-
-							}
-
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
 								$context->getController()->forward("phone","consentMessage",0);
 								die;
 							}
 					}
-						if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
-						{
-							$context->getController()->forward("phone","consentMessage",0);
-							die;
-						}
 				}
                                 
 					
