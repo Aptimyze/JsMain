@@ -13,6 +13,7 @@
             <font size=3>CLIENT SERVICE PAGE</font>
         </td>
     </tr>
+    ~if $notFound neq true`
     ~assign var=num value=1`
     <tr>
         <td>
@@ -66,6 +67,21 @@
         </form>
     </tr>
     <tr><td></td><td></td><td ~if $error eq '1'`style="color: red;"~/if`>~$message`</td></tr>
+
+    </tr><br>
+    ~else`
+    <tr>
+        <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;User is either invalid or not eligible for new exclusive handling
+        </td>
+    </tr><br>
+    <tr>
+        <td>
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="location.href='/operations.php/jsexclusive/menu'" value="Back">
+        </td>
+    </tr><br>
+    ~/if`
+
 </table>
 
 
