@@ -318,7 +318,7 @@ function showOldMobileSiteInfo()
 	if(android!=-1 && match!=null && typeof(parseFloat(match[1]))=='number')
  	{
 	   	var androidVersion=match[1].substring(0,3);
-	   	if(androidVersion>=3.0)
+	   	if(androidVersion>=5.0)
 			return false;
  	 	else
 			return true;
