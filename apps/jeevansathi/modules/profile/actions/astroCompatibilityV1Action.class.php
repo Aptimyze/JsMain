@@ -97,6 +97,7 @@ class astroCompatibilityV1Action extends sfActions
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
+					$successArr["status"] = "1";
 				}
 				else
 				{
@@ -104,6 +105,7 @@ class astroCompatibilityV1Action extends sfActions
 					if($count >= "100")
 					{
 						$successArr["MESSAGE"] = "Actual Report Sent";
+						$successArr["status"] = "1";
 					}
 					else
 					{
@@ -139,9 +141,13 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				
 				unset($astroObj);
-				/*$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-				$apiResponseHandlerObj->setResponseBody($successArr);
-				$apiResponseHandlerObj->generateResponse();*/
+				if(MobileCommon::isApp())
+				{
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					$apiResponseHandlerObj->setResponseBody($successArr);
+					$apiResponseHandlerObj->generateResponse();
+				}
+				
 				return SfView::NONE;
 				
 			}
