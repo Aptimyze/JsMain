@@ -36,7 +36,7 @@ $( document ).ready(function() {
 			if($("#mainContent").length){
 				
 
-				if((typeof pageMyJs != 'undefined' && pageMyJs==1))
+				if((typeof(pageMyJs) != 'undefined' && pageMyJs==1))
 				{
 					var showAppClass = 'ham_b20_n ham_minu20';
 				}
@@ -94,7 +94,7 @@ $( document ).ready(function() {
     }
    else
    {
-   	 if($("#mainContent").length  && typeof webView ==='undefined' || webView ==""){	 
+   	 if($("#mainContent").length  && typeof(webView) ==='undefined' || webView ==""){	 
 			var topX=0;
 			if($("#mainContent").css("position")=="relative")
 			   topX=0;
@@ -315,7 +315,7 @@ function showOldMobileSiteInfo()
 	if(android!=-1 && match!=null && typeof(parseFloat(match[1]))=='number')
  	{
 	   	var androidVersion=match[1].substring(0,3);
-	   	if(androidVersion>=5.0)
+	   	if(androidVersion>=3.0)
 			return false;
  	 	else
 			return true;
