@@ -28,8 +28,13 @@ while ($row = mysql_fetch_array($res)) {
     $profileids_arr1[] = $pid;
     //if(strstr($row['SERVEFOR'],'O'))
     //    $offline_arr[$pid]=$pid;
-    if (($row['SERVEFOR'] == 'L') || ($row['SERVEFOR'] == 'T')) {
-        $assisted_arr[$pid][] = $row['SERVEFOR'];
+    if (($row['SERVEFOR'] == 'L') || ($row['SERVEFOR'] == 'T') || (strpos($row['SERVEFOR'],'X')!==false)) {
+        if(strpos($row['SERVEFOR'],'X')!==false){
+            $assisted_arr[$pid][] = 'X';
+        }
+        else{
+            $assisted_arr[$pid][] = $row['SERVEFOR'];
+        }
     }
 
     $sql1 = "UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE ID=$id";
@@ -70,7 +75,8 @@ if (count($profileids_arr) > 0) {
         }
         if (is_array($assisted_arr[$profile])) {
             $expire_assist = array_diff($assisted_arr[$profile], $check_main);
-            if (in_array("T", $expire_assist)) {
+            
+            if (in_array("X", $expire_assist)) {
                 endAutoApply($profile);
             }
 

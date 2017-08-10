@@ -329,7 +329,7 @@ $('body').on('click', '.moreCluster', function()
                     /**
                     * Preparing Object in format like returned from AJAX
                     */
-                    if(valueLabel!="All"){
+                    if(valueLabel!="All" && valueLabel != "Any Well Known College"){
                         resultOfInputElementsFormatted[valueLabel]={"count":countLabel,"isSelected":isChecked,"label":valueLabel,"id":codedValueLabel};
                     }
                     

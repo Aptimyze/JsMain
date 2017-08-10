@@ -64,10 +64,12 @@ EOF;
                 $tempProfileRecords = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG();
 		$autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
                 $receiverEoiObj = new receiverEoiCount();
+                $sendInterestTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+                $notInTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES_COMPLETE();
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition,$totalScripts,$currentScript);
-		//$profileArr=array(1=>array("PROFILEID"=>1,"LAST_LOGIN_DT"=>"2017-01-27 00:00:00"));
+		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2017-07-16 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -99,7 +101,7 @@ EOF;
 				$totalLimit=100;
 				if($this->isJsDummyMember($senderId))
 				{
-					$limit=100;
+					$limit=25;
 					$totalLimit=200;
 				}
 				$totalSenders++;
@@ -118,6 +120,9 @@ EOF;
                                 
                                 //find profiles who have already received eoi's limited for today
                                 $notInProfiles = $receiverEoiObj->getReceiversWithLimit($this->maxEoiReceiver);
+                                
+                                $notInProfiles .= $notInTableObj->getNotInProfilesForSender($senderId);
+                                $notInProfiles = trim($notInProfiles);
                                 
                                 $searchMutualMatches = true;
                                 
@@ -154,6 +159,9 @@ EOF;
                                     
 				$matchArr = $resultArr['PIDS'];
 				$matchCount = $resultArr['CNT'];
+                                
+                                $isNewRBEligible = MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID());
+                                
 				// getting partner matches
 				if(($limit > $limitCounter) && $matchCount)
 				{
@@ -171,9 +179,14 @@ EOF;
 							$this->setExceptionError($ex);
 						}
 						UserFilterCheck::$filterObj=null;
-						$contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
-						if($contactEngineObj)
-						if($contactEngineObj->getComponent()->errorMessage != '')
+                                                
+                                                if($isNewRBEligible)
+                                                    $sendInterestTableObj->insertProfiles($profileObj->getPROFILEID(), $receiverObj->getPROFILEID());
+                                                else
+                                                    $contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
+                                                
+						if($isNewRBEligible || $contactEngineObj)
+						if(!$isNewRBEligible && $contactEngineObj->getComponent()->errorMessage != '')
 						{
 							// if any error occurs send mail
 							$mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
@@ -188,6 +201,7 @@ EOF;
 							$totalContactsMade++;
 							$limitCounter++;
 							try{
+                                                            if(!$isNewRBEligible)
 								$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
                                                                 // insert entry in receiver limit array
                                                                 $receiverEoiObj->insertOrUpdateEntryForReceiver($receiverId);
@@ -219,8 +233,11 @@ EOF;
 			echo $this->errorMsg;
                         SendMail::send_email("ankitshukla125@gmail.com","error ".$this->errorMsg,"Exceptions caught");
                 }
-		
-		
+
+        //reset screening status of exclusive RB clients
+        $exServicingObj = new billing_EXCLUSIVE_SERVICING();
+		$exServicingObj->resetScreenedStatusAll();
+		unset($exServicingObj);
 	}
 	
 	/** logs sfException
