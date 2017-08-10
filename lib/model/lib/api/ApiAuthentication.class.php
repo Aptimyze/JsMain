@@ -396,6 +396,22 @@ Abstract class ApiAuthentication
                 JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
             }
             unset($prodObj,$queueData,$body);
+
+            // App Registration Update Handling
+	    /*
+            $appRegCookieName 	='APP_REG_UPDATE';
+  	    $registrationid 	=$this->request->getParameter('registrationid');
+	    $apiappVersion 	=$this->request->getParameter('CURRENT_VERSION');
+            if(!isset($_COOKIE[$appRegCookieName]) && $registrationid){
+                        $producerObj = new JsNotificationProduce();
+                        if($producerObj->getRabbitMQServerConnected()){
+                                $dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion);
+                                $msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+                                $producerObj->sendMessage($msgdata);
+                                @setcookie("$appRegCookieName",time(),86400,"/",$this->domain);
+                        }
+            }*/
+            // end
         }
 	}
 	
