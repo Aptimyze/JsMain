@@ -145,14 +145,22 @@ class ExclusiveFunctions{
         public function formatDataForMatchMail($data,$matchMailData){
             foreach ($matchMailData as $key => $value){
                 $matchMailFormattedData[$value["PROFILEID"]] = $value;
+                $profileidArr[]=$value["PROFILEID"];
             }
-            
+            $profileidStr = implode(",", $profileidArr);
+            $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $index => $val){
+                $modifiedNameArr[$val["PROFILEID"]] = $val;
+            }
             foreach($data as $date => $val){
                 foreach($val as $index => $dataValue){
                     unset($temp);
                     $temp["ACCEPTANCE_ID"] = $dataValue["ACCEPTANCE_ID"];
                     $temp["USERNAME"] = $matchMailFormattedData[$dataValue["ACCEPTANCE_ID"]]["USERNAME"];
                     $temp["PHOTO_URL"] = $matchMailFormattedData[$dataValue["ACCEPTANCE_ID"]]["PHOTO_URL"];
+                    if($modifiedNameArr[$dataValue["ACCEPTANCE_ID"]]["DISPLAY"] == "Y")
+                        $temp["NAME_OF_USER"] = $modifiedNameArr[$dataValue["ACCEPTANCE_ID"]]["NAME"];
                     $finalData[$date][]=$temp;
                 }
             }
