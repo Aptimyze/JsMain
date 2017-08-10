@@ -59,7 +59,7 @@ class astroCompatibilityV1Action extends sfActions
 			//if the mail has been sent
 			if($flag)
 			{
-				$successArr["MESSAGE"] = "Sample Mail Sent";
+				$successArr["MESSAGE"] = "Sample Mail Sent";				
 			}
 			else //if the mail has not been sent
 			{
@@ -97,15 +97,13 @@ class astroCompatibilityV1Action extends sfActions
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
-					$successArr["status"] = "1";
 				}
 				else
 				{
 					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);					
 					if($count >= "100")
 					{
-						$successArr["MESSAGE"] = "Actual Report Sent";
-						$successArr["status"] = "1";
+						$successArr["MESSAGE"] = "Actual Report Sent";	
 					}
 					else
 					{
@@ -125,6 +123,7 @@ class astroCompatibilityV1Action extends sfActions
 						{
 							PdfCreation::setResponse("astroCompatibility-".$otherUsername.".pdf",$file);
 							$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
+							$successArr["STATUS"] = "1";
 							$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
 							$astroObj->addDataForActualReport($loggedInProfileId);
 							if($count == "0")
