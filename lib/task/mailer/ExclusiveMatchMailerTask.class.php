@@ -50,7 +50,6 @@ EOF;
 		    	$calculatetable->updateAcceptancesAndStatus($str_value,$key);
 	    	}
 	    }
-        $exclusiveMailer->logMatchMailProfiles($result);
 	    $exclusiveMailer->logMails();
 	    //Sending Mail
 	    $receivers = $exclusiveMailer->getMailerProfiles();
@@ -89,7 +88,7 @@ EOF;
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
                     if ($flag) {
                     	$this->updateStatus($pid,'Y');
-                        //$exclusiveMailer->logMatchMailProfiles($result);
+                        $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);
                     } else {
                     	$this->updateStatus($pid,'N');
                     }

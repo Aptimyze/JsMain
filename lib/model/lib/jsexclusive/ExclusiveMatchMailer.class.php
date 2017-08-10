@@ -164,18 +164,15 @@ class ExclusiveMatchMailer {
         }
 	}
     
-    public function logMatchMailProfiles($data){
+    public function logMatchMailProfiles($data,$profileid){
         if($data && is_array($data)){
             $exclusiveMailLogObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS();
-            foreach($data as $profileid => $val){
-                unset($params);
-                foreach($val as $key =>$value){
-                    $params["CLIENT_ID"] = $profileid;
-                    $params["ACCEPTANCE_ID"] = $value;
-                    $params["STATUS"] = "U";
-                    $params["ENTRY_DT"] = date('Y-m-d');
-                    $exclusiveMailLogObj->insertForFollowup($params);
-                }
+            $params["STATUS"] = "U";
+            $params["ENTRY_DT"] = date('Y-m-d');
+            $params["CLIENT_ID"] = $profileid;
+            foreach($data as $key =>$value){
+                $params["ACCEPTANCE_ID"] = $value;
+                $exclusiveMailLogObj->insertForFollowup($params);
             }
         }
     }
