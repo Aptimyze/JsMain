@@ -768,9 +768,10 @@ class JPROFILE
     private function logCacheConsumeCount($funName)
     {return;
       /*  $key = 'cacheConsumption' . '_' . date('Y-m-d');
-        JsMemcache::getInstance()->hIncrBy($key, $funNam*/e);
+        JsMemcache::getInstance()->hIncrBy($key, $funName);
 
        // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+	*/
     }
 
     //This function is used to find details of users who do not have a photo and whose date condition satifies the condition given in the array
@@ -779,5 +780,4 @@ class JPROFILE
         return self::$objProfileMysql->getProfileForNoPhotoMailer($dateConditionArr);
     }
 }
-
 ?>
