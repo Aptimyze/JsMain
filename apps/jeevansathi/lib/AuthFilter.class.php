@@ -96,7 +96,7 @@ class AuthFilter extends sfFilter {
 				
 				// Code to execute after the action execution, before the rendering
 				//Stopping from going to oldMobileSite
-				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite')){
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop()){
 					$context->getController()->forward("static", "oldMobileSite");
 				}
 				$fromRegister="";
