@@ -43,6 +43,8 @@ class JsForm extends sfForm
 	  	unset($this->formValues['casteNoBar']);	  	
 	  }
           $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
+          if(array_key_exists("edu_level_new",$this->formValues))
+                $jprofileEducationArr = ProfileCommon::getEduDegreesToRemove ($this->formValues['edu_level_new']);
 	  foreach($this->formValues as $field_name=>$value){
                   if($field_name == "jamaat" && $value==''){
                       if($this->formValues['religion']!='2')

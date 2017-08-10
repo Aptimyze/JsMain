@@ -141,5 +141,15 @@ class ExclusiveFunctions{
                 return 'Sunday';
             }
         }
+	public function getRMDetails($profileid)
+	{
+        	$exServicingObj = new billing_EXCLUSIVE_SERVICING('newjs_masterRep');
+                $rmDetails =$exServicingObj->checkBioData($profileid);
+		$rmName =$rmDetails['AGENT_USERNAME'];
+		$pswrdsObj =new jsadmin_PSWRDS('newjs_masterRep');
+		$executiveDetails =$pswrdsObj->getExecutiveDetails($rmName);	
+		$phone =$executiveDetails['PHONE'];
+		return $phone;
+	}
 }
 ?>
