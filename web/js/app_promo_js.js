@@ -307,7 +307,7 @@ function showAppPromoForMessageListingPage(){
 
 function showOldMobileSiteInfo()
 {
-	if((getIosVersion() || getAndroidVersion()) && !getCookieData("appPromo"))
+	if((getIosVersion() || getAndroidVersion()) && !getCookieData("appPromo") && AppLoggedInUser)
 		return false;
 	var ua = ua || navigator.userAgent;
 	var android=ua.indexOf("Android");
