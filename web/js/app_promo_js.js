@@ -21,6 +21,9 @@ if(typeof(AndroidPromotion)=="undefined"){
 if(typeof(AppLoggedInUser)=="undefined"){
 	var AppLoggedInUser=0;
 }
+if(typeof(webView) ==='undefined'){
+	var webView ="";	
+}
 $( document ).ready(function() {
 	//
       if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
