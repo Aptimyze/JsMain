@@ -1307,22 +1307,4 @@ border-radius: 32px;
     -webkit-transform: translate(-50%,-50%);
     -moz-transform: translate(-50%,-50%);
 }
-
-.ot_bell {
-    background-position: 1px -184px;
-    width: 40px;
-    height: 35px;
-}
-
-.ot_sprtie {
-    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
-    background-repeat: no-repeat;
-}
-
-.deleteDecline {
-    background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/decline.png);
-    background-repeat: no-repeat;
-    background-position: -6px -90px;
-    width: 25px;
-    height: 25px;
-}
+.z101{z-index: 101}
