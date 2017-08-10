@@ -15,7 +15,7 @@
                 <tr style="background-color:lightgreen;"><td>Match mail sent Date</td><td>~$date`</td></tr>
                     ~foreach from=$valued key=index item=val`
                         <tr class="formhead" align="center">
-                            <td height="21" align="CENTER" colspan="2"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$val.ACCEPTANCE_ID`" target="_blank">~$val.USERNAME`</a>
+                            <td height="21" align="CENTER" colspan="2"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$val.ACCEPTANCE_ID`" target="_blank">~$val.USERNAME`</a>~if $val.NAME_OF_USER` (~$val.NAME_OF_USER`) ~/if`
                             </td>
                         </tr>
                         <tr class="formhead" align="left">
