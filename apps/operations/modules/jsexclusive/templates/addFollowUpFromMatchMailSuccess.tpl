@@ -36,12 +36,12 @@
                         </tr>
                     ~/foreach`
                     <br>
-                    <tr align="center">
-                        <td class="label" colspan="2" height="20" style="background-color:Moccasin">
-                            <input type="submit" name="submit" value="SUBMIT">
-                        </td>
-                    </tr>
                 ~/foreach`
+                <tr align="center">
+                    <td class="label" colspan="2" height="20" style="background-color:Moccasin">
+                        <input type="submit" name="submit" value="SUBMIT">
+                    </td>
+                </tr>
             ~else`
                 <tr style="background-color:lightgreen;" align="center"><td>No data Available</td><td>~$date`</td></tr>
 		    ~/if`     	
