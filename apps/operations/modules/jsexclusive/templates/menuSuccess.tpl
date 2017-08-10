@@ -39,7 +39,10 @@ function passvalue(){
     <br>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/menu">Today's Clients ( Ask for Followups )</a>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/todaysClients">Today's Clients ( Ask for Followups )</a>
+        </td>
+        <td>
+            &nbsp;&nbsp;~$todaysClientCount`
         </td>
     </tr>
     <br>
