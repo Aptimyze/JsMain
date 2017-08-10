@@ -481,11 +481,11 @@
             <!--start:left-->
             <div class="fl wid50p jsexc">
                 <ul>
-                    <li>Create a profile for you that gets noticed</li>
-                    <li>Understand qualities you are looking in your desired partner</li>
-                    <li>Hand-picking of profiles by Jeevansathi that match your expectations</li>
-                    <li>Contact shortlisted profiles & arrange meetings on your behalf</li>
-                    <li>Priority Customer service</li>
+                    <li>Work on your profile to ensure its gets noticed</li>
+                    <li>Understand the qualities that you are looking for in your desired partner</li>
+                    <li>Sending Interests to handpicked profiles matching your criteria</li>
+                    <li>Contact profiles shortlisted by you and arrange meetings</li>
+                    <li>Get benefits of JS Boost and make your number visible to free members</li>
                 </ul>
                 <div id="jsxKnowMoreLink" class="pl19 pt10"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f16 colr5">Know More</a></div>
                 <div class="fullwid txtc">

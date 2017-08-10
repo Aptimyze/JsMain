@@ -19,11 +19,21 @@ class NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET extends TABLE
    * 
    * @param type $iProfileID
    */
-  public function insertRecordsFromChatLog($iProfileID)
+  public function insertRecordsFromChatLog($iProfileID, $timeOfDeletion=null)
   {
     try {
       $sql = "INSERT IGNORE INTO newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET SELECT * FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+      
+      if($timeOfDeletion) {
+        $sql.= " AND DATE <= :TIME_OF_DEL";
+      }
+        
       $prep = $this->db->prepare($sql);
+      
+      if($timeOfDeletion) {
+        $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+      }
+      
       $prep->bindValue(":PID", $iProfileID, PDO::PARAM_INT);
       $prep->execute();
     } catch (Exception $ex) {

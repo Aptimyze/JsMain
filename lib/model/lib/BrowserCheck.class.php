@@ -40,14 +40,24 @@ class BrowserCheck
 		$allowed=1;
 		$pattern='(Android\/([0-9.]*))';
 	}
+	else if(preg_match('/windows/i',$u_agent))
+        {
+                $allowed=55;
+                $pattern='(Windows\/([0-9.]*))';
+        }
+	else if(preg_match('/safari/i',$u_agent))
+        {
+                $allowed=66;
+                $pattern='(safari\/([0-9.]*))';
+        }
 	if(preg_match('/Opera mini/i',$u_agent))
-                $allowed=0;
-	/*else if(preg_match('/Firefox/i',$u_agent))
+                $allowed=44;
+	else if(preg_match('/Firefox/i',$u_agent))
         {
                 $allowed=33;
                 $pattern='(Firefox\/([0-9.]*))';
         }
-	*/
+	
 	if(preg_match('/iPad/i',$u_agent))
                 $allowed=1;
 	if($allowed)
