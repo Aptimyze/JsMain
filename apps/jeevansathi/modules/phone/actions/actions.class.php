@@ -326,9 +326,21 @@ class phoneActions extends sfActions
         die();
 		}
 
+    public function executeDNCConsent(sfWebRequest $request)
+  	{
 
 
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
+    $arr['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+    $arr['apiHit'] = CommonConstants::$CONSENT_MSG_API;
+    $arr['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
+    $sendingDetails['consentData'] = $arr;
+    $respObj->setResponseBody($sendingDetails);
+    $respObj->generateResponse();
+    die;
 
+  }
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {

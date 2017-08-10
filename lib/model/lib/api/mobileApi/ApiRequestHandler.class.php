@@ -174,20 +174,14 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else if ($request->getParameter("showConsentMsg") == 'Y') 
+				else if ($request->getParameter("showConsentMsg") == 'Y')
 				{
+					$output["moduleName"] = "phone";
+					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
 
-					$respObj = ApiResponseHandler::getInstance();
-					$respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
-					$sendingDetails['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
-					$sendingDetails['apiHit'] = CommonConstants::$CONSENT_MSG_API;
-					$sendingDetails['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
-					$respObj->setResponseBody($sendingDetails);
-					$respObj->generateResponse();
-					die;
 
-				}	
-			
+				}
+
 
 			}
 
