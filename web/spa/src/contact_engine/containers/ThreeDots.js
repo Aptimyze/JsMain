@@ -6,6 +6,7 @@ import { performAction } from "./contactEngine.js";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import {getCookie} from '../../common/components/CookieHelper';
 import ReportAbuse from "./ReportAbuse";
+import BlockPage from "./BlockPage";
 import Loader from "../../common/components/Loader";
 
 
@@ -15,7 +16,10 @@ class ThreeDots extends React.Component{
     this.state = {
       showLayer: false,
       showAbuseLayer: false,
-      showLoader:false
+      showLoader:false,
+      showIgnoreLayer:false,
+      showIgnoreLayerMessage:'',
+      ignoreButton:{}
     };
 
   }
@@ -35,6 +39,10 @@ class ThreeDots extends React.Component{
     this.setState({showAbuseLayer: true})
   }
 
+  showIgnoreLayer(message,button) {
+    this.setState({showIgnoreLayer: true,showIgnoreLayerMessage:message,ignoreButton:button})
+  }
+
   showLoaderDiv() {
       this.setState({
           showLoader:true
@@ -47,17 +55,29 @@ class ThreeDots extends React.Component{
     }
 
   callBackFunctionThreeDots(jsonOb){
-    switch(button.action)
+    switch(jsonOb.button.action)
     {
       case 'CONTACT_DETAIL':
-        
+            
       break;
+      case 'IGNORE':
+        if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
+        {
+          this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.others[jsonOb.index]},jsonOb.index);
+          this.closeThreeDotLayer();
+        }
+        else
+        {
+        this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.primary[0]},jsonOb.index);
+          this.showIgnoreLayer(jsonOb.response.message,jsonOb.response.button_after_action.buttons.primary[0]);
+        }
+
+        break;
       default:
-//        performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
+       this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
       break;
     }
 
-//    this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
   }
 
 
@@ -65,8 +85,7 @@ class ThreeDots extends React.Component{
     this.showLoaderDiv();
     switch(button.action)
     {
-      case 'IGNORE':
-        break;
+
       default:
       performAction(this.props.profilechecksum,(response)=>this.callBackFunctionThreeDots({index:index,button:button,response:response}),button);
         break;
@@ -79,6 +98,14 @@ class ThreeDots extends React.Component{
     document.getElementById("vpro_tapoverlay").classList.remove("dn");
   }
 
+  closeBlockPageLayer()
+  {
+    this.setState({showIgnoreLayer: false});
+    this.closeThreeDotLayer()
+    document.getElementById("vpro_tapoverlay").classList.remove("dn");
+  }
+
+
   componentWillReceiveProps(nextProps)
   {
     this.hideLoaderDiv();
@@ -87,8 +114,14 @@ class ThreeDots extends React.Component{
   render(){
 
     var reportAbuseView;
+    var showIgnoreLayerView;
     if(this.state.showAbuseLayer == true) {
       reportAbuseView = <ReportAbuse username={this.props.username} profilechecksum={this.props.profilechecksum} closeAbuseLayer={() => this.closeAbuseLayer()} profileThumbNailUrl={this.props.profileThumbNailUrl} />
+      document.getElementById("vpro_tapoverlay").classList.add("dn");
+    }
+
+    if(this.state.showIgnoreLayer == true) {
+      showIgnoreLayerView = <BlockPage message={this.state.showIgnoreLayerMessage}profileThumbNailUrl={this.props.profileThumbNailUrl} closeBlockPageLayer={() => this.closeBlockPageLayer()} unblock = {() => this.manageThreeDotsButton(this.state.ignoreButton,3)}/>
       document.getElementById("vpro_tapoverlay").classList.add("dn");
     }
     var layerView;
@@ -100,7 +133,7 @@ class ThreeDots extends React.Component{
         loaderView = <Loader show="page"></Loader>;
       }
 
-      var imageList = {'INITIATE':'msg_srp','CONTACTDETAIL':'vcontact','SHORTLIST':'srtlist','IGNORE':'ignore'};
+      var imageList = {'INITIATE':'mainsp msg_srp','CONTACTDETAIL':'mainsp vcontact','SHORTLIST':'mainsp srtlist','IGNORE':'mainsp ignore','REMINDER':'ot_sprtie ot_bell','CANCEL_INTEREST':'deleteDecline'};
         layerView = <div id="contactOverlay" className="posabs dispbl scrollhid">
         {loaderView}
             <div id="vpro_tapoverlay" className="posabs vpro_tapoverlay">
@@ -114,24 +147,21 @@ class ThreeDots extends React.Component{
                     {
                       buttons.map(function(button,index)
                       {
+
                         let top_id = button.action;
                         let inside_id = "otherimage"+index;
                         let outside_id = "otherlabel"+index;
                         let label = button.label;
-                        let image;
 
                         if ( button.action == "SHORTLIST" && (button.params.indexOf("true") !== -1 ))
                         {
-                          image = "mainsp shortlisted";
+                          imageList[button.action] = "mainsp shortlisted";
                         }
-                        else
-                        {
-                          image = "mainsp " + imageList[button.action];
-                        }
+                       
 
                           return (
                             <div onClick={() => this.manageThreeDotsButton(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>
-                              <i className= {image} id={inside_id}></i>
+                              <i className= {imageList[button.action]} id={inside_id}></i>
                               <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
                             </div>
                           )
@@ -155,6 +185,7 @@ class ThreeDots extends React.Component{
 
         {layerView}
         {reportAbuseView}
+        {showIgnoreLayerView}
         <div onClick={() => this.getThreeDotLayer()} className="posabs srp_pos2">
           <i className="mainsp threedot1"></i>
         </div>
