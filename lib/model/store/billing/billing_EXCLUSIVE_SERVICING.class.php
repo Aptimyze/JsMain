@@ -344,6 +344,23 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		  throw new jsException($e);
 		}
 	}
+
+    /** Function to reset screening status for all rows
+     *
+     * @param   none
+     * @return  none
+     */
+    public function resetScreenedStatusAll(){
+        try{
+            $sql = "UPDATE billing.EXCLUSIVE_SERVICING SET SCREENED_STATUS=:SCREENED_STATUS WHERE SCREENED_STATUS = 'Y'";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":SCREENED_STATUS",'N', PDO::PARAM_STR);
+            $res->execute();
+        }
+        catch(Exception $e){
+          throw new jsException($e);
+        }
+    }
         
             /**
      * Function to get count of users/clients assigned to a particular agent for each service day
