@@ -570,7 +570,7 @@ class csvGenerationHandler
 			}
 			if($processName=='renewalProcessInDialer'){
 				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER('newjs_masterRep');	
-	                        $profilesRenewalDialer =$renewalInDialerObj->fetchRenewalDialerProfilesForFilter();
+	                        $profilesRenewalDialer =$renewalInDialerObj->fetchRenewalDialerProfiles();
 	                        if(count($profilesRenewalDialer)>0){
 					$profileArr =array_diff($profileArr,$profilesRenewalDialer);
 					$profileArr =array_values($profileArr);
