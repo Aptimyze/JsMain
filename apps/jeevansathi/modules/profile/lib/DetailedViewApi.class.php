@@ -128,7 +128,7 @@ class DetailedViewApi
 		{
 			$this->m_arrOut = array();
 			$this->getMetaTags();
-			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
+			$arrMoreInfo = $this->m_arrOut;
 		}
                 
 		$this->m_arrOut = array();
@@ -256,7 +256,7 @@ class DetailedViewApi
 		$metaTags['can_url'] = $can_url;
 		$metaTags['desc'] = $desc;
 
-		$this->m_arrOut = $metaTags;
+		$this->m_arrOut['meta_tags'] = $metaTags;
 	}
 	
 	protected function getDecorated_CriticalInfo(){

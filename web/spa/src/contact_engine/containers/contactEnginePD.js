@@ -12,7 +12,8 @@ export class contactEnginePD extends React.Component{
     this.state = {
     	actionDone: false,
       remindDone: false,
-      showMessageOverlay:false
+      showMessageOverlay:false,
+      interestSent:false
     }
     this.actionUrl = {
       "INITIATE":"/api/v2/contacts/postEOI",
@@ -47,7 +48,9 @@ export class contactEnginePD extends React.Component{
         })
       } 
       if(nextProps.contactAction.contactDone) {
-        console.log("yess",nextProps.contactAction)
+        this.setState({
+          interestSent: true
+        })
       }
   }
   closeMessageLayer() {
@@ -63,17 +66,17 @@ export class contactEnginePD extends React.Component{
   render(){
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.button} />
+      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.isPaid} profilechecksum={this.props.profiledata.profilechecksum}/>
     }
     if(this.state.actionDone){
-      if(this.props.contactAction.accept.buttondetails.button.action == "WRITE_MESSAGE") {
+      if(this.props.contactAction.accept.button_after_action.buttons[0].action == "WRITE_MESSAGE") {
         return (<div id="buttons1" className="view_ce fullwid z100">
           {messageOverlayView}
-          <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.contactAction(this.props.contactAction.accept.buttondetails.button.action)}>
+          <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.contactAction(this.props.contactAction.accept.button_after_action.buttons[0].action)}>
             <div className="wid60p">
               <i className="mainsp ot_msg"></i>
-              <input className="action" type="hidden" value={this.props.contactAction.accept.buttondetails.button.action}></input>
-              <div className="white">{this.props.contactAction.accept.buttondetails.button.label}</div>
+              <input className="action" type="hidden" value={this.props.contactAction.accept.button_after_action.buttons[0].action}></input>
+              <div className="white">{this.props.contactAction.accept.button_after_action.buttons[0].label}</div>
             </div>
             <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
           </div>
@@ -85,7 +88,7 @@ export class contactEnginePD extends React.Component{
         return (<div id="buttons2" className="view_ce fullwid lh26">
               <div className="fullwid srp_bg1 txtc pad5new posrel" >
                 <div className="wid60p">
-                  <div className="white">{this.props.contactAction.reminder.buttondetails.button.label}</div>
+                  <div className="white">{this.props.contactAction.reminder.button_after_action.buttons[0].label}</div>
                 </div>
                 <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
               </div>
@@ -115,8 +118,21 @@ export class contactEnginePD extends React.Component{
         </div>
       </div>
       );
+    }
+    else if(this.state.interestSent) {
+      return(<div id="buttons1" className="view_ce fullwid">
+        <div className="fullwid bg7 txtc pad5new posrel" >
+          <div className="wid60p" onClick={() => this.contactAction(this.props.contactAction.contact.button_after_action.buttons[0].action)}>
+            <i className="mainsp msg_srp"></i>
+            <input className="action" type="hidden" value={this.props.contactAction.contact.button_after_action.buttons[0].action}></input>
+            <div className="white">{this.props.contactAction.contact.button_after_action.buttons[0].label}</div>
+          </div>
+          <ThreeDots buttondata={this.props.buttondata} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
+        </div>
+      </div>
+      );
     } 
-    else if(this.props.buttondata.buttons.primary[0].action == "REMINDER" || this.props.buttondata.buttons.primary[0].action == "INITIATE") {
+    else if(this.props.buttondata.buttons.primary[0].action == "INITIATE") {
       return(<div id="buttons1" className="view_ce fullwid">
         <div className="fullwid bg7 txtc pad5new posrel" >
           <div className="wid60p" onClick={() => this.contactAction(this.props.buttondata.buttons.primary[0].action)}>
