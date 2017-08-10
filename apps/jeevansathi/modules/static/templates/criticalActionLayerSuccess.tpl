@@ -821,10 +821,10 @@ var altEmail = '~$altEmail`';</script>
         occuSelected = 0;
         occMap = {};
         res  = {
-        D :"Don't know",
-        M : "Yes",
+        // D :"Don't know",
+        M : "Manglik",
         A : "Angshik (partial manglik)",
-        N : "No"};
+        N : "Non Manglik"};
 
         var occIndex=1;
         $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex++)+'"></option>');

@@ -91,6 +91,12 @@ if(calIdTemp=='18'){
     /* CAL 25 */
     if(calIdTemp=='25'){
 
+    occuSelected= 0;
+
+    if($("#manglikSubmit").length && $("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70 >0)
+        {
+              $("#skipBtn").css("margin-top",$("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70);
+        }
 
     if(isIphone != '1')
     {
@@ -100,7 +106,6 @@ if(calIdTemp=='18'){
         // $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
         }); 
     }
-    occuSelected= 0;
 
 
     $("#occMidDiv").css("height",window.innerHeight - 50);
@@ -108,10 +113,10 @@ if(calIdTemp=='18'){
         if(typeof listArray == 'undefined' || listArray === null)
         { 
                 listArray = {
-                D :"Don't know",
-                M : "Yes",
+                // D :"Don't know",
+                M : "Manglik",
                 A : "Angshik (partial manglik)",
-                N : "No"};
+                N : "Non Manglik"};
             }
             appendOccupationData(listArray);
                 $("#listDiv").removeClass("dn");
@@ -398,6 +403,13 @@ else {
                     }
                     if(layerId == 25){
                         var occuCode = $("#occSelect").attr('occCode');
+                        if(!occuCode){
+                            showError("Please select a Manglik Status");
+                            console.log("Please select a Manglik Status");
+                            CALButtonClicked=0;
+                            return;
+                        }
+                        
                         if(occuCode){
                             dataOcc = {'editFieldArr[MANGLIK]':occuCode};
                             $.ajax({
@@ -487,13 +499,17 @@ else {
             $(id1).css('background-color','#d9475c');
             $(id2).css('background-color','#C6C6C6');
         }
+        var showErrorTimeout;
         function showError(msg)
         {
-
-              $( "#validation_error" ).text(msg);
-              $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
+            if(showErrorTimeout){
+                clearTimeout(showErrorTimeout);
+            }
+            $( "#validation_error" ).text(msg);
+            $( "#validation_error" ).slideDown( "slow", function() {});//.delay( 3000 );
+            showErrorTimeout = setTimeout(function(){
               $( "#validation_error" ).slideUp( "slow", function() {});
-
+            }, 3000);
         }
 
 
