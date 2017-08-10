@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <input type="text" maxlength="70" id="reasonText" name="reasonText" value="" class="crm-disabled" disabled>
+                    <input type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="width: 287px;height: 50px;" class="crm-disabled" disabled>
                 </td>
             </tr>
             <tr class="fieldsnew">
