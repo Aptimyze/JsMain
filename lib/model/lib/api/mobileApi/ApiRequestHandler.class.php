@@ -179,7 +179,7 @@ class ApiRequestHandler
 					$isApp = MobileCommon::isApp();
 					if($isApp)
 					{
-						$versionArr = ('A'=>107,'I'=>5.9);
+						$versionArr = array('A'=>107,'I'=>5.9);
 						$showConsentMsg = '';
 
 						if ($request->getParameter("version") >= $versionArr[$isApp] && $profileid)
