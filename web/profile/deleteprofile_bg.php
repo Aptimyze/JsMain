@@ -217,6 +217,9 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 //Delete Roster Data for this profile
 deleteChatRoster($profileid);
 
+//Delete this profile from ExclusiveServicing
+deleteProfileFromExclusiveServicing($profileid);
+
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
 $username_result=mysql_query($username_query,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
@@ -749,4 +752,9 @@ function deleteChatRoster($profileid) {
       mail("nitesh.s@jeevansathi.com","Chat roster data not getting deleted", "Issues while inserting into rabbitmq queue USER_DELETE for user {$profileid}");
     }
   }
+}
+
+function deleteProfileFromExclusiveServicing($profileid){
+    $exclusiveFuncObj = new ExclusiveFunctions();
+    $exclusiveFuncObj->deleteEntryFromExclusiveServicing($profileid,'D');
 }

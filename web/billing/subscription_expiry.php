@@ -10,9 +10,9 @@ include_once "functions.php";
 include_once "comfunc_sums.php";
 include_once "../jsadmin/ap_common.php";
 include_once JsConstants::$docRoot . "/classes/JProileUpdateLib.php";
+include_once(JsConstants::$alertDocRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db = connect_db();
-
 $ts = time();
 //current date
 $curdate = date("Y-m-d", $ts);
@@ -20,29 +20,17 @@ $curdate = date("Y-m-d", $ts);
 $ts -= (24 * 60 * 60) * 10;
 $before_ten_days = date("Y-m-d", $ts);
 
-$sql = "SELECT ID,PROFILEID, EXPIRY_DT, SERVEFOR FROM billing.SERVICE_STATUS WHERE EXPIRY_DT BETWEEN '$before_ten_days' AND '$curdate' AND ACTIVE='Y'";
+$sql = "SELECT ID,PROFILEID, EXPIRY_DT, SERVEFOR, BILLID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT BETWEEN '$before_ten_days' AND '$curdate' AND ACTIVE='Y'";
 $res = mysql_query_decide($sql, $db) or die($sql . mysql_error_js());
 while ($row = mysql_fetch_array($res)) {
     $id                = $row['ID'];
     $pid               = $row['PROFILEID'];
     $profileids_arr1[] = $pid;
+    $billid            = $row['BILLID'];
     //if(strstr($row['SERVEFOR'],'O'))
     //    $offline_arr[$pid]=$pid;
     if (($row['SERVEFOR'] == 'L') || ($row['SERVEFOR'] == 'T')) {
         $assisted_arr[$pid][] = $row['SERVEFOR'];
-    }
-
-    // Deleting entry from billing.EXCLUSIVE_SERVICING as soon as subs expire
-    $servicingSQL = "SELECT * FROM billing.EXCLUSIVE_SERVICING
-                     WHERE CLIENT_ID = $pid";
-    $sqlOutput = mysql_query_decide($servicingSQL, $db) or die($sql . mysql_error_js());
-    $result = mysql_fetch_array($sqlOutput);
-    if ($result){
-        $servicingLogSQL = "INSERT INTO billing.EXCLUSIVE_SERVICING_LOG (AGENT_USERNAME, CLIENT_ID, ASSIGNED_DT, ENTRY_DT, SERVICE_DAY, SERVICE_SET_DT, BIODATA_LOCATION, BIODATA_UPLOAD_DT, SCREENED_DT, SCREENED_STATUS, EMAIL_STAGE) VALUES (".$result["AGENT_USERNAME"].",".$result["CLIENT_ID"].",".$result["ASSIGNED_DT"].",".$result["ENTRY_DT"].",".$result["SERVICE_DAY"].",".$result["SERVICE_SET_DT"].",".$result["BIODATA_LOCATION"].",".$result["BIODATA_UPLOAD_DT"].",".$result["SCREENED_DT"].",".$result["SCREENED_STATUS"].",".$result["EMAIL_STAGE"].")";
-        $servicingLogRes = mysql_query_decide($servicingLogSQL, $db) or die($sql . mysql_error_js());
-        $servicingSQL1 = "DELETE FROM billing.EXCLUSIVE_SERVICING 
-                     WHERE CLIENT_ID = $pid";
-        $servicingRes = mysql_query_decide($servicingSQL1, $db) or die($sql . mysql_error_js());
     }
 
     $sql1 = "UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE ID=$id";
@@ -51,6 +39,11 @@ while ($row = mysql_fetch_array($res)) {
         endIntroCalls($pid);
     }
 
+    // Deleting entry from billing.EXCLUSIVE_SERVICING as soon as subs expire
+    if (strpos($row['SERVEFOR'],'X')){
+        $exclusiveFunctionsObj = new ExclusiveFunctions();
+        $exclusiveFunctionsObj->deleteEntryFromExclusiveServicing($pid,'X',$billid);
+    }
 }
 $profileids_arr_n = array_unique($profileids_arr1);
 $profileids_arr   = array_values($profileids_arr_n);

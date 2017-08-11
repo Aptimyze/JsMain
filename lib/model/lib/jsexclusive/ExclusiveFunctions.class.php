@@ -323,5 +323,20 @@ class ExclusiveFunctions{
 		$phone =$executiveDetails['PHONE'];
 		return $phone;
 	}
+
+    public function deleteEntryFromExclusiveServicing($profileid,$flag,$billid=0) {
+        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        $profilesInfo = $exclusiveServicingObj->getAllDataForClient($profileid,$billid);
+        $exclusiveServicingLogObj = new billing_EXCLUSIVE_SERVICING_LOG();
+        if($flag == 'D' || ($flag == 'X' && $billid !=0))
+            $success = $exclusiveServicingLogObj->addDeletedProfileFromExclusiveServicing($profilesInfo);
+        if($success == true){
+            if($flag == 'X' && $billid != 0){
+                $exclusiveServicingObj->removeExclusiveClientEntry($profileid,$billid);
+            }else if($flag == 'D'){
+                $exclusiveServicingObj->removeExclusiveClientEntry($profileid);
+            }
+        }
+	}
 }
 ?>
