@@ -174,7 +174,7 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else 
+				else if($output["moduleName"] != "phone")
 				{
 					$showConsentMsg = '';
 
