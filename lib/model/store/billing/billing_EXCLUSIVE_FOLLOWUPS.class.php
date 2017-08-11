@@ -14,6 +14,25 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		$this->FOLLOWUP3_DT_BIND_TYPE = "STR";
 		$this->FOLLOWUP4_DT_BIND_TYPE = "STR";
 		$this->CONCALL_SCH_DT_BIND_TYPE = "STR";
+
+    }
+    
+    public function insertIntoExclusiveFollowups($params){
+        if(is_array($params)){
+            try{
+                $sql = "INSERT INTO billing.EXCLUSIVE_FOLLOWUPS (AGENT_USERNAME, CLIENT_ID, MEMBER_ID, ENTRY_DT, FOLLOWUP1_DT, STATUS) VALUES (:AGENT_USERNAME, :CLIENT_ID, :MEMBER_ID, :ENTRY_DT, :FOLLOWUP1_DT, :STATUS)";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":AGENT_USERNAME",$params["AGENT_USERNAME"],PDO::PARAM_STR);
+                $res->bindValue(":CLIENT_ID",$params["CLIENT_ID"],PDO::PARAM_INT);
+                $res->bindValue(":MEMBER_ID",$params["MEMBER_ID"],PDO::PARAM_INT);
+                $res->bindValue(":ENTRY_DT",$params["ENTRY_DT"],PDO::PARAM_STR);
+                $res->bindValue(":FOLLOWUP1_DT",$params["FOLLOWUP1_DT"],PDO::PARAM_STR);
+                $res->bindValue(":STATUS",$params["STATUS"],PDO::PARAM_INT);                
+                $res->execute();
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
     }
 
     /**
@@ -54,7 +73,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 	{
 		try
 		{
-		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT)";
+		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT) OR (STATUS LIKE 'F3' AND FOLLOWUP4_DT <= :CURRENT_DT)";
 		    $sql .= "ORDER BY STATUS DESC,MEMBER_ID";
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
@@ -103,7 +122,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		try
 		{
 
-		    $sql = "SELECT count(*) AS CNT FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT)";
+		    $sql = "SELECT count(*) AS CNT FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT) OR (STATUS LIKE 'F3' AND FOLLOWUP4_DT <= :CURRENT_DT)";
 		    $res = $this->db->prepare($sql);
 		    $res->bindValue(":CURRENT_DT", $followUpDate, PDO::PARAM_STR);
 		    $res->execute();
@@ -205,10 +224,8 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
      * @param   $id,$updateArr=""
      * @return  none
      */ 
-  public function updateFollowUp($id,$updateArr="")
-  {
-    try
-    {
+  public function updateFollowUp($id,$updateArr=""){
+    try{
       if($id>=0 && is_array($updateArr) && count($updateArr)>0)
       {
       	$updateStr = "";

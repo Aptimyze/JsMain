@@ -141,6 +141,69 @@ class ExclusiveFunctions{
                 return 'Sunday';
             }
         }
+        
+        public function formatDataForMatchMail($data,$matchMailData){
+            foreach ($matchMailData as $key => $value){
+                $matchMailFormattedData[$value["PROFILEID"]] = $value;
+                $profileidArr[]=$value["PROFILEID"];
+            }
+            $profileidStr = implode(",", $profileidArr);
+            $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $index => $val){
+                $modifiedNameArr[$val["PROFILEID"]] = $val;
+            }
+            foreach($data as $date => $val){
+                foreach($val as $index => $dataValue){
+                    unset($temp);
+                    $temp["ACCEPTANCE_ID"] = $dataValue["ACCEPTANCE_ID"];
+                    $temp["USERNAME"] = $matchMailFormattedData[$dataValue["ACCEPTANCE_ID"]]["USERNAME"];
+                    $temp["PHOTO_URL"] = $matchMailFormattedData[$dataValue["ACCEPTANCE_ID"]]["PHOTO_URL"];
+                    if($modifiedNameArr[$dataValue["ACCEPTANCE_ID"]]["DISPLAY"] == "Y")
+                        $temp["NAME_OF_USER"] = $modifiedNameArr[$dataValue["ACCEPTANCE_ID"]]["NAME"];
+                    $finalData[$date][]=$temp;
+                }
+            }
+            return $finalData;
+        }
+        
+        public function returnAcceptanceIdArr($dataArr){
+            if(is_array($dataArr)){
+                foreach($dataArr as $date => $value){
+                    foreach($value as $index => $tableData){
+                        $resultSet[] = $tableData['ACCEPTANCE_ID'];
+                    }
+                }
+                return $resultSet;
+            }
+        }
+        
+        public function getUsernameForArr($arr){
+            if(is_array($arr)){
+                $jprofileObj = new JPROFILE('newjs_masterRep');
+                $result = $jprofileObj->getAllSubscriptionsArr($eligibleProfileArr);
+            }
+        }
+        
+        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$skipUpdate=false){
+            if(is_array($arr)){
+                if($skipUpdate == false){
+                    $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
+                    $followupObj->updateStatusForClientId(implode(",", $arr),'Y');
+                }
+                $exclusiveFollowupObj = new billing_EXCLUSIVE_FOLLOWUPS();
+                $todaysDate = date('Y-m-d H:i:s');
+                $params["ENTRY_DT"] = $todaysDate;
+                $params["CLIENT_ID"] = $client;
+                $params["AGENT_USERNAME"] = $agent;
+                $params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                $params["STATUS"] = "F0";
+                foreach($arr as $key => $val){
+                    $params["MEMBER_ID"] = $val;
+                    $exclusiveFollowupObj->insertIntoExclusiveFollowups($params);
+                }
+            }
+        }
 
     public function formatFollowUpsData($followUpsCount){
     	$currentDt = date("Y-m-d");
@@ -278,7 +341,7 @@ class ExclusiveFunctions{
                 break;
             case "F2":
                 if($params["followupStatus"]=='F'){
-                    $updateArr["STATUS"] == "F3";
+                    $updateArr["STATUS"] = "F3";
                     $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                      $updateArr["FOLLOWUP4_DT"] = $params["date1"];
                 }
@@ -306,7 +369,10 @@ class ExclusiveFunctions{
                 $updateArr["FOLLOWUP4_DT"] = $currentDt;
                 break;
         }
-       	$updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        if($params["followupStatus"]=='Y'){
+       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        }
+        
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
         $followUpObj->updateFollowUp($params["ifollowUpId"],$updateArr);
         unset($followUpObj);

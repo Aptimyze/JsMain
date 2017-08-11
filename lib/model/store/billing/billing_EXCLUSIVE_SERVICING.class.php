@@ -391,6 +391,22 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
+
+    public function getDayWiseAssignedAgent($agent,$day){
+        try{
+            $sql = "SELECT distinct CLIENT_ID FROM billing.EXCLUSIVE_SERVICING WHERE AGENT_USERNAME = :AGENT_USERNAME AND SERVICE_DAY = :SERVICE_DAY";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT_USERNAME", $agent,PDO::PARAM_STR);
+            $res->bindValue(":SERVICE_DAY", $day,PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                $output[] = $result;
+            }
+            return $output;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
      /* Function to get detail for a client id to check if it exists in the system
      *
      * @param   $agent ID

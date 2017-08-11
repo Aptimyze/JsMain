@@ -17,6 +17,10 @@ function validateFollowUp()
     }
 }
 
+function backToFollowUps(){
+    window.location = "/operations.php/jsexclusive/followupCaller";
+}
+
 $(document).ready(function() {
 
     $("#followupStatus").change(function(){
