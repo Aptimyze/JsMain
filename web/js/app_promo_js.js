@@ -21,6 +21,9 @@ if(typeof(AndroidPromotion)=="undefined"){
 if(typeof(AppLoggedInUser)=="undefined"){
 	var AppLoggedInUser=0;
 }
+if(typeof(webView) ==='undefined'){
+	var webView ="";	
+}
 $( document ).ready(function() {
 	//
       if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
@@ -36,7 +39,7 @@ $( document ).ready(function() {
 			if($("#mainContent").length){
 				
 
-				if((typeof pageMyJs != 'undefined' && pageMyJs==1))
+				if((typeof(pageMyJs) != 'undefined' && pageMyJs==1))
 				{
 					var showAppClass = 'ham_b20_n ham_minu20';
 				}
@@ -94,7 +97,7 @@ $( document ).ready(function() {
     }
    else
    {
-   	 if($("#mainContent").length  && typeof webView ==='undefined' || webView ==""){	 
+   	 if($("#mainContent").length  && typeof(webView) ==='undefined' || webView ==""){	 
 			var topX=0;
 			if($("#mainContent").css("position")=="relative")
 			   topX=0;
@@ -304,7 +307,7 @@ function showAppPromoForMessageListingPage(){
 
 function showOldMobileSiteInfo()
 {
-	if((getIosVersion() || getAndroidVersion()) && !getCookieData("appPromo"))
+	if((getIosVersion() || getAndroidVersion()) && !getCookieData("appPromo") && AppLoggedInUser)
 		return false;
 	var ua = ua || navigator.userAgent;
 	var android=ua.indexOf("Android");
@@ -315,7 +318,7 @@ function showOldMobileSiteInfo()
 	if(android!=-1 && match!=null && typeof(parseFloat(match[1]))=='number')
  	{
 	   	var androidVersion=match[1].substring(0,3);
-	   	if(androidVersion>=5.0)
+	   	if(androidVersion>=4.0)
 			return false;
  	 	else
 			return true;
