@@ -174,11 +174,26 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else if ($request->getParameter("showConsentMsg") == 'Y')
+				else 
 				{
-					$output["moduleName"] = "phone";
-					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
+					$showConsentMsg = '';
 
+					if ($profileid)
+					{
+						$memObject=JsMemcache::getInstance();
+						$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
+						if(!$showConsentMsg) 
+						{
+							$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
+							$memObject->set('showConsentMsg_'.$profileid,$showConsentMsg);
+						}
+
+					}
+					if($showConsentMsg=='Y')
+					{	
+						$output["moduleName"] = "phone";
+						$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
+					}	
 
 				}
 
