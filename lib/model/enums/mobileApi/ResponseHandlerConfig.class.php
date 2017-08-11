@@ -135,6 +135,9 @@ class ResponseHandlerConfig
 	//Report Invalid
 
 	 public static $SAME_NUMBER_INVALID_TWICE = array("message"=>"You cannot report the same number Invalid again.","statusCode" => '1');
+     
+     // Report Abuse
+	public static $ABUSE_ATTACHMENT_ERROR = array("message"=>"Error in attachment.","statusCode"=>'1');
 }
 
 ?>

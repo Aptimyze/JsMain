@@ -14,7 +14,12 @@ class FAQFeedBack
 	private $errorReq;
 	private $webRequest;
 	private static $REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other','one or more of profile details are incorrect','photo on profile doesn\'t belong to the person','user is using abusive/indecent language','user is stalking me with messages/calls','user is asking for money','user has no intent to marry','user is already married / engaged','user is not picking up phone calls','person on phone denied owning this profile','user\'s phone is switched off/not reachable','User\'s phone is invalid');
-
+    
+    private $m_bAttachmentExist;
+    private $m_bAttachmentError;
+    private $m_arrAttachmentErrorMsg;
+    const MAX_ALLOWED_ATTACHMENTS = 5;
+    
         public function __construct($api=0)
 	{
 		if($api)
@@ -123,7 +128,7 @@ class FAQFeedBack
 		} 		 
 		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 
-		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName);
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName,$this->abuseAttachmentID);
 			
 				// block for blocking the reported abuse added by Palash
 		
@@ -156,6 +161,11 @@ class FAQFeedBack
 				//////////////////////////////////////////////////
 
 	}
+    
+    /**
+     * 
+     * @param sfWebRequest $request
+     */
 	private function extractInfo(sfWebRequest $request)
 	{
 		$this->m_iTracePath = $request->getParameter('tracepath');
@@ -198,9 +208,19 @@ class FAQFeedBack
 		}
 		if($request->getParameter('setOption'))
 			$this->setOption = $request->getParameter('setOption');
-
+        
+        $this->m_bAttachmentExist = false;
+        if($requestArr['attachment'] == 1) {
+          $this->m_bAttachmentExist = true;
+          $this->processFileAttachment();
+        }
 	}
 	
+    /**
+     * 
+     * @param sfWebRequest $request
+     * @return boolean
+     */
 	public function ProcessData(sfWebRequest $request)
 	{     
 		$this->extractInfo($request);
@@ -208,7 +228,17 @@ class FAQFeedBack
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
 		$dataArray = $this->webRequest->getParameter('feed');
-
+        $apiResponseHandlerObj=ApiResponseHandler::getInstance();
+        
+        //If Attachement Exist and Error in attachement
+        if($this->m_bAttachmentExist && $this->m_bAttachmentError) {
+          $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTACHMENT_ERROR); 
+          //$error[message]='You cannot report abuse against the same person more than twice.';
+          $apiResponseHandlerObj->setResponseBody(array("error"=>$this->m_arrAttachmentErrorMsg));
+          $apiResponseHandlerObj->generateResponse();
+          die;
+        }
+        
 	if($dataArray['category'] == FeedbackEnum::CAT_ABUSE)
 	{    
 		if($this->webRequest->getParameter('fromCRM')){  
@@ -243,9 +273,7 @@ class FAQFeedBack
 		}
 
 		$reportAbuseObj = new REPORT_ABUSE_LOG();
-		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		
-
 	 	if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{   
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
@@ -285,13 +313,13 @@ class FAQFeedBack
 				$this->m_bValidForm = true;
 
 				$this->InsertFeedBack();		
-
+                
 			if($this->m_szCategory!=FeedbackEnum::CAT_ABUSE)
 			{	
 				$this->FwdMail();
 				
 			}
-
+            
 			return true;
 
 
@@ -370,9 +398,13 @@ class FAQFeedBack
 			//Insert in MIS_FEEDBACK_RESULT Store
 			$objMIS_FeedBack_Result->Insert($this->m_szCategory,$iTicketID);
 
+            if($this->m_bAttachmentExist) {
+              $this->uploadDocs();
+            }
 			if($this->m_szCategory==FeedbackEnum::CAT_ABUSE)
-			{    
-    			$this->insertReportAbuseLog();
+			{ 
+              
+              $this->insertReportAbuseLog();
     		}	
 		}
 		
@@ -402,6 +434,120 @@ class FAQFeedBack
   public function getCategory()
   {
     return $this->m_szCategory;
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  private function processFileAttachment()
+  {
+    $request = $this->webRequest;
+    
+    //Get Files and check the file extension
+    $arrFileAttachment = $_FILES['feed'];
+    
+    //JPEG, PNG, GIF, BMP
+    $arrAllowedDocType = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
+    $maxDocSize = 5242880; // 1048576 * 5 // 5MB
+    $minDocSize = 1024; // 1 KB
+    
+    //Do Server Side Validation
+    $bResult = true;
+    $arrErrorMsg = array();
+    
+    $count = 0;
+    foreach($arrFileAttachment['name'] as $key => $value) {
+      $count++;
+      if(false === $bResult) {
+        break;
+      }
+      //Check Doc Type
+      $bResult = in_array((exif_imagetype($arrFileAttachment['tmp_name'][$key])), $arrAllowedDocType);
+      if($bResult == false) {
+        $arrErrorMsg[$key] = "Invalid attachment type";
+      }
+      //Check Doc Size
+      $bResult = $arrFileAttachment['size'][$key] > $minDocSize and $arrFileAttachment['size'][$key] <= $maxDocSize;
+      if($bResult == false) {
+        $arrErrorMsg[$key] = "Invalid attachment size";
+      }
+      //Check for Max Allowed Attachments
+      if($count > self::MAX_ALLOWED_ATTACHMENTS) {
+        $maxCount = self::MAX_ALLOWED_ATTACHMENTS;
+        $arrErrorMsg[$key] = "Only {$maxCount} attachments are allowed";
+      }
+    }
+    
+    $this->m_bAttachmentError = count($arrErrorMsg) ? true : false;
+    $this->m_arrAttachmentErrorMsg = $arrErrorMsg;
+  }
+  
+  /**
+   * 
+   */
+  private function uploadDocs()
+  {
+    $arrFileAttachment = $_FILES['feed'];
+    
+    $strBaseUploadPath = "/uploads/Abuse/";
+    $strUploadPath = JsConstants::$docRoot.$strBaseUploadPath;
+    
+    if (false === is_dir($strUploadPath)) {
+      mkdir($strUploadPath,0777,true);
+    }
+    
+    $uniqueId = uniqid();
+    /**
+     * 
+     */
+    $arrUploadedPics = array();
+    $count = 1;
+    foreach($arrFileAttachment['name'] as $key => $value) {  
+     
+      if($count > self::MAX_ALLOWED_ATTACHMENTS) {
+        break;
+      }
+      
+      //Move to JS Server
+      $strTargetFile = $strBaseUploadPath."{$uniqueId}_{$value}";
+      $bResult = move_uploaded_file($arrFileAttachment["tmp_name"][$key], JsConstants::$docRoot.$strTargetFile);
+      $strUrlPrefix = IMAGE_SERVER_ENUM::$appPicUrl;
+
+      if($bResult) {
+        $arrUploadedPics["DOC_{$count}"] = "{$strUrlPrefix}{$strTargetFile}";
+        $count++;
+      } else {
+        //Trigger to alert issue while moving pics
+      }
+    }
+    
+    $objStore = new FEEDBACK_ABUSE_ATTACHMENTS();
+    $recordID = $objStore->insertRecord($arrUploadedPics);
+    
+    $this->abuseAttachmentID = -1;
+    if($recordID) {
+      $this->abuseAttachmentID = $recordID;
+    }
+    //Insert into image server log
+    $moduleName= array();
+    $moduleId=array();
+    $imageType=array();
+    $status=array();
+    
+    foreach($arrUploadedPics as $key => $val) {
+      $moduleName[] = IMAGE_SERVER_MODULE_NAME_ENUM::getModuleName("ABUSE_ATTACHMENTS");
+      $moduleId[] = $recordID;
+      $imageType[] = $key;
+      $status[] = IMAGE_SERVER_STATUS_ENUM::$onAppServer;
+    }
+    
+    $imageServerLogStore = new ImageServerLog;
+    $imageServerLogStore->insertBulk($moduleName, $moduleId, $imageType, $status);
+    
+    //Insert into Report Abuse Log Entry
+    
+    return $recordID;
   }
 } 
 ?>
