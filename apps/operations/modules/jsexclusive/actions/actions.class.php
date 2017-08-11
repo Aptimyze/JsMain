@@ -214,9 +214,14 @@ class jsexclusiveActions extends sfActions {
             else{
                 $jprofileObj = new JPROFILE("newjs_slave");
                 $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
-                $exclusiveLib = new ExclusiveFunctions();
-                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
-                $this->message = "Proposal mail sent to ".$username;
+                if(is_array($details)){
+                    $exclusiveLib = new ExclusiveFunctions();
+                    $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
+                    $this->message = "Follow up added successfully. Proposal mail sent to $username. Please DO NOT add the same ID again.";
+                }
+                else{
+                    $this->message = "Invalid Username: ".$username;
+                }
             }
         }
 
