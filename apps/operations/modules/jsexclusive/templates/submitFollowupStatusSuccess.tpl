@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <input type="text" maxlength="70" id="reasonText" name="reasonText" value="" class="crm-disabled" disabled>
+                    <textarea type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="resize:none;width: 287px;height: 50px;" class="crm-disabled" disabled></textarea>
                 </td>
             </tr>
             <tr class="fieldsnew">
@@ -81,7 +81,7 @@
             <tr></tr>
             <tr align="center">
                 <td class="label" style="background-color:PeachPuff">
-                    <input type="submit" name="submit" value="Back to Followup page">
+                    <input type="button" value="Back to Followups" onclick="backToFollowUps();">
                 </td>
                 <td class="label" style="background-color:PeachPuff">
                     <input type="submit" name="submit" value="Submit" onclick="return validateFollowUp();">

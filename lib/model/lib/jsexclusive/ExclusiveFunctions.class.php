@@ -341,7 +341,7 @@ class ExclusiveFunctions{
                 break;
             case "F2":
                 if($params["followupStatus"]=='F'){
-                    $updateArr["STATUS"] == "F3";
+                    $updateArr["STATUS"] = "F3";
                     $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
                      $updateArr["FOLLOWUP4_DT"] = $params["date1"];
                 }
@@ -369,7 +369,10 @@ class ExclusiveFunctions{
                 $updateArr["FOLLOWUP4_DT"] = $currentDt;
                 break;
         }
-       	$updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        if($params["followupStatus"]=='Y'){
+       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+        }
+        
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
         $followUpObj->updateFollowUp($params["ifollowUpId"],$updateArr);
         unset($followUpObj);
