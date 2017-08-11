@@ -11,6 +11,7 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
+//		print(MobileCommon::isApp());print('---'.MobileCommon::isNewMobileSite());print('-D--'.MobileCommon::isDesktop());die;
 	$context = $this->getContext();
 	$request = $context->getRequest();
 	if(!$request->getParameter("startScriptTime"))

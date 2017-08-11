@@ -169,7 +169,7 @@ render(){
                     </Link>
                     <div onClick={() => this.setState((prevState)=>{prevState.loaderStyles[index]={};prevState.loaderStyles[index].display='block';return prevState;})}>
 
-                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(index)} button={tuple.buttonDetailsJSMS.buttons} profilechecksum={tuple.profilechecksum} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index} button={tuple.buttonDetailsJSMS.buttons}/>
+                    <ContactEngineButton buttondata={tuple} buttonName={this.props.listingName} callBack={()=>this.removeMyjsTuple(index)} button={tuple.buttonDetails.buttons} profilechecksum={tuple.profilechecksum} pagesrcbtn="myjs" tupleID={this.props.listing.infotype+"_"+index} button={tuple.buttonDetailsJSMS.buttons}/>
 
                     </div>
                 </div>

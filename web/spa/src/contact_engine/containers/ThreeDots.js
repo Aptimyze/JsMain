@@ -12,7 +12,7 @@ import Loader from "../../common/components/Loader";
 
 class ThreeDots extends React.Component{
   constructor(props){
-    super();
+    super(props);
     this.state = {
       showLayer: false,
       showAbuseLayer: false,
@@ -21,6 +21,7 @@ class ThreeDots extends React.Component{
       showIgnoreLayerMessage:'',
       ignoreButton:{}
     };
+    console.log(props,'---------');
 
   }
   getThreeDotLayer() {
@@ -58,7 +59,6 @@ class ThreeDots extends React.Component{
     switch(jsonOb.button.action)
     {
       case 'CONTACT_DETAIL':
-            
       break;
       case 'IGNORE':
         if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
@@ -157,7 +157,7 @@ class ThreeDots extends React.Component{
                         {
                           imageList[button.action] = "mainsp shortlisted";
                         }
-                       
+
 
                           return (
                             <div onClick={() => this.manageThreeDotsButton(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>

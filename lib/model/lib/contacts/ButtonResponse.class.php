@@ -4,7 +4,7 @@ Class ButtonResponse
 	private $buttonResponseObj;
 	public function __construct($loginProfile='', $otherProfile='', $page='', $contactHandler = "")
 	{
-		if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
+		if(MobileCommon::isApp()=='I')
 			$this->buttonResponseObj = new ButtonResponseJSMS($loginProfile, $otherProfile, $page, $contactHandler);
 		elseif(MobileCommon::isAPP()=="A")
 			$this->buttonResponseObj = new ButtonResponseApi($loginProfile, $otherProfile, $page, $contactHandler );

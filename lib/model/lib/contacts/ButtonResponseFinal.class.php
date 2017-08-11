@@ -9,7 +9,7 @@ Class ButtonResponseFinal
 	private $privilageObj;
 	private $channel;
 	private $source;
-	private $viewer; 
+	private $viewer;
 	private $contactType;
 	private $loginProfile;
 	private $otherProfile;
@@ -42,7 +42,7 @@ Class ButtonResponseFinal
 		}
 	}
 	public function getButtonArray()
-	{	
+	{
 		if($this->loginProfile->getPROFILEID())
 		{
 
@@ -95,7 +95,7 @@ Class ButtonResponseFinal
 			$params["channel"] = $this->channel;
 			$responseArray = $this->getLogoutButtonArray($params);
 		}
-		
+
 		$finalResponse = self::buttonDetailsMerge($responseArray);
 		return $finalResponse;
 	}
@@ -183,7 +183,7 @@ Class ButtonResponseFinal
 					//print_r($responseArray["infomsglabel"]);die;
 					//print_r($channel);die;
 					//var_dump($channel);die;
-					
+
 				}
 				else
 				$buttons[] = self::getButtonsFinalResponse($val,$page,"","","",$count);
@@ -273,7 +273,7 @@ Class ButtonResponseFinal
 				if($contactType && $value["CONTACT_TYPE"] && $value["CONTACT_TYPE"]!= $contactType)
 					continue;
 				$return = $value;
-				
+
 			}
 		}
 		//echo $return["BUTTONS"];die;
@@ -389,7 +389,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getdefaultButton($button,$params)
@@ -413,31 +413,31 @@ Class ButtonResponseFinal
 		if($ignored)
 		{
 			$buttons["label"] 		= "Unblock"; ;
-			$buttons["params"] 		= "&ignore=0";	
+			$buttons["params"] 		= "&ignore=0";
 		}
 		else
 		{
 			$buttons["label"] 		= "Block";
 			$buttons["params"] 		= "&ignore=1";
 		}
-		if($button) 
-		{ 
-			$buttons["iconid"]              = $button->icon; 
-			$buttons["primary"]     		= $button->primary; 
-			$buttons["secondary"]   		= $button->secondary; 
-			$buttons['enable']              = $button->active=="true"?true:false; 
-			$buttons['id']                  = $button->TYPE; 
-			$buttons["action"]              = "IGNORE"; 
-		} 
-		else 
-		{ 
-			$buttons["action"]              = "IGNORE"; 
-			$buttons['enable']              = true; 
-			$buttons['id']                  = "IGNORE"; 
-		} 
+		if($button)
+		{
+			$buttons["iconid"]              = $button->icon;
+			$buttons["primary"]     		= $button->primary;
+			$buttons["secondary"]   		= $button->secondary;
+			$buttons['enable']              = $button->active=="true"?true:false;
+			$buttons['id']                  = $button->TYPE;
+			$buttons["action"]              = "IGNORE";
+		}
+		else
+		{
+			$buttons["action"]              = "IGNORE";
+			$buttons['enable']              = true;
+			$buttons['id']                  = "IGNORE";
+		}
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getContactDetailsButton($button,$params)
@@ -497,7 +497,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getCancelButton($button,$params)
@@ -511,7 +511,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getCancelInterestButton($button,$params)
@@ -525,7 +525,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getReminderButton($button,$params,$count)
@@ -536,7 +536,7 @@ Class ButtonResponseFinal
 		if($count){
 			if ($count < ErrorHandler::REMINDER_COUNT) {
 				if((ErrorHandler::REMINDER_COUNT - $count) == 1)
-				{	
+				{
 					$buttons["label"]  = "Remind Again";
 					$buttons["enable"] = true;
 				}
@@ -548,7 +548,7 @@ Class ButtonResponseFinal
 				}
 				$buttons["action"] = "REMINDER";
 			} else {
-				
+
 				$buttons["label"]  = "Reminder ".(ErrorHandler::REMINDER_COUNT - 1)."/".(ErrorHandler::REMINDER_COUNT - 1);
 				$buttons["enable"] = false;
 				$buttons["action"] = "DEFAULT";
@@ -577,7 +577,7 @@ Class ButtonResponseFinal
 		{
 			$params['isBookmarked'] = $params['SHORTLIST'] == "Y"?1:0;
 		}
-		if(!isset($params['isBookmarked'])) {		
+		if(!isset($params['isBookmarked'])) {
 			$bookmarkObj  = new Bookmarks();
 			if(is_a($loginProfile,Profile))
 				$loginProfileId = $loginProfile->getPROFILEID();
@@ -598,7 +598,7 @@ Class ButtonResponseFinal
 			$buttons["iconid"] = IdToAppImagesMapping::SHORTLISTEDBUTTON;
 			$buttons["label"]  = "Remove Shortlist";
 			$buttons["params"] = "&shortlist=true";
-		} 
+		}
 		else{
 			$buttons["iconid"] = IdToAppImagesMapping::SHORTLISTBUTTON;
 			$buttons["label"]  = "Shortlist";
