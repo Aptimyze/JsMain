@@ -174,26 +174,31 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else if($output["moduleName"] != "phone")
+				else if($output["moduleName"] != "phone" )
 				{
-					$showConsentMsg = '';
-
-					if ($profileid)
+					$isApp = MobileCommon::isApp();
+					if($isApp)
 					{
-						$memObject=JsMemcache::getInstance();
-						$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
-						if(!$showConsentMsg) 
-						{
-							$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
-							$memObject->set('showConsentMsg_'.$profileid,$showConsentMsg);
-						}
+						$versionArr = ('A'=>107,'I'=>5.9);
+						$showConsentMsg = '';
 
+						if ($request->getParameter("version") >= $versionArr[$isApp] && $profileid)
+						{
+							$memObject=JsMemcache::getInstance();
+							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
+							if(!$showConsentMsg) 
+							{
+								$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
+								$memObject->set('showConsentMsg_'.$profileid,$showConsentMsg);
+							}
+
+						}
+						if($showConsentMsg=='Y')
+						{	
+							$output["moduleName"] = "phone";
+							$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
+						}	
 					}
-					if($showConsentMsg=='Y')
-					{	
-						$output["moduleName"] = "phone";
-						$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
-					}	
 
 				}
 
