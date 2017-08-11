@@ -181,11 +181,11 @@ class ApiRequestHandler
 					{
 						$versionArr = array('A'=>107,'I'=>5.9);
 						$showConsentMsg = '';
-
-						if ($request->getParameter("version") >= $versionArr[$isApp] && $profileid)
+						$appVersion = $request->getParameter("API_APP_VERSION"); 
+						if ( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid)
 						{
 							$memObject=JsMemcache::getInstance();
-							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
+							$showConsentMsg='Y';//$memObject->get('showConsentMsg_'.$profileid); 
 							if(!$showConsentMsg) 
 							{
 								$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
