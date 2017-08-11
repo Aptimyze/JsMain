@@ -381,6 +381,7 @@ Abstract class ApiAuthentication
         {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
+		//$this->updateAppRegistrationId();
         }
         $curDat = date('Y-m-d');
         if($queueArr['profileId'] && JsMemcache::getInstance()->get("DISC_HIST_".$curDat."_".$queueArr['profileId']) != "Y"){
@@ -397,21 +398,6 @@ Abstract class ApiAuthentication
             }
             unset($prodObj,$queueData,$body);
 
-            // App Registration Update Handling
-	    /*
-            $appRegCookieName 	='APP_REG_UPDATE';
-  	    $registrationid 	=$this->request->getParameter('registrationid');
-	    $apiappVersion 	=$this->request->getParameter('CURRENT_VERSION');
-            if(!isset($_COOKIE[$appRegCookieName]) && $registrationid){
-                        $producerObj = new JsNotificationProduce();
-                        if($producerObj->getRabbitMQServerConnected()){
-                                $dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion);
-                                $msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
-                                $producerObj->sendMessage($msgdata);
-                                @setcookie("$appRegCookieName",time(),86400,"/",$this->domain);
-                        }
-            }*/
-            // end
         }
 	}
 	
@@ -919,5 +905,26 @@ Abstract class ApiAuthentication
 			}
 		}
 	}
+
+	// App Registration-Id Login time Update Handling
+        public function updateAppRegistrationId()
+        {
+	    //if(strstr($_SERVER["REQUEST_URI"],"api/v1/")
+            $registrationid     =sfContext::getInstance()->getRequest()->getParameter('registrationid');
+            $apiappVersion      =sfContext::getInstance()->getRequest()->getParameter('CURRENT_VERSION');
+            $lastLoginDate      =$this->loginData["LAST_LOGIN_DT"];
+	    $todayDate		=date("Y-m-d");	 
+	    $checkDate 		=date("Y-m-d H:i:s",strtotime("$todayDate -2 days"));
+	    if(strtotime($lastLoginDate)<=strtotime($checkDate)){		
+            	if($registrationid && !$this->isNotApp){
+                        $producerObj = new JsNotificationProduce();
+                        if($producerObj->getRabbitMQServerConnected()){
+                                $dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion);
+                                $msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+                                $producerObj->sendMessage($msgdata);
+                        }
+            	}
+	    }	
+        }
 }
 ?>
