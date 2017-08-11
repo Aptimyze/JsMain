@@ -74,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <div style="padding:10px 10px;background-color:#ad160d;margin-bottom:20px;width: 159px;margin: 0 auto;text-decoration: none;">
+                            <div style="text-align: center; padding:10px 10px;background-color:#ad160d;margin-bottom:20px;width: 159px;margin: 0 auto;text-decoration: none;">
                                 <a href="~sfConfig::get('app_site_url')`/successStory/layer?fromSuccessStoryMailer=true&mailid=~$mailerId`" target="_blank" style="color:#fff;font-size:12px;text-decoration: none;">Submit your Success Story</a>
                             </div>
                         </td>
