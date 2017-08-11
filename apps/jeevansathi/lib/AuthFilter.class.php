@@ -224,13 +224,13 @@ class AuthFilter extends sfFilter {
 								}
 							}
 							
-
-						}
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
 								$context->getController()->forward("phone","consentMessage",0);
 								die;
 							}
+
+						}
 					}
 				}
                                 
