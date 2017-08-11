@@ -252,7 +252,7 @@ class NEWJS_CHAT_LOG extends TABLE{
      * @return type
      * @throws jsException
      */
-    public function getAllChatForHousKeeping($iProfileID)
+    public function getAllChatForHousKeeping($iProfileID, $timeOfDeletion=null)
     {
       try{
         if(!$iProfileID)
@@ -261,8 +261,16 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
         
         $sql = "SELECT CHATID FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        if($timeOfDeletion) {
+          $sql.= " AND DATE <= :TIME_OF_DEL";
+        }
         $prep=$this->db->prepare($sql);
         $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        
+        if($timeOfDeletion) {
+          $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+        }
+        
         $prep->execute();
         while($row = $prep->fetch(PDO::FETCH_ASSOC))
         {
@@ -280,7 +288,7 @@ class NEWJS_CHAT_LOG extends TABLE{
      * @return type
      * @throws jsException
      */
-    public function deleteAllChatForUser($iProfileID)
+    public function deleteAllChatForUser($iProfileID, $timeOfDeletion=null)
     {
       try{
         if(!$iProfileID)
@@ -289,8 +297,17 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
         
         $sql = "DELETE FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        if($timeOfDeletion) {
+          $sql.= " AND DATE <= :TIME_OF_DEL";
+        }
         $prep=$this->db->prepare($sql);
+        
         $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        
+        if($timeOfDeletion) {
+          $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+        }
+        
         $prep->execute();
         
         } catch (Exception $ex) {

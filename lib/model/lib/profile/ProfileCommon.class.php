@@ -1257,5 +1257,24 @@ public static function getAnnulled($profileid,$mstatus)
         ob_end_clean();
        
     }
+    
+    
+    public static function getEduDegreesToRemove($highestEdu){
+        $arrPG_Degree = FieldMap::getFieldLabel("degree_grouping",'',1);
+        $arrPG_Group = $arrPG_Degree['PG'];
+        $arrUG_Group = $arrPG_Degree['UG'];
+        $arrPG_Group = explode(" , ",$arrPG_Group);
+        $arrUG_Group = explode(" , ",$arrUG_Group);
+        
+        if(in_array($highestEdu,$arrUG_Group))
+	{
+            return array('PG_DEGREE'=>'','PG_COLLEGE'=>'');
+        }
+        else{
+            return array();
+        }
+            
+       
+    }
 }
 ?>

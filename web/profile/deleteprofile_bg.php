@@ -40,6 +40,8 @@ else
 }
 
 $mainDb = connect_db();
+$gb_time_of_deletion = calculateTimeOfDeletion($mainDb);
+
 $slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 if($logError)
@@ -216,6 +218,7 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 //Delete Roster Data for this profile
 deleteChatRoster($profileid);
+removeDeleteCronArg($profileid, $mainDb);
 
 //Delete this profile from ExclusiveServicing
 deleteProfileFromExclusiveServicing($profileid);
@@ -468,6 +471,8 @@ if(JsConstants::$webServiceFlag == 1)
 */
 function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='',$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='')
 {
+  
+    $timeOfDel = getTimeOfDeletion();
 	if(!$databaseName)
 		$databaseName='newjs';
 
@@ -480,7 +485,7 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 		{
 			$idsArr[]=$myrow["ID"];
 		}*/
-		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel);
+		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel,$timeOfDel);
 		
 		if(is_array($idsArr))
 		{
@@ -509,14 +514,14 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 
 		}
 		
-		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel);
+		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel,$timeOfDel);
 		
 		//$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
 		//mysql_query($sql,$db) or ($skip=1);
 		if ($res) {
 			
 		
-				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel);
+				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel,$timeOfDel);
 		
 				if(!$response)
 					$skip=1;
@@ -526,6 +531,20 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 	}
 	else{
 		$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+        
+        $dateTimeColumn = "DATE";
+        if($selTable == "CONTACTS") {
+          $dateTimeColumn = "TIME";
+        } else if($selTable == "BOOKMARKS") {
+          $dateTimeColumn = "BKDATE";
+        } else if($selTable == "OFFLINE_MATCHES") {
+          $dateTimeColumn = "MATCH_DATE";
+        }
+        //As per $selTable Add Proper Column of Time and Condition
+        if($timeOfDel) {
+          $sql.= " AND {$dateTimeColumn} <= '{$timeOfDel}' ";
+        }
+        
 		mysql_query($sql,$db) or ($skip=1);
 		if (!$skip) {
 			if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
@@ -534,6 +553,11 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 
 			} 
 				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+                
+                if($timeOfDel) {
+                  $sql.= " AND {$dateTimeColumn} <= '{$timeOfDel}' ";
+                }
+                
 				mysql_query($sql, $db) or ($skip = 1);
 		}
 	}
@@ -689,8 +713,11 @@ function markProfilesAsNonDuplicate($profileid,$dupLogObj){
 function deleteChatData($dbName, $iProfileId)
 {
   try{
+    
+    $timeOfDel = getTimeOfDeletion();
+    
     $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
-    $arrChatIds = $chatLogStoreObj->getAllChatForHousKeeping($iProfileId);
+    $arrChatIds = $chatLogStoreObj->getAllChatForHousKeeping($iProfileId, $timeOfDel);
 
     if(count($arrChatIds)) {
       $deletedChatsStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
@@ -705,11 +732,11 @@ function deleteChatData($dbName, $iProfileId)
 
       //Insert Chat Log data into respective delete store
       $deletedchatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
-      $deletedchatLogStoreObj->insertRecordsFromChatLog($iProfileId);
+      $deletedchatLogStoreObj->insertRecordsFromChatLog($iProfileId, $timeOfDel);
       unset($deletedchatLogStoreObj);
 
       //Remove from Chat Log
-      $chatLogStoreObj->deleteAllChatForUser($iProfileId);
+      $chatLogStoreObj->deleteAllChatForUser($iProfileId, $timeOfDel);
     }
     unset($chatLogStoreObj);
   } catch (Exception $ex) {
@@ -754,7 +781,54 @@ function deleteChatRoster($profileid) {
   }
 }
 
+
 function deleteProfileFromExclusiveServicing($profileid){
     $exclusiveFuncObj = new ExclusiveFunctions();
     $exclusiveFuncObj->deleteEntryFromExclusiveServicing($profileid,'D');
+}
+function removeDeleteCronArg($profileid,$dbObj) {
+  $sql = "DELETE FROM PROFILE.DELETE_CRON_ARG WHERE PROFILEID = $profileid";
+  $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+}
+
+function calculateTimeOfDeletion($dbObj)
+{
+  global $argv;
+  
+  $timeOfDeletion = null;
+  if(isset($argv[2])) {
+    $timeOfDeletion = $argv[2];
+    //TODO Validate this time format also
+    //Second arguement can be archived arg also
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $timeOfDeletion);
+    $timeOfDeletion = ($date && $date->format('Y-m-d H:i:s') === $timeOfDeletion) ?$timeOfDeletion : null;
+  }
+  
+  $profileid = $argv[1];
+  if(is_null($timeOfDeletion)) {//if 
+    
+    // Get From Table
+    $sql = "SELECT ARG_DEL_TIME_STAMP FROM PROFILE.DELETE_CRON_ARG where PROFILEID = $profileid";
+    $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+	$myrow=mysql_fetch_assoc($result);
+    
+    if(is_array($myrow)) {
+      $timeOfDeletion = $myrow['ARG_DEL_TIME_STAMP'];
+    } else {
+      //$timeOfDeletion = null;
+    }   
+  } 
+  
+  if($timeOfDeletion) {
+    $sql = "INSERT IGNORE INTO PROFILE.DELETE_CRON_ARG( PROFILEID, ARG_DEL_TIME_STAMP) VALUES ($profileid, '$timeOfDeletion');";
+    $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+  }
+  
+  return $timeOfDeletion;
+}
+
+function getTimeOfDeletion()
+{
+  global $gb_time_of_deletion;
+  return $gb_time_of_deletion;
 }

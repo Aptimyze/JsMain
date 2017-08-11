@@ -101,7 +101,7 @@ class VariableParams
     public static $lightningDealOfferConfig = array(
                                         "lastLoggedInOffset" => 30,
                                         "lastLightningDiscountViewedOffset" => 15,
-                                        "pool2FilterPercent" => 25,
+                                        "pool2FilterPercent" => 100,
                                         "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
                                         "activeOfferFlag" => true
                                         );
@@ -622,10 +622,11 @@ class VariableParams
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",
-        "Then utilizes his expertise to shortlist potential matches for you",
-        "Connects with you to find the most suitable matches for you",
-        "Introduces you to the chosen matches & arranges meetings",
-        "Priority Customer service"
+        "Utilizes their expertise and sends interests to shortlisted matches",
+        "Contacts profiles you like on your behalf",
+        "Introduces you to chosen matches and arranges meetings",
+        "Priority Customer service",
+        "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
     public static $DOL_CONV_RATE = 60;
     
