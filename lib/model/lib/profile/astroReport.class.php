@@ -81,7 +81,7 @@ class astroReport
 	public function setActualReportFlag($loggedInProfileId,$otherProfileId)
 	{
 		$key = $loggedInProfileId."_pog_".$otherProfileId."_actualAstro";
-		JsMemcache::getInstance()->addDataToCache($key,"1",21600);
+		JsMemcache::getInstance()->addDataToCache($key,"1",900); //this has been changed from 6 hours to 15 min.
 	}
 
 	//this increments the count in actual report for a profile
