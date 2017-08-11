@@ -3,6 +3,7 @@
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
 	Created on 2017-08-11
+
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
