@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <input type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="width: 287px;height: 50px;" class="crm-disabled" disabled>
+                    <textarea type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="resize:none;width: 287px;height: 50px;" class="crm-disabled" disabled></textarea>
                 </td>
             </tr>
             <tr class="fieldsnew">
