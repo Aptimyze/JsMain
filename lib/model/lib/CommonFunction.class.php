@@ -1045,7 +1045,7 @@ class CommonFunction
                 $verifyDateFlag=true;
                 if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 				{
-					$verifyDate = $loginProfile->getENTRY_DT();
+					$verifyDate = $loggedInObj->getENTRY_DT();
 				}
                 	$datetime1 = new DateTime();
 					$datetime2 = new DateTime($verifyDate);
