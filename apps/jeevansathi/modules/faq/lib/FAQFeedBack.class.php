@@ -18,6 +18,7 @@ class FAQFeedBack
     private $m_bAttachmentExist;
     private $m_bAttachmentError;
     private $m_arrAttachmentErrorMsg;
+    private $m_iAbuseAttachmentID;
     const MAX_ALLOWED_ATTACHMENTS = 5;
     
         public function __construct($api=0)
@@ -27,6 +28,7 @@ class FAQFeedBack
 		else
 			$this->api=0;
 		$this->m_bValidForm = false;
+        $this->m_iAbuseAttachmentID = -1;
 	}
 	public function getTracePath()
 	{
@@ -128,7 +130,7 @@ class FAQFeedBack
 		} 		 
 		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 
-		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName,$this->abuseAttachmentID);
+		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName,$this->m_iAbuseAttachmentID);
 			
 				// block for blocking the reported abuse added by Palash
 		
@@ -525,9 +527,9 @@ class FAQFeedBack
     $objStore = new FEEDBACK_ABUSE_ATTACHMENTS();
     $recordID = $objStore->insertRecord($arrUploadedPics);
     
-    $this->abuseAttachmentID = -1;
+    $this->m_iAbuseAttachmentID = -1;
     if($recordID) {
-      $this->abuseAttachmentID = $recordID;
+      $this->m_iAbuseAttachmentID = $recordID;
     }
     //Insert into image server log
     $moduleName= array();
