@@ -160,7 +160,11 @@ class AppSearch extends SearchParamters
 					$mstatus[]=$k;
 			}
 		}
-		$searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
+                if($request->getParameter('mstatus')){
+                        $searchParamsSetter['MSTATUS'] = $request->getParameter('mstatus');
+                }else{
+                        $searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
+                }
                 foreach($searchParamsSetter as $k=>$v)
                         if($v=='DONT_MATTER')
                                 $searchParamsSetter[$k] = '';
