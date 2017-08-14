@@ -401,7 +401,7 @@ else {
                         }
 
                     }
-                    if(layerId == 25){
+                    if(layerId == 25 && button == "B1"){
                         var occuCode = $("#occSelect").attr('occCode');
                         if(!occuCode){
                             showError("Please select a Manglik Status");
