@@ -14,6 +14,7 @@ class AppSearch extends SearchParamters
 	const neverMarried = 'N';
 	const male = 'M';
 	const female = 'F';
+        private $skipFields = array("GENDER","AGE","INCOME","HEIGHT","RELIGION","CASTE","CASTE_GROUP","MATCHALERTS_DATE_CLUSTER","HAVEPHOTO","MTONGUE","CITY_RES","COUNTRY_RES","STATE","MSTATUS");
 
 	/**
         * Constructor function.
@@ -66,39 +67,22 @@ class AppSearch extends SearchParamters
 		$searchParamsSetter['HAVEPHOTO'] = $request->getParameter('photo');
 		$searchParamsSetter['MTONGUE'] = $request->getParameter('mtongue');
                 
-                if($request->getParameter('viewed'))
-                        $searchParamsSetter['VIEWED'] = $request->getParameter('viewed');
-                
+                $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
+                $applyClusters = array_diff($solr_clusters,$this->skipFields);
+                foreach($applyClusters as $clusterFields){
+                        if($cluster = $request->getParameter(strtolower($clusterFields))){
+                                if($clusterFields == "KNOWN_COLLEGE"){
+                                        if($cluster == "Any")
+                                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
+                                        else
+                                                $searchParamsSetter['KNOWN_COLLEGE'] = $cluster;
+                                }else{
+                                        $searchParamsSetter[$clusterFields] = $cluster;
+                                }
+                        }
+                }
                 if($request->getParameter('occupation'))
                         $searchParamsSetter['OCCUPATION'] = $request->getParameter('occupation');
-                
-                if($request->getParameter('edu_level_new'))
-                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
-                
-                if($request->getParameter('known_college')){
-                        if($request->getParameter('known_college') == "Any")
-                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
-                        else
-                                $searchParamsSetter['KNOWN_COLLEGE'] = $request->getParameter('known_college');
-                }
-                
-                if($request->getParameter('native_state'))
-                        $searchParamsSetter['NATIVE_STATE'] = $request->getParameter('native_state');
-                
-                if($request->getParameter('manglik'))
-                        $searchParamsSetter['MANGLIK'] = $request->getParameter('manglik');
-                
-                if($request->getParameter('relation'))
-                        $searchParamsSetter['RELATION'] = $request->getParameter('relation');
-                
-                if($request->getParameter('last_activity'))
-                        $searchParamsSetter['LAST_ACTIVITY'] = $request->getParameter('last_activity');
-                
-                if($request->getParameter('horoscope'))
-                        $searchParamsSetter['HOROSCOPE'] = $request->getParameter('horoscope');
-                
-                if($request->getParameter('diet'))
-                        $searchParamsSetter['DIET'] = $request->getParameter('diet');
                 
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
