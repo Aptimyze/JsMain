@@ -48,6 +48,7 @@ class SearchSort
          * @var type string
          */
         private $jsBoostSortStr;
+        private $PaidStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -346,6 +347,13 @@ class SearchSort
         }
         public function getJsBoostSorting(){
                 return $this->jsBoostSortStr;
+        }
+        
+        public function setPaidDateSorting(){
+                        $this->PaidStr =  "PAID_ON_SCORE";
+        }
+        public function getPaidDateSorting(){
+                return $this->PaidStr;
         }
 }
 ?>

@@ -1162,7 +1162,7 @@ return $result;
 		$this->db->rollback();
 	}
 
-	public function getAllMessageIdLog($profileid,$senderRecevierStr='SENDER')
+	public function getAllMessageIdLog($profileid,$senderRecevierStr='SENDER',$timeOfDeletion=null)
 	{
 		try 
 		{
@@ -1173,9 +1173,19 @@ return $result;
 				else
 				{
 					$sql="select ID FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID";
+                    
+                    if($timeOfDeletion) {
+                      $sql.= " AND DATE <= :TIME_OF_DEL";
+                    }
+                    
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-					$prep->execute();
+                    
+                    if($timeOfDeletion) {
+                      $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+                    }
+					
+                    $prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
 						$output[] = $row['ID'];
@@ -1191,8 +1201,16 @@ return $result;
 			throw new jsException($e);
 		}
 	}
-
-	public function deleteMessageLog($profileid,$senderRecevierStr='SENDER')
+    
+    /**
+     * 
+     * @param type $profileid
+     * @param type $senderRecevierStr
+     * @param type $timeOfDeletion
+     * @return boolean
+     * @throws jsException
+     */
+	public function deleteMessageLog($profileid,$senderRecevierStr='SENDER', $timeOfDeletion=null)
 	{
 		try 
 		{
@@ -1203,8 +1221,18 @@ return $result;
 				else
 				{
 					$sql="DELETE FROM newjs.MESSAGE_LOG WHERE ".$senderRecevierStr."=:PROFILEID";
-					$prep=$this->db->prepare($sql);
+                    
+                    if($timeOfDeletion) {
+                      $sql.= " AND DATE <= :TIME_OF_DEL";
+                    }
+					
+                    $prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+                    
+                    if($timeOfDeletion) {
+                      $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+                    }
+                    
 					$prep->execute();
 					return true;
 				}	

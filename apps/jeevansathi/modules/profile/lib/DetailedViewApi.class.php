@@ -308,6 +308,7 @@ class DetailedViewApi
 		$szLocation = CommonFunction::getResLabel($objProfile->getCOUNTRY_RES(),$state,$city,$objProfile->getANCESTRAL_ORIGIN(),"city");	
 		$this->m_arrOut['location'] = $szLocation;
 		//Caste
+                $this->m_arrOut['religionId'] = $objProfile->getReligion();
 		if(stripos($objProfile->getDecoratedCaste(),": ")!=false)
 		{
 			$this->m_arrOut['caste'] = substr($objProfile->getDecoratedCaste(),stripos($objProfile->getDecoratedCaste(),": ") + 2);
@@ -343,7 +344,7 @@ class DetailedViewApi
 
 		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
     if($bHoroScope === 'D'){
-      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;     
     }
     else{
         $astroArr = (array)$this->m_arrAstro;
@@ -379,6 +380,11 @@ class DetailedViewApi
             else
                 $this->m_arrOut['NO_ASTRO']=1;
 
+        //condition change for astro report to be shown
+        if($bHoroScope === 'D' && $this->m_arrOut['NO_ASTRO'] == 1)
+        {
+            $this->m_arrOut['NO_ASTRO']=0;
+        }
         if(MobileCommon::isAndroidApp())
         { 
             $this->m_arrOut['thumbnailPic'] = null;

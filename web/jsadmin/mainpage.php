@@ -233,6 +233,15 @@ if (isset($data)) //successful login
         if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
         }
+        
+        if (in_array('ExPmSr', $priv) || in_array('SuPmSr', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/menu\">Exclusive RM Interface</a>";
+        }
+
+        if (in_array('ExPmSr', $priv) || in_array('SuPmSr', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/jsexclusive/followupCaller\">JsExclusive Followup Caller Module</a>";
+        }
+        
         if (in_array('IUO', $priv) || in_array('IUI', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/only_service.php?name=$username&cid=$cid&mode=W\">Disposing call without alloting profile</a>";
         }
@@ -615,6 +624,7 @@ if (isset($data)) //successful login
         }
          if ( in_array('P', $priv) || in_array('MG', $priv)) {
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/registerMis/productMetric\">Product Metrics</a>";
+                    $linkarr[]="<a href=\"$SITE_URL/jsadmin/makeFieldsBlank.php?cid=$cid\">Make Fields Blank of a Profile</a>";
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/showLIVETags\">LIVE Tags</a>";
          }
     }

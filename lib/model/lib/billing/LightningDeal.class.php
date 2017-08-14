@@ -84,7 +84,7 @@ class LightningDeal
 			$lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));
 
 			//use billing.LIGHTNING_DEAL_DISCOUNT to get list of profiles who have viewed lightning deal in past 15 days
-			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+			$lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
 			$lastViewedPool = $lightningDiscObj->filterDiscountActivatedProfiles('','V',$lastViewedDt);
 			unset($lightningDiscObj);
 
@@ -213,13 +213,16 @@ class LightningDeal
         $profileid = $loginData["PROFILEID"];
         if($profileid){
             $dateGreaterThan = date('Y-m-d H:i:s', strtotime('-1 day', strtotime(date('Y-m-d H:i:s'))));
-            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+            $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT();
             $data = $lightningObj->getLightningDealDiscountData($profileid,$dateGreaterThan);
+                        
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
             
             $memHandlerObj = new MembershipHandler();
             $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);
             $currentMaxDisc = $hamburgerMsg["maxDiscount"];
-            if($data && ($data['STATUS'] == 'V' || $currentMaxDisc <= $data["DISCOUNT"])){
+            if($data && !($hamburgerMsg["userType"] == memUserType::PAID_BEYOND_RENEW || $hamburgerMsg["userType"] == memUserType::UPGRADE_ELIGIBLE) && ($data['STATUS'] == 'V' || $currentMaxDisc <= $data["DISCOUNT"])){
                 $memHandlerObj = new MembershipHandler();
                 list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency();
                 $minActualPrice = $hamburgerMsg["startingPlan"]["origStartingPrice"];
@@ -335,7 +338,7 @@ class LightningDeal
     public function generateRenewalProfilesPool(){
         
         $expDate1 = date('Y-m-d');
-        $expDate2 = date('Y-m-d',  strtotime('+2 Days'));
+        $expDate2 = date('Y-m-d',  strtotime('+3 Days'));
         $serviceStatusObj = new BILLING_SERVICE_STATUS("crm_slave");
         $data = $serviceStatusObj->getRenewalProfilesForDates($expDate1, $expDate2);
         if(is_array($data)){
@@ -346,7 +349,7 @@ class LightningDeal
         $count = count($data);
         $limit = 5000;
         $counter = 0;
-        $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT("crm_slave");
+        $lightningDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
         $lastViewedOffset = $this->dealConfig["lastLightningDiscountViewedOffset"] - 1;
         $todayDate = date("Y-m-d");
         $lastViewedDt = date("Y-m-d",strtotime("$todayDate -".$lastViewedOffset." days"));

@@ -1,0 +1,23 @@
+screenRBInterestsSuccess:
+  metas:
+    title:        JsExclusive - Screen RB Interests
+
+  stylesheets:    []
+
+  javascripts:    []
+
+followupCallerSuccess:
+  metas:
+    title:        JsExclusive - Follow Ups
+
+  stylesheets:    []
+
+  javascripts:    [jspc/crm/exclusiveFollowUps_js@bottom]
+
+submitFollowupStatusSuccess:
+  metas:
+    title:        JsExclusive - Submit Follow Up Status
+
+  stylesheets:    []
+
+  javascripts:    [jspc/crm/submitFollowUp_js]
