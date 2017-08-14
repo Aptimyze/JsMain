@@ -369,6 +369,8 @@ class SearchApiStrategyV1
                                                         $key = "CASTE";
                                                 }elseif($clusterIndex == "STATE"){
                                                         $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "LAST_ACTIVITY"){
+                                                        $clusterIndex = "ONLINE";
                                                 }
                                                 eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
                                                 $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
