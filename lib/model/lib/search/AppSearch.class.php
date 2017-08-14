@@ -84,6 +84,9 @@ class AppSearch extends SearchParamters
                 if($request->getParameter('occupation'))
                         $searchParamsSetter['OCCUPATION'] = $request->getParameter('occupation');
                 
+                if($request->getParameter('edu_level_new'))
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
+                
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
                 if($city_country_resArr && $cities_resArr){
