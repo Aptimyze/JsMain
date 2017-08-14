@@ -17,6 +17,7 @@ var noScrollingAction=0;
 var reachedEnd=0;
 var statusValOfImgLoad=0;
 var showECPPage="";
+var filteredProfilesHeadShown = 0;
 _SEARCH_RESULTS_PER_PAGE=25;
 var maxResult = 99; //after 100 Results loader
 
@@ -271,11 +272,12 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 
 
 
-function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
+function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,profileData)
 {
 		
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
+    
     if ( firstResponse.infotype == "INTEREST_ARCHIVED")
 	{
 		contactTracking += "&"+firstResponse.tracking;
@@ -294,7 +296,14 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 			else
 				totalNoOfResults = firstResponse.no_of_results;
 		}
-        var tupleStructure = '<div class="posrel tupleOuterDiv searchNavigation" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}" style="display:none;height:{searchTupleImageHeight}px;">';
+                var tupleStructure = "";
+                if (contactCenter !=1 && profileData.filter_reason!="") {
+                        if(filteredProfilesHeadShown===0){
+                                filteredProfilesHeadShown=1;
+                                tupleStructure += '<div class="dn padd3015 filteredDiv" style="background-color: #fff;"><h1 class="txtc fontlig f20 color2" style="font-weight: 600;padding-bottom: 15px;">Below profiles have filtered you out</h1><div class="txtc fontlig f14" style="padding-bottom: 10px;">Filtered profiles are those profiles where you don\'t <br>match their partner preferences.</div><div class="txtc fontlig f14">Your interests will go to their \'filtered\' folder. so<br>response to your interests may be delayed.</div></div>';
+                        }
+                }
+        tupleStructure += '<div class="posrel tupleOuterDiv searchNavigation" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}" style="display:none;height:{searchTupleImageHeight}px;">';
 	if(contactCenter==1)
 		tupleStructure+='<a tupleNo="idd'+idd+'" class="searchNavigation" href="javascript:void(0)" onclick=showProfilePage("/profile/viewprofile.php?total_rec='+totalNoOfResults+'&profilechecksum='+profilechecksum+contactTracking+'&tupleId='+idd+'&searchid='+firstResponse.searchid+'&'+NAVIGATOR+showECPPage+'&'+'offset='+(idd-1)+'&contact_id='+firstResponse.contact_id+'&actual_offset='+idd+'")>';
 	else
@@ -786,7 +795,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 				if(viewSimilar==1)
 					searchTuple = $.ReplaceJsVars(tupleStructureViewSimilar(val1.profilechecksum,val1.album_count,profileNoId),mapObj);
 				else
-					searchTuple = $.ReplaceJsVars(tupleStructure(val1.profilechecksum,val1.album_count,profileNoId,tupleStype,totalNoOfResults),mapObj);
+					searchTuple = $.ReplaceJsVars(tupleStructure(val1.profilechecksum,val1.album_count,profileNoId,tupleStype,totalNoOfResults,val1),mapObj);
 				if(key=='featuredProfiles')
 					tuplesOfOnePage=searchTuple+tuplesOfOnePage;
 				else
@@ -992,7 +1001,8 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{profilechecksum}':removeNull(val1.profilechecksum),
 			'{mstatus}':removeNull(val1.mstatus),
 			'{verificationSeal}':removeNull(verificationSeal),
-			'{blahblahToEnd_withNoComma}':"----------"
+			'{blahblahToEnd_withNoComma}':"----------",
+                        '{filter_reason}':removeNull(val1.filter_reason)
 		};
 	return mapping;
 }
@@ -1106,6 +1116,7 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 		},timedOut);
 		BindNextPage();
 		$('.srp_bgmsg').css('display','block');
+		$('.filteredDiv').css('display','block');
 	},timedOut);
 		BindNextPage();
 }
