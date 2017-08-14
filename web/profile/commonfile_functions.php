@@ -492,7 +492,7 @@ $js_arr[]=array("jsms/common/CommonFunctions"             => "75");
 $js_arr[]=array("jsms/common/touchswipe_js"   => "6");
 $js_arr[]=array("jsms/common/history_js"   => "10");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"   => "5");
-$js_arr[]=array("jsms/search/jqueryInfiniteScroll"   => "69");
+$js_arr[]=array("jsms/search/jqueryInfiniteScroll"   => "70");
 $js_arr[]=array("jsms/search/JsmsSearch"   => "5");
 $js_arr[]=array("jsms/search/MobileSearchCommon"   => "5");
 $js_arr[]=array("jsms/angular/registration/lib/angular_min" => "2");
