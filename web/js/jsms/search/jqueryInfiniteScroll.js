@@ -17,7 +17,7 @@ var noScrollingAction=0;
 var reachedEnd=0;
 var statusValOfImgLoad=0;
 var showECPPage="";
-var filteredProfilesHeadShown = 0;
+var filteredProfilesHeadShown = 0; 
 _SEARCH_RESULTS_PER_PAGE=25;
 var maxResult = 99; //after 100 Results loader
 
