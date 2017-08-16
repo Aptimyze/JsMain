@@ -88,7 +88,7 @@ The JS Team</div></td>
 		//aadhar detail deletion
 		$aadharDeletionObj = new aadharVerification();
 		$aadharDeletionObj->resetAadharDetails($profileid);
-		unset($aadharDeletionObj);die;
+		unset($aadharDeletionObj);
 		//$newDeletedProfileObj = new NEWJS_NEW_DELETED_PROFILE_LOG;
 		$profileInfo = $jprofileObj->SelectDeleteData($profileid);
 		$email = $profileInfo["EMAIL"];
