@@ -140,12 +140,12 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				
 				unset($astroObj);
-				if(MobileCommon::isApp())
-				{
-					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-					$apiResponseHandlerObj->setResponseBody($successArr);
-					$apiResponseHandlerObj->generateResponse();
-				}
+				// if(MobileCommon::isApp())
+				// {
+				// 	$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+				// 	$apiResponseHandlerObj->setResponseBody($successArr);
+				// 	$apiResponseHandlerObj->generateResponse();
+				// }
 				
 				return SfView::NONE;
 				
