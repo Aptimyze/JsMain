@@ -85,6 +85,10 @@ The JS Team</div></td>
 		$AP_MissedServiceLog = new ASSISTED_PRODUCT_AP_MISSED_SERVICE_LOG;
 		$AP_CallHistory = new ASSISTED_PRODUCT_AP_CALL_HISTORY;
 		$ssMailerObj = new MAILER_SS_MAILER;
+		//aadhar detail deletion
+		$aadharDeletionObj = new aadharVerification();
+		$aadharDeletionObj->resetAadharDetails($profileid);
+		unset($aadharDeletionObj);die;
 		//$newDeletedProfileObj = new NEWJS_NEW_DELETED_PROFILE_LOG;
 		$profileInfo = $jprofileObj->SelectDeleteData($profileid);
 		$email = $profileInfo["EMAIL"];
