@@ -22,7 +22,7 @@ export class contactEnginePD extends React.Component{
       "REMINDER":"/api/v2/contacts/postSendReminder",
       "WRITE_MESSAGE":"/api/v2/contacts/WriteMessage",
       "CANCEL":"/api/v2/contacts/postCancelInterest",
-      "SHORTLIST":"/api/v1/common/AddBookmark",      
+      "SHORTLIST":"/api/v1/common/AddBookmark",
       "MESSAGE":"/api/v2/contacts/postWriteMessage",
       "CONTACT_DETAIL":"/api/v2/contacts/contactDetails"
     };
@@ -41,12 +41,12 @@ export class contactEnginePD extends React.Component{
         this.setState({
           remindDone: true
         })
-      } 
+      }
       if (nextProps.contactAction.msgInitiated) {
         this.setState({
           showMessageOverlay: true
         })
-      } 
+      }
       if(nextProps.contactAction.contactDone) {
         this.setState({
           interestSent: true
@@ -61,17 +61,25 @@ export class contactEnginePD extends React.Component{
   	this.props.showLoaderDiv();
     var url = '&profilechecksum='+this.props.profiledata.profilechecksum;
     this.props.callContactApi(this.actionUrl[action],action,url);
-  }  	
+  }
 
   render(){
+    console.log(this.props);
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.isPaid} profilechecksum={this.props.profiledata.profilechecksum}/>
+
+      console.log('in1');
+      console.log(this.props);
+
+      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.cansend} profilechecksum={this.props.profiledata.profilechecksum}/>
     }
     if(this.state.actionDone){
+      console.log('1');
+      console.log(this.state);
       if(this.props.contactAction.accept.button_after_action.buttons[0].action == "WRITE_MESSAGE") {
-        return (<div id="buttons1" className="view_ce fullwid z100">
-          {messageOverlayView}
+        return (<div>  {messageOverlayView}
+                <div id="buttons1" className="view_ce fullwid z100">
+
           <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.contactAction(this.props.contactAction.accept.button_after_action.buttons[0].action)}>
             <div className="wid60p">
               <i className="mainsp ot_msg"></i>
@@ -80,10 +88,10 @@ export class contactEnginePD extends React.Component{
             </div>
             <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
           </div>
-        </div>
+        </div></div>
         );
       }
-    } 
+    }
     else if(this.state.remindDone) {
         return (<div id="buttons2" className="view_ce fullwid lh26">
               <div className="fullwid srp_bg1 txtc pad5new posrel" >
@@ -131,7 +139,7 @@ export class contactEnginePD extends React.Component{
         </div>
       </div>
       );
-    } 
+    }
     else if(this.props.buttondata.buttons.primary[0].action == "INITIATE") {
       return(<div id="buttons1" className="view_ce fullwid">
         <div className="fullwid bg7 txtc pad5new posrel" >

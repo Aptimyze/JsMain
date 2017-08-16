@@ -24,7 +24,7 @@
 .srp_pos2 {
 	top: 0;
     right: 0;
-    padding: 10px 5px;	
+    padding: 10px 5px;
 }
 .mb70{margin-bottom: 70px}
 
@@ -47,10 +47,10 @@
 }
 .photoDiv {
 	border: 1px solid rgb(255,255,255);
-	border: 1px solid rgba(255,255,255,0.2);  
-	overflow:hidden; 
-	width: 90px; 
-	height: 90px; 
+	border: 1px solid rgba(255,255,255,0.2);
+	overflow:hidden;
+	width: 90px;
+	height: 90px;
 	border-radius: 45px;
 }
 .pl15{padding-left: 15px}
@@ -158,4 +158,38 @@ textarea {
     background-position: -239px -130px;
     width: 29px;
     height: 20px;
+}
+.ce_top1{top: 0px}
+.ce_z101{z-index: 101}
+.ce_z102{z-index: 102}
+.ce_z103{z-index: 103}
+.ce_hgt1{height: 48px}
+.ce_hgt2{line-height: 40px;text-align: center;}
+.ce_lf1 {left: 0;top: 0;}
+.ce_rg1{right:0; top:0}
+.ce_dim1{width: 50px;height: 50px;}
+.ce_pt1{padding-top: 55%}
+.ce_scoll1{overflow-y: auto; overflow-x: hidden;}
+.ce_overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgb(0,0,0);
+    opacity: .70;
+    filter: alpha(opacity=70);
+    -moz-opacity: .70;
+    overflow-x: none;
+}
+.ce-bg {
+    background: url("https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg") no-repeat center center #Dbdbdb;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }

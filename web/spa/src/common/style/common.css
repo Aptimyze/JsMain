@@ -52,14 +52,7 @@ a img {
 a {
 	text-decoration:none
 }
-.clearfix:before, .clearfix:after {
-	display:table;
-	line-height:0;
-	content:""
-}
-.clearfix:after {
-	clear:both
-}
+
 section:before, section:after {
 	display:table;
 	line-height:0;
@@ -1308,3 +1301,11 @@ border-radius: 32px;
     -moz-transform: translate(-50%,-50%);
 }
 .z101{z-index: 101}
+.clearfix:before, .clearfix:after {
+	display:table;
+	line-height:0;
+	content:""
+}
+.clearfix:after {
+	clear:both
+}
