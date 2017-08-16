@@ -218,7 +218,7 @@ class PictureFunctions
 	public function createWatermark($filename_path,$type_of_pic,$format)
 	{
 		if ($type_of_pic == "main")
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_1.gif";
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.png";
 		else
 			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small.gif";
 			
