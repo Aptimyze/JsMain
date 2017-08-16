@@ -187,11 +187,24 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
-
         $agent = $request['name'];
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-        $this->welcomeCallsProfiles = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
+        $nameOfUserObj = new incentive_NAME_OF_USER();
+        $userNameObj = new Operator;
+
+        $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
+        $combinedIdArr = array_keys($combinedIdArr);
+        $combinedIdStr = implode(",",$combinedIdArr);
+
+        $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+
+        foreach($nameOfUserArr as $key=>$value){
+            $username = $userNameObj->getDetail($value["PROFILEID"],"PROFILEID","USERNAME");
+            $nameOfUserArr[$key]["USERNAME"] = $username["USERNAME"];
+        }
+
+        $this->welcomeCallsProfiles = $nameOfUserArr;
         $this->welcomeCallsProfilesCount = count($this->welcomeCallsProfiles);
     }
 
