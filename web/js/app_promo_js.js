@@ -21,6 +21,9 @@ if(typeof(AndroidPromotion)=="undefined"){
 if(typeof(AppLoggedInUser)=="undefined"){
 	var AppLoggedInUser=0;
 }
+if(typeof(webView) ==='undefined'){
+	var webView ="";	
+}
 $( document ).ready(function() {
 	//
       if(typeof(messageListAppPromo) != "undefined" && getAndroidVersion()){
@@ -33,17 +36,10 @@ $( document ).ready(function() {
       if((!getCookieData("appPromo") && (typeof appPromo === 'undefined')) || messageListingAppPromo)
       { 
 		   writeCookie("appPromo","jeevansathi",3);
-			if($("#main").length)
-			{
-				if(getAndroidVersion())
-					$( "#main" ).before("<div id=\"appPromo\" class =\"app_posr app_txtc\" style =\"background-color:#721108;\"><img id= \"appPromoImg\" src=\"IMG_URL/images/mobilejs/wap_promotion3.jpg\" border=\"0\"/><div class=\"app_posa app_pos1\"><div class=\"napp_pad1\"><div class=\"app_fnt38 nfamily2 app_txtl ncolr1 app_txtl\" style=\"font-size:25px\">What our users say</div><div class=\"app_txtl app_fntb ncolr2 napp_pt1 nfamily2\">\"Amazing app. Very handy and lightning fast access to all the profiles with great picture clarity and neat fonts. Truly satisfying….\" </div><div class=\"clearfix napp_pt1\"><div class=\"pull-left\"> <div class=\"napp_rat5\"></div>                          </div><div class=\"pull-right app_fntb ncolr2 app_txtr\">Rahulkumar<br/><span class=\"app_fnta\">16th June 2014</span></div></div>  <div class=\"napp_pt20 ncolr2 app_fntb\">Get the best experience with the</br><div class =\"app_f20\">Jeevansathi App | 3 MB </div></div>  <div class=\"app_pt30\"><div class=\"app_btn app_f40\"><a href=\"/static/appredirect?type=androidLayer\" style=\"color: #fff; text-decoration:none\">Download for Free</a></div><div class=\"napp_pt_abc app_clr1 app_f16\" onclick=\"showPromo(0);\">Skip to mobile site</div></div>    </div></div><img style=\"width:0px;height:0px;\" src=\"/static/trackinterstitial?rand="+ap_randNumber+"&randUser="+ap_assignRandom+"\"/></div><div id=\"appPromoHide\" class=\"appPromoHide\" style=\"opacity:1; height:100%; width:100%; z-index:11;margin-top:0px; position:absolute;\"></div>");
-				if(getIosVersion())
-					$( "#main" ).before("<div id=\"appPromo\" class =\"app_posr app_txtc\" style =\"background-color:#721108;\"><img id= \"appPromoImg\" src=\"IMG_URL/images/mobilejs/wap_promotion3.jpg\" border=\"0\"/><div class=\"app_posa app_pos1\"><div class=\"napp_pad1\"><div class=\"app_fnt38 nfamily2 app_txtl ncolr1 app_txtl\" style=\"font-size:25px\">What our users say</div><div class=\"app_txtl app_fntb ncolr2 napp_pt1 nfamily2\">\"Amazing app. Very handy and lightning fast access to all the profiles with great picture clarity and neat fonts. Truly satisfying….\" </div><div class=\"clearfix napp_pt1\"><div class=\"pull-left\"> <div class=\"napp_rat5\"></div>                          </div><div class=\"pull-right app_fntb ncolr2 app_txtr\">Rahulkumar<br/><span class=\"app_fnta\">16th June 2014</span></div></div>  <div class=\"napp_pt20 ncolr2 app_fntb\">Get the best experience with the</br><div class =\"app_f20\"> Jeevansathi Apple App</div></div>  <div class=\"app_pt30\"><div class=\"app_btn app_f40\"><a href=\"/static/appredirect?type=iosLayer\" style=\"color: #fff; text-decoration:none\">Download for Free</a></div><div class=\"napp_pt_abc app_clr1 app_f16\" onclick=\"showPromo(0);\">Skip to mobile site</div></div>    </div></div><img style=\"width:0px;height:0px;\" src=\"/static/trackinterstitial?rand="+ap_randNumber+"&randUser="+ap_assignRandom+"\"/></div><div id=\"appPromoHide\" class=\"appPromoHide\" style=\"opacity:1; height:100%; width:100%; z-index:11;margin-top:0px; position:absolute;\"></div>");
-			}
 			if($("#mainContent").length){
 				
 
-				if((typeof pageMyJs != 'undefined' && pageMyJs==1))
+				if((typeof(pageMyJs) != 'undefined' && pageMyJs==1))
 				{
 					var showAppClass = 'ham_b20_n ham_minu20';
 				}
@@ -99,58 +95,28 @@ $( document ).ready(function() {
 			$(document).bind('touchmove', function(e) {e.preventDefault();});
       }
     }
-    if($("#main").length && showOldSiteMessage){	 
-			var topX=50;
-			if($("#header").css("position")=="relative")
+   else
+   {
+   	 if($("#mainContent").length  && typeof(webView) ==='undefined' || webView ==""){	 
+			var topX=0;
+			if($("#mainContent").css("position")=="relative")
 			   topX=0;
-		   showOldSiteMessage=0;
-			if(!getCookieData("oldbrowser")){
+			if(showOldMobileSiteInfo() && !getCookieData('oldbrowser')){
 				showOldSiteMessage=1;
 				var mes=ReturnBrowMes();
 				if(mes)
 				{
-					var oldBrowserInfo='<section style="background: none repeat scroll 0 0 #5C5F62;color: #fff;padding: 10px 0;font-size:15px;position:relative;top:'+topX+'px;cursor:pointer;"><div class="pgwrapper">'+ReturnBrowMes()+'</div></section>';
+					var oldBrowserInfo='<section style="background: none repeat scroll 0 0 #fff;color: #565252;padding: 10px 0;font-size:15px;position:relative;top:'+topX+'px;cursor:pointer;"><div class="pgwrapper txtc">'+ReturnBrowMes()+'</div></section>';
 					if(mes.indexOf("Chrome")!=-1)
 							oldBrowserInfo="<a href='/static/appredirect?type=androidMobFooter' style='text-decoration:none'>"+oldBrowserInfo+"</a>";
 
-					$("#header").after(oldBrowserInfo);
+					$("#mainContent").before(oldBrowserInfo);
 					writeCookie("oldbrowser",1,1);
 				}
 			}
 		}
-  if(!showOldSiteMessage){ 
-    $.ajax({
-    type: "POST",
-    url: "/api/v3/membership/membershipDetails",
-    data : {getMembershipMessage:1}
-    }).done(function(msg){
-      if(msg.membership_message == null){
-        if($("#main").length && getAndroidVersion() && AndroidPromotion){
-          if($("#appPromoMyProfile").length > 0)
-          {
-            if(OperaMiniFlag){
-              $('#appPromoMyProfile').css("display","block");
-              $('#appPromoHideProfile').removeClass("nl_close");
-            }
-            else{
-              $('#appPromoMyProfile').slideDown(1000);
-              $("#appPromoHideProfile").bind("click",function(){
-                $('#appPromoMyProfile').slideUp(1000);
-                $("#header").css('top','0px');
-              });
-            }
-          }
-        }
-		
-      } else {
-        if((document.location.href).indexOf("register")!=-1){
-          $("<a href='/membership/jspc' style='text-decoration: none;'><section id='membership_band' style='background: none repeat scroll 0 0 #42688f;color: #fff;padding: 10px 0;font-size:15px;position:relative;top:0px;cursor:pointer;'><div class='pgwrapper'>"+msg.membership_message.top+" "+msg.membership_message.bottom+"</div></section></div>").insertAfter('.b7nHUd');
-        } else {
-          $("<a href='/membership/jspc' style='text-decoration: none;'><section id='membership_band' style='background: none repeat scroll 0 0 #42688f;color: #fff;padding: 10px 0;font-size:15px;position:relative;top:50px;cursor:pointer;'><div class='pgwrapper'>"+msg.membership_message.top+" "+msg.membership_message.bottom+"</div></section></div>").insertAfter('.b7nHUd');
-        }
-      }
-    });
-}
+   }
+  
 });
 
 function writeCookie (key, value, hours) {
@@ -295,12 +261,12 @@ else
 function ReturnBrowMes()
 {
  if( navigator.userAgent.match(/Android/i))
-	return "To access the all new full feature site of Jeevansathi, download the app or view in the latest version of Chrome browser";
- if(navigator.userAgent.match(/iPhone/i))
-	return "To access the all new full feature site of Jeevansathi, view in the latest version of Safari browser";
- if(navigator.userAgent.match(/Windows Phone/i))
-	return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
-return "To access the all new full feature site of Jeevansathi, view in the latest version of Chrome browser";
+	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download Chrome browser or the latest app from Playstore";
+ if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i))
+	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download Safari browser or the latest app from Appstore";
+if(navigator.userAgent.match(/Windows Phone/i))
+	return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download UC Browser ";
+return "We don't officially support your current browser, so you may experience some difficulties. For the best experience, please download either Chrome ,safari or UC browser";
 }
 
 function getIosVersion(ua) {
@@ -337,4 +303,52 @@ function showAppPromoForMessageListingPage(){
             }
     }
     return 1;
+}
+
+function showOldMobileSiteInfo()
+{
+	if((getIosVersion() || getAndroidVersion()) && !getCookieData("appPromo") && AppLoggedInUser)
+		return false;
+	var ua = ua || navigator.userAgent;
+	var android=ua.indexOf("Android");
+	var match = ua.match(/Android\s([0-9\.]*)/);
+	var mobile=ua.indexOf("Mobile");
+	var operaMini=ua.indexOf("Opera Mini");
+	var windows=ua.indexOf("Windows Phone");
+	if(android!=-1 && match!=null && typeof(parseFloat(match[1]))=='number')
+ 	{
+	   	var androidVersion=match[1].substring(0,3);
+	   	if(androidVersion>=4.0)
+			return false;
+ 	 	else
+			return true;
+	}
+	if(navigator.userAgent.indexOf('Opera')!=-1 && navigator.userAgent.indexOf('Opera')!=null) {
+		return true;
+ 	}
+	var matchIos= ua.match(/(iPhone);/i);
+	//console.log(match);
+	var OsVersion=ua.match(/OS\s[0-9.]*/i);
+	//console.log(OsVersion);
+	if(OsVersion!=null && matchIos !=null && OsVersion[0].substring(3,5)>="7")
+		return false;
+	
+ 	if(navigator.userAgent.match(/Windows Phone/i)){
+ 		var matchWindows = navigator.userAgent.match(/Windows Phone\s([0-9\.]*)/);
+ 		if(matchWindows!=null && typeof(parseFloat(matchWindows[1]))=='number')
+ 		{
+ 			var windowVersion=matchWindows[1].substring(0,3);
+   		 	if(windowVersion>9)
+   		 		return false;
+   		 	else
+   		 		return true;	
+   		}
+   		else
+   			return false;
+	}
+	
+		return false;
+
+
+
 }

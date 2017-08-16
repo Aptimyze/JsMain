@@ -403,7 +403,7 @@ function validateAndSend(){
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataOcc,
                             success: function(response) {
                                  criticalLayerButtonsAction('~$action1`','B1');
@@ -735,7 +735,7 @@ var altEmail = '~$altEmail`';</script>
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataCity,
                             success: function(response) {
                                  criticalLayerButtonsAction('~$action1`','B1');
@@ -754,6 +754,160 @@ var altEmail = '~$altEmail`';</script>
    
 
  }
+ document.head.appendChild(setscript);
+ 
+   </script>
+
+~elseif $layerId == '25'`
+ 
+ <link href="~sfConfig::get('app_img_url')`/min/?f=/~$chosenCss`" rel="stylesheet" type="text/css"/>
+ 
+ 
+     
+     <style type='text/css' >
+             .chosenDropWid {width: 230px; padding:10px 6px !important; }
+       .occL-wid{width:560px;}
+       .occL-p1{padding: 25px 30px}
+       .occL-p2{padding: 13px 9px}
+       .occ-bdr1{border-bottom: 1px solid #e2e2e2}
+       .occ-bdr2{border: 1px solid #d9475c}
+       .chosen-container-single .chosen-search input[type="text"]{display: none}
+       .chosen-container{border: 1px solid #e2e2e2;padding:10px 0;}
+       .occ-pos1{right:0;top:0}
+       .dpp-up-arrow {background-position: -2px -31px;width: 14px;height: 11px;}
+       .dpp-pos5 {top: -14px;left: 40px;}
+ 
+       /* add this  below class dynamically once you recived the error on .chosen-container */
+       .chosen-container-err{border:1px solid #d9475c;}
+       .chosen-container-single .chosen-default{color:#34495e;}
+ 
+     </style> 
+ 
+ <div id='criticalAction-layer' class="occL-wid mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
+   <div class="f17 fontreg color11">
+     <!-- start:header -->
+     <div class="occ-bdr1 occL-p1">
+       ~$titleText`
+     </div>
+     <!-- end:header -->
+     <div class="occL-p1">
+       <p class="opa80">~$contentText`</p>
+       <br />
+       <p class="opa80">~$subText`</p>
+       <!-- start:div for chosen -->
+       <div class="pos-rel pt22 mb30 fontlig noMultiSelect" id="parentChosen">  
+         <p class="f12 color5 pos-abs disp-none occ-pos1 js-req1">Required</p>    
+         <select id="occList" data-placeholder="Select Manglik Status" class="chosen-select-width">
+                     </select>
+ 
+         
+       </div>
+       <button id="occ-sub" onclick="onClickActionSubmit" class="cursp fullwid bg_pink lh63 txtc f18 fontlig colrw brdr-0">SUBMIT</button>
+       <!-- end:div for chosen -->
+ 
+     </div>
+   </div>
+ 
+ 
+ 
+ 
+   </div>
+   <script type="text/javascript">
+          
+
+    
+        appendManglikData = function() {
+        $("#occList").html('');
+        occuSelected = 0;
+        occMap = {};
+        res  = {
+        // D :"Don't know",
+        M : "Manglik",
+        A : "Angshik (partial manglik)",
+        N : "Non Manglik"};
+
+        var occIndex=1;
+        $("#occList").append('<option class="textTru chosenDropWid" id="notFound" value="'+(occIndex++)+'"></option>');
+        $.each(res, function(index, elem) {
+                      occMap[occIndex] = index;
+                    $("#occList").append('<option class="textTru chosenDropWid" value="'+(occIndex++)+'" occCode = "'+index+'">' + elem +'</option>');
+        });
+        loadChosen();
+        }
+   function loadChosen(){
+     var config = {
+       '.chosen-select'           : {},
+       '.chosen-select-deselect'  : {allow_single_deselect:true},
+       '.chosen-select-no-single' : {disable_search_threshold:10},
+       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+       '.chosen-select-width'     : {width:"100%"},
+       '.chosen-select-no-search' : {disable_search:true,width:"100%"},
+       '.chosen-select-width-right':{width:"100%"},
+
+     }
+     
+     
+     
+
+     for (var selector in config) {
+       $(selector).chosen(config[selector]);
+     }
+
+
+     $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+   }
+  
+ 
+      $('#occList').on("change",function(){
+        if( $('#occList').val() != 1)
+          $('.js-req1').fadeOut();
+         
+     });
+
+
+    function onClickActionSubmit(){
+         if( $('#occList').val() == 1)
+         {
+           $('.js-req1').fadeIn();
+           return;
+         }
+         else 
+         {
+            
+                            var occuCode = occMap[$("#occList").val()];
+                            dataOcc = {'editFieldArr[MANGLIK]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                 criticalLayerButtonsAction('~$action1`','B1');
+
+
+                            },
+                            error: function(response) {
+                                }
+                            });
+                        
+
+           
+           return;
+       }
+
+        
+        criticalLayerButtonsAction('~$action1`','B1');
+    }
+
+     $('#occ-sub').click(function(){ 
+        onClickActionSubmit();  
+     });
+ 
+ var setscript=document.createElement('script');
+ setscript.type='text/javascript';
+ setscript.src="~sfConfig::get('app_img_url')`/min/?f=~$chosenJs`";
+ setscript.onload = function(){appendManglikData();}
  document.head.appendChild(setscript);
  
    </script>

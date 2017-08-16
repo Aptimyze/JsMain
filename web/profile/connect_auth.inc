@@ -1,5 +1,9 @@
 <?php
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+if(!MobileCommon::isApp() && !MobileCommon::isDesktop() && MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !sfContext::getInstance()->getRequest()->getParameter('redirectFromOldSite')){
+	$url=JsConstants::$siteUrl."/static/oldMobileSite?redirectFromOldSite=1";
+		header("Location: " . $url);die;
+}
  include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function login($username,$password,$allowDeactive=0)
 {

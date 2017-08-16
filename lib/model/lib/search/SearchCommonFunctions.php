@@ -418,5 +418,24 @@ class SearchCommonFunctions
                 $mappingOccupationData = array_unique($mappingOccupationData);
                 return $mappingOccupationData;
         }
+        public static function getCasteMappingData($casteArray = array()){
+                $mappingCasteData = array();
+                if(!empty($casteArray)){
+                        $mappedArr = FieldMap::getFieldLabel("caste_group_array",1,1);
+                        $map = array();
+                        foreach($mappedArr as $key=>$mappedCaste){
+                                $map[$key] = explode(",", $mappedCaste);
+                        }
+                        foreach($casteArray as $caste){
+                                foreach($map as $k=>$castes){
+                                        if(in_array($caste, $castes)){
+                                                $mappingCasteData = array_merge($mappingCasteData,$castes);
+                                        }
+                                }
+                        }
+                }
+                $mappingCasteData = array_unique($mappingCasteData);
+                return $mappingCasteData;
+        }
 }
 ?>

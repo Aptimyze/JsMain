@@ -355,7 +355,7 @@ if($limit == 1000000)
 	public function getRBMessage($sender,$receiverObj,$profileObj)
 	{
 
-		if($this->isJsDummyMember($sender))
+		if($this->isJsDummyMember($sender) || MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID()))
 				{
 					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
