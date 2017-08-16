@@ -1,7 +1,7 @@
 import * as CONSTANTS from '../../common/constants/apiConstants'
 import React from 'react';
 import {push} from 'react-router-redux';
-import {getCookie,setCookie} from "../../common/components/CookieHelper";
+import {getCookie,setCookie,removeCookie} from "../../common/components/CookieHelper";
 import "babel-polyfill";
 import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
@@ -58,6 +58,13 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
         },
       }).then( (response) => {
+        if ( response.data.responseStatusCode == "9" )
+        {
+          removeCookie("AUTHCHECKSUM");
+          localStorage.clear();
+          window.location.href="/";
+        }
+
         if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
         {
           recordDataReceived(containerObj,new Date().getTime());
