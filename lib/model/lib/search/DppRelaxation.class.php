@@ -213,6 +213,21 @@ class DppRelaxation {
             $registerationHeight = $this->loggedInProfileObj->getHEIGHT();
             return $registerationHeight>$hheight?$registerationHeight:$hheight;
         }
+
+        /**
+         * returns relaxed diet
+         * @param  string $diet array which contains comma seprated values.
+         * @return string relaxed string or original diet string
+         */
+        public function getRelaxedDIET($diet)
+        {
+            $dietArr = explode(',',$diet);            
+            if (in_array('E',$dietArr) && !in_array('V',$dietArr)) //if Eggetarian exists and vegetarian is not selected
+            {                          
+                return $diet.",".TopSearchBandConfig::$vegetarian;
+            }            
+            return $diet;
+        }
 }
 
 ?>
