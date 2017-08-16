@@ -39,6 +39,11 @@ class DppRelaxation {
                         $ownCaste = $this->loggedInProfileObj->getCASTE();
                         $relaxedCastes = $ownCaste . ',' . RelatedCastes::$relatedCasteArr[$ownCaste];
                         $casteString = trim($dppcaste . "," . $relaxedCastes, ',');
+                        $groupsCaste = SearchCommonFunctions::getCasteMappingData(explode(",",$dppcaste));
+                        if(!empty($groupsCaste)){
+                                $casteString = trim($casteString . "," . implode(",",$groupsCaste), ',');
+                                $casteString = implode(",",array_unique(explode(",",$casteString)));
+                        }
                 }
                 return $casteString;
         }

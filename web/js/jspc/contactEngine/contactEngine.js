@@ -652,6 +652,13 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	if(actionDetails.contact4)
 		viewContactElement.find('.js-emailContactCC').removeClass('disp-none').find('.js-emailValueCC').html(actionDetails.contact4.value);
 
+	if(actionDetails.contact9){
+		viewContactElement.find('.js-relationshipPhoneCC').removeClass('disp-none').find('.js-relationshipPhoneCC').html(actionDetails.contact9.value);
+		if(actionDetails.contact4){
+			viewContactElement.find('.js-emailContactCC').removeClass('pt10').addClass('pt6');
+		}
+	}
+
 	if(actionDetails.leftviewvalue){
 	viewContactElement.find('.js-leftToView1').removeClass('disp-none').html(actionDetails.leftviewvalue);
 	viewContactElement.find('.js-leftToView2').removeClass('disp-none').html(actionDetails.leftviewlabel);
@@ -721,6 +728,11 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	if(Obj.actiondetails.contact8!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact8,false);
+	}
+
+	if(Obj.actiondetails.contact9!=null)
+	{
+		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact9,true,'L','',profileChecksum);
 	}
 	
 	viewContactElement.find("#cEViewContactListing").html(liFinalHtml);

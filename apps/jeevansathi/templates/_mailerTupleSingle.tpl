@@ -1,8 +1,9 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
     <tr>
         <td></td>
-        <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~if $user->getNAME_OF_USER()` ~$user->getNAME_OF_USER()` ~else` ~$user->getUSERNAME()` ~/if`</a></td>
-        <td height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""`Guna Match ~$user->getGUNA()`/36 ~/if`</td>
+        <td height="28" style="padding-left:5px;" colspan="2"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~if $user->getNAME_OF_USER()` ~$user->getNAME_OF_USER()` ~else` ~$user->getUSERNAME()` ~/if` </a>
+            ~if $user->getSUBSCRIPTION_TEXT() neq ""` <span height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;"> | </span>~/if`<span style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#c4161c"> ~if $user->getSUBSCRIPTION_TEXT() neq ""` ~$user->getSUBSCRIPTION_TEXT()` ~/if`</span>
+            <span height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""` | Guna Match ~$user->getGUNA()`/36 ~/if`</span></td>
     </tr>
     <tr>
         <td width="22"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="20" height="1" vspace="0" hspace="0" align="left"></td>

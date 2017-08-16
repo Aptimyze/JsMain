@@ -210,7 +210,7 @@ class FieldForm extends sfForm
                 $producerObj = new Producer();
                 if($producerObj->getRabbitMQServerConnected())
                 {
-                        $updateSeenProfileData = array("process"=>"UPDATE_CRITICAL_INFO_PROFILE",'data'=>array('body'=>array('profileid'=>$this->loggedInObj->getPROFILEID(),"PREV_MSTATUS"=>$prevMstatus,"MSTATUS"=>$criticalInfoFieldArr["MSTATUS"],"PREV_DTOFBIRTH"=>$prevDob,"DTOFBIRTH"=>$criticalInfoFieldArr["DTOFBIRTH"])));
+                        $updateSeenProfileData = array("process"=>"UPDATE_CRITICAL_INFO_PROFILE",'data'=>array('body'=>array('profileid'=>$this->loggedInObj->getPROFILEID(),"PREV_MSTATUS"=>$prevMstatus,"MSTATUS"=>$criticalInfoFieldArr["MSTATUS"],"PREV_DTOFBIRTH"=>$prevDob,"DTOFBIRTH"=>$criticalInfoFieldArr["DTOFBIRTH"],"current_time"=>date("Y-m-d H:i:s"))));
                         $producerObj->sendMessage($updateSeenProfileData);
                 }
         }
