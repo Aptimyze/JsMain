@@ -535,7 +535,29 @@ BUTTON1_PAGEID_ANDROID=>"",
 BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "Y",
-)       
+),
+25 => array(LAYERID=>"25",
+TIMES=>"3",
+MINIMUM_INTERVAL=>"720",
+TITLE=>"Provide your Manglik Status",
+TEXT=>"Even if you don't believe in horoscope matching, adding this will help you in getting better response.",
+BUTTON1=>"Submit",
+BUTTON2=>"Skip",
+ACTION1=>"close",
+ACTION2=>"close",
+JSMS_ACTION1=>"/",
+JSMS_ACTION2=>"/",
+BUTTON1_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON1_PAGEID_IOS=>"",
+BUTTON1_PAGEID_ANDROID=>"",
+BUTTON2_PAGEID_IOS=>"",
+BUTTON2_PAGEID_ANDROID=>"",
+UNLIMITED => "N"
+),     
+       
 );
 if ($label) {
    if ($value) {
@@ -557,7 +579,7 @@ else {
 
 public static function getLAYERFromPriority($priority){
 
-$arr = array(19,24,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,17,3,5,6,7,13,14);
+$arr = array(19,24,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,25,17,3,5,6,7,13,14);
 	return $arr[$priority-1];
 
 }

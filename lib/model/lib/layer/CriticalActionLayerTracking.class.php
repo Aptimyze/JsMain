@@ -475,7 +475,7 @@ return 0;
                     if(!MobileCommon::isApp()){
                       if(in_array($profileObj->getRELIGION(), 
                         array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
-                        if(empty($profileObj->getMANGLIK())) {
+                        if(!($profileObj->getMANGLIK())) {
                           $show=1;
                         }
                       }
@@ -484,7 +484,7 @@ return 0;
 
                   case '24':
 
-                      if(self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION'))) 
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION'))) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];
