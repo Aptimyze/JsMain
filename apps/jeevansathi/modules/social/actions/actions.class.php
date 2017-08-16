@@ -760,6 +760,10 @@ class socialActions extends sfActions
 
 
 	$loggedInProfileid = $request->getAttribute('profileid');
+	if(!$loggedInProfileid) //this was added to ensure that POG album cannot be viewed in case of Logout.
+	{
+		$this->forward('static','LogoutPage');
+	}	
 	if(!$profilechecksum)
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
@@ -773,6 +777,11 @@ class socialActions extends sfActions
 	}
 	else
 	{
+		if(PictureFunctions::conditionalPhotoAccess()) //if conditional layer is to be shown
+		{
+			$this->showLayer = 1;
+			$this->setTemplate("mobile/mobilePhotoAlbum");
+		}
 		$authenticationJsObj = new JsAuthentication();
 		$requestedProfileid=$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
 		$Profile = Profile::getInstance('newjs_master',$requestedProfileid);
@@ -787,7 +796,8 @@ class socialActions extends sfActions
                         else
                                 $contact_status = $contact_status_new["TYPE"];
 		}
-		$ProfileObj=$Profile;	
+		$ProfileObj=$Profile;		
+
 	}
 	$picServiceObj = new PictureService($ProfileObj);
 	$album = $picServiceObj->getAlbum($contact_status);

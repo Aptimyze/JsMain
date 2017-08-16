@@ -76,6 +76,8 @@ class PictureStaticVariablesEnum
 		public static $defaultCoverPhotoUrl = "/images/jspc/viewProfileImg/cover1.jpg";
         public static $defaultViewProfileCoverPhotoUrl = "/images/jspc/viewProfileImg/defaultViewProfileCover.jpg?";
         public static $photoColumnArray = Array("TITLE","KEYWORD","PICTUREID","ORDERING","PROFILEID","PICFORMAT","UPDATED_TIMESTAMP");
+        public static $acceptedhavePhotoValues = array("U","Y");
+        const VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS = 1296000; //15 days in seconds
 }
 
 ?>

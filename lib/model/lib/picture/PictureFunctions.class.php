@@ -719,5 +719,30 @@ class PictureFunctions
                         JsMemcache::getInstance()->remove($key);
                 }
         }
+
+        //This function is used for conditional access of photos defining conditions on when to show the photo.
+        public static function conditionalPhotoAccess()
+        {
+        	$loginProfile = LoggedInProfile::getInstance();
+        	$profilePic = $loginProfile->getHAVEPHOTO();        	
+        	$subscription = $loginProfile->getSUBSCRIPTION();
+        	$verifyActivatedDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+       		$dateDiff = time() - strtotime($verifyActivatedDate);
+
+        	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
+        	{
+        		return 0;
+        	}
+        	elseif($subscription) //if member is paid, dont show layer
+        	{
+        		return 0;
+        	}
+        	elseif($dateDiff > PictureStaticVariablesEnum::$acceptedhavePhotoValues && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues)) //if verify activation date is 15 days and above AND pic is not uploaded
+        	{
+        		return 1;
+        	}
+        	else
+        		return 0;
+        }
 }
 ?>
