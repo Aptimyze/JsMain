@@ -10,7 +10,7 @@ class aadharVerificationEnums
 	public static $fieldsToCheck ="AADHAR_NO,REQUEST_ID,VERIFY_STATUS";
 	const URLTOHIT = "https://api.idfy.com/v2/tasks";
 	public static $aadharHeaderArr = array(
-    	'apikey:f97b05b2-9360-4706-91e7-6154513200a1',
+    	'apikey:786c16d4-9b01-42bd-a64d-b8d046abb52b',
     	'Content-Type:application/json',
 		);
 
@@ -20,7 +20,7 @@ class aadharVerificationEnums
 	const NOTVERIFIEDMSG = "Given Aadhaar number does not match with profile details";
 	const STATUSPENDINGMSG = "Status Pending";
 	const AADHARVERIFIED = "Aadhaar number is verified";
-	public static $headerArrForStatus = array('apiKey:f97b05b2-9360-4706-91e7-6154513200a1');
+	public static $headerArrForStatus = array('apiKey:786c16d4-9b01-42bd-a64d-b8d046abb52b');
 	CONST COMPLETED = "completed";
 	CONST EXACTMATCH = "exact";
 	CONST VERIFIED = "Y";
