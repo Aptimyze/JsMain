@@ -579,7 +579,7 @@ else {
 
 public static function getLAYERFromPriority($priority){
 
-$arr = array(19,24,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,17,3,5,6,7,13,14);
+$arr = array(19,24,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,25,17,3,5,6,7,13,14);
 	return $arr[$priority-1];
 
 }
