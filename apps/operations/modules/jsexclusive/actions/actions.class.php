@@ -191,7 +191,7 @@ class jsexclusiveActions extends sfActions {
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
         $nameOfUserObj = new incentive_NAME_OF_USER();
-        $userNameObj = new Operator;
+        $purchasesObj = new billing_PURCHASES();
 
         $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
         $combinedIdArr = array_keys($combinedIdArr);
@@ -199,11 +199,11 @@ class jsexclusiveActions extends sfActions {
 
         $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
 
-        foreach($nameOfUserArr as $key=>$value){
-            $username = $userNameObj->getDetail($value["PROFILEID"],"PROFILEID","USERNAME");
-            $nameOfUserArr[$key]["USERNAME"] = $username["USERNAME"];
-        }
+        $userNames = $purchasesObj->getUserName($combinedIdStr);
 
+        foreach($nameOfUserArr as $key=>$value){
+            $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+        }
         $this->welcomeCallsProfiles = $nameOfUserArr;
         $this->welcomeCallsProfilesCount = count($this->welcomeCallsProfiles);
     }
