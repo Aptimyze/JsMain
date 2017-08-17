@@ -18,7 +18,7 @@ Class ButtonResponse
 	}
 	public static function __callStatic($functionName,$arguements)
         {
-		if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
+		if(MobileCommon::isApp()=='I')
 			return call_user_func_array(array("ButtonResponseJSMS",$functionName),$arguements);
 		elseif(MobileCommon::isAPP()=="A")
 			return call_user_func_array(array("ButtonResponseApi",$functionName),$arguements);

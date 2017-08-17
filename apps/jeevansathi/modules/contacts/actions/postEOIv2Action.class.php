@@ -306,11 +306,11 @@ class postEOIv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite())
 		{
 
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
+			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
 			//$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
 			//$finalresponseArray["button_after_action"][] =
 
 		}

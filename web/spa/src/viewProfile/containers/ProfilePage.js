@@ -578,11 +578,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
-        },
-        replaceOldButton: (newButtons) =>{
-          dispatch({type:'REPLACE_BUTTON',payload:{newButtons:newButtons}});
         }
-    }
+      }
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(ProfilePage)

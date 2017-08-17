@@ -14,7 +14,7 @@ class postCancelInterestv2Action extends sfAction
   *
   * @param sfRequest $request A request object
   */
-  
+
   function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
@@ -42,7 +42,7 @@ class postCancelInterestv2Action extends sfAction
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
-						
+
 						$this->Profile = new Profile();
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
@@ -53,7 +53,7 @@ class postCancelInterestv2Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,$this->tobetype,ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS",$this->tobetype);
 					$this->contactHandlerObj->setElement("MESSAGE","");
-					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");		
+					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactArray();
 				}
@@ -75,8 +75,8 @@ class postCancelInterestv2Action extends sfAction
 		}
 		die;
 	}
-	
-	
+
+
 	private function getContactArray()
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
@@ -119,11 +119,11 @@ class postCancelInterestv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","C");
+			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","S","C");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
-			//$finalresponseArray["button_after_action"][] = 
+			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
+            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+			//$finalresponseArray["button_after_action"][] =
 
 		}
 
@@ -136,4 +136,3 @@ class postCancelInterestv2Action extends sfAction
 		return $finalresponseArray;
 	}
 }
-

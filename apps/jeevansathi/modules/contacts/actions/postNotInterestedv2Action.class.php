@@ -14,7 +14,7 @@ class postNotInterestedv2Action extends sfAction
   *
   * @param sfRequest $request A request object
   */
-  
+
   function execute($request){
 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
@@ -29,18 +29,18 @@ class postNotInterestedv2Action extends sfAction
 				//Contains logined Profile information;
 				$this->loginProfile = LoggedInProfile::getInstance();
 				//$this->loginProfile->getDetail($this->loginData["PROFILEID"], "PROFILEID");
-				
+
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
-						
+
 						$this->Profile = new Profile();
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'D',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("STATUS","D");	
+					$this->contactHandlerObj->setElement("STATUS","D");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
@@ -65,8 +65,8 @@ class postNotInterestedv2Action extends sfAction
 		}
 		die;
 	}
-	
-	
+
+
 	private function getContactArray()
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
@@ -108,22 +108,21 @@ class postNotInterestedv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("NOT_INTERESTED_BY_ME","M","R","D");
+			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("NOT_INTERESTED_BY_ME","M","R","D");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
-			//$finalresponseArray["button_after_action"][] = 
+			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
+            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+			//$finalresponseArray["button_after_action"][] =
 
 		}
 		else
 		{
                $button_after_action = $buttonObj->getButtonArray();
 
-                
+
            $finalresponseArray["button_after_action"] = ButtonResponse::buttondetailsMerge($button_after_action);
        }
 		return $finalresponseArray;
-		
+
 	}
 }
-
