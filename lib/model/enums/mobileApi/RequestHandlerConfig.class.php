@@ -59,7 +59,9 @@ class RequestHandlerConfig
       "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1"),
         "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1"),
         "dppSuggestionsCAL"=>array("v1"=>"dppSuggestionsCALV1","v2"=>"dppSuggestionsCALV1","v3"=>"dppSuggestionsCALV1"),
-        "dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1")),
+        "dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1"),
+        "aadharVerification"=>array("v1"=>"aadharVerificationV1","v2"=>"aadharVerificationV1","v3"=>"aadharVerificationV1"),
+        "aadharVerificationStatus"=>array("v1"=>"aadharVerificationStatusV1","v2"=>"aadharVerificationStatusV1","v3"=>"aadharVerificationStatusV1"),),
 		"settings" => array(
 			"alertManager" => array("v1" => "AlertManagerV1", "v2" => "", "v3" => "AlertManagerV1"),
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
