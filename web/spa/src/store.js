@@ -8,10 +8,10 @@ import verifiedVisitReducer from "./verifiedVisit/reducers/verifiedVisitReducer"
 import ForgotPasswordReducer from "./forgotPassword/reducers/ForgotPasswordReducer"
 import Jsb9Reducer from "./common/reducers/Jsb9Reducer"
 import contactEngineReducer from "./contact_engine/reducers/contactEngineReducer"
+import SearchFormReducer from "./searchForm/reducers/SearchFormReducer";
 
 
-
-const store = createStore(combineReducers({LoginReducer,ProfileReducer,MyjsReducer,AlbumReducer,verifiedVisitReducer,Jsb9Reducer,ForgotPasswordReducer,contactEngineReducer}),{},applyMiddleware(thunk));
+const store = createStore(combineReducers({LoginReducer,ProfileReducer,MyjsReducer,AlbumReducer,verifiedVisitReducer,Jsb9Reducer,ForgotPasswordReducer,contactEngineReducer,SearchFormReducer}),{},applyMiddleware(thunk));
 
 
 export default store;
