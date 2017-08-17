@@ -125,10 +125,6 @@ export class contactEnginePD extends React.Component{
   );
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-
-      console.log('in1');
-      console.log(this.props);
-
       messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.cansend} profilechecksum={this.props.profiledata.profilechecksum}/>
     }
 
