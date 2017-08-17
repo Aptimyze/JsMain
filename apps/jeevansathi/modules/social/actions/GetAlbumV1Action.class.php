@@ -130,7 +130,7 @@ class GetAlbumV1Action extends sfActions
 				elseif($showLayer) //this is added in case conditional photo access layer is to be shown
 				{
 					$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-					$respObj->setResponseBody(array("albumUrls"=>null,"showLayer"=>$showLayer));
+					$respObj->setResponseBody(array("albumUrls"=>null,"showConditionalPhotoLayer"=>$showLayer));
 				}
 				else
 				{

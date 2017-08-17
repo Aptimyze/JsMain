@@ -290,7 +290,7 @@ function ajaxCallForAlbum(username,profilechecksum){
           photoURL = result.albumUrls;
           if(result.albumUrls==null)
           {
-            if(result.showLayer) //code to show layer for upload photo
+            if(result.showConditionalPhotoLayer) //code to show layer for upload photo
             {
                // alert("SHOW LAYER :"+result.showLayer);
                 $("#commonOverlay").css('display','block');
