@@ -9,6 +9,32 @@ import ReportAbuse from "./ReportAbuse";
 import BlockPage from "./BlockPage";
 import Loader from "../../common/components/Loader";
 
+class Btn3dotprint extends React.Component{
+  render(){
+    return(<div className="fullwid" id="buttonsOverlay">
+            {
+                        this.props.buttonprint.map(function(button,index)
+                        {
+                          if(button.action=='DEFAULT')return (<div></div>);
+                          let top_id = button.action;
+                          let inside_id = "otherimage"+index;
+                          let outside_id = "otherlabel"+index;
+                          let label = button.label;
+
+                            return (
+                              <div key={index} onClick={() => this.props.bindAction(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>
+                                <i className= {cssMap[button.iconid]} id={inside_id}></i>
+                                <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
+                              </div>
+                            )
+                        },this)
+                      }
+                    </div>
+
+    );
+  }
+}
+
 
 class ThreeDots extends React.Component{
   constructor(props){
@@ -17,7 +43,8 @@ class ThreeDots extends React.Component{
       showLoader:false,
       showIgnoreLayer:false,
       showIgnoreLayerMessage:'',
-      ignoreButton:{}
+      ignoreButton:{},
+      tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
     };
     console.log(props,'---------');
 
@@ -111,6 +138,14 @@ class ThreeDots extends React.Component{
     var reportAbuseView;
     var showIgnoreLayerView;
 
+    let image3dot = <div id="3DotProPic" className="txtc">
+                      <div id="photoIDDiv" className="photoDiv">
+                        <img id="ce_photo" className="srp_box2 mr6" src={this.props.profileThumbNailUrl} />
+                      </div>
+                      <div className="f14 white fontlig opa80 pt10" id="topMsg">Connect with {this.props.username}</div>
+                    </div>;
+
+
     if(this.state.showIgnoreLayer == true) {
       showIgnoreLayerView = <BlockPage message={this.state.showIgnoreLayerMessage} profileThumbNailUrl={this.props.profileThumbNailUrl} closeBlockPageLayer={() => this.closeBlockPageLayer()} unblock = {() => this.manageThreeDotsButton(this.state.ignoreButton,3)}/>
       document.getElementById("vpro_tapoverlay").classList.add("dn");
@@ -122,41 +157,25 @@ class ThreeDots extends React.Component{
         loaderView = <Loader show="page"></Loader>;
       }
       console.log('insed threed');
-        return (<div id="contactOverlay" className="posabs dispbl scrollhid">
-        {loaderView}
-            <div id="vpro_tapoverlay" className="posabs vpro_tapoverlay">
-                <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
-                    <div id="3DotProPic" className="txtc">
-                      <div id="photoIDDiv" className="photoDiv">
-                        <img id="ce_photo" className="srp_box2 mr6" src={this.props.profileThumbNailUrl} />
+        return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+                  <a href="#"  className="ce_overlay ce_z102" > </a>
+                    <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
+
+                      <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
+                        {image3dot}
+                        <Btn3dotprint buttonprint={buttons}/>
+                        <div className="dispibl fullwid mt45">
+                          <div onClick={this.props.closeThreeDotLayer} className="mainsp srp_close1"></div>
+                        </div>
                       </div>
-                      <div className="f14 white fontlig opa80 pt10" id="topMsg">Connect with {this.props.username}</div>
-                    </div>
-                    {
-                      buttons.map(function(button,index)
-                      {
-                        if(button.action=='DEFAULT')return (<div></div>);
-                        let top_id = button.action;
-                        let inside_id = "otherimage"+index;
-                        let outside_id = "otherlabel"+index;
-                        let label = button.label;
 
-                          return (
-                            <div key={index} onClick={() => this.props.bindAction(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>
-                              <i className= {cssMap[button.iconid]} id={inside_id}></i>
-                              <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
-                            </div>
-                          )
-                      },this)
-                    }
 
-                    <div className="dispibl fullwid mt45">
-                      <div onClick={this.props.closeThreeDotLayer} className="mainsp srp_close1"></div>
                     </div>
                 </div>
-            </div>
-            <img src="https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" className="classimg1 vpro_pos1 posfix z100" />
-        </div>)
+
+
+
+        )
 
   }
 
