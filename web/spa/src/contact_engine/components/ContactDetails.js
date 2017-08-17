@@ -53,7 +53,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
   <div className="pt15">
       <div className="txtc"><a href="#" className={"pb20 white fontlig f16 "+this.state.bottomMsgShow} id="bottomMsg">{this.state.bottomMsgText}</a></div>
       <a href="#" className="dispbl brdr22 white txtc f16 pad2 fontlig " id="closeLayer" style={{display:'none',borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',webkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</a>
-        <a href="#" className="white txtc f16 pad2 fontlig " id="neverMindLayer" style={this.state.nevMindStyle} >Never Mind</a>
+        <a href="#" className="white txtc f16 pad2 fontlig " id="neverMindLayer" onClick={this.props.closeCDLayer} style={this.state.nevMindStyle} >Never Mind</a>
         <a href="javascript:void(0);" className={"brdr23_contact dispbl color2 txtc f16 pad2 fontlig "+this.state.memShow} id="membershipMessageCE" >{this.state.memText}</a>
         <div onClick={()=>this.state.memBFunction()}  className={"bg7 white txtc f16 pad2 fontlig "+this.state.footerBShow} id="footerButton">{this.state.footerBText}</div>
     </div>
@@ -61,7 +61,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
 
 </div>
 </div>
-{this.getFooterButton(this.props.actionDetails)}
+{this.getFooterButton()}
 
 </div>
 );
@@ -79,7 +79,7 @@ reportInvalid(){
 }
 getPhoneSection(displayProps){
   console.log(displayProps);
-let nevMindStyle = {display:'block'}, reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
+let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
 
 if (displayProps.showReportInvalid)
   reportInvalid = (<span  onClick={()=>this.reportInvalid(displayProps)} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
@@ -125,7 +125,7 @@ return (
 
 getEmailInfo(displayProps)
 {
-  let nevMindStyle = {display:'block'},mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
+  let mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
 
     if(displayProps.contact){
       mobileValShow = '',mobileValBlur ='dispnone';
@@ -291,12 +291,14 @@ else
     let landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true});
     let alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false});
     let emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false});
-
+    if(actiondetails.contact1 && actiondetails.contact1.value=="blur")
+      nevMindStyle = {display:'block'};
     //$("#footerButton").html(result.actiondetails.footerbutton.label);
     //$("#mobile").hide();
 
     }
         if(actiondetails.footerbutton!=null){
+          if(actiondetails.footerbutton.action)nevMindStyle={display:'block'};
           footerBShow = 'dispbl';
           footerBText = actiondetails.footerbutton.label;
           if(actiondetails.infomsglabel)
@@ -361,6 +363,7 @@ else
           }
           else if(actiondetails.errmsglabel)
           {
+            topMsg2TextShow='dispnone';
             //////************/$("#topMsg2,#landline").hide();
             //$("#landline").hide();
             //$("#ViewContactPreLayerTextNoNumber").html("You will be able to see the Email Id of "+result.actiondetails.headerlabel+ "but not the phone number. This is because "+result.actiondetails.headerlabel+"'s has chosen to hide phone number.");

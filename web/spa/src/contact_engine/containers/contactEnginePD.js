@@ -106,14 +106,13 @@ export class contactEnginePD extends React.Component{
       break;
 
       case 'CONTACT_DETAIL':
-        this.showHideCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
-        this.props.unsetScroll();
+        this.showLayerCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
       break;
 
       case 'WRITE_MESSAGE':
          console.log('red btn');
         console.log(responseButtons);
-        this.showHideCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
+        this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
 
 
 
@@ -203,11 +202,18 @@ else
 
 }
 
-showHideCommon(data){
+showLayerCommon(data){
+  this.props.unsetScroll();
   this.setState({
     ...data
   });
-  console.log('statecd',this.state);
+
+}
+hideLayerCommon(data){
+  this.setState({
+    ...data
+  });
+//  if(!this.state.showThreeDots && !this.state.showThreeDots & !this.state.showThreeDots)
 }
 setThreeDotData(){
 this.setState({
@@ -218,8 +224,9 @@ this.props.unsetScroll();
 
 hideThreeDotLayer(){
 this.setState({
-  showThreeDots: false
-})
+showThreeDots: false
+});
+this.props.setScroll();
 }
 
 hideWriteLayer(){
@@ -244,11 +251,11 @@ getOverLayDataDisplay(){
 
     let layer = '';
       if(this.state.showThreeDots)
-        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={this.hideThreeDotLayer.bind(this)} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideThreeDotLayer()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
         layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showContactDetail)
-        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
 
     if(this.state.showMsgLayer)
     {
