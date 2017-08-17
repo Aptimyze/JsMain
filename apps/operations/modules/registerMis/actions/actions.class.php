@@ -288,14 +288,14 @@ class registerMisActions extends sfActions {
                 foreach($params["source_cities"] as $selCity){
                         $cities_arr[] = FieldMap::getFieldLabel("city_india",$selCity);
                 }
-                $this->selectedCities = implode(",",$cities_arr);
+                $this->selectedCities = implode(",",$cities_arr); // variable having lables of selected cities
                 $this->selectedLabel = "Cities";
         }elseif(!empty($params["source_countries"])){
                 $cities_arr=array();
                 foreach($params["source_countries"] as $selCity){
                         $cities_arr[] = FieldMap::getFieldLabel("country",$selCity);
                 }
-                $this->selectedCities = implode(",",$cities_arr);
+                $this->selectedCities = implode(",",$cities_arr); // variable having lables of selected countries
                 $this->selectedLabel = "Countries";
         }
         if ($formArr['report_format'] == 'CSV') {
