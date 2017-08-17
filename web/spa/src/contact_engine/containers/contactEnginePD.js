@@ -137,7 +137,7 @@ getFrontButton(){console.log(this.props);
   if(otherButtons[0].action == 'ACCEPT' && otherButtons[1].action == 'DECLINE')
   return(<div key='1' id="buttons1" className="view_ce fullwid">
 
-    <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
+    <div className="wid50p bg7 dispibl txtc pad5new brdr6" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
 
       <div id="btnAccept" className="fontlig f13 white cursp dispbl">
         <i className="ot_sprtie ot_chk"></i>
