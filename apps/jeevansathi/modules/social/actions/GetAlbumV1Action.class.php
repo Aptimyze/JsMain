@@ -57,7 +57,7 @@ class GetAlbumV1Action extends sfActions
 				{
 					if($request->getParameter("profileChecksum")) //case (c)
 					{
-						if(1)//$this->checkForConditionalAccess($loggedInProfileid,$conditionalFlag)) //if this is set to 1, show conditional access layer
+						if($this->checkForConditionalAccess($loggedInProfileid,$conditionalFlag)) //if this is set to 1, show conditional access layer
 						{
 							$showLayer = 1;
 						}
