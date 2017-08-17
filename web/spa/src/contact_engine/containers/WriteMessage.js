@@ -57,19 +57,19 @@ export class WriteMessage extends React.Component{
           loaderView = <Loader show="div"></Loader>;
         }
     let WriteMsg_buttonView, WriteMsg_innerView,WriteMsg_topView;
-
-
+  console.log('in 22');
+  console.log(this.props);
     WriteMsg_topView =   <div className="posrel clearfix fontthin ce_hgt1">
         <div className="posabs com_left1">
-          <img id="imageId" src={this.props.profileThumbNailUrl} className="com_brdr_radsrp ce_dim1"/>
+          <img id="imageId" src={this.props.buttonData.viewed} className="com_brdr_radsrp ce_dim1"/>
         </div>
         <div className="posabs com_right1">
-          <i className="mainsp com_cross" onClick={this.props.closeMessageLayer}></i>
+          <i className="mainsp com_cross" onClick={this.props.closeWriteMsgLayer}></i>
         </div>
         <div className="txtc f19 white pt10" id="usernameId">{this.props.username}</div>
       </div>;
 
-    if(this.props.buttonData == 'false')
+    if(this.props.buttonData.cansend == 'false')
     {
       WriteMsg_innerView = <div className="fullwid white dispbl freeMsgDiv ce_pt1" id="freeMsgId">
           Become a paid member to connect further
@@ -77,16 +77,16 @@ export class WriteMessage extends React.Component{
 
       let offertextHTML='',buttonHTML='';
 
-      if(this.props.contactAction.message.button.text!=null)
+      if(this.props.buttonData.button.text!=null)
       {
          offertextHTML = <div className="white color2 ce_hgt2 brdr23_contact" key="PD_offer_text" id="CEmembershipMessage2">
-                          {this.props.contactAction.message.button.text}
+                          {this.props.buttonData.button.text}
                          </div>;
       }
       buttonHTML = <a href="/profile/mem_comparison.php" id="buttons1" key="PD_mem_label" className="fullwid">
               <div className="fullwid bg7 txtc pad5new posrel lh40">
                   <div className="wid60p">
-                      <div className="white">  {this.props.contactAction.message.button.label}</div>
+                      <div className="white">  {this.props.buttonData.button.label}</div>
                   </div>
               </div>
             </a>;
