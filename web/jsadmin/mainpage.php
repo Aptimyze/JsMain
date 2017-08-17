@@ -623,6 +623,10 @@ if (isset($data)) //successful login
                     $linkarr[]="<a href=\"$SITE_URL/jsadmin/makeFieldsBlank.php?cid=$cid\">Make Fields Blank of a Profile</a>";
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/showLIVETags\">LIVE Tags</a>";
          }
+         // link for adding / deleting buzzwords for screening
+         if (in_array('CSSUP', $priv)) {
+             $linkarr[]="<a href=\"$SITE_URL/jsadmin/addRemoveBuzzwords.php?cid=$cid\">Add / Remove Buzzwords</a>";
+         }
     }
 
     $smarty->assign("linkarr", $linkarr);
