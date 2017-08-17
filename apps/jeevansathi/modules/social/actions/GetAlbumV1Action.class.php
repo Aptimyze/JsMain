@@ -155,7 +155,7 @@ class GetAlbumV1Action extends sfActions
     public function checkForConditionalAccess($loggedInProfileid,$conditionalFlag)
     {    	
     	if((MobileCommon::isApp() && $conditionalFlag) || !MobileCommon::isApp())
-    	{
+    	{    		
     		return PictureFunctions::conditionalPhotoAccess();
     	}
     	else

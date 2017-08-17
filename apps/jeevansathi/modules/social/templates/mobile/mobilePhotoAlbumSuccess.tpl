@@ -16,7 +16,8 @@
 		
 	</div>
 	<div class="posfix fullwid btmo">
-		<a href="/social/MobilePhotoUpload" class="bg7 txtc white fullwid dispbl lh50 border0">Uplaod Photo</a>
+	<a href="/social/MobilePhotoUpload" class="bg7 txtc white fullwid dispbl lh50 border0" onclick="trackJsEventGA('Conditional Photo Acces','Upload Photo','MS','');
+	">Uplaod Photo</a>
 	</div>
 </div>
 ~else`
