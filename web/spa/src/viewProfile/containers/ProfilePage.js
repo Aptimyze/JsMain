@@ -61,13 +61,13 @@ class ProfilePage extends React.Component {
     {
         let urlString;
         if(this.state.profilechecksum != "") {
-            urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;    
+            urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
         } else {
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
-          
+
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
             if(searchid != 1 && searchid != null)
@@ -182,6 +182,12 @@ class ProfilePage extends React.Component {
             showLoader:true
         });
     }
+    hideLoaderDiv() {
+        this.setState({
+            showLoader:false
+        });
+    }
+
     componentWillReceiveProps(nextProps)
     {
         if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
@@ -204,7 +210,7 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-            
+
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
@@ -342,7 +348,7 @@ class ProfilePage extends React.Component {
     {
         if ( typeof this.props.history.prevUrl == 'undefined' )
         {
-            this.props.history.push("/myjs");   
+            this.props.history.push("/myjs");
         }
         else
         {
@@ -410,7 +416,7 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
 
-                contactEngineView = <ContactEngineButton showLoaderDiv={()=> this.showLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                contactEngineView = <ContactEngineButton showLoaderDiv={()=> this.showLoaderDiv()} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
@@ -573,7 +579,7 @@ const mapDispatchToProps = (dispatch) => {
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
         }
-    }
+      }
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(ProfilePage)

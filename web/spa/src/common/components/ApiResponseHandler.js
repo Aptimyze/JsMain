@@ -28,8 +28,8 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         else
           checkSumURL = '&AUTHCHECKSUM='+aChsum;
       }
-    } 
-    
+    }
+
     if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl) {
       let data;
       if(localStorage.getItem("prevDataUrl") == callUrl) {
@@ -55,7 +55,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           'Accept': 'application/json',
           'withCredentials':true,
           'X-Requested-By': 'jeevansathi',
-          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
         },
       }).then( (response) => {
         if ( response.data.responseStatusCode == "9" )
@@ -93,7 +93,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         } else if(dispatch == "saveLocalPrev") {
             localStorage.setItem("prevData", JSON.stringify(response.data));
             localStorage.setItem("prevDataUrl",callUrl)
-        } 
+        }
         return response.data;
       })
       .catch( (error) => {

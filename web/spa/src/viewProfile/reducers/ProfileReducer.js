@@ -50,13 +50,22 @@ const ProfileReducer = (state={
 			gunaScore:action.payload
 		}
 		break;
-		case "REPLACE_BUTTON":
-		let bD = {...state.buttonDetails};
-		bD.buttons.others[action.payload.index] = action.payload.button.button;
+		case "REPLACE_BUTTONS":
+		console.log(state.buttonDetails,'ce oldstate');
 		state = {
 			...state,
-			buttonDetails:bD
+			buttonDetails:action.payload.newButtonDetails
 		}
+		console.log(state,'ce newstate');
+		break;
+		case "REPLACE_BUTTON":
+		var tmpButtonDetails = {...state.buttonDetails};
+		tmpButtonDetails['buttons'] = action.payload.newButtons;
+		state = {
+			...state,
+			buttonDetails:tmpButtonDetails
+		}
+		console.log(state,'ce newstate');
 		break;
 	}
 	return state;

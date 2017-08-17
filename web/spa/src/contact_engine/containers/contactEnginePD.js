@@ -5,16 +5,17 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
+import {performAction} from './contactEngine';
+import {ContactDetails} from '../components/ContactDetails';
 
 export class contactEnginePD extends React.Component{
   constructor(props){
-    super();
+    super(props);
     this.state = {
     	actionDone: false,
       remindDone: false,
-      showMessageOverlay:false,
-      interestSent:false
-    }
+      showMessageOverlay:false
+        };
     this.actionUrl = {
       "INITIATE":"/api/v2/contacts/postEOI",
       "ACCEPT": "/api/v2/contacts/postAccept",
@@ -32,24 +33,9 @@ export class contactEnginePD extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-      if(nextProps.contactAction.acceptDone) {
-       this.setState({
-       	  actionDone: true
-       })
-      }
-      if(nextProps.contactAction.reminderDone) {
-        this.setState({
-          remindDone: true
-        })
-      }
       if (nextProps.contactAction.msgInitiated) {
         this.setState({
           showMessageOverlay: true
-        })
-      }
-      if(nextProps.contactAction.contactDone) {
-        this.setState({
-          interestSent: true
         })
       }
   }
@@ -60,100 +46,182 @@ export class contactEnginePD extends React.Component{
   contactAction(action){
   	this.props.showLoaderDiv();
     var url = '&profilechecksum='+this.props.profiledata.profilechecksum;
-    this.props.callContactApi(this.actionUrl[action],action,url);
+//    performAction(button,this.props.profiledata.profilechecksum,callBack.bind(this));
+//    this.props.callContactApi(this.actionUrl[action],action,url);
+  }
+  bindAction(button,index){
+
+    switch(button.action)
+    {
+
+      case 'REPORT_ABUSE':
+
+      break;
+
+      case 'REPORT_INVALID':
+      break;
+
+      default:
+          let callBack = (responseButtons)=>{
+          this.props.hideLoaderDiv();console.log('resp',responseButtons);
+          this.postAction(button,responseButtons,index);
+        }
+        this.props.showLoaderDiv();
+        performAction(this.props.profiledata.profilechecksum,callBack.bind(this),button);
+        this.props.resetMyjsData();
+      break;
+
+
+    }
   }
 
+  getNewButtons(newButton,index){
+    var temp=this.props.buttondata.buttons.slice(0);
+    temp[index] = newButton;console.log('newbutt',temp);
+    return temp;
+  }
+  postAction(actionButton,responseButtons,index)
+  {
+    switch(actionButton.action){
+
+      case 'SHORTLIST':
+        var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
+        this.props.replaceSingleButton(newButtons);
+      break;
+      case 'IGNORE':
+        if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
+        {
+          this.props.replaceOldButtons(getNewButtons(jsonOb.response.button_after_action.buttons.others[jsonOb.index],jsonOb.index));
+          this.closeThreeDotLayer();
+        }
+        else
+        {
+          this.props.replaceOldButtons({'button':jsonOb.response.button_after_action.buttons.primary[0]},jsonOb.index);
+          this.showIgnoreLayer(jsonOb.response.message,jsonOb.response.button_after_action.buttons.primary[0]);
+        }
+
+      break;
+
+      case 'CONTACT_DETAIL':
+        this.showHideCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
+      break;
+
+      default:
+        this.props.replaceOldButtons(responseButtons);
+      break;
+
+
+
+    }
+
+
+
+  }
   render(){
-    console.log(this.props);
+    return (
+    <div>{[this.getFrontButton(),
+    this.getOverLayDataDisplay()]
+  }</div>
+  );
     var messageOverlayView;
     if(this.props.profiledata && this.state.showMessageOverlay == true) {
-
-      console.log('in1');
-      console.log(this.props);
-
       messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.cansend} profilechecksum={this.props.profiledata.profilechecksum}/>
     }
-    if(this.state.actionDone){
-      console.log('1');
-      console.log(this.state);
-      if(this.props.contactAction.accept.button_after_action.buttons[0].action == "WRITE_MESSAGE") {
-        return (<div>  {messageOverlayView}
-                <div id="buttons1" className="view_ce fullwid z100">
 
-          <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.contactAction(this.props.contactAction.accept.button_after_action.buttons[0].action)}>
-            <div className="wid60p">
-              <i className="mainsp ot_msg"></i>
-              <input className="action" type="hidden" value={this.props.contactAction.accept.button_after_action.buttons[0].action}></input>
-              <div className="white">{this.props.contactAction.accept.button_after_action.buttons[0].label}</div>
-            </div>
-            <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
-          </div>
-        </div></div>
-        );
-      }
-    }
-    else if(this.state.remindDone) {
-        return (<div id="buttons2" className="view_ce fullwid lh26">
-              <div className="fullwid srp_bg1 txtc pad5new posrel" >
-                <div className="wid60p">
-                  <div className="white">{this.props.contactAction.reminder.button_after_action.buttons[0].label}</div>
-                </div>
-                <ThreeDots buttondata={this.props.buttondata} username={this.props.buttondata.username} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
-              </div>
-            </div>
-        );
-    }
-    else if(this.props.buttondata.buttons.primary[0].action == "ACCEPT") {
-      return(<div id="buttons1" className="view_ce fullwid">
 
-        <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.contactAction(this.props.buttondata.buttons.others[0].action)}>
-
-          <div id="btnAccept" className="fontlig f13 white cursp dispbl">
-            <i className="ot_sprtie ot_chk"></i>
-            <input className="params" type="hidden" value={this.props.buttondata.buttons.others[0].params}></input>
-            <input className="action" type="hidden" value={this.props.buttondata.buttons.others[0].action}></input>
-
-            <div className="white">{this.props.buttondata.buttons.others[0].label}</div>
-          </div>
-        </div>
-        <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.contactAction(this.props.buttondata.buttons.others[1].action)}>
-          <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
-            <i className="ot_sprtie newitcross"></i>
-            <input className="params" type="hidden" value={this.props.buttondata.buttons.others[1].params}></input>
-            <input className="action" type="hidden" value={this.props.buttondata.buttons.others[1].action}></input>
-            <div className="white">{this.props.buttondata.buttons.others[1].label}</div>
-          </div>
-        </div>
-      </div>
-      );
-    }
-    else if(this.state.interestSent) {
-      return(<div id="buttons1" className="view_ce fullwid">
-        <div className="fullwid bg7 txtc pad5new posrel" >
-          <div className="wid60p" onClick={() => this.contactAction(this.props.contactAction.contact.button_after_action.buttons[0].action)}>
-            <i className="mainsp msg_srp"></i>
-            <input className="action" type="hidden" value={this.props.contactAction.contact.button_after_action.buttons[0].action}></input>
-            <div className="white">{this.props.contactAction.contact.button_after_action.buttons[0].label}</div>
-          </div>
-          <ThreeDots buttondata={this.props.buttondata} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
-        </div>
-      </div>
-      );
-    }
-    else if(this.props.buttondata.buttons.primary[0].action == "INITIATE") {
-      return(<div id="buttons1" className="view_ce fullwid">
-        <div className="fullwid bg7 txtc pad5new posrel" >
-          <div className="wid60p" onClick={() => this.contactAction(this.props.buttondata.buttons.primary[0].action)}>
-            <i className="mainsp msg_srp"></i>
-            <input className="action" type="hidden" value={this.props.buttondata.buttons.primary[0].action}></input>
-            <div className="white">{this.props.buttondata.buttons.primary[0].label}</div>
-          </div>
-          <ThreeDots buttondata={this.props.buttondata} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />
-        </div>
-      </div>
-      );
-    }
   }
+getFrontButton(){console.log(this.props);
+  let primaryButton = this.props.buttondata.buttons[0];
+  let threeDots = (<div></div>);
+  let otherButtons = this.props.buttondata.buttons;
+  if(otherButtons[0].action == 'ACCEPT' && otherButtons[1].action == 'DECLINE')
+  return(<div key='1' id="buttons1" className="view_ce fullwid">
+
+    <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
+
+      <div id="btnAccept" className="fontlig f13 white cursp dispbl">
+        <i className="ot_sprtie ot_chk"></i>
+        <div className="white">{otherButtons[0].label}</div>
+      </div>
+    </div>
+    <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.bindAction(otherButtons[1])}>
+      <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
+        <i className="ot_sprtie newitcross"></i>
+        <div className="white">{otherButtons[1].label}</div>
+      </div>
+    </div>
+  </div>
+  );
+  if(this.props.buttondata.buttons) threeDots =(<div onClick={this.setThreeDotData.bind(this)} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+
+  if(primaryButton.enable==true){
+    return (<div id="buttons1" className="view_ce fullwid">
+      <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton)}>
+        <div className="wid60p">
+          <i className="mainsp msg_srp"></i>
+          <div className="white">{primaryButton.label}</div>
+        </div>
+        </div>
+        {threeDots}
+
+    </div>)
+  }
+  else return (<div id="buttons1" className="view_ce fullwid">
+    <div className="fullwid srp_bg1 txtc pad18 posrel" >
+      <div className="wid60p">
+        <span className="fontlig f15 color7 dispbl">{primaryButton.label}</span>
+      </div>
+      {threeDots}
+      </div>
+  </div>
+);
+
+}
+
+showHideCommon(data){
+  this.setState({
+    ...data
+  })
+}
+setThreeDotData(){
+this.setState({
+  showThreeDots: true
+});
+}
+
+hideThreeDotLayer(){
+this.setState({
+  showThreeDots: false
+})
+}
+
+showReportAbuse(){
+this.setState({
+  showReportAbuse: true
+});
+}
+
+hideReportAbuse(){
+this.setState({
+  showReportAbuse: false
+})
+}
+
+  getOverLayDataDisplay(object){
+    let layer = (<div></div>);
+      if(this.state.showThreeDots)
+        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={this.hideThreeDotLayer.bind(this)} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+      else if(this.state.showReportAbuse)
+        layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+      else if(this.state.showContactDetail)
+        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+    return (<div key='2'>{layer}</div>)
+  }
+
+  setFrontButtonDisplay(object){
+    this.setState({frontButton:object});
+  }
+
 }
 
 const mapStateToProps = (state) => {
@@ -164,10 +232,22 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        callContactApi: (api,action,url) => {
-          commonApiCall(api,url,action,'POST',dispatch,true);
+        resetMyjsData: () => {
           dispatch({type:'RESET_MYJS_TIMESTAMP',payload:{value:-1}});
+        },
+        replaceOldButtons: (newButtons) => {
+          dispatch({
+            type: 'REPLACE_BUTTONS',
+            payload: {newButtonDetails:newButtons.buttondetails}
+          });
+        },
+        replaceSingleButton: (newButtons) => {
+          dispatch({
+            type: 'REPLACE_BUTTON',
+            payload: {newButtons:newButtons}
+          });
         }
+
     }
 }
 

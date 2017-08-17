@@ -6,7 +6,7 @@
  * and it's siblings {@link Accept}, {@link CancelAccept}, <BR>
  * {@link Reminder}, {@link CancelContact}, {@link WriteMessage} <BR>
  * and {@link Initiate} class<BR>
- * 
+ *
  * This class is responsible to handle Cancel Accept event between two users.<BR>
  * @extends ContactEvent {@link ContactEvent}
  * @package   jeevansathi
@@ -15,13 +15,13 @@
  */
 class Decline extends ContactEvent{
   /**
-   * 
+   *
    * Constructor for instantiating object of Decline class
-   * 
+   *
    * <p>
    * It sets the contactHandler variable of parent class ContactEvent and then call the constructior of parent class ContactEvent.
    * </p>
-   * 
+   *
    * @access public
    * @param ContactHandler $contactHandler
    */
@@ -38,13 +38,13 @@ class Decline extends ContactEvent{
     }
   }
   /**
-   * 
+   *
    * Sets details required to display Pre Component for action Decline
-   * 
+   *
    * <p>
    * This function sets information required to built pre component. It instantiates PreComponent, set the details like drafts, template name etc. required and returns this component.
    * </p>
-   * 
+   *
    * @access public
    */
   public function setPreComponent()
@@ -59,9 +59,9 @@ class Decline extends ContactEvent{
     //$this->component->innerTpl="profile_eoi_pia";
   }
   /**
-   * 
+   *
    * Submits the form and make database changes
-   * 
+   *
    * <p>
    * This function updates:
    * <ol>
@@ -69,7 +69,7 @@ class Decline extends ContactEvent{
    * <li> contacts table </li>
    * </ol>
    * </p>
-   * 
+   *
    * @access public
    */
   public function submit(){
@@ -78,17 +78,17 @@ class Decline extends ContactEvent{
     $this->contactHandler->getContactObj()->setType(ContactHandler::DECLINE);
     $this->contactHandler->getContactObj()->setSEEN(Contacts::NOTSEEN);
 
-    $this->contactHandler->getContactObj()->updateContact();
+//    $this->contactHandler->getContactObj()->updateContact();
     $responseTracking =  $this->contactHandler->getElements("RESPONSETRACKING");
     JSResponseTracking::updateResponseTracking($this->contactHandler,$responseTracking);
-    $this->contactHandler->setElement("STATUS","D");    
+    $this->contactHandler->setElement("STATUS","D");
     $this->handleMessage();
 
     //    $this->updateContactSeen();//
     $producerObj=new Producer();
 
     if($producerObj->getRabbitMQServerConnected())
-    {   
+    {
       if($this->contactHandler->getContactObj()->getMSG_DEL() != 'Y')
       {
         $receiver = $this->contactHandler->getViewed();
@@ -104,24 +104,24 @@ class Decline extends ContactEvent{
     else
     {
         $this->sendMail();
-    }    
+    }
   }
 
 
   /**
-   * 
+   *
    * function setPostComponent
-   * 
+   *
    * <p>
-   * This function sets details to create display template after the action Accept is performed. It instantiates PostComponent and sets details required like message to be diplayed, title of page etc in the variable component 
+   * This function sets details to create display template after the action Accept is performed. It instantiates PostComponent and sets details required like message to be diplayed, title of page etc in the variable component
    * </p>
-   * 
+   *
    * @access public
    */
   public function setPostComponent()
   {
     $this->component	=	new PostComponent;
-    $draftsObj	=	new ProfileDrafts($this->contactHandler->getViewer());    
+    $draftsObj	=	new ProfileDrafts($this->contactHandler->getViewer());
     $this->component->drafts = $draftsObj->getDeclineDrafts('Y');
     $this->component->acceptdrafts = $draftsObj->getAcceptDrafts();
     $this->component->declinedrafts = $draftsObj->getDeclineDrafts();
@@ -130,13 +130,13 @@ class Decline extends ContactEvent{
 
 
   /**
-   * 
+   *
    * Sets Variables to be updated in Memcache while performing action Decline
-   * 
+   *
    * <p>
    * This function sets and updates memcache variables according to the previous status type between sender and receiver
    * </p>
-   * 
+   *
    * @access private
    * @param $currentFlag
    */
@@ -182,10 +182,10 @@ class Decline extends ContactEvent{
 		$profileMemcacheServiceViewedObj->update("ACC_ME_NEW",-1);
       }
       $profileMemcacheServiceViewerObj->updateMemcache();
-      $profileMemcacheServiceViewedObj->updateMemcache(); 	
+      $profileMemcacheServiceViewedObj->updateMemcache();
        InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewer()->getPROFILEID(),"",1);
     InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewed()->getPROFILEID(),"",1);
-    
+
     }
     catch (Exception $e) {
       throw new jsException($e);
