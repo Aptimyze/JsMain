@@ -133,7 +133,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $dncOb= new dnc_DNC_LIST();
 
                 if ($loggedInProfileObj->getPHONE_MOB()||$loggedInProfileObj->getPHONE_RES()){
-                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_RES()));
+                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_WITH_STD()));
                 if (is_array($resultArray)) return true;
                 	}
 
