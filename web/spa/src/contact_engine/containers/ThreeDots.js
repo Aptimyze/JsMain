@@ -53,6 +53,22 @@ class ThreeDots extends React.Component{
   callBackFunctionThreeDots(jsonOb){
     switch(jsonOb.button.action)
     {
+      case 'CONTACT_DETAIL':
+
+      break;
+      case 'IGNORE':
+        if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
+        {
+          this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.others[jsonOb.index]},jsonOb.index);
+          this.closeThreeDotLayer();
+        }
+        else
+        {
+        this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.primary[0]},jsonOb.index);
+          this.showIgnoreLayer(jsonOb.response.message,jsonOb.response.button_after_action.buttons.primary[0]);
+        }
+
+        break;
       default:
        this.props.changeButton(jsonOb.response.buttondetails,jsonOb.index);
       break;
