@@ -125,6 +125,9 @@ header, section, footer, aside, nav, article, figure {
 .btmo {
 	bottom:0px
 }
+.btm50 {
+	bottom: 50px
+}
 .border0 {
 	border:0px
 }
@@ -707,6 +710,7 @@ header, section, footer, aside, nav, article, figure {
 .brdr20{border-top:1px solid #fbfbfb}
 .brdr21{border-top:1px solid #d4d4d4}
 .brdr22{border-top:1px solid #fff}
+.brdr23{border-top:1px solid #cbc9c9; }
 /*---fonts classes---*/
 .fb{font-weight:bold}
 .f11 {
