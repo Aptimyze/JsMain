@@ -335,7 +335,7 @@ class PictureFunctions
 	{
 		PictureFunctions::setHeaders();
 		if ($type_of_pic == "main")
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.png";
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_1.gif";
 		else
 			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small.gif";
 			
