@@ -230,6 +230,8 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 	
 		<div class="fr wid88p"></div>
 	</div>
+  <div id="{{relationshipManager}}" class="fullwid clearfix pt10 ">
+  </div>
 </div>
 <!--end:text box-->
 </div>

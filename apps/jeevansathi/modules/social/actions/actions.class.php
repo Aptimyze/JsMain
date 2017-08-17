@@ -764,7 +764,14 @@ class socialActions extends sfActions
 	{
 		$this->forward('static','LogoutPage');
 	}	
-	if(!$profilechecksum)
+	$requestedProfileid = NULL;
+
+	if($profilechecksum)
+	{
+		$authenticationJsObj = new JsAuthentication();
+		$requestedProfileid =$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
+	}
+	if($requestedProfileid==NULL || $requestedProfileid=='')
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
 		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
@@ -777,13 +784,12 @@ class socialActions extends sfActions
 	}
 	else
 	{
+
 		if(PictureFunctions::conditionalPhotoAccess()) //if conditional layer is to be shown
 		{
 			$this->showLayer = 1;
 			$this->setTemplate("mobile/mobilePhotoAlbum");
 		}
-		$authenticationJsObj = new JsAuthentication();
-		$requestedProfileid=$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
 		$Profile = Profile::getInstance('newjs_master',$requestedProfileid);
 		$Profile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
 		if($Profile->getPHOTO_DISPLAY()=='C')
@@ -801,7 +807,6 @@ class socialActions extends sfActions
 	}
 	$picServiceObj = new PictureService($ProfileObj);
 	$album = $picServiceObj->getAlbum($contact_status);
-        
 	if(is_array($album))
 	{
 		$this->countPics = count($album);
@@ -827,7 +832,7 @@ class socialActions extends sfActions
 //			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
 		}		
 	}
-	else if($profilechecksum)
+	else if($requestedProfileid)
 		$this->redirect(sfConfig::get("app_site_url")."/profile/viewprofile.php?profilechecksum=".$profilechecksum);
 	else
 		$this->redirect(sfConfig::get("app_site_url")."/social/MobilePhotoUpload");
@@ -839,7 +844,7 @@ class socialActions extends sfActions
 	}
 	$this->mob_img_url=$mob_img_url;
 	$this->pictureId=$pictureId;
-	if(!$profilechecksum)
+	if(!$requestedProfileid)
 	{
 		$this->goBackLink=sfConfig::get('app_site_url')."/profile/viewprofile.php?ownview=1";
 	}
@@ -1643,7 +1648,8 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
 					$this->photohave = "Y";
 				if($profileObj->getSUBSCRIPTION()=="" || $profileObj->getSUBSCRIPTION()=="D")
 					$this->photosubs = "Y";
-
+				if($receiverProfileId)
+				{
 				$receiverObj = Profile::getInstance("newjs_master",$receiverProfileId);
 				$receiverObj->getDetail("","","USERNAME,GENDER,PRIVACY");
 
@@ -1652,6 +1658,11 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
                                 
 				$psObj = new PictureService($receiverObj);
 				$output = $psObj->performPhotoRequest();
+				}
+				else
+				{
+					$output = "InvalidReceiver";
+				}
 				if($output == "Success")
 				{	$output = "true";
                                         if($receiverObj->getGENDER()=="F")
@@ -1659,6 +1670,11 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
                                         else
                                                 $heSheCall = "he";
 					$successMessage = "Your photo request has been sent to ".$this->USERNAME.". We will inform you when $heSheCall uploads photo.";
+				}
+				if($output == "InvalidReceiver")
+				{
+					$output = "I";
+					$successMessage = "Receiver provided is invalid";
 				}
 				elseif($output == "SameGender")
 				{

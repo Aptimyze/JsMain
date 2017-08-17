@@ -471,6 +471,16 @@ return 0;
                       
                       
                     break;
+                  case '25':
+                    if(!MobileCommon::isApp()){
+                      if(in_array($profileObj->getRELIGION(), 
+                        array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
+                        if(empty($profileObj->getMANGLIK())) {
+                          $show=1;
+                        }
+                      }
+                    }
+                  break;
 
           default : return false;
         }
