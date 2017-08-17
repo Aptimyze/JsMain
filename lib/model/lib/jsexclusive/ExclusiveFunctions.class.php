@@ -404,5 +404,39 @@ class ExclusiveFunctions{
             }
         }
 	}
+
+	public function getReceiverAndAgentDetailsforProposalMail(){
+        $followupObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $result = $followupObj->getDetailsForProposalMail();
+
+        if (!is_array($result))
+            $result = array();
+
+        $agentUsernames = array();
+        foreach ($result as $key=>$value){
+            if(!in_array($value["AGENT_USERNAME"],$agentUsernames))
+                $agentUsernames[]=$value["AGENT_USERNAME"];
+        }
+        if (!empty($agentUsernames)){
+            $pswrdsObj = new jsadmin_PSWRDS();
+            $agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentUsernames);
+        }
+
+        if (!is_array($agentDetail))
+            $agentDetail = array();
+
+        foreach ($result as $key=>$value){
+            $agentUserName = $value["AGENT_USERNAME"];
+            $result[$key]["EMAIL"] = $agentDetail[$agentUserName]["EMAIL"];
+            $result[$key]["NAME"] = $agentDetail[$agentUserName]["FIRST_NAME"];
+            if ($lastName = $agentDetail[$agentUserName]["LAST_NAME"])
+                $result[$key]["NAME"] .= " ".$lastName;
+        }
+
+        $proposalObj = new billing_ExclusiveProposalMailer();
+        $proposalObj->insertMailLog($result);
+        $result = $proposalObj->getProfilesToSendProposalMail();
+        return $result;
+    }
 }
 ?>
