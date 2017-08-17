@@ -163,7 +163,7 @@ class ThreeDots extends React.Component{
 
                       <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
                         {image3dot}
-                        <Btn3dotprint buttonprint={buttons}/>
+                        <Btn3dotprint bindAction={this.props.bindAction} buttonprint={buttons}/>
                         <div className="dispibl fullwid mt45">
                           <div onClick={this.props.closeThreeDotLayer} className="mainsp srp_close1"></div>
                         </div>

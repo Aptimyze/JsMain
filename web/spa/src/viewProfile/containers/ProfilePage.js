@@ -416,7 +416,7 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
 
-                contactEngineView = <ContactEngineButton showLoaderDiv={()=> this.showLoaderDiv()} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                contactEngineView = <ContactEngineButton showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
@@ -489,7 +489,7 @@ class ProfilePage extends React.Component {
             },100);
         }
         return (
-            <div id="ProfilePage">
+            <div style={this.state.profilePageStyle} id="ProfilePage">
                 <GA ref="GAchild" />
                 {metaTagView}
                 {promoView}

@@ -6,7 +6,7 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
 import {performAction} from './contactEngine';
-import {ContactDetails} from '../components/ContactDetails';
+import ContactDetails from '../components/ContactDetails';
 
 export class contactEnginePD extends React.Component{
   constructor(props){
@@ -107,6 +107,7 @@ export class contactEnginePD extends React.Component{
 
       case 'CONTACT_DETAIL':
         this.showHideCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
+        this.props.unsetScroll();
       break;
 
       case 'WRITE_MESSAGE':
@@ -205,12 +206,14 @@ else
 showHideCommon(data){
   this.setState({
     ...data
-  })
+  });
+  console.log('statecd',this.state);
 }
 setThreeDotData(){
 this.setState({
   showThreeDots: true
 });
+this.props.unsetScroll();
 }
 
 hideThreeDotLayer(){
@@ -239,7 +242,7 @@ this.setState({
 
 getOverLayDataDisplay(){
 
-    let layer = (<div key="2"></div>);
+    let layer = '';
       if(this.state.showThreeDots)
         layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={this.hideThreeDotLayer.bind(this)} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
