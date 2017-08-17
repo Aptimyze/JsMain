@@ -267,3 +267,13 @@ color: transparent;
     height: 19px;
     background-position: -49px -8px;
 }
+.closeIcon {
+    width: 28px;
+    height: 19px;
+    background-position: -13px -8px;
+}
+.crossPosition {
+    position: absolute;
+    left: 83%;
+    margin-top: -20px;
+}
