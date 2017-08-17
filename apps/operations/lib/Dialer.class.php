@@ -97,7 +97,8 @@ class Dialer
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
 	
-                        	if($analyticScore<70 || $analyticScore>100){
+                        	//if($analyticScore<70 || $analyticScore>100){
+				if($analyticScore<90 || $analyticScore>100){
                         	        $this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
 					continue;	
 				}
