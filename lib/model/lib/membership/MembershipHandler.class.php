@@ -2054,7 +2054,7 @@ class MembershipHandler
                     //check if already VD is active for this profile
                     $existingVDEntries = $vdObj->getDiscountDetails($profileid,discountType::WELCOME_DISCOUNT);
                     
-                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && is_array($discountArr[0])){
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && is_array($discountArr[0]) && $existingVDEntries["EDATE"]<=$endDate){
                         $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$discountArr[0],"PROFILEID"=>$profileid,"DISCOUNT"=>$discount,"SDATE"=>$startDate,"EDATE"=>$endDate,"ENTRY_DT"=>$activationDt));
                     }
                     else{
