@@ -52,16 +52,16 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
 <div className="posfix btmo fullwid" id="bottomElement">
   <div className="pt15">
       <div className="txtc"><a href="#" className={"pb20 white fontlig f16 "+this.state.bottomMsgShow} id="bottomMsg">{this.state.bottomMsgText}</a></div>
-      <a href="#" className="dispbl brdr22 white txtc f16 pad2 fontlig " id="closeLayer" style={{display:'none',borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',webkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</a>
+      <div className={"brdr22 white txtc f16 pad2 fontlig "+this.statecloseLyrShow} id="closeLayer" onClick={()=>this.props.closeCDLayer()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
         <a href="#" className="white txtc f16 pad2 fontlig " id="neverMindLayer" onClick={this.props.closeCDLayer} style={this.state.nevMindStyle} >Never Mind</a>
         <a href="javascript:void(0);" className={"brdr23_contact dispbl color2 txtc f16 pad2 fontlig "+this.state.memShow} id="membershipMessageCE" >{this.state.memText}</a>
-        <div onClick={()=>this.state.memBFunction()}  className={"bg7 white txtc f16 pad2 fontlig "+this.state.footerBShow} id="footerButton">{this.state.footerBText}</div>
+        <div onClick={()=>this.props.bindAction(this.props.actionDetails.footerbutton)}  className={"bg7 white txtc f16 pad2 fontlig "+this.state.footerBShow} id="footerButton">{this.state.footerBText}</div>
     </div>
 </div>
 
 </div>
 </div>
-{this.getFooterButton()}
+{this.getMembershipOvlay()}
 
 </div>
 );
@@ -78,15 +78,11 @@ reportInvalid(){
 
 }
 getPhoneSection(displayProps){
-  console.log(displayProps);
-let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
+let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='',contactShow='dispnone';//$("#neverMindLayer").show();
 
-if (displayProps.showReportInvalid)
-  reportInvalid = (<span  onClick={()=>this.reportInvalid(displayProps)} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
 
   if(displayProps.contact){
-    mobileValShow = '',mobileValBlur ='dispnone';
-
+    contactShow = '';
 
 //    $("#mobileVal,#mobileValBlur").hide();
     //$("#mobileValBlur").hide();
@@ -94,7 +90,14 @@ if (displayProps.showReportInvalid)
     if(displayProps.contact.value=="blur"){
       mobileValBlur = ''; //$("#mobileValBlur").show();
     }
-    else mobileValShow='';//$("#mobileVal").show();
+    else
+    {
+    mobileValShow='';
+    if (displayProps.showReportInvalid)
+      reportInvalid = (<span  onClick={()=>this.reportInvalid(displayProps)} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
+
+    }
+  //$("#mobileVal").show();
           mobileVal = displayProps.contact.value;
               //  $("#mobileVal").html(displayProps.contact.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (displayProps.contact.iconid){
@@ -104,7 +107,7 @@ if (displayProps.showReportInvalid)
   }
       else if(displayProps.contact_message)
       {
-        mobileValShow = '',mobileValBlur ='';
+        mobileValShow = '';
         //$("#mobileVal,#mobile").show();
         mobileVal = actiondetails.contact1_message;
 //        $("#mobileVal").html(result.actiondetails.contact1_message);
@@ -113,8 +116,9 @@ if (displayProps.showReportInvalid)
 return (
   <div className={"pt15 "+ mobileValShow} >
     <div className="fl white">
-      <div className=" f14 lh30 opa50">{displayProps.label}</div>
-      <div className={"f16 "+mobileValShow}></div>
+      <div className=" f14 lh30 opa50">{displayProps.contact ? displayProps.contact.label : ''}</div>
+      <span className={"f16 "+mobileValShow}>{mobileVal}</span>
+      {reportInvalid}
       <div className={"pb20 "+mobileValBlur} id="mobileValBlur" ><div className="fontreg" style={{textShadow: '0 0 12px white',color:'transparent',fontSize:'26px'}}>+91 987654321</div> </div>
       <div></div>
     </div>
@@ -125,10 +129,10 @@ return (
 
 getEmailInfo(displayProps)
 {
-  let mobileIconShow='dispnone',mobileValShow='dispnone', mobileValBlur='dispnone',mobileVal='';//$("#neverMindLayer").show();
+  let mobileIconShow='dispnone',emailValShow='dispnone', mobileValBlur='dispnone',emailVal='',contactShow='dispnone';//$("#neverMindLayer").show();
 
     if(displayProps.contact){
-      mobileValShow = '',mobileValBlur ='dispnone';
+      contactShow = '';
 
   //    $("#mobileVal,#mobileValBlur").hide();
       //$("#mobileValBlur").hide();
@@ -136,8 +140,8 @@ getEmailInfo(displayProps)
       if(displayProps.contact.value=="blur"){
         mobileValBlur = ''; //$("#mobileValBlur").show();
       }
-      else mobileValShow='';//$("#mobileVal").show();
-            mobileVal = displayProps.contact.value;
+      else emailValShow='';//$("#mobileVal").show();
+      emailVal = displayProps.contact.value;
                 //  $("#mobileVal").html(displayProps.contact.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                   if (displayProps.contact.iconid){
   //                   $("#mobileIcon > a").attr('href','tel:'+displayProps.contact.value.toString());
@@ -146,20 +150,20 @@ getEmailInfo(displayProps)
     }
 
   return (
-    <div className={"pt15 "+ mobileValShow} >
+    <div className={"pt15 "+ contactShow} >
       <div className="fl white">
-        <div className=" f14 lh30 opa50">{displayProps.label}</div>
-        <div className={"f16 "+mobileValShow}></div>
+        <div className=" f14 lh30 opa50">{displayProps.contact ? displayProps.contact.label :''}</div>
+        <div className={"f16 "+emailValShow}>{emailVal}</div>
         <div className={"pb20 "+mobileValBlur} id="mobileValBlur" ><div className="fontreg" style={{textShadow: '0 0 12px white',color:'transparent',fontSize:'26px'}}>+91 987654321</div> </div>
         <div></div>
       </div>
-      <div  className={"fr pt15 " + mobileIconShow}  ><a href={'mailto:'+mobileVal.toString()}><i  className="mainsp srp_msg1" ></i></a></div>
+      <div  className={"fr pt15 " + mobileIconShow}  ><a href={'mailto:'+emailVal.toString()}><i  className="mainsp srp_msg1" ></i></a></div>
       <div className="clr"></div>
     </div>);
 
 }
 
-getFooterButton(){
+getMembershipOvlay(){
   return (<div className={"posrel fullwid fullheight overlayPos "+this.state.memOvlayShow} id="membershipOverlay">
       <img src="/images/jsms/membership_img/revamp_bg1.jpg" className="posfix classimg1 bgset" />
       <div className="fullheight fullwid layerOpa posrel" style={{overflow:'auto'}}>
@@ -197,13 +201,17 @@ getFooterButton(){
   </div>);
 }
 
+footerBFunction(){
+this.props.bindAction()
+//  this.props.bindAction
+
+}
 getContactDetails(actiondetails){
   var memText, memShow, topMsg2Text='', topMsg2TextShow,topMsg2Text, topMsgTextShow,topMsgText='',
   bottomMsgShow={display:'none'},bottomMsgText='',bottomMsgredirectFun=()=>{},bottomMsgShow2={display:'none'},
   bottomMsgText2='', nevMindStyle={display:'none'}, vCPreLayerShow='dispnone', vCPreLayerNoNumShow='dispnone',footerBShow='dispnone',
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
   memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>);
-
   //$("#topMsg").hide();
   //$("#"+actionTemplate[action]).show();
   /*if(result.footerbutton)
@@ -287,10 +295,10 @@ else
 //     $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
 //   }
 
-    let primaryMob = this.getPhoneSection({contact:actiondetails.contact1,contact_message:actiondetails.contact1_message,showReportInvalid:true});
-    let landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true});
-    let alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false});
-    let emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false});
+    primaryMob = this.getPhoneSection({contact:actiondetails.contact1,contact_message:actiondetails.contact1_message,showReportInvalid:true});
+    landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true});
+    alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false});
+    emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false});
     if(actiondetails.contact1 && actiondetails.contact1.value=="blur")
       nevMindStyle = {display:'block'};
     //$("#footerButton").html(result.actiondetails.footerbutton.label);
@@ -387,7 +395,7 @@ else
           nevMindStyle,vCPreLayerShow,vCPreLayerNoNumShow, footerBText,preLayerText,
           commonOverlayShow,newErrMsg,memHeading,sH1,sH2,sH3,mOExists,mO1,mO2,oPrice:'',oPShow:'dispnone'
           , lowestOfferDiv, vCNoNumber,closeLyrShow,cdOvlayShow,primaryMob,landLine,alternateMob,
-          emailInfo,memOvlayShow
+          emailInfo,memOvlayShow,footerBShow
 
         };//$("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
 

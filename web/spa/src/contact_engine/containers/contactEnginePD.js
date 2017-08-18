@@ -64,8 +64,7 @@ export class contactEnginePD extends React.Component{
 
       default:
           let callBack = (responseButtons)=>{
-          this.props.hideLoaderDiv();console.log('resp',responseButtons);
-          console.log('bi4');
+          this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
         }
         this.props.showLoaderDiv();
@@ -79,7 +78,7 @@ export class contactEnginePD extends React.Component{
 
   getNewButtons(newButton,index){
     var temp=this.props.buttondata.buttons.slice(0);
-    temp[index] = newButton;console.log('newbutt',temp);
+    temp[index] = newButton;
     return temp;
   }
   postAction(actionButton,responseButtons,index)
@@ -88,7 +87,7 @@ export class contactEnginePD extends React.Component{
     switch(actionButton.action){
 
       case 'SHORTLIST':
-        var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
+        var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
         this.props.replaceSingleButton(newButtons);
       break;
       case 'IGNORE':
@@ -110,12 +109,7 @@ export class contactEnginePD extends React.Component{
       break;
 
       case 'WRITE_MESSAGE':
-         console.log('red btn');
-        console.log(responseButtons);
         this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
-
-
-
       break;
 
 
@@ -259,8 +253,6 @@ getOverLayDataDisplay(){
 
     if(this.state.showMsgLayer)
     {
-      console.log('mes write');
-      console.log(this.state.showWriteMsgLayerData);
         layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={this.hideWriteLayer.bind(this)}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
     }
     return (  <div key="2">{layer}</div>)
