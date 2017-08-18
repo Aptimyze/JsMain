@@ -6,7 +6,7 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
 import {performAction} from './contactEngine';
-import {ContactDetails} from '../components/ContactDetails';
+import ContactDetails from '../components/ContactDetails';
 
 export class contactEnginePD extends React.Component{
   constructor(props){
@@ -14,7 +14,7 @@ export class contactEnginePD extends React.Component{
     this.state = {
     	actionDone: false,
       remindDone: false,
-      showMessageOverlay:false
+      showMessageOverlay:false,
         };
     this.actionUrl = {
       "INITIATE":"/api/v2/contacts/postEOI",
@@ -51,6 +51,7 @@ export class contactEnginePD extends React.Component{
   }
   bindAction(button,index){
 
+
     switch(button.action)
     {
 
@@ -63,7 +64,7 @@ export class contactEnginePD extends React.Component{
 
       default:
           let callBack = (responseButtons)=>{
-          this.props.hideLoaderDiv();console.log('resp',responseButtons);
+          this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
         }
         this.props.showLoaderDiv();
@@ -77,7 +78,7 @@ export class contactEnginePD extends React.Component{
 
   getNewButtons(newButton,index){
     var temp=this.props.buttondata.buttons.slice(0);
-    temp[index] = newButton;console.log('newbutt',temp);
+    temp[index] = newButton;
     return temp;
   }
   postAction(actionButton,responseButtons,index)
@@ -108,11 +109,19 @@ export class contactEnginePD extends React.Component{
 
         break;
 
-        case 'CONTACT_DETAIL':
-        this.showHideCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
-        break;
 
-        default:
+      case 'CONTACT_DETAIL':
+        this.showLayerCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
+      break;
+
+      case 'WRITE_MESSAGE':
+        this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
+      break;
+
+
+
+
+      default:
         this.props.replaceOldButtons(responseButtons);
         break;
       }
@@ -121,26 +130,23 @@ export class contactEnginePD extends React.Component{
   render(){
    
     return (
-    <div>
-    {[this.getFrontButton(),
-    this.getOverLayDataDisplay()]
+    <div>{[this.getFrontButton(),
+        this.getOverLayDataDisplay()]
   }</div>
   );
-    var messageOverlayView;
-    if(this.props.profiledata && this.state.showMessageOverlay == true) {
-      messageOverlayView = <WriteMessage closeMessageLayer={()=>this.closeMessageLayer()} username={this.props.profiledata.username} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} buttonData={this.props.contactAction.message.cansend} profilechecksum={this.props.profiledata.profilechecksum}/>
-    }
-
-
   }
-getFrontButton(){console.log(this.props);
+
+getFrontButton(){
+
   let primaryButton = this.props.buttondata.buttons[0];
   let threeDots = (<div></div>);
   let otherButtons = this.props.buttondata.buttons;
   if(otherButtons[0].action == 'ACCEPT' && otherButtons[1].action == 'DECLINE')
+  {
+
   return(<div key='1' id="buttons1" className="view_ce fullwid">
 
-    <div className="wid50p bg7 dispibl txtc pad5new" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
+    <div className="wid50p bg7 dispibl txtc pad5new brdr6" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
 
       <div id="btnAccept" className="fontlig f13 white cursp dispbl">
         <i className="ot_sprtie ot_chk"></i>
@@ -155,9 +161,16 @@ getFrontButton(){console.log(this.props);
     </div>
   </div>
   );
-  if(this.props.buttondata.buttons) threeDots =(<div onClick={this.setThreeDotData.bind(this)} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+}
+  if(this.props.buttondata.buttons)
+  {
 
-  if(primaryButton.enable==true){
+
+  threeDots =(<div onClick={this.setThreeDotData.bind(this)} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+}
+if(primaryButton.enable==true)
+{
+
     return (<div id="buttons1" className="view_ce fullwid">
       <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton)}>
         <div className="wid60p">
@@ -168,34 +181,54 @@ getFrontButton(){console.log(this.props);
         {threeDots}
 
     </div>)
-  }
-  else return (<div id="buttons1" className="view_ce fullwid">
-    <div className="fullwid srp_bg1 txtc pad18 posrel" >
-      <div className="wid60p">
-        <span className="fontlig f15 color7 dispbl">{primaryButton.label}</span>
-      </div>
-      {threeDots}
-      </div>
-  </div>
-);
+}
+else
+{
+
+     return (<div id="buttons1" className="view_ce fullwid">
+      <div className="fullwid srp_bg1 txtc pad18 posrel" >
+        <div className="wid60p">
+          <span className="fontlig f15 color7 dispbl">{primaryButton.label}</span>
+        </div>
+        {threeDots}
+        </div>
+    </div>
+  );
+}
 
 }
 
-showHideCommon(data){
+showLayerCommon(data){
+  this.props.unsetScroll();
   this.setState({
     ...data
-  })
+  });
+
+}
+hideLayerCommon(data){
+  this.setState({
+    ...data
+  });
+//  if(!this.state.showThreeDots && !this.state.showThreeDots & !this.state.showThreeDots)
 }
 setThreeDotData(){
 this.setState({
   showThreeDots: true
 });
+this.props.unsetScroll();
 }
 
 hideThreeDotLayer(){
 this.setState({
-  showThreeDots: false
-})
+showThreeDots: false
+});
+this.props.setScroll();
+}
+
+hideWriteLayer(){
+  this.setState({
+      showMsgLayer: false
+  });
 }
 
 showReportAbuse(){
@@ -210,15 +243,21 @@ this.setState({
 })
 }
 
-  getOverLayDataDisplay(object){
-    let layer = (<div></div>);
+getOverLayDataDisplay(){
+
+    let layer = '';
       if(this.state.showThreeDots)
-        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={this.hideThreeDotLayer.bind(this)} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-      else if(this.state.showReportAbuse)
+        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideThreeDotLayer()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+      if(this.state.showReportAbuse)
         layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-      else if(this.state.showContactDetail)
-        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-    return (<div key='2'>{layer}</div>)
+      if(this.state.showContactDetail)
+        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+
+    if(this.state.showMsgLayer)
+    {
+        layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={this.hideWriteLayer.bind(this)}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
+    }
+    return (  <div key="2">{layer}</div>)
   }
 
   setFrontButtonDisplay(object){

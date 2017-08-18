@@ -18,7 +18,9 @@ import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
-import HamMain from "../../Hamburger/containers/HamMain"
+import HamMain from "../../Hamburger/containers/HamMain";
+import { getAndroidVersion, getIosVersion} from "../../common/components/commonFunctions";
+
 
 class LoginPage extends React.Component {
 
@@ -205,6 +207,16 @@ class LoginPage extends React.Component {
         {
             promoView = <AppPromo parentComp="LoginPage" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
+        let appDownloadView;
+        if(getAndroidVersion()) {
+            appDownloadView = <div id="appLinkAndroid" className="txtc pad2">
+                <a href="/static/appredirect?type=androidMobFooter" className="f15 white fontlig">Download App | 3MB only</a>
+            </div>;
+        } else if(getIosVersion()) {
+            appDownloadView = <div id="appLinkIos" className="txtc pad2">
+                <a href="/static/appredirect?type=iosMobFooter" className="f15 white fontlig">Download App</a>
+            </div>;
+        }
 
         let formInput = <div id ="formInput">
                             <div className="fullwid brdr9 brdr10 lgin_inp_pad">
@@ -238,6 +250,11 @@ class LoginPage extends React.Component {
                                 <div id="loginButton" className="bg7 fullwid txtc pad2">
                                     <div onClick={() => this.doLogin()} className="white f18 fontlig">Login</div>
                                 </div>
+                            </div>
+                            <div id="afterCaptcha" className="txtc pad12">
+                                <Link id="forgotPasswordLink" to={"/static/forgotPassword"} className="white f14 fontlig">
+                                    Forgot Password
+                                </Link>
                             </div>
                             <div className="bg10 fullwid mt5">
                                 <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
@@ -283,20 +300,11 @@ class LoginPage extends React.Component {
 
                                         {formInput}
 
-                                        <div id="afterCaptcha" className="txtc pad12">
-                                            <Link id="forgotPasswordLink" to={"/static/forgotPassword"} className="white f14 fontlig">Forgot Password</Link>
-                                        </div>
                                         <div className="abs_c fwid_c mt20">
                                             {captchDiv}
                                             {buttonView}
-
-                                            <div id="appLinkAndroid" className="txtc pad2 dn">
-                                                <a href="/static/appredirect?type=androidMobFooter" className="f15 white fontlig">Download App | 3MB only</a>
-                                            </div>
-
-                                            <div id="appLinkIos" className="txtc pad2 dn">
-                                                <a href="/static/appredirect?type=iosMobFooter" className="f15 white fontlig">Download App</a>
-                                            </div>
+                                            {appDownloadView}
+                                            
 
                                             <div className="txtc pad2">
                                                 <a id="hindiLink" href="#" className="f16 white fontlig">हिंदी में</a>

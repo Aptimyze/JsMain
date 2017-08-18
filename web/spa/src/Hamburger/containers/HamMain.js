@@ -447,9 +447,9 @@ export default class HamMain extends React.Component {
                 </li>
                 <li>
                     <i className="hamSprite searchIcon"></i>
-                    <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
+                    <Link id="searchLink" to={"/search/topSearchBand?isMobile=Y"} className="white">
                         Search
-                    </a>
+                    </Link>
                 </li>
                 <li>
                     <i className="hamSprite searchProfileIcon"></i>
