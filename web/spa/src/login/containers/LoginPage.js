@@ -165,7 +165,7 @@ class LoginPage extends React.Component {
     componentDidUpdate(prevprops) {
         if(prevprops.location) {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
-                this.refs.Hamchild.hideHam();
+                this.refs.Hamchild.getWrappedInstance().hideHam();
             }
         }
     }
@@ -179,7 +179,7 @@ class LoginPage extends React.Component {
             }
 
         }
-        this.refs.Hamchild.openHam();
+        this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
     removePromoLayer() {

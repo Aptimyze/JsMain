@@ -36,6 +36,14 @@ class SearchFormPage extends React.Component {
        
     }
 
+    componentDidUpdate(prevprops) {
+        if(prevprops.location) {
+            if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
+                this.refs.Hamchild.getWrappedInstance().hideHam();
+            }
+        }
+    }
+
     showError(inputString) {
         let _this = this;
         this.setState ({
@@ -49,6 +57,19 @@ class SearchFormPage extends React.Component {
             })
         }, this.state.timeToHide+100);
     }
+
+    showHam() {
+        if(window.location.search.indexOf("ham=1") == -1) {
+            if(window.location.search.indexOf("?") == -1) {
+                this.props.history.push(window.location.pathname+"?ham=1");
+            } else {
+                this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
+            }
+
+        }
+        this.refs.Hamchild.getWrappedInstance().openHam();
+    }
+
     changeTab(e) {
         if(e.target.nextSibling) {
             e.target.nextSibling.classList.remove("selectedTab");
@@ -71,15 +92,20 @@ class SearchFormPage extends React.Component {
           loaderView = <Loader show="page"></Loader>;
         }
         let savedSearchCountView;
-        savedSearchCountView = <div className="posabs savsrc-pos2">
-            <div className="txtc color6 f12 roundIcon">1</div>
-        </div>;
-        let savedSearchView,genderView;
+        if(document.getElementById("savedSearchCount")) {
+            let count = document.getElementById("savedSearchCount").innerText;
+            savedSearchCountView = <div className="posabs savsrc-pos2">
+                <div className="txtc color6 f12 roundIcon">{count}</div>
+            </div>;    
+        }
+        
+        let savedSearchView,genderView,hamView;
         if(this.state.loggeInStatus == true) {
             savedSearchView = <div className="dispibl fr" id="savedSearchIcon">
                 <i className="savsrc-sp savsrc-icon1"></i>
                 {savedSearchCountView}
             </div>;
+            hamView = <HamMain ref="Hamchild" page="others"></HamMain>;
         } else {
             genderView = <div id="search_gender">
                 <div className="pad3 brdr1 txtc">
@@ -93,10 +119,11 @@ class SearchFormPage extends React.Component {
                     </div>
                 </div>
             </div>;
+            hamView = <HamMain ref="Hamchild" page="Login"></HamMain>;
         }
 
         let headerView = <div className="bg1 padd22">
-            <i id="hamburgerIcon" className="fl dispbl mainsp baricon"></i>
+            <i id="hamburgerIcon" onClick={() => this.showHam()} className="fl dispbl mainsp baricon"></i>
             <div className="white fontthin f19 txtc dispibl wid84p">
                 Search Your Match
             </div>
@@ -118,6 +145,7 @@ class SearchFormPage extends React.Component {
         return (
             <div className="bg4" id="SearchFormPage">
                 <GA ref="GAchild" />
+                {hamView}
                 {errorView}
                 {loaderView}
                 {headerView}
