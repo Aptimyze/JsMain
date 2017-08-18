@@ -30,17 +30,17 @@ class ApiFeedbackAttachmentV1Action extends sfActions {
       $apiResponseHandlerObj->generateResponse();
       die(Y);
     }
-    
+    $arrFeedback = $request->getParameter('feed');
     if($request->isMethod('POST')) {
       $feedBackObj = new FAQFeedBack(1);
       $result = $feedBackObj->uploadTempAttachments($request);     
       if($feedBackObj->getIsAttachmentError()) {
-        $result["feed[count]"] = $request->getParameter("feed[count]");
+        $result["feed[count]"] = $arrFeedback['count'];
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTACHMENT_ERROR);
         $apiResponseHandlerObj->setResponseBody($result);
       } else {
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-        $apiResponseHandlerObj->setResponseBody(array("attachment_id" => $result, "feed[count]"=>$request->getParameter("feed[count]")));
+        $apiResponseHandlerObj->setResponseBody( array( "attachment_id" => $result, "feed[count]"=> $arrFeedback['count'] ) );
       }
     } else {
       $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$POST_PARAM_INVALID);
