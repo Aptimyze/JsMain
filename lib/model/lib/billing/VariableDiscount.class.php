@@ -210,7 +210,7 @@ class VariableDiscount
        * @param  $profileid,$discountDetails,$serviceArr,$sendSms
        * @return none
        */ 
-    public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false)
+    public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false,$type="")
     {
         $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $SENT_MAIL = 'Y';  //$SENT_MAIL = 'Y' specifies no mail to be sent
@@ -223,7 +223,7 @@ class VariableDiscount
         if(!$vdObj1->getProfileidWithDiscount($profileid))
         {
 	    $vdObj = new billing_VARIABLE_DISCOUNT();
-            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS);
+            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS,$type);
             $durationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
             $params = array("PROFILEID"=>$profileid,"SERVICE"=>$serviceArr,"DISC1"=>$discountDetails["DISC1"],"DISC2"=>$discountDetails["DISC2"],"DISC3"=>$discountDetails["DISC3"],"DISC6"=>$discountDetails["DISC6"],"DISC12"=>$discountDetails["DISC12"],"DISCL"=>$discountDetails["DISCL"]);
             $durationObj->addVDOfferDurationServiceWise($params);
@@ -374,7 +374,7 @@ class VariableDiscount
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
-	$todayDate =date("Y-m-d");
+	   $todayDate =date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
