@@ -1,4 +1,4 @@
-<?php
+f<?php
 /**
  * API For DetailedProfile
  *
@@ -286,7 +286,7 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        if(MobileCommon::isAndroidApp())
+        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite())
         {
         	$tickArr = array();
 
