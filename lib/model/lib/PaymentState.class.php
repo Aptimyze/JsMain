@@ -60,6 +60,8 @@ Desc: constructor logic
 		$subscription =	 $profile->getSUBSCRIPTION();
 		if(strstr($subscription,"F,D") || strstr($subscription,"D,F") || strstr($subscription,"D"))
 			$this->EVALUE = true;
+		elseif(MembershipHandler::isEligibleForRBHandling($profile->getPROFILEID()))
+			$this->JSEXCLUSIVE = true;
 		elseif(strstr($subscription,"F"))
 			$this->ERISHTA = true;
 		elseif(($ftoStateObj->getState()==FTOStateTypes::FTO_ELIGIBLE) || 
@@ -68,8 +70,6 @@ Desc: constructor logic
 			$this->FTO = true;
 		else
 			$this->FREE = true;
-		if(MembershipHandler::isEligibleForRBHandling($this->profileObj->getPROFILEID()))
-			$this->JSEXCLUSIVE = true;
 	}
 /**************************************************
 function getPaymentStatus()
