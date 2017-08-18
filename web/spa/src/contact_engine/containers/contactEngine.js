@@ -12,11 +12,7 @@ export const performAction = (profilechecksum,callBFun,button) =>
     return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[button.action],url,'','POST').then((response)=>{if(typeof callBFun=='function') callBFun(response);});
 }
 
-<<<<<<< HEAD
 export const cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'mainsp bellicon','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
-=======
-export const cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp','083':'ot_sprtie ot_bell'};
->>>>>>> 99417823c09e83003463f013930831801003c501
 export default class contactEngine extends React.Component{
   constructor(props){
     super();

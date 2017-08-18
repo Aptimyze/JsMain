@@ -7,6 +7,8 @@ import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
 import {performAction} from './contactEngine';
 import ContactDetails from '../components/ContactDetails';
+import BlockPage from './BlockPage';
+
 
 export class contactEnginePD extends React.Component{
   constructor(props){
@@ -82,53 +84,46 @@ export class contactEnginePD extends React.Component{
   }
   postAction(actionButton,responseButtons,index)
   {
-    if ( responseButtons.responseStatusCode == 4) 
+
+    if ( responseButtons.responseStatusCode == 4)
     {
       this.props.showError(responseButtons.responseMessage)
     }
     else
     {
-      switch(actionButton.action){
-
+      switch(actionButton.action)
+      {
         case 'SHORTLIST':
-        var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
-        this.props.replaceSingleButton(newButtons);
-        break;
+          var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
+          this.props.replaceSingleButton(newButtons);
+          break;
         case 'IGNORE':
-        if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
-        {
-          this.props.replaceOldButtons(getNewButtons(jsonOb.response.button_after_action.buttons.others[jsonOb.index],jsonOb.index));
-          this.closeThreeDotLayer();
-        }
-        else
-        {
-          this.props.replaceOldButtons({'button':jsonOb.response.button_after_action.buttons.primary[0]},jsonOb.index);
-          this.showIgnoreLayer(jsonOb.response.message,jsonOb.response.button_after_action.buttons.primary[0]);
-        }
-
+            console.log('in ignore');
+            this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   });
+            //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
+            //this.props.replaceSingleButton(newButtons);
         break;
 
+        case 'CONTACT_DETAIL':
+            this.showLayerCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
+        break;
 
-      case 'CONTACT_DETAIL':
-        this.showLayerCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
-      break;
+        case 'WRITE_MESSAGE':
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
+        break;
+        default:
+          if(responseButtons.actiondetails.errmsglabel){
+            this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
+          }
 
-      case 'WRITE_MESSAGE':
-        this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
-      break;
-      default:
-        if(responseButtons.actiondetails.errmsglabel){
-          this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
-        }
-
-        else
-        this.props.replaceOldButtons(responseButtons);
+          else
+          this.props.replaceOldButtons(responseButtons);
         break;
       }
     }
   }
   render(){
-   
+
     return (
     <div>{[this.getFrontButton(),
         this.getOverLayDataDisplay()]
@@ -225,7 +220,6 @@ getOverLayDataDisplay(){
         layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showContactDetail)
         layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-
     if(this.state.showMsgLayer)
     {
         layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
@@ -234,6 +228,10 @@ getOverLayDataDisplay(){
     {
       layer = this.getCommonOverLay(this.state.commonOvlayData);
 
+    }
+    if(this.state.showBlockLayer)
+    {
+      layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>this.hideLayerCommon({showBlockLayer:false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />;
     }
 
     return (  <div key="2">{layer}</div>)
