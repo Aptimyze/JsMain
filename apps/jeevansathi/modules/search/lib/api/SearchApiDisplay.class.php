@@ -450,8 +450,10 @@ class SearchApiDisplay
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
+                                
                 //aadhar verification part
-                  $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS']);
+                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS']);
+
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
 				{

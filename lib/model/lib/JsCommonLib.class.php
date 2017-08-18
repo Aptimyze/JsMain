@@ -1114,8 +1114,9 @@ public static function insertConsentMessageFlag($profileid) {
          */
         public static function logFunctionCalling($className, $funName)
         {
-            $key = $className.'_'.date('Y-m-d');
-            JsMemcache::getInstance()->hIncrBy($key, $funName);
+        	return;
+           /* $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);*/
 
             //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
