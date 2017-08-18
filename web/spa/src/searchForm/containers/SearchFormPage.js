@@ -8,6 +8,7 @@ import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import HamMain from "../../Hamburger/containers/HamMain";
 import {getCookie} from '../../common/components/CookieHelper';
+import AppPromo from "../../common/components/AppPromo";
 
 class SearchFormPage extends React.Component {
 
@@ -18,7 +19,8 @@ class SearchFormPage extends React.Component {
             errorMessage: "",
             timeToHide: 3000,
             showLoader: false,
-            loggeInStatus: false
+            loggeInStatus: false,
+            showPromo: false
         };
         if(getCookie("AUTHCHECKSUM")) {
             this.state.loggeInStatus = true;
@@ -32,6 +34,11 @@ class SearchFormPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
+        if(nextProps.appPromotion == true) {
+            this.setState ({
+                showPromo : true
+            });
+        }
         console.log("data",nextProps.searchData)
        
     }
@@ -91,6 +98,13 @@ class SearchFormPage extends React.Component {
         {
           loaderView = <Loader show="page"></Loader>;
         }
+
+        var promoView;
+        if(this.state.showPromo)
+        {
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+        }
+
         let savedSearchCountView;
         if(document.getElementById("savedSearchCount")) {
             let count = document.getElementById("savedSearchCount").innerText;
@@ -145,13 +159,16 @@ class SearchFormPage extends React.Component {
         return (
             <div className="bg4" id="SearchFormPage">
                 <GA ref="GAchild" />
+                {promoView}
                 {hamView}
                 {errorView}
                 {loaderView}
-                {headerView}
-                {genderView}
-                {photoView}
-                <div id="search_submit" className="bg7 white fullwid dispbl txtc lh50 pinkRipple">Search</div>
+                <div className="fullheight bg4" id="mainContent">
+                    {headerView}
+                    {genderView}
+                    {photoView}
+                    <div id="search_submit" className="bg7 white fullwid dispbl txtc lh50 pinkRipple">Search</div>
+                </div>
             </div>
         );
     }
