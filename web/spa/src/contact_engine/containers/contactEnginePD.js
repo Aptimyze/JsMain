@@ -14,9 +14,8 @@ export class contactEnginePD extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-    	actionDone: false,
-      remindDone: false,
       showMessageOverlay:false,
+      layerCount:0
         };
     this.actionUrl = {
       "INITIATE":"/api/v2/contacts/postEOI",
@@ -104,14 +103,21 @@ export class contactEnginePD extends React.Component{
             //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
             //this.props.replaceSingleButton(newButtons);
         break;
+
         case 'CONTACT_DETAIL':
             this.showLayerCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
         break;
+
         case 'WRITE_MESSAGE':
             this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
         break;
         default:
-            this.props.replaceOldButtons(responseButtons);
+          if(responseButtons.actiondetails.errmsglabel){
+            this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
+          }
+
+          else
+          this.props.replaceOldButtons(responseButtons);
         break;
       }
     }
@@ -153,9 +159,7 @@ getFrontButton(){
 }
   if(this.props.buttondata.buttons)
   {
-
-
-  threeDots =(<div onClick={this.setThreeDotData.bind(this)} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true})} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
 }
 if(primaryButton.enable==true)
 {
@@ -184,10 +188,10 @@ else
     </div>
   );
 }
-
 }
 
 showLayerCommon(data){
+  this.layerCount++;
   this.props.unsetScroll();
   this.setState({
     ...data
@@ -195,68 +199,65 @@ showLayerCommon(data){
 
 }
 hideLayerCommon(data){
+  this.layerCount--;
+  if(!this.layerCount)this.props.setScroll();
   this.setState({
     ...data
   });
 //  if(!this.state.showThreeDots && !this.state.showThreeDots & !this.state.showThreeDots)
 }
-setThreeDotData(){
-this.setState({
-  showThreeDots: true
-});
-this.props.unsetScroll();
-}
 
-hideThreeDotLayer(){
-this.setState({
-showThreeDots: false
-});
-this.props.setScroll();
-}
 
-hideWriteLayer(){
-  this.setState({
-      showMsgLayer: false
-  });
-}
-hideBlockLayer(){
-  this.setState({
-      showBlockLayer: false
-  });
-}
 
-showReportAbuse(){
-this.setState({
-  showReportAbuse: true
-});
-}
 
-hideReportAbuse(){
-this.setState({
-  showReportAbuse: false
-})
-}
 
 getOverLayDataDisplay(){
 
     let layer = '';
       if(this.state.showThreeDots)
-        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideThreeDotLayer()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
-        layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideReportAbuse()} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showContactDetail)
         layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-      if(this.state.showMsgLayer)
-      {
-        layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={this.hideWriteLayer.bind(this)}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
-      }
-      if(this.state.showBlockLayer)
-      {
-        layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={this.hideBlockLayer.bind(this)} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />;
-      }
+    if(this.state.showMsgLayer)
+    {
+        layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
+    }
+    if(this.state.commonOvlayLayer)
+    {
+      layer = this.getCommonOverLay(this.state.commonOvlayData);
+
+    }
+    if(this.state.showBlockLayer)
+    {
+      layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>this.hideLayerCommon({showBlockLayer:false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />;
+    }
+
     return (  <div key="2">{layer}</div>)
   }
 
+getCommonOverLay(actionDetails){
+  return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
+            <a href="#"  className="ce_overlay" > </a>
+              <div className="posabs ce_z103 ce_top1 fullwid" >
+
+                <div className="white fullwid" id="commonOverlayTop">
+                        <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
+                        </div>
+                </div>
+              </div>
+              <div className="posfix btmo fullwid" id="bottomElement">
+                <div className="pt15">
+                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.hideLayerCommon({commonOvlayLayer:false})} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+                </div>
+              </div>
+
+          </div>
+);
+}
   setFrontButtonDisplay(object){
     this.setState({frontButton:object});
   }
