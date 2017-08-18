@@ -926,7 +926,7 @@ class SearchApiDisplay
 
     public function getFinalVerificationStatus($verificationStatus)
     {
-    	if(MobileCommon::isAndroidApp())
+    	if(MobileCommon::isApp())
 		{
 			$aadharObj = new aadharVerification();
    			$aadharArr = $aadharObj->getAadharDetails($this->viewerObj->getPROFILEID());   			
