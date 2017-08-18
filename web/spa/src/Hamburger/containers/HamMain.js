@@ -19,6 +19,7 @@ class HamMain extends React.Component {
             showLoader:false,
             bellResponse: props.bellResponse || "notDefined"
         }
+        this.resizeHam = this.resizeHam.bind(this);
     }
 
     translateSite(translateURL)
@@ -59,6 +60,19 @@ class HamMain extends React.Component {
         } else {
             document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
         }
+        window.addEventListener("resize", this.resizeHam);
+    }
+
+    resizeHam() {
+        if(this.state.bellResponse.MEMBERSHIPT_TOP == null || !this.state.bellResponse.MEMBERSHIPT_TOP) {
+            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+        } else {
+            document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+        } 
+    }
+    componentWillUnmount()
+    {
+        window.removeEventListener('resize', this.resizeHam);
     }
 
     checkHeight() {

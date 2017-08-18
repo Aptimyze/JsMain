@@ -14,6 +14,7 @@ class SearchFormPage extends React.Component {
 
     constructor(props) {
         super();
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -44,11 +45,16 @@ class SearchFormPage extends React.Component {
     }
 
     componentDidUpdate(prevprops) {
+        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
         if(prevprops.location) {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
                 this.refs.Hamchild.getWrappedInstance().hideHam();
             }
         }
+    }
+
+    componentWillUnmount(){
+        this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
 
     showError(inputString) {
@@ -155,7 +161,7 @@ class SearchFormPage extends React.Component {
                 </div>
             </div>
         </div>;
-
+        this.trackJsb9 = 1;
         return (
             <div className="bg4" id="SearchFormPage">
                 <GA ref="GAchild" />
@@ -176,7 +182,8 @@ class SearchFormPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       searchData: state.SearchFormReducer.searchData
+       searchData: state.SearchFormReducer.searchData,
+       Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
@@ -185,7 +192,10 @@ const mapDispatchToProps = (dispatch) => {
         getSearchData: () => {
             let call_url = '/api/v1/search/searchFormData?json={"searchForm":"2013-12-25 00:00:00"}';
             commonApiCall(call_url,{},'GET_SEARCH_DATA','POST',dispatch);
-        }
+        },
+        jsb9TrackRedirection : (time,url) => {
+            jsb9Fun.recordRedirection(dispatch,time,url)
+        },
     }
 }
 
