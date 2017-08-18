@@ -482,6 +482,24 @@ return 0;
                     }
                   break;
 
+                  case '24':
+
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION'))) 
+                      {
+                          $nameData=(new NameOfUser())->getNameData($profileid);
+                          $nameOfUser=$nameData[$profileid]['NAME'];
+                          if($nameOfUser)
+                          {
+                            $aadhaarObj = new aadharVerification();
+                            $details = $aadhaarObj->getAadharDetails($profileid)[$profileid];
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
+                              $show=1;
+                          }
+                      }
+                      
+                      
+                    break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -577,6 +595,10 @@ break;
                   '20' => array(  
                     'A' => '99',
                     'I' => '5.4'
+                        ),
+
+                  '24' => array(  
+                    'A' => '107'
                         )        
 
           );

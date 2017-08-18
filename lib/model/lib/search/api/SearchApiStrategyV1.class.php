@@ -342,6 +342,42 @@ class SearchApiStrategyV1
                         $searchSummaryObj = new SearchService();
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
+                        
+                        if(MobileCommon::isAndroidApp()){
+                                $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
+                                if($clusterIndex != ""){
+                                        if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
+                                                eval('$clusterLVal = $SearchParamtersObj->getL'.$clusterIndex.'();');
+                                                eval('$clusterHVal = $SearchParamtersObj->getH'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>"L".$clusterIndex,"value"=>$clusterLVal),"1"=>array("key"=>"H".$clusterIndex,"value"=>$clusterHVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }else{
+                                                $key = $clusterIndex;
+                                                if($clusterIndex == "EDUCATION_GROUPING"){
+                                                        $clusterIndex = "EDU_LEVEL_NEW";
+                                                        $key = "EDU_LEVEL_NEW";
+                                                }elseif($clusterIndex == "OCCUPATION_GROUPING"){
+                                                        $clusterIndex = "OCCUPATION";
+                                                        $key = "OCCUPATION";
+                                                }elseif($clusterIndex == "COUNTRY_RES"){
+                                                        $key = "LOCATION";
+                                                }elseif($clusterIndex == "CITY_RES"){
+                                                        $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "HAVEPHOTO"){
+                                                        $key = "PHOTO";
+                                                }elseif($clusterIndex == "CASTE_GROUP"){
+                                                        $key = "CASTE";
+                                                }elseif($clusterIndex == "STATE"){
+                                                        $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "LAST_ACTIVITY"){
+                                                        $clusterIndex = "ONLINE";
+                                                }
+                                                eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }
+                                }
+                        }
                 }
                 $featuredProfileArrNew = array();
                // echo '<pre>';
