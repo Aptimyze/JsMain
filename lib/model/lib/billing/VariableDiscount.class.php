@@ -234,6 +234,14 @@ class VariableDiscount
 	unset($durationObj);
     }
 
+    public function activateExtendedVD($entryDate){
+        //activate and delete today
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT("newjs_masterRep");
+        $eligibleRows = $vdExtendedObj->fetchAllRecords("*",$currentDate);
+        print_r($eligibleRows);die;
+        unset($vdExtendedObj);
+    }
+
     /**
      * @fn getDiscountEligibleProfiles
      * @param $params--conditions,$discountType(optional----key/name for temp table)

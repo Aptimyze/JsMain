@@ -40,7 +40,10 @@ EOF;
 	$sendMailAlert = true;  
         $VDObj = new VariableDiscount();
         $VDObj->populateRemainingRecordsFromVDTemp($entryDate,$sendMailAlert);
-        unset($VDObj);
+        
 
+  // Extended VD process
+      $VDObj->activateExtendedVD($entryDate);
+      unset($VDObj); 
   }
 }

@@ -47,6 +47,29 @@ class billing_EXTENDED_VARIABLE_DISCOUNT extends TABLE{
             }
             throw new jsException($e);
         }
-    }  
+    } 
+
+    /*function to get records from table
+    * @params : $fields(","separated list or *),$limit,$offset
+    * @return: rows 
+    */
+    public function fetchAllRecords($fields="*",$entryDate)
+    {
+        try
+        {
+            $sql = "SELECT ".$fields." FROM billing.EXTENDED_VARIABLE_DISCOUNT WHERE SDATE = :SDATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":SDATE",$entryDate, PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                $vdData[] = $result;
+            }
+            return $vdData;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    } 
 }
 ?>
