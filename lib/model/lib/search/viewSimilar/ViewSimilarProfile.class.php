@@ -80,12 +80,17 @@ class ViewSimilarProfile {
                         // contacts viewed
 $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,MTONGUE,ENTRY_DT,HAVEPHOTO,SHOW_HOROSCOPE,COUNTRY_RES,BTYPE,COMPLEXION,EDU_LEVEL_NEW,OCCUPATION,MSTATUS,CITY_RES,DRINK,SMOKE,DIET,HANDICAPPED,MANGLIK,RELATION,HANDICAPPED,HIV,SUBSCRIPTION,BTIME,MOB_STATUS,LANDL_STATUS,ACTIVATED,INCOMPLETE");
                         $viewedAge = $profileObj->getAGE();
-
+                        
                         $AgeViewed =  $this->AgeInterval($viewedOppositeGender,$viewedAge,$viewerAge);
                         if(viewSimilarConfig::VspWithoutSolr($viewed))
                             $whereParams = $this->getWhereParamsForReverseDpp($viewedOppositeGender,$loginProfile);
                         $whereParams['lage']=$AgeViewed['lAge'];
                         $whereParams['hage']=$AgeViewed['hAge'];
+                        $dbName = JsDbSharding::getShardNo($viewer);
+                        $loggedInJpartnerObj = new newjs_JPARTNER($dbName);
+                        $pMstatus = $loggedInJpartnerObj->get(array('PROFILEID'=>$viewer),'PARTNER_MSTATUS');
+                        if($pMstatus[0]['PARTNER_MSTATUS'] != '')
+                            $whereParams['MSTATUS'] = $pMstatus[0]['PARTNER_MSTATUS'];
                         
                         if(viewSimilarConfig::VspWithoutSolr($viewed)){
                             $profileListObj = new IgnoredContactedProfiles();
